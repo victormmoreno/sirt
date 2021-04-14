@@ -13,7 +13,11 @@ class Movimiento extends Model
     const IS_CAMBIAR  = 'Cambió';
     const IS_NO_APROBAR = 'no aprobó';
     const IS_SOLICITAR_TALENTO = 'solicitó al talento';
-    const IS_SOLICITAR_DINAMIZADOR = 'solicitó al dinamizador';
+    const IS_POSTULAR = 'postuló';
+    const IS_REGISTRAR = 'registró';
+    const IS_CALIFICAR = 'calificó';
+    const IS_ASIGNAR = 'asignó';
+    const IS_DUPLICAR = 'duplicó';
     protected $table = 'movimientos';
 
     /**
@@ -56,9 +60,39 @@ class Movimiento extends Model
         return self::IS_SOLICITAR_TALENTO;
     }
 
-    public static function IsSolicitarDinamizador()
+    public static function IsPostular()
     {
-        return self::IS_SOLICITAR_DINAMIZADOR;
+        return self::IS_POSTULAR;
+    }
+
+    public static function IsRegistrar()
+    {
+        return self::IS_REGISTRAR;
+    }
+
+    public static function IsCalificar()
+    {
+        return self::IS_CALIFICAR;
+    }
+
+    public static function IsAsignar()
+    {
+        return self::IS_ASIGNAR;
+    }
+
+    public static function IsDuplicar()
+    {
+        return self::IS_DUPLICAR;
+    }
+
+    // public function historial()
+    // {
+    //     return $this->morphMany(HistorialEntidad::class, 'historial_entidad');
+    // }
+
+    public function historial()
+    {
+        return $this->hasMany(HistorialEntidad::class, 'movimiento_id', 'id');
     }
 
     public function actividades_movimientos()

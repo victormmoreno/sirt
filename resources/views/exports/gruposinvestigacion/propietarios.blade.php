@@ -2,6 +2,7 @@
     <thead>
     <tr>
         <th>Código de Proyecto</th>
+        <th>Nodo del Proyecto</th>
         <th>Código del Grupo de Investigación</th>
         <th>Nombre del Grupo de Investigación</th>
         <th>Tipo de Grupo de Investigación</th>
@@ -15,6 +16,7 @@
         @foreach($grupos as $value)
             <tr>
             <td>{{ $value->codigo_actividad }}</td>
+            <td>{{ $value->nodo_nombre }}</td>
             <td>{{ $value->codigo_grupo }}</td>
             <td>{{ $value->nombre_grupo }}</td>
             <td>{{ $value->tipogrupo }}</td>

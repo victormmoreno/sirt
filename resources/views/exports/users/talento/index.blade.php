@@ -2,6 +2,7 @@
     <thead>
     <tr>
         <th>Código de Proyecto</th>
+        <th>Nodo del proyecto</th>
         <th>Número de Documento del Talento</th>
         <th>Nombres del Talento</th>
         <th>Apellidos del Talento</th>
@@ -30,6 +31,7 @@
         @foreach($talentos as $value)
         <tr>
             <td>{{ $value->codigo_actividad }}</td>
+            <td>{{ $value->nodo_nombre }}</td>
             <td>{{ $value->documento }}</td>
             <td>{{ $value->nombres }}</td>
             <td>{{ $value->apellidos }}</td>

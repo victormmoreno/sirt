@@ -21,9 +21,10 @@ class GrupoInvestigacionRepository
       'codigo_actividad',
       'codigo_grupo',
       'entidades.nombre AS nombre_grupo',
-      'email_entidad',
+      'entidades.email_entidad',
       'institucion',
-      'clasificacionescolciencias.nombre AS nombre_clasificacion'
+      'clasificacionescolciencias.nombre AS nombre_clasificacion',
+      'entidad_nodo.nombre AS nodo_nombre'
     )
     ->selectRaw('concat(ciudades.nombre, " - ", departamentos.nombre) AS ciudad')
     ->selectRaw('if(tipogrupo = '.GrupoInvestigacion::IsInterno().', "SENA", "Externo") AS tipogrupo')
@@ -35,6 +36,7 @@ class GrupoInvestigacionRepository
     ->join('ciudades', 'ciudades.id', '=', 'entidades.ciudad_id')
     ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('entidades AS entidad_nodo', 'entidad_nodo.id', '=', 'nodos.entidad_id')
     ->join('clasificacionescolciencias', 'clasificacionescolciencias.id', '=', 'gruposinvestigacion.clasificacioncolciencias_id')
     ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
     ->where('entidades.nombre', '!=', 'No Aplica')

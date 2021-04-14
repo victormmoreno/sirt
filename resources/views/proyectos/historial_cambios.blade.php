@@ -1,7 +1,6 @@
 <ul class="collapsible" data-collapsible="accordion">
   <li>
-    <div class="collapsible-header teal lighten-4"><i class="material-icons">filter_drama</i>Ver historial de
-      movimientos.</div>
+    <div class="collapsible-header teal lighten-4"><i class="material-icons">filter_drama</i>Ver historial de movimientos.</div>
     <div class="collapsible-body">
       <div class="row">
         <div class="center col s12 m12 l12">

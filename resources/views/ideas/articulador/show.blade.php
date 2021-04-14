@@ -19,14 +19,15 @@
               </center>
               <div class="divider"></div>
               <div class="row">
-                @if ($idea->estadoIdea->nombre == 'Postulado')
                 <div class="col s12 m3 l3">
                   <ul class="collection with-header">
                     <li class="collection-header"><h5>Opciones</h5></li>
+                    @if ($idea->estadoIdea->nombre == 'Postulado')
                     <li class="collection-item">
                       <form action="{{route('idea.aceptar.postulacion', $idea->id)}}" method="POST" name="frmAceptarPostulacionIdea">
-                      {{-- {!! method_field('PUT')!!}
-                      @csrf --}}
+                      {!! method_field('PUT')!!}
+                      @csrf
+                      <input type="hidden" name="txtobservacionesAceptacion" id="txtobservacionesAceptacion" value="">
                         <a href="" onclick="confirmacionAceptacionPostulacion(event)">
                           <div class="card-panel teal lighten-2 black-text center">
                             Aceptar idea de proyecto
@@ -46,6 +47,10 @@
                         </a>
                       </form>
                     </li>
+                    @endif
+                    <li class="collection-item">
+                      @include('ideas.historial_cambios')
+                    </li>
                   </ul>
                 </div>
                 <div class="col s12 m9 l9">
@@ -56,16 +61,6 @@
                     </a>
                   </center>
                 </div>
-                @else
-                <div class="col s12 m12 l12">
-                  @include('ideas.detalle')
-                  <center>
-                    <a href="{{route('idea.index')}}" class="waves-effect red lighten-2 btn center-aling">
-                      <i class="material-icons right">backspace</i>Cancelar
-                    </a>
-                  </center>
-                </div>
-                @endif
               </div>
             </div>
           </div>
@@ -81,8 +76,19 @@
     e.preventDefault();
     Swal.fire({
     title: '¿Está seguro(a) de aceptar la postulación de esta idea de proyecto?',
-    // text: "You won't be able to revert this!",
+    input: 'textarea',
+    inputPlaceholder: 'Puedes dejar algunas observaciones para el talento',
     type: 'warning',
+    inputValidator: (value) => {
+      if (!value) {
+        return 'Se necesitan unas observaciones!'
+      } else {
+        $('#txtobservacionesAceptacion').val(value);
+      }
+    },
+    inputAttributes: {
+      maxlength: 2100
+    },
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
@@ -90,7 +96,8 @@
     confirmButtonText: 'Sí!'
     }).then((result) => {
       if (result.value) {
-        window.location.href = "{{ route('idea.aceptar.postulacion', $idea->id) }}";
+        document.frmAceptarPostulacionIdea.submit();
+        // window.location.href = "{{ route('idea.aceptar.postulacion', $idea->id) }}";
       }
     })
   }

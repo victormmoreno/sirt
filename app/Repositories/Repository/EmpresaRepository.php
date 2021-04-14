@@ -53,10 +53,11 @@ public function empresasPropietarias(string $fecha_inicio, string $fecha_cierre)
     'entidades.nombre AS nombre_empresa',
     'fecha_creacion',
     'sectores.nombre AS nombre_sector',
-    'email_entidad',
+    'entidades.email_entidad',
     'empresas.direccion',
     'tamanhos_empresas.nombre AS tamanho_empresa',
-    'tipos_empresas.nombre AS tipo_empresa'
+    'tipos_empresas.nombre AS tipo_empresa',
+    'entidad_nodo.nombre AS nodo_nombre'
     )
     ->selectRaw('concat(ciudades.nombre, " - ", departamentos.nombre) AS ciudad')
     ->join('entidades', 'entidades.id', '=', 'empresas.entidad_id')
@@ -68,6 +69,7 @@ public function empresasPropietarias(string $fecha_inicio, string $fecha_cierre)
     ->join('ciudades', 'ciudades.id', '=', 'entidades.ciudad_id')
     ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->join('entidades AS entidad_nodo', 'entidad_nodo.id', '=', 'nodos.entidad_id')
     ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
     ->leftJoin('tamanhos_empresas', 'tamanhos_empresas.id', '=', 'empresas.tamanhoempresa_id')
     ->leftJoin('tipos_empresas', 'tipos_empresas.id', '=', 'empresas.tipoempresa_id')

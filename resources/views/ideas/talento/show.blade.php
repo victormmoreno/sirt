@@ -19,10 +19,10 @@
               </center>
               <div class="divider"></div>
               <div class="row">
-                @if ($idea->estadoIdea->nombre === "En registro")
                 <div class="col s12 m3 l3">
                   <ul class="collection with-header">
                     <li class="collection-header"><h5>Opciones</h5></li>
+                    @if ($idea->estadoIdea->nombre === "En registro")
                     <li class="collection-item">
                       <form action="{{route('idea.enviar', $idea->id)}}" method="POST" id="frmEnviarIdeaTalento" name="frmEnviarIdeaTalento">
                         {!! method_field('PUT')!!}
@@ -42,6 +42,24 @@
                         </div>
                       </a>
                     </li>
+                    @endif
+                    @if ($idea->estadoIdea->nombre == 'Rechazado por comité')
+                    <li class="collection-item">
+                      <form action="{{route('idea.duplicar', $idea->id)}}" method="POST" id="frmDuplicarIdea" name="frmDuplicarIdea">
+                        {!! method_field('PUT')!!}
+                        <input type="hidden" value="{{$idea}}" name="txtidea_id">
+                        @csrf
+                        <a href="" onclick="confirmacionDuplicacion(event)">
+                          <div class="card-panel orange lighten-2 black-text center">
+                            Duplicar idea de proyecto.
+                          </div>
+                        </a>
+                      </form>
+                    </li>
+                    @endif
+                    <li class="collection-item">
+                      @include('ideas.historial_cambios')
+                    </li>
                   </ul>
                 </div>
                 <div class="col s12 m8 l8">
@@ -52,16 +70,6 @@
                     </a>
                   </center>
                 </div>
-                @else
-                <div class="col s12 m12 l12">
-                  @include('ideas.detalle')
-                  <center>
-                    <a href="{{route('idea.index')}}" class="waves-effect red lighten-2 btn center-aling">
-                      <i class="material-icons right">backspace</i>Volver
-                    </a>
-                  </center>
-                </div>  
-                @endif
               </div>
             </div>
           </div>
