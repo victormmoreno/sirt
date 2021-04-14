@@ -26,7 +26,7 @@ class IdeasWasAcceptedToComite
      */
     public function handle(IdeasWasAccepted $event)
     {
-        Mail::to($event->idea->talento->user->email)->send(new IdeaAceptadaParaComite($event->idea));
-        Mail::to($event->infocenters)->send(new IdeaAceptadaParaComiteInfocenter($event->idea));
+        Mail::to($event->idea->talento->user->email)->send(new IdeaAceptadaParaComite($event->idea, $event->observaciones));
+        Mail::to($event->infocenters)->send(new IdeaAceptadaParaComiteInfocenter($event->idea, $event->observaciones));
     }
 }

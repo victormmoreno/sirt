@@ -2,14 +2,14 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\{EstadoIdea, Idea, Nodo, Empresa, Entidad, Gestor};
+use App\Models\{EstadoIdea, Idea, Nodo, Empresa, Entidad, Movimiento};
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use App\Events\Idea\{IdeaHasReceived, IdeasWasAccepted, IdeasWasRejected};
 use App\User;
 use App\Notifications\Idea\{IdeaReceived, IdeaAceptadaParaComite};
-use phpDocumentor\Reflection\PseudoTypes\True_;
+use Session;
 
 class IdeaRepository
 {
@@ -52,7 +52,7 @@ class IdeaRepository
      * @return boolean
      * @author dum
      **/
-    public function aceptarPostulacion($idea)
+    public function aceptarPostulacion($idea, $request)
     {
         DB::beginTransaction();
         try {
@@ -67,11 +67,13 @@ class IdeaRepository
             foreach ($infocenters as $key => $infocenter) {
                 $emails_infocenter[$key+1] = $infocenter->email;
             }
-            event(new IdeasWasAccepted($idea, $infocenters));
+            event(new IdeasWasAccepted($idea, $infocenters, $request->txtobservacionesAceptacion));
 
             if (!$infocenters->isEmpty()) {
                 Notification::send($infocenters, new IdeaAceptadaParaComite($idea, auth()->user()));
             }
+            
+            $idea->registrarHistorialIdea(Movimiento::IsAprobar(), Session::get('login_role'), $request->txtobservacionesAceptacion, 'la postulación de la idea de proyecto');
             DB::commit();
             return true;
         } catch (\Throwable $th) {
@@ -92,25 +94,14 @@ class IdeaRepository
     {
         DB::beginTransaction();
         try {
-            // Crea un registro espejo de la idea de proyecto
-            // dd($idea->rutamodel);
-            $espejo = $idea->replicate();
-            $espejo->codigo_idea = $this->generarCodigoIdea($idea->nodo_id);
-            $espejo->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsRegistro())->first()->id;
-            // dd($espejo->rutamodel);
-            $espejo->push();
-            if ($idea->rutamodel != null) {
-                $espejo->rutamodel()->create([
-                    'ruta' => $idea->rutamodel->ruta,
-                ]);
-            }
             // Cambiar el estado de la idea original a rechazado por el articulador
             $idea->update([
                 'estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsRechazadoArticulador())->first()->id
             ]);
             // Envío de correo al talento y articulador con los motivos de porque se rechazó.
-            event(new IdeasWasRejected($espejo, $request->txtmotivosRechazo));
-
+            event(new IdeasWasRejected($idea, $request->txtmotivosRechazo));
+            
+            $idea->registrarHistorialIdea(Movimiento::IsNoAprobar(), Session::get('login_role'), $request->txtmotivosRechazo, 'la postulación de la idea de proyecto');
             DB::commit();
             return true;
         } catch (\Throwable $th) {
@@ -314,9 +305,15 @@ class IdeaRepository
                 "talento_id" => auth()->user()->talento->id,
                 "empresa_id" => $empresa_id,
                 "acuerdo_no_confidencialidad" => $valoresCondicionales['acuerdo_no_confidencialidad'],
-                "fecha_acuerdo_no_confidencialidad" => $valoresCondicionales['fecha_acuerdo_no_confidencialidad']
+                "fecha_acuerdo_no_confidencialidad" => $valoresCondicionales['fecha_acuerdo_no_confidencialidad'],
             ]);
-        
+
+            
+
+            // $idea->created_at = $row->created_at;
+            // $idea->updated_at = $row->update_at;
+            // $idea->save(['timestamps' => false]);
+            
             if ($request->input('txtlinkvideo') != null) {
                 $idea->rutamodel()->create([
                     'ruta' => $request->input('txtlinkvideo'),
@@ -386,9 +383,62 @@ class IdeaRepository
         }
     }
 
+    /**
+     * Genera un código diferente a la idea que se duplica
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    private function generarCodigoIdeaDuplicado($idea)
+    {
+        $nuevo_codigo = $idea->codigo_idea;
+        $nuevo_codigo = $nuevo_codigo . '-D' . rand(1, 9);
+        return $nuevo_codigo;
+    }
+
+    /**
+     * Duplicar idea de proyecto
+     *
+     * @param $request
+     * @param $id
+     * @return array
+     * @author dum
+     **/
+    public function duplicarIdea($request, $idea)
+    {
+        DB::beginTransaction();
+        try {
+            $duplicado = $idea->replicate();
+            $duplicado->codigo_idea = $this->generarCodigoIdeaDuplicado($idea);
+            $duplicado->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsRegistro())->first()->id;
+            $duplicado->push();
+            $idea->registrarHistorialIdea(Movimiento::IsDuplicar(), Session::get('login_role'), null, 'con el código de idea ' . $duplicado->codigo_idea);
+            if ($idea->rutamodel != null) {
+                $duplicado->rutamodel()->create([
+                    'ruta' => $idea->rutamodel->ruta,
+                ]);
+            }
+            DB::commit();
+            return [
+                'state' => true,
+                'msg' => 'La idea se ha duplicado exitosamente!',
+                'title' => 'Postulación exitosa!',
+                'type' => 'success'
+            ];
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return [
+                'state' => false,
+                'msg' => 'La idea no se ha duplicado!',
+                'title' => 'Postulación errónea!',
+                'type' => 'error'
+            ];
+        }
+    }
+
     public function enviarIdeaAlNodo($request, $idea)
     {
-        // dd($idea->validarAcuerdoConfidencialidad());
         // exit();
         DB::beginTransaction();
         try {
@@ -430,6 +480,7 @@ class IdeaRepository
             if (!$users->isEmpty()) {
                 Notification::send($users, new IdeaReceived($idea));
             }
+            $idea->registrarHistorialIdea(Movimiento::IsPostular(), Session::get('login_role'), null, 'al nodo ' . $idea->nodo->entidad->nombre);
             DB::commit();
             return [
                 'state' => true,

@@ -46,7 +46,8 @@ class TalentoRepository
             'fecha_terminacion',
             'tipo_talentos.nombre AS nombre_tipotalento',
             'gradosescolaridad.nombre AS nombre_gradoescolaridad',
-            'apellidos'
+            'apellidos',
+			'entidades.nombre AS nodo_nombre'
         )
             ->selectRaw('CONCAT(celular, "; ", users.telefono) AS contactos')
             ->selectRaw('CONCAT(ciudades.nombre, " - ", departamentos.nombre) AS ciudad_residencia')
@@ -63,6 +64,7 @@ class TalentoRepository
             ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
             ->join('gruposanguineos', 'gruposanguineos.id', '=', 'users.gruposanguineo_id')
             ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+			->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
             ->join('ciudades', 'ciudades.id', '=', 'users.ciudad_id')
             ->join('eps', 'eps.id', '=', 'users.eps_id')
             ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
@@ -107,7 +109,8 @@ class TalentoRepository
 		'fecha_terminacion',
 		'tipo_talentos.nombre AS nombre_tipotalento',
 		'gradosescolaridad.nombre AS nombre_gradoescolaridad',
-		'apellidos')
+		'apellidos',
+		'entidades.nombre AS nodo_nombre')
 		->selectRaw('CONCAT(celular, "; ", users.telefono) AS contactos')
 		->selectRaw('CONCAT(ciudades.nombre, " - ", departamentos.nombre) AS ciudad_residencia')
 		->selectRaw('IF(eps.nombre = "Otra", otra_eps, "No aplica") AS otra_eps')
@@ -123,6 +126,7 @@ class TalentoRepository
 		->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
 		->join('gruposanguineos', 'gruposanguineos.id', '=', 'users.gruposanguineo_id')
 		->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+		->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
 		->join('ciudades', 'ciudades.id', '=', 'users.ciudad_id')
 		->join('eps', 'eps.id', '=', 'users.eps_id')
 		->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')

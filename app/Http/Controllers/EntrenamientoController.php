@@ -37,10 +37,10 @@ class EntrenamientoController extends Controller
     {
         $update = $this->entrenamientoRepository->updateEvidencias($request, $id);
         if ($update) {
-            Alert::success('Modificación Exitosa!', 'Los entregables del entrenamiento se han modificado!')->showConfirmButton('Ok', '#3085d6');
+            Alert::success('Modificación Exitosa!', 'Los entregables del taller de fortalecimiento se han modificado!')->showConfirmButton('Ok', '#3085d6');
             return redirect('entrenamientos');
         } else {
-            Alert::error('Modificación Errónea!', 'Los entregables del entrenamiento no se han modificado!')->showConfirmButton('Ok', '#3085d6');
+            Alert::error('Modificación Errónea!', 'Los entregables del taller de fortalecimiento no se han modificado!')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
     }
@@ -53,11 +53,13 @@ class EntrenamientoController extends Controller
      */
     public function evidencias($id)
     {
-        $entrenamiento = $this->entrenamientoRepository->consultarEntrenamientoPorId($id);
-        if (\Session::get('login_role') == User::IsInfocenter()) {
-            return view('entrenamientos.infocenter.evidencias', [
+        $entrenamiento = $this->entrenamientoRepository->getById($id);
+        if (\Session::get('login_role') == User::IsArticulador()) {
+            return view('entrenamientos.articulador.evidencias', [
                 'entrenamiento' => $entrenamiento,
             ]);
+        } else {
+            abort('403');
         }
     }
 
@@ -182,7 +184,7 @@ class EntrenamientoController extends Controller
     {
         $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('nodo_id', auth()->user()->gestor->nodo_id)->whereHas('estadoIdea', 
         function ($query){
-            $query->where('nombre', EstadoIdea::IsRechazadoArticulador());
+            $query->whereIn('nombre', [EstadoIdea::IsRechazadoArticulador(), EstadoIdea::IsRegistro()]);
         })->get();
         if (Session::get('login_role') == User::IsArticulador()) {
             return view('entrenamientos.articulador.create', ['ideas' => $ideas]);

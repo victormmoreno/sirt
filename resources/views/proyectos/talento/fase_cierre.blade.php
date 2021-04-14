@@ -79,7 +79,7 @@
     e.preventDefault();
     Swal.fire({
     title: '¿Está seguro(a) de aprobar la fase de cierre de este proyecto?',
-    // text: "You won't be able to revert this!",
+    text: 'Al hacerlo estás aceptando y aprobando toda la información de esta fase, los documento adjuntos y las asesorias recibidas.',
     type: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',

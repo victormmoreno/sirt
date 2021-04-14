@@ -42,6 +42,22 @@ class Comite extends Model
     return ucfirst(strtolower(trim($observaciones)));
   }
 
+  public function historial()
+  {
+      return $this->morphMany(HistorialEntidad::class, 'model');
+  }
+
+  public function registrarHistorialComite($movimiento, $role, $comentario, $descripcion)
+  {
+      return $this->historial()->create([
+          'movimiento_id' => Movimiento::where('movimiento', $movimiento)->first()->id, 
+          'user_id' => auth()->user()->id,
+          'role_id' => Role::where('name', $role)->first()->id,
+          'comentarios' => $comentario,
+          'descripcion' => $descripcion
+        ]);
+  }
+
   /*=====  End of asesores eloquent  ======*/
 
   /*========================================

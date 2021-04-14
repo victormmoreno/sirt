@@ -1401,6 +1401,7 @@ class ProyectoRepository
       $proyecto->users_propietarios()->attach(request()->propietarios_user);
       $proyecto->empresas()->attach(request()->propietarios_empresas);
       $proyecto->gruposinvestigacion()->attach(request()->propietarios_grupos);
+      $proyecto->idea->registrarHistorialIdea(Movimiento::IsRegistrar(), Session::get('login_role'), null, 'como un PBT asociado con el código ' . $actividad->codigo_actividad);
 
       DB::commit();
       return true;

@@ -2,13 +2,24 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\{Entrenamiento, EntrenamientoIdea,  RutaModel};
-use Illuminate\Support\Facades\{DB, Storage};
+use App\Models\{Entrenamiento, EntrenamientoIdea,  RutaModel, Movimiento, EstadoIdea};
+use Illuminate\Support\Facades\{DB, Storage, Session};
 use Carbon\Carbon;
 
 class EntrenamientoRepository
 {
 
+    /**
+     * Consulta un entrenamiento por su id
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function getById(int $id)
+    {
+        return Entrenamiento::findOrFail($id);
+    }
     /**
      * Permite eliminar los archivos almacenados en la base de datos (por el id de un entrenamiento)
      * @param int id Id del archivo del entrenamiento del cual se le van a borrar los archivos (ruta de la base de datos)
@@ -162,6 +173,11 @@ class EntrenamientoRepository
                 "codigo_entrenamiento" => $codigo_entrenamiento
             ]);
             $entrenamiento->ideas()->sync($syncIdeas, false);
+            // Cambiar todas las ideas del entrenamiento a estado "En registro"
+            $entrenamiento->ideas()->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsRegistro())->first()->id]);
+            // Registra el historial de todas esas ideas
+            $this->registrarHistorialIdeaTaller($entrenamiento, Movimiento::IsRegistrar());
+            // $entrenamiento->ideas->registrarHistorialIdea(Movimiento::IsRegistrar(), Session::get('login_role'), null, 'en el taller de fortalecimiento ' . $codigo_entrenamiento . ' realizado el día ' . $request->input('txtfecha_sesion1'));
             DB::commit();
             return [
                 'state' => true,
@@ -177,6 +193,15 @@ class EntrenamientoRepository
                 'title' => 'Registro erróneo!',
                 'type' => 'error',
             ];
+        }
+    }
+
+    private function registrarHistorialIdeaTaller($entrenamiento, $movimiento)
+    {
+        foreach ($entrenamiento->ideas as $key => $idea) {
+            if ($movimiento == Movimiento::IsRegistrar()) {
+                $idea->registrarHistorialIdea(Movimiento::IsRegistrar(), Session::get('login_role'), null, 'en el taller de fortalecimiento ' . $entrenamiento->codigo_entrenamiento . ' realizado el día ' . $entrenamiento->fecha_sesion1);
+            }
         }
     }
 

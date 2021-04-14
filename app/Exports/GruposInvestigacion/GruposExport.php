@@ -16,7 +16,7 @@ class GruposExport extends FatherExport
         $this->setQuery($query);
         $this->setTitle($title);
         $this->setCount($this->getQuery()->count() + 1);
-        $this->setRangeHeadingCell('A1:H1');
+        $this->setRangeHeadingCell('A1:I1');
     }
 
     public function registerEvents(): array
@@ -41,7 +41,7 @@ class GruposExport extends FatherExport
         $event->sheet->getStyle($this->getRangeHeadingCell())->getFont()->setSize(14)->setBold(1);
         // Estilos para los registros de la consulta
         $init = 'A';
-        for ($i=0; $i < 8 ; $i++) {
+        for ($i=0; $i < 9 ; $i++) {
         $temp = $init++;
         $coordenadas = $temp . '1:'. $temp . $this->getCount();
         $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArray());

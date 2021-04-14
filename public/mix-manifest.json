@@ -1,15 +1,11 @@
 {
-<<<<<<< HEAD
-    "/js/app.js": "/js/app.js?id=01daf36a1cda5eba52ba",
-    "/js/app.min.js": "/js/app.min.js?id=01daf36a1cda5eba52ba",
+    "/js/app.js": "/js/app.js?id=516a67847d9c50e8dae1",
+    "/js/app.min.js": "/js/app.min.js?id=516a67847d9c50e8dae1",
     "/css/libs.css": "/css/libs.css?id=09b9b3848ff8d443713b",
     "/css/libs.min.css": "/css/libs.min.css?id=09b9b3848ff8d443713b",
     "/js/libs.js": "/js/libs.js?id=4b13c0ed75957f978585",
     "/js/libs.min.js": "/js/libs.min.js?id=4b13c0ed75957f978585",
-    "/js/app2.js": "/js/app2.js?id=63a5bc9ce10211c815bb",
-    "/js/app2.min.js": "/js/app2.min.js?id=63a5bc9ce10211c815bb",
+    "/js/app2.js": "/js/app2.js?id=6454d9c25bb4f5b10a81",
+    "/js/app2.min.js": "/js/app2.min.js?id=6454d9c25bb4f5b10a81",
     "/js/web.js": "/js/web.js?id=fc671af1b3ebe558665a"
-=======
-    "/js/app.js": "/js/app.js"
->>>>>>> 9f9c469343babf747a28ec38dfe8e8a9bc6e6ca6
 }

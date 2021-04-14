@@ -156,11 +156,10 @@ function detallesIdeasDelEntrenamiento(id){
     $("#ideasEntrenamiento").empty();
     if (respuesta != null ) {
       $("#fechasEntrenamiento").empty();
-      $("#fechasEntrenamiento").append("<span class='cyan-text text-darken-3'>Fecha de la Primera Sesion del Entrenamiento: </span>"+respuesta[0].fecha_sesion1+"<br>");
-      $("#fechasEntrenamiento").append("<span class='cyan-text text-darken-3'>Fecha de la Segunda Sesion del Entrenamiento: </span>"+respuesta[0].fecha_sesion2+"");
+      $("#fechasEntrenamiento").append("<span class='cyan-text text-darken-3'>Fecha del taller de fortalecimiento: </span>"+respuesta[0].fecha_sesion1+"<br>");
       $.each(respuesta, function(i, item) {
         $("#ideasEntrenamiento").append("<tr><td>"+item.codigo_idea+" - "+item.nombre_proyecto+
-          "</td><td>"+item.confirmacion+"</td><td>"+item.convocado+"</td><td>"+item.canvas+"</td><td>"+item.asistencia1+"</td><td>"+item.asistencia2+"</td></tr>");
+          "</td><td>"+item.confirmacion+"</td><td>"+item.asistencia1+"</td></tr>");
       });
       $('#modalIdeasEntrenamiento').openModal();
     }
@@ -681,6 +680,24 @@ function confirmacionPostulacion(e){
   }).then((result) => {
     if (result.value) {
       document.frmEnviarIdeaTalento.submit();
+    }
+  })
+}
+
+function confirmacionDuplicacion(e){
+  e.preventDefault();
+  Swal.fire({
+  title: '¿Está seguro(a) de duplicar esta idea de proyecto?',
+  text: "Esto se recomienda hacer en caso de que se quiera continuar con el proceso en tecnoparque.",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  cancelButtonText: 'Cancelar',
+  confirmButtonText: 'Sí!'
+  }).then((result) => {
+    if (result.value) {
+      document.frmDuplicarIdea.submit();
     }
   })
 }

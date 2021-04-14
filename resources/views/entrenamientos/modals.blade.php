@@ -7,11 +7,8 @@
             <thead>
             <tr>
                 <th>Idea de Proyecto</th>
-                <th>¿Confirmación a los Entrenamientos?</th>
-                <th>¿Convocado a Comité?</th>
-                <th>Canvas</th>
-                <th>Asistencia al Primer Entrenamiento</th>
-                <th>Asistencia al Segundo Entrenamiento</th>
+                <th>¿Confirmación de asistencia?</th>
+                <th>Asistió al taller?</th>
             </tr>
             </thead>
             <tbody id="ideasEntrenamiento">

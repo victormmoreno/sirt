@@ -129,13 +129,11 @@
           <br>
           <ul class="collection">
               <li class="collection-item">
-                <b>Inhabilitado:</b> La idea ya no se podrá registrar en un futuro entrenamiento/taller de fortalecimiento y/o comité.
+                <b>Rechazado por comité:</b> La idea ya no se podrá registrar en un futuro taller de fortalecimiento y/o comité, pero el 
+                talento tendrá la opción de hacer una copia de la idea de proyecto en caso de que quiera continuar con el proceso.
               </li>
               <li class="collection-item">
-                <b>Inicio:</b> La idea se puede registrar en un futuro entrenamiento/taller de fortalecimiento ó en otro comité.
-              </li>
-              <li class="collection-item">
-                <b>Reprogramado:</b> La idea de puede reagendar a un próximo comité pero ya no se podrá asociar a un entrenamiento/taller de fortalecimiento.
+                <b>Reprogramado:</b> La idea de puede reagendar a un próximo comité pero ya no se podrá asociar a un taller de fortalecimiento.
               </li>
           </ul>
       </p>
