@@ -72,7 +72,7 @@
       </li>
       <li>
         <a href="{{route('entrenamientos')}}" class="{{setActiveRouteActivePage('entrenamientos')}}" rel="canonical" title="Entrenamientos">
-          <i class="material-icons {{setActiveRouteActiveIcon('entrenamientos')}}">library_books</i>Entrenamientos
+          <i class="material-icons {{setActiveRouteActiveIcon('entrenamientos')}}">library_books</i>Taller de fortalecimiento
         </a>
       </li>
       <li class="no-padding">
