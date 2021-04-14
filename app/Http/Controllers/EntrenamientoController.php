@@ -58,9 +58,18 @@ class EntrenamientoController extends Controller
             return view('entrenamientos.articulador.evidencias', [
                 'entrenamiento' => $entrenamiento,
             ]);
-        } else {
-            abort('403');
         }
+        if (\Session::get('login_role') == User::IsDinamizador()) {
+            return view('entrenamientos.dinamizador.evidencias', [
+                'entrenamiento' => $entrenamiento,
+            ]);
+        }
+        if (\Session::get('login_role') == User::IsAdministrador()) {
+            return view('entrenamientos.dinamizador.evidencias', [
+                'entrenamiento' => $entrenamiento,
+            ]);
+        }
+        abort('403');
     }
 
 
@@ -141,7 +150,12 @@ class EntrenamientoController extends Controller
             case User::IsArticulador():
                 $nodo_id = auth()->user()->gestor->nodo_id;
                 break;
-            
+            case User::IsDinamizador():
+                $nodo_id = auth()->user()->dinamizador->nodo_id;
+                break;
+            case User::IsAdministrador():
+                $nodo_id = $request->filter_nodo;
+                break;
             default:
                 # code...
                 break;

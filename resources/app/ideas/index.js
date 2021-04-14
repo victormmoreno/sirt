@@ -153,6 +153,11 @@ var idea ={
                     name: 'details',
                     orderable: false
                 },
+                {
+                    data: 'info',
+                    name: 'info',
+                    orderable: false
+                },
 
             ],
         });
