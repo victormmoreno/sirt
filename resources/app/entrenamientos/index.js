@@ -42,27 +42,15 @@ $(document).ready(function() {
         name: 'fecha_sesion1',
       },
       {
-        data: 'fecha_sesion2',
-        name: 'fecha_sesion2',
-      },
-      {
-        data: 'correos',
-        name: 'correos',
-      },
-      {
-        width: '8%',
-        data: 'fotos',
-        name: 'fotos',
-      },
-      {
-        width: '8%',
-        data: 'listado_asistencia',
-        name: 'listado_asistencia',
-      },
-      {
         width: '8%',
         data: 'details',
         name: 'details',
+        orderable: false
+      },
+      {
+        width: '8%',
+        data: 'evidencias',
+        name: 'evidencias',
         orderable: false
       },
     ],

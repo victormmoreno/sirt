@@ -113,16 +113,6 @@
             </div>
           </div>
         </div>
-        <div id="modal1" class="modal modal-fixed-footer">
-          <div class="modal-content">
-            <center><h4 id="titulo" class="center-aling"></h4></center>
-            <div class="divider"></div>
-            <div id="detalle_idea"></div>
-          </div>
-          <div class="modal-footer  white-text">
-            <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
-          </div>
-        </div>
       </div>
     </div>
   </div>
