@@ -21,8 +21,10 @@ Por favor, tratar de realizar la debida gestión para realizar el comité.<br>
       <h3 class="subtittle-value">{{$idea->nombre_proyecto}}</h3>
       <h3 class="subtittle">Talento: </h3>
       <h3 class="subtittle-value">{{$idea->talento->user->nombres}} {{$idea->talento->user->apellidos}} - {{$idea->talento->user->email}}</h3>
-      {{-- <h2>Descripción</h2>
-      <small align="justify"><strong>{{$idea->descripcion}}</strong></small> --}}
+      @if ($observaciones != null)
+      <h2>El articulador dejó las siguientes observaciones</h2>
+      <small align="justify"><strong>{{$observaciones}}</strong></small>
+      @endif
   </center>
 	
 @endcomponent

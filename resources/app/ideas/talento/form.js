@@ -217,27 +217,12 @@ function mensajesIdeaForm(data) {
             window.location.href = data.url;
         }, 5000);
     }
-    // if (data.state == 'no_registro') {
-    //     title = "Registro Erróneo";
-    //     text = "La idea de proyecto no se ha registrado, por favor inténtalo de nuevo";
-    //     type = "warning";
-    //     pintarMensajeIdeaForm(title, text, type);
-    // }
+
     if (data.state == 'update') {
-        // title = "Modificación Exitosa";
-        // text = "La idea de proyecto ha sido modificada satisfactoriamente.<br>Aunque la idea se ha modificado, debe postularse para que se pueda iniciar el proceso de proyecto con tecnoparque";
-        // type = "success";
-        // pintarMensajeIdeaForm(title, text, type);
         setTimeout(function () {
             window.location.href = data.url;
         }, 5000);
     }
-    // if (data.state == 'no_update') {
-    //     title = "Modificación Errónea";
-    //     text = "La idea de proyecto no ha sido modificada, por favor intentalo de nuevo";
-    //     type = "warning";
-    //     pintarMensajeIdeaForm(title, text, type);
-    // }
 };
 
 

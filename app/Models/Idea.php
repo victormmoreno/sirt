@@ -118,6 +118,17 @@ class Idea extends Model
             ->where('tipo_idea', $this->IsEmprendedor());
     }
 
+    public function registrarHistorialIdea($movimiento, $role, $comentario, $descripcion)
+    {
+        return $this->historial()->create([
+            'movimiento_id' => Movimiento::where('movimiento', $movimiento)->first()->id, 
+            'user_id' => auth()->user()->id,
+            'role_id' => Role::where('name', $role)->first()->id,
+            'comentarios' => $comentario,
+            'descripcion' => $descripcion
+          ]);
+    }
+
     public function validarAcuerdoConfidencialidad()
     {
         // return $this;

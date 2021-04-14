@@ -69,3 +69,21 @@ function confirmacionPostulacion(e){
     }
   })
 }
+
+function confirmacionDuplicacion(e){
+  e.preventDefault();
+  Swal.fire({
+  title: '¿Está seguro(a) de duplicar esta idea de proyecto?',
+  text: "Esto se recomienda hacer en caso de que se quiera continuar con el proceso en tecnoparque.",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  cancelButtonText: 'Cancelar',
+  confirmButtonText: 'Sí!'
+  }).then((result) => {
+    if (result.value) {
+      document.frmDuplicarIdea.submit();
+    }
+  })
+}

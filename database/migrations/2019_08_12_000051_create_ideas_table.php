@@ -30,7 +30,7 @@ class CreateIdeasTable extends Migration
             $table->string('correo_contacto', 100)->nullable()->default(null);
             $table->string('telefono_contacto', 11)->nullable()->default(null);
             $table->string('nombre_proyecto', 200);
-            $table->string('codigo_idea', 20);
+            $table->string('codigo_idea', 40);
             $table->tinyInteger('aprendiz_sena')->default('1');
             $table->tinyInteger('pregunta1')->default('1');
             $table->tinyInteger('pregunta2')->default('1');

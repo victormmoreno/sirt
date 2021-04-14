@@ -3,9 +3,9 @@
 namespace App\Repositories\Repository;
 
 use App\Repositories\Repository\UserRepository\DinamizadorRepository;
-use App\Models\{Comite, EstadoIdea, EstadoComite, Idea};
+use App\Models\{Comite, EstadoIdea, EstadoComite, Idea, Movimiento, Gestor};
 use App\Events\Comite\{AgendamientoWasRegistered, ComiteWasRegistered, GestoresWereRegistered};
-use Illuminate\Support\Facades\{DB, Notification};
+use Illuminate\Support\Facades\{DB, Notification, Session};
 use App\Notifications\Comite\ComiteRealizado;
 use App\Http\Controllers\PDF\PdfComiteController;
 use Carbon\Carbon;
@@ -170,6 +170,7 @@ class ComiteRepository
             $comite->ideas()->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsConvocado())->first()->id]);
             $syncIdeas = $this->arraySyncIdeasAgendamiento($request);
             $syncGestores = $this->arraySyncGestoresAgendamiento($request);
+            $this->registrarHistorialIdeasComite($comite, Movimiento::IsRegistrar(), 'cambio', $syncIdeas);
             $comite->ideas()->sync($syncIdeas, true);
             $comite->gestores()->sync($syncGestores, true);
             $comite->ideas()->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsProgramado())->first()->id]);
@@ -193,12 +194,13 @@ class ComiteRepository
     {
         DB::beginTransaction();
         try {
+            
             $comite = Comite::findOrFail($id);
             $comite->update([
                 'observaciones' => $request->get('txtobservacionescomite'),
                 'estado_comite_id' => EstadoComite::where('nombre', 'Realizado')->first()->id
             ]);
-
+    
             $this->reiniciarCamposPivot($comite, $request);
             // Cambia los valores del campo asistencia a las ideas que asistieron.
             $this->updateCamposPivotBoolean($comite, $request, 'txtasistido', 'asistencia');
@@ -208,7 +210,10 @@ class ComiteRepository
             $this->updateObservacionesIdea($comite, $request);
             // Cambia el estado de las ideas de proyecto
             $this->updateEstadoIdeas($comite, $request);
-
+            // Registra el historial de las ideas de proyecto
+            $this->registrarHistorialIdeasComite($comite, Movimiento::IsCalificar(), 'registro_calificacion', null, $request);
+            // Registrar el historial del comité
+            $comite->registrarHistorialComite(Movimiento::IsCalificar(), Session::get('login_role'), null, 'el comité de ideas');
             DB::commit();
             return true;
         } catch (\Throwable $th) {
@@ -231,6 +236,10 @@ class ComiteRepository
             $comite = Comite::findOrFail($id);
             $comite->update(['estado_comite_id' => EstadoComite::where('nombre', 'Proyectos asignados')->first()->id]);
             $this->asignarIdeasAGestores($comite, $request);
+            // Registra el historial de las ideas de proyecto
+            $this->registrarHistorialIdeasComite($comite, Movimiento::IsCalificar(), 'asignación', null, $request);
+            // Registrar el historial del comité
+            $comite->registrarHistorialComite(Movimiento::IsCalificar(), Session::get('login_role'), null, 'el comité de ideas');
             DB::commit();
             return true;
         } catch (\Throwable $th) {
@@ -268,9 +277,9 @@ class ComiteRepository
         foreach ($comite->ideas as $key => $value) {
             $estado_idea = EstadoIdea::where('nombre', $request->get('txtestadoidea')[$key])->first();
             $value->update(['estadoidea_id' => $estado_idea->id]);
-            if ($estado_idea->nombre == EstadoIdea::IsRechazadoComite()) {
-                $this->espejoIdeasRechazadasComite($value);
-            }
+            // if ($estado_idea->nombre == EstadoIdea::IsRechazadoComite()) {
+            //     $this->espejoIdeasRechazadasComite($value);
+            // }
         }
     }
 
@@ -282,18 +291,18 @@ class ComiteRepository
      * @return void
      * @author dum
      **/
-    private function espejoIdeasRechazadasComite($idea)
-    {
-        $espejo = $idea->replicate();
-        $espejo->codigo_idea = $this->getIdeaRepository()->generarCodigoIdea($idea->nodo_id);
-        $espejo->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsRegistro())->first()->id;
-        $espejo->push();
-        if ($idea->rutamodel != null) {
-            $espejo->rutamodel()->create([
-                'ruta' => $idea->rutamodel->ruta,
-            ]);
-        }
-    }
+    // private function espejoIdeasRechazadasComite($idea)
+    // {
+    //     $espejo = $idea->replicate();
+    //     $espejo->codigo_idea = $this->getIdeaRepository()->generarCodigoIdea($idea->nodo_id);
+    //     $espejo->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsRegistro())->first()->id;
+    //     $espejo->push();
+    //     if ($idea->rutamodel != null) {
+    //         $espejo->rutamodel()->create([
+    //             'ruta' => $idea->rutamodel->ruta,
+    //         ]);
+    //     }
+    // }
 
     /**
      * Cambia el valor de los campos de la tabla pivot comite_idea
@@ -400,23 +409,88 @@ class ComiteRepository
         try {
             $syncIdeas = array();
             $syncGestores = array();
+            $syncIdeas = $this->arraySyncIdeasAgendamiento($request);
+            $syncGestores = $this->arraySyncGestoresAgendamiento($request);
             $codigo_comite = $this->generarCodigoComite($request);
             $comite = Comite::create([
                 'codigo' => $codigo_comite,
                 'fechacomite' => $request->input('txtfechacomite_create'),
                 'estado_comite_id' => EstadoComite::where('nombre', 'Programado')->first()->id
             ]);
-            $syncIdeas = $this->arraySyncIdeasAgendamiento($request);
-            $syncGestores = $this->arraySyncGestoresAgendamiento($request);
             $comite->ideas()->sync($syncIdeas, false);
             $comite->gestores()->sync($syncGestores, false);
             $comite->ideas()->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsProgramado())->first()->id]);
+            $this->registrarHistorialIdeasComite($comite, Movimiento::IsRegistrar(), 'registro');
+            $comite->registrarHistorialComite(Movimiento::IsRegistrar(), Session::get('login_role'), null, 'el comité de ideas programado para el día ' . $comite->fechacomite->isoFormat('DD/MM/YYYY'));
             DB::commit();
             return true;
         } catch (\Throwable $th) {
             DB::rollback();
             return false;
         }
+    }
+
+    /**
+     * Registrar el historial de cuando una idea es registrada en un comité
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    private function registrarHistorialIdeasComite($comite, $movimiento, $fase, $nuevas = [], $request = null)
+    {
+
+        switch ($fase) {
+            case 'registro':
+                foreach ($comite->ideas as $key => $idea) {
+                    if ($movimiento == Movimiento::IsRegistrar()) {
+                        $idea->registrarHistorialIdea(Movimiento::IsRegistrar(), Session::get('login_role'), null, 'en el comité de ideas ' . $comite->codigo . ' programado para el día ' . $comite->fechacomite->isoFormat('DD/MM/YYYY'));
+                    }
+                }
+                break;
+
+            case 'cambio':
+                $ideas_ant = array();
+                foreach ($comite->ideas as $id => $idea) {
+                    $ideas_ant[$id] = array('hora' => $idea->pivot->hora, 'direccion' => $idea->pivot->direccion, 'idea_id' => $idea->id);
+                }
+                $diff = arrayRecursiveDiff($nuevas, $ideas_ant);
+                foreach ($diff as $key => $value) {
+                    $idea = Idea::find($value['idea_id']);
+                    $idea->registrarHistorialIdea(Movimiento::IsRegistrar(), Session::get('login_role'), null, 'en el comité de ideas ' . $comite->codigo . ' programado para el día ' . $comite->fechacomite->isoFormat('DD/MM/YYYY'));
+                }
+                break;
+
+            case 'registro_calificacion':
+                foreach ($comite->ideas as $key => $idea) {
+                    if ($request->get('txtestadoidea')[$key] == EstadoIdea::IsRechazadoComite()) {
+                        $idea->registrarHistorialIdea(Movimiento::IsCalificar(), Session::get('login_role'), null, 'la idea en el comité ' . $comite->codigo . ' y esta fue rechazada');
+                    }
+                    if ($request->get('txtestadoidea')[$key] == EstadoIdea::IsReprogramado()) {
+                        $idea->registrarHistorialIdea(Movimiento::IsCalificar(), Session::get('login_role'), null, 'en el comité de ideas ' . $comite->codigo . ' y esta fue reprogramada');
+                    }
+                    if ($request->get('txtestadoidea')[$key] == EstadoIdea::IsAdmitido()) {
+                        $idea->registrarHistorialIdea(Movimiento::IsCalificar(), Session::get('login_role'), null, 'en el comité de ideas ' . $comite->codigo . ' y esta fue admitida');
+                    }
+                }
+                break;
+
+            case 'asignación':
+
+                foreach ($comite->ideas as $key => $idea) {
+                    if ($idea->pivot->admitido == 1) {
+                        $idea->update(['gestor_id' => $request->txtgestores[$key]]);
+                        $idea->registrarHistorialIdea(Movimiento::IsAsignar(), Session::get('login_role'), null, $idea->gestor->user->nombres . ' ' . $idea->gestor->user->apellidos);
+                    }
+                }
+
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+
     }
 
     /**
@@ -430,6 +504,8 @@ class ComiteRepository
     {
         DB::beginTransaction();
         try {
+            $gestor = Gestor::find($request->txtgestor_id);
+            $idea->registrarHistorialIdea(Movimiento::IsCambiar(), Session::get('login_role'), null, $idea->gestor->user->nombres . ' ' . $idea->gestor->user->apellidos . ' a ' . $gestor->user->nombres . ' ' . $gestor->user->apellidos);
             $idea->update([
                 'gestor_id' => $request->txtgestor_id
             ]);

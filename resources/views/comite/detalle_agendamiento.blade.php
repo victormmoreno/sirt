@@ -1,4 +1,6 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
+@include('comite.historial_cambios')
+<div class="divider"></div>
 <div class="row no-m-t no-m-b">
     <div class="col s12 m12 l12">
         <div class="mailbox-view">

@@ -140,12 +140,12 @@ class IdeaController extends Controller
 
     }
 
-    public function aceptarPostulacionIdea($id)
+    public function aceptarPostulacionIdea(Request $request, $id)
     {
         $idea = $this->ideaRepository->findByid($id);
         $this->authorize('show', $idea);
         // dd($id);
-        $update = $this->ideaRepository->aceptarPostulacion($idea);
+        $update = $this->ideaRepository->aceptarPostulacion($idea, $request);
         if ($update) {
             Alert::success('Postulación aceptada!', 'La postulación de la idea se ha aceptado en el nodo!')->showConfirmButton('Ok', '#3085d6');
             return redirect('idea');
@@ -236,12 +236,31 @@ class IdeaController extends Controller
         return $this->datatableIdeas($ideas);
     }
 
+    /**
+     * Duplica la idea de proyecto por parte del talento
+     *
+     * @param int $id Id de la idea de proyecto
+     * @return Response
+     * @author dum
+     **/
+    public function duplicarIdeaRechazada(Request $request, $id)
+    {
+        $idea = $this->ideaRepository->findByid($id);
+        $resultado = $this->ideaRepository->duplicarIdea($request, $idea);
+        alert($resultado['title'], $resultado['msg'], $resultado['type'])->showConfirmButton('Ok', '#3085d6');;
+        if ($resultado['state']) {
+            return redirect('idea');
+        } else {
+            return back();
+        }
+    }
+
     public function datatableIdeasTalento(Request $request)
     {
         $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('talento_id', auth()->user()->talento->id)
         ->whereHas('estadoIdea', 
         function ($query){
-            $query->whereNotIn('nombre', [EstadoIdea::IsRechazadoArticulador(), EstadoIdea::IsRechazadoComite()]);
+            $query->whereNotIn('nombre', [EstadoIdea::IsRechazadoArticulador()]);
         })->get();
         return $this->datatableIdeas($ideas);
     }

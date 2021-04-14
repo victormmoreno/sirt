@@ -2,13 +2,24 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\{Entrenamiento, EntrenamientoIdea,  RutaModel};
-use Illuminate\Support\Facades\{DB, Storage};
+use App\Models\{Entrenamiento, EntrenamientoIdea,  RutaModel, Movimiento, EstadoIdea};
+use Illuminate\Support\Facades\{DB, Storage, Session};
 use Carbon\Carbon;
 
 class EntrenamientoRepository
 {
 
+    /**
+     * Consulta un entrenamiento por su id
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function getById(int $id)
+    {
+        return Entrenamiento::findOrFail($id);
+    }
     /**
      * Permite eliminar los archivos almacenados en la base de datos (por el id de un entrenamiento)
      * @param int id Id del archivo del entrenamiento del cual se le van a borrar los archivos (ruta de la base de datos)
@@ -137,39 +148,76 @@ class EntrenamientoRepository
     public function generarCodigoEntrenamiento()
     {
         $anho = Carbon::now()->isoFormat('YYYY');
-        $tecnoparque = sprintf("%02d", auth()->user()->infocenter->nodo_id);
+        $tecnoparque = sprintf("%02d", auth()->user()->gestor->nodo_id);
         $id = Entrenamiento::selectRaw('MAX(id+1) AS max')->get()->last();
         $id->max == null ? $id->max = 1 : $id->max = $id->max;
         $id->max = sprintf("%04d", $id->max);
-        $infocenter = sprintf("%03d", auth()->user()->infocenter->id);
+        $infocenter = sprintf("%03d", auth()->user()->gestor->id);
         $codigo_entrenamiento = 'E' . $anho . '-' . $tecnoparque . $infocenter . '-' . $id->max;
         return $codigo_entrenamiento;
     }
 
-    // Hace el registro del entrenamiento
-    public function store($request)
-    {
-        $codigo_entrenamiento = $this->generarCodigoEntrenamiento();
-        return Entrenamiento::create([
-            "fecha_sesion1" => $request->input('txtfecha_sesion1'),
-            "fecha_sesion2" => $request->input('txtfecha_sesion2'),
-            "codigo_entrenamiento" => $codigo_entrenamiento,
-        ]);
-    }
-
     // Hace el registro en la tabla entrenamiento_idea
     // Se hace la validacion con operadores ternarios para evitar que el campo quede null
-    public function storeEntrenamientoIdea($value, $idEntrenamiento)
+    public function storeEntrenamiento($request)
     {
-        return EntrenamientoIdea::create([
-            "entrenamiento_id" => $idEntrenamiento,
-            "idea_id" => $value['id'],
-            "confirmacion" => isset($value['Confirm']) ? 1 : 0,
-            "canvas" => isset($value['Canvas']) ? 1 : 0,
-            "asistencia1" => isset($value['AssistF']) ? 1 : 0,
-            "asistencia2" => isset($value['AssistS']) ? 1 : 0,
-            "convocado_csibt" => isset($value['Convocado']) ? 1 : 0,
-        ]);
+        DB::beginTransaction();
+        try {
+            
+            $codigo_entrenamiento = $this->generarCodigoEntrenamiento();
+            $syncIdeas = array();
+            $syncIdeas = $this->arraySyncIdeasTaller($request);
+            $entrenamiento = Entrenamiento::create([
+                "fecha_sesion1" => $request->input('txtfecha_sesion1'),
+                "fecha_sesion2" => $request->input('txtfecha_sesion1'),
+                "codigo_entrenamiento" => $codigo_entrenamiento
+            ]);
+            $entrenamiento->ideas()->sync($syncIdeas, false);
+            // Cambiar todas las ideas del entrenamiento a estado "En registro"
+            $entrenamiento->ideas()->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsRegistro())->first()->id]);
+            // Registra el historial de todas esas ideas
+            $this->registrarHistorialIdeaTaller($entrenamiento, Movimiento::IsRegistrar());
+            // $entrenamiento->ideas->registrarHistorialIdea(Movimiento::IsRegistrar(), Session::get('login_role'), null, 'en el taller de fortalecimiento ' . $codigo_entrenamiento . ' realizado el día ' . $request->input('txtfecha_sesion1'));
+            DB::commit();
+            return [
+                'state' => true,
+                'msg' => 'El taller de fortalecimiento se registró exitosamente!',
+                'title' => 'Registro exitoso!',
+                'type' => 'success',
+            ];
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return [
+                'state' => false,
+                'msg' => 'El taller de fortalecimiento no se ha registrado!',
+                'title' => 'Registro erróneo!',
+                'type' => 'error',
+            ];
+        }
+    }
+
+    private function registrarHistorialIdeaTaller($entrenamiento, $movimiento)
+    {
+        foreach ($entrenamiento->ideas as $key => $idea) {
+            if ($movimiento == Movimiento::IsRegistrar()) {
+                $idea->registrarHistorialIdea(Movimiento::IsRegistrar(), Session::get('login_role'), null, 'en el taller de fortalecimiento ' . $entrenamiento->codigo_entrenamiento . ' realizado el día ' . $entrenamiento->fecha_sesion1);
+            }
+        }
+    }
+
+        /**
+     * Retorna array con los datos que se van a registrar en la tabla intermedia
+     * @param $request Datos del formulario
+     * @return array
+     * @author dum
+     */
+    private function arraySyncIdeasTaller($request)
+    {
+        $syncData = array();
+        foreach ($request->get('ideas_taller') as $id => $value) {
+            $syncData[$id] = array('confirmacion' => $request->confirmaciones[$id], 'asistencia1' => $request->asistencia[$id], 'idea_id' => $value);
+        }
+        return $syncData;
     }
 
     // Consulta los entrenamientos que se hicieron en la fecha de la primera y segunda sesion

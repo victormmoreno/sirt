@@ -15,7 +15,7 @@ class TalentoUserExport extends FatherExport
         $this->setTitle($title);
         $this->setQuery($query);
         $this->setCount($this->getQuery()->count() + 1);
-        $this->setRangeHeadingCell('A1:W1');
+        $this->setRangeHeadingCell('A1:X1');
     }
 
     public function registerEvents(): array
@@ -40,7 +40,7 @@ class TalentoUserExport extends FatherExport
         // Estilos para los nombres de las columnas
         $event->sheet->getStyle($this->getRangeHeadingCell())->getFont()->setSize(14)->setBold(1);
         $init = 'A';
-        for ($i=0; $i < 23 ; $i++) {
+        for ($i=0; $i < 24 ; $i++) {
         $temp = $init++;
         $coordenadas = $temp . '1:'. $temp . $this->getCount();
         $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArray());
