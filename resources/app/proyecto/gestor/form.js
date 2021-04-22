@@ -194,9 +194,13 @@ function ideaProyectoAsociadaConExito(codigo, nombre) {
 
 
 // Prepara un string con la fila que se va a pintar en la tabla de los talentos que participaran en el proyecto
-function prepararFilaEnLaTablaDeTalentos(ajax) { // El ajax.talento.id es el id del TALENTO, no del usuario
+function prepararFilaEnLaTablaDeTalentos(ajax, isInterlocutor) {
+    let talentInterlocutor = null;
+    if(isInterlocutor){
+        talentInterlocutor = "checked";
+    }// El ajax.talento.id es el id del TALENTO, no del usuario
     let idTalento = ajax.talento.id;
-    let fila = '<tr class="selected" id=talentoAsociadoAProyecto' + idTalento + '>' + '<td><input type="radio" class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.talento.documento + ' - ' + ajax.talento.talento + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarTalentoDeProyecto_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let fila = '<tr class="selected" id=talentoAsociadoAProyecto' + idTalento + '>' + '<td><input type="radio" '+ talentInterlocutor +' class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.talento.documento + ' - ' + ajax.talento.talento + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarTalentoDeProyecto_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
@@ -227,14 +231,14 @@ function prepararFilaEnLaTablaDePropietarios_Grupos(ajax) { // El ajax.user.id e
 }
 
 // Pinta el talento en la tabla de los talentos que participarán en el proyecto
-function pintarTalentoEnTabla_Fase_Inicio(id) {
+function pintarTalentoEnTabla_Fase_Inicio(id, isInterlocutor) {
     $.ajax({
         dataType: 'json',
         type: 'get',
         url: '/usuario/talento/consultarTalentoPorId/' + id
     }).done(function (ajax) {
 
-        let fila = prepararFilaEnLaTablaDeTalentos(ajax);
+        let fila = prepararFilaEnLaTablaDeTalentos(ajax, isInterlocutor);
         $('#detalleTalentosDeUnProyecto_Create').append(fila);
         talentoSeAsocioAlProyecto();
     });
@@ -258,7 +262,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Empresa(nit) 
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/empresa/ajaxDetallesDeUnaEmpresa/' + nit + '/nit' 
+        url: '/empresa/ajaxDetallesDeUnaEmpresa/' + nit + '/nit'
     }).done(function (ajax) {
         let fila = prepararFilaEnLaTablaDePropietarios_Empresa(ajax);
         $('#propiedadIntelectual_Empresas').append(fila);
@@ -358,11 +362,11 @@ function eliminarPropietarioDeUnProyecto_FaseInicio_Grupo(index) {
 
 // Método para agregar talentos a un proyecto
 // El parametro recibido es el id de la tabla talentos
-function addTalentoProyecto(id) {
+function addTalentoProyecto(id, isInterloculor) {
     if (noRepeat(id) == false) {
         talentoYaSeEncuentraAsociado();
     } else {
-        pintarTalentoEnTabla_Fase_Inicio(id);
+        pintarTalentoEnTabla_Fase_Inicio(id, isInterloculor);
     }
 }
 
@@ -398,12 +402,36 @@ function addGrupoPropietario(id) {
 // Asocia una idea de proyecto al registro de un proyecto
 function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
     $('#txtidea_id').val(id);
-    $('#ideasDeProyectoConEmprendedores_modal').closeModal();
+    
+
+    $.ajax({
+        dataType: 'json',
+        type: 'get',
+        url: '/idea/show/' + id
+    }).done(function (response) {
+        
+        if(response.data.idea =! null){
+            if(response.data.talento != null){
+
+                addTalentoProyecto(response.data.talento.id, true);
+                addPersonaPropiedad(response.data.talento.user.id);
+            }
+            if(response.data.empresa != null){
+                
+                addEntidadEmpresa(response.data.empresa.nit);
+            }
+            $('#ideasDeProyectoConEmprendedores_modal').closeModal();
+
+        }
+        
+        console.log(response);
+    });
     ideaProyectoAsociadaConExito(codigo, nombre);
     $('#txtnombreIdeaProyecto_Proyecto').val(codigo + " - " + nombre);
     $('#txtnombre').val(nombre);
     $("label[for='txtnombreIdeaProyecto_Proyecto']").addClass('active');
     $("label[for='txtnombre']").addClass('active');
+    
 }
 
 // Consultas las ideas de proyecto que fueron aprobadas en el comité

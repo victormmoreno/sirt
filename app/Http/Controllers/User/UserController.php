@@ -348,17 +348,13 @@ class UserController extends Controller
             ]);
         } else {
             if ($user != null) {
-                
+
                 if(($user->isUserExperto() || $user->isUserArticulador()) && ($user->gestor->nodo_id != $request->input('txtnodogestor')  || $user->gestor->lineatecnologica_id != $request->input('txtlinea') ) )
                 {
                     $activities = $user->gestor->actividades()->activitiesGestor();
                     $removeRole = array_diff(collect($user->getRoleNames())->toArray(), $request->input('role'));
 
-                    
-
-                    if($activities->count() > 0 
-                    // || ($removeRole != null && collect($removeRole)->contains(User::IsGestor()))
-                    )
+                    if($activities->count() > 0 || ($removeRole != null && collect($removeRole)->contains(User::IsGestor())))
                     {
                         return response()->json([
                             'state'   => 'error',
@@ -393,9 +389,9 @@ class UserController extends Controller
                         'user' => $userUpdate,
                     ]);
                 }
-                    
+
                 $userUpdate = $this->userRepository->UpdateUserConfirm($request, $user);
-                
+
                 return response()->json([
                     'state'   => 'success',
                     'message' => 'El Usuario ha sido modificado satisfactoriamente',
