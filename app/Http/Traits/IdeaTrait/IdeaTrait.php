@@ -10,6 +10,8 @@ use App\Models\Comite;
 use App\Models\Talento;
 use App\Models\Gestor;
 use App\Models\Empresa;
+use App\Models\Entrenamiento;
+use App\Models\HistorialEntidad;
 
 trait IdeaTrait
 {
@@ -30,6 +32,11 @@ trait IdeaTrait
     public static function IsGrupoInvestigacion()
     {
         return self::IS_GRUPOINVESTIGACION;
+    }
+
+    public function historial()
+    {
+        return $this->morphMany(HistorialEntidad::class, 'model');
     }
 
 
@@ -66,6 +73,13 @@ trait IdeaTrait
         return $this->belongsToMany(Comite::class, 'comite_idea')
             ->withTimestamps()
             ->withPivot(['hora', 'admitido', 'asistencia', 'observaciones', 'direccion']);
+    }
+
+    public function entrenamiento()
+    {
+        return $this->belongsToMany(Entrenamiento::class, 'entrenamiento_idea')
+            ->withTimestamps()
+            ->withPivot(['confirmacion', 'canvas', 'asistencia1', 'asistencia2', 'convocado_csibt']);
     }
 
     public function nodo()

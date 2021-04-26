@@ -373,9 +373,10 @@ Route::group(
         Route::get('/modalIdeas/{id}', 'IdeaController@abrirModalIdeas')->name('idea.modal');
         Route::get('/{id}/detalle', 'IdeaController@detalle')->name('idea.detalle');
         Route::get('/updateEstadoIdea/{id}/{estado}', 'IdeaController@updateEstadoIdea')->name('idea.update.estado')->middleware(['auth', 'role_session:Infocenter']);
-        Route::get('/aceptar_postulacion/{idea}', 'IdeaController@aceptarPostulacionIdea')->name('idea.aceptar.postulacion')->middleware('role_session:Articulador');
+        Route::put('/aceptar_postulacion/{idea}', 'IdeaController@aceptarPostulacionIdea')->name('idea.aceptar.postulacion')->middleware('role_session:Articulador');
         Route::put('/rechazar_postulacion/{idea}', 'IdeaController@rechazarPostulacionIdea')->name('idea.rechazar.postulacion')->middleware('role_session:Articulador');
         Route::put('/enviar_nodo/{id}', 'IdeaController@enviarIdeaAlNodo')->name('idea.enviar')->middleware('role_session:Talento');
+        Route::put('/duplicar_idea/{id}', 'IdeaController@duplicarIdeaRechazada')->name('idea.duplicar')->middleware('role_session:Talento');
         Route::put('/{idea}', 'IdeaController@update')->name('idea.update')->middleware(['auth', 'role_session:Talento']);
         Route::post('/', 'IdeaController@store')->name('idea.store')->middleware(['auth', 'role_session:Talento']);
         Route::get('/show/{idea}', 'IdeaController@show')->name('idea.show');
@@ -386,13 +387,12 @@ Route::group(
 Route::group(
     [
         'prefix'     => 'entrenamientos',
-        'middleware' => ['auth', 'role_session:Infocenter|Administrador|Dinamizador|Gestor'],
+        'middleware' => ['auth', 'role_session:Infocenter|Administrador|Dinamizador|Gestor|Articulador'],
     ],
     function () {
         Route::get('/', 'EntrenamientoController@index')->name('entrenamientos');
-        Route::get('/consultarEntrenamientosPorNodo/{id}', 'EntrenamientoController@datatableEntrenamientosPorNodo');
-        Route::get('/consultarEntrenamientosPorNodo', 'EntrenamientoController@datatableEntrenamientosPorNodo_Dinamizador');
-        Route::get('/create', 'EntrenamientoController@create')->name('entrenamientos.create')->middleware('role_session:Infocenter');
+        Route::get('/consultarEntrenamientosPorNodo', 'EntrenamientoController@datatableEntrenamientosPorNodo');
+        Route::get('/create', 'EntrenamientoController@create')->name('entrenamientos.create')->middleware('role_session:Articulador');
         Route::get('/{id}/edit', 'EntrenamientoController@edit')->name('entrenamientos.edit')->middleware('role_session:Infocenter');
         Route::get('/{id}', 'EntrenamientoController@details')->name('entrenamientos.details');
         Route::get('/inhabilitarEntrenamiento/{id}/{estado}', 'EntrenamientoController@inhabilitarEntrenamiento')->name('entrenamientos.inhabilitar')->middleware('role_session:Infocenter');
@@ -407,11 +407,11 @@ Route::group(
         Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileEntrenamiento')->name('entrenamientos.files.download');
         Route::get('/datatableArchivosDeUnEntrenamiento/{id}', 'ArchivoController@datatableArchivosDeUnEntrenamiento');
         // Route::put('/{id}', 'EntrenamientoController@update')->name('entrenamientos.update');
-        Route::put('/updateEvidencias/{id}', 'EntrenamientoController@updateEvidencias')->name('entrenamientos.update.evidencias')->middleware('role_session:Infocenter');
-        Route::post('/', 'EntrenamientoController@store')->name('entrenamientos.store')->middleware('role_session:Infocenter');
+        Route::put('/updateEvidencias/{id}', 'EntrenamientoController@updateEvidencias')->name('entrenamientos.update.evidencias')->middleware('role_session:Articulador');
+        Route::post('/', 'EntrenamientoController@store')->name('entrenamientos.store')->middleware('role_session:Articulador');
         Route::post('/addidea', 'EntrenamientoController@add_idea')->middleware('role_session:Infocenter');
-        Route::post('/store/{id}/files', 'ArchivoController@uploadFileEntrenamiento')->name('entrenamientos.files.store')->middleware('role_session:Infocenter');
-        Route::delete('/file/{idFile}', 'ArchivoController@destroyFileEntrenamiento')->name('entrenamientos.files.destroy')->middleware('role_session:Infocenter');
+        Route::post('/store/{id}/files', 'ArchivoController@uploadFileEntrenamiento')->name('entrenamientos.files.store')->middleware('role_session:Articulador');
+        Route::delete('/file/{idFile}', 'ArchivoController@destroyFileEntrenamiento')->name('entrenamientos.files.destroy')->middleware('role_session:Articulador');
     }
 );
 
@@ -433,7 +433,7 @@ Route::group(
         Route::get('/{id}/edit', 'ComiteController@edit')->name('csibt.edit')->middleware('role_session:Infocenter');
         Route::get('/cambiar_asignacion/{idea}/{comite}', 'ComiteController@cambiar_idea_gestor')->name('comite.cambiar.asignacion')->middleware('role_session:Dinamizador');
         Route::get('/{id}', 'ComiteController@show')->name('csibt.show');
-        Route::get('/{id}/evidencias', 'ComiteController@evidencias')->name('csibt.evidencias')->middleware('role_session:Infocenter|Dinamizador');
+        Route::get('/{id}/evidencias', 'ComiteController@evidencias')->name('csibt.evidencias')->middleware('role_session:Infocenter|Dinamizador|Administrador');
         Route::get('/{id}/consultarCsibtPorNodo', 'ComiteController@datatableCsibtPorNodo_Administrador')->name('csibt.show');
         Route::get('/getideasComiteCreate', 'ComiteController@get_ideasComiteCreate');
         Route::get('/eliminarIdeaCC/{id}', 'ComiteController@get_eliminarIdeaComiteCreate');

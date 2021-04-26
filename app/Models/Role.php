@@ -9,6 +9,11 @@ use App\User;
 class Role extends RoleSpatie
 {
 
+  public function historial()
+  {
+      return $this->hasMany(HistorialEntidad::class, 'role_id', 'id');
+  }
+
   public function users_movimientos()
   {
     return $this->belongsToMany(User::class, 'movimientos_actividades_users_roles')

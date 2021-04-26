@@ -40,10 +40,19 @@
                       Solicitar al talento que apruebe la fase de cierre.
                     </div>
                   </a>
-                  @else
+                  @endif
+                  @if ( ($ultimo_movimiento->movimiento == App\Models\Movimiento::IsSolicitarTalento()) || 
+                  $ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsAprobar() )
                   <a disabled>
                     <div class="card-panel yellow accent-1 black-text">
-                      Esta fase ya ha sido aprobada por el talento y/o dinamizador (Para mas detalle ver el historial de movimientos).
+                      Esta fase está siendo aprobada por el talento y/o dinamizador (Para mas detalle ver el historial de movimientos).
+                    </div>
+                  </a>
+                  @endif
+                  @if ( $proyecto->fase->nombre != 'Cierre' )
+                  <a disabled>
+                    <div class="card-panel yellow accent-1 black-text">
+                      Esta fase ya se aprobó (Para mas detalle ver el historial de movimientos).
                     </div>
                   </a>
                   @endif

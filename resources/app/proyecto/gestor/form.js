@@ -432,7 +432,6 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
         type: 'get',
         url: '/idea/show/' + id
     }).done(function (response) {
-        console.log(response.data.idea.alcance);
         let value = response.data.idea;
         if(idea =! null){
             

@@ -15,16 +15,18 @@ class IdeasWasAccepted
     use Dispatchable, InteractsWithSockets, SerializesModels;
     public $idea;
     public $infocenters;
+    public $observaciones;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($idea, $infocenters)
+    public function __construct($idea, $infocenters, $observaciones)
     {
         $this->idea = $idea;
         $this->infocenters = $infocenters;
+        $this->observaciones = $observaciones;
     }
 
     /**

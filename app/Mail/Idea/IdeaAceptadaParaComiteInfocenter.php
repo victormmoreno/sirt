@@ -12,6 +12,7 @@ class IdeaAceptadaParaComiteInfocenter extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
     public $subject = 'Se ha aceptado una idea para comité';
     public $idea;
+    public $observaciones;
 
 
     /**
@@ -19,9 +20,10 @@ class IdeaAceptadaParaComiteInfocenter extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($idea)
+    public function __construct($idea, $observaciones)
     {
         $this->idea = $idea;
+        $this->observaciones = $observaciones;
     }
 
     /**

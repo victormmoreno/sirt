@@ -1,4 +1,6 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
+@include('comite.historial_cambios')
+<div class="divider"></div>
 <div class="row no-m-t no-m-b">
     <div class="col s12 m12 l12">
         <div class="mailbox-view">
@@ -57,17 +59,32 @@
                                                 <p>
                                                     <b class="black-text">
                                                         Nombres y apellidos de la persona que inscribió la idea de proyecto:
-                                                    </b> {{$value->nombres_contacto}} {{$value->apellidos_contacto}}
+                                                    </b> 
+                                                    @if (isset($value->talento->user->nombres))
+                                                    {{$value->talento->user->nombres}} {{$value->talento->user->apellidos}}
+                                                    @else
+                                                    {{$value->nombres_contacto}} {{$value->apellidos_contacto}}
+                                                    @endif
                                                 </p>
                                                 <p>
                                                     <b class="black-text">
-                                                        Teléfono de la persona que inscribió la idea de proyecto:
-                                                    </b> {{$value->telefono_contacto}}
+                                                        Celular de la persona que inscribió la idea de proyecto:
+                                                    </b> 
+                                                    @if (isset($value->talento->user->celular))
+                                                        {{$value->talento->user->celular}}
+                                                    @else
+                                                        {{$value->telefono_contacto}}
+                                                    @endif
                                                 </p>
                                                 <p>
                                                     <b class="black-text">
                                                         Email de la persona que inscribió la idea de proyecto:
-                                                    </b> {{$value->correo_contacto}}
+                                                    </b> 
+                                                    @if (isset($value->talento->user->email))
+                                                        {{$value->talento->user->email}}
+                                                    @else
+                                                        {{$value->correo_contacto}}
+                                                    @endif
                                                 </p>
                                                 <h5 class="center">Datos del agendamiento</h5>
                                                 <div class="divider"></div>

@@ -150,6 +150,7 @@ function preguntaInicioRechazar(e){
     e.preventDefault();
     Swal.fire({
     title: '¿Está seguro(a) de aprobar la fase de inicio de este proyecto?',
+    text: 'Al hacerlo estás aceptando y aprobando toda la información de esta fase, los documento adjuntos y las asesorias recibidas.',
     type: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',

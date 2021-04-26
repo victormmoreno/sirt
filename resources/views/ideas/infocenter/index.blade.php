@@ -89,6 +89,7 @@
                         <th>Nombre de la Idea</th>
                         <th>Estado</th>
                         <th>Detalles</th>
+                        <th>Proceso</th>
                       </tr>
                     </thead>
                     <tbody>

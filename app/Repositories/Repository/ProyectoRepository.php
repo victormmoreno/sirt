@@ -259,8 +259,8 @@ class ProyectoRepository
       ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
       ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
       ->selectRaw('IF(trl_esperado = '.Proyecto::IsTrl6Esperado().', "TRL 6", "TRL 7 - TRL 8") AS trl_esperado')
-      ->selectRaw('IF(fases.nombre = "Cierre", IF(trl_obtenido = 0, "TRL 6", IF(trl_obtenido = 1, "TRL 7", "TRL 8")), "El proyecto no se ha cerrado") AS trl_obtenido')
-      ->selectRaw('IF(fases.nombre = "Cierre" || fases.nombre = "Suspendido", fecha_cierre, "El proyecto no se ha cerrado") AS fecha_cierre')
+      ->selectRaw('IF(fases.nombre = "Finalizado", IF(trl_obtenido = 0, "TRL 6", IF(trl_obtenido = 1, "TRL 7", "TRL 8")), "El proyecto no se ha cerrado") AS trl_obtenido')
+      ->selectRaw('IF(fases.nombre = "Finalizado" || fases.nombre = "Suspendido", fecha_cierre, "El proyecto no se ha cerrado") AS fecha_cierre')
       ->selectRaw('IF(areasconocimiento.nombre = "Otro", otro_areaconocimiento, "No aplica") AS otro_areaconocimiento')
       ->selectRaw('IF(fabrica_productividad = 0, "No", "Si") AS fabrica_productividad')
       ->selectRaw('IF(reci_ar_emp = 0, "No", "Si") AS reci_ar_emp')
@@ -271,6 +271,8 @@ class ProyectoRepository
       ->selectRaw('IF(art_cti = 0, "No", "Si") AS art_cti')
       ->selectRaw('IF(art_cti = 0, "No aplica", nom_act_cti) AS nom_act_cti')
       ->selectRaw('IF(fases.nombre = "Cierre", IF(diri_ar_emp = 0, "No", "Si"), "El proyecto no se ha cerrado") AS diri_ar_emp')
+      ->selectRaw('DATE_FORMAT(fecha_cierre, "%Y") AS anho')
+      ->selectRaw('DATE_FORMAT(fecha_cierre, "%m") AS mes')
       ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
       ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
       ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
@@ -1399,6 +1401,7 @@ class ProyectoRepository
       $proyecto->users_propietarios()->attach(request()->propietarios_user);
       $proyecto->empresas()->attach(request()->propietarios_empresas);
       $proyecto->gruposinvestigacion()->attach(request()->propietarios_grupos);
+      $proyecto->idea->registrarHistorialIdea(Movimiento::IsRegistrar(), Session::get('login_role'), null, 'como un PBT asociado con el código ' . $actividad->codigo_actividad);
 
       DB::commit();
       return true;

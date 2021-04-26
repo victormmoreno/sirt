@@ -35,7 +35,8 @@
                   @if ( ($proyecto->fase->nombre == 'Inicio' && $ultimo_movimiento == null) || 
                   ($proyecto->fase->nombre == 'Inicio' && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsCambiar()) ||
                   ($ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->fase == 'Inicio' ) || 
-                  ($ultimo_movimiento->rol == App\User::IsDinamizador() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->fase == 'Inicio' ) )
+                  ($ultimo_movimiento->rol == App\User::IsDinamizador() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->fase == 'Inicio' ) ||
+                  ($ultimo_movimiento->rol == App\User::IsDinamizador() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsReversar()) )
                   <a href="{{route('proyecto.solicitar.aprobacion', [$proyecto->id, 'Inicio'])}}">
                     <div class="card-panel yellow accent-1 black-text">
                       Solicitar al talento interlocutor que apruebe la fase de inicio.

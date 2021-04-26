@@ -3,6 +3,7 @@
     <thead>
     <tr>
         <th>Código de Proyecto</th>
+        <th>Nodo del proyecto</th>
         <th>Nit de la empresa</th>
         <th>Codigo CIIU</th>
         <th>Nombre de la empresa</th>
@@ -19,6 +20,7 @@
         @foreach($empresas as $value)
             <tr>
             <td>{{ $value->codigo_actividad }}</td>
+            <td>{{ $value->nodo_nombre }}</td>
             <td>{{ $value->nit }}</td>
             <td>{{ $value->codigo_ciiu }}</td>
             <td>{{ $value->nombre_empresa }}</td>
