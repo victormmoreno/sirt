@@ -163,7 +163,7 @@ class SeguimientoController extends Controller
     $trlObtenidos = 0;
     $trlEsperados = $this->getProyectoRepository()->consultarTrl('trl_esperado', 'fecha_inicio', $fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->get();
     $inscritos = $this->getProyectoRepository()->consultarProyectoInscritosEntreFecha($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->first()->cantidad;
-    $cerrados = $this->getProyectoRepository()->consultarProyectoCerradosEntreFecha('Cierre', $fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->first()->cantidad;
+    $cerrados = $this->getProyectoRepository()->consultarProyectoCerradosEntreFecha('Finalizado', $fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->first()->cantidad;
     $trlObtenidos = $this->getProyectoRepository()->consultarTrl('trl_obtenido', 'fecha_cierre', $fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('fases.nombre', 'Cierre')->get();
     $trlEsperadosAgrupados = $this->agruparTrls($trlEsperados, 'Inicio');
     $trlObtenidosAgrupados = $this->agruparTrls($trlObtenidos, 'Cierre');
@@ -280,7 +280,7 @@ class SeguimientoController extends Controller
     $trlObtenidos = 0;
     $trlEsperados = $this->getProyectoRepository()->consultarTrl('trl_esperado', 'fecha_inicio', $fecha_inicio, $fecha_fin)->where('g.id', $idgestor)->get();
     $inscritos = $this->getProyectoRepository()->consultarProyectoInscritosEntreFecha($fecha_inicio, $fecha_fin)->where('g.id', $idgestor)->first()->cantidad;
-    $cerrados = $this->getProyectoRepository()->consultarProyectoCerradosEntreFecha('Cierre', $fecha_inicio, $fecha_fin)->where('g.id', $idgestor)->first()->cantidad;
+    $cerrados = $this->getProyectoRepository()->consultarProyectoCerradosEntreFecha('Finalizado', $fecha_inicio, $fecha_fin)->where('g.id', $idgestor)->first()->cantidad;
     $trlObtenidos = $this->getProyectoRepository()->consultarTrl('trl_obtenido', 'fecha_cierre', $fecha_inicio, $fecha_fin)->where('g.id', $idgestor)->where('fases.nombre', 'Cierre')->get();
     $trlEsperadosAgrupados = $this->agruparTrls($trlEsperados, 'Inicio');
     $trlObtenidosAgrupados = $this->agruparTrls($trlObtenidos, 'Cierre');
