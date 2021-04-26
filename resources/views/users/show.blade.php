@@ -37,9 +37,7 @@
                 <div class="card mailbox-content">
                     <div class="card-content">
                         <div class="row no-m-t no-m-b">
-
                             <div class="col s12 m12 l12">
-
                                 <div class="mailbox-view">
                                     <div class="mailbox-view-header">
                                         <div class="left mailbox-buttons">

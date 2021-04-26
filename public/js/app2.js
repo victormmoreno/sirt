@@ -5413,19 +5413,49 @@ function addGrupoPropietario(id) {
         pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Grupo(id);
     }
 }
+//vaciar valores agregados en tablas
+function dumpAggregateValuesIntoTables(){
+    $('#detalleTalentosDeUnProyecto_Create').empty();
+    $('#propiedadIntelectual_Personas').empty();
+    $('#propiedadIntelectual_Empresas').empty();
+    $('#propiedadIntelectual_Grupos').empty();
+}
+
+//agregar valor a campos
+function addValueToFields(nombre, codigo, value){
+    $('#txtnombreIdeaProyecto_Proyecto').val(codigo + " - " + nombre);
+    $('#txtnombre').val(nombre);
+    $("label[for='txtnombreIdeaProyecto_Proyecto']").addClass('active');
+    $("label[for='txtnombre']").addClass('active');
+
+    $('#txtobjetivo').val(value.objetivo);
+    $('#txtobjetivo').trigger('autoresize');
+    $("label[for='txtobjetivo']").addClass('active');
+
+    $('#txtalcance_proyecto').val(value.alcance);
+    $('#txtalcance_proyecto').trigger('autoresize');
+    $("label[for='txtalcance_proyecto']").addClass('active');
+}
+
 
 // Asocia una idea de proyecto al registro de un proyecto
 function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
     $('#txtidea_id').val(id);
     
-
     $.ajax({
         dataType: 'json',
         type: 'get',
         url: '/idea/show/' + id
     }).done(function (response) {
-        
-        if(response.data.idea =! null){
+        console.log(response.data.idea.alcance);
+        let value = response.data.idea;
+        if(idea =! null){
+            
+            dumpAggregateValuesIntoTables();
+            
+            addValueToFields(nombre, codigo, value);
+            ideaProyectoAsociadaConExito(codigo, nombre);
+
             if(response.data.talento != null){
 
                 addTalentoProyecto(response.data.talento.id, true);
@@ -5436,16 +5466,11 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
                 addEntidadEmpresa(response.data.empresa.nit);
             }
             $('#ideasDeProyectoConEmprendedores_modal').closeModal();
-
         }
         
-        console.log(response);
+    }).fail(function( jqXHR, textStatus, errorThrown ) {
+        errorAjax(jqXHR, textStatus, errorThrown);
     });
-    ideaProyectoAsociadaConExito(codigo, nombre);
-    $('#txtnombreIdeaProyecto_Proyecto').val(codigo + " - " + nombre);
-    $('#txtnombre').val(nombre);
-    $("label[for='txtnombreIdeaProyecto_Proyecto']").addClass('active');
-    $("label[for='txtnombre']").addClass('active');
     
 }
 
@@ -5614,6 +5639,38 @@ function showInput_ActorCTi() {
     } else {
         divNombreActorCTi.hide();
     }
+}
+
+function errorAjax(jqXHR, textStatus, errorThrown){
+    if (jqXHR.status === 0) {
+
+        alert('Not connect: Verify Network.');
+
+      } else if (jqXHR.status == 404) {
+
+        alert('Requested page not found [404]');
+
+      } else if (jqXHR.status == 500) {
+
+        alert('Internal Server Error [500].');
+
+      } else if (textStatus === 'parsererror') {
+
+        alert('Requested JSON parse failed.');
+
+      } else if (textStatus === 'timeout') {
+
+        alert('Time out error.');
+
+      } else if (textStatus === 'abort') {
+
+        alert('Ajax request aborted.');
+
+      } else {
+
+        alert('Uncaught Error: ' + jqXHR.responseText);
+
+      }
 }
 
 // Enviar formulario para modificar el proyecto en fase de cierre

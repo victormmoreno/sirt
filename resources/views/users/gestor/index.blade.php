@@ -49,7 +49,7 @@
                                         <span class="card-title hand-of-Sean-fonts orange-text text-darken-3">Talentos de {{config('app.name')}}</span>
                                         <div class="right mailbox-buttons">
                                             <div class=" show-on-large hide-on-med-and-down">
-                                                <a  href="{{route('usuario.search')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down"><i class="material-icons">add_circle</i> Nuevo usuario</a>
+                                                <a  href="{{route('usuario.search')}}" class="waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down"><i class="material-icons">add_circle</i> Buscar usuario</a>
                                             </div>
                                         </div>
                                     </div>
@@ -108,7 +108,7 @@
                     </div>
                 </div>
                 <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-                    <a href="{{route('usuario.search')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Usuario">
+                    <a href="{{route('usuario.search')}}"  class="btn tooltipped btn-floating btn-large grey darken-1 white-text" data-position="left" data-delay="50" data-tooltip="Buscar Usuario">
                          <i class="material-icons">add_circle</i>
                     </a>
                 </div>

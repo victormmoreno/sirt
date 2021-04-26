@@ -487,7 +487,7 @@ class IdeaController extends Controller
 
     public function show($id)
     {
-        $idea = Idea::select('id', 'codigo_idea','nombre_proyecto', 'talento_id', 'empresa_id')->with([
+        $idea = Idea::select('id', 'codigo_idea','nombre_proyecto','objetivo', 'alcance',  'talento_id', 'empresa_id')->with([
             'talento' => function($query){
                 $query->select('id', 'user_id');
             },
@@ -503,6 +503,7 @@ class IdeaController extends Controller
         ])->where('id', $id)->first();
         $talento = null;
         $empresa = null;
+      
 
         if($idea->has('talento.user') &&isset($idea->talento->user))
         {
@@ -512,6 +513,7 @@ class IdeaController extends Controller
         {
             $empresa = $idea->company;
         }
+        
         return response()->json([
             'data' => [
                 'idea' => $idea,

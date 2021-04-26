@@ -14,10 +14,11 @@
         <label for="txtlinea" class="">Línea Tecnológica</label>
     </div>
 </div>
-<div class="divider"></div>
+
 <div class="row">
-    <h5 class="center"><i class="material-icons">lightbulb</i>Idea de Proyecto.</h5>
+    <h5 class="center orange-text"><i class="material-icons">lightbulb</i>Idea de Proyecto.</h5>
 </div>
+<div class="divider"></div>
 <div class="row">
     <div class="col s12 m6 l6 offset-l3 m3">
         <center>
@@ -54,10 +55,11 @@
         @endif
     </div>
 </div>
-<div class="divider"></div>
+
 <div class="row">
-    <h5 class="center">Datos del proyecto.</h5>
+    <h5 class="center orange-text">Datos del proyecto.</h5>
 </div>
+<div class="divider"></div>
 <div class="row">
     <div class="input-field col s12 m6 l6">
         @if ($existe)
@@ -252,10 +254,11 @@
         </div>
     </div>
 </div>
-<div class="divider"></div>
+
 <div class="row">
-    <h5 class="center"><i class="material-icons">supervised_user_circle</i>Talentos que participarán en el proyecto</h5>
+    <h5 class="center orange-text"><i class="material-icons">supervised_user_circle</i>Talentos que participarán en el proyecto</h5>
 </div>
+<div class="divider"></div>
 <div class="row">
     <div class="col s12 m12 l12">
         <div class="card-content">
@@ -368,10 +371,8 @@
         </div>
     </div>
 </div>
+<h5 class="center orange-text">Objetivos y alcance del proyecto.</h5>
 <div class="divider"></div>
-<div class="row">
-    <h5 class="center">Objetivos y alcance del proyecto.</h5>
-</div>
 <div class="row">
     <div class="col s12 m6 l6">
         <div class="input-field col s12 m12 l12">
@@ -436,10 +437,8 @@
         </div>
     </div>
 </div>
+<h5 class="center orange-text">Datos de la propiedad intelectual.</h5>
 <div class="divider"></div>
-<div class="row">
-    <h5 class="center">Datos de la propiedad intelectual.</h5>
-</div>
 <div class="row">
     <div class="col s12 m4 l4">
         <div class="card-panel green lighten-5">

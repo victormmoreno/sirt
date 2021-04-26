@@ -11,12 +11,12 @@
 
 <li class="no-padding {{setActiveRoute('proyecto')}}">
   <a href="{{route('proyecto')}}" class="waves-effect waves-grey {{setActiveRouteActivePage('proyecto')}}" rel="canonical" title="Proyectos de Base Tecnológica">
-    <i class="material-icons {{ setActiveRouteActiveIcon('proyecto') }}">library_books</i>Proyectos de Base Tecnológica
+    <i class="material-icons {{ setActiveRouteActiveIcon('proyecto') }}">library_books</i>PBT
   </a>
 </li>
 <li class="no-padding {{setActiveRoute('articulacion')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('articulacion')}}" href="{{route('articulacion')}}" rel="canonical" title="Articulaciones">
-    <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>Articulaciones con Grupos de Investigación
+    <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>AGI
   </a>
 </li>
 <li class="{!! setActiveRoute('edt') !!}">
@@ -79,11 +79,6 @@
     <i class="material-icons {{setActiveRouteActiveIcon('costos')}}">attach_money</i>Costos
   </a>
 </li>
-{{-- <li class="no-padding">
-  <a class="waves-effect waves-grey {{setActiveRouteActivePage('idea')}}" href="{{route('idea.index')}}" rel="canonical" title="Ideas">
-    <i class="material-icons {{ setActiveRouteActiveIcon('idea') }}">lightbulb</i>Ideas
-  </a>
-</li> --}}
 <li class="no-padding">
   <a href="{{route('csibt')}}" class="{{setActiveRouteActivePage('csibt')}}" rel="canonical" title="CSIBT's">
     <i class="material-icons {{setActiveRouteActiveIcon('csibt')}}">gavel</i>CSIBT's
