@@ -10,16 +10,6 @@
           <i class="material-icons {{setActiveRouteActiveIcon('idea')}}">lightbulb</i>Ideas
         </a>
       </li>
-      {{-- <li>
-        <a href="{{route('entrenamientos')}}" class="{{setActiveRouteActivePage('entrenamientos')}}" rel="canonical" title="Taller de Fortalecimiento">
-          <i class="material-icons {{setActiveRouteActiveIcon('entrenamientos')}}">library_books</i>Taller de Fortalecimiento
-        </a>
-      </li>
-      <li>
-        <a href="{{route('csibt')}}" class="{{setActiveRouteActivePage('csibt')}}" rel="canonical" title="CSIBT's">
-          <i class="material-icons {{setActiveRouteActiveIcon('csibt')}}">gavel</i>CSIBT's
-        </a>
-      </li> --}}
     </ul>
   </div>
 </li>

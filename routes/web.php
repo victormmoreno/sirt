@@ -128,7 +128,7 @@ Route::group(
         Route::put('/updateacceso/{documento}', 'UserController@updateAcceso')->name('usuario.usuarios.updateacceso')->middleware('disablepreventback');
         Route::get('/talento/getEdadTalento/{id}', 'TalentoController@getEdad');
 
-        
+
         // Route::get('/usuarios/{id}', 'UserController@edit')->name('usuario.usuarios.edit')->where('documento', '[0-9]+');;
 
         Route::get('/usuarios/crear/{documento?}', 'UserController@create')->name('usuario.usuarios.create')->where('documento', '[0-9]+');
@@ -143,7 +143,7 @@ Route::group(
             'as'   => 'usuario.buscarusuario',
         ])->where('documento', '[0-9]+');
 
-        
+
         Route::get('/usuarios', 'UserController@userSearch')->name('usuario.search');
         Route::get('/{documento}/permisos', 'UserController@changeNodeUser')->name('usuario.usuarios.changenode')->where('documento', '[0-9]+');
         Route::put('/{documento}/updatenodo', 'UserController@updateNode')->name('usuario.usuarios.updatenodo')->middleware('disablepreventback');
@@ -364,7 +364,7 @@ Route::group(
     ],
     function () {
         Route::get('/', 'IdeaController@index')->name('idea.index');
-        Route::get('/datatable_filtros', 'IdeaController@datatableFiltros')->name('idea.datatable.filtros')->middleware('role_session:Articulador|Infocenter|Dinamizador|Administrador|Gestir');
+        Route::get('/datatable_filtros', 'IdeaController@datatableFiltros')->name('idea.datatable.filtros')->middleware('role_session:Articulador|Infocenter|Dinamizador|Administrador|Gestor');
         Route::get('/export', 'IdeaController@export')->name('idea.export');
         Route::get('/datatableIdeasDeTalentos', 'IdeaController@datatableIdeasTalento')->name('idea.datatable.talento')->middleware('role_session:Talento');
         // Route::get('/datatableIdeasEnviadasDeTalentos', 'IdeaController@datatableIdeasTalento')->name('idea.datatable.talento')->middleware('role_session:Talento');
@@ -379,6 +379,7 @@ Route::group(
         Route::put('/duplicar_idea/{id}', 'IdeaController@duplicarIdeaRechazada')->name('idea.duplicar')->middleware('role_session:Talento');
         Route::put('/{idea}', 'IdeaController@update')->name('idea.update')->middleware(['auth', 'role_session:Talento']);
         Route::post('/', 'IdeaController@store')->name('idea.store')->middleware(['auth', 'role_session:Talento']);
+        Route::get('/show/{idea}', 'IdeaController@show')->name('idea.show');
     }
 );
 
