@@ -460,7 +460,7 @@ Route::group(
     ],
     function () {
         Route::get('/', 'EmpresaController@index')->name('empresa');
-        Route::get('/create', 'EmpresaController@create')->name('empresa.create')->middleware('role_session:Talento');
+        Route::get('/create', 'EmpresaController@create')->name('empresa.create')->middleware('role_session:Talento|Administrador');
         Route::get('/datatableEmpresasDeTecnoparque', 'EmpresaController@datatableEmpresasDeTecnoparque')->name('empresa.datatable');
         Route::get('/{id}/edit', 'EmpresaController@edit')->name('empresa.edit')->middleware('role_session:Desarrollador|Administrador');
         Route::get('/ajaxDetallesDeUnaEmpresa/{value}/{field}', 'EmpresaController@detalleDeUnaEmpresa')->name('empresa.detalle');
