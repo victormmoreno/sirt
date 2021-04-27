@@ -37,78 +37,78 @@
                 {{isset($user->gestor->nodo->entidad)? $user->gestor->nodo->entidad->nombre : 'No registra'}}
             </td>
             <td>
-                {{$gestor->user->present()->userTipoDocuento()}}
+                {{$user->present()->userTipoDocuento()}}
             </td>
             <td>
-                {{$gestor->user->present()->userLugarExpedicionDocumento()}}
+                {{$user->present()->userLugarExpedicionDocumento()}}
             </td>
             <td>
-                {{$gestor->user->present()->userDocumento()}}
+                {{$user->present()->userDocumento()}}
             </td>
             <td>
-                {{$gestor->user->present()->userFullName()}}
+                {{$user->present()->userFullName()}}
             </td>
             <td>
-                {{$gestor->user->present()->userFechaNacimiento()}}
+                {{$user->present()->userFechaNacimiento()}}
             </td>
             <td>
-                {{$gestor->user->present()->userEmail()}}
+                {{$user->present()->userEmail()}}
             </td>
             <td>
-                {{isset($gestor->user->celular) ? $gestor->user->celular : isset($gestor->user->telefono) ? $gestor->user->telefono : 'No registra'}}
+                {{isset($user->celular) ? $user->celular : isset($user->telefono) ? $user->telefono : 'No registra'}}
             </td>
             <td>
-                {{$gestor->user->present()->userGenero()}}
+                {{$user->present()->userGenero()}}
             </td>
             <td>
-                {{$gestor->user->present()->userGrupoSanguineo()}}
+                {{$user->present()->userGrupoSanguineo()}}
             </td>
             <td>
-                {{$gestor->user->present()->userEstrato()}}
+                {{$user->present()->userEstrato()}}
             </td>
             <td>
-                {{$gestor->user->present()->userDireccion()}}
+                {{$user->present()->userDireccion()}}
             </td>
             <td>
-                {{$gestor->user->present()->userLugarResidencia()}}
+                {{$user->present()->userLugarResidencia()}}
             </td>
             <td>
-                {{$gestor->user->present()->userEtnia()}}
+                {{$user->present()->userEtnia()}}
             </td>
             <td>
-                {{$gestor->user->present()->userGradoDiscapacidad()}}
+                {{$user->present()->userGradoDiscapacidad()}}
             </td>
             <td>
-                {{$gestor->user->present()->userDescripcionGradoDiscapacidad()}}
+                {{$user->present()->userDescripcionGradoDiscapacidad()}}
             </td>
             <td>
-                {{$gestor->user->present()->userEps()}}
+                {{$user->present()->userEps()}}
             </td>
             <td>
-                {{$gestor->user->present()->userEps()}}
+                {{$user->present()->userEps()}}
             </td>
             <td>
-                {{$gestor->user->present()->userOtraEps()}}
+                {{$user->present()->userOtraEps()}}
             </td>
             <td>
-                {{$gestor->user->present()->userInstitucion()}}
+                {{$user->present()->userInstitucion()}}
             </td>
             <td>
-                {{$gestor->user->present()->userTituloObtenido()}}
+                {{$user->present()->userTituloObtenido()}}
             </td>
             <td>
-                {{$gestor->user->present()->userFechaTerminacion()}}
+                {{$user->present()->userFechaTerminacion()}}
             </td>
             <td>
-                {{$gestor->user->present()->userOcupacionesNames()}}
+                {{$user->present()->userOcupacionesNames()}}
             </td>
-            <td>{{ isset($gestor) ? $gestor->lineatecnologica->abreviatura : ''}} - {{ isset($gestor) ? $gestor->lineatecnologica->nombre : 'No registra'}}</td>
-            <td>$ {{isset($gestor->honorarios) ? number_format($gestor->honorarios) : 0}}</td>
+            <td>{{ isset($user->gestor->lineatecnologica) ? $user->gestor->lineatecnologica->abreviatura : ''}} - {{ isset($user->gestor->lineatecnologica) ? $user->gestor->lineatecnologica->nombre : 'No registra'}}</td>
+            <td>$ {{isset($user->gestor->honorarios) ? number_format($user->gestor->honorarios) : 0}}</td>
             <td>
-                {{ $gestor->user->present()->userRolesNames()}}
+                {{ $user->present()->userRolesNames()}}
             </td>
             <td>
-                {{ $gestor->user->present()->userAcceso()}}
+                {{ $user->present()->userAcceso()}}
             </td>
         </tr>
         @empty

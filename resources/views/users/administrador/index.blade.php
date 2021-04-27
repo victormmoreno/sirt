@@ -39,7 +39,7 @@
                                         </div>
                                     </div>
                                     <div class="col s12 m4 l4 show-on-large hide-on-med-and-down">
-                                        <a  href="{{route('usuario.search')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Buscar Usuario</a>
+                                        <a  href="{{route('usuario.search')}}" class="waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Buscar Usuario</a>
                                     </div>
                                 </div>
                             </div>
@@ -114,7 +114,7 @@
                     </div>
                 </div>
                 <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-                    <a href="{{route('usuario.search')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Buscar Usuario">
+                    <a href="{{route('usuario.search')}}"  class="btn tooltipped btn-floating btn-large darken-1 white-text" data-position="left" data-delay="50" data-tooltip="Buscar Usuario">
                         <i class="material-icons">search</i>
                     </a>
                 </div>

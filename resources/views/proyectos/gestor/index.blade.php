@@ -15,33 +15,17 @@
               <div class="row">
                 <div class="col s12 m12 l12">
                   <div class="row">
-                    <div class="col s12 m10 l10">
+                    <div class="col s12 m8 l8">
                       <div class="center-align">
-                        <span class="card-title center-align">Proyectos de {{ auth()->user()->nombres }} {{ auth()->user()->apellidos }} </span>
+                        <span class="card-title center-align orange-text text-darken-3">Proyectos de {{ auth()->user()->nombres }} {{ auth()->user()->apellidos }} </span>
                       </div>
                     </div>
-                    <div class="col s12 m2 l2">
-                      <a href="{{ route('proyecto.create') }}">
-                        <div class="card green">
-                          <div class="card-content center">
-                            <i class="left material-icons white-text">add</i>
-                            <span class="white-text">Nuevo Proyecto</span>
-                          </div>
-                        </div>
-                      </a>
+                    <div class="col s12 m4 l4 ">
+                        <a  href="{{route('proyecto.create')}}" class="waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo Proyecto</a>
                     </div>
                   </div>
                   <div class="divider"></div>
-                  <div class="row">
-                    <div class="col s12 m12 l12">
-                      <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
-                        <li class="tab col s3"><a href="#proyectos" class="active">Proyectos</a></li>
-                        {{-- <li class="tab col s3"><a class="" href="#proyectos_pendientes">Pendiente de Aprobación</a></li> --}}
-                        <div class="indicator" style="right: 580.5px; left: 0px;"></div>
-                      </ul>
-                      <br>
-                    </div>
-                  </div>
+                  
                   <div id="proyectos">
                     <div class="row">
                       <div class="col s12 m12 l12">
