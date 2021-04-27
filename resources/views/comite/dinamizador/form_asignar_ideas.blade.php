@@ -51,14 +51,17 @@
                         <th style="width: 20%">
                             Idea de Proyecto
                         </th>
-                        <th style="width: 10%">
+                        <th style="width: 5%">
                             ¿Admitido?
                         </th>
                         <th style="width: 30%">
                             Oservaciones del comité
                         </th>
-                        <th style="width: 40%">
+                        <th style="width: 25%">
                             <a class="modal-trigger" href="#modalGestores"><i class="material-icons left">help</i></a>Gestores a cargo de la idea
+                        </th>
+                        <th style="width: 20%">
+                            <a class="modal-trigger" href="#modalDerivarIdea"><i class="material-icons left">help</i></a>Derivar idea de proyecto
                         </th>
                     </tr>
                 </thead>
@@ -84,6 +87,21 @@
                                 </select>
                                 <small id="txtgestor_id.{{$key}}-error" class="error red-text"></small>
                             </td>
+                            <td>
+                                @if ($value->pivot->admitido == 1)
+                                <a href="javascript:void(0)" onclick="confirmacionDuplicidad( event, '{{route('idea.derivar', [$value->id, $comite->id])}}' )">
+                                    <div class="card-panel green lighten-3 black-text center">
+                                      Duplicar idea de proyecto.
+                                    </div>
+                                  </a>
+                                @else
+                                  <a href="javascript:void(0)">
+                                      <div class="card-panel grey black-text center">
+                                        Idea de proyecto no admitida.
+                                      </div>
+                                    </a>
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -105,6 +123,18 @@
           Este campo del formulario te permitirá asignar un gestor del nodo el cuál estará a cargo del proyecto.
           <br>
           Debes tener en cuenta que una vez se registre el proyecto, el dinamizador puede re-asignar un gestor al proyecto.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Ok.</a>
+    </div>
+</div>
+<div id="modalDerivarIdea" class="modal">
+    <div class="modal-content">
+      <h4>Derivar idea de proyecto</h4>
+      <p>
+          En caso de que en una idea de proyecto se va a realizar mas de un TRL, se presiona este botón para hacer una duplicación de la idea de proyecto 
+          con la intención de que se pueda asignar a mas de un experto.
       </p>
     </div>
     <div class="modal-footer">

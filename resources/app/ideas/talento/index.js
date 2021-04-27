@@ -87,3 +87,21 @@ function confirmacionDuplicacion(e){
     }
   })
 }
+
+function confirmacionInhabilitar(e){
+  e.preventDefault();
+  Swal.fire({
+  title: '¿Está seguro(a) de inhabilitar esta idea de proyecto?',
+  text: "Esto quiere decir que esta idea de proyecto no se le podrá realizar un proceso en tecnoparque.",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  cancelButtonText: 'Cancelar',
+  confirmButtonText: 'Sí!'
+  }).then((result) => {
+    if (result.value) {
+      document.frmInhabilitarIdea.submit();
+    }
+  })
+}

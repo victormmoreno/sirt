@@ -57,6 +57,20 @@
                       </form>
                     </li>
                     @endif
+                    @if ($idea->estadoIdea->nombre != 'En PBT' && $idea->estadoIdea->nombre != 'Inhabilitado')
+                    <li class="collection-item">
+                      <form action="{{route('idea.inhabilitar', $idea->id)}}" method="POST" id="frmInhabilitarIdea" name="frmInhabilitarIdea">
+                        {!! method_field('PUT')!!}
+                        <input type="hidden" value="{{$idea}}" name="txtidea_id">
+                        @csrf
+                        <a href="" onclick="confirmacionInhabilitar(event)">
+                          <div class="card-panel orange lighten-2 black-text center">
+                            Inhabilitar idea de proyecto.
+                          </div>
+                        </a>
+                      </form>
+                    </li>
+                    @endif
                     <li class="collection-item">
                       @include('ideas.historial_cambios')
                     </li>

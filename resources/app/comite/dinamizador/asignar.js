@@ -22,6 +22,37 @@ $(document).on('submit', 'form#formComiteAsignarCreate', function (event) {
     });
 });
 
+// function confirmacionDuplicidad(e, route){
+//     e.preventDefault();
+//     Swal.fire({
+//     title: '¿Está seguro(a) de duplicar esta idea de proyecto?',
+//     text: "Debes tener en cuenta que a partir de esta idea se va a registrar mas de un TRL.",
+//     type: 'warning',
+//     showCancelButton: true,
+//     confirmButtonColor: '#3085d6',
+//     cancelButtonColor: '#d33',
+//     cancelButtonText: 'Cancelar',
+//     confirmButtonText: 'Sí!'
+//     }).then((result) => {
+//       if (result.value) {
+//         Swal.fire({
+//             title: 'Verificación. ¿Está seguro(a) de duplicar esta idea de proyecto?',
+//             text: "Esta acción no se podrá revertir.",
+//             type: 'warning',
+//             showCancelButton: true,
+//             confirmButtonColor: '#3085d6',
+//             cancelButtonColor: '#d33',
+//             cancelButtonText: 'Cancelar',
+//             confirmButtonText: 'Continuar!'
+//             }).then((result) => {
+//               if (result.value) {
+//                   location.href = route;
+//               }
+//             })
+//       }
+//     })
+//   }
+
 function ajaxSendFormComiteAsignar(form, data, url, fase) {
     $.ajax({
         type: form.attr('method'),
