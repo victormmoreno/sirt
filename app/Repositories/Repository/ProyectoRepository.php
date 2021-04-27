@@ -822,7 +822,6 @@ class ProyectoRepository
    */
   public function aprobacionFaseInicio($request, $id, $fase)
   {
-    DB::beginTransaction();
     try {
       
       $comentario = null;
@@ -860,7 +859,9 @@ class ProyectoRepository
         $regMovimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
         
         event(new ProyectoWasApproved($proyecto, $regMovimiento, $destinatarios));
-        // Notification::send([$proyecto->articulacion_proyecto->actividad->gestor->user, $dinamizadores], new ProyectoAprobarInicioDinamizador($proyecto, $talento_lider, $regMovimiento));
+        if (Session::get('login_role') == User::IsTalento()) {
+          Notification::send($dinamizadores, new ProyectoAprobarInicioDinamizador($proyecto, $talento_lider, $regMovimiento));
+        }
         if (Session::get('login_role') == User::IsDinamizador() && $fase == "Inicio") {
           // Cambiar el proyecto de fase
           $proyecto->update([
@@ -1065,29 +1066,6 @@ class ProyectoRepository
   }
 
   /**
-   * Notifica al dinamizador para que apruebe el proyecto en la fase de cierre
-   * 
-   * @param int $id Id del proyecto
-   * @return boolean
-   * @author dum
-   */
-  public function notificarAlDinamziador_Cierre(int $id)
-  {
-    DB::beginTransaction();
-    try {
-      $dinamizadorRepository = new DinamizadorRepository;
-      $proyecto = Proyecto::findOrFail($id);
-      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
-      Notification::send($dinamizadores, new ProyectoAprobarCierre($proyecto));
-      DB::commit();
-      return true;
-    } catch (\Throwable $th) {
-      DB::rollBack();
-      return false;
-    }
-  }
-
-  /**
    * Notifica al dinamizador para que apruebe el proyecto en la fase de suspendido
    * 
    * @param int $id Id del proyecto
@@ -1102,45 +1080,6 @@ class ProyectoRepository
       $proyecto = Proyecto::findOrFail($id);
       $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
       Notification::send($dinamizadores, new ProyectoAprobarSuspendido($proyecto));
-      DB::commit();
-      return true;
-    } catch (\Throwable $th) {
-      DB::rollBack();
-      return false;
-    }
-  }
-
-  /**
-   * Notifica al talento interlocutor para que apruebe la fase de planeación
-   * 
-   * @param int $id Id del proyecto
-   * @return boolean
-   * @author dum
-   */
-  public function notificarAlDinamizador_Planeacion(int $id)
-  {
-    DB::beginTransaction();
-    try {
-      $dinamizadorRepository = new DinamizadorRepository;
-      $proyecto = Proyecto::findOrFail($id);
-      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
-      Notification::send($dinamizadores, new ProyectoAprobarPlaneacion($proyecto));
-      DB::commit();
-      return true;
-    } catch (\Throwable $th) {
-      DB::rollBack();
-      return false;
-    }
-  }
-
-  public function notificarAlDinamizador_Ejecucion(int $id)
-  {
-    DB::beginTransaction();
-    try {
-      $dinamizadorRepository = new DinamizadorRepository;
-      $proyecto = Proyecto::findOrFail($id);
-      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
-      Notification::send($dinamizadores, new ProyectoAprobarEjecucion($proyecto));
       DB::commit();
       return true;
     } catch (\Throwable $th) {
