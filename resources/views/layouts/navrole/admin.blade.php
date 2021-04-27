@@ -30,8 +30,7 @@
 </li>
 <li class="no-padding {{setActiveRoute('articulacion')}}">
   <a href="{{ route('articulacion') }}" class="{{setActiveRouteActivePage('articulacion')}}" rel="canonical" title="Articulaciones">
-    <i class="material-icons {{setActiveRouteActiveIcon('articulacion')}}">autorenew</i>Articulaciones con Grupos de Investigación
-  </a>
+    <i class="material-icons {{setActiveRouteActiveIcon('articulacion')}}">autorenew</i>AGI  </a>
 </li>
 {{-- <li class="no-padding {{setActiveRoute('intervencion')}}">
   <a href="{{ route('intervencion.index') }}" class="{{setActiveRouteActivePage('intervencion')}}" rel="canonical" title="Articulaciones">

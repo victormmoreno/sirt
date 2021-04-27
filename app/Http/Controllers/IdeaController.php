@@ -501,6 +501,9 @@ class IdeaController extends Controller
             case User::IsGestor():
                 $nodo = auth()->user()->gestor->nodo_id;
                 break;
+            case User::IsArticulador():
+                $nodo = auth()->user()->gestor->nodo_id;
+                break;
             case User::IsInfocenter():
                 $nodo = auth()->user()->infocenter->nodo_id;
                 break;
@@ -536,5 +539,44 @@ class IdeaController extends Controller
                 'route' => route('idea.index'),
             ]);
         }
+    }
+
+    public function show($id)
+    {
+        $idea = Idea::select('id', 'codigo_idea','nombre_proyecto','objetivo', 'alcance',  'talento_id', 'empresa_id')->with([
+            'talento' => function($query){
+                $query->select('id', 'user_id');
+            },
+            'talento.user' => function($query){
+                $query->select('id','documento', 'nombres', 'apellidos', 'email', 'celular');
+            },
+            'company' => function($query){
+                $query->select('id', 'nit', 'entidad_id');
+            },
+            'company.entidad' => function($query){
+                $query->select('id', 'nombre', 'slug');
+            }
+        ])->where('id', $id)->first();
+        $talento = null;
+        $empresa = null;
+      
+
+        if($idea->has('talento.user') &&isset($idea->talento->user))
+        {
+            $talento = $idea->talento;
+        }
+        if($idea->has('company.entidad') && isset($idea->company->entidad))
+        {
+            $empresa = $idea->company;
+        }
+        
+        return response()->json([
+            'data' => [
+                'idea' => $idea,
+                'talento' => $talento,
+                'empresa' => $empresa,
+            ],
+        ]);
+
     }
 }

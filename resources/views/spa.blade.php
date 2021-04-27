@@ -994,11 +994,12 @@
                 <div class="dire-telf">
                     <div class="direc">
                         <h5>Dirección</h5>
-                        <p>Carrera 23 No 39 - 38 Bucaramanga</p>
+                        <p>Calle 48 # 28-40 Edificio S-Innova antiguo edificio Ecopetrol (Cabecera)</p>
+                        
                     </div>
                     <div class="telf">
-                        <h5>Teléfono</h5>
-                        <p>(+037) 6800600</p>
+                        <h5>Línea Celular y WhatsApp</h5>
+                        <p>3027030292</p>
                     </div>
                 </div>
                 <h5>Líneas</h5>
@@ -1021,7 +1022,7 @@
                         </div>
                     </div>
                 </div>
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3959.066749550133!2d-73.12118595033506!3d7.118263517914365!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e683f57b7db02a9%3A0x2451bd9419408f8b!2sTecnoparque%20Nodo%20Bucaramanga!5e0!3m2!1ses!2sco!4v1604526314470!5m2!1ses!2sco"
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3959.0840261864123!2d-73.11511948522599!3d7.116261094861151!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e683fde131abaff%3A0xd1d9daec32a3cc53!2sCl.%2048%20%2328-40%2C%20Bucaramanga%2C%20Santander!5e0!3m2!1ses-419!2sco!4v1619060910082!5m2!1ses-419!2sco"
                     width="400" height="200" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
                 <div class="contenedor-circulos">
                     <div class="opcionNodos santa1"></div>
@@ -1624,11 +1625,14 @@
 
                 <h5>Dirección</h5>
 
-                <p>Carrera 23 No 39 - 38 Bucaramanga</p>
+                <p>Calle 48 # 28-40 Edificio Se-Innova antiguo edificio Ecopetrol (Cabecera)a</p>
+                <h5>Correo Electrónico</h5>
 
-                <h5>Teléfono</h5>
+                <p>tecnoparquebuc@sena.edu.co</p>
 
-                <p>(+037) 6800600</p>
+                <h5>Línea Celular y WhatsApp</h5>
+
+                <p>3027030292</p>
 
             </div>
 
@@ -1646,7 +1650,7 @@
 
             </div>
 
-            <iframe class="nodos-movil-mapa" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3959.066749550133!2d-73.12118595033506!3d7.118263517914365!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e683f57b7db02a9%3A0x2451bd9419408f8b!2sTecnoparque%20Nodo%20Bucaramanga!5e0!3m2!1ses!2sco!4v1604526314470!5m2!1ses!2sco"
+            <iframe class="nodos-movil-mapa" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3959.0840261864123!2d-73.11511948522599!3d7.116261094861151!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e683fde131abaff%3A0xd1d9daec32a3cc53!2sCl.%2048%20%2328-40%2C%20Bucaramanga%2C%20Santander!5e0!3m2!1ses-419!2sco!4v1619060910082!5m2!1ses-419!2sco"
                 width="400" height="200" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
 
         </div>

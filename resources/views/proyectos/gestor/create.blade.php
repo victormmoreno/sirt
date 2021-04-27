@@ -5,8 +5,8 @@
   <div class="content">
     <div class="row no-m-t no-m-b">
       <div class="col s12 m12 l12">
-        <h5>
-          <a class="footer-text left-align" href="{{route('proyecto')}}">
+        <h5 class="orange-text">
+          <a class="footer-text left-align " href="{{route('proyecto')}}">
             <i class="material-icons arrow-l">arrow_back</i>
           </a> Proyectos de Base Tecnológica
         </h5>
@@ -15,13 +15,15 @@
             <div class="row">
               <br>
               <center>
-                <span class="card-title center-align"><b>Nuevo Proyecto - {{ auth()->user()->nombres }} {{ auth()->user()->apellidos }}</b></span>
+                <span class="card-title center-align orange-text"><b>Nuevo Proyecto - {{ auth()->user()->nombres }} {{ auth()->user()->apellidos }}</b></span>
               </center>
               <div class="divider"></div>
-              <div class="card-panel red lighten-3">
-                <div class="card-content white-text">
-                  <a class="btn-floating red"><i class="material-icons left">info_outline</i></a>
-                  <span>Los elementos con (*) son obligatorios</span>
+              <div class="col s12 m12 l12">
+                <div class="card-content red lighten-3 white-text">
+                  <p>
+                    <i class="material-icons left">info_outline</i>
+                    Los elementos con (*) son obligatorios
+                  </p>
                 </div>
               </div>
               <br/>
