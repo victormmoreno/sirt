@@ -18,7 +18,8 @@
                 <div class="col s12 m6 l6 offset-s3 offset-m3 offset-l3 center">
                   @if ( ($ultimo_movimiento->rol == App\User::IsDinamizador() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsAprobar() && $proyecto->fase->nombre == 'Planeación') || 
                   ($ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->fase == 'Planeación') || 
-                  ($ultimo_movimiento->rol == App\User::IsDinamizador() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->fase == 'Planeación') )
+                  ($ultimo_movimiento->rol == App\User::IsDinamizador() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->fase == 'Planeación') ||
+                  $ultimo_movimiento->rol == App\User::IsDinamizador() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsCambiar() )
                   <a href="{{route('proyecto.solicitar.aprobacion', [$proyecto->id, 'Planeación'])}}">
                     <div class="card-panel yellow accent-1 black-text">
                       Solicitar al talento que apruebe la fase de planeación.

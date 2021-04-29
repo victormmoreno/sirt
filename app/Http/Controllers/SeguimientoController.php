@@ -127,17 +127,19 @@ class SeguimientoController extends Controller
    * @param int $
    * @param int $
    */
-  private function retornarValoresDelSeguimientoFases(int $Pinicio, int $Pplaneacion, int $Pejecucion, int $Pcierre, int $Ainicio, int $Aplaneacion, int $Aejecucion, int $Acierre) {
+  private function retornarValoresDelSeguimientoFases(int $Pinicio, int $Pplaneacion, int $Pejecucion, int $Pcierre, int $Pfinalizado, int $Psuspendido) {
     $datos = array();
     $datos['ProyectosInicio'] = $Pinicio;
     $datos['ProyectosPlaneacion'] = $Pplaneacion;
     $datos['ProyectosEjecucion'] = $Pejecucion;
     $datos['ProyectosCierre'] = $Pcierre;
+    $datos['ProyectosFinalizado'] = $Pfinalizado;
+    $datos['ProyectosSuspendido'] = $Psuspendido;
 
-    $datos['ArticulacionesInicio'] = $Ainicio;
-    $datos['ArticulacionesPlaneacion'] = $Aplaneacion;
-    $datos['ArticulacionesEjecucion'] = $Aejecucion;
-    $datos['ArticulacionesCierre'] = $Acierre;
+    // $datos['ArticulacionesInicio'] = $Ainicio;
+    // $datos['ArticulacionesPlaneacion'] = $Aplaneacion;
+    // $datos['ArticulacionesEjecucion'] = $Aejecucion;
+    // $datos['ArticulacionesCierre'] = $Acierre;
     return $datos;
   }
 
@@ -195,23 +197,16 @@ class SeguimientoController extends Controller
     $Pplaneacion = 0;
     $Pejecucion = 0;
     $Pcierre = 0;
-    $Ainicio = 0;
-    $Aplaneacion = 0;
-    $Aejecucion = 0;
-    $Acierre = 0;
+    $Psuspendido = 0;
     // Proyectos
     $Pinicio = $this->getProyectoRepository()->consultarProyectosFase('Inicio')->where('nodos.id', $idnodo)->first()->cantidad;
     $Pplaneacion = $this->getProyectoRepository()->consultarProyectosFase('Planeación')->where('nodos.id', $idnodo)->first()->cantidad;
     $Pejecucion = $this->getProyectoRepository()->consultarProyectosFase('Ejecución')->where('nodos.id', $idnodo)->first()->cantidad;
     $Pcierre = $this->getProyectoRepository()->consultarProyectosFase('Cierre')->where('nodos.id', $idnodo)->first()->cantidad;
-    // Articulaciones
-    $Ainicio = $this->getArticulacionRepository()->consultarArticulacionesFase('Inicio')->where('nodos.id', $idnodo)->first()->cantidad;
-    $Aplaneacion = $this->getArticulacionRepository()->consultarArticulacionesFase('Planeación')->where('nodos.id', $idnodo)->first()->cantidad;
-    $Aejecucion = $this->getArticulacionRepository()->consultarArticulacionesFase('Ejecución')->where('nodos.id', $idnodo)->first()->cantidad;
-    $Acierre = $this->getArticulacionRepository()->consultarArticulacionesFase('Cierre')->where('nodos.id', $idnodo)->first()->cantidad;
+    $Pfinalizado = $this->getProyectoRepository()->consultarProyectosFase('Finalizado')->where('nodos.id', $idnodo)->first()->cantidad;
+    $Psuspendido = $this->getProyectoRepository()->consultarProyectosFase('Suspendido')->where('nodos.id', $idnodo)->first()->cantidad;
 
-
-    $datos = $this->retornarValoresDelSeguimientoFases($Pinicio, $Pplaneacion, $Pejecucion, $Pcierre, $Ainicio, $Aplaneacion, $Aejecucion, $Acierre);
+    $datos = $this->retornarValoresDelSeguimientoFases($Pinicio, $Pplaneacion, $Pejecucion, $Pcierre, $Pfinalizado, $Psuspendido);
     return response()->json([
       'datos' => $datos
     ]);
@@ -228,6 +223,10 @@ class SeguimientoController extends Controller
     $idgestor = $id;
     if (Session::get('login_role') == User::IsGestor()) {
       $idgestor = auth()->user()->gestor->id;
+      $idnodo = auth()->user()->gestor->nodo_id;
+    }
+    if (Session::get('login_role') == User::IsDinamizador()) {
+      $idnodo = auth()->user()->dinamizador->nodo_id;
     }
 
     $datos = array();
@@ -235,23 +234,16 @@ class SeguimientoController extends Controller
     $Pplaneacion = 0;
     $Pejecucion = 0;
     $Pcierre = 0;
-    $Ainicio = 0;
-    $Aplaneacion = 0;
-    $Aejecucion = 0;
-    $Acierre = 0;
+    $Psuspendido = 0;
     // Proyectos
-    $Pinicio = $this->getProyectoRepository()->consultarProyectosFase('Inicio')->where('g.id', $idgestor)->first()->cantidad;
-    $Pplaneacion = $this->getProyectoRepository()->consultarProyectosFase('Planeación')->where('g.id', $idgestor)->first()->cantidad;
-    $Pejecucion = $this->getProyectoRepository()->consultarProyectosFase('Ejecución')->where('g.id', $idgestor)->first()->cantidad;
-    $Pcierre = $this->getProyectoRepository()->consultarProyectosFase('Cierre')->where('g.id', $idgestor)->first()->cantidad;
-    // Articulaciones
-    $Ainicio = $this->getArticulacionRepository()->consultarArticulacionesFase('Inicio')->where('g.id', $idgestor)->first()->cantidad;
-    $Aplaneacion = $this->getArticulacionRepository()->consultarArticulacionesFase('Planeación')->where('g.id', $idgestor)->first()->cantidad;
-    $Aejecucion = $this->getArticulacionRepository()->consultarArticulacionesFase('Ejecución')->where('g.id', $idgestor)->first()->cantidad;
-    $Acierre = $this->getArticulacionRepository()->consultarArticulacionesFase('Cierre')->where('g.id', $idgestor)->first()->cantidad;
+    $Pinicio = $this->getProyectoRepository()->consultarProyectosFase('Inicio')->where('g.id', $idgestor)->where('nodos.id', $idnodo)->first()->cantidad;
+    $Pplaneacion = $this->getProyectoRepository()->consultarProyectosFase('Planeación')->where('g.id', $idgestor)->where('nodos.id', $idnodo)->first()->cantidad;
+    $Pejecucion = $this->getProyectoRepository()->consultarProyectosFase('Ejecución')->where('g.id', $idgestor)->where('nodos.id', $idnodo)->first()->cantidad;
+    $Pcierre = $this->getProyectoRepository()->consultarProyectosFase('Cierre')->where('g.id', $idgestor)->where('nodos.id', $idnodo)->first()->cantidad;
+    $Pfinalizado = $this->getProyectoRepository()->consultarProyectosFase('Finalizado')->where('g.id', $idgestor)->where('nodos.id', $idnodo)->first()->cantidad;
+    $Psuspendido = $this->getProyectoRepository()->consultarProyectosFase('Suspendido')->where('g.id', $idgestor)->where('nodos.id', $idnodo)->first()->cantidad;
 
-
-    $datos = $this->retornarValoresDelSeguimientoFases($Pinicio, $Pplaneacion, $Pejecucion, $Pcierre, $Ainicio, $Aplaneacion, $Aejecucion, $Acierre);
+    $datos = $this->retornarValoresDelSeguimientoFases($Pinicio, $Pplaneacion, $Pejecucion, $Pcierre, $Pfinalizado, $Psuspendido);
     return response()->json([
       'datos' => $datos
     ]);
