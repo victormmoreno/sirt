@@ -59,6 +59,8 @@ $(document).on('submit', 'form#formEditProfile', function (event) {
 });
 
 
+
+
 var EditProfileUser = {
     printErroresFormulario: function (data){
       if (data.state == 'error_form') {

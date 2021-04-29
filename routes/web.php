@@ -148,10 +148,11 @@ Route::group(
         Route::get('/{documento}/permisos', 'UserController@changeNodeUser')->name('usuario.usuarios.changenode')->where('documento', '[0-9]+');
         Route::put('/{documento}/updatenodo', 'UserController@updateNode')->name('usuario.usuarios.updatenodo')->middleware('disablepreventback');
         Route::get('/usuarios/acceso/{documento}', 'UserController@acceso')->name('usuario.usuarios.acceso')->where('documento', '[0-9]+');
-
-        Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'only' => 'show'])->names([
+        Route::put('/{id}/update-account', 'UserController@updateAccountUser')->name('usuario.usuarios.updateaccount')->middleware('disablepreventback');
+        Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'only' => ['show', 'edit']])->names([
             'update'  => 'usuario.usuarios.update',
             'show'    => 'usuario.usuarios.show',
+            'edit'    => 'usuario.usuarios.edit',
         ])->parameters([
             'usuarios' => 'id',
         ]);

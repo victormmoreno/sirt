@@ -55,22 +55,23 @@
                                         <div class="right mailbox-buttons">
 
                                             @if($user->documento != auth()->user()->documento)
-
                                                 @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
+                                                <!-- Dropdown Trigger -->
+                                                    <a class='dropdown-button btn waves-effect waves-orange btn-flat m-t-xs' href='#' data-activates='dropdown-actions'>Cambiar información</a>
+                                                    <!-- Dropdown Structure -->
+                                                    <ul id='dropdown-actions' class='dropdown-content'>
+                                                        <li><a href="{{route('usuario.usuarios.edit', $user->present()->userDocumento())}}">Cambiar Información personal</a></li>
+                                                        <li class="divider"></li>
+                                                        <li><a  href="{{route('usuario.usuarios.changenode', $user->present()->userDocumento())}}">Cambiar Roles y Nodos</a></li>
+                                                    </ul>
+                                                @endif
+                                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && !$user->hasAnyRole([App\User::IsDinamizador(), App\User::IsAdministrador() ]))
                                                     <a href="{{route('usuario.usuarios.acceso', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar Acceso</a>
-                                                @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && !$user->hasAnyRole([App\User::IsDinamizador(), App\User::IsAdministrador() ]))
-                                                    <a href="{{route('usuario.usuarios.acceso', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar Acceso</a>
-                                                @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor() && !$user->hasAnyRole([App\User::IsDinamizador(), App\User::IsAdministrador(), App\User::IsInfocenter(), App\User::IsArticulador(), App\User::IsIngreso(), App\User::IsDesarrollador() ]))
+                                                    <a href="{{route('usuario.usuarios.changenode', $user->present()->userDocumento())}}"  class="waves-effect waves-orange btn-flat m-t-xs">Cambiar Roles y Nodos</a>
+                                                @endif
+                                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor() && !$user->hasAnyRole([App\User::IsDinamizador(), App\User::IsAdministrador(), App\User::IsInfocenter(), App\User::IsArticulador(), App\User::IsIngreso(), App\User::IsDesarrollador() ]))
                                                     <a href="{{route('usuario.usuarios.acceso', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar Acceso</a>
                                                 @endif
-                                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador() && !$user->hasRole(App\User::IsTalento()))
-                                                <a href="{{route('usuario.usuarios.changenode', $user->present()->userDocumento())}}"  class="waves-effect waves-orange btn-flat m-t-xs">Cambiar Roles y Nodos</a>
-                                                @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
-                                                <a href="{{route('usuario.usuarios.changenode', $user->present()->userDocumento())}}"  class="waves-effect waves-orange btn-flat m-t-xs">Cambiar Roles y Nodos</a>
-                                                @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
-                                                <a href="{{route('usuario.usuarios.changenode', $user->present()->userDocumento())}}"  class="waves-effect waves-orange btn-flat m-t-xs">Cambiar Roles y Nodos</a>
-                                                @endif
-                                                
                                             @endif
                                         </div>
                                     </div>
