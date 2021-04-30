@@ -38,8 +38,8 @@ $yearNow = Carbon\Carbon::now()->isoFormat('YYYY');
               <div id="gestor" class="col s12 m12 l12">
                 <div class="col s12 m12 l12">
                   <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
-                    <li class="tab col s3"><a class="" href="#gestor_todo">Proyectos y AGI Inscritos - Cerrados</a></li>
-                    <li class="tab col s3"><a class="" href="#gestor_actual">Fase actual de proyectos y AGI</a></li>
+                    <li class="tab col s3"><a class="" href="#gestor_todo">Proyectos Inscritos - Cerrados</a></li>
+                    <li class="tab col s3"><a class="" href="#gestor_actual">Fase actual de proyectos</a></li>
                     {{-- <li class="tab col s3"><a class="" href="#linea">Línea</a></li> --}}
                   </ul>
                   <br>
@@ -112,8 +112,8 @@ $yearNow = Carbon\Carbon::now()->isoFormat('YYYY');
               <div id="tecnoparque" class="col s12 m12 l12">
                 <div class="col s12 m12 l12">
                   <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
-                    <li class="tab col s3"><a class="" href="#tecnoparque_todo">Proyectos y AGI Inscritos - Cerrados</a></li>
-                    <li class="tab col s3"><a class="" href="#tecnoparque_actual">Fase actual de proyectos y AGI</a></li>
+                    <li class="tab col s3"><a class="" href="#tecnoparque_todo">Proyectos Inscritos - Cerrados</a></li>
+                    <li class="tab col s3"><a class="" href="#tecnoparque_actual">Fase actual de proyectos</a></li>
                     {{-- <li class="tab col s3"><a class="" href="#linea">Línea</a></li> --}}
                   </ul>
                   <br>
@@ -156,7 +156,7 @@ $yearNow = Carbon\Carbon::now()->isoFormat('YYYY');
                       style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
                       <div class="row card-panel">
                         <h5 class="center">
-                          Aquí puedes ver los estados actuales de los proyectos y articulaciones con grupos de investigación.
+                          Aquí puedes ver los estados actuales de los proyectos.
                         </h5>
                       </div>
                     </div>

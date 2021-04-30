@@ -237,36 +237,28 @@ function graficoSeguimientoFases(data, name) {
         },
         data: [
           {
-            name: "Proyectos en Inicio",
+            name: "Proyectos en inicio",
             y: data.datos.ProyectosInicio,
           },
           {
-            name: "Proyectos en Planeación",
+            name: "Proyectos en planeación",
             y: data.datos.ProyectosPlaneacion,
           },
           {
-            name: "Proyectos en Ejecución",
+            name: "Proyectos en ejecución",
             y: data.datos.ProyectosEjecucion,
           },
           {
-            name: "Proyectos en Cierre",
+            name: "Proyectos en cierre",
             y: data.datos.ProyectosCierre,
           },
           {
-            name: "Articulaciones en Inicio",
-            y: data.datos.ArticulacionesInicio,
+            name: "Proyectos finalizados",
+            y: data.datos.ProyectosFinalizado,
           },
           {
-            name: "Articulaciones en Planeación",
-            y: data.datos.ArticulacionesPlaneacion,
-          },
-          {
-            name: "Articulaciones en Ejecución",
-            y: data.datos.ArticulacionesEjecucion,
-          },
-          {
-            name: "Articulaciones en Cierre",
-            y: data.datos.ArticulacionesCierre,
+            name: "Proyectos suspendidos",
+            y: data.datos.ProyectosSuspendido,
           },
         ]
       }

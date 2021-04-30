@@ -209,9 +209,14 @@ class ProyectoRepository
       $q->where(function ($query) {
         $query->whereYear('actividades.fecha_cierre', Carbon::now()->isoFormat('YYYY'));
       })
-        ->orWhere(function ($query) {
+      ->orWhere(function($query) {
+        $query->where(function($query) {
           $query->whereYear('actividades.fecha_inicio', Carbon::now()->isoFormat('YYYY'));
+          $query->orWhere(function($query) {
+          $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
         });
+      });
+      });
     });
   }
 
@@ -290,7 +295,12 @@ class ProyectoRepository
           $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre]);
         })
         ->orWhere(function($query) use ($fecha_inicio, $fecha_cierre) {
+          $query->where(function($query) use ($fecha_inicio, $fecha_cierre) {
           $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
+          $query->orWhere(function ($query) {
+            $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
+          });
+        });
         });
       })
       ->groupBy('codigo_actividad', 'actividades.nombre')
