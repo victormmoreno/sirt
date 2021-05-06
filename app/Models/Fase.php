@@ -49,6 +49,11 @@ class Fase extends Model
       return $this->hasMany(Proyecto::class, 'fase_id', 'id');
   }
 
+  public function articulacionespbt()
+  {
+      return $this->hasMany(ArticulacionPbt::class, 'fase_id', 'id');
+  }
+
   public function articulaciones()
   {
       return $this->hasMany(Articulacion::class, 'fase_id', 'id');

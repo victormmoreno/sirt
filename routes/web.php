@@ -885,3 +885,6 @@ Route::group([
 });
 
 //-----------------------Fin ruta sección noticias-----------------------------------
+
+
+Route::resource('articulaciones', 'ArticulacionPbtController');

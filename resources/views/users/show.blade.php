@@ -56,6 +56,7 @@
 
                                             @if($user->documento != auth()->user()->documento)
                                                 @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
+                                                <a href="{{route('usuario.usuarios.acceso', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar Acceso</a>
                                                 <!-- Dropdown Trigger -->
                                                     <a class='dropdown-button btn waves-effect waves-orange btn-flat m-t-xs' href='#' data-activates='dropdown-actions'>Cambiar información</a>
                                                     <!-- Dropdown Structure -->

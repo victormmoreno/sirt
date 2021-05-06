@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
+use App\Models\ArticulacionPbt;
 
 class Proyecto extends Model
 {
@@ -115,6 +116,11 @@ class Proyecto extends Model
   public function articulacion_proyecto()
   {
     return $this->belongsTo(ArticulacionProyecto::class, 'articulacion_proyecto_id', 'id');
+  }
+
+  public function articulacionpbt()
+  {
+      return $this->hasOne(ArticulacionPbt::class, 'proyecto_id', 'id');
   }
 
   /*=====  End of relaciones polimorficas  ======*/

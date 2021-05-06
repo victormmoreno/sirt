@@ -116,6 +116,12 @@ class Actividad extends Model
         return $this->belongsTo(Gestor::class, 'gestor_id', 'id');
     }
 
+    public function articulacionpbt()
+    {
+        return $this->hasMany(ArticulacionPbt::class, 'actividad_id', 'id');
+    }
+
+
     /**
      * Devolver relacion entre actividades y nodo
      * @author julian londoño
@@ -147,5 +153,7 @@ class Actividad extends Model
         })
         ->orderBy('fecha_inicio', 'ASC')->pluck('nombre','codigo_actividad');
     }
+
+    
 
 }
