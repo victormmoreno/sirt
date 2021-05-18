@@ -50,6 +50,7 @@ class IdeaFormRequest extends FormRequest
             'txtvalor_clientes' => 'max:2100|' . $control,
             'txtsi_requisitos_legales' => Rule::requiredIf(request()->txtrequisitos_legales == 1) . '|max:2100|nullable',
             'txtsi_requiere_certificaciones' => Rule::requiredIf(request()->txtrequiere_certificaciones == 1) . '|max:2100|nullable',
+            'txtsede_id' => Rule::requiredIf(request()->txtsede_id == 1 && request()->txtsede_id == null),
             'txtforma_juridica' => 'max:1400|'. $control,
             'txtlinkvideo' => 'nullable|url|max:1000',
             'txtversion_beta' => $control . '|max:200',
@@ -109,7 +110,8 @@ class IdeaFormRequest extends FormRequest
             'txtconvocatoria.required' => 'El nombre de la convocatoria es obligatorio.',
             'txtconvocatoria.max' => 'El nombre de la convocatoria debe ser máximo :max caracteres.',
             'txtempresa.required' => 'El nombre de la entidad que avala es obligatorio.',
-            'txtempresa.max' => 'El nombre de la entidad que avala debe ser máximo :max caracteres.'
+            'txtempresa.max' => 'El nombre de la entidad que avala debe ser máximo :max caracteres.',
+            'txtsede_id.required' => 'La sede con la que se realizará la idea de proyecto es obligatoria.',
         ];
     }
 

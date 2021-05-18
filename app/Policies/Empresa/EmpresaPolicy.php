@@ -3,6 +3,7 @@
 namespace App\Policies\Empresa;
 
 use App\User;
+use App\Models\Empresa;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Spatie\Permission\Models\Role;
 
@@ -41,25 +42,25 @@ class EmpresaPolicy
     }
 
     /**
-     * Determine whether the user can edit a nodo.
+     * Determine whether the user can edit a empresa.
      *
-     * @param  \App\User  $user
+     * @param  \App\Model\Empresa  $empresa
      * @return bool
      */
-    public function edit(User $user)
+    public function edit(Empresa $empresa)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+        return (bool) session()->get('login_role') == User::IsAdministrador() || (session()->get('login_role') == User::IsTalento() && $empresa->user_id == auth()->user()->id);
     }
 
     /**
-     * Determine whether the user can update a nodo.
+     * Determine whether the user can update a empresa.
      *
-     * @param  \App\User  $user
+     * @param  \App\Model\Empresa  $empresa
      * @return bool
      */
-    public function update(User $user)
+    public function update(Empresa $empresa)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+        return (bool) session()->get('login_role') == User::IsAdministrador() || (session()->get('login_role') == User::IsTalento() && $empresa->user_id == auth()->user()->id);
     }
 
 }

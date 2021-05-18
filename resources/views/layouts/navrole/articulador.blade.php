@@ -13,3 +13,8 @@
     <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas
   </a>
 </li>
+<li class="no-padding {{setActiveRoute('empresa')}}">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('empresa')}}" href="{{route('empresa')}}" rel="canonical" title="Empresas">
+    <i class="material-icons {{ setActiveRouteActiveIcon('empresa') }}">business_center</i>Empresas
+  </a>
+</li>

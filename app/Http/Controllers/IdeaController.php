@@ -57,7 +57,7 @@ class IdeaController extends Controller
     {
         if ($request->input('txtidea_empresa') == 1) {
             // Idea con empresa
-            $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($request->input('txtnit'), 'nit')->first();
+            $empresa = $this->empresaRepository->consultarEmpresaParams($request->input('txtnit'), 'nit')->first();
             if ($empresa == null) {
                 $req_empresa = new EmpresaFormRequest;
                 $validar_empresa = Validator::make($request->all(), $req_empresa->rules(), $req_empresa->messages());
@@ -411,7 +411,7 @@ class IdeaController extends Controller
 
         if ($request->input('txtidea_empresa') == 1) {
             // Idea con empresa
-            $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($request->input('txtnit'), 'nit')->first();
+            $empresa = $this->empresaRepository->consultarEmpresaParams($request->input('txtnit'), 'nit')->first();
             if ($empresa == null) {
                 $req_empresa = new EmpresaFormRequest;
                 $validar_empresa = Validator::make($request->all(), $req_empresa->rules(), $req_empresa->messages());
@@ -467,7 +467,7 @@ class IdeaController extends Controller
     {
         $idea = $this->ideaRepository->findByid($id);
         $update = $this->ideaRepository->enviarIdeaAlNodo($request, $idea);
-        alert($update['title'], $update['msg'], $update['type'])->showConfirmButton('Ok', '#3085d6');;
+        alert($update['title'], $update['msg'], $update['type'])->showConfirmButton('Ok', '#3085d6');
         if ($update['state']) {
             return redirect('idea');
         } else {
@@ -521,24 +521,6 @@ class IdeaController extends Controller
             ->get();
 
         return (new IdeasExport($ideas))->download("ideas - " . config('app.name') . ".{$extension}");
-    }
-
-    /**
-     * Cambia el estado de idea a una idea de proyecto
-     * @param int id Id de la idea que se le va a cambiar el estado
-     * @param string estado nombre del estado al que se va a cambiar la idea
-     * @return void
-     */
-    public function updateEstadoIdea($id, $estado)
-    {
-        $idea = Idea::ConsultarIdeaId($id)->first();
-        $this->authorize('update', $idea);
-        if ($idea->estado_idea == EstadoIdea::IsRegistro()) {
-            $this->ideaRepository->updateEstadoIdea($id, $estado);
-            return response()->json([
-                'route' => route('idea.index'),
-            ]);
-        }
     }
 
     public function show($id)

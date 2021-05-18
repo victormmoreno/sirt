@@ -311,16 +311,19 @@ function consultarEmpresaTecnoparque() {
             type: 'get',
             url : '/empresa/ajaxDetallesDeUnaEmpresa/'+nit+'/'+field,
             success: function (response) {
-                // console.log(response.empresa.entidad.nombre);
               if (response.empresa == null) {
                 divEmpresaRegistrada.hide();
                 divRegistrarEmpresa.show();
                 $('#txtnit_empresa').val(nit);
                 $("label[for='txtnit_empresa']").addClass('active');
               } else {
+                let registros;
                 asignarValoresFRMIdeas(response);
                 divEmpresaRegistrada.show();
                 divRegistrarEmpresa.hide();
+                reiniciarSede();
+                registros = mostrarSedesEmpresa(response);
+                $('#sedesEmpresaFormIdea').append(registros);
               }
             },
             error: function (xhr, textStatus, errorThrown) {
@@ -329,6 +332,46 @@ function consultarEmpresaTecnoparque() {
           })
         }
     }
+}
+
+function reiniciarSede() {
+  $('#sedesEmpresaFormIdea').empty();
+  $('#txtsede_id').val('');
+  $('#txtnombre_sede_disabled').val('Primero debes seleccionar una sede');
+}
+
+function mostrarSedesEmpresa(ajax) {
+  let fila = "";
+  ajax.empresa.sedes.forEach(element => {
+    fila += `<li class="collection-item">
+      ` + element.nombre_sede + ` - ` + element.direccion + ` ` + element.ciudad.nombre + ` (` + element.ciudad.departamento.nombre + `)
+      <a href="#!" class="secondary-content" onclick="asociarSedeAIdeaProyecto(`+element.id+`)">Asociar esta sede de la empresa a la idea de proyecto</a></div>
+    </li>`;
+  });
+  return fila
+}
+
+function asociarSedeAIdeaProyecto(sede_id) {
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url : '/empresa/ajaxDetalleDeUnaSede/'+sede_id,
+    success: function (response) {
+      $('#txtsede_id').val(response.sede.id);
+      $('#txtnombre_sede_disabled').val(response.sede.nombre_sede + ' - ' + response.sede.direccion + ' ' + response.sede.ciudad.nombre + ' (' + response.sede.ciudad.departamento.nombre + ')');
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 1500,
+        type: 'success',
+        title: 'La sede '+response.sede.nombre_sede+' se asoció a la idea de proyecto!'
+    });
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    }
+  })
 }
 
   $(document).on('click', '.btnModalIdeaCancelar', function(event) {
@@ -406,7 +449,7 @@ function enviarIdeaRegistro(event, tipo) {
 }
 
 function asignarValoresFRMIdeas(response) {
-    $('#txtnombre_empresa_det').val(response.empresa.entidad.nombre);
+    $('#txtnombre_empresa_det').val(response.empresa.nombre);
     $("label[for='txtnombre_empresa_det']").addClass('active');
     $('#txttipo_empresa_det').val(response.empresa.tipoempresa.nombre);
     $("label[for='txttipo_empresa_det']").addClass('active');
@@ -1972,71 +2015,6 @@ function consultarCsibtPorNodo() {
 }
 
 $(document).ready(function() {
-    var datatableEmpresas = $('#empresasDeTecnoparque_tableNoGestor').DataTable({
-        language: {
-        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-        processing: true,
-        serverSide: true,
-        ajax:{
-        url: "/empresa/datatableEmpresasDeTecnoparque",
-        type: "get",
-        },
-        deferRender: true,
-        columns: [
-        {
-            data: 'nit',
-            name: 'nit',
-        },
-        {
-            data: 'nombre_empresa',
-            name: 'nombre_empresa',
-        },
-        {
-            data: 'sector_empresa',
-            name: 'sector_empresa',
-        },
-        {
-            data: 'ciudad',
-            name: 'ciudad',
-        },
-        {
-            data: 'direccion',
-            name: 'direccion',
-        },
-        {
-            data: 'details',
-            name: 'details',
-            orderable: false
-        },
-        {
-            data: 'edit',
-            name: 'edit',
-            orderable: false
-        },
-        ],
-        initComplete: function () {
-        this.api().columns().every( function () {
-            var column = this;
-            var select = $('<select><option value=""></option></select>')
-            .appendTo( $(column.footer()).empty() )
-            .on( 'change', function () {
-            var val = $.fn.dataTable.util.escapeRegex(
-                $(this).val()
-            );
-
-            column
-            .search( val ? '^'+val+'$' : '', true, false )
-            .draw();
-            } );
-
-            column.data().unique().sort().each( function ( d, j ) {
-            select.append( '<option value="'+d+'">'+d+'</option>' )
-            } );
-        } );
-        },
-    });
     $('#empresasDeTecnoparque_table').DataTable({
         language: {
         "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -2062,19 +2040,6 @@ $(document).ready(function() {
             name: 'sector_empresa',
         },
         {
-            data: 'ciudad',
-            name: 'ciudad',
-        },
-        {
-            data: 'direccion',
-            name: 'direccion',
-        },
-        {
-            data: 'contacts',
-            name: 'contacts',
-            orderable: false
-        },
-        {
             data: 'details',
             name: 'details',
             orderable: false
@@ -2082,110 +2047,6 @@ $(document).ready(function() {
         ],
     });
 });
-var empresaIndex = {
-    consultarDetallesDeUnaEmpresa:function(id){
-        $.ajax({
-        dataType:'json',
-        type:'get',
-        url:"/empresa/ajaxDetallesDeUnaEmpresa/"+id+"/"+'id'
-        }).done(function(respuesta){
-        $("#modalDetalleDeUnaEmpresaTecnoparque_titulo").empty();
-        $("#modalDetalleDeUnaEmpresaTecnoparque_detalle_empresa").empty();
-        if (respuesta == null) {
-            swal('Ups!!', 'Ha ocurrido un error', 'warning');
-        } else {
-            $("#modalDetalleDeUnaEmpresaTecnoparque_titulo").append("<span class='cyan-text text-darken-3'>Datos de la Empresa </span><br>");
-            $("#modalDetalleDeUnaEmpresaTecnoparque_detalle_empresa").append("<div class='row'>"
-            +'<div class="col s12 m6 l6">'
-            +'<span class="cyan-text text-darken-3">Nit de la Empresa: </span>'
-            +'</div>'
-            +'<div class="col s12 m6 l6">'
-            +'<span class="black-text">'+respuesta.empresa.nit+'</span>'
-            +'</div>'
-            +'</div>'
-            +'<div class="divider"></div>'
-            +'<div class="row">'
-            +'<div class="col s12 m6 l6">'
-            +'<span class="cyan-text text-darken-3">Nombre de la Empresa: </span>'
-            +'</div>'
-            +'<div class="col s12 m6 l6">'
-            +'<span class="black-text">'+respuesta.empresa.entidad.nombre+'</span>'
-            +'</div>'
-            +'</div>'
-            +'<div class="divider"></div>'
-            +'<div class="row">'
-            +'<div class="col s12 m6 l6">'
-            +'<span class="cyan-text text-darken-3">Dirección de la Empresa: </span>'
-            +'</div>'
-            +'<div class="col s12 m6 l6">'
-            +'<span class="black-text">'+respuesta.empresa.direccion+'</span>'
-            +'</div>'
-            +'</div>'
-            +'<div class="divider"></div>'
-            +'<div class="row">'
-            +'<div class="col s12 m6 l6">'
-            +'<span class="cyan-text text-darken-3">Ciudad de la Empresa: </span>'
-            +'</div>'
-            +'<div class="col s12 m6 l6">'
-            +'<span class="black-text">'+respuesta.empresa.entidad.ciudad.nombre+'</span>'
-            +'</div>'
-            +'</div>'
-            +'<div class="divider"></div>'
-            +'<div class="row">'
-            +'<div class="col s12 m6 l6">'
-            +'<span class="cyan-text text-darken-3">Email de la Empresa: </span>'
-            +'</div>'
-            +'<div class="col s12 m6 l6">'
-            +'<span class="black-text">'+respuesta.empresa.entidad.email_entidad+'</span>'
-            +'</div>'
-            +'</div>'
-        );
-        $('#detalleDeUnaEmpresaTecnoparque').openModal();
-        }
-    });
-    },
-}
-
-
-
-
-var EmpresaCreate = {
-    getCiudad: function() {
-        let id;
-        id = $('#txtdepartamento_empresa').val();
-        $.ajax({
-            dataType: 'json',
-            type: 'get',
-            url: '/usuario/getciudad/' + id
-        }).done(function(response) {
-            $('#txtciudad_id_empresa').empty();
-            $('#txtciudad_id_empresa').append('<option value="">Seleccione la Ciudad</option>')
-            $.each(response.ciudades, function(i, e) {
-                $('#txtciudad_id_empresa').append('<option  value="' + e.id + '">' + e.nombre + '</option>');
-            })
-            $('#txtciudad_id_empresa').material_select();
-        });
-    },
-    printErroresFormulario: function (data){
-        if (data.state == 'error_form') {
-            let errores = "";
-            for (control in data.errors) {
-                errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
-                $('#' + control + '-error').html(data.errors[control]);
-                $('#' + control + '-error').show();
-            }
-            Swal.fire({
-                title: 'Advertencia!',
-                html: 'Estas ingresando mal los datos.' + errores,
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'Ok'
-            });
-        }
-    }
-}
-
 $(document).on('submit', 'form#formRegisterCompany', function (event) {
 
     $('button[type="submit"]').attr('disabled', 'disabled');
@@ -2204,14 +2065,7 @@ $(document).on('submit', 'form#formRegisterCompany', function (event) {
     success: function (data) {
         $('button[type="submit"]').prop("disabled", false);
         $('.error').hide();
-        if (data.fail) {
-            
-        for (control in data.errors) {
-            $('#' + control + '-error').html(data.errors[control]);
-            $('#' + control + '-error').show();
-        }
-        EmpresaCreate.printErroresFormulario(data);
-        }
+        printErroresFormulario(data);
         if (data.state == 'error' && data.url == false) {
         Swal.fire({
             title: 'La empresa no se ha registrado, por favor inténtalo de nuevo',
@@ -2259,41 +2113,199 @@ $(document).on('submit', 'form#formEditCompany', function (event) {
             $('button[type="submit"]').removeAttr('disabled');
             $('button[type="submit"]').prop("disabled", false);
             $('.error').hide();
-            if (data.fail) {
+            printErroresFormulario(data);
+            if (data.state != 'error_form') {
+                Swal.fire({
+                    title: data.title,
+                    html: data.msg,
+                    type: data.type,
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok'
+                });
+            }
 
-                for (control in data.errors) {
-                    $('#' + control + '-error').html(data.errors[control]);
-                    $('#' + control + '-error').show();
-                }
-                EmpresaCreate.printErroresFormulario(data);
-            }
-            if (data.state == 'error' && data.url == false) {
-                Swal.fire({
-                    title: 'La empresa no se ha modificado, por favor inténtalo de nuevo',
-                    type: 'warning',
-                    showCancelButton: false,
-                    confirmButtonColor: '#3085d6',
-                    confirmButtonText: 'Ok'
-                });
-            }
-            if (data.state == 'success' && data.url != false) {
-                Swal.fire({
-                    title: 'Modifciación Exitosa',
-                    text: `La empresa ha sido modificado satisfactoriamente`,
-                    type: 'success',
-                    showCancelButton: false,
-                    confirmButtonColor: '#3085d6',
-                    confirmButtonText: 'Ok'
-                });
-                setTimeout(function(){
+            if (data.state == 'update') {
+                setTimeout(function () {
                     window.location.href = data.url;
-                }, 1000);
+                }, 1500);
             }
         },
-        // error: function (xhr, textStatus, errorThrown) {
-        //   alert("Error: " + errorThrown);
-        // }
     });
+});
+
+$(document).on('submit', 'form#formEditCompanyHq', function (event) {
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    $.ajax({
+        type: form.attr('method'),
+        url: url,
+        data: data,
+        cache: false,
+        contentType: false,
+        dataType: 'json',
+        processData: false,
+        success: function (data) {
+            $('button[type="submit"]').removeAttr('disabled');
+            $('button[type="submit"]').prop("disabled", false);
+            $('.error').hide();
+            printErroresFormulario(data);
+            if (data.state != 'error_form') {
+                Swal.fire({
+                    title: data.title,
+                    html: data.msg,
+                    type: data.type,
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok'
+                });
+            }
+
+            if (data.state == 'update') {
+                setTimeout(function () {
+                    window.location.href = data.url;
+                }, 1500);
+            }
+        },
+    });
+});
+
+$(document).on('submit', 'form#formAddCompanyHq', function (event) {
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    $.ajax({
+        type: form.attr('method'),
+        url: url,
+        data: data,
+        cache: false,
+        contentType: false,
+        dataType: 'json',
+        processData: false,
+        success: function (data) {
+            $('button[type="submit"]').removeAttr('disabled');
+            $('button[type="submit"]').prop("disabled", false);
+            $('.error').hide();
+            printErroresFormulario(data);
+            if (data.state != 'error_form') {
+                Swal.fire({
+                    title: data.title,
+                    html: data.msg,
+                    type: data.type,
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok'
+                });
+            }
+
+            if (data.state == 'store') {
+                setTimeout(function () {
+                    window.location.href = data.url;
+                }, 1500);
+            }
+        },
+    });
+});
+
+$(document).on('submit', 'form#formEditResponsable', function (event) {
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    $.ajax({
+        type: form.attr('method'),
+        url: url,
+        data: data,
+        cache: false,
+        contentType: false,
+        dataType: 'json',
+        processData: false,
+        success: function (data) {
+            $('button[type="submit"]').removeAttr('disabled');
+            $('button[type="submit"]').prop("disabled", false);
+            $('.error').hide();
+            printErroresFormulario(data);
+            if (data.state != 'error_form') {
+                Swal.fire({
+                    title: data.title,
+                    html: data.msg,
+                    type: data.type,
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok'
+                });
+            }
+
+            if (data.state == 'update') {
+                setTimeout(function () {
+                    window.location.href = data.url;
+                }, 1500);
+            }
+        },
+    });
+});
+
+$(document).on('submit', 'form#formSearchEmpresas', function (event) {
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    $('#empresas_encontradas').empty();
+    let nit = $('#txtnit_search').val();
+    let patronNit=new RegExp('^[0-9]{9,13}$');
+    if (!patronNit.test(nit)) {
+        Swal.fire(
+            'Estás ingresando mal los datos!',
+            'Por favor ingrese un nit válido entre 6 y 13 dígitos (no se permiten puntos ni código de verificación)',
+            'error'
+        );
+        $('button[type="submit"]').removeAttr('disabled');
+        $('button[type="submit"]').prop("disabled", false);
+    } else {
+        var form = $(this);
+        var data = new FormData($(this)[0]);
+        var url = form.attr("action");
+        $.ajax({
+            type: form.attr('method'),
+            url: url,
+            data: data,
+            cache: false,
+            contentType: false,
+            dataType: 'json',
+            processData: false,
+            success: function (data) {
+                if (data.empresas.length == 0) {
+                    $('#empresas_encontradas').append(`
+                        <div class="row">
+                            <ul class="collection with-header">
+                                <li class="collection-header"><h5>No se encontraron empresas</h5></li>
+                            </ul>
+                        </div>
+                    `);
+                } else {
+                    if (data.state == 'search') {
+                        $('#empresas_encontradas').append(`<div class="row">`);
+                            $.each( data.empresas, function( key, empresa ) {
+                            let route = data.urls[key];
+                            $('#empresas_encontradas').append(`
+                                <ul class="collection">
+                                    <li class="collection-item"><h5>`+empresa.nit+` - `+empresa.nombre+`</h5></li>
+                                    <li class="collection-item"><a href=`+route+`>Ver detalles</a></li>
+                                </ul>
+                            `);
+                        });
+                        $('#empresas_encontradas').append(`</div>`);
+                    }
+                }
+                $('button[type="submit"]').removeAttr('disabled');
+                $('button[type="submit"]').prop("disabled", false);
+            },
+        });
+    }
 });
 $(document).ready(function() {
   $('#grupoDeInvestigacionTecnoparque_table').DataTable({
