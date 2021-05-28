@@ -1087,51 +1087,30 @@ class ProyectoRepository
     }
   }
 
-  /**
-   * Notifica al dinamizador para que apruebe el proyecto en la fase de suspendido
-   * 
-   * @param int $id Id del proyecto
-   * @return boolean
-   * @author dum
-   */
-  public function notificarAlDinamziador_Suspendido(int $id)
-  {
-    DB::beginTransaction();
-    try {
-      $dinamizadorRepository = new DinamizadorRepository;
-      $proyecto = Proyecto::findOrFail($id);
-      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
-      Notification::send($dinamizadores, new ProyectoAprobarSuspendido($proyecto));
-      DB::commit();
-      return true;
-    } catch (\Throwable $th) {
-      DB::rollBack();
-      return false;
-    }
-  }
 
-  /**
-   * Notifica al talento interlocutor para que apruebe la fase de planeación
-   * 
-   * @param int $id Id del proyecto
-   * @return boolean
-   * @author dum
-   */
-  public function notificarAlDinamizador_Planeacion(int $id)
-  {
-    DB::beginTransaction();
-    try {
-      $dinamizadorRepository = new DinamizadorRepository;
-      $proyecto = Proyecto::findOrFail($id);
-      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
-      Notification::send($dinamizadores, new ProyectoAprobarPlaneacion($proyecto));
-      DB::commit();
-      return true;
-    } catch (\Throwable $th) {
-      DB::rollBack();
-      return false;
+
+    /**
+     * Notifica al talento interlocutor para que apruebe la fase de planeación
+     * 
+     * @param int $id Id del proyecto
+     * @return boolean
+     * @author dum
+     */
+    public function notificarAlDinamizador_Planeacion(int $id)
+    {
+      DB::beginTransaction();
+      try {
+        $dinamizadorRepository = new DinamizadorRepository;
+        $proyecto = Proyecto::findOrFail($id);
+        $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
+        Notification::send($dinamizadores, new ProyectoAprobarPlaneacion($proyecto));
+        DB::commit();
+        return true;
+      } catch (\Throwable $th) {
+        DB::rollBack();
+        return false;
+      }
     }
-  }
 
   public function notificarAlDinamizador_Ejecucion(int $id)
   {

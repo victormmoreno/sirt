@@ -28,6 +28,23 @@ class CreateArticulacionPbtsTable extends Migration
             $table->string('email_entidad')->nullable();
             $table->string('nombre_convocatoria')->nullable();
             $table->text('objetivo')->nullable();
+            $table->timestamp('fecha_esperada_finalizacion')->nullable();
+            
+            $table->tinyInteger('aprobacion_dinamizador_ejecucion')->default('0');
+            $table->tinyInteger('aprobacion_dinamizador_suspender')->default('0');
+
+            $table->tinyInteger('postulacion')->default('0');
+            $table->tinyInteger('aprobacion')->default('0');
+            $table->text('justificacion')->nullable();
+            $table->tinyInteger('informe_justificado')->default('0');
+            $table->tinyInteger('informe_noaprobado')->default('0');
+            $table->string('recibira')->nullable();
+            $table->timestamp('cuando')->nullable();
+            $table->tinyInteger('pdf_aprobacion')->default('0');
+            $table->tinyInteger('pdf_noaprobacion')->default('0');
+            $table->tinyInteger('documento_postulacion')->default('0');
+            $table->tinyInteger('documento_convocatoria')->default('0');
+
             $table->text('lecciones_aprendidas')->nullable();
             $table->timestamps();  
 

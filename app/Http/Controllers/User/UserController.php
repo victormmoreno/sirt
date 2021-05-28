@@ -135,6 +135,14 @@ class UserController extends Controller
     public function show($documento)
     {
         $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
+
+        if (request()->ajax()) {
+            return response()->json([
+                'data' => [
+                    'user' => $user
+                ]
+            ]);
+        }
         return view('users.show', ['user' => $user]);
     }
 

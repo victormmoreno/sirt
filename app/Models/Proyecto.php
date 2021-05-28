@@ -146,4 +146,32 @@ class Proyecto extends Model
   }
 
   /*=====  End of scope para consultar por estado de proyecto  ======*/
+
+  public function scopeNodo($query, $nodo)
+    {
+        if (!empty($nodo) && $nodo != null && $nodo != 'all') {
+            return $query->whereHas('articulacion_proyecto.actividad', function ($subQuery) use ($nodo) {
+                $subQuery->where('nodo_id', $nodo);
+            });
+        }
+        return $query;
+    }
+
+    public function scopeStarEndDate($query, $year)
+    {
+        if (!empty($year) && $year != null && $year != 'all') {
+            return $query->whereHas('articulacion_proyecto.actividad', function ($subQuery) use ($year) {
+                $subQuery->whereYear('fecha_inicio', $year)->orWhereYear('fecha_cierre', $year);
+            });
+        }
+        return $query;
+    }
+
+    public function scopeFase($query, $fase)
+    {
+        if (!empty($fase) && $fase != 'all' && $fase != null) {
+            return $query->where('fase_id', $fase);
+        }
+        return $query;
+    }
 }

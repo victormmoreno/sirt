@@ -14,6 +14,7 @@ class Fase extends Model
   const IS_EJECUCION = 3;
   const IS_CIERRE = 4;
   const IS_SUSPENDIDO = 5;
+  const IS_FINALIZADO = 6;
 
   protected $fillable = [
     'nombre',
@@ -44,6 +45,11 @@ class Fase extends Model
       return self::IS_SUSPENDIDO;
   }
 
+  public static function IsFinalizado()
+  {
+      return self::IS_FINALIZADO;
+  }
+
   public function proyectos()
   {
       return $this->hasMany(Proyecto::class, 'fase_id', 'id');
@@ -52,6 +58,11 @@ class Fase extends Model
   public function articulacionespbt()
   {
       return $this->hasMany(ArticulacionPbt::class, 'fase_id', 'id');
+  }
+
+  public function archivomodel()
+  {
+      return $this->hasMany(ArchivoModel::class, 'fase_id', 'id');
   }
 
   public function articulaciones()

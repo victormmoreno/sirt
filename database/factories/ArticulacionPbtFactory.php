@@ -9,6 +9,7 @@ use App\Models\Fase;
 use App\Models\TipoArticulacion;
 use App\Models\AlcanceArticulacion;
 use Faker\Generator as Faker;
+use Carbon\Carbon;
 
 $factory->define(ArticulacionPbt::class, function (Faker $faker) {
     return [
@@ -22,6 +23,7 @@ $factory->define(ArticulacionPbt::class, function (Faker $faker) {
         'email_entidad' => $faker->unique()->freeEmail,
         'nombre_convocatoria' => $faker->word,
         'objetivo' => $faker->text($maxNbChars = 100),
+        'fecha_esperada_finalizacion' => $faker->randomElement([Carbon::now()->subYears($faker->randomDigit())->subMonth($faker->randomDigit()), Carbon::now()->subDays($faker->randomDigit())]),
         'lecciones_aprendidas' => $faker->text($maxNbChars = 100),
     ];
 });

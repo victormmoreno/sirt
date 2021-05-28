@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Presenters\ArticulacionPbtPresenter;
 
 class ArticulacionPbt extends Model
 {
@@ -24,7 +25,25 @@ class ArticulacionPbt extends Model
         'email_entidad',
         'nombre_convocatoria',
         'objetivo',
-        'lecciones_aprendidas'
+        'fecha_esperada_finalizacion',
+        'lecciones_aprendidas',
+        'aprobacion_dinamizador_ejecucion',
+        'aprobacion_dinamizador_suspender',
+        'postulacion',
+        'aprobacion',
+        'justificacion',
+        'informe_justificado',
+        'informe_noaprobado',
+        'recibira',
+        'pdf_aprobacion',
+        'pdf_noaprobacion',
+        'documento_postulacion',
+        'documento_convocatoria',
+        'cuando'
+    ];
+
+    protected $dates = [
+        'fecha_esperada_finalizacion', 'cuando'
     ];
 
     public function actividad()
@@ -50,6 +69,18 @@ class ArticulacionPbt extends Model
     public function alcancearticulacion()
     {
       return $this->belongsTo(AlcanceArticulacion::class, 'alcance_articulacion_id', 'id');
+    }
+
+    public function archivomodel()
+    {
+        return $this->morphOne(ArchivoModel::class, 'model');
+    }
+
+    public function talentos()
+    {
+        return $this->belongsToMany(Talento::class, 'articulaciones_pbt_talento')
+            ->withTimestamps()
+            ->withPivot('talento_lider');
     }
 
     public function scopeTipoArticulacion($query, $tipoArticulacion)
@@ -80,11 +111,49 @@ class ArticulacionPbt extends Model
 
     public function scopeStarEndDate($query, $year)
     {
-      if (!empty($year) && $year != null && $year != 'all') {
-          return $query->whereHas('actividad', function ($subQuery) use ($year) {
-              $subQuery->whereYear('fecha_inicio', $year)->orWhereYear('fecha_cierre', $year);
-          });
-      }
-      return $query;
+        if (!empty($year) && $year != null && $year != 'all') {
+            return $query->whereHas('actividad', function ($subQuery) use ($year) {
+                $subQuery->whereYear('fecha_inicio', $year)->orWhereYear('fecha_cierre', $year);
+            });
+        }
+        return $query;
+    }
+
+    public function scopeFase($query, $fase)
+    {
+        if (!empty($fase) && $fase != 'all' && $fase != null) {
+            return $query->where('fase_id', $fase);
+        }
+        return $query;
+    }
+
+    public function scopeTalents($query, $talent){
+        if (!empty($talent) && $talent != 'all' && $talent != null) {
+            return $query->whereHas('talentos', function($query) use($talent){
+                $query->where('talento_id', $talent);
+            });
+        }
+        return $query;
+    }
+
+    public function present()
+    {
+        return new ArticulacionPbtPresenter($this);
+    }
+
+    public function historial()
+    {
+        return $this->morphMany(HistorialEntidad::class, 'model');
+    }
+
+    public function registerHistoryArticulacion($movimiento, $role, $comentario, $descripcion)
+    {
+        return $this->historial()->create([
+            'movimiento_id' => Movimiento::where('movimiento', $movimiento)->first()->id, 
+            'user_id' => auth()->user()->id,
+            'role_id' => Role::where('name', $role)->first()->id,
+            'comentarios' => $comentario,
+            'descripcion' => $descripcion
+          ]);
     }
 }

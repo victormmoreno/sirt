@@ -29,8 +29,8 @@
   </a>
 </li>
 <li class="no-padding {{setActiveRoute('articulacion')}}">
-  <a href="{{ route('articulacion') }}" class="{{setActiveRouteActivePage('articulacion')}}" rel="canonical" title="Articulaciones">
-    <i class="material-icons {{setActiveRouteActiveIcon('articulacion')}}">autorenew</i>AGI  </a>
+  <a href="{{ route('articulaciones.index') }}" class="{{setActiveRouteActivePage('articulacion')}}" rel="canonical" title="Articulaciones">
+    <i class="material-icons {{setActiveRouteActiveIcon('articulacion')}}">autorenew</i>Articulaciones</a>
 </li>
 {{-- <li class="no-padding {{setActiveRoute('intervencion')}}">
   <a href="{{ route('intervencion.index') }}" class="{{setActiveRouteActivePage('intervencion')}}" rel="canonical" title="Articulaciones">

@@ -38,7 +38,6 @@
                             <div class="card-content">
                                 <div class="row no-m-t no-m-b">
                                     <div class="col s12 m12 l12">
-                                       
                                         <div class="mailbox-view">
                                             <div class="mailbox-view-header">
                                                 @include('users.profile.nav.header')
@@ -59,11 +58,8 @@
                                                 <form action="{{ route('usuario.usuarios.updateaccount',$user->id)}}" id="formEditUser" method="POST" onsubmit="return checkSubmit()">
                                                     {!! csrf_field() !!}
                                                     {!! method_field('PUT')!!}
-
                                                     <div class="row">
-                                                        
                                                         <div class="col s12 m12 l12 ">
-
                                                             <div class="row">
                                                                 <div class="col m6">
                                                                     <div class="row">
@@ -307,7 +303,6 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-
                                                         </div>
 
                                                     </div>
@@ -412,7 +407,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                
             </div>
         </div>
     </div>

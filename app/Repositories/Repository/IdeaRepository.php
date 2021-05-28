@@ -234,7 +234,7 @@ class IdeaRepository
             
             $valoresCondicionales = $this->valoresCondicionales($request);
             $empresa_id = null;
-            // dd($request->input('txtnit_empresa'));
+       
             if ($request->input('txtidea_empresa') == 1) {
                 $empresa_detalle = Empresa::where('nit', $request->input('txtnit'))->first();
                 if ($empresa_detalle == null) {
@@ -261,7 +261,7 @@ class IdeaRepository
                         $empresa_id = $empresa_detalle->id;
                 }
             }
-            // dd($empresa_id);
+    
         
             $codigo_idea = $this->generarCodigoIdea($request->input('txtnodo'));
         
@@ -308,11 +308,6 @@ class IdeaRepository
                 "fecha_acuerdo_no_confidencialidad" => $valoresCondicionales['fecha_acuerdo_no_confidencialidad'],
             ]);
 
-            
-
-            // $idea->created_at = $row->created_at;
-            // $idea->updated_at = $row->update_at;
-            // $idea->save(['timestamps' => false]);
             
             if ($request->input('txtlinkvideo') != null) {
                 $idea->rutamodel()->create([
