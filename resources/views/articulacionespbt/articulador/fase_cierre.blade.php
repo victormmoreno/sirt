@@ -98,7 +98,7 @@
                                                             Guardar
                                                         </button>
                                                         @endif
-                                                        <a href="{{route('proyecto.ejecucion', $actividad->articulacionpbt->id)}}" class="waves-effect red lighten-2 btn center-aling">
+                                                        <a href="{{route('articulaciones.show', $actividad->articulacionpbt->id)}}" class="waves-effect red lighten-2 btn center-aling">
                                                             <i class="material-icons right">backspace</i>Cancelar
                                                         </a>
                                                     </center>
@@ -175,6 +175,7 @@
         processing: true,
         serverSide: true,
         order: false,
+        "lengthChange": false,
         ajax:{
         url: "{{route('articulacion.files', [$actividad->articulacionpbt->id, 'Cierre'])}}",
         type: "get",

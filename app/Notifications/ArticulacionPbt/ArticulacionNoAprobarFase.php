@@ -61,8 +61,8 @@ class ArticulacionNoAprobarFase extends Notification implements ShouldQueue
     {
         return [
             'link'  => route('articulaciones.show', $this->articulacion->id),
-            'icon'  => 'library_books',
-            'color' => 'green',
+            'icon'  => 'autorenew',
+            'color' => 'orange',
             'autor' => "{$this->movimiento->user->nombres} {$this->movimiento->user->apellidos}",
             'text'  => "Fase {$this->fase} de la articulación no aprobada: {$this->articulacion->actividad->codigo_actividad} - {$this->articulacion->actividad->nombre}",
           ];

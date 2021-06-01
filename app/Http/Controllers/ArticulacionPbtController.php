@@ -16,6 +16,7 @@ use Illuminate\Http\{Request, Response};
 use App\Http\Requests\ArticulacionPbt\{ArticulacionFaseInicioFormRequest, ArticulacionFaseCierreFormRequest, ArticulacionMiembrosFormRequest};
 use App\Repositories\Repository\ArticulacionPbtRepository;
 use App\Exports\ArticulacionesPbt\ArticulacionesPbtExport;
+use App\Repositories\Repository\UserRepository\UserRepository;
 
 
 class ArticulacionPbtController extends Controller
@@ -65,6 +66,7 @@ class ArticulacionPbtController extends Controller
 
     public function datatableFiltros(Request $request)
     {
+        $this->authorize('datatable', ArticulacionPbt::class);
         $talent = null;
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
@@ -84,6 +86,7 @@ class ArticulacionPbtController extends Controller
                 return abort('403');
                 break;
         }
+
         $articulaciones = [];
         if (!empty($request->filter_year_art) && !empty($request->filter_phase)  && !empty($request->filter_tipo_articulacion) && !empty($request->filter_tipo_articulacion) && !empty($request->filter_alcance_articulacion)) {
 
@@ -166,12 +169,7 @@ class ArticulacionPbtController extends Controller
             <i class="material-icons">search</i>
             </a>';
                 return $info;
-        })->addColumn('edit', function ($data) {
-            $edit = '<a class="btn m-b-xs modal-trigger" href='.route('articulaciones.edit', $data->id).'>
-            <i class="material-icons">edit</i>
-            </a>';
-                return $edit;
-        })->rawColumns(['nodo','codigo_articulacion','nombre_articulacion','articulador','fase','starDate',  'show','edit'])->make(true);
+        })->rawColumns(['nodo','codigo_articulacion','nombre_articulacion','articulador','fase','starDate',  'show'])->make(true);
     }
 
 
@@ -185,9 +183,7 @@ class ArticulacionPbtController extends Controller
         $this->authorize('create', ArticulacionPbt::class);
         $alcances = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
         $tipoarticulaciones = TipoArticulacion::orderBy('nombre')->pluck('nombre', 'id');
-        
         return view('articulacionespbt.create',  ['alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones]);
-        
         return abort('403'); 
     }
 
@@ -234,18 +230,8 @@ class ArticulacionPbtController extends Controller
             $subQuery->where('id', $id);
         })
         ->firstOrFail();
+        $this->authorize('show', ArticulacionPbt::class);
         return view('articulacionespbt.show', ['actividad' =>$actividad]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -289,51 +275,18 @@ class ArticulacionPbtController extends Controller
      **/
     public function updateEjecucion(Request $request, $id)
     {
-        if (Session::get('login_role') == User::IsArticulador()) {
-            $response = $this->getArticulacionRepository()->updateEntregablesEjecucionRepository($request, $id);
-            if ($response != null) {
-                Alert::success('Modificación Exitosa!', 'Los entregables de la articulación en la fase de ejecución se han modificado!')->showConfirmButton('Ok', '#3085d6');
-                return redirect()->route('articulaciones.show', $response->id);
-            } else {
-                Alert::error('Modificación Errónea!', 'Los entregables de la articulación en la fase de ejecución no se han modificado!')->showConfirmButton('Ok', '#3085d6');
-                return back();
-            }
+        $response = $this->getArticulacionRepository()->updateEntregablesEjecucionRepository($request, $id);
+        if ($response != null) {
+            Alert::success('Modificación Exitosa!', 'Los entregables de la articulación en la fase de ejecución se han modificado!')->showConfirmButton('Ok', '#3085d6');
+            return redirect()->route('articulaciones.show', $response->id);
         } else {
-            // if ($request->decision == 'aceptado') {
-            //     $update = $this->getArticulacionRepository()->setPostCierreProyectoRepository($id);
-            //     if ($update) {
-            //         Alert::success('Modificación Exitosa!', 'La fase de ejecución de la articulación se ha aprobado!')->showConfirmButton('Ok', '#3085d6');
-            //         return redirect('proyecto');
-            //     } else {
-            //         Alert::error('Modificación Errónea!', 'La fase de ejecución de la articulación no se ha aprobado!')->showConfirmButton('Ok', '#3085d6');
-            //         return back();
-            //     }
-            // } else {
-            //     $update = $this->getArticulacionRepository()->noAprobarFaseProyecto($request, $id, 'Ejecución');
-            //     if ($update) {
-            //         Alert::success('Notificación Exitosa!', 'Se le ha notificado al gestor de la articulación los motivos por los que no se aprueba esta fase del proyecto!')->showConfirmButton('Ok', '#3085d6');
-            //         return redirect('proyecto');
-            //     } else {
-            //         Alert::error('Notificación Errónea!', 'No se ha podido enviar la notificación al gestor del proyecto!')->showConfirmButton('Ok', '#3085d6');
-            //         return back();
-            //     }
-            // }
+            Alert::error('Modificación Errónea!', 'Los entregables de la articulación en la fase de ejecución no se han modificado!')->showConfirmButton('Ok', '#3085d6');
+            return back();
         }
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
+     * Display the specified resource of talents.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -482,15 +435,14 @@ class ArticulacionPbtController extends Controller
      */
     public function updateEntregables(Request $request, $id)
     {
-        if (Session::get('login_role') == User::IsArticulador()) {
-            $update = $this->getArticulacionRepository()->updateEntregablesInicioArticulacon($request, $id);
-            if ($update != null) {
-                Alert::success('Modificación Exitosa!', 'Los entregables de la articulación se han modificado!')->showConfirmButton('Ok', '#3085d6');
-                return redirect()->route('articulacion.show.inicio', $update->id);
-            } else {
-                Alert::error('Modificación Errónea!', 'Los entregables de la articulación no se han modificado!')->showConfirmButton('Ok', '#3085d6');
-                return back();
-            }
+        $this->authorize('updateEntregable', ArticulacionPbt::class);
+        $update = $this->getArticulacionRepository()->updateEntregablesInicioArticulacon($request, $id);
+        if ($update != null) {
+            Alert::success('Modificación Exitosa!', 'Los entregables de la articulación se han modificado!')->showConfirmButton('Ok', '#3085d6');
+            return redirect()->route('articulacion.show.inicio', $update->id);
+        } else {
+            Alert::error('Modificación Errónea!', 'Los entregables de la articulación no se han modificado!')->showConfirmButton('Ok', '#3085d6');
+            return back();
         }
     }
 
@@ -550,12 +502,13 @@ class ArticulacionPbtController extends Controller
             $subQuery->where('id', $id);
         })
         ->firstOrFail();
-        $historico =  $actividad->articulacionpbt->historial;
+
+        $ultimo_movimiento = $actividad->articulacionpbt->historial->last();
         switch (Session::get('login_role')) {
             case User::IsArticulador():
                 return view('articulacionespbt.articulador.fase_suspendido', [
                     'actividad' => $actividad,
-                    'historico' => $historico
+                    'ultimo_movimiento' => $ultimo_movimiento
                 ]);
                 break;
 
@@ -563,7 +516,7 @@ class ArticulacionPbtController extends Controller
 
                 return view('articulacionespbt.dinamizador.fase_suspendido', [
                     'actividad' => $actividad,
-                    'historico' => $historico
+                    'ultimo_movimiento' => $ultimo_movimiento
                 ]);
                 break;
             default:
@@ -654,44 +607,15 @@ class ArticulacionPbtController extends Controller
      **/
     public function updateSuspendido(Request $request, int $id)
     {
-        if (Session::get('login_role') == User::IsDinamizador()) {
-            $response = $this->getArticulacionRepository()->updateAprobacionSuspendido($id);
-            
-            if ($response != null) {
-                Alert::success('Modificación Exitosa!', 'La fase de suspendido de la articulación se aprobó!')->showConfirmButton('Ok', '#3085d6');
-                return redirect()->route('articulaciones.show', $response->id);
-            } else {
-                Alert::error('Modificación Errónea!', 'La fase de suspendido de la articulación no se aprobó!')->showConfirmButton('Ok', '#3085d6');
-                return back();
-            }
+        $articulacion = ArticulacionPbt::findOrFail($id);
+        
+        $response = $this->getArticulacionRepository()->suspenderArticulacion($request, $articulacion);
+        if ($response != null) {
+            Alert::success('Modificación Exitosa!', 'La fase de suspendido de la articulación se aprobó!')->showConfirmButton('Ok', '#3085d6');
+            return redirect()->route('articulaciones.show', $response->id);
         } else {
-            $articulacion = ArticulacionPbt::findOrFail($id);
-            if ($articulacion->aprobacion_dinamizador_suspender == 1) {
-                $validator = Validator::make(
-                    $request->all(),
-                    [
-                        'txtfecha_cierre' => 'required|date_format:"Y-m-d"',
-                    ],
-                    [
-                        'txtfecha_cierre.required' => 'La fecha de cierre de la articulación es obligatoria.',
-                        'txtfecha_cierre.date_format' => 'El formato de la fecha de cierre es incorrecto ("AAAA-MM-DD")'
-                    ]
-                );
-                if ($validator->fails()) {
-                    Alert::error('Modificación Errónea!', 'Estás ingresando mal la fecha de cierre!')->showConfirmButton('Ok', '#3085d6');
-                    return back()
-                        ->withErrors($validator)
-                        ->withInput();
-                }
-                $response = $this->getArticulacionRepository()->suspenderArticulacion($request, $articulacion);
-                if ($response != null) {
-                    Alert::success('Modificación Exitosa!', 'La articulación se ha suspendido!')->showConfirmButton('Ok', '#3085d6');
-                    return redirect()->route('articulaciones.show', $response->id);
-                } else {
-                    Alert::error('Modificación Errónea!', 'La articulación no se ha suspendido!')->showConfirmButton('Ok', '#3085d6');
-                    return back();
-                }
-            }
+            Alert::error('Modificación Errónea!', 'La fase de suspendido de la articulación no se aprobó!')->showConfirmButton('Ok', '#3085d6');
+            return back();
         }
     }
 
@@ -714,7 +638,7 @@ class ArticulacionPbtController extends Controller
             if ($articulacion->fase->nombre == 'Suspendido') {
                 $update = $this->getArticulacionRepository()->reversarArticulacion($articulacion, $fase);
                 if ($update != null) {
-                    Alert::success('La fase de la articulación se ha reversado a '.$fase.'!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
+                    Alert::success('La articulación se ha reversado a la fase '.$fase.'!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
                     return redirect()->route('articulaciones.show', $update->id);
                 } else {
                     Alert::error('La articulación no se ha reversado!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
@@ -876,6 +800,65 @@ class ArticulacionPbtController extends Controller
 
     
         return (new ArticulacionesPbtExport($articulaciones))->download("Articulaciones PBT - " . config('app.name') . ".{$extension}");
+    }
+
+    /**
+    * Formulario para cambiar el gestor de un proyecto
+    *
+    * @param int $id Id del proyecto
+    * @return type
+    * @throws conditon
+    **/
+    public function changeArticulador(UserRepository $userRepository, int $id)
+    {
+        $actividad = Actividad::with('articulacionpbt')
+        ->whereHas('articulacionpbt', function ($subQuery) use ($id) {
+            $subQuery->where('id', $id);
+        })
+        ->firstOrFail();
+
+        $historico =  $actividad->articulacionpbt->historial;
+
+        $articuladores = $userRepository->getArticuladorForNode($actividad->nodo_id)->pluck('articulador', 'id');
+        
+        return view('articulacionespbt.dinamizador.cambiar_articulador', [
+            'actividad' => $actividad,
+            'historico' => $historico,
+            'articuladores' => $articuladores
+        ]);
+    }
+
+    /**
+    * Cambiar el articulador de una articulacion
+    * @param Request $request
+    * @param int $id
+    * @return Response
+    * @author devjul
+    **/
+    public function updateArticulador(Request $request, int $id)
+    {
+        $messages = [
+            'txtgestor.required' => 'El Articulador es obligatorio.',
+        ];
+
+        $validator = Validator::make($request->all(), [
+            'txtgestor' => 'required',
+        ], $messages);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $update = $this->getArticulacionRepository()->updateArticulador($request, $id);
+        if ($update != null) {
+            Alert::success('Se ha cambiado el articulador de la articulación!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
+            return redirect()->route('articulaciones.show', $update->id);
+        } else {
+            Alert::error('No se ha cambiado el articulador de la articulación!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
     }
 
 }

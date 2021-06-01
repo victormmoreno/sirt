@@ -17,6 +17,10 @@
                   El {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}} 
                 {{$value->descripcion}} en la fecha {{$value->created_at->isoFormat('DD-MM-YYYY')}}
                 @endif
+                @if ($value->movimiento->movimiento == App\Models\Movimiento::IsSolicitarDinamizador())
+                  El {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}} 
+                {{$value->descripcion}} la articulación en la fecha {{$value->created_at->isoFormat('DD-MM-YYYY')}}
+                @endif
                 @if ($value->movimiento->movimiento == App\Models\Movimiento::IsAprobar() || $value->movimiento->movimiento == App\Models\Movimiento::IsNoAprobar())
                   El {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}} 
                   la fase {{$value->descripcion}} en la fecha {{$value->created_at->isoFormat('DD-MM-YYYY')}}

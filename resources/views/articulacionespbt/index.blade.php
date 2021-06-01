@@ -130,7 +130,7 @@
                         <th>Articulador</th>
                         <th>Fase</th>
                         <th>Fecha de Registro</th>                        
-                        <th>Detalles</th>
+                        <th>Proceso</th>
                       </tr>
                     </thead>
                     <tbody>

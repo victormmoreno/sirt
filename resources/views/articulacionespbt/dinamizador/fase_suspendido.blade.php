@@ -39,17 +39,19 @@
                         <div class="mailbox-view-header no-m-b no-m-t">
                             <div class="right mailbox-buttons no-s">
                                 @if (!$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()))
-                                <form action="{{route('articulacion.update.suspendido', $actividad->articulacionpbt->id)}}" method="POST" name="frmSuspendidoDinamizador">
-                                    {!! method_field('PUT')!!}
-                                    @csrf
-                                    <center>
-                                      <button type="submit" onclick="preguntaSuspendido(event)" value="send" {{$actividad->articulacionpbt->aprobacion_dinamizador_suspendido == 0 ? '' : 'disabled'}}
-                                        class="waves-effect deep-orange  btn center-aling">
-                                        <i class="material-icons right">done</i>
-                                        {{$actividad->articulacionpbt->aprobacion_dinamizador_suspendido == 0 ? 'Aprobar suspensión del proyecto' : 'Este proyecto ya se ha suspendido'}}
-                                      </button>
-                                    </center>
-                                  </form>
+                                    @if ($ultimo_movimiento != null && $ultimo_movimiento->role->name == App\User::IsArticulador() && $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsSolicitarDinamizador())
+                                        <form action="{{route('articulacion.update.suspendido', $actividad->articulacionpbt->id)}}" method="POST" name="frmSuspendidoDinamizador" onsubmit="return checkSubmit()">
+                                            {!! method_field('PUT')!!}
+                                            @csrf
+                                            <center>
+                                            <button type="submit" onclick="preguntaSuspendido(event)" value="send" {{$actividad->articulacionpbt->aprobacion_dinamizador_suspendido == 0 ? '' : 'disabled'}}
+                                                class="waves-effect waves-orange btn orange m-t-xs">
+                                                <i class="material-icons right">done</i>
+                                                    Aprobar suspensión de la articulación
+                                            </button>
+                                            </center>
+                                        </form>
+                                    @endif
                                 @endif
                             </div>
                         </div>
@@ -72,7 +74,15 @@
                             
                             <div class="row">
                               <div class="col s12 m12 l12">
-                                
+                                    <div class="row search-tabs-row search-tabs-container grey lighten-4">
+                                        <div class="col s12 m12 l12">
+                                            <div class="mailbox-options grey lighten-4 text-white">
+                                                <ul class="grey lighten-4 text-white">
+                                                    <li class="text-mailbox ">Evidencias</li>                                            
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="row">
                                         @include('articulacionespbt.archivos_table_fase', ['fase' => 'suspendido'])
                                     </div> 

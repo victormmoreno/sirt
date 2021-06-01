@@ -43,8 +43,8 @@ class ArticulacionSuspendidaAprobada extends Notification implements ShouldQueue
     {
       return [
         'link'  => route('articulacion.suspender', $this->getArticulacion()->id),
-        'icon'  => 'library_books',
-        'color' => 'green',
+        'icon'  => 'autorenew',
+        'color' => 'orange',
         'autor' => "{$this->getArticulacion()->actividad->gestor->user->nombres} {$this->getArticulacion()->actividad->gestor->user->apellidos}",
         'text'  => "Se aprobó la suspensión de la articulación | {$this->getArticulacion()->actividad->codigo_actividad} - {$this->getArticulacion()->actividad->nombre}",
       ];

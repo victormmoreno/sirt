@@ -440,34 +440,12 @@ class ArticulacionPbtRepository
             $articulacion = ArticulacionPbt::findOrFail($id);
             $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulacion->actividad->nodo_id)->get();
             Notification::send($dinamizadores, new ArticulacionAprobarSuspendido($articulacion));
+            $articulacion->registerHistoryArticulacion(Movimiento::IsSolicitarDinamizador(),Session::get('login_role'), null, 'Suspender');
             DB::commit();
             return true;
         } catch (\Throwable $th) {
             DB::rollBack();
             return false;
-        }
-    }
-
-        /**
-     * Cambia el estado de aprobacion_dinamizador_suspender para que el articulador pueda suspender una articulacion
-     * @param int $id
-     * @return array
-     * @author devjul
-     **/
-    public function updateAprobacionSuspendido(int $id)
-    {
-        DB::beginTransaction();
-        try {
-            $articulacion = ArticulacionPbt::findOrFail($id);
-            $articulacion->update([
-                'aprobacion_dinamizador_suspender' => 1
-            ]);
-            Notification::send(User::findOrFail($articulacion->actividad->gestor->user->id), new ArticulacionSuspendidaAprobada($articulacion));
-            DB::commit();
-            return $articulacion;
-        } catch (\Throwable $th) {
-            DB::rollback();
-            return null;
         }
     }
 
@@ -483,12 +461,16 @@ class ArticulacionPbtRepository
         DB::beginTransaction();
         try {
             $articulacion->update([
-                'fase_id' => Fase::where('nombre', 'Suspendido')->first()->id
+                'fase_id' => Fase::where('nombre', 'Suspendido')->first()->id,
+                'aprobacion_dinamizador_suspender' => 1
             ]);
 
             $articulacion->actividad()->update([
-                'fecha_cierre' => $request->txtfecha_cierre
+                'fecha_cierre' => Carbon::now()->isoFormat('YYYY-MM-DD'),
             ]);
+
+            Notification::send(User::findOrFail($articulacion->actividad->gestor->user->id), new ArticulacionSuspendidaAprobada($articulacion));
+            $articulacion->registerHistoryArticulacion(Movimiento::IsAprobar(),Session::get('login_role'), null, 'Suspensión');
             DB::commit();
             return $articulacion;
         } catch (\Throwable $th) {
@@ -574,6 +556,36 @@ class ArticulacionPbtRepository
             return $articulacion;
         } catch (\Exception $e) {
             DB::rollback();
+            return null;
+        }
+    }
+
+    /**
+    * Cambia el articulador de una articulacion
+    *
+    * @param Request $request
+    * @param int $id id de la articulacion
+    * @return response
+    * @author devjul
+    **/
+    public function updateArticulador($request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $articulacion = ArticulacionPbt::find($id);
+            $fase = Fase::where('id', $articulacion->fase_id)->first()->nombre;
+
+            if ($articulacion->actividad->gestor_id != $request->txtgestor) {
+                $articulacion->registerHistoryArticulacion(Movimiento::IsCambiar(),Session::get('login_role'), null, $fase);
+            }
+            $articulacion->actividad()->update([
+                'gestor_id' => $request->txtgestor 
+            ]);
+
+            DB::commit();
+            return $articulacion;
+        } catch (\Throwable $th) {
+            DB::rollBack();
             return null;
         }
     }

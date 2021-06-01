@@ -1140,4 +1140,14 @@ class UserRepository
 
         return $userUpdated;
     }
+
+    public function getArticuladorForNode($node)
+    {
+        return User::select('gestores.id')
+            ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS articulador')
+            ->join('gestores', 'gestores.user_id', '=', 'users.id')
+            ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
+            ->role(User::IsArticulador())
+            ->where('nodos.id', $node);
+    }
 }

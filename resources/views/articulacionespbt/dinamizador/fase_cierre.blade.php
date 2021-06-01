@@ -47,7 +47,7 @@
                                             
                                         @if ($actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsCierre()))
                                             @if ($ultimo_movimiento != null && $actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsCierre()) &&  $ultimo_movimiento->role->name == App\User::IsTalento() && $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsAprobar())
-                                            <form action="{{route('articulacion.aprobacion', [$actividad->articulacionpbt->id, 'Cierre'])}}" method="POST" name="frmCierreDinamizador">
+                                            <form action="{{route('articulacion.aprobacion', [$actividad->articulacionpbt->id, 'Cierre'])}}" method="POST" name="frmCierreDinamizador" onsubmit="return checkSubmit()">
                                                 {!! method_field('PUT')!!}
                                                 @csrf
                                                 

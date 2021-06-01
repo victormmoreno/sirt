@@ -63,8 +63,8 @@ class ArticulacionAprobarInicioDinamizador extends Notification implements Shoul
     {
         return [
             'link'  => route("articulaciones.show", $this->articulacion->id),
-            'icon'  => 'library_books',
-            'color' => 'green',
+            'icon'  => 'autorenew',
+            'color' => 'orange',
             'autor' => "{$this->talento->nombres} {$this->talento->apellidos}",
             'text'  => "El {$this->movimiento->role->name} ha aprobado la fase de {$this->fase} | {$this->articulacion->actividad->codigo_actividad} - {$this->articulacion->actividad->nombre}",
           ];

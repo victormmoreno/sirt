@@ -6440,6 +6440,23 @@ $('#download_archive_art').click(function(){
 
     window.location = url;
 });
+
+function preguntaReversarArticulacion(e){
+    e.preventDefault();
+    Swal.fire({
+    title: '¿Está seguro(a) de reversar esta articulación a la fase de Inicio?',
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Sí!'
+    }).then((result) => {
+      if (result.value) {
+        document.frmReversarFase.submit();
+      }
+    })
+  }
 $(document).on('submit', 'form#frmArticulacionpbt_FaseInicio', function (event) { 
     $('button[type="submit"]').attr('disabled', 'disabled');
     event.preventDefault();

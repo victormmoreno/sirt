@@ -46,7 +46,7 @@
                                         <div class="right mailbox-buttons no-s">
                                             @if ($actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsEjecucion()))
                                                 @if ($ultimo_movimiento != null && $actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsEjecucion()) &&  $ultimo_movimiento->role->name == App\User::IsTalento() && $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsAprobar())
-                                                    <form action="{{route('articulacion.aprobacion', [$actividad->articulacionpbt->id, 'Ejecución'])}}" method="POST" name="frmEjecucionDinamizador">
+                                                    <form action="{{route('articulacion.aprobacion', [$actividad->articulacionpbt->id, 'Ejecución'])}}" method="POST" name="frmEjecucionDinamizador" onsubmit="return checkSubmit()">
                                                         {!! method_field('PUT')!!}
                                                         @csrf
                                                         <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">

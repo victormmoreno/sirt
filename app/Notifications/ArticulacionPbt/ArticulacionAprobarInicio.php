@@ -62,8 +62,8 @@ class ArticulacionAprobarInicio extends Notification implements ShouldQueue
     {
         return [
             'link'  => route("articulaciones.show", $this->getArticulacion()->id),
-            'icon'  => 'library_books',
-            'color' => 'green',
+            'icon'  => 'autorenew',
+            'color' => 'orange',
             'autor' => "{$this->getArticulacion()->actividad->gestor->user->nombres} {$this->getArticulacion()->actividad->gestor->user->apellidos}",
             'text'  => "El Articulador ha solicitado aprobar la fase de {$this->getFase()} | {$this->getArticulacion()->actividad->codigo_actividad} - {$this->getArticulacion()->actividad->nombre}",
           ];

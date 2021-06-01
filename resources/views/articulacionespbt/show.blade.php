@@ -1,9 +1,6 @@
 @extends('layouts.app')
 @section('meta-title', 'Articulaciones PBT')
 @section('content')
-@php
-  $year = Carbon\Carbon::now()->year;
-@endphp
 <main class="mn-inner">
     <div class="content">
         <div class="row no-m-t no-m-b">
@@ -40,15 +37,15 @@
                                 <div class="mailbox-view no-s">
                                         @if (Session::get('login_role') == App\User::IsDinamizador() && !$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio()) && !$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()))
                                         <div class="mailbox-view-header no-m-b no-m-t">
-                                        <div class="right mailbox-buttons no-s">
-                                            <form action="{{route('articulacion.reversar', [$actividad->articulacionpbt->id, 'Inicio'])}}" method="POST" name="frmReversarFase">
-                                                {!! method_field('PUT')!!}
-                                                @csrf
-                                                <button type="submit" onclick="preguntaReversar(event)" value="send" class="btn-flat">
-                                                    Reversar fase de la articulación a Inicio.
-                                                </button>
-                                            </form>
-                                        </div>
+                                            <div class="right mailbox-buttons no-s">
+                                                <form action="{{route('articulacion.reversar', [$actividad->articulacionpbt->id, 'Inicio'])}}" method="POST" name="frmReversarFase">
+                                                    {!! method_field('PUT')!!}
+                                                    @csrf
+                                                    <button type="submit" onclick="preguntaReversarArticulacion(event)" value="send" class="btn-flat">
+                                                        Reversar fase de la articulación a Inicio.
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </div>
                                         @endif
                                         @if(!$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()) && (session()->has('login_role') && session()->get('login_role') != App\User::IsAdministrador()))
@@ -61,15 +58,17 @@
                                                     @elseif($actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsCierre()))
                                                         <a href="{{route('articulacion.show.cierre',$actividad->articulacionpbt->id)}}" class="waves-effect waves-orange btn orange m-t-xs">Ir a la Fase de {{$actividad->articulacionpbt->present()->articulacionPbtNameFase()}}</a>
                                                     @endif
-                                                    
+                                                    @if((session()->has('login_role') && session()->get('login_role') === App\User::IsDinamizador()) && !$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsSuspendido()))
+                                                        <a href="{{route('articulacion.cambiar',$actividad->articulacionpbt->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar articulador</a>
+                                                    @endif  
                                                     @if((session()->has('login_role') && session()->get('login_role') === App\User::IsArticulador()))
                                                     
                                                         @if(!$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsSuspendido()))
-                                                            <a class="waves-effect waves-grey btn-flat m-t-xs">Cambiar articulador</a>
                                                             <a href="{{route('articulacion.miembros', $actividad->articulacionpbt->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Miembros</a>    
                                                             <a href="{{route('articulacion.suspender', $actividad->articulacionpbt->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Suspender Articulación</a>
                                                         @endif
-                                                    @endif                                 
+                                                    @endif  
+                                                                                 
                                                 </div>
                                             </div>
                                         @endif
@@ -89,9 +88,7 @@
                                         </div>                                        
                                     </div>
                                     <div class="divider mailbox-divider"></div>
-                                   
                                     <div class="mailbox-text">
-                                        
                                         <div class="row">
                                             <div class="col s12">
                                                 @include('articulacionespbt.history-change')
@@ -138,6 +135,7 @@
             processing: true,
             serverSide: true,
             order: false,
+            "lengthChange": false,
             ajax:{
             url: "{{route('articulacion.files', [$actividad->articulacionpbt->id, 'Inicio'])}}",
             type: "get",
@@ -165,6 +163,7 @@
             processing: true,
             serverSide: true,
             order: false,
+            "lengthChange": false,
             ajax:{
             url: "{{route('articulacion.files', [$actividad->articulacionpbt->id, 'Ejecución'])}}",
             type: "get",
@@ -192,6 +191,7 @@
             processing: true,
             serverSide: true,
             order: false,
+            "lengthChange": false,
             ajax:{
             url: "{{route('articulacion.files', [$actividad->articulacionpbt->id,'Cierre'])}}",
             type: "get",

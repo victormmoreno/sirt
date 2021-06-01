@@ -22,7 +22,6 @@
         </div>
     </div>
     <div class="row no-m-t no-m-b">
-      
         <div class="card mailbox-content">
           <div class="card-content">
             <div class="row no-m-t no-m-b">
@@ -39,17 +38,24 @@
                         <div class="mailbox-view-header no-m-b no-m-t">
                             <div class="right mailbox-buttons no-s">
                               
-                              @if (!$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsSuspendido()))
-                                @if(!$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()))
-                                @if ($actividad->articulacionpbt->aprobacion_dinamizador_suspender == 0)
-                                  <a href="{{route('articulacion.notificar.suspension',$actividad->articulacionpbt->id)}}" class="waves-effect waves-orange btn orange m-t-xs">
-                                      Solicitar al dinamizador que apruebe la suspensión de la articulación
-                                  </a>
-                                  @else
-                                  <a disabled class="waves-effect waves-grey btn-flat m-t-xs">
-                                      Esta fase ya ha sido aprobada por el dinamizador
-                                  </a>
-                                  @endif
+                              @if (!$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()))
+                                @if(!$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsSuspendido()))
+                                  @if ($ultimo_movimiento == null || $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsCambiar() || $ultimo_movimiento->movimiento->movimiento  == App\Models\Movimiento::IsNoAprobar() || $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsReversar())
+                                    <a href="{{route('articulacion.notificar.suspension',$actividad->articulacionpbt->id)}}" class="waves-effect waves-orange btn orange m-t-xs">
+                                        Solicitar al dinamizador que apruebe la suspensión de la articulación
+                                    </a>
+                                    @else
+                                      @if ($ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsSolicitarDinamizador())
+                                        <a disabled class="waves-effect waves-orange btn disabled m-t-xs">
+                                            Solicitud enviada al Dinamizador
+                                        </a>
+                                      @endif
+                                      @if($ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsAprobar() && $ultimo_movimiento->role->name == App\User::IsDinamizador())
+                                        <a disabled class="waves-effect waves-orange btn disabled m-t-xs">
+                                            El Dinamizador aprobó la suspensión
+                                        </a>
+                                      @endif
+                                    @endif
                                   @endif  
                                @endif
                             </div>
@@ -70,24 +76,25 @@
                         </div>
                         <div class="divider mailbox-divider"></div>
                         <div class="mailbox-text">
-                            
+
                             <div class="row">
-                              <div class="col s12 m12 l12">
-                                <form method="POST" name="frmArticulacionSuspender" action="{{route('articulacion.update.suspendido',$actividad->articulacionpbt->id)}}">
-                                  @include('articulacionespbt.form.form_suspendido', [
-                                    'btnText' => 'Modificar'])
-                                  <div class="row">
-                                    @include('articulacionespbt.archivos_table_fase', ['fase' => 'suspendido'])
-                                  </div>
-                                  <center>
-                                    @if (!$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsSuspendido()))
-                                      @if ($actividad->articulacionpbt->aprobacion_dinamizador_suspender == 1)
-                                        <button type="submit" onclick="preguntaSuspender(event)" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Suspender</button>
-                                      @endif
-                                    @endif
-                                  </center>
-                                </form>
+                              <div class="row search-tabs-row search-tabs-container grey lighten-4">
+                                <div class="col s12 m12 l12">
+                                    <div class="mailbox-options grey lighten-4 text-white">
+                                        <ul class="grey lighten-4 text-white">
+                                            <li class="text-mailbox ">Evidencias</li>                                            
+                                        </ul>
+                                    </div>
+                                </div>
                               </div>
+                              @if (!$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()))
+                                @if ($actividad->articulacionpbt->aprobacion_dinamizador_suspender == 0)
+                                    <div class="card-panel teal">
+                                        <div class="dropzone" id="fase_suspendido_articulacion"></div>
+                                    </div>
+                                @endif
+                              @endif
+                              @include('articulacionespbt.archivos_table_fase', ['fase' => 'suspendido'])
                             </div>
                         </div>
                     </div>
@@ -168,6 +175,7 @@
     processing: true,
     serverSide: true,
     order: false,
+    "lengthChange": false,
     ajax:{
       url: "{{route('articulacion.files', [$actividad->articulacionpbt->id, 'Suspendido'])}}",
       type: "get",

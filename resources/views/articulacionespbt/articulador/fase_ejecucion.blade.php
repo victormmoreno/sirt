@@ -176,6 +176,7 @@
     processing: true,
     serverSide: true,
     order: false,
+    "lengthChange": false,
     ajax:{
       url: "{{route('articulacion.files', [$actividad->articulacionpbt->id, 'Ejecución'])}}",
       type: "get",

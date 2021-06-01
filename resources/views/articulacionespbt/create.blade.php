@@ -10,7 +10,7 @@
             <div class="col s12 m12 l6">
                 <h5 class="left-align orange-text text-darken-3">
                     <i class="material-icons left">
-                    autorenew
+                        autorenew
                     </i>
                     Articulaciones PBT
                 </h5>
