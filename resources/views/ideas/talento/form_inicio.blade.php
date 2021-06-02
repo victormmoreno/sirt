@@ -71,7 +71,7 @@
                 <label>
                     No
                     @if ($existe)
-                        @if ($idea->empresa_id != null)
+                        @if ($idea->sede_id != null)
                         <input type="checkbox" name="txtidea_empresa" id="txtidea_empresa" checked value="1" onchange="showInput_BuscarEmpresa()">
                         @else
                         <input type="checkbox" name="txtidea_empresa" id="txtidea_empresa" value="1" onchange="showInput_BuscarEmpresa()">
@@ -87,8 +87,8 @@
         <div class="row" id="buscarEmpresa_content">
             <div class="input-field col s8 m8 l8">
                 @if ($existe)
-                    @if ($idea->empresa_id != null)
-                    <input type="text" id="txtnit" name="txtnit" value="{{ $idea->company->nit }}">
+                    @if ($idea->sede_id != null)
+                    <input type="text" id="txtnit" name="txtnit" value="{{ $idea->sede->empresa->nit }}">
                     @else
                     <input type="text" id="txtnit" name="txtnit" value="">
                     @endif
@@ -111,11 +111,34 @@
             <h4 class="center">Registrar una nueva empresa</h4>
             <div class="divider"></div>
             @include('empresa.form', ['vista' => 'ideas'])
+            <div class="divider"></div>
+            @include('empresa.form_sedes', ['vista' => 'ideas'])
         </div>
         <div class="card-panel green lighten-5" id="consultarEmpresa_content">
             <div class="divider"></div>
             <h4 class="center">Empresa registrada</h4>
             @include('empresa.detalle_registrado')
+            <div class="divider"></div>
+            <h4 class="center">Sedes registradas de la empresa</h4>
+            <ul class="collection" id="sedesEmpresaFormIdea">
+
+            </ul>
+            <div class="divider"></div>
+            <h4 class="center">Sede que se asociará a la idea de proyecto</h4>
+            @if ($existe)
+                @if ($idea->sede_id != null)
+                <input type="text" disabled name="txtnombre_sede_disabled" id="txtnombre_sede_disabled" value="{{$idea->sede->nombre_sede}} - {{$idea->sede->direccion}} {{$idea->sede->ciudad->nombre}} ({{$idea->sede->ciudad->departamento->nombre}})">
+                <input type="hidden" name="txtsede_id" id="txtsede_id" value="{{$idea->sede_id}}">
+                @else
+                <input type="text" disabled name="txtnombre_sede_disabled" id="txtnombre_sede_disabled" value="Primero debes seleccionar una sede">
+                <input type="hidden" name="txtsede_id" id="txtsede_id">
+                @endif
+            @else
+            <input type="text" disabled name="txtnombre_sede_disabled" id="txtnombre_sede_disabled" value="Primero debes seleccionar una sede">
+            <input type="hidden" name="txtsede_id" id="txtsede_id">
+            @endif
+            <label for="txtnombre_sede_disabled">Sede a la que se asociará la idea de proyecto <span class="red-text">*</span></label>
+            <small id="txtsede_id-error" class="error red-text"></small>
         </div>
         <div class="divider"></div>
         <div class="row">
@@ -1026,21 +1049,5 @@
                 </div>
             </div>
         </div>
-        {{-- <center>
-            @if ($btnText == 'Modificar')
-            <button type="submit" class="waves-effect cyan darken-1 btn center-aling" onclick="modalOpcionesFormulario(event)">
-                <i class="material-icons right">done</i>
-                {{$btnText}}
-            </button>
-            @else
-            <button type="submit" class="waves-effect cyan darken-1 btn center-aling" onclick="modalOpcionesFormulario(event)">
-                <i class="material-icons right">done_all</i>
-                {{$btnText}}
-            </button>
-            @endif
-            <a href="{{route('idea.index')}}" class="waves-effect red lighten-2 btn center-aling">
-                <i class="material-icons right">backspace</i>Cancelar
-            </a>
-        </center> --}}
     </div>
 </div>

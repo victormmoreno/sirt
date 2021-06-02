@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\{EstadoIdea, Idea, Nodo, Empresa, Entidad, Movimiento, Comite};
+use App\Models\{EstadoIdea, Idea, Nodo, Movimiento, Comite, Sede};
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
@@ -13,6 +13,13 @@ use Session;
 
 class IdeaRepository
 {
+
+    private $empresaRepository;
+
+    public function __construct(EmpresaRepository $empresaRepository)
+    {
+        $this->empresaRepository = $empresaRepository;
+    }
 
     public function getSelectNodo()
     {
@@ -233,36 +240,8 @@ class IdeaRepository
         try {
             
             $valoresCondicionales = $this->valoresCondicionales($request);
-            $empresa_id = null;
-       
-            if ($request->input('txtidea_empresa') == 1) {
-                $empresa_detalle = Empresa::where('nit', $request->input('txtnit'))->first();
-                if ($empresa_detalle == null) {
-                    // Registro de una nueva empresa
-                    $entidad = Entidad::create([
-                        'ciudad_id'     => $request->input('txtciudad_id_empresa'),
-                        'nombre'        => $request->input('txtnombre_empresa'),
-                        'slug'          => str_slug($request->input('txtnombre_empresa') . str_random(7), '-'),
-                        'email_entidad' => $request->input('txtemail_entidad'),
-                        ]);
-                        
-                    $empresa = Empresa::create([
-                        'entidad_id' => $entidad->id,
-                        'sector_id'  => $request->input('txtsector_empresa'),
-                        'nit'        => $request->input('txtnit_empresa'),
-                        'direccion'  => $request->input('txtdireccion_empresa'),
-                        'tipoempresa_id'  => $request->input('txttipoempresa_id_empresa'),
-                        'tamanhoempresa_id'  => $request->input('txttamanhoempresa_id_empresa'),
-                        'fecha_creacion'  => $request->input('txtfecha_creacion_empresa'),
-                        'codigo_ciiu'  => $request->input('txtcodigo_ciiu_empresa'),
-                        ]);
-                        $empresa_id = $empresa->id;
-                } else {
-                        $empresa_id = $empresa_detalle->id;
-                }
-            }
-    
-        
+            $sede_id = $this->registrarEmpresaConIdea($request);
+
             $codigo_idea = $this->generarCodigoIdea($request->input('txtnodo'));
         
             $idea = Idea::create([
@@ -303,7 +282,7 @@ class IdeaRepository
                 "tipo_idea" => Idea::IsEmprendedor(),
                 "estadoidea_id" => EstadoIdea::where('nombre', '=', EstadoIdea::IsRegistro())->first()->id,
                 "talento_id" => auth()->user()->talento->id,
-                "empresa_id" => $empresa_id,
+                "sede_id" => $sede_id,
                 "acuerdo_no_confidencialidad" => $valoresCondicionales['acuerdo_no_confidencialidad'],
                 "fecha_acuerdo_no_confidencialidad" => $valoresCondicionales['fecha_acuerdo_no_confidencialidad'],
             ]);
@@ -516,10 +495,7 @@ class IdeaRepository
             $duplicado = $idea->replicate();
             $duplicado->codigo_idea = $this->generarCodigoIdeaDuplicado($idea);
             $duplicado->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsRegistro())->first()->id;
-            // if (Session::get('login_role') == User::IsTalento()) {
-            // } else {
-            //     $duplicado->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsAdmitido())->first()->id;
-            // }
+
             $duplicado->push();
             // $duplicado->push();
             $idea->registrarHistorialIdea(Movimiento::IsDuplicar(), Session::get('login_role'), null, 'con el código de idea ' . $duplicado->codigo_idea);
@@ -659,40 +635,34 @@ class IdeaRepository
         }
     }
 
+    public function registrarEmpresaConIdea($request)
+    {
+        $sede_id = null;
+        if ($request->input('txtidea_empresa') == 1) {
+            $sede_detalle = Sede::find($request->input('txtsede_id'));
+            // $sede_detalle = Empresa::where('nit', $request->input('txtnit'))->first();
+            if ($sede_detalle == null) {
+                // Registro de una nueva empresa
+                $empresa = $this->empresaRepository->store($request);
+                $sede_id = $empresa['sede']->id;
+            } else {
+                // Actualizar el responsable de la empresa en caso de que no se encuentre asociada a ningún usuario
+                if ($sede_detalle->empresa->user_id == null) {
+                    $sede_detalle->empresa->update(['user_id' => auth()->user()->id]);
+                }
+                $sede_id = $sede_detalle->id;
+            }
+        }
+        return $sede_id;
+    }
+
     public function Update($request, $idea)
     {
         DB::beginTransaction();
         try {
             $valoresCondicionales = $this->valoresCondicionales($request);
-
-            $empresa_id = null;
-            // dd($request->input('txtnit_empresa'));
-            if ($request->input('txtidea_empresa') == 1) {
-                $empresa_detalle = Empresa::where('nit', $request->input('txtnit'))->first();
-                if ($empresa_detalle == null) {
-                    // Registro de una nueva empresa
-                    $entidad = Entidad::create([
-                        'ciudad_id'     => $request->input('txtciudad_id_empresa'),
-                        'nombre'        => $request->input('txtnombre_empresa'),
-                        'slug'          => str_slug($request->input('txtnombre_empresa') . str_random(7), '-'),
-                        'email_entidad' => $request->input('txtemail_entidad'),
-                        ]);
-                        
-                    $empresa = Empresa::create([
-                        'entidad_id' => $entidad->id,
-                        'sector_id'  => $request->input('txtsector_empresa'),
-                        'nit'        => $request->input('txtnit_empresa'),
-                        'direccion'  => $request->input('txtdireccion_empresa'),
-                        'tipoempresa_id'  => $request->input('txttipoempresa_id_empresa'),
-                        'tamanhoempresa_id'  => $request->input('txttamanhoempresa_id_empresa'),
-                        'fecha_creacion'  => $request->input('txtfecha_creacion_empresa'),
-                        'codigo_ciiu'  => $request->input('txtcodigo_ciiu_empresa'),
-                        ]);
-                        $empresa_id = $empresa->id;
-                } else {
-                        $empresa_id = $empresa_detalle->id;
-                }
-            }
+            
+            $sede_id = $this->registrarEmpresaConIdea($request);
 
             $idea->update([
                 "nombre_proyecto" => $request->input('txtnombre_proyecto'),
@@ -728,7 +698,7 @@ class IdeaRepository
                 "convocatoria" => $valoresCondicionales['convocatoria'],
                 "aval_empresa" => $valoresCondicionales['aval_empresa'],
                 "empresa" => $valoresCondicionales['empresa'],
-                "empresa_id" => $empresa_id,
+                "sede_id" => $sede_id,
                 "acuerdo_no_confidencialidad" => $valoresCondicionales['acuerdo_no_confidencialidad'],
                 "fecha_acuerdo_no_confidencialidad" => $valoresCondicionales['fecha_acuerdo_no_confidencialidad']
             ]);
@@ -763,29 +733,9 @@ class IdeaRepository
         }
     }
 
-    // Cambiar el estado de una idea según el parametro que se le envia, (el parametro es el NOMBRE DEL ESTADO DE IDEAS)
-    public function updateEstadoIdea($idIdea, $estadoACambiar)
-    {
-        return DB::update("UPDATE ideas SET estadoidea_id = (
-      CASE
-      WHEN '$estadoACambiar' = 'Inscrito' THEN 1
-      WHEN '$estadoACambiar' = 'Convocado' THEN 2
-      WHEN '$estadoACambiar' = 'Admitido' THEN 3
-      WHEN '$estadoACambiar' = 'No Admitido' THEN 4
-      WHEN '$estadoACambiar' = 'No Convocado' THEN 5
-      WHEN '$estadoACambiar' = 'Inhabilitado' THEN 6
-      WHEN '$estadoACambiar' = 'En Proyecto' THEN 7
-      WHEN '$estadoACambiar' = 'No Aplica' THEN 8
-      WHEN '$estadoACambiar' = 'Programado' THEN 9
-      WHEN '$estadoACambiar' = 'Reprogramado' THEN 10
-      END
-      ) WHERE id = $idIdea ");
-    }
-
     public function findByid($id)
     {
         return Idea::find($id);
-        // return Idea::where('id', $id)->first();
     }
 
 

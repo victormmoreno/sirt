@@ -4,7 +4,7 @@ namespace App\Exports\Indicadores;
 
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use App\Exports\Proyectos\{ProyectosExport};
-use App\Exports\Articulaciones\{ArticulacionesExport};
+// use App\Exports\Articulaciones\{ArticulacionesExport};
 use App\Exports\Empresas\{EmpresasExport};
 use App\Exports\GruposInvestigacion\{GruposExport};
 use App\Exports\User\Talento\TalentoUserExport;
@@ -13,15 +13,15 @@ class Indicadores2020Export implements WithMultipleSheets
 {
     private $queryProyectos;
     private $queryTalentos;
-    private $queryArticulacion;
+    // private $queryArticulacion;
     private $queryEmpresasPropietarias;
     private $queryGruposPropietarios;
     private $queryTalentosPropietarios;
 
-    public function __construct($queryProyectos, $queryTalentos, $queryArticulacion, $queryEmpresasPropietarias, $queryGruposPropietarios, $queryTalentosPropietarios) {
+    public function __construct($queryProyectos, $queryTalentos, $queryEmpresasPropietarias, $queryGruposPropietarios, $queryTalentosPropietarios) {
         $this->setQueryProyectos($queryProyectos);
         $this->setQueryTalentos($queryTalentos);
-        $this->setQueryArticulacion($queryArticulacion);
+        // $this->setQueryArticulacion($queryArticulacion);
         $this->setQueryEmpresasPropietarias($queryEmpresasPropietarias);
         $this->setQueryTalentosPropietarios($queryTalentosPropietarios);
         $this->setQueryGruposPropietarios($queryGruposPropietarios);
@@ -38,7 +38,7 @@ class Indicadores2020Export implements WithMultipleSheets
         $sheets[] = new EmpresasExport($this->getQueryEmpresasPropietarias(), 'propietarias');
         $sheets[] = new GruposExport($this->getQueryGruposPropietarios(), 'propietarios');
         $sheets[] = new TalentoUserExport($this->getQueryTalentosPropietarios(), 'Propietarios');
-        $sheets[] = new ArticulacionesExport($this->getQueryArticulacion());
+        // $sheets[] = new ArticulacionesExport($this->getQueryArticulacion());
         return $sheets;
     }
 
@@ -58,13 +58,13 @@ class Indicadores2020Export implements WithMultipleSheets
         return $this->queryTalentos;
     }
 
-    private function setQueryArticulacion($queryArticulacion) {
-        $this->queryArticulacion = $queryArticulacion;
-    }
+    // private function setQueryArticulacion($queryArticulacion) {
+    //     $this->queryArticulacion = $queryArticulacion;
+    // }
 
-    private function getQueryArticulacion() {
-        return $this->queryArticulacion;
-    }
+    // private function getQueryArticulacion() {
+    //     return $this->queryArticulacion;
+    // }
 
     private function setQueryEmpresasPropietarias($queryEmpresasPropietarias) {
         $this->queryEmpresasPropietarias = $queryEmpresasPropietarias;

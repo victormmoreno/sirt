@@ -63,16 +63,19 @@ function consultarEmpresaTecnoparque() {
             type: 'get',
             url : '/empresa/ajaxDetallesDeUnaEmpresa/'+nit+'/'+field,
             success: function (response) {
-                // console.log(response.empresa.entidad.nombre);
               if (response.empresa == null) {
                 divEmpresaRegistrada.hide();
                 divRegistrarEmpresa.show();
                 $('#txtnit_empresa').val(nit);
                 $("label[for='txtnit_empresa']").addClass('active');
               } else {
+                let registros;
                 asignarValoresFRMIdeas(response);
                 divEmpresaRegistrada.show();
                 divRegistrarEmpresa.hide();
+                reiniciarSede();
+                registros = mostrarSedesEmpresa(response);
+                $('#sedesEmpresaFormIdea').append(registros);
               }
             },
             error: function (xhr, textStatus, errorThrown) {
@@ -81,6 +84,46 @@ function consultarEmpresaTecnoparque() {
           })
         }
     }
+}
+
+function reiniciarSede() {
+  $('#sedesEmpresaFormIdea').empty();
+  $('#txtsede_id').val('');
+  $('#txtnombre_sede_disabled').val('Primero debes seleccionar una sede');
+}
+
+function mostrarSedesEmpresa(ajax) {
+  let fila = "";
+  ajax.empresa.sedes.forEach(element => {
+    fila += `<li class="collection-item">
+      ` + element.nombre_sede + ` - ` + element.direccion + ` ` + element.ciudad.nombre + ` (` + element.ciudad.departamento.nombre + `)
+      <a href="#!" class="secondary-content" onclick="asociarSedeAIdeaProyecto(`+element.id+`)">Asociar esta sede de la empresa a la idea de proyecto</a></div>
+    </li>`;
+  });
+  return fila
+}
+
+function asociarSedeAIdeaProyecto(sede_id) {
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url : '/empresa/ajaxDetalleDeUnaSede/'+sede_id,
+    success: function (response) {
+      $('#txtsede_id').val(response.sede.id);
+      $('#txtnombre_sede_disabled').val(response.sede.nombre_sede + ' - ' + response.sede.direccion + ' ' + response.sede.ciudad.nombre + ' (' + response.sede.ciudad.departamento.nombre + ')');
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 1500,
+        type: 'success',
+        title: 'La sede '+response.sede.nombre_sede+' se asoció a la idea de proyecto!'
+    });
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    }
+  })
 }
 
   $(document).on('click', '.btnModalIdeaCancelar', function(event) {
@@ -158,7 +201,7 @@ function enviarIdeaRegistro(event, tipo) {
 }
 
 function asignarValoresFRMIdeas(response) {
-    $('#txtnombre_empresa_det').val(response.empresa.entidad.nombre);
+    $('#txtnombre_empresa_det').val(response.empresa.nombre);
     $("label[for='txtnombre_empresa_det']").addClass('active');
     $('#txttipo_empresa_det').val(response.empresa.tipoempresa.nombre);
     $("label[for='txttipo_empresa_det']").addClass('active');

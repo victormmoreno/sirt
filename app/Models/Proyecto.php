@@ -54,6 +54,23 @@ class Proyecto extends Model
   // Estado que indica que el trl esperado es 7 u 8
   const IS_TRL7_8_ESPERADO = 1;
 
+  const IS_TRL6_OBTENIDO = 0;
+  const IS_TRL7_OBTENIDO = 1;
+  const IS_TRL8_OBTENIDO = 2;
+
+  // Retorna para las constantes del campo trl_obtenido
+  public static function IsTrl6Obtenido()
+  {
+    return self::IS_TRL6_OBTENIDO;
+  }
+  public static function IsTrl7Obtenido()
+  {
+    return self::IS_TRL7_OBTENIDO;
+  }
+  public static function IsTrl8Obtenido()
+  {
+    return self::IS_TRL8_OBTENIDO;
+  }
   // Retorna para las constantes del campo trl_esperado
   public static function IsTrl6Esperado()
   {
@@ -75,9 +92,9 @@ class Proyecto extends Model
   //     return $this->hasMany(ArchivoProyecto::class, 'proyecto_id', 'id');
   // }
 
-  public function empresas()
+  public function sedes()
   {
-    return $this->morphedByMany(Empresa::class, 'propietario')->withTimestamps();
+    return $this->morphedByMany(Sede::class, 'propietario')->withTimestamps();
   }
 
   public function gruposinvestigacion()

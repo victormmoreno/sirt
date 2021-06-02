@@ -32,23 +32,46 @@
                   </a>
                 </div>
                 <div class="col s12 m4 l4 center">
-                  @if ( ($proyecto->fase->nombre == 'Inicio' && $ultimo_movimiento == null) || 
-                  ($proyecto->fase->nombre == 'Inicio' && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsCambiar()) ||
-                  ($ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->fase == 'Inicio' ) || 
-                  ($ultimo_movimiento->rol == App\User::IsDinamizador() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->fase == 'Inicio' ) ||
-                  ($ultimo_movimiento->rol == App\User::IsDinamizador() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsReversar()) )
-                  <a href="{{route('proyecto.solicitar.aprobacion', [$proyecto->id, 'Inicio'])}}">
-                    <div class="card-panel yellow accent-1 black-text">
-                      Solicitar al talento interlocutor que apruebe la fase de inicio.
-                    </div>
-                  </a>
+                @if ($proyecto->fase->nombre == 'Inicio')
+                  @if ($ultimo_movimiento == null || $ultimo_movimiento->movimiento == App\Models\Movimiento::IsCambiar() || $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() || $ultimo_movimiento->movimiento == App\Models\Movimiento::IsReversar())
+                    <a href="{{route('proyecto.solicitar.aprobacion', [$proyecto->id, 'Inicio'])}}">
+                      <div class="card-panel yellow accent-1 black-text">
+                        Enviar solicitud de aprobación al talento interlocutor.
+                      </div>
+                    </a>
                   @else
+                    @if ($ultimo_movimiento->movimiento == App\Models\Movimiento::IsSolicitarTalento())
+                      <a disabled>
+                        <div class="card-panel yellow accent-1 black-text">
+                          Se envió la solicitud de aprobación al talento interlocutor.
+                        </div>
+                      </a>
+                    @endif
+                    @if($ultimo_movimiento->movimiento == App\Models\Movimiento::IsAprobar() && $ultimo_movimiento->rol == App\User::IsTalento())
+                      <a disabled>
+                        <div class="card-panel yellow accent-1 black-text">
+                          El talento interlocutor aprobó la fase de Inicio, aún falta la aprobación del dinamizador.
+                        </div>
+                      </a>
+                    @endif
+                  @endif
+                @else
                   <a disabled>
                     <div class="card-panel yellow accent-1 black-text">
-                      Esta fase ya ha sido aprobada por el talento y/o dinamizador (Para mas detalle ver el historial de movimientos).
+                      Este proyecto no se encuentra en fase de inicio.
                     </div>
                   </a>
-                  @endif
+                @endif
+                </div>
+              </div>
+              <div class="row">
+                <div class="col s12 m4 l4 center">
+                  <a href="{{route('pdf.proyecto.acta.inicio', $proyecto->id)}}" target="_blank">
+                    <div class="card-panel blue white-text">
+                      <i class="material-icons left">file_download</i>
+                      Generar acta de inicio de categorización.
+                    </div>
+                  </a>
                 </div>
               </div>
               <form id="frmProyectos_FaseInicio_Update" action="{{route('proyecto.update.inicio', $proyecto->id)}}" method="POST">

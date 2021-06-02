@@ -44,7 +44,7 @@ class Idea extends Model
         'codigo_idea',
         'aprendiz_sena',
         'pregunta1',
-        'empresa_id',
+        'sede_id',
         'pregunta2',
         'pregunta3',
         'descripcion',

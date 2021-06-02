@@ -159,20 +159,20 @@
                                                         ¿Esta idea de proyecto está registrada con una empresa?
                                                     </span>
                                                     <p>
-                                                        @if ($idea->empresa_id == null)
+                                                        @if ($idea->sede_id == null)
                                                             No hay información disponible.
                                                         @else
                                                             Si.
                                                         @endif
                                                     </p>
                                                 </li>
-                                                @if ($idea->empresa_id != null)
+                                                @if ($idea->sede_id != null)
                                                     <li class="collection-item">
                                                         <span class="title cyan-text text-darken-3">
                                                             Nombre de la empresa
                                                         </span>
                                                         <p>
-                                                            {{$idea->company->nit}} - {{$idea->company->entidad->nombre}}
+                                                            {{$idea->sede->empresa->nit}} - {{$idea->sede->empresa->nombre}}
                                                         </p>
                                                     </li>
                                                 @endif

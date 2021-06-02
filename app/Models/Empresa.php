@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class Empresa extends Model
 {
@@ -16,6 +17,9 @@ class Empresa extends Model
     protected $fillable = [
         'entidad_id',
         'sector_id',
+        'user_id',
+        'nombre',
+        'email',
         'nit',
         'direccion',
         'tipoempresa_id',
@@ -23,6 +27,14 @@ class Empresa extends Model
         'fecha_creacion',
         'codigo_ciiu',
     ];
+
+    public function ideaPerteneceAUsuario()
+    {
+        if ($this->user_id == auth()->user()->id) {
+            return true;
+        }
+        return false;
+    }
 
     /*=========================================
     =            asesores eloquent            =
@@ -52,17 +64,22 @@ class Empresa extends Model
         $this->attributes['direccion'] = ucwords(mb_strtolower(trim($direccion),'UTF-8'));
     }
 
+    public function sedes()
+    {
+        return $this->hasMany(Sede::class, 'empresa_id', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
     /*=====  End of mutador eloquent  ======*/
 
     // Relación a la tabla entidades
     public function entidad()
     {
         return $this->belongsTo(Entidad::class, 'entidad_id', 'id');
-    }
-
-    public function proyectos()
-    {
-        return $this->morphToMany(Proyecto::class, 'propietario')->withTimestamps();
     }
 
     // Relación a la tabla de sectores
