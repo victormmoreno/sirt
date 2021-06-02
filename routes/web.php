@@ -304,12 +304,6 @@ Route::group([
     Route::get('usoinfraestructura/talentosporarticulacion/{id}', 'UsoInfraestructuraController@talentosPorArticulacion')
         ->name('usoinfraestructura.talentosporarticulacion');
 
-    Route::get('usoinfraestructura/edtforuser/{id}', 'UsoInfraestructuraController@edtForUser')
-        ->name('usoinfraestructura.edtforuser');
-
-    Route::get('usoinfraestructura/edtsforuser', 'UsoInfraestructuraController@edtsForUser')
-        ->name('usoinfraestructura.edtsforuser');
-
 
     Route::get('usoinfraestructura/projectsforuser', 'UsoInfraestructuraController@projectsForUser')
         ->name('usoinfraestructura.projectsforuser');

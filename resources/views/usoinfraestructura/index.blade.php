@@ -47,7 +47,11 @@
                                                     </span>  
                                                 </div>
                                                 <div class="col s12 m4 l4 show-on-large hide-on-med-and-down">
-                                                    <a  href="{{route('usoinfraestructura.create')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down">{{session()->has('login_role') == App\User::IsGestor() ? 'Nueva Asesoria' : 'Nuevo uso de Infraestructura'}} </a>
+                                                    @if(session()->has('login_role') == App\User::IsGestor() || session()->has('login_role') == App\User::IsArticulador()) 
+                                                        <a  href="{{route('usoinfraestructura.create')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nueva Asesoria</a>
+                                                    @else
+                                                        <a  href="{{route('usoinfraestructura.create')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo uso de Infraestructura</a>
+                                                    @endif
                                                 </div>
                                             @endif
                                         </div>                                    
@@ -100,7 +104,7 @@
                             <table class="display responsive-table datatable-example dataTable" id="usoinfraestructa_data_table" width="100%">
                                 <thead>
                                     <th width="10%">Fecha</th>
-                                    <th width="20%">Gestor</th>
+                                    <th width="20%">Asesor</th>
                                     <th width="45%">Nombre</th>
                                     <th width="10%">Fase</th>
                                     <th width="5%">Asesoría Directa</th>
@@ -112,12 +116,11 @@
                         </div>
                     </div>
                 </div>
-                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor()|| session()->get('login_role') == App\User::IsTalento() ))
+                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor()|| session()->get('login_role') == App\User::IsTalento() || session()->get('login_role') == App\User::IsArticulador() ))
                 <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
                 <a href="{{route('usoinfraestructura.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="{{session()->has('login_role') == App\User::IsGestor() ? 'Nueva Asesoria' : 'Nuevo uso de Infraestructura'}}">
                         <i class="material-icons">add_circle</i>
                     </a>
-                
                 </div>
                 @endif
             </div>

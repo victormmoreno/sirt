@@ -44,6 +44,25 @@ class UsoInfraestructuraFormRequest extends FormRequest
                 'txtcantidad'               => 'nullable|numeric|min:0|max:99|between:0,99.9',
 
             ];
+        }
+        elseif (session()->has('login_role') && session()->get('login_role') == User::IsArticulador()) {
+
+            return [
+                'txtfecha'                  => 'required|date_format:"Y-m-d"',
+                'asesoriadirecta'           => 'required|array',
+                'asesoriaindirecta'         => 'required|array',
+
+                'txttipousoinfraestructura' => 'required',
+                'txtactividad'              => 'required',
+                'txtcompromisos'            => 'required|max:2400',
+                'txtdescripcion'            => 'nullable|max:2000',
+                'txtasesoriadirecta'        => 'nullable|numeric|min:0|max:99|between:0,99.9',
+                'txtasesoriaindirecta'      => 'nullable|numeric|min:0|max:99|between:0,99.9',
+
+                'txttiempouso'              => 'nullable|numeric|min:0|max:99|between:0,99.9',
+                'txtcantidad'               => 'nullable|numeric|min:0|max:99|between:0,99.9',
+
+            ];
         } else if (session()->has('login_role') && session()->get('login_role') == User::IsTalento()) {
             return [
                 'txtfecha'                  => 'required|date_format:"Y-m-d"',

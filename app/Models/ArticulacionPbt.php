@@ -156,4 +156,15 @@ class ArticulacionPbt extends Model
             'descripcion' => $descripcion
           ]);
     }
+
+    /*===================================================================
+    =            scope para consultar articulaciones           =
+    ===================================================================*/
+
+    public function scopeArticulacionesWithRelations($query, array $relations)
+    {
+        return $query->with($relations);
+    }
+
+    /*=====  End of scope para consultar por estado de proyecto  ======*/
 }

@@ -590,4 +590,14 @@ class ArticulacionPbtRepository
         }
     }
 
+    /**
+     * retorna query con las articulaciones en fase Inicio, En ejecución por usuarios
+    * @return collection
+    * @author devjul
+    */
+    public function getArticulacionesForUser(array $relations)
+    {
+        return ArticulacionPbt::articulacionesWithRelations($relations);
+    }
+
 }
