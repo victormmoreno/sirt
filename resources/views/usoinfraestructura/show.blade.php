@@ -38,8 +38,10 @@
                                                         </span>
                                                         <span class="mailbox-author">
                                                             <b>Nodo: </b> Tecnoparque nodo {{$usoinfraestructura->actividad->nodo->entidad->nombre}}, {{$usoinfraestructura->actividad->nodo->entidad->ciudad->nombre}} ({{$usoinfraestructura->actividad->nodo->entidad->ciudad->departamento->nombre}})<br/>
+                                                            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor()))
                                                             <b>Linea Tecnológica: </b> {{isset($usoinfraestructura->actividad->gestor->lineatecnologica->nombre) ? $usoinfraestructura->actividad->gestor->lineatecnologica->nombre : 'No registra'}} <br/>
-                                                            <b>Gestor Asesor: </b>
+                                                            @endif
+                                                            <b>Asesor: </b>
                                                             {{$usoinfraestructura->actividad->gestor->user()->withTrashed()->first()->documento}} - {{$usoinfraestructura->actividad->gestor->user()->withTrashed()->first()->nombres}} {{$usoinfraestructura->actividad->gestor->user()->withTrashed()->first()->apellidos}}<br/>
                                                         </span>
                                                     </div>
@@ -78,12 +80,7 @@
                                                                             <strong class="cyan-text text-darken-3">Fecha de Inicio:</strong>
                                                                             {{$usoinfraestructura->actividad->fecha_inicio->isoformat('LL')}}
                                                                         </p>
-                                                                        @if(isset($usoinfraestructura->actividad->fecha_cierre) && $usoinfraestructura->actividad->fecha_cierre != null)
-                                                                            <p>
-                                                                                <strong class="cyan-text text-darken-3">Fecha de Cierre :</strong>
-                                                                                {{$usoinfraestructura->actividad->fecha_cierre->isoformat('LL')}}
-                                                                            </p>
-                                                                        @endif
+                                                                        
                                                                         @if(isset($usoinfraestructura->actividad->articulacion_proyecto) && $usoinfraestructura->actividad->articulacion_proyecto != null)
                                                                             @if(isset($usoinfraestructura->actividad->articulacion_proyecto->proyecto) && $usoinfraestructura->actividad->articulacion_proyecto->proyecto != null)
                                                                                 
@@ -103,44 +100,7 @@
                                                                         @endif
                                                                     </li>
                                                                 </ul>
-                                                                @if(isset($usoinfraestructura->actividad->edt) && $usoinfraestructura->actividad->edt != null)
-                                                                    <div class="center">
-                                                                        <span class="mailbox-title ">
-                                                                            Empresas ({{$usoinfraestructura->actividad->edt->entidades->count()}})
-                                                                        </span>
-
-                                                                    </div>
-                                                                    <ul class="collection">
-                                                                        @forelse($usoinfraestructura->actividad->edt->entidades as $entidad)
-                                                                            <li class="collection-item avatar">
-                                                                                <i class="material-icons circle teal darken-2">
-                                                                                    business_center
-                                                                                </i>
-                                                                                <span class="title">
-                                                                                    {{$entidad->empresa->nit}} - {{$entidad->nombre}}
-                                                                                </span>
-                                                                                <p>
-                                                                                    {{$entidad->ciudad->nombre}} ({{$entidad->ciudad->departamento->nombre}})
-                                                                                </p>
-                                                                                <p>
-                                                                                    {{$entidad->email_entidad}}
-                                                                                </p>
-                                                                                <p>
-                                                                                    {{$entidad->empresa->direccion}}
-                                                                                </p>
-
-                                                                            </li>
-                                                                        @empty
-                                                                        <div class="center">
-                                                                            <i class="large material-icons center">
-                                                                                block
-                                                                            </i>
-                                                                            <p class="center-align">No se encontraron resultados</p>
-                                                                        </div>
-                                                                        @endforelse
-
-                                                                    </ul>
-                                                                @endif
+                                                               
                                                             </div>
                                                             <div class="divider mailbox-divider"></div>
                                                             <ul class="collection">
@@ -244,7 +204,7 @@
                                                                                 Próximos compromisos
                                                                             </span>
                                                                             <p>
-                                                                                {{ !isset($usoinfraestructura->compromisos) ? $usoinfraestructura->compromisos : 'No Registra'}}
+                                                                                {{ isset($usoinfraestructura->compromisos) ? $usoinfraestructura->compromisos : 'No Registra'}}
                                                                             </p>
                                                                         </li>
                                                                     </ul>
@@ -390,6 +350,7 @@
                                                                     </ul>
                                                                 </div>
                                                             </div>
+                                                            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsArticulador() || session()->get('login_role') == App\User::IsTalento()))
                                                             <div class="right">
                                                                 <a href="{{route('usoinfraestructura.edit',$usoinfraestructura->id)}}" class="waves-effect waves-teal darken-2 btn-flat m-t-xs center-aling">
                                                                     Cambiar Información
@@ -400,8 +361,8 @@
                                                                     </i>
                                                                     Eliminar
                                                                 </a>
-
                                                             </div>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </div>

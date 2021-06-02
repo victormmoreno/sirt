@@ -5,7 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsersRequests\UserFormEditRequest;
 use App\Models\{Nodo,Fase, Entidad, Etnia, TipoTalento, TipoFormacion, TipoEstudio, Eps, Ocupacion, LineaTecnologica};
-use App\Repositories\Repository\UserRepository\UserRepository;
+use App\Repositories\Repository\{UserRepository\UserRepository, ProfileRepository\ProfileRepository};
 use App\User;
 use Illuminate\Http\Request;
 use App\Datatables\UserDatatable;
@@ -135,6 +135,14 @@ class UserController extends Controller
     public function show($documento)
     {
         $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
+
+        if (request()->ajax()) {
+            return response()->json([
+                'data' => [
+                    'user' => $user
+                ]
+            ]);
+        }
         return view('users.show', ['user' => $user]);
     }
 
@@ -403,6 +411,75 @@ class UserController extends Controller
                     'state'   => 'error',
                     'message' => 'El Usuario no se ha modificado',
                     'url' => false
+                ]);
+            }
+        }
+    }
+
+    public function edit($document)
+    {
+
+        $user = User::withTrashed()->where('documento', $document)->firstOrFail();
+
+        //$this->authorize('editAccount', $authUser);
+
+        return view('users.edit', [
+            'user'              => $user,
+            'etnias' => Etnia::pluck('nombre', 'id'),
+            'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
+            'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
+            'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
+            'eps'               => $this->userRepository->getAllEpsActivas(),
+            'departamentos'     => $this->userRepository->getAllDepartamentos(),
+            'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
+            'view' => 'edit'
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateAccountUser(Request $request, ProfileRepository $profileRepostory, $id)
+    {
+        //buscar usuario por su id
+        $user = User::find($id);
+
+        if ($user == null) {
+            $user = User::onlyTrashed()->find($id);
+        }
+        $this->authorize('updateProfile', $user);
+
+        $req       = new UserFormEditRequest;
+        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+
+
+        if ($validator->fails()) {
+            return response()->json([
+                'state'   => 'error_form',
+                'fail'   => true,
+                'errors' => $validator->errors(),
+            ]);
+        } else {
+            if ($user != null) {
+                //acutalizar usuario
+                $userUpdate = $profileRepostory->Update($request, $user);
+
+                return response()->json([
+                    'state'   => 'success',
+                    'message' => 'La cuenta del usuario ha sido actualizada exitosamente.',
+                    'url' => route('usuario.usuarios.show', $userUpdate->documento),
+                    'user' => $userUpdate,
+                ]);
+            } else {
+                return response()->json([
+                    'state'   => 'error',
+                    'message' => 'El Usuario no se ha modificado',
+                    'url' => redirect()->back()
+
                 ]);
             }
         }

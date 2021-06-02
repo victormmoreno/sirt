@@ -20,7 +20,7 @@ class MaterialController extends Controller
 
     public function __construct(MaterialRepository $materialRepository, LineaRepository $lineaRepository, NodoRepository $nodoRepository)
     {
-        $this->middleware(['auth', 'role_session:Administrador|Dinamizador|Gestor|Talento']);
+        $this->middleware(['auth', 'role_session:Administrador|Dinamizador|Articulador|Gestor|Talento']);
         $this->setMaterialRepository($materialRepository);
         $this->setLineaTecnologicaRepository($lineaRepository);
         $this->setNodoRepository($nodoRepository);

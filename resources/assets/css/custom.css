@@ -90,13 +90,6 @@ h5.breadcrumbs-header {
 
 
 
-/*color tabs personalizados vicmo*/
-.tabs .tab .active {
-  color:#26a69a;
-  /*Custom Text Color While Active*/
-  background-color: rgba(89, 181, 72, 0.2);
-  /*Custom Background Color While Active*/
-}
 
 .dataTable {
   width: 100%,
@@ -146,3 +139,105 @@ h5.breadcrumbs-header {
     font-weight: 500;
     box-shadow: none;
 }
+
+
+.mailbox-options ul {
+    overflow: hidden;
+    background: #f9f9f9;
+    border-bottom: 1px solid #e0e0e0;
+    margin: 0;
+    padding-left: 20px;
+}
+
+.mailbox-options ul li {
+    float: left;
+}
+
+.mailbox-options ul li.text-mailbox {
+    display: block;
+    font-size: 13px;
+    padding: 12px 16px;
+    color: rgba(0,0,0,.7);
+}
+
+.mailbox-options ul li.active{
+    color: rgba(248, 182, 1, 0.7);
+}
+
+.mailbox-options ul li a {
+    display: block;
+    font-size: 13px;
+    padding: 12px 16px;
+    color: rgba(0,0,0,.7);
+}
+
+.mailbox-options ul li a.active{
+    color: rgba(248, 182, 1, 0.7);
+}
+
+#popoverOpener {
+    position: absolute;
+    left: 50%;
+    margin-left: -10vw;
+    text-align: center;
+    top: 45vh;
+    width: 20vw;
+  }
+  
+  .bootstrap .popover {
+    transition: left 400ms ease-out, top 250ms ease-in;
+  }
+  
+  .popover-content > div {
+    text-align: center;
+  }
+  
+  .popover-content > div > a:link {
+    border: 1px solid lavender;
+    border-radius: 8px;
+    display: inline-block;
+    padding: 4px;
+    text-decoration: none;
+    transition: all 250ms;
+  }
+  
+  .popover-content > div > a:hover {
+    background-color: #eeeeff;
+    border-color: #AFAFBF;
+    border-radius: 4px;
+    box-shadow: 0 0 4px #ccc;
+  }
+
+  
+.tabs {
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+
+.tabs .tab a {
+    color: #ff8f00;
+}
+
+.tabs .tab a:hover {
+    color: #000000;
+}
+
+.tabs .tab.disabled a {
+    color: #b0bec5;
+    cursor: default;
+}
+
+.tabs .indicator {
+    background-color: #ff8f00;
+}
+
+/*color tabs personalizados vicmo*/
+.tabs .tab .active {
+    color:#ff8f00;
+    /*Custom Text Color While Active*/
+    background-color: rgba(241, 195, 93, 0.548);
+    /*Custom Background Color While Active*/
+}
+
+  
+
+

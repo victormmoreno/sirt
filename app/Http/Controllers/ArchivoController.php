@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Fase, Proyecto, ArchivoArticulacionProyecto, Articulacion, RutaModel};
+use App\Models\{Fase, Proyecto, ArchivoArticulacionProyecto, Articulacion, RutaModel, ArticulacionPbt, ArchivoModel};
 use App\Repositories\Repository\{ArticulacionRepository, ArchivoRepository, ProyectoRepository, EntrenamientoRepository, EdtRepository, CharlaInformativaRepository};
 use Illuminate\Support\Facades\{Storage, Session};
 use App\User;
@@ -393,13 +393,15 @@ class ArchivoController extends Controller
     return Storage::response($path);
   }
 
-  // // Descarga el archivo de la articulación
-  // public function downloadFileArticulacion($idFile)
-  // {
-  //   $ruta = $this->archivoRepository->consultarRutaDeArchivoDeLaArticulacionPorId($idFile);
-  //   $path = str_replace('storage', 'public', $ruta->ruta);
-  //   return Storage::response($path);
-  // }
+
+  // Descarga el archivo de la articulación
+  public function downloadFileArticulacion($idFile)
+  {
+    
+    $archivo = ArchivoModel::select('id', 'ruta')->where('id', $idFile)->get()->last();
+    $path = str_replace('storage', 'public', $archivo->ruta);
+    return Storage::response($path);
+  }
 
   /**
   * Tabla para mostrar los archivos de una articulacion_proyecto
@@ -493,7 +495,7 @@ class ArchivoController extends Controller
       // Fase donde se guardará el archivo de la articulación
       $fase = Fase::select('id', 'nombre')->where('nombre', $request->fase)->get()->last();
       // Tipo de Aritculación (AGI / Si es con grupo de investigación) ó (AEE / Si es con empresa o emprendedor)
-      $articulacion = Articulacion::findOrFail($id);;
+      $articulacion = Articulacion::findOrFail($id);
       // Año de la fecha de inicio de una articulación
       $anhoFechaInicio = $articulacion->articulacion_proyecto->actividad->fecha_inicio;
       $anhoFechaInicio = $anhoFechaInicio->format('YYYY');
@@ -506,5 +508,106 @@ class ArchivoController extends Controller
       $this->archivoRepository->storeFileArticulacionProyecto($id, $fase->id, Storage::url($fileUrl));
     }
   }
+
+  public function uploadFileArticulacionPbt(Request $request, $id)
+  {
+    if (request()->ajax()) {
+      $this->validate(request(), [
+        'nombreArchivo' => 'max:50000|mimes:jpeg,png,jpg,docx,doc,pdf,exe,xlsl,xlsx,xls,pptx,sldx,ppsx,exe,zip',
+      ],
+      [
+        'nombreArchivo.mimes' => 'El tipo de archivo no es permitido',
+        'nombreArchivo.max' => 'El tamaño del archivo no puede superar las 50MB'
+      ]);
+      $file = request()->file('nombreArchivo');
+    
+      $archivo = ArchivoModel::selectRaw('MAX(id+1) AS max')->get()->last();
+      $fileName = $archivo->max . '_' . $file->getClientOriginalName();
+      // Creando la ruta
+      $articulacion = ArticulacionPbt::findOrFail($id);
+      $route = "";
+      $nodo = sprintf("%02d", auth()->user()->gestor->nodo_id);
+      $anho = Carbon::parse($articulacion->actividad->fecha_inicio)->isoFormat('YYYY');
+    
+      $articulador = sprintf("%03d", $articulacion->actividad->gestor_id);
+
+      $fase = Fase::select('id', 'nombre')->where('nombre', $request->fase)->get()->last();
+      $fase_id = $fase->id;
+      $fase = $fase->nombre;
+      $route = 'public/' . $nodo . '/' . $anho . '/articulacion_pbt' . '/' . $articulador . '/' . $articulacion->id . '/' . $fase;
+      $fileUrl = $file->storeAs($route, $fileName);
+      $id = $articulacion->id;
+      $articulacion->archivomodel()->create([
+        'ruta' => Storage::url($fileUrl),
+        'fase_id' => $fase_id
+      ]);
+    }
+  }
+
+  /**
+  * Muestra la datatable de los arcivos de una articulacion pbt
+  * @param int $id id de la articulacion
+  * @param string $fase nombre de la fase
+  * @return Datatable
+  * @author devjul
+  */
+  public function datatableArchiveArticulacion($id, $fase)
+  {
+      if (request()->ajax()) {
+          $articulacion = ArticulacionPbt::findOrFail($id);
+          $archivo =  $articulacion->archivomodel()->whereHas('fase', function($query) use($fase){
+            $query->where('nombre', $fase);
+          })->get();
+          return $this->datatableArchivosArticulacionPbt($archivo);
+      }
+  }
+
+  /**
+  * Tabla para mostrar los archivos de una articulacion_pbt
+  * @param int $id id de la articulacion
+  * @return Reponse
+  * @author devjul
+  */
+  public function datatableArchivosArticulacionPbt($query)
+  {
+    return datatables()->of($query)
+      ->addColumn('download', function ($data) {
+          $download = '
+          <a target="_blank" href="' . route('articulacion.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
+          <i class="material-icons">file_download</i>
+          </a>
+          ';
+          return $download;
+      })->addColumn('delete', function ($data) {
+          $delete = '<form method="POST" action="' . route('articulacion.files.destroy', $data) . '">
+          ' . method_field('DELETE') . '' .  csrf_field() . '
+          <button class="btn red darken-4 m-b-xs">
+          <i class="material-icons">delete_forever</i>
+          </button>
+          </form>';
+          return $delete;
+      })->addColumn('file', function ($data) {
+          $file = '
+          <i class="material-icons">insert_drive_file</i> ' . basename(url($data->ruta) ) . '
+          ';
+          return $file;
+      })->rawColumns(['download', 'delete', 'file'])->make(true);
+  }
+
+  /**
+  * @param int $idFile Id del archivo artilacion
+  * @return Response
+  * @author Victor Manuel Moreno Vega
+  */
+  public function destroyFileArticulacion($idFile)
+  {
+      $file = ArchivoModel::find($idFile);
+      $file->delete();
+      $filePath = str_replace('storage', 'public', $file->ruta);
+      Storage::delete($filePath);
+      toast('El Archivo se ha eliminado con éxito!','success')->autoClose(2000)->position('top-end');
+      return back();
+  }
+
 
 }

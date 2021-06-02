@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{AreaConocimiento, Centro, Gestor, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, TipoArticulacionProyecto, Actividad};
+use App\Models\{AreaConocimiento, Centro, Fase, Gestor, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, TipoArticulacionProyecto, Actividad};
 use App\Repositories\Repository\{EmpresaRepository, EntidadRepository, ProyectoRepository, UserRepository\GestorRepository, ConfiguracionRepository\ServidorVideoRepository};
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use App\Http\Requests\{ProyectoFaseInicioFormRequest, ProyectoFaseCierreFormRequest};
@@ -285,7 +285,7 @@ class ProyectoController extends Controller
     {
         if (request()->ajax()) {
             $ideas = Idea::ConsultarIdeasAprobadasEnComite(auth()->user()->gestor->nodo_id, auth()->user()->gestor->id)->get();
-            // dd($ideas);
+    
             return datatables()->of($ideas)
             ->addColumn('checkbox', function ($data) {
                     $checkbox = '
@@ -529,7 +529,7 @@ class ProyectoController extends Controller
         $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
         $ultimo_movimiento = $historico->last();
 
-        // dd($ultimo_movimiento);
+     
         switch (Session::get('login_role')) {
             case User::IsGestor():
                 return view('proyectos.gestor.fase_inicio', [
@@ -1305,7 +1305,116 @@ class ProyectoController extends Controller
         return abort(Response::HTTP_FORBIDDEN);
     }
 
+    public function filterByCode($value)
+    {
+                
+        $proyecto = Proyecto::select('id','idea_id','fase_id','articulacion_proyecto_id','alcance_proyecto')
+        ->with([
+            'idea',
+            'fase',
+            'articulacion_proyecto' => function($query){
+                $query->select('id', 'actividad_id');
+            },
+            'articulacion_proyecto.actividad'=> function($query){
+                $query->select('id', 'gestor_id', 'nodo_id', 'codigo_actividad', 'nombre', 'objetivo_general', 'fecha_inicio', 'fecha_cierre');
+            },
+            'articulacion_proyecto.talentos',
+            'articulacion_proyecto.talentos.user',
+        ])->whereHas('articulacion_proyecto.actividad', function ($subQuery) use ($value) {
+            $subQuery->where('codigo_actividad', $value);
+        })
+        ->where('fase_id', Fase::IsFinalizado())
+        ->first();
 
+        if($proyecto != null){
+            return response()->json([
+                'data' => [
+                    'proyecto' => $proyecto,
+                    'status_code' => Response::HTTP_OK
+                ]
+            ],Response::HTTP_OK);
+        }
+        
+        return response()->json([
+            'data' => [
+                'proyecto' => null,
+                'status_code' => Response::HTTP_NOT_FOUND,
+            ]
+        ]);
+    }
+
+    public function datatableProyectosFinalizados(Request $request)
+    {
+        
+        switch (\Session::get('login_role')) {
+            case User::IsAdministrador():
+                $nodo = $request->filter_nodo_art;
+                break;
+            case User::IsDinamizador():
+                $nodo = auth()->user()->dinamizador->nodo_id;
+                break;
+            case User::IsArticulador():
+                $nodo = auth()->user()->gestor->nodo_id;
+                break;
+            default:
+                return abort('403');
+                break;
+        }
+        $proyectos = [];
+        
+        if (!empty($request->filter_year_pro)) {    
+            $proyectos = Proyecto::select('id','idea_id','fase_id','articulacion_proyecto_id','alcance_proyecto')
+            ->with([
+                'fase',
+                'articulacion_proyecto' => function($query){
+                    $query->select('id', 'actividad_id');
+                },
+                'articulacion_proyecto.actividad'=> function($query){
+                    $query->select('id', 'gestor_id', 'nodo_id', 'codigo_actividad', 'nombre', 'objetivo_general', 'fecha_inicio', 'fecha_cierre');
+                }
+            ])
+            ->nodo($nodo)
+            ->starEndDate($request->filter_year_pro)
+            ->where('fase_id', Fase::IsFinalizado()) 
+            ->get();
+        }
+
+        return $this->datatableAddProjects($proyectos);
+    }
+
+    private function datatableAddProjects($proyectos)
+    {
+        return datatables()->of($proyectos  )
+            ->addColumn('add_proyecto', function ($data) {
+                    $checkbox = '';
+                    if (isset($data->articulacion_proyecto->actividad)) {
+                        $checkbox = '<a class="btn blue" onclick="filter_project.addProjectToArticulacion(\'' .($data->articulacion_proyecto->actividad->codigo_actividad) . '\')">
+                                        <i class="material-icons">done</i>
+                                    </a>';
+                    }
+                    return $checkbox;
+            })
+            ->editColumn('codigo_proyecto', function ($data) {
+                if (isset($data->articulacion_proyecto->actividad)) {
+                    return  $data->articulacion_proyecto->actividad->codigo_actividad;
+                }
+                return "No registra";
+            })
+            ->editColumn('nombre', function ($data) {
+                if (isset($data->articulacion_proyecto->actividad)) {
+                    return  $data->articulacion_proyecto->actividad->nombre;
+                }
+                return "No registra";
+            })
+            ->editColumn('fase', function ($data) {
+                if (isset($data->fase)) {
+                    return  $data->fase->nombre;
+                }
+                return "No registra";
+            })
+            ->rawColumns(['codigo_proyecto','nombre','fase','show','add_proyecto'])->make(true);
+            
+    }
 
     /**
      * Asigna un valor a $proyectoRepository

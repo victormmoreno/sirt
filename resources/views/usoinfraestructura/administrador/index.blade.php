@@ -95,7 +95,7 @@
                             <table class="display responsive-table datatable-example dataTable" id="usoinfraestructa_data_table" width="100%">
                                 <thead>
                                     <th width="10%">Fecha</th>
-                                    <th width="20%">Gestor</th>
+                                    <th width="20%">Asesor</th>
                                     <th width="45%">Nombre</th>
                                     <th width="10%">Fase</th>
                                     <th width="5%">Asesoría Directa</th>

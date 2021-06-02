@@ -28,17 +28,28 @@
                 <div class="col s12 m8 l8 offset-l2 m2">
 
                         <h5 class="center-align">
-                            <mark>Gestor A Cargo</mark>
+                            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsArticulador()))
+                                <mark>Articulador A Cargo</mark>
+                            @else
+                                <mark>Gestor A Cargo</mark>
+                            @endif
                         </h5>
 
                     <table class="striped centered responsive-table" id="tbldetallegestores">
                         <thead>
                             <tr>
+                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor()))
                                 <th>
                                     Linea Tecnológica
                                 </th>
+                                @endif
                                 <th>
-                                    Gestor
+                                    @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsArticulador()))
+                                        Articulador
+                                    @else
+                                        Gestor
+                                    @endif
+
                                 </th>
                                 <th>
                                     Asesoria Directa (Horas)
@@ -55,9 +66,11 @@
                                 @forelse ($usoinfraestructura->usogestores as $key => $gestor)
                                     @if($gestor->id === auth()->user()->gestor->id)
                                         <tr id="filaGestor{{$gestor->id}}">
+                                            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor()))
                                             <td>{{$gestor->lineatecnologica->abreviatura}} -  {{$gestor->lineatecnologica->nombre}}</td>
+                                            @endif
                                             <td>
-                                                <input type="hidden" name="gestor[]"  value="{{$gestor->id}}" min="0" />{{$gestor->user()->withTrashed()->first()->documento}} - {{$gestor->user()->withTrashed()->first()->nombres}} {{$gestor->user->apellidos}} - Gestor a cargo
+                                                <input type="hidden" name="gestor[]"  value="{{$gestor->id}}" min="0" />{{$gestor->user()->withTrashed()->first()->documento}} - {{$gestor->user()->withTrashed()->first()->nombres}} {{$gestor->user->apellidos}}
                                             </td>
                                             <td><input type="number" name="asesoriadirecta[]" min="0" step="0.1" value="{{$gestor->pivot->asesoria_directa}}"></td>
                                             <td><input type="number" name="asesoriaindirecta[]" min="0" step="0.1" value="{{$gestor->pivot->asesoria_indirecta}}"></td>
@@ -93,6 +106,7 @@
                 </div>
 
             </div>
+            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor()))
             <br>
             <div class="divider"></div>
             <h5 class="center-align">
@@ -212,6 +226,7 @@
                     </div>
                 </div>
             </div>
+            @endif
         </fieldset>
     </div>
 </div>

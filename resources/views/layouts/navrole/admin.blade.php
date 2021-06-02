@@ -28,10 +28,10 @@
     <i class="material-icons {{setActiveRouteActiveIcon('proyecto')}}">library_books</i>PBT
   </a>
 </li>
-{{-- <li class="no-padding {{setActiveRoute('articulacion')}}">
-  <a href="{{ route('articulacion') }}" class="{{setActiveRouteActivePage('articulacion')}}" rel="canonical" title="Articulaciones">
-    <i class="material-icons {{setActiveRouteActiveIcon('articulacion')}}">autorenew</i>AGI  </a>
-</li> --}}
+<li class="no-padding {{setActiveRoute('articulacion')}}">
+  <a href="{{ route('articulaciones.index') }}" class="{{setActiveRouteActivePage('articulacion')}}" rel="canonical" title="Articulaciones">
+    <i class="material-icons {{setActiveRouteActiveIcon('articulacion')}}">autorenew</i>Articulaciones</a>
+</li>
 {{-- <li class="no-padding {{setActiveRoute('intervencion')}}">
   <a href="{{ route('intervencion.index') }}" class="{{setActiveRouteActivePage('intervencion')}}" rel="canonical" title="Articulaciones">
     <i class="material-icons {{setActiveRouteActiveIcon('intervencion')}}">autorenew</i>Intervención a Empresas

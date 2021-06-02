@@ -190,6 +190,8 @@ class DatabaseSeeder extends Seeder
                 'tipo_formacion',
                 'tipos_empresas',
                 'tamanhos_empresas',
+                'alcance_articulaciones',
+                'tipo_articulaciones',
             ]);
         } else {
             echo "NO PUEDES TRUNCAR TABLAS";
