@@ -4988,7 +4988,7 @@ var infoActividad = {
                     </div>
                 </div>`);
             infoActividad.showTalentos(response.data.actividad.articulacion_proyecto.talentos);
-            infoActividad.showPropiedadIntelectualEmpresas(response.data.actividad.articulacion_proyecto.proyecto.empresas);
+            infoActividad.showPropiedadIntelectualEmpresas(response.data.actividad.articulacion_proyecto.proyecto.sedes);
             infoActividad.showPropiedadIntelectualTalentos(response.data.actividad.articulacion_proyecto.proyecto.users_propietarios);
             infoActividad.showPropiedadIntelectualGrupo(response.data.actividad.articulacion_proyecto.proyecto.gruposinvestigacion);
     },
@@ -5107,7 +5107,7 @@ var infoActividad = {
             info = data.map(function(el){
                     return `
                         <li class="collection-item">
-                        ${infoActividad.showInfoNull(el.nit)} - ${infoActividad.showInfoNull(el.entidad.nombre)}
+                        ${infoActividad.showInfoNull(el.empresa.nit)} - ${infoActividad.showInfoNull(el.empresa.nombre)} (${infoActividad.showInfoNull(el.nombre_sede)})
                         </li>`;
             });
 
@@ -5295,7 +5295,7 @@ function empresaYaSeEncuentraAsociado_Propietario() {
         showConfirmButton: false,
         timer: 1500,
         type: 'warning',
-        title: 'Esta empresa ya se encuentra asociada como dueño de la propiedad intelectual!'
+        title: 'Esta empresa/sede ya se encuentra asociada como dueño de la propiedad intelectual!'
     });
 }
 
@@ -5319,7 +5319,7 @@ function empresaSeAsocioAlProyecto_Propietario() {
         showConfirmButton: false,
         timer: 1500,
         type: 'success',
-        title: 'La empresa se ha asociado como dueño de la propiedad intelectual!'
+        title: 'La sede se ha asociado como dueño de la propiedad intelectual!'
     });
 }
 
@@ -5369,10 +5369,11 @@ function prepararFilaEnLaTablaDePropietarios_Users(ajax) { // El ajax.user.id es
 
 // Prepara un string con la fila que se va a pintar en la tabla de los propietarios (empresas) que son dueños de la propiedad intelectual
 function prepararFilaEnLaTablaDePropietarios_Empresa(ajax) {
-    let idEmpresa = ajax.empresa.id;
-    let codigo = ajax.empresa.nit;
-    let nombre = ajax.empresa.entidad.nombre;
-    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Empresa' + idEmpresa + '>' + '<td><input type="hidden" name="propietarios_empresas[]" value="' + idEmpresa + '">' + codigo + ' - ' + nombre + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Empresa(' + idEmpresa + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let idSede = ajax.sede.id;
+    let codigo = ajax.sede.empresa.nit;
+    let nombre = ajax.sede.empresa.nombre;
+    let nombre_sede = ajax.sede.nombre_sede;
+    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Empresa' + idSede + '>' + '<td><input type="hidden" name="propietarios_sedes[]" value="' + idSede + '">' + codigo + ' - ' + nombre + ' ('+ nombre_sede +')</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Empresa(' + idSede + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
@@ -5413,16 +5414,28 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual(id) {
 }
 
 // Pinta el usuario en la tabla de las entidades (empresas) que son dueños de la propiedad intelectual
-function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Empresa(nit) {
+function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Sede(sede_id) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/empresa/ajaxDetallesDeUnaEmpresa/' + nit + '/nit'
-    }).done(function (ajax) {
-        let fila = prepararFilaEnLaTablaDePropietarios_Empresa(ajax);
-        $('#propiedadIntelectual_Empresas').append(fila);
-        empresaSeAsocioAlProyecto_Propietario();
-    });
+        url : '/empresa/ajaxDetalleDeUnaSede/'+sede_id,
+        success: function (response) {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            type: 'success',
+            title: 'La sede '+response.sede.nombre_sede+' se asoció a la idea de proyecto!'
+          });
+          let fila = prepararFilaEnLaTablaDePropietarios_Empresa(response);
+              $('#propiedadIntelectual_Empresas').append(fila);
+              empresaSeAsocioAlProyecto_Propietario();
+        },
+        error: function (xhr, textStatus, errorThrown) {
+          alert("Error: " + errorThrown);
+        }
+      })
 }
 
 // Pinta el usuario en la tabla de las entidades (grupos de investigacion) que son dueños de la propiedad intelectual
@@ -5467,11 +5480,11 @@ function noRepeat_Propiedad(id) {
     return retorno;
 }
 
-// Valida que la empresa no se encuentre asociado al proyecto como dueño de la propiedad intelectual
-function noRepeat_Empresa(id) {
+// Valida que la sede no se encuentre asociado al proyecto como dueño de la propiedad intelectual
+function noRepeat_Sede(id) {
     let idEntidad = id;
     let retorno = true;
-    let a = document.getElementsByName("propietarios_empresas[]");
+    let a = document.getElementsByName("propietarios_sedes[]");
     for (x = 0; x < a.length; x ++) {
         if (a[x].value == idEntidad) {
             retorno = false;
@@ -5535,12 +5548,40 @@ function addPersonaPropiedad(user_id) {
     }
 }
 
+function prepararSedesEmpresa(sedes) {
+    let fila = "";
+    sedes.forEach(element => {
+        fila += `<li class="collection-item">
+        ` + element.nombre_sede + ` - ` + element.direccion + ` ` + element.ciudad.nombre + ` (` + element.ciudad.departamento.nombre + `)
+        <a href="#!" class="secondary-content" onclick="addSedePropietaria(`+element.id+`)">Asociar esta sede de la empresa al proyecto</a></div>
+      </li>`;
+    });
+    return fila;
+}
+
 // Método para agregar una empresa como dueño de una propiedad intelectual
-function addEntidadEmpresa(nit) {
-    if (noRepeat_Empresa(nit) == false) {
+function addEntidadEmpresa(id) {
+    $('#sedesPropietarias_Empresas_detalles').empty();
+    $.ajax({
+        dataType: 'json',
+        type: 'get',
+        url : '/empresa/ajaxDetallesDeUnaEmpresa/'+id+'/id',
+        success: function (response) {
+            let filas_sedes = prepararSedesEmpresa(response.empresa.sedes);
+            $('#sedesPropietarias_Empresas_detalles').append(filas_sedes);
+            $('#sedesPropietarias_Empresas_modal').openModal();
+        },
+        error: function (xhr, textStatus, errorThrown) {
+          alert("Error: " + errorThrown);
+        }
+      })
+}
+
+function addSedePropietaria(id) {
+    if (noRepeat_Sede(id) == false) {
         empresaYaSeEncuentraAsociado_Propietario();
     } else {
-        pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Empresa(nit);
+        pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Sede(id);
     }
 }
 
@@ -5589,7 +5630,7 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
     }).done(function (response) {
         let value = response.data.idea;
         if(idea =! null){
-            
+            console.log(response);
             dumpAggregateValuesIntoTables();
             
             addValueToFields(nombre, codigo, value);
@@ -5600,9 +5641,8 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
                 addTalentoProyecto(response.data.talento.id, true);
                 addPersonaPropiedad(response.data.talento.user.id);
             }
-            if(response.data.empresa != null){
-                
-                addEntidadEmpresa(response.data.empresa.nit);
+            if(response.data.sede != null){
+                addSedePropietaria(response.data.sede.id);
             }
             $('#ideasDeProyectoConEmprendedores_modal').closeModal();
         }

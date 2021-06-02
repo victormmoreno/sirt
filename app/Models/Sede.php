@@ -31,8 +31,13 @@ class Sede extends Model
   }
 
   public function ideas()
-    {
-        return $this->hasMany(Idea::class, 'sede_id', 'id');
-    }
+  {
+      return $this->hasMany(Idea::class, 'sede_id', 'id');
+  }
+
+  public function proyectos()
+  {
+      return $this->morphToMany(Proyecto::class, 'propietario')->withTimestamps();
+  }
 
 }

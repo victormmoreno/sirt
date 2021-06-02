@@ -1,3 +1,4 @@
+<a class="waves-effect waves-teal btn-flat" href="{{route('pdf.proyecto.acta.inicio', $proyecto->id)}}">Generar acta de inicio</a>
 <div class="row">
     <div class="col s12 m12 l12">
         <div class="row">
@@ -16,13 +17,13 @@
                             ¿La idea viene de una convocatoria?
                         </span>
                         <p>
-                            {{$proyecto->idea->viene_convocatoria == 1 ? 'Si': 'No'}} 
+                            {{$proyecto->idea->viene_convocatoria == 1 ? 'Si': 'No'}}
                         </p>
                         <span class="title black-text text-darken-3">
                             Nombre de convocatoria
                         </span>
                         <p>
-                            {{$proyecto->idea->viene_convocatoria == 1 ? $proyecto->idea->convocatoria: 'No Aplica'}} 
+                            {{$proyecto->idea->viene_convocatoria == 1 ? $proyecto->idea->convocatoria: 'No Aplica'}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -155,7 +156,6 @@
                             @if (isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo))
                             {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo}}
                             @endif
-                            {{-- {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo}} --}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -166,7 +166,6 @@
                             @if (isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo))
                             {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo}}
                             @endif
-                            {{-- {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo}} --}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -177,7 +176,6 @@
                             @if (isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo))
                             {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo}}
                             @endif
-                            {{-- {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo}} --}}
                         </p>
                     </li>
                 </ul>
@@ -220,10 +218,10 @@
             <div class="card-panel">
                 <ul class="collection with-header">
                     <li class="collection-header"><h5>Empresas</h5></li>
-                    @if ($proyecto->empresas->count() > 0)
-                    @foreach ($proyecto->empresas as $key => $value)
+                    @if ($proyecto->sedes->count() > 0)
+                    @foreach ($proyecto->sedes as $key => $value)
                     <li class="collection-item">
-                        {{$value->nit}} - {{ $value->entidad->nombre }}
+                        {{$value->empresa->nit}} - {{ $value->empresa->nombre }} ({{$value->nombre_sede}})
                     </li>
                     @endforeach
                     @else

@@ -453,7 +453,7 @@ var infoActividad = {
                     </div>
                 </div>`);
             infoActividad.showTalentos(response.data.actividad.articulacion_proyecto.talentos);
-            infoActividad.showPropiedadIntelectualEmpresas(response.data.actividad.articulacion_proyecto.proyecto.empresas);
+            infoActividad.showPropiedadIntelectualEmpresas(response.data.actividad.articulacion_proyecto.proyecto.sedes);
             infoActividad.showPropiedadIntelectualTalentos(response.data.actividad.articulacion_proyecto.proyecto.users_propietarios);
             infoActividad.showPropiedadIntelectualGrupo(response.data.actividad.articulacion_proyecto.proyecto.gruposinvestigacion);
     },
@@ -572,7 +572,7 @@ var infoActividad = {
             info = data.map(function(el){
                     return `
                         <li class="collection-item">
-                        ${infoActividad.showInfoNull(el.nit)} - ${infoActividad.showInfoNull(el.entidad.nombre)}
+                        ${infoActividad.showInfoNull(el.empresa.nit)} - ${infoActividad.showInfoNull(el.empresa.nombre)} (${infoActividad.showInfoNull(el.nombre_sede)})
                         </li>`;
             });
 

@@ -105,6 +105,9 @@ class EmpresaController extends Controller
             </a>
             ';
             return $button;
+            })->addColumn('add_propietario', function ($data) {
+                $add_propietario = '<a onclick="addEntidadEmpresa('.$data->id.')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+                return $add_propietario;
             })
             ->rawColumns(['details', 'edit', 'add_propietario'])->make(true);
     }

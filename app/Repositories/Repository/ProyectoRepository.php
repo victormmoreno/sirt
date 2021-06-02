@@ -3,7 +3,7 @@
 namespace App\Repositories\Repository;
 
 
-use App\Models\{Proyecto, Entidad, Fase, Actividad, ArticulacionProyecto, ArchivoArticulacionProyecto, Movimiento, UsoInfraestructura, Role};
+use App\Models\{Proyecto, Entidad, Fase, Actividad, ArticulacionProyecto, ArchivoArticulacionProyecto, Movimiento, UsoInfraestructura, Role, Idea, EstadoIdea};
 use Illuminate\Support\Facades\{DB, Notification, Storage, Session};
 use App\Notifications\Proyecto\{ProyectoCierreAprobado, ProyectoAprobarInicio, ProyectoAprobarPlaneacion, ProyectoAprobarEjecucion, ProyectoAprobarCierre, ProyectoAprobarInicioDinamizador, ProyectoAprobarSuspendido, ProyectoSuspendidoAprobado, ProyectoNoAprobarFase};
 use Carbon\Carbon;
@@ -465,11 +465,11 @@ class ProyectoRepository
       ]);
 
       $proyecto->users_propietarios()->detach();
-      $proyecto->empresas()->detach();
+      $proyecto->sedes()->detach();
       $proyecto->gruposinvestigacion()->detach();
 
       $proyecto->users_propietarios()->attach(request()->propietarios_user);
-      $proyecto->empresas()->attach(request()->propietarios_empresas);
+      $proyecto->sedes()->attach(request()->propietarios_sedes);
       $proyecto->gruposinvestigacion()->attach(request()->propietarios_grupos);
 
       DB::commit();
@@ -1264,8 +1264,10 @@ class ProyectoRepository
       $art_cti = 1;
       $fabrica_productividad = 1;
   
-  
-      $this->getIdeaRepository()->updateEstadoIdea(request()->txtidea_id, 'En Proyecto');
+      $idea = Idea::find(request()->txtidea_id);
+      $idea->update([
+        'estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsPBT())->first()->id
+      ]);
   
       if (!isset(request()->trl_esperado)) {
         $trl_esperado = 0;
@@ -1348,7 +1350,7 @@ class ProyectoRepository
       ]);
 
       $proyecto->users_propietarios()->attach(request()->propietarios_user);
-      $proyecto->empresas()->attach(request()->propietarios_empresas);
+      $proyecto->sedes()->attach(request()->propietarios_sedes);
       $proyecto->gruposinvestigacion()->attach(request()->propietarios_grupos);
       $proyecto->idea->registrarHistorialIdea(Movimiento::IsRegistrar(), Session::get('login_role'), null, 'como un PBT asociado con el código ' . $actividad->codigo_actividad);
 

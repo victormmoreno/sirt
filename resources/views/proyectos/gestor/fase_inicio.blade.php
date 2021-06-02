@@ -64,6 +64,16 @@
                 @endif
                 </div>
               </div>
+              <div class="row">
+                <div class="col s12 m4 l4 center">
+                  <a href="{{route('pdf.proyecto.acta.inicio', $proyecto->id)}}" target="_blank">
+                    <div class="card-panel blue white-text">
+                      <i class="material-icons left">file_download</i>
+                      Generar acta de inicio de categorización.
+                    </div>
+                  </a>
+                </div>
+              </div>
               <form id="frmProyectos_FaseInicio_Update" action="{{route('proyecto.update.inicio', $proyecto->id)}}" method="POST">
                 {!! method_field('PUT')!!}
                 @include('proyectos.gestor.form_inicio', [

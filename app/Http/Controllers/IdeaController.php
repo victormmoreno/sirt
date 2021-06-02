@@ -525,38 +525,38 @@ class IdeaController extends Controller
 
     public function show($id)
     {
-        $idea = Idea::select('id', 'codigo_idea','nombre_proyecto','objetivo', 'alcance',  'talento_id', 'empresa_id')->with([
+        $idea = Idea::select('id', 'codigo_idea','nombre_proyecto','objetivo', 'alcance',  'talento_id', 'sede_id')->with([
             'talento' => function($query){
                 $query->select('id', 'user_id');
             },
             'talento.user' => function($query){
                 $query->select('id','documento', 'nombres', 'apellidos', 'email', 'celular');
             },
-            'company' => function($query){
-                $query->select('id', 'nit', 'entidad_id');
+            'sede' => function($query){
+                $query->select('id', 'nombre_sede', 'direccion', 'empresa_id');
             },
-            'company.entidad' => function($query){
-                $query->select('id', 'nombre', 'slug');
+            'sede.empresa' => function($query){
+                $query->select('id', 'nombre', 'nit');
             }
         ])->where('id', $id)->first();
         $talento = null;
-        $empresa = null;
+        $sede = null;
       
 
         if($idea->has('talento.user') &&isset($idea->talento->user))
         {
             $talento = $idea->talento;
         }
-        if($idea->has('company.entidad') && isset($idea->company->entidad))
+        if($idea->has('sede.empresa') && isset($idea->sede->empresa))
         {
-            $empresa = $idea->company;
+            $sede = $idea->sede;
         }
         
         return response()->json([
             'data' => [
                 'idea' => $idea,
                 'talento' => $talento,
-                'empresa' => $empresa,
+                'sede' => $sede,
             ],
         ]);
 

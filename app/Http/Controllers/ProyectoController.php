@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{AreaConocimiento, Centro, Gestor, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, TipoArticulacionProyecto, Actividad};
+use App\Models\{AreaConocimiento, Centro, Gestor, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, TipoArticulacionProyecto, Actividad, Empresa};
 use App\Repositories\Repository\{EmpresaRepository, EntidadRepository, ProyectoRepository, UserRepository\GestorRepository, ConfiguracionRepository\ServidorVideoRepository};
-use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
+use Illuminate\Support\{Str, Facades\Session, Facades\Validator, Facades\DB};
 use App\Http\Requests\{ProyectoFaseInicioFormRequest, ProyectoFaseCierreFormRequest};
 use Illuminate\Http\{Request, Response};
 use App\User;
@@ -69,6 +69,15 @@ class ProyectoController extends Controller
         $proyecto = Proyecto::findOrFail($id);
         $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
         $costo = $this->costoController->costosDeUnaActividad($proyecto->articulacion_proyecto->actividad->id);
+        // foreach ($propietarios as $key => $propietario) {
+            // $empresa = Empresa::find($propietario->propietario_id);
+            // $sede = $empresa->sedes->first()->id;
+            // dd($propietario->update());
+            // $propietario->update([
+            //     'propietario_id' => $sede,
+            //     'propietario_type' => 'App\Models\Sede'
+            // ]);
+        // }
         return view('proyectos.detalle', [
             'proyecto' => $proyecto,
             'costo' => $costo,
@@ -158,6 +167,14 @@ class ProyectoController extends Controller
                     });
                 }
             })->rawColumns(['info', 'details', 'proceso', 'delete', 'download_seguimiento'])->make(true);
+    }
+
+    public function carta_certificacion($id)
+    {
+        $proyecto = Proyecto::findOrFail($id);
+        return view('proyectos.certificacion', [
+            'proyecto' => $proyecto
+        ]);
     }
 
     /**
@@ -1264,8 +1281,8 @@ class ProyectoController extends Controller
                     $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
                         ->orWhere('deleted_at', '!=', null);
                 },
-                'articulacion_proyecto.proyecto.empresas',
-                'articulacion_proyecto.proyecto.empresas.entidad',
+                'articulacion_proyecto.proyecto.sedes',
+                'articulacion_proyecto.proyecto.sedes.empresa',
                 'articulacion_proyecto.proyecto.gruposinvestigacion',
                 'articulacion_proyecto.proyecto.gruposinvestigacion.entidad',
                 'articulacion_proyecto.proyecto.users_propietarios',

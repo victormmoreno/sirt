@@ -55,6 +55,20 @@
   </div>
 </div>
 
+<div class="modal" id="sedesPropietarias_Empresas_modal">
+  <div class="modal-content">
+    <div class="row">
+      <h4>Sedes de la empresa</h4>
+      <ul class="collection" id="sedesPropietarias_Empresas_detalles">
+        
+      </ul>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cerrar</a>
+  </div>
+</div>
+
 <div class="modal" id="posiblesPropietarios_Grupos_modal">
   <div class="modal-content">
     <div class="row">
