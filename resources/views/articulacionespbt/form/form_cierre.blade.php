@@ -97,7 +97,7 @@
             </div>
             <div class="input-field col s12 m12 l6">
                 <p class="p-v-xs">
-                    <input type="checkbox" {{ $actividad->articulacionpbt->present()->articulacionPbtPostulacion() == 1 ? 'checked' : '' }}
+                    <input type="checkbox" {{ $actividad->articulacionpbt->present()->articulacionPbtDocumentoPostualcion() == 1 ? 'checked' : '' }}
                         id="txtdoc_postulacion1" name="txtdoc_postulacion1" value="1"/>
                     <label for="txtdoc_postulacion1">
                         PDF de documentos de postulación

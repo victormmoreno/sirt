@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{AreaConocimiento, Centro, Gestor, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, TipoArticulacionProyecto, Actividad, Empresa};
+use App\Models\{AreaConocimiento, Centro, Gestor, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, TipoArticulacionProyecto, Actividad, Empresa, Fase};
 use App\Repositories\Repository\{EmpresaRepository, EntidadRepository, ProyectoRepository, UserRepository\GestorRepository, ConfiguracionRepository\ServidorVideoRepository};
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator, Facades\DB};
 use App\Http\Requests\{ProyectoFaseInicioFormRequest, ProyectoFaseCierreFormRequest};
@@ -457,7 +457,6 @@ class ProyectoController extends Controller
      */
     public function index()
     {
-
         switch (Session::get('login_role')) {
             case User::IsGestor():
                 return view('proyectos.gestor.index');
