@@ -1,4 +1,4 @@
-<a class="waves-effect waves-teal btn-flat" href="{{route('pdf.proyecto.acta.inicio', $proyecto->id)}}">Generar acta de inicio</a>
+<a class="waves-effect waves-teal btn-flat" href="{{route('pdf.proyecto.acta.inicio', $proyecto->id)}}">Generar acta de inicio para generalización</a>
 <div class="row">
     <div class="col s12 m12 l12">
         <div class="row">
