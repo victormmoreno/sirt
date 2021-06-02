@@ -38,12 +38,17 @@
       <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>Usuarios
     </a>
 </li>
+<li class="no-padding {{setActiveRoute('empresa')}}">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('empresa')}}" href="{{route('empresa')}}" rel="canonical" title="Empresas">
+    <i class="material-icons {{ setActiveRouteActiveIcon('empresa') }}">business_center</i>Empresas
+  </a>
+</li>
 <li class="no-padding {{setActiveRoute('proyecto')}}">
   <a href="{{route('proyecto')}}" class="waves-effect waves-grey {{setActiveRouteActivePage('proyecto')}}" rel="canonical" title="Proyectos de Base Tecnológica">
     <i class="material-icons {{ setActiveRouteActiveIcon('proyecto') }}">library_books</i>PBT
   </a>
 </li>
-<li class="no-padding {{setActiveRoute('articulacion')}}">
+{{-- <li class="no-padding {{setActiveRoute('articulacion')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('articulacion')}}" href="{{route('articulacion')}}" rel="canonical" title="Articulaciones">
     <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>AGI</a>
-</li>
+</li> --}}

@@ -53,9 +53,26 @@
     <script>
       $(document).ready(function () {
         $('#modalRecordatorioDeRegistroDeIdea').openModal();
-        @if($idea->empresa_id != null)
+        @if($idea->sede_id != null)
         consultarEmpresaTecnoparque();
+        asociarSedeAIdeaProyecto({{$idea->sede_id}});
         @endif
       });
+      function getCiudadSede() {
+        let id;
+        id = $('#txtdepartamento_sede').val();
+        $.ajax({
+            dataType: 'json',
+            type: 'get',
+            url: '/usuario/getciudad/' + id
+        }).done(function(response) {
+            $('#txtciudad_id_sede').empty();
+            $('#txtciudad_id_sede').append('<option value="">Seleccione la Ciudad</option>')
+            $.each(response.ciudades, function(i, e) {
+                $('#txtciudad_id_sede').append('<option value="' + e.id + '">' + e.nombre + '</option>');
+            })
+            $('#txtciudad_id_sede').material_select();
+            });
+        }
     </script>
 @endpush

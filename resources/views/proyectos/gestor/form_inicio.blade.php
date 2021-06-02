@@ -524,9 +524,9 @@
                 </thead>
                 <tbody>
                     @if ($existe)
-                        @foreach ($proyecto->empresas as $key => $value)
+                        @foreach ($proyecto->sedes as $key => $value)
                             <tr id="propietarioAsociadoAlProyecto_Empresa{{$value->id}}">
-                            <td><input type="hidden" name="propietarios_empresas[]" value="{{$value->id}}">{{$value->nit}} - {{ $value->entidad->nombre }}</td>
+                            <td><input type="hidden" name="propietarios_sedes[]" value="{{$value->id}}">{{$value->empresa->nit}} - {{ $value->empresa->nombre }} ({{$value->nombre_sede}})</td>
                             @if ($proyecto->fase->nombre == 'Inicio')
                             <td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Empresa({{$value->id}});"><i class="material-icons">delete_sweep</i></a></td>
                             @endif

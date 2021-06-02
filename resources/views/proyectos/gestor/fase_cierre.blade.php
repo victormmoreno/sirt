@@ -32,29 +32,36 @@
                   </a>
                 </div>
                 <div class="col s12 m4 l4 center">
-                  @if ( ($ultimo_movimiento->rol == App\User::IsDinamizador() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsAprobar() && $proyecto->fase->nombre == 'Cierre') || 
-                  ($ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->fase == 'Cierre') || 
-                  ($ultimo_movimiento->rol == App\User::IsDinamizador() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->fase == 'Cierre') )
-                  <a href="{{route('proyecto.solicitar.aprobacion', [$proyecto->id, 'Cierre'])}}">
-                    <div class="card-panel yellow accent-1 black-text">
-                      Solicitar al talento que apruebe la fase de cierre.
-                    </div>
-                  </a>
-                  @endif
-                  @if ( ($ultimo_movimiento->movimiento == App\Models\Movimiento::IsSolicitarTalento()) || 
-                  $ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsAprobar() )
-                  <a disabled>
-                    <div class="card-panel yellow accent-1 black-text">
-                      Esta fase está siendo aprobada por el talento y/o dinamizador (Para mas detalle ver el historial de movimientos).
-                    </div>
-                  </a>
-                  @endif
-                  @if ( $proyecto->fase->nombre != 'Cierre' )
-                  <a disabled>
-                    <div class="card-panel yellow accent-1 black-text">
-                      Esta fase ya se aprobó (Para mas detalle ver el historial de movimientos).
-                    </div>
-                  </a>
+                  @if ($proyecto->fase->nombre == 'Cierre')
+                    @if ( ($ultimo_movimiento->movimiento == App\Models\Movimiento::IsCambiar() || $ultimo_movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() || $ultimo_movimiento->movimiento == App\Models\Movimiento::IsReversar())
+                     || ($ultimo_movimiento->rol == App\User::IsDinamizador() && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsAprobar()) )
+                      <a href="{{route('proyecto.solicitar.aprobacion', [$proyecto->id, 'Cierre'])}}">
+                        <div class="card-panel yellow accent-1 black-text">
+                          Solicitar al talento que apruebe la fase de cierre.
+                        </div>
+                      </a>
+                    @else
+                      @if ($ultimo_movimiento->movimiento == App\Models\Movimiento::IsSolicitarTalento())
+                      <a disabled>
+                        <div class="card-panel yellow accent-1 black-text">
+                          Se envió la solicitud de aprobación al talento interlocutor.
+                        </div>
+                      </a>
+                      @endif
+                      @if($ultimo_movimiento->movimiento == App\Models\Movimiento::IsAprobar() && $ultimo_movimiento->rol == App\User::IsTalento())
+                        <a disabled>
+                          <div class="card-panel yellow accent-1 black-text">
+                            El talento interlocutor aprobó la fase de cierre, aún falta la aprobación del dinamizador.
+                          </div>
+                        </a>
+                      @endif
+                    @endif
+                  @else
+                    <a disabled>
+                      <div class="card-panel yellow accent-1 black-text">
+                        Este proyecto no se encuentra en fase de cierre.
+                      </div>
+                    </a>
                   @endif
                 </div>
               </div>

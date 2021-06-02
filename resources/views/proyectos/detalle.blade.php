@@ -59,6 +59,7 @@
                                 </div>
                             </div>
                         </div>
+                        <a class="waves-effect waves-teal btn-flat" href="{{route('proyecto.certificacion', $proyecto->id)}}">Generar carta de certificación</a>
                         <div class="divider"></div>
                         <ul class="tabs">
                           <li class="tab col s3"><a class="active" href="#inicio">Inicio</a></li>

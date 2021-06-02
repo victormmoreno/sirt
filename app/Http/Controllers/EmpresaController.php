@@ -3,82 +3,81 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\{EmpresaFormRequest, ContactoEntidadFormRequest};
+use App\Http\Requests\{EmpresaFormRequest};
 use App\Models\{Empresa, Sector, TamanhoEmpresa, TipoEmpresa};
-use App\Repositories\Repository\{EmpresaRepository, UserRepository\UserRepository, ContactoEntidadRepository, EntidadRepository};
-use Illuminate\Support\Facades\{DB, Validator};
-use App\Helpers\ArrayHelper;
+use App\Repositories\Repository\{EmpresaRepository, UserRepository\UserRepository};
+use Illuminate\Support\Facades\{Session, Validator};
 Use App\User;
 
 class EmpresaController extends Controller
 {
     private $empresaRepository;
     private $userRepository;
-    private $contactoEntidadRepository;
-    private $entidadRepository;
 
-    public function __construct(EmpresaRepository $empresaRepository, UserRepository $userRepository, ContactoEntidadRepository $contactoEntidadRepository, EntidadRepository $entidadRepository)
+    public function __construct(EmpresaRepository $empresaRepository, UserRepository $userRepository)
     {
         $this->empresaRepository = $empresaRepository;
         $this->userRepository = $userRepository;
-        $this->contactoEntidadRepository = $contactoEntidadRepository;
-        $this->entidadRepository = $entidadRepository;
         $this->middleware([
             'auth',
         ]);
-
     }
 
-    /**
-     * consulta los datos de un empresa según el ID DE ENTIDAD (ENTIDAD_ID)
-     * @param int id Id de la entidad, por el cual se consultará la empresa
-     * @return Response
-     * @author Victor Manuel Moreno Vega
-     */
-    public function consultarEmpresaPorIdEntidad($id)
+    public function validarAccesoForms($empresa)
     {
-        return response()->json([
-        'detalles' => $this->entidadRepository->consultarEmpresaEntidadRepository($id),
-        ]);
-    }
-
-    public function updateContactosEmpresa(Request $request, $id)
-    {
-        $req = new ContactoEntidadFormRequest;
-        $validator = Validator::make($request->all(), $req->rules(), $req->messages(), $req->attributes());
-        if ($validator->fails())
-        return response()->json([
-        'fail' => true,
-        'errors' => $validator->errors(),
-        ]);
-        $result = $this->contactoEntidadRepository->update($request, $id);
-        if ($result == false) {
-        return response()->json([
-            'fail' => false
-        ]);
-        }
-    }
-
-    // Consulta los contactos que tiene un empresa, según el id de la ENTIDAD y el nodo
-    public function contactosDeLaEmpresaPorNodo($id)
-    {
-        if (request()->ajax()) {
-        $idnodo_user = "";
-            if (\Session::get('login_role') == User::IsGestor()) {
-                $idnodo_user = auth()->user()->gestor->nodo_id;
+        if ( (!$empresa->ideaPerteneceAUsuario() && Session::get('login_role') == User::IsTalento()) || (Session::get('role_session') == User::IsGestor() || Session::get('role_session') == User::IsArticulador() || Session::get('role_session') == User::IsInfocenter() ) ) {
+            if ($empresa->user == null) {
+                alert('No tienes permisos', 'Solo el administrador del sistema tiene permisos para cambiar la información de esta empresa', 'warning')->showConfirmButton('Ok', '#3085d6');
             } else {
-                $idnodo_user = auth()->user()->dinamizador->nodo_id;
+                alert('No tienes permisos', 'Solo el usuario ' . $empresa->user->nombres . ' ' . $empresa->user->apellidos . ' tiene permisos para cambiar la información de esta empresa', 'warning')->showConfirmButton('Ok', '#3085d6');
             }
-
-            $contactos = $this->empresaRepository->consultarContactosPorNodoDeUnaEmpresa($id, $idnodo_user)->toArray();
-
-            $contactos = ArrayHelper::validarDatoNullDeUnArray($contactos);
-
-            return response()->json([
-                'contactos' => $contactos,
-                'route' => url('/empresa/updateContactoDeUnaEmpresa') . '/' . $id,
-            ]);
+            return false;
         }
+        return true;
+    }
+
+    public function detalle(int $id)
+    {
+        $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
+        switch (Session::get('login_role')) {
+            case User::IsTalento():
+                return view('empresa.talento.show', ['empresa' => $empresa]);
+                break;
+            case User::IsAdministrador():
+                return view('empresa.administrador.show', ['empresa' => $empresa]);
+                break;
+            case User::IsGestor():
+                return view('empresa.show_no_option', ['empresa' => $empresa]);
+                break;
+            case User::IsArticulador():
+                return view('empresa.show_no_option', ['empresa' => $empresa]);
+                break;
+            case User::IsInfocenter():
+                return view('empresa.show_no_option', ['empresa' => $empresa]);
+                break;
+            default:
+                
+                break;
+        }
+    }
+
+    public function search_empresa(Request $request)
+    {
+        $empresas = Empresa::where('nit', 'like', '%'.$request->txtnit_search.'%')->get();
+        $urls = [];
+        foreach ($empresas as $empresa) {
+            $urls[] = route('empresa.detalle', $empresa->id);
+        }
+        return response()->json([
+            'empresas' => $empresas,
+            'urls' => $urls,
+            'state' => 'search'
+        ]);
+    }
+
+    public function search()
+    {
+        return view('empresa.search');
     }
 
     /**
@@ -89,97 +88,39 @@ class EmpresaController extends Controller
     */
     public function index()
     {
-        switch (\Session::get('login_role')) {
-        case User::IsGestor():
-            return view('empresa.gestor.index');
-            break;
-        case User::IsDinamizador():
-            return view('empresa.dinamizador.index');
-            break;
-        case User::IsAdministrador():
-            return view('empresa.administrador.index');
-            break;
-        default:
-
-            break;
+        if (Session::get('login_role') == User::IsTalento()) {
+            return view('empresa.talento.index');
+        } else {
+            return view('empresa.index');
         }
+    }
+
+    public function datatableEmpresas($empresas)
+    {
+        return datatables()->of($empresas)
+            ->addColumn('details', function ($data) {
+            $button = '
+            <a class="btn m-b-xs" href="'.route('empresa.detalle', $data->id).'">
+                <i class="material-icons">search</i>
+            </a>
+            ';
+            return $button;
+            })->addColumn('add_propietario', function ($data) {
+                $add_propietario = '<a onclick="addEntidadEmpresa('.$data->id.')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+                return $add_propietario;
+            })
+            ->rawColumns(['details', 'edit', 'add_propietario'])->make(true);
     }
     // Datatable que muestra las empresas de tecnoparque por parte del dinamizador
 
     public function datatableEmpresasDeTecnoparque()
     {
-        if (request()->ajax()) {
-        if (\Session::get('login_role') == User::IsAdministrador() || \Session::get('login_role') == User::IsGestor()) {
-            $empresas = $this->empresaRepository->consultarEmpresasDeRedTecnoparque();
-            return datatables()->of($empresas)
-            ->addColumn('details', function ($data) {
-            $button = '
-            <a class="btn light-blue m-b-xs modal-trigger" href="#!" onclick="empresaIndex.consultarDetallesDeUnaEmpresa('. $data->id .')">
-                <i class="material-icons">info</i>
-            </a>
-            ';
-            return $button;
-            })->addColumn('contacts', function ($data) {
-            $contact = '
-            <a class="btn orange lighten-3 m-b-xs modal-trigger" id="#contactosDeUnaEntidad_modal" onclick="consultarContactosDeUnaEntidad('.$data->id_entidad.');">
-            <i class="material-icons">local_phone</i>
-            </a>
-            ';
-            return $contact;
-            })->addColumn('edit', function ($data) {
-            $edit = '<a href="'. route("empresa.edit", $data->id) .'" class="btn m-b-xs"><i class="material-icons">edit</i></a>';
-            return $edit;
-            })->addColumn('add_articulacion', function ($data) {
-            $add = '<a onclick="addEmpresaArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
-            return $add;
-            })->addColumn('add_propietario', function ($data) {
-            $add_propietario = '<a onclick="addEntidadEmpresa(' . $data->nit . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
-            return $add_propietario;
-            })->addColumn('add_empresa_a_edt', function ($data) {
-            return '<a class="btn blue m-b-xs" onclick="addEmpresaAEdt('.$data->id_entidad.')"><i class="material-icons">done_all</i></a>';
-            })->rawColumns(['details', 'edit', 'add_articulacion', 'contacts', 'add_empresa_a_edt', 'add_propietario'])->make(true);
+        if (Session::get('login_role') == User::IsTalento()) {
+            $empresas = $this->empresaRepository->consultarEmpresas()->where('users.id', auth()->user()->id)->get();
         } else {
-            $empresas = $this->empresaRepository->consultarEmpresasDeRedTecnoparque();
-            return datatables()->of($empresas)
-            ->addColumn('details', function ($data) {
-            $button = '
-            <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="empresaIndex.consultarDetallesDeUnaEmpresa('. $data->id .')">
-            <i class="material-icons">info</i>
-            </a>
-            ';
-            return $button;
-            })->addColumn('contacts', function ($data) {
-            // $contact = '
-            // <a class="btn orange lighten-3 m-b-xs modal-trigger" href="#modal1" data-href='. route('empresa.contactos.nodo', $data->id_entidad) .'>
-            // <i class="material-icons">local_phone</i>
-            // </a>
-            // ';
-            $contact = '
-            <a class="btn orange lighten-3 m-b-xs modal-trigger" id="#contactosDeUnaEntidad_modal" onclick="consultarContactosDeUnaEntidad('.$data->id_entidad.');">
-            <i class="material-icons">local_phone</i>
-            </a>
-            ';
-            return $contact;
-            })->addColumn('soft_delete', function ($data) {
-            $edit = '<a class="btn m-b-xs"><i class="material-icons">sweep_delete</i></a>';
-            return $edit;
-            })->rawColumns(['details', 'soft_delete', 'contacts'])->make(true);
+            $empresas = $this->empresaRepository->consultarEmpresas()->get();
         }
-        }
-    }
-
-    /**
-    * Consulta que muestra los detalles de una empresa
-    * @param $param Valor del parámetro por el que se va a filtrar la empresa.
-    * @param $field Nombre del campo por el que se va a filtrar
-    * @return Response
-    */
-    public function detalleDeUnaEmpresa(string $param, string $field)
-    {
-        $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($param, $field)->first();
-        return response()->json([
-        'empresa' => $empresa
-        ]);
+        return $this->datatableEmpresas($empresas);
     }
 
     /**
@@ -190,7 +131,7 @@ class EmpresaController extends Controller
     */
     public function create()
     {
-        $this->authorize('create', Empresa::class);
+        // $this->authorize('create', Empresa::class);
         return view('empresa.create', [
         'departamentos' => $this->userRepository->getAllDepartamentos(),
         'sectores' => Sector::SelectAllSectors()->get(),
@@ -208,8 +149,6 @@ class EmpresaController extends Controller
     */
     public function store(Request $request)
     {
-        $this->authorize('store', Empresa::class);
-
         $req = new EmpresaFormRequest;
 
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
@@ -223,7 +162,7 @@ class EmpresaController extends Controller
             ]);
         } else {
             $company = $this->empresaRepository->store($request);
-            if ($company) {
+            if ($company['state']) {
                 $message = 'La empresa ha sido creada satisfactoriamente';
                 return response()->json([
                     'state'   => 'success',
@@ -248,9 +187,11 @@ class EmpresaController extends Controller
     */
     public function edit($id)
     {
-        $empresa = Empresa::find($id);
-        $this->authorize('edit', $empresa);
-        return view('empresa.edit', [
+        $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
+        if (!$this->validarAccesoForms($empresa))
+            return back();
+        // $this->authorize('edit', $empresa);
+        return view('empresa.talento.edit', [
             'empresa' => $empresa,
             'departamentos' => $this->userRepository->getAllDepartamentos(),
             'sectores' => Sector::SelectAllSectors()->get(),
@@ -258,6 +199,146 @@ class EmpresaController extends Controller
             'tipos' => TipoEmpresa::all()
         ]);
         
+    }
+
+    public function ajaxDeUnaSede(string $id)
+    {
+        $sede = $this->empresaRepository->consultarSedeRepository($id)->first();
+        return response()->json([
+            'sede' => $sede
+        ]);
+    }
+
+    public function ajaxDeUnaEmpresa(string $value, string $field)
+    {
+        $empresa = $this->empresaRepository->consultarEmpresaParams($value, $field)->first();
+        return response()->json([
+        'empresa' => $empresa
+        ]);
+    }
+
+    /**
+    * Formulario para cambiar la información de las sedes
+    *
+    * @param  int  $id
+    * @return \Illuminate\Http\Response
+    * @author Victor Manuel Moreno Vega
+    */
+    public function add_sede($id)
+    {
+        $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
+
+        return view('empresa.add_sede', [
+            'empresa' => $empresa,
+            'departamentos' => $this->userRepository->getAllDepartamentos()
+        ]);
+    }
+
+    /**
+    * Formulario para cambiar la información de las sedes
+    *
+    * @param  int  $id
+    * @return \Illuminate\Http\Response
+    * @author Victor Manuel Moreno Vega
+    */
+    public function sedes_edit($id, $id_sede)
+    {
+        $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
+        if (!$this->validarAccesoForms($empresa))
+            return back();
+
+        $sede = $empresa->sedes->where('id', $id_sede)->first();
+        return view('empresa.talento.edit_sede', [
+            'empresa' => $empresa,
+            'sede' => $sede,
+            'departamentos' => $this->userRepository->getAllDepartamentos()
+        ]);
+    }
+
+    /**
+    * Formulario para cambiar el responsable de la empresa
+    *
+    * @param  int  $id
+    * @return \Illuminate\Http\Response
+    * @author Victor Manuel Moreno Vega
+    */
+    public function form_responsable($id)
+    {
+        $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
+        if (!$this->validarAccesoForms($empresa))
+            return back();
+        return view('empresa.talento.edit_responsable', [
+            'empresa' => $empresa
+        ]);
+    }
+
+    /**
+    * Cambiar el responsable de la empresa
+    *
+    * @param  \Illuminate\Http\Request  $request
+    * @param  int  $id
+    * @return \Illuminate\Http\Response
+    * @author Victor Manuel Moreno Vega
+    */
+    public function update_responsable(Request $request, $id)
+    {
+        $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
+        if (!$this->validarAccesoForms($empresa))
+            return back();
+        
+        if ($request->input('txttype_search') == 1) {
+            $messages = [
+                'txtsearch_user.required' => 'El número de documento es obligatorio.',
+                'txtsearch_user.digits_between' => 'El número de documento debe tener entre 6 y 11 dígitos.',
+                'txtsearch_user.numeric' => 'El número de documento debe ser numérico.'
+            ];
+            $validator = Validator::make($request->all(), [
+                'txtsearch_user' => 'required|digits_between:6,11|numeric',
+                'txttype_search' => 'required|in:1',
+            ], $messages);
+            if ($validator->fails()) {
+                return response()->json([
+                    'state'   => 'error_form',
+                    'fail'   => true,
+                    'errors' => $validator->errors()
+                ]);
+            }
+        } else {
+            $messages = [
+                'txtsearch_user.required' => 'El correo electrónico es obligatorio.',
+                'txtsearch_user.email' => 'El correo electrónico digitado no es válido.'
+            ];
+            $validator = Validator::make($request->all(), [
+                'txtsearch_user' => 'required|email',
+                'txttype_search' => 'required|in:2',
+            ], $messages);
+            if ($validator->fails()) {
+                return response()->json([
+                    'state'   => 'error_form',
+                    'fail'   => true,
+                    'errors' => $validator->errors()
+                ]);
+            }
+        }
+
+        $result = $this->empresaRepository->update_responsable($request, $empresa);
+        if ($result['state']) {
+            return response()->json([
+                'state' => 'update', 
+                'url' => route('empresa.detalle', $id),
+                'title' => $result['title'],
+                'msg' => $result['msg'],
+                'type' => $result['type']
+            ]);
+        } else {
+            return response()->json([
+                'state' => 'no_update', 
+                'title' => $result['title'],
+                'msg' => $result['msg'],
+                'type' => $result['type']
+            ]);
+        }
+
     }
 
     /**
@@ -270,11 +351,13 @@ class EmpresaController extends Controller
     */
     public function update(Request $request, $id)
     {
-        $empresa = Empresa::find($id);
-        $this->authorize('update', $empresa);
+        $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
+        if (!$this->validarAccesoForms($empresa))
+            return back();
+        // $this->authorize('update', $empresa);
 
         $req       = new EmpresaFormRequest;
-        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+        $validator = Validator::make($request->all(), $req->rules('just_comp'), $req->messages());
 
 
         if ($validator->fails()) {
@@ -285,19 +368,98 @@ class EmpresaController extends Controller
             ]);
 
         } else {
-            $empresaUpdate = $this->empresaRepository->update($request, $empresa);
-            if ($empresaUpdate != null) {
+            $result = $this->empresaRepository->update($request, $empresa);
+            if ($result['state']) {
                 return response()->json([
-                    'state'   => 'success',
-                    'message' => 'La idea ha sido modificado satisfactoriamente',
-                    'url' => route('empresa'),
+                    'state' => 'update', 
+                    'url' => route('empresa.detalle', $id),
+                    'title' => $result['title'],
+                    'msg' => $result['msg'],
+                    'type' => $result['type']
                 ]);
-            } 
+            } else {
+                return response()->json([
+                    'state' => 'no_update', 
+                    'title' => $result['title'],
+                    'msg' => $result['msg'],
+                    'type' => $result['type']
+                ]);
+            }
+        }
+    }
+
+    public function update_sede(Request $request, $id, $id_sede)
+    {
+        $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
+        if (!$this->validarAccesoForms($empresa))
+            return back();
+        $sede = $empresa->sedes->where('id', $id_sede)->first();
+
+        $req       = new EmpresaFormRequest;
+        $validator = Validator::make($request->all(), $req->rules('just_hq'), $req->messages());
+
+
+        if ($validator->fails()) {
             return response()->json([
-                'state'   => 'error',
-                'message' => 'La idea no se ha modificado',
-                'url' => false
+                'state'   => 'error_form',
+                'fail'   => true,
+                'errors' => $validator->errors(),
             ]);
+
+        } else {
+            $result = $this->empresaRepository->updateSedes($request, $sede);
+            if ($result['state']) {
+                return response()->json([
+                    'state' => 'update', 
+                    'url' => route('empresa.detalle', $id),
+                    'title' => $result['title'],
+                    'msg' => $result['msg'],
+                    'type' => $result['type']
+                ]);
+            } else {
+                return response()->json([
+                    'state' => 'no_update', 
+                    'title' => $result['title'],
+                    'msg' => $result['msg'],
+                    'type' => $result['type']
+                ]);
+            }
+        }
+    }
+
+    public function store_sede(Request $request, $id)
+    {
+        $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
+
+        $req       = new EmpresaFormRequest;
+        $validator = Validator::make($request->all(), $req->rules('just_hq'), $req->messages());
+
+
+        if ($validator->fails()) {
+            return response()->json([
+                'state'   => 'error_form',
+                'fail'   => true,
+                'errors' => $validator->errors(),
+            ]);
+
+        } else {
+            $result = $this->empresaRepository->storeSede($request, $empresa);
+            if ($result['state']) {
+                return response()->json([
+                    'state' => 'store', 
+                    'url' => route('empresa.detalle', $id),
+                    'title' => $result['title'],
+                    'msg' => $result['msg'],
+                    'type' => $result['type']
+                ]);
+            } else {
+                return response()->json([
+                    'state' => 'no_store', 
+                    'title' => $result['title'],
+                    'msg' => $result['msg'],
+                    'type' => $result['type']
+                ]);
+            }
         }
     }
 }

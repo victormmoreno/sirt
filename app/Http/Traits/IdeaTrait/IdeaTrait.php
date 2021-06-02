@@ -5,6 +5,7 @@ namespace App\Http\Traits\IdeaTrait;
 use App\Models\EstadoIdea;
 use App\Models\Nodo;
 use App\Models\Proyecto;
+use App\Models\Sede;
 use App\Models\RutaModel;
 use App\Models\Comite;
 use App\Models\Talento;
@@ -58,9 +59,9 @@ trait IdeaTrait
         return $this->belongsTo(Gestor::class, 'gestor_id', 'id');
     }
 
-    public function company()
+    public function sede()
     {
-        return $this->belongsTo(Empresa::class, 'empresa_id', 'id');
+        return $this->belongsTo(Sede::class, 'sede_id', 'id');
     }
 
     public function talento()

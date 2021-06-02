@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class EmpresaFormRequest extends FormRequest
 {
@@ -21,20 +22,21 @@ class EmpresaFormRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules($sit = null)
     {
         return [
-            'txtnit_empresa' => 'required|numeric|digits_between:9,13|unique:empresas,nit,' . request()->route('id'),
+            'txtnit_empresa' => Rule::requiredIf($sit != 'just_hq').'|digits_between:9,13|unique:empresas,nit,' . request()->route('id'),
             'txtcodigo_ciiu_empresa' => 'max:15|nullable',
-            'txtnombre_empresa' => 'required|min:1|max:300|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/',
+            'txtnombre_empresa' => Rule::requiredIf($sit != 'just_hq') . '|min:1|max:300',
+            'txtnombre_sede' =>  Rule::requiredIf($sit != 'just_comp') . '|min:1|max:300',
             'txtfecha_creacion_empresa' => 'date_format:Y-m-d|nullable',
-            'txtsector_empresa' => 'required',
+            'txtsector_empresa' => Rule::requiredIf($sit != 'just_hq'),
             'txtemail_entidad' => 'email|nullable|min:7|max:200',
-            'txtdireccion_empresa' => 'max:100|nullable',
-            'txtdepartamento_empresa' => 'required',
-            'txtciudad_id_empresa' => 'required',
-            'txttamanhoempresa_id_empresa' => 'required',
-            'txttipoempresa_id_empresa' => 'required',
+            'txtdireccion_sede' => 'max:100|nullable',
+            'txtdepartamento_sede' => Rule::requiredIf($sit != 'just_comp'),
+            'txtciudad_id_sede' => Rule::requiredIf($sit != 'just_comp'),
+            'txttamanhoempresa_id_empresa' => Rule::requiredIf($sit != 'just_hq'),
+            'txttipoempresa_id_empresa' => Rule::requiredIf($sit != 'just_hq'),
         ];
     }
 
@@ -45,6 +47,10 @@ class EmpresaFormRequest extends FormRequest
             'txtnombre_empresa.min' => 'El nombre de la empresa debe ser mínimo de 1 caracter.',
             'txtnombre_empresa.max' => 'El nombre de la empresa debe ser máximo de 300 caracteres.',
             'txtnombre_empresa.regex' => 'El formate del campo nombre de la empresa es incorrecto.',
+            'txtnombre_sede.required' => 'El nombre de la sede es obligatorio.',
+            'txtnombre_sede.min' => 'El nombre de la sede debe ser mínimo de 1 caracter.',
+            'txtnombre_sede.max' => 'El nombre de la sede debe ser máximo de 300 caracteres.',
+            'txtnombre_sede.regex' => 'El formate del campo nombre de la sede es incorrecto.',
             'txtnit_empresa.required' => 'El nit de la empresa es obligatorio.',
             'txtnit_empresa.numeric' => 'El nit de la empresa debe ser numérico (Sin puntos ni número de verificación).',
             'txtnit_empresa.unique' => 'El nit de la empresa ya se encuentra registrado.',
@@ -52,9 +58,9 @@ class EmpresaFormRequest extends FormRequest
             'txtemail_entidad.email' => 'El formato del email de la empresa es incorrecto.',
             'txtemail_entidad.min' => 'El email de la empresa debe ser mínimo de 7 caracteres.',
             'txtemail_entidad.max' => 'El email de la empresa debe ser máximo de 200 caracteres.',
-            'txtdireccion_empresa.max' => 'La dirección de la empresa deben ser máximo de 100 caracteres.',
-            'txtdepartamento_empresa.required' => 'El departamento de la Empresa es obligatorio.',
-            'txtciudad_id_empresa.required' => 'La ciudad de la empresa es obligatoria.',
+            'txtdireccion_sede.max' => 'La dirección de la empresa deben ser máximo de 100 caracteres.',
+            'txtdepartamento_sede.required' => 'El departamento de la Empresa es obligatorio.',
+            'txtciudad_id_sede.required' => 'La ciudad de la empresa es obligatoria.',
             'txtsector_empresa.required' => 'El sector de la empresa es obligatorio.',
             'txttamanhoempresa_id_empresa.required' => 'El tamaño de la empresa es obligatorio.',
             'txttipoempresa_id_empresa.required' => 'El tipo de la empresa es obligatorio.',
@@ -63,16 +69,16 @@ class EmpresaFormRequest extends FormRequest
         ];
     }
 
-    public function attributes()
-    {
-        return [
-            'nombre' => 'Nombre de la Empresa',
-            'nit' => 'Nit de la Empresa',
-            'email_entidad' => 'Email de la Empresa',
-            'direccion' => 'Dirección de la Empresa',
-            'txtdepartamento' => 'Departamento de la Empresa',
-            'txtciudad_id' => 'Ciudad de la Empresa',
-            'txtsector' => 'Sector de la Empresa',
-        ];
-    }
+    // public function attributes()
+    // {
+    //     return [
+    //         'nombre' => 'Nombre de la Empresa',
+    //         'nit' => 'Nit de la Empresa',
+    //         'email_entidad' => 'Email de la Empresa',
+    //         'direccion' => 'Dirección de la Empresa',
+    //         'txtdepartamento' => 'Departamento de la Empresa',
+    //         'txtciudad_id' => 'Ciudad de la Empresa',
+    //         'txtsector' => 'Sector de la Empresa',
+    //     ];
+    // }
 }

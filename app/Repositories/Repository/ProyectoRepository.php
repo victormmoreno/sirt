@@ -3,7 +3,7 @@
 namespace App\Repositories\Repository;
 
 
-use App\Models\{Proyecto, Entidad, Fase, Actividad, ArticulacionProyecto, ArchivoArticulacionProyecto, Movimiento, UsoInfraestructura, Role};
+use App\Models\{Proyecto, Entidad, Fase, Actividad, ArticulacionProyecto, ArchivoArticulacionProyecto, Movimiento, UsoInfraestructura, Role, Idea, EstadoIdea};
 use Illuminate\Support\Facades\{DB, Notification, Storage, Session};
 use App\Notifications\Proyecto\{ProyectoCierreAprobado, ProyectoAprobarInicio, ProyectoAprobarPlaneacion, ProyectoAprobarEjecucion, ProyectoAprobarCierre, ProyectoAprobarInicioDinamizador, ProyectoAprobarSuspendido, ProyectoSuspendidoAprobado, ProyectoNoAprobarFase};
 use Carbon\Carbon;
@@ -465,11 +465,11 @@ class ProyectoRepository
       ]);
 
       $proyecto->users_propietarios()->detach();
-      $proyecto->empresas()->detach();
+      $proyecto->sedes()->detach();
       $proyecto->gruposinvestigacion()->detach();
 
       $proyecto->users_propietarios()->attach(request()->propietarios_user);
-      $proyecto->empresas()->attach(request()->propietarios_empresas);
+      $proyecto->sedes()->attach(request()->propietarios_sedes);
       $proyecto->gruposinvestigacion()->attach(request()->propietarios_grupos);
 
       DB::commit();
@@ -1076,32 +1076,20 @@ class ProyectoRepository
   }
 
   /**
-<<<<<<< HEAD
-   * Notifica al dinamizador para que apruebe el proyecto en la fase de cierre
-=======
    * Notifica al dinamizador para que apruebe el proyecto en la fase de suspendido
->>>>>>> 53d64974f4c43ab650f2ce5b9aa2b78935d54da2
    * 
    * @param int $id Id del proyecto
    * @return boolean
    * @author dum
    */
-<<<<<<< HEAD
-  public function notificarAlDinamziador_Cierre(int $id)
-=======
   public function notificarAlDinamziador_Suspendido(int $id)
->>>>>>> 53d64974f4c43ab650f2ce5b9aa2b78935d54da2
   {
     DB::beginTransaction();
     try {
       $dinamizadorRepository = new DinamizadorRepository;
       $proyecto = Proyecto::findOrFail($id);
       $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
-<<<<<<< HEAD
-      Notification::send($dinamizadores, new ProyectoAprobarCierre($proyecto));
-=======
       Notification::send($dinamizadores, new ProyectoAprobarSuspendido($proyecto));
->>>>>>> 53d64974f4c43ab650f2ce5b9aa2b78935d54da2
       DB::commit();
       return true;
     } catch (\Throwable $th) {
@@ -1109,52 +1097,6 @@ class ProyectoRepository
       return false;
     }
   }
-<<<<<<< HEAD
-
-
-
-    /**
-     * Notifica al talento interlocutor para que apruebe la fase de planeación
-     * 
-     * @param int $id Id del proyecto
-     * @return boolean
-     * @author dum
-     */
-    public function notificarAlDinamizador_Planeacion(int $id)
-    {
-      DB::beginTransaction();
-      try {
-        $dinamizadorRepository = new DinamizadorRepository;
-        $proyecto = Proyecto::findOrFail($id);
-        $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
-        Notification::send($dinamizadores, new ProyectoAprobarPlaneacion($proyecto));
-        DB::commit();
-        return true;
-      } catch (\Throwable $th) {
-        DB::rollBack();
-        return false;
-      }
-    }
-
-  public function notificarAlDinamizador_Ejecucion(int $id)
-  {
-    DB::beginTransaction();
-    try {
-      $dinamizadorRepository = new DinamizadorRepository;
-      $proyecto = Proyecto::findOrFail($id);
-      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
-      Notification::send($dinamizadores, new ProyectoAprobarEjecucion($proyecto));
-      DB::commit();
-      return true;
-    } catch (\Throwable $th) {
-      DB::rollBack();
-      return false;
-    }
-  }
-
-=======
-
->>>>>>> 53d64974f4c43ab650f2ce5b9aa2b78935d54da2
   /**
    * Cambia el estado de aprobacion_dinamizador, para permitirle al gestor cerrar el proyecto
    */
@@ -1321,8 +1263,10 @@ class ProyectoRepository
       $art_cti = 1;
       $fabrica_productividad = 1;
   
-  
-      $this->getIdeaRepository()->updateEstadoIdea(request()->txtidea_id, 'En Proyecto');
+      $idea = Idea::find(request()->txtidea_id);
+      $idea->update([
+        'estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsPBT())->first()->id
+      ]);
   
       if (!isset(request()->trl_esperado)) {
         $trl_esperado = 0;
@@ -1405,7 +1349,7 @@ class ProyectoRepository
       ]);
 
       $proyecto->users_propietarios()->attach(request()->propietarios_user);
-      $proyecto->empresas()->attach(request()->propietarios_empresas);
+      $proyecto->sedes()->attach(request()->propietarios_sedes);
       $proyecto->gruposinvestigacion()->attach(request()->propietarios_grupos);
       $proyecto->idea->registrarHistorialIdea(Movimiento::IsRegistrar(), Session::get('login_role'), null, 'como un PBT asociado con el código ' . $actividad->codigo_actividad);
 

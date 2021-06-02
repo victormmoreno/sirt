@@ -187,11 +187,11 @@
         </tr>
         <tr>
           <td colspan="6">
-            @if ($proyecto->empresas->count() > 0)
+            @if ($proyecto->sedes->count() > 0)
             <ul>
-              @foreach ($proyecto->empresas as $key => $value)
+              @foreach ($proyecto->sedes as $key => $value)
               <li>
-                {{$value->nit}} - {{ $value->entidad->nombre }}
+                {{$value->empresa->nit}} - {{ $value->empresa->nombre }} ({{ $value->nombre_sede }})
               </li>
               @endforeach
             </ul>
