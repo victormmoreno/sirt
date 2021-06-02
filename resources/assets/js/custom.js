@@ -84,6 +84,17 @@ $(document).ready(function() {
       weekStart : 1, cancelText : 'Cancelar',
       okText: 'Guardar'
     });
+
+    $('.datepicker-min-date').bootstrapMaterialDatePicker({
+      time:false,
+      date:true,
+      year:true,
+      format: 'YYYY-MM-DD',
+      minDate : new Date(),
+      language: 'es',
+      weekStart : 1, cancelText : 'Cancelar',
+      okText: 'Guardar'
+    });
     // $('.datepicker').pickadate({
     //     selectMonths: true,
     //     selectYears: 60,
@@ -176,3 +187,4 @@ function checkSubmit() {
     $('button[type="submit"]').attr('disabled', 'disabled');
     return true;
 }
+

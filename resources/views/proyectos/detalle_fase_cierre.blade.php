@@ -105,6 +105,7 @@
                     {{$proyecto->articulacion_proyecto->actividad->conclusiones}}
                 </p>
             </li>
+            
         </ul>
     </div>
     <div class="col s12 m4 l4">
@@ -192,6 +193,7 @@
         </ul>
     </div>
 </div>
+
 <div class="row">
     <div class="col s12 m6 l6">
         <ul class="collection">

@@ -1,6 +1,6 @@
 @include('usoinfraestructura.pasos.usoinfraestructura')
 
-@if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+@if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsArticulador()))
     @include('usoinfraestructura.pasos.asesoria')
 @endif
 @include('usoinfraestructura.pasos.talento')

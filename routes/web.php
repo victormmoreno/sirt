@@ -44,10 +44,10 @@ Route::post('user/verify', 'Auth\UnregisteredUserVerificationController@verifica
 Route::get('email/reset', 'Auth\ChangeEmailController@showEmailChangeRequestForm')->name('email.request');
 Route::post('email/send', 'Auth\ChangeEmailController@sendEmailChange')->name('email.send');
 
-// DB::listen(function ($query) {
+DB::listen(function ($query) {
 // echo "<pre>{$query->sql}</pre>";
 // echo "<pre>{$query->time}</pre>";
-// });
+});
 
 /*===========================================================
 =            ruta para revisar funcionaliddes de prueba          =
@@ -148,10 +148,11 @@ Route::group(
         Route::get('/{documento}/permisos', 'UserController@changeNodeUser')->name('usuario.usuarios.changenode')->where('documento', '[0-9]+');
         Route::put('/{documento}/updatenodo', 'UserController@updateNode')->name('usuario.usuarios.updatenodo')->middleware('disablepreventback');
         Route::get('/usuarios/acceso/{documento}', 'UserController@acceso')->name('usuario.usuarios.acceso')->where('documento', '[0-9]+');
-
-        Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'only' => 'show'])->names([
+        Route::put('/{id}/update-account', 'UserController@updateAccountUser')->name('usuario.usuarios.updateaccount')->middleware('disablepreventback');
+        Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'only' => ['show', 'edit']])->names([
             'update'  => 'usuario.usuarios.update',
             'show'    => 'usuario.usuarios.show',
+            'edit'    => 'usuario.usuarios.edit',
         ])->parameters([
             'usuarios' => 'id',
         ]);
@@ -302,12 +303,6 @@ Route::group([
 
     Route::get('usoinfraestructura/talentosporarticulacion/{id}', 'UsoInfraestructuraController@talentosPorArticulacion')
         ->name('usoinfraestructura.talentosporarticulacion');
-
-    Route::get('usoinfraestructura/edtforuser/{id}', 'UsoInfraestructuraController@edtForUser')
-        ->name('usoinfraestructura.edtforuser');
-
-    Route::get('usoinfraestructura/edtsforuser', 'UsoInfraestructuraController@edtsForUser')
-        ->name('usoinfraestructura.edtsforuser');
 
 
     Route::get('usoinfraestructura/projectsforuser', 'UsoInfraestructuraController@projectsForUser')
@@ -549,7 +544,7 @@ Route::group(
 
     [
         'prefix'     => 'proyecto',
-        'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor|Talento|Infocenter'],
+        'middleware' => ['auth', 'role_session:Articulador|Administrador|Dinamizador|Gestor|Talento|Infocenter'],
     ],
     function () {
         Route::get('/notificar_inicio/{id}/{fase}', 'ProyectoController@solicitar_aprobacion')->name('proyecto.solicitar.aprobacion')->middleware('role_session:Gestor');
@@ -561,6 +556,8 @@ Route::group(
         Route::get('/create', 'ProyectoController@create')->name('proyecto.create')->middleware('role_session:Gestor');
         Route::get('/datatableProyectosDelTalento', 'ProyectoController@datatableProyectoTalento')->name('proyecto.datatable.talento');
         Route::get('/datatableEntidad/{id}', 'ProyectoController@datatableEntidadesTecnoparque')->name('proyecto.datatable.entidades');
+        Route::get('/datatableproyectosfinalizados', 'ProyectoController@datatableProyectosFinalizados')->name('proyecto.datatable.finalizados');
+
         Route::get('/datatableEmpresasTecnoparque', 'ProyectoController@datatableEmpresasTecnoparque')->name('proyecto.datatable.empresas')->middleware('role_session:Talento');
         Route::get('/datatableGruposInvestigacionTecnoparque/{tipo}', 'ProyectoController@datatableGruposInvestigacionTecnoparque')->name('proyecto.datatable.empresas');
         Route::get('/datatableTecnoacademiasTecnoparque', 'ProyectoController@datatableTecnoacademiasTecnoparque')->name('proyecto.datatable.tecnoacademias');
@@ -570,7 +567,7 @@ Route::group(
         Route::get('/datatableIdeasConEmpresasGrupo', 'ProyectoController@datatableIdeasConEmpresasGrupo')->name('proyecto.datatable.ideas.empresasgrupos');
         Route::get('/datatableProyectosDelGestorPorAnho/{idgestor}/{anho}', 'ProyectoController@datatableProyectosDelGestorPorAnho')->name('proyecto.datatable.proyectos.gestor.anho')->middleware('role_session:Administrador|Dinamizador|Gestor|Infocenter');
         Route::get('/datatableProyectosDelNodoPorAnho/{idnodo}/{anho}', 'ProyectoController@datatableProyectosDelNodoPorAnho')->name('proyecto.datatable.proyectos.nodo.anho');
-        Route::get('/detalle/{id}', 'ProyectoController@detalle')->name('proyecto.detalle')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador|Infocenter');
+        Route::get('/detalle/{id}', 'ProyectoController@detalle')->name('proyecto.detalle')->middleware('role_session:Articulador|Gestor|Dinamizador|Talento|Administrador|Infocenter');
         Route::get('/inicio/{id}', 'ProyectoController@inicio')->name('proyecto.inicio')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador|Infocenter');
         Route::get('/planeacion/{id}', 'ProyectoController@planeacion')->name('proyecto.planeacion')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador|Infocenter');
         Route::get('/ejecucion/{id}', 'ProyectoController@ejecucion')->name('proyecto.ejecucion')->middleware('role_session:Gestor|Dinamizador|Talento|Administrador|Infocenter');
@@ -596,13 +593,16 @@ Route::group(
         Route::post('/', 'ProyectoController@store')->name('proyecto.store')->middleware('role_session:Gestor');
         Route::post('/store/{id}/files', 'ArchivoController@uploadFileProyecto')->name('proyecto.files.upload')->middleware('role_session:Gestor');
         Route::delete('/file/{idFile}', 'ArchivoController@destroyFileProyecto')->name('proyecto.files.destroy')->middleware('role_session:Gestor');
+       
     }
 );
+
+Route::get('actividades/filter-code/{value}', 'ProyectoController@filterByCode')->name('proyecto.filterbycode');
 
 Route::group(
     [
         'prefix'     => 'actividad',
-        'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor|Talento|Infocenter'],
+        'middleware' => ['auth', 'role_session:Articulador|Administrador|Dinamizador|Gestor|Talento|Infocenter'],
     ],
     function () {
         Route::get('/detalle/{code}', 'ProyectoController@detailActivityByCode')->name('actividad.detalle');
@@ -887,3 +887,34 @@ Route::group([
 });
 
 //-----------------------Fin ruta sección noticias-----------------------------------
+
+Route::get('articulaciones/export', 'ArticulacionPbtController@export')->name('articulacion.export')->middleware('role_session:Administrador|Articulador|Dinamizador');
+Route::get('articulaciones/download/inicio/{id}', 'Pdf\PdfArticulacionPbtController@downloadFormInicio')->name('pdf.articulacion.inicio')->middleware('role_session:Articulador');
+Route::get('articulaciones/download/cierre/{id}', 'Pdf\PdfArticulacionPbtController@downloadFormCierre')->name('pdf.articulacion.cierre')->middleware('role_session:Articulador');
+
+
+Route::delete('articulaciones/file/{idFile}', 'ArchivoController@destroyFileArticulacion')->name('articulacion.files.destroy')->middleware('role_session:Articulador');
+Route::get('articulaciones/downloadFile/{id}', 'ArchivoController@downloadFileArticulacion')->name('articulacion.files.download');
+Route::get('articulaciones/archivos-articulacion/{id}/{fase}', 'ArchivoController@datatableArchiveArticulacion')->name('articulacion.files');
+Route::post('articulaciones/store/{id}/files', 'ArchivoController@uploadFileArticulacionPbt')->name('articulacion.files.upload')->middleware('role_session:Articulador');
+
+Route::put('articulaciones/update-articulador/{id}', 'ArticulacionPbtController@updateArticulador')->name('articulacion.update.articulador')->middleware('role_session:Dinamizador');
+Route::get('articulaciones/cambiar-articulador/{id}', 'ArticulacionPbtController@changeArticulador')->name('articulacion.cambiar')->middleware('role_session:Dinamizador');
+Route::put('articulaciones/miembros/{id}', 'ArticulacionPbtController@updateMiembros')->name('articulacion.update.miembros')->middleware('role_session:Articulador');
+Route::get('articulaciones/miembros/{id}', 'ArticulacionPbtController@miembros')->name('articulacion.miembros')->middleware('role_session:Articulador');
+Route::put('articulaciones/reversar/{id}/{fase}', 'ArticulacionPbtController@updateReversar')->name('articulacion.reversar')->middleware('role_session:Dinamizador|Administrador');
+Route::put('articulaciones/suspendido/{id}', 'ArticulacionPbtController@updateSuspendido')->name('articulacion.update.suspendido')->middleware('role_session:Dinamizador');
+Route::get('articulaciones/notificar_suspendido/{id}', 'ArticulacionPbtController@notificarSuspendido')->name('articulacion.notificar.suspension')->middleware('role_session:Articulador');
+Route::put('articulaciones/ejecucion/{id}', 'ArticulacionPbtController@updateEjecucion')->name('articulacion.update.ejecucion')->middleware('role_session:Articulador');
+Route::put('articulaciones/cierre/{id}', 'ArticulacionPbtController@updateCierre')->name('articulacion.update.cierre')->middleware('role_session:Articulador');
+Route::get('articulaciones/suspender/{id}', 'ArticulacionPbtController@suspender')->name('articulacion.suspender')->middleware('role_session:Articulador|Dinamizador');
+Route::put('articulaciones/gestionar-aprobacion/{id}/{fase}', 'ArticulacionPbtController@gestionarAprobacion')->name('articulacion.aprobacion')->middleware('role_session:Dinamizador|Talento');
+Route::get('articulaciones/notificar-inicio/{id}/{fase}', 'ArticulacionPbtController@solicitar_aprobacion')->name('articulacion.solicitar.aprobacion')->middleware('role_session:Articulador');
+Route::put('articulaciones/updateEntregables/{id}', 'ArticulacionPbtController@updateEntregables')->name('articulacion.update.entregables.inicio')->middleware('role_session:Articulador');
+Route::get('articulaciones/entregables/inicio/{id}', 'ArticulacionPbtController@entregablesInicio')->name('articulacion.entregables.inicio')->middleware('role_session:Articulador');
+Route::get('articulaciones/inicio/{id}', 'ArticulacionPbtController@showFaseInicioArticulacion')->name('articulacion.show.inicio')->middleware('role_session:Articulador|Dinamizador|Administrador|Talento');
+Route::get('articulaciones/ejecucion/{id}', 'ArticulacionPbtController@showFaseEjecucionArticulacion')->name('articulacion.show.ejecucion')->middleware('role_session:Articulador|Dinamizador|Administrador|Talento');
+Route::get('articulaciones/cierre/{id}', 'ArticulacionPbtController@showFaseCierreArticulacion')->name('articulacion.show.cierre')->middleware('role_session:Articulador|Dinamizador|Administrador|Talento');
+Route::get('articulaciones/datatable_filtros', 'ArticulacionPbtController@datatableFiltros')->name('articulacion.datatable.filtros')->middleware('role_session:Articulador|Dinamizador|Administrador|Talento');
+Route::get('usuarios/filtro-talento/{documento}', 'ArticulacionPbtController@filterTalento')->name('articulacion.usuario.talento.search');
+Route::resource('articulaciones', 'ArticulacionPbtController', ['except' => ['edit', 'delete']]);

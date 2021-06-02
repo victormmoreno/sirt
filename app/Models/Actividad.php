@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\User;
+use App\Presenters\ActividadPresenter;
 
 class Actividad extends Model
 {
@@ -116,6 +117,11 @@ class Actividad extends Model
         return $this->belongsTo(Gestor::class, 'gestor_id', 'id');
     }
 
+    public function articulacionpbt()
+    {
+        return $this->hasOne(ArticulacionPbt::class, 'actividad_id', 'id');
+    }
+
     /**
      * Devolver relacion entre actividades y nodo
      * @author julian londoño
@@ -148,4 +154,8 @@ class Actividad extends Model
         ->orderBy('fecha_inicio', 'ASC')->pluck('nombre','codigo_actividad');
     }
 
+    public function present()
+    {
+        return new ActividadPresenter($this);
+    } 
 }

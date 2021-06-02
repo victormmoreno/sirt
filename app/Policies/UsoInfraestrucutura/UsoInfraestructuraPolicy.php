@@ -18,7 +18,7 @@ class UsoInfraestructuraPolicy
      */
     public function index(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsTalento()]) && session()->get('login_role') != User::IsIngreso() || session()->get('login_role') != User::IsInfocenter();
+        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsArticulador(), User::IsTalento()]) && session()->get('login_role') != User::IsIngreso() || session()->get('login_role') != User::IsInfocenter();
     }
 
     /**
@@ -29,7 +29,7 @@ class UsoInfraestructuraPolicy
      */
     public function create(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsGestor(), User::IsTalento()]) && session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsTalento();
+        return (bool) $user->hasAnyRole([User::IsArticulador(), User::IsGestor(), User::IsTalento()]) && session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsTalento();
     }
 
     /**
@@ -40,7 +40,7 @@ class UsoInfraestructuraPolicy
      */
     public function store(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsGestor(), User::IsTalento()]) && session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsTalento();
+        return (bool) $user->hasAnyRole([User::IsArticulador(),User::IsGestor(), User::IsTalento()]) && session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsTalento();
     }
 
     /**
@@ -69,6 +69,8 @@ class UsoInfraestructuraPolicy
             return true;
         } else if ($user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsTalento()]) && session()->get('login_role') == User::IsGestor() && $uso->actividad->gestor->user->id == $user->id) {
             return true;
+        } else if ($user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsArticulador(), User::IsGestor(), User::IsTalento()]) && session()->get('login_role') == User::IsArticulador() && $uso->actividad->gestor->user->id == $user->id) {
+            return true;
         } else if ($user->hasAnyRole([User::IsTalento()]) && session()->get('login_role') == User::IsTalento() && $uso->actividad->articulacion_proyecto->talentos->contains($user->talento->id)) {
             return true;
         }else{
@@ -86,7 +88,7 @@ class UsoInfraestructuraPolicy
      */
     public function edit(User $user, UsoInfraestructura $uso)
     {
-        if ($user->hasAnyRole([User::IsGestor()]) && session()->get('login_role') == User::IsGestor() && $uso->actividad->gestor->user->id == $user->id) {
+        if ($user->hasAnyRole([User::IsArticulador(),User::IsGestor()]) && (session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsArticulador()) && $uso->actividad->gestor->user->id == $user->id) {
             return true;
         } else if ($user->hasAnyRole([User::IsTalento()]) && session()->get('login_role') == User::IsTalento() && $uso->actividad->articulacion_proyecto->talentos->contains($user->talento->id)) {
             return true;
@@ -106,7 +108,7 @@ class UsoInfraestructuraPolicy
      */
     public function update(User $user, UsoInfraestructura $uso)
     {
-        if ($user->hasAnyRole([User::IsGestor()]) && session()->get('login_role') == User::IsGestor() && $uso->actividad->gestor->user->id == $user->id) {
+        if ($user->hasAnyRole([User::IsArticulador(),User::IsGestor()]) && (session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsArticulador()) && $uso->actividad->gestor->user->id == $user->id) {
             return true;
         } else if ($user->hasAnyRole([User::IsTalento()]) && session()->get('login_role') == User::IsTalento() && $uso->actividad->articulacion_proyecto->talentos->contains($user->talento->id)) {
             return true;

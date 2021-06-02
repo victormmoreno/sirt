@@ -1076,20 +1076,74 @@ class ProyectoRepository
   }
 
   /**
+<<<<<<< HEAD
+   * Notifica al dinamizador para que apruebe el proyecto en la fase de cierre
+=======
    * Notifica al dinamizador para que apruebe el proyecto en la fase de suspendido
+>>>>>>> 53d64974f4c43ab650f2ce5b9aa2b78935d54da2
    * 
    * @param int $id Id del proyecto
    * @return boolean
    * @author dum
    */
+<<<<<<< HEAD
+  public function notificarAlDinamziador_Cierre(int $id)
+=======
   public function notificarAlDinamziador_Suspendido(int $id)
+>>>>>>> 53d64974f4c43ab650f2ce5b9aa2b78935d54da2
   {
     DB::beginTransaction();
     try {
       $dinamizadorRepository = new DinamizadorRepository;
       $proyecto = Proyecto::findOrFail($id);
       $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
+<<<<<<< HEAD
+      Notification::send($dinamizadores, new ProyectoAprobarCierre($proyecto));
+=======
       Notification::send($dinamizadores, new ProyectoAprobarSuspendido($proyecto));
+>>>>>>> 53d64974f4c43ab650f2ce5b9aa2b78935d54da2
+      DB::commit();
+      return true;
+    } catch (\Throwable $th) {
+      DB::rollBack();
+      return false;
+    }
+  }
+<<<<<<< HEAD
+
+
+
+    /**
+     * Notifica al talento interlocutor para que apruebe la fase de planeación
+     * 
+     * @param int $id Id del proyecto
+     * @return boolean
+     * @author dum
+     */
+    public function notificarAlDinamizador_Planeacion(int $id)
+    {
+      DB::beginTransaction();
+      try {
+        $dinamizadorRepository = new DinamizadorRepository;
+        $proyecto = Proyecto::findOrFail($id);
+        $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
+        Notification::send($dinamizadores, new ProyectoAprobarPlaneacion($proyecto));
+        DB::commit();
+        return true;
+      } catch (\Throwable $th) {
+        DB::rollBack();
+        return false;
+      }
+    }
+
+  public function notificarAlDinamizador_Ejecucion(int $id)
+  {
+    DB::beginTransaction();
+    try {
+      $dinamizadorRepository = new DinamizadorRepository;
+      $proyecto = Proyecto::findOrFail($id);
+      $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
+      Notification::send($dinamizadores, new ProyectoAprobarEjecucion($proyecto));
       DB::commit();
       return true;
     } catch (\Throwable $th) {
@@ -1098,6 +1152,9 @@ class ProyectoRepository
     }
   }
 
+=======
+
+>>>>>>> 53d64974f4c43ab650f2ce5b9aa2b78935d54da2
   /**
    * Cambia el estado de aprobacion_dinamizador, para permitirle al gestor cerrar el proyecto
    */

@@ -387,28 +387,11 @@ class UsoInfraestructuraRepository
             'actividad.articulacion_proyecto.proyecto.sublinea'             => function ($query) {
                 $query->select('id', 'nombre');
             },
-            'actividad.articulacion_proyecto.articulacion'                  => function ($query) {
-                $query->select('id', 'articulacion_proyecto_id', 'tipoarticulacion_id', 'tipo_articulacion', 'observaciones', 'estado');
-            },
-            'actividad.articulacion_proyecto.articulacion.tipoarticulacion' => function ($query) {
-                $query->select('id', 'nombre', 'articulado_con');
-            },
+            'actividad.articulacionpbt',
+            'actividad.articulacionpbt.fase',
+            // 'actividad.articulacionpbt.tipoarticulacion',
 
-            'actividad.edt.entidades',
-            'actividad.edt.entidades.empresa'                               => function ($query) {
-                $query->select('id', 'entidad_id', 'sector_id', 'nit', 'direccion');
-            },
-            'actividad.edt.entidades.empresa.sector'                        => function ($query) {
-                $query->select('id', 'nombre');
-            },
-            'actividad.edt.entidades.ciudad',
-            'actividad.edt.entidades.ciudad.departamento',
-            'actividad.edt.areaconocimiento'                                => function ($query) {
-                $query->select('id', 'nombre');
-            },
-            'actividad.edt.tipoedt'                                         => function ($query) {
-                $query->select('id', 'nombre');
-            },
+            
             'actividad.gestor'                                              => function ($query) {
                 $query->select('id', 'user_id', 'nodo_id', 'lineatecnologica_id');
             },

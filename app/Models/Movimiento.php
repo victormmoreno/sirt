@@ -13,6 +13,7 @@ class Movimiento extends Model
     const IS_CAMBIAR  = 'Cambió';
     const IS_NO_APROBAR = 'no aprobó';
     const IS_SOLICITAR_TALENTO = 'solicitó al talento';
+    const IS_SOLICITAR_DINAMIZADOR = 'solicitó al dinamizador';
     const IS_POSTULAR = 'postuló';
     const IS_REGISTRAR = 'registró';
     const IS_CALIFICAR = 'calificó';
@@ -60,6 +61,11 @@ class Movimiento extends Model
     public static function IsSolicitarTalento()
     {
         return self::IS_SOLICITAR_TALENTO;
+    }
+
+    public static function IsSolicitarDinamizador()
+    {
+        return self::IS_SOLICITAR_DINAMIZADOR;
     }
 
     public static function IsPostular()
