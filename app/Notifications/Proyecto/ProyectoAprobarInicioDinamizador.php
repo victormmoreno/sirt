@@ -45,27 +45,12 @@ class ProyectoAprobarInicioDinamizador extends Notification implements ShouldQue
     public function toArray($notifiable)
     {
         return [
-            'link'  => route('proyecto.inicio', $this->getProyecto()->id),
+            'link'  => route('proyecto.inicio', $this->proyecto->id),
             'icon'  => 'library_books',
             'color' => 'green',
             'autor' => "{$this->talento->nombres} {$this->talento->apellidos}",
-            'text'  => "El {$this->getMovimiento()->rol} ha aprobado la fase de {$this->getMovimiento()->fase} | {$this->getProyecto()->articulacion_proyecto->actividad->codigo_actividad} - {$this->getProyecto()->articulacion_proyecto->actividad->nombre}",
+            'text'  => "El {$this->movimiento->rol} ha aprobado la fase de {$this->movimiento->fase} | {$this->proyecto->articulacion_proyecto->actividad->codigo_actividad} - {$this->proyecto->articulacion_proyecto->actividad->nombre}",
           ];
-    }
-
-    public function getTalento()
-    {
-        return $this->talento;
-    }
-
-    public function getProyecto()
-    {
-        return $this->proyecto;
-    }
-
-    public function getMovimiento()
-    {
-        return $this->movimiento;
     }
 
 }

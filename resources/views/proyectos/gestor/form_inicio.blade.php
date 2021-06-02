@@ -84,7 +84,7 @@
             @endforelse
         </select>
         @endif
-        <label for="txtareaconocimiento_id">Áreas de Conocmiento <span class="red-text">*</span></label>
+        <label for="txtareaconocimiento_id">Áreas de Conocimiento <span class="red-text">*</span></label>
         <small id="txtareaconocimiento_id-error" class="error red-text"></small>
     </div>
     <div class="input-field col s12 m6 l6">

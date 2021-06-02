@@ -32,6 +32,8 @@ class GrupoInvestigacionRepository
     ->join('propietarios', 'propietarios.propietario_id', '=', 'gruposinvestigacion.id')
     ->join('proyectos', 'proyectos.id', '=', 'propietarios.proyecto_id')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('proyectos AS pp', 'pp.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+    ->join('fases', 'fases.id', '=', 'pp.fase_id')
     ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
     ->join('ciudades', 'ciudades.id', '=', 'entidades.ciudad_id')
     ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
@@ -46,7 +48,12 @@ class GrupoInvestigacionRepository
         $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre]);
       })
       ->orWhere(function($query) use ($fecha_inicio, $fecha_cierre) {
+        $query->where(function($query) use ($fecha_inicio, $fecha_cierre) {
         $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
+        $query->orWhere(function ($query) {
+          $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
+        });
+      });
       });
     });
   }

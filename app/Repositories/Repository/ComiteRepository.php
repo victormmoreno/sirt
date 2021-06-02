@@ -134,6 +134,7 @@ class ComiteRepository
             $comite = Comite::findOrFail($idComite);
             $idea = $comite->ideas()->wherePivot('idea_id', $id)->first();
             $infocenters = $idea->nodo->infocenter;
+            $idea->registrarHistorialIdea(Movimiento::IsNotificar(), Session::get('login_role'), null, 'el resultado de la idea de proyecto inscrita en el comité ' . $comite->codigo);
             foreach ($infocenters as $key => $value) {
                 $extensiones = $extensiones . $value->extension . ", ";
             }
@@ -239,7 +240,7 @@ class ComiteRepository
             // Registra el historial de las ideas de proyecto
             $this->registrarHistorialIdeasComite($comite, Movimiento::IsCalificar(), 'asignación', null, $request);
             // Registrar el historial del comité
-            $comite->registrarHistorialComite(Movimiento::IsCalificar(), Session::get('login_role'), null, 'el comité de ideas');
+            $comite->registrarHistorialComite(Movimiento::IsAsignar(), Session::get('login_role'), null, 'las ideas de proyecto a los expertos.');
             DB::commit();
             return true;
         } catch (\Throwable $th) {

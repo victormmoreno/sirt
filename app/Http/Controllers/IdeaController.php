@@ -237,8 +237,25 @@ class IdeaController extends Controller
     }
 
     /**
+     * Duplica la idea de proyecto que aplicará para mas de un TRL
+     *
+     * @param int $id Id de la idea de proyecto
+     * @param int $comite Id del comité
+     * @return Response
+     * @author dum
+     **/
+    public function deviarIdea($id, $comite)
+    {
+        $idea = $this->ideaRepository->findByid($id);
+        $resultado = $this->ideaRepository->derivarIdea($idea, $comite);
+        alert($resultado['title'], $resultado['msg'], $resultado['type'])->showConfirmButton('Ok', '#3085d6');;
+        return back();
+    }
+
+    /**
      * Duplica la idea de proyecto por parte del talento
      *
+     * @param Request $request
      * @param int $id Id de la idea de proyecto
      * @return Response
      * @author dum
@@ -246,7 +263,27 @@ class IdeaController extends Controller
     public function duplicarIdeaRechazada(Request $request, $id)
     {
         $idea = $this->ideaRepository->findByid($id);
-        $resultado = $this->ideaRepository->duplicarIdea($request, $idea);
+        $resultado = $this->ideaRepository->duplicarIdea($idea);
+        alert($resultado['title'], $resultado['msg'], $resultado['type'])->showConfirmButton('Ok', '#3085d6');;
+        if ($resultado['state']) {
+            return redirect('idea');
+        } else {
+            return back();
+        }
+    }
+
+    /**
+     * Inhabilita una idea de proyecto
+     *
+     * @param Request $request
+     * @param int $id Id de la idea de proyecto
+     * @return Response
+     * @author dum
+     **/
+    public function inhabilitarIdea(Request $request, $id)
+    {
+        $idea = $this->ideaRepository->findByid($id);
+        $resultado = $this->ideaRepository->inhabilitarIdea($idea);
         alert($resultado['title'], $resultado['msg'], $resultado['type'])->showConfirmButton('Ok', '#3085d6');;
         if ($resultado['state']) {
             return redirect('idea');

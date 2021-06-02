@@ -209,9 +209,14 @@ class ProyectoRepository
       $q->where(function ($query) {
         $query->whereYear('actividades.fecha_cierre', Carbon::now()->isoFormat('YYYY'));
       })
-        ->orWhere(function ($query) {
+      ->orWhere(function($query) {
+        $query->where(function($query) {
           $query->whereYear('actividades.fecha_inicio', Carbon::now()->isoFormat('YYYY'));
+          $query->orWhere(function($query) {
+          $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
         });
+      });
+      });
     });
   }
 
@@ -290,7 +295,12 @@ class ProyectoRepository
           $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre]);
         })
         ->orWhere(function($query) use ($fecha_inicio, $fecha_cierre) {
+          $query->where(function($query) use ($fecha_inicio, $fecha_cierre) {
           $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
+          $query->orWhere(function ($query) {
+            $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
+          });
+        });
         });
       })
       ->groupBy('codigo_actividad', 'actividades.nombre')
@@ -822,7 +832,6 @@ class ProyectoRepository
    */
   public function aprobacionFaseInicio($request, $id, $fase)
   {
-    DB::beginTransaction();
     try {
       
       $comentario = null;
@@ -860,7 +869,9 @@ class ProyectoRepository
         $regMovimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
         
         event(new ProyectoWasApproved($proyecto, $regMovimiento, $destinatarios));
-        // Notification::send([$proyecto->articulacion_proyecto->actividad->gestor->user, $dinamizadores], new ProyectoAprobarInicioDinamizador($proyecto, $talento_lider, $regMovimiento));
+        if (Session::get('login_role') == User::IsTalento()) {
+          Notification::send($dinamizadores, new ProyectoAprobarInicioDinamizador($proyecto, $talento_lider, $regMovimiento));
+        }
         if (Session::get('login_role') == User::IsDinamizador() && $fase == "Inicio") {
           // Cambiar el proyecto de fase
           $proyecto->update([
@@ -1065,20 +1076,32 @@ class ProyectoRepository
   }
 
   /**
+<<<<<<< HEAD
    * Notifica al dinamizador para que apruebe el proyecto en la fase de cierre
+=======
+   * Notifica al dinamizador para que apruebe el proyecto en la fase de suspendido
+>>>>>>> 53d64974f4c43ab650f2ce5b9aa2b78935d54da2
    * 
    * @param int $id Id del proyecto
    * @return boolean
    * @author dum
    */
+<<<<<<< HEAD
   public function notificarAlDinamziador_Cierre(int $id)
+=======
+  public function notificarAlDinamziador_Suspendido(int $id)
+>>>>>>> 53d64974f4c43ab650f2ce5b9aa2b78935d54da2
   {
     DB::beginTransaction();
     try {
       $dinamizadorRepository = new DinamizadorRepository;
       $proyecto = Proyecto::findOrFail($id);
       $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->articulacion_proyecto->actividad->nodo_id)->get();
+<<<<<<< HEAD
       Notification::send($dinamizadores, new ProyectoAprobarCierre($proyecto));
+=======
+      Notification::send($dinamizadores, new ProyectoAprobarSuspendido($proyecto));
+>>>>>>> 53d64974f4c43ab650f2ce5b9aa2b78935d54da2
       DB::commit();
       return true;
     } catch (\Throwable $th) {
@@ -1086,6 +1109,7 @@ class ProyectoRepository
       return false;
     }
   }
+<<<<<<< HEAD
 
 
 
@@ -1128,6 +1152,9 @@ class ProyectoRepository
     }
   }
 
+=======
+
+>>>>>>> 53d64974f4c43ab650f2ce5b9aa2b78935d54da2
   /**
    * Cambia el estado de aprobacion_dinamizador, para permitirle al gestor cerrar el proyecto
    */

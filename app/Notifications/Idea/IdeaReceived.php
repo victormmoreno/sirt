@@ -43,7 +43,7 @@ class IdeaReceived extends Notification implements ShouldQueue
     {
 
         return [
-            'link'  => route('idea.index'),
+            'link'  => route('idea.detalle', $this->idea->id),
             'icon'  => 'lightbulb',
             'color' => 'cyan',
             'autor' => "{$this->idea->talento->user->nombres} {$this->idea->talento->user->apellidos}",

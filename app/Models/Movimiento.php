@@ -19,6 +19,8 @@ class Movimiento extends Model
     const IS_CALIFICAR = 'calificó';
     const IS_ASIGNAR = 'asignó';
     const IS_DUPLICAR = 'duplicó';
+    const IS_INHABILITAR = 'inhabilitó';
+    const IS_NOTIFICAR = 'notificó';
     protected $table = 'movimientos';
 
     /**
@@ -89,6 +91,16 @@ class Movimiento extends Model
     public static function IsDuplicar()
     {
         return self::IS_DUPLICAR;
+    }
+
+    public static function IsInhabilitar()
+    {
+        return self::IS_INHABILITAR;
+    }
+
+    public static function IsNotificar()
+    {
+        return self::IS_NOTIFICAR;
     }
 
     // public function historial()

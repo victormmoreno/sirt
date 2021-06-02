@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\{EstadoIdea, Idea, Nodo, Empresa, Entidad, Movimiento};
+use App\Models\{EstadoIdea, Idea, Nodo, Empresa, Entidad, Movimiento, Comite};
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
@@ -393,6 +393,115 @@ class IdeaRepository
     }
 
     /**
+     * Inhabilitar idea de proyecto
+     *
+     * @param $id
+     * @return array
+     * @author dum
+     **/
+    public function inhabilitarIdea($idea)
+    {
+        DB::beginTransaction();
+        try {
+            $idea->registrarHistorialIdea(Movimiento::IsInhabilitar(), Session::get('login_role'), null, 'mientras estaba en estado "' . $idea->estadoIdea->nombre . '"');
+            $idea->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsInhabilitado())->first()->id]);
+            DB::commit();
+            return [
+                'state' => true,
+                'msg' => 'La idea se ha inhabilitado exitosamente!',
+                'title' => 'Inhabilitación exitosa!',
+                'type' => 'success'
+            ];
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return [
+                'state' => false,
+                'msg' => 'La idea no se ha inhabilitado!',
+                'title' => 'Inhabilitación errónea!',
+                'type' => 'error'
+            ];
+        }
+    }
+
+    /**
+     * undocumented function summary
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function duplicarIdeaComite($comite, $comite_idea, $duplicado)
+    {
+        $comite = Comite::find($comite);
+
+        $syncData = array();
+        foreach ($comite->ideas as $id => $value) {
+            $inter = $value->comites()->wherePivot('comite_id', $comite->id)->first()->pivot;
+            $syncData[$id] = array(
+            'hora' => $inter->hora,
+            'admitido' => $inter->admitido,
+            'direccion' => $inter->direccion,
+            'asistencia' => $inter->asistencia,
+            'observaciones' => $inter->observaciones,
+            'idea_id' => $value->id
+            );
+        }
+
+        array_push(
+            $syncData, 
+            array(
+                'hora' => $comite_idea->hora,
+                'admitido' => $comite_idea->admitido,
+                'direccion' => $comite_idea->direccion,
+                'asistencia' => $comite_idea->asistencia,
+                'observaciones' => $comite_idea->observaciones,
+                'idea_id' => $duplicado->id
+            )
+        );
+
+        $comite->ideas()->sync($syncData, true);
+    }
+    /**
+     * Deriva una idea de proyecto para registrarse en mas de un PBT
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function derivarIdea($idea, $comite = null)
+    {
+        
+        DB::beginTransaction();
+        try {
+            $comite_idea = $idea->comites()->wherePivot('comite_id', $comite)->first()->pivot;
+            $duplicado = $idea->replicate();
+            $duplicado->codigo_idea = $this->generarCodigoIdeaDuplicado($idea);
+            $duplicado->save();
+            $this->duplicarIdeaComite($comite, $comite_idea, $duplicado);
+            $idea->registrarHistorialIdea(Movimiento::IsDuplicar(), Session::get('login_role'), null, 'con el código de idea ' . $duplicado->codigo_idea . ' para ser registrada en mas de un TRL');
+            DB::commit();
+            return [
+                'state' => true,
+                'msg' => 'La idea se ha derivado exitosamente!',
+                'title' => 'Duplicación exitosa!',
+                'type' => 'success'
+            ];
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return [
+                'state' => false,
+                'msg' => 'La idea no se ha derivado!',
+                'title' => 'Duplicación errónea!',
+                'type' => 'error'
+            ];
+        }
+    }
+
+    /**
      * Duplicar idea de proyecto
      *
      * @param $request
@@ -400,14 +509,19 @@ class IdeaRepository
      * @return array
      * @author dum
      **/
-    public function duplicarIdea($request, $idea)
+    public function duplicarIdea($idea)
     {
         DB::beginTransaction();
         try {
             $duplicado = $idea->replicate();
             $duplicado->codigo_idea = $this->generarCodigoIdeaDuplicado($idea);
             $duplicado->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsRegistro())->first()->id;
+            // if (Session::get('login_role') == User::IsTalento()) {
+            // } else {
+            //     $duplicado->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsAdmitido())->first()->id;
+            // }
             $duplicado->push();
+            // $duplicado->push();
             $idea->registrarHistorialIdea(Movimiento::IsDuplicar(), Session::get('login_role'), null, 'con el código de idea ' . $duplicado->codigo_idea);
             if ($idea->rutamodel != null) {
                 $duplicado->rutamodel()->create([
@@ -418,7 +532,7 @@ class IdeaRepository
             return [
                 'state' => true,
                 'msg' => 'La idea se ha duplicado exitosamente!',
-                'title' => 'Postulación exitosa!',
+                'title' => 'Duplicación exitosa!',
                 'type' => 'success'
             ];
         } catch (\Throwable $th) {
@@ -426,7 +540,7 @@ class IdeaRepository
             return [
                 'state' => false,
                 'msg' => 'La idea no se ha duplicado!',
-                'title' => 'Postulación errónea!',
+                'title' => 'Duplicación errónea!',
                 'type' => 'error'
             ];
         }

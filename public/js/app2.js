@@ -689,6 +689,24 @@ function confirmacionDuplicacion(e){
     }
   })
 }
+
+function confirmacionInhabilitar(e){
+  e.preventDefault();
+  Swal.fire({
+  title: '¿Está seguro(a) de inhabilitar esta idea de proyecto?',
+  text: "Esto quiere decir que esta idea de proyecto no se le podrá realizar un proceso en tecnoparque.",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  cancelButtonText: 'Cancelar',
+  confirmButtonText: 'Sí!'
+  }).then((result) => {
+    if (result.value) {
+      document.frmInhabilitarIdea.submit();
+    }
+  })
+}
 function consultarIdeasEnviadasAlNodo () {
     $('#tbl_IdeasEnviadasDelNodo').dataTable().fnDestroy();
     $('#tbl_IdeasEnviadasDelNodo').DataTable({
@@ -1182,6 +1200,37 @@ $(document).on('submit', 'form#formComiteAsignarCreate', function (event) {
         }
     });
 });
+
+function confirmacionDuplicidad(e, route){
+    e.preventDefault();
+    Swal.fire({
+    title: '¿Está seguro(a) de duplicar esta idea de proyecto?',
+    text: "Debes tener en cuenta que a partir de esta idea se va a registrar mas de un TRL.",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Sí!'
+    }).then((result) => {
+      if (result.value) {
+        Swal.fire({
+            title: 'Verificación. ¿Está seguro(a) de duplicar esta idea de proyecto?',
+            text: "Esta acción no se podrá revertir.",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Continuar!'
+            }).then((result) => {
+              if (result.value) {
+                  location.href = route;
+              }
+            })
+      }
+    })
+  }
 
 function ajaxSendFormComiteAsignar(form, data, url, fase) {
     $.ajax({
@@ -9952,36 +10001,28 @@ function graficoSeguimientoFases(data, name) {
         },
         data: [
           {
-            name: "Proyectos en Inicio",
+            name: "Proyectos en inicio",
             y: data.datos.ProyectosInicio,
           },
           {
-            name: "Proyectos en Planeación",
+            name: "Proyectos en planeación",
             y: data.datos.ProyectosPlaneacion,
           },
           {
-            name: "Proyectos en Ejecución",
+            name: "Proyectos en ejecución",
             y: data.datos.ProyectosEjecucion,
           },
           {
-            name: "Proyectos en Cierre",
+            name: "Proyectos en cierre",
             y: data.datos.ProyectosCierre,
           },
           {
-            name: "Articulaciones en Inicio",
-            y: data.datos.ArticulacionesInicio,
+            name: "Proyectos finalizados",
+            y: data.datos.ProyectosFinalizado,
           },
           {
-            name: "Articulaciones en Planeación",
-            y: data.datos.ArticulacionesPlaneacion,
-          },
-          {
-            name: "Articulaciones en Ejecución",
-            y: data.datos.ArticulacionesEjecucion,
-          },
-          {
-            name: "Articulaciones en Cierre",
-            y: data.datos.ArticulacionesCierre,
+            name: "Proyectos suspendidos",
+            y: data.datos.ProyectosSuspendido,
           },
         ]
       }

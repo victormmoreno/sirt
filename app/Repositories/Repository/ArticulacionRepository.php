@@ -596,8 +596,13 @@ class ArticulacionRepository
         $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre]);
       })
       ->orWhere(function($query) use ($fecha_inicio, $fecha_cierre) {
+        $query->where(function($query) use ($fecha_inicio, $fecha_cierre) {
         $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
-      });
+        $query->orWhere(function ($query) {
+          $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
+        });
+        });
+        });
     })
     ->groupBy('codigo_actividad', 'actividades.nombre')
     ->orderBy('n.nombre');
