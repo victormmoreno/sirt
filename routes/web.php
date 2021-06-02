@@ -899,8 +899,8 @@ Route::group([
 //-----------------------Fin ruta sección noticias-----------------------------------
 
 Route::get('articulaciones/export', 'ArticulacionPbtController@export')->name('articulacion.export')->middleware('role_session:Administrador|Articulador|Dinamizador');
-Route::get('articulaciones/download/inicio/{id}', 'Pdf\PdfArticulacionPbtController@downloadFormInicio')->name('pdf.articulacion.inicio')->middleware('role_session:Articulador');
-Route::get('articulaciones/download/cierre/{id}', 'Pdf\PdfArticulacionPbtController@downloadFormCierre')->name('pdf.articulacion.cierre')->middleware('role_session:Articulador');
+Route::get('articulaciones/download/inicio/{id}', 'PDF\PdfArticulacionPbtController@downloadFormInicio')->name('pdf.articulacion.inicio')->middleware('role_session:Articulador');
+Route::get('articulaciones/download/cierre/{id}', 'PDF\PdfArticulacionPbtController@downloadFormCierre')->name('pdf.articulacion.cierre')->middleware('role_session:Articulador');
 
 
 Route::delete('articulaciones/file/{idFile}', 'ArchivoController@destroyFileArticulacion')->name('articulacion.files.destroy')->middleware('role_session:Articulador');
