@@ -12,8 +12,8 @@ class IdeasSedesTableSeeder extends Seeder
      */
     public function run()
     {
-        $ideas = Idea::all();
-        // Manejando la información en la empresa
+        $ideas = Idea::where('empresa_id', '!=', 'null')->get();
+        // Manejando la informaci贸n en la empresa
         foreach ($ideas as $key => $idea) {
             if ($idea->empresa_id != null) {
                 $empresa = Empresa::find($idea->empresa_id);
