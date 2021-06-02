@@ -36,6 +36,13 @@ class Talento extends Model
             ->withPivot('talento_lider');
     }
 
+    public function articulacionpbt()
+    {
+        return $this->belongsToMany(ArticulacionPbt::class, 'articulaciones_pbt_talento')
+            ->withTimestamps()
+            ->withPivot('talento_lider');
+    }
+
     // Relacion muchos a muchos con uso de infraestructura
     public function usoinfraestructuras()
     {

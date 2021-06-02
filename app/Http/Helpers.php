@@ -36,3 +36,32 @@ function arrayRecursiveDiff($aArray1, $aArray2) {
   
     return $aReturn;
 }
+
+function nameFase($fase){
+    switch ($fase) {
+        case 'inicio':
+            $fase = 'inicio';
+            break;
+        case 'planeación':
+            $fase = 'planeacion';
+            break;
+        case 'Ejecución':
+            $fase = 'ejecucion';
+            break;
+        case 'ejecución':
+            $fase = 'ejecucion';
+            break;
+        case 'cierre':
+            $fase = 'cierre';
+            break;
+        case 'Cierre':
+            $fase = 'cierre';
+            break;
+        
+        default:
+            $fase = 'inicio';
+            break;
+    }
+
+    return $fase;
+}

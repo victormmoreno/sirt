@@ -477,6 +477,14 @@ class User extends Authenticatable implements JWTSubject
         return (bool) $this->documento == \Auth::user()->documento;
     }
 
+    public static function enableTalentsArticulacion($articulacion)
+    {
+        foreach ($articulacion->talentos as $value) {
+            $value->user()->withTrashed()->first()->restore();
+            $value->user()->withTrashed()->first()->update(['estado' => User::IsActive()]);
+        }
+    }
+
 
     public function present()
     {

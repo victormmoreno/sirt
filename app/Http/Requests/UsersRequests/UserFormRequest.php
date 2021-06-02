@@ -163,7 +163,7 @@ class UserFormRequest extends FormRequest
 
             'txtfecha_nacimiento.required'        => 'La fecha de nacimiento es obligatoria.',
             'txtfecha_nacimiento.date'            => 'La fecha de nacimiento no es una fecha válida.',
-            'txtfecha_nacimiento.before_or_equal' => 'La fecha de nacimiento  debe ser una fecha anterior o igual a 2019-06-11.',
+            'txtfecha_nacimiento.before_or_equal' => 'La fecha de nacimiento  debe ser una fecha anterior o igual a la actual',
 
             'txtestrato.required'                 => 'El estrato es obligatorio.',
 

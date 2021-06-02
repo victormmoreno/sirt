@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\{EstadoIdea, Idea, Nodo, Empresa, Entidad, Movimiento, Comite, Sede};
+use App\Models\{EstadoIdea, Idea, Nodo, Movimiento, Comite, Sede};
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
@@ -241,22 +241,7 @@ class IdeaRepository
             
             $valoresCondicionales = $this->valoresCondicionales($request);
             $sede_id = $this->registrarEmpresaConIdea($request);
-            // if ($request->input('txtidea_empresa') == 1) {
-            //     $sede_detalle = Sede::find($request->input('txtsede_id'));
-            //     // $sede_detalle = Empresa::where('nit', $request->input('txtnit'))->first();
-            //     if ($sede_detalle == null) {
-            //         // Registro de una nueva empresa
-            //         $empresa = $this->empresaRepository->store($request);
-            //         $sede_id = $empresa['sede']->id;
-            //     } else {
-            //         // Actualizar el responsable de la empresa en caso de que no se encuentre asociada a ningún usuario
-            //         if ($sede_detalle->empresa->user_id == null) {
-            //             $sede_detalle->empresa->update(['user_id' => auth()->user()->id]);
-            //         }
-            //         $sede_id = $sede_detalle->id;
-            //     }
-            // }
-        
+
             $codigo_idea = $this->generarCodigoIdea($request->input('txtnodo'));
         
             $idea = Idea::create([
@@ -302,11 +287,6 @@ class IdeaRepository
                 "fecha_acuerdo_no_confidencialidad" => $valoresCondicionales['fecha_acuerdo_no_confidencialidad'],
             ]);
 
-            
-
-            // $idea->created_at = $row->created_at;
-            // $idea->updated_at = $row->update_at;
-            // $idea->save(['timestamps' => false]);
             
             if ($request->input('txtlinkvideo') != null) {
                 $idea->rutamodel()->create([

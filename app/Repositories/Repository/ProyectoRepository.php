@@ -1097,7 +1097,6 @@ class ProyectoRepository
       return false;
     }
   }
-
   /**
    * Cambia el estado de aprobacion_dinamizador, para permitirle al gestor cerrar el proyecto
    */

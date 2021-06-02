@@ -107,6 +107,8 @@ mix.scripts([
     'resources/app/edt/gestor/form.js',
     'resources/app/edt/gestor/index.js',
     'resources/app/edt/index.js',
+    'resources/app/articulacionespbt/index.js',
+    'resources/app/articulacionespbt/form.js',
     'resources/app/costoadministrativo/dinamizador/index.js',
     'resources/app/costoadministrativo/dinamizador/index.js',
     'resources/app/equipos/index.js',
@@ -125,6 +127,7 @@ mix.scripts([
     'resources/app/graficos/index.js',
     'resources/app/seguimiento/index.js',
     'resources/app/costos/index.js',
+    
     'resources/app/publicacion/index.js',
     'resources/app/publicacion/form.js'
 	],'public/js/app2.js');

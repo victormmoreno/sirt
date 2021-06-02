@@ -62,8 +62,8 @@ class UsoInfraestructuraPresenter extends Presenter
     {
         if ($this->uso->has('actividad.articulacion_proyecto.proyecto.fase') && isset($this->uso->actividad->articulacion_proyecto->proyecto->fase)) {
             return $this->uso->actividad->articulacion_proyecto->proyecto->fase->nombre;
-        } else if ($this->uso->has('actividad.articulacion_proyecto.articulacion.fase') && isset($this->uso->actividad->articulacion_proyecto->articulacion->fase)) {
-            return $this->uso->actividad->articulacion_proyecto->articulacion->fase->nombre;
+        } else if ($this->uso->has('actividad.articulacionpbt.fase') && isset($this->uso->actividad->articulacionpbt->fase)) {
+            return $this->uso->actividad->articulacionpbt->fase->nombre;
         } else {
             return "No Aplica";
         }

@@ -174,9 +174,7 @@ class UsoInfraestructura extends Model
         if ($tipo_usoinfraestructura == self::IsProyecto()) {
             return 'Proyecto ';
         } else if ($tipo_usoinfraestructura == self::IsArticulacion()) {
-            return 'Articulacion ';
-        } else if ($tipo_usoinfraestructura == self::IsEdt()) {
-            return 'EDT ';
+            return 'Articulación ';
         } else {
             return 'No registra';
         }

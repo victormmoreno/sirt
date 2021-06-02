@@ -18,4 +18,4 @@
         @endif
       </tr>
     </thead>
-  </table>
+</table>

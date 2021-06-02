@@ -1,3 +1,38 @@
+<li class="no-padding {{setActiveRoute('usuario')}}">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('usuario')}}" href="{{route('usuario.index')}}" rel="canonical" title="Usuarios">
+    <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>Usuarios
+  </a>
+</li>
+<li class="no-padding">
+  <a class="collapsible-header waves-effect waves-grey {{ setActiveRouteActivePage('idea') }} {{ setActiveRouteActivePage('entrenamientos') }} {{setActiveRouteActivePage('csibt')}} {!! setActiveRoutePadding('idea'), setActiveRoutePadding('entrenamientos'), setActiveRoutePadding('csibt') !!}">
+    <i class="material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('csibt') }}">lightbulb_outline</i>Ideas de Proyecto
+    <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('csibt') }}">keyboard_arrow_right</i>
+  </a>
+  <div class="collapsible-body">
+    <ul>
+      <li>
+        <a href="{{route('idea.index')}}" class="{{setActiveRouteActivePage('idea')}}" rel="canonical" title="Ideas">
+          <i class="material-icons {{setActiveRouteActiveIcon('idea')}}">lightbulb</i>Ideas
+        </a>
+      </li>
+      <li>
+        <a href="{{route('entrenamientos')}}" class="{{setActiveRouteActivePage('entrenamientos')}}" rel="canonical" title="Taller de fortalecimiento">
+          <i class="material-icons {{setActiveRouteActiveIcon('entrenamientos')}}">library_books</i>Taller de fortalecimiento
+        </a>
+      </li>
+      <li class="no-padding">
+        <a href="{{route('csibt')}}" class="{{setActiveRouteActivePage('csibt')}}" rel="canonical" title="CSIBT's">
+          <i class="material-icons {{setActiveRouteActiveIcon('csibt')}}">gavel</i>CSIBT's
+        </a>
+      </li>
+    </ul>
+  </div>
+</li>
+<li class="no-padding {{setActiveRoute('proyecto')}}">
+  <a href="{{route('proyecto')}}" class="waves-effect waves-grey {{setActiveRouteActivePage('proyecto')}}" rel="canonical" title="Proyectos de Base Tecnológica">
+    <i class="material-icons {{ setActiveRouteActiveIcon('proyecto') }}">library_books</i>Proyectos
+  </a>
+</li>
 <li class="no-padding {{setActiveRoute('nodo')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('nodo')}}" href="{{route('nodo.index')}}" rel="canonical" title="Nodo">
     <i class="material-icons {{ setActiveRouteActiveIcon('nodo') }}">location_city</i>Nodo
@@ -8,21 +43,12 @@
   <i class="material-icons {!! setActiveRouteActiveIcon('costos-administrativos') !!}">settings_input_svideo</i>Costos Administrativos
   </a>
 </li>
-<li class="no-padding {{setActiveRoute('usuario')}}">
-  <a class="waves-effect waves-grey {{setActiveRouteActivePage('usuario')}}" href="{{route('usuario.index')}}" rel="canonical" title="Usuarios">
-    <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>Usuarios
-  </a>
+
+
+<li class="no-padding {{setActiveRoute('articulacion')}}">
+  <a href="{{ route('articulaciones.index') }}" class="{{setActiveRouteActivePage('articulacion')}}" rel="canonical" title="Articulaciones">
+    <i class="material-icons {{setActiveRouteActiveIcon('articulacion')}}">autorenew</i>Articulaciones</a>
 </li>
-<li class="no-padding {{setActiveRoute('proyecto')}}">
-  <a href="{{route('proyecto')}}" class="waves-effect waves-grey {{setActiveRouteActivePage('proyecto')}}" rel="canonical" title="Proyectos de Base Tecnológica">
-    <i class="material-icons {{ setActiveRouteActiveIcon('proyecto') }}">library_books</i>PBT
-  </a>
-</li>
-{{-- <li class="no-padding {{setActiveRoute('articulacion')}}">
-  <a class="waves-effect waves-grey {{setActiveRouteActivePage('articulacion')}}" href="{{route('articulacion')}}" rel="canonical" title="Articulaciones">
-    <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>AGI
-  </a>
-</li> --}}
 <li class="{!! setActiveRoute('edt') !!}">
   <a class="waves-effect waves-grey {!! setActiveRouteActivePage('edt') !!}" href="{{route('edt')}}" rel="canonical" title="EDT's">
   <i class="material-icons {!! setActiveRouteActiveIcon('edt') !!}">hearing</i>EDT's
@@ -43,11 +69,6 @@
     <i class="material-icons {{setActiveRouteActiveIcon('costos')}}">attach_money</i>Costos
   </a>
 </li>
-{{-- <li class="no-padding {{setActiveRoute('grafico')}}">
-  <a href="{{route('grafico')}}" class="{{setActiveRouteActivePage('grafico')}}" rel="canonical" title="Gráficos">
-    <i class="material-icons {{setActiveRouteActiveIcon('grafico')}}">insert_chart</i>Gráficos
-  </a>
-</li> --}}
 <li class="no-padding {{setActiveRoute('seguimiento')}}">
   <a href="{{route('seguimiento')}}" class="{{setActiveRouteActivePage('seguimiento')}}" rel="canonical" title="Seguimiento">
     <i class="material-icons {{setActiveRouteActiveIcon('seguimiento')}}">search</i>Seguimiento
@@ -58,32 +79,8 @@
     <i class="material-icons {{setActiveRouteActiveIcon('indicadores')}}">info_outline</i>Indicadores
   </a>
 </li>
+
 <li class="no-padding">
-  <a class="collapsible-header waves-effect waves-grey {{ setActiveRouteActivePage('idea') }} {{ setActiveRouteActivePage('entrenamientos') }} {{setActiveRouteActivePage('csibt')}} {!! setActiveRoutePadding('idea'), setActiveRoutePadding('entrenamientos'), setActiveRoutePadding('csibt') !!}">
-    <i class="material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('csibt') }}">lightbulb_outline</i>Ideas de Proyecto
-    <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('csibt') }}">keyboard_arrow_right</i>
-  </a>
-  <div class="collapsible-body">
-    <ul>
-      <li>
-        <a href="{{route('idea.index')}}" class="{{setActiveRouteActivePage('idea')}}" rel="canonical" title="Ideas">
-          <i class="material-icons {{setActiveRouteActiveIcon('idea')}}">lightbulb</i>Ideas
-        </a>
-      </li>
-      <li>
-        <a href="{{route('entrenamientos')}}" class="{{setActiveRouteActivePage('entrenamientos')}}" rel="canonical" title="Entrenamientos">
-          <i class="material-icons {{setActiveRouteActiveIcon('entrenamientos')}}">library_books</i>Taller de fortalecimiento
-        </a>
-      </li>
-      <li class="no-padding">
-        <a href="{{route('csibt')}}" class="{{setActiveRouteActivePage('csibt')}}" rel="canonical" title="CSIBT's">
-          <i class="material-icons {{setActiveRouteActiveIcon('csibt')}}">gavel</i>CSIBT's
-        </a>
-      </li>
-    </ul>
-  </div>
-</li>
-<li class="no-padding  ">
   <a class="collapsible-header waves-effect waves-grey {!! setActiveRouteActivePage('equipo'), setActiveRouteActivePage('mantenimiento')!!} {!! setActiveRoutePadding('equipo'),  setActiveRoutePadding('mantenimiento')!!}">
     <i class="material-icons {{ setActiveRouteActiveIcon('equipo'),  setActiveRouteActiveIcon('mantenimiento')}}">account_balance_wallet</i>Equipos
     <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('equipo'), setActiveRouteActiveIcon('mantenimiento') }}">keyboard_arrow_right</i>
