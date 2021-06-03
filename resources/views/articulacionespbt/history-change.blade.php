@@ -10,20 +10,23 @@
                 {{$actividad->present()->startDate()}}.
               </li>
               @foreach ($actividad->articulacionpbt->historial as $value)
-              
               <li class="collection-item">
-                
+               
                 @if ($value->movimiento->movimiento == App\Models\Movimiento::IsSolicitarTalento())
-                  El {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}} 
+                  El {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}} aprobar la fase
                 {{$value->descripcion}} en la fecha {{$value->created_at->isoFormat('DD-MM-YYYY')}}
                 @endif
                 @if ($value->movimiento->movimiento == App\Models\Movimiento::IsSolicitarDinamizador())
                   El {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}} 
                 {{$value->descripcion}} la articulación en la fecha {{$value->created_at->isoFormat('DD-MM-YYYY')}}
                 @endif
-                @if ($value->movimiento->movimiento == App\Models\Movimiento::IsAprobar() || $value->movimiento->movimiento == App\Models\Movimiento::IsNoAprobar())
+                @if ($value->movimiento->movimiento == App\Models\Movimiento::IsAprobar())
                   El {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}} 
                   la fase {{$value->descripcion}} en la fecha {{$value->created_at->isoFormat('DD-MM-YYYY')}}
+                @endif
+                @if ( $value->movimiento->movimiento == App\Models\Movimiento::IsNoAprobar())
+                  El {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}} 
+                  la fase {{$value->descripcion}} en la fecha {{$value->created_at->isoFormat('DD-MM-YYYY')}} por los siguientes motivos:  {{$value->comentarios}}
                 @endif
                 @if ($value->movimiento->movimiento == App\Models\Movimiento::IsPostular() || $value->movimiento->movimiento == App\Models\Movimiento::IsDuplicar())
                   El {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}} 
