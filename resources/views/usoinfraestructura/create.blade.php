@@ -169,11 +169,11 @@
                     usoInfraestructuraCreate.limpiarListaGestorACargo();
                     usoInfraestructuraCreate.limpiarListaGestorAsesores();
                     usoInfraestructuraCreate.removeDisableSelectButtons();
-                    usoInfraestructuraCreate.removeDisableButtonGestorAsesor();
-                    usoInfraestructuraCreate.removeDisableButtonEquipos();
                     usoInfraestructuraCreate.removeDisableButtonTalento();
-                    usoInfraestructuraCreate.removeDisableButtonMaterial();
+                    usoInfraestructuraCreate.addDisableButtonEquipos();
+                    usoInfraestructuraCreate.addDisableButtonMaterial();
                     usoInfraestructuraCreate.removeDisableButtonGestorAsesor();
+
 
                 } else if( $("#IsEdt").is(":checked")) {
 

@@ -20,7 +20,7 @@
                 <div class="col s12 m6 l6">
                     <div class="mailbox-options grey lighten-4">
                         <ul class="grey lighten-4">
-                            <li class="text-mailbox">Proyectos finalizados</li>                                            
+                            <li class="text-mailbox">Proyectos en fases de Ejecución, Cierre y finalizados</li>                                            
                         </ul>
                     </div>
                 </div>
