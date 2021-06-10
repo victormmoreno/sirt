@@ -77,8 +77,6 @@ $(document).ready(function() {
       // year:true,
       shortTime:true,
       format: 'YYYY-MM-DD',
-      // monthPicker: true,
-      // minDate : new Date(),
       maxDate: new Date,
       language: 'es',
       weekStart : 1, cancelText : 'Cancelar',

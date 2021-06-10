@@ -34,7 +34,7 @@ class ArticulacionPbtRepository
                 'nodo_id' =>  $this->nodeArticulacion(),
                 'codigo_actividad' => $codigo_actividad,
                 'nombre' => request()->txtnombre_articulacion,
-                'fecha_inicio' => Carbon::now()->isoFormat('YYYY-MM-DD'),
+                'fecha_inicio' => request()->txtfecha_inicio,
             ]);
                 
             

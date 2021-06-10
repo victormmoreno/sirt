@@ -193,7 +193,17 @@
             <div class="row search-tabs-row search-tabs-header">
                 <div class="card card-transparent">
                     <div class="card-content"> 
+                        
                         <div class="row">
+                            <div class="input-field col s12 m12 l12">
+                                @if(isset($actividad))
+                                    <input @if(!$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  id="txtfecha_inicio" name="txtfecha_inicio" type="text" class="datepicker picker__input" value="{{$actividad->present()->startDate()}}">
+                                @else
+                                    <input id="txtfecha_inicio" name="txtfecha_inicio" type="text" class="datepicker picker__input">
+                                @endif
+                                <label for="txtfecha_inicio">Fecha de inicio de la articulación <span class="red-text">*</span></label>
+                                <small id="txtfecha_inicio-error" class="error red-text"></small>
+                            </div>
                             <div class="input-field col s12 m12 l12">
                                 @if(isset($actividad))
                                     <input @if(!$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  id="txtnombre_articulacion" name="txtnombre_articulacion" type="text" class="validate" value="{{$actividad->articulacionpbt->present()->articulacionPbtName()}}">
