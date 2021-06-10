@@ -34,7 +34,7 @@ class ArticulacionPbtRepository
                 'nodo_id' =>  $this->nodeArticulacion(),
                 'codigo_actividad' => $codigo_actividad,
                 'nombre' => request()->txtnombre_articulacion,
-                'fecha_inicio' => Carbon::now()->isoFormat('YYYY-MM-DD'),
+                'fecha_inicio' => request()->txtfecha_inicio,
             ]);
                 
             
@@ -365,8 +365,6 @@ class ArticulacionPbtRepository
             $pdf_aprobacion = 0;
             $pdf_doc_postulacion = 0;
             $pdf_noaprobacion = 0;
-
-        
         
             $articulacion = ArticulacionPbt::findOrFail($id);
             
@@ -389,10 +387,6 @@ class ArticulacionPbtRepository
 
             if (isset($request->txtpdfaprobacion)) {
                 $pdf_aprobacion = 1;
-            }
-
-            if (isset($request->txtdoc_postulacion1)) {
-                $pdf_doc_postulacion = 1;
             }
 
             if (isset($request->txtdoc_postulacion)) {

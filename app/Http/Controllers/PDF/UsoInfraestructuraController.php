@@ -4,7 +4,7 @@ namespace App\Http\Controllers\PDF;
 
 use App\Http\Controllers\{Controller, ProyectoController};
 use Illuminate\Http\Request;
-use App\Models\{Proyecto, Articulacion};
+use App\Models\{Proyecto, ArticulacionPbt};
 use Carbon\Carbon;
 use PDF;
 
@@ -34,21 +34,38 @@ class UsoInfraestructuraController extends Controller
       $actividad = Proyecto::findOrFail($idActividad);
       $usos = Proyecto::with('articulacion_proyecto.actividad.usoinfraestructuras')->find($idActividad);
       $talentos = Proyecto::with('articulacion_proyecto.talentos.user')->find($idActividad);
-    } else {
-      $actividad = Articulacion::findOrFail($idActividad);
-      $usos = Articulacion::with('articulacion_proyecto.actividad.usoinfraestructuras')->find($idActividad);
-      $talentos = Articulacion::with('articulacion_proyecto.talentos.user')->find($idActividad);
-    }
-    // dd($talentos);
 
-    $pdf = PDF::loadView('pdf.usos.seguimiento', [
-      'actividad' => $actividad,
-      'usos' => $usos,
-      'talentos' => $talentos,
-      'tipo_actividad' => $tipoActividad
-    ]);
-    $pdf->setPaper(strtolower('LETTER'), $orientacion = 'landscape');
-    return $pdf->stream('Seguimiento_' . $actividad->articulacion_proyecto->actividad->codigo_actividad . '.pdf');
+      $pdf = PDF::loadView('pdf.usos.seguimiento', [
+        'actividad' => $actividad,
+        'usos' => $usos,
+        'talentos' => $talentos,
+        'tipo_actividad' => $tipoActividad
+      ]);
+
+      $pdf->setPaper(strtolower('LETTER'), $orientacion = 'landscape');
+      return $pdf->stream('Seguimiento_' . $actividad->articulacion_proyecto->actividad->codigo_actividad . '.pdf');
+
+    } else if($tipoActividad == 'articulacion'){
+      $actividad = ArticulacionPbt::findOrFail($idActividad);
+      $usos = ArticulacionPbt::with(['actividad.usoinfraestructuras'])->find($idActividad);
+      $talentos = ArticulacionPbt::with('talentos.user')->find($idActividad);
+
+      $pdf = PDF::loadView('pdf.usos.seguimiento', [
+        'actividad' => $actividad,
+        'usos' => $usos,
+        'talentos' => $talentos,
+        'tipo_actividad' => $tipoActividad
+      ]);
+
+      $pdf->setPaper(strtolower('LETTER'), $orientacion = 'landscape');
+      return $pdf->stream('Seguimiento_' . $actividad->actividad->codigo_actividad . '.pdf');
+    }else{
+        return abort('404');
+    }
+    
+
+    
+    
   }
 
   /**

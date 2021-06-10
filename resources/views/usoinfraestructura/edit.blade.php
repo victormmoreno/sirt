@@ -131,9 +131,9 @@
 	                    usoInfraestructuraUpdate.limpiarListaGestorAsesores();
 	                    usoInfraestructuraUpdate.removeDisableSelectButtons();
 	                    usoInfraestructuraUpdate.removeDisableButtonGestorAsesor();
-	                    usoInfraestructuraUpdate.removeDisableButtonEquipos();
 	                    usoInfraestructuraUpdate.removeDisableButtonTalento();
-	                    usoInfraestructuraUpdate.removeDisableButtonMaterial();
+                        usoInfraestructuraUpdate.addDisableButtonEquipos();
+                        usoInfraestructuraUpdate.addDisableButtonMaterial();
                         usoInfraestructuraUpdate.dataTableArtculacionFindByUser();
 	                }
 	              });
