@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\Models\ArticulacionPbt;
+use App\Presenters\ProyectoPresenter;
 
 class Proyecto extends Model
 {
@@ -80,6 +81,11 @@ class Proyecto extends Model
   public static function IsTrl78Esperado()
   {
     return self::IS_TRL7_8_ESPERADO;
+  }
+  
+  public function present()
+  {
+      return new ProyectoPresenter($this);
   }
 
   /*===============================================

@@ -37,88 +37,120 @@ class EmpresaRepository
         });
     }
 
-    /**
-        * Consulta las empresas asociadas como propietarias a proyecto
-        *
-        * @param string $fecha_inicio
-        * @param string $fecha_cierre
-        * @return Eloquent
-        * @author dum
-        **/
-    public function empresasPropietarias(string $fecha_inicio, string $fecha_cierre)
-    {
-        return Empresa::select(
-        'codigo_actividad',
-        'nit',
-        'codigo_ciiu',
-        'entidades.nombre AS nombre_empresa',
-        'fecha_creacion',
-        'sectores.nombre AS nombre_sector',
-        'entidades.email_entidad',
-        'empresas.direccion',
-        'tamanhos_empresas.nombre AS tamanho_empresa',
-        'tipos_empresas.nombre AS tipo_empresa',
-        'areasconocimiento.nombre AS nombre_areaconocimiento',
-        'lineastecnologicas.nombre AS nombre_linea',
-        'entidad_nodo.nombre AS nodo_nombre',
-        'sublineas.nombre AS nombre_sublinea',
-        'actividades.nombre',
-        'fases.nombre AS nombre_fase'
-        )
-        ->selectRaw('concat(ciudades.nombre, " - ", departamentos.nombre) AS ciudad')
-        ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
-        ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
-        ->selectRaw('IF(pp.trl_esperado = '.Proyecto::IsTrl6Esperado().', "TRL 6", "TRL 7 - TRL 8") AS trl_esperado')
-        ->selectRaw('IF(fases.nombre = "Finalizado", IF(pp.trl_obtenido = 0, "TRL 6", IF(pp.trl_obtenido = 1, "TRL 7", "TRL 8")), "El proyecto no se ha cerrado") AS trl_obtenido')
-        ->selectRaw('IF(fases.nombre = "Finalizado" || fases.nombre = "Suspendido", fecha_cierre, "El proyecto no se ha cerrado") AS fecha_cierre')
-        ->selectRaw('IF(areasconocimiento.nombre = "Otro", pp.otro_areaconocimiento, "No aplica") AS otro_areaconocimiento')
-        ->selectRaw('IF(pp.fabrica_productividad = 0, "No", "Si") AS fabrica_productividad')
-        ->selectRaw('IF(pp.reci_ar_emp = 0, "No", "Si") AS reci_ar_emp')
-        ->selectRaw('IF(pp.economia_naranja = 0, "No", "Si") AS economia_naranja')
-        ->selectRaw('IF(pp.economia_naranja = 0, "No aplica", pp.tipo_economianaranja) AS tipo_economianaranja')
-        ->selectRaw('IF(pp.dirigido_discapacitados = 0, "No", "Si") AS dirigido_discapacitados')
-        ->selectRaw('IF(pp.dirigido_discapacitados = 0, "No aplica", pp.tipo_discapacitados) AS tipo_discapacitados')
-        ->selectRaw('IF(pp.art_cti = 0, "No", "Si") AS art_cti')
-        ->selectRaw('IF(pp.art_cti = 0, "No aplica", pp.nom_act_cti) AS nom_act_cti')
-        ->selectRaw('IF(fases.nombre = "Cierre", IF(pp.diri_ar_emp = 0, "No", "Si"), "El proyecto no se ha cerrado") AS diri_ar_emp')
-        ->selectRaw('DATE_FORMAT(fecha_cierre, "%Y") AS anho')
-        ->selectRaw('DATE_FORMAT(fecha_cierre, "%m") AS mes')
-        ->join('entidades', 'entidades.id', '=', 'empresas.entidad_id')
-        ->join('propietarios', 'propietarios.propietario_id', '=', 'empresas.id')
-        ->join('proyectos', 'proyectos.id', '=', 'propietarios.proyecto_id')
-        ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-        ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-        ->join('proyectos AS pp', 'pp.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
-        ->join('fases', 'fases.id', '=', 'pp.fase_id')
-        ->join('sectores', 'sectores.id', '=', 'empresas.sector_id')
-        ->join('ciudades', 'ciudades.id', '=', 'entidades.ciudad_id')
-        ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
-        ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
-        ->join('entidades AS entidad_nodo', 'entidad_nodo.id', '=', 'nodos.entidad_id')
-        ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
-        ->join('users', 'users.id', '=', 'gestores.user_id')
-        ->join('sublineas', 'sublineas.id', '=', 'pp.sublinea_id')
-        ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
-        ->join('areasconocimiento', 'areasconocimiento.id', '=', 'pp.areaconocimiento_id')
-        ->leftJoin('ideas', 'ideas.id', '=', 'pp.idea_id')
-        ->leftJoin('tamanhos_empresas', 'tamanhos_empresas.id', '=', 'empresas.tamanhoempresa_id')
-        ->leftJoin('tipos_empresas', 'tipos_empresas.id', '=', 'empresas.tipoempresa_id')
-        ->where('entidades.nombre', '!=', 'No Aplica')
-        ->where('propietarios.propietario_type', 'App\Models\Empresa')
-        ->where(function($q) use ($fecha_inicio, $fecha_cierre) {
-        $q->where(function($query) use ($fecha_inicio, $fecha_cierre) {
-            $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre]);
-        })
-        ->orWhere(function($query) use ($fecha_inicio, $fecha_cierre) {
-            $query->where(function($query) use ($fecha_inicio, $fecha_cierre) {
-            $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
-            $query->orWhere(function ($query) {
-            $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
-            });
-        });
-        });
-        });
-    }
+    // /**
+    //     * Consulta las empresas asociadas como propietarias a proyecto
+    //     *
+    //     * @param string $fecha_inicio
+    //     * @param string $fecha_cierre
+    //     * @return Eloquent
+    //     * @author dum
+    //     **/
+    // public function empresasPropietarias(string $fecha_inicio, string $fecha_cierre)
+    // {
+    //     return Proyecto::with([
+    //         'sedes',
+    //         'sedes.empresa',
+    //         'gruposinvestigacion',
+    //         'gruposinvestigacion.entidad',
+    //         'sedes.empresa',
+    //         'articulacion_proyecto',
+    //         'articulacion_proyecto.actividad',
+    //         'articulacion_proyecto.actividad.gestor',
+    //         'articulacion_proyecto.actividad.gestor.user' => function($query) {
+    //             $query->withTrashed();
+    //         },
+    //         'articulacion_proyecto.actividad.nodo',
+    //         'articulacion_proyecto.actividad.nodo.entidad',
+    //         'articulacion_proyecto.proyecto',
+    //         'articulacion_proyecto.proyecto.fase',
+    //         'articulacion_proyecto.proyecto.idea',
+    //       ])->where(function($q) use ($fecha_inicio, $fecha_cierre) {
+    //         $q->whereHas('articulacion_proyecto.actividad', function($query) use ($fecha_inicio, $fecha_cierre) {
+    //           $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre]);
+    //         })
+    //         ->orWhere(function($query) use ($fecha_inicio, $fecha_cierre) {
+    //           $query->whereHas('articulacion_proyecto.actividad', function($query) use ($fecha_inicio, $fecha_cierre) {
+    //             $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
+    //           })
+    //           ->orWhereHas('articulacion_proyecto.proyecto.fase', function ($query) {
+    //             $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
+    //           });
+    //         });
+    //       });
+
+
+    //     // return Empresa::select(
+    //     // 'codigo_actividad',
+    //     // 'nit',
+    //     // 'codigo_ciiu',
+    //     // 'empresas.nombre AS nombre_empresa',
+    //     // 'fecha_creacion',
+    //     // 'sectores.nombre AS nombre_sector',
+    //     // 'empresas.email',
+    //     // 'sedes.direccion',
+    //     // 'tamanhos_empresas.nombre AS tamanho_empresa',
+    //     // 'tipos_empresas.nombre AS tipo_empresa',
+    //     // 'areasconocimiento.nombre AS nombre_areaconocimiento',
+    //     // 'lineastecnologicas.nombre AS nombre_linea',
+    //     // 'entidad_nodo.nombre AS nodo_nombre',
+    //     // 'sublineas.nombre AS nombre_sublinea',
+    //     // 'actividades.nombre',
+    //     // 'fases.nombre AS nombre_fase'
+    //     // )
+    //     // ->selectRaw('concat(ciudades.nombre, " - ", departamentos.nombre) AS ciudad')
+    //     // ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
+    //     // ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
+    //     // ->selectRaw('IF(pp.trl_esperado = '.Proyecto::IsTrl6Esperado().', "TRL 6", "TRL 7 - TRL 8") AS trl_esperado')
+    //     // ->selectRaw('IF(fases.nombre = "Finalizado", IF(pp.trl_obtenido = 0, "TRL 6", IF(pp.trl_obtenido = 1, "TRL 7", "TRL 8")), "El proyecto no se ha cerrado") AS trl_obtenido')
+    //     // ->selectRaw('IF(fases.nombre = "Finalizado" || fases.nombre = "Suspendido", fecha_cierre, "El proyecto no se ha cerrado") AS fecha_cierre')
+    //     // ->selectRaw('IF(areasconocimiento.nombre = "Otro", pp.otro_areaconocimiento, "No aplica") AS otro_areaconocimiento')
+    //     // ->selectRaw('IF(pp.fabrica_productividad = 0, "No", "Si") AS fabrica_productividad')
+    //     // ->selectRaw('IF(pp.reci_ar_emp = 0, "No", "Si") AS reci_ar_emp')
+    //     // ->selectRaw('IF(pp.economia_naranja = 0, "No", "Si") AS economia_naranja')
+    //     // ->selectRaw('IF(pp.economia_naranja = 0, "No aplica", pp.tipo_economianaranja) AS tipo_economianaranja')
+    //     // ->selectRaw('IF(pp.dirigido_discapacitados = 0, "No", "Si") AS dirigido_discapacitados')
+    //     // ->selectRaw('IF(pp.dirigido_discapacitados = 0, "No aplica", pp.tipo_discapacitados) AS tipo_discapacitados')
+    //     // ->selectRaw('IF(pp.art_cti = 0, "No", "Si") AS art_cti')
+    //     // ->selectRaw('IF(pp.art_cti = 0, "No aplica", pp.nom_act_cti) AS nom_act_cti')
+    //     // ->selectRaw('IF(fases.nombre = "Cierre", IF(pp.diri_ar_emp = 0, "No", "Si"), "El proyecto no se ha cerrado") AS diri_ar_emp')
+    //     // ->selectRaw('DATE_FORMAT(fecha_cierre, "%Y") AS anho')
+    //     // ->selectRaw('DATE_FORMAT(fecha_cierre, "%m") AS mes')
+    //     // ->join('sedes', 'sedes.empresa_id', '=', 'empresas.id')
+    //     // ->join('propietarios', 'propietarios.propietario_id', '=', 'sedes.id')
+    //     // ->join('proyectos', 'proyectos.id', '=', 'propietarios.proyecto_id')
+    //     // ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    //     // ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    //     // ->join('proyectos AS pp', 'pp.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+    //     // ->join('fases', 'fases.id', '=', 'pp.fase_id')
+    //     // ->join('sectores', 'sectores.id', '=', 'empresas.sector_id')
+    //     // ->join('ciudades', 'ciudades.id', '=', 'sedes.ciudad_id')
+    //     // ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
+    //     // ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    //     // ->join('entidades AS entidad_nodo', 'entidad_nodo.id', '=', 'nodos.entidad_id')
+    //     // ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+    //     // ->join('users', 'users.id', '=', 'gestores.user_id')
+    //     // ->join('sublineas', 'sublineas.id', '=', 'pp.sublinea_id')
+    //     // ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
+    //     // ->join('areasconocimiento', 'areasconocimiento.id', '=', 'pp.areaconocimiento_id')
+    //     // ->leftJoin('ideas', 'ideas.id', '=', 'pp.idea_id')
+    //     // ->leftJoin('tamanhos_empresas', 'tamanhos_empresas.id', '=', 'empresas.tamanhoempresa_id')
+    //     // ->leftJoin('tipos_empresas', 'tipos_empresas.id', '=', 'empresas.tipoempresa_id')
+    //     // // ->where('empresas.nombre', '!=', 'No Aplica')
+    //     // ->where('propietarios.propietario_type', 'App\Models\Sede')
+    //     // ->where(function($q) use ($fecha_inicio, $fecha_cierre) {
+    //     //     $q->where(function($query) use ($fecha_inicio, $fecha_cierre) {
+    //     //         $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre]);
+    //     //     })
+    //     //     ->orWhere(function($query) use ($fecha_inicio, $fecha_cierre) {
+    //     //         $query->where(function($query) use ($fecha_inicio, $fecha_cierre) {
+    //     //         $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
+    //     //             $query->orWhere(function ($query) {
+    //     //             $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
+    //     //             });
+    //     //         });
+    //     //     });
+    //     // });
+    // }
 
     // Modifica los datos de una empresa
     public function update($request, $empresa)
@@ -309,7 +341,7 @@ class EmpresaRepository
         'empresas.nombre AS nombre_empresa',
         'sectores.nombre AS sector_empresa')
         ->join('sectores', 'sectores.id', '=', 'empresas.sector_id')
-        ->join('users', 'users.id', '=', 'empresas.user_id');
+        ->leftJoin('users', 'users.id', '=', 'empresas.user_id');
     }
     
     public function consultarSedeRepository($id)

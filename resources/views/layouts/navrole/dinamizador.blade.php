@@ -43,7 +43,11 @@
   <i class="material-icons {!! setActiveRouteActiveIcon('costos-administrativos') !!}">settings_input_svideo</i>Costos Administrativos
   </a>
 </li>
-
+<li class="no-padding {{setActiveRoute('articulacion')}}">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('articulacion')}}" href="{{route('articulacion')}}" rel="canonical" title="Articulaciones">
+    <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>AGI
+  </a>
+</li>
 
 <li class="no-padding {{setActiveRoute('articulacion')}}">
   <a href="{{ route('articulaciones.index') }}" class="{{setActiveRouteActivePage('articulacion')}}" rel="canonical" title="Articulaciones">

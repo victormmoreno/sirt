@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Actividad, TipoArticulacionProyecto, EstadoProyecto};
+use App\Models\{Actividad};
 use App\Repositories\Repository\{ActividadRepository, ProyectoRepository};
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
@@ -44,14 +44,8 @@ class CostoController extends Controller
       ]);
     } else if ( Session::get('login_role') == User::IsDinamizador() ) {
       $actividades = Actividad::ConsultarActividades()->where('nodo_id', auth()->user()->dinamizador->nodo_id)->get()->pluck('proyecto', 'id');
-      $tipos = TipoArticulacionProyecto::orderBy('nombre')->get();
-      $estado = EstadoProyecto::whereIn('nombre', ['Cierre PF', 'Cierre PMV'])->orderBy('nombre')->get();
-      $estado_ipe = EstadoProyecto::whereIn('nombre', ['Inicio', 'Planeacion', 'En ejecucion'])->orderBy('nombre')->get();
       return view('costos.dinamizador.index', [
-        'actividades' => $actividades,
-        'tipos_proyecto' => $tipos,
-        'estados' => $estado,
-        'estados_ipe' => $estado_ipe
+        'actividades' => $actividades
       ]);
     } else {
       abort('403');

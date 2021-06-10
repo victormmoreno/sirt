@@ -14,7 +14,7 @@ class ProyectosExport extends FatherExport
     {
         $this->setQuery($query);
         $this->setCount($this->getQuery()->count() + 1);
-        $this->setRangeHeadingCell('A1:X1');
+        $this->setRangeHeadingCell('A1:AB1');
     }
 
     /**
@@ -47,7 +47,7 @@ class ProyectosExport extends FatherExport
     private function styledCells(AfterSheet $event) {
         $event->sheet->getStyle($this->getRangeHeadingCell())->getFont()->setSize(14)->setBold(1);
         $init = 'A';
-        for ($i = 0; $i < 26; $i++) {
+        for ($i = 0; $i < 28; $i++) {
             $temp = $init++;
             $coordenadas = $temp . '1:' . $temp . $this->getCount();
             $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArray());

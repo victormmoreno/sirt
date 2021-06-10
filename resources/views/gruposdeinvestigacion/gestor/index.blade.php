@@ -57,7 +57,6 @@
     </div>
   </div>
 </main>
-@include('empresa.modals')
 <div id="detalleDeUnGrupoDeInvestigacion" class="modal">
   <div class="modal-content">
     <center><h4 id="modalDetalleDeUnGrupoDeInvestigacion_titulo" class="center-aling"></h4></center>
