@@ -101,6 +101,29 @@ class ArticulacionPbtPresenter extends Presenter
         return "No registra";
     }
 
+    public function articulacionPbtNameTipoVinculacion()
+    {
+        if($this->articulacionpbt->tipo_vinculacion == ArticulacionPbt::IsPbt()){
+            return "PBT";
+        }
+        if($this->articulacionpbt->tipo_vinculacion == ArticulacionPbt::IsSenaInnova()){
+            return "SENA Innova";
+        }
+        if($this->articulacionpbt->tipo_vinculacion == ArticulacionPbt::IsColinnova()){
+            return "Colinnova";
+        }
+        return "No registra";
+    }
+
+    public function articulacionPbtTipoVinculacion($value):bool
+    {
+        if($this->articulacionpbt->tipo_vinculacion == $value){
+            return true;
+        }
+        return false;
+    }
+
+
     public function articulacionPbtObjetivo()
     {
         if ($this->articulacionpbt && isset($this->articulacionpbt)) {

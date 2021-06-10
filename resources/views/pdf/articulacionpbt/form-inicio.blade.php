@@ -208,7 +208,9 @@ td, th {
         </tr>
         <tr>
           <td><b>Código Articulación<b></td>
-          <td colspan="5">{{$articulacion->actividad->codigo_actividad}}</td>
+          <td colspan="3">{{$articulacion->actividad->codigo_actividad}}</td>
+          <td><b>Tipo Vinculación</b></td>
+          <td>{{$articulacion->present()->articulacionPbtNameTipoVinculacion()}}</td>
         </tr>
         <tr>
           <td><b>Nombre Articulación</b></td>

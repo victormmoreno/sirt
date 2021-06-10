@@ -95,7 +95,7 @@
 @endsection
 @push('script')
 <script>
-
+    
     datatableArchiveArticulacion_inicio();
 
     function datatableArchiveArticulacion_inicio() {

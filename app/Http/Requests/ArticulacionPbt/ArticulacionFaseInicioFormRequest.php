@@ -3,6 +3,8 @@
 namespace App\Http\Requests\ArticulacionPbt;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\ArticulacionPbt;
+use Illuminate\Validation\Rule;
 
 
 class ArticulacionFaseInicioFormRequest extends FormRequest
@@ -25,7 +27,8 @@ class ArticulacionFaseInicioFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'txtpbt' => 'required',
+            'txttipovinculacion' => 'required',
+            'txtpbt' => Rule::requiredIf(request()->txttipovinculacion == ArticulacionPbt::IsPbt()) . '|nullable',
             'talentos' => 'required',
             'txttalento_interlocutor'=>'required',
             'txtnombre_articulacion' => 'required|min:2|max:191',
@@ -44,7 +47,7 @@ class ArticulacionFaseInicioFormRequest extends FormRequest
     public function messages()
     {
         return $messages = [
-        
+            'txttipovinculacion.required' => 'El tipo de vinculación es obligatorio.',
             'txtpbt.required' => 'El proyecto es obligatorio.',
             'txt_tipo_articulacion.required' => 'El tipo de articulación es obligatoria.',
             'txt_alcance_articulacion.required' => 'El tipo de articulación es obligatoria.',

@@ -39,6 +39,7 @@ class ArticulacionPbtRepository
                 
             
             $articulacion = ArticulacionPbt::create([
+                'tipo_vinculacion' =>request()->txttipovinculacion,
                 'actividad_id' => $actividad->id,
                 'proyecto_id' => request()->txtpbt,
                 'fase_id' => Fase::IsInicio(),
@@ -131,7 +132,8 @@ class ArticulacionPbtRepository
             $articulacion = ArticulacionPbt::find($id);
 
             $articulacion->update([
-                'fase_id' => Fase::IsInicio(),
+                'tipo_vinculacion' => request()->txttipovinculacion,
+                'proyecto_id' => request()->txtpbt,
                 'tipo_articulacion_id' => request()->txt_tipo_articulacion,
                 'alcance_articulacion_id' => request()->txt_alcance_articulacion,
                 'entidad'=> request()->txtname_entidad,
