@@ -60,7 +60,7 @@ class EmpresasExport extends FatherExport
     public function view(): View
     {
         return view('exports.empresas.propietarias', [
-        'empresas' => $this->getQuery()
+        'proyectos' => $this->getQuery()
         ]);
 
     }

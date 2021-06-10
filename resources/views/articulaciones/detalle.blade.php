@@ -62,7 +62,7 @@
             serverSide: true,
             order: false,
             ajax:{
-            url: "{{route('articulacion.files', [$articulacion->id, 'Inicio'])}}",
+            url: "{{route('articulacion.agi.files', [$articulacion->id, 'Inicio'])}}",
             type: "get",
             },
             columns: [
@@ -88,7 +88,7 @@
             serverSide: true,
             order: false,
             ajax:{
-            url: "{{route('articulacion.files', [$articulacion->id, 'Planeación'])}}",
+            url: "{{route('articulacion.agi.files', [$articulacion->id, 'Planeación'])}}",
             type: "get",
             },
             columns: [
@@ -114,7 +114,7 @@
             serverSide: true,
             order: false,
             ajax:{
-            url: "{{route('articulacion.files', [$articulacion->id, 'Ejecución'])}}",
+            url: "{{route('articulacion.agi.files', [$articulacion->id, 'Ejecución'])}}",
             type: "get",
             },
             columns: [
@@ -140,7 +140,7 @@
             serverSide: true,
             order: false,
             ajax:{
-            url: "{{route('articulacion.files', [$articulacion->id, 'Cierre'])}}",
+            url: "{{route('articulacion.agi.files', [$articulacion->id, 'Cierre'])}}",
             type: "get",
             },
             columns: [

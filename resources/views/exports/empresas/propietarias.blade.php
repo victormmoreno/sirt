@@ -41,53 +41,58 @@
     </tr>
     </thead>
     <tbody>
-        @foreach($empresas as $value)
+        @foreach($proyectos as $key => $proyecto)
+            @foreach ($proyecto->sedes as $key => $sede)
             <tr>
-                <td>{{ $value->nodo_nombre }}</td>
-            <td>{{ $value->codigo_actividad }}</td>
-            <td>{{ $value->nombre }}</td>
-            <td>{{ $value->gestor }}</td>
-            <td>{{ $value->nombre_linea }}</td>
-            <td>{{ $value->nombre_sublinea }}</td>
-            <td>{{ $value->nombre_idea }}</td>
-            <td>{{ $value->nombre_areaconocimiento }}</td>
-            <td>{{ $value->otro_areaconocimiento }}</td>
-            <td>{{ $value->fecha_inicio }}</td>
-            <td>{{ $value->nombre_fase }}</td>
-            <td>{{ $value->fecha_cierre }}</td>
-            @if ($value->nombre_fase == 'Finalizado' || $value->nombre_fase == 'Suspendido')
-            <td>{{ $value->anho }}</td>
-            @else
-            <td>El proyecto no se ha cerrado</td>
-            @endif
-            @if ($value->nombre_fase == 'Finalizado' || $value->nombre_fase == 'Suspendido')
-            <td>{{ $value->mes }}</td>
-            @else
-            <td>El proyecto no se ha cerrado</td>
-            @endif
-            <td>{{ $value->trl_esperado }}</td>
-            <td>{{ $value->trl_obtenido }}</td>
-            <td>{{ $value->fabrica_productividad }}</td>
-            <td>{{ $value->reci_ar_emp }}</td>
-            <td>{{ $value->economia_naranja }}</td>
-            <td>{{ $value->tipo_economianaranja }}</td>
-            <td>{{ $value->dirigido_discapacitados }}</td>
-            <td>{{ $value->tipo_discapacitados }}</td>
-            <td>{{ $value->art_cti }}</td>
-            <td>{{ $value->nom_act_cti }}</td>
-            <td>{{ $value->diri_ar_emp }}</td>
+            <td>{{ $proyecto->articulacion_proyecto->actividad->nodo->entidad->nombre }}</td>
+            <td>{{ $proyecto->articulacion_proyecto->actividad->codigo_actividad }}</td>
+            <td>{{ $proyecto->articulacion_proyecto->actividad->nombre }}</td>
+            <td>{{ $proyecto->articulacion_proyecto->actividad->gestor->user->present()->userFullName() }}</td>
+            <td>{{ $proyecto->sublinea->linea->nombre }}</td>
+            <td>{{ $proyecto->sublinea->nombre }}</td>
+            <td>{{ $proyecto->idea->codigo_idea }} - {{ $proyecto->idea->nombre_proyecto }}</td>
+            <td>{{ $proyecto->areaconocimiento->nombre }}</td>
+            <td>{{ $proyecto->present()->proyectoOtroAreaConocimiento() }}</td>
+            <td>{{ $proyecto->articulacion_proyecto->actividad->fecha_inicio->isoFormat('YYYY-MM-DD') }}</td>
+            <td>{{ $proyecto->fase->nombre }}</td>
+            <td>{{ $proyecto->present()->proyectoFechaCierre() }}</td>
 
-            <td>{{ $value->nit }}</td>
-            <td>{{ $value->codigo_ciiu }}</td>
-            <td>{{ $value->nombre_empresa }}</td>
-            <td>{{ $value->fecha_creacion }}</td>
-            <td>{{ $value->nombre_sector }}</td>
-            <td>{{ $value->ciudad }}</td>
-            <td>{{ $value->direccion }}</td>
-            <td>{{ $value->email_entidad }}</td>
-            <td>{{ $value->tamanho_empresa }}</td>
-            <td>{{ $value->tipo_empresa }}</td>
+            @if ($proyecto->fase->nombre == 'Finalizado' || $proyecto->fase->nombre == 'Suspendido')
+            <td>{{ $proyecto->articulacion_proyecto->actividad->fecha_cierre->isoFormat('YYYY') }}</td>
+            @else
+            <td>El proyecto no se ha cerrado</td>
+            @endif
+            
+            @if ($proyecto->fase->nombre == 'Finalizado' || $proyecto->fase->nombre == 'Suspendido')
+            <td>{{ $proyecto->articulacion_proyecto->actividad->fecha_cierre->isoFormat('MM') }}</td>
+            @else
+            <td>El proyecto no se ha cerrado</td>
+            @endif
+
+            <td>{{ $proyecto->present()->proyectoTrlEsperado() }}</td>
+            <td>{{ $proyecto->present()->proyectoTrlObtenido() }}</td>
+            <td>{{ $proyecto->present()->proyectoFabricaProductividad() }}</td>
+            <td>{{ $proyecto->present()->proyectoRecibidoAreaEmprendimiento() }}</td>
+            <td>{{ $proyecto->present()->proyectoEconomiaNaranja() }}</td>
+            <td>{{ $proyecto->present()->proyectoTipoEconomiaNaranja() }}</td>
+            <td>{{ $proyecto->present()->proyectoDirigidoDiscapacitados() }}</td>
+            <td>{{ $proyecto->present()->proyectoDirigidoTipoDiscapacitados() }}</td>
+            <td>{{ $proyecto->present()->proyectoActorCTi() }}</td>
+            <td>{{ $proyecto->present()->proyectoNombreActorCTi() }}</td>
+            <td>{{ $proyecto->present()->proyectoDirigidoAreaEmprendimiento() }}</td>
+            <td>{{ $sede->empresa->nit }}</td>
+            <td>{{ $sede->empresa->codigo_ciiu }}</td>
+            <td>{{ $sede->empresa->nombre }}</td>
+            <td>{{ $sede->empresa->fecha_creacion }}</td>
+            <td>{{ $sede->empresa->sector->nombre }}</td>
+            <td>{{ $sede->ciudad->nombre }} - {{ $sede->ciudad->departamento->nombre }}</td>
+            <td>{{ $sede->direccion }}</td>
+            <td>{{ $sede->empresa->email }}</td>
+            <td>{{ $sede->empresa->tamanhoempresa->nombre }}</td>
+            <td>{{ $sede->empresa->tipoempresa->nombre }}</td>
             </tr>
+                
+            @endforeach
         @endforeach
     </tbody>
 </table>

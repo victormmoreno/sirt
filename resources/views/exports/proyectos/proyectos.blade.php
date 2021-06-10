@@ -26,60 +26,64 @@
         <th>¿Articulado con CT+i?</th>
         <th>¿Nombre del actor CT+i?</th>
         <th>¿Dirigido a área de emprendimiento SENA?</th>
-        <th>Tipos de propietarios</th>
+        <th>Empresas dueñas de la propiedad intelectual</th>
+        <th>Grupos de investigación dueños de la propiedad intelectual</th>
+        <th>Personas dueñas de la propiedad intelectual</th>
     </tr>
     </thead>
     <tbody>
-        @foreach($proyectos as $value)
+        @foreach($proyectos as $proyecto)
         <tr>
-          <td>{{ $value->nodo }}</td>
-          <td>{{ $value->gestor }}</td>
-          <td>{{ $value->nombre_linea }}</td>
-          <td>{{ $value->nombre_sublinea }}</td>
-          <td>{{ $value->nombre_idea }}</td>
-          <td>{{ $value->codigo_actividad }}</td>
-          <td>{{ $value->nombre }}</td>
-          <td>{{ $value->nombre_areaconocimiento }}</td>
-          <td>{{ $value->otro_areaconocimiento }}</td>
-          <td>{{ $value->fecha_inicio }}</td>
-          <td>{{ $value->nombre_fase }}</td>
-          <td>{{ $value->fecha_cierre }}</td>
-          @if ($value->nombre_fase == 'Finalizado' || $value->nombre_fase == 'Suspendido')
-          <td>{{ $value->anho }}</td>
+          <td>{{ $proyecto->articulacion_proyecto->actividad->nodo->entidad->nombre }}</td>
+          <td>{{ $proyecto->articulacion_proyecto->actividad->gestor->user->present()->userFullName() }}</td>
+          <td>{{ $proyecto->sublinea->linea->nombre }}</td>
+          <td>{{ $proyecto->sublinea->nombre }}</td>
+          <td>{{ $proyecto->idea->codigo_idea }} - {{ $proyecto->idea->nombre_proyecto }}</td>
+          <td>{{ $proyecto->articulacion_proyecto->actividad->codigo_actividad }}</td>
+          <td>{{ $proyecto->articulacion_proyecto->actividad->nombre }}</td>
+          <td>{{ $proyecto->areaconocimiento->nombre }}</td>
+          <td>{{ $proyecto->present()->proyectoOtroAreaConocimiento() }}</td>
+          <td>{{ $proyecto->articulacion_proyecto->actividad->fecha_inicio->isoFormat('YYYY-MM-DD') }}</td>
+          <td>{{ $proyecto->fase->nombre }}</td>
+          <td>{{ $proyecto->present()->proyectoFechaCierre() }}</td>
+
+          @if ($proyecto->fase->nombre == 'Finalizado' || $proyecto->fase->nombre == 'Suspendido')
+            <td>{{ $proyecto->articulacion_proyecto->actividad->fecha_cierre->isoFormat('YYYY') }}</td>
           @else
-          <td>El proyecto no se ha cerrado</td>
+            <td>El proyecto no se ha cerrado</td>
           @endif
-          @if ($value->nombre_fase == 'Finalizado' || $value->nombre_fase == 'Suspendido')
-          <td>{{ $value->mes }}</td>
+          
+          @if ($proyecto->fase->nombre == 'Finalizado' || $proyecto->fase->nombre == 'Suspendido')
+            <td>{{ $proyecto->articulacion_proyecto->actividad->fecha_cierre->isoFormat('MM') }}</td>
           @else
-          <td>El proyecto no se ha cerrado</td>
+            <td>El proyecto no se ha cerrado</td>
           @endif
-          <td>{{ $value->trl_esperado }}</td>
-          <td>{{ $value->trl_obtenido }}</td>
-          <td>{{ $value->fabrica_productividad }}</td>
-          <td>{{ $value->reci_ar_emp }}</td>
-          <td>{{ $value->economia_naranja }}</td>
-          <td>{{ $value->tipo_economianaranja }}</td>
-          <td>{{ $value->dirigido_discapacitados }}</td>
-          <td>{{ $value->tipo_discapacitados }}</td>
-          <td>{{ $value->art_cti }}</td>
-          <td>{{ $value->nom_act_cti }}</td>
-          <td>{{ $value->diri_ar_emp }}</td>
-          @php
-              $datos = explode(",", $value->propietarios)
-          @endphp
+
+          <td>{{ $proyecto->present()->proyectoTrlEsperado() }}</td>
+          <td>{{ $proyecto->present()->proyectoTrlObtenido() }}</td>
+          <td>{{ $proyecto->present()->proyectoFabricaProductividad() }}</td>
+          <td>{{ $proyecto->present()->proyectoRecibidoAreaEmprendimiento() }}</td>
+          <td>{{ $proyecto->present()->proyectoEconomiaNaranja() }}</td>
+          <td>{{ $proyecto->present()->proyectoTipoEconomiaNaranja() }}</td>
+          <td>{{ $proyecto->present()->proyectoDirigidoDiscapacitados() }}</td>
+          <td>{{ $proyecto->present()->proyectoDirigidoTipoDiscapacitados() }}</td>
+          <td>{{ $proyecto->present()->proyectoActorCTi() }}</td>
+          <td>{{ $proyecto->present()->proyectoNombreActorCTi() }}</td>
+          <td>{{ $proyecto->present()->proyectoDirigidoAreaEmprendimiento() }}</td>
           <td>
-            @for ($i = 0; $i < count($datos); $i++)
-                @if ($datos[$i] == "App\User")
-                  Persona, 
-                @elseif($datos[$i] == "App\Models\Empresa")
-                  Empresa, 
-                @elseif($datos[$i] == "App\Models\GrupoInvestigacion")
-                  Grupo de Investigación, 
-                @else
-                  No se encontraron datos.
-                @endif
-              @endfor
+            @foreach ($proyecto->sedes as $sede)
+            {{ $sede->empresa->nit }} - {{ $sede->empresa->nombre }};
+            @endforeach
+          </td>
+          <td>
+            @foreach ($proyecto->gruposinvestigacion as $grupo)
+            {{ $grupo->codigo_grupo }} - {{ $grupo->entidad->nombre }};
+            @endforeach
+          </td>
+          <td>
+            @foreach ($proyecto->users_propietarios as $user)
+            {{ $user->present()->userFullName() }};
+            @endforeach
           </td>
         </tr>
         @endforeach

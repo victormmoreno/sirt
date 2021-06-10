@@ -32,6 +32,11 @@
   <a href="{{ route('articulaciones.index') }}" class="{{setActiveRouteActivePage('articulacion')}}" rel="canonical" title="Articulaciones">
     <i class="material-icons {{setActiveRouteActiveIcon('articulacion')}}">autorenew</i>Articulaciones</a>
 </li>
+<li class="no-padding {{setActiveRoute('articulacion')}}">
+  <a class="waves-effect waves-grey {{setActiveRouteActivePage('articulacion')}}" href="{{route('articulacion')}}" rel="canonical" title="Articulaciones">
+    <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>AGI
+  </a>
+</li>
 {{-- <li class="no-padding {{setActiveRoute('intervencion')}}">
   <a href="{{ route('intervencion.index') }}" class="{{setActiveRouteActivePage('intervencion')}}" rel="canonical" title="Articulaciones">
     <i class="material-icons {{setActiveRouteActiveIcon('intervencion')}}">autorenew</i>Intervención a Empresas

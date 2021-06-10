@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Presenters\GrupoPresenter;
 
 class GrupoInvestigacion extends Model
 {
@@ -28,6 +29,11 @@ class GrupoInvestigacion extends Model
         'institucion',
     
     ];
+
+    public function present()
+    {
+        return new GrupoPresenter($this);
+    }
 
     public function proyectos()
     {

@@ -14,11 +14,11 @@
     <i class="material-icons {{ setActiveRouteActiveIcon('proyecto') }}">library_books</i>PBT
   </a>
 </li>
-{{-- <li class="no-padding {{setActiveRoute('articulacion')}}">
+<li class="no-padding {{setActiveRoute('articulacion')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('articulacion')}}" href="{{route('articulacion')}}" rel="canonical" title="Articulaciones">
     <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>AGI
   </a>
-</li> --}}
+</li>
 <li class="{!! setActiveRoute('edt') !!}">
   <a class="waves-effect waves-grey {!! setActiveRouteActivePage('edt') !!}" href="{{route('edt')}}" rel="canonical" title="EDT's">
   <i class="material-icons {!! setActiveRouteActiveIcon('edt') !!}">hearing</i>EDT's
