@@ -36,6 +36,7 @@ class ArticulacionFaseInicioFormRequest extends FormRequest
             'txtemail'    => 'required|email|min:1|max:100',
             'txtnombre_convocatoria'    => 'nullable|min:1|max:191',
             'txtfecha_esperada' => 'required|date|date_format:Y-m-d|after_or_equal:' . date('Y-m-d'),
+            'txtfecha_inicio' => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
             'txtobjetivo' => 'required|min:2|max:10000',
         ];
     }
@@ -74,6 +75,10 @@ class ArticulacionFaseInicioFormRequest extends FormRequest
             'txtfecha_esperada.required'        => 'La fecha esperada es obligatoria.',
             'txtfecha_esperada.date'            => 'La fecha esperada no es una fecha válida.',
             'txtfecha_esperada.after_or_equal' => 'La fecha esperada debe ser una fecha posterior o igual a la actual',
+
+            'txtfecha_inicio.required'        => 'La fecha de inicio es obligatoria.',
+            'txtfecha_inicio.date'            => 'La fecha de inicio no es una fecha válida.',
+            'txtfecha_inicio.before_or_equal' => 'La fecha de inicio debe ser una fecha anterior o igual a la actual',
     
 
             'txtobjetivo.required' => 'El objetivo es obligatorio.',

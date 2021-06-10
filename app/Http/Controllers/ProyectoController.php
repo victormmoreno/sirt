@@ -1339,7 +1339,7 @@ class ProyectoController extends Controller
         ])->whereHas('articulacion_proyecto.actividad', function ($subQuery) use ($value) {
             $subQuery->where('codigo_actividad', $value);
         })
-        ->where('fase_id', Fase::IsFinalizado())
+        ->whereIn('fase_id', [Fase::IsFinalizado(), Fase::IsEjecucion(), Fase::IsCierre()])
         ->first();
 
         if($proyecto != null){
@@ -1391,7 +1391,7 @@ class ProyectoController extends Controller
             ])
             ->nodo($nodo)
             ->starEndDate($request->filter_year_pro)
-            ->where('fase_id', Fase::IsFinalizado()) 
+            ->whereIn('fase_id', [Fase::IsFinalizado(), Fase::IsEjecucion(), Fase::IsCierre()]) 
             ->get();
         }
 

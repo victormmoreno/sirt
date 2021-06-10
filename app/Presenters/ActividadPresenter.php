@@ -55,7 +55,7 @@ class ActividadPresenter extends Presenter
 
     public function startDate(){
         if (isset($this->actividad)) {
-            return $this->actividad->fecha_inicio->isoFormat('DD-MM-YYYY');
+            return $this->actividad->fecha_inicio->isoFormat('YYYY-MM-DD');
         }
         return "No registra";
     }

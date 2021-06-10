@@ -167,8 +167,6 @@ td, th {
   .tr-striped {
        background-color: #bdbdbd;
       }
-
-  
 }
 
     </style>
