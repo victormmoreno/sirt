@@ -15,7 +15,7 @@ class ArticulacionesPbtExport extends FatherExport
     {
         $this->setQuery($query);
         $this->setCount($this->getQuery()->count() + 1);
-        $this->setRangeHeadingCell('A1:O1');
+        $this->setRangeHeadingCell('A1:P1');
     }
 
     /**
@@ -49,7 +49,7 @@ class ArticulacionesPbtExport extends FatherExport
     {
         $event->sheet->getStyle($this->getRangeHeadingCell())->getFont()->setSize(14)->setBold(1);
         $init = 'A';
-        for ($i = 0; $i < 15; $i++) {
+        for ($i = 0; $i < 16; $i++) {
             $temp = $init++;
             $coordenadas = $temp . '1:' . $temp . $this->getCount();
             $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArray());
