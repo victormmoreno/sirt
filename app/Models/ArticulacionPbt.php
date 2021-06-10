@@ -9,12 +9,17 @@ class ArticulacionPbt extends Model
 {
     protected $table = 'articulacion_pbts';
 
+    const IS_PBT = 1;
+    const IS_SENAINNOVA  = 2;
+    const IS_COLINNOVA  = 3;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
+        'tipo_vinculacion',
         'actividad_id',
         'proyecto_id',
         'fase_id',
@@ -45,6 +50,21 @@ class ArticulacionPbt extends Model
     protected $dates = [
         'fecha_esperada_finalizacion', 'cuando'
     ];
+
+    public static function IsPbt()
+    {
+        return self::IS_PBT;
+    }
+
+    public static function IsSenaInnova()
+    {
+        return self::IS_SENAINNOVA;
+    }
+
+    public static function IsColinnova()
+    {
+        return self::IS_COLINNOVA;
+    }
 
     public function actividad()
     {

@@ -1,10 +1,58 @@
-
-<ul class="collapsible" data-collapsible="expandable">
-    <li class="active">
-        <div class="collapsible-header grey lighten-2 active"><i class="material-icons">subtitles</i>1. Seleccione PBT</div>
+<div class="row search-tabs-row search-tabs-container grey lighten-4">
+    <div class="col s12 m6 l6">
+        <div class="mailbox-options grey lighten-4">
+            <ul class="grey lighten-4">
+                <li class="text-mailbox">Seleccione el tipo de vinculación</li>                                            
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="input-field col s12 m12 l12">
+        <p class="center p-v-xs">
+            @if(isset($actividad->articulacionpbt))
+            
+                <input class="with-gap" id="IsPbt" name="txttipovinculacion" type="radio" @if($actividad->articulacionpbt->present()->articulacionPbtTipoVinculacion(App\Models\ArticulacionPbt::IsPbt())) checked @endif value="1" onchange="checkTipoVinculacion(this)"/>
+                <label for="IsPbt">
+                    PBT
+                </label>
+                <input class="with-gap" id="IsSenaInnova" name="txttipovinculacion" type="radio" @if($actividad->articulacionpbt->present()->articulacionPbtTipoVinculacion(App\Models\ArticulacionPbt::IsSenaInnova())) checked @endif  value="2" onchange="checkTipoVinculacion(this)"/>
+                <label for="IsSenaInnova">
+                    Sena Innova
+                </label>
+                <input class="with-gap" id="IsColinnova" name="txttipovinculacion" type="radio" @if($actividad->articulacionpbt->present()->articulacionPbtTipoVinculacion(App\Models\ArticulacionPbt::IsColinnova())) checked @endif  value="3" onchange="checkTipoVinculacion(this)"/>
+                <label for="IsColinnova">
+                    Colinnova
+                </label> 
+    
+                
+            @else
+                <input class="with-gap" id="IsPbt" name="txttipovinculacion" type="radio"  value="1" checked onchange="checkTipoVinculacion()"/>
+                <label for="IsPbt">
+                    PBT
+                </label>
+                <input class="with-gap" id="IsSenaInnova" name="txttipovinculacion" type="radio"  value="2" onchange="checkTipoVinculacion()"/>
+                <label for="IsSenaInnova">
+                    Sena Innova
+                </label>
+                <input class="with-gap" id="IsColinnova" name="txttipovinculacion" type="radio"  value="3" onchange="checkTipoVinculacion()"/>
+                <label for="IsColinnova">
+                    Colinnova
+                </label> 
+            @endif
+        </p>
+        <center>
+            <small class="center-align error red-text" id="txttipovinculacion-error">
+            </small>
+        </center>
+    </div>
+</div>
+<ul class="collapsible collapsible-art" data-collapsible="expandable">
+    <li class="collapsible-li active section-projects">
+        <div class="collapsible-header grey lighten-2 active"><i class="material-icons">subtitles</i>Seleccione PBT</div>
         <div class="collapsible-body" style="display: block;">
             
-            @if ($btnText == 'Guardar')
+            {{-- @if ($btnText == 'Guardar') --}}
                 <div class="row search-tabs-row search-tabs-header">
                     <div class="input-field col s12 m12 l4">
                         <input type="text" id="filter_code" name="filter_code" class="autocomplete">
@@ -15,7 +63,7 @@
                         <a class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_code_project"><i class="material-icons">search</i>Buscar</a>
                     </div>
                 </div>
-            @endif
+            {{-- @endif --}}
             <div class="row search-tabs-row search-tabs-container grey lighten-4">
                 <div class="col s12 m6 l6">
                     <div class="mailbox-options grey lighten-4">
@@ -61,12 +109,12 @@
                         </div>
                     </div>
                 @endif 
-                
+
             </div>
         </div>
     </li>
-    <li>
-        <div class="collapsible-header grey lighten-2"><span class="text-white"><i class="material-icons text-white">supervisor_account</i>2. Miembros (Talentos)</span></div>
+    <li class="collapsible-li">
+        <div class="collapsible-header grey lighten-2"><span class="text-white"><i class="material-icons text-white">supervisor_account</i>Miembros (Talentos)</span></div>
         <div class="collapsible-body" style="">
             @if ($btnText == 'Guardar')
                 <div class="row search-tabs-row search-tabs-header">
@@ -187,8 +235,8 @@
             </div> 
         </div>
     </li>
-    <li>
-        <div class="collapsible-header grey lighten-2"><i class="material-icons">library_books</i>3. Información básica</div>
+    <li class="collapsible-li">
+        <div class="collapsible-header grey lighten-2"><i class="material-icons">library_books</i>Información básica</div>
         <div class="collapsible-body" style="">
             <div class="row search-tabs-row search-tabs-header">
                 <div class="card card-transparent">

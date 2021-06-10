@@ -162,6 +162,7 @@ $('#filter_talents_advanced').click(function () {
     filter_project.queryTalentos();
 });
 
+
 var filter_project = {
     fill_code_project:function(filter_code_project = null){
         
@@ -493,6 +494,60 @@ var filter_project = {
             })
         }
     },
-    
-    
+    showSeccionProject: function (){
+        $('.section-projects').show();
+    },
+    hideSeccionProject: function (){
+        $('.section-projects').hide();
+    },
+    showsectionCollapseTalent: function(collap,collapheader,el){
+        
+        collap[0].classList.remove('active');
+        collap[1].classList.add('active');
+        collapheader[0].classList.remove('active');
+        collapheader[1].classList.add('active');
+        el[1].setAttribute("style", "display: block; padding-top: 0px; margin-top: 0px; padding-bottom: 0px; margin-bottom: 0px;");
+    },
+    hidesectionCollapseTalent: function(collap,collapheader,el){
+        collap[1].classList.remove('active');
+        collap[0].classList.add('active');
+        collapheader[1].classList.remove('active');
+        collapheader[0].classList.add('active');
+        el[1].setAttribute("style", "");
+    },
+    emptySectionProject: function(){
+        filter_project.emptyResult('result-talents');
+        filter_project.notFound('result-talents');
+        filter_project.emptyResult('alert-response');
+        filter_project.emptyResult('collection-response');
+        filter_project.emptyResult('alert-response-talents');
+        $('#txtnombre_articulacion').val();
+    }
+}
+
+
+function checkTipoVinculacion(val) {
+    let collap =document.getElementsByClassName('collapsible-li');
+    let collapheader =document.getElementsByClassName('collapsible-header grey lighten-2');
+    let el = document.getElementsByClassName('collapsible-body');
+   
+    if ( $("#IsPbt").is(":checked") ) {
+        filter_project.showSeccionProject();
+        filter_project.hidesectionCollapseTalent(collap,collapheader,el);
+    } 
+    else if ($("#IsSenaInnova").is(":checked") ) {
+      
+        filter_project.emptyResult('alert-response');
+        filter_project.emptyResult('collection-response');
+        filter_project.hideSeccionProject();
+        filter_project.showsectionCollapseTalent(collap,collapheader,el);
+    } 
+     else if( $("#IsColinnova").is(":checked")) {
+        
+        filter_project.emptyResult('alert-response');
+        filter_project.emptyResult('collection-response');
+        filter_project.hideSeccionProject();
+        filter_project.showsectionCollapseTalent(collap,collapheader,el);
+    }
+
 }

@@ -14,11 +14,11 @@
     <i class="material-icons {{ setActiveRouteActiveIcon('proyecto') }}">library_books</i>PBT
   </a>
 </li>
-{{-- <li class="no-padding {{setActiveRoute('articulacion')}}">
+<li class="no-padding {{setActiveRoute('articulacion')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('articulacion')}}" href="{{route('articulacion')}}" rel="canonical" title="Articulaciones">
     <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>AGI
   </a>
-</li> --}}
+</li>
 <li class="{!! setActiveRoute('edt') !!}">
   <a class="waves-effect waves-grey {!! setActiveRouteActivePage('edt') !!}" href="{{route('edt')}}" rel="canonical" title="EDT's">
   <i class="material-icons {!! setActiveRouteActiveIcon('edt') !!}">hearing</i>EDT's
@@ -69,11 +69,11 @@
     <i class="material-icons {{setActiveRouteActiveIcon('indicadores')}}">info_outline</i>Indicadores
   </a>
 </li>
-<li class="no-padding {{setActiveRoute('seguimiento')}}">
-  <a href="{{route('seguimiento')}}" class="{{setActiveRouteActivePage('seguimiento')}}" rel="canonical" title="Seguimiento">
-    <i class="material-icons {{setActiveRouteActiveIcon('seguimiento')}}">search</i>Seguimiento
-  </a>
-</li>
+<!--<li class="no-padding {{setActiveRoute('seguimiento')}}">-->
+<!--  <a href="{{route('seguimiento')}}" class="{{setActiveRouteActivePage('seguimiento')}}" rel="canonical" title="Seguimiento">-->
+<!--    <i class="material-icons {{setActiveRouteActiveIcon('seguimiento')}}">search</i>Seguimiento-->
+<!--  </a>-->
+<!--</li>-->
 <li class="no-padding {{setActiveRoute('costos')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('costos')}}" href="{{route('costos')}}" rel="canonical" title="Costos">
     <i class="material-icons {{setActiveRouteActiveIcon('costos')}}">attach_money</i>Costos
