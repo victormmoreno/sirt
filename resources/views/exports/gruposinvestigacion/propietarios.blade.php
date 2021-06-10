@@ -13,18 +13,20 @@
     </tr>
     </thead>
     <tbody>
-        @foreach($grupos as $value)
-            <tr>
-            <td>{{ $value->codigo_actividad }}</td>
-            <td>{{ $value->nodo_nombre }}</td>
-            <td>{{ $value->codigo_grupo }}</td>
-            <td>{{ $value->nombre_grupo }}</td>
-            <td>{{ $value->tipogrupo }}</td>
-            <td>{{ $value->institucion }}</td>
-            <td>{{ $value->nombre_clasificacion }}</td>
-            <td>{{ $value->email_entidad }}</td>
-            <td>{{ $value->ciudad }}</td>
-            </tr>
+        @foreach($proyectos as $proyecto)
+            @foreach ($proyecto->gruposinvestigacion as $grupo)
+                <tr>
+                    <td>{{ $proyecto->articulacion_proyecto->actividad->codigo_actividad }}</td>
+                    <td>{{ $proyecto->articulacion_proyecto->actividad->nodo->entidad->nombre }}</td>
+                    <td>{{ $grupo->codigo_grupo }}</td>
+                    <td>{{ $grupo->entidad->nombre }}</td>
+                    <td>{{ $grupo->present()->grupoTipo() }}</td>
+                    <td>{{ $grupo->institucion }}</td>
+                    <td>{{ $grupo->clasificacioncolciencias->nombre }}</td>
+                    <td>{{ $grupo->entidad->email_entidad }}</td>
+                    <td>{{ $grupo->entidad->ciudad->nombre }}</td>
+                </tr>
+            @endforeach
         @endforeach
     </tbody>
 </table>

@@ -304,7 +304,13 @@ class IdeaRepository
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollback();
-            return ['state' => false, 'idea' => null];
+            return [
+                'state' => false,
+                'msg' => 'La idea no se ha postulado al nodo!',
+                'title' => 'Postulación errónea!',
+                'type' => 'error',
+                'idea' => null
+            ];
         }
 
     }

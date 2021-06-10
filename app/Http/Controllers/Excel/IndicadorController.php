@@ -3,26 +3,22 @@
 namespace App\Http\Controllers\Excel;
 
 use App\Exports\Indicadores\Indicadores2020Export;
-use App\Repositories\Repository\{ProyectoRepository, ArticulacionRepository, EmpresaRepository, UserRepository\TalentoRepository, GrupoInvestigacionRepository};
+use App\Repositories\Repository\{ProyectoRepository};
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
+use App\Models\Proyecto;
 use Excel;
 
 class IndicadorController extends Controller
 {
 
   private $proyectoRepository;
-  private $talentoRepository;
 
-  public function __construct(ProyectoRepository $proyectoRepository, TalentoRepository $talentoRepository, ArticulacionRepository $articulacionRepository, EmpresaRepository $empresaRepository, GrupoInvestigacionRepository $grupoInvestigacionRepository)
+  public function __construct(ProyectoRepository $proyectoRepository)
   {
     $this->setProyectoRepository($proyectoRepository);
-    $this->setTalentoRepository($talentoRepository);
-    $this->setArticulacionRepository($articulacionRepository);
-    $this->setEmpresaRepository($empresaRepository);
-    $this->setGrupoInvestigacionRepository($grupoInvestigacionRepository);
   }
 
   /**
@@ -36,68 +32,28 @@ class IndicadorController extends Controller
   public function exportIndicadores2020($idnodo, string $fecha_inicio, string $fecha_fin)
   {
     $query = '';
-    $queryTalentos = '';
-    // $queryArticulacion = '';
-    $queryEmpresasPropietarias = '';
-    $queryGruposPropietarios = '';
-    $queryTalentosPropietarios = '';
 
     if (Session::get('login_role') == User::IsAdministrador()) {
 
       if ($idnodo == 'all') {
-        $query = $this->getProyectoRepository()->consultarProyectos_Repository($fecha_inicio, $fecha_fin)->get();
-        $queryTalentos = $this->getTalentoRepository()->consultarTalentosAsociadosAProyectos($fecha_inicio, $fecha_fin)->get();
-        // $queryArticulacion = $this->getArticulacionRepository()->consultarArticulaciones_repository($fecha_inicio, $fecha_fin)->get();
-        $queryEmpresasPropietarias = $this->getEmpresaRepository()->empresasPropietarias($fecha_inicio, $fecha_fin)->get();
-        $queryGruposPropietarios = $this->getGrupoInvestigacionRepository()->gruposPropietarios($fecha_inicio, $fecha_fin)->get();
-        $queryTalentosPropietarios = $this->getTalentoRepository()->talentosPropietarios($fecha_inicio, $fecha_fin)->get();
+        $query = $this->getProyectoRepository()->proyectosIndicadores_Repository($fecha_inicio, $fecha_fin)->get();
       } else {
-        $query = $this->getProyectoRepository()->consultarProyectos_Repository($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->get();
-        $queryTalentos = $this->getTalentoRepository()->consultarTalentosAsociadosAProyectos($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->get();
-        // $queryArticulacion = $this->getArticulacionRepository()->consultarArticulaciones_repository($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->get();
-        $queryEmpresasPropietarias = $this->getEmpresaRepository()->empresasPropietarias($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->get();
-        $queryGruposPropietarios = $this->getGrupoInvestigacionRepository()->gruposPropietarios($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->get();
-        $queryTalentosPropietarios = $this->getTalentoRepository()->talentosPropietarios($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->get();
+        $query = $this->getProyectoRepository()->proyectosIndicadores_Repository($fecha_inicio, $fecha_fin)->whereHas('articulacion_proyecto.actividad.nodo', function($query) use ($idnodo) {
+          $query->where('id', $idnodo);
+        })->get();
       }
     } else if (Session::get('login_role') == User::IsDinamizador()) {
-      $query = $this->getProyectoRepository()->consultarProyectos_Repository($fecha_inicio, $fecha_fin)->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
-      $queryTalentos = $this->getTalentoRepository()->consultarTalentosAsociadosAProyectos($fecha_inicio, $fecha_fin)->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
-      // $queryArticulacion = $this->getArticulacionRepository()->consultarArticulaciones_repository($fecha_inicio, $fecha_fin)->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
-      $queryEmpresasPropietarias = $this->getEmpresaRepository()->empresasPropietarias($fecha_inicio, $fecha_fin)->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
-      $queryGruposPropietarios = $this->getGrupoInvestigacionRepository()->gruposPropietarios($fecha_inicio, $fecha_fin)->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
-      $queryTalentosPropietarios = $this->getTalentoRepository()->talentosPropietarios($fecha_inicio, $fecha_fin)->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
+      $query = $this->getProyectoRepository()->proyectosIndicadores_Repository($fecha_inicio, $fecha_fin)->whereHas('articulacion_proyecto.actividad.nodo', function($query) {
+        $query->where('id', auth()->user()->dinamizador->nodo_id);
+      })->get();
     } else {
-      $query = $this->getProyectoRepository()->consultarProyectos_Repository($fecha_inicio, $fecha_fin)->where('gestores.id', auth()->user()->gestor->id)->get();
-      $queryTalentos = $this->getTalentoRepository()->consultarTalentosAsociadosAProyectos($fecha_inicio, $fecha_fin)->where('gestores.id', auth()->user()->gestor->id)->get();
-      // $queryArticulacion = $this->getArticulacionRepository()->consultarArticulaciones_repository($fecha_inicio, $fecha_fin)->where('gestores.id', auth()->user()->gestor->id)->get();
-      $queryEmpresasPropietarias = $this->getEmpresaRepository()->empresasPropietarias($fecha_inicio, $fecha_fin)->where('gestores.id', auth()->user()->gestor->id)->get();
-      $queryGruposPropietarios = $this->getGrupoInvestigacionRepository()->gruposPropietarios($fecha_inicio, $fecha_fin)->where('gestores.id', auth()->user()->gestor->id)->get();
-      $queryTalentosPropietarios = $this->getTalentoRepository()->talentosPropietarios($fecha_inicio, $fecha_fin)->where('gestores.id', auth()->user()->gestor->id)->get();
+      $query = $this->getProyectoRepository()->proyectosIndicadores_Repository($fecha_inicio, $fecha_fin)->whereHas('articulacion_proyecto.actividad.gestor', function($query) {
+        $query->where('id', auth()->user()->gestor->id);
+      })->get();
     }
 
-    return Excel::download(new Indicadores2020Export($query, $queryTalentos, $queryEmpresasPropietarias, $queryGruposPropietarios, $queryTalentosPropietarios), 'Indicadores.xlsx');
+    return Excel::download(new Indicadores2020Export($query), 'Indicadores_'.$fecha_inicio.'_a_'.$fecha_fin.'.xlsx');
   }
-
-  private function setEmpresaRepository($empresaRepository)
-  {
-    $this->empresaRepository = $empresaRepository;
-  }
-
-  private function getEmpresaRepository()
-  {
-    return $this->empresaRepository;
-  }
-
-  private function setArticulacionRepository($articulacionRepository)
-  {
-    $this->articulacionRepository = $articulacionRepository;
-  }
-
-  private function getArticulacionRepository()
-  {
-    return $this->articulacionRepository;
-  }
-
 
   private function setProyectoRepository($proyectoRepository)
   {
@@ -109,23 +65,4 @@ class IndicadorController extends Controller
     return $this->proyectoRepository;
   }
 
-  private function setTalentoRepository($talentoRepository)
-  {
-    $this->talentoRepository = $talentoRepository;
-  }
-
-  private function getTalentoRepository()
-  {
-    return $this->talentoRepository;
-  }
-
-  private function setGrupoInvestigacionRepository($grupoInvestigacionRepository)
-  {
-    $this->grupoInvestigacionRepository = $grupoInvestigacionRepository;
-  }
-
-  private function getGrupoInvestigacionRepository()
-  {
-    return $this->grupoInvestigacionRepository;
-  }
 }

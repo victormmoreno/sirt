@@ -220,6 +220,59 @@ class ProyectoRepository
     });
   }
 
+  public function proyectosIndicadores_Repository(string $fecha_inicio, string $fecha_cierre)
+  {
+      return Proyecto::with([
+          'users_propietarios',
+          'gruposinvestigacion',
+          'gruposinvestigacion.clasificacioncolciencias',
+          'gruposinvestigacion.entidad',
+          'sedes',
+          'sedes.empresa',
+          'sedes.empresa.tamanhoempresa',
+          'sedes.empresa.tipoempresa',
+          'sedes.empresa',
+          'sublinea',
+          'sublinea.linea',
+          'areaconocimiento',
+          'fase',
+          'articulacion_proyecto',
+          'articulacion_proyecto.talentos',
+          'articulacion_proyecto.talentos.user' => function($query) {
+            $query->withTrashed();
+          },
+          'articulacion_proyecto.talentos.user.grupoSanguineo',
+          'articulacion_proyecto.talentos.user.eps',
+          'articulacion_proyecto.talentos.user.etnia',
+          'articulacion_proyecto.talentos.user.gradoescolaridad',
+          'articulacion_proyecto.talentos.user.ciudad',
+          'articulacion_proyecto.talentos.user.ciudad.departamento',
+          'articulacion_proyecto.actividad',
+          'articulacion_proyecto.actividad.gestor',
+          'articulacion_proyecto.actividad.gestor.user' => function($query) {
+            $query->withTrashed();
+          },
+          'articulacion_proyecto.actividad.nodo',
+          'articulacion_proyecto.actividad.nodo.entidad',
+          'articulacion_proyecto.proyecto',
+          'articulacion_proyecto.proyecto.fase',
+          'articulacion_proyecto.proyecto.idea',
+        ])->where(function($q) use ($fecha_inicio, $fecha_cierre) {
+          $q->whereHas('articulacion_proyecto.actividad', function($query) use ($fecha_inicio, $fecha_cierre) {
+            $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre]);
+          })
+          ->orWhere(function($query) use ($fecha_inicio, $fecha_cierre) {
+            $query->whereHas('articulacion_proyecto.actividad', function($query) use ($fecha_inicio, $fecha_cierre) {
+              $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
+            })
+            ->orWhereHas('articulacion_proyecto.proyecto.fase', function ($query) {
+              $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
+            });
+          });
+        });
+  }
+  
+
   /**
    * Consulta la cantidad de proyectos que se finalizaron por mes de un nodo
    *

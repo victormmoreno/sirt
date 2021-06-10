@@ -53,7 +53,7 @@
     </thead>
     <tbody>
         @foreach($proyectos as $proyecto)
-            @foreach ($proyecto->articulacion_proyecto->talentos as $talento)
+            @foreach ($proyecto->users_propietarios as $user)
                 <tr>
                     <td>{{ $proyecto->articulacion_proyecto->actividad->codigo_actividad }}</td>
                     <td>{{ $proyecto->articulacion_proyecto->actividad->nodo->entidad->nombre }}</td>
@@ -92,28 +92,28 @@
                     <td>{{ $proyecto->present()->proyectoNombreActorCTi() }}</td>
                     <td>{{ $proyecto->present()->proyectoDirigidoAreaEmprendimiento() }}</td>
 
-                    <td>{{ $talento->user->documento }}</td>
-                    <td>{{ $talento->user->nombres }}</td>
-                    <td>{{ $talento->user->apellidos }}</td>
-                    <td>{{ $talento->user->email }}</td>
-                    <td>{{ $talento->user->celular }} / {{ $talento->user->telefono }}</td>
-                    <td>{{ $talento->user->present()->userGenero() }}</td>
-                    <td>{{ $talento->user->grupoSanguineo->nombre }}</td>
-                    <td>{{ $talento->user->estrato }}</td>
-                    <td>{{ $talento->user->present()->userLugarResidencia() }}</td>
-                    <td>{{ $talento->user->direccion }}</td>
-                    <td>{{ $talento->user->barrio }}</td>
-                    <td>{{ $talento->user->fechanacimiento }}</td>
-                    <td>{{ $talento->user->present()->userEps() }}</td>
-                    <td>{{ $talento->user->present()->userOtraEps() }}</td>
-                    <td>{{ $talento->user->present()->userEtnia() }}</td>
-                    <td>{{ $talento->user->present()->userGradoDiscapacidad() }}</td>
-                    <td>{{ $talento->user->present()->userDescripcionGradoDiscapacidad() }}</td>
-                    <td>{{ $talento->user->present()->userGradoEscolaridad() }}</td>
-                    <td>{{ $talento->user->present()->userInstitucion() }}</td>
-                    <td>{{ $talento->user->present()->userTituloObtenido() }}</td>
-                    <td>{{ $talento->user->present()->userFechaTerminacion() }}</td>
-                    <td>{{ $talento->user->present()->userNombreTipoTalento() }}</td>
+                    <td>{{ $user->documento }}</td>
+                    <td>{{ $user->nombres }}</td>
+                    <td>{{ $user->apellidos }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td>{{ $user->celular }} / {{ $user->telefono }}</td>
+                    <td>{{ $user->present()->userGenero() }}</td>
+                    <td>{{ $user->grupoSanguineo->nombre }}</td>
+                    <td>{{ $user->estrato }}</td>
+                    <td>{{ $user->present()->userLugarResidencia() }}</td>
+                    <td>{{ $user->direccion }}</td>
+                    <td>{{ $user->barrio }}</td>
+                    <td>{{ $user->fechanacimiento }}</td>
+                    <td>{{ $user->present()->userEps() }}</td>
+                    <td>{{ $user->present()->userOtraEps() }}</td>
+                    <td>{{ $user->present()->userEtnia() }}</td>
+                    <td>{{ $user->present()->userGradoDiscapacidad() }}</td>
+                    <td>{{ $user->present()->userDescripcionGradoDiscapacidad() }}</td>
+                    <td>{{ $user->present()->userGradoEscolaridad() }}</td>
+                    <td>{{ $user->present()->userInstitucion() }}</td>
+                    <td>{{ $user->present()->userTituloObtenido() }}</td>
+                    <td>{{ $user->present()->userFechaTerminacion() }}</td>
+                    <td>{{ $user->present()->userNombreTipoTalento() }}</td>
                 </tr>
             @endforeach
         @endforeach

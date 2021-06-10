@@ -30,20 +30,10 @@
           <div class="card">
             <div class="card-content">
               <div class="row">
-                <div class="col s12 m10 l10">
+                <div class="col s12 m12 l12">
                   <div class="center-align">
                     <span class="card-title center-align">Articulaciones G.I - {{auth()->user()->nombres}} {{ auth()->user()->apellidos}}</span>
                   </div>
-                </div>
-                <div class="col s12 m2 l2">
-                  <a href="{{ route('articulacion.create') }}">
-                    <div class="card green">
-                      <div class="card-content center">
-                        <i class="left material-icons white-text">add</i>
-                        <span class="white-text">Nueva Articulación</span>
-                      </div>
-                    </div>
-                  </a>
                 </div>
               </div>
               <div class="divider"></div>

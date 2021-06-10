@@ -80,11 +80,6 @@ class IdeaController extends Controller
                 ]);
             }
             $result = $this->ideaRepository->Store($request);
-            // if ($result['state']) {
-            //     return response()->json(['state' => 'registro', 'url' => route('idea.detalle', $result['idea']->id)]);
-            // } else {
-            //     return response()->json(['state' => 'no_registro']);
-            // }
         } else {
             $req = new IdeaFormRequest($request->input('txtopcionRegistro'));
             $validator = Validator::make($request->all(), $req->rules(), $req->messages());
