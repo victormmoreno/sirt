@@ -27,16 +27,10 @@ class ArticulacionFaseCierreFormRequest extends FormRequest
     {
         return [
             'txttipopostulacion' => 'required',
-            // 'txtpdfjustificado'   =>  Rule::requiredIf(request()->txttipopostulacion == "no") .'|nullable',
             'txtjustificacion'    =>  Rule::requiredIf(request()->txttipopostulacion == "no" ) . '|min:1|max:3500|nullable',
             'txtaprobacion'    =>  Rule::requiredIf(request()->txttipopostulacion == "si" ) . '|nullable',
             'txtrecibira'    =>  Rule::requiredIf(request()->txttipopostulacion == "si" && request()->txtaprobacion == "aprobado") . '|min:1|max:191|nullable',
             'txtcuando'    =>  Rule::requiredIf(request()->txttipopostulacion == "si" && request()->txtaprobacion == "aprobado") . '|date|date_format:Y-m-d|nullable|after_or_equal:' . date('Y-m-d'),
-            // 'txtpdfaprobacion'    =>  Rule::requiredIf(request()->txttipopostulacion == "si" && request()->txtaprobacion == "aprobado") . '|nullable',
-            // 'txtdoc_postulacion1'    =>  Rule::requiredIf(request()->txttipopostulacion == "si" && request()->txtaprobacion == "aprobado") . '|nullable',
-            // 'txtinforme'    =>  Rule::requiredIf(request()->txttipopostulacion == "si" && request()->txtaprobacion == "noaprobado") . '|nullable',
-            // 'txtpdfnoaprobacion'    =>  Rule::requiredIf(request()->txttipopostulacion == "si" && request()->txtaprobacion == "noaprobado") . '|nullable',
-            // 'txtdoc_postulacion'    =>  Rule::requiredIf(request()->txttipopostulacion == "si" && request()->txtaprobacion == "noaprobado") . '|nullable',
             'txtlecciones'    =>   'required|min:1|max:3500',
         ];
     }

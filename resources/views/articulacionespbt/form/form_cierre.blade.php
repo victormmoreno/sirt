@@ -95,16 +95,7 @@
                     <small id="txtpdfaprobacion-error"  class="error red-text"></small>
                 </p>
             </div>
-            <div class="input-field col s12 m12 l6">
-                <p class="p-v-xs">
-                    <input type="checkbox" {{ $actividad->articulacionpbt->present()->articulacionPbtDocumentoPostualcion() == 1 ? 'checked' : '' }}
-                        id="txtdoc_postulacion1" name="txtdoc_postulacion1" value="1"/>
-                    <label for="txtdoc_postulacion1">
-                        PDF de documentos de postulación
-                    </label>
-                    <small id="txtdoc_postulacion1-error"  class="error red-text"></small>
-                </p>
-            </div>
+            
         </div>
         <div class="row r-no-aprobado">
             <div class="input-field col s12 m12 l6">
@@ -129,18 +120,21 @@
                     <small id="txtpdfnoaprobacion-error"  class="error red-text"></small>
                 </p>
             </div>
+            
+        </div>
+        <div class="row ">
             <div class="input-field col s12 m12 l6">
                 <p class="p-v-xs">
-                    <input type="checkbox"  {{ $actividad->articulacionpbt->present()->articulacionPbtDocumentoPostualcion() == 1 ? 'checked' : '' }}
-                        id="txtdoc_postulacion" name="txtdoc_postulacion" value="0">
+                    <input type="checkbox" {{ $actividad->articulacionpbt->present()->articulacionPbtDocumentoPostualcion() == 1 ? 'checked' : '' }}
+                        id="txtdoc_postulacion" name="txtdoc_postulacion" value="1"/>
                     <label for="txtdoc_postulacion">
                         PDF de documentos de postulación
                     </label>
-                    <br>
                     <small id="txtdoc_postulacion-error"  class="error red-text"></small>
                 </p>
             </div>
         </div>
+        
     </div>
 </div>
 <div class="row">
