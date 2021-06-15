@@ -40,7 +40,7 @@
                   </div>
                   <div class="row card-panel teal lighten-5">
                     <h6>Para consultar TODOS los indicadores, debes seleccionar un nodo, un rango de fechas y luego presionar el botón de descarga.</h6>
-                    <div class="input-field col s12 m4 l4">
+                    <div class="input-field col s12 m2 l2">
                       <select class="js-states select2 browser-default" name="txtnodo_id" id="txtnodo_id" style="width: 100%">
                           <option value="all">Todos</option>
                         @foreach($nodos as $nodo)
@@ -48,6 +48,16 @@
                         @endforeach
                       </select>
                       <label for="txtnodo_id" class="active">Seleccione el Nodo</label>
+                    </div>
+                    <div class="input-field col s12 m2 l2">
+                      <select class="js-states select2 browser-default" name="txthoja_nombre" id="txthoja_nombre" style="width: 100%">
+                          <option value="proyectos">Proyectos</option>
+                          <option value="tal_ejecutores">Talentos ejecutores</option>
+                          <option value="empresas_duenhas">Empresas dueñas de propiedad intelectual</option>
+                          <option value="grupos_duenhos">Grupos de investigación dueñas de propiedad intelectual</option>
+                          <option value="personas_duenhas">Personas dueñas de propiedad intelectual</option>
+                      </select>
+                      <label for="txthoja_nombre" class="active">Seleccione que información desea exportar</label>
                     </div>
                     <div class="input-field col s12 m3 l3">
                       <input type="text" id="txtfecha_inicio_todos" name="txtfecha_inicio_todos" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
@@ -77,6 +87,7 @@
       let idnodo = 0;
       let fecha_inicio = $('#txtfecha_inicio_todos').val();
       let fecha_fin = $('#txtfecha_fin_todos').val();
+      let hoja = $('#txthoja_nombre').val();
       if (bandera == 1) {
         idnodo = $('#txtnodo_id').val();
       }
@@ -86,7 +97,7 @@
         if (fecha_inicio > fecha_fin) {
           Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
         } else {
-          location.href = '/excel/export/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin;
+          location.href = '/excel/export/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+hoja;
         }
       }
 
