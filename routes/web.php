@@ -750,10 +750,12 @@ Route::group(
     ],
     function () {
         Route::get('/', 'SeguimientoController@index')->name('seguimiento');
-        Route::get('/seguimientoDeUnGestor/{id}/{fecha_inicio}/{fecha_fin}', 'SeguimientoController@seguimientoDelGestor');
-        Route::get('/seguimientoDeUnNodo/{id}/{fecha_inicio}/{fecha_fin}', 'SeguimientoController@seguimientoDelNodo')->middleware('role_session:Dinamizador|Administrador');
+        Route::get('/seguimientoEsperadoDeUnGestor/{id}', 'SeguimientoController@seguimientoEsperadoDelGestor');
+        Route::get('/seguimientoEsperadoDeUnaLinea/{id}/{nodo}', 'SeguimientoController@seguimientoEsperadoDeLaLinea');
+        Route::get('/seguimientoEsperadoDeUnNodo/{id}', 'SeguimientoController@seguimientoEsperadoDelNodo')->middleware('role_session:Dinamizador|Administrador');
         Route::get('/seguimientoDeUnNodoFases/{id}', 'SeguimientoController@seguimientoDelNodoFases')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/seguimientoDeUnGestorFases/{id}', 'SeguimientoController@seguimientoDelGestorFases')->middleware('role_session:Dinamizador|Administrador');
+        Route::get('/seguimientoActualDeUnGestor/{id}', 'SeguimientoController@seguimientoActualDelGestor');
+        Route::get('/seguimientoActualDeUnaLinea/{id}/{nodo}', 'SeguimientoController@seguimientoActualDeLaLinea');
     }
 );
 

@@ -1,20 +1,18 @@
 var graficosSeguimiento = {
-  gestor: 'graficoSeguimientoPorGestorDeUnNodo_column',
-  nodo: 'graficoSeguimientoDeUnNodo_column',
+  gestor: 'graficoSeguimientoEsperadoPorGestorDeUnNodo_column',
+  nodo_esperado: 'graficoSeguimientoDeUnNodo_column',
   nodo_fases: 'graficoSeguimientoDeUnNodoFases_column',
-  gestor_fases: 'graficoSeguimientoPorGestorFases_column'
+  gestor_fases: 'graficoSeguimientoPorGestorFases_column',
+  linea_esperado: 'graficoSeguimientoEsperadoPorLineaDeUnNodo_column',
+  linea_actual: 'graficoSeguimientoActualPorLineaDeUnNodo_column'
 };
 
 function alertaLineaNoValido() {
-  Swal.fire('Advertencia!', 'Seleccione una Línea Tecnológica', 'warning');
+  Swal.fire('Advertencia!', 'Seleccione una línea tecnológica', 'warning');
 };
 
 function alertaGestorNoValido() {
-  Swal.fire('Advertencia!', 'Seleccione un Gestor', 'warning');
-};
-
-function alertaFechasNoValidas() {
-  Swal.fire('Advertencia!', 'Seleccione fechas válidas', 'warning');
+  Swal.fire('Advertencia!', 'Seleccione un experto', 'warning');
 };
 
 function alertaNodoNoValido() {
@@ -23,52 +21,110 @@ function alertaNodoNoValido() {
 // 0 para cuando el Dinamizador consultar
 // 1 para cuando el gestor consulta
 
-function consultarSeguimientoDeUnGestor(bandera) {
-  let id = 0;
-  let fecha_inicio = $('#txtfecha_inicio_Gestor').val();
-  let fecha_fin = $('#txtfecha_fin_Gestor').val();
-
-  if ( bandera == 1 ) {
-    id = $('#txtgestor_id').val();
-  }
-
-  if ( id === "" ) {
-    alertaGestorNoValido();
-  } else {
-    if ( fecha_inicio > fecha_fin ) {
-      alertaFechasNoValidas();
-    } else {
-      $.ajax({
-        dataType: 'json',
-        type: 'get',
-        url: '/seguimiento/seguimientoDeUnGestor/'+id+'/'+fecha_inicio+'/'+fecha_fin,
-        success: function (data) {
-          graficoSeguimiento(data, graficosSeguimiento.gestor);
-        },
-        error: function (xhr, textStatus, errorThrown) {
-          alert("Error: " + errorThrown);
-        },
-      })
-    }
-  }
+function consultarSeguimientoDeUnGestor(gestor_id) {
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url: '/seguimiento/seguimientoEsperadoDeUnGestor/'+gestor_id,
+    success: function (data) {
+      graficoSeguimientoEsperado(data, graficosSeguimiento.gestor);
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
+  })
 };
 
-function consultarSeguimientoDeUnGestorFase(bandera) {
-  let id = 0;
-
-  if ( bandera == 1 ) {
-    id = $('#txtgestor_id_actual').val();
+// Bandera
+// 0 para dinamizadores y expertos
+// 1 para administradores
+function consultarSeguimientoEsperadoDeUnaLinea(bandera) {
+  let nodo_id = null;
+  let linea_id = null;
+  if (bandera == 0) {
+    linea_id = $('#txtlinea_esperado').val();
+    if (linea_id == '') {
+      return alertaLineaNoValido();
+    }
+  } else {
+    linea_id = $('#txtlinea_esperado').val();
+    nodo_id = $('#txtnodo_linea_esperado').val();
+    if (linea_id == '') {
+      return alertaLineaNoValido();
+    }
+    if (nodo_id == '') {
+      return alertaNodoNoValido();
+    }
   }
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url: '/seguimiento/seguimientoEsperadoDeUnaLinea/'+linea_id+'/'+nodo_id,
+    success: function (data) {
+      graficoSeguimientoEsperado(data, graficosSeguimiento.linea_esperado);
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
+  })
+}
 
-  if ( id === "" ) {
-    alertaGestorNoValido();
+function consultarSeguimientoActualDeUnaLinea(bandera) {
+  let nodo_id = null;
+  let linea_id = null;
+  if (bandera == 0) {
+    linea_id = $('#txtlinea_actual').val();
+    if (linea_id == '') {
+      return alertaLineaNoValido();
+    }
+  } else {
+    linea_id = $('#txtlinea_actual').val();
+    nodo_id = $('#txtnodo_linea_actual').val();
+    if (linea_id == '') {
+      return alertaLineaNoValido();
+    }
+    if (nodo_id == '') {
+      return alertaNodoNoValido();
+    }
+  }
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url: '/seguimiento/seguimientoActualDeUnaLinea/'+linea_id+'/'+nodo_id,
+    success: function (data) {
+      graficoSeguimientoFases(data, graficosSeguimiento.linea_actual);
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
+  })
+}
+
+function consultarSeguimientoActualDeUnGestor(gestor_id) {
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url: '/seguimiento/seguimientoActualDeUnGestor/'+gestor_id,
+    success: function (data) {
+      graficoSeguimientoFases(data, graficosSeguimiento.gestor_fases);
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
+  })
+};
+
+function consultarSeguimientoEsperadoDeUnNodo(nodo_id) {
+
+  if ( nodo_id === "" ) {
+    alertaNodoNoValido();
   } else {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/seguimiento/seguimientoDeUnGestorFases/'+id,
+      url: '/seguimiento/seguimientoEsperadoDeUnNodo/'+nodo_id,
       success: function (data) {
-        graficoSeguimientoFases(data, graficosSeguimiento.gestor_fases);
+        graficoSeguimientoEsperado(data, graficosSeguimiento.nodo_esperado);
       },
       error: function (xhr, textStatus, errorThrown) {
         alert("Error: " + errorThrown);
@@ -77,53 +133,14 @@ function consultarSeguimientoDeUnGestorFase(bandera) {
   }
 };
 
-// 0 para cuando el Dinamizador consultar
-// 1 para cuando el Administrador consulta
-
-function consultarSeguimientoDeUnNodo(bandera) {
-  let id = 0;
-  let fecha_inicio = $('#txtfecha_inicio_Nodo').val();
-  let fecha_fin = $('#txtfecha_fin_Nodo').val();
-
-  if ( bandera == 1 ) {
-    id = $('#txtnodo_id').val();
-  }
-
-  if ( id === "" ) {
-    alertaNodoNoValido();
-  } else {
-    if ( fecha_inicio > fecha_fin ) {
-      alertaFechasNoValidas();
-    } else {
-      $.ajax({
-        dataType: 'json',
-        type: 'get',
-        url: '/seguimiento/seguimientoDeUnNodo/'+id+'/'+fecha_inicio+'/'+fecha_fin,
-        success: function (data) {
-          graficoSeguimiento(data, graficosSeguimiento.nodo);
-        },
-        error: function (xhr, textStatus, errorThrown) {
-          alert("Error: " + errorThrown);
-        },
-      })
-    }
-  }
-};
-
-function consultarSeguimientoDeUnNodoFases(bandera) {
-  let id = 0;
-
-  if ( bandera == 1 ) {
-    id = $('#txtnodo_id').val();
-  }
-
-  if ( id === "" ) {
+function consultarSeguimientoDeUnNodoFases(nodo_id) {
+  if ( nodo_id === "" ) {
     alertaNodoNoValido();
   } else {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/seguimiento/seguimientoDeUnNodoFases/'+id,
+      url: '/seguimiento/seguimientoDeUnNodoFases/'+nodo_id,
       success: function (data) {
         graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
       },
@@ -134,13 +151,13 @@ function consultarSeguimientoDeUnNodoFases(bandera) {
   }
 };
 
-function graficoSeguimiento(data, name) {
+function graficoSeguimientoEsperado(data, name) {
   Highcharts.chart(name, {
     chart: {
       type: 'column'
     },
     title: {
-      text: 'Seguimiento'
+      text: 'Proyectos que se encuentran abiertos'
     },
     yAxis: {
       title: {
@@ -165,10 +182,6 @@ function graficoSeguimiento(data, name) {
         },
         data: [
           {
-            name: "Proyectos Inscritos",
-            y: data.datos.Inscritos,
-          },
-          {
             name: "TRL 6 esperados",
             y: data.datos.Esperado6,
           },
@@ -177,28 +190,8 @@ function graficoSeguimiento(data, name) {
             y: data.datos.Esperado7_8,
           },
           {
-            name: "Proyectos Cerrados",
-            y: data.datos.Cerrados,
-          },
-          {
-            name: "TRL 6 obtenidos",
-            y: data.datos.Obtenido6,
-          },
-          {
-            name: "TRL 7 obtenidos",
-            y: data.datos.Obtenido7_8,
-          },
-          {
-            name: "TRL 8 obtenidos",
-            y: data.datos.Obtenido8,
-          },
-          {
-            name: "Articulaciones con G.I Inscritas",
-            y: data.datos.ArticulacionesInscritas,
-          },
-          {
-            name: "Articulaciones con G.I Cerradas",
-            y: data.datos.ArticulacionesCerradas,
+            name: "Total de proyectos activos",
+            y: data.datos.Activos,
           },
         ]
       }
@@ -212,7 +205,7 @@ function graficoSeguimientoFases(data, name) {
       type: 'column'
     },
     title: {
-      text: 'Seguimiento (Fases)'
+      text: 'Proyectos actuales y finalizados en el año actual'
     },
     yAxis: {
       title: {
@@ -238,27 +231,31 @@ function graficoSeguimientoFases(data, name) {
         data: [
           {
             name: "Proyectos en inicio",
-            y: data.datos.ProyectosInicio,
+            y: data.datos.Inicio,
           },
           {
             name: "Proyectos en planeación",
-            y: data.datos.ProyectosPlaneacion,
+            y: data.datos.Planeacion,
           },
           {
             name: "Proyectos en ejecución",
-            y: data.datos.ProyectosEjecucion,
+            y: data.datos.Ejecucion,
           },
           {
             name: "Proyectos en cierre",
-            y: data.datos.ProyectosCierre,
+            y: data.datos.Cierre,
           },
           {
             name: "Proyectos finalizados",
-            y: data.datos.ProyectosFinalizado,
+            y: data.datos.Finalizado,
           },
           {
             name: "Proyectos suspendidos",
-            y: data.datos.ProyectosSuspendido,
+            y: data.datos.Suspendido,
+          },
+          {
+            name: "Total de proyecto en el año actual",
+            y: data.datos.Total,
           },
         ]
       }

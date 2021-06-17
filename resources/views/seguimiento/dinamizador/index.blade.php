@@ -30,56 +30,96 @@ $yearNow = Carbon\Carbon::now()->isoFormat('YYYY');
               <div class="col s12 m12 l12">
                 <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
                   <li class="tab col s3"><a class="" href="#tecnoparque">Tecnoparque</a></li>
-                  <li class="tab col s3"><a class="" href="#gestor">Gestor</a></li>
-                  {{-- <li class="tab col s3"><a class="" href="#linea">Línea</a></li> --}}
+                  <li class="tab col s3"><a class="" href="#gestor">Experto</a></li>
+                  <li class="tab col s3"><a class="" href="#linea">Línea Tecnológica</a></li>
                 </ul>
                 <br>
+              </div>
+              <div id="linea" class="col s12 m12 l12">
+                <div class="col s12 m12 l12">
+                  <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
+                    <li class="tab col s3"><a class="active" href="#linea_todo">Proyectos abiertos (TRL esperado)</a></li>
+                    <li class="tab col s3"><a class="" href="#linea_actual">Fase actual de proyectos</a></li>
+                  </ul>
+                  <br>
+                </div>
+                <div class="row" id="linea_todo">
+                  <div class="col s12 m4 l4">
+                    <div class="input-field col s12 m12 l12">
+                      <select id="txtlinea_esperado" name="txtlinea_esperado" style="width: 100%" tabindex="-1">
+                        <option value="">Seleccione la línea tecnológica</option>
+                        @foreach($lineas as $id => $nombre)
+                        <option value="{{$id}}">{{$nombre}}</option>
+                        @endforeach
+                      </select>
+                      <label for="txtlinea_esperado">Línea Tecnológica</label>
+                    </div>
+                    <div class="col s12 m12 l12 center">
+                      <button onclick="consultarSeguimientoEsperadoDeUnaLinea(0)" class="btn">Consultar</button>
+                    </div>
+                  </div>
+                  <div class="col s12 m8 l8">
+                    <div id="graficoSeguimientoEsperadoPorLineaDeUnNodo_column" class="green lighten-3"
+                      style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
+                      <div class="row card-panel">
+                        <h5 class="center">
+                          Para consultar el seguimiento de una línea tecnológica, debes seleccionar una línea tecnológica del nodo en la lista desplegable de las líneas del nodo y luego presionar el botón de "Consultar".
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row" id="linea_actual">
+                  <div class="col s12 m4 l4">
+                    <div class="input-field col s12 m12 l12">
+                      <select id="txtlinea_actual" name="txtlinea_actual" style="width: 100%" tabindex="-1">
+                        <option value="">Seleccione la línea tecnológica</option>
+                        @foreach($lineas as $id => $nombre)
+                        <option value="{{$id}}">{{$nombre}}</option>
+                        @endforeach
+                      </select>
+                      <label for="txtlinea_actual">Línea Tecnológica</label>
+                    </div>
+                    <div class="col s12 m12 l12 center">
+                      <button onclick="consultarSeguimientoActualDeUnaLinea(0)" class="btn">Consultar</button>
+                    </div>
+                  </div>
+                  <div class="col s12 m8 l8">
+                    <div id="graficoSeguimientoActualPorLineaDeUnNodo_column" class="green lighten-3"
+                      style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
+                      <div class="row card-panel">
+                        <h5 class="center">
+                          Para consultar el seguimiento de una línea tecnológica, debes seleccionar una línea tecnológica del nodo en la lista desplegable de las líneas del nodo y luego presionar el botón de "Consultar".
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div id="gestor" class="col s12 m12 l12">
                 <div class="col s12 m12 l12">
                   <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
-                    <li class="tab col s3"><a class="" href="#gestor_todo">Proyectos Inscritos - Cerrados</a></li>
+                    <li class="tab col s3"><a class="active" href="#gestor_todo">Proyectos abiertos (TRL esperado)</a></li>
                     <li class="tab col s3"><a class="" href="#gestor_actual">Fase actual de proyectos</a></li>
-                    {{-- <li class="tab col s3"><a class="" href="#linea">Línea</a></li> --}}
                   </ul>
                   <br>
                 </div>
                 <div class="row" id="gestor_todo">
                   <div class="col s12 m4 l4">
                     <div class="input-field col s12 m12 l12">
-                      <select id="txtgestor_id" name="txtgestor_id" style="width: 100%" tabindex="-1">
-                        <option value="">Seleccione el Gestor</option>
+                      <select id="txtgestor_id" name="txtgestor_id" style="width: 100%" tabindex="-1" onchange="consultarSeguimientoDeUnGestor(this.value)">
+                        <option value="">Seleccione el experto</option>
                         @foreach($gestores as $id => $nombres_gestor)
                         <option value="{{$id}}">{{$nombres_gestor}}</option>
                         @endforeach
                       </select>
-                      <label for="txtgestor_id">Gestor</label>
-                    </div>
-                    <div class="input-field col s12 m6 l6">
-                      <input type="text" id="txtfecha_inicio_Gestor" name="txtfecha_inicio_Gestor"
-                        class="datepicker picker__input"
-                        value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
-                      <label for="txtfecha_inicio_Gestor">Fecha Inicio</label>
-                    </div>
-                    <div class="input-field col s12 m6 l6">
-                      <input type="text" id="txtfecha_fin_Gestor" name="txtfecha_fin_Gestor"
-                        class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
-                      <label for="txtfecha_fin_Gestor">Fecha Fin</label>
-                    </div>
-                    <div class="center col s12 m6 l6">
-                      <button onclick="consultarSeguimientoDeUnGestor(1)" class="btn">Consultar</button>
+                      <label for="txtgestor_id">Experto</label>
                     </div>
                   </div>
                   <div class="col s12 m8 l8">
-                    <div id="graficoSeguimientoPorGestorDeUnNodo_column" class="green lighten-3"
+                    <div id="graficoSeguimientoEsperadoPorGestorDeUnNodo_column" class="green lighten-3"
                       style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
                       <div class="row card-panel">
                         <h5 class="center">
-                          Para consultar el seguimiento de un gestor, debes seleccionar un gestor del nodo en el campo
-                          de gestores, luego seleccionar
-                          un rango de fecha y por último pulsar el botón de <button
-                            onclick="consultarSeguimientoDeUnGestor(1)" class="btn">Consultar</button>
-                        </h5>
+                          Para consultar el seguimiento de un experto, debes seleccionar un experto del nodo en la lista desplegable de los expertos.
                       </div>
                     </div>
                   </div>
@@ -87,13 +127,13 @@ $yearNow = Carbon\Carbon::now()->isoFormat('YYYY');
                 <div class="row" id="gestor_actual">
                   <div class="col s12 m4 l4">
                     <div class="input-field col s12 m12 l12">
-                      <select id="txtgestor_id_actual" name="txtgestor_id_actual" style="width: 100%" tabindex="-1" onchange="consultarSeguimientoDeUnGestorFase(1)">
-                        <option value="">Seleccione el Gestor</option>
+                      <select id="txtgestor_id_actual" name="txtgestor_id_actual" style="width: 100%" tabindex="-1" onchange="consultarSeguimientoActualDeUnGestor(this.value)">
+                        <option value="">Seleccione el experto</option>
                         @foreach($gestores as $id => $nombres_gestor)
                         <option value="{{$id}}">{{$nombres_gestor}}</option>
                         @endforeach
                       </select>
-                      <label for="txtgestor_id_actual">Gestor</label>
+                      <label for="txtgestor_id_actual">Experto</label>
                     </div>
                   </div>
                   <div class="col s12 m8 l8">
@@ -101,8 +141,7 @@ $yearNow = Carbon\Carbon::now()->isoFormat('YYYY');
                       style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
                       <div class="row card-panel">
                         <h5 class="center">
-                          Para consultar el seguimiento de un gestor, debes seleccionar un gestor del nodo en el campo
-                          de gestores.
+                          Para consultar el seguimiento de un experto, debes seleccionar un experto del nodo en la lista desplegable de los expertos.
                         </h5>
                       </div>
                     </div>
@@ -112,38 +151,17 @@ $yearNow = Carbon\Carbon::now()->isoFormat('YYYY');
               <div id="tecnoparque" class="col s12 m12 l12">
                 <div class="col s12 m12 l12">
                   <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
-                    <li class="tab col s3"><a class="" href="#tecnoparque_todo">Proyectos Inscritos - Cerrados</a></li>
+                    <li class="tab col s3"><a class="" href="#tecnoparque_esperado">Proyectos abiertos (TRL esperado)</a></li>
                     <li class="tab col s3"><a class="" href="#tecnoparque_actual">Fase actual de proyectos</a></li>
-                    {{-- <li class="tab col s3"><a class="" href="#linea">Línea</a></li> --}}
                   </ul>
                   <br>
                 </div>
-                <div class="row" id="tecnoparque_todo">
-                  <div class="col s12 m4 l4">
-                    <div class="row">
-                      <div class="input-field col s12 m6 l6">
-                        <input type="text" id="txtfecha_inicio_Nodo" name="txtfecha_inicio_Nodo"
-                          class="datepicker picker__input"
-                          value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
-                        <label for="txtfecha_inicio_Nodo">Fecha Inicio</label>
-                      </div>
-                      <div class="input-field col s12 m6 l6">
-                        <input type="text" id="txtfecha_fin_Nodo" name="txtfecha_fin_Nodo"
-                          class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
-                        <label for="txtfecha_fin_Nodo">Fecha Fin</label>
-                      </div>
-                    </div>
-                    <div class="center col s12 m6 l6">
-                      <button onclick="consultarSeguimientoDeUnNodo(0)" class="btn">Consultar</button>
-                    </div>
-                  </div>
-                  <div class="col s12 m8 l8">
-                    <div id="graficoSeguimientoDeUnNodo_column" class="green lighten-3"
-                      style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
+                <div class="row" id="tecnoparque_esperado">
+                  <div class="col s12 m12 l12">
+                    <div id="graficoSeguimientoDeUnNodo_column" class="green lighten-3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
                       <div class="row card-panel">
                         <h5 class="center">
-                          Para consultar el seguimiento de proyectos del nodo, debes seleccionar
-                          un rango de fecha y luego pulsar el botón de <button onclick="consultarSeguimientoDeUnNodo(0)"
+                          Para consultar el seguimiento de proyectos del nodo, debes pulsar el botón de <button onclick="consultarSeguimientoEsperadoDeUnNodo(0)"
                             class="btn">Consultar</button>
                         </h5>
                       </div>
@@ -173,6 +191,7 @@ $yearNow = Carbon\Carbon::now()->isoFormat('YYYY');
 @endsection
 @push('script')
     <script>
+      consultarSeguimientoEsperadoDeUnNodo(0);
       consultarSeguimientoDeUnNodoFases(0);
     </script>
 @endpush

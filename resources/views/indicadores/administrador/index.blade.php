@@ -51,11 +51,11 @@
                     </div>
                     <div class="input-field col s12 m2 l2">
                       <select class="js-states select2 browser-default" name="txthoja_nombre" id="txthoja_nombre" style="width: 100%">
+                        <option value="empresas_duenhas">Empresas dueñas de propiedad intelectual</option>
+                        <option value="grupos_duenhos">Grupos de investigación dueñas de propiedad intelectual</option>
+                        <option value="personas_duenhas">Personas dueñas de propiedad intelectual</option>
                           <option value="proyectos">Proyectos</option>
                           <option value="tal_ejecutores">Talentos ejecutores</option>
-                          <option value="empresas_duenhas">Empresas dueñas de propiedad intelectual</option>
-                          <option value="grupos_duenhos">Grupos de investigación dueñas de propiedad intelectual</option>
-                          <option value="personas_duenhas">Personas dueñas de propiedad intelectual</option>
                       </select>
                       <label for="txthoja_nombre" class="active">Seleccione que información desea exportar</label>
                     </div>
