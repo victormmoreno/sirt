@@ -42,7 +42,7 @@ class ProyectoPresenter extends Presenter
 
     public function proyectoFechaCierre()
     {
-        if ($this->proyecto->fase->nombre == 'Suspendido' || $this->proyecto->fase->nombre == 'Cierre') {
+        if ($this->proyecto->fase->nombre == 'Suspendido' || $this->proyecto->fase->nombre == 'Finalizado') {
             if ($this->proyecto->articulacion_proyecto->actividad->fecha_cierre == null) {
                 return "No registra";
             } else {

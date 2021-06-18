@@ -12,9 +12,11 @@ use App\Exports\User\Talento\TalentoUserExport;
 class Indicadores2020Export implements WithMultipleSheets
 {
     private $query;
-
-    public function __construct($queryProyectos) {
+    private $hoja;
+    
+    public function __construct($queryProyectos, $hoja) {
         $this->setQuery($queryProyectos);
+        $this->hoja = $hoja;
     }
     /**
      * @return array
@@ -22,12 +24,29 @@ class Indicadores2020Export implements WithMultipleSheets
     public function sheets(): array
     {
         $sheets = [];
-
-        $sheets[] = new ProyectosExport($this->getQuery());
-        $sheets[] = new TalentoUserExport($this->getQuery(), 'Ejecutores');
-        $sheets[] = new EmpresasExport($this->getQuery(), 'propietarias');
-        $sheets[] = new GruposExport($this->getQuery(), 'propietarios');
-        $sheets[] = new TalentoUserExport($this->getQuery(), 'Propietarios'); 
+        if ($this->hoja == null) {
+            $sheets[] = new ProyectosExport($this->getQuery());
+            $sheets[] = new TalentoUserExport($this->getQuery(), 'Ejecutores');
+            $sheets[] = new EmpresasExport($this->getQuery(), 'propietarias');
+            $sheets[] = new GruposExport($this->getQuery(), 'propietarios');
+            $sheets[] = new TalentoUserExport($this->getQuery(), 'Propietarios'); 
+        } else {
+            if ($this->hoja == 'proyectos') {
+                $sheets[] = new ProyectosExport($this->getQuery());
+            }
+            if ($this->hoja == 'tal_ejecutores') {
+                $sheets[] = new TalentoUserExport($this->getQuery(), 'Ejecutores');
+            }
+            if ($this->hoja == 'empresas_duenhas') {
+                $sheets[] = new EmpresasExport($this->getQuery(), 'propietarias');
+            }
+            if ($this->hoja == 'grupos_duenhos') {
+                $sheets[] = new GruposExport($this->getQuery(), 'propietarios');
+            }
+            if ($this->hoja == 'personas_duenhas') {
+                $sheets[] = new TalentoUserExport($this->getQuery(), 'Propietarios'); 
+            }
+        }
         // $sheets[] = new ArticulacionesExport($this->getQueryArticulacion());
         return $sheets;
     }

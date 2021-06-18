@@ -29,7 +29,7 @@ class IndicadorController extends Controller
    * @return Response
    * @author dum
    */
-  public function exportIndicadores2020($idnodo, string $fecha_inicio, string $fecha_fin)
+  public function exportIndicadores2020($idnodo, string $fecha_inicio, string $fecha_fin, string $hoja = null)
   {
     $query = '';
 
@@ -51,8 +51,7 @@ class IndicadorController extends Controller
         $query->where('id', auth()->user()->gestor->id);
       })->get();
     }
-
-    return Excel::download(new Indicadores2020Export($query), 'Indicadores_'.$fecha_inicio.'_a_'.$fecha_fin.'.xlsx');
+    return Excel::download(new Indicadores2020Export($query, $hoja), 'Indicadores_'.$fecha_inicio.'_a_'.$fecha_fin.'.xlsx');
   }
 
   private function setProyectoRepository($proyectoRepository)
