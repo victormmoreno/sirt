@@ -5,20 +5,30 @@
                 <ul class="collection">
                     <li class="collection-item">
                         <span class="title black-text text-darken-3">
-                            Idea
+                            Tipo Vinculación
                         </span>
                         <p>
-                            <a class="orange-text text-darken-1" onclick="detallesIdeaPorId({{$actividad->articulacionpbt->present()->articulacionPbtIdIdeaProyecto()}})">{{$actividad->articulacionpbt->present()->articulacionPbtCodeIdeaProyecto()}} - {{$actividad->articulacionpbt->present()->articulacionPbtNameIdeaProyecto()}}</a>
+                            {{$actividad->articulacionpbt->present()->articulacionPbtNameTipoVinculacion()}}
                         </p>
                     </li>
-                    <li class="collection-item">
-                        <span class="title black-text text-darken-3">
-                            Proyecto
-                        </span>
-                        <p>
-                            <a class="orange-text text-darken-1" target="_blank" href="{{route('proyecto.detalle', $actividad->articulacionpbt->present()->articulacionPbtIdProyecto())}}">{{$actividad->articulacionpbt->present()->articulacionPbtCodeProyecto()}} - {{$actividad->articulacionpbt->present()->articulacionPbtNameProyecto()}}</a>
-                        </p>
-                    </li>
+                    @if($actividad->articulacionpbt->present()->articulacionPbtTipoVinculacion(App\Models\ArticulacionPbt::IsPbt()))
+                        <li class="collection-item">
+                            <span class="title black-text text-darken-3">
+                                Idea
+                            </span>
+                            <p>
+                                <a class="orange-text text-darken-1" onclick="detallesIdeaPorId({{$actividad->articulacionpbt->present()->articulacionPbtIdIdeaProyecto()}})">{{$actividad->articulacionpbt->present()->articulacionPbtCodeIdeaProyecto()}} - {{$actividad->articulacionpbt->present()->articulacionPbtNameIdeaProyecto()}}</a>
+                            </p>
+                        </li>
+                        <li class="collection-item">
+                            <span class="title black-text text-darken-3">
+                                Proyecto
+                            </span>
+                            <p>
+                                <a class="orange-text text-darken-1" target="_blank" href="{{route('proyecto.detalle', $actividad->articulacionpbt->present()->articulacionPbtIdProyecto())}}">{{$actividad->articulacionpbt->present()->articulacionPbtCodeProyecto()}} - {{$actividad->articulacionpbt->present()->articulacionPbtNameProyecto()}}</a>
+                            </p>
+                        </li>
+                    @endif
                     <li class="collection-item">
                         <span class="title black-text text-darken-3">
                             Articulación

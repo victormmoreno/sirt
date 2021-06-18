@@ -138,3 +138,8 @@
     @include('ideas.modals')
 </main>
 @endsection
+@push('script')
+    <script>
+        checkTipoVinculacion({{$actividad->articulacionpbt->tipo_vinculacion}});
+    </script>
+@endpush

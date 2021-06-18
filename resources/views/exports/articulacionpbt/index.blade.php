@@ -29,6 +29,9 @@
                 Tipo Articulación
             </th>
             <th>
+                Tipo Vinculación
+            </th>
+            <th>
                 Alcance
             </th>
             <th>
@@ -78,6 +81,9 @@
             </td>
             <td>
                 {{$articulacion->present()->articulacionPbtNombreTipoArticulacion()}}
+            </td>
+            <td>
+                {{$articulacion->present()->articulacionPbtNameTipoVinculacion()}}
             </td>
             <td>
                 {{$articulacion->present()->articulacionPbtNombreAlcanceArticulacion()}}
