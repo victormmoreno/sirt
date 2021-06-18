@@ -40,6 +40,7 @@
                   </div>
                   <div class="row card-panel teal lighten-5">
                     <h6>Para consultar TODOS los indicadores, debes seleccionar un rango de fechas y luego presionar el botón de descarga.</h6>
+                    <h6>Recordar que se está mostrando la fase ACTUAL del proyecto.</h6>
                     <div class="input-field col s12 m5 l5">
                       <input type="text" id="txtfecha_inicio_todos" name="txtfecha_inicio_todos" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                       <label for="txtfecha_inicio_todos">Fecha Inicio</label>
@@ -77,7 +78,7 @@
         if (fecha_inicio > fecha_fin) {
           Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
         } else {
-          location.href = '/excel/export/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin;
+          location.href = '/excel/export/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/all';
         }
       }
 

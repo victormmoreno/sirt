@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\Repository\{ProyectoRepository, ArticulacionRepository, EdtRepository};
+use App\Repositories\Repository\{ProyectoRepository, ArticulacionRepository, EdtRepository, LineaRepository};
 use Illuminate\Support\Facades\{Session};
 use Illuminate\Http\Request;
 use App\Models\{Gestor, Articulacion};
 use App\User;
+use Carbon\Carbon;
 
 class SeguimientoController extends Controller
 {
@@ -17,23 +18,16 @@ class SeguimientoController extends Controller
    */
   private $proyectoRepository;
   /**
-   * Objeto para la clase ArticulacionRepository
+   * Objeto para la clade LineaRepository
    *
    * @var object
    */
-  private $articulacionRepository;
-  /**
-   * Objeto para la clade EdtRepository
-   *
-   * @var object
-   */
-  private $edtRepository;
+  private $lineaRepository;
 
-  public function __construct(ProyectoRepository $proyectoRepository, ArticulacionRepository $articulacionRepository, EdtRepository $edtRepository)
+  public function __construct(ProyectoRepository $proyectoRepository, LineaRepository $lineaRepository)
   {
     $this->setProyectoRepository($proyectoRepository);
-    $this->setArticulacionRepository($articulacionRepository);
-    $this->setEdtRepository($edtRepository);
+    $this->setLineaRepository($lineaRepository);
   }
 
   /**
@@ -47,7 +41,7 @@ class SeguimientoController extends Controller
     if (Session::get('login_role') == User::IsDinamizador()) {
       return view('seguimiento.dinamizador.index', [
         'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
-        // 'lineas' => $this->getLineaRepository()->getAllLineaNodo(auth()->user()->dinamizador->nodo_id)->lineas->pluck('nombre', 'id')
+        'lineas' => $this->getLineaRepository()->getAllLineaNodo(auth()->user()->dinamizador->nodo_id)->lineas->pluck('nombre', 'id')
       ]);
     } else if (Session::get('login_role') == User::IsGestor()) {
       return view('seguimiento.gestor.index');
@@ -57,24 +51,86 @@ class SeguimientoController extends Controller
   }
 
   /**
+   * Agreupa por fases la cantidad de proyectos
+   *
+   * @param Builder $Pabiertos Query de los proyectos por fases (Inicio, Planeación, Ejecución, Cierre)
+   * @return type
+   * @throws conditon
+   **/
+  public function agruparProyectosAbiertos($Pabiertos)
+  {
+    $inicio = 0;
+    $planeacion = 0;
+    $ejecucion = 0;
+    $cierre = 0;
+    $total = 0;
+    foreach ($Pabiertos as $proyecto) {
+      switch ($proyecto->fase) {
+        case 'Inicio':
+          $inicio++;
+          break;
+          case 'Planeación':
+          $planeacion++;
+          break;
+        case 'Ejecución':
+          $ejecucion++;
+          break;
+        case 'Cierre':
+          $cierre++;
+          break;
+      }
+      $total++;
+    }
+    return array('inicio' => $inicio, 'planeacion' => $planeacion, 'ejecucion' => $ejecucion, 'cierre' => $cierre, 'total' => $total);
+  }
+
+  /**
+   * Agreupa por fases la cantidad de proyectos
+   *
+   * @param Builder $Pfinalizados Query de los proyectos por fases (Finalizado, Suspendido)
+   * @return type
+   * @throws conditon
+   **/
+  public function agruparProyectosCerrados($Pfinalizados)
+  {
+    $finalizado = 0;
+    $suspendido = 0;
+    $total = 0;
+    foreach ($Pfinalizados as $proyecto) {
+      switch ($proyecto->fase) {
+        case 'Finalizado':
+          $finalizado++;
+          break;
+        case 'Suspendido':
+          $suspendido++;
+          break;
+      }
+      $total++;
+    }
+    return array('finalizado' => $finalizado, 'suspendido' => $suspendido, 'total' => $total);
+  }
+
+  /**
    * Retorna array con los valores de la cantidad de trl esperado/obtenido
    * @param Collection $proyectos
-   * @param string $fase Indica si se van a contar los trl esperados u obtenidos
+   * @param string $trl Indica si se van a contar los trl esperados u obtenidos
    * @return array
    * @author dum
    **/
-  public function agruparTrls($proyectos, $fase)
+  public function agruparTrls($proyectos, $trl)
   {
+    $total = 0;
     $trl6 = 0;
     $trl7_8 = 0;
     $trl8 = 0;
-    if ($fase == 'Inicio') {
+    if ($trl == 'esperados') {
       foreach ($proyectos as $key => $value) {
         if ($value->trl_esperado == 0) {
-          $trl6 = $value->cantidad;
+          $trl6++;
         } else {
-          $trl7_8 = $value->cantidad;
+          $trl7_8++;
         }
+        $total++;
       }
     } else {
       foreach ($proyectos as $key => $value) {
@@ -87,60 +143,97 @@ class SeguimientoController extends Controller
         }
       }
     }
-    return array('trl6' => $trl6, 'trl7_8' => $trl7_8, 'trl8' => $trl8);
+    return array('trl6' => $trl6, 'trl7_8' => $trl7_8, 'trl8' => $trl8, 'total' => $total);
   }
 
   /**
    * Retorna un array con los valores del seguimiento
-   * @param int $inscritos Valor entero de proyectos inscritos
    * @param array $trlsEsperados Valor entero de agrupacion de proyectos por trls esperados
-   * @param int $cerrados Valor entero de proyectos cerrados
-   * @param array $trlsObtenidos Valor entero de agrupacion de proyectos por trls obtenidos
-   * @param int $articulacionesInscritas Valor entero de articulaciones inscritas
-   * @param int $articulacionesCerradas Valor entero de articulaciones cerradas
    * @return array
    * @author dum
    */
-  private function retornarValoresDelSeguimiento($inscritos, $trlsEsperados, $cerrados, $trlsObtenidos, $articulacionesInscritas, $articulacionesCerradas)
+  private function retornarValoresDelSeguimientoEsperados($trlsEsperados)
   {
     $datos = array();
-    $datos['Inscritos'] = $inscritos;
+    $datos['Activos'] = $trlsEsperados['total'];
     $datos['Esperado6'] = $trlsEsperados['trl6'];
     $datos['Esperado7_8'] = $trlsEsperados['trl7_8'];
-    $datos['Cerrados'] = $cerrados;
-    $datos['Obtenido6'] = $trlsObtenidos['trl6'];
-    $datos['Obtenido7_8'] = $trlsObtenidos['trl7_8'];
-    $datos['Obtenido8'] = $trlsObtenidos['trl8'];
-    $datos['ArticulacionesInscritas'] = $articulacionesInscritas;
-    $datos['ArticulacionesCerradas'] = $articulacionesCerradas;
     return $datos;
   }
 
   /** 
    * Retorna un array con los valores del seguimiento por fase actual
-   * @param int $Pinicio Cantidad de proyectos en fase inicio
-   * @param int $Pplaneacion Cantidad de proyectos en fase planeacion
-   * @param int $Pejecucion Cantidad de proyectos en fase ejecucion
-   * @param int $Pcierre Cantidad de proyectos en fase cierre
-   * @param int $
-   * @param int $
-   * @param int $
-   * @param int $
+   * @param array $abiertos Array con los totales de proyectos activos
+   * @param array $cerrados Array con los totales de proyectos cerrados
+   * @return array
    */
-  private function retornarValoresDelSeguimientoFases(int $Pinicio, int $Pplaneacion, int $Pejecucion, int $Pcierre, int $Pfinalizado, int $Psuspendido) {
+  private function retornarValoresDelSeguimientoPorFases($abiertos, $cerrados) {
     $datos = array();
-    $datos['ProyectosInicio'] = $Pinicio;
-    $datos['ProyectosPlaneacion'] = $Pplaneacion;
-    $datos['ProyectosEjecucion'] = $Pejecucion;
-    $datos['ProyectosCierre'] = $Pcierre;
-    $datos['ProyectosFinalizado'] = $Pfinalizado;
-    $datos['ProyectosSuspendido'] = $Psuspendido;
-
-    // $datos['ArticulacionesInicio'] = $Ainicio;
-    // $datos['ArticulacionesPlaneacion'] = $Aplaneacion;
-    // $datos['ArticulacionesEjecucion'] = $Aejecucion;
-    // $datos['ArticulacionesCierre'] = $Acierre;
+    $datos['Inicio'] = $abiertos['inicio'];
+    $datos['Planeacion'] = $abiertos['planeacion'];
+    $datos['Ejecucion'] = $abiertos['ejecucion'];
+    $datos['Cierre'] = $abiertos['cierre'];
+    $datos['Finalizado'] = $cerrados['finalizado'];
+    $datos['Suspendido'] = $cerrados['suspendido'];
+    $datos['Total'] = $abiertos['total'] + $cerrados['total'];
     return $datos;
+  }
+
+  /**
+   * Consulta el seguimiento de una línea de un nodo
+   *
+   * @param int $linea Id de la linea_tecnologica
+   * @param string $fecha_inicio Primera fecha para realizar el filtro del seguimiento
+   * @param string $fecha_fin Segunda fecha para realizar el filtro del seguimiento
+   * @return Reponse
+   * @author dum
+   */
+  public function seguimientoEsperadoDeLaLinea($idlinea, $idnodo)
+  {
+    if (Session::get('login_role') == User::IsDinamizador()) {
+      $idnodo = auth()->user()->dinamizador->nodo_id;
+    }
+    if (Session::get('login_role') == User::IsGestor()) {
+      $idnodo = auth()->user()->gestor->nodo_id;
+    }
+
+    $datos = array();
+    $trlEsperados = 0;
+    $trlEsperados = $this->getProyectoRepository()->proyectosSeguimientoAbiertos('trl_esperado')->where('lineastecnologicas.id', $idlinea)->where('nodos.id', $idnodo)->get();
+    $trlEsperadosAgrupados = $this->agruparTrls($trlEsperados, 'esperados');
+
+    $datos = $this->retornarValoresDelSeguimientoEsperados($trlEsperadosAgrupados);
+
+    return response()->json([
+      'datos' => $datos
+    ]);
+  }
+
+  /**
+   * Consulta el seguimiento de un gestor
+   *
+   * @param int $id Id del gestor
+   * @param string $fecha_inicio Primera fecha para realizar el filtro del seguimiento
+   * @param string $fecha_fin Segunda fecha para realizar el filtro del seguimiento
+   * @return Reponse
+   * @author dum
+   */
+  public function seguimientoEsperadoDelGestor($id)
+  {
+    $gestor = Gestor::find($id);
+    $idgestor = $gestor->id;
+    $idnodo = $gestor->nodo_id;
+
+    $datos = array();
+    $trlEsperados = 0;
+    $trlEsperados = $this->getProyectoRepository()->proyectosSeguimientoAbiertos('trl_esperado')->where('g.id', $idgestor)->where('nodos.id', $idnodo)->get();
+    $trlEsperadosAgrupados = $this->agruparTrls($trlEsperados, 'esperados');
+
+    $datos = $this->retornarValoresDelSeguimientoEsperados($trlEsperadosAgrupados);
+
+    return response()->json([
+      'datos' => $datos
+    ]);
   }
 
   /**
@@ -151,7 +244,7 @@ class SeguimientoController extends Controller
    * @return Response
    * @author dum
    */
-  public function seguimientoDelNodo($id, $fecha_inicio, $fecha_fin)
+  public function seguimientoEsperadoDelNodo($id)
   {
     $idnodo = $id;
     if (Session::get('login_role') == User::IsDinamizador()) {
@@ -160,19 +253,10 @@ class SeguimientoController extends Controller
 
     $datos = array();
     $trlEsperados = 0;
-    $inscritos = 0;
-    $cerrados = 0;
-    $trlObtenidos = 0;
-    $trlEsperados = $this->getProyectoRepository()->consultarTrl('trl_esperado', 'fecha_inicio', $fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->get();
-    $inscritos = $this->getProyectoRepository()->consultarProyectoInscritosEntreFecha($fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->first()->cantidad;
-    $cerrados = $this->getProyectoRepository()->consultarProyectoCerradosEntreFecha('Finalizado', $fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->first()->cantidad;
-    $trlObtenidos = $this->getProyectoRepository()->consultarTrl('trl_obtenido', 'fecha_cierre', $fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('fases.nombre', 'Cierre')->get();
-    $trlEsperadosAgrupados = $this->agruparTrls($trlEsperados, 'Inicio');
-    $trlObtenidosAgrupados = $this->agruparTrls($trlObtenidos, 'Cierre');
-    $articulacionesInscritas = $this->getArticulacionRepository()->consultarArticulacionesEntreFecha_Repository('fecha_inicio', $fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('tipo_articulacion', Articulacion::IsGrupo())->first()->cantidad;
-    $articulacionesCerradas = $this->getArticulacionRepository()->consultarArticulacionesEntreFecha_Repository('fecha_cierre', $fecha_inicio, $fecha_fin)->where('nodos.id', $idnodo)->where('fases.nombre', 'Cierre')->where('tipo_articulacion', Articulacion::IsGrupo())->first()->cantidad;
+    $trlEsperados = $this->getProyectoRepository()->proyectosSeguimientoAbiertos('trl_esperado')->where('nodos.id', $idnodo)->get();
+    $trlEsperadosAgrupados = $this->agruparTrls($trlEsperados, 'esperados');
 
-    $datos = $this->retornarValoresDelSeguimiento($inscritos, $trlEsperadosAgrupados, $cerrados, $trlObtenidosAgrupados, $articulacionesInscritas, $articulacionesCerradas);
+    $datos = $this->retornarValoresDelSeguimientoEsperados($trlEsperadosAgrupados);
 
     return response()->json([
       'datos' => $datos
@@ -193,94 +277,75 @@ class SeguimientoController extends Controller
     }
 
     $datos = array();
-    $Pinicio = 0;
-    $Pplaneacion = 0;
-    $Pejecucion = 0;
-    $Pcierre = 0;
-    $Psuspendido = 0;
+    $Pabiertos = 0;
+    $Pfinalizados = 0;
     // Proyectos
-    $Pinicio = $this->getProyectoRepository()->consultarProyectosFase('Inicio')->where('nodos.id', $idnodo)->first()->cantidad;
-    $Pplaneacion = $this->getProyectoRepository()->consultarProyectosFase('Planeación')->where('nodos.id', $idnodo)->first()->cantidad;
-    $Pejecucion = $this->getProyectoRepository()->consultarProyectosFase('Ejecución')->where('nodos.id', $idnodo)->first()->cantidad;
-    $Pcierre = $this->getProyectoRepository()->consultarProyectosFase('Cierre')->where('nodos.id', $idnodo)->first()->cantidad;
-    $Pfinalizado = $this->getProyectoRepository()->consultarProyectosFase('Finalizado')->where('nodos.id', $idnodo)->first()->cantidad;
-    $Psuspendido = $this->getProyectoRepository()->consultarProyectosFase('Suspendido')->where('nodos.id', $idnodo)->first()->cantidad;
+    $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->where('nodos.id', $idnodo)->get();
+    $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->where('nodos.id', $idnodo)->get();
 
-    $datos = $this->retornarValoresDelSeguimientoFases($Pinicio, $Pplaneacion, $Pejecucion, $Pcierre, $Pfinalizado, $Psuspendido);
+    $abiertosAgrupados = $this->agruparProyectosAbiertos($Pabiertos);
+    $cerradosAgrupados = $this->agruparProyectosCerrados($Pfinalizados);
+    $datos = $this->retornarValoresDelSeguimientoPorFases($abiertosAgrupados, $cerradosAgrupados);
     return response()->json([
       'datos' => $datos
     ]);
   }
 
   /**
-   * Consulta el seguimiento de un nodo, por fases actuales
-   * @param int $id Id del nodo
+   * Consulta el seguimiento de un experto, por fases actuales
+   * @param int $id Id del experto
    * @return Response
    * @author dum
    **/
-  public function seguimientoDelGestorFases(int $id)
+  public function seguimientoActualDelGestor(int $id)
   {
-    $idgestor = $id;
-    if (Session::get('login_role') == User::IsGestor()) {
-      $idgestor = auth()->user()->gestor->id;
-      $idnodo = auth()->user()->gestor->nodo_id;
-    }
-    if (Session::get('login_role') == User::IsDinamizador()) {
-      $idnodo = auth()->user()->dinamizador->nodo_id;
-    }
+    $gestor = Gestor::find($id);
+    $idgestor = $gestor->id;
+    $idnodo = $gestor->nodo_id;
 
     $datos = array();
-    $Pinicio = 0;
-    $Pplaneacion = 0;
-    $Pejecucion = 0;
-    $Pcierre = 0;
-    $Psuspendido = 0;
+    $Pabiertos = 0;
+    $Pfinalizados = 0;
     // Proyectos
-    $Pinicio = $this->getProyectoRepository()->consultarProyectosFase('Inicio')->where('g.id', $idgestor)->where('nodos.id', $idnodo)->first()->cantidad;
-    $Pplaneacion = $this->getProyectoRepository()->consultarProyectosFase('Planeación')->where('g.id', $idgestor)->where('nodos.id', $idnodo)->first()->cantidad;
-    $Pejecucion = $this->getProyectoRepository()->consultarProyectosFase('Ejecución')->where('g.id', $idgestor)->where('nodos.id', $idnodo)->first()->cantidad;
-    $Pcierre = $this->getProyectoRepository()->consultarProyectosFase('Cierre')->where('g.id', $idgestor)->where('nodos.id', $idnodo)->first()->cantidad;
-    $Pfinalizado = $this->getProyectoRepository()->consultarProyectosFase('Finalizado')->where('g.id', $idgestor)->where('nodos.id', $idnodo)->first()->cantidad;
-    $Psuspendido = $this->getProyectoRepository()->consultarProyectosFase('Suspendido')->where('g.id', $idgestor)->where('nodos.id', $idnodo)->first()->cantidad;
+    $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->where('g.id', $idgestor)->where('nodos.id', $idnodo)->get();
+    $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->where('g.id', $idgestor)->where('nodos.id', $idnodo)->get();
 
-    $datos = $this->retornarValoresDelSeguimientoFases($Pinicio, $Pplaneacion, $Pejecucion, $Pcierre, $Pfinalizado, $Psuspendido);
+    $abiertosAgrupados = $this->agruparProyectosAbiertos($Pabiertos);
+    $cerradosAgrupados = $this->agruparProyectosCerrados($Pfinalizados);
+
+    $datos = $this->retornarValoresDelSeguimientoPorFases($abiertosAgrupados, $cerradosAgrupados);
     return response()->json([
       'datos' => $datos
     ]);
   }
 
   /**
-   * Consulta el seguimiento de un gestor
-   *
-   * @param int $id Id del gestor
-   * @param string $fecha_inicio Primera fecha para realizar el filtro del seguimiento
-   * @param string $fecha_fin Segunda fecha para realizar el filtro del seguimiento
-   * @return Reponse
+   * Consulta el seguimiento de una línea de un nodo, por fases actuales
+   * @param int $idlinea Id de la línea
+   * @param int $idnodo Id del nodo
+   * @return Response
    * @author dum
-   */
-  public function seguimientoDelGestor($id, $fecha_inicio, $fecha_fin)
+   **/
+  public function seguimientoActualDeLaLinea($idlinea, $idnodo)
   {
-    $idgestor = $id;
+    if (Session::get('login_role') == User::IsDinamizador()) {
+      $idnodo = auth()->user()->dinamizador->nodo_id;
+    }
     if (Session::get('login_role') == User::IsGestor()) {
-      $idgestor = auth()->user()->gestor->id;
+      $idnodo = auth()->user()->gestor->nodo_id;
     }
 
     $datos = array();
-    $trlEsperados = 0;
-    $inscritos = 0;
-    $cerrados = 0;
-    $trlObtenidos = 0;
-    $trlEsperados = $this->getProyectoRepository()->consultarTrl('trl_esperado', 'fecha_inicio', $fecha_inicio, $fecha_fin)->where('g.id', $idgestor)->get();
-    $inscritos = $this->getProyectoRepository()->consultarProyectoInscritosEntreFecha($fecha_inicio, $fecha_fin)->where('g.id', $idgestor)->first()->cantidad;
-    $cerrados = $this->getProyectoRepository()->consultarProyectoCerradosEntreFecha('Finalizado', $fecha_inicio, $fecha_fin)->where('g.id', $idgestor)->first()->cantidad;
-    $trlObtenidos = $this->getProyectoRepository()->consultarTrl('trl_obtenido', 'fecha_cierre', $fecha_inicio, $fecha_fin)->where('g.id', $idgestor)->where('fases.nombre', 'Cierre')->get();
-    $trlEsperadosAgrupados = $this->agruparTrls($trlEsperados, 'Inicio');
-    $trlObtenidosAgrupados = $this->agruparTrls($trlObtenidos, 'Cierre');
-    $articulacionesInscritas = $this->getArticulacionRepository()->consultarArticulacionesEntreFecha_Repository('fecha_inicio', $fecha_inicio, $fecha_fin)->where('g.id', $idgestor)->where('tipo_articulacion', Articulacion::IsGrupo())->first()->cantidad;
-    $articulacionesCerradas = $this->getArticulacionRepository()->consultarArticulacionesEntreFecha_Repository('fecha_cierre', $fecha_inicio, $fecha_fin)->where('g.id', $idgestor)->where('fases.nombre', 'Cierre')->where('tipo_articulacion', Articulacion::IsGrupo())->first()->cantidad;
+    $Pabiertos = 0;
+    $Pfinalizados = 0;
+    // Proyectos
+    $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->where('lineastecnologicas.id', $idlinea)->where('nodos.id', $idnodo)->get();
+    $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->where('lineastecnologicas.id', $idlinea)->where('nodos.id', $idnodo)->get();
 
-    $datos = $this->retornarValoresDelSeguimiento($inscritos, $trlEsperadosAgrupados, $cerrados, $trlObtenidosAgrupados, $articulacionesInscritas, $articulacionesCerradas);
+    $abiertosAgrupados = $this->agruparProyectosAbiertos($Pabiertos);
+    $cerradosAgrupados = $this->agruparProyectosCerrados($Pfinalizados);
 
+    $datos = $this->retornarValoresDelSeguimientoPorFases($abiertosAgrupados, $cerradosAgrupados);
     return response()->json([
       'datos' => $datos
     ]);
@@ -308,44 +373,24 @@ class SeguimientoController extends Controller
   }
 
   /**
-   * Asigna un valor a $articulacionRepository
+   * Asigna un valor a $lineaRepository
    * @param object
    * @return void
    * @author dum
    */
-  private function setArticulacionRepository($articulacionRepository)
+  private function setLineaRepository($lineaRepository)
   {
-    $this->articulacionRepository = $articulacionRepository;
+    $this->lineaRepository = $lineaRepository;
   }
 
   /**
-   * Retorna el valor de $articulacionRepository
+   * Retorna el valor de $lineaRepository
    * @return object
    * @author dum
    */
-  private function getArticulacionRepository()
+  private function getLineaRepository()
   {
-    return $this->articulacionRepository;
+    return $this->lineaRepository;
   }
 
-  /**
-   * Asigna un valor a $edtRepository
-   * @param object $edtRepository
-   * @return void
-   * @author dum
-   */
-  private function setEdtRepository($edtRepository)
-  {
-    $this->edtRepository = $edtRepository;
-  }
-
-  /**
-   * Retorna el valor de $edtRepository
-   * @return object
-   * @author dum
-   */
-  private function getEdtRepository()
-  {
-    return $this->edtRepository;
-  }
 }

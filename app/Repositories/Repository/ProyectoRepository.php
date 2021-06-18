@@ -196,7 +196,7 @@ class ProyectoRepository
    * @return Builder
    * @author dum
    **/
-  public function consultarProyectosFase(string $fase)
+  public function consultarProyectosFase()
   {
     return Proyecto::selectRaw('count(proyectos.id) as cantidad')
     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
@@ -204,20 +204,41 @@ class ProyectoRepository
     ->join('gestores AS g', 'g.id', '=', 'actividades.gestor_id')
     ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
     ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
-    ->where('fases.nombre', $fase)
-    ->where(function ($q) {
-      $q->where(function ($query) {
-        $query->whereYear('actividades.fecha_cierre', Carbon::now()->isoFormat('YYYY'));
-      })
-      ->orWhere(function($query) {
-        $query->where(function($query) {
-          $query->whereYear('actividades.fecha_inicio', Carbon::now()->isoFormat('YYYY'));
-          $query->orWhere(function($query) {
-          $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
-        });
-      });
-      });
-    });
+    ->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre'])
+    ->groupBy('fases.nombre');
+  }
+
+  /**
+   * Consulta cantidad de proyecto por fase
+   * @param string $fase Fase que se va a filtrar
+   * @return Builder
+   * @author dum
+   **/
+  public function proyectosSeguimientoCerrados($year)
+  {
+    return Proyecto::select('fases.nombre AS fase', 'proyectos.id')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores AS g', 'g.id', '=', 'actividades.gestor_id')
+    ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
+    ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
+    ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->whereIn('fases.nombre', ['Finalizado', 'Suspendido'])
+    ->whereYear('fecha_cierre', $year);
+  }
+
+  public function proyectosSeguimientoAbiertos()
+  {
+    return Proyecto::select('trl_esperado', 'fases.nombre AS fase')
+    ->join('articulacion_proyecto AS ap', 'ap.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades AS a', 'a.id', '=', 'ap.actividad_id')
+    ->join('gestores AS g', 'g.id', '=', 'a.gestor_id')
+    ->join('nodos', 'nodos.id', '=', 'a.nodo_id')
+    ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
+    ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
+    ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
+    ->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
   }
 
   public function proyectosIndicadores_Repository(string $fecha_inicio, string $fecha_cierre)
