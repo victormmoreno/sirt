@@ -209,7 +209,7 @@ td, th {
         <tr>
           <td><b>Código Articulación<b></td>
           <td colspan="3">{{$articulacion->actividad->codigo_actividad}}</td>
-          <td><b>Tipo Vinculación</b></td>
+          <td><b>Tipo Convocatoria</b></td>
           <td>{{$articulacion->present()->articulacionPbtNameTipoVinculacion()}}</td>
         </tr>
         <tr>

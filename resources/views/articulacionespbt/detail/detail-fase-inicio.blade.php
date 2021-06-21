@@ -5,7 +5,7 @@
                 <ul class="collection">
                     <li class="collection-item">
                         <span class="title black-text text-darken-3">
-                            Tipo Vinculación
+                            Tipo Convocatoria
                         </span>
                         <p>
                             {{$actividad->articulacionpbt->present()->articulacionPbtNameTipoVinculacion()}}
