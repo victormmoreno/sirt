@@ -726,7 +726,7 @@ Route::group(
         Route::get('/excelArticulacionDeUnGestor/{id}', 'Excel\ArticulacionController@articulacionesDeUnGestor')->name('articulacion.excel.gestor');
         Route::get('/excelDeUnaArticulacion/{id}', 'Excel\ArticulacionController@articulacionPorId')->name('articulacion.excel.unica');
         Route::get('/excelArticulacionDeUnNodo/{id}', 'Excel\ArticulacionController@articulacionesDeUnNodo')->name('articulacion.excel.nodo')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/export/{idnodo}/{fecha_inicio}/{fecha_fin}', 'Excel\IndicadorController@exportIndicadores2020')->middleware('role_session:Dinamizador|Administrador|Gestor')->name('indicador.export.excel');
+        Route::get('/export/{idnodo}/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicadores2020')->middleware('role_session:Dinamizador|Administrador|Gestor')->name('indicador.export.excel');
         // Route::get('/export/{idnodo}/{fecha_inicio}/{fecha_fin}', 'Excel\IndicadorController@export')->middleware('role_session:Dinamizador|Administrador')->name('indicador.export.excel');
 
         //Rutas para la generación de excel del módulo de nodo
@@ -750,10 +750,12 @@ Route::group(
     ],
     function () {
         Route::get('/', 'SeguimientoController@index')->name('seguimiento');
-        Route::get('/seguimientoDeUnGestor/{id}/{fecha_inicio}/{fecha_fin}', 'SeguimientoController@seguimientoDelGestor');
-        Route::get('/seguimientoDeUnNodo/{id}/{fecha_inicio}/{fecha_fin}', 'SeguimientoController@seguimientoDelNodo')->middleware('role_session:Dinamizador|Administrador');
+        Route::get('/seguimientoEsperadoDeUnGestor/{id}', 'SeguimientoController@seguimientoEsperadoDelGestor');
+        Route::get('/seguimientoEsperadoDeUnaLinea/{id}/{nodo}', 'SeguimientoController@seguimientoEsperadoDeLaLinea');
+        Route::get('/seguimientoEsperadoDeUnNodo/{id}', 'SeguimientoController@seguimientoEsperadoDelNodo')->middleware('role_session:Dinamizador|Administrador');
         Route::get('/seguimientoDeUnNodoFases/{id}', 'SeguimientoController@seguimientoDelNodoFases')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/seguimientoDeUnGestorFases/{id}', 'SeguimientoController@seguimientoDelGestorFases')->middleware('role_session:Dinamizador|Administrador');
+        Route::get('/seguimientoActualDeUnGestor/{id}', 'SeguimientoController@seguimientoActualDelGestor');
+        Route::get('/seguimientoActualDeUnaLinea/{id}/{nodo}', 'SeguimientoController@seguimientoActualDeLaLinea');
     }
 );
 
