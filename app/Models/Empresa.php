@@ -97,8 +97,4 @@ class Empresa extends Model
     {
         return $this->belongsTo(TamanhoEmpresa::class, 'tamanhoempresa_id', 'id');
     }
-    // public function ideas()
-    // {
-    //   return $this->hasMany(Idea::class, 'empresa_id', 'id');
-    // }
 }

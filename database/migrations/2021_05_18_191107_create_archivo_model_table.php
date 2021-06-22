@@ -6,6 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateArchivoModelTable extends Migration
 {
+    public $tableName = 'archivo_model';
     /**
      * Run the migrations.
      *
@@ -13,7 +14,7 @@ class CreateArchivoModelTable extends Migration
      */
     public function up()
     {
-        Schema::create('archivo_model', function (Blueprint $table) {
+        Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->bigIncrements('id');
             $table->integer('model_id')->unsigned();
@@ -33,6 +34,6 @@ class CreateArchivoModelTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('archivo_model');
+        Schema::dropIfExists($this->tableName);
     }
 }
