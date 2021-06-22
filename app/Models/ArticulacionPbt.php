@@ -22,6 +22,7 @@ class ArticulacionPbt extends Model
         'tipo_vinculacion',
         'actividad_id',
         'proyecto_id',
+        'sede_id',
         'fase_id',
         'tipo_articulacion_id',
         'alcance_articulacion_id',
@@ -94,6 +95,11 @@ class ArticulacionPbt extends Model
     public function archivomodel()
     {
         return $this->morphOne(ArchivoModel::class, 'model');
+    }
+
+    public function sede()
+    {
+        return $this->belongsTo(Sede::class, 'sede_id', 'id');
     }
 
     public function talentos()

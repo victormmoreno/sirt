@@ -5,7 +5,7 @@
                 <ul class="collection">
                     <li class="collection-item">
                         <span class="title black-text text-darken-3">
-                            Tipo Vinculación
+                            Tipo Convocatoria
                         </span>
                         <p>
                             {{$actividad->articulacionpbt->present()->articulacionPbtNameTipoVinculacion()}}
@@ -28,6 +28,15 @@
                                 <a class="orange-text text-darken-1" target="_blank" href="{{route('proyecto.detalle', $actividad->articulacionpbt->present()->articulacionPbtIdProyecto())}}">{{$actividad->articulacionpbt->present()->articulacionPbtCodeProyecto()}} - {{$actividad->articulacionpbt->present()->articulacionPbtNameProyecto()}}</a>
                             </p>
                         </li>
+                    @else
+                    <li class="collection-item">
+                        <span class="title black-text text-darken-3">
+                            Empresa
+                        </span>
+                        <p>
+                            {{$actividad->articulacionpbt->present()->articulacionPbtSedeEmpresa()}}
+                        </p>
+                    </li>
                     @endif
                     <li class="collection-item">
                         <span class="title black-text text-darken-3">

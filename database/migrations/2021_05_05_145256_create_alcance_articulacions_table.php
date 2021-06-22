@@ -6,6 +6,8 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateAlcanceArticulacionsTable extends Migration
 {
+
+    public $tableName = 'alcance_articulaciones';
     /**
      * Run the migrations.
      *
@@ -13,7 +15,7 @@ class CreateAlcanceArticulacionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('alcance_articulaciones', function (Blueprint $table) {
+        Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->charset = 'utf8mb4';
             $table->collation = 'utf8mb4_unicode_ci';
@@ -30,6 +32,6 @@ class CreateAlcanceArticulacionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('alcance_articulaciones');
+        Schema::dropIfExists($this->tableName);
     }
 }

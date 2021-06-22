@@ -4,8 +4,9 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddTipoVinculacionToArticulacionPbt extends Migration
+class AddSedeToArticulacionPbt extends Migration
 {
+
     public $tableName = 'articulacion_pbts';
     /**
      * Run the migrations.
@@ -15,8 +16,9 @@ class AddTipoVinculacionToArticulacionPbt extends Migration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->integer('tipo_vinculacion')->default(1)->after('id'); //defaul-pbt
-            // $table->integer('proyecto_id')->nullable()->change();
+            $table->unsignedInteger('sede_id')->nullable()->after('proyecto_id');
+
+            $table->foreign('sede_id')->references('id')->on('sedes')->onDelete('cascade');
         });
     }
 
@@ -28,7 +30,7 @@ class AddTipoVinculacionToArticulacionPbt extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->dropColumn(['tipo_vinculacion']);
+            $table->dropColumn(['sede_id']);
         });
     }
 }

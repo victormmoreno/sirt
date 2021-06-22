@@ -221,7 +221,7 @@ class UserPresenter extends Presenter
 
     public function userNombreTipoTalento()
     {
-        if ($this->user->has('talento.tipotalento')) {
+        if (isset($this->user->talento->tipotalento) && $this->user->has('talento.tipotalento')) {
             return $this->user->talento->tipotalento->nombre;
         }
         return $this->message('Información no disponible');

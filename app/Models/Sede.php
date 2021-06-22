@@ -35,6 +35,11 @@ class Sede extends Model
       return $this->hasMany(Idea::class, 'sede_id', 'id');
   }
 
+  public function articulaciones()
+  {
+      return $this->hasMany(ArticulacionPbt::class, 'sede_id', 'id');
+  }
+
   public function proyectos()
   {
       return $this->morphToMany(Proyecto::class, 'propietario')->withTimestamps();

@@ -6,6 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateArticulacionesPbtTalentoTable extends Migration
 {
+    public $tableName = 'articulaciones_pbt_talento';
     /**
      * Run the migrations.
      *
@@ -13,7 +14,7 @@ class CreateArticulacionesPbtTalentoTable extends Migration
      */
     public function up()
     {
-        Schema::create('articulaciones_pbt_talento', function (Blueprint $table) {
+        Schema::create($this->tableName, function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('articulacion_pbt_id');
             $table->unsignedInteger('talento_id');
@@ -31,6 +32,6 @@ class CreateArticulacionesPbtTalentoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('articulaciones_pbt_talento');
+        Schema::dropIfExists($this->tableName);
     }
 }
