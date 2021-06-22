@@ -123,6 +123,14 @@ class ArticulacionPbtPresenter extends Presenter
         return false;
     }
 
+    public function articulacionPbtSedeEmpresa()
+    {
+        if ($this->articulacionpbt->sede && isset($this->articulacionpbt->sede)) {
+            return $this->articulacionpbt->sede->nombre_sede;
+        }
+        return "No registra";
+    }
+
 
     public function articulacionPbtObjetivo()
     {
@@ -142,10 +150,10 @@ class ArticulacionPbtPresenter extends Presenter
 
     public function articulacionPbtNombreConvocatoria()
     {
-        if ($this->articulacionpbt && isset($this->articulacionpbt)) {
+        if ($this->articulacionpbt && isset($this->articulacionpbt->nombre_convocatoria)) {
             return $this->articulacionpbt->nombre_convocatoria;
         }
-         return "No registra";
+        return "No registra";
     }
 
     public function articulacionPbtEmail()

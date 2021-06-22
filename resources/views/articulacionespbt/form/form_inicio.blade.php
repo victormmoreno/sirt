@@ -51,19 +51,16 @@
     <li class="collapsible-li active section-projects">
         <div class="collapsible-header grey lighten-2 active"><i class="material-icons">subtitles</i>Seleccione PBT</div>
         <div class="collapsible-body" style="display: block;">
-            
-            {{-- @if ($btnText == 'Guardar') --}}
-                <div class="row search-tabs-row search-tabs-header">
-                    <div class="input-field col s12 m12 l4">
-                        <input type="text" id="filter_code" name="filter_code" class="autocomplete">
-                        <label for="filter_code">Código proyecto</label>
-                    </div>
-                    <div class="input-field col s12 m12 l8 right">
-                        <a class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_project_advanced"><i class="material-icons">list</i>Busqueda Avanzada</a>
-                        <a class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_code_project"><i class="material-icons">search</i>Buscar</a>
-                    </div>
+            <div class="row search-tabs-row search-tabs-header">
+                <div class="input-field col s12 m12 l4">
+                    <input type="text" id="filter_code" name="filter_code" class="autocomplete">
+                    <label for="filter_code">Código proyecto</label>
                 </div>
-            {{-- @endif --}}
+                <div class="input-field col s12 m12 l8 right">
+                    <a class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_project_advanced"><i class="material-icons">list</i>Busqueda Avanzada</a>
+                    <a class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_code_project"><i class="material-icons">search</i>Buscar</a>
+                </div>
+            </div>
             <div class="row search-tabs-row search-tabs-container grey lighten-4">
                 <div class="col s12 m6 l6">
                     <div class="mailbox-options grey lighten-4">
@@ -110,6 +107,85 @@
                     </div>
                 @endif 
 
+            </div>
+        </div>
+    </li>
+    <li class="collapsible-li  section-company" style="display: none;">
+        <div class="collapsible-header grey lighten-2"><i class="material-icons">subtitles</i>Seleccione una sede (Empresa)</div>
+        <div class="collapsible-body" >
+            <div class="row search-tabs-row search-tabs-header">
+                <div class="input-field col s12 m12 l4">
+                    <input type="text" id="filter_nit" name="filter_nit" class="autocomplete">
+                    <label for="filter_nit">Nit Empresa</label>
+                </div>
+                <div class="input-field col s12 m12 l8 right">
+                    <a class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_company_advanced"><i class="material-icons">list</i>Busqueda Avanzada</a>
+                    <a class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_nit_company"><i class="material-icons">search</i>Buscar</a>
+                </div>
+            </div>
+            <div class="row search-tabs-row search-tabs-container grey lighten-4">
+                <div class="col s12 m6 l6">
+                    <div class="mailbox-options grey lighten-4">
+                        <ul class="grey lighten-4">
+                            <li class="text-mailbox">Sedes de la empresa</li>                                            
+                        </ul>
+                    </div>
+                </div>
+                <div class="col s12 m6 l6 right-align search-stats">
+                    <span class="m-r-sm">Resultados</span><span class="secondary-stats"></span>
+                </div>
+            </div>
+            <div class="row search-tabs-row search-tabs-container white lighten-4 alert-response-sedes">
+                               
+                
+                <div class="row">
+                    <div class="col s12 m12 l12">
+                    <div class="card card-transparent">
+                        <div class="card-content">
+                            <div class="search-result">
+                                <p class="search-result-description">No se encontraron resultados</p>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div> 
+            <div class="row search-tabs-row search-tabs-container grey lighten-4">
+                <div class="col s12 m12 l12">
+                    <div class="mailbox-options grey lighten-4 text-white">
+                        <ul class="grey lighten-4 text-white result-sede">
+                            <li class="text-mailbox ">Sede que participará en la articulación</li>                                            
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row search-tabs-row search-tabs-container white lighten-4 alert-response-company">
+                @if(isset($actividad))
+                    <div class="row">
+                        <div class="col s12 m12 l12">
+                            <div class="card transparent bs-dark">
+                                <div class="card-content">
+                                    <span class="card-title p-h-lg"> {{$actividad->articulacionpbt->present()->articulacionPbtSedeEmpresa()}}</span>
+                                    <input type="hidden" name="txtsede" value="{{$actividad->articulacionpbt->sede_id}}"/>                   
+                                </div>
+                            </div>   
+                        </div>
+                    </div>
+                @else
+                <div class="row">
+                    <div class="col s12 m12 l12">
+                        <div class="card card-transparent">
+                            <div class="card-content">
+                                <div class="search-result">
+                                    <p class="search-result-description">Aún no se ha agregado la sede</p>
+                                </div>
+                            </div>
+                        </div>
+                        <small id="txtsede-error" class="error red-text"></small>
+                    </div>
+                </div>
+                @endif
+                
             </div>
         </div>
     </li>
@@ -366,6 +442,7 @@
         </div>
     </li>
 </ul>
+
 @if ($btnText == 'Guardar')
 <center>
     <button type="submit" class="waves-effect cyan darken-1 btn center-aling">

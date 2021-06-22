@@ -167,6 +167,8 @@ td, th {
   .tr-striped {
        background-color: #bdbdbd;
       }
+
+  
 }
 
     </style>
@@ -178,27 +180,21 @@ td, th {
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <title>Acta de Cierre</title>
-    <meta charset="utf-8"/>
   </head>
   
   <body>
     <footer>
         GD-F-007 V01
     </footer>
-    
     <div class="card-content">
-      
       <table class="bordered">
-        
         <tr>
           <td colspan="1" rowspan="2"><img class="center-image" src="{{asset('img/web.png')}}"></td>
           <td colspan="5" class="centered"><b>Acta de Cierre<b></td>
-
         </tr>
         <tr>
           <td colspan="5" class="centered"><b>ACTA No. {{ substr($articulacion->actividad->codigo_actividad, -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b></td>
-        </tr>
-        
+        </tr>     
       </table>
       <br>
       <table class="bordered">
@@ -207,7 +203,9 @@ td, th {
         </tr>
         <tr>
           <td><b>Código Articulación<b></td>
-          <td colspan="5">{{$articulacion->actividad->codigo_actividad}}</td>
+          <td colspan="3">{{$articulacion->actividad->codigo_actividad}}</td>
+          <td><b>Tipo Convocatoria</b></td>
+          <td>{{$articulacion->present()->articulacionPbtNameTipoVinculacion()}}</td>
         </tr>
         <tr>
           <td><b>Nombre Articulación</b></td>
@@ -227,6 +225,12 @@ td, th {
           <td><b>Alcance</b></td>
           <td colspan="2">{{$articulacion->present()->articulacionPbtNombreAlcanceArticulacion()}}</td>
         </tr>
+        @if($articulacion->present()->articulacionPbtTipoVinculacion(App\Models\ArticulacionPbt::IsSenaInnova()) || $articulacion->present()->articulacionPbtTipoVinculacion(App\Models\ArticulacionPbt::IsColinnova()))
+          <tr>
+            <td colspan="2"><b>Sede de la empresa</b></td>
+            <td colspan="4">{{$articulacion->present()->articulacionPbtSedeEmpresa()}}</td>
+          </tr>
+        @endif
         <tr>
           <td colspan="2"><b>Entidad con la que se realiza la articulación</b></td>
           <td colspan="4">{{$articulacion->present()->articulacionPbtEntidad()}}</td>
@@ -247,28 +251,50 @@ td, th {
         </tr>
         <tr>
           <td colspan="4"><b>Se realizo la postulación al convenio, convocatoria y/o instrumento</b></td>
-          <td colspan="2">@if($articulacion->present()->articulacionPbtPostulacion() == 1) SI @else NO @endif</td>
+          <td colspan="2">@if($articulacion->present()->articulacionPbtPostulacion() == 0) NO @else SI @endif</td>
         </tr>
-       
+        @if($articulacion->present()->articulacionPbtPostulacion() == 0)
         <tr>
-          <td colspan="1"><b>Lecciones Aprendidas</b></td>
+          <td colspan="1"><b>Justificación</b></td>
+          <td colspan="5"> {{$articulacion->present()->articulacionPbtJustificacion()}}</td>
+        </tr>
+        @elseif($articulacion->present()->articulacionPbtPostulacion() == 1)
+          <tr>
+            <td colspan="4"><b>Estado Articulación</b></td>
+            <td colspan="2">@if($articulacion->present()->articulacionPbtAprobacion() == 1) Aprobado @else No Aprobado @endif</td>
+          </tr>
+          @if($articulacion->present()->articulacionPbtAprobacion() == 1)
+            <tr>
+              <td colspan="1"><b>Qué recibirá</b></td>
+              <td colspan="5">{{$articulacion->present()->articulacionPbtRecibira()}}</td>
+            </tr>
+            <tr>
+              <td colspan="2"><b>Cuando</b></td>
+              <td colspan="4">{{$articulacion->present()->articulacionPbtFechaCuando()}}</td>
+            </tr>
+          @endif
+        @endif
+        <tr>
+          <td colspan="1"><b>Lecciones aprendidas</b></td>
           <td colspan="5">{{$articulacion->present()->articulacionPbtLeccionesAprendidas()}}</td>
         </tr>
-        <tr class="tr-striped">
-          <td colspan="6" ><b>Información Proyecto de Base Tecnológica (PBT)<b></td>
-        </tr>
-        <tr>
-          <td colspan="1"><b>Código Idea<b></td>
-          <td colspan="2">{{$articulacion->present()->articulacionPbtCodeIdeaProyecto()}}</td>
-          <td colspan="1"><b>Nombre Idea</b></td>
-          <td colspan="2">{{$articulacion->present()->articulacionPbtNameIdeaProyecto()}}</td>
-        </tr>
-        <tr>
-          <td colspan="1"><b>Código Proyecto<b></td>
-          <td colspan="2">{{$articulacion->present()->articulacionPbtCodeProyecto()}}</td>
-          <td colspan="1"><b>Nombre Proyecto</b></td>
-          <td colspan="2">{{$articulacion->present()->articulacionPbtNameProyecto()}}</td>
-        </tr>
+        @if($articulacion->present()->articulacionPbtTipoVinculacion(App\Models\ArticulacionPbt::IsPbt()))
+          <tr class="tr-striped">
+            <td colspan="6" ><b>Información Proyecto de Base Tecnológica (PBT)<b></td>
+          </tr>
+          <tr>
+            <td colspan="1"><b>Código Idea<b></td>
+            <td colspan="2">{{$articulacion->present()->articulacionPbtCodeIdeaProyecto()}}</td>
+            <td colspan="1"><b>Nombre Idea</b></td>
+            <td colspan="2">{{$articulacion->present()->articulacionPbtNameIdeaProyecto()}}</td>
+          </tr>
+          <tr>
+            <td colspan="1"><b>Código Proyecto<b></td>
+            <td colspan="2">{{$articulacion->present()->articulacionPbtCodeProyecto()}}</td>
+            <td colspan="1"><b>Nombre Proyecto</b></td>
+            <td colspan="2">{{$articulacion->present()->articulacionPbtNameProyecto()}}</td>
+          </tr>        
+        @endif
         <tr class="tr-striped">
           <td colspan="6" ><b>Talentos que participan de la articulación<b></td>
         </tr>
