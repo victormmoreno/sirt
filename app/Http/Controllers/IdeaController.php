@@ -55,6 +55,7 @@ class IdeaController extends Controller
      */
     public function store(Request $request)
     {
+        $empresa = null;
         if ($request->input('txtidea_empresa') == 1) {
             // Idea con empresa
             $empresa = $this->empresaRepository->consultarEmpresaParams($request->input('txtnit'), 'nit')->first();
@@ -71,7 +72,7 @@ class IdeaController extends Controller
         }
 
         if ($request->input('txtopcionRegistro') == "guardar") {
-            $req = new IdeaFormRequest($request->input('txtopcionRegistro'));
+            $req = new IdeaFormRequest($request->input('txtopcionRegistro'), $empresa);
             $validator = Validator::make($request->all(), $req->rules(), $req->messages());
             if ($validator->fails()) {
                 return response()->json([
@@ -81,7 +82,7 @@ class IdeaController extends Controller
             }
             $result = $this->ideaRepository->Store($request);
         } else {
-            $req = new IdeaFormRequest($request->input('txtopcionRegistro'));
+            $req = new IdeaFormRequest($request->input('txtopcionRegistro'), $empresa);
             $validator = Validator::make($request->all(), $req->rules(), $req->messages());
             if ($validator->fails()) {
                 return response()->json([
@@ -401,6 +402,7 @@ class IdeaController extends Controller
 
     public function update(Request $request, $id)
     {
+        $empresa = null;
         $idea = $this->ideaRepository->findByid($id);
         $this->authorize('update', $idea);
 
@@ -418,7 +420,7 @@ class IdeaController extends Controller
                 }
             }
         }
-        $req = new IdeaFormRequest($request->input('txtopcionRegistro'));
+        $req = new IdeaFormRequest($request->input('txtopcionRegistro'), $empresa);
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
             return response()->json([

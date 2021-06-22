@@ -33,6 +33,11 @@
       <i class="material-icons {{ setActiveRouteActiveIcon('nodo') }}">location_city</i>Nodo
     </a>
 </li>
+<li class="no-padding {{setActiveRoute('indicadores')}}">
+  <a href="{{route('indicadores')}}" class="{{setActiveRouteActivePage('indicadores')}}">
+    <i class="material-icons {{setActiveRouteActiveIcon('indicadores')}}">info_outline</i>Indicadores
+  </a>
+</li>
 <li class="no-padding {{setActiveRoute('usuario')}}">
     <a class="waves-effect waves-grey {{setActiveRouteActivePage('usuario')}}" href="{{route('usuario.index')}}" rel="canonical" title="Usuarios">
       <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>Usuarios
@@ -48,7 +53,3 @@
     <i class="material-icons {{ setActiveRouteActiveIcon('proyecto') }}">library_books</i>PBT
   </a>
 </li>
-{{-- <li class="no-padding {{setActiveRoute('articulacion')}}">
-  <a class="waves-effect waves-grey {{setActiveRouteActivePage('articulacion')}}" href="{{route('articulacion')}}" rel="canonical" title="Articulaciones">
-    <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>AGI</a>
-</li> --}}

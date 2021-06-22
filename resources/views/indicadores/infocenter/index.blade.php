@@ -40,6 +40,7 @@
                   </div>
                   <div class="row card-panel teal lighten-5">
                     <h6>Para consultar TODOS los indicadores, debes seleccionar un rango de fechas y luego presionar el botón de descarga.</h6>
+                    <h6>Recordar que se está mostrando la fase ACTUAL del proyecto.</h6>
                     <div class="input-field col s12 m5 l5">
                       <input type="text" id="txtfecha_inicio_todos" name="txtfecha_inicio_todos" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
                       <label for="txtfecha_inicio_todos">Fecha Inicio</label>
@@ -49,7 +50,7 @@
                       <label for="txtfecha_fin_todos">Fecha Fin</label>
                     </div>
                     <div class="center input-field col s12 m2 l2">
-                      <a onclick="generarExcelConTodosLosIndicadores(0);" class="btn"><i class="material-icons">file_download</i></a>
+                      <a onclick="generarExcelConTodosLosIndicadores({{auth()->user()->infocenter->nodo_id}});" class="btn"><i class="material-icons">file_download</i></a>
                     </div>
                   </div>
                 </div>
@@ -60,28 +61,17 @@
       </div>
     </div>
   </main>
-@endsection
-@push('script')
+  @endsection
+  @push('script')
   <script>
-    function generarExcelConTodosLosIndicadores(bandera) {
-      let idnodo = 0;
+    function generarExcelConTodosLosIndicadores(nodo_id) {
       let fecha_inicio = $('#txtfecha_inicio_todos').val();
       let fecha_fin = $('#txtfecha_fin_todos').val();
-      if (bandera == 1) {
-        idnodo = $('#txtnodo_id').val();
-      }
-
-      if (idnodo === '') {
-        Swal.fire('Error!', 'Seleccione un nodo', 'error');
+      if (fecha_inicio > fecha_fin) {
+        Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
       } else {
-        if (fecha_inicio > fecha_fin) {
-          Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
-        } else {
-          location.href = '/excel/export/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/all';
-        }
+        location.href = '/excel/export/'+nodo_id+'/'+fecha_inicio+'/'+fecha_fin+'/all';
       }
-
-
     }
   </script>
 @endpush

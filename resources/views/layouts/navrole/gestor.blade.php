@@ -69,11 +69,11 @@
     <i class="material-icons {{setActiveRouteActiveIcon('indicadores')}}">info_outline</i>Indicadores
   </a>
 </li>
-<!--<li class="no-padding {{setActiveRoute('seguimiento')}}">-->
-<!--  <a href="{{route('seguimiento')}}" class="{{setActiveRouteActivePage('seguimiento')}}" rel="canonical" title="Seguimiento">-->
-<!--    <i class="material-icons {{setActiveRouteActiveIcon('seguimiento')}}">search</i>Seguimiento-->
-<!--  </a>-->
-<!--</li>-->
+<li class="no-padding {{setActiveRoute('seguimiento')}}">
+  <a href="{{route('seguimiento')}}" class="{{setActiveRouteActivePage('seguimiento')}}" rel="canonical" title="Seguimiento">
+    <i class="material-icons {{setActiveRouteActiveIcon('seguimiento')}}">search</i>Seguimiento
+  </a>
+</li>
 <li class="no-padding {{setActiveRoute('costos')}}">
   <a class="waves-effect waves-grey {{setActiveRouteActivePage('costos')}}" href="{{route('costos')}}" rel="canonical" title="Costos">
     <i class="material-icons {{setActiveRouteActiveIcon('costos')}}">attach_money</i>Costos

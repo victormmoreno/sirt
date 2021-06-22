@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\Repository\{ProyectoRepository, ArticulacionRepository, EdtRepository, LineaRepository};
+use App\Repositories\Repository\{ProyectoRepository, LineaRepository};
 use Illuminate\Support\Facades\{Session};
 use Illuminate\Http\Request;
-use App\Models\{Gestor, Articulacion};
+use App\Models\{Gestor, Nodo};
 use App\User;
 use Carbon\Carbon;
 
@@ -45,6 +45,10 @@ class SeguimientoController extends Controller
       ]);
     } else if (Session::get('login_role') == User::IsGestor()) {
       return view('seguimiento.gestor.index');
+    } else if (Session::get('login_role') == User::IsAdministrador()) {
+      return view('seguimiento.administrador.index', [
+        'nodos' => Nodo::SelectNodo()->get(),
+      ]);
     } else {
       abort('403');
     }
@@ -263,6 +267,21 @@ class SeguimientoController extends Controller
     ]);
   }
 
+
+  public function seguimientoEsperadoDeTecnoparque()
+  {
+    $datos = array();
+    $trlEsperados = 0;
+    $trlEsperados = $this->getProyectoRepository()->proyectosSeguimientoAbiertos('trl_esperado')->get();
+    $trlEsperadosAgrupados = $this->agruparTrls($trlEsperados, 'esperados');
+
+    $datos = $this->retornarValoresDelSeguimientoEsperados($trlEsperadosAgrupados);
+
+    return response()->json([
+      'datos' => $datos
+    ]);
+  }
+
   /**
    * Consulta el seguimiento de un nodo, por fases actuales
    * @param int $id Id del nodo
@@ -282,6 +301,23 @@ class SeguimientoController extends Controller
     // Proyectos
     $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->where('nodos.id', $idnodo)->get();
     $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->where('nodos.id', $idnodo)->get();
+
+    $abiertosAgrupados = $this->agruparProyectosAbiertos($Pabiertos);
+    $cerradosAgrupados = $this->agruparProyectosCerrados($Pfinalizados);
+    $datos = $this->retornarValoresDelSeguimientoPorFases($abiertosAgrupados, $cerradosAgrupados);
+    return response()->json([
+      'datos' => $datos
+    ]);
+  }
+
+  public function seguimientoDeTecnoparqueFases()
+  {
+    $datos = array();
+    $Pabiertos = 0;
+    $Pfinalizados = 0;
+    // Proyectos
+    $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->get();
+    $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->get();
 
     $abiertosAgrupados = $this->agruparProyectosAbiertos($Pabiertos);
     $cerradosAgrupados = $this->agruparProyectosCerrados($Pfinalizados);

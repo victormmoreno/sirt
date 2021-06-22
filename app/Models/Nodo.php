@@ -147,7 +147,8 @@ class Nodo extends Model
     public function scopeSelectNodo($query)
     {
         return $query->select('nodos.id', DB::raw("CONCAT('Tecnoparque Nodo ',entidades.nombre) as nodos"))
-            ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id');
+            ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+            ->orderBy('entidades.nombre');
     }
 
     /*=====  End of scope para consultar la lista de nodos  ======*/

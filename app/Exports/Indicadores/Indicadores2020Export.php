@@ -24,7 +24,7 @@ class Indicadores2020Export implements WithMultipleSheets
     public function sheets(): array
     {
         $sheets = [];
-        if ($this->hoja == null) {
+        if ($this->hoja == 'all') {
             $sheets[] = new ProyectosExport($this->getQuery());
             $sheets[] = new TalentoUserExport($this->getQuery(), 'Ejecutores');
             $sheets[] = new EmpresasExport($this->getQuery(), 'propietarias');
@@ -47,7 +47,6 @@ class Indicadores2020Export implements WithMultipleSheets
                 $sheets[] = new TalentoUserExport($this->getQuery(), 'Propietarios'); 
             }
         }
-        // $sheets[] = new ArticulacionesExport($this->getQueryArticulacion());
         return $sheets;
     }
 
