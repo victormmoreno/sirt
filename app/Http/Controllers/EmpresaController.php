@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\{Request, Response};
 use App\Http\Requests\{EmpresaFormRequest};
-use App\Models\{Empresa, Sector, TamanhoEmpresa, TipoEmpresa};
+use App\Models\{Empresa, Sector, TamanhoEmpresa, TipoEmpresa, Sede};
 use App\Repositories\Repository\{EmpresaRepository, UserRepository\UserRepository};
 use Illuminate\Support\Facades\{Session, Validator};
 Use App\User;
@@ -109,7 +109,11 @@ class EmpresaController extends Controller
                 $add_propietario = '<a onclick="addEntidadEmpresa('.$data->id.')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
                 return $add_propietario;
             })
-            ->rawColumns(['details', 'edit', 'add_propietario'])->make(true);
+            ->addColumn('add_company_art', function ($data) {
+                $add_propietario = '<a onclick="addCompanyArticulacion('.$data->id.')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+                return $add_propietario;
+            })
+            ->rawColumns(['details', 'edit', 'add_propietario', 'add_company_art'])->make(true);
     }
     // Datatable que muestra las empresas de tecnoparque por parte del dinamizador
 
@@ -460,6 +464,60 @@ class EmpresaController extends Controller
                     'type' => $result['type']
                 ]);
             }
+        }
+    }
+
+    public function filterByCode($value)
+    {
+                
+        if (request()->ajax()) {      
+            $company = Empresa::with([
+                'entidad',
+                'sedes',            
+            ])->where('nit', $value)
+            ->first();
+
+            if($company != null){
+                return response()->json([
+                    'data' => [
+                        'empresa' => $company,
+                        'status_code' => Response::HTTP_OK
+                    ]
+                ],Response::HTTP_OK);
+            }
+            
+            return response()->json([
+                'data' => [
+                    'empresa' => null,
+                    'status_code' => Response::HTTP_NOT_FOUND,
+                ]
+            ]);
+        }else{
+            abort('403');
+        }
+    }
+
+    public function filterSede(int $id){
+        if (request()->ajax()) {
+            $sede = Sede::where('id', $id)->first();
+
+            if($sede != null){
+                return response()->json([
+                    'data' => [
+                        'sede' => $sede,
+                        'status_code' => Response::HTTP_OK
+                    ]
+                ],Response::HTTP_OK);
+            }
+            
+            return response()->json([
+                'data' => [
+                    'empresa' => null,
+                    'status_code' => Response::HTTP_NOT_FOUND,
+                ]
+            ]);
+        } else {
+            abort('403');
         }
     }
 }

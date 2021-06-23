@@ -29,6 +29,7 @@ class ArticulacionFaseInicioFormRequest extends FormRequest
         return [
             'txttipovinculacion' => 'required',
             'txtpbt' => Rule::requiredIf(request()->txttipovinculacion == ArticulacionPbt::IsPbt()) . '|nullable',
+            'txtsede' => Rule::requiredIf(request()->txttipovinculacion == ArticulacionPbt::IsSenaInnova() || request()->txttipovinculacion == ArticulacionPbt::IsColinnova()) . '|nullable',
             'talentos' => 'required',
             'txttalento_interlocutor'=>'required',
             'txtnombre_articulacion' => 'required|min:2|max:191',
@@ -49,6 +50,7 @@ class ArticulacionFaseInicioFormRequest extends FormRequest
         return $messages = [
             'txttipovinculacion.required' => 'El tipo de vinculación es obligatorio.',
             'txtpbt.required' => 'El proyecto es obligatorio.',
+            'txtsede.required' => 'La sede de la empresa es obligatoria.',
             'txt_tipo_articulacion.required' => 'El tipo de articulación es obligatoria.',
             'txt_alcance_articulacion.required' => 'El tipo de articulación es obligatoria.',
             'txttalento_interlocutor.required'=>'Debe haber un interlocutor',

@@ -29,7 +29,7 @@
                 Tipo Articulación
             </th>
             <th>
-                Tipo Vinculación
+                Tipo convocatoria
             </th>
             <th>
                 Alcance
@@ -65,7 +65,7 @@
                 {{$articulacion->actividad->present()->actividadName()}}
             </td>
             <td>
-                {{$articulacion->actividad->present()->actividadUserRolesAsesor()}}
+                {{$articulacion->actividad->present()->actividadUserAsesor()}}
             </td>
             <td>
                 {{$articulacion->present()->articulacionPbtNameFase()}}
