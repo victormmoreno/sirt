@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 class IdeaFormRequest extends FormRequest
 {
     public $type;
+    public $empresa;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -18,9 +19,10 @@ class IdeaFormRequest extends FormRequest
         return true;
     }
 
-    function __construct(string $type)
+    function __construct(string $type, $empresa)
     {
         $this->type = $type;
+        $this->empresa = $empresa;
     }
 
     /**
@@ -50,7 +52,6 @@ class IdeaFormRequest extends FormRequest
             'txtvalor_clientes' => 'max:2100|' . $control,
             'txtsi_requisitos_legales' => Rule::requiredIf(request()->txtrequisitos_legales == 1) . '|max:2100|nullable',
             'txtsi_requiere_certificaciones' => Rule::requiredIf(request()->txtrequiere_certificaciones == 1) . '|max:2100|nullable',
-            'txtsede_id' => Rule::requiredIf(request()->txtsede_id == 1 && request()->txtsede_id == null),
             'txtforma_juridica' => 'max:1400|'. $control,
             'txtlinkvideo' => 'nullable|url|max:1000',
             'txtversion_beta' => $control . '|max:200',
@@ -58,7 +59,8 @@ class IdeaFormRequest extends FormRequest
             'txtsi_recursos_necesarios' => Rule::requiredIf(request()->txtrecursos_necesarios == 1) . '|max:2100|nullable',
             'txtnodo' => 'required',
             'txtconvocatoria' => Rule::requiredIf(request()->txtviene_convocatoria == 1) . '|max:100|nullable',
-            'txtempresa' => Rule::requiredIf(request()->txtaval_empresa == 1) . '|min:1|max:100|nullable'
+            'txtempresa' => Rule::requiredIf(request()->txtaval_empresa == 1) . '|min:1|max:100|nullable',
+            'txtsede_id' => Rule::requiredIf(request()->txtidea_empresa == 1 && $this->empresa != null)
         ];
     }
 

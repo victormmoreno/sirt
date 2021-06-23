@@ -716,8 +716,7 @@ Route::group(
     ],
     function () {
         // Rutas para la generación de excel del módulo de edts
-        Route::get('/excelDeUnaEdt/{id}', 'Excel\EdtController@edtsPorId')->name('edt.excel.unica')->middleware('role_session:Gestor|Dinamizador|Administrador');
-        // Route::get('/excelEdtsDeUnGestor/{id}', 'Excel\EdtController@edtsDeUnGestor')->name('edt.excel.gestor')->middleware('role_session:Gestor|Dinamizador|Administrador');
+        Route::get('/excelDeUnaEdt/{id}', 'Excel\EdtController@edtsPorId')->name('edt.excel.unica')->middleware('role_session:Gestor|Dinamizador|Administrador|Infocenter');
         Route::get('/excelEdtsDeUnNodo/{id}', 'Excel\EdtController@edtsDeUnNodo')->name('edt.excel.nodo')->middleware('role_session:Dinamizador|Administrador');
         Route::get('/excelEdtsFinalizadasPorFechaYNodo/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\EdtController@edtPorFechaCierreYNodo')->name('edt.excel.nodo.fecha')->middleware('role_session:Dinamizador|Administrador');
         Route::get('/excelEdtsFinalizadasPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\EdtController@edtPorFechaCierreYGestor')->name('edt.excel.gestor.fecha')->middleware('role_session:Gestor|Dinamizador|Administrador');
@@ -726,8 +725,7 @@ Route::group(
         Route::get('/excelArticulacionDeUnGestor/{id}', 'Excel\ArticulacionController@articulacionesDeUnGestor')->name('articulacion.excel.gestor');
         Route::get('/excelDeUnaArticulacion/{id}', 'Excel\ArticulacionController@articulacionPorId')->name('articulacion.excel.unica');
         Route::get('/excelArticulacionDeUnNodo/{id}', 'Excel\ArticulacionController@articulacionesDeUnNodo')->name('articulacion.excel.nodo')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/export/{idnodo}/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicadores2020')->middleware('role_session:Dinamizador|Administrador|Gestor')->name('indicador.export.excel');
-        // Route::get('/export/{idnodo}/{fecha_inicio}/{fecha_fin}', 'Excel\IndicadorController@export')->middleware('role_session:Dinamizador|Administrador')->name('indicador.export.excel');
+        Route::get('/export/{idnodo}/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicadores2020')->name('indicador.export.excel');
 
         //Rutas para la generación de excel del módulo de nodo
         Route::get('/excelnodo', 'Excel\NodoController@exportQueryAllNodo')
@@ -753,7 +751,9 @@ Route::group(
         Route::get('/seguimientoEsperadoDeUnGestor/{id}', 'SeguimientoController@seguimientoEsperadoDelGestor');
         Route::get('/seguimientoEsperadoDeUnaLinea/{id}/{nodo}', 'SeguimientoController@seguimientoEsperadoDeLaLinea');
         Route::get('/seguimientoEsperadoDeUnNodo/{id}', 'SeguimientoController@seguimientoEsperadoDelNodo')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/seguimientoDeUnNodoFases/{id}', 'SeguimientoController@seguimientoDelNodoFases')->middleware('role_session:Dinamizador|Administrador');
+        Route::get('/seguimientoEsperadoDeTecnoparque', 'SeguimientoController@seguimientoEsperadoDeTecnoparque')->middleware('role_session:Administrador');
+        Route::get('/seguimientoDeUnNodoFases/{id}', 'SeguimientoController@seguimientoDelNodoFases')->middleware('role_session:Administrador');
+        Route::get('/seguimientoDeTecnoparqueFases', 'SeguimientoController@seguimientoDeTecnoparqueFases')->middleware('role_session:Dinamizador|Administrador');
         Route::get('/seguimientoActualDeUnGestor/{id}', 'SeguimientoController@seguimientoActualDelGestor');
         Route::get('/seguimientoActualDeUnaLinea/{id}/{nodo}', 'SeguimientoController@seguimientoActualDeLaLinea');
     }
@@ -765,7 +765,7 @@ Route::group(
 Route::group(
     [
         'prefix' => 'indicadores',
-        'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor',]
+        'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Gestor|Infocenter']
     ],
     function () {
         Route::get('/', 'IndicadorController@index')->name('indicadores');

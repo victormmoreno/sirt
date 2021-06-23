@@ -57,16 +57,16 @@
     <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas
   </a>
 </li>
+<li class="no-padding {{setActiveRoute('seguimiento')}}">
+  <a href="{{route('seguimiento')}}" class="{{setActiveRouteActivePage('seguimiento')}}" rel="canonical" title="Seguimiento">
+    <i class="material-icons {{setActiveRouteActiveIcon('seguimiento')}}">search</i>Seguimiento
+  </a>
+</li>
 <li class="no-padding {{setActiveRoute('indicadores')}}">
   <a href="{{route('indicadores')}}" class="{{setActiveRouteActivePage('indicadores')}}">
     <i class="material-icons {{setActiveRouteActiveIcon('indicadores')}}">info_outline</i>Indicadores
   </a>
 </li>
-{{-- <li class="no-padding {{setActiveRoute('grafico')}}">
-  <a href="{{route('grafico')}}" class="{{setActiveRouteActivePage('grafico')}}" rel="canonical" title="Gráficos">
-    <i class="material-icons {{setActiveRouteActiveIcon('grafico')}}">insert_chart</i>Gráficos
-  </a>
-</li> --}}
 <li class="no-padding">
   <a class="collapsible-header waves-effect waves-grey {{setActiveRouteActivePage('csibt')}} {{ setActiveRouteActivePage('idea') }} {{ setActiveRouteActivePage('entrenamientos') }} {{setActiveRouteActivePage('idea')}} {{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}  {!! setActiveRoutePadding('idea'),setActiveRoutePadding('entrenamientos'), setActiveRoutePadding('csibt') !!}">
     <i class="material-icons {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">lightbulb_outline</i>Ideas de Proyecto
@@ -132,38 +132,3 @@
         <i class="material-icons {{setActiveRouteActiveIcon('noticias')}}">local_library</i>Noticias
     </a>
 </li>
-{{-- <li class="no-padding">
-  <a class="collapsible-header waves-effect waves-grey {{ setActiveRouteActivePage('visitante'), setActiveRouteActivePage('ingreso') }} {{ setActiveRoutePadding('visitante'), setActiveRoutePadding('ingreso') }}">
-    <i class="material-icons {{ setActiveRouteActiveIcon('visitante') }} {{ setActiveRouteActiveIcon('ingreso') }}">directions_walk</i>Ingresos
-    <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('visitante') }} {{ setActiveRouteActiveIcon('ingreso') }}">keyboard_arrow_right</i>
-  </a>
-  <div class="collapsible-body">
-    <ul>
-      <li>
-        <a href="{{route('ingreso')}}" class="{{setActiveRouteActivePage('ingreso')}}">
-          <i class="material-icons {{setActiveRouteActiveIcon('ingreso')}}">transit_enterexit</i>Ingresos
-        </a>
-      </li>
-      <li>
-        <a href="{{route('visitante')}}" class="{{setActiveRouteActivePage('visitante')}}">
-          <i class="material-icons {{setActiveRouteActiveIcon('visitante')}}">accessibility</i>Visitantes
-        </a>
-      </li>
-    </ul>
-  </div>
-</li> --}}
-{{-- <li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">local_library</i>Materiales de Formación
-  </a>
-</li>
-<li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">attach_money</i>Costos
-  </a>
-</li>
-<li class="no-padding">
-  <a class="waves-effect waves-grey" href="">
-    <i class="material-icons">show_chart</i>Indicadores
-  </a>
-</li> --}}
