@@ -31,7 +31,7 @@ class IndicadorController extends Controller
    */
   public function exportIndicadores2020($idnodo, string $fecha_inicio, string $fecha_fin, string $hoja = null)
   {
-    $query = '';
+    $query = null;
 
     if (Session::get('login_role') == User::IsAdministrador()) {
 
@@ -46,10 +46,15 @@ class IndicadorController extends Controller
       $query = $this->getProyectoRepository()->proyectosIndicadores_Repository($fecha_inicio, $fecha_fin)->whereHas('articulacion_proyecto.actividad.nodo', function($query) {
         $query->where('id', auth()->user()->dinamizador->nodo_id);
       })->get();
+    } else if (Session::get('login_role') == User::IsInfocenter()) {
+      $query = $this->getProyectoRepository()->proyectosIndicadores_Repository($fecha_inicio, $fecha_fin)->whereHas('articulacion_proyecto.actividad.nodo', function($query) {
+        $query->where('id', auth()->user()->infocenter->nodo_id);
+      })->get();
     } else {
       $query = $this->getProyectoRepository()->proyectosIndicadores_Repository($fecha_inicio, $fecha_fin)->whereHas('articulacion_proyecto.actividad.gestor', function($query) {
         $query->where('id', auth()->user()->gestor->id);
       })->get();
+
     }
     return Excel::download(new Indicadores2020Export($query, $hoja), 'Indicadores_'.$fecha_inicio.'_a_'.$fecha_fin.'.xlsx');
   }

@@ -222,6 +222,21 @@
             @endif
           </td>
         </tr>
+        <tr>
+          <th class="centrar" colspan="6">ASISTENTES</th>
+        </tr>
+        <tr>
+          <th class="centrar" colspan="2"><small><b>NOMBRE</b></small></th>
+          <th class="centrar" colspan="2"><small><b>CARGO</b></small></th>
+        </tr>
+        <tr>
+          <td class="centrar" colspan="2"><small>{{$proyecto->articulacion_proyecto->actividad->gestor->user->nombres}} {{$proyecto->articulacion_proyecto->actividad->gestor->user->apellidos}}</small></td>
+          <td class="centrar" colspan="2"><small>Gestor</small></td>
+        </tr>
+        <tr>
+          <td class="centrar" colspan="2"><small>{{$proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', '=', 1)->first()->user->nombres}} {{$proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', '=', 1)->first()->user->apellidos}}</small></td>
+          <td class="centrar" colspan="2"><small>Talento Interlocutor</small></td>
+        </tr>
       </tbody>
     </table>
   </body>

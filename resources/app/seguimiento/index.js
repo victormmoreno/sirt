@@ -1,7 +1,9 @@
 var graficosSeguimiento = {
   gestor: 'graficoSeguimientoEsperadoPorGestorDeUnNodo_column',
   nodo_esperado: 'graficoSeguimientoDeUnNodo_column',
+  tecnoparque_esperado: 'graficoSeguimientoTecnoparque_column',
   nodo_fases: 'graficoSeguimientoDeUnNodoFases_column',
+  tecnoparque_fases: 'graficoSeguimientoTecnoparqueFases_column',
   gestor_fases: 'graficoSeguimientoPorGestorFases_column',
   linea_esperado: 'graficoSeguimientoEsperadoPorLineaDeUnNodo_column',
   linea_actual: 'graficoSeguimientoActualPorLineaDeUnNodo_column'
@@ -114,6 +116,21 @@ function consultarSeguimientoActualDeUnGestor(gestor_id) {
   })
 };
 
+function consultarSeguimientoEsperadoDeTecnoparque() {
+  
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url: '/seguimiento/seguimientoEsperadoDeTecnoparque/',
+    success: function (data) {
+      graficoSeguimientoEsperado(data, graficosSeguimiento.tecnoparque_esperado);
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
+  })
+};
+
 function consultarSeguimientoEsperadoDeUnNodo(nodo_id) {
 
   if ( nodo_id === "" ) {
@@ -149,6 +166,20 @@ function consultarSeguimientoDeUnNodoFases(nodo_id) {
       },
     })
   }
+};
+
+function consultarSeguimientoDeTecnoparqueFases() {
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url: '/seguimiento/seguimientoDeTecnoparqueFases/',
+    success: function (data) {
+      graficoSeguimientoFases(data, graficosSeguimiento.tecnoparque_fases);
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
+  })
 };
 
 function graficoSeguimientoEsperado(data, name) {
