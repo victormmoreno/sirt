@@ -72,20 +72,20 @@ class HomeController extends Controller
               'totalTalentos' => Talento::with('user')->get()->count(),
               'administradores' => User::role(User::IsAdministrador())->select('documento','nombres','apellidos')->get(),
             ]);
-        case 'Dinamizador':
+        case User::IsDinamizador():
         // $datos = array('actualizacion' => 114215, 'spot' => 123);
           return view('home.home');
           break;
 
-        case 'Gestor':
-          return view('home.home');
+        case User::IsGestor():
+          return view('home.gestor');
           break;
 
-        case 'Desarrollador':
+        case User::IsDesarrollador():
           return view('home.desarrollador');
           break;
 
-        case 'Articulador':
+        case User::IsArticulador():
           return view('home.home');
           break;
         default:

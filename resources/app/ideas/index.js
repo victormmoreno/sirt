@@ -19,12 +19,14 @@ $(document).ready(function() {
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
-            "lengthChange": false
+            pageLength: 20,
+            "lengthChange": false,
         }).clear().draw();
         $('#ideas_data_action_table_articulador').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
+            pageLength: 20,
             "lengthChange": false
         }).clear().draw();
         $('#ideas_data_table').DataTable({
@@ -60,12 +62,14 @@ $('#filter_idea').click(function () {
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
+            pageLength: 20,
             "lengthChange": false
         }).clear().draw();
         $('#ideas_data_action_table_articulador').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
+            pageLength: 20,
             "lengthChange": false
         }).clear().draw();
         $('#ideas_data_table').DataTable({
@@ -104,6 +108,7 @@ var idea ={
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
+            pageLength: 20,
             "lengthChange": false,
             processing: true,
             serverSide: true,
@@ -170,6 +175,7 @@ var idea ={
             "lengthChange": false,
             processing: true,
             serverSide: true,
+            pageLength: 20,
             "order": [[ 1, "desc" ]],
             ajax:{
                 url: "/idea/datatable_filtros",
@@ -233,6 +239,7 @@ var idea ={
             "lengthChange": false,
             processing: true,
             serverSide: true,
+            pageLength: 20,
             "order": [[ 1, "desc" ]],
             ajax:{
                 url: "/idea/datatable_filtros",
