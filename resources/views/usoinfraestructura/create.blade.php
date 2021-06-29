@@ -489,7 +489,7 @@
                     name: 'codigo_actividad',
                   },
                   {
-                    title: 'Nombre del Proyecto',
+                    title: 'Nombre de Articulación',
                     data: 'nombre',
                     name: 'nombre',
                   },
@@ -741,8 +741,6 @@
                 type:'get',
                 url:'/materiales/getmaterial/'+ material
             }).done(function(response){
-
-
                 $("label[for='txtcantidad']").empty();
                 $("label[for='txtcantidad']").text('cantidad a gastar ('+response.material.medida.nombre+ ')');
             });
