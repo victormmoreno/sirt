@@ -105,15 +105,14 @@
   function confirmacionRechazoPostulacion(e){
     e.preventDefault();
     Swal.fire({
-    title: '¿Está seguro(a) de rechazar la postulación de esta idea de proyecto?',
+    title: '¿Está seguro(a) de devolver la postulación de esta idea de proyecto?',
     input: 'textarea',
-    inputPlaceholder: 'Por favor, escriba los motivos por los cuales se está rechazando la postulación de la idea de proyecto',
+    inputPlaceholder: 'Por favor, escriba los motivos por los cuales se está devolviendo la postulación de la idea de proyecto',
     type: 'warning',
     inputValidator: (value) => {
       if (!value) {
-        return 'Los motivos de rechazo deben ser obligatorios!'
+        return 'Los motivos por los cuales se devuelve la idea deben ser obligatorios!'
       } else {
-        // $('#decision').val('rechazado');
         $('#txtmotivosRechazo').val(value);
       }
     },
