@@ -38,7 +38,7 @@ $yearNow = Carbon\Carbon::now()->isoFormat('YYYY');
               <div id="linea" class="col s12 m12 l12">
                 <div class="col s12 m12 l12">
                   <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
-                    <li class="tab col s3"><a class="active" href="#linea_todo">Proyectos abiertos (TRL esperado)</a></li>
+                    <li class="tab col s3"><a class="active" href="#linea_todo">Proyectos activos (TRL esperado)</a></li>
                     <li class="tab col s3"><a class="" href="#linea_actual">Fase actual de proyectos</a></li>
                   </ul>
                   <br>
@@ -97,7 +97,7 @@ $yearNow = Carbon\Carbon::now()->isoFormat('YYYY');
               <div id="gestor" class="col s12 m12 l12">
                 <div class="col s12 m12 l12">
                   <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
-                    <li class="tab col s3"><a class="active" href="#gestor_todo">Proyectos abiertos (TRL esperado)</a></li>
+                    <li class="tab col s3"><a class="active" href="#gestor_todo">Proyectos activos (TRL esperado)</a></li>
                     <li class="tab col s3"><a class="" href="#gestor_actual">Fase actual de proyectos</a></li>
                   </ul>
                   <br>
@@ -151,7 +151,7 @@ $yearNow = Carbon\Carbon::now()->isoFormat('YYYY');
               <div id="tecnoparque" class="col s12 m12 l12">
                 <div class="col s12 m12 l12">
                   <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
-                    <li class="tab col s3"><a class="" href="#tecnoparque_esperado">Proyectos abiertos (TRL esperado)</a></li>
+                    <li class="tab col s3"><a class="" href="#tecnoparque_esperado">Proyectos activos (TRL esperado)</a></li>
                     <li class="tab col s3"><a class="" href="#tecnoparque_actual">Fase actual de proyectos</a></li>
                   </ul>
                   <br>

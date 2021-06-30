@@ -114,6 +114,7 @@ function consultarProyectosDelGestorPorAnho() {
     language: {
       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
     },
+    pageLength: 20,
     processing: true,
     serverSide: true,
     order: [ 0, 'desc' ],

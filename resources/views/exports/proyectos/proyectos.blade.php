@@ -2,7 +2,7 @@
     <thead>
     <tr>
         <th>Nodo</th>
-        <th>Gestor a cargo</th>
+        <th>Experto/a a cargo</th>
         <th>Línea Tecnológica</th>
         <th>Sublínea</th>
         <th>Idea de Proyecto</th>

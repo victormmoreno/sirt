@@ -327,6 +327,33 @@ class SeguimientoController extends Controller
     ]);
   }
 
+  public function seguimientoProyectosInscritosPorMes(int $id)
+  {
+    $gestor = Gestor::find($id);
+    $idgestor = $gestor->id;
+    $idnodo = $gestor->nodo_id;
+
+    $datos = array();
+    // Proyectos
+    $datos = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->where('g.id', $idgestor)->where('nodos.id', $idnodo)->get();
+    $datos = $this->agruparDatosPorMeses($datos);
+
+    return response()->json([
+      'datos' => $datos
+    ]);
+  }
+
+  public function agruparDatosPorMeses($datos)
+  {
+    $meses = [];
+    $cantidades = [];
+    foreach ($datos as $key => $dato) {
+      $meses[$key] = $dato->nombre_mes;
+      $cantidades[$key] = $dato->cantidad;
+    }
+    return array('meses' => $meses, 'cantidades' => $cantidades);
+  }
+
   /**
    * Consulta el seguimiento de un experto, por fases actuales
    * @param int $id Id del experto
