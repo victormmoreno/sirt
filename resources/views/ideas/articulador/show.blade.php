@@ -42,7 +42,7 @@
                         <input type="hidden" name="txtmotivosRechazo" id="txtmotivosRechazo" value="">
                         <a href="" onclick="confirmacionRechazoPostulacion(event)">
                           <div class="card-panel red lighten-2 black-text center">
-                            Rechazar idea de proyecto
+                            Devolver idea de proyecto
                           </div>
                         </a>
                       </form>

@@ -228,6 +228,23 @@ class ProyectoRepository
     ->whereYear('fecha_cierre', $year);
   }
 
+
+  public function proyectosInscritosPorMes($year)
+  {
+    $this->traducirMeses();
+    return Proyecto::selectRaw('MONTH(fecha_inicio) AS mes, COUNT(proyectos.id) AS cantidad, DATE_FORMAT(fecha_inicio, "%M") AS nombre_mes')
+    ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    ->join('gestores AS g', 'g.id', '=', 'actividades.gestor_id')
+    ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
+    ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
+    ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
+    ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+    ->whereYear('fecha_inicio', $year)
+    ->groupBy("mes", "nombre_mes")
+    ->orderBy("mes");
+  }
+
   public function proyectosSeguimientoAbiertos()
   {
     return Proyecto::select('trl_esperado', 'fases.nombre AS fase')
@@ -291,6 +308,45 @@ class ProyectoRepository
             });
           });
         });
+  }
+  public function proyectosIndicadoresSeparados_Repository()
+  {
+      return Proyecto::with([
+          'users_propietarios',
+          'gruposinvestigacion',
+          'gruposinvestigacion.clasificacioncolciencias',
+          'gruposinvestigacion.entidad',
+          'sedes',
+          'sedes.empresa',
+          'sedes.empresa.tamanhoempresa',
+          'sedes.empresa.tipoempresa',
+          'sedes.empresa',
+          'sublinea',
+          'sublinea.linea',
+          'areaconocimiento',
+          'fase',
+          'articulacion_proyecto',
+          'articulacion_proyecto.talentos',
+          'articulacion_proyecto.talentos.user' => function($query) {
+            $query->withTrashed();
+          },
+          'articulacion_proyecto.talentos.user.grupoSanguineo',
+          'articulacion_proyecto.talentos.user.eps',
+          'articulacion_proyecto.talentos.user.etnia',
+          'articulacion_proyecto.talentos.user.gradoescolaridad',
+          'articulacion_proyecto.talentos.user.ciudad',
+          'articulacion_proyecto.talentos.user.ciudad.departamento',
+          'articulacion_proyecto.actividad',
+          'articulacion_proyecto.actividad.gestor',
+          'articulacion_proyecto.actividad.gestor.user' => function($query) {
+            $query->withTrashed();
+          },
+          'articulacion_proyecto.actividad.nodo',
+          'articulacion_proyecto.actividad.nodo.entidad',
+          'articulacion_proyecto.proyecto',
+          'articulacion_proyecto.proyecto.fase',
+          'articulacion_proyecto.proyecto.idea',
+        ]);
   }
   
 

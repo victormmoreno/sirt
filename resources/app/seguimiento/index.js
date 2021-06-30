@@ -6,7 +6,8 @@ var graficosSeguimiento = {
   tecnoparque_fases: 'graficoSeguimientoTecnoparqueFases_column',
   gestor_fases: 'graficoSeguimientoPorGestorFases_column',
   linea_esperado: 'graficoSeguimientoEsperadoPorLineaDeUnNodo_column',
-  linea_actual: 'graficoSeguimientoActualPorLineaDeUnNodo_column'
+  linea_actual: 'graficoSeguimientoActualPorLineaDeUnNodo_column',
+  inscritos_mes: 'graficoSeguimientoInscritosPorMes_column'
 };
 
 function alertaLineaNoValido() {
@@ -69,6 +70,25 @@ function consultarSeguimientoEsperadoDeUnaLinea(bandera) {
       alert("Error: " + errorThrown);
     },
   })
+}
+
+function consultarProyectosInscritosPorMes(gestor_id) {
+  if (gestor_id == null) {
+      alertaGestorNoValido();
+  } else {
+    $.ajax({
+      dataType: 'json',
+      type: 'get',
+      url: '/seguimiento/seguimientoInscritosPorMesExperto/'+gestor_id,
+      success: function (data) {
+        console.log(data.datos.meses);
+        graficoSeguimientoPorMes(data, graficosSeguimiento.inscritos_mes);
+      },
+      error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+      },
+    })
+  }
 }
 
 function consultarSeguimientoActualDeUnaLinea(bandera) {
@@ -188,7 +208,7 @@ function graficoSeguimientoEsperado(data, name) {
       type: 'column'
     },
     title: {
-      text: 'Proyectos que se encuentran abiertos'
+      text: 'Proyectos que se encuentran activos'
     },
     yAxis: {
       title: {
@@ -227,6 +247,64 @@ function graficoSeguimientoEsperado(data, name) {
         ]
       }
     ],
+  });
+}
+
+function graficoSeguimientoPorMes(data, name) {
+  Highcharts.chart(name, {
+    title: {
+      text: 'Proyectos inscritos por mes en el año actual'
+    },
+    subtitle: {
+      text: 'Cuando el mes no aparece es porque el valor es cero(0)'
+    },
+    yAxis: {
+      title: {
+        text: 'Cantidad de proyectos'
+      }
+    },
+  
+    xAxis: {
+      categories: data.datos.meses,
+      accessibility: {
+        rangeDescription: 'Mes'
+      }
+    },
+  
+    legend: {
+      layout: 'vertical',
+      align: 'right',
+      verticalAlign: 'middle'
+    },
+  
+    // plotOptions: {
+    //   series: {
+    //     label: {
+    //       connectorAllowed: false
+    //     },
+    //     pointStart: 2010
+    //   }
+    // },
+  
+    series: [{
+      name: 'Proyectos inscritos',
+      data: data.datos.cantidades
+    }],
+  
+    responsive: {
+      rules: [{
+        condition: {
+          maxWidth: 500
+        },
+        chartOptions: {
+          legend: {
+            layout: 'horizontal',
+            align: 'center',
+            verticalAlign: 'bottom'
+          }
+        }
+      }]
+    }
   });
 }
 

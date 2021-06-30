@@ -38,7 +38,7 @@
                 <div id="gestor" class="col s12 m12 l12">
                   <div class="col s12 m12 l12">
                     <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
-                      <li class="tab col s3"><a class="active" href="#gestor_todo">Proyectos abiertos (TRL esperado)</a></li>
+                      <li class="tab col s3"><a class="active" href="#gestor_todo">Proyectos activos (TRL esperado)</a></li>
                       <li class="tab col s3"><a class="" href="#gestor_actual">Fase actual de proyectos</a></li>
                     </ul>
                     <br>
@@ -68,7 +68,14 @@
                   </div>
                 </div>
                 <div id="proyectos" class="col s12 m12 l12">
-                  <div class="row">
+                  <div class="col s12 m12 l12">
+                    <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
+                      <li class="tab col s3"><a class="active" href="#proyectos_asesorias">Resumen de asesorias por proyecto</a></li>
+                      <li class="tab col s3"><a class="" href="#proyectos_inscritos">Proyectos inscritos por mes en el año actual</a></li>
+                    </ul>
+                    <br>
+                  </div>
+                  <div class="row" id="proyectos_asesorias">
                     <div class="col s12 m4 l4">
                       <blockquote>
                         <h5>Aquí puedes generar un archivo PDF con detalles de los usos de infraestructuras que se realizaron en un proyecto.</h5>
@@ -86,6 +93,17 @@
                       </div>
                       <div class="row">
                         @include('seguimiento.table_proyectos')
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" id="proyectos_inscritos">
+                    <div class="col s12 m12 l12">
+                      <div id="graficoSeguimientoInscritosPorMes_column" class="green lighten-3"
+                        style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
+                        <div class="row card-panel">
+                          <h5 class="center">
+                            Para consultar el seguimiento de un experto, solo debe esperar unos segundos.
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -126,6 +144,7 @@
   $( document ).ready(function() {
     consultarSeguimientoDeUnGestor({{auth()->user()->gestor->id}});
     consultarSeguimientoActualDeUnGestor({{auth()->user()->gestor->id}});
+    consultarProyectosInscritosPorMes({{auth()->user()->gestor->id}});
     consultarProyectosSeguimiento_Gestor();
     consultarArticulacionesSeguimiento_Gestor();
   });
