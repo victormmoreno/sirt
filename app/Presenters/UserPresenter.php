@@ -165,7 +165,7 @@ class UserPresenter extends Presenter
 
     public function userYearOld()
     {
-        return isset($this->user->fechanacimiento) ? optional($this->user->fechanacimiento)->age . ' a帽os' : '';
+        return isset($this->user->fechanacimiento) ? optional($this->user->fechanacimiento)->age . ' años' : '';
     }
 
     public function userDinamizadorNombreNodo()
@@ -224,7 +224,7 @@ class UserPresenter extends Presenter
         if (isset($this->user->talento->tipotalento) && $this->user->has('talento.tipotalento')) {
             return $this->user->talento->tipotalento->nombre;
         }
-        return $this->message('Informaci贸n no disponible');
+        return $this->message('Información no disponible');
     }
 
     public function userTipoTalento()

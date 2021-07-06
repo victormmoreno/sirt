@@ -10,7 +10,7 @@ $(document).ready(function() {
     }else if((filter_nodo_art != '' || filter_nodo_art != null) && filter_year_art !='' && filter_phase != '' && filter_tipo_articulacion != '' && (filter_alcance_articulacion != '' || filter_alcance_articulacion != null)){
         articulacion_pbt.fill_datatatables_articulacion(filter_nodo_art, filter_year_art, filter_phase, filter_tipo_articulacion, filter_alcance_articulacion);
     }else{
-        
+
         $('#articulaciones_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -26,9 +26,9 @@ $('#filter_articulacion').click(function () {
     let filter_phase = $('#filter_phase').val();
     let filter_tipo_articulacion = $('#filter_tipo_articulacion').val();
     let filter_alcance_articulacion = $('#filter_alcance_articulacion').val();
-   
+
     $('#articulaciones_data_table').dataTable().fnDestroy();
-    if((filter_nodo_art == '' || filter_nodo_art == null) && filter_year_art !='' && filter_phase != '' && filter_tipo_articulacion != '' && (filter_alcance_articulacion == '' || filter_alcance_articulacion == null)){        
+    if((filter_nodo_art == '' || filter_nodo_art == null) && filter_year_art !='' && filter_phase != '' && filter_tipo_articulacion != '' && (filter_alcance_articulacion == '' || filter_alcance_articulacion == null)){
         articulacion_pbt.fill_datatatables_articulacion(filter_nodo_art = null,filter_year_art, filter_phase, filter_tipo_articulacion, filter_alcance_articulacion = null);
     }else if((filter_nodo_art != '' || filter_nodo_art != null) && filter_year_art !='' && filter_phase != '' && filter_tipo_articulacion != '' && (filter_alcance_articulacion != '' || filter_alcance_articulacion != null)){
         articulacion_pbt.fill_datatatables_articulacion(filter_nodo_art, filter_year_art, filter_phase, filter_tipo_articulacion, filter_alcance_articulacion);
@@ -55,7 +55,7 @@ var articulacion_pbt ={
             ajax:{
                 url: "/articulaciones/datatable_filtros",
                 type: "get",
-                
+
                 data: {
                     filter_nodo_art: filter_nodo_art,
                     filter_year_art: filter_year_art,

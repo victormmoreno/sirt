@@ -31,7 +31,7 @@ class CreateArticulacionPbtsTable extends Migration
             $table->string('nombre_convocatoria')->nullable();
             $table->text('objetivo')->nullable();
             $table->timestamp('fecha_esperada_finalizacion')->nullable();
-            
+
             $table->tinyInteger('aprobacion_dinamizador_ejecucion')->default('0');
             $table->tinyInteger('aprobacion_dinamizador_suspender')->default('0');
 
@@ -39,7 +39,7 @@ class CreateArticulacionPbtsTable extends Migration
             $table->tinyInteger('aprobacion')->default('0');
             $table->text('justificacion')->nullable();
             $table->tinyInteger('informe_justificado')->default('0');
-            $table->tinyInteger('informe_noaprobado')->default('0');
+            $table->text('informe')->nullable();
             $table->string('recibira')->nullable();
             $table->timestamp('cuando')->nullable();
             $table->tinyInteger('pdf_aprobacion')->default('0');
@@ -48,14 +48,14 @@ class CreateArticulacionPbtsTable extends Migration
             $table->tinyInteger('documento_convocatoria')->default('0');
 
             $table->text('lecciones_aprendidas')->nullable();
-            $table->timestamps();  
+            $table->timestamps();
 
             $table->foreign('actividad_id')->references('id')->on('actividades')->onDelete('cascade');
             $table->foreign('proyecto_id')->references('id')->on('proyectos')->onDelete('cascade');
             $table->foreign('fase_id')->references('id')->on('fases')->onDelete('cascade');
             $table->foreign('tipo_articulacion_id')->references('id')->on('tipo_articulaciones')->onDelete('cascade');
             $table->foreign('alcance_articulacion_id')->references('id')->on('alcance_articulaciones')->onDelete('cascade');
-            
+
         });
     }
 

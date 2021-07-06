@@ -31,6 +31,7 @@ class ArticulacionFaseCierreFormRequest extends FormRequest
             'txtaprobacion'    =>  Rule::requiredIf(request()->txttipopostulacion == "si" ) . '|nullable',
             'txtrecibira'    =>  Rule::requiredIf(request()->txttipopostulacion == "si" && request()->txtaprobacion == "aprobado") . '|min:1|max:191|nullable',
             'txtcuando'    =>  Rule::requiredIf(request()->txttipopostulacion == "si" && request()->txtaprobacion == "aprobado") . '|date|date_format:Y-m-d|nullable|after_or_equal:' . date('Y-m-d'),
+            'txtinforme'    =>   Rule::requiredIf(request()->txttipopostulacion == "si" && request()->txtaprobacion == "noaprobado") . '|min:1|max:3500|nullable',
             'txtlecciones'    =>   'required|min:1|max:3500',
         ];
     }
@@ -38,7 +39,7 @@ class ArticulacionFaseCierreFormRequest extends FormRequest
     public function messages()
     {
         return $messages = [
-        
+
             'txttipopostulacion.required' => 'El campo se realizó la postulación es obligatorio.',
             'txtpdfjustificado.required' => 'El campo PDF justificativo firmado por el Talento es obligatorio.',
             'txtjustificacion.required' => 'El campo justificación es obligatorio.',
@@ -61,10 +62,13 @@ class ArticulacionFaseCierreFormRequest extends FormRequest
             'txtpdfnoaprobacion.required' => 'El campo PDF de no aprobación es obligatorio.',
             'txtdoc_postulacion.required' => 'El campo PDF de documentos de postulación es obligatorio.',
 
+            'txtinforme.required' => 'El campo informe es obligatorio.',
+            'txtinforme.min'     => 'El campo informe debe ser minimo 1 caracter',
+            'txtinforme.max'     => 'El campo informe debe ser máximo 3500 caracteres',
+
             'txtlecciones.required' => 'El campo lecciones aprendidas es obligatorio.',
             'txtlecciones.min'     => 'El campo lecciones aprendidas debe ser minimo 1 caracter',
             'txtlecciones.max'     => 'El campo lecciones aprendidas debe ser máximo 3500 caracteres',
-           
         ];
     }
 }
