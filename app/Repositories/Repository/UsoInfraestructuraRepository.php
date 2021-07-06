@@ -233,9 +233,9 @@ class UsoInfraestructuraRepository
 
             if (isset($equiposmantenimiento)) {
                 //formula para calcular el valor del mantenimiento del equipo * tiempo uso infraestructura
-                $mantenimientoEquipo = round(($equiposmantenimiento->valor_mantenimiento / $equiposmantenimiento->equipo->vida_util / $equiposmantenimiento->equipo->horas_uso_anio) * (double) $request->get('tiempouso')[$id]);
+                $mantenimientoEquipo[$id] = round(($equiposmantenimiento->valor_mantenimiento / $equiposmantenimiento->equipo->vida_util / $equiposmantenimiento->equipo->horas_uso_anio) * (double) $request->get('tiempouso')[$id]);
             } else {
-                $mantenimientoEquipo = 0;
+                $mantenimientoEquipo[$id] = 0;
             }
             //costo total de equippos
             $totalEquipos[$id] = $depreciacionEquipo[$id] + $mantenimientoEquipo[$id];
@@ -391,7 +391,7 @@ class UsoInfraestructuraRepository
             'actividad.articulacionpbt.fase',
             // 'actividad.articulacionpbt.tipoarticulacion',
 
-            
+
             'actividad.gestor'                                              => function ($query) {
                 $query->select('id', 'user_id', 'nodo_id', 'lineatecnologica_id');
             },

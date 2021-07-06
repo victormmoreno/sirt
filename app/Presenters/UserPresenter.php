@@ -90,7 +90,7 @@ class UserPresenter extends Presenter
     public function userEtnia()
     {
         if($this->user->has('etnia') && isset($this->user->etnia)){
-            return $this->user->etnia->nombre;  
+            return $this->user->etnia->nombre;
         }
         return 'No Registra';
     }
@@ -165,7 +165,7 @@ class UserPresenter extends Presenter
 
     public function userYearOld()
     {
-        return isset($this->user->fechanacimiento) ? optional($this->user->fechanacimiento)->age . ' años' : '';
+        return isset($this->user->fechanacimiento) ? optional($this->user->fechanacimiento)->age . ' a帽os' : '';
     }
 
     public function userDinamizadorNombreNodo()
@@ -224,7 +224,7 @@ class UserPresenter extends Presenter
         if (isset($this->user->talento->tipotalento) && $this->user->has('talento.tipotalento')) {
             return $this->user->talento->tipotalento->nombre;
         }
-        return $this->message('Información no disponible');
+        return $this->message('Informaci贸n no disponible');
     }
 
     public function userTipoTalento()
