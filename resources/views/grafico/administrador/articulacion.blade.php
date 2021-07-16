@@ -71,7 +71,7 @@
                       </div>
                     </li>
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">autorenew</i>Articulaciones finalizadas por gestor y fecha</div>
+                      <div class="collapsible-header"><i class="material-icons">autorenew</i>Articulaciones finalizadas por experto y fecha</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="col s12 m4 l4">
@@ -96,7 +96,7 @@
                           <div class="col s12 m8 l8">
                             <div id="graficoArticulacionesPorGestorYFecha_stacked" class="green lighten-3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
                               <div class="row card-panel">
-                                <h5 class="center">Para consultar las articulaciones por gestor, se debe seleccionar un gestor y fechas válidas, luego presionar el botón consultar</h5>
+                                <h5 class="center">Para consultar las articulaciones por experto, se debe seleccionar un experto y fechas válidas, luego presionar el botón consultar</h5>
                               </div>
                             </div>
                           </div>
@@ -166,7 +166,6 @@
 @endsection
 @push('script')
   <script>
-    // $(document).ready(function(){});
     function getGestorYLineasDeUnNodo(id) {
       if (id == '') {
         Swal.fire('Advertencia!', 'Seleccione un nodo válido!', 'warning');
@@ -179,14 +178,12 @@
             $('#txtgestor_id').empty();
             $('#txtgestor_id').append('<option value="">Seleccione el Gestor</option>')
             $.each(data.gestores, function(i, e) {
-              // console.log(e.nombres_gestor);
               $('#txtgestor_id').append('<option value="'+e.id+'">'+e.nombres_gestor+'</option>');
             })
 
             $('#txtlinea_tecnologica').empty();
             $('#txtlinea_tecnologica').append('<option value="">Seleccione la Línea Tecnológica</option>')
             $.each(data.lineas, function(i, e) {
-              // console.log(e.nombres_gestor);
               $('#txtlinea_tecnologica').append('<option value="'+e.id+'">'+e.nombre+'</option>');
             })
             $('#txtgestor_id').material_select();

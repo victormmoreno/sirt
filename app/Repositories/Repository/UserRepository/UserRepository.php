@@ -4,7 +4,6 @@ namespace App\Repositories\Repository\UserRepository;
 
 use App\Models\{
     ActivationToken,
-    Honorario,
     Centro,
     Ciudad,
     Departamento,
@@ -21,110 +20,57 @@ use App\Models\{
     Ocupacion,
     Regional,
     Talento,
-    TipoDocumento
+    TipoDocumento,
+    UserNodo
 };
-
 use App\User;
 use Cache;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Session;
 use Spatie\Permission\Models\Role;
-
-
 class UserRepository
 {
-    /*===========================================================================
-    =            metodo para consultar todos los tipos de documentos            =
-    ===========================================================================*/
 
     public function getAllTipoDocumento()
     {
         return TipoDocumento::allTipoDocumento()->get();
     }
 
-    /*=====  End of metodo para consultar todos los tipos de documentos  ======*/
-
-    /*=============================================================
-    =            metodo para consultar todos los nodos            =
-    =============================================================*/
-
     public function getAllNodos()
     {
         return Nodo::selectNodo()->pluck('nodos', 'id');
     }
-
-    /*=====  End of metodo para consultar todos los nodos  ======*/
-
-    /*=====================================================================
-    =            metodo para consultar todos los departamentos            =
-    =====================================================================*/
 
     public function getAllDepartamentos()
     {
         return Departamento::allDepartamentos()->get();
     }
 
-    /*=====  End of metodo para consultar todos los departamentos  ======*/
-
-    /*=================================================================
-    =            metodo para consultar todoas las ciudades            =
-    =================================================================*/
-
     public function getAllCiudades()
     {
         return Ciudad::all();
     }
-
-    /*=====  End of metodo para consultar todoas las ciudades  ======*/
-
-    /*============================================================================
-    =            metodo para consultar las ciudades por departmamento            =
-    ============================================================================*/
 
     public function getAllCiudadDepartamento($departamento)
     {
         return Ciudad::allCiudadDepartamento($departamento)->get();
     }
 
-    /*=====  End of metodo para consultar las ciudades por departmamento  ======*/
-
-    /*=============================================================================
-    =            metodo para consultar todos los grados de escolaridad            =
-    =============================================================================*/
-
     public function getSelectAllGradosEscolaridad()
     {
         return GradoEscolaridad::allGradosEscolaridad()->orderby('gradosescolaridad.nombre')->get();
     }
-
-    /*=====  End of metodo para consultar todos los grados de escolaridad  ======*/
-
-    /*=========================================================================
-    =            metodo para consultar todos los grupos sanguineos            =
-    =========================================================================*/
 
     public function getAllGrupoSanguineos()
     {
         return GrupoSanguineo::allGrupoSanguineos('gruposanguineos.nombre')->get();
     }
 
-    /*=====  End of metodo para consultar todos los grupos sanguineos  ======*/
-
-    /*===========================================================================
-    =            metodo para consultar todos las eps segun su estado            =
-    ===========================================================================*/
-
     public function getAllEpsActivas()
     {
         return Eps::allEps(Eps::IsActive(), 'eps.nombre')->get();
     }
-
-    /*=====  End of metodo para consultar todos las eps segun su estado  ======*/
-
-    /*===============================================
-    =            metodod para registrar  token de activacion           =
-    ===============================================*/
 
     public function activationToken($user)
     {
@@ -135,29 +81,13 @@ class UserRepository
         ]);
     }
 
-    /*=====  End of metodod para registrar   ======*/
-
-    /*====================================================================
-    =            metodo para  consultar todas las ocupaciones            =
-    ====================================================================*/
-
     public function getAllOcupaciones()
     {
-
         return Ocupacion::allOcupaciones()->pluck('nombre', 'id');
     }
 
-    /*=====  End of metodo para  consultar todas las ocupaciones  ======*/
-
-    /*=====  End of metodo para consultar todo el detalle del usuario por su id  ======*/
-
-    /*===============================================================
-    =            metodo para consultar el usuario por id            =
-    ===============================================================*/
-
     public function findById($id)
     {
-
         return User::with(
             [
                 'tipodocumento' => function ($query) {
@@ -196,7 +126,6 @@ class UserRepository
 
     public function findUserByDocument($document)
     {
-
         return User::with(
             [
                 'tipodocumento' => function ($query) {
@@ -233,44 +162,21 @@ class UserRepository
         )->withTrashed()->where('documento', $document);
     }
 
-    /*=====  End of metodo para consultar el usuario por id  ======*/
-
-    /*========================================================================
-    =            metodo para consultar la informacion del usuario            =
-    ========================================================================*/
-
     public function account($id)
     {
         return User::with(['tipodocumento', 'grupoSanguineo', 'eps', 'ciudad', 'ciudad.departamento', 'ocupaciones', 'gradoescolaridad', 'talento', 'dinamizador', 'roles', 'dinamizador.nodo', 'dinamizador.nodo.entidad', 'gestor.nodo', 'gestor.nodo.entidad', 'gestor.lineatecnologica', 'infocenter', 'infocenter.nodo', 'infocenter.nodo.entidad'])->withTrashed()->where('id', $id)->firstOrFail();
     }
 
-    /*=====  End of metodo para consultar la informacion del usuario  ======*/
-
-    /*========================================================================
-    =            metodo para obtener todos los roles laravel permision            =
-    ========================================================================*/
-
     public function getAllRoles()
     {
-        return Role::whereNotIn('name', [User::IsDesarrollador()])->pluck('name', 'id');
+        return Role::whereNotIn('name', [User::IsDesarrollador()])->orderby('name')->pluck('name', 'id');
     }
-
-    /*=====  End of metodo para obtener todos los roles laravel permision  ======*/
-
-    /*========================================================================
-    =            metodo para obtener todos los roles menos el inidicado laravel permision            =
-    ========================================================================*/
 
     public function getRoleWhereNotInRole(array $role)
     {
-        return Role::whereNotIn('name', $role)->pluck('name', 'id');
+        return Role::whereNotIn('name', $role)->orderby('name')->pluck('name', 'id');
     }
 
-    /*=====  End of metodo para obtener todos los roles menos el inidicado laravel permision  ======*/
-
-    /*========================================================================
-    =            metodo para obtener todos los roles inidicados laravel permision            =
-    ========================================================================*/
 
     public function getRoleWhereInRole(array $role)
     {
@@ -278,71 +184,39 @@ class UserRepository
         return Role::whereIn('name', $role)->pluck('name', 'id');
     }
 
-    /*=====  End of metodo para obtener todos los roles inidicados laravel permision  ======*/
-
-    /*=============================================================
-    =            metodo para consultar todos los nodos            =
-    =============================================================*/
-
     public function getAllNodo()
     {
-        return Nodo::selectNodo()->pluck('nodos', 'id');
+        return Nodo::selectNodo()->orderby('entidades.nombre')->pluck('nodos', 'id');
     }
 
     public function getAllNodoPrueba()
     {
-        return Nodo::selectNodo()->where('entidades.nombre', '!=', Nodo::NODO_PRUEBA)->pluck('nodos', 'id');
+        return Nodo::selectNodo()->where('entidades.nombre', '!=', Nodo::NODO_PRUEBA)->orderby('entidades.nombre')->pluck('nodos', 'id');
     }
 
-    /*=====  End of metodo para consultar todos los nodos  ======*/
-
-    /*=================================================================
-    =            metodo para consultar las lineas por nodo            =
-    =================================================================*/
 
     public function getAllLineaNodo($nodo)
     {
         return Nodo::allLineasPorNodo($nodo);
     }
 
-    /*=====  End of metodo para consultar las lineas por nodo  ======*/
-
-
-
-    /*==================================================================
-    =            metodo para consultar todas las regionales            =
-    ==================================================================*/
-
     public function getAllRegionales()
     {
         return Regional::allRegionales()->pluck('nombre', 'id');
     }
 
-    /*=====  End of metodo para consultar todas las regionales  ======*/
-
-    /*======================================================
-    =            metodo para guardar un usuario            =
-    ======================================================*/
     public function Store($request, $password)
     {
-
         DB::beginTransaction();
         try {
-
             $user = $this->storeUser($request, $password);
-
             $user->ocupaciones()->sync($request->get('txtocupaciones'));
-
             if ($this->existRoleInArray($request, User::IsAdministrador())) {
-
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleAdministrador'));
             }
-
             if ($this->existRoleInArray($request, User::IsDinamizador())) {
-
                 $this->exitOneDinamizadorForNodo($user, $request);
             }
-
             if ($this->existRoleInArray($request, User::IsGestor())) {
                 $gestor = Gestor::create([
                     "user_id"             => $user->id,
@@ -350,7 +224,6 @@ class UserRepository
                     "lineatecnologica_id" => $request->input('txtlinea'),
                     "honorarios"          => $request->input('txthonorario'),
                 ]);
-
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleGestor'));
             }
             if ($this->existRoleInArray($request, User::IsInfocenter())) {
@@ -359,42 +232,32 @@ class UserRepository
                     "nodo_id"   => $request->input('txtnodoinfocenter'),
                     "extension" => $request->input('txtextension'),
                 ]);
-
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleInfocenter'));
             }
-
             if ($this->existRoleInArray($request, User::IsTalento())) {
                 $this->storeTalento($request, $user);
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleTalento'));
             }
-
             if ($this->existRoleInArray($request, User::IsIngreso())) {
                 Ingreso::create([
                     "nodo_id" => $request->input('txtnodoingreso'),
                     "user_id" => $user->id,
                 ]);
-
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleIngreso'));
             }
-
             if ($this->existRoleInArray($request, User::IsProveedor())) {
-
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleProveedor'));
             }
-
             DB::commit();
             return $user;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return false;
         }
     }
 
-    /*=====  End of metodo para guardar un usuario  ======*/
-
     private function storeUser($request, $password)
     {
-
         return User::create([
             "tipodocumento_id"     => $request->input('txttipo_documento'),
             "gradoescolaridad_id"  => $request->input('txtgrado_escolaridad'),
@@ -411,7 +274,6 @@ class UserRepository
             "etnia_id"               => $request->input('txtetnias'),
             "grado_discapacidad"    => $request->input('txtgrado_discapacidad'),
             "descripcion_grado_discapacidad"    => $request->input('txtdiscapacidad'),
-
             "celular"              => $request->input('txtcelular'),
             "telefono"             => $request->input('txttelefono'),
             "fechanacimiento"      => $request->input('txtfecha_nacimiento'),
@@ -434,7 +296,6 @@ class UserRepository
 
     protected function storeTalento($request, $user)
     {
-
         $entidad = null;
 
         if (
@@ -462,13 +323,13 @@ class UserRepository
             "tipo_talento_id"       => $request->input('txttipotalento'),
             "entidad_id"            => $entidad,
 
-            "programa_formacion"    => $request->get('txtprogramaformacion') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_APRENDIZ_SENA_CON_APOYO) ? $request->input('txtprogramaformacion_aprendiz') : 
+            "programa_formacion"    => $request->get('txtprogramaformacion') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_APRENDIZ_SENA_CON_APOYO) ? $request->input('txtprogramaformacion_aprendiz') :
                 (
-                    $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO) ? $request->input('txtprogramaformacion_aprendiz') : 
+                    $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO) ? $request->input('txtprogramaformacion_aprendiz') :
                     (
                         $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_EGRESADO_SENA) ? $request->input('txtprogramaformacion_egresado') : null
                     )
-                ),    
+                ),
             "tipo_formacion_id"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_EGRESADO_SENA) ? $request->input('txttipoformacion') : null,
             "tipo_estudio_id"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ? $request->input('txttipoestudio') : null,
             "dependencia"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_SENA) ? $request->input('txtdependencia') : null,
@@ -506,34 +367,21 @@ class UserRepository
         return TipoTalento::where('nombre', $tipotalento)->first()->id;
     }
 
-
-    /*=========================================================
-    =            metodo para actualizar un usuario            =
-    =========================================================*/
-
     public function Update($request, $user)
     {
-        
-
         DB::beginTransaction();
         try {
-
             $userUpdated = $this->updateUser($request, $user);
-
             $userUpdated->ocupaciones()->sync($request->get('txtocupaciones'));
-
             $userUpdate = $this->SyncInfoRolesUser($request, $userUpdated);
-
             DB::commit();
-
             return $userUpdate;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return false;
         }
     }
 
-    /*=====  End of metodo para actualizar un usuario  ======*/
 
     /*==========================================================================
     =            metodo para preguntar si existe el rol en el array            =
@@ -584,7 +432,6 @@ class UserRepository
 
     private function updateUser($request, $user)
     {
-
         $user->update([
             "tipodocumento_id"     => $request->input('txttipo_documento'),
             "gradoescolaridad_id"  => $request->input('txtgrado_escolaridad'),
@@ -738,8 +585,8 @@ class UserRepository
         return User::InfoUserDatatable()->with(['roles' => function ($query) {
             $query->select('name');
         }])
-            ->orderby('users.created_at', 'desc')
-            ->get();
+        ->orderby('users.created_at', 'desc')
+        ->get();
     }
 
     /*=====  End of metodo para mostrar todos los usuarios en datatables  ======*/
@@ -755,7 +602,6 @@ class UserRepository
         })->get();
 
         if ($userdinamizador->count() >= Dinamizador::cantidadDinamizadoresPermitidosPornodo()) {
-
             $userdinamizador->each(function ($item) {
                 if ($item->hasRole(User::IsDinamizador()) && $item->roles->count() == 1) {
 
@@ -767,13 +613,11 @@ class UserRepository
                 $item->removeRole(config('laravelpermission.roles.roleDinamizador'));
             });
         }
-
         if ($method == 'store') {
             Dinamizador::create([
                 "user_id" => $user->id,
                 "nodo_id" => $request->input('txtnododinamizador'),
             ]);
-
             $this->assignRoleUser($user, config('laravelpermission.roles.roleDinamizador'));
         }
     }
@@ -963,27 +807,75 @@ class UserRepository
             ]);
 
             DB::commit();
-
             return $userUpdate;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return false;
         }
     }
 
-    private function SyncInfoRolesUser($request, $userUpdated){
-
-        $userdinamizador = null;
-        if ($request->filled('txtnododinamizador')) {
-            $userdinamizador = User::whereHas('dinamizador.nodo', function ($query) use ($request) {
-                $query->where('id', $request->txtnododinamizador);
-            })->get();
-        }
+    private function SyncInfoRolesUser($request, $userUpdated)
+    {
 
         $newRole = array_diff($request->input('role'), collect($userUpdated->getRoleNames())->toArray());
 
         $removeRole = array_diff(collect($userUpdated->getRoleNames())->toArray(), $request->input('role'));
 
+        $this->removeInfoTableToRole($userUpdated, $removeRole);
+
+        $this->assigInformationNewApoyoTecnico($request, $userUpdated, $newRole);
+
+        $this->assigInformationNewArticulador($request, $userUpdated, $newRole);
+
+        $this->assigInformationNewDinamizador($request, $userUpdated, $newRole, User::IsDinamizador());
+
+        $this->assigInformationNewGestor($request, $userUpdated, $newRole);
+
+        $this->assigInformationNewInfocenter($request, $userUpdated, $newRole);
+
+        $this->assigInformationNewTalent($request, $userUpdated, $newRole);
+
+        $this->assigInformationNewIngreso($request, $userUpdated, $newRole);
+
+        //update
+
+        $this->updateInfoRemoveApoyoTecnico($request, $userUpdated, $removeRole);
+        $this->updateInfoRemoveArticulador($request, $userUpdated, $removeRole);
+
+        $this->updateInfoRemoveDinamizador($request, $userUpdated, $removeRole);
+
+        $this->updateInfoRemoveGestor($request, $userUpdated, $removeRole);
+
+        $this->updateInfoRemoveInfocenter($request, $userUpdated, $removeRole);
+
+        $this->updateInfoRemoveTalento($request, $userUpdated, $removeRole);
+
+        $this->updateInfoRemoveIngreso($request, $userUpdated, $removeRole);
+
+        $userUpdated->syncRoles($request->role);
+
+        return $userUpdated;
+    }
+
+    public function getArticuladorForNode($node)
+    {
+        return User::select('gestores.id')
+            ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS articulador')
+            ->join('gestores', 'gestores.user_id', '=', 'users.id')
+            ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
+            ->role(User::IsArticulador())
+            ->where('nodos.id', $node);
+    }
+
+
+
+    /**
+     * @author devjul
+     * remove information in tables according to role
+     * @return void
+     */
+    private function removeInfoTableToRole(User $userUpdated, array $removeRole)
+    {
         if ($removeRole != null && $this->roleIsAssigned($removeRole, User::IsDinamizador()) && isset($userUpdated->dinamizador)) {
             Dinamizador::find($userUpdated->dinamizador->id)->delete();
         }
@@ -995,11 +887,21 @@ class UserRepository
         if ($removeRole != null && $this->roleIsAssigned($removeRole, User::IsIngreso()) && isset($userUpdated->ingreso)) {
             Ingreso::find($userUpdated->ingreso->id)->delete();
         }
+    }
 
-        if ($newRole != null && $this->roleIsAssigned($newRole, User::IsDinamizador()) && !isset($userUpdated->dinamizador) && $this->notExistRoleInArray($request, $userUpdated, User::IsDinamizador())) {
+    /**
+     * @author devjul
+     * assign information to new dinamizador
+     * @return void
+     */
+    private function assigInformationNewDinamizador($request, User $userUpdated, array $newRole, $role)
+    {
+        $userdinamizador = $this->queryDinamizadoresByNodo($request);
+
+        if ($newRole != null && $this->roleIsAssigned($newRole, $role) && !isset($userUpdated->dinamizador) && $this->notExistRoleInArray($request, $userUpdated, $role)) {
             if ($userdinamizador !== null && $userdinamizador->count() >= Dinamizador::cantidadDinamizadoresPermitidosPornodo()) {
-                $userdinamizador->each(function ($item) {
-                    if ($item->hasRole(User::IsDinamizador()) && $item->roles->count() == 1) {
+                $userdinamizador->each(function ($item) use($role) {
+                    if ($item->hasRole($role) && $item->roles->count() == 1) {
 
                         $item->update([
                             'estado' => User::IsInactive(),
@@ -1019,23 +921,79 @@ class UserRepository
                 ]);
             }
         }
+    }
 
-        if ($newRole != null && ($this->roleIsAssigned($newRole, User::IsGestor()) || $this->roleIsAssigned($newRole, User::IsArticulador())  ) && !isset($userUpdated->gestor) && ($this->notExistRoleInArray($request, $userUpdated, User::IsGestor()) || $this->notExistRoleInArray($request, $userUpdated, User::IsArticulador()))) {
-
-                if($userUpdated->isUserArticulador() || $request->input('txtlinea') == ""){
-                    $line = 1;
-                }else{
-                    $line = $request->input('txtlinea'); 
-                }
-                Gestor::create([
-                    "user_id"             => $userUpdated->id,
-                    "nodo_id"             => $request->input('txtnodogestor'),
-                    "lineatecnologica_id" => $line,
-                    "honorarios"          => $request->input('txthonorario'),
-                ]);
-            
+    /**
+     * @author devjul
+     * returns all the dynamizers of a node
+     * @return
+     */
+    protected function queryDinamizadoresByNodo($request)
+    {
+        if ($request->filled('txtnododinamizador')) {
+            return User::whereHas('dinamizador.nodo', function ($query) use ($request) {
+                $query->where('id', $request->txtnododinamizador);
+            })->get();
         }
+        return null;
+    }
+    /**
+     * @author devjul
+     * assign information to new user apoyo tecnico
+     * @return
+     */
+    private function assigInformationNewApoyoTecnico($request, $userUpdated, $newRole)
+    {
+        if ($newRole != null && $this->roleIsAssigned($newRole, User::IsApoyoTecnico()) && !isset($userUpdated->apoyotecnico) && $this->notExistRoleInArray($request, $userUpdated, User::IsApoyoTecnico())) {
+            UserNodo::create([
+                'user_id' => $userUpdated->id,
+                'nodo_id' => $request->input('txtnodouser'),
+                'role' => User::IsApoyoTecnico(),
+                'honorarios' => $request->input('txthonorariouser'),
+            ]);
+        }
+    }
 
+    /**
+     * @author devjul
+     * assign information to new user articulador
+     * @return
+     */
+    private function assigInformationNewArticulador($request, $userUpdated, $newRole)
+    {
+        if ($newRole != null && $this->roleIsAssigned($newRole, User::IsArticulador()) && !isset($userUpdated->articulador) && $this->notExistRoleInArray($request, $userUpdated, User::IsArticulador())) {
+            UserNodo::create([
+                'user_id' => $userUpdated->id,
+                'nodo_id' => $request->input('txtnodoarticulador'),
+                'role' => User::IsArticulador(),
+                'honorarios' => $request->input('txthonorarioarticulador'),
+            ]);
+        }
+    }
+
+    /**
+     * @author devjul
+     * assign information to new experto
+     * @return
+     */
+    private function assigInformationNewGestor($request, User $userUpdated, array $newRole)
+    {
+        if ($newRole != null && $this->roleIsAssigned($newRole, User::IsGestor()) && !isset($userUpdated->gestor) && $this->notExistRoleInArray($request, $userUpdated, User::IsGestor())) {
+            Gestor::create([
+                "user_id"             => $userUpdated->id,
+                "nodo_id"             => $request->input('txtnodogestor'),
+                "lineatecnologica_id" => $request->input('txtlinea'),
+                "honorarios"          => $request->input('txthonorario'),
+            ]);
+        }
+    }
+    /**
+     * @author devjul
+     * assign information to new infocenter
+     * @return
+     */
+    private function assigInformationNewInfocenter($request, User $userUpdated, array $newRole)
+    {
         if ($newRole != null && $this->roleIsAssigned($newRole, User::IsInfocenter()) && !isset($userUpdated->infocenter) && $this->notExistRoleInArray($request, $userUpdated, User::IsInfocenter())) {
             Infocenter::create([
                 "user_id"   => $userUpdated->id,
@@ -1043,25 +1001,49 @@ class UserRepository
                 "extension" => $request->input('txtextension'),
             ]);
         }
+    }
 
+    /**
+     * @author devjul
+     * assign information to new talent
+     * @return
+     */
+    private function assigInformationNewTalent($request, User $userUpdated, array $newRole)
+    {
         if ($newRole != null && $this->roleIsAssigned($newRole, User::IsTalento()) && !isset($userUpdated->talento) && $this->notExistRoleInArray($request, $userUpdated, User::IsTalento())) {
             $this->storeTalento($request, $userUpdated);
         }
+    }
+
+    /**
+     * @author devjul
+     * assign information to new ingreso
+     * @return
+     */
+    private function assigInformationNewIngreso($request, User $userUpdated, array $newRole)
+    {
         if ($newRole != null && $this->roleIsAssigned($newRole, User::IsIngreso()) && !isset($userUpdated->ingreso) && $this->notExistRoleInArray($request, $userUpdated, User::IsIngreso())) {
             Ingreso::create([
                 "user_id" => $userUpdated->id,
                 "nodo_id" => $request->input('txtnodoingreso'),
             ]);
         }
+    }
 
-        //update dinamizador
+    /**
+     * @author devjul
+     * update information to user dinamizador
+     * @return void
+     */
+    private function updateInfoRemoveDinamizador($request, User $userUpdated, array $removeRole){
+        $userdinamizador = $this->queryDinamizadoresByNodo($request);
+
         if (isset($userUpdated->dinamizador->id) && !$this->roleIsAssigned($removeRole, User::IsDinamizador())) {
 
             if ($userdinamizador !== null  && $userdinamizador->count() >= Dinamizador::cantidadDinamizadoresPermitidosPornodo() && $userUpdated->dinamizador->nodo->id == $request->input('txtnododinamizador')) {
                 $userdinamizador->each(function ($item) {
 
                     if ($item->hasRole(User::IsDinamizador()) && $item->roles->count() == 1) {
-
                         $item->update([
                             'estado' => User::IsInactive(),
                         ]);
@@ -1074,70 +1056,100 @@ class UserRepository
                     "user_id" => $userUpdated->id,
                     "nodo_id" => $request->input('txtnododinamizador'),
                 ]);
-            } 
-            
-            else {
-                // Dinamizador::find($userUpdated->dinamizador->id)->update([
-                //     "nodo_id" => $request->input('txtnododinamizador'),
-                // ]);
             }
         }
+    }
 
-        //update gestor
-        if (isset($userUpdated->gestor) && ($this->roleIsAssigned($removeRole, User::IsGestor()) || $this->roleIsAssigned($removeRole, User::IsArticulador())) && $request->filled('txtnodogestor')) {
-            if($userUpdated->isUserArticulador() || $request->input('txtlinea') == ""){
-                $line = 1;
-            }else{
-                $line = $request->input('txtlinea'); 
-            }
-            $gestor = Gestor::find($userUpdated->gestor->id)->update([
+    /**
+     * @author devjul
+     * update information to user experto
+     * @return void
+     */
+    private function updateInfoRemoveGestor($request, User $userUpdated, array $removeRole){
+        if (isset($userUpdated->gestor) && $this->roleIsAssigned($removeRole, User::IsGestor()) && $request->filled('txtnodogestor')) {
+
+            Gestor::find($userUpdated->gestor->id)->update([
                 "nodo_id"             => $request->input('txtnodogestor'),
-                "lineatecnologica_id" => $line,
+                "lineatecnologica_id" => $request->input('txtlinea'),
                 "honorarios"          => $request->input('txthonorario'),
             ]);
-        } else if (isset($userUpdated->gestor) && (!$this->roleIsAssigned($removeRole, User::IsGestor()) || !$this->roleIsAssigned($removeRole, User::IsArticulador())) && $request->filled('txtnodogestor')) {
-            if($userUpdated->isUserArticulador() || $request->input('txtlinea') == ""){
-                $line = 1;
-            }else{
-                $line = $request->input('txtlinea'); 
-            }
-            $gestor = Gestor::find($userUpdated->gestor->id)->update([
+        } else if (isset($userUpdated->gestor) && !$this->roleIsAssigned($removeRole, User::IsGestor()) && $request->filled('txtnodogestor')) {
+
+            Gestor::find($userUpdated->gestor->id)->update([
                 "nodo_id"             => $request->input('txtnodogestor'),
-                "lineatecnologica_id" => $line,
+                "lineatecnologica_id" => $request->input('txtlinea'),
                 "honorarios"          => $request->input('txthonorario'),
             ]);
         }
+    }
 
-        //update infocenter
+    /**
+     * @author devjul
+     * update information to user infocenter
+     * @return void
+     */
+    private function updateInfoRemoveInfocenter($request, User $userUpdated, array $removeRole){
         if (isset($userUpdated->infocenter->id) && !$this->roleIsAssigned($removeRole, User::IsInfocenter()) && $request->filled('txtnodoinfocenter')) {
 
             Infocenter::find($userUpdated->infocenter->id)->update([
                 "nodo_id"   => $request->input('txtnodoinfocenter'),
-                "extension" => $request->input('txtextension'),
+                "nodo_id" => $request->input('txtextension'),
             ]);
         }
+    }
 
+    /**
+     * @author devjul
+     * update information to user talento
+     * @return void
+     */
+    private function updateInfoRemoveTalento($request, User $userUpdated, array $removeRole){
         if (isset($userUpdated->talento) && !$this->roleIsAssigned($removeRole, User::IsTalento())) {
             $this->updateTalento($request, $userUpdated);
         }
+    }
 
+    /**
+     * @author devjul
+     * update information to user ingreso
+     * @return void
+     */
+    private function updateInfoRemoveIngreso($request, User $userUpdated, array $removeRole){
         if (isset($userUpdated->ingreso) && !$this->roleIsAssigned($removeRole, User::IsIngreso()) && $request->filled('txtnodoingreso')) {
             Ingreso::find($userUpdated->ingreso->id)->update([
                 "nodo_id" => $request->input('txtnodoingreso'),
             ]);
         }
-        $userUpdated->syncRoles($request->role);
-
-        return $userUpdated;
     }
 
-    public function getArticuladorForNode($node)
-    {
-        return User::select('gestores.id')
-            ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS articulador')
-            ->join('gestores', 'gestores.user_id', '=', 'users.id')
-            ->join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
-            ->role(User::IsArticulador())
-            ->where('nodos.id', $node);
+    /**
+     * @author devjul
+     * update information to user apoyo tecnico
+     * @return void
+     */
+    private function updateInfoRemoveApoyoTecnico($request, User $userUpdated, array $removeRole){
+        if (isset($userUpdated->apoyotecnico->id) && !$this->roleIsAssigned($removeRole, User::IsApoyoTecnico()) && $request->filled('txtnodouser')) {
+            UserNodo::find($userUpdated->apoyotecnico->id)->update([
+                'user_id' => $userUpdated->id,
+                'nodo_id' => $request->input('txtnodouser'),
+                'honorarios' => $request->input('txthonorariouser'),
+            ]);
+        }
     }
+
+    /**
+     * @author devjul
+     * update information to user articulador
+     * @return void
+     */
+    private function updateInfoRemoveArticulador($request, User $userUpdated, array $removeRole){
+        if (isset($userUpdated->articulador->id) && !$this->roleIsAssigned($removeRole, User::IsArticulador()) && $request->filled('txtnodoarticulador')) {
+            UserNodo::find($userUpdated->articulador->id)->update([
+                'user_id' => $userUpdated->id,
+                'nodo_id' => $request->input('txtnodoarticulador'),
+                'honorarios' => $request->input('txthonorarioarticulador'),
+            ]);
+        }
+    }
+
 }

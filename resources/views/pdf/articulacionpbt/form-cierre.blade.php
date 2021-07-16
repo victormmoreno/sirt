@@ -16,65 +16,65 @@
         background-color: rgba(51, 51, 51, 0.08);
     }
 
-.center-image{
-    vertical-align: middle;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    margin-left: 10px;
+    .center-image{
+        vertical-align: middle;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        margin-left: 10px;
 
-}
+    }
 
-table, th, td {
-    border: solid;
-}
+    table, th, td {
+        border: solid;
+    }
 
-table {
-    width: 100%;
-    display: table;
-    font-size: 13px;
-}
+    table {
+        width: 100%;
+        display: table;
+        font-size: 13px;
+    }
 
-table.bordered > thead > tr,
-table.bordered > tbody > tr {
-    border-bottom: 2px solid #050505;
-}
+    table.bordered > thead > tr,
+    table.bordered > tbody > tr {
+        border-bottom: 2px solid #050505;
+    }
 
-table.striped > tbody > tr:nth-child(odd) {
-    background-color: #f2f2f2;
-}
+    table.striped > tbody > tr:nth-child(odd) {
+        background-color: #f2f2f2;
+    }
 
-table.striped > tbody > tr > td {
-    border-radius: 0;
-}
+    table.striped > tbody > tr > td {
+        border-radius: 0;
+    }
 
-table.highlight > tbody > tr {
-    transition: background-color .25s ease;
-}
+    table.highlight > tbody > tr {
+        transition: background-color .25s ease;
+    }
 
-table.highlight > tbody > tr:hover {
-    background-color: #f2f2f2;
-}
+    table.highlight > tbody > tr:hover {
+        background-color: #f2f2f2;
+    }
 
-table.centered thead tr th, table.centered tbody tr td {
-    text-align: center;
-}
+    table.centered thead tr th, table.centered tbody tr td {
+        text-align: center;
+    }
 
-thead {
-    border-bottom: 1px solid #d0d0d0;
-}
+    thead {
+        border-bottom: 1px solid #d0d0d0;
+    }
 
-td, th {
-    display: table-cell;
-    text-align: left;
-    vertical-align: middle;
-    border-radius: 2px;
-    overflow: hidden;
-    white-space: pre-line;
-}
-.centered {
-    text-align: center;
-}
+    td, th {
+        display: table-cell;
+        text-align: left;
+        vertical-align: middle;
+        border-radius: 2px;
+        overflow: hidden;
+        white-space: pre-line;
+    }
+    .centered {
+        text-align: center;
+    }
 @media only screen and (max-width: 992px) {
     table.responsive-table {
         width: 100%;
@@ -176,8 +176,8 @@ td, th {
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <title>Acta de Cierre</title>
-    </head>
-    <body>
+</head>
+<body>
         <footer>
             GD-F-007 V01
         </footer>

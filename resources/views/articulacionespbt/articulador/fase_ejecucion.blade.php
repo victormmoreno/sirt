@@ -10,7 +10,7 @@
             <div class="col s8 m8 l5">
                 <h5 class="left-align orange-text text-darken-3">
                     <i class="material-icons left">
-                      autorenew
+                    autorenew
                     </i>
                     Articulaciones PBT
                 </h5>
@@ -37,7 +37,7 @@
                                         <li class="text-mailbox">Cierre</li>
                                         <div class="right">
                                             <li class="text-mailbox "> Fase actual: {{$actividad->articulacionpbt->present()->articulacionPbtNameFase()}}</li>
-                                            <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>   
+                                            <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>
                                         </div>
                                     </ul>
                                 </div>
@@ -62,8 +62,8 @@
                                                         </a>
                                                     @endif
                                                 @endif
-                                            
-                                            @endif                         
+
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="mailbox-view-header">
@@ -84,7 +84,7 @@
                                     <div class="mailbox-text">
                                         <div class="row">
                                             <div class="col s12 m12 l12">
-                                            
+
                                             @if ($actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsEjecucion()))
                                                 <form action="{{route('articulacion.update.ejecucion', $actividad->articulacionpbt->id)}}" method="POST" onsubmit="return checkSubmit()">
                                                     @include('articulacionespbt.form.form_ejecucion', ['btnText' => 'Modificar'])
@@ -93,7 +93,7 @@
                                                     </div>
                                                     <center>
                                                         @if ($actividad->articulacionpbt->aprobacion_dinamizador_ejecucion == 0)
-                                                        <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
+                                                        <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Guardar</button>
                                                         @endif
                                                         <a href="{{ route('articulaciones.show', $actividad->articulacionpbt->id) }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
                                                     </center>
@@ -127,7 +127,7 @@
 @push('script')
 <script>
   datatableArchivosArticulacion();
-  
+
   var Dropzone = new Dropzone('#fase_ejecucion_articulacion', {
     url: '{{ route('articulacion.files.upload', $actividad->articulacionpbt->id) }}',
     headers: {

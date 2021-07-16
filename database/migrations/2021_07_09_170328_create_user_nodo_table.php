@@ -4,31 +4,31 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFailedJobsTable extends Migration
+class CreateUserNodoTable extends Migration
 {
     /**
      * the attribute that names the table.
      *
      * @var string
      */
-    protected $tableName = 'failed_jobs';
+    protected $tableName = 'user_nodo';
 
     /**
      * Run the migrations.
-     * @table failed_jobs
      *
      * @return void
      */
     public function up()
     {
         Schema::create($this->tableName, function (Blueprint $table) {
-            $table->engine = 'InnoDB';
             $table->bigIncrements('id');
-            $table->text('connection');
-            $table->text('queue');
-            $table->longText('payload');
-            $table->longText('exception');
-            $table->timestamp('failed_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('nodo_id');
+            $table->string('role');
+            $table->double('honorarios');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('nodo_id')->references('id')->on('nodos')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -39,6 +39,6 @@ class CreateFailedJobsTable extends Migration
      */
     public function down()
     {
-    Schema::dropIfExists($this->tableName);
+        Schema::dropIfExists($this->tableName);
     }
 }

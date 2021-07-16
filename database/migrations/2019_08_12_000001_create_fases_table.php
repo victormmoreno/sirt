@@ -7,10 +7,11 @@ use Illuminate\Database\Migrations\Migration;
 class CreateFasesTable extends Migration
 {
     /**
-     * Schema table name to migrate
+     * the attribute that names the table.
+     *
      * @var string
      */
-    public $tableName = 'fases';
+    protected $tableName = 'fases';
 
     /**
      * Run the migrations.

@@ -2,7 +2,6 @@
 @section('meta-title', 'Tecnoparque nodo '. $nodo->entidad->present()->entidadName())
 
 @section('content')
-
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
         <div class="row no-m-t no-m-b">
@@ -198,7 +197,7 @@
                                                         </div>
                                                         <div class="row">
                                                             <div class="center">
-                                                                <span class="zurich-bt-fonts orange-text text-darken-2"><b>Gestores y Articulador</b></span>
+                                                                <span class="zurich-bt-fonts orange-text text-darken-2"><b>Expertos y Articulador</b></span>
                                                             </div>
                                                             <div class="divider mailbox-divider">
                                                             </div>
@@ -223,7 +222,7 @@
                                                                         </li>
                                                                     </ul>
                                                                     @endif
-                                                                    
+
                                                                 </div>
                                                             @empty
                                                                 <div class="col s12 m12 l6">
@@ -239,7 +238,7 @@
                                                             @endforelse
                                                         </div>
                                                         <div class="row">
-                                                            
+
                                                             <div class="col s12 m12 l12">
                                                                 <div class="center">
                                                                     <span class="zurich-bt-fonts orange-text text-darken-2"><b>Ingreso</b></span>

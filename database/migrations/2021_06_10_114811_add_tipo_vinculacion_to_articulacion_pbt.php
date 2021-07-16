@@ -16,7 +16,6 @@ class AddTipoVinculacionToArticulacionPbt extends Migration
     {
         Schema::table($this->tableName, function (Blueprint $table) {
             $table->integer('tipo_vinculacion')->default(1)->after('id'); //defaul-pbt
-            // $table->integer('proyecto_id')->nullable()->change();
         });
     }
 

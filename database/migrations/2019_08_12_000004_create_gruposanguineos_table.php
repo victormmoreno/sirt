@@ -7,10 +7,11 @@ use Illuminate\Database\Migrations\Migration;
 class CreateGruposanguineosTable extends Migration
 {
     /**
-     * Schema table name to migrate
+     * the attribute that names the table.
+     *
      * @var string
      */
-    public $tableName = 'gruposanguineos';
+    protected $tableName = 'gruposanguineos';
 
     /**
      * Run the migrations.
@@ -34,8 +35,8 @@ class CreateGruposanguineosTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+    Schema::dropIfExists($this->tableName);
+    }
 }

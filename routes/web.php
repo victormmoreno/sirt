@@ -53,10 +53,12 @@ DB::listen(function ($query) {
 =            ruta para revisar funcionaliddes de prueba          =
 ===========================================================*/
 
-// Route::get('email', function () {
-// return new App\Mail\Comite\SendEmailIdeaComite(App\Models\Idea::first());
+Route::get('email', function () {
+// return new App\Mail\Idea\IdeaAceptadaParaComite(App\Models\Idea::first(), 'Aceptada');
 
-// });
+$articuladores = App\User::with(['articulador'])->whereHas('articulador')->get();
+    dd($articuladores);
+});
 
 /*=====  End of ruta para revisafuncionaliddes de prueba  ======*/
 
@@ -128,8 +130,6 @@ Route::group(
         Route::put('/updateacceso/{documento}', 'UserController@updateAcceso')->name('usuario.usuarios.updateacceso')->middleware('disablepreventback');
         Route::get('/talento/getEdadTalento/{id}', 'TalentoController@getEdad');
 
-
-        // Route::get('/usuarios/{id}', 'UserController@edit')->name('usuario.usuarios.edit')->where('documento', '[0-9]+');;
 
         Route::get('/usuarios/crear/{documento?}', 'UserController@create')->name('usuario.usuarios.create')->where('documento', '[0-9]+');
 
@@ -601,7 +601,7 @@ Route::group(
         Route::post('/', 'ProyectoController@store')->name('proyecto.store')->middleware('role_session:Gestor');
         Route::post('/store/{id}/files', 'ArchivoController@uploadFileProyecto')->name('proyecto.files.upload')->middleware('role_session:Gestor');
         Route::delete('/file/{idFile}', 'ArchivoController@destroyFileProyecto')->name('proyecto.files.destroy')->middleware('role_session:Gestor');
-       
+
     }
 );
 

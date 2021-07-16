@@ -75,6 +75,12 @@ class Nodo extends Model
         return $this->hasMany(Gestor::class, 'nodo_id', 'id');
     }
 
+    public function usernodos()
+    {
+        return $this->hasMany(UserNodo::class, 'nodo_id', 'id');
+    }
+
+
     public function ideas()
     {
         return $this->hasMany(Idea::class, 'nodo_id', 'id');

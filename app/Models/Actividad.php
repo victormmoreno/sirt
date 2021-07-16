@@ -57,14 +57,14 @@ class Actividad extends Model
      * @author dum
      */
     public static function consultarHistoricoActividad($id) {
-      return DB::table('movimientos_actividades_users_roles')->select('movimiento', 'fases.nombre AS fase', 'roles.name AS rol', 'comentarios', 'movimientos_actividades_users_roles.created_at')
-      ->selectRaw('concat(nombres, " ", apellidos) AS usuario')
-      ->where('actividad_id', $id)
-      ->join('movimientos', 'movimientos.id', 'movimientos_actividades_users_roles.movimiento_id')
-      ->join('fases', 'fases.id', '=', 'movimientos_actividades_users_roles.fase_id')
-      ->join('users', 'users.id', '=', 'movimientos_actividades_users_roles.user_id')
-      ->join('roles', 'roles.id', '=', 'movimientos_actividades_users_roles.role_id')
-      ->orderBy('movimientos_actividades_users_roles.created_at');
+        return DB::table('movimientos_actividades_users_roles')->select('movimiento', 'fases.nombre AS fase', 'roles.name AS rol', 'comentarios', 'movimientos_actividades_users_roles.created_at')
+        ->selectRaw('concat(nombres, " ", apellidos) AS usuario')
+        ->where('actividad_id', $id)
+        ->join('movimientos', 'movimientos.id', 'movimientos_actividades_users_roles.movimiento_id')
+        ->join('fases', 'fases.id', '=', 'movimientos_actividades_users_roles.fase_id')
+        ->join('users', 'users.id', '=', 'movimientos_actividades_users_roles.user_id')
+        ->join('roles', 'roles.id', '=', 'movimientos_actividades_users_roles.role_id')
+        ->orderBy('movimientos_actividades_users_roles.created_at');
     }
 
     /**
@@ -74,8 +74,8 @@ class Actividad extends Model
     */
     public function scopeConsultarActividades($query)
     {
-      return $query->select('id')
-      ->selectRaw('CONCAT(codigo_actividad, " / ", nombre) AS proyecto');
+        return $query->select('id')
+        ->selectRaw('CONCAT(codigo_actividad, " / ", nombre) AS proyecto');
     }
 
     public function articulacion_proyecto()
@@ -85,26 +85,26 @@ class Actividad extends Model
 
     public function movimientos()
     {
-      return $this->belongsToMany(Movimiento::class, 'movimientos_actividades_users_roles')
-      ->withTimestamps();
+        return $this->belongsToMany(Movimiento::class, 'movimientos_actividades_users_roles')
+        ->withTimestamps();
     }
 
     public function users_movimientos()
     {
-      return $this->belongsToMany(User::class, 'movimientos_actividades_users_roles')
-      ->withTimestamps();
+        return $this->belongsToMany(User::class, 'movimientos_actividades_users_roles')
+        ->withTimestamps();
     }
 
     public function roles_movimientos()
     {
-      return $this->belongsToMany(Role::class, 'movimientos_actividades_users_roles')
-      ->withTimestamps();
+        return $this->belongsToMany(Role::class, 'movimientos_actividades_users_roles')
+        ->withTimestamps();
     }
 
     public function fases_movimientos()
     {
-      return $this->belongsToMany(Fase::class, 'movimientos_actividades_users_roles')
-      ->withTimestamps();
+        return $this->belongsToMany(Fase::class, 'movimientos_actividades_users_roles')
+        ->withTimestamps();
     }
 
     public function edt()
@@ -138,7 +138,7 @@ class Actividad extends Model
 
     public function objetivos_especificos()
     {
-      return $this->hasMany(ObjetivoEspecifico::class, 'actividad_id', 'id');
+        return $this->hasMany(ObjetivoEspecifico::class, 'actividad_id', 'id');
     }
 
     public function scopeActivitiesGestor($query)
@@ -157,5 +157,5 @@ class Actividad extends Model
     public function present()
     {
         return new ActividadPresenter($this);
-    } 
+    }
 }

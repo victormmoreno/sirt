@@ -42,7 +42,7 @@ class UsoInfraestructuraController extends Controller
     ) {
         $this->middleware(['auth', 'role_session:Administrador|Dinamizador|Articulador|Gestor|Talento']);
         $this->setUsoIngraestructuraProyectoRepository($UsoInfraestructuraProyectoRepository);
-    
+
         $this->setUsoIngraestructuraArtculacionRepository($setUsoIngraestructuraArtculacionRepository);
         $this->setUsoInfraestructuraRepository($UsoInfraestructuraRepository);
 
@@ -208,9 +208,9 @@ class UsoInfraestructuraController extends Controller
                 $actividad = $request->filter_actividad;
                 break;
             case User::IsArticulador():
-                $nodo = auth()->user()->gestor->nodo_id;
-                $user = auth()->user()->gestor->user->id;
-                $gestor = auth()->user()->gestor->id;
+                $nodo = auth()->user()->articulador->nodo_id;
+                $user = auth()->user()->id;
+                $gestor = auth()->user()->articulador->id;
                 $actividad = $request->filter_actividad;
                 break;
             case User::IsTalento():
@@ -296,13 +296,13 @@ class UsoInfraestructuraController extends Controller
 
         $this->authorize('create', UsoInfraestructura::class);
         $sumasArray   = [];
-        
+
         $date         = Carbon::now()->format('Y-m-d');
 
         if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
             $projects     = $this->getDataProjectsForUser()->count();
 
-            $sumasArray = [            
+            $sumasArray = [
                 'projects'       => $projects,
             ];
             $cantActividades = array_sum($sumasArray);
@@ -336,7 +336,7 @@ class UsoInfraestructuraController extends Controller
                 'cantidadActividades' => $cantActividades,
             ]);
         }else if (Session::has('login_role') && Session::get('login_role') == User::IsArticulador()) {
-            
+
             $artulaciones = $this->getDataArticulaciones()->count();
             $sumasArray = [
                 'articulaciones' => $artulaciones,
@@ -352,8 +352,7 @@ class UsoInfraestructuraController extends Controller
                 },
             ];
             $user             = auth()->user()->id;
-            $nodo             = auth()->user()->gestor->nodo->id;
-            $lineaTecnologica = auth()->user()->gestor->lineatecnologica->id;
+            $nodo             = auth()->user()->articulador->nodo->id;
             $gestores         = $this->getGestorRepository()->getInfoGestor($relations)
                 ->whereHas('user', function ($query) use ($user) {
                     $query->where('id', '!=', $user)->where('estado', User::IsActive());
@@ -371,8 +370,8 @@ class UsoInfraestructuraController extends Controller
                 'date'                => $date,
                 'cantidadActividades' => $cantActividades,
             ]);
-        } 
-        
+        }
+
         else if (Session::has('login_role') && Session::get('login_role') == User::IsTalento()) {
             $artulaciones = $this->getDataArticulaciones()->count();
             $projects     = $this->getDataProjectsForUser()->count();
@@ -478,7 +477,7 @@ class UsoInfraestructuraController extends Controller
         $date = Carbon::now()->format('Y-m-d');
 
         if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
-            
+
             $relations = [
                 'user'             => function ($query) {
                     $query->select('id', 'documento', 'nombres', 'apellidos');
@@ -508,9 +507,9 @@ class UsoInfraestructuraController extends Controller
                 'date'               => $date,
 
             ]);
-        } 
+        }
         elseif (Session::has('login_role') && Session::get('login_role') == User::IsArticulador()) {
-            
+
             $relations = [
                 'user'             => function ($query) {
                     $query->select('id', 'documento', 'nombres', 'apellidos');
@@ -521,7 +520,7 @@ class UsoInfraestructuraController extends Controller
             ];
             $user             = auth()->user()->id;
             $nodo             = auth()->user()->gestor->nodo->id;
-            
+
             $gestores         = $this->getGestorRepository()->getInfoGestor($relations)
                 ->whereHas('user', function ($query) use ($user) {
                     $query->where('id', '!=', $user)->where('estado', User::IsActive());
@@ -740,13 +739,13 @@ class UsoInfraestructuraController extends Controller
                 ->get();
         }else if (Session::has('login_role') && Session::get('login_role') == User::IsArticulador()){
             return [];
-        } 
+        }
         else {
             abort('403');
         }
     }
 
-   
+
 
     /**
      * devuelve consulta con los talentos por proyecto
@@ -841,7 +840,7 @@ class UsoInfraestructuraController extends Controller
                 Fase::IsEjecucion(),
             ];
 
-            $articulacion = ArticulacionPbt::with(['actividad','actividad.gestor', 
+            $articulacion = ArticulacionPbt::with(['actividad','actividad.gestor',
             'actividad.gestor.user'=> function($query){
                 $query->select('id', 'documento', 'nombres', 'apellidos');
             }])
@@ -851,7 +850,7 @@ class UsoInfraestructuraController extends Controller
             $lineastecnologicas = LineaTecnologica::join('lineastecnologicas_nodos', 'lineastecnologicas_nodos.linea_tecnologica_id', '=', 'lineastecnologicas.id')
                 ->where('lineastecnologicas_nodos.nodo_id', $articulacionNodo)
                 ->get();
-           
+
 
             $equipos = Equipo::where('nodo_id', $articulacionNodo)->get();
 
@@ -863,7 +862,7 @@ class UsoInfraestructuraController extends Controller
 
             $talentos = $articulacion->talentos()->with('user')->get();
 
-        
+
             return response()->json([
                 'articulacion'       => $articulacion,
                 'lineastecnologicas' => $lineastecnologicas,
@@ -923,7 +922,7 @@ class UsoInfraestructuraController extends Controller
                         $query->whereYear('fecha_inicio', $anio)->orWhereYear('fecha_cierre', $anio);
                     })
                     ->pluck('nombre', 'id');
-                    
+
             } elseif ((!empty($anio) && $anio != null && $anio == 'all')) {
                 $activities =  Actividad::select('id')
                     ->selectRaw('CONCAT(codigo_actividad, " - ", nombre) as nombre')

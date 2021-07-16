@@ -132,7 +132,9 @@ class UserPolicy
             || collect($user->getRoleNames())->contains(User::IsGestor())
             && session()->get('login_role') == User::IsGestor()
             || collect($user->getRoleNames())->contains(User::IsInfocenter())
-            && session()->get('login_role') == User::IsInfocenter();
+            && session()->get('login_role') == User::IsInfocenter()
+            || collect($user->getRoleNames())->contains(User::IsArticulador())
+            && session()->get('login_role') == User::IsArticulador();
     }
 
     /**

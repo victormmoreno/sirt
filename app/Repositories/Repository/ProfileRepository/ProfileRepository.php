@@ -53,11 +53,9 @@ class ProfileRepository
     =====================================================================*/
     public function updatePassword($request, $user)
     {
-
         $user->update([
             "password" => $request->input('txtnewpassword'),
         ]);
-
         return $user;
     }
     /*=====  End of metodo para actualizar la constraseña del usuario  ======*/

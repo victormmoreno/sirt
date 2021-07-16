@@ -21,6 +21,7 @@ use App\Models\{
     Talento,
     TipoDocumento,
     Contratista,
+    UserNodo,
 };
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -47,6 +48,7 @@ class User extends Authenticatable implements JWTSubject
     const IS_PROVEEDOR     = "Proveedor";
     const IS_DESARROLLADOR     = "Desarrollador";
     const IS_ARTICULADOR     = "Articulador";
+    const IS_APOYO_TECNICO     = "Apoyo Técnico";
 
     protected $appends = ['nombre_completo'];
 
@@ -206,6 +208,16 @@ class User extends Authenticatable implements JWTSubject
     public function gestor()
     {
         return $this->hasOne(Gestor::class, 'user_id', 'id');
+    }
+
+    public function articulador()
+    {
+        return $this->hasOne(UserNodo::class, 'user_id', 'id')->where('role', User::IsArticulador());
+    }
+
+    public function apoyotecnico()
+    {
+        return $this->hasOne(UserNodo::class, 'user_id', 'id')->where('role', User::IsApoyoTecnico());
     }
 
     public function dinamizador()

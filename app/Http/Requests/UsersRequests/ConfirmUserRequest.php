@@ -11,14 +11,14 @@ use App\User;
 class ConfirmUserRequest extends FormRequest
 {
 
-     /**
+    /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -31,19 +31,22 @@ class ConfirmUserRequest extends FormRequest
 
         return [
             'role'                      => 'required',
+            'txtnodouser'               => Rule::requiredIf(collect(request()->role)->contains(User::IsApoyoTecnico())) . '|nullable',
+            'txthonorariouser'          => Rule::requiredIf(collect(request()->role)->contains(User::IsApoyoTecnico()))  . '|nullable|digits_between:1,10|numeric',
+            'txtnodoarticulador'        => Rule::requiredIf(collect(request()->role)->contains(User::IsArticulador())) . '|nullable',
+            'txthonorarioarticulador'   => Rule::requiredIf(collect(request()->role)->contains(User::IsArticulador()))  . '|nullable|digits_between:1,10|numeric',
             'txtnododinamizador'        => Rule::requiredIf(collect(request()->role)->contains(User::IsDinamizador())) . '|nullable',
-            'txtnodogestor'             => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor()) || collect(request()->role)->contains(User::IsArticulador())) . '|nullable',
+            'txtnodogestor'             => Rule::requiredIf(collect (request()->role)->contains(User::IsGestor())) . '|nullable',
+
             'txtlinea'                  => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor())) . '|nullable',
-            'txthonorario'              => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor()) || collect(request()->role)->contains(User::IsArticulador())) . '|nullable|digits_between:1,10|numeric',
+            'txthonorario'              => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor())) . '|nullable|digits_between:1,10|numeric',
             'txtnodoinfocenter'         => Rule::requiredIf(collect(request()->role)->contains(User::IsInfocenter())) . '|nullable',
             'txtextension'              => Rule::requiredIf(collect(request()->role)->contains(User::IsInfocenter())) . '|nullable|digits_between:1,7|numeric',
-            'txttipotalento'                 => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento())) . '|nullable',
+            'txttipotalento'            => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento())) . '|nullable',
             'txtnodoingreso'            => Rule::requiredIf(collect(request()->role)->contains(User::IsIngreso())) . '|nullable',
-            'txtregional_aprendiz'               => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
-                (request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)->first()->id ||
-                    request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_CON_APOYO)->first()->id)) . '|nullable',
-
-
+            'txtregional_aprendiz'      => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
+                                            (request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)->first()->id ||
+                                            request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_CON_APOYO)->first()->id)) . '|nullable',
 
             'txtregional_egresado'               => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
                 (request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_EGRESADO_SENA)->first()->id)) . '|nullable',
@@ -99,8 +102,6 @@ class ConfirmUserRequest extends FormRequest
 
             'txtempresa'                => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
                 (request()->txttipotalento == TipoTalento::where('nombre', TipoTalento::IS_FUNCIONARIO_EMPRESA)->first()->id)) . '|nullable|min:1|max:200',
-
-
         ];
     }
 
@@ -108,6 +109,16 @@ class ConfirmUserRequest extends FormRequest
     {
         return $messages = [
             'role.required'                       => 'Por favor seleccione al menos un rol',
+            'txtnodouser.required'         => "El nodo del ".User::IsApoyoTecnico() ." es obligatorio",
+            'txthonorariouser.required'               => 'El honorario del ' . User::IsApoyoTecnico() . ' es obligatorio.',
+            'txthonorariouser.regex'                  => 'El formato del campo honorario es incorrecto',
+            'txthonorariouser.digits_between'         => 'El honorario debe tener entre 6 y 7 digitos',
+
+            'txtnodoarticulador.required'         => "El nodo del ".User::IsArticulador() ." es obligatorio",
+            'txthonorarioarticulador.required'               => 'El honorario del ' . User::IsArticulador() . ' es obligatorio.',
+            'txthonorarioarticulador.regex'                  => 'El formato del campo honorario es incorrecto',
+            'txthonorarioarticulador.digits_between'         => 'El honorario debe tener entre 6 y 7 digitos',
+
             'txtnododinamizador.required'         => 'El nodo del dinamizador es obligatorio.',
             'txtnodogestor.required'              => 'El nodo es obligatorio.',
             'txtlinea.required'                   => 'La linea es obligatoria.',

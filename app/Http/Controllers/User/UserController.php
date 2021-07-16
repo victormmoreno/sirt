@@ -49,6 +49,9 @@ class UserController extends Controller
             case User::IsAdministrador():
                 $nodo = $request->filter_nodo;
                 break;
+            case User::IsArticulador():
+                dd($nodo = auth()->user()->usernodo);
+                break;
             case User::IsDinamizador():
                 $nodo = auth()->user()->dinamizador->nodo_id;
                 break;
@@ -79,7 +82,7 @@ class UserController extends Controller
         }
         switch (session()->get('login_role')) {
             case User::IsAdministrador():
-                $nodos = Entidad::has('nodo')->with('nodo')->get()->pluck('nombre', 'nodo.id');
+                $nodos = Entidad::has('nodo')->with('nodo')->orderby('nombre')->get()->pluck('nombre', 'nodo.id');
                 return view('users.administrador.index', [
                     'roles' => $this->userRepository->getAllRoles(),
                     'nodos' => $nodos,

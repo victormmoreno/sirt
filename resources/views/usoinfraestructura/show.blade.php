@@ -49,7 +49,7 @@
                                                     <div class="right mailbox-buttons">
                                                         <span class="mailbox-title">
                                                             <p class="center">
-                                                                Información Asesoría y uso    
+                                                                Información Asesoría y uso
                                                             </p>
                                                         </span>
                                                     </div>
@@ -80,10 +80,10 @@
                                                                             <strong class="cyan-text text-darken-3">Fecha de Inicio:</strong>
                                                                             {{$usoinfraestructura->actividad->fecha_inicio->isoformat('LL')}}
                                                                         </p>
-                                                                        
+
                                                                         @if(isset($usoinfraestructura->actividad->articulacion_proyecto) && $usoinfraestructura->actividad->articulacion_proyecto != null)
                                                                             @if(isset($usoinfraestructura->actividad->articulacion_proyecto->proyecto) && $usoinfraestructura->actividad->articulacion_proyecto->proyecto != null)
-                                                                                
+
                                                                                 <p>
                                                                                 <strong class="cyan-text text-darken-3">Sublinea:</strong>
                                                                                     {{$usoinfraestructura->actividad->articulacion_proyecto->proyecto->sublinea->nombre}}
@@ -96,11 +96,10 @@
                                                                                     <strong class="cyan-text text-darken-3">Fase del Proyecto:</strong>
                                                                                     {{isset($usoinfraestructura->actividad->articulacion_proyecto->proyecto->fase) ? $usoinfraestructura->actividad->articulacion_proyecto->proyecto->fase->nombre : 'No registra' }}
                                                                                 </p>
-                                                                            @endif                                                                        
+                                                                            @endif
                                                                         @endif
                                                                     </li>
                                                                 </ul>
-                                                               
                                                             </div>
                                                             <div class="divider mailbox-divider"></div>
                                                             <ul class="collection">
@@ -295,7 +294,7 @@
                                                                     <div class="center">
                                                                         <span class="mailbox-title green-complement-text">
                                                                             Equipos ({{$equipos->count()}})
-                                                                            
+
                                                                         </span>
                                                                     </div>
                                                                     <div class="divider mailbox-divider"></div>

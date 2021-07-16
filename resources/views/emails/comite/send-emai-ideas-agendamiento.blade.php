@@ -2,22 +2,24 @@
 # Programación para el Comité de Selección de Ideas | Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.
 
 Señor(a)<br>
+@if(isset($idea->talento->user))
 <b>_{{$idea->talento->user->nombres }} {{$idea->talento->user->apellidos }}_</b><br>
+@endif
 Cordial Saludo.
 <br>
 Dando respuesta al registro de idea para la Red Tecnoparque tenemos el gusto de informar la fecha y dirección donde se realizará el comité de selección de ideas.
-Se dará un espacio de cinco minutos para presentar un pitch (llevar presentación o video) donde se evaluará claridad de la idea y/o la solución, grado de innovación, 
-impacto y equipo de trabajo. También se contara con un espacio de cinco minutos para preguntas del comité. 
+Se dará un espacio de cinco minutos para presentar un pitch (llevar presentación o video) donde se evaluará claridad de la idea y/o la solución, grado de innovación,
+impacto y equipo de trabajo. También se contara con un espacio de cinco minutos para preguntas del comité.
 <br>
 @component('mail::panel')
-	
+
 	<h1 class="tittle">📑 Programación para el Comité de Selección de Ideas</h1>
-	
+
 @endcomponent
 
 @component('mail::promotion')
   <center>
-      <h3 class="subtittle">Código Idea:</h3> 
+      <h3 class="subtittle">Código Idea:</h3>
       <h3 class="subtittle-value">{{$idea->codigo_idea}}</h3>
       <h3 class="subtittle">Nombre Idea de proyecto: </h3>
       <h3 class="subtittle-value">{{$idea->nombre_proyecto}}</h3>
@@ -26,7 +28,7 @@ impacto y equipo de trabajo. También se contara con un espacio de cinco minutos
       <h3 class="subtittle">Fecha y hora que se realizará el comité: </h3>
       <h3 class="subtittle-value">{{$comite->fechacomite->isoFormat('LL')}} a las {{$idea->comites()->wherePivot('comite_id', $comite->id)->first()->pivot->hora}}</h3>
   </center>
-	
+
 @endcomponent
 
 @if( $idea->nodo->infocenter->isEmpty())

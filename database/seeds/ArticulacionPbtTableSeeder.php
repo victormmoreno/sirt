@@ -13,11 +13,9 @@ class ArticulacionPbtTableSeeder extends Seeder
      */
     public function run()
     {
-
         factory(Actividad::class, 20)->create()
         ->each(function ($actividad) {
-            $actividad->articulacionpbt()->save(factory(ArticulacionPbt::class)->make());    
+            $actividad->articulacionpbt()->save(factory(ArticulacionPbt::class)->make());
         });
-       
     }
 }

@@ -16,7 +16,6 @@
     <div class="col s6 m6 l6">
         <h6>Para descargar el seguimiento y asesorias, presiona el botón con el ícono <i class="far fa-file-pdf"></i></h6>
         <a class="btn green lighten-1 m-b-xs" href="{{route('pdf.actividad.usos', [$actividad->articulacionpbt->id, 'articulacion'])}}" target="_blank"><i class="far fa-file-pdf"></i></a>
-        {{-- <a class="btn green lighten-1 m-b-xs" href="#"><i class="far fa-file-pdf"></i></a>  --}}
     </div>
 </div>
 <div class="row">
@@ -25,11 +24,11 @@
             <input type="checkbox" {{$actividad->articulacionpbt->aprobacion_dinamizador_ejecucion == 1 ? 'disabled' : '' }} {{ $actividad->articulacionpbt->present()->articulacionPbtDocumentoConvocatoria() == 1 ? 'checked' : '' }}
                 id="txtdoc_convocatoria" name="txtdoc_convocatoria" value="1">
             <label for="txtdoc_convocatoria">
-                Documentos de convocatoria 
+                Documentos de convocatoria
             </label>
         </p>
     </div>
-    
+
 </div>
 @if ($actividad->articulacionpbt->aprobacion_dinamizador_ejecucion == 0)
 <div class="row">

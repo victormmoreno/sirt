@@ -56,20 +56,6 @@ class RegisterController extends Controller
         $this->middleware('guest')->except(['confirmContratorInformation', 'showConfirmContratorInformationForm']);
         $this->userRepository = $userRepository;
     }
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-    }
 
 
     /**
@@ -87,7 +73,6 @@ class RegisterController extends Controller
             'eps'                 => $this->userRepository->getAllEpsActivas(),
             'departamentos'     => $this->userRepository->getAllDepartamentos(),
             'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-            // 'nodos'             => $this->userRepository->getAllNodo(),
             'nodos'             => $this->userRepository->getAllNodoPrueba(),
             'regionales'        => $this->userRepository->getAllRegionales(),
             'tipotalentos' => TipoTalento::pluck('nombre', 'id'),
@@ -184,12 +169,12 @@ class RegisterController extends Controller
                 if($dinamizador != null){
                     Notification::send($dinamizador, new NewContractor($user, $dinamizador));
                 }
-                
+
             }
 
             DB::commit();
             return $user;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return false;
         }
@@ -218,8 +203,8 @@ class RegisterController extends Controller
             "telefono"             => $request->input('txttelefono'),
             "fechanacimiento"      => $request->input('txtfecha_nacimiento'),
             "genero"               => $request->input('txtgenero') == 'on' ? $request['txtgenero'] = 0 : $request['txtgenero'] = 1,
-            "mujerCabezaFamilia"            => $request->input('txtmadrecabezafamilia'),
-            "desplazadoPorViolencia"            => $request->input('txtdesplazadoporviolencia'),
+            "mujerCabezaFamilia"   => $request->input('txtmadrecabezafamilia'),
+            "desplazadoPorViolencia" => $request->input('txtdesplazadoporviolencia'),
             "otra_eps"             => $request->input('txteps') == Eps::where('nombre', Eps::OTRA_EPS)->first()->id ? $request->input('txtotraeps') : null,
             "estado"               => $this->stateUser($request),
             "institucion"          => $request->input('txtinstitucion'),
@@ -270,10 +255,8 @@ class RegisterController extends Controller
             "dependencia"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_SENA) ?
                 $request->input('txtdependencia') : null,
 
-
             "universidad"           => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
                 $request->input('txtuniversidad') : null,
-
 
             "carrera_universitaria" => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
                 $request->input('txtcarrera') : null,
@@ -297,18 +280,6 @@ class RegisterController extends Controller
     protected function guard()
     {
         return Auth::guard();
-    }
-
-    /**
-     * The user has been registered.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $user
-     * @return mixed
-     */
-    protected function registered(Request $request, $user)
-    {
-        //
     }
 
     private function assignRoleUser($user, $role)
@@ -361,9 +332,7 @@ class RegisterController extends Controller
         $this->authorize('confirmContratorInformation', $user);
 
         $req = new ConfirmUserRequest;
-
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-
         if ($validator->fails()) {
             return response()->json([
                 'state'   => 'error_form',
@@ -371,14 +340,12 @@ class RegisterController extends Controller
                 'errors' => $validator->errors(),
             ]);
         } else {
-            
             if ($user != null) {
                 $userUpdate = $this->userRepository->UpdateUserConfirm($request, $user);
 
                 if($userUpdate != null){
                     Notification::send($userUpdate, new RoleAssignedOfficer($userUpdate));
                 }
-
                 return response()->json([
                     'state'   => 'success',
                     'message' => 'El Usuario ha sido modificado satisfactoriamente',
@@ -392,8 +359,6 @@ class RegisterController extends Controller
                     'url' => false
                 ]);
             }
-        }   
-
+        }
     }
-
 }

@@ -107,11 +107,11 @@ class TalentoRepository
 				->orWhere(function($query) use ($fecha_inicio, $fecha_cierre) {
 					$query->where(function($query) use ($fecha_inicio, $fecha_cierre) {
 					$query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
-					$query->orWhere(function ($query) {
-					  $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
-					});
-				  });
-				  });
+                        $query->orWhere(function ($query) {
+                            $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
+                        });
+                    });
+				});
             })
             ->orderBy('codigo_actividad')
             ->withTrashed();
@@ -201,11 +201,11 @@ class TalentoRepository
 			->orWhere(function($query) use ($fecha_inicio, $fecha_cierre) {
 				$query->where(function($query) use ($fecha_inicio, $fecha_cierre) {
 				$query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
-				$query->orWhere(function ($query) {
-				  $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
-				});
-			  });
-			  });
+                    $query->orWhere(function ($query) {
+                        $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
+                    });
+                });
+			});
 		})
 		->orderBy('codigo_actividad')
 		->withTrashed();
