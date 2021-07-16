@@ -103,7 +103,7 @@ class IdeaRepository
         try {
             // Cambiar el estado de la idea original a rechazado por el articulador
             $idea->update([
-                'estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsRechazadoArticulador())->first()->id
+                'estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsRegistro())->first()->id
             ]);
             // Envío de correo al talento y articulador con los motivos de porque se rechazó.
             event(new IdeasWasRejected($idea, $request->txtmotivosRechazo));

@@ -7,7 +7,7 @@
         <th>Articulación con: </th>
         <th>Fecha de Inicio</th>
         <th>Fecha de Cierre</th>
-        <th>Gestor</th>
+        <th>Experto</th>
         <th>Formato de Confidencialida y Compromiso</th>
         <th>Acta de Cierre</th>
         <th>Informe Final de la Asesoria</th>

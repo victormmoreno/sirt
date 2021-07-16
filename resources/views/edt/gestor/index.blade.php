@@ -39,7 +39,7 @@
                         <option value="{{$i}}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{$i}}</option>
                       @endfor
                     </select>
-                    <label for="txtanho_edts_Gestor">Seleccione el Año</label>
+                    <label for="txtanho_edts_Gestor">Seleccione el año</label>
                   </div>
                 </div>
               </div>
@@ -47,7 +47,7 @@
                 <thead>
                   <th>Código de la Edt</th>
                   <th>Nombre</th>
-                  <th>Gestor</th>
+                  <th>Experto</th>
                   <th>Área de Conocimiento</th>
                   <th>Tipo de Edt</th>
                   <th>Fecha de Inicio</th>

@@ -33,7 +33,7 @@ class UsoInfraestructuraRepository
             $usoInfraestructura = $this->storeUsoInfraestructura($actividad, $request);
             //llamado de metodo para guardar talentos asociados al uso de infraestructura
             $this->storeTalentoToUsoInfraestructura($usoInfraestructura, $request);
-            //llamado de metodo para guardar Gestores y horas de asesoria asociados al uso de infraestructura
+            //llamado de metodo para guardar expertos y horas de asesoria asociados al uso de infraestructura
             $this->storeGestorUsoToUsoInfraestructura($usoInfraestructura, $request);
             //llamado de metodo para guardar materiales y costos de material asociados al uso de infraestructura
             $this->storeMaterialUsoToUsoInfraestructura($usoInfraestructura, $request);
@@ -282,7 +282,7 @@ class UsoInfraestructuraRepository
             $usoInfraestructura = $this->updateUsoInfraestructura($id, $request);
             //llamado de metodo para guardar talentos asociados al uso de infraestructura
             $this->storeTalentoToUsoInfraestructura($usoInfraestructura, $request);
-            //llamado de metodo para guardar Gestores y horas de asesoria asociados al uso de infraestructura
+            //llamado de metodo para guardar expertos y horas de asesoria asociados al uso de infraestructura
             $this->storeGestorUsoToUsoInfraestructura($usoInfraestructura, $request);
             //llamado de metodo para guardar materiales y costos de material asociados al uso de infraestructura
             $this->storeMaterialUsoToUsoInfraestructura($usoInfraestructura, $request);

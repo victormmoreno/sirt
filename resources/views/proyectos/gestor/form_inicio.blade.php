@@ -6,7 +6,7 @@
     <div class="input-field col s12 m6 l6">
         <input disabled id="txtgestor" name="txtgestor"
             value="{{ auth()->user()->nombres }} {{ auth()->user()->apellidos }}" type="text">
-        <label for="txtgestor" class="">Gestor</label>
+        <label for="txtgestor" class="">Experto</label>
     </div>
     <div class="input-field col s12 m6 l6">
         <input disabled id="txtlinea" name="txtlinea" value="{{ auth()->user()->gestor->lineatecnologica->nombre }}"
@@ -68,7 +68,7 @@
             onchange="selectAreaConocimiento_Proyecto_FaseInicio();">
             <option value="">Seleccione el área de conocimiento</option>
             @forelse ($areasconocimiento as $id => $value)
-            <option value="{{$id}}" {{ !isset($proyecto) ? '' : $proyecto->areaconocimiento_id == $id ? 'selected' : '' }}>{{$value}}</option>
+            <option value="{{$id}}" {{ $proyecto->areaconocimiento_id == $id ? 'selected' : '' }}>{{$value}}</option>
             @empty
             <option value=""> No hay información disponible</option>
             @endforelse
@@ -92,7 +92,7 @@
         <select {{$proyecto->fase->nombre != 'Inicio' ? 'disabled' : '' }} id="txtsublinea_id" class="js-states" name="txtsublinea_id" style="width: 100%">
             <option value="">Seleccione la Sublínea</option>
             @forelse ($sublineas as $key => $value)
-            <option value="{{$key}}" {{ $btnText == 'Guardar' ? '' : $proyecto->sublinea_id == $key ? 'selected' : '' }}>{{$value}}</option>
+            <option value="{{$key}}" {{ $proyecto->sublinea_id == $key ? 'selected' : '' }}>{{$value}}</option>
             @empty
             <option value="">No hay información disponible</option>
             @endforelse

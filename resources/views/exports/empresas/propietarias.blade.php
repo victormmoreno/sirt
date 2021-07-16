@@ -5,7 +5,7 @@
         <th>Nodo del proyecto</th>
         <th>Código de Proyecto</th>
         <th>Nombre de Proyecto</th>
-        <th>Gestor a cargo</th>
+        <th>Experto a cargo</th>
         <th>Línea Tecnológica</th>
         <th>Sublínea</th>
         <th>Idea de Proyecto</th>

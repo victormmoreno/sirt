@@ -163,7 +163,7 @@
                                     <div class="col s6 m6 l6">
                                         <p class="p-v-xs">
                                             <input type="checkbox" disabled {{ $articulacion->articulacion_proyecto->actividad->formulario_inicio == 1 ? 'checked' : '' }} id="txtformulario_inicio" name="txtformulario_inicio" value="1">
-                                            <label for="txtformulario_inicio">Formularios con firmas del gestor y talentos.</label>
+                                            <label for="txtformulario_inicio">Formularios con firmas del experto y talentos.</label>
                                         </p>
                                     </div>
                                 </div>

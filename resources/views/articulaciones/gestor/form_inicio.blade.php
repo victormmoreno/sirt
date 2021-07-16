@@ -8,7 +8,7 @@ $cont = 0;
     <div class="input-field col s12 m6 l6">
         <input disabled id="txtgestor" name="txtgestor"
             value="{{ auth()->user()->nombres }} {{ auth()->user()->apellidos }}" type="text">
-        <label for="txtgestor" class="">Gestor</label>
+        <label for="txtgestor" class="">Experto</label>
     </div>
     <div class="input-field col s12 m6 l6">
         <input disabled id="txtlinea" name="txtlinea" value="{{ auth()->user()->gestor->lineatecnologica->nombre }}"

@@ -205,7 +205,7 @@
                         @endif
                     
                     <label class="active" for="txtgestor">
-                        Gestor a cargo
+                        Experto a cargo
                         <span class="red-text">
                             *
                         </span>

@@ -71,15 +71,15 @@
                       </div>
                     </li>
                     <li>
-                      <div class="collapsible-header"><i class="material-icons">autorenew</i>Articulaciones finalizadas por gestor y fecha</div>
+                      <div class="collapsible-header"><i class="material-icons">autorenew</i>Articulaciones finalizadas por experto y fecha</div>
                       <div class="collapsible-body">
                         <div class="row">
                           <div class="col s12 m4 l4">
                             <div class="input-field col s12 m12 l12">
                               <select id="txtgestor_id" name="txtgestor_id" style="width: 100%" tabindex="-1">
-                                <option value="">Seleccione el Gestor</option>
+                                <option value="">Seleccione el experto</option>
                               </select>
-                              <label for="txtgestor_id">Gestor</label>
+                              <label for="txtgestor_id">Experto</label>
                             </div>
                             <div class="input-field col s12 m6 l6">
                               <input type="text" id="txtfecha_inicio_Grafico2" name="txtfecha_inicio_Grafico2" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
@@ -96,7 +96,7 @@
                           <div class="col s12 m8 l8">
                             <div id="graficoArticulacionesPorGestorYFecha_stacked" class="green lighten-3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
                               <div class="row card-panel">
-                                <h5 class="center">Para consultar las articulaciones por gestor, se debe seleccionar un gestor y fechas válidas, luego presionar el botón consultar</h5>
+                                <h5 class="center">Para consultar las articulaciones por experto, se debe seleccionar un experto y fechas válidas, luego presionar el botón consultar</h5>
                               </div>
                             </div>
                           </div>
@@ -177,7 +177,7 @@
           url: '/grafico/consultarGestoresYLineasDeUnNodo/'+id,
           success: function (data) {
             $('#txtgestor_id').empty();
-            $('#txtgestor_id').append('<option value="">Seleccione el Gestor</option>')
+            $('#txtgestor_id').append('<option value="">Seleccione el experto</option>')
             $.each(data.gestores, function(i, e) {
               // console.log(e.nombres_gestor);
               $('#txtgestor_id').append('<option value="'+e.id+'">'+e.nombres_gestor+'</option>');

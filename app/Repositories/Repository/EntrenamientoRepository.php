@@ -174,7 +174,7 @@ class EntrenamientoRepository
             ]);
             $entrenamiento->ideas()->sync($syncIdeas, false);
             // Cambiar todas las ideas del entrenamiento a estado "En registro"
-            $entrenamiento->ideas()->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsRegistro())->first()->id]);
+            // $entrenamiento->ideas()->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsRegistro())->first()->id]);
             // Registra el historial de todas esas ideas
             $this->registrarHistorialIdeaTaller($entrenamiento, Movimiento::IsRegistrar());
             // $entrenamiento->ideas->registrarHistorialIdea(Movimiento::IsRegistrar(), Session::get('login_role'), null, 'en el taller de fortalecimiento ' . $codigo_entrenamiento . ' realizado el día ' . $request->input('txtfecha_sesion1'));
@@ -215,7 +215,7 @@ class EntrenamientoRepository
     {
         $syncData = array();
         foreach ($request->get('ideas_taller') as $id => $value) {
-            $syncData[$id] = array('confirmacion' => $request->confirmaciones[$id], 'asistencia1' => $request->asistencia[$id], 'idea_id' => $value);
+            $syncData[$id] = array('confirmacion' => $request->confirmaciones[$id], 'asistencia1' => $request->asistencias[$id], 'idea_id' => $value);
         }
         return $syncData;
     }

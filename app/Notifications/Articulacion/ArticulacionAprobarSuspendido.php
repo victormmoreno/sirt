@@ -45,7 +45,7 @@ class ArticulacionAprobarSuspendido extends Notification implements ShouldQueue
             'icon'  => 'library_books',
             'color' => 'green',
             'autor' => "{$this->getArticulacion()->articulacion_proyecto->actividad->gestor->user->nombres} {$this->getArticulacion()->articulacion_proyecto->actividad->gestor->user->apellidos}",
-            'text'  => "El gestor ha solicitado aprobar la suspensión de una articulación | {$this->getArticulacion()->articulacion_proyecto->actividad->codigo_actividad} - {$this->getArticulacion()->articulacion_proyecto->actividad->nombre}",
+            'text'  => "El experto ha solicitado aprobar la suspensión de una articulación | {$this->getArticulacion()->articulacion_proyecto->actividad->codigo_actividad} - {$this->getArticulacion()->articulacion_proyecto->actividad->nombre}",
           ];
     }
 

@@ -77,7 +77,7 @@
                         @endif
 
                 </select>
-                <label for="txtnodogestor" class="active">Nodo Gestor<span class="red-text">*</span></label>
+                <label for="txtnodogestor" class="active">Nodo del experto<span class="red-text">*</span></label>
                 <small id="txtnodogestor-error" class="error red-text"></small>
             </div>
             <div class="input-field col s12 m12 l12">

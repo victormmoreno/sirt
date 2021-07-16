@@ -28,7 +28,7 @@ class ArticulacionController extends Controller
   }
 
   /**
-   * Genera el excel de las articulaciones que tiene un gestor
+   * Genera el excel de las articulaciones que tiene un experto
    * @param int $id Id del gestor
    * @return Response\Excel
    * @author dum

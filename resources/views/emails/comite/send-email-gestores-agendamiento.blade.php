@@ -1,7 +1,7 @@
 @component('mail::message')
 # Programación para el Comité de Selección de Ideas | Tecnoparque Nodo {{$nodo}}.
 
-Gestores(a)
+Expertos
 <br>
 Cordial Saludo.
 <br>
@@ -32,12 +32,12 @@ impacto y equipo de trabajo. También se contara con un espacio de cinco minutos
     </center>
 @endcomponent
 
-<h5>Gestores(a) que estarán presentes en el comité</h5>
+<h5>Expertos que estarán presentes en el comité</h5>
 
 @component('mail::promotion')
     <center>
         @foreach ($comite->gestores as $gestor)
-            <h3 class="subtittle">Gestor(a):</h3> 
+            <h3 class="subtittle">Experto(a):</h3> 
             <h3 class="subtittle-value">{{$gestor->user->nombres}} {{$gestor->user->apellidos}}</h3>
             <h3 class="subtittle">Desde: </h3>
             <h3 class="subtittle-value">{{$gestor->pivot->hora_inicio}}</h3>

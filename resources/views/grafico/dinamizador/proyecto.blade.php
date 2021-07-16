@@ -85,9 +85,6 @@
                           </div>
                           <div class="col s12 m8 l8">
                             <div id="graficosProyectoConEmpresaPorMesYNodo_combinate" class="green lighten-3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
-                              {{-- <div class="row card-panel">
-                                <h5 class="center">Para consultar las edts por gestor, se debe seleccionar un gestor y fechas válidas, luego presionar el botón consultar</h5>
-                              </div> --}}
                             </div>
                           </div>
                         </div>

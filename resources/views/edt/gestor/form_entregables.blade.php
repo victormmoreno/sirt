@@ -11,7 +11,7 @@
   </div>
   <div class="input-field col s12 m6 l6">
     <input type="text" id="txtgestor_id" disabled value="{{$edt->gestor}}">
-    <label for="txtgestor_id" class="active">Gestor</label>
+    <label for="txtgestor_id" class="active">Experto</label>
   </div>
 </div>
 <div class="divider"></div>

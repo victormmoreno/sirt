@@ -89,7 +89,7 @@ class GraficoController extends Controller
   }
 
   /**
-   * Consulta los gestores y nodos de un proyecto
+   * Consulta los expertos y nodos de un proyecto
    *
    * @param int $id Id del nodo
    * @return Response

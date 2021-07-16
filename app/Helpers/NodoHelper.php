@@ -18,7 +18,7 @@ class NodoHelper
     {
         // $value = session()->get('login_role');
         if (\Session::get('login_role') == User::IsGestor() && isset(auth()->user()->gestor->nodo_id)) {
-            return 'Gestor nodo ' . Nodo::userNodo(auth()->user()->gestor->nodo_id)->first()->nombre;
+            return 'Experto nodo ' . Nodo::userNodo(auth()->user()->gestor->nodo_id)->first()->nombre;
         } else if (\Session::get('login_role') == User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo_id)) {
             return 'Dinamizador nodo ' . Nodo::userNodo(auth()->user()->dinamizador->nodo_id)->first()->nombre;
         } else if (\Session::get('login_role') == User::IsInfocenter() && isset(auth()->user()->infocenter->nodo_id)) {

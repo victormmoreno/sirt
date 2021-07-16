@@ -73,7 +73,7 @@
                             <div class="col s12 m4 l4">
                                 <a href="{{route('csibt.notificar.agendamiento', [$comite->id, -1,'gestores'])}}">
                                     <div class="card-panel blue-grey lighten-3 black-text center">
-                                        <i class="material-icons left">notifications</i>Enviar citación a gestores.
+                                        <i class="material-icons left">notifications</i>Enviar citación a expertos.
                                     </div>
                                 </a>
                             </div>

@@ -26,7 +26,7 @@
     {{ $idea->comites()->wherePivot('comite_id', $comite->id)->first()->pivot->observaciones }}
   </p>
   <p style="text-align: justify">
-    Luego de seguir las recomendaciones usted podrá solicitar una nueva citación al comité y este decidirá si se le asigna un gestor de Tecnoparque,
+    Luego de seguir las recomendaciones usted podrá solicitar una nueva citación al comité y este decidirá si se le asigna un experto de Tecnoparque,
     quien lo contactará para iniciar con la metodología en caso de que el proyecto se admitido.
     Cualquier información adicional la puede solicitar a los teléfonos {{ $idea->nodo->telefono }} <b>ext.</b> {{ $extensiones }}.
   </p>

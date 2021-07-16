@@ -29,7 +29,7 @@
                     <div class="card-content">
                         <br>
                         <center>
-                            <span class="card-title center-align">Asignar ideas del CSIBT a gestores - <b>{{$comite->codigo}}</b></span>
+                            <span class="card-title center-align">Asignar ideas del comité a expertos - <b>{{$comite->codigo}}</b></span>
                         </center>
                         <div class="divider"></div>
                         <div class="row">

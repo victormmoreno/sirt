@@ -11,7 +11,7 @@
                 <li class="collection-item">
                     <span class="title"><b>Paso 2</b></span>
                     <p>
-                        señor(a) usuario, si la asesoria fue acompañada por otro gestor agregue a este en la sección de gestores Asesores, pulsando el boton agregar gestor.
+                        Señor(a) usuario, si la asesoria fue acompañada por otro experto agregue a este en la sección de expertos asesores, pulsando el boton agregar experto.
                     </p>
                 </li>
             </ul>
@@ -29,9 +29,9 @@
 
                         <h5 class="center-align">
                             @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsArticulador()))
-                                <mark>Articulador A Cargo</mark>
+                                <mark>Articulador a cargo</mark>
                             @else
-                                <mark>Gestor A Cargo</mark>
+                                <mark>Experto a cargo</mark>
                             @endif
                         </h5>
 
@@ -47,7 +47,7 @@
                                     @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsArticulador()))
                                         Articulador
                                     @else
-                                        Gestor
+                                        Experto
                                     @endif
 
                                 </th>
@@ -80,7 +80,7 @@
                                 <tr id="filaGestor{{$usoinfraestructura->actividad->gestor->id}}">
                                     <td>{{$usoinfraestructura->actividad->gestor->lineatecnologica->abreviatura}} -  {{$usoinfraestructura->actividad->gestor->lineatecnologica->nombre}}</td>
                                     <td>
-                                        <input type="hidden" name="gestor[]" value="{{$usoinfraestructura->actividad->gestor->id}}" min="0" />{{$usoinfraestructura->actividad->gestor->user()->withTrashed()->first()->documento}} - {{$usoinfraestructura->actividad->gestor->user()->withTrashed()->first()->nombres}} {{$usoinfraestructura->actividad->gestor->user->apellidos}} - Gestor a cargo
+                                        <input type="hidden" name="gestor[]" value="{{$usoinfraestructura->actividad->gestor->id}}" min="0" />{{$usoinfraestructura->actividad->gestor->user()->withTrashed()->first()->documento}} - {{$usoinfraestructura->actividad->gestor->user()->withTrashed()->first()->nombres}} {{$usoinfraestructura->actividad->gestor->user->apellidos}} - Experto a cargo
                                     </td>
                                     <td><input type="number" name="asesoriadirecta[]" value="0" step="0.1" min="0"></td>
                                     <td><input type="number" name="asesoriaindirecta[]" value="0" step="0.1" min="0"></td>
@@ -110,14 +110,14 @@
             <br>
             <div class="divider"></div>
             <h5 class="center-align">
-                <mark>Gestores Asesores</mark>
+                <mark>Expertos asesores</mark>
             </h5>
             <br><br>
             <div class="row">
                 <div class="input-field col s12 m4 l5">
                     <select class="js-states browser-default select2"  id="txtgestorasesor" name="txtgestorasesor" style="width: 100%" tabindex="-1" {{isset($usoinfraestructura->usogestores) ? '' : 'disabled'}} >
                         <option value="">
-                                Seleccione Gestor
+                                Seleccione experto
                             </option>
                         @if(isset($usoinfraestructura->usogestores))
                             @foreach($gestores as $gestor)
@@ -135,7 +135,7 @@
 
                     </select>
                     <label class="active" for="txtgestorasesor">
-                        Gestores
+                        Expertos
                     </label>
                 </div>
                 <div class="input-field col s12 m2 l2">
@@ -175,7 +175,7 @@
                             <thead>
                                 <tr>
                                     <th>
-                                        Gestor
+                                        Experto
                                     </th>
                                     <th>
                                         Asesoria Directa (Horas)

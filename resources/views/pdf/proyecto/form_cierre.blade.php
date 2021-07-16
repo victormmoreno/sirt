@@ -209,7 +209,7 @@
         </tr>
         <tr>
           <td class="centrar" colspan="2"><small>{{$proyecto->articulacion_proyecto->actividad->gestor->user->nombres}} {{$proyecto->articulacion_proyecto->actividad->gestor->user->apellidos}}</small></td>
-          <td class="centrar" colspan="2"><small>Gestor</small></td>
+          <td class="centrar" colspan="2"><small>Experto</small></td>
           <td class="centrar" colspan="2"></td>
         </tr>
         <tr>
