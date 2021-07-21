@@ -33,7 +33,7 @@ class UsoInfraestructuraRepository
             $usoInfraestructura = $this->storeUsoInfraestructura($actividad, $request);
             //llamado de metodo para guardar talentos asociados al uso de infraestructura
             $this->storeTalentoToUsoInfraestructura($usoInfraestructura, $request);
-            //llamado de metodo para guardar expertos y horas de asesoria asociados al uso de infraestructura
+            //llamado de metodo para guardar Gestores y horas de asesoria asociados al uso de infraestructura
             $this->storeGestorUsoToUsoInfraestructura($usoInfraestructura, $request);
             //llamado de metodo para guardar materiales y costos de material asociados al uso de infraestructura
             $this->storeMaterialUsoToUsoInfraestructura($usoInfraestructura, $request);
@@ -233,9 +233,9 @@ class UsoInfraestructuraRepository
 
             if (isset($equiposmantenimiento)) {
                 //formula para calcular el valor del mantenimiento del equipo * tiempo uso infraestructura
-                $mantenimientoEquipo = round(($equiposmantenimiento->valor_mantenimiento / $equiposmantenimiento->equipo->vida_util / $equiposmantenimiento->equipo->horas_uso_anio) * (double) $request->get('tiempouso')[$id]);
+                $mantenimientoEquipo[$id] = round(($equiposmantenimiento->valor_mantenimiento / $equiposmantenimiento->equipo->vida_util / $equiposmantenimiento->equipo->horas_uso_anio) * (double) $request->get('tiempouso')[$id]);
             } else {
-                $mantenimientoEquipo = 0;
+                $mantenimientoEquipo[$id] = 0;
             }
             //costo total de equippos
             $totalEquipos[$id] = $depreciacionEquipo[$id] + $mantenimientoEquipo[$id];
@@ -282,7 +282,7 @@ class UsoInfraestructuraRepository
             $usoInfraestructura = $this->updateUsoInfraestructura($id, $request);
             //llamado de metodo para guardar talentos asociados al uso de infraestructura
             $this->storeTalentoToUsoInfraestructura($usoInfraestructura, $request);
-            //llamado de metodo para guardar expertos y horas de asesoria asociados al uso de infraestructura
+            //llamado de metodo para guardar Gestores y horas de asesoria asociados al uso de infraestructura
             $this->storeGestorUsoToUsoInfraestructura($usoInfraestructura, $request);
             //llamado de metodo para guardar materiales y costos de material asociados al uso de infraestructura
             $this->storeMaterialUsoToUsoInfraestructura($usoInfraestructura, $request);

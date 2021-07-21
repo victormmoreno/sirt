@@ -15,7 +15,15 @@ class UsoInfraestructuraPresenter extends Presenter
 
     public function tipoUsoInfraestructura()
     {
-        return $this->uso->tipo_usoinfraestructura == UsoInfraestructura::IsProyecto() ? 'Proyecto' : $this->uso->tipo_usoinfraestructura == UsoInfraestructura::IsArticulacion() ? 'Articulación' : $this->uso->tipo_usoinfraestructura == UsoInfraestructura::IsEst() ? 'EDT' : 'No Registra';
+        if($this->uso->tipo_usoinfraestructura == UsoInfraestructura::IsProyecto()) {
+            return  'Proyecto';
+        }else if($this->uso->tipo_usoinfraestructura == UsoInfraestructura::IsArticulacion()){
+            return 'Articulación';
+        }else if($this->uso->tipo_usoinfraestructura == UsoInfraestructura::IsEst()){
+            return 'EDT';
+        }else{
+            return 'No Registra';
+        }
     }
 
     public function fechaUsoInfraestructura()
@@ -40,7 +48,10 @@ class UsoInfraestructuraPresenter extends Presenter
 
     public function nodoUso()
     {
-        return $this->uso->has('actividad.nodo.entidad') ? "Tecnparque Nodo {$this->uso->actividad->nodo->entidad->nombre}" : 'No Registra';
+        if($this->uso->has('actividad.nodo.entidad')){
+            return "Tecnparque Nodo {$this->uso->actividad->nodo->entidad->nombre}";
+        }
+        return 'No Registra';
     }
 
     public function actividadLinea()

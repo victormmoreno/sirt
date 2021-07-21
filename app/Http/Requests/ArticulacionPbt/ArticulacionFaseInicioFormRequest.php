@@ -54,8 +54,8 @@ class ArticulacionFaseInicioFormRequest extends FormRequest
             'txt_tipo_articulacion.required' => 'El tipo de articulación es obligatoria.',
             'txt_alcance_articulacion.required' => 'El tipo de articulación es obligatoria.',
             'txttalento_interlocutor.required'=>'Debe haber un interlocutor',
-        
-     
+
+
             'talentos.required' => 'Debe asociar por lo menos un talento a la articulación.',
 
             'txtnombre_articulacion.required' => 'El nombre de la articulación es obligatoria.',
@@ -84,12 +84,11 @@ class ArticulacionFaseInicioFormRequest extends FormRequest
             'txtfecha_inicio.required'        => 'La fecha de inicio es obligatoria.',
             'txtfecha_inicio.date'            => 'La fecha de inicio no es una fecha válida.',
             'txtfecha_inicio.before_or_equal' => 'La fecha de inicio debe ser una fecha anterior o igual a la actual',
-    
 
             'txtobjetivo.required' => 'El objetivo es obligatorio.',
             'txtobjetivo.max' => 'El objetivo debe ser máximo de 191 carácteres.',
             'txtobjetivo.min' => 'El objetivo debe ser minimo  de 2 carácteres.',
-           
+
         ];
     }
 }

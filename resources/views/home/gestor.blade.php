@@ -5,7 +5,7 @@
   <main class="mn-inner inner-active-sidebar">
     {{-- <div class="middle-content"> --}}
       <div class="row">
-        <div class="col s12 m3 l3">
+        <div class="col s12 m5 l5">
           <div class="card stats-card">
             <div class="card-content">
               <span class="stats-counter">
@@ -31,7 +31,9 @@
             </div>
           </div>
         </div>
-        <div class="col s12 m4 l4">
+      </div>
+      <div class="row">
+        <div class="col s12 m5 l5">
           <div class="card stats-card">
             <div class="card-content">
               <span class="stats-counter">
