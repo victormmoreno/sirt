@@ -8,7 +8,7 @@
             <th >Fase</th>
             <th >Total horas Asesoria Directa</th>
             <th >Total horas Asesoria Indirecta</th>
-            <th >Gestores</th>
+            <th >Expertos</th>
             <th >Talentos</th>
             <th >Equipos</th>
             <th >Materiales de Formación</th>

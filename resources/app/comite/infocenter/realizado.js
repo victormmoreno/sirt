@@ -3,7 +3,7 @@ $(document).on('submit', 'form#formComiteRealizadoCreate', function (event) {
     Swal.fire({
         title: '¿Está seguro(a) de guardar esta información?',
         // text: "You won't be able to revert this!",
-        text: "Debes tener en cuenta mientras el dinamizador no asigne las ideas de proyectos a los gestores puedes cambiar esta información",
+        text: "Debes tener en cuenta mientras el dinamizador no asigne las ideas de proyectos a los expertos puedes cambiar esta información",
         type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',

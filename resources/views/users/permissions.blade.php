@@ -72,9 +72,9 @@
                                                                     @break
                                                                     @case(App\User::IsDinamizador())
                                                                         @if(isset($user))
-                                                                            <input type="checkbox" name="role[]"  {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  {{$name == App\User::IsAdministrador() ? 'onclick=this.checked=!this.checked;' : $name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked;' : '' }} value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
+                                                                            <input type="checkbox" name="role[]"  {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  {{$name == App\User::IsAdministrador() ? 'onclick=this.checked=!this.checked;' : ($name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked;' : '') }} value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
                                                                         @else
-                                                                            <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" {{$name == App\User::IsAdministrador() ? 'onclick=this.checked=!this.checked;' : $name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked;' : '' }} onchange="roles.getRoleSeleted(this)">
+                                                                            <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" {{$name == App\User::IsAdministrador() ? 'onclick=this.checked=!this.checked;' : ($name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked;' : '') }} onchange="roles.getRoleSeleted(this)">
                                                                         @endif
                                                                     @break
                                                                     @case(App\User::IsGestor())
@@ -87,9 +87,9 @@
                                                                     @default
                                                                     @break
                                                                 @endswitch
-    
+
                                                                 <label for="test-{{$name}}">{{$name}}</label>
-                                                            </p>   
+                                                            </p>
                                                         @empty
                                                             <p class="p-v-xs">No tienes roles asignados</p>
                                                         @endforelse
@@ -117,7 +117,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-    
+
                                                     @endif
                                                     <div class="row">
                                                         <div class="input-field col s12 m12 l12 valign-wrapper selectRole" style="display:block">
@@ -130,7 +130,7 @@
                                                                 <div class="card-content">
                                                                     <span class="card-title activator grey-text text-darken-4 center-align">Información Dinamizador</span>
                                                                     <div class="input-field col s12 m12 l12">
-    
+
                                                                         <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnododinamizador" name="txtnododinamizador" style="width: 100%; display: none
                                                                         " tabindex="-1">
                                                                             @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
@@ -157,7 +157,7 @@
                                                         <div id="gestor" class="input-field col s12 m12 l6 offset-l3">
                                                             <div  class="card mailbox-content">
                                                                 <div class="card-content">
-                                                                    <span class="gestorarticulador card-title activator grey-text text-darken-4 center-align">Información Gestor</span>
+                                                                    <span class="gestorarticulador card-title activator grey-text text-darken-4 center-align">Información del experto</span>
                                                                     <div class="input-field col s12 m12 l12">
                                                                         <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnodogestor" name="txtnodogestor" onchange="linea.getSelectLineaForNodo()" style="width: 100%" tabindex="-1">
                                                                             @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
@@ -177,7 +177,7 @@
                                                                                 <option value="{{auth()->user()->dinamizador->nodo->id}}">Tecnoparque Nodo {{auth()->user()->dinamizador->nodo->entidad->nombre}}</option>
                                                                             @endif
                                                                         </select>
-                                                                        <label for="txtnodogestor" class="active">Nodo Gestor<span class="red-text">*</span></label>
+                                                                        <label for="txtnodogestor" class="active">Nodo del experto<span class="red-text">*</span></label>
                                                                         <small id="txtnodogestor-error" class="error red-text"></small>
                                                                     </div>
                                                                     <div class="input-field col s12 m12 l12 linea">
@@ -198,7 +198,7 @@
                                                                         <small id="txtlinea-error" class="error red-text"></small>
                                                                     </div>
                                                                     <div class="input-field col s12 m12 l12">
-                                                                        
+
                                                                         <input id="txthonorario" name="txthonorario" type="text" value="{{ isset($user->gestor->honorarios) ? $user->gestor->honorarios : old('txthonorario')}}" {{ isset($user->gestor->honorarios) && session()->get('login_role') == App\User::IsGestor() ||   (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id)  && isset($user->gestor->nodo->id ) && $user->gestor->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : ''}}>
                                                                         <label for="txthonorario">Honorario <span class="red-text">*</span></label>
                                                                         <small id="txthonorario-error" class="error red-text"></small>
@@ -233,7 +233,7 @@
                                                                                 @endif
                                                                         </select>
                                                                         <label for="txtnodoinfocenter" class="active">Nodo Infocenter<span class="red-text">*</span></label>
-    
+
                                                                         <small id="txtnodoinfocenter-error" class="error red-text"></small>
                                                                     </div>
                                                                     <div class="input-field col s12 m12 l12">
@@ -603,14 +603,14 @@ var roles = {
                 $("span[class*='gestorarticulador']").html("Información Articulador");
                 $("label[for*='txtlinea']").hide();
                 $("#txtlinea").val(1);
-                
+
                 $("label[for*='txtlinea']").html("Línea Articulador");
                 $("label[for*='txthonorario']").html("Honorario Articulador");
                 $('#test-Articulador').prop('checked', true);
                 $('#test-Gestor').prop('checked', false);
                 $('#gestor').show();
                 $('.linea').hide();
-                
+
             }else if($(this).val() == '{{App\User::IsInfocenter()}}'){
                 roles.hideSelectRole();
                 $('#infocenter').show();
@@ -656,7 +656,7 @@ var linea = {
                         $('#txtlinea').select2('val','{{$user->gestor->lineatecnologica_id}}');
                     @endif
                 });
-                
+
                 @if($errors->any())
                     $('#txtlinea').val("{{old('txtlinea')}}");
                 @endif

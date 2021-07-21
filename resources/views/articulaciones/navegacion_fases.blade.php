@@ -31,7 +31,7 @@
     <div class="col s12 m4 l4">
         <a href="{{route('articulacion.cambiar', $articulacion->id)}}">
             <div class="card-panel green lighten-3 black-text center">
-                Cambiar el gestor de la articulación.
+                Cambiar el experto de la articulación.
             </div>
         </a>
     </div>

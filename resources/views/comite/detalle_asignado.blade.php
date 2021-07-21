@@ -119,13 +119,13 @@
                                                 <div class="divider"></div>
                                                 <p>
                                                     <b class="black-text">
-                                                        Gestor asignado a la idea de proyecto:
+                                                        Experto asignado a la idea de proyecto:
                                                     </b> 
                                                     @if ($value->pivot->admitido == 1)
                                                         @if(isset($value->gestor->user))
                                                         {{$value->gestor->user->nombres}} {{$value->gestor->user->apellidos}}
                                                         @else
-                                                        Esta idea de proyecto no ha sido asignada a ningún gestor(a)
+                                                        Esta idea de proyecto no ha sido asignada a ningún experto(a)
                                                         @endif
                                                     @else
                                                         Esta idea de proyecto no fue aprobada en el comité.
@@ -146,7 +146,7 @@
                                                 <a href="{{route('comite.cambiar.asignacion', [$value, $comite])}}">
                                                     <div class="card-panel yellow lighten-3 black-text center">
                                                         <i class="material-icons left">edit</i>
-                                                        Cambiar asignación del gestor.
+                                                        Cambiar asignación del experto.
                                                         <i class="material-icons right">edit</i>
                                                     </div>
                                                 </a>

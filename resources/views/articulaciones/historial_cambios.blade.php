@@ -16,7 +16,7 @@
                           El {{$historico[$i]->rol}} {{$historico[$i]->usuario}} {{$historico[$i]->movimiento}} la articulación el día {{$historico[$i]->created_at}}
                           @else
                             @if ($historico[$i]->movimiento == 'Cambió')
-                            El {{$historico[$i]->rol}} {{$historico[$i]->usuario}} {{$historico[$i]->movimiento}} el gestor de la articulación el día {{$historico[$i]->created_at}}
+                            El {{$historico[$i]->rol}} {{$historico[$i]->usuario}} {{$historico[$i]->movimiento}} el experto de la articulación el día {{$historico[$i]->created_at}}
                             (Este proyecto se encontraba en fase de {{$historico[$i]->fase}})
                             @elseif($historico[$i]->movimiento == 'Reversó')
                             El {{$historico[$i]->rol}} {{$historico[$i]->usuario}} {{$historico[$i]->movimiento}} la fase de la articulación de {{$historico[$i]->fase}} a Inicio el día {{$historico[$i]  ->created_at}}.

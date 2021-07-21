@@ -934,7 +934,7 @@
                         showConfirmButton: false,
                         timer: 1500,
                         type: 'error',
-                        title: 'El Gestor ' + nombreGestor + ' ya esta listado.'
+                        title: 'El experto ' + nombreGestor + ' ya esta listado.'
                       });
 
                     $("#txtgestorasesor").val();
@@ -982,7 +982,7 @@
                         showConfirmButton: false,
                         timer: 1500,
                         type: 'success',
-                        title: 'El Gestor ' + nombreGestor + ' agregado.'
+                        title: 'El experto ' + nombreGestor + ' ha sido agregado.'
                       });
 
 
@@ -1013,7 +1013,7 @@
             showConfirmButton: false,
             timer: 1500,
             type: 'success',
-            title: 'Gestor eliminado.'
+            title: 'Experto eliminado.'
           });
         }
 

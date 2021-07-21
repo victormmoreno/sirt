@@ -193,7 +193,7 @@
                                                                                         <option value="{{auth()->user()->dinamizador->nodo->id}}">Tecnoparque Nodo {{auth()->user()->dinamizador->nodo->entidad->nombre}}</option>
                                                                                     @endif
                                                                                 </select>
-                                                                                <label for="txtnodogestor" class="active">Nodo Gestor<span class="red-text">*</span></label>
+                                                                                <label for="txtnodogestor" class="active">Nodo del experto<span class="red-text">*</span></label>
                                                                                 <small id="txtnodogestor-error" class="error red-text"></small>
                                                                             </div>
                                                                             <div class="input-field col s12 m12 l12 linea">
@@ -600,10 +600,10 @@ var roles = {
             }else if($(this).val() == '{{App\User::IsGestor()}}' ){
                 roles.hideSelectRole();
                 $('#gestor').hide();
-                $("label[for*='txtnodogestor']").html("Nodo Gestor");
-                $("span[class*='gestorarticulador']").html("Información Gestor");
-                $("label[for*='txtlinea']").html("Línea Gestor");
-                $("label[for*='txthonorario']").html("Honorario gestor");
+                $("label[for*='txtnodogestor']").html("Nodo del experto");
+                $("span[class*='gestorarticulador']").html("Información del experto");
+                $("label[for*='txtlinea']").html("Línea del experto");
+                $("label[for*='txthonorario']").html("Honorarios del experto");
                 $('#test-Articulador').prop('checked', false);
                 $('#test-Gestor').prop('checked', true);
                 $('.linea').show();

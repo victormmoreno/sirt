@@ -17,7 +17,7 @@
         <input name="txtgestor_id"
             value="{{ $proyecto->articulacion_proyecto->actividad->gestor->user->nombres }} {{ $proyecto->articulacion_proyecto->actividad->gestor->user->apellidos }}"
             disabled id="txtgestor_id">
-        <label class="active" for="txtgestor_id">Gestor</label>
+        <label class="active" for="txtgestor_id">Experto</label>
     </div>
     <div class="input-field col s12 m6 l6">
         <input name="txtlinea" id="txtlinea" value="{{ $proyecto->sublinea->linea->nombre }}" disabled>

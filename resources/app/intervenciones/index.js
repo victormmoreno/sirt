@@ -27,7 +27,7 @@ function detallesDeUnaIntervencion(id){
   
           +'<div class="row">'
           +'<div class="col s12 m6 l6">'
-          +'<span class="teal-text text-darken-3">Gestor a cargo: </span>'
+          +'<span class="teal-text text-darken-3">Experto a cargo: </span>'
           +'</div>'
           +'<div class="col s12 m6 l6">'
           +'<span class="black-text">'+respuesta.detalles.gestor+'</span>'

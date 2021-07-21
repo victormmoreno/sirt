@@ -7,7 +7,7 @@
         <th>Sector</th>
         <th>Línea Tecnológica</th>
         <th>Sublínea</th>
-        <th>Gestor a cargo</th>
+        <th>Experto a cargo</th>
         <th>Área de Conocimiento</th>
         <th>Estado del Proyecto</th>
         <th>Tipo de Proyecto</th>

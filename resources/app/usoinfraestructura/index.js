@@ -83,7 +83,7 @@ var usoinfraestructuraIndex = {
 
         if (nodo == null || nodo == '' || nodo == 'all' || nodo == undefined){
             $('#filter_gestor').empty();
-            $('#filter_gestor').append('<option value="" selected>Seleccione un Gestor</option>');
+            $('#filter_gestor').append('<option value="" selected>Seleccione un experto</option>');
         }else{
             $.ajax({
                 type: 'GET',

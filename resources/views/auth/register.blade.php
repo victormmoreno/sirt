@@ -359,13 +359,13 @@
                                     <div class="divider mailbox-divider"></div>
                                     <h5 class="text-primarycolor center-align hand-of-Sean-fonts orange-text text-darken-3">Tipo de usuario</h5>
                                     <p class="p-v-xs">
-                                        <input checked="" class="txttipousuario" id="txttalento" name="txttipousuario" type="radio" value="talento" onchange="user.checkedTypeUser()" {{ isset($idea->pregunta1) && $idea->pregunta1 == 1 ? 'checked' : old('pregunta1') == 1 ? 'checked':''}}/>
+                                        <input checked="" class="txttipousuario" id="txttalento" name="txttipousuario" type="radio" value="talento" onchange="user.checkedTypeUser()" {{ isset($idea->pregunta1) && $idea->pregunta1 == 1 ? 'checked' : (old('pregunta1') == 1 ? 'checked':'')}}/>
                                         <label align="justify" for="txttalento" class="black-text text-black">
                                             Deseo presentar una idea de proyecto.
                                         </label>
                                     </p>
                                     <p class="p-v-xs">
-                                        <input class="txttipousuario" id="txtcontratista" name="txttipousuario" type="radio" value="contratista" onchange="user.checkedTypeUser()" {{ isset($idea->pregunta2) && $idea->pregunta2 == 2 ? 'checked' : old('pregunta2') == 2 ? 'checked':''}}/>
+                                        <input class="txttipousuario" id="txtcontratista" name="txttipousuario" type="radio" value="contratista" onchange="user.checkedTypeUser()" {{ isset($idea->pregunta2) && $idea->pregunta2 == 2 ? 'checked' : (old('pregunta2') == 2 ? 'checked':'')}}/>
                                         <label align="justify" for="txtcontratista" class="black-text text-black">
                                             Soy funcionario de la Red Tecnoparque Colombia.
                                         </label>

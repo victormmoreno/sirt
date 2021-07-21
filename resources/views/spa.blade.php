@@ -109,7 +109,7 @@
                 <div id="lineas-texto">
                     <h1>líneas</h1>
                     <hr>
-                    <p>Tecnoparque se especializa en 4 líneas sustentadas en tecnologías emergentes, en las oportunidades del sector productivo y la política del gobierno. <br> Los usuarios pueden acceder gratuitamente a asesoría especializada de gestores
+                    <p>Tecnoparque se especializa en 4 líneas sustentadas en tecnologías emergentes, en las oportunidades del sector productivo y la política del gobierno. <br> Los usuarios pueden acceder gratuitamente a asesoría especializada de expertos
                         expertos en las 4 líneas tecnológicas además de acceso a infraestructura y laboratorios con equipos de alta tecnología, convirtiendo a Tecnoparque en un actor clave en los ecosistemas de Ciencia Tecnología e Innovación en el país.
                     </p>
                 </div>

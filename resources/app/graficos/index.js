@@ -28,7 +28,7 @@ function alertaNodoNoValido() {
 }
 
 function alertaGestorNoValido() {
-  Swal.fire('Advertencia!', 'Seleccione un gestor(a)', 'warning');
+  Swal.fire('Advertencia!', 'Seleccione un experto', 'warning');
 }
 
 function alertaLineaNoValido() {
@@ -512,7 +512,7 @@ function consultarEdtsPorGestorYFecha_stacked(bandera) {
   let fecha_fin = $('#txtfecha_fin_edtGrafico2').val();
   let id = $('#txtgestor_id_edtGrafico2').val();
   if (id == '') {
-    Swal.fire('Advertencia!', 'Selecciona un Gestor!', 'warning');
+    Swal.fire('Advertencia!', 'Selecciona un experto!', 'warning');
   } else {
     if (fecha_inicio > fecha_fin) {
       Swal.fire('Advertencia!', 'Selecciona fecha válidas!', 'warning');
@@ -577,16 +577,13 @@ function consultarEdtsPorNodoGestorYFecha_stacked(bandera) {
       url: '/grafico/consultarEdtsPorNodoGestorYFecha/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
       success: function (data) {
         var tamanho = data.consulta.length;
-        // console.log(tamanho);
         var datos = {
           gestores: [],
           tipo1Array: [],
           tipo2Array: [],
           tipo3Array: []
         };
-        // console.log(data.tipos);
         for (var i = 0; i < tamanho; i++) {
-          // console.log(data.consulta[i].gestor);
           if (data.consulta[i].gestor != null) {
             datos.gestores.push(data.consulta[i].gestor);
           }
@@ -820,7 +817,7 @@ function consultarArticulacionesDeUnGestorPorFecha_stacked() {
   let fecha_fin = $('#txtfecha_fin_Grafico2').val();
   let id = $('#txtgestor_id').val();
   if (id == '') {
-    Swal.fire('Advertencia!', 'Selecciona un Gestor!', 'warning');
+    Swal.fire('Advertencia!', 'Selecciona un experto!', 'warning');
   } else {
     if (fecha_inicio > fecha_fin) {
       Swal.fire('Advertencia!', 'Selecciona fecha válidas!', 'warning');

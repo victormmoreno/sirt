@@ -80,7 +80,7 @@
                     </li>
                     <li class="collection-item">
                         <span class="title black-text text-darken-3">
-                            Nombre de convocatoria 
+                            Nombre de convocatoria
                         </span>
                         <p>
                             {{$actividad->articulacionpbt->present()->articulacionPbtNombreConvocatoria()}}
@@ -100,7 +100,7 @@
                     </li>
                     <li class="collection-item">
                         <span class="title black-text text-darken-3">
-                            Nombre de contacto 
+                            Nombre de contacto
                         </span>
                         <p>
                             {{$actividad->articulacionpbt->present()->articulacionPbtNombreContacto()}}
@@ -108,16 +108,16 @@
                     </li>
                     <li class="collection-item">
                         <span class="title black-text text-darken-3">
-                            Mail institucional de contacto de la organización 
+                            Mail institucional de contacto de la organización
                         </span>
                         <p>
                             {{$actividad->articulacionpbt->present()->articulacionPbtEmail()}}
                         </p>
                     </li>
-                    
+
                     <li class="collection-item">
                         <span class="title black-text text-darken-3">
-                            Objetivo de la articulación 
+                            Objetivo de la articulación
                         </span>
                         <p>
                             {{$actividad->articulacionpbt->present()->articulacionPbtObjetivo()}}
@@ -225,14 +225,10 @@
                         @else
                             <li class="collection-item">
                                 <span class="title black-text text-darken-3">
-                                    Informe de no aprobado
+                                    Informe
                                 </span>
                                 <p>
-                                    @if ($actividad->articulacionpbt->present()->articulacionPbtInformeNoAprobado() == 1)
-                                        SI
-                                    @else
-                                        NO
-                                    @endif
+                                    {{$actividad->articulacionpbt->present()->articulacionPbtInforme()}}
                                 </p>
                             </li>
                             <li class="collection-item">
@@ -256,7 +252,7 @@
                                         SI
                                     @else
                                         NO
-                                    @endif  
+                                    @endif
                                 </p>
                             </li>
                         @endif
@@ -266,11 +262,11 @@
                             Lecciones aprendidas
                         </span>
                         <p>
-                            {{$actividad->articulacionpbt->present()->articulacionPbtLeccionesAprendidas()}}     
+                            {{$actividad->articulacionpbt->present()->articulacionPbtLeccionesAprendidas()}}
                         </p>
                     </li>
                 </ul>
-            </div>  
+            </div>
         </div>
     </div>
 </div>
@@ -281,7 +277,7 @@
         Evidencias de la fase de Cierre.
     </span>
 </div>
-<div class="divider mailbox-divider"></div> 
+<div class="divider mailbox-divider"></div>
 <div class="row">
     @include('articulacionespbt.table-archive-fase', ['fase' => 'cierre'])
 </div>

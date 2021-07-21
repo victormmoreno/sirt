@@ -90,7 +90,7 @@ class UserPresenter extends Presenter
     public function userEtnia()
     {
         if($this->user->has('etnia') && isset($this->user->etnia)){
-            return $this->user->etnia->nombre;  
+            return $this->user->etnia->nombre;
         }
         return 'No Registra';
     }

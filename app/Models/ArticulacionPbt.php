@@ -42,7 +42,7 @@ class ArticulacionPbt extends Model
         'informe_noaprobado',
         'recibira',
         'pdf_aprobacion',
-        'pdf_noaprobacion',
+        'informe',
         'documento_postulacion',
         'documento_convocatoria',
         'cuando'
@@ -69,27 +69,27 @@ class ArticulacionPbt extends Model
 
     public function actividad()
     {
-      return $this->belongsTo(Actividad::class, 'actividad_id', 'id');
+        return $this->belongsTo(Actividad::class, 'actividad_id', 'id');
     }
 
     public function proyecto()
     {
-      return $this->belongsTo(Proyecto::class, 'proyecto_id', 'id');
+        return $this->belongsTo(Proyecto::class, 'proyecto_id', 'id');
     }
 
     public function fase()
     {
-      return $this->belongsTo(Fase::class, 'fase_id', 'id');
+        return $this->belongsTo(Fase::class, 'fase_id', 'id');
     }
 
     public function tipoarticulacion()
     {
-      return $this->belongsTo(TipoArticulacion::class, 'tipo_articulacion_id', 'id');
+        return $this->belongsTo(TipoArticulacion::class, 'tipo_articulacion_id', 'id');
     }
 
     public function alcancearticulacion()
     {
-      return $this->belongsTo(AlcanceArticulacion::class, 'alcance_articulacion_id', 'id');
+        return $this->belongsTo(AlcanceArticulacion::class, 'alcance_articulacion_id', 'id');
     }
 
     public function archivomodel()
@@ -175,22 +175,20 @@ class ArticulacionPbt extends Model
     public function registerHistoryArticulacion($movimiento, $role, $comentario, $descripcion)
     {
         return $this->historial()->create([
-            'movimiento_id' => Movimiento::where('movimiento', $movimiento)->first()->id, 
+            'movimiento_id' => Movimiento::where('movimiento', $movimiento)->first()->id,
             'user_id' => auth()->user()->id,
             'role_id' => Role::where('name', $role)->first()->id,
             'comentarios' => $comentario,
             'descripcion' => $descripcion
-          ]);
+        ]);
     }
 
     /*===================================================================
     =            scope para consultar articulaciones           =
     ===================================================================*/
-
     public function scopeArticulacionesWithRelations($query, array $relations)
     {
         return $query->with($relations);
     }
-
     /*=====  End of scope para consultar por estado de proyecto  ======*/
 }

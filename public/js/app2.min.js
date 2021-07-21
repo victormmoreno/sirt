@@ -4848,6 +4848,12 @@ function consultarProyectosDelNodoPorAnho() {
         name: 'proceso',
         orderable: false
       },
+      {
+        width: '6%',
+        data: 'download_trazabilidad',
+        name: 'download_trazabilidad',
+        orderable: false
+      },
 
     ],
   });
@@ -6434,7 +6440,7 @@ $(document).ready(function() {
     }else if((filter_nodo_art != '' || filter_nodo_art != null) && filter_year_art !='' && filter_phase != '' && filter_tipo_articulacion != '' && (filter_alcance_articulacion != '' || filter_alcance_articulacion != null)){
         articulacion_pbt.fill_datatatables_articulacion(filter_nodo_art, filter_year_art, filter_phase, filter_tipo_articulacion, filter_alcance_articulacion);
     }else{
-        
+
         $('#articulaciones_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -6450,9 +6456,9 @@ $('#filter_articulacion').click(function () {
     let filter_phase = $('#filter_phase').val();
     let filter_tipo_articulacion = $('#filter_tipo_articulacion').val();
     let filter_alcance_articulacion = $('#filter_alcance_articulacion').val();
-   
+
     $('#articulaciones_data_table').dataTable().fnDestroy();
-    if((filter_nodo_art == '' || filter_nodo_art == null) && filter_year_art !='' && filter_phase != '' && filter_tipo_articulacion != '' && (filter_alcance_articulacion == '' || filter_alcance_articulacion == null)){        
+    if((filter_nodo_art == '' || filter_nodo_art == null) && filter_year_art !='' && filter_phase != '' && filter_tipo_articulacion != '' && (filter_alcance_articulacion == '' || filter_alcance_articulacion == null)){
         articulacion_pbt.fill_datatatables_articulacion(filter_nodo_art = null,filter_year_art, filter_phase, filter_tipo_articulacion, filter_alcance_articulacion = null);
     }else if((filter_nodo_art != '' || filter_nodo_art != null) && filter_year_art !='' && filter_phase != '' && filter_tipo_articulacion != '' && (filter_alcance_articulacion != '' || filter_alcance_articulacion != null)){
         articulacion_pbt.fill_datatatables_articulacion(filter_nodo_art, filter_year_art, filter_phase, filter_tipo_articulacion, filter_alcance_articulacion);
@@ -6479,7 +6485,7 @@ var articulacion_pbt ={
             ajax:{
                 url: "/articulaciones/datatable_filtros",
                 type: "get",
-                
+
                 data: {
                     filter_nodo_art: filter_nodo_art,
                     filter_year_art: filter_year_art,
@@ -6559,7 +6565,8 @@ function preguntaReversarArticulacion(e){
       }
     })
   }
-$(document).on('submit', 'form#frmArticulacionpbt_FaseInicio', function (event) { 
+
+$(document).on('submit', 'form#frmArticulacionpbt_FaseInicio', function (event) {
     $('button[type="submit"]').attr('disabled', 'disabled');
     event.preventDefault();
     var form = $(this);
@@ -6568,7 +6575,7 @@ $(document).on('submit', 'form#frmArticulacionpbt_FaseInicio', function (event) 
     ajaxSendFormArticulacion(form, data, url, 'registrada', 'Registro exitoso');
 });
 
-$(document).on('submit', 'form#frmUpdateArticulacion_FaseInicio', function (event) { 
+$(document).on('submit', 'form#frmUpdateArticulacion_FaseInicio', function (event) {
     $('button[type="submit"]').attr('disabled', 'disabled');
     event.preventDefault();
     var form = $(this);
@@ -6577,7 +6584,7 @@ $(document).on('submit', 'form#frmUpdateArticulacion_FaseInicio', function (even
     ajaxSendFormArticulacion(form, data, url, 'actualizado', 'Modificación Exitosa');
 });
 
-$(document).on('submit', 'form#frmUpdateArticulacionMiembros', function (event) { 
+$(document).on('submit', 'form#frmUpdateArticulacionMiembros', function (event) {
     $('button[type="submit"]').attr('disabled', 'disabled');
     event.preventDefault();
     var form = $(this);
@@ -6606,7 +6613,6 @@ function ajaxSendFormArticulacionFaseCierre(form, data, url) {
         dataType: 'json',
         processData: false,
         success: function (data) {
-            console.log(data);
             $('button[type="submit"]').removeAttr('disabled');
             $('.error').hide();
             printErroresFormulario(data);
@@ -6676,12 +6682,12 @@ function ajaxSendFormArticulacion(form, data, url, action, title) {
         dataType: 'json',
         processData: false,
         success: function (response) {
-         
+
             $('button[type="submit"]').removeAttr('disabled');
             $('.error').hide();
             printErroresFormulario(response);
             filter_project.messageArticulacion(response, action, title);
-            
+
         },
         error: function (xhr, textStatus, errorThrown) {
             alert("Error: " + errorThrown);
@@ -6716,7 +6722,7 @@ $('#filter_project_modal').click(function () {
 });
 
 $('#filter_company_advanced').click(function () {
-    
+
     filter_project.queryCompaniesTable();
 });
 
@@ -6738,23 +6744,23 @@ $('#filter_talents_advanced').click(function () {
 
 var filter_project = {
     fill_code_project:function(filter_code_project = null){
-        
+
         filter_project.emptyResult('alert-response');
         filter_project.emptyResult('collection-response');
         filter_project.emptyResult('alert-response-talents');
-        filter_project.emptyResult('txtnombre_articulacion');    
+        filter_project.emptyResult('txtnombre_articulacion');
         if(filter_code_project.length > 0){
             $.ajax({
                 dataType: 'json',
                 type: 'get',
                 url: '/actividades/filter-code/' + filter_code_project
-            }).done(function (response) {    
-                if(response.data.status_code == 200){   
+            }).done(function (response) {
+                if(response.data.status_code == 200){
                     let activity = response.data.proyecto.articulacion_proyecto.actividad;
                     let data = response.data;
                     $('#txtnombre_articulacion').val(activity.nombre);
                     $("label[for='txtnombre_articulacion']").addClass('active');
-    
+
                     $('.alert-response').append(`
                     <div class="row">
                         <div class="col s12 m12 l12">
@@ -6772,7 +6778,7 @@ var filter_project = {
                         </div>
                     </div>
                     `);
-    
+
                     $('.collection-response').append(`
                     <li class="collection-item dismissable">
                         <a target="_blank" href="/proyecto/detalle/`+data.proyecto.id+`" class="secondary-content orange-text"><i class="material-icons">link</i></a>
@@ -6783,21 +6789,21 @@ var filter_project = {
                     </li>
                     <li class="collection-item dismissable">
                         <a  onclick="detallesIdeaPorId(`+data.proyecto.idea.id+`)" class="secondary-content orange-text" >
-                        
+
                             <i class="material-icons">link</i>
                         </a>
                         <span class="title">Idea:</span>
-                        
+
                         <p>`+data.proyecto.idea.codigo_idea+ `<br>
                         `+data.proyecto.idea.nombre_proyecto+ `
                         </p>
-                        
+
                     </li>
                     `);
-    
+
                     if (data.proyecto.articulacion_proyecto.talentos.length != 0) {
                         $.each(data.proyecto.articulacion_proyecto.talentos, function(e, talento) {
-                            
+
                             $('.alert-response-talents').append(`<div class="row card-talent`+talento.user.id+`">
                                     <div class="col s12 m12 l12">
                                         <div class="card bs-dark">
@@ -6814,21 +6820,21 @@ var filter_project = {
                                                 <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs orange-text" href="/usuario/usuarios/`+talento.user.documento+ `"><i class="material-icons left"> link</i>Ver más</a>
                                                 <a onclick="filter_project.deleteTalent( `+talento.user.id+ `);" class="waves-effect waves-red btn-flat m-b-xs red-text"><i class="material-icons left"> delete_sweep</i>Eliminar</a>
                                             </div>
-                                        </div>   
+                                        </div>
                                     </div>
                                 </div>`);
                         });
                     }else{
                         filter_project.notFound('alert-response-talents');
                     }
-                    
+
                 }else{
                     filter_project.notFound('alert-response');
                     filter_project.notFound('alert-response-talents');
-    
+
                     $('.collection-response').append(`
                         <li class="collection-item dismissable">
-                            <span class="title">Sin resultados</span>                          
+                            <span class="title">Sin resultados</span>
                         </li>
                     `);
                 }
@@ -6838,60 +6844,60 @@ var filter_project = {
             filter_project.notFound('alert-response-talents');
             $('.collection-response').append(`
                 <li class="collection-item dismissable">
-                    <span class="title">Sin resultados</span>                          
+                    <span class="title">Sin resultados</span>
                 </li>
             `);
         }
-        
+
     },
     fill_nit_company:function(filter_code_company = null){
-        
+
         filter_project.emptyResult('alert-response');
-      
+
         filter_project.emptyResult('alert-response-sedes');
         // filter_project.emptyResult('alert-response-company');
-          
+
         if(filter_code_company.length > 0){
             $.ajax({
                 dataType: 'json',
                 type: 'get',
                 url: '/empresas/filter-code/' + filter_code_company
-            }).done(function (response) {    
-                if(response.data.status_code == 200){   
+            }).done(function (response) {
+                if(response.data.status_code == 200){
                     let data = response.data;
 
-    
+
                     if (data.empresa.sedes.length != 0) {
                         $.each(data.empresa.sedes, function(e, sede) {
-                            
+
                             $('.alert-response-sedes').append(`<div class="row card-talent`+sede.id+`">
                                     <div class="col s12 m12 l12">
                                         <div class="card bs-dark">
                                             <div class="card-content">
                                                 <span class="card-title p-h-lg"> `+sede.nombre_sede+ `</span>
                                                 <input type="hidden" name="sedes" value="`+sede.id+`"/>
-                                                
+
                                                 <div class="position-top-right p f-12 mail-date hide-on-med-and-down"> Empresa: `+data.empresa.nit+` - `+data.empresa.nombre+`</div>
-                                                
+
                                             </div>
                                             <div class="card-action">
                                                 <a onclick="filter_project.addSedeArticulacionPbt( `+sede.id+ `);" class="waves-effect waves-red btn-flat m-b-xs orange-text">Agregar sede</a>
                                                 <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs orange-text" href="/empresa/detalle/`+data.empresa.id+ `"><i class="material-icons left"> link</i>Ver más</a>
                                             </div>
-                                        </div>   
+                                        </div>
                                     </div>
                                 </div>`);
                         });
                     }else{
-                        
+
                         filter_project.notFound('alert-response-sedes');
                         filter_project.notFound('alert-response-company');
                     }
-    
-                   
-                    
+
+
+
                 }else{
-                    
+
                     filter_project.notFound('alert-response-sedes');
                     filter_project.notFound('alert-response-company');
                 }
@@ -6900,7 +6906,7 @@ var filter_project = {
             filter_project.notFound('alert-response');
             filter_project.notFound('alert-response-sedes');
         }
-        
+
     },
     sedesEmpresa: function(sedes) {
         let fila = "";
@@ -6914,9 +6920,9 @@ var filter_project = {
     },
     addSedeArticulacionPbt: function(value){
         filter_project.printSede(value);
-        $('#sedes_modal').closeModal(); 
-        $('#company_modal').closeModal(); 
-        
+        $('#sedes_modal').closeModal();
+        $('#company_modal').closeModal();
+
     },
     printSede: function(id){
         filter_project.emptyResult('alert-response-company');
@@ -6925,16 +6931,16 @@ var filter_project = {
             type: 'get',
             url: '/empresas/sede/' + id
         }).done(function (response) {
-            if(response.data.status_code == 200){   
+            if(response.data.status_code == 200){
             $('.alert-response-company').append(`
                 <div class="row">
                     <div class="col s12 m12 l12">
                         <div class="card transparent bs-dark">
                             <div class="card-content">
                                 <span class="card-title p-h-lg"> `+response.data.sede.nombre_sede+ `</span>
-                                <input type="hidden" name="txtsede" value="`+response.data.sede.id+`"/>                   
+                                <input type="hidden" name="txtsede" value="`+response.data.sede.id+`"/>
                             </div>
-                        </div>   
+                        </div>
                     </div>
                 </div>
                 `);
@@ -6942,9 +6948,9 @@ var filter_project = {
                 filter_project.notFound('alert-response-company');
             }
         });
-        
+
     },
-    
+
     deleteTalent:function(id){
         $('.card-talent'+ id).remove();
         Swal.fire({
@@ -7052,10 +7058,10 @@ var filter_project = {
         $('#filter_talents_advanced_modal').openModal();
     },
     addProjectToArticulacion:function(code) {
-        
-        filter_project.fill_code_project(code); 
-        filter_project.emptyResult('result-talents'); 
-        $('#filter_project_advanced_modal').closeModal();     
+
+        filter_project.fill_code_project(code);
+        filter_project.emptyResult('result-talents');
+        $('#filter_project_advanced_modal').closeModal();
     },
     searchUser:function(document){
         $('.result-talents').empty();
@@ -7086,9 +7092,9 @@ var filter_project = {
                 }else{
                     filter_project.notFound('result-talents');
                 }
-            
+
             });
-        }        
+        }
     },
     formatDate: function(date){
         if(date == null){
@@ -7124,7 +7130,7 @@ var filter_project = {
             filter_project.emptyResult('talent-empty');
             filter_project.printTalentoInTable(talent);
         }
-        $('#filter_talents_advanced_modal').closeModal(); 
+        $('#filter_talents_advanced_modal').closeModal();
     },
     noRepeat: function(id) {
         let idTalento = id;
@@ -7158,7 +7164,7 @@ var filter_project = {
             $('.alert-response-talents').append(fila);
         });
     },
-    prepareTableRowTalent: function(response) { 
+    prepareTableRowTalent: function(response) {
         let data = response;
         let fila =`<div class="row card-talent`+data.talento.id+`">
                         <div class="col s12 m12 l12">
@@ -7172,7 +7178,7 @@ var filter_project = {
                                     <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs orange-text" href="/usuario/usuarios/`+data.talento.documento+ `"><i class="material-icons left"> link</i>Ver más</a>
                                     <a onclick="filter_project.deleteTalent( `+data.talento.id+ `);" class="waves-effect waves-red btn-flat m-b-xs red-text"><i class="material-icons left"> delete_sweep</i>Eliminar</a>
                                 </div>
-                            </div>   
+                            </div>
                         </div>
                     </div>`;
         return fila;
@@ -7214,7 +7220,7 @@ var filter_project = {
         $('.section-company').hide();
     },
     showsectionCollapseTalent: function(collap,collapheader,el){
-        
+
         collap[0].classList.remove('active');
         collap[1].classList.add('active');
         collapheader[0].classList.remove('active');
@@ -7243,7 +7249,7 @@ function checkTipoVinculacion(val) {
     let collap =document.getElementsByClassName('collapsible-li');
     let collapheader =document.getElementsByClassName('collapsible-header grey lighten-2');
     let el = document.getElementsByClassName('collapsible-body');
-   
+
     if ( $("#IsPbt").is(":checked") ) {
         filter_project.emptyResult('alert-response');
         filter_project.emptyResult('collection-response');
@@ -7254,17 +7260,17 @@ function checkTipoVinculacion(val) {
         filter_project.showSeccionProject();
         filter_project.hideSeccionCompany();
         filter_project.hidesectionCollapseTalent(collap,collapheader,el);
-    } 
+    }
     else if ($("#IsSenaInnova").is(":checked") ) {
-      
+
         filter_project.emptyResult('alert-response');
         filter_project.emptyResult('collection-response');
         filter_project.hideSeccionProject();
         filter_project.showSeccionCompany();
         filter_project.showsectionCollapseTalent(collap,collapheader,el);
-    } 
+    }
      else if( $("#IsColinnova").is(":checked")) {
-        
+
         filter_project.emptyResult('alert-response');
         filter_project.emptyResult('collection-response');
         filter_project.hideSeccionProject();

@@ -15,7 +15,7 @@
                 El {{$historico[$i]->rol}} {{$historico[$i]->usuario}} {{$historico[$i]->movimiento}} el proyecto el día {{$historico[$i]->created_at}}
                 @else
                   @if ($historico[$i]->movimiento == 'Cambió')
-                  El {{$historico[$i]->rol}} {{$historico[$i]->usuario}} {{$historico[$i]->movimiento}} el gestor del proyecto el día {{$historico[$i]->created_at}}
+                  El {{$historico[$i]->rol}} {{$historico[$i]->usuario}} {{$historico[$i]->movimiento}} el experto del proyecto el día {{$historico[$i]->created_at}}
                   (Este proyecto se encontraba en fase de {{$historico[$i]->fase}})
                   @elseif($historico[$i]->movimiento == 'Reversó')
                   El {{$historico[$i]->rol}} {{$historico[$i]->usuario}} {{$historico[$i]->movimiento}} el proyecto de la fase {{$historico[$i]->fase}} a {{$historico[$i]->comentarios}} el día {{$historico[$i]->created_at}}.

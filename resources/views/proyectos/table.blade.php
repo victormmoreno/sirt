@@ -35,31 +35,33 @@
   <thead>
     <tr>
       <th>Código de Proyecto</th>
-      <th>Gestor</th>
+      <th>Experto</th>
       <th>Nombre</th>
       <th>Sublínea</th>
       <th>Fase</th>
       <th>Información</th>
       <th>Proceso</th>
+      <th>Trazabilidad</th>
     </tr>
   </thead>
   <tfoot>
     <tr>
       <th>
-        <input type="text" name="codigo_proyecto" id="codigo_proyecto_tblProyectosDelNodoPorAnho" placeholder="Buscar por Código de Proyecto">
+        <input type="text" name="codigo_proyecto" id="codigo_proyecto_tblProyectosDelNodoPorAnho" placeholder="Buscar por código de proyecto">
       </th>
       <th>
-        <input type="text" name="gestor" id="gestor_tblProyectosDelNodoPorAnho" placeholder="Buscar por Gestor">
+        <input type="text" name="gestor" id="gestor_tblProyectosDelNodoPorAnho" placeholder="Buscar por experto">
       </th>
       <th>
-        <input type="text" name="nombre" id="nombre_tblProyectosDelNodoPorAnho" placeholder="Buscar por Nombre">
+        <input type="text" name="nombre" id="nombre_tblProyectosDelNodoPorAnho" placeholder="Buscar por nombre">
       </th>
       <th>
-        <input type="text" name="sublinea_nombre" id="sublinea_nombre_tblProyectosDelNodoPorAnho" placeholder="Buscar por Sublinea">
+        <input type="text" name="sublinea_nombre" id="sublinea_nombre_tblProyectosDelNodoPorAnho" placeholder="Buscar por sublinea">
       </th>
       <th>
-        <input type="text" name="nombre_fase" id="fase_nombre_tblProyectosDelNodoPorAnho" placeholder="Buscar por Fase">
+        <input type="text" name="nombre_fase" id="fase_nombre_tblProyectosDelNodoPorAnho" placeholder="Buscar por fase">
       </th>
+      <th></th>
       <th></th>
       <th></th>
     </tr>
@@ -75,7 +77,7 @@
   <thead>
     <tr>
       <th>Código de Proyecto</th>
-      <th>Gestor</th>
+      <th>Experto</th>
       <th>Nombre</th>
       <th>Sublínea</th>
       <th>Fase</th>
@@ -86,19 +88,19 @@
   <tfoot>
     <tr>
       <th>
-        <input type="text" name="codigo_proyecto" id="codigo_proyecto_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por Código de Proyecto">
+        <input type="text" name="codigo_proyecto" id="codigo_proyecto_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por código de proyecto">
       </th>
       <th>
-        <input type="text" name="gestor" id="gestor_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por Gestor">
+        <input type="text" name="gestor" id="gestor_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por experto">
       </th>
       <th>
-        <input type="text" name="nombre" id="nombre_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por Nombre">
+        <input type="text" name="nombre" id="nombre_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por nombre">
       </th>
       <th>
-        <input type="text" name="sublinea_nombre" id="sublinea_nombre_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por Sublinea">
+        <input type="text" name="sublinea_nombre" id="sublinea_nombre_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por sublinea">
       </th>
       <th>
-        <input type="text" name="nombre_fase" id="sublinea_nombre_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por Fase">
+        <input type="text" name="nombre_fase" id="sublinea_nombre_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por fase">
       </th>
       <th></th>
       <th></th>
@@ -115,7 +117,7 @@
   <thead>
     <tr>
       <th>Código de Proyecto</th>
-      <th>Gestor</th>
+      <th>Experto</th>
       <th>Nombre</th>
       <th>Fase</th>
       <th>Información</th>
@@ -126,16 +128,16 @@
   <tfoot>
     <tr>
       <th>
-        <input type="text" name="codigo_proyecto" id="codigo_proyecto_tblproyectosDelTalento" placeholder="Buscar por Código de Proyecto">
+        <input type="text" name="codigo_proyecto" id="codigo_proyecto_tblproyectosDelTalento" placeholder="Buscar por código de proyecto">
       </th>
       <th>
-        <input type="text" name="gestor" id="gestor_tblproyectosDelTalento" placeholder="Buscar por Gestor">
+        <input type="text" name="gestor" id="gestor_tblproyectosDelTalento" placeholder="Buscar por experto">
       </th>
       <th>
-        <input type="text" name="nombre" id="nombre_tblproyectosDelTalento" placeholder="Buscar por Nombre">
+        <input type="text" name="nombre" id="nombre_tblproyectosDelTalento" placeholder="Buscar por nombre">
       </th>
       <th>
-        <input type="text" name="Fase" id="sublinea_nombre_tblproyectosDelTalento" placeholder="Buscar por Fase">
+        <input type="text" name="Fase" id="sublinea_nombre_tblproyectosDelTalento" placeholder="Buscar por fase">
       </th>
       <th></th>
       <th></th>

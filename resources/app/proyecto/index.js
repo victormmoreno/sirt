@@ -104,7 +104,7 @@ function verTalentosDeUnProyecto(id){
   });
 }
 
-// Ajax que muestra los proyectos de un gestor por año
+// Ajax que muestra los proyectos de un experto por año
 function consultarProyectosDelGestorPorAnho() {
 
   let anho = $('#anho_proyectoPorAnhoGestorNodo').val();
@@ -305,6 +305,12 @@ function consultarProyectosDelNodoPorAnho() {
         name: 'proceso',
         orderable: false
       },
+      {
+        width: '6%',
+        data: 'download_trazabilidad',
+        name: 'download_trazabilidad',
+        orderable: false
+      },
 
     ],
   });
@@ -468,7 +474,7 @@ var infoActividad = {
                     <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.nombre)}</TD>
                 </TR>
                 <TR>
-                    <TH width="25%">Gestor</TH>
+                    <TH width="25%">Experto</TH>
                     <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.gestor.user.documento)} - ${response.data.actividad.gestor.user.nombres} ${response.data.actividad.gestor.user.apellidos}</TD>
                     <TH width="25%">Correo Electrónico</TH>
                     <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.gestor.user.email)}</TD>

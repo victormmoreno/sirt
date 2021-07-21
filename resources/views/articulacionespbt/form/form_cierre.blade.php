@@ -4,13 +4,13 @@
 @endphp
 
 <div class="row center">
-    
+
     <div class="col s12 m12 l12">
         <p class="p-v-xs text-center">
             <label align="justify" for="txttalento" class="black-text text-black">
                 Se realizo la postulación al convenio, convocatoria y/o instrumento:
             </label>
-            
+
             <input class="txttipopostulacion" id="txtno" name="txttipopostulacion" type="radio" value="no" onchange="articulacionCierre.checkedTypePostulacion()" @if(isset($actividad->articulacionpbt) && $actividad->articulacionpbt->present()->articulacionPbtPostulacion() == 0) checked @endif/>
             <label align="justify" for="txtno" class="black-text text-black">
                 No
@@ -23,7 +23,7 @@
         <small id="txttipopostulacion-error" class="error red-text"></small>
     </div>
 </div>
-<div class="row r-no">         
+<div class="row r-no">
     <div class="input-field col s12 m12 l12">
         <div class="col s6 m6 l6">
             <p class="p-v-xs">
@@ -42,7 +42,7 @@
         @else
             <textarea name="txtjustificacion" class="materialize-textarea" length="3500" maxlength="3500" id="txtjustificacion"></textarea>
         @endif
-        
+
         <label for="txtjustificacion">Justificación<span class="red-text">*</span></label>
         <small id="txtjustificacion-error" class="error red-text"></small>
     </div>
@@ -80,11 +80,10 @@
                 @else
                     <input id="txtcuando" name="txtcuando" type="text" class="validate datepicker-min-date">
                 @endif
-                
+
                 <label for="txtcuando">Cuando <span class="red-text">*</span></label>
                 <small id="txtcuando-error" class="error red-text"></small>
             </div>
-            
             <div class="input-field col s12 m12 l6">
                 <p class="p-v-xs">
                     <input type="checkbox" {{ $actividad->articulacionpbt->present()->articulacionPbtPdfAprobacion() == 1 ? 'checked' : '' }}
@@ -95,20 +94,11 @@
                     <small id="txtpdfaprobacion-error"  class="error red-text"></small>
                 </p>
             </div>
-            
+
         </div>
         <div class="row r-no-aprobado">
-            <div class="input-field col s12 m12 l6">
-                <p class="p-v-xs">
-                    <input type="checkbox"  {{ $actividad->articulacionpbt->present()->articulacionPbtInformeNoAprobado() == 1 ? 'checked' : '' }}
-                        id="txtinforme" name="txtinforme" value="0">
-                    <label for="txtinforme">
-                        Informe de no aprobado
-                    </label>
-                    <br>
-                    <small id="txtinforme-error"  class="error red-text"></small>
-                </p>
-            </div>
+
+
             <div class="input-field col s12 m12 l6">
                 <p class="p-v-xs">
                     <input type="checkbox"  {{ $actividad->articulacionpbt->present()->articulacionPbtNoPdfAprobacion() == 1 ? 'checked' : '' }}
@@ -120,9 +110,6 @@
                     <small id="txtpdfnoaprobacion-error"  class="error red-text"></small>
                 </p>
             </div>
-            
-        </div>
-        <div class="row ">
             <div class="input-field col s12 m12 l6">
                 <p class="p-v-xs">
                     <input type="checkbox" {{ $actividad->articulacionpbt->present()->articulacionPbtDocumentoPostualcion() == 1 ? 'checked' : '' }}
@@ -133,8 +120,17 @@
                     <small id="txtdoc_postulacion-error"  class="error red-text"></small>
                 </p>
             </div>
+            <div class="input-field col s12 m12 l12">
+                @if(isset($actividad))
+                    <textarea  @if(!$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsCierre())) disabled @endif  name="txtinforme" class="materialize-textarea" length="3500" maxlength="3500" id="txtinforme">{{$actividad->articulacionpbt->present()->articulacionPbtInforme()}}</textarea>
+                @else
+                    <textarea name="txtinforme" class="materialize-textarea" length="3500" maxlength="3500" id="txtinforme"></textarea>
+                @endif
+
+                <label for="txtinforme">Informe <span class="red-text">*</span></label>
+                <small id="txtinforme-error" class="error red-text"></small>
+            </div>
         </div>
-        
     </div>
 </div>
 <div class="row">
@@ -144,7 +140,7 @@
         @else
             <textarea name="txtlecciones" class="materialize-textarea" length="3500" maxlength="3500" id="txtlecciones"></textarea>
         @endif
-        
+
         <label for="txtlecciones">Lecciones aprendidas<span class="red-text">*</span></label>
         <small id="txtlecciones-error" class="error red-text"></small>
     </div>

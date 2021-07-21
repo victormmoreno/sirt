@@ -22,7 +22,7 @@ class NodoController extends Controller
         $this->middleware('auth');
         $this->middleware([
             'auth',
-            'role_session:Administrador|Dinamizador|Gestor|Infocenter|Talento',
+            'role_session:Administrador|Dinamizador|Experto|Infocenter|Talento',
         ]);
         $this->setNodoRepository($nodoRepository);
         $this->setDepartamentoRepository($departamentoRepository);

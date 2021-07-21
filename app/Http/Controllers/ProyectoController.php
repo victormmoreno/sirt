@@ -108,9 +108,9 @@ class ProyectoController extends Controller
             })->addColumn('download_seguimiento', function ($data) {
                 $seguimiento = '<a class="btn green lighten-1 m-b-xs" href=' . route('pdf.actividad.usos', [$data->id, 'proyecto']) . ' target="_blank"><i class="far fa-file-pdf"></i></a>';
                 return $seguimiento;
-            })->addColumn('delete', function ($data) {
-                $delete = '<a class="btn red lighten-3 m-b-xs" onclick="eliminarProyectoPorId_event(' . $data->id . ', event)"><i class="material-icons">delete_sweep</i></a>';
-                return $delete;
+            })->addColumn('download_trazabilidad', function ($data) {
+                $seguimiento = '<a class="btn green lighten-1 m-b-xs" href=' . route('excel.proyecto.trazabilidad', $data->actividad_id) . '  target="_blank"><i class="far fa-file-excel"></i></a>';
+                return $seguimiento;
             })->addColumn('proceso', function ($data) {
                 if ($data->nombre_fase == 'Finalizado' || $data->nombre_fase == 'Suspendido') {
                     $edit = '<a class="btn m-b-xs" href=' . route('proyecto.detalle', $data->id) . '><i class="material-icons">search</i></a>';
@@ -166,7 +166,7 @@ class ProyectoController extends Controller
                         return false;
                     });
                 }
-            })->rawColumns(['info', 'details', 'proceso', 'delete', 'download_seguimiento'])->make(true);
+            })->rawColumns(['info', 'details', 'proceso', 'download_seguimiento', 'download_trazabilidad'])->make(true);
     }
 
     public function carta_certificacion($id)
@@ -278,7 +278,7 @@ class ProyectoController extends Controller
     }
 
     /**
-     * Consulta los proyectos de un gestor por año (De la fecha de cierre)
+     * Consulta los proyectos de un experto por año (De la fecha de cierre)
      * @param Request $request
      * @param int $id Id del gestor
      * @param string $anho Año por el que se filtran los proyectos
@@ -800,7 +800,7 @@ class ProyectoController extends Controller
     }
 
     /**
-     * Formulario para cambiar el gestor de un proyecto
+     * Formulario para cambiar el experto de un proyecto
      *
      * @param int $id Id del proyecto
      * @return type
@@ -941,10 +941,10 @@ class ProyectoController extends Controller
             } else {
                 $update = $this->getProyectoRepository()->noAprobarFaseProyecto($request, $id, 'Planeación');
                 if ($update) {
-                    Alert::success('Notificación Exitosa!', 'Se le ha notificado al gestor del proyecto los motivos por los que no se aprueba esta fase del proyecto!')->showConfirmButton('Ok', '#3085d6');
+                    Alert::success('Notificación Exitosa!', 'Se le ha notificado al experto del proyecto los motivos por los que no se aprueba esta fase del proyecto!')->showConfirmButton('Ok', '#3085d6');
                     return redirect('proyecto');
                 } else {
-                    Alert::error('Notificación Errónea!', 'No se ha podido enviar la notificación al gestor del proyecto!')->showConfirmButton('Ok', '#3085d6');
+                    Alert::error('Notificación Errónea!', 'No se ha podido enviar la notificación al experto del proyecto!')->showConfirmButton('Ok', '#3085d6');
                     return back();
                 }
             }
@@ -982,10 +982,10 @@ class ProyectoController extends Controller
             } else {
                 $update = $this->getProyectoRepository()->noAprobarFaseProyecto($request, $id, 'Ejecución');
                 if ($update) {
-                    Alert::success('Notificación Exitosa!', 'Se le ha notificado al gestor del proyecto los motivos por los que no se aprueba esta fase del proyecto!')->showConfirmButton('Ok', '#3085d6');
+                    Alert::success('Notificación Exitosa!', 'Se le ha notificado al experto del proyecto los motivos por los que no se aprueba esta fase del proyecto!')->showConfirmButton('Ok', '#3085d6');
                     return redirect('proyecto');
                 } else {
-                    Alert::error('Notificación Errónea!', 'No se ha podido enviar la notificación al gestor del proyecto!')->showConfirmButton('Ok', '#3085d6');
+                    Alert::error('Notificación Errónea!', 'No se ha podido enviar la notificación al experto del proyecto!')->showConfirmButton('Ok', '#3085d6');
                     return back();
                 }
             }
@@ -1078,10 +1078,10 @@ class ProyectoController extends Controller
             } else {
                 $update = $this->getProyectoRepository()->noAprobarFaseProyecto($request, $id, 'Cierre');
                 if ($update) {
-                    Alert::success('Notificación Exitosa!', 'Se le ha notificado al gestor del proyecto los motivos por los que no se aprueba esta fase del proyecto!')->showConfirmButton('Ok', '#3085d6');
+                    Alert::success('Notificación Exitosa!', 'Se le ha notificado al experto del proyecto los motivos por los que no se aprueba esta fase del proyecto!')->showConfirmButton('Ok', '#3085d6');
                     return redirect('proyecto');
                 } else {
-                    Alert::error('Notificación Errónea!', 'No se ha podido enviar la notificación al gestor del proyecto!')->showConfirmButton('Ok', '#3085d6');
+                    Alert::error('Notificación Errónea!', 'No se ha podido enviar la notificación al experto del proyecto!')->showConfirmButton('Ok', '#3085d6');
                     return back();
                 }
             }
@@ -1140,7 +1140,7 @@ class ProyectoController extends Controller
     }
 
     /**
-     * Cambiar el gestor de un proyecto
+     * Cambiar el experto de un proyecto
      * @param Request $request
      * @param int $id
      * @return Response
@@ -1149,7 +1149,7 @@ class ProyectoController extends Controller
     public function updateGestor(Request $request, int $id)
     {
         $messages = [
-            'txtgestor_id.required' => 'El Gestor es obligatorio.',
+            'txtgestor_id.required' => 'El experto es obligatorio.',
         ];
 
         $validator = Validator::make($request->all(), [
@@ -1164,10 +1164,10 @@ class ProyectoController extends Controller
 
         $update = $this->getProyectoRepository()->updateGestor($request, $id);
         if ($update) {
-            Alert::success('Se ha cambiado el gestor del proyecto!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
+            Alert::success('Se ha cambiado el experto del proyecto!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
             return redirect('proyecto');
         } else {
-            Alert::error('No se ha cambiado el gestor del proyecto!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+            Alert::error('No se ha cambiado el experto del proyecto!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
     }
@@ -1239,7 +1239,7 @@ class ProyectoController extends Controller
 
     /*===============================================
   =========================
-  =            metodo para consultar los proyectos en ejecucion de un gestor            =
+  =            metodo para consultar los proyectos en ejecucion de un experto            =
   ========================================================================*/
 
     public function projectsForGestor($id)
@@ -1252,7 +1252,7 @@ class ProyectoController extends Controller
         ]);
     }
 
-    /*=====  End of metodo para consultar los proyectos en ejecucion de un gestor  ======*/
+    /*=====  End of metodo para consultar los proyectos en ejecucion de un experto  ======*/
 
     /**
      * metodo para consultar el detalle de una actividad (proyecto- articulacion)

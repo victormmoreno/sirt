@@ -196,10 +196,8 @@ class EntrenamientoController extends Controller
      */
     public function create()
     {
-        $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('nodo_id', auth()->user()->gestor->nodo_id)->whereHas('estadoIdea', 
-        function ($query){
-            $query->whereIn('nombre', [EstadoIdea::IsRechazadoArticulador(), EstadoIdea::IsRegistro()]);
-        })->get();
+        $now = Carbon::now()->isoFormat('YYYY');
+        $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('nodo_id', auth()->user()->gestor->nodo_id)->whereYear('created_at', $now)->get();
         if (Session::get('login_role') == User::IsArticulador()) {
             return view('entrenamientos.articulador.create', ['ideas' => $ideas]);
         } else {
@@ -242,9 +240,9 @@ class EntrenamientoController extends Controller
                     $updateEntrenamiento = "";
                     DB::beginTransaction();
                     try {
-                        foreach ($ideasDelEntrenamiento as $key => $value) {
-                            $this->ideaRepository->updateEstadoIdea($value->id, $estado);
-                        }
+                        // foreach ($ideasDelEntrenamiento as $key => $value) {
+                        //     $this->ideaRepository->updateEstadoIdea($value->id, $estado);
+                        // }
                         $archivosEntrenamiento = $this->entrenamientoRepository->consultarArchivosDeUnEntrenamiento($id);
                         foreach ($archivosEntrenamiento as $key => $value) {
                             $this->entrenamientoRepository->deleteArchivoEntrenamientoPorEntrenamiento($value->id);

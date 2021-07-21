@@ -34,8 +34,9 @@
         @forelse($users as $user)
         <tr>
             <td>
-                {{isset($user->gestor->nodo->entidad)? $user->gestor->nodo->entidad->nombre : 'No registra'}}
+                {{isset($user->gestor->nodo->entidad) ? $user->gestor->nodo->entidad->nombre : 'No registra'}}
             </td>
+            <td>{{ isset($user->gestor->lineatecnologica) ? $user->gestor->lineatecnologica->abreviatura : ''}} - {{ isset($user->gestor->lineatecnologica) ? $user->gestor->lineatecnologica->nombre : 'No registra'}}</td>
             <td>
                 {{$user->present()->userTipoDocuento()}}
             </td>
@@ -102,7 +103,7 @@
             <td>
                 {{$user->present()->userOcupacionesNames()}}
             </td>
-            <td>{{ isset($user->gestor->lineatecnologica) ? $user->gestor->lineatecnologica->abreviatura : ''}} - {{ isset($user->gestor->lineatecnologica) ? $user->gestor->lineatecnologica->nombre : 'No registra'}}</td>
+            
             <td>$ {{isset($user->gestor->honorarios) ? number_format($user->gestor->honorarios) : 0}}</td>
             <td>
                 {{ $user->present()->userRolesNames()}}

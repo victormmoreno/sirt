@@ -85,7 +85,7 @@ class UsoInfraestructuraFormRequest extends FormRequest
             'txtfecha.required'                  => 'La fecha es obligatoria',
             'txtfecha.date_format'               => 'La fecha debe tener un formato de Y-m-d',
             'txtlinea.required'                  => 'La linea tecnológica es obligatoria',
-            'txtgestor.required'                 => 'El gestor es obligatorio',
+            'txtgestor.required'                 => 'El experto es obligatorio',
             'txttipousoinfraestructura.required' => 'por favor seleccione el tipo de uso de infraestructura',
             'txtactividad.required'              => 'El proyecto ó la articulación es obligatoria',
             'txtdescripcion.max'                 => 'La descripcion debe tener máximo 2000 caracteres',

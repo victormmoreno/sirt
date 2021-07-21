@@ -30,20 +30,6 @@
                     <div class="card-content">
                         <div class="row no-m-t no-m-b">
                             <div class="col s12 m12 l12">
-                                {{-- <div class="mailbox-options">
-                                    <ul>
-                                        <li>
-                                            <a href="{{{route('usuario.index')}}}">
-                                                Todas las asesorias y usos
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{{route('usuario.mytalentos')}}}">
-                                                asesorias y usos por gestor
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div> --}}
                                 <div class="mailbox-view">
                                     <div class="mailbox-view-header center-align ">
                                         <span class="card-title center-align absolute-center hand-of-Sean-fonts orange-text text-darken-3">Asesorias y usos de {{config('app.name')}}</span>
@@ -70,7 +56,7 @@
                                     </select>
                                 </div>
                                 <div class="input-field col s12 m4 l4">
-                                    <label class="active" for="filter_gestor">Gestor Asesor <span class="red-text">*</span></label>
+                                    <label class="active" for="filter_gestor">Experto asesor <span class="red-text">*</span></label>
                                     <select class="js-states browser-default select2" name="filter_gestor" id="filter_gestor" >
                                         <option value="" >Seleccione primero el nodo</option>
                                     </select>

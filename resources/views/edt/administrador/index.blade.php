@@ -75,7 +75,7 @@
                   <thead>
                     <th>Código de la Edt</th>
                     <th>Nombre</th>
-                    <th>Gestor</th>
+                    <th>Experto</th>
                     <th>Área de Conocimiento</th>
                     <th>Tipo de Edt</th>
                     <th>Fecha de Inicio</th>

@@ -7,7 +7,7 @@
   <h6 class="right-align grey-text">Generado: {{Carbon\Carbon::now()}}</h6>
   <center>
     <p class="z-depth-3">
-      <img src="http://drive.google.com/uc?export=view&id=1QLkYJuTk4JaT9nqHF7Rw6eF5p0G3or4C" class="img-responsive" width="342" height="89">
+      <img src="{{ asset('img/logonacional_Negro.png') }}" class="img-responsive" width="342" height="89">
     </p>
   </center>
   <p>
@@ -24,9 +24,9 @@
     Asesoría Técnica especializada y los servicios tecnológicos para el desarrollo de su
     idea: <b>“{{ $idea->nombre_proyecto }}”</b>
     @if(isset($idea->gestor))
-    En los próximos días, el gestor {{$idea->gestor->user->nombres}} {{$idea->gestor->user->apellidos}} se pondrá en contacto con usted para generar una agenda de trabajo inicial.
+    En los próximos días, el experto {{$idea->gestor->user->nombres}} {{$idea->gestor->user->apellidos}} se pondrá en contacto con usted para generar una agenda de trabajo inicial.
     @else
-    En los próximos días, un gestor(a) de Tecnoparque se pondrá en contacto con usted para generar una agenda de trabajo inicial.
+    En los próximos días, un experto(a) de Tecnoparque se pondrá en contacto con usted para generar una agenda de trabajo inicial.
     @endif
 
   </p>
@@ -47,7 +47,7 @@
     http://tecnoparque.sena.edu.co
   </p>
   <center>
-    <a><img src="https://i.ibb.co/M7vksPf/sennova.png" border="0" style="position: absolute; bottom: 0"  width="200" height="60"></a>
+    <a><img src="{{ asset('img/sennova.png') }}" border="0" style="position: absolute; bottom: 0"  width="200" height="60"></a>
   </center>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>

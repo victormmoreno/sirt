@@ -56,7 +56,7 @@ class ArchivoComiteController extends Controller
   {
     if (request()->ajax()) {
       $this->validate(request(), [
-        'nombreArchivo' => 'max:50000|mimes:jpeg,png,jpg,docx,doc,pdf,exe,xlsl,xls,pptx,sldx,ppsx,exe,zip',
+        'nombreArchivo' => 'max:50000',
       ],
       [
         'nombreArchivo.mimes' => 'El tipo de archivo no es permitido',

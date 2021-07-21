@@ -49,7 +49,7 @@
                   </div>
                   <div class="input-field col s12 m12 l12">
                     <input type="text" name="txtgestor_actividad" id="txtgestor_actividad" disabled>
-                    <label for="txtgestor_actividad">Gestor</label>
+                    <label for="txtgestor_actividad">Experto</label>
                   </div>
                   <div class="input-field col s12 m12 l12">
                     <input type="text" name="txthoras_asesoria_actividad" id="txthoras_asesoria_actividad" disabled>

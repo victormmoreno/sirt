@@ -115,7 +115,7 @@
 </div>
 <div class="divider"></div>
 <center>
-    <span class="card-title center-align">Gestores</span>
+    <span class="card-title center-align">Expertos</span>
     <i class="Small material-icons prefix">info</i>
 </center>
 <div class="row">
@@ -123,27 +123,27 @@
         <div class="card-content">
             <h5>
                 <span class="red-text text-darken-2">
-                    Para registrar los gestores en el comité dar click en el botón <a class="btn-floating waves-effect waves-light red">
+                    Para registrar los expertos en el comité dar click en el botón <a class="btn-floating waves-effect waves-light red">
                     <i class="material-icons">add</i></a>
                 </span>
             </h5>
-            <p>Si desea agregar mas gestores de tecnoparque por favor seleccione..</p>
+            <p>Si desea agregar mas expertos de tecnoparque por favor seleccione..</p>
             <ul class="collapsible collapsible-accordion" data-collapsible="accordion">
                 <li>
                     <div class="collapsible-header active blue-grey lighten-1">
-                        <i class="material-icons">lightbulb</i>Seleccione los gestores que estarán presentes en el comité
+                        <i class="material-icons">lightbulb</i>Seleccione los expertos que estarán presentes en el comité
                     </div>
                     <div class="collapsible-body">
                         <div class="card-content">
                             <div class="row">
                                 <div class="input-field col s12 m4 l4">
                                     <select id="txtidgestor" class="js-states browser-default select2" style="width: 100%;" name="txtidgestor">
-                                        <option value="0">Seleccione los gestores que estarán presenten en el comité</option>
+                                        <option value="0">Seleccione los expertos que estarán presenten en el comité</option>
                                         @foreach ($gestores as $key => $gestor)
                                         <option value="{{$gestor->id}}">{{$gestor->documento}} - {{$gestor->nombre}}</option>
                                         @endforeach
                                     </select>
-                                    <label for="#txtidgestor" class="active">Gestores de Tecnoparque <span class="red-text">*</span></label>
+                                    <label for="#txtidgestor" class="active">Expertos de Tecnoparque <span class="red-text">*</span></label>
                                 </div>
                                 <div class="input-field col s12 m4 l4">
                                     <i class="material-icons prefix">access_time</i>
@@ -157,13 +157,13 @@
                                 </div>
                             </div>
                             <center>
-                                <a onclick="addGestorComite()" class="indigo lighten-2 btn-large" data-position="bottom" data-delay="50" data-tooltip="Agregar el gestor seleccionado al comité"><i class="material-icons left">add</i>Agregar</a>
+                                <a onclick="addGestorComite()" class="indigo lighten-2 btn-large" data-position="bottom" data-delay="50" data-tooltip="Agregar el experto seleccionado al comité"><i class="material-icons left">add</i>Agregar</a>
                             </center>
                             <div class="card-content">
                                 <table class="responsive-table" style="width: 100%">
                                     <thead>
                                         <tr>
-                                            <th style="width: 70%">Nombre del gestor</th>
+                                            <th style="width: 70%">Nombre del experto</th>
                                             <th style="width: 10%">Hora de Inicio</th>
                                             <th style="width: 10%">Hora de Fin</th>
                                             <th style="width: 10%">Eliminar</th>

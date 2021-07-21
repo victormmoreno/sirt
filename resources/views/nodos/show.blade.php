@@ -198,7 +198,7 @@
                                                         </div>
                                                         <div class="row">
                                                             <div class="center">
-                                                                <span class="zurich-bt-fonts orange-text text-darken-2"><b>Gestores y Articulador</b></span>
+                                                                <span class="zurich-bt-fonts orange-text text-darken-2"><b>Expertos y Articulador</b></span>
                                                             </div>
                                                             <div class="divider mailbox-divider">
                                                             </div>

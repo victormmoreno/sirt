@@ -16,12 +16,12 @@
         @if ($tipo_actividad == 'proyecto')
           <th>Código del proyecto</th>
           <th>Nombre del proyecto</th>
-          <th>Gestor a cargo del proyecto</th>
+          <th>Experto a cargo del proyecto</th>
           <th>Sublínea tecnológica</th>
         @else
           <th>Código de la articulación</th>
           <th>Nombre de la articulación</th>
-          <th>Gestor a cargo de la articulación</th>
+          <th>Experto a cargo de la articulación</th>
         @endif
       </tr>
     </thead>
@@ -268,9 +268,9 @@
     <div class="column">
       <div>__________________________________________________________</div>
       @if ($tipo_actividad == 'proyecto')
-      <small>Firma del gestor(a) - {{$actividad->articulacion_proyecto->actividad->gestor->user->nombres}} {{$actividad->articulacion_proyecto->actividad->gestor->user->apellidos}}</small>
+      <small>Firma del experto(a) - {{$actividad->articulacion_proyecto->actividad->gestor->user->nombres}} {{$actividad->articulacion_proyecto->actividad->gestor->user->apellidos}}</small>
       @else
-      <small>Firma del Articulador(a) - {{$actividad->actividad->gestor->user->nombres}} {{$actividad->actividad->gestor->user->apellidos}}</small>
+      <small>Firma del articulador(a) - {{$actividad->actividad->gestor->user->nombres}} {{$actividad->actividad->gestor->user->apellidos}}</small>
       @endif
     </div>
     <br>

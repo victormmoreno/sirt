@@ -31,7 +31,7 @@ class ArticulacionPbtPresenter extends Presenter
 
     public function articulacionPbtNameProyecto()
     {
-        if ($this->articulacionpbt->has('proyecto') && isset($this->articulacionpbt->proyecto)) {
+        if ($this->articulacionpbt->has('proyecto') && isset($this->articulacionpbt->proyecto->articulacion_proyecto->actividad)) {
             return $this->articulacionpbt->proyecto->articulacion_proyecto->actividad->nombre;
         }
         return "No registra";
@@ -39,7 +39,7 @@ class ArticulacionPbtPresenter extends Presenter
 
     public function articulacionPbtCodeProyecto()
     {
-        if ($this->articulacionpbt->has('proyecto') && isset($this->articulacionpbt->proyecto)) {
+        if ($this->articulacionpbt->has('proyecto') && isset($this->articulacionpbt->proyecto->articulacion_proyecto->actividad)) {
             return $this->articulacionpbt->proyecto->articulacion_proyecto->actividad->codigo_actividad;
         }
         return "No registra";
@@ -161,7 +161,7 @@ class ArticulacionPbtPresenter extends Presenter
         if ($this->articulacionpbt && isset($this->articulacionpbt)) {
             return $this->articulacionpbt->email_entidad;
         }
-         return "No registra";
+        return "No registra";
     }
 
     public function articulacionPbtNombreContacto()
@@ -169,7 +169,7 @@ class ArticulacionPbtPresenter extends Presenter
         if ($this->articulacionpbt && isset($this->articulacionpbt)) {
             return $this->articulacionpbt->nombre_contacto;
         }
-         return "No registra";
+        return "No registra";
     }
 
     public function articulacionPbtEntidad()
@@ -177,7 +177,7 @@ class ArticulacionPbtPresenter extends Presenter
         if ($this->articulacionpbt && isset($this->articulacionpbt)) {
             return $this->articulacionpbt->entidad;
         }
-         return "No registra";
+        return "No registra";
     }
 
     public function articulacionPbtNombreTipoArticulacion()
@@ -185,20 +185,20 @@ class ArticulacionPbtPresenter extends Presenter
         if ($this->articulacionpbt->tipoarticulacion && isset($this->articulacionpbt->tipoarticulacion)) {
             return $this->articulacionpbt->tipoarticulacion->nombre;
         }
-         return "No registra";
+        return "No registra";
     }
-    
+
     public function articulacionPbtNombreAlcanceArticulacion()
     {
         if ($this->articulacionpbt->alcancearticulacion && isset($this->articulacionpbt->alcancearticulacion)) {
             return $this->articulacionpbt->alcancearticulacion->nombre;
         }
-         return "No registra";
+        return "No registra";
     }
 
     public function fullNameTalentInterlocutor(){
         if($this->articulacionpbt->talentos != null){
-             $talent = $this->articulacionpbt->talentos()->wherePivot('talento_lider', 1)->first();
+            $talent = $this->articulacionpbt->talentos()->wherePivot('talento_lider', 1)->first();
             return "{$talent->user->documento} - {$talent->user->nombres} {$talent->user->apellidos}";
         }
         return "No registra";
@@ -209,18 +209,17 @@ class ArticulacionPbtPresenter extends Presenter
             return $this->articulacionpbt->talentos->map(function($val){
                 return $val->user->present()->userFullName();
             });
-            
         }
         return "No registra";
     }
 
-    
+
     public function articulacionPbtLeccionesAprendidas()
     {
         if ($this->articulacionpbt && isset($this->articulacionpbt)) {
             return $this->articulacionpbt->lecciones_aprendidas;
         }
-         return "No registra";
+        return "No registra";
     }
 
     public function articulacionPbtAprobacionDinamizadorEjecucion()
@@ -228,7 +227,7 @@ class ArticulacionPbtPresenter extends Presenter
         if ($this->articulacionpbt && isset($this->articulacionpbt) && $this->articulacionpbt->aprobacion_dinamizador_ejecucion == 1) {
             return 1;
         }
-         return 0;
+        return 0;
     }
 
     public function articulacionPbtAprobacionDinamizadorSuspender()
@@ -236,7 +235,7 @@ class ArticulacionPbtPresenter extends Presenter
         if ($this->articulacionpbt && isset($this->articulacionpbt) && $this->articulacionpbt->aprobacion_dinamizador_suspender == 1) {
             return 1;
         }
-         return 0;
+        return 0;
     }
 
     public function articulacionPbtPostulacion()
@@ -244,7 +243,7 @@ class ArticulacionPbtPresenter extends Presenter
         if ($this->articulacionpbt && isset($this->articulacionpbt) && $this->articulacionpbt->postulacion == 1) {
             return 1;
         }
-         return 0;
+        return 0;
     }
 
     public function articulacionPbtAprobacion()
@@ -252,7 +251,7 @@ class ArticulacionPbtPresenter extends Presenter
         if ($this->articulacionpbt && isset($this->articulacionpbt) && $this->articulacionpbt->aprobacion == 1) {
             return 1;
         }
-         return 0;
+        return 0;
     }
 
 
@@ -261,7 +260,7 @@ class ArticulacionPbtPresenter extends Presenter
         if ($this->articulacionpbt && isset($this->articulacionpbt)) {
             return $this->articulacionpbt->justificacion;
         }
-         return "No registra";
+        return "No registra";
     }
 
     public function articulacionPbtInformeJustificado()
@@ -269,24 +268,24 @@ class ArticulacionPbtPresenter extends Presenter
         if ($this->articulacionpbt && isset($this->articulacionpbt) && $this->articulacionpbt->informe_justificado == 1) {
             return 1;
         }
-         return 0;
+        return 0;
     }
 
-    public function articulacionPbtInformeNoAprobado()
+    public function articulacionPbtInforme()
     {
-        if ($this->articulacionpbt && isset($this->articulacionpbt) && $this->articulacionpbt->informe_noaprobado == 1) {
-            return 1;
+        if ($this->articulacionpbt && isset($this->articulacionpbt) && $this->articulacionpbt->informe != null) {
+            return $this->articulacionpbt->informe;
         }
-         return 0;
+        return 'No registra';
     }
 
-    
+
     public function articulacionPbtRecibira()
     {
         if ($this->articulacionpbt && isset($this->articulacionpbt)) {
             return $this->articulacionpbt->recibira;
         }
-         return "No registra";
+        return "No registra";
     }
 
     public function articulacionPbtFechaCuando()
@@ -302,7 +301,7 @@ class ArticulacionPbtPresenter extends Presenter
         if ($this->articulacionpbt && isset($this->articulacionpbt) && $this->articulacionpbt->pdf_aprobacion == 1) {
             return 1;
         }
-         return 0;
+        return 0;
     }
 
     public function articulacionPbtNoPdfAprobacion()
@@ -310,7 +309,7 @@ class ArticulacionPbtPresenter extends Presenter
         if ($this->articulacionpbt && isset($this->articulacionpbt) && $this->articulacionpbt->pdf_noaprobacion == 1) {
             return 1;
         }
-         return 0;
+        return 0;
     }
 
     public function articulacionPbtDocumentoPostualcion()
@@ -318,7 +317,7 @@ class ArticulacionPbtPresenter extends Presenter
         if ($this->articulacionpbt && isset($this->articulacionpbt) && $this->articulacionpbt->documento_postulacion == 1) {
             return 1;
         }
-         return 0;
+        return 0;
     }
 
     public function articulacionPbtDocumentoConvocatoria()
@@ -326,7 +325,7 @@ class ArticulacionPbtPresenter extends Presenter
         if ($this->articulacionpbt && isset($this->articulacionpbt) && $this->articulacionpbt->documento_convocatoria == 1) {
             return 1;
         }
-         return 0;
+        return 0;
     }
-    
+
 }

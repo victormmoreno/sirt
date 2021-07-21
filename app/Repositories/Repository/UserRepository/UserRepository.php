@@ -462,29 +462,19 @@ class UserRepository
             "tipo_talento_id"       => $request->input('txttipotalento'),
             "entidad_id"            => $entidad,
 
-            "programa_formacion"    => $request->get('txtprogramaformacion') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_APRENDIZ_SENA_CON_APOYO) ?
-                $request->input('txtprogramaformacion_aprendiz') : $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO) ?
-                $request->input('txtprogramaformacion_aprendiz') : $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_EGRESADO_SENA) ?
-                $request->input('txtprogramaformacion_egresado') : null,
-
-            "tipo_formacion_id"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_EGRESADO_SENA) ?
-                $request->input('txttipoformacion') : null,
-
-            "tipo_estudio_id"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
-                $request->input('txttipoestudio') : null,
-            "dependencia"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_SENA) ?
-                $request->input('txtdependencia') : null,
-
-
-            "universidad"           => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
-                $request->input('txtuniversidad') : null,
-
-
-            "carrera_universitaria" => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
-                $request->input('txtcarrera') : null,
-
-            "empresa"               => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_EMPRESA) ?
-                $request->input('txtempresa') : null,
+            "programa_formacion"    => $request->get('txtprogramaformacion') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_APRENDIZ_SENA_CON_APOYO) ? $request->input('txtprogramaformacion_aprendiz') : 
+                (
+                    $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO) ? $request->input('txtprogramaformacion_aprendiz') : 
+                    (
+                        $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_EGRESADO_SENA) ? $request->input('txtprogramaformacion_egresado') : null
+                    )
+                ),    
+            "tipo_formacion_id"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_EGRESADO_SENA) ? $request->input('txttipoformacion') : null,
+            "tipo_estudio_id"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ? $request->input('txttipoestudio') : null,
+            "dependencia"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_SENA) ? $request->input('txtdependencia') : null,
+            "universidad"           => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ? $request->input('txtuniversidad') : null,
+            "carrera_universitaria" => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ? $request->input('txtcarrera') : null,
+            "empresa"               => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_EMPRESA) ? $request->input('txtempresa') : null,
 
         ]);
     }
@@ -565,7 +555,7 @@ class UserRepository
      * undocumented function
      * metodo para comprobar comprobar que el no exista en array
      *
-     * @author julian londoño
+     * @author julian londo���o
      **/
     private function notExistRoleInArray($request, $userUpdated, $role)
     {

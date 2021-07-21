@@ -3,7 +3,7 @@
     <tr>
         <th>Código del Proyecto</th>
         <th>Nombre</th>
-        <th>Gestor a Cargo</th>
+        <th>Experto a cargo</th>
         <th>Idea de Proyecto</th>
         <th>Sector</th>
         <th>Línea Tecnológica</th>
