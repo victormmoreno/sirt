@@ -31,7 +31,7 @@
                 <div class="col s12 m12 l12">
                   <ul class="tabs" style="width: 100%;">
                     <li class="tab col s3"><a href="#proyectos_por_nodo" class="active">Proyectos del Nodo</a></li>
-                    <li class="tab col s3"><a class="" href="#proyectos_por_gestor">Proyectos por Gestor</a></li>
+                    <li class="tab col s3"><a class="" href="#proyectos_por_gestor">Proyectos por experto</a></li>
                     <div class="indicator" style="right: 580.5px; left: 0px;"></div>
                   </ul>
                   <br>
@@ -57,7 +57,7 @@
               </div>
               <div id="proyectos_por_gestor">
                 <span>
-                  Para consultar los proyectos de un gestor, debes seleccionar el año (de la fecha de cierre de los proyectos), luego un gestor del nodo y por último presionar el
+                  Para consultar los proyectos de un experto, debes seleccionar el año (de la fecha de cierre de los proyectos), luego un experto del nodo y por último presionar el
                   botón <b>"Consultar proyectos"</b>.
                 </span>
                 <br><br>
@@ -69,16 +69,16 @@
                         <option value="{{$i}}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{$i}}</option>
                       @endfor
                     </select>
-                    <label for="anho_proyectoPorAnhoGestorNodo">Seleccione el Año</label>
+                    <label for="anho_proyectoPorAnhoGestorNodo">Seleccione el año</label>
                   </div>
                   <div class="input-field col s12 m6 l6">
                     <select id="txtgestor_id" name="txtgestor_id" style="width: 100%" tabindex="-1">
-                      <option value="">Seleccione un gestor del nodo</option>
+                      <option value="">Seleccione un experto del nodo</option>
                       @foreach($gestores as $id => $nombres_gestor)
                         <option value="{{$id}}">{{$nombres_gestor}}</option>
                       @endforeach
                     </select>
-                    <label for="txtgestor_id">Gestor</label>
+                    <label for="txtgestor_id">Experto</label>
                   </div>
                 </div>
                 <div class="row">
@@ -127,7 +127,7 @@
   $("#sublinea_nombre_tblproyectosDelGestorPorAnho").keyup(function(){
     $('#tblproyectosDelGestorPorAnho').DataTable().draw();
   });
-  // Ajax que muestra los proyectos de un gestor por año
+  // Ajax que muestra los proyectos de un experto por año
   function consulta() {
     let anho = $('#anho_proyectoPorAnhoGestorNodo').val();
     let gestor = $('#txtgestor_id').val();

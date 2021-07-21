@@ -4,7 +4,7 @@ return [
     'roles'       => [
         'roleAdministrador' => 'Administrador',
         'roleDinamizador'   => 'Dinamizador',
-        'roleGestor'        => 'Gestor',
+        'roleGestor'        => 'Experto',
         'roleInfocenter'    => 'Infocenter',
         'roleTalento'       => 'Talento',
         'roleIngreso'       => 'Ingreso',

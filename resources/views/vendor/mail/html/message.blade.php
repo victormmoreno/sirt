@@ -3,7 +3,7 @@
     @slot('header')
         @component('mail::header', ['url' => config('app.url')])
             <center>
-                <img class="chapter-title responsive-img" height="80px" src="http://drive.google.com/uc?export=view&id=1QLkYJuTk4JaT9nqHF7Rw6eF5p0G3or4C" width="300px" alt="{{ config('app.name') }}"/>
+                <img class="chapter-title responsive-img" height="80px" src="{{ asset('img/logonacional_Negro.png') }}" width="300px" alt="{{ config('app.name') }}"/>
             </center>
         @endcomponent
     @endslot

@@ -54,14 +54,14 @@
               <div class="row">
                 <div class="input-field col s12 m6 l6">
                   <select id="txtgestor_id" class="js-states" name="txtgestor_id" style="width: 100%;">
-                    <option value="">Seleccione el Gestor</option>
+                    <option value="">Seleccione el experto</option>
                     @forelse ($gestores as $id => $value)
                       <option value="{{$id}}" {{ $id == $proyecto->gestor_id ? 'selected' : '' }} {{ old('txtgestor_id') == $id ? 'selected':'' }} >{{$value}}</option>
                     @empty
                       <option value="">No hay información disponible</option>
                     @endforelse
                   </select>
-                  <label for="txtgestor_id">Gestores <span class="red-text">*</span></label>
+                  <label for="txtgestor_id">Expertos <span class="red-text">*</span></label>
                   @error('txtgestor_id')
                     <label id="txtgestor_id-error" class="error" for="txtgestor_id">{{ $message }}</label>
                   @enderror

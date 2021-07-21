@@ -228,7 +228,7 @@ class ArticulacionRepository
   }
 
   /**
-   * Cambia el estado de aprobacion_dinamizador, para permitirle al gestor cerrar la artriculación
+   * Cambia el estado de aprobacion_dinamizador, para permitirle al experto cerrar la artriculación
    */
   public function updateAprobacionDinamizador(int $id)
   {
@@ -473,7 +473,7 @@ class ArticulacionRepository
 
 
     /**
-   * Cambia el gestor de un proyecto
+   * Cambia el experto de un proyecto
    *
    * @param Request $request
    * @param int $id id del proyecto
@@ -535,7 +535,7 @@ class ArticulacionRepository
   }
 
     /**
-   * Cambia el estado de aprobacion_dinamizador_suspender para que el gestor pueda suspender una articulación
+   * Cambia el estado de aprobacion_dinamizador_suspender para que el experto pueda suspender una articulación
    * @param int $id
    * @return boolean
    * @author dum
@@ -730,7 +730,7 @@ class ArticulacionRepository
   }
 
   /**
-  * Cambia el gestor que está asociado a una articulación
+  * Cambia el experto que está asociado a una articulación
   * @param Request $request
   * @param int $id Id de la articulación
   * @return boolean

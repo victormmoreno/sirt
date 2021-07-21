@@ -276,7 +276,7 @@ class ComiteController extends Controller
   public function updateGestor(Request $request, Idea $idea, Comite $comite)
   {
     $messages = [
-      'txtgestor_id.required' => 'El Gestor es obligatorio.',
+      'txtgestor_id.required' => 'El experto es obligatorio.',
     ];
 
     $validator = Validator::make($request->all(), [
@@ -290,10 +290,10 @@ class ComiteController extends Controller
     }
     $update = $this->getComiteRepository()->updateGestorIdea($request, $idea);
     if ($update) {
-      alert()->success('Se ha cambiado el gestor de la idea de proyecto!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
+      alert()->success('Se ha cambiado el experto de la idea de proyecto!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
       return redirect(route('csibt.detalle', $comite->id));
     } else {
-      alert()->error('No se ha cambiado el gestor de la idea de proyecto!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+      alert()->error('No se ha cambiado el experto de la idea de proyecto!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
       return back();
     }
   }

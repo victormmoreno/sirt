@@ -40,7 +40,7 @@
                 <div class="col s12 m12 l12">
                   <ul class="tabs" style="width: 100%;">
                     <li class="tab col s3"><a href="#articulaciones_por_nodo" class="active">Intervención a Empresas del Nodo</a></li>
-                    <li class="tab col s3"><a href="#articulaciones_por_gestor">Intervención a Empresas por Gestor</a></li>
+                    <li class="tab col s3"><a href="#articulaciones_por_gestor">Intervención a Empresas por experto</a></li>
                     <div class="indicator" style="right: 580.5px; left: 0px;"></div>
                   </ul>
                   <br>
@@ -59,12 +59,12 @@
                 </div>
                 <div class="input-field col s12 m6 l6">
                   <select class="initialized" id="txtgestor_id" name="txtgestor_id" style="width: 100%" tabindex="-1">
-                    <option value="">Seleccione un gestor del nodo * </option>
+                    <option value="">Seleccione un experto del nodo * </option>
                     @foreach($gestores as $id => $nombres_gestor)
                       <option value="{{$id}}">{{$nombres_gestor}}</option>
                     @endforeach
                   </select>
-                  <label for="txtgestor_id">Gestor</label>
+                  <label for="txtgestor_id">Experto</label>
                 </div>
                 <div class="row">
                   <div class="col s12 m4 l4 offset-l4">
@@ -96,15 +96,6 @@
               <div class="divider"></div>
               <div class="row">
                 @include('intervencion.table')
-                {{-- <div class="col s12 m2 l2">
-                  <a href="{{route('articulacion.excel.nodo', auth()->user()->dinamizador->nodo_id)}}">
-                    <div class="card green">
-                      <div class="card-content center">
-                        <span class="white-text">Descargar tabla</span>
-                      </div>
-                    </div>
-                  </a>
-                </div> --}}
               </div>
             </div>
           </div>
@@ -127,10 +118,8 @@
         processing: true,
         serverSide: true,
         order: [ 0, 'desc' ],
-        // searching: false,
         ajax:{
           url: "/intervencion/datatableIntervencionesDelNodo/"+0+"/"+anho,
-          // type: "get",
           data: function (d) {
             d.codigo_articulacion = $('.codigo_articulacion').val(),
             d.nombre = $('.nombre').val(),

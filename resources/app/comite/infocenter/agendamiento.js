@@ -121,7 +121,7 @@ function eliminarIdeaDelAgendamiento(index) {
     $('#ideaAsociadaAgendamiento' + index).remove();
 }
 
-// Elimina un gestor agendada en un comité
+// Elimina un experto agendado en un comité
 function eliminarGestorDelAgendamiento(index) {
     $('#gestorAsociadoAgendamiento' + index).remove();
 }
@@ -267,7 +267,7 @@ Swal.fire({
     showConfirmButton: false,
     timer: 3000,
     type: 'error',
-    title: 'Estás ingresando mal los datos del gestor'
+    title: 'Estás ingresando mal los datos del experto'
 })
 }
 
@@ -289,7 +289,7 @@ Swal.fire({
           showConfirmButton: false,
           timer: 3000,
           type: 'success',
-          title: 'El gestor se asoció con éxito al comité'
+          title: 'El experto se asoció con éxito al comité'
         })
 }
 
@@ -311,7 +311,7 @@ Swal.fire({
     showConfirmButton: false,
     timer: 1500,
     type: 'warning',
-    title: 'El gestor ya se encuentra asociado en este comité!'
+    title: 'El experto ya se encuentra asociado en este comité!'
 });
 }
 

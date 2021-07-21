@@ -7,7 +7,7 @@
     <div class="input-field col s12 m4 l4">
         <input disabled id="txtgestor" name="txtgestor"
             value="{{ auth()->user()->nombres }} {{ auth()->user()->apellidos }}" type="text">
-        <label for="txtgestor" class="">Gestor</label>
+        <label for="txtgestor" class="">Experto</label>
     </div>
     <div class="input-field col s12 m4 l4">
         <input disabled id="txtlinea" name="txtlinea" value="{{ $articulacion->articulacion_proyecto->actividad->gestor->lineatecnologica->nombre }}"

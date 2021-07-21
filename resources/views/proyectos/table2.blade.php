@@ -2,7 +2,7 @@
   <thead>
     <tr>
       <th>Código de Proyecto</th>
-      <th>Gestor</th>
+      <th>Experto</th>
       <th>Nombre</th>
       <th>Sublínea</th>
       <th>Fase</th>
@@ -13,19 +13,19 @@
   <tfoot>
     <tr>
       <th>
-        <input type="text" name="codigo_proyecto" id="codigo_proyecto_tblproyectosDelGestorPorAnho" placeholder="Buscar por Código de Proyecto">
+        <input type="text" name="codigo_proyecto" id="codigo_proyecto_tblproyectosDelGestorPorAnho" placeholder="Buscar por código de proyecto">
       </th>
       <th>
-        <input type="text" name="gestor" id="gestor_tblproyectosDelGestorPorAnho" placeholder="Buscar por Gestor">
+        <input type="text" name="gestor" id="gestor_tblproyectosDelGestorPorAnho" placeholder="Buscar por experto">
       </th>
       <th>
-        <input type="text" name="nombre" id="nombre_tblproyectosDelGestorPorAnho" placeholder="Buscar por Nombre">
+        <input type="text" name="nombre" id="nombre_tblproyectosDelGestorPorAnho" placeholder="Buscar por nombre">
       </th>
       <th>
-        <input type="text" name="sublinea_nombre" id="sublinea_nombre_tblproyectosDelGestorPorAnho" placeholder="Buscar por Sublinea">
+        <input type="text" name="sublinea_nombre" id="sublinea_nombre_tblproyectosDelGestorPorAnho" placeholder="Buscar por sublinea">
       </th>
       <th>
-        <input type="text" name="nombre_fase" id="nombre_fase_tblproyectosDelGestorPorAnho" placeholder="Buscar por Fase">
+        <input type="text" name="nombre_fase" id="nombre_fase_tblproyectosDelGestorPorAnho" placeholder="Buscar por fase">
       </th>
       <th></th>
       <th></th>

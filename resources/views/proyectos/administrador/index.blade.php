@@ -33,7 +33,6 @@
                     <div class="col s12 m12 l12">
                       <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
                         <li class="tab col s3"><a href="#proyectos_por_nodo" class="active">Proyectos Por Nodo</a></li>
-                        {{-- <li class="tab col s3"><a class="" href="#proyectos_por_gestor">Proyectos por Gestor</a></li> --}}
                         <div class="indicator" style="right: 580.5px; left: 0px;"></div>
                       </ul>
                       <br>

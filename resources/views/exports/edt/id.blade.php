@@ -8,7 +8,7 @@
             <th>Área de Conocimiento</th>
             <th>Fecha de Inicio</th>
             <th>Fecha de Cierre</th>
-            <th>Gestor</th>
+            <th>Experto</th>
             <th>Observaciones</th>
             <th>Empleados</th>
             <th>Instructores</th>

@@ -18,7 +18,7 @@
         <input name="txtgestor_id"
             value="{{ $articulacion->articulacion_proyecto->actividad->gestor->user->nombres }} {{ $articulacion->articulacion_proyecto->actividad->gestor->user->apellidos }}"
             disabled id="txtgestor_id">
-        <label class="active" for="txtgestor_id">Gestor</label>
+        <label class="active" for="txtgestor_id">Experto</label>
     </div>
     <div class="input-field col s12 m6 l6">
         <input name="txtlinea" id="txtlinea" value="{{ $articulacion->articulacion_proyecto->actividad->gestor->lineatecnologica->nombre }}" disabled>
@@ -37,7 +37,7 @@
     <div class="col s6 m6 l6">
         <p class="p-v-xs">
             <input type="checkbox" {{$articulacion->fase->nombre != 'Inicio' ? 'disabled' : '' }} {{ $articulacion->articulacion_proyecto->actividad->formulario_inicio == 1 ? 'checked' : '' }} id="txtformulario_inicio" name="txtformulario_inicio" value="1">
-            <label for="txtformulario_inicio">Formularios con firmas del gestor y talentos.</label>
+            <label for="txtformulario_inicio">Formularios con firmas del experto y talentos.</label>
         </p>
     </div>
 </div>

@@ -5,7 +5,7 @@
         <th>Nombre del Proyecto</th>
         <th>Idea de Proyecto</th>
         <th>Sector</th>
-        <th>Gestor</th>
+        <th>Experto</th>
         <th>Línea Tecnológica</th>
         <th>Sublínea</th>
         <th>Área de Conocimiento</th>

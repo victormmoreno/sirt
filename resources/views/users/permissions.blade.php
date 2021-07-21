@@ -157,7 +157,7 @@
                                                         <div id="gestor" class="input-field col s12 m12 l6 offset-l3">
                                                             <div  class="card mailbox-content">
                                                                 <div class="card-content">
-                                                                    <span class="gestorarticulador card-title activator grey-text text-darken-4 center-align">Información Gestor</span>
+                                                                    <span class="gestorarticulador card-title activator grey-text text-darken-4 center-align">Información del experto</span>
                                                                     <div class="input-field col s12 m12 l12">
                                                                         <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnodogestor" name="txtnodogestor" onchange="linea.getSelectLineaForNodo()" style="width: 100%" tabindex="-1">
                                                                             @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
@@ -177,7 +177,7 @@
                                                                                 <option value="{{auth()->user()->dinamizador->nodo->id}}">Tecnoparque Nodo {{auth()->user()->dinamizador->nodo->entidad->nombre}}</option>
                                                                             @endif
                                                                         </select>
-                                                                        <label for="txtnodogestor" class="active">Nodo Gestor<span class="red-text">*</span></label>
+                                                                        <label for="txtnodogestor" class="active">Nodo del experto<span class="red-text">*</span></label>
                                                                         <small id="txtnodogestor-error" class="error red-text"></small>
                                                                     </div>
                                                                     <div class="input-field col s12 m12 l12 linea">

@@ -68,7 +68,7 @@
                             <option value="">No hay información disponible</option>
                           @endforelse
                         </select>
-                        <label for="txtgestor_id">Gestores <span class="red-text">*</span></label>
+                        <label for="txtgestor_id">Expertos <span class="red-text">*</span></label>
                         @error('txtgestor_id')
                           <label id="txtgestor_id-error" class="error" for="txtgestor_id">{{ $message }}</label>
                         @enderror

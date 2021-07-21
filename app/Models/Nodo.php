@@ -154,7 +154,7 @@ class Nodo extends Model
     /*=====  End of scope para consultar la lista de nodos  ======*/
 
     /*====================================================================================================
-    =            scope para consultar el nodo del dinamizador - gestor - infocenter - ingreso            =
+    =            scope para consultar el nodo del dinamizador - experto - infocenter - ingreso            =
     ====================================================================================================*/
 
     public function scopeListNodos($query)
@@ -171,7 +171,7 @@ class Nodo extends Model
             ->where('nodos.id', '=', $nodo_id);
     }
 
-    /*=====  End of scope para consultar el nodo del dinamizador - gestor - infocenter - ingreso  ======*/
+    /*=====  End of scope para consultar el nodo del dinamizador - experto - infocenter - ingreso  ======*/
 
     /*==============================================================================
     =            scope para consultar todas las lineas por departamento            =

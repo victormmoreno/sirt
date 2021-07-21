@@ -31,7 +31,7 @@ class ArticulacionPbtPresenter extends Presenter
 
     public function articulacionPbtNameProyecto()
     {
-        if ($this->articulacionpbt->has('proyecto') && isset($this->articulacionpbt->proyecto)) {
+        if ($this->articulacionpbt->has('proyecto') && isset($this->articulacionpbt->proyecto->articulacion_proyecto->actividad)) {
             return $this->articulacionpbt->proyecto->articulacion_proyecto->actividad->nombre;
         }
         return "No registra";
@@ -39,7 +39,7 @@ class ArticulacionPbtPresenter extends Presenter
 
     public function articulacionPbtCodeProyecto()
     {
-        if ($this->articulacionpbt->has('proyecto') && isset($this->articulacionpbt->proyecto)) {
+        if ($this->articulacionpbt->has('proyecto') && isset($this->articulacionpbt->proyecto->articulacion_proyecto->actividad)) {
             return $this->articulacionpbt->proyecto->articulacion_proyecto->actividad->codigo_actividad;
         }
         return "No registra";

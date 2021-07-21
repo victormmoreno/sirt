@@ -36,7 +36,7 @@ class ComiteAsignarFormRequest extends FormRequest
         // exit();
       foreach(request()->get('txtgestores') as $key => $val)
       {
-        $messages['txtgestores.'.$key.'.required'] = 'El gestor a cargo de la idea de proyecto #'.($key+1).' es obligatorio.';
+        $messages['txtgestores.'.$key.'.required'] = 'El experto a cargo de la idea de proyecto #'.($key+1).' es obligatorio.';
       }
       return $messages;
     }

@@ -1,26 +1,172 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <style>
-      .centrar {
-        text-align: center;
-      }
-      footer {
-      position: fixed;
-      left: 0px;
-      bottom: -50px;
-      right: 0px;
-      height: 40px;
-      border-bottom: 2px solid #ddd;
-      text-align: right;
-    }
-    footer .page:after {
-      content: counter(page);
-    }
+        footer.page-footer {
+            margin-top: 20px;
+            padding-top: 20px;
+            background-color: #ee6e73;
+        }
 
+        footer.page-footer .footer-copyright {
+            overflow: hidden;
+            height: 50px;
+            line-height: 50px;
+            color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(51, 51, 51, 0.08);
+        }
 
+        .center-image{
+            vertical-align: middle;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-left: 10px;
 
-    </style>
+        }
+
+        table, th, td {
+            border: solid;
+        }
+
+        table {
+            width: 100%;
+            display: table;
+            font-size: 13px;
+            word-wrap: break-word;
+        }
+
+        table.bordered > thead > tr,
+        table.bordered > tbody > tr {
+            border-bottom: 2px solid #050505;
+        }
+
+        table.striped > tbody > tr:nth-child(odd) {
+            background-color: #f2f2f2;
+        }
+
+        table.striped > tbody > tr > td {
+            border-radius: 0;
+        }
+
+        table.highlight > tbody > tr {
+            transition: background-color .25s ease;
+        }
+
+        table.highlight > tbody > tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        table.centered thead tr th, table.centered tbody tr td {
+            text-align: center;
+        }
+
+        thead {
+            border-bottom: 1px solid #d0d0d0;
+        }
+
+        td, th {
+            display: table-cell;
+            text-align: left;
+            vertical-align: middle;
+            border-radius: 2px;
+            overflow: hidden;
+            white-space: pre-line;
+        }
+        .centered {
+            text-align: center;
+        }
+    @media only screen and (max-width: 992px) {
+        table.responsive-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            display: block;
+            position: relative;
+            /* sort out borders */
+        }
+        table.responsive-table td:empty:before {
+            content: '\00a0';
+        }
+        table.responsive-table th,
+        table.responsive-table td {
+
+            vertical-align: top;
+        }
+        table.responsive-table th {
+            text-align: left;
+        }
+        table.responsive-table thead {
+            display: block;
+            float: left;
+        }
+        table.responsive-table thead tr {
+            display: block;
+            padding: 0 0 0 0;
+        }
+        table.responsive-table thead tr th::before {
+            content: "\00a0";
+        }
+        table.responsive-table tbody {
+            display: block;
+            width: auto;
+            position: relative;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        table.responsive-table tbody tr {
+            display: inline-block;
+            vertical-align: top;
+        }
+        table.responsive-table th {
+            display: block;
+            text-align: right;
+        }
+        table.responsive-table td {
+            display: block;
+            min-height: 1.25em;
+            text-align: left;
+        }
+        table.responsive-table tr {
+            padding: 0 0px;
+        }
+        table.responsive-table thead {
+            border: 0;
+            border-right: 1px solid #d0d0d0;
+        }
+        table.responsive-table.bordered th {
+            border-bottom: 0;
+            border-left: 0;
+
+        }
+        table.responsive-table.bordered td {
+            border-left: 0;
+            border-right: 0;
+            border-bottom: 0;
+            border: 1px solid #000;
+        }
+        table.responsive-table.bordered tr {
+            border: 0;
+        }
+        table.responsive-table.bordered tbody tr {
+            border-right: 1px solid #d0d0d0;
+            min-width: 235px;
+            height: 10px;
+            background-color: #433;
+        }
+
+        td{
+            text-align: center;
+        padding: 5px;
+        /* Alto de las celdas */
+        height: 10px;
+        }
+
+        .tr-striped {
+            background-color: #bdbdbd;
+            }
+        }
+        </style>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -29,215 +175,216 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <title>Acta de Inicio</title>
-  </head>
-  
-  <body>
+</head>
+<body>
     <footer>
         GD-F-007 V01
     </footer>
-    <table class="table-bordered table-sm">
-      <thead>
-        <tr>
-          <th colspan="1">
-            <center>
-              <img src="{{asset('img/web.png')}}">
-            </center>
-          </th>
-          <th colspan="5" class="centrar">ACTA No. {{ substr($proyecto->articulacion_proyecto->actividad->codigo_actividad, -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="centrar" scope="row" colspan="6"><b>TÍTULO DE PROYECTO: {{$proyecto->articulacion_proyecto->actividad->nombre}}</b></td>
-        </tr>
-        <tr>
-          <td colspan="1" scope="row">Nodo: <b>{{$proyecto->articulacion_proyecto->actividad->nodo->entidad->nombre}}</b></td>
-          <td colspan="2">Fecha: <b>{{$proyecto->articulacion_proyecto->actividad->fecha_inicio->isoFormat('YYYY-MM-DD')}}</b></td>
-          <td colspan="3">Código del Proyecto: <b>{{$proyecto->articulacion_proyecto->actividad->codigo_actividad}}</b></td>
-        </tr>
-        <tr>
-          <th class="centrar" colspan="6">DATOS DEL PROYECTO</th>
-        </tr>
-        <tr>
-          <td colspan="3">Código de la Idea de Proyecto: <b>{{$proyecto->idea->codigo_idea}}</b></td>
-          <td colspan="3">Nombre de la Idea de Proyecto: <b>{{$proyecto->idea->nombre_proyecto}}</b></td>
-        </tr>
-        <tr>
-          <td colspan="3">
-            Área de conocimiento: <b>{{$proyecto->areaconocimiento->nombre}}</b>
-            @if ($proyecto->areaconocimiento->nombre == 'Otro')
-            <br>
-            {{$proyecto->otro_areaconocimiento}}
-            @endif
-          </td>
-          <td colspan="3">Sublínea: <b>{{$proyecto->sublinea->nombre}}</b></td>
-        </tr>
-        <tr>
-          <td colspan="2">TRL que se pretende realizar: <b>{{$proyecto->trl_esperado == 0 ? 'TRL6' : 'TRL 7 - TRL 8'}}</b></td>
-          <td colspan="2">¿Recibido a través de fábrica de productividad?: <b>{{$proyecto->fabrica_productividad == 0 ? 'NO' : 'SI'}}</b></td>
-          <td colspan="2">¿Recibido a través del área de emprendimiento SENA?: <b>{{$proyecto->reci_ar_emp == 0 ? 'NO' : 'SI'}}</b></td>
-        </tr>
-        <tr  style="page-break-inside:avoid;">
-          <td colspan="2">
-            ¿El proyecto pertenece a la economía naranja?: <b>{{$proyecto->economia_naranja == 0 ? 'NO' : 'SI'}}</b>
-            @if ($proyecto->economia_naranja == 1)
-            <br>
-            Tipo de economía naranja: <b>{{$proyecto->tipo_economianaranja}}</b>
-            @endif
-          </td>
-          <td colspan="2">
-            ¿El proyecto está dirigido a personas en condición de discapacidad?: <b>{{$proyecto->dirigido_discapacitados == 0 ? 'NO' : 'SI'}}</b>
-            @if ($proyecto->dirigido_discapacitados == 1)
-            <br>
-            Tipo de discapacidad: <b>{{$proyecto->tipo_discapacitados}}</b></p>
-            @endif
-          </td>
-          <td colspan="2">
-            Articulado con CT+i: <b>{{$proyecto->art_cti == 0 ? 'NO' : 'SI'}}</b>
-            @if ($proyecto->art_cti == 1)
-            <br>
-            Nombre del Actor CT+i: <b>{{$proyecto->nom_act_cti}}</b>
-            @endif
-          </td>
-        </tr>
-        <tr>
-          <th class="centrar" colspan="6">TALENTOS QUE PARTICIPAN EN EL PROYECTO</th>
-        </tr>
-        <tr>
-          {{-- <td colspan="1"></td> --}}
-          <td colspan="6">
-            <table class="table table-borderless">
-              <thead>
-                <tr>
-                  <th style="width: 40%">Talento Interlocutor</th>
-                  <th style="width: 60%">Talento</th>
-                </tr>
-              </thead>
-              <tbody>
-                @foreach ($proyecto->articulacion_proyecto->talentos as $key => $value)
-                <tr>
-                  <td>
-                    {{$value->pivot->talento_lider == 1 ? 'SI' : 'NO'}}
-                  </td>
-                  <td>{{$value->user->documento}} - {{$value->user->nombres}} {{$value->user->apellidos}}</td>
-                </tr>
-                @endforeach
-              </tbody>
-            </table>
-          </td>
-          {{-- <td colspan="1"></td> --}}
-        </tr>
-        <tr>
-          <th class="centrar" colspan="6">OBJETIVOS DEL PROYECTO Y ALCANCE</th>
-        </tr>
-        <tr>
-          <th class="centrar" colspan="6"><small><b>OBJETIVO GENERAL</b></small></th>
-        </tr>
-        <tr>
-          <td colspan="6">
-            {{$proyecto->articulacion_proyecto->actividad->objetivo_general}}
-          </td>
-        </tr>
-        <tr>
-          <th class="centrar" colspan="6"><small><b>OBJETIVOS ESPECÍFICOS</b></small></th>
-        </tr>
-        <tr>
-          <td colspan="6">
-            <ol>
-              <li>{{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->objetivo}}</li>
-              <li>{{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo}}</li>
-              <li>{{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo}}</li>
-              <li>{{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo}}</li>
-            </ol>
-          </td>
-        </tr>
-        <tr>
-          <th class="centrar" colspan="6"><small><b>ALCANCE DEL PROYECTO</b></small></th>
-        </tr>
-        <tr>
-          <td colspan="6">
-            {{$proyecto->alcance_proyecto}}
-          </td>
-        </tr>
-        <tr>
-          <th class="centrar" colspan="6">DATOS DE LA PROPIEDAD INTELECTUAL</th>
-        </tr>
-        <tr>
-          <th class="centrar" colspan="6"><small><b>PERSONAS (TALENTOS)</b></small></th>
-        </tr>
-        <tr>
-          <td colspan="6">
+    <div class="card-content">
+        <table class="bordered">
+            <tr>
+                <td colspan="1" rowspan="2"><img class="center-image" src="{{asset('img/web.png')}}"></td>
+                <td colspan="5" class="centered"><b>Acta de Inicio<b></td>
+            </tr>
+            <tr>
+                <td colspan="5" class="centered"><b>ACTA No. {{ substr($proyecto->articulacion_proyecto->actividad->codigo_actividad, -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b></td>
+            </tr>
+        </table>
+        <br>
+        <table class="bordered">
+            <tr>
+                <td  scope="row" colspan="6"><b>TÍTULO DE PROYECTO: {{$proyecto->articulacion_proyecto->actividad->nombre}}</b></td>
+            </tr>
+            <tr>
+                <td colspan="1" scope="row">Nodo: <b>{{$proyecto->articulacion_proyecto->actividad->nodo->entidad->nombre}}</b></td>
+                <td colspan="2">Fecha: <b>{{$proyecto->articulacion_proyecto->actividad->fecha_inicio->isoFormat('YYYY-MM-DD')}}</b></td>
+                <td colspan="3">Código del Proyecto: <b>{{$proyecto->articulacion_proyecto->actividad->codigo_actividad}}</b></td>
+            </tr>
+            <tr class="tr-striped">
+                <td colspan="6" ><b>DATOS DEL PROYECTO<b></td>
+            </tr>
+            <tr>
+                <td colspan="3">Código de la Idea de Proyecto: <b>{{$proyecto->idea->codigo_idea}}</b></td>
+                <td colspan="3">Nombre de la Idea de Proyecto: <b>{{$proyecto->idea->nombre_proyecto}}</b></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    Área de conocimiento: <b>{{$proyecto->areaconocimiento->nombre}}</b>
+                    @if ($proyecto->areaconocimiento->nombre == 'Otro')
+                    <br>
+                    {{$proyecto->otro_areaconocimiento}}
+                    @endif
+                </td>
+                <td colspan="3">Sublínea: <b>{{$proyecto->sublinea->nombre}}</b></td>
+            </tr>
+            <tr>
+                <td colspan="2">TRL que se pretende realizar: <b>{{$proyecto->trl_esperado == 0 ? 'TRL6' : 'TRL 7 - TRL 8'}}</b></td>
+                <td colspan="2">¿Recibido a través de fábrica de productividad?: <b>{{$proyecto->fabrica_productividad == 0 ? 'NO' : 'SI'}}</b></td>
+                <td colspan="2">¿Recibido a través del área de emprendimiento SENA?: <b>{{$proyecto->reci_ar_emp == 0 ? 'NO' : 'SI'}}</b></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    ¿El proyecto pertenece a la economía naranja?: <b>{{$proyecto->economia_naranja == 0 ? 'NO' : 'SI'}}</b>
+                    @if ($proyecto->economia_naranja == 1)
+                    <br>
+                    Tipo de economía naranja: <b>{{$proyecto->tipo_economianaranja}}</b>
+                    @endif
+                </td>
+                <td colspan="2">
+                    ¿El proyecto está dirigido a personas en condición de discapacidad?: <b>{{$proyecto->dirigido_discapacitados == 0 ? 'NO' : 'SI'}}</b>
+                    @if ($proyecto->dirigido_discapacitados == 1)
+                    <br>
+                    Tipo de discapacidad: <b>{{$proyecto->tipo_discapacitados}}</b></p>
+                    @endif
+                </td>
+                <td colspan="2">
+                    Articulado con CT+i: <b>{{$proyecto->art_cti == 0 ? 'NO' : 'SI'}}</b>
+                    @if ($proyecto->art_cti == 1)
+                    <br>
+                    Nombre del Actor CT+i: <b>{{$proyecto->nom_act_cti}}</b>
+                    @endif
+                </td>
+            </tr>
+            <tr class="tr-striped">
+                <td colspan="6" ><b>TALENTOS QUE PARTICIPAN EN EL PROYECTO<b></td>
+            </tr>
+            <tr>
+                <td colspan="1"><b> Interlocutor</b></td>
+                <td colspan="5"><b>Talento</b></td>
+            </tr>
+            @forelse ($proyecto->articulacion_proyecto->talentos as $talento)
+            <tr>
+                @if($talento->pivot->talento_lider == 1)
+                    <td colspan="1" >SI</td>
+                @else
+                <td colspan="1" >NO</td>
+                @endif
+                <td colspan="5" >{{$talento->user->documento}} - {{$talento->user->nombres}} {{$talento->user->apellidos}}</td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="1" >Sin resultados</td>
+                <td colspan="5" >Sin resultados</td>
+            </tr>
+            @endforelse
+            <tr class="tr-striped">
+                <td colspan="6" ><b>OBJETIVOS DEL PROYECTO Y ALCANCE<b></td>
+            </tr>
+            <tr>
+                <td colspan="1"><b>OBJETIVO GENERAL</b></td>
+                <td colspan="5">
+                    {{$proyecto->articulacion_proyecto->actividad->objetivo_general}}
+                </td>
+            </tr>
+            <tr class="tr-striped">
+                <td  colspan="6"><b>OBJETIVOS ESPECÍFICOS</b></td>
+            </tr>
+            <tr>
+                <td colspan="1"><b>1</b></td>
+                <td colspan="5">{{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->objetivo}}</td>
+            </tr>
+            <tr>
+                <td colspan="1"><b>2</b></td>
+                <td colspan="5">{{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo}}</td>
+            </tr>
+            <tr>
+                <td colspan="1"><b>3</b></td>
+                <td colspan="5">{{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo}}</td>
+            </tr>
+            <tr>
+                <td colspan="1"><b>4</b></td>
+                <td colspan="5">{{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo}}</td>
+            </tr>
+            <tr>
+                <td colspan="1"><b>ALCANCE DEL PROYECTO</b></td>
+                <td colspan="5">
+                    {{$proyecto->alcance_proyecto}}
+                </td>
+            </tr>
+            <tr class="tr-striped">
+                <td colspan="6" ><b>DATOS DE LA PROPIEDAD INTELECTUAL<b></td>
+            </tr>
+            <tr>
+                <td  colspan="6"><b>PERSONAS (TALENTOS)</b></td>
+            </tr>
             @if ($proyecto->users_propietarios->count() > 0)
-            <ul>
-              @foreach ($proyecto->users_propietarios as $key => $value)
-              <li>
-                {{$value->documento}} - {{$value->nombres}} {{$value->apellidos}}
-              </li>
-              @endforeach
-            </ul>
+                <tr>
+                    <td colspan="1"><b>Documento</b></td>
+                    <td colspan="5"><b>PERSONA</b></td>
+                </tr>
+                @foreach ($proyecto->users_propietarios as $key => $value)
+                    <tr>
+                        <td colspan="1" >{{$value->documento}}</td>
+                        <td colspan="5" >{{$value->nombres}} {{$value->apellidos}}</td>
+                    </tr>
+                @endforeach
             @else
-            <p>
-              No se encontraron personas dueñas de la propiedad intelectual.
-            </p>
+                <tr>
+                    <td colspan="6" >No se encontraron personas dueñas de la propiedad intelectual.</td>
+                </tr>
             @endif
-          </td>
-        </tr>
-        <tr>
-          <th class="centrar" colspan="6"><small><b>EMPRESAS</b></small></th>
-        </tr>
-        <tr>
-          <td colspan="6">
+            <tr>
+                <td  colspan="6"><b>EMPRESAS</b></td>
+            </tr>
             @if ($proyecto->sedes->count() > 0)
-            <ul>
-              @foreach ($proyecto->sedes as $key => $value)
-              <li>
-                {{$value->empresa->nit}} - {{ $value->empresa->nombre }} ({{ $value->nombre_sede }})
-              </li>
-              @endforeach
-            </ul>
+                <tr>
+                    <td colspan="1"><b>Nit</b></td>
+                    <td colspan="5"><b>Nombre de empresa</b></td>
+                </tr>
+                @foreach ($proyecto->sedes as $key => $value)
+                    <tr>
+                        <td colspan="1" >{{$value->empresa->nit}}</td>
+                        <td colspan="5" >{{ $value->empresa->nombre }} ({{ $value->nombre_sede }})</td>
+                    </tr>
+                @endforeach
             @else
-            <p>
-              No se encontraron empresas dueñas de la propiedad intelectual.
-            </p>
+                <tr>
+                    <td colspan="6" >No se encontraron personas dueñas de la propiedad intelectual.</td>
+                </tr>
             @endif
-          </td>
-        </tr>
-        <tr>
-          <th class="centrar" colspan="6"><small><b>GRUPOS DE INVESTIGACIÓN</b></small></th>
-        </tr>
-        <tr>
-          <td colspan="6">
+            <tr>
+                <td  colspan="6"><b>GRUPOS DE INVESTIGACIÓN</b></td>
+            </tr>
             @if ($proyecto->gruposinvestigacion->count() > 0)
-            <ul>
-              @foreach ($proyecto->gruposinvestigacion as $key => $value)
-              <li>
-                {{$value->codigo_grupo}} - {{ $value->entidad->nombre }}
-              </li>
-              @endforeach
-            </ul>
+                <tr>
+                    <td colspan="1"><b>Código grupo</b></td>
+                    <td colspan="5"><b>Grupo de investigación</b></td>
+                </tr>
+                @foreach ($proyecto->gruposinvestigacion as $key => $value)
+                    <tr>
+                        <td colspan="1" >{{$value->codigo_grupo}}</td>
+                        <td colspan="5" >{{ $value->entidad->nombre }}</td>
+                    </tr>
+                @endforeach
             @else
-            <p>
-              No se encontraron grupos de investigación dueños de la propiedad intelectual.
-            </p>
+                <tr>
+                    <td colspan="6" >No se encontraron personas dueñas de la propiedad intelectual.</td>
+                </tr>
             @endif
-          </td>
-        </tr>
-        <tr>
-          <th class="centrar" colspan="6">ASISTENTES</th>
-        </tr>
-        <tr>
-          <th class="centrar" colspan="2"><small><b>NOMBRE</b></small></th>
-          <th class="centrar" colspan="2"><small><b>CARGO</b></small></th>
-        </tr>
-        <tr>
-          <td class="centrar" colspan="2"><small>{{$proyecto->articulacion_proyecto->actividad->gestor->user->nombres}} {{$proyecto->articulacion_proyecto->actividad->gestor->user->apellidos}}</small></td>
-          <td class="centrar" colspan="2"><small>Gestor</small></td>
-        </tr>
-        <tr>
-          <td class="centrar" colspan="2"><small>{{$proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', '=', 1)->first()->user->nombres}} {{$proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', '=', 1)->first()->user->apellidos}}</small></td>
-          <td class="centrar" colspan="2"><small>Talento Interlocutor</small></td>
-        </tr>
-      </tbody>
-    </table>
-  </body>
+            <tr class="tr-striped">
+                <td colspan="6" ><b>ASISTENTES<b></td>
+            </tr>
+            <tr>
+                <td colspan="6" rowspan="5"></td>
+            </tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr>
+                <td colspan="6" >{{$proyecto->articulacion_proyecto->actividad->gestor->user->nombres}} {{$proyecto->articulacion_proyecto->actividad->gestor->user->apellidos}} - Experto</td>
+            </tr>
+            <tr>
+                <td colspan="6" rowspan="5"></td>
+            </tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr>
+                <td colspan="6" >{{$proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', '=', 1)->first()->user->nombres}} {{$proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', '=', 1)->first()->user->apellidos}} - Talento Interlocutor</td>
+            </tr>
+        </table>
+    </div>
+</body>
 </html>

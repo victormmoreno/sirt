@@ -138,7 +138,7 @@
         </tr>
         <tr>
           <td class="centrar" colspan="2"><small>{{$articulacion->articulacion_proyecto->actividad->gestor->user->nombres}} {{$articulacion->articulacion_proyecto->actividad->gestor->user->apellidos}}</small></td>
-          <td class="centrar" colspan="2"><small>Gestor</small></td>
+          <td class="centrar" colspan="2"><small>Experto</small></td>
           <td class="centrar" colspan="2"></td>
         </tr>
         @foreach ($articulacion->articulacion_proyecto->talentos as $value)

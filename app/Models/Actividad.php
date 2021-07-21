@@ -20,8 +20,6 @@ class Actividad extends Model
     protected $casts = [
         'gestor_id'        => 'integer',
         'nodo_id'          => 'integer',
-        'codigo_actividad' => 'string',
-        'nombre'           => 'string',
         'fecha_inicio'     => 'date:Y-m-d',
         'fecha_cierre'     => 'date:Y-m-d',
 

@@ -38,12 +38,12 @@
         <div class="card stats-card">
           <div class="card-options">
               <ul class="hide-on-med-only">
-                <li class="red-text"><span class="badge cyan lighten-1">{{$countGestoresActivos}} Gestores Activos</span></li>
+                <li class="red-text"><span class="badge cyan lighten-1">{{$countGestoresActivos}} Expertos activos</span></li>
               </ul>
           </div>
           <div class="card-content">
-            <span class="card-title "><b>Gestores</b> </span>
-            <span class="stats-counter"><small> Total de Gestores: {{$totalGestores}}</small></span>
+            <span class="card-title "><b>Expertos</b> </span>
+            <span class="stats-counter"><small> Total de expertos: {{$totalGestores}}</small></span>
           </div>
         </div>
       </div>
@@ -81,11 +81,6 @@
     </div>
 
   </div>
-  {{-- <div class="inner-sidebar">
-    <span class="inner-sidebar-title center-aling"><b></b> Administradores </span>
-    <div class="message-list">
-    </div>
-  </div> --}}
 </main>
 
  

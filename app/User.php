@@ -40,7 +40,7 @@ class User extends Authenticatable implements JWTSubject
     const IS_INACTIVE      = false;
     const IS_ADMINISTRADOR = "Administrador";
     const IS_DINAMIZADOR   = "Dinamizador";
-    const IS_GESTOR        = "Gestor";
+    const IS_GESTOR        = "Experto";
     const IS_INFOCENTER    = "Infocenter";
     const IS_TALENTO       = "Talento";
     const IS_INGRESO       = "Ingreso";

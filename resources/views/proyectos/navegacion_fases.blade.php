@@ -30,7 +30,7 @@
     <div class="col s12 m4 l4">
         <a href="{{route('proyecto.cambiar', $proyecto->id)}}">
             <div class="card-panel green lighten-3 black-text center">
-                Cambiar el gestor del proyecto.
+                Cambiar el experto del proyecto.
             </div>
         </a>
     </div>

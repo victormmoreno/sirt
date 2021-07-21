@@ -108,7 +108,7 @@ class CostoController extends Controller
   }
 
   /**
-  * Obtiene la linea del gestor a cargo de la actividad
+  * Obtiene la linea del experto a cargo de la actividad
   *
   * @param Collection $actividad
   * @return string
@@ -120,7 +120,7 @@ class CostoController extends Controller
   }
 
   /**
-  * Obtiene el nombre del gestor a cargo de la actividad
+  * Obtiene el nombre del experto a cargo de la actividad
   *
   * @param Collection $actividad
   * @return string

@@ -318,16 +318,16 @@ class EdtController extends Controller
     } else {
       $validator = Validator::make($request->all(), [
         'txtgestor_id' => 'required'
-      ], ['txtgestor_id.required' => 'El Gestor es obligatorio.']);
+      ], ['txtgestor_id.required' => 'El experto es obligatorio.']);
       if ($validator->fails()) {
         return back()->withErrors($validator)->withInput();
       }
       $update = $this->edtRepository->updateGestorEdt_Repository($request, $id);
       if ($update) {
-        Alert::success('Modificación Exitosa!', 'El gestor de la edt se ha cambiado!')->showConfirmButton('Ok', '#3085d6');
+        Alert::success('Modificación Exitosa!', 'El experto de la edt se ha cambiado!')->showConfirmButton('Ok', '#3085d6');
         return redirect('edt');
       } else {
-        Alert::error('Modificación Errónea!', 'El gestor de la edt no se ha cambiado!')->showConfirmButton('Ok', '#3085d6');
+        Alert::error('Modificación Errónea!', 'El experto de la edt no se ha cambiado!')->showConfirmButton('Ok', '#3085d6');
         return back();
       }
     }

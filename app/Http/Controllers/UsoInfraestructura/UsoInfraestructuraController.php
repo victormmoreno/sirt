@@ -40,7 +40,7 @@ class UsoInfraestructuraController extends Controller
 
 
     ) {
-        $this->middleware(['auth', 'role_session:Administrador|Dinamizador|Articulador|Gestor|Talento']);
+        $this->middleware(['auth', 'role_session:Administrador|Dinamizador|Articulador|Experto|Talento']);
         $this->setUsoIngraestructuraProyectoRepository($UsoInfraestructuraProyectoRepository);
     
         $this->setUsoIngraestructuraArtculacionRepository($setUsoIngraestructuraArtculacionRepository);

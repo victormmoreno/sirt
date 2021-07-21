@@ -746,7 +746,7 @@ class ProyectoRepository
   }
 
   /**
-   * Cambia el gestor de un proyecto
+   * Cambia el experto de un proyecto
    *
    * @param Request $request
    * @param int $id id del proyecto
@@ -1308,7 +1308,7 @@ class ProyectoRepository
   }
 
   /**
-   * Consulta los proyectos que tiene un gestor por año
+   * Consulta los proyectos que tiene un experto por año
    * @param int $idgestor Id del gestor
    * @param string $anho Año por el que se filtra la consulta
    * @return Collection
@@ -1492,7 +1492,7 @@ class ProyectoRepository
   }
 
   /*========================================================================
-  =            metodo para consultar los proyectos de un ususario gestor talento         =
+  =            metodo para consultar los proyectos de un ususario experto talento         =
   ========================================================================*/
   public function getProjectsForUser(array $relations, array $estado = [])
   {

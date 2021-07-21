@@ -81,7 +81,7 @@
                             <div class="row">
                                 <div class="col s12 m12 l12">
                                     <div class="card-panel green lighten-5">
-                                        <h5 class="center">Gestores que se agendaron para el comité</h5>
+                                        <h5 class="center">Expertos que se agendaron para el comité</h5>
                                         <table>
                                             <thead>
                                                 <tr>
@@ -148,10 +148,10 @@
               <li class="collection-item">
                 <a href="javascript:void(0)">
                     <div class="card-panel blue-grey lighten-3 black-text center">
-                        <i class="material-icons left">notifications</i>Enviar citación a gestores.
+                        <i class="material-icons left">notifications</i>Enviar citación a expertos.
                     </div>
                 </a>
-                Este botón enviará una notificación a todos los gestores.
+                Este botón enviará una notificación a todos los expertos.
               </li>
               <li class="collection-item">
                 <a href="">
@@ -159,7 +159,7 @@
                         <i class="material-icons left">notifications</i>Enviar citación a todos los participantes.
                     </div>
                 </a>
-                Este botón enviará una notificación del comité a todos los participantes, tanto gestores como talentos.
+                Este botón enviará una notificación del comité a todos los participantes, tanto expertos como talentos.
               </li>
           </ul>
       </p>

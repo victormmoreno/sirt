@@ -4848,6 +4848,12 @@ function consultarProyectosDelNodoPorAnho() {
         name: 'proceso',
         orderable: false
       },
+      {
+        width: '6%',
+        data: 'download_trazabilidad',
+        name: 'download_trazabilidad',
+        orderable: false
+      },
 
     ],
   });
