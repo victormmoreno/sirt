@@ -94,8 +94,11 @@
                     <small id="txtpdfaprobacion-error"  class="error red-text"></small>
                 </p>
             </div>
+
         </div>
         <div class="row r-no-aprobado">
+
+
             <div class="input-field col s12 m12 l6">
                 <p class="p-v-xs">
                     <input type="checkbox"  {{ $actividad->articulacionpbt->present()->articulacionPbtNoPdfAprobacion() == 1 ? 'checked' : '' }}

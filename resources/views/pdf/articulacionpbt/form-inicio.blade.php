@@ -242,6 +242,9 @@
                 <td colspan="5">{{$articulacion->present()->articulacionPbtObjetivo()}}</td>
             </tr>
             @if($articulacion->present()->articulacionPbtTipoVinculacion(App\Models\ArticulacionPbt::IsPbt()))
+            <tr class="tr-striped">
+                <td colspan="6" ><b>Información Proyecto de Base Tecnológica (PBT)<b></td>
+            </tr>
             <tr>
                 <td colspan="1"><b>Código Idea<b></td>
                 <td colspan="2">{{$articulacion->present()->articulacionPbtCodeIdeaProyecto()}}</td>

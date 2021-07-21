@@ -391,7 +391,7 @@ class UsoInfraestructuraRepository
             'actividad.articulacionpbt.fase',
             // 'actividad.articulacionpbt.tipoarticulacion',
 
-            
+
             'actividad.gestor'                                              => function ($query) {
                 $query->select('id', 'user_id', 'nodo_id', 'lineatecnologica_id');
             },

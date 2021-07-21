@@ -40,12 +40,12 @@
                                                 </button>
                                             </form>
                                             @else
-                                                @if($ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsAprobar() && $ultimo_movimiento->role->name == App\User::IsTalento())
+                                                @if(isset($ultimo_movimiento->movimiento->movimiento) && $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsAprobar() && $ultimo_movimiento->role->name == App\User::IsTalento())
                                                 <a disabled class="waves-effect waves-orange btn disabled m-t-xs">
                                                     El talento interlocutor aprobó la fase de Inicio, aún falta la aprobación del dinamizador
                                                 </a>
                                                 @endif
-                                                @if($ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->role->name == App\User::IsTalento())
+                                                @if(isset($ultimo_movimiento->movimiento->movimiento) && $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() && $ultimo_movimiento->role->name == App\User::IsTalento())
                                                 <a disabled class="waves-effect waves-orange btn disabled m-t-xs">
                                                     El talento interlocutor no aprobó la fase de Inicio
                                                 </a>

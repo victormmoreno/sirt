@@ -31,7 +31,7 @@
                     @else
                     <li class="collection-item">
                         <span class="title black-text text-darken-3">
-                            Empresa
+                            Sede de la empresa
                         </span>
                         <p>
                             {{$actividad->articulacionpbt->present()->articulacionPbtSedeEmpresa()}}
