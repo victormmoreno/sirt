@@ -1225,7 +1225,7 @@ $(document).on('submit', 'form#formComiteAsignarCreate', function (event) {
     Swal.fire({
         title: '¿Está seguro(a) de guardar esta información?',
         text: "No podrás revertir estos cambios!",
-        // text: "Debes tener en cuenta mientras el dinamizador no asigne las ideas de proyectos a los gestores puedes cambiar esta información",
+        // text: "Debes tener en cuenta mientras el dinamizador no asigne las ideas de proyectos a los expertos puedes cambiar esta información",
         type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -1612,7 +1612,7 @@ function eliminarIdeaDelAgendamiento(index) {
     $('#ideaAsociadaAgendamiento' + index).remove();
 }
 
-// Elimina un gestor agendada en un comité
+// Elimina un experto agendado en un comité
 function eliminarGestorDelAgendamiento(index) {
     $('#gestorAsociadoAgendamiento' + index).remove();
 }
@@ -1758,7 +1758,7 @@ Swal.fire({
     showConfirmButton: false,
     timer: 3000,
     type: 'error',
-    title: 'Estás ingresando mal los datos del gestor'
+    title: 'Estás ingresando mal los datos del experto'
 })
 }
 
@@ -1780,7 +1780,7 @@ Swal.fire({
           showConfirmButton: false,
           timer: 3000,
           type: 'success',
-          title: 'El gestor se asoció con éxito al comité'
+          title: 'El experto se asoció con éxito al comité'
         })
 }
 
@@ -1802,7 +1802,7 @@ Swal.fire({
     showConfirmButton: false,
     timer: 1500,
     type: 'warning',
-    title: 'El gestor ya se encuentra asociado en este comité!'
+    title: 'El experto ya se encuentra asociado en este comité!'
 });
 }
 
@@ -1856,7 +1856,7 @@ $(document).on('submit', 'form#formComiteRealizadoCreate', function (event) {
     Swal.fire({
         title: '¿Está seguro(a) de guardar esta información?',
         // text: "You won't be able to revert this!",
-        text: "Debes tener en cuenta mientras el dinamizador no asigne las ideas de proyectos a los gestores puedes cambiar esta información",
+        text: "Debes tener en cuenta mientras el dinamizador no asigne las ideas de proyectos a los expertos puedes cambiar esta información",
         type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -4306,7 +4306,7 @@ function detallesDeUnaIntervencion(id){
   
           +'<div class="row">'
           +'<div class="col s12 m6 l6">'
-          +'<span class="teal-text text-darken-3">Gestor a cargo: </span>'
+          +'<span class="teal-text text-darken-3">Experto a cargo: </span>'
           +'</div>'
           +'<div class="col s12 m6 l6">'
           +'<span class="black-text">'+respuesta.detalles.gestor+'</span>'
@@ -4546,6 +4546,40 @@ $(document).ready(function() {
   consultarProyectosDelNodoPorAnho();
 });
 
+function verHorasDeExpertosEnProyecto(id) {
+  $.ajax({
+    dataType:'json',
+    type:'get',
+    url:"/proyecto/consultarHorasExpertos/"+id
+  }).done(function(respuesta){
+    $("#horasAsesoriasExpertosPorProyeto_table").empty();
+    if (respuesta.horas.length == 0 ) {
+      Swal.fire({
+        title: 'Ups!!',
+        text: "No se encontraron horas de asesorías de los expertos en este proyecto!",
+        type: 'error',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      })
+    } else {
+      $("#horasAsesoriasExpertosPorProyeto_titulo").empty();
+      $("#horasAsesoriasExpertosPorProyeto_titulo").append("<span class='cyan-text text-darken-3'>Horas de los experto en el proyecto</span>");
+      $.each(respuesta.horas, function (i, item) {
+        // console.log(item.experto);
+        $("#horasAsesoriasExpertosPorProyeto_table").append(
+          '<tr>'
+          +'<td>'+item.experto+'</td>'
+          +'<td>'+item.horas_directas+'</td>'
+          +'<td>'+item.horas_indirectas+'</td>'
+          +'</tr>'
+        );
+      });
+      $('#horasAsesoriasExpertosPorProyeto_modal').openModal();
+    }
+  });
+}
+
 function consultarProyectosDeTalentos () {
 
   $('#tblProyectoDelTalento').dataTable().fnDestroy();
@@ -4647,7 +4681,7 @@ function verTalentosDeUnProyecto(id){
   });
 }
 
-// Ajax que muestra los proyectos de un gestor por año
+// Ajax que muestra los proyectos de un experto por año
 function consultarProyectosDelGestorPorAnho() {
 
   let anho = $('#anho_proyectoPorAnhoGestorNodo').val();
@@ -4837,7 +4871,7 @@ function consultarProyectosDelNodoPorAnho() {
         name: 'nombre_fase',
       },
       {
-        width: '8%',
+        width: '6%',
         data: 'info',
         name: 'info',
         orderable: false
@@ -4852,6 +4886,12 @@ function consultarProyectosDelNodoPorAnho() {
         width: '6%',
         data: 'download_trazabilidad',
         name: 'download_trazabilidad',
+        orderable: false
+      },
+      {
+        width: '6%',
+        data: 'ver_horas',
+        name: 'ver_horas',
         orderable: false
       },
 
@@ -5017,7 +5057,7 @@ var infoActividad = {
                     <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.nombre)}</TD>
                 </TR>
                 <TR>
-                    <TH width="25%">Gestor</TH>
+                    <TH width="25%">Experto</TH>
                     <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.gestor.user.documento)} - ${response.data.actividad.gestor.user.nombres} ${response.data.actividad.gestor.user.apellidos}</TD>
                     <TH width="25%">Correo Electrónico</TH>
                     <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.gestor.user.email)}</TD>
@@ -7251,8 +7291,6 @@ function checkTipoVinculacion(val) {
     let el = document.getElementsByClassName('collapsible-body');
 
     if ( $("#IsPbt").is(":checked") ) {
-        filter_project.emptyResult('alert-response');
-        filter_project.emptyResult('collection-response');
         filter_project.emptyResult('alert-response-sedes');
         filter_project.emptyResult('alert-response-company');
         filter_project.notFound('alert-response-sedes');
@@ -8648,7 +8686,7 @@ var usoinfraestructuraIndex = {
 
         if (nodo == null || nodo == '' || nodo == 'all' || nodo == undefined){
             $('#filter_gestor').empty();
-            $('#filter_gestor').append('<option value="" selected>Seleccione un Gestor</option>');
+            $('#filter_gestor').append('<option value="" selected>Seleccione un experto</option>');
         }else{
             $.ajax({
                 type: 'GET',
@@ -9152,7 +9190,7 @@ function alertaNodoNoValido() {
 }
 
 function alertaGestorNoValido() {
-  Swal.fire('Advertencia!', 'Seleccione un gestor(a)', 'warning');
+  Swal.fire('Advertencia!', 'Seleccione un experto', 'warning');
 }
 
 function alertaLineaNoValido() {
@@ -9636,7 +9674,7 @@ function consultarEdtsPorGestorYFecha_stacked(bandera) {
   let fecha_fin = $('#txtfecha_fin_edtGrafico2').val();
   let id = $('#txtgestor_id_edtGrafico2').val();
   if (id == '') {
-    Swal.fire('Advertencia!', 'Selecciona un Gestor!', 'warning');
+    Swal.fire('Advertencia!', 'Selecciona un experto!', 'warning');
   } else {
     if (fecha_inicio > fecha_fin) {
       Swal.fire('Advertencia!', 'Selecciona fecha válidas!', 'warning');
@@ -9701,16 +9739,13 @@ function consultarEdtsPorNodoGestorYFecha_stacked(bandera) {
       url: '/grafico/consultarEdtsPorNodoGestorYFecha/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
       success: function (data) {
         var tamanho = data.consulta.length;
-        // console.log(tamanho);
         var datos = {
           gestores: [],
           tipo1Array: [],
           tipo2Array: [],
           tipo3Array: []
         };
-        // console.log(data.tipos);
         for (var i = 0; i < tamanho; i++) {
-          // console.log(data.consulta[i].gestor);
           if (data.consulta[i].gestor != null) {
             datos.gestores.push(data.consulta[i].gestor);
           }
@@ -9944,7 +9979,7 @@ function consultarArticulacionesDeUnGestorPorFecha_stacked() {
   let fecha_fin = $('#txtfecha_fin_Grafico2').val();
   let id = $('#txtgestor_id').val();
   if (id == '') {
-    Swal.fire('Advertencia!', 'Selecciona un Gestor!', 'warning');
+    Swal.fire('Advertencia!', 'Selecciona un experto!', 'warning');
   } else {
     if (fecha_inicio > fecha_fin) {
       Swal.fire('Advertencia!', 'Selecciona fecha válidas!', 'warning');
@@ -10079,7 +10114,7 @@ function alertaNodoNoValido() {
   Swal.fire('Advertencia!', 'Seleccione un nodo', 'warning');
 };
 // 0 para cuando el Dinamizador consultar
-// 1 para cuando el gestor consulta
+// 1 para cuando el experto consulta
 
 function consultarSeguimientoDeUnGestor(gestor_id) {
   $.ajax({
