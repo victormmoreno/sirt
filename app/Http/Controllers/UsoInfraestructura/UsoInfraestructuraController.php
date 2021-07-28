@@ -765,14 +765,14 @@ class UsoInfraestructuraController extends Controller
 
             $proyectoNodo = Proyecto::findOrFail($id)->articulacion_proyecto->actividad->nodo_id;
 
-            $proyectoTalento = Proyecto::select('proyectos.*', 'actividades.id as actividad_id', 'actividades.gestor_id as actividad_gestor_id', 'actividades.nodo_id as actividad_nodo_id', 'actividades.codigo_actividad', 'actividades.nombre as actividades_nombre', 'gestores.id as gestor_id', 'gestores.lineatecnologica_id as gestor_lineatecnologica_id', 'gestores.honorarios', 'users.id as user_id', 'users.documento', 'users.nombres', 'users.apellidos', 'nodos.id as nodo_id', 'lineastecnologicas.abreviatura', 'lineastecnologicas.id as lineatecnologica_id', 'lineastecnologicas.nombre as lineatecnologica_nombre')
+            $proyectoTalento = Proyecto::select('proyectos.*', 'actividades.id as actividad_id', 'proyectos.aseosr_id as actividad_gestor_id', 'proyectos.nodo_id as actividad_nodo_id', 'actividades.codigo_actividad', 'actividades.nombre as actividades_nombre', 'gestores.id as gestor_id', 'gestores.lineatecnologica_id as gestor_lineatecnologica_id', 'gestores.honorarios', 'users.id as user_id', 'users.documento', 'users.nombres', 'users.apellidos', 'nodos.id as nodo_id', 'lineastecnologicas.abreviatura', 'lineastecnologicas.id as lineatecnologica_id', 'lineastecnologicas.nombre as lineatecnologica_nombre')
                 ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
                 ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
                 ->join('actividades', 'articulacion_proyecto.actividad_id', '=', 'actividades.id')
-                ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+                ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
                 ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'gestores.lineatecnologica_id')
                 ->join('users', 'users.id', '=', 'gestores.user_id')
-                ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+                ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
                 ->whereIn('fases.id', $fase)
                 ->findOrFail($id);
 
@@ -841,11 +841,11 @@ class UsoInfraestructuraController extends Controller
             ];
 
             $articulacion = ArticulacionPbt::with(['actividad','actividad.gestor',
-            'actividad.gestor.user'=> function($query){
-                $query->select('id', 'documento', 'nombres', 'apellidos');
-            }])
-                ->whereIn('fase_id', $fase)
-                ->findOrFail($id);
+                'actividad.gestor.user'=> function($query){
+                    $query->select('id', 'documento', 'nombres', 'apellidos');
+                }])
+                    ->whereIn('fase_id', $fase)
+                    ->findOrFail($id);
 
             $lineastecnologicas = LineaTecnologica::join('lineastecnologicas_nodos', 'lineastecnologicas_nodos.linea_tecnologica_id', '=', 'lineastecnologicas.id')
                 ->where('lineastecnologicas_nodos.nodo_id', $articulacionNodo)

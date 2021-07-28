@@ -50,7 +50,7 @@ class UserController extends Controller
                 $nodo = $request->filter_nodo;
                 break;
             case User::IsArticulador():
-                dd($nodo = auth()->user()->usernodo);
+                $nodo = auth()->user()->articulador->nodo_id;
                 break;
             case User::IsDinamizador():
                 $nodo = auth()->user()->dinamizador->nodo_id;
@@ -89,6 +89,12 @@ class UserController extends Controller
                 ]);
                 break;
             case User::IsDinamizador():
+                $role = [User::IsGestor(), User::IsArticulador(), User::IsInfocenter(), User::IsTalento(), User::IsIngreso()];
+                return view('users.index', [
+                    'roles' => $this->userRepository->getRoleWhereInRole($role),
+                ]);
+                break;
+            case User::IsArticulador():
                 $role = [User::IsGestor(), User::IsArticulador(), User::IsInfocenter(), User::IsTalento(), User::IsIngreso()];
                 return view('users.index', [
                     'roles' => $this->userRepository->getRoleWhereInRole($role),
@@ -223,6 +229,9 @@ class UserController extends Controller
                 break;
             case User::IsDinamizador():
                 $nodo = auth()->user()->dinamizador->nodo_id;
+                break;
+            case User::IsArticulador():
+                $nodo = auth()->user()->articulador->nodo_id;
                 break;
             case User::IsGestor():
                 $nodo = auth()->user()->gestor->nodo_id;
@@ -360,19 +369,19 @@ class UserController extends Controller
         } else {
             if ($user != null) {
 
-                if(($user->isUserExperto() || $user->isUserArticulador()) && ($user->gestor->nodo_id != $request->input('txtnodogestor')  || $user->gestor->lineatecnologica_id != $request->input('txtlinea') ) )
+                if(($user->isUserExperto()) && ($user->gestor->nodo_id != $request->input('txtnodogestor')  || $user->gestor->lineatecnologica_id != $request->input('txtlinea') ) )
                 {
-                    $activities = $user->gestor->actividades()->activitiesGestor();
+                    $projects = $user->gestor->proyectos()->proyectosGestor();
                     $removeRole = array_diff(collect($user->getRoleNames())->toArray(), $request->input('role'));
 
-                    if($activities->count() > 0 || ($removeRole != null && collect($removeRole)->contains(User::IsGestor())))
+                    if($projects->count() > 0 || ($removeRole != null && collect($removeRole)->contains(User::IsGestor())))
                     {
                         return response()->json([
                             'state'   => 'error',
-                            'message' => "No se puede cambiar de nodo, actualmente el experto tiene {$activities->count()} atividades sin finalizar, para ello debe asignarlas a otro experto del nodo",
+                            'message' => "No se puede cambiar de nodo, actualmente el experto tiene {$projects->count()} atividades sin finalizar, para ello debe asignarlas a otro experto del nodo",
                             'url' => false,
-                            'activities' => $activities,
-                            'count' => $activities->count()
+                            'activities' => $projects,
+                            'count' => $projects->count()
                         ]);
                     }
 
@@ -387,9 +396,37 @@ class UserController extends Controller
                         ]);
                     }
                 }
+                if(($user->isUserArticulador()) && ($user->articulador->nodo_id != $request->input('txtnodoarticulador') ) )
+                {
+                    $articulaciones = $user->asesorarticulacionpbt()->articulacionesArticulador();
+                    $removeRole = array_diff(collect($user->getRoleNames())->toArray(), $request->input('role'));
+
+                    if($articulaciones->count() > 0 || ($removeRole != null && collect($removeRole)->contains(User::IsArticulador())))
+                    {
+                        return response()->json([
+                            'state'   => 'error',
+                            'message' => "No se puede cambiar de nodo, actualmente el experto tiene {$articulaciones->count()} atividades sin finalizar, para ello debe asignarlas a otro Articulador del nodo",
+                            'url' => false,
+                            'activities' => $articulaciones,
+                            'count' => $articulaciones->count()
+                        ]);
+                    }
+
+                    if($request->input('txtnodoarticulador') != $user->articulador->nodo_id){
+                        $userUpdate = $this->userRepository->UpdateUserConfirm($request, $user);
+                        Notification::send($userUpdate, new NodeChanged($userUpdate));
+                        return response()->json([
+                            'state'   => 'success',
+                            'message' => 'El Usuario ha sido modificado satisfactoriamente',
+                            'url' => route('usuario.usuarios.show', $userUpdate->documento),
+                            'user' => $userUpdate,
+                        ]);
+                    }
+                }
                 if(($user->isUserDinamizador() && ($user->dinamizador->nodo_id != $request->input('txtnododinamizador')))
                     || ($user->isUserInfocenter() && ($user->infocenter->nodo_id != $request->input('txtnodoinfocenter')))
                     || ($user->isUserIngreso() && ($user->ingreso->nodo_id != $request->input('txtnodoingreso')))
+                    || ($user->isUserApoyoTecnico() && ($user->apoyotecnico->nodo_id != $request->input('txtnodouser')))
                 ){
                     $userUpdate = $this->userRepository->UpdateUserConfirm($request, $user);
                     Notification::send($userUpdate, new NodeChanged($userUpdate));
@@ -421,7 +458,6 @@ class UserController extends Controller
 
     public function edit($document)
     {
-
         $user = User::withTrashed()->where('documento', $document)->firstOrFail();
 
         //$this->authorize('editAccount', $authUser);
@@ -448,17 +484,12 @@ class UserController extends Controller
      */
     public function updateAccountUser(Request $request, ProfileRepository $profileRepostory, $id)
     {
-        //buscar usuario por su id
-        $user = User::find($id);
+        $user = User::withTrashed()->find($id);
 
-        if ($user == null) {
-            $user = User::onlyTrashed()->find($id);
-        }
         $this->authorize('updateProfile', $user);
 
         $req       = new UserFormEditRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-
 
         if ($validator->fails()) {
             return response()->json([
@@ -468,9 +499,7 @@ class UserController extends Controller
             ]);
         } else {
             if ($user != null) {
-                //acutalizar usuario
                 $userUpdate = $profileRepostory->Update($request, $user);
-
                 return response()->json([
                     'state'   => 'success',
                     'message' => 'La cuenta del usuario ha sido actualizada exitosamente.',
@@ -482,7 +511,6 @@ class UserController extends Controller
                     'state'   => 'error',
                     'message' => 'El Usuario no se ha modificado',
                     'url' => redirect()->back()
-
                 ]);
             }
         }

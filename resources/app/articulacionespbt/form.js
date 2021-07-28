@@ -683,8 +683,6 @@ function checkTipoVinculacion(val) {
     let el = document.getElementsByClassName('collapsible-body');
 
     if ( $("#IsPbt").is(":checked") ) {
-        filter_project.emptyResult('alert-response');
-        filter_project.emptyResult('collection-response');
         filter_project.emptyResult('alert-response-sedes');
         filter_project.emptyResult('alert-response-company');
         filter_project.notFound('alert-response-sedes');

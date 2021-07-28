@@ -2,16 +2,14 @@
 @section('meta-title', 'Articulaciones PBT')
 @section('content')
 @php
-  $year = Carbon\Carbon::now()->year;
+    $year = Carbon\Carbon::now()->year;
 @endphp
 <main class="mn-inner">
     <div class="content">
         <div class="row no-m-t no-m-b">
             <div class="col s8 m8 l5">
                 <h5 class="left-align orange-text text-darken-3">
-                    <i class="material-icons left">
-                      autorenew
-                    </i>
+                    <i class="material-icons left">autorenew</i>
                     Articulaciones PBT
                 </h5>
             </div>
@@ -19,7 +17,7 @@
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">Inicio</a></li>
                     <li ><a href="{{route('articulaciones.index')}}">Articulaciones PBT</a></li>
-                    <li ><a href="{{route('articulaciones.show', $actividad->articulacionpbt->id)}}">detalle</a></li>
+                    <li ><a href="{{route('articulaciones.show', $articulacion->id)}}">detalle</a></li>
                     <li class="active">Inicio</li>
                 </ol>
             </div>
@@ -36,18 +34,18 @@
                                         <li class="text-mailbox">Ejecución</li>
                                         <li class="text-mailbox">Cierre</li>
                                         <div class="right">
-                                            <li class="text-mailbox "> Fase actual: {{$actividad->articulacionpbt->present()->articulacionPbtNameFase()}}</li>
-                                            <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>   
+                                            <li class="text-mailbox "> Fase actual: {{$articulacion->present()->articulacionPbtNameFase()}}</li>
+                                            <li class="text-mailbox">Fecha Inicio: {{$articulacion->present()->articulacionPbtstartDate()}}</li>
                                         </div>
                                     </ul>
                                 </div>
                                 <div class="mailbox-view no-s">
                                     <div class="mailbox-view-header no-m-b no-m-t">
                                         <div class="right mailbox-buttons no-s">
-                                            @if (!$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsSuspendido()))
-                                                @if ($actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio()))
+                                            @if (!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsSuspendido()))
+                                                @if ($articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio()))
                                                     @if ($ultimo_movimiento == null || $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsCambiar() || $ultimo_movimiento->movimiento->movimiento  == App\Models\Movimiento::IsNoAprobar() || $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsReversar())
-                                                        <a href="{{route('articulacion.solicitar.aprobacion', [$actividad->articulacionpbt->id, 'Inicio'])}}" class="waves-effect waves-light btn orange m-t-xs">Solicitar aprobación al talento interlocutor</a>
+                                                        <a href="{{route('articulacion.solicitar.aprobacion', [$articulacion->id, 'Inicio'])}}" class="waves-effect waves-light btn orange m-t-xs">Solicitar aprobación al talento interlocutor</a>
                                                     @else
                                                         @if ($ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsSolicitarTalento())
                                                         <a disabled class="waves-effect waves-orange btn disabled m-t-xs">
@@ -65,25 +63,24 @@
                                                         La articulación no se encuentra en esta fase
                                                     </a>
                                                 @endif
-                                                @if ($actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio()))
-                                                    <a target="_blank" href="{{route('pdf.articulacion.inicio', $actividad->articulacionpbt->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Descargar Formulario</a>
-                                                    <a href="{{route('articulacion.entregables.inicio', $actividad->articulacionpbt->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Entregables</a>
+                                                @if ($articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio()))
+                                                    <a target="_blank" href="{{route('pdf.articulacion.inicio', $articulacion->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Descargar Formulario</a>
+                                                    <a href="{{route('articulacion.entregables.inicio', $articulacion->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Entregables</a>
                                                 @endif
                                             @endif
-                                                                          
                                         </div>
                                     </div>
                                     <div class="mailbox-view-header">
                                         <div class="left">
-                                            <span class="mailbox-title p-v-lg">{{$actividad->present()->actividadCode()}} - {{$actividad->present()->actividadName()}}</span>
+                                            <span class="mailbox-title p-v-lg">{{$articulacion->present()->articulacionCode()}} - {{$articulacion->present()->articulacionName()}}</span>
                                             <div class="left">
-                                                <span class="mailbox-title">{{$actividad->present()->actividadUserAsesor()}}</span>
-                                                <span class="mailbox-author">{{$actividad->present()->actividadUserRolesAsesor()}} </span>
+                                                <span class="mailbox-title">{{$articulacion->present()->articulacionPbtUserAsesor()}}</span>
+                                                <span class="mailbox-author">{{$articulacion->present()->articulacionPbtUserRolesAsesor()}} </span>
                                             </div>
                                         </div>
                                         <div class="right mailbox-buttons p-v-lg">
                                             <div class="right">
-                                                <span class="mailbox-title">{{$actividad->present()->actividadNode()}}</span>
+                                                <span class="mailbox-title">{{$articulacion->present()->articulacionPbtNodo()}}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -91,7 +88,7 @@
                                     <div class="mailbox-text">
                                         <div class="row">
                                             <div class="col s12 m12 l9">
-                                                <form id="frmUpdateArticulacion_FaseInicio" action="{{route('articulaciones.update', $actividad->articulacionpbt->id)}}" method="POST" onsubmit="return checkSubmit()">
+                                                <form id="frmUpdateArticulacion_FaseInicio" action="{{route('articulaciones.update', $articulacion->id)}}" method="POST" onsubmit="return checkSubmit()">
                                                     {!! method_field('PUT')!!}
                                                     {!! csrf_field() !!}
                                                     @include('articulacionespbt.form.form_inicio', ['btnText' => 'Modificar'])
@@ -99,26 +96,26 @@
                                             </div>
                                             <div class="col s12 m12 l3 hide-on-med-and-down">
                                                 <ul class="collection collection-response">
-                                                    @if(isset($actividad))
+                                                    @if(isset($articulacion))
                                                         <li class="collection-item dismissable">
-                                                            <a target="_blank" href="{{route('proyecto.detalle', $actividad->articulacionpbt->present()->articulacionPbtIdProyecto())}}" class="secondary-content orange-text"><i class="material-icons">link</i></a>
+                                                            <a target="_blank" href="{{route('proyecto.detalle', $articulacion->present()->articulacionPbtIdProyecto())}}" class="secondary-content orange-text"><i class="material-icons">link</i></a>
                                                             <span class="title">PBT</span>
-                                                            <p>{{$actividad->articulacionpbt->present()->articulacionPbtCodeProyecto()}}<br>
-                                                                {{$actividad->articulacionpbt->present()->articulacionPbtNameProyecto()}}
+                                                            <p>{{$articulacion->present()->articulacionPbtCodeProyecto()}}<br>
+                                                                {{$articulacion->present()->articulacionPbtNameProyecto()}}
                                                             </p>
                                                         </li>
                                                         <li class="collection-item dismissable">
-                                                            <a  onclick="detallesIdeaPorId({{$actividad->articulacionpbt->present()->articulacionPbtIdIdeaProyecto()}})" class="secondary-content orange-text">
+                                                            <a  onclick="detallesIdeaPorId({{$articulacion->present()->articulacionPbtIdIdeaProyecto()}})" class="secondary-content orange-text">
                                                                 <i class="material-icons">link</i>
                                                             </a>
                                                             <span class="title">Idea:</span>
-                                                            <p>{{$actividad->articulacionpbt->present()->articulacionPbtCodeIdeaProyecto()}}<br>
-                                                                {{$actividad->articulacionpbt->present()->articulacionPbtNameIdeaProyecto()}}
+                                                            <p>{{$articulacion->present()->articulacionPbtCodeIdeaProyecto()}}<br>
+                                                                {{$articulacion->present()->articulacionPbtNameIdeaProyecto()}}
                                                             </p>
                                                         </li>
                                                     @else
                                                         <li class="collection-item dismissable">
-                                                            <span class="title">Sin resultados</span>                          
+                                                            <span class="title">Sin resultados</span>
                                                         </li>
                                                     @endif
                                                 </ul>
@@ -140,6 +137,6 @@
 @endsection
 @push('script')
     <script>
-        checkTipoVinculacion({{$actividad->articulacionpbt->tipo_vinculacion}});
+        checkTipoVinculacion({{$articulacion->tipo_vinculacion}});
     </script>
 @endpush

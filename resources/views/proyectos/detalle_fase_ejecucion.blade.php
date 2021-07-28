@@ -8,7 +8,7 @@
 <div class="row">
     <div class="col s6 m6 l6">
         <p class="p-v-xs">
-            <input type="checkbox" disabled {{ $proyecto->articulacion_proyecto->actividad->seguimiento == 1 ? 'checked' : '' }}
+            <input type="checkbox" disabled {{ $proyecto->articulacion_proyecto->actividad->present()->actividadSeguimiento() == 1 ? 'checked' : '' }}
                 id="txtseguimiento" name="txtseguimiento" value="1">
             <label for="txtseguimiento">
                 Seguimiento y usos de infraestructuras.

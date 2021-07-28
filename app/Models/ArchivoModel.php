@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class ArchivoModel extends Model
 {
@@ -14,7 +15,6 @@ class ArchivoModel extends Model
         'fase_id'
     ];
 
-
     public function archivomodel()
     {
         return $this->morphTo();
@@ -22,28 +22,16 @@ class ArchivoModel extends Model
 
     public function fase()
     {
-      return $this->belongsTo(Fase::class, 'fase_id', 'id');
+        return $this->belongsTo(Fase::class, 'fase_id', 'id');
     }
-
-    /*=========================================
-    =            asesores eloquent            =
-    =========================================*/
 
     public function getDominoAttribute($ruta)
     {
-        return mb_strtolower(trim($ruta), 'UTF-8');
-    }   
-
-    /*=====  End of asesores eloquent  ======*/
-
-    /*========================================
-    =            mutador eloquent            =
-    ========================================*/
+        return Str::lower(trim($ruta));
+    }
     public function setDominoAttribute($ruta)
     {
-        $this->attributes['ruta'] = mb_strtolower(trim($ruta), 'UTF-8');
+        $this->attributes['ruta'] = Str::lower(trim($ruta));
     }
-
-    /*=====  End of mutador eloquent  ======*/
 }
 

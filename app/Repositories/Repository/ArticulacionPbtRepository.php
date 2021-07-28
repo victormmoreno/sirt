@@ -5,10 +5,8 @@ namespace App\Repositories\Repository;
 use Carbon\Carbon;
 use App\Models\ArticulacionPbt;
 use App\Models\Fase;
-use App\Models\Actividad;
 use App\User;
 use App\Models\Movimiento;
-use App\Models\Role;
 use Illuminate\Support\Facades\{DB, Notification, Storage, Session};
 use App\Notifications\ArticulacionPbt\{ArticulacionAprobarInicio, ArticulacionNoAprobarFase, ArticulacionAprobarInicioDinamizador, ArticulacionAprobarSuspendido, ArticulacionSuspendidaAprobada};
 use App\Repositories\Repository\UserRepository\DinamizadorRepository;
@@ -28,21 +26,15 @@ class ArticulacionPbtRepository
         try {
             $codigo_actividad = $this->generateCodeArticulacion();
 
-
-            $actividad = Actividad::create([
-                'gestor_id' => auth()->user()->gestor->id,
+            $articulacion = ArticulacionPbt::create([
+                'asesor_id' => auth()->user()->id,
                 'nodo_id' =>  $this->nodeArticulacion(),
-                'codigo_actividad' => $codigo_actividad,
+                'codigo' => $codigo_actividad,
                 'nombre' => request()->txtnombre_articulacion,
                 'fecha_inicio' => request()->txtfecha_inicio,
-            ]);
-
-
-            $articulacion = ArticulacionPbt::create([
                 'tipo_vinculacion' =>request()->txttipovinculacion,
-                'actividad_id' => $actividad->id,
-                'proyecto_id' => request()->txtpbt,
-                'sede_id' => request()->txtsede,
+                'articulable_id' => $this->articulableId($request),
+                'articulable_type' => $this->articulableModel($request),
                 'fase_id' => Fase::IsInicio(),
                 'tipo_articulacion_id' => request()->txt_tipo_articulacion,
                 'alcance_articulacion_id' => request()->txt_alcance_articulacion,
@@ -54,37 +46,53 @@ class ArticulacionPbtRepository
                 'objetivo'=> request()->txtobjetivo,
             ]);
 
-
             $syncData = [];
             $syncData = $this->syncTalent($request);
             $articulacion->talentos()->sync($syncData, false);
-
             User::enableTalentsArticulacion($articulacion);
-
             DB::commit();
-            return $actividad;
+            return $articulacion;
         } catch (\Exception $e) {
             DB::rollback();
             return null;
         }
     }
 
+    private function articulableId($request){
+        if($request->txtpbt != null){
+            return $request->txtpbt;
+        }
+        if($request->txtsede != null){
+            return $request->txtsede;
+        }
+        return null;
+    }
+
+    private function articulableModel($request){
+        if($request->txtpbt != null){
+            return \App\Models\Proyecto::class;
+        }
+        if($request->txtsede != null){
+            return \App\Models\Sede::class;
+        }
+        return null;
+    }
+
     /**
      * Genera un código para la articulacion
      * @return string
-     * @author dum
+     * @author devjul
      */
     private function generateCodeArticulacion()
     {
             $anho = Carbon::now()->isoFormat('YYYY');
             $tecnoparque = sprintf("%02d", $this->nodeArticulacion());
-            $linea = auth()->user()->gestor->lineatecnologica_id;
-            $gestor = sprintf("%03d", auth()->user()->gestor->id);
+            $mes = Carbon::now()->isoFormat('MM');
+            $articulador = sprintf("%03d", auth()->user()->articulador->id);
             $idArticulacion = ArticulacionPbt::selectRaw('MAX(id+1) AS max')->get()->last();
             $idArticulacion->max == null ? $idArticulacion->max = 1 : $idArticulacion->max = $idArticulacion->max;
             $idArticulacion->max = sprintf("%04d", $idArticulacion->max);
-
-            return 'A' . $anho . '-' . $tecnoparque . $linea . $gestor . '-' . $idArticulacion->max;
+            return 'A' . $anho . '-' . $tecnoparque . $mes . $articulador . '-' . $idArticulacion->max;
     }
 
     /**
@@ -93,8 +101,8 @@ class ArticulacionPbtRepository
      * @author devjul
      */
     private function nodeArticulacion(){
-        if(isset(auth()->user()->gestor)){
-            return auth()->user()->gestor->nodo_id;
+        if(isset(auth()->user()->articulador)){
+            return auth()->user()->articulador->nodo_id;
         }
         return;
     }
@@ -118,7 +126,7 @@ class ArticulacionPbtRepository
         return $syncData;
     }
 
-     /**
+    /**
      * Modifica los valores iniciales de una articulacion
      *
      * @param Request request Request con los datos del formulario
@@ -133,9 +141,14 @@ class ArticulacionPbtRepository
             $articulacion = ArticulacionPbt::find($id);
 
             $articulacion->update([
-                'tipo_vinculacion' => request()->txttipovinculacion,
-                'proyecto_id' => request()->txtpbt,
-                'sede_id' => request()->txtsede,
+                'asesor_id' => auth()->user()->id,
+                'nodo_id' =>  $this->nodeArticulacion(),
+                'nombre' => request()->txtnombre_articulacion,
+                'fecha_inicio' => request()->txtfecha_inicio,
+                'tipo_vinculacion' =>request()->txttipovinculacion,
+                'articulable_id' => $this->articulableId($request),
+                'articulable_type' => $this->articulableModel($request),
+                'fase_id' => Fase::IsInicio(),
                 'tipo_articulacion_id' => request()->txt_tipo_articulacion,
                 'alcance_articulacion_id' => request()->txt_alcance_articulacion,
                 'entidad'=> request()->txtname_entidad,
@@ -145,13 +158,6 @@ class ArticulacionPbtRepository
                 'fecha_esperada_finalizacion' => request()->txtfecha_esperada,
                 'objetivo'=> request()->txtobjetivo,
             ]);
-
-            $articulacion->actividad()->update([
-                'gestor_id' => auth()->user()->gestor->id,
-                'nodo_id' =>  $this->nodeArticulacion(),
-                'nombre' => request()->txtnombre_articulacion,
-            ]);
-
 
             $syncData = [];
             $syncData = $this->syncTalent($request);
@@ -178,7 +184,6 @@ class ArticulacionPbtRepository
     {
         DB::beginTransaction();
         try {
-
             $form_inicio = 0;
 
             if (isset($request->txtformulario_inicio)) {
@@ -187,7 +192,7 @@ class ArticulacionPbtRepository
 
             $articulacion = ArticulacionPbt::find($id);
 
-            $articulacion->actividad()->update([
+            $articulacion->update([
                 'formulario_inicio' => $form_inicio
             ]);
             DB::commit();
@@ -243,7 +248,7 @@ class ArticulacionPbtRepository
             $dinamizadorRepository = new DinamizadorRepository;
             $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulacion->actividad->nodo_id)->get();
             $destinatarios = $dinamizadorRepository->getAllDinamizadorPorNodoArray($dinamizadores);
-            array_push($destinatarios, ['email' => $articulacion->actividad->gestor->user->email]);
+            array_push($destinatarios, ['email' => $articulacion->asesor->email]);
             $talento_lider = $articulacion->talentos()->wherePivot('talento_lider', 1)->first();
             $talento_lider = $talento_lider->user;
 
@@ -258,7 +263,7 @@ class ArticulacionPbtRepository
                 $regMovimiento = $articulacion->historial->last();
 
 
-                Notification::send($articulacion->actividad->gestor->user, new ArticulacionNoAprobarFase($articulacion, $regMovimiento, strtolower($fase)));
+                Notification::send($articulacion->asesor, new ArticulacionNoAprobarFase($articulacion, $regMovimiento, strtolower($fase)));
 
             } else {
                 $title = 'Aprobación Exitosa!';
@@ -269,7 +274,7 @@ class ArticulacionPbtRepository
                 $regMovimiento = $articulacion->historial->last();
 
 
-                Notification::send([$articulacion->actividad->gestor->user, $dinamizadores], new ArticulacionAprobarInicioDinamizador($articulacion, $talento_lider, $regMovimiento,strtolower($fase)));
+                Notification::send([$articulacion->asesor, $dinamizadores], new ArticulacionAprobarInicioDinamizador($articulacion, $talento_lider, $regMovimiento,strtolower($fase)));
 
                 if (Session::get('login_role') == User::IsDinamizador() && ($fase == "Inicio" || $fase == "inicio")) {
 
@@ -286,10 +291,7 @@ class ArticulacionPbtRepository
                 if (Session::get('login_role') == User::IsDinamizador() && ($fase == "Cierre" || $fase == "cierre")) {
 
                     $articulacion->update([
-                        'fase_id' => Fase::where('nombre', 'Finalizado')->first()->id
-                    ]);
-
-                    $articulacion->actividad()->update([
+                        'fase_id' => Fase::where('nombre', 'Finalizado')->first()->id,
                         'fecha_cierre' => Carbon::now()
                     ]);
 
@@ -337,11 +339,10 @@ class ArticulacionPbtRepository
             }
 
             $articulacion->update([
-                'documento_convocatoria' => $documento_convocatoria
+                'documento_convocatoria' => $documento_convocatoria,
+                'seguimiento' => $seguimiento,
             ]);
-            $articulacion->actividad()->update([
-                'seguimiento' => $seguimiento
-            ]);
+
             DB::commit();
             return $articulacion;
         } catch (\Throwable $th) {
@@ -360,8 +361,8 @@ class ArticulacionPbtRepository
      */
     public function updateCierreArticulacion($request, $id)
     {
-        //DB::beginTransaction();
-        //try {
+        DB::beginTransaction();
+        try {
             $postulacion = 0;
             $aprobacion = 0;
             $pdfjustificativo = 0;
@@ -403,12 +404,12 @@ class ArticulacionPbtRepository
                 'lecciones_aprendidas' => $request->txtlecciones,
             ]);
 
-        //DB::commit();
+        DB::commit();
         return $articulacion;
-        //} catch (\Throwable $th) {
-        //DB::rollback();
-        //return null;
-        //}
+        } catch (\Throwable $th) {
+        DB::rollback();
+        return null;
+        }
     }
 
     /**
@@ -448,14 +449,11 @@ class ArticulacionPbtRepository
         try {
             $articulacion->update([
                 'fase_id' => Fase::where('nombre', 'Suspendido')->first()->id,
-                'aprobacion_dinamizador_suspender' => 1
+                'aprobacion_dinamizador_suspender' => 1,
+                'fecha_cierre' => Carbon::now()->isoFormat('YYYY-MM-DD')
             ]);
 
-            $articulacion->actividad()->update([
-                'fecha_cierre' => Carbon::now()->isoFormat('YYYY-MM-DD'),
-            ]);
-
-            Notification::send(User::findOrFail($articulacion->actividad->gestor->user->id), new ArticulacionSuspendidaAprobada($articulacion));
+            Notification::send(User::findOrFail($articulacion->asesor->id), new ArticulacionSuspendidaAprobada($articulacion));
             $articulacion->registerHistoryArticulacion(Movimiento::IsAprobar(),Session::get('login_role'), null, 'Suspensión');
             DB::commit();
             return $articulacion;
@@ -486,12 +484,9 @@ class ArticulacionPbtRepository
                 'aprobacion_dinamizador_suspender' => 0
             ]);
 
-
-
             if ($fase == 'Inicio' || $fase == 'Planeación' || $fase == 'Ejecución') {
                 $this->reversarAInicioPlaneacionEjecucion($articulacion);
             }
-
             DB::commit();
             return $articulacion;
         } catch (\Throwable $th) {
@@ -561,11 +556,11 @@ class ArticulacionPbtRepository
             $articulacion = ArticulacionPbt::find($id);
             $fase = Fase::where('id', $articulacion->fase_id)->first()->nombre;
 
-            if ($articulacion->actividad->gestor_id != $request->txtgestor) {
+            if ($articulacion->asesor_id != $request->txtgestor) {
                 $articulacion->registerHistoryArticulacion(Movimiento::IsCambiar(),Session::get('login_role'), null, $fase);
             }
-            $articulacion->actividad()->update([
-                'gestor_id' => $request->txtgestor
+            $articulacion->update([
+                'asesor_id' => $request->txtgestor
             ]);
 
             DB::commit();

@@ -46,9 +46,9 @@ class ProyectoAprobarInicio extends Notification implements ShouldQueue
             'link'  => route('proyecto.inicio', $this->getProyecto()->id),
             'icon'  => 'library_books',
             'color' => 'green',
-            'autor' => "{$this->getProyecto()->articulacion_proyecto->actividad->gestor->user->nombres} {$this->getProyecto()->articulacion_proyecto->actividad->gestor->user->apellidos}",
-            'text'  => "El gestor ha solicitado aprobar la fase de {$this->getFase()} | {$this->getProyecto()->articulacion_proyecto->actividad->codigo_actividad} - {$this->getProyecto()->articulacion_proyecto->actividad->nombre}",
-          ];
+            'autor' => "{$this->getProyecto()->present()->proyectoUserAsesor()}",
+            'text'  => "El experto ha solicitado aprobar la fase de {$this->getFase()} | {$this->getProyecto()->articulacion_proyecto->actividad->codigo_actividad} - {$this->getProyecto()->articulacion_proyecto->actividad->nombre}",
+        ];
     }
 
     public function setProyecto($proyecto)

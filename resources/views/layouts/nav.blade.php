@@ -279,10 +279,11 @@
             @break
 
             @case(App\User::IsArticulador())
-
-            @include('layouts.navrole.articulador')
+                @include('layouts.navrole.articulador')
             @break
-
+            @case(App\User::IsApoyoTecnico())
+                @include('layouts.navrole.apoyo-tecnico')
+            @break
             @default
             @endswitch
         </ul>

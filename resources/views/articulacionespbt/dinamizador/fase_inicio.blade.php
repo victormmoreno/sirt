@@ -23,50 +23,50 @@
             </ol>
         </div>
     </div>
-      <div class="row no-m-t no-m-b">
+    <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12 no-p-h">
             <div class="card mailbox-content">
                 <div class="card-content">
                     <div class="row no-m-t no-m-b">
                         <div class="col s12 m12 l12">
                             <div class="mailbox-options">
-                              <ul>
+                                <ul>
                                 <li class="text-mailbox active">Inicio</li>
                                 <li class="text-mailbox">Ejecución</li>
                                 <li class="text-mailbox">Cierre</li>
                                 <div class="right">
                                     <li class="text-mailbox "> Fase actual: {{$actividad->articulacionpbt->present()->articulacionPbtNameFase()}}</li>
-                                    <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>   
+                                    <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>
                                 </div>
                             </ul>
                             </div>
                             <div class="mailbox-view no-s">
                                 <div class="mailbox-view-header no-m-b no-m-t">
                                     <div class="right mailbox-buttons no-s">
-                                      @if ($actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio()))
-                                        @if ($ultimo_movimiento != null && $ultimo_movimiento->role->name == App\User::IsTalento() && $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsAprobar())
-                                          <form action="{{route('articulacion.aprobacion', [$actividad->articulacionpbt->id, 'Inicio'])}}" method="POST" name="frmInicioDinamizador" onsubmit="return checkSubmit()">
-                                              {!! method_field('PUT')!!}
-                                              @csrf
-                                              <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
-                                              <input type="hidden" type="text" name="decision" id="decision">
-                                              <button type="submit" onclick="preguntaInicio(event)" class="waves-effect deep-orange darken-1 btn center-aling">
-                                                <i class="material-icons right">done</i>
-                                                Aprobar fase de inicio
-                                              </button>
-                                              <button type="submit" onclick="preguntaInicioRechazar(event)" class="waves-effect  btn center-aling">
-                                                <i class="material-icons right">close</i>
-                                                No aprobar la fase de Inicio
-                                              </button>
-                                            </form>
-                                          @endif
-                                      @endif
+                                        @if ($actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio()))
+                                            @if ($ultimo_movimiento != null && $ultimo_movimiento->role->name == App\User::IsTalento() && $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsAprobar())
+                                            <form action="{{route('articulacion.aprobacion', [$actividad->articulacionpbt->id, 'Inicio'])}}" method="POST" name="frmInicioDinamizador" onsubmit="return checkSubmit()">
+                                                {!! method_field('PUT')!!}
+                                                @csrf
+                                                <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
+                                                <input type="hidden" type="text" name="decision" id="decision">
+                                                <button type="submit" onclick="preguntaInicio(event)" class="waves-effect deep-orange darken-1 btn center-aling">
+                                                    <i class="material-icons right">done</i>
+                                                    Aprobar fase de inicio
+                                                </button>
+                                                <button type="submit" onclick="preguntaInicioRechazar(event)" class="waves-effect  btn center-aling">
+                                                    <i class="material-icons right">close</i>
+                                                    No aprobar la fase de Inicio
+                                                </button>
+                                                </form>
+                                            @endif
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="mailbox-view-header">
                                     <div class="left">
                                         <span class="mailbox-title p-v-lg">{{$actividad->present()->actividadCode()}} - {{$actividad->present()->actividadName()}}</span>
-                                        
+
                                         <div class="left">
                                             <span class="mailbox-title">{{$actividad->present()->actividadUserAsesor()}}</span>
                                             <span class="mailbox-author">{{$actividad->present()->actividadUserRolesAsesor()}} </span>
@@ -74,12 +74,11 @@
                                     </div>
                                     <div class="right mailbox-buttons p-v-lg">
                                         <div class="right">
-                                            <span class="mailbox-title">{{$actividad->present()->actividadNode()}}</span>
+                                            <span class="mailbox-title">Nodo</span>
                                         </div>
-                                    </div>                                    
+                                    </div>
                                 </div>
                                 <div class="divider mailbox-divider"></div>
-                               
                                 <div class="mailbox-text">
                                     <div class="row">
                                         <div class="col s12">
@@ -96,7 +95,7 @@
         </div>
     </div>
     </div>
-  
+
   @include('ideas.modals')
 </main>
 @endsection
@@ -151,7 +150,7 @@ datatableArchiveArticulacion_inicio();
       }
     })
   }
-  
+
 
 
   function changeToInicio() {

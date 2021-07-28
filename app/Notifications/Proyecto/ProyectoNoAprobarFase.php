@@ -47,8 +47,8 @@ class ProyectoNoAprobarFase extends Notification implements ShouldQueue
             'icon'  => 'library_books',
             'color' => 'green',
             'autor' => "{$this->getMovimiento()->usuario}",
-            'text'  => "Fase {$this->getMovimiento()->fase} del proyecto no aprobada: {$this->getMovimiento()->comentarios} | {$this->getProyecto()->articulacion_proyecto->actividad->codigo_actividad} - {$this->getProyecto()->articulacion_proyecto->actividad->nombre}",
-          ];
+            'text'  => "Fase {$this->getMovimiento()->fase} del proyecto no aprobada: {$this->getMovimiento()->comentarios} | {$this->getProyecto()->present()->proyectoCode()} - {$this->getProyecto()->present()->proyectoName()}",
+        ];
     }
 
         /**

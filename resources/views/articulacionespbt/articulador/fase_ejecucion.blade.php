@@ -76,7 +76,7 @@
                                         </div>
                                         <div class="right mailbox-buttons p-v-lg">
                                             <div class="right">
-                                                <span class="mailbox-title">{{$actividad->present()->actividadNode()}}</span>
+                                                <span class="mailbox-title">Nodo</span>
                                             </div>
                                         </div>
                                     </div>

@@ -15,7 +15,7 @@
                                     <li class="text-mailbox">Cierre</li>
                                     <div class="right">
                                         <li class="text-mailbox "> Fase actual: {{$actividad->articulacionpbt->present()->articulacionPbtNameFase()}}</li>
-                                        <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>   
+                                        <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>
                                     </div>
                                 </ul>
                             </div>
@@ -27,7 +27,7 @@
                                             <form action="{{route('articulacion.aprobacion', [$actividad->articulacionpbt->id, 'Inicio'])}}" method="POST" name="frmInicioTalento">
                                                 {!! method_field('PUT')!!}
                                                 @csrf
-                                                
+
                                                 <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
                                                 <input type="hidden" type="text" name="decision" id="decision">
                                                 <button type="submit" onclick="preguntaInicio(event)" class="waves-effect waves-orange btn orange m-t-xs">
@@ -50,15 +50,14 @@
                                                     El talento interlocutor no aprobó la fase de Inicio
                                                 </a>
                                                 @endif
-                                            @endif  
-                                        
+                                            @endif
+
                                         @endif
                                     </div>
                                 </div>
                                 <div class="mailbox-view-header">
                                     <div class="left">
                                         <span class="mailbox-title p-v-lg">{{$actividad->present()->actividadCode()}} - {{$actividad->present()->actividadName()}}</span>
-                                        
                                         <div class="left">
                                             <span class="mailbox-title">{{$actividad->present()->actividadUserAsesor()}}</span>
                                             <span class="mailbox-author">{{$actividad->present()->actividadUserRolesAsesor()}} </span>
@@ -66,14 +65,11 @@
                                     </div>
                                     <div class="right mailbox-buttons p-v-lg">
                                         <div class="right">
-                                            <span class="mailbox-title">{{$actividad->present()->actividadNode()}}</span>
+                                            <span class="mailbox-title">Nodo</span>
                                         </div>
                                     </div>
-                                    
-                                    
                                 </div>
                                 <div class="divider mailbox-divider"></div>
-                               
                                 <div class="mailbox-text">
                                     <div class="row">
                                         <div class="col s12">
@@ -95,7 +91,7 @@
 @endsection
 @push('script')
 <script>
-    
+
     datatableArchiveArticulacion_inicio();
 
     function datatableArchiveArticulacion_inicio() {

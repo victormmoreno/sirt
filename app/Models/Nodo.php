@@ -6,18 +6,27 @@ use App\Exceptions\Nodo\NodoDoesNotExist;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use App\User;
 
 class Nodo extends Model
 {
-
+    /**
+     * Constant for the expected nodo prueba
+     * @var string
+     * @author dum
+     */
     const NODO_PRUEBA = 'Prueba';
-    // use SoftDeletes;
+    /**
+     * the table name
+     * @var string
+     * @author devjul
+     */
     protected $table = 'nodos';
 
     /**
      * The attributes that are mass assignable.
-     *
      * @var array
+     * @author devjul
      */
     protected $fillable = [
         'centro_id',
@@ -29,8 +38,8 @@ class Nodo extends Model
 
     /**
      * The attributes that should be cast to native types.
-     *
      * @var array
+     * @author devjul
      */
     protected $casts = [
         'centro_id'   => 'integer',
@@ -39,30 +48,14 @@ class Nodo extends Model
         'telefono'    => 'string',
         'anho_inicio' => 'year',
     ];
-
-    // protected $dates = ['deleted_at'];
-
-    /*===========================================
-    =            relaciones eloquent            =
-    ===========================================*/
-    public function centro()
+    public function articuladores()
     {
-        return $this->belongsTo(Centro::class, 'centro_id', 'id');
+        return $this->hasMany(UserNodo::class, 'nodo_id', 'id')->where('role', User::IsArticulador());
     }
 
-    public function entidad()
+    public function apoyostecnicos()
     {
-        return $this->belongsTo(Entidad::class, 'entidad_id', 'id');
-    }
-
-    public function infocenter()
-    {
-        return $this->hasMany(Infocenter::class, 'nodo_id', 'id');
-    }
-
-    public function contratista()
-    {
-        return $this->hasMany(Contratista::class, 'nodo_id', 'id');
+        return $this->hasMany(UserNodo::class, 'nodo_id', 'id')->where('role', User::IsApoyoTecnico());
     }
 
     public function dinamizador()
@@ -75,15 +68,9 @@ class Nodo extends Model
         return $this->hasMany(Gestor::class, 'nodo_id', 'id');
     }
 
-    public function usernodos()
+    public function infocenter()
     {
-        return $this->hasMany(UserNodo::class, 'nodo_id', 'id');
-    }
-
-
-    public function ideas()
-    {
-        return $this->hasMany(Idea::class, 'nodo_id', 'id');
+        return $this->hasMany(Infocenter::class, 'nodo_id', 'id');
     }
 
     public function ingresos()
@@ -91,20 +78,29 @@ class Nodo extends Model
         return $this->hasMany(Ingreso::class, 'nodo_id', 'id');
     }
 
+    public function centro()
+    {
+        return $this->belongsTo(Centro::class, 'centro_id', 'id');
+    }
+
+    public function entidad()
+    {
+        return $this->belongsTo(Entidad::class, 'entidad_id', 'id');
+    }
+
+    public function contratista()
+    {
+        return $this->hasMany(Contratista::class, 'nodo_id', 'id');
+    }
+
+    public function ideas()
+    {
+        return $this->hasMany(Idea::class, 'nodo_id', 'id');
+    }
+
     public function equipos()
     {
         return $this->hasMany(Equipo::class, 'nodo_id', 'id');
-    }
-
-
-    public function costoadministrativonodo()
-    {
-        return $this->belongsToMany(CostoAdministrativo::class, 'nodo_costoadministrativo', 'nodo_id', 'costo_administrativo_id')
-            ->withTimestamps()
-            ->withPivot([
-                'anho',
-                'valor',
-            ]);
     }
 
     public function materiales()
@@ -114,14 +110,52 @@ class Nodo extends Model
 
     /**
      * Devolver relacion entre actividades y nodo
-     * @author julian londoño
+     * @author devjul
      */
-    public function actividades()
+    // public function actividades()
+    // {
+    //     return $this->hasMany(Actividad::class, 'nodo_id', 'id');
+    // }
+
+    /**
+     * Devolver relacion entre proyectos y nodo
+     * @author devjul
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function proyectos()
     {
-        return $this->hasMany(Actividad::class, 'nodo_id', 'id');
+        return $this->hasMany(Proyecto::class, 'nodo_id', 'id');
     }
 
-    //relacion muchos a muchos con lineas
+    /**
+     * Devolver relacion entre edts y nodo
+     * @author devjul
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function edts()
+    {
+        return $this->hasMany(Edt::class, 'nodo_id', 'id');
+    }
+
+    /**
+     * Devolver devjul entre articulacion_pbt y nodo
+     * @author devjil
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function articulaciopbts()
+    {
+        return $this->hasMany(ArticulacionPbt::class, 'nodo_id', 'id');
+    }
+
+    /**
+     * Devolver devjul entre articulaciones y nodo
+     * @author devjil
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function articulaciones()
+    {
+        return $this->hasMany(Articulacion::class, 'nodo_id', 'id');
+    }
 
     public function lineas()
     {
@@ -134,7 +168,6 @@ class Nodo extends Model
         return $this->hasMany(ContactoEntidad::class, 'nodo_id', 'id');
     }
 
-    // Consulta los nodos de tecnoparque
     public function scopeNodoDeTecnoparque($query)
     {
         return $query->select('entidades.id AS id_entidad', 'entidades.nombre AS nombre_nodo', 'nodos.id', 'nodos.direccion', 'centros.codigo_centro')
@@ -144,25 +177,12 @@ class Nodo extends Model
             ->join('entidades AS e', 'e.id', '=', 'centros.entidad_id');
     }
 
-    /*=====  End of relaciones eloquent  ======*/
-
-    /*==============================================================
-    =            scope para consultar la lista de nodos            =
-    ==============================================================*/
-
     public function scopeSelectNodo($query)
     {
         return $query->select('nodos.id', DB::raw("CONCAT('Tecnoparque Nodo ',entidades.nombre) as nodos"))
             ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
             ->orderBy('entidades.nombre');
     }
-
-    /*=====  End of scope para consultar la lista de nodos  ======*/
-
-    /*====================================================================================================
-    =            scope para consultar el nodo del dinamizador - gestor - infocenter - ingreso            =
-    ====================================================================================================*/
-
     public function scopeListNodos($query)
     {
         return $query->select(DB::raw('concat("Tecnoparque nodo ", nombre) AS nombre'), 'id')
@@ -171,28 +191,15 @@ class Nodo extends Model
 
     public function scopeUserNodo($query, $nodo_id)
     {
-
         return $query->select('entidades.nombre')
             ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
             ->where('nodos.id', '=', $nodo_id);
     }
 
-    /*=====  End of scope para consultar el nodo del dinamizador - gestor - infocenter - ingreso  ======*/
-
-    /*==============================================================================
-    =            scope para consultar todas las lineas por departamento            =
-    ==============================================================================*/
-
     public function scopeAllLineasPorNodo($query, $nodo)
     {
         return $query->with('lineas')->find($nodo);
     }
-
-    /*=====  End of scope para consultar todas las lineas por departamento  ======*/
-
-    /*===========================================================================
-    =            scope para retornar el nodo del usuario autenticada            =
-    ===========================================================================*/
 
     public function scopeNodoUserAthenticated($query, $nodo)
     {
@@ -200,8 +207,6 @@ class Nodo extends Model
             ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
             ->where('nodos.id', '=', $nodo);
     }
-
-    /*=====  End of scope para retornar el nodo del usuario autenticada  ======*/
 
     /**
      * buscar un nodo por el nombre.
@@ -212,7 +217,6 @@ class Nodo extends Model
      */
     public static function findByName(string $name, int $id)
     {
-
         $nodo = static::with([
             'entidad' => function ($query) use ($name) {
                 $query->where('nombre', $name);
@@ -232,10 +236,8 @@ class Nodo extends Model
      * @return collection
      * @author julian londoño
      */
-
     public function scopeGetLineasForNodoIdsNames($query, $nodo): Collection
     {
-
         return $query->find($nodo)->lineas->pluck('nombre', 'id');
     }
 
@@ -244,11 +246,10 @@ class Nodo extends Model
      *
      *
      * @return array
-     * @author julian londoño
+     * @author devjul
      */
     public function scopeNodoFirst($query)
     {
-
         return $query->first();
     }
 
@@ -275,7 +276,6 @@ class Nodo extends Model
     public function scopeFindOrFailNodo($nodo, $columns = ['*'])
     {
         $result = $this->scopeFindNodo($nodo, $columns);
-
         if (is_array($nodo)) {
             if (count($result) === count(array_unique($nodo))) {
                 return $result;
@@ -286,13 +286,21 @@ class Nodo extends Model
             abort('404');
         }
     }
+    public function costoadministrativonodo()
+    {
+        return $this->belongsToMany(CostoAdministrativo::class, 'nodo_costoadministrativo', 'nodo_id', 'costo_administrativo_id')
+            ->withTimestamps()
+            ->withPivot([
+                'anho',
+                'valor',
+            ]);
+    }
 
     /**
      * mostar equipo humano de tecnoparque.
-     *
+     * @author devjul
      * @param array $relations
      * @return array
-     * @author julian londoño
      */
     public function scopeTeamTecnoparque($query, array $relations)
     {
@@ -304,7 +312,7 @@ class Nodo extends Model
 
     /**
      * Devolver cantidad de nodos
-     * @author julian londoño
+     * @author devjul
      */
     public function scopeCountNodos($query)
     {

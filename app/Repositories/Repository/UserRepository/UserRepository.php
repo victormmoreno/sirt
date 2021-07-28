@@ -738,8 +738,8 @@ class UserRepository
                 ->join('articulacion_proyecto', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
                 ->join('proyectos', 'proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
                 ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-                ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
-                ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+                ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
+                ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
                 ->groupBy('users.documento');
         }
         return User::select(
@@ -783,8 +783,8 @@ class UserRepository
             ->join('articulacion_proyecto', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
             ->join('proyectos', 'proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
             ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-            ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
-            ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+            ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
+            ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
             ->where(function ($q) use ($anio) {
                 $q->where(function ($query) use ($anio) {
                     $query->whereYear('fecha_cierre', $anio);
@@ -805,7 +805,6 @@ class UserRepository
             $userUpdate->update([
                 'estado' => User::IsActive(),
             ]);
-
             DB::commit();
             return $userUpdate;
         } catch (\Exception $e) {
@@ -1093,7 +1092,7 @@ class UserRepository
 
             Infocenter::find($userUpdated->infocenter->id)->update([
                 "nodo_id"   => $request->input('txtnodoinfocenter'),
-                "nodo_id" => $request->input('txtextension'),
+                "extension" => $request->input('txtextension'),
             ]);
         }
     }

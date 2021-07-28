@@ -14,27 +14,22 @@ class Actividad extends Model
 
     /**
      * The attributes that should be cast to native types.
-     *
      * @var array
      */
     protected $casts = [
-        'gestor_id'        => 'integer',
-        'nodo_id'          => 'integer',
         'codigo_actividad' => 'string',
         'nombre'           => 'string',
         'fecha_inicio'     => 'date:Y-m-d',
         'fecha_cierre'     => 'date:Y-m-d',
-
     ];
 
     /**
      * The attributes that are mass assignable.
-     *
      * @var array
      */
     protected $fillable = [
-        'gestor_id',
-        'nodo_id',
+        // 'gestor_id',
+        // 'nodo_id',
         'codigo_actividad',
         'nombre',
         'fecha_inicio',
@@ -47,7 +42,6 @@ class Actividad extends Model
         'seguimiento',
         'evidencia_final',
         'formulario_final'
-
     ];
 
     /**
@@ -112,24 +106,20 @@ class Actividad extends Model
         return $this->hasOne(Edt::class, 'actividad_id', 'id');
     }
 
-    public function gestor()
-    {
-        return $this->belongsTo(Gestor::class, 'gestor_id', 'id');
-    }
+    // public function gestor()
+    // {
+    //     return $this->belongsTo(Gestor::class, 'gestor_id', 'id');
+    // }
 
-    public function articulacionpbt()
-    {
-        return $this->hasOne(ArticulacionPbt::class, 'actividad_id', 'id');
-    }
+    // public function articulacionpbt()
+    // {
+    //     return $this->hasOne(ArticulacionPbt::class, 'actividad_id', 'id');
+    // }
 
-    /**
-     * Devolver relacion entre actividades y nodo
-     * @author julian londoño
-     */
-    public function nodo()
-    {
-        return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
-    }
+    // public function nodo()
+    // {
+    //     return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
+    // }
 
     public function usoinfraestructuras()
     {
@@ -139,19 +129,6 @@ class Actividad extends Model
     public function objetivos_especificos()
     {
         return $this->hasMany(ObjetivoEspecifico::class, 'actividad_id', 'id');
-    }
-
-    public function scopeActivitiesGestor($query)
-    {
-        return $query->with(['articulacion_proyecto.proyecto', 'articulacion_proyecto.articulacion'])
-        ->wherehas('articulacion_proyecto.proyecto', function ($query)  {
-            $query->where(function($subquery){
-                $subquery->where('fase_id', Fase::IsInicio())
-                ->orwhere('fase_id', Fase::IsPlaneacion())
-                ->orwhere('fase_id', Fase::IsEjecucion());
-            });
-        })
-        ->orderBy('fecha_inicio', 'ASC')->pluck('nombre','codigo_actividad');
     }
 
     public function present()

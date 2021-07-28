@@ -183,9 +183,13 @@ class UserPresenter extends Presenter
         return $this->user->has('gestor.nodo.entidad') ? "Tecnoparque Nodo {$this->user->gestor->nodo->entidad->nombre}" : $this->message('No Registra');
     }
 
-    public function userNodoName()
+    public function userArticuladorName()
     {
-        return $this->user->has('usernodo.nodo.entidad') ? "Tecnoparque Nodo {$this->user->usernodo->nodo->entidad->nombre}" : $this->message('No Registra');
+        return $this->user->has('articulador.nodo.entidad') ? "Tecnoparque Nodo {$this->user->articulador->nodo->entidad->nombre}" : $this->message('No Registra');
+    }
+    public function userApoyoTecnicoName()
+    {
+        return $this->user->has('apoyotecnico.nodo.entidad') ? "Tecnoparque Nodo {$this->user->apoyotecnico->nodo->entidad->nombre}" : $this->message('No Registra');
     }
 
     public function userGestorNombreLinea()

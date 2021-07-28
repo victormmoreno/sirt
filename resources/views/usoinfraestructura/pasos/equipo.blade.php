@@ -22,9 +22,9 @@
             @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
                 <legend>Paso 3</legend>
             @endif
-            
+
             <p class="center card-title orange-text text-darken-3">
-               <b> Equipos</b> 
+               <b> Equipos</b>
             </p>
             <div class="divider"></div>
             <div class="row">
@@ -34,11 +34,11 @@
                             <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtlineatecnologica" id="txtlineatecnologica" onchange="usoInfraestructuraUpdate.getEquipoPorLinea()" {{isset($usoinfraestructura->tipo_usoinfraestructura) && ($usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() ) ? 'disabled' : ''}}>
                                 <option value="">Seleccione Linea Tecnológica</option>
                                 @foreach($usoinfraestructura->actividad->nodo->lineas as $lineatecnologica)
-                                    
+
                                     <option value="{{$lineatecnologica->id}}">
-                                         {{$lineatecnologica->abreviatura}} - {{$lineatecnologica->nombre}}
+                                        {{$lineatecnologica->abreviatura}} - {{$lineatecnologica->nombre}}
                                     </option>
-                                
+
                                 @endforeach
                             </select>
                         @else
@@ -57,11 +57,9 @@
                                 Seleccione el equipo
                             </option>
                             @foreach($usoinfraestructura->actividad->nodo->equipos->where('lineatecnologica_id', $usoinfraestructura->actividad->gestor->lineatecnologica_id) as $equipo)
-                                
                                 <option value="{{$equipo->id}}">
                                     {{str_limit($equipo->nombre,50,"...")}}
                                 </option>
-                                
                             @endforeach
                         @else
                             <option value="">
@@ -74,7 +72,7 @@
                     </label>
                 </div>
                 <div class="input-field col s12 m3 l2 ">
-            
+
                     <input class="validate" id="txttiempouso" name="txttiempouso" type="number"  value="1" min="0" step="0.1" {{isset($usoinfraestructura->tipo_usoinfraestructura) && $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() ? "disabled" : ""}}/>
                         <label for="txttiempouso">
                             Tiempo Uso (Horas)
@@ -84,7 +82,7 @@
                 <div class="input-field col s12 m12 l2 offset-s3 offset-m4">
                     <a class="waves-effect waves-light btn blue m-b-xs btnAgregarEquipo"  onclick="agregarEquipoAusoInfraestructura()">
                         Agregar Equipo
-                    </a>                    
+                    </a>
                 </div>
                 <table class="striped centered responsive-table" id="tbldetallelineas">
                     <thead>
@@ -103,7 +101,7 @@
                     <tbody id="detallesUsoInfraestructura">
                         @if(isset( $equipos))
                             @forelse ($equipos as $key => $equipo)
-                                    
+
                                     <tr id="filaEquipo{{$equipo->id}}">
                                         <td>
                                             <input type="hidden" name="equipo[]" value="{{$equipo->id}}"/>{{$equipo->nombre}}

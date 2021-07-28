@@ -8,9 +8,7 @@ use App\Models\{Idea, Nodo, EstadoIdea};
 use App\Repositories\Repository\{EntrenamientoRepository, IdeaRepository};
 use Illuminate\Support\Facades\{DB, Session, Validator};
 use App\User;
-use Carbon\Carbon;
-use Alert;
-// use Alert2;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class EntrenamientoController extends Controller
 {
@@ -87,21 +85,18 @@ class EntrenamientoController extends Controller
                 $entrenamientos = $this->entrenamientoRepository->consultarEntrenamientosPorNodo(auth()->user()->infocenter->nodo_id);
                 return datatables()->of($entrenamientos)
                     ->addColumn('details', function ($data) {
-                        $button = '
-          <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="detallesIdeasDelEntrenamiento(' . $data->id . ')">
-          <i class="material-icons">info</i>
-          </a>
-          ';
+                        $button = '<a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="detallesIdeasDelEntrenamiento(' . $data->id . ')">
+                                        <i class="material-icons">info</i>
+                                    </a>';
                         return $button;
                     })->addColumn('update_state', function ($data) {
                         $delete = '<a class="btn red lighten-3 m-b-xs" onclick="inhabilitarEntrenamientoPorId(' . $data->id . ', event)"><i class="material-icons">delete_sweep</i></a>';
                         return $delete;
                     })->addColumn('evidencias', function ($data) {
                         $evidencias = '
-          <a class="btn blue-grey m-b-xs" href=' . route('entrenamientos.evidencias', $data->id) . '>
-            <i class="material-icons">library_books</i>
-          </a>
-          ';
+                                <a class="btn blue-grey m-b-xs" href=' . route('entrenamientos.evidencias', $data->id) . '>
+                                    <i class="material-icons">library_books</i>
+                                </a>';
                         return $evidencias;
                     })->addColumn('edit', function ($data) {
                         $edit = '<a class="btn m-b-xs" disabled><i class="material-icons">edit</i></a>';
@@ -196,7 +191,7 @@ class EntrenamientoController extends Controller
      */
     public function create()
     {
-        $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('nodo_id', auth()->user()->gestor->nodo_id)->whereHas('estadoIdea', 
+        $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('nodo_id', auth()->user()->gestor->nodo_id)->whereHas('estadoIdea',
         function ($query){
             $query->whereIn('nombre', [EstadoIdea::IsRechazadoArticulador(), EstadoIdea::IsRegistro()]);
         })->get();
@@ -268,7 +263,6 @@ class EntrenamientoController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      * @author Victor Manuel Moreno Vega
@@ -279,28 +273,28 @@ class EntrenamientoController extends Controller
         $req = new EntrenamientoFormRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
-          return response()->json([
-            'state'   => 'error_form',
-            'errors' => $validator->errors(),
-          ]);
+            return response()->json([
+                'state'   => 'error_form',
+                'errors' => $validator->errors(),
+            ]);
         } else {
-          $result = $this->entrenamientoRepository->storeEntrenamiento($request);
-          if ($result['state']) {
-            return response()->json([
-                'state' => 'registro', 
-                'title' => $result['title'],
-                'msg' => $result['msg'],
-                'type' => $result['type'],
-                'url' => route('entrenamientos'),
-            ]);
-          } else {
-            return response()->json([
-                'state' => 'no_registro', 
-                'title' => $result['title'],
-                'msg' => $result['msg'],
-                'type' => $result['type']
-            ]);
-          }
+            $result = $this->entrenamientoRepository->storeEntrenamiento($request);
+            if ($result['state']) {
+                return response()->json([
+                    'state' => 'registro',
+                    'title' => $result['title'],
+                    'msg' => $result['msg'],
+                    'type' => $result['type'],
+                    'url' => route('entrenamientos'),
+                ]);
+            } else {
+                return response()->json([
+                    'state' => 'no_registro',
+                    'title' => $result['title'],
+                    'msg' => $result['msg'],
+                    'type' => $result['type']
+                ]);
+            }
         }
     }
 
@@ -313,15 +307,11 @@ class EntrenamientoController extends Controller
      */
     public function edit($id)
     {
-        // exit;
-
         $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
         $ideas = Idea::ConsultarIdeasEnInicio(auth()->user()->infocenter->nodo_id)->get();
         $entrenamiento = $this->entrenamientoRepository->consultarEntrenamientoPorId($id);
-        // $detalles = $this->entrenamientoRepository->consultarIdeasDelEntrenamiento($id);
         if (\Session::get('login_role') == User::IsInfocenter()) {
             return view('entrenamientos.infocenter.edit', compact('nodo', 'ideas', 'entrenamiento'));
         }
     }
-
 }

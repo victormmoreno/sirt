@@ -37,7 +37,7 @@
                                         <li class="text-mailbox active">Cierre</li>
                                         <div class="right">
                                             <li class="text-mailbox "> Fase actual: {{$actividad->articulacionpbt->present()->articulacionPbtNameFase()}}</li>
-                                            <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>   
+                                            <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>
                                         </div>
                                     </ul>
                                 </div>
@@ -62,8 +62,8 @@
                                                         </a>
                                                     @endif
                                                 @endif
-                                            @endif  
-                                            <a target="_blank" href="{{route('pdf.articulacion.cierre', $actividad->articulacionpbt->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Descargar Formulario</a>                   
+                                            @endif
+                                            <a target="_blank" href="{{route('pdf.articulacion.cierre', $actividad->articulacionpbt->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Descargar Formulario</a>
                                         </div>
                                     </div>
                                     <div class="mailbox-view-header">
@@ -76,7 +76,7 @@
                                         </div>
                                         <div class="right mailbox-buttons p-v-lg">
                                             <div class="right">
-                                                <span class="mailbox-title">{{$actividad->present()->actividadNode()}}</span>
+                                                <span class="mailbox-title">Nodo</span>
                                             </div>
                                         </div>
                                     </div>

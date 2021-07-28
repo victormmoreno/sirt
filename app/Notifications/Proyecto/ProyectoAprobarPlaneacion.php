@@ -45,9 +45,9 @@ class ProyectoAprobarPlaneacion extends Notification implements ShouldQueue
             'link'  => route('proyecto.planeacion', $this->getProyecto()->id),
             'icon'  => 'library_books',
             'color' => 'green',
-            'autor' => "{$this->getProyecto()->articulacion_proyecto->actividad->gestor->user->nombres} {$this->getProyecto()->articulacion_proyecto->actividad->gestor->user->apellidos}",
+            'autor' => "{$this->getProyecto()->present()->proyectoUserAsesor()}",
             'text'  => "El gestor ha solicitado aprobar la fase de planeación | {$this->getProyecto()->articulacion_proyecto->actividad->codigo_actividad} - {$this->getProyecto()->articulacion_proyecto->actividad->nombre}",
-          ];
+        ];
     }
 
     public function setProyecto($proyecto)

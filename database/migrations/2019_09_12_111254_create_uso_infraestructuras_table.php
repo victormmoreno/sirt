@@ -30,7 +30,6 @@ class CreateUsoInfraestructurasTable extends Migration
                 ->references('id')->on('actividades')
                 ->onDelete('no action')
                 ->onUpdate('no action');
-
         });
     }
 

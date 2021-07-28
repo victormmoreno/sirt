@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
-use Alert;
-
 use App\Http\Requests\{EmpresaFormRequest, IdeaFormRequest};
 use App\Models\{Departamento, EstadoIdea, Idea, Entidad, Sector, TamanhoEmpresa, TipoEmpresa};
 use App\Repositories\Repository\{IdeaRepository, EmpresaRepository};
@@ -12,6 +9,7 @@ use App\User;
 use Illuminate\Support\Facades\{Session, Validator};
 use Illuminate\Http\Request;
 use App\Exports\Idea\IdeasExport;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class IdeaController extends Controller
 {
@@ -97,7 +95,7 @@ class IdeaController extends Controller
         }
         if ($result['state']) {
             return response()->json([
-                'state' => 'registro', 
+                'state' => 'registro',
                 'url' => route('idea.detalle', $result['idea']->id),
                 'title' => $result['title'],
                 'msg' => $result['msg'],
@@ -105,7 +103,7 @@ class IdeaController extends Controller
                 ]);
         } else {
             return response()->json([
-                'state' => 'no_registro', 
+                'state' => 'no_registro',
                 'title' => $result['title'],
                 'msg' => $result['msg'],
                 'type' => $result['type']
@@ -153,7 +151,7 @@ class IdeaController extends Controller
 
     /**
      * Retorna el render de la vista con los datos de la consulta
-     * 
+     *
      * @param $id Id de la idea de proyecto
      * @return Response
      * @author dum
@@ -176,12 +174,12 @@ class IdeaController extends Controller
 
     /**
      * Rechaza la postulación de la idea de proyecto en el nodo
-     * 
+     *
      * @param int $id Id de la idea de proyecto
      * @return Response
      * @author dum
-     * 
-     **/    
+     *
+     **/
     public function rechazarPostulacionIdea(Request $request, $id)
     {
         $idea = $this->ideaRepository->findByid($id);
@@ -291,7 +289,7 @@ class IdeaController extends Controller
     public function datatableIdeasTalento(Request $request)
     {
         $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('talento_id', auth()->user()->talento->id)
-        ->whereHas('estadoIdea', 
+        ->whereHas('estadoIdea',
         function ($query){
             $query->whereNotIn('nombre', [EstadoIdea::IsRechazadoArticulador()]);
         })->get();
@@ -384,7 +382,7 @@ class IdeaController extends Controller
         $this->authorize('update', $idea);
         $nodos = $this->ideaRepository->getSelectNodo();
         // $nodos = $this->ideaRepository->getSelectNodoPrueba();
-        return view('ideas.talento.edit', ['idea' => $idea, 
+        return view('ideas.talento.edit', ['idea' => $idea,
         'nodos' => $nodos,
         'departamentos' => Departamento::all(),
         'sectores' => Sector::all(),
@@ -436,7 +434,7 @@ class IdeaController extends Controller
         }
         if ($result['state']) {
             return response()->json([
-                'state' => 'update', 
+                'state' => 'update',
                 'url' => route('idea.detalle', $result['idea']->id),
                 'title' => $result['title'],
                 'msg' => $result['msg'],
@@ -444,7 +442,7 @@ class IdeaController extends Controller
             ]);
         } else {
             return response()->json([
-                'state' => 'no_update', 
+                'state' => 'no_update',
                 'title' => $result['title'],
                 'msg' => $result['msg'],
                 'type' => $result['type']
@@ -538,7 +536,7 @@ class IdeaController extends Controller
         ])->where('id', $id)->first();
         $talento = null;
         $sede = null;
-      
+
 
         if($idea->has('talento.user') &&isset($idea->talento->user))
         {
@@ -548,7 +546,7 @@ class IdeaController extends Controller
         {
             $sede = $idea->sede;
         }
-        
+
         return response()->json([
             'data' => [
                 'idea' => $idea,

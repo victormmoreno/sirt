@@ -139,9 +139,10 @@
                                                                     <div class="input-field col s12 m12 l12">
                                                                         <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnodouser" name="txtnodouser"  style="width: 100%" tabindex="-1">
                                                                             @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
+
                                                                                 <option value="">Seleccione Nodo</option>
                                                                                 @foreach($nodos as $id => $nodo)
-                                                                                    @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsApoyoTecnico()))
+                                                                                    @if(isset($user->apoyotecnico->nodo->id) && collect($user->roles)->contains('name',App\User::IsApoyoTecnico()))
                                                                                         <option value="{{$id}}" {{old('txtnodouser',$user->apoyotecnico->nodo->id) ==  $id ? 'selected':''}} >{{$nodo}}</option>
                                                                                     @else
                                                                                         <option value="{{$id}}" {{old('txtnodouser') ==  $id ? 'selected':''}}>{{$nodo}}</option>
@@ -159,7 +160,7 @@
                                                                         <small id="txtnodouser-error" class="error red-text"></small>
                                                                     </div>
                                                                     <div class="input-field col s12 m12 l12">
-                                                                        <input id="txthonorariouser" name="txthonorariouser" type="text" value="{{ isset($user->apoyotecnico->honorarios) ? $user->apoyotecnico->honorarios : old('txthonorario')}}" {{ isset($user->gestor->honorarios) && session()->get('login_role') == App\User::IsGestor() ||   (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id)  && isset($user->gestor->nodo->id ) && $user->gestor->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : ''}}>
+                                                                        <input id="txthonorariouser" name="txthonorariouser" type="text" value="{{ isset($user->apoyotecnico->honorarios) ? $user->apoyotecnico->honorarios : old('txthonorario')}}" {{ isset($user->apoyotecnico->honorarios) && session()->get('login_role') == App\User::IsGestor() ||   (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id)  && isset($user->apoyotecnico->nodo->id ) && $user->apoyotecnico->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : ''}}>
                                                                         <label for="txthonorariouser">Honorario mensual <span class="red-text">*</span></label>
                                                                         <small id="txthonorariouser-error" class="error red-text"></small>
                                                                     </div>

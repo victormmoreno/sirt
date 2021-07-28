@@ -10,7 +10,7 @@ class ArticulacionAprobarCierre extends Notification implements ShouldQueue
 {
     use Queueable;
     private $articulacion;
-    
+
     /**
      * Create a new notification instance.
      *
@@ -44,9 +44,9 @@ class ArticulacionAprobarCierre extends Notification implements ShouldQueue
             'link'  => route('articulacion.cierre', $this->getArticulacion()->id),
             'icon'  => 'library_books',
             'color' => 'green',
-            'autor' => "{$this->getArticulacion()->articulacion_proyecto->actividad->gestor->user->nombres} {$this->getArticulacion()->articulacion_proyecto->actividad->gestor->user->apellidos}",
-            'text'  => "El gestor ha solicitado aprobar la fase de cierre | {$this->getArticulacion()->articulacion_proyecto->actividad->codigo_actividad} - {$this->getArticulacion()->articulacion_proyecto->actividad->nombre}",
-          ];
+            'autor' => "{$this->getArticulacion()->asesor->user->nombres} {$this->getArticulacion()->asesor->apellidos}",
+            'text'  => "El experto ha solicitado aprobar la fase de cierre | {$this->getArticulacion()->articulacion_proyecto->actividad->codigo_actividad} - {$this->getArticulacion()->articulacion_proyecto->actividad->nombre}",
+        ];
     }
 
     public function setArticulacion($articulacion)

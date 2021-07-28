@@ -37,7 +37,7 @@
                                         <li class="text-mailbox">Cierre</li>
                                         <div class="right">
                                             <li class="text-mailbox "> Fase actual: {{$actividad->articulacionpbt->present()->articulacionPbtNameFase()}}</li>
-                                            <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>   
+                                            <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>
                                         </div>
                                     </ul>
                                 </div>
@@ -71,12 +71,12 @@
                                                         El talento interlocutor no aprobó la fase de ejecución
                                                     </a>
                                                     @endif
-                                                @endif  
-                                            @endif                            
+                                                @endif
+                                            @endif
                                         </div>
                                         <div class="left">
                                             <span class="mailbox-title p-v-lg">{{$actividad->present()->actividadCode()}} - {{$actividad->present()->actividadName()}}</span>
-                                            
+
                                             <div class="left">
                                                 <span class="mailbox-title">{{$actividad->present()->actividadUserAsesor()}}</span>
                                                 <span class="mailbox-author">{{$actividad->present()->actividadUserRolesAsesor()}} </span>
@@ -84,14 +84,14 @@
                                         </div>
                                         <div class="right mailbox-buttons p-v-lg">
                                             <div class="right">
-                                                <span class="mailbox-title">{{$actividad->present()->actividadNode()}}</span>
+                                                <span class="mailbox-title">Nodo</span>
                                             </div>
-                                        </div>                                    
+                                        </div>
                                     </div>
                                     <div class="divider mailbox-divider"></div>
                                     <div class="mailbox-view-header no-m-b no-m-t">
                                         <div class="row">
-                                            <div class="col s12 m12 l12">  
+                                            <div class="col s12 m12 l12">
                                                 @include('articulacionespbt.detail.detail-fase-ejecucion')
                                             </div>
                                         </div>
@@ -181,7 +181,7 @@
                 name: 'download',
                 orderable: false,
             },
-        
+
         ],
     });
 }

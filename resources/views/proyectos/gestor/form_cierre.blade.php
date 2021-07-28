@@ -1,6 +1,6 @@
 {!! csrf_field() !!}
 @php
-    $disabled = $proyecto->articulacion_proyecto->actividad->aprobacion_dinamizador == 1 ? 'disabled' : '';
+    $disabled = $proyecto->articulacion_proyecto->actividad->present()->actividadAprobacionDinamizador() == 1 ? 'disabled' : '';
 @endphp
 <div class="row">
     <div class="input-field col s12 m6 l6">

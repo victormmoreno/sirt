@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class UserNodo extends Model
 {
@@ -39,19 +40,11 @@ class UserNodo extends Model
         return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
     }
 
-    /*=========================================
-    =            asesores eloquent            =
-    =========================================*/
     public function getHonorariosAttribute($honorarios)
     {
         return trim($honorarios);
     }
 
-    /*=====  End of asesores eloquent  ======*/
-
-    /*========================================
-    =            mutador eloquent            =
-    ========================================*/
     public function setHonorariosAttribute($honorarios)
     {
         $this->attributes['honorarios'] = trim($honorarios);

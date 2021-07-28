@@ -42,7 +42,7 @@ class UsoInfraestructuraRepository
 
             DB::commit();
             return 'true';
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return 'false';
         }
@@ -51,7 +51,7 @@ class UsoInfraestructuraRepository
     /**
      * retorna registro de uso de infraestructura
      * @param $usoInfraestructura
-     * @param  array $request
+     * @param $request
      * @author devjul
      */
     private function storeUsoInfraestructura($actividad, $request)
@@ -69,7 +69,7 @@ class UsoInfraestructuraRepository
     /**
      * retorna registro de talentos al uso de infraestrucutra
      * @param $usoInfraestructura
-     * @param  array $request
+     * @param $request
      * @author devjul
      */
     private function storeTalentoToUsoInfraestructura($usoInfraestructura, $request)
@@ -85,7 +85,7 @@ class UsoInfraestructuraRepository
     /**
      * retorna registro de gestores_uso al uso de infraestrucutra
      * @param $usoInfraestructura
-     * @param  array $request
+     * @param $request
      * @author devjul
      */
     private function storeGestorUsoToUsoInfraestructura($usoInfraestructura, $request)
@@ -102,7 +102,7 @@ class UsoInfraestructuraRepository
     /**
      * metodo retorna costo de horas de asesoria
      *
-     * @param array $request
+     * @param $request
      * @author devjul
      */
     private function calculateCostoHorasAsesoria($request)
@@ -136,7 +136,7 @@ class UsoInfraestructuraRepository
     /**
      * retorna registro de material_uso al uso de infraestrucutra
      * @param $usoInfraestructura
-     * @param  array $request
+     * @param $request
      * @author devjul
      */
     private function storeMaterialUsoToUsoInfraestructura($usoInfraestructura, $request)
@@ -152,8 +152,7 @@ class UsoInfraestructuraRepository
 
     /**
      * metodo retorna costo de materiales
-     *
-     * @param array $request
+     * @param $request
      * @author devjul
      */
     private function calculateCostoMateriales($request)
@@ -183,7 +182,7 @@ class UsoInfraestructuraRepository
     /**
      * retorna registro de equipos_uso al uso de infraestrucutra
      * @param $usoInfraestructura
-     * @param  array $request
+     * @param $request
      * @author devjul
      */
     private function storeEquipoUsoToUsoInfraestructura($usoInfraestructura, $request)
@@ -291,7 +290,7 @@ class UsoInfraestructuraRepository
 
             DB::commit();
             return true;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return false;
         }
@@ -300,7 +299,7 @@ class UsoInfraestructuraRepository
     /**
      * retorna registro de equipos_uso al uso de infraestrucutra
      * @param $usoInfraestructura
-     * @param  array $request
+     * @param  $request
      * @author devjul
      */
     private function updateUsoInfraestructura($id, $request)
@@ -445,9 +444,9 @@ class UsoInfraestructuraRepository
             ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombre_gestor')
             ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
             ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-            ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+            ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
             ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
-            ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+            ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
             ->join('users', 'users.id', '=', 'gestores.user_id')
             ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
             ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')

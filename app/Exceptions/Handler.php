@@ -46,6 +46,9 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof \League\Flysystem\FileNotFoundException) {
+            return abort(404);
+        }
         if ($request->fullUrlIs($request->root() . '/ideas')) {
             return redirect()->route('idea.create');
         }

@@ -37,20 +37,20 @@
                                         <li class="text-mailbox">Cierre</li>
                                         <div class="right">
                                             <li class="text-mailbox "> Fase actual: {{$actividad->articulacionpbt->present()->articulacionPbtNameFase()}}</li>
-                                            <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>   
+                                            <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>
                                         </div>
                                     </ul>
                                 </div>
                                 <div class="mailbox-view no-s">
                                     <div class="mailbox-view-header no-m-b no-m-t">
                                         <div class="right mailbox-buttons no-s">
-                                            
+
                                         @if ($actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsEjecucion()))
                                             @if ($ultimo_movimiento != null && $actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsEjecucion()) && $ultimo_movimiento->movimiento->movimiento == "solicitó al talento" && $actividad->articulacionpbt->talentos()->wherePivot('talento_lider', 1)->first()->user->id == auth()->user()->id)
                                             <form action="{{route('articulacion.aprobacion', [$actividad->articulacionpbt->id, 'Ejecución'])}}" method="POST" name="frmEjecucionTalento">
                                                 {!! method_field('PUT')!!}
                                                 @csrf
-                                                
+
                                                 <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
                                                 <input type="hidden" type="text" name="decision" id="decision">
                                                 <button type="submit" onclick="preguntaEjecucion(event)" class="waves-effect waves-orange btn orange m-t-xs">
@@ -73,34 +73,33 @@
                                                     El talento interlocutor no aprobó la fase de ejecución
                                                 </a>
                                                 @endif
-                                            @endif  
-                                        
-                                        @endif                               
+                                            @endif
+
+                                        @endif
                                         </div>
                                     </div>
-                                        <div class="mailbox-view-header">
+                                    <div class="mailbox-view-header">
+                                        <div class="left">
+                                            <span class="mailbox-title p-v-lg">{{$actividad->present()->actividadCode()}} - {{$actividad->present()->actividadName()}}</span>
                                             <div class="left">
-                                                <span class="mailbox-title p-v-lg">{{$actividad->present()->actividadCode()}} - {{$actividad->present()->actividadName()}}</span>
-                                                <div class="left">
-                                                    <span class="mailbox-title">{{$actividad->present()->actividadUserAsesor()}}</span>
-                                                    <span class="mailbox-author">{{$actividad->present()->actividadUserRolesAsesor()}} </span>
-                                                </div>
-                                            </div>
-                                            <div class="right mailbox-buttons p-v-lg">
-                                                <div class="right">
-                                                    <span class="mailbox-title">{{$actividad->present()->actividadNode()}}</span>
-                                                </div>
+                                                <span class="mailbox-title">{{$actividad->present()->actividadUserAsesor()}}</span>
+                                                <span class="mailbox-author">{{$actividad->present()->actividadUserRolesAsesor()}} </span>
                                             </div>
                                         </div>
-                                        <div class="divider mailbox-divider"></div>
-                                        <div class="mailbox-text">
-                                            <div class="row">
-                                                <div class="col s12 m12 l12">  
-                                                    @include('articulacionespbt.detail.detail-fase-ejecucion')
-                                                </div>
+                                        <div class="right mailbox-buttons p-v-lg">
+                                            <div class="right">
+                                                <span class="mailbox-title">Nodo</span>
                                             </div>
                                         </div>
-                                    
+                                    </div>
+                                    <div class="divider mailbox-divider"></div>
+                                    <div class="mailbox-text">
+                                        <div class="row">
+                                            <div class="col s12 m12 l12">
+                                                @include('articulacionespbt.detail.detail-fase-ejecucion')
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -186,7 +185,7 @@
         name: 'download',
         orderable: false,
       },
-      
+
     ],
   });
 }

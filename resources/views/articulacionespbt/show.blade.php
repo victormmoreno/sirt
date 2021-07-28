@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'Articulaciones PBT')
+@section('meta-title', 'Articulaciones')
 @section('content')
 <main class="mn-inner">
     <div class="content">
@@ -7,15 +7,15 @@
             <div class="col s8 m8 l5">
                 <h5 class="left-align orange-text text-darken-3">
                     <i class="material-icons left">
-                      autorenew
+                        autorenew
                     </i>
-                    Articulaciones PBT
+                    Articulaciones
                 </h5>
             </div>
             <div class="col s4 m4 l5 offset-l2  rigth-align show-on-large hide-on-med-and-down">
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">Inicio</a></li>
-                    <li ><a href="{{route('articulaciones.index')}}">Articulaciones PBT</a></li>
+                    <li ><a href="{{route('articulaciones.index')}}">Articulaciones</a></li>
                     <li class="active">detalle</li>
                 </ol>
             </div>
@@ -28,17 +28,17 @@
                             <div class="col s12 m12 l12">
                                 <div class="mailbox-options">
                                     <ul>
-                                        <li class="text-mailbox ">La articulación se encuentra actualmente en la fase de {{$actividad->articulacionpbt->present()->articulacionPbtNameFase()}}</li>
+                                        <li class="text-mailbox ">La articulación se encuentra actualmente en la fase de {{$articulacion->present()->articulacionPbtNameFase()}}</li>
                                         <div class="right">
-                                            <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>   
+                                            <li class="text-mailbox">Fecha Inicio: {{$articulacion->present()->articulacionPbtstartDate()}}</li>
                                         </div>
                                     </ul>
                                 </div>
                                 <div class="mailbox-view no-s">
-                                        @if (Session::get('login_role') == App\User::IsDinamizador() && !$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio()) && !$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()))
+                                        @if (Session::get('login_role') == App\User::IsDinamizador() && !$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio()) && !$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()))
                                         <div class="mailbox-view-header no-m-b no-m-t">
                                             <div class="right mailbox-buttons no-s">
-                                                <form action="{{route('articulacion.reversar', [$actividad->articulacionpbt->id, 'Inicio'])}}" method="POST" name="frmReversarFase">
+                                                <form action="{{route('articulacion.reversar', [$articulacion->id, 'Inicio'])}}" method="POST" name="frmReversarFase">
                                                     {!! method_field('PUT')!!}
                                                     @csrf
                                                     <button type="submit" onclick="preguntaReversarArticulacion(event)" value="send" class="btn-flat">
@@ -48,44 +48,43 @@
                                             </div>
                                         </div>
                                         @endif
-                                        @if(!$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()) && (session()->has('login_role') && session()->get('login_role') != App\User::IsAdministrador()))
+                                        @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()) && (session()->has('login_role') && session()->get('login_role') != App\User::IsAdministrador()))
                                             <div class="mailbox-view-header no-m-b no-m-t">
                                                 <div class="right mailbox-buttons no-s">
-                                                    @if($actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio()))
-                                                        <a href="{{route('articulacion.show.inicio',$actividad->articulacionpbt->id)}}" class="waves-effect waves-orange btn orange m-t-xs">Ir a la Fase de  {{$actividad->articulacionpbt->present()->articulacionPbtNameFase()}}</a>
-                                                    @elseif($actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsEjecucion()))
-                                                        <a href="{{route('articulacion.show.ejecucion',$actividad->articulacionpbt->id)}}" class="waves-effect waves-orange btn orange m-t-xs">Ir a la Fase de {{$actividad->articulacionpbt->present()->articulacionPbtNameFase()}}</a>
-                                                    @elseif($actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsCierre()))
-                                                        <a href="{{route('articulacion.show.cierre',$actividad->articulacionpbt->id)}}" class="waves-effect waves-orange btn orange m-t-xs">Ir a la Fase de {{$actividad->articulacionpbt->present()->articulacionPbtNameFase()}}</a>
+                                                    @if($articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio()))
+                                                        <a href="{{route('articulacion.show.inicio',$articulacion->id)}}" class="waves-effect waves-orange btn orange m-t-xs">Ir a la Fase de  {{$articulacion->present()->articulacionPbtNameFase()}}</a>
+                                                    @elseif($articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsEjecucion()))
+                                                        <a href="{{route('articulacion.show.ejecucion',$articulacion->id)}}" class="waves-effect waves-orange btn orange m-t-xs">Ir a la Fase de {{$articulacion->present()->articulacionPbtNameFase()}}</a>
+                                                    @elseif($articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsCierre()))
+                                                        <a href="{{route('articulacion.show.cierre',$articulacion->id)}}" class="waves-effect waves-orange btn orange m-t-xs">Ir a la Fase de {{$articulacion->present()->articulacionPbtNameFase()}}</a>
                                                     @endif
-                                                    @if((session()->has('login_role') && session()->get('login_role') === App\User::IsDinamizador()) && !$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsSuspendido()))
-                                                        <a href="{{route('articulacion.cambiar',$actividad->articulacionpbt->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar articulador</a>
-                                                    @endif  
+                                                    @if((session()->has('login_role') && session()->get('login_role') === App\User::IsDinamizador()) && !$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsSuspendido()))
+                                                        <a href="{{route('articulacion.cambiar',$articulacion->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar articulador</a>
+                                                    @endif
                                                     @if((session()->has('login_role') && session()->get('login_role') === App\User::IsArticulador()))
-                                                    
-                                                        @if(!$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsSuspendido()))
-                                                            <a href="{{route('articulacion.miembros', $actividad->articulacionpbt->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Miembros</a>    
-                                                            <a href="{{route('articulacion.suspender', $actividad->articulacionpbt->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Suspender Articulación</a>
+
+                                                        @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsSuspendido()))
+                                                            <a href="{{route('articulacion.miembros', $articulacion->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Miembros</a>
+                                                            <a href="{{route('articulacion.suspender', $articulacion->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Suspender Articulación</a>
                                                         @endif
-                                                    @endif  
-                                                                                 
+                                                    @endif
                                                 </div>
                                             </div>
                                         @endif
                                     <div class="mailbox-view-header">
                                         <div class="left">
-                                            <span class="mailbox-title p-v-lg">{{$actividad->present()->actividadCode()}} - {{$actividad->present()->actividadName()}}</span>
-                                            
+                                            <span class="mailbox-title p-v-lg">{{$articulacion->present()->articulacionPbtCode()}} - {{$articulacion->present()->articulacionPbtName()}}</span>
+
                                             <div class="left">
-                                                <span class="mailbox-title">{{$actividad->present()->actividadUserAsesor()}}</span>
-                                                <span class="mailbox-author">{{$actividad->present()->actividadUserRolesAsesor()}} </span>
+                                                <span class="mailbox-title">{{$articulacion->present()->articulacionPbtUserAsesor()}}</span>
+                                                <span class="mailbox-author">{{$articulacion->present()->articulacionPbtUserRolesAsesor()}} </span>
                                             </div>
                                         </div>
                                         <div class="right mailbox-buttons p-v-lg">
                                             <div class="right">
-                                                <span class="mailbox-title">{{$actividad->present()->actividadNode()}}</span>
+                                                <span class="mailbox-title">{{$articulacion->present()->articulacionPbtNodo()}}</span>
                                             </div>
-                                        </div>                                        
+                                        </div>
                                     </div>
                                     <div class="divider mailbox-divider"></div>
                                     <div class="mailbox-text">
@@ -137,7 +136,7 @@
             order: false,
             "lengthChange": false,
             ajax:{
-            url: "{{route('articulacion.files', [$actividad->articulacionpbt->id, 'Inicio'])}}",
+            url: "{{route('articulacion.files', [$articulacion->id, 'Inicio'])}}",
             type: "get",
             },
             columns: [
@@ -165,7 +164,7 @@
             order: false,
             "lengthChange": false,
             ajax:{
-            url: "{{route('articulacion.files', [$actividad->articulacionpbt->id, 'Ejecución'])}}",
+            url: "{{route('articulacion.files', [$articulacion->id, 'Ejecución'])}}",
             type: "get",
             },
             columns: [
@@ -193,7 +192,7 @@
             order: false,
             "lengthChange": false,
             ajax:{
-            url: "{{route('articulacion.files', [$actividad->articulacionpbt->id,'Cierre'])}}",
+            url: "{{route('articulacion.files', [$articulacion->id,'Cierre'])}}",
             type: "get",
             },
             columns: [
@@ -210,6 +209,6 @@
             ],
         });
     }
-    
+
     </script>
 @endpush

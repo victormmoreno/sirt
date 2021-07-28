@@ -37,20 +37,20 @@
                                         <li class="text-mailbox active">Cierre</li>
                                         <div class="right">
                                             <li class="text-mailbox "> Fase actual: {{$actividad->articulacionpbt->present()->articulacionPbtNameFase()}}</li>
-                                            <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>   
+                                            <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>
                                         </div>
                                     </ul>
                                 </div>
                                 <div class="mailbox-view no-s">
                                     <div class="mailbox-view-header no-m-b no-m-t">
                                         <div class="right mailbox-buttons no-s">
-                                            
+
                                         @if ($actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsCierre()))
                                             @if ($ultimo_movimiento != null && $actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsCierre()) &&  $ultimo_movimiento->role->name == App\User::IsTalento() && $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsAprobar())
                                             <form action="{{route('articulacion.aprobacion', [$actividad->articulacionpbt->id, 'Cierre'])}}" method="POST" name="frmCierreDinamizador" onsubmit="return checkSubmit()">
                                                 {!! method_field('PUT')!!}
                                                 @csrf
-                                                
+
                                                 <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
                                                 <input type="hidden" type="text" name="decision" id="decision">
                                                 <button type="submit" onclick="preguntaCierre(event)" class="waves-effect waves-orange btn orange m-t-xs">
@@ -73,9 +73,9 @@
                                                     El talento interlocutor no aprobó la fase de cierre
                                                 </a>
                                                 @endif
-                                            @endif  
-                                        
-                                        @endif                               
+                                            @endif
+
+                                        @endif
                                         </div>
                                     </div>
                                         <div class="mailbox-view-header">
@@ -88,19 +88,19 @@
                                             </div>
                                             <div class="right mailbox-buttons p-v-lg">
                                                 <div class="right">
-                                                    <span class="mailbox-title">{{$actividad->present()->actividadNode()}}</span>
+                                                    <span class="mailbox-title">Nodo</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="divider mailbox-divider"></div>
                                         <div class="mailbox-text">
                                             <div class="row">
-                                                <div class="col s12 m12 l12">  
+                                                <div class="col s12 m12 l12">
                                                     @include('articulacionespbt.detail.detail-fase-cierre')
                                                 </div>
                                             </div>
                                         </div>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -118,7 +118,7 @@
 $( document ).ready(function() {
     datatableArchivosArticulacion();
   });
- 
+
 function preguntaCierreRechazar(e){
     e.preventDefault();
     Swal.fire({
@@ -189,7 +189,7 @@ function datatableArchivosArticulacion() {
         name: 'download',
         orderable: false,
       },
-      
+
     ],
   });
 }

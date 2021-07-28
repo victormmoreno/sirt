@@ -7,11 +7,6 @@ use App\User;
 
 class NodoHelper
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public static function returnNodoUsuario()
     {
         if (\Session::get('login_role') == User::IsGestor() && isset(auth()->user()->gestor->nodo_id)) {

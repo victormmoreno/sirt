@@ -61,11 +61,6 @@
                                                                                 {{$actividad->actividad->codigo_actividad}} - {{$actividad->actividad->nombre}}
                                                                             @endif
                                                                             <p class="blue-grey-text ">{{optional($actividad->actividad->fecha_inicio)->isoFormat('LL')}}   Tecnoparque Nodo {{$actividad->actividad->nodo->entidad->nombre}}
-                                                                                {{-- <div class="right">
-                                                                                <small>
-                                                                                    <a class="modal-trigger waves-effect waves-light btn" href="#modal1">Ver más</a>
-                                                                                </small>
-                                                                            </div> --}}
                                                                             </p>
                                                                         </div>
                                                                     </div
@@ -83,13 +78,8 @@
                                                                             {{$actividad->codigo_actividad}} - {{$actividad->nombre}}
                                                                         @endif
 
+                                                                        <p class="blue-grey-text ">{{optional($actividad->fecha_inicio)->isoFormat('LL')}}
 
-                                                                        <p class="blue-grey-text ">{{optional($actividad->fecha_inicio)->isoFormat('LL')}}   Tecnoparque Nodo {{$actividad->nodo->entidad->nombre}}
-                                                                            {{-- <div class="right">
-                                                                                <small>
-                                                                                    <a class="modal-trigger waves-effect waves-light btn" href="#modal1">Ver más</a>
-                                                                                </small>
-                                                                            </div> --}}
                                                                         </p>
                                                                     </div>
                                                                 </div>
@@ -106,12 +96,8 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                     @endforelse
-
                                                 </div>
-
-
                                             </div>
                                             @if(isset($actividades))
                                                 <div class="center">
@@ -129,13 +115,4 @@
         </div>
     </div>
 </main>
-{{-- <div id="modal1" class="modal modal-fixed-footer">
-    <div class="modal-content">
-        <h4 class="valign-wrapper truncate center-align">Modal Header</h4>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
-    </div>
-    <div class="modal-footer">
-        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
-    </div>
-</div> --}}
 @endsection

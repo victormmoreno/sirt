@@ -34,12 +34,12 @@
                                     <ul>
                                         <li class="text-mailbox ">La articulación se encuentra actualmente en la fase de {{$actividad->articulacionpbt->present()->articulacionPbtNameFase()}}</li>
                                         <div class="right">
-                                            <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>   
+                                            <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>
                                         </div>
                                     </ul>
                                 </div>
                                 <div class="mailbox-view no-s">
-                                    
+
                                     <div class="mailbox-view-header">
                                         <div class="left">
                                             <span class="mailbox-title p-v-lg">{{$actividad->present()->actividadCode()}} - {{$actividad->present()->actividadName()}}</span>
@@ -50,7 +50,7 @@
                                         </div>
                                         <div class="right mailbox-buttons p-v-lg">
                                             <div class="right">
-                                                <span class="mailbox-title">{{$actividad->present()->actividadNode()}}</span>
+                                                <span class="mailbox-title">Nodo</span>
                                             </div>
                                         </div>
                                     </div>
@@ -64,7 +64,7 @@
                                                     @include('articulacionespbt.form.form_miembros', ['btnText' => 'Modificar'])
                                                 </form>
                                             </div>
-                                            
+
                                         </div>
                                     </div>
                                 </div>
@@ -147,13 +147,13 @@
             name: 'download',
             orderable: false,
         },
-      
+
         {
             data: 'delete',
             name: 'delete',
             orderable: false,
         },
-       
+
         ],
     });
     }

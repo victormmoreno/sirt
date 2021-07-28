@@ -10,172 +10,250 @@ use App\Presenters\ProyectoPresenter;
 class Proyecto extends Model
 {
 
-  protected $table = 'proyectos';
+    /**
+     * the table name
+     * @var string
+     * @author dum
+     */
+    protected $table = 'proyectos';
 
-  /**
-   * The attributes that are mass assignable.
-   *
-   * @var array
-   */
-  protected $fillable = [
-    'articulacion_proyecto_id', // Llave foranea
-    'idea_id', // Llave foranea
-    'sublinea_id', // Llave foranea
-    'areaconocimiento_id', // Llave foranea
-    'economia_naranja',
-    'art_cti',
-    'nom_act_cti',
-    'diri_ar_emp',
-    'reci_ar_emp',
-    'acc',
-    'manual_uso_inf',
-    'estado_arte',
-    'alcance_proyecto',
-    'tipo_economianaranja',
-    'dirigido_discapacitados',
-    'tipo_discapacitados',
-    'otro_areaconocimiento',
-    'trl_esperado',
-    'trl_obtenido',
-    'fase_id',
-    'fabrica_productividad',
-    'doc_titular',
-    'trl_prototipo',
-    'trl_pruebas',
-    'trl_modelo',
-    'trl_normatividad',
-    'evidencia_trl'
-  ];
+    /**
+     * Constant for the expected trl_field
+     * @var int
+     * @author dum
+     */
+    // Estado que indica que el trl esperado es 6
+    const IS_TRL6_ESPERADO = 0;
+    // Estado que indica que el trl esperado es 7 u 8
+    const IS_TRL7_8_ESPERADO = 1;
 
-  /**
-   * Constante para el campo trl_esperado
-   */
-  // Estado que indica que el trl esperado es 6
-  const IS_TRL6_ESPERADO = 0;
-  // Estado que indica que el trl esperado es 7 u 8
-  const IS_TRL7_8_ESPERADO = 1;
+    /**
+     * Constante para el campo trl_obtenido
+     * @var int
+     * @author dum
+     */
+    const IS_TRL6_OBTENIDO = 0;
+    const IS_TRL7_OBTENIDO = 1;
+    const IS_TRL8_OBTENIDO = 2;
 
-  const IS_TRL6_OBTENIDO = 0;
-  const IS_TRL7_OBTENIDO = 1;
-  const IS_TRL8_OBTENIDO = 2;
+    /**
+     * The attributes that are mass assignable.
+     * @author dum
+     * @var array
+     */
+    protected $fillable = [
+        'articulacion_proyecto_id',
+        'asesor_id',
+        'nodo_id',
+        'idea_id',
+        'sublinea_id',
+        'areaconocimiento_id',
+        'economia_naranja',
+        'art_cti',
+        'nom_act_cti',
+        'diri_ar_emp',
+        'reci_ar_emp',
+        'acc',
+        'manual_uso_inf',
+        'estado_arte',
+        'alcance_proyecto',
+        'tipo_economianaranja',
+        'dirigido_discapacitados',
+        'tipo_discapacitados',
+        'otro_areaconocimiento',
+        'trl_esperado',
+        'trl_obtenido',
+        'fase_id',
+        'fabrica_productividad',
+        'doc_titular',
+        'trl_prototipo',
+        'trl_pruebas',
+        'trl_modelo',
+        'trl_normatividad',
+        'evidencia_trl'
+    ];
+    /**
+     * returns the obtained trl
+     * @author dum
+     * @return int
+     */
+    public static function IsTrl6Obtenido()
+    {
+        return self::IS_TRL6_OBTENIDO;
+    }
 
-  // Retorna para las constantes del campo trl_obtenido
-  public static function IsTrl6Obtenido()
-  {
-    return self::IS_TRL6_OBTENIDO;
-  }
-  public static function IsTrl7Obtenido()
-  {
-    return self::IS_TRL7_OBTENIDO;
-  }
-  public static function IsTrl8Obtenido()
-  {
-    return self::IS_TRL8_OBTENIDO;
-  }
-  // Retorna para las constantes del campo trl_esperado
-  public static function IsTrl6Esperado()
-  {
-    return self::IS_TRL6_ESPERADO;
-  }
+    /**
+     * returns the obtained trl
+     * @author dum
+     * @return int
+     */
+    public static function IsTrl7Obtenido()
+    {
+        return self::IS_TRL7_OBTENIDO;
+    }
+    /**
+     * returns the obtained trl
+     * @author dum
+     * @return int
+     */
+    public static function IsTrl8Obtenido()
+    {
+        return self::IS_TRL8_OBTENIDO;
+    }
+    /**
+     * returns the obtained trl
+     * @author dum
+     * @return int
+     */
+    public static function IsTrl6Esperado()
+    {
+        return self::IS_TRL6_ESPERADO;
+    }
 
-  public static function IsTrl78Esperado()
-  {
-    return self::IS_TRL7_8_ESPERADO;
-  }
-  
-  public function present()
-  {
-      return new ProyectoPresenter($this);
-  }
+    /**
+     * returns the obtained trl
+     * @author dum
+     * @return int
+     */
+    public static function IsTrl78Esperado()
+    {
+        return self::IS_TRL7_8_ESPERADO;
+    }
 
-  /*===============================================
-  =            relaciones polimorficas            =
-  ===============================================*/
+    /**
+     * Define a polymorphic, inverse many-to-many relationship between projects and sedes
+     * @author dum
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function sedes()
+    {
+        return $this->morphedByMany(Sede::class, 'propietario')->withTimestamps();
+    }
 
-  // Relación a la tabla de archivosproyecto
-  // public function archivosproyecto()
-  // {
-  //     return $this->hasMany(ArchivoProyecto::class, 'proyecto_id', 'id');
-  // }
+    /**
+     * Define an inverse one-to-one or many relationship between projects and users
+     * @author devjul
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function asesor()
+    {
+        return $this->belongsTo(Gestor::class, 'asesor_id', 'id');
+    }
 
-  public function sedes()
-  {
-    return $this->morphedByMany(Sede::class, 'propietario')->withTimestamps();
-  }
+    /**
+     * Define an inverse one-to-one or many relationship between projects and node
+     * @author devjul
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function nodo()
+    {
+        return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
+    }
 
-  public function gruposinvestigacion()
-  {
-    return $this->morphedByMany(GrupoInvestigacion::class, 'propietario')->withTimestamps();
-  }
+    /**
+     * Define a polymorphic, inverse many-to-many relationship between projects and grupos de investigacion
+     * @author dum
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function gruposinvestigacion()
+    {
+        return $this->morphedByMany(GrupoInvestigacion::class, 'propietario')->withTimestamps();
+    }
 
-  public function users_propietarios()
-  {
-    return $this->morphedByMany(User::class, 'propietario')->withTimestamps()->withTrashed();
-  }
+    /**
+     * Define a polymorphic, inverse many-to-many relationship between projects and users
+     * @author dum
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function users_propietarios()
+    {
+        return $this->morphedByMany(User::class, 'propietario')->withTimestamps()->withTrashed();
+    }
 
-  public function areaconocimiento()
-  {
-    return $this->belongsTo(AreaConocimiento::class, 'areaconocimiento_id', 'id');
-  }
+    /**
+     * Define a polymorphic, inverse many-to-many relationship between proyectos and articulacion_pbt
+     * @author dum
+     * @return \Illuminate\Database\Eloquent\Relations\morphOne
+     */
+    public function articulacion()
+    {
+        return $this->morphOne(ArticulacionPbt::class,'articulable');
+    }
 
-  public function fase()
-  {
-    return $this->belongsTo(Fase::class, 'fase_id', 'id');
-  }
+    /**
+     * Define an inverse one-to-one or many relationship between projects and users
+     * @author dum
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function areaconocimiento()
+    {
+        return $this->belongsTo(AreaConocimiento::class, 'areaconocimiento_id', 'id');
+    }
 
-  public function sublinea()
-  {
-    return $this->belongsTo(Sublinea::class, 'sublinea_id', 'id');
-  }
+    /**
+     * Define an inverse one-to-one or many relationship between projects and fases
+     * @author dum
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function fase()
+    {
+        return $this->belongsTo(Fase::class, 'fase_id', 'id');
+    }
 
-  /**
-   * Relación con la tabla de ideas
-   */
-  public function idea()
-  {
-    return $this->belongsTo(Idea::class, 'idea_id', 'id');
-  }
+    /**
+     * Define an inverse one-to-one or many relationship between projects and sublinea
+     * @author dum
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function sublinea()
+    {
+        return $this->belongsTo(Sublinea::class, 'sublinea_id', 'id');
+    }
 
-  public function articulacion_proyecto()
-  {
-    return $this->belongsTo(ArticulacionProyecto::class, 'articulacion_proyecto_id', 'id');
-  }
+    /**
+     * Define an inverse one-to-one or many relationship between projects and ideas
+     * @author dum
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function idea()
+    {
+        return $this->belongsTo(Idea::class, 'idea_id', 'id');
+    }
 
-  public function articulacionpbt()
-  {
-      return $this->hasOne(ArticulacionPbt::class, 'proyecto_id', 'id');
-  }
+    /**
+     * Define an inverse one-to-one or many relationship between projects and articulacion_proyecto
+     * @author dum
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function articulacion_proyecto()
+    {
+        return $this->belongsTo(ArticulacionProyecto::class, 'articulacion_proyecto_id', 'id');
+    }
 
-  /*=====  End of relaciones polimorficas  ======*/
+    /**
+     * Define a one-to-one relationship between projects and articulacionpbt
+     * @author dum
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    // public function articulacionpbt()
+    // {
+    //     return $this->hasOne(ArticulacionPbt::class, 'proyecto_id', 'id');
+    // }
 
-  /*======================================================================================
-=            scope para consultar el nombre y el id del proyecto por estado            =
-======================================================================================*/
+    public function scopeEstadoOfProjects($query, array $relations, array $estado = [])
+    {
+        return $query->with($relations)->whereHas(
+            'estadoproyecto',
+            function ($query) use ($estado) {
+                $query->whereIn('nombre', $estado);
+            }
+        );
+    }
 
-  /*=====  End of scope para consultar el nombre y el id del proyecto por estado  ======*/
-
-  /*===================================================================
-    =            scope para consultar por estado de proyecto            =
-    ===================================================================*/
-
-  public function scopeEstadoOfProjects($query, array $relations, array $estado = [])
-  {
-    return $query->with($relations)->whereHas(
-      'estadoproyecto',
-      function ($query) use ($estado) {
-        $query->whereIn('nombre', $estado);
-      }
-    );
-  }
-
-  /*=====  End of scope para consultar por estado de proyecto  ======*/
-
-  public function scopeNodo($query, $nodo)
+    public function scopeNodo($query, $nodo)
     {
         if (!empty($nodo) && $nodo != null && $nodo != 'all') {
-            return $query->whereHas('articulacion_proyecto.actividad', function ($subQuery) use ($nodo) {
-                $subQuery->where('nodo_id', $nodo);
-            });
+            return $query->where('nodo_id', $nodo);
         }
         return $query;
     }
@@ -196,5 +274,26 @@ class Proyecto extends Model
             return $query->where('fase_id', $fase);
         }
         return $query;
+    }
+
+    public function scopeProyectosGestor($query)
+    {
+        return $query->with(['articulacion_proyecto.actividad'])
+            ->where(function($subquery){
+                $subquery->where('fase_id', Fase::IsInicio())
+                ->orwhere('fase_id', Fase::IsPlaneacion())
+                ->orwhere('fase_id', Fase::IsEjecucion());
+            })->get()
+            ->pluck('articulacion_proyecto.actividad.nombre','articulacion_proyecto.actividad.codigo_actividad' );
+    }
+
+    /**
+     * returns an instance of the ProjectPresenter class
+     * @author dum
+     * @return void
+     */
+    public function present()
+    {
+        return new ProyectoPresenter($this);
     }
 }

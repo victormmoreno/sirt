@@ -50,7 +50,7 @@ class ProyectoAprobarInicioDinamizador extends Notification implements ShouldQue
             'color' => 'green',
             'autor' => "{$this->talento->nombres} {$this->talento->apellidos}",
             'text'  => "El {$this->movimiento->rol} ha aprobado la fase de {$this->movimiento->fase} | {$this->proyecto->articulacion_proyecto->actividad->codigo_actividad} - {$this->proyecto->articulacion_proyecto->actividad->nombre}",
-          ];
+        ];
     }
 
 }
