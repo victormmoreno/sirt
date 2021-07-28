@@ -38,7 +38,8 @@ class UsoInfraestructura extends Model
      * @var array
      */
     protected $casts = [
-        'actividad_id'            => 'integer',
+        // 'actividad_id'            => 'integer',
+
         'tipo_usoinfraestructura' => 'integer',
         'fecha'                   => 'date:Y-m-d',
         'descripcion'             => 'string',

@@ -4,32 +4,30 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddSedeToArticulacionPbt extends Migration
+class AlterUsoinfraestructurasTable extends Migration
 {
-
-    public $tableName = 'articulacion_pbts';
+    protected $tableName = 'usoinfraestructuras';
     /**
      * Run the migrations.
-     *
      * @return void
      */
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->unsignedInteger('sede_id')->nullable()->after('proyecto_id');
-            $table->foreign('sede_id')->references('id')->on('sedes')->onDelete('cascade');
+            $table->string('asesorable_type')->nullable()->after('id');
+            $table->integer('asesorable_id')->nullable()->unsigned()->after('asesorable_type');
+            $table->index(["asesorable_type", "asesorable_id"], 'usoinfraestructuras_asesorable_type_asesorable_id_index');
         });
     }
 
     /**
      * Reverse the migrations.
-     *
      * @return void
      */
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->dropColumn(['sede_id']);
+            $table->dropColumn(['asesorable_type', 'asesorable_type']);
         });
     }
 }
