@@ -6,7 +6,12 @@ use Illuminate\Support\Facades\Schema;
 
 class AddSlugToEntidadesTable extends Migration
 {
-    public $tableName = 'entidades';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'entidades';
+
     /**
      * Run the migrations.
      *

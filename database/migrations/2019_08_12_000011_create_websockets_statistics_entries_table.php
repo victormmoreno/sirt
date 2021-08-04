@@ -10,7 +10,7 @@ class CreateWebsocketsStatisticsEntriesTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'websockets_statistics_entries';
+    protected $tableName = 'websockets_statistics_entries';
 
     /**
      * Run the migrations.
@@ -36,8 +36,8 @@ class CreateWebsocketsStatisticsEntriesTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

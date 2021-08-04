@@ -6,8 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddDireccionToComiteIdeaTable extends Migration
 {
-
-    public $tableName = 'comite_idea';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'comite_idea';
     /**
      * Run the migrations.
      *

@@ -10,7 +10,7 @@ class CreateTecnoacademiasTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'tecnoacademias';
+    protected $tableName = 'tecnoacademias';
 
     /**
      * Run the migrations.
@@ -57,8 +57,8 @@ class CreateTecnoacademiasTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

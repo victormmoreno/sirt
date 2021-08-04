@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddComentariosToMovimientosActividadesUsersRolesTable extends Migration
 {
-    public $tableName = 'movimientos_actividades_users_roles';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'movimientos_actividades_users_roles';
     /**
      * Run the migrations.
      *

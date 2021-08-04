@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 class AddTipoUsoinfraestructuraToUsoinfraestructurasTable extends Migration
 {
-
-    public $tableName = 'usoinfraestructuras';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'usoinfraestructuras';
     /**
      * Run the migrations.
      *

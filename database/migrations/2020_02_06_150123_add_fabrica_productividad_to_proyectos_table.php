@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddFabricaProductividadToProyectosTable extends Migration
 {
-    public $tableName = 'proyectos';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'proyectos';
     /**
      * Run the migrations.
      *

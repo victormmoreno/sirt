@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddFieldToArticulacionesTable extends Migration
 {
-    public $tableName = 'articulaciones';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'articulaciones';
     /**
      * Run the migrations.
      *
@@ -20,7 +24,7 @@ class AddFieldToArticulacionesTable extends Migration
             $table->unsignedInteger('fase_id')->nullable()->default(null)->after('articulacion_proyecto_id');
 
             $table->index(["fase_id"], 'fk_articulaciones_fases1_idx');
-            
+
             $table->foreign('fase_id', 'fk_articulaciones_fases1_idx')
             ->references('id')->on('fases')
             ->onDelete('no action')

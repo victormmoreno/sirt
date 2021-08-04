@@ -34,7 +34,7 @@
                                         <li class="text-mailbox">Cierre</li>
                                         <div class="right">
                                             <li class="text-mailbox "> Fase actual: {{$articulacion->present()->articulacionPbtNameFase()}}</li>
-                                            <li class="text-mailbox">Fecha Inicio: {{$articulacion->present()->startDate()}}</li>
+                                            <li class="text-mailbox">Fecha Inicio: {{$articulacion->present()->articulacionPbtStartDate()}}</li>
                                         </div>
                                     </ul>
                                 </div>
@@ -45,20 +45,20 @@
                                             <span class="mailbox-title p-v-lg">{{$articulacion->present()->articulacionCode()}} - {{$articulacion->present()->articulacionName()}}</span>
 
                                             <div class="left">
-                                                <span class="mailbox-title">{{$articulacion->present()->articulacionUserAsesor()}}</span>
-                                                <span class="mailbox-author">{{$articulacion->present()->articulacionUserRolesAsesor()}} </span>
+                                                <span class="mailbox-title">{{$articulacion->present()->articulacionPbtUserAsesor()}}</span>
+                                                <span class="mailbox-author">{{$articulacion->present()->articulacionPbtUserRolesAsesor()}} </span>
                                             </div>
                                         </div>
                                         <div class="right mailbox-buttons p-v-lg">
                                             <div class="right">
-                                                <span class="mailbox-title">Nodo</span>
+                                                <span class="mailbox-title">{{$articulacion->present()->articulacionPbtNodo()}}</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="divider mailbox-divider"></div>
                                     <div class="mailbox-text">
                                         <div class="row">
-                                            <form action="{{route('articulacion.update.articulador', $articulador->id)}}" method="POST" name="frmUpdateGestor" onsubmit="return checkSubmit()">
+                                            <form action="{{route('articulacion.update.articulador', $articulacion->id)}}" method="POST" name="frmUpdateGestor" onsubmit="return checkSubmit()">
                                                 {!! method_field('PUT')!!}
                                                 @csrf
                                                 <div class="row">
@@ -66,7 +66,7 @@
                                                     <select id="txtgestor" class="js-states" name="txtgestor" style="width: 100%;">
                                                         <option value="">Seleccione el Articulador</option>
                                                         @forelse ($articuladores as $id => $value)
-                                                        <option value="{{$id}}" {{ $id == $articulador->asesor_id ? 'selected' : '' }} {{ old('txtgestor') == $id ? 'selected':'' }} >{{$value}}</option>
+                                                        <option value="{{$id}}" {{ $id == $articulacion->asesor_id ? 'selected' : '' }} {{ old('txtgestor') == $id ? 'selected':'' }} >{{$value}}</option>
                                                         @empty
                                                         <option value="">No hay información disponible</option>
                                                         @endforelse

@@ -6,8 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateServidorVideosTable extends Migration
 {
-
-    public $tableName = 'servidor_videos';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'servidor_videos';
     /**
      * Run the migrations.
      *

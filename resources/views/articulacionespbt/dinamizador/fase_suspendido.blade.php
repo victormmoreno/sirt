@@ -16,7 +16,7 @@
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">Inicio</a></li>
                     <li ><a href="{{route('articulaciones.index')}}">Articulaciones PBT</a></li>
-                    <li ><a href="{{route('articulaciones.show', $actividad->articulacionpbt->id)}}">detalle</a></li>
+                    <li ><a href="{{route('articulaciones.show', $articulacion->id)}}">detalle</a></li>
                     <li class="active">Inicio</li>
                 </ol>
             </div>
@@ -28,22 +28,22 @@
                         <div class="col s12 m12 l12">
                             <div class="mailbox-options">
                                 <ul>
-                                    <li class="text-mailbox ">La articulación se encuentra actualmente en la fase de {{$actividad->articulacionpbt->present()->articulacionPbtNameFase()}}</li>
+                                    <li class="text-mailbox ">La articulación se encuentra actualmente en la fase de {{$articulacion->present()->articulacionPbtNameFase()}}</li>
                                     <div class="right">
-                                        <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>
+                                        <li class="text-mailbox">Fecha Inicio: {{$articulacion->present()->articulacionPbtStartDate()}}</li>
                                     </div>
                                 </ul>
                             </div>
                             <div class="mailbox-view no-s">
                                 <div class="mailbox-view-header no-m-b no-m-t">
                                     <div class="right mailbox-buttons no-s">
-                                        @if (!$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()))
+                                        @if (!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()))
                                             @if ($ultimo_movimiento != null && $ultimo_movimiento->role->name == App\User::IsArticulador() && $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsSolicitarDinamizador())
-                                                <form action="{{route('articulacion.update.suspendido', $actividad->articulacionpbt->id)}}" method="POST" name="frmSuspendidoDinamizador" onsubmit="return checkSubmit()">
+                                                <form action="{{route('articulacion.update.suspendido', $articulacion->id)}}" method="POST" name="frmSuspendidoDinamizador" onsubmit="return checkSubmit()">
                                                     {!! method_field('PUT')!!}
                                                     @csrf
                                                     <center>
-                                                    <button type="submit" onclick="preguntaSuspendido(event)" value="send" {{$actividad->articulacionpbt->aprobacion_dinamizador_suspendido == 0 ? '' : 'disabled'}}
+                                                    <button type="submit" onclick="preguntaSuspendido(event)" value="send" {{$articulacion->aprobacion_dinamizador_suspendido == 0 ? '' : 'disabled'}}
                                                         class="waves-effect waves-orange btn orange m-t-xs">
                                                         <i class="material-icons right">done</i>
                                                             Aprobar suspensión de la articulación
@@ -56,15 +56,15 @@
                                 </div>
                                 <div class="mailbox-view-header">
                                     <div class="left">
-                                        <span class="mailbox-title p-v-lg">{{$actividad->present()->actividadCode()}} - {{$actividad->present()->actividadName()}}</span>
+                                        <span class="mailbox-title p-v-lg">{{$articulacion->present()->articulacionCode()}} - {{$articulacion->present()->articulacionName()}}</span>
                                         <div class="left">
-                                            <span class="mailbox-title">{{$actividad->present()->actividadUserAsesor()}}</span>
-                                            <span class="mailbox-author">{{$actividad->present()->actividadUserRolesAsesor()}} </span>
+                                            <span class="mailbox-title">{{$articulacion->present()->articulacionPbtUserAsesor()}}</span>
+                                            <span class="mailbox-author">{{$articulacion->present()->articulacionPbtUserRolesAsesor()}} </span>
                                         </div>
                                     </div>
                                     <div class="right mailbox-buttons p-v-lg">
                                         <div class="right">
-                                            <span class="mailbox-title">Nodo</span>
+                                            <span class="mailbox-title">{{$articulacion->present()->articulacionPbtNodo()}} </span>
                                         </div>
                                     </div>
                                 </div>
@@ -124,7 +124,7 @@
                 serverSide: true,
                 order: false,
                 ajax:{
-                url: "{{route('articulacion.files', [$actividad->articulacionpbt->id, 'Suspendido'])}}",
+                url: "{{route('articulacion.files', [$articulacion->id, 'Suspendido'])}}",
                 type: "get",
                 },
                 columns: [

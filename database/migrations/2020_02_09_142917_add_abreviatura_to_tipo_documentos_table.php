@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddAbreviaturaToTipoDocumentosTable extends Migration
 {
-    public $tableName = 'tiposdocumentos';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'tiposdocumentos';
     /**
      * Run the migrations.
      *

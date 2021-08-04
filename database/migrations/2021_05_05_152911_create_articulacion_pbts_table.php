@@ -6,8 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateArticulacionPbtsTable extends Migration
 {
-
-    public $tableName = 'articulacion_pbts';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'articulacion_pbts';
     /**
      * Run the migrations.
      *
@@ -55,7 +58,6 @@ class CreateArticulacionPbtsTable extends Migration
             $table->foreign('fase_id')->references('id')->on('fases')->onDelete('cascade');
             $table->foreign('tipo_articulacion_id')->references('id')->on('tipo_articulaciones')->onDelete('cascade');
             $table->foreign('alcance_articulacion_id')->references('id')->on('alcance_articulaciones')->onDelete('cascade');
-
         });
     }
 

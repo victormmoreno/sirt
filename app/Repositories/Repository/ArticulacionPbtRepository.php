@@ -216,9 +216,8 @@ class ArticulacionPbtRepository
         try {
             $articulacion = ArticulacionPbt::findOrFail($id);
             $talentLider = $articulacion->talentos()->wherePivot('talento_lider', 1)->first();
-            $user = $talentLider->user;
             $articulacion->registerHistoryArticulacion(Movimiento::IsSolicitarTalento(),Session::get('login_role'), null, "{$fase}");
-            Notification::send($talentLider->user, new ArticulacionAprobarInicio($articulacion, strtolower($fase), $user));
+            Notification::send($talentLider->user, new ArticulacionAprobarInicio($articulacion, strtolower($fase), $talentLider->user));
             DB::commit();
             return true;
         } catch (\Throwable $th) {
@@ -238,7 +237,6 @@ class ArticulacionPbtRepository
     {
         DB::beginTransaction();
         try {
-
             $comentario = null;
             $movimiento = null;
             $mensaje = null;
@@ -246,7 +244,7 @@ class ArticulacionPbtRepository
 
             $articulacion = ArticulacionPbt::findOrFail($id);
             $dinamizadorRepository = new DinamizadorRepository;
-            $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulacion->actividad->nodo_id)->get();
+            $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulacion->nodo_id)->get();
             $destinatarios = $dinamizadorRepository->getAllDinamizadorPorNodoArray($dinamizadores);
             array_push($destinatarios, ['email' => $articulacion->asesor->email]);
             $talento_lider = $articulacion->talentos()->wherePivot('talento_lider', 1)->first();
@@ -425,7 +423,7 @@ class ArticulacionPbtRepository
         try {
             $dinamizadorRepository = new DinamizadorRepository;
             $articulacion = ArticulacionPbt::findOrFail($id);
-            $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulacion->actividad->nodo_id)->get();
+            $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulacion->nodo_id)->get();
             Notification::send($dinamizadores, new ArticulacionAprobarSuspendido($articulacion));
             $articulacion->registerHistoryArticulacion(Movimiento::IsSolicitarDinamizador(),Session::get('login_role'), null, 'Suspender');
             DB::commit();
@@ -505,10 +503,7 @@ class ArticulacionPbtRepository
     private function reversarAInicioPlaneacionEjecucion(ArticulacionPbt $articulacion)
     {
         $articulacion->update([
-            'aprobacion_dinamizador_ejecucion' => 0
-        ]);
-
-        $articulacion->actividad()->update([
+            'aprobacion_dinamizador_ejecucion' => 0,
             'aprobacion_dinamizador' => 0
         ]);
     }

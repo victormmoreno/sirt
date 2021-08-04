@@ -7,8 +7,11 @@ use Carbon\Carbon;
 
 class AddFechaToMaterialesTable extends Migration
 {
-
-    public $tableName = 'materiales';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'materiales';
     /**
      * Run the migrations.
      *

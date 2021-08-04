@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateRutaModelTable extends Migration
 {
-
-    public $tableName = 'ruta_model';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'ruta_model';
     /**
      * Run the migrations.
      *

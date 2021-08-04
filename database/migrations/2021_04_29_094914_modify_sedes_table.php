@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class ModifySedesTable extends Migration
 {
-    public $tableName = 'sedes';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'sedes';
     /**
      * Run the migrations.
      *
@@ -25,7 +29,6 @@ class ModifySedesTable extends Migration
                 ->references('id')->on('ciudades')
                 ->onDelete('no action')
                 ->onUpdate('no action');
-
         });
     }
 

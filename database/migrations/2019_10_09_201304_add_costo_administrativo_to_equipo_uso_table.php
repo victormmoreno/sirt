@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddCostoAdministrativoToEquipoUsoTable extends Migration
 {
-    public $tableName = 'equipo_uso';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'equipo_uso';
     /**
      * Run the migrations.
      *
@@ -27,7 +31,7 @@ class AddCostoAdministrativoToEquipoUsoTable extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $this->dropColumn(['costo_administrativo']);
+            $table->dropColumn(['costo_administrativo']);
         });
     }
 }

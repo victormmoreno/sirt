@@ -6,8 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddSedeToArticulacionPbt extends Migration
 {
-
-    public $tableName = 'articulacion_pbts';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'articulacion_pbts';
     /**
      * Run the migrations.
      *

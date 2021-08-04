@@ -220,6 +220,11 @@ class Proyecto extends Model
         return $this->belongsTo(Idea::class, 'idea_id', 'id');
     }
 
+    public function usoinfraestructuras()
+    {
+        return $this->morphMany(UsoInfraestructura::class, 'asesorable');
+    }
+
     /**
      * Define an inverse one-to-one or many relationship between projects and articulacion_proyecto
      * @author dum
