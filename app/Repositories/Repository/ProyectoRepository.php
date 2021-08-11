@@ -289,9 +289,8 @@ class ProyectoRepository
             },
             'nodo',
             'nodo.entidad',
-            'articulacion_proyecto.proyecto',
-            'articulacion_proyecto.proyecto.fase',
-            'articulacion_proyecto.proyecto.idea',
+            'fase',
+            'idea',
             ])->where(function($q) use ($fecha_inicio, $fecha_cierre) {
             $q->whereHas('articulacion_proyecto.actividad', function($query) use ($fecha_inicio, $fecha_cierre) {
                 $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre]);
@@ -300,7 +299,7 @@ class ProyectoRepository
                 $query->whereHas('articulacion_proyecto.actividad', function($query) use ($fecha_inicio, $fecha_cierre) {
                 $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
                 })
-                ->orWhereHas('articulacion_proyecto.proyecto.fase', function ($query) {
+                ->orWhereHas('fase', function ($query) {
                 $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
                 });
             });
@@ -356,8 +355,8 @@ class ProyectoRepository
             'nodo',
             'nodo.entidad',
             'articulacion_proyecto.proyecto',
-            'articulacion_proyecto.proyecto.fase',
-            'articulacion_proyecto.proyecto.idea',
+            'fase',
+            'idea',
             ]);
     }
 
@@ -1320,19 +1319,19 @@ class ProyectoRepository
     public function ConsultarProyectosPorAnho($anho)
     {
         return Proyecto::select(
-        'actividades.codigo_actividad AS codigo_proyecto',
-        'actividades.nombre',
-        'areasconocimiento.nombre AS nombre_areaconocimiento',
-        'sublineas.nombre AS sublinea_nombre',
-        'articulacion_proyecto.id AS articulacion_proyecto_id',
-        'actividades.fecha_cierre AS fecha_fin',
-        'lineastecnologicas.nombre AS nombre_linea',
-        'fecha_inicio',
-        'fecha_cierre',
-        'economia_naranja',
-        'fases.nombre AS nombre_fase',
-        'proyectos.id',
-        'actividades.id AS actividad_id'
+            'actividades.codigo_actividad AS codigo_proyecto',
+            'actividades.nombre',
+            'areasconocimiento.nombre AS nombre_areaconocimiento',
+            'sublineas.nombre AS sublinea_nombre',
+            'articulacion_proyecto.id AS articulacion_proyecto_id',
+            'actividades.fecha_cierre AS fecha_fin',
+            'lineastecnologicas.nombre AS nombre_linea',
+            'fecha_inicio',
+            'fecha_cierre',
+            'economia_naranja',
+            'fases.nombre AS nombre_fase',
+            'proyectos.id',
+            'actividades.id AS actividad_id'
         )
         ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
         ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) as nombre_idea')

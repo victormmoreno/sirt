@@ -6,6 +6,10 @@ use Illuminate\Database\Migrations\Migration;
 
 class AlterUsoinfraestructurasTable extends Migration
 {
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
     protected $tableName = 'usoinfraestructuras';
     /**
      * Run the migrations.

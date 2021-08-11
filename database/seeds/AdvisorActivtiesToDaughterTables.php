@@ -14,7 +14,6 @@ class AdvisorActivtiesToDaughterTables extends Seeder
     {
         //proyectos
         $proyectos = Actividad::with(['articulacion_proyecto.proyecto'])->whereHas('articulacion_proyecto.proyecto')->get();
-        // dd($proyectos->first());
 
         foreach ($proyectos as $key => $proyecto) {
             if ($proyecto->articulacion_proyecto->proyecto != null) {

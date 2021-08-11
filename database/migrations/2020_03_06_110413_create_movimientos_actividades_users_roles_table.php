@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateMovimientosActividadesUsersRolesTable extends Migration
 {
-    public $tableName = 'movimientos_actividades_users_roles';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'movimientos_actividades_users_roles';
     /**
      * Run the migrations.
      *
@@ -29,7 +33,7 @@ class CreateMovimientosActividadesUsersRolesTable extends Migration
             $table->index(["movimiento_id"], 'fk_movimientos_movimientos1_idx');
             $table->index(["fase_id"], 'fk_movimientos_fases1_idx');
             $table->index(["role_id"], 'fk_movimientos_roles1_idx');
-            
+
             $table->foreign('actividad_id', 'fk_movimientos_actividades1_idx')
             ->references('id')->on('actividades')
             ->onDelete('no action')

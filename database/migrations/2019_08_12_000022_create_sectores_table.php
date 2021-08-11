@@ -10,7 +10,7 @@ class CreateSectoresTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'sectores';
+    protected $tableName = 'sectores';
 
     /**
      * Run the migrations.
@@ -35,8 +35,8 @@ class CreateSectoresTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+    Schema::dropIfExists($this->tableName);
+    }
 }

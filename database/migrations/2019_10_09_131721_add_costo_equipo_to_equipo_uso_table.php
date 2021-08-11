@@ -6,8 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddCostoEquipoToEquipoUsoTable extends Migration
 {
-
-    public $tableName = 'equipo_uso';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'equipo_uso';
     /**
      * Run the migrations.
      *
@@ -28,7 +31,7 @@ class AddCostoEquipoToEquipoUsoTable extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $this->dropColumn(['costo_equipo']);
+            $table->dropColumn(['costo_equipo']);
         });
     }
 }

@@ -6,8 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateTipoEstudio extends Migration
 {
-
-    public $tableName = 'tipo_estudio';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'tipo_estudio';
     /**
      * Run the migrations.
      *

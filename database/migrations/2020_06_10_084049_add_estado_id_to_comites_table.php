@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddEstadoIdToComitesTable extends Migration
 {
-    public $tableName = 'comites';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'comites';
     /**
      * Run the migrations.
      *

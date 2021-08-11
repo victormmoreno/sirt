@@ -6,8 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddSiguientesInvestigacionesToArticulacionesTable extends Migration
 {
-
-    public $tableName = 'articulaciones';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'articulaciones';
     /**
      * Run the migrations.
      *

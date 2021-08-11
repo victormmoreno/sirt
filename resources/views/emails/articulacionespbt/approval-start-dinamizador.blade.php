@@ -1,9 +1,9 @@
 @component('mail::message')
-# Aprobación fase de {{$fase}} | {{$data->actividad->codigo_actividad}} - {{$data->actividad->nombre}}
+# Aprobación fase de {{$fase}} | {{$data->present()->articulacionCode()}} - {{$data->present()->articulacionName()}}
 
 Cordial Saludo.
 
-<p align="justify">El <b> {{$movimiento->role->name}}  {{$user->nombres}} {{$user->apellidos}}</b> ha aprobado la fase de {{$fase}} de la articulación {{$data->actividad->codigo_actividad}} - {{$data->actividad->nombre}}</p>
+<p align="justify">El <b> {{$movimiento->role->name}}  {{$user->present()->userFullName()}}</b> ha aprobado la fase de {{$fase}} de la articulación {{$data->present()->articulacionCode()}} - {{$data->present()->articulacionName()}}</p>
 
 
 Gracias,<br>
@@ -22,6 +22,5 @@ Gestión {{ config('app.name') }} 💯
         'actionURL' => route("articulacion.show.{$fase}",$data->id),
     ]
 )
-
 @endslot
 @endcomponent

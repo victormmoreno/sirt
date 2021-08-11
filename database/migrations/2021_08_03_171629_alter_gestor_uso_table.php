@@ -4,13 +4,13 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddAprobacionTalentoToArticulacionProyectoTable extends Migration
+class AlterGestorUsoTable extends Migration
 {
     /**
      * Schema table name to migrate
      * @var string
      */
-    protected $tableName = 'articulacion_proyecto';
+    protected $tableName = 'gestor_uso';
     /**
      * Run the migrations.
      *
@@ -19,7 +19,9 @@ class AddAprobacionTalentoToArticulacionProyectoTable extends Migration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->tinyInteger('aprobacion_talento')->default(0)->after('actividad_id');
+            $table->string('asesorable_type')->nullable()->after('usoinfraestructura_id');
+            $table->integer('asesorable_id')->nullable()->unsigned()->after('asesorable_type');
+            $table->index(["asesorable_type", "asesorable_id"], 'gestor_uso_asesorable_type_asesorable_id_index');
         });
     }
 
@@ -31,7 +33,7 @@ class AddAprobacionTalentoToArticulacionProyectoTable extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->dropColumn(['aprobacion_talento']);
+            $table->dropColumn(['asesorable_type', 'asesorable_type']);
         });
     }
 }

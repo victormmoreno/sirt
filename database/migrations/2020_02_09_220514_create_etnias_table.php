@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateEtniasTable extends Migration
 {
-    public $tableName = 'etnias';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'etnias';
     /**
      * Run the migrations.
      *

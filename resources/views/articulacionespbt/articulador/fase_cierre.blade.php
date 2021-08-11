@@ -2,16 +2,14 @@
 @section('meta-title', 'Articulaciones PBT')
 @section('content')
 @php
-  $year = Carbon\Carbon::now()->year;
+    $year = Carbon\Carbon::now()->year;
 @endphp
 <main class="mn-inner">
     <div class="content">
         <div class="row no-m-t no-m-b">
             <div class="col s8 m8 l5">
                 <h5 class="left-align orange-text text-darken-3">
-                    <i class="material-icons left">
-                      autorenew
-                    </i>
+                    <i class="material-icons left">autorenew</i>
                     Articulaciones PBT
                 </h5>
             </div>
@@ -19,7 +17,7 @@
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">Inicio</a></li>
                     <li ><a href="{{route('articulaciones.index')}}">Articulaciones PBT</a></li>
-                    <li ><a href="{{route('articulaciones.show', $actividad->articulacionpbt->id)}}">detalle</a></li>
+                    <li ><a href="{{route('articulaciones.show', $articulacion->id)}}">detalle</a></li>
                     <li class="active">Cierre</li>
                 </ol>
             </div>
@@ -36,18 +34,18 @@
                                         <li class="text-mailbox ">Ejecución</li>
                                         <li class="text-mailbox active">Cierre</li>
                                         <div class="right">
-                                            <li class="text-mailbox "> Fase actual: {{$actividad->articulacionpbt->present()->articulacionPbtNameFase()}}</li>
-                                            <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>
+                                            <li class="text-mailbox "> Fase actual: {{$articulacion->present()->articulacionPbtNameFase()}}</li>
+                                            <li class="text-mailbox">Fecha Inicio: {{$articulacion->present()->articulacionPbtstartDate()}}</li>
                                         </div>
                                     </ul>
                                 </div>
                                 <div class="mailbox-view no-s">
                                     <div class="mailbox-view-header no-m-b no-m-t">
                                         <div class="right mailbox-buttons no-s">
-                                            @if ($actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsCierre()))
+                                            @if ($articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsCierre()))
                                                 @if ( ($ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsCambiar() || $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsNoAprobar() || $ultimo_movimiento->movimiento == App\Models\Movimiento::IsReversar())
                                                 || ($ultimo_movimiento->role->name == App\User::IsDinamizador() && $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsAprobar()) )
-                                                <a href="{{route('articulacion.solicitar.aprobacion', [$actividad->articulacionpbt->id, 'Cierre'])}}" class="waves-effect waves-light btn orange m-t-xs">
+                                                <a href="{{route('articulacion.solicitar.aprobacion', [$articulacion->id, 'Cierre'])}}" class="waves-effect waves-light btn orange m-t-xs">
                                                     Solicitar al talento que apruebe la fase de Cierre
                                                 </a>
                                                 @else
@@ -63,20 +61,20 @@
                                                     @endif
                                                 @endif
                                             @endif
-                                            <a target="_blank" href="{{route('pdf.articulacion.cierre', $actividad->articulacionpbt->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Descargar Formulario</a>
+                                            <a target="_blank" href="{{route('pdf.articulacion.cierre', $articulacion->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Descargar Formulario</a>
                                         </div>
                                     </div>
                                     <div class="mailbox-view-header">
                                         <div class="left">
-                                            <span class="mailbox-title p-v-lg">{{$actividad->present()->actividadCode()}} - {{$actividad->present()->actividadName()}}</span>
+                                            <span class="mailbox-title p-v-lg">{{$articulacion->present()->articulacionCode()}} - {{$articulacion->present()->articulacionName()}}</span>
                                             <div class="left">
-                                                <span class="mailbox-title">{{$actividad->present()->actividadUserAsesor()}}</span>
-                                                <span class="mailbox-author">{{$actividad->present()->actividadUserRolesAsesor()}} </span>
+                                                <span class="mailbox-title">{{$articulacion->present()->articulacionPbtUserAsesor()}}</span>
+                                                <span class="mailbox-author">{{$articulacion->present()->articulacionPbtUserRolesAsesor()}} </span>
                                             </div>
                                         </div>
                                         <div class="right mailbox-buttons p-v-lg">
                                             <div class="right">
-                                                <span class="mailbox-title">Nodo</span>
+                                                <span class="mailbox-title">{{$articulacion->present()->articulacionPbtNodo()}}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -84,21 +82,21 @@
                                     <div class="mailbox-text">
                                         <div class="row">
                                             <div class="col s12 m12 l12">
-                                            @if ($actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::Iscierre()))
-                                                <form id="frmArticulacionFaseCierre" action="{{route('articulacion.update.cierre', $actividad->articulacionpbt->id)}}" method="POST" onsubmit="return checkSubmit()">
+                                            @if ($articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::Iscierre()))
+                                                <form id="frmArticulacionFaseCierre" action="{{route('articulacion.update.cierre', $articulacion->id)}}" method="POST" onsubmit="return checkSubmit()">
                                                     {!! method_field('PUT')!!}
                                                     @include('articulacionespbt.form.form_cierre', ['btnText' => 'Modificar'])
                                                     <div class="row">
                                                         @include('articulacionespbt.table-archive-fase', ['fase' => 'Cierre'])
                                                     </div>
                                                     <center>
-                                                        @if ($actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::Iscierre()))
+                                                        @if ($articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::Iscierre()))
                                                         <button type="submit" class="waves-effect cyan darken-1 btn center-aling">
                                                             <i class="material-icons right">done</i>
                                                             Guardar
                                                         </button>
                                                         @endif
-                                                        <a href="{{route('articulaciones.show', $actividad->articulacionpbt->id)}}" class="waves-effect red lighten-2 btn center-aling">
+                                                        <a href="{{route('articulaciones.show', $articulacion->id)}}" class="waves-effect red lighten-2 btn center-aling">
                                                             <i class="material-icons right">backspace</i>Cancelar
                                                         </a>
                                                     </center>
@@ -177,7 +175,7 @@
         order: false,
         "lengthChange": false,
         ajax:{
-        url: "{{route('articulacion.files', [$actividad->articulacionpbt->id, 'Cierre'])}}",
+        url: "{{route('articulacion.files', [$articulacion->id, 'Cierre'])}}",
         type: "get",
         },
         columns: [
@@ -191,7 +189,7 @@
             name: 'download',
             orderable: false,
         },
-        @if ($actividad->articulacionpbt->present()->articulacionPbtNameFase() == 'Cierre')
+        @if ($articulacion->present()->articulacionPbtNameFase() == 'Cierre')
         {
             data: 'delete',
             name: 'delete',
@@ -203,7 +201,7 @@
     }
 
 var Dropzone = new Dropzone('#fase_cierre_articulacion', {
-        url: '{{ route('articulacion.files.upload', $actividad->articulacionpbt->id) }}',
+        url: '{{ route('articulacion.files.upload', $articulacion->id) }}',
         headers: {
         'X-CSRF-TOKEN': '{{ csrf_token() }}'
         },

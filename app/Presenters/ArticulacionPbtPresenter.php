@@ -187,6 +187,19 @@ class ArticulacionPbtPresenter extends Presenter
         return "No registra";
     }
 
+    public function articulacionPbtSedeEmpresaId()
+    {
+        if(
+            $this->articulacionpbt->whereHasMorph(
+                'articulable',
+                [ \App\Models\Sede::class],
+            ) && isset($this->articulacionpbt->articulable)
+        ){
+            return $this->articulacionpbt->articulable->id;
+        }
+        return "No registra";
+    }
+
 
     public function articulacionPbtObjetivo()
     {
@@ -362,7 +375,7 @@ class ArticulacionPbtPresenter extends Presenter
 
     public function articulacionPbtNoPdfAprobacion()
     {
-        if ($this->articulacionpbt && isset($this->articulacionpbt) && $this->articulacionpbt->pdf_noaprobacion == 1) {
+        if (isset($this->articulacionpbt) && $this->articulacionpbt->pdf_noaprobacion == 1) {
             return 1;
         }
         return 0;

@@ -201,7 +201,7 @@
             </tr>
             <tr>
                 <td><b>Nombre Articulación</b></td>
-                <td colspan="5">{{$articulacion->present()->articulacionCode()}}</td>
+                <td colspan="5">{{$articulacion->present()->articulacionName()}}</td>
             </tr>
             <tr>
                 <td><b>Nodo</b></td>

@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateSedesTable extends Migration
 {
-    public $tableName = 'sedes';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'sedes';
     /**
      * Run the migrations.
      *
@@ -20,7 +24,7 @@ class CreateSedesTable extends Migration
             $table->unsignedInteger('empresa_id');
             $table->string('nombre_sede', 300);
             $table->timestamps();
-            
+
             $table->index(["empresa_id"], 'fk_sedes_empresas1_idx');
 
             $table->foreign('empresa_id', 'fk_sedes_empresas1_idx')

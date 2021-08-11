@@ -166,7 +166,7 @@
                             <div class="card transparent bs-dark">
                                 <div class="card-content">
                                     <span class="card-title p-h-lg"> {{$articulacion->present()->articulacionPbtSedeEmpresa()}}</span>
-                                    <input type="hidden" name="txtsede" value="{{$articulacion->sede_id}}"/>
+                                    <input type="hidden" name="txtsede" value="{{$articulacion->present()->articulacionPbtSedeEmpresaId()}}"/>
                                 </div>
                             </div>
                         </div>

@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateMaterialesTable extends Migration
 {
-    public $tableName = 'materiales';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'materiales';
     /**
      * Run the migrations.
      *
@@ -55,7 +59,7 @@ class CreateMaterialesTable extends Migration
                 ->onDelete('no action')
                 ->onUpdate('no action');
 
-             $table->foreign('categoria_material_id', 'fk_categoria_material_materiales1_idx')
+            $table->foreign('categoria_material_id', 'fk_categoria_material_materiales1_idx')
                 ->references('id')->on('categoria_material')
                 ->onDelete('no action')
                 ->onUpdate('no action');

@@ -343,15 +343,15 @@ class ArticulacionPbtController extends Controller
 
         switch (Session::get('login_role')) {
             case User::IsArticulador():
-                return view('articulacionespbt.articulador.fase_ejecucion', ['articul$articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.articulador.fase_ejecucion', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
 
             case User::IsDinamizador():
-                return view('articulacionespbt.dinamizador.fase_ejecucion', ['articul$articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.dinamizador.fase_ejecucion', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
 
             case User::IsTalento():
-                return view('articulacionespbt.talento.fase_ejecucion', ['articul$articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.talento.fase_ejecucion', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
             default:
                 return abort(Response::HTTP_FORBIDDEN);
@@ -369,15 +369,15 @@ class ArticulacionPbtController extends Controller
 
         switch (Session::get('login_role')) {
             case User::IsArticulador():
-                return view('articulacionespbt.articulador.fase_cierre', ['arti$articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.articulador.fase_cierre', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
 
             case User::IsDinamizador():
-                return view('articulacionespbt.dinamizador.fase_cierre', ['arti$articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.dinamizador.fase_cierre', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
 
             case User::IsTalento():
-                return view('articulacionespbt.talento.fase_cierre', ['arti$articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.talento.fase_cierre', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
 
             default:
@@ -499,7 +499,7 @@ class ArticulacionPbtController extends Controller
 
         if (Session::get('login_role') == User::IsArticulador()) {
             $articulacion = ArticulacionPbt::findOrFail($id);
-            if ($articulacion->actividad->aprobacion_dinamizador == 1) {
+            if ($articulacion->aprobacion_dinamizador == 1) {
 
 
             } else {

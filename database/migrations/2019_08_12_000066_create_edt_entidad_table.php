@@ -10,7 +10,7 @@ class CreateEdtEntidadTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'edt_entidad';
+    protected $tableName = 'edt_entidad';
 
     /**
      * Run the migrations.
@@ -49,8 +49,8 @@ class CreateEdtEntidadTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

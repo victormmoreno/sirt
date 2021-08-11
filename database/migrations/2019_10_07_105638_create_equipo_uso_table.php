@@ -6,8 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateEquipoUsoTable extends Migration
 {
-
-    public $tableName = 'equipo_uso';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'equipo_uso';
     /**
      * Run the migrations.
      *

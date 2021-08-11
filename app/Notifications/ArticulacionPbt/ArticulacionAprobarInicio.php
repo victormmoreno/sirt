@@ -48,7 +48,7 @@ class ArticulacionAprobarInicio extends Notification implements ShouldQueue
 
         $fase = nameFase($this->getFase());
         return (new MailMessage)
-            ->subject("Aprobación fase de {$this->getFase()} | {$this->getArticulacion()->actividad->codigo_actividad} - {$this->getArticulacion()->actividad->nombre}" )
+            ->subject("Aprobación fase de {$this->getFase()} | {$this->articulacion->present()->articulacionCode()} - {$this->articulacion->present()->articulacionName()}" )
             ->markdown('emails.articulacionespbt.approval-start', ['data' => $this->getArticulacion(), 'fase' => $fase, 'user' => $this->talent]);
     }
 
@@ -64,8 +64,8 @@ class ArticulacionAprobarInicio extends Notification implements ShouldQueue
             'link'  => route("articulaciones.show", $this->getArticulacion()->id),
             'icon'  => 'autorenew',
             'color' => 'orange',
-            'autor' => "{$this->getArticulacion()->asesor->nombres} {$this->getArticulacion()->asesor->apellidos}",
-            'text'  => "El Articulador ha solicitado aprobar la fase de {$this->getFase()} | {$this->getArticulacion()->actividad->codigo_actividad} - {$this->getArticulacion()->actividad->nombre}",
+            'autor' => "{$this->getArticulacion()->present()->articulacionPbtUserAsesor()}",
+            'text'  => "El Articulador ha solicitado aprobar la fase de {$this->getFase()} | {$this->articulacion->present()->articulacionCode()} - {$this->articulacion->present()->articulacionName()}",
         ];
     }
 
