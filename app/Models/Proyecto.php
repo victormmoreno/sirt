@@ -120,6 +120,11 @@ class Proyecto extends Model
         return self::IS_TRL7_8_ESPERADO;
     }
 
+    public function asesorias()
+    {
+        return $this->morphMany(UsoInfraestructura::class, 'asesorable');
+    }
+
     /**
      * Define a polymorphic, inverse many-to-many relationship between projects and sedes
      * @author dum

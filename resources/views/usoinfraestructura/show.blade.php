@@ -34,15 +34,15 @@
                                                 <div class="mailbox-view-header">
                                                     <div class="left">
                                                         <span class="mailbox-title orange-text text-darken-3">
-                                                            Asesoría y uso | {{$usoinfraestructura->actividad->codigo_actividad}} - {{$usoinfraestructura->actividad->nombre}}
+                                                            Asesoría y uso | {{$usoinfraestructura->asesorable->articulacion_proyecto->actividad->codigo_actividad}} - {{$usoinfraestructura->asesorable->articulacion_proyecto->actividad->nombre}}
                                                         </span>
                                                         <span class="mailbox-author">
-                                                            <b>Nodo: </b> Tecnoparque nodo {{$usoinfraestructura->actividad->nodo->entidad->nombre}}, {{$usoinfraestructura->actividad->nodo->entidad->ciudad->nombre}} ({{$usoinfraestructura->actividad->nodo->entidad->ciudad->departamento->nombre}})<br/>
+                                                            <b>Nodo: </b> Tecnoparque nodo {{$usoinfraestructura->asesorable->nodo->entidad->nombre}}, {{$usoinfraestructura->asesorable->nodo->entidad->ciudad->nombre}} ({{$usoinfraestructura->asesorable->nodo->entidad->ciudad->departamento->nombre}})<br/>
                                                             @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor()))
-                                                            <b>Linea Tecnológica: </b> {{isset($usoinfraestructura->actividad->gestor->lineatecnologica->nombre) ? $usoinfraestructura->actividad->gestor->lineatecnologica->nombre : 'No registra'}} <br/>
+                                                            <b>Linea Tecnológica: </b> {{isset($usoinfraestructura->asesorable->asesor->lineatecnologica->nombre) ? $usoinfraestructura->asesorable->asesor->lineatecnologica->nombre : 'No registra'}} <br/>
                                                             @endif
                                                             <b>Asesor: </b>
-                                                            {{$usoinfraestructura->actividad->gestor->user()->withTrashed()->first()->documento}} - {{$usoinfraestructura->actividad->gestor->user()->withTrashed()->first()->nombres}} {{$usoinfraestructura->actividad->gestor->user()->withTrashed()->first()->apellidos}}<br/>
+                                                            {{$usoinfraestructura->asesorable->asesor->user()->withTrashed()->first()->documento}} - {{$usoinfraestructura->asesorable->asesor->user()->withTrashed()->first()->nombres}} {{$usoinfraestructura->asesorable->asesor->user()->withTrashed()->first()->apellidos}}<br/>
                                                         </span>
                                                     </div>
                                                     @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsTalento()))
@@ -62,41 +62,38 @@
                                                         <div class="col s12 m4 l5">
                                                             <div class="center">
                                                                 <span class="mailbox-title green-complement-text">
-                                                                    Información {{App\Models\UsoInfraestructura::TipoUsoInfraestructura($usoinfraestructura->tipo_usoinfraestructura)}}
+                                                                    Información de la asesoría
                                                                 </span>
                                                             </div>
                                                             <div class="left">
                                                                 <ul class="collection">
                                                                     <li class="collection-item ">
                                                                         <p>
-                                                                            <strong class="cyan-text text-darken-3"> Código de {{App\Models\UsoInfraestructura::TipoUsoInfraestructura($usoinfraestructura->tipo_usoinfraestructura)}}:</strong>
-                                                                            {{$usoinfraestructura->actividad->codigo_actividad}}
+                                                                            <strong class="cyan-text text-darken-3"> Código del proyecto o articulación:</strong>
+                                                                            {{$usoinfraestructura->asesorable->articulacion_proyecto->actividad->codigo_actividad}}
                                                                         </p>
                                                                         <p>
-                                                                            <strong class="cyan-text text-darken-3">Nombre de {{App\Models\UsoInfraestructura::TipoUsoInfraestructura($usoinfraestructura->tipo_usoinfraestructura)}}:</strong>
-                                                                            {{$usoinfraestructura->actividad->nombre}}
+                                                                            <strong class="cyan-text text-darken-3">Nombre de proyecto o articulación:</strong>
+                                                                            {{$usoinfraestructura->asesorable->articulacion_proyecto->actividad->nombre}}
                                                                         </p>
                                                                         <p>
                                                                             <strong class="cyan-text text-darken-3">Fecha de Inicio:</strong>
-                                                                            {{$usoinfraestructura->actividad->fecha_inicio->isoformat('LL')}}
+                                                                            {{$usoinfraestructura->asesorable->articulacion_proyecto->actividad->fecha_inicio->isoformat('LL')}}
                                                                         </p>
 
-                                                                        @if(isset($usoinfraestructura->actividad->articulacion_proyecto) && $usoinfraestructura->actividad->articulacion_proyecto != null)
-                                                                            @if(isset($usoinfraestructura->actividad->articulacion_proyecto->proyecto) && $usoinfraestructura->actividad->articulacion_proyecto->proyecto != null)
-
-                                                                                <p>
-                                                                                <strong class="cyan-text text-darken-3">Sublinea:</strong>
-                                                                                    {{$usoinfraestructura->actividad->articulacion_proyecto->proyecto->sublinea->nombre}}
-                                                                                </p>
-                                                                                <p>
-                                                                                <strong class="cyan-text text-darken-3">Área de Conocimiento:</strong>
-                                                                                    {{$usoinfraestructura->actividad->articulacion_proyecto->proyecto->areaconocimiento->nombre}}
-                                                                                </p>
-                                                                                <p>
-                                                                                    <strong class="cyan-text text-darken-3">Fase del Proyecto:</strong>
-                                                                                    {{isset($usoinfraestructura->actividad->articulacion_proyecto->proyecto->fase) ? $usoinfraestructura->actividad->articulacion_proyecto->proyecto->fase->nombre : 'No registra' }}
-                                                                                </p>
-                                                                            @endif
+                                                                        @if(isset($usoinfraestructura->asesorable->articulacion_proyecto->actividad) && $usoinfraestructura->asesorable->articulacion_proyecto->actividad != null)
+                                                                            <p>
+                                                                            <strong class="cyan-text text-darken-3">Sublinea:</strong>
+                                                                                {{$usoinfraestructura->asesorable->sublinea->nombre}}
+                                                                            </p>
+                                                                            <p>
+                                                                            <strong class="cyan-text text-darken-3">Área de Conocimiento:</strong>
+                                                                                {{$usoinfraestructura->asesorable->areaconocimiento->nombre}}
+                                                                            </p>
+                                                                            <p>
+                                                                                <strong class="cyan-text text-darken-3">Fase del Proyecto:</strong>
+                                                                                {{isset($usoinfraestructura->asesorable->fase) ? $usoinfraestructura->asesorable->fase->nombre : 'No registra' }}
+                                                                            </p>
                                                                         @endif
                                                                     </li>
                                                                 </ul>
