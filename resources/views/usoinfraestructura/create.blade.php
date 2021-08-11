@@ -530,10 +530,8 @@
                 $('#txtlinea').removeAttr('value');
                 $('#detallesGestores').children("tr").remove();
 
-               
                 $('#txttalento').append('<option value="">Seleccione el talento</option>');
                 $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
-             
                 $('#txtmaterial').append('<option value="">Seleccione el material de formación</option>');
 
                 if (response.articulacion.length != 0) {
@@ -542,16 +540,16 @@
                         let a = document.getElementsByName("gestor[]");
                         let fila ="";
 
-                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td><input type="hidden" name="gestor[]" value="'+response.articulacion.actividad.gestor_id+'">'+response.articulacion.actividad.gestor.user.documento + ' - ' +response.articulacion.actividad.gestor.user.nombres+' '+ response.articulacion.actividad.gestor.user.apellidos +'</td><td><input type="number" min="0" maxlength="6" name="asesoriadirecta[]" value="0"><label class="error" for="asesoriadirecta" id="asesoriadirecta-error"></label></td><td><input type="number" min="0" maxlength="6" name="asesoriaindirecta[]" value="0"><label class="error" for="asesoriaindirecta" id="asesoriaindirecta-error"></label></td></td><td></tr>';
+                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td><input type="hidden" name="gestor[]" value="'+response.articulacion.asesor_id+'">'+response.articulacion.asesor.documento + ' - ' +response.articulacion.asesor.nombres+' '+ response.articulacion.asesor.apellidos +'</td><td><input type="number" min="0" maxlength="6" name="asesoriadirecta[]" value="0"><label class="error" for="asesoriadirecta" id="asesoriadirecta-error"></label></td><td><input type="number" min="0" maxlength="6" name="asesoriaindirecta[]" value="0"><label class="error" for="asesoriaindirecta" id="asesoriaindirecta-error"></label></td></td><td></tr>';
                         cont++;
                         $('#detallesGestores').append(fila);
                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
                         $('#txtgestor').attr('value');
-                        $('#txtgestor').val(response.articulacion.actividad.gestor.user.documento+ ' - '+ response.articulacion.actividad.gestor.nombres + ' ' + response.articulacion.actividad.user_apellidos);
+                        $('#txtgestor').val(response.articulacion.asesor.documento+ ' - '+ response.articulacion.asesor.nombres + ' ' + response.articulacion.asesor.apellidos);
                         $("label[for='txtgestor']").addClass('active');
                     @endif
-                    
-                    $('#txtnodo').val(response.articulacion.actividad.nodo_id);
+
+                    $('#txtnodo').val(response.articulacion.nodo_id);
                     $("label[for='txtlinea']").addClass('active');
                 }else{
                     @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
@@ -590,7 +588,7 @@
                 }else{
                     $('#txtlineatecnologica').append('<option value="">no se encontraron resultados</option>');
                 }
-                
+
 
                 if (response.equipos.length != 0) {
                     $.each(response.equipos, function(e, equipo) {
@@ -623,7 +621,7 @@
 
             });
         },
-    
+
         getEquipoPorLinea:function(){
             let lineatecnologica = $('#txtlineatecnologica').val();
             let nodo = $('#txtnodo').val();
@@ -902,7 +900,7 @@
             $("label[for='txtactividad']").text("Edt");
             $divActividad.show();
 
-          
+
 
         }
 

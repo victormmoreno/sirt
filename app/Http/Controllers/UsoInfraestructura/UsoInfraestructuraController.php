@@ -191,32 +191,32 @@ class UsoInfraestructuraController extends Controller
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
                 $nodo = $request->filter_nodo;
-                $gestor = $request->filter_gestor;
+                $asesor = $request->filter_gestor;
                 $user = null;
                 $actividad = null;
                 break;
             case User::IsDinamizador():
                 $nodo = auth()->user()->dinamizador->nodo_id;
-                $gestor = $request->filter_gestor;
+                $asesor = $request->filter_gestor;
                 $user = null;
                 $actividad = null;
                 break;
             case User::IsGestor():
                 $nodo = auth()->user()->gestor->nodo_id;
                 $user = auth()->user()->gestor->user->id;
-                $gestor = auth()->user()->gestor->id;
+                $asesor = auth()->user()->gestor->id;
                 $actividad = $request->filter_actividad;
                 break;
             case User::IsArticulador():
                 $nodo = auth()->user()->articulador->nodo_id;
                 $user = auth()->user()->id;
-                $gestor = auth()->user()->articulador->id;
+                $asesor = auth()->user()->articulador->id;
                 $actividad = $request->filter_actividad;
                 break;
             case User::IsTalento():
                 $nodo = null;
                 $user = auth()->user()->talento->user->id;
-                $gestor = null;
+                $asesor = null;
                 $actividad = $request->filter_actividad;
                 break;
             default:
@@ -228,17 +228,14 @@ class UsoInfraestructuraController extends Controller
 
             $proyectos = [];
             $usos = [];
-            
-            // dd($gestor);
             if (Session::get('login_role') == User::IsGestor()) {
-                // $usos = UsoInfraestructura::with(['asesorable'])->whereHasMorph('asesorable', [\App\Models\Proyecto::class])->whereYear('fecha', $request->filter_year)->get();
-                // $usos_proyecto = $usos->asesorias;
+
                 $proyectos = $this->getProyectoRepository()->asesoriasDeProyecto()
                 ->whereHas('asesorias', function($query) use ($request) {
                     $query->whereYear('fecha', $request->filter_year);
                 })
-                ->whereHas('asesor', function ($query) use ($gestor){
-                    $query->where('id', $gestor);
+                ->whereHas('asesor', function ($query) use ($asesor){
+                    $query->where('id', $asesor);
                 })
                 ->get();
             }
@@ -646,16 +643,16 @@ class UsoInfraestructuraController extends Controller
             return datatables()->of($artulaciones)
                 ->addColumn('checkbox', function ($data) {
                     $checkbox = '
-                    <a class="btn cyan m-b-xs" onclick="asociarArticulacionAUsoInfraestructura(' . $data->id . ', \'' . $data->actividad->codigo_actividad . '\', \'' . $this->reemplezarComillas($data->actividad->nombre) . '\')">
+                    <a class="btn cyan m-b-xs" onclick="asociarArticulacionAUsoInfraestructura(' . $data->id . ', \'' . $data->present()->articulacionCode() . '\', \'' . $this->reemplezarComillas($data->present()->articulacionName()) . '\')">
                         <i class="material-icons">done_all</i>
                     </a>';
 
                     return $checkbox;
                 })->editColumn('codigo_actividad', function ($data) {
-                    return $data->actividad->codigo_actividad;
+                    return $data->present()->articulacionCode();
                 })
                 ->editColumn('nombre', function ($data) {
-                    return $data->actividad->nombre;
+                    return $data->present()->articulacionName();
                 })
                 ->editColumn('fase', function ($data) {
                     return $data->fase->nombre;
@@ -673,39 +670,26 @@ class UsoInfraestructuraController extends Controller
         $fase = [
             Fase::IsInicio(),
             Fase::IsEjecucion(),
+            Fase::IsCierre(),
         ];
 
         $relations = [
             'fase'                => function ($query) {
                 $query->select('id', 'nombre');
             },
-            'actividad' => function ($query) {
-                $query->select('id', 'codigo_actividad', 'nombre', 'fecha_inicio');
-            },
         ];
 
         if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
-
-            return $this->getUsoIngraestructuraArtculacionRepository()
-                ->getArticulacionesForUser($relations)
-
-                ->whereHas('actividad.gestor.user', function ($query) use ($user) {
-                    $query->withTrashed();
-                })
-                ->whereHas('actividad.gestor.user', function ($query) use ($user) {
-                    $query->where('documento', $user);
-                })
-                ->whereIn('fase_id', $fase)
-                ->get();
+            return [];
         }elseif(Session::has('login_role') && Session::get('login_role') == User::IsArticulador()) {
 
             return $this->getUsoIngraestructuraArtculacionRepository()
                 ->getArticulacionesForUser($relations)
 
-                ->whereHas('actividad.gestor.user', function ($query) use ($user) {
+                ->whereHas('asesor', function ($query) use ($user) {
                     $query->withTrashed();
                 })
-                ->whereHas('actividad.gestor.user', function ($query) use ($user) {
+                ->whereHas('asesor', function ($query) use ($user) {
                     $query->where('documento', $user);
                 })
                 ->whereIn('fase_id', $fase)
@@ -715,7 +699,7 @@ class UsoInfraestructuraController extends Controller
             return $this->getUsoIngraestructuraArtculacionRepository()
                 ->getArticulacionesForUser($relations)
 
-                ->whereHas('actividad.gestor.user', function ($query) use ($user) {
+                ->whereHas('asesor', function ($query) use ($user) {
                     $query->withTrashed();
                 })
                 ->whereHas('talentos.user', function ($query) use ($user) {
@@ -808,10 +792,10 @@ class UsoInfraestructuraController extends Controller
 
             $proyectoNodo = Proyecto::findOrFail($id)->nodo_id;
 
-            $proyectoTalento = Proyecto::select('proyectos.*', 'actividades.id as actividad_id', 'proyectos.asesor_id as actividad_gestor_id', 
-            'proyectos.nodo_id as actividad_nodo_id', 'actividades.codigo_actividad', 'actividades.nombre as actividades_nombre', 'gestores.id as gestor_id', 
-            'gestores.lineatecnologica_id as gestor_lineatecnologica_id', 'gestores.honorarios', 'users.id as user_id', 'users.documento', 'users.nombres', 
-            'users.apellidos', 'nodos.id as nodo_id', 'lineastecnologicas.abreviatura', 'lineastecnologicas.id as lineatecnologica_id', 
+            $proyectoTalento = Proyecto::select('proyectos.*', 'actividades.id as actividad_id', 'proyectos.asesor_id as actividad_gestor_id',
+            'proyectos.nodo_id as actividad_nodo_id', 'actividades.codigo_actividad', 'actividades.nombre as actividades_nombre', 'gestores.id as gestor_id',
+            'gestores.lineatecnologica_id as gestor_lineatecnologica_id', 'gestores.honorarios', 'users.id as user_id', 'users.documento', 'users.nombres',
+            'users.apellidos', 'nodos.id as nodo_id', 'lineastecnologicas.abreviatura', 'lineastecnologicas.id as lineatecnologica_id',
             'lineastecnologicas.nombre as lineatecnologica_nombre')
                 ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
                 ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
@@ -880,15 +864,16 @@ class UsoInfraestructuraController extends Controller
     {
         if (request()->ajax()) {
 
-            $articulacionNodo = ArticulacionPbt::findOrFail($id)->actividad->nodo_id;
+            $articulacionNodo = ArticulacionPbt::findOrFail($id)->nodo->id;
 
             $fase = [
                 Fase::IsInicio(),
                 Fase::IsEjecucion(),
+                Fase::IsCierre(),
             ];
 
-            $articulacion = ArticulacionPbt::with(['actividad','actividad.gestor',
-                'actividad.gestor.user'=> function($query){
+            $articulacion = ArticulacionPbt::with([
+                'asesor'=> function($query){
                     $query->select('id', 'documento', 'nombres', 'apellidos');
                 }])
                     ->whereIn('fase_id', $fase)
@@ -938,7 +923,7 @@ class UsoInfraestructuraController extends Controller
                 ->addColumn('checkbox', function ($data) {
                     $checkbox = '<a class="btn cyan m-b-xs" onclick="asociarProyectoAUsoInfraestructura(' . $data->id . ', \'' . $data->articulacion_proyecto->actividad->codigo_actividad . '\', \'' . $this->reemplezarComillas($data->articulacion_proyecto->actividad->nombre) . '\')">
                         <i class="material-icons">done_all</i>
-                      </a>';
+                    </a>';
                     return $checkbox;
                 })->editColumn('codigo_actividad', function ($data) {
                     return $data->articulacion_proyecto->actividad->codigo_actividad;

@@ -29,7 +29,7 @@ class ArticuladoresToUserNodoTableSeeder extends Seeder
                         'role' => User::IsArticulador(),
                         'honorarios' => $user->gestor->honorarios,
                     ]);
-                    Gestor::find($user->gestor->id)->delete();
+                    // Gestor::find($user->gestor->id)->delete();
                 }
             }
         }

@@ -228,6 +228,15 @@ class ArticulacionPbt extends Model
         return $query;
     }
 
+    public function scopeAsesor($query, $user = null){
+        if (!empty($user) && $user != 'all' && $user != null) {
+            return $query->whereHas('asesor', function($query) use($user){
+                $query->where('id', $user);
+            });
+        }
+        return $query;
+    }
+
     public function present()
     {
         return new ArticulacionPbtPresenter($this);

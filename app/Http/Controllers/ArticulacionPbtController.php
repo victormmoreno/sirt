@@ -69,15 +69,19 @@ class ArticulacionPbtController extends Controller
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
                 $nodo = $request->filter_nodo_art;
+                $user = null;
                 break;
             case User::IsDinamizador():
                 $nodo = auth()->user()->dinamizador->nodo_id;
+                $user = null;
                 break;
             case User::IsArticulador():
                 $nodo = auth()->user()->articulador->nodo_id;
+                $user = auth()->user()->id;
                 break;
             case User::IsTalento():
                 $nodo = null;
+                $user = null;
                 $talent = auth()->user()->talento->id;
                 break;
             default:
@@ -104,6 +108,7 @@ class ArticulacionPbtController extends Controller
             ->alcanceArticulacion($request->filter_alcance_articulacion)
             ->fase($request->filter_phase)
             ->nodo($nodo)
+            ->asesor($user)
             ->starEndDate($request->filter_year_art)
             ->talents($talent)
             ->orderBy('created_at', 'desc')

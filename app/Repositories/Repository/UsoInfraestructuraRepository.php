@@ -32,7 +32,7 @@ class UsoInfraestructuraRepository
         if (Session::get('login_role') == User::IsGestor() || Session::get('login_role') == User::IsTalento()) {
             $model = $actividad->articulacion_proyecto->proyecto;
             // Agrego esto para solucionar un problema de merge
-            
+
         } else {
             // En caso de ser una articulación pbt que solo lo puedo hacer el articulador
             // code...
@@ -404,9 +404,6 @@ class UsoInfraestructuraRepository
             },
             'actividad.articulacionpbt',
             'actividad.articulacionpbt.fase',
-            // 'actividad.articulacionpbt.tipoarticulacion',
-
-
             'actividad.gestor'                                              => function ($query) {
                 $query->select('id', 'user_id', 'nodo_id', 'lineatecnologica_id');
             },
@@ -423,13 +420,10 @@ class UsoInfraestructuraRepository
             'actividad.gestor.user'                                         => function ($query) {
                 $query->select('id', 'documento', 'nombres', 'apellidos');
             },
-
-            'actividad.articulacion_proyecto.actividad.gestor.lineatecnologica.equipos',
             'usotalentos',
             'usotalentos.user'                                              => function ($query) {
                 $query->select('id', 'documento', 'nombres', 'apellidos');
             },
-
             'usogestores',
             'usogestores.lineatecnologica'                                  => function ($query) {
                 $query->select('id', 'nombre', 'abreviatura');
@@ -448,7 +442,6 @@ class UsoInfraestructuraRepository
             'usoequipos.lineatecnologica'                                   => function ($query) {
                 $query->select('id', 'nombre', 'abreviatura');
             },
-
         ];
     }
 
