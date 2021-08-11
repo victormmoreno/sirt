@@ -31,6 +31,8 @@ class UsoInfraestructuraRepository
             ->first();
         if (Session::get('login_role') == User::IsGestor() || Session::get('login_role') == User::IsTalento()) {
             $model = $actividad->articulacion_proyecto->proyecto;
+            // Agrego esto para solucionar un problema de merge
+            
         } else {
             // En caso de ser una articulación pbt que solo lo puedo hacer el articulador
             // code...
