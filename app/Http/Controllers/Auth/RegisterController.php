@@ -131,7 +131,6 @@ class RegisterController extends Controller
                 $dinamizadorRepository = new DinamizadorRepository;
                 $dinamizador = $dinamizadorRepository->getAllDinamizadoresPorNodo($request->input('txtnodo'))->first();
 
-                event(new UserWasRegistered($user, $password));
                 if($dinamizador != null){
                     Notification::send($dinamizador, new NewContractor($user, $dinamizador));
                 }
@@ -280,6 +279,7 @@ class RegisterController extends Controller
     public function showConfirmContratorInformationForm(int $documento){
 
         $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
+
         $this->authorize('confirmContratorInformation', $user);
         return view('auth.confirm-contractor-information', [
             'user' => $user,
@@ -296,7 +296,8 @@ class RegisterController extends Controller
     public function confirmContratorInformation(Request $request, int $documento){
 
         $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
-        $this->authorize('confirmContratorInformation', $user);
+
+        // $this->authorize('confirmContratorInformation', $user);
 
         $req = new ConfirmUserRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());

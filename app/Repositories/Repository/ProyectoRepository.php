@@ -332,17 +332,14 @@ class ProyectoRepository
             'articulacion_proyecto.talentos.user.gradoescolaridad',
             'articulacion_proyecto.talentos.user.ciudad',
             'articulacion_proyecto.talentos.user.ciudad.departamento',
-            'articulacion_proyecto.actividad',
-            'articulacion_proyecto.actividad.gestor',
-            'articulacion_proyecto.actividad.gestor.user' => function($query) {
+            'asesor.user' => function($query) {
                 $query->withTrashed();
             },
             'nodo',
             'nodo.entidad',
-            'articulacion_proyecto.proyecto',
             'fase',
             'idea',
-            ]);
+        ]);
     }
 
 

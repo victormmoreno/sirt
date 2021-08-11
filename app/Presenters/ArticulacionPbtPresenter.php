@@ -81,7 +81,7 @@ class ArticulacionPbtPresenter extends Presenter
                 [ \App\Models\Proyecto::class],
             ) && isset($this->articulacionpbt->articulable->articulacion_proyecto->actividad)
         ){
-            return $this->articulacionpbt->articulable->articulacion_proyecto->actividad->fecha_cierre->isoFormat('YYYY-MM-DD');
+            return optional($this->articulacionpbt->articulable->articulacion_proyecto->actividad->fecha_cierre)->isoFormat('YYYY-MM-DD');
         }
         return "No registra";
     }
@@ -212,7 +212,7 @@ class ArticulacionPbtPresenter extends Presenter
     public function articulacionPbtFechaFinalizacion()
     {
         if ($this->articulacionpbt && isset($this->articulacionpbt)) {
-            return $this->articulacionpbt->fecha_esperada_finalizacion->isoFormat('YYYY-MM-DD');
+            return optional($this->articulacionpbt->fecha_esperada_finalizacion)->isoFormat('YYYY-MM-DD');
         }
         return "No registra";
     }
@@ -360,7 +360,7 @@ class ArticulacionPbtPresenter extends Presenter
     public function articulacionPbtFechaCuando()
     {
         if ($this->articulacionpbt && isset($this->articulacionpbt->cuando)) {
-            return $this->articulacionpbt->cuando->isoFormat('YYYY-MM-DD');
+            return optional($this->articulacionpbt->cuando)->isoFormat('YYYY-MM-DD');
         }
         return;
     }
@@ -415,7 +415,7 @@ class ArticulacionPbtPresenter extends Presenter
 
     public function articulacionPbtstartDate(){
         if (isset($this->articulacionpbt)) {
-            return $this->articulacionpbt->fecha_inicio->isoFormat('YYYY-MM-DD');
+            return optional($this->articulacionpbt->fecha_inicio)->isoFormat('YYYY-MM-DD');
         }
         return "No registra";
     }

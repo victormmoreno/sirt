@@ -3,7 +3,7 @@
 
 Señor(a)<br>
 _<strong>{{$user->nombres}} {{$user->apellidos}}</strong>_<br>
-Contratista de {{config('app.name')}}.
+Funcionario de {{config('app.name')}}.
 
 Cordial Saludo.
 
@@ -17,7 +17,7 @@ Ahora debes esperar a que el administrador del aplicativo o el dinamizador de No
 
 Estas son tu credenciales, con la cual podrás ingresar a la plataforma {{config('app.name')}}, una vez te activen tu cuenta.
 @component('mail::panel')
-     <h1 class="tittle">🔐 Credenciales Inicio de Sesión</h1>
+    <h1 class="tittle">🔐 Credenciales Inicio de Sesión</h1>
 @endcomponent
 
 
@@ -51,6 +51,6 @@ Gestión {{ config('app.name') }} 💯
 )
 
 @endslot
-	
+
 @endcomponent
-   
+

@@ -3,7 +3,7 @@
 
 Cordial Saludo.
 
-<p align="justify">El <b> {{$movimiento->role->name}}  {{$user->present()->userFullName()}}</b> ha aprobado la fase de {{$fase}} de la articulación {{$data->present()->articulacionCode()}} - {{$data->present()->articulacionName()}}</p>
+<p align="justify">El <b> {{$movimiento->role->name}}  {{$talent->present()->userFullName()}}</b> ha aprobado la fase de {{$fase}} de la articulación {{$data->present()->articulacionCode()}} - {{$data->present()->articulacionName()}}</p>
 
 
 Gracias,<br>

@@ -248,7 +248,6 @@ class ArticulacionPbtRepository
             $destinatarios = $dinamizadorRepository->getAllDinamizadorPorNodoArray($dinamizadores);
             array_push($destinatarios, ['email' => $articulacion->asesor->email]);
             $talento_lider = $articulacion->talentos()->wherePivot('talento_lider', 1)->first();
-            $talento_lider = $talento_lider->user;
 
             if ($request->decision == 'rechazado') {
                 $title = 'Aprobación rechazada!';
@@ -259,7 +258,6 @@ class ArticulacionPbtRepository
                 $articulacion->registerHistoryArticulacion($movimiento,Session::get('login_role'), $comentario, $fase);
 
                 $regMovimiento = $articulacion->historial->last();
-
 
                 Notification::send($articulacion->asesor, new ArticulacionNoAprobarFase($articulacion, $regMovimiento, strtolower($fase)));
 
@@ -272,7 +270,7 @@ class ArticulacionPbtRepository
                 $regMovimiento = $articulacion->historial->last();
 
 
-                Notification::send([$articulacion->asesor, $dinamizadores], new ArticulacionAprobarInicioDinamizador($articulacion, $talento_lider, $regMovimiento,strtolower($fase)));
+                Notification::send([$articulacion->asesor, $dinamizadores], new ArticulacionAprobarInicioDinamizador($articulacion, $talento_lider->user, $regMovimiento,strtolower($fase)));
 
                 if (Session::get('login_role') == User::IsDinamizador() && ($fase == "Inicio" || $fase == "inicio")) {
 

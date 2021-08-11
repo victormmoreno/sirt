@@ -50,7 +50,7 @@ class ArticulacionAprobarInicioDinamizador extends Notification implements Shoul
 
         return (new MailMessage)
             ->subject("Aprobación fase de {$this->fase} | {$this->articulacion->present()->articulacionCode()} - {$this->articulacion->present()->articulacionName()}" )
-            ->markdown('emails.articulacionespbt.approval-start-dinamizador', ['data' => $this->articulacion, 'fase' => $this->fase, 'user' => $this->talento, 'movimiento' => $this->movimiento]);
+            ->markdown('emails.articulacionespbt.approval-start-dinamizador', ['data' => $this->articulacion, 'fase' => $this->fase, 'talent' => $this->talento, 'movimiento' => $this->movimiento]);
     }
 
     /**

@@ -4,11 +4,10 @@
         <meta charset="utf-8"/>
         <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
         <title>
-            Certificado | {{$user->nombres }} {{$user->apellidos}}
+            Certificado | {{$user->present()->userFullName()}}
         </title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
         <link href="{{ asset('img/web.png') }}" rel="shortcut icon" type="image/x-icon"/>
-    
 
         <style type="text/css">
         body,
@@ -46,7 +45,7 @@
         }
 
         a {
-            color: #00838f;
+            color: #ff9800 !important;
             text-decoration:none;
             font-weight: 600;
         }
@@ -56,13 +55,13 @@
         }
 
         img {
-          border-style: none;
+            border-style: none;
         }
 
 
         .card-image {
-          height: 89px;
-          width: 342px; 
+            height: 89px;
+            width: 342px;
         }
 
         .certificad{
@@ -78,10 +77,8 @@
         .page:after { content: counter(page, upper-roman); }
 
 
-        /* Typography */
-
         h1 {
-            color: #3d4852;
+            color: #ff9800 !important;
             font-size: 19px;
             font-weight: bold;
             margin-top: 0;
@@ -89,7 +86,7 @@
         }
 
         h2 {
-            color: #3d4852;
+            color: #ff9800 !important;
             font-size: 16px;
             font-weight: bold;
             margin-top: 0;
@@ -97,7 +94,7 @@
         }
 
         h3 {
-            color: #3d4852;
+            color: #ff9800 !important;
             font-size: 14px;
             font-weight: bold;
             margin-top: 0;
@@ -120,15 +117,11 @@
             max-width: 100%;
         }
 
-        img .certificated {
-
-        }
-
 
         /* Layout */
 
         .wrapper {
-            background-color: #008981;
+            background-color: #ff9800 !important;
             margin: 0;
             padding: 0;
             width: 100%;
@@ -155,7 +148,7 @@
         }
 
         .header a {
-            color: #008981;
+            color: #ff9800 !important;
             font-size: 19px;
             font-weight: bold;
             text-decoration: none;
@@ -167,8 +160,8 @@
 
         .body {
             background-color: #e0f2f1;
-            border-bottom: 1px solid #edeff2;
-            border-top: 1px solid #edeff2;
+            border-bottom: 1px solid #ff9800 !important;
+            border-top: 1px solid #ff9800 !important;
             margin: 0;
             padding: 0;
             width: 100%;
@@ -181,7 +174,7 @@
         .inner-body {
             background-color: rgba(178, 223, 219, 0.2);
             /*opacity:0.6;*/
-            border: 4px solid #009688;
+            border: 4px solid #ff9800 !important;
             margin: 0 auto;
             padding: 0;
             width: 570px;
@@ -193,7 +186,7 @@
         /* Subcopy */
 
         .subcopy {
-            border-top: 1px solid #008981;
+            border-top: 1px solid #ff9800 !important;
             margin-top: 25px;
             padding-top: 25px;
         }
@@ -220,13 +213,13 @@
 
         .image-footer-left {
             height: 60px;
-            width: 250;
+            width: 250px;
             bottom: 40px;
             margin: 30px;
             padding: 0;
             text-align: center;
             position: fixed;
-            
+
         }
 
         .image-footer-right{
@@ -299,7 +292,7 @@
         }
         .tittle {
             text-align: center;
-            color: #008981;
+            color: #ff9800 !important;
 
         }
 
@@ -320,23 +313,20 @@
         }
 
         .title-date{
-           text-align: right; 
-           padding-top: -50px;
-           font-size: 12px;
+            text-align: right;
+            padding-top: -50px;
+            font-size: 12px;
         }
 
         .title-date-rotate {
-           text-align: left;
-           font-size: 12px;
-         /*  writing-mode: vertical-lr;*/
-           transform: rotate(90deg);
-            
+            text-align: left;
+            font-size: 12px;
+            transform: rotate(90deg);
         }
 
         .promotion h1 {
             text-align: center;
         }
-
         .promotion h2 {
             text-align: center;
         }
@@ -359,7 +349,7 @@
 
         }
         .subtittle{
-            color:#008981;
+            color:#ff9800 !important;
             text-align: center;
         }
         .subtittle-value{
@@ -394,7 +384,7 @@
                     <br/>
                     Siendo un programa de innovación tecnológica del Servicio Nacional de Aprendizaje (SENA) dirigida a todos los Colombianos, que actúa como acelerador para el desarrollo de proyectos de I+D+i, La Red Tecnoparque Colombia,  hace constar que el señor(a)
                     <b>
-                        {{$user->nombres}} {{$user->apellidos}}
+                        {{$user->present()->userFullName()}}
                     </b>
                     identificado con
             {{$user->tipodocumento->nombre}} {{$user->documento}}, se inscribió en nuestro sistema el día

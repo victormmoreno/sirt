@@ -9,7 +9,7 @@ Cordial Saludo.
 
 Hemos enviado este correo para informarte tu contraseña asiginada, con la cual podrás ingresar a la plataforma {{config('app.name')}}.
 @component('mail::panel')
-     <h1 class="tittle">🔐 Credenciales Inicio de Sesión</h1>
+    <h1 class="tittle">🔐 Credenciales Inicio de Sesión</h1>
 @endcomponent
 
 
@@ -43,6 +43,5 @@ Gestión {{ config('app.name') }} 💯
 )
 
 @endslot
-	
+
 @endcomponent
-   

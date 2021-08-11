@@ -6,6 +6,7 @@ use App\Repositories\Repository\ProyectoRepository;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Controller;
 use App\User;
+
 class ProyectoController extends Controller
 {
     private $query;
