@@ -28,34 +28,34 @@ class UsoInfraestructuraController extends Controller
     public function downloadPDFUsosInfraestructura(int $idActividad, string $tipoActividad)
     {
         if ($tipoActividad == 'proyecto') {
-            $actividad = Proyecto::findOrFail($idActividad);
+            $module = Proyecto::findOrFail($idActividad);
             $usos = Proyecto::with('articulacion_proyecto.actividad.usoinfraestructuras')->find($idActividad);
             $talentos = Proyecto::with('articulacion_proyecto.talentos.user')->find($idActividad);
 
             $pdf = PDF::loadView('pdf.usos.seguimiento', [
-                'actividad' => $actividad,
+                'module' => $module,
                 'usos' => $usos,
                 'talentos' => $talentos,
                 'tipo_actividad' => $tipoActividad
             ]);
 
             $pdf->setPaper(strtolower('LETTER'), $orientacion = 'landscape');
-            return $pdf->stream('Seguimiento_' . $actividad->articulacion_proyecto->actividad->present()->actividadCode() . '.pdf');
+            return $pdf->stream('Seguimiento_' . $module->articulacion_proyecto->actividad->present()->actividadCode() . '.pdf');
 
         } else if($tipoActividad == 'articulacion'){
-            $actividad = ArticulacionPbt::findOrFail($idActividad);
-            $usos = ArticulacionPbt::with(['actividad.usoinfraestructuras'])->find($idActividad);
+            $module = ArticulacionPbt::findOrFail($idActividad);
+            $usos = $module;
             $talentos = ArticulacionPbt::with('talentos.user')->find($idActividad);
 
             $pdf = PDF::loadView('pdf.usos.seguimiento', [
-                'actividad' => $actividad,
+                'module' => $module,
                 'usos' => $usos,
                 'talentos' => $talentos,
                 'tipo_actividad' => $tipoActividad
             ]);
 
             $pdf->setPaper(strtolower('LETTER'), $orientacion = 'landscape');
-            return $pdf->stream('Seguimiento_' . $actividad->actividad->codigo_actividad . '.pdf');
+            return $pdf->stream('Seguimiento_' . $module->present()->articulacionCode(). '.pdf');
         }else{
             return abort('404');
         }

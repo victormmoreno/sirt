@@ -7,8 +7,7 @@ use Illuminate\Database\Migrations\Migration;
 class AddAsesorToArticulacionPbts extends Migration
 {
     /**
-     * the attribute that names the table.
-     *
+     * Schema table name to migrate
      * @var string
      */
     protected $tableName = 'articulacion_pbts';

@@ -6,8 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddGestorIdToIdeasTable extends Migration
 {
-
-    public $tableName = 'ideas';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'ideas';
     /**
      * Run the migrations.
      *

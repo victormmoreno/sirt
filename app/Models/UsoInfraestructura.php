@@ -38,7 +38,8 @@ class UsoInfraestructura extends Model
      * @var array
      */
     protected $casts = [
-        'actividad_id'            => 'integer',
+        // 'actividad_id'            => 'integer',
+
         'tipo_usoinfraestructura' => 'integer',
         'fecha'                   => 'date:Y-m-d',
         'descripcion'             => 'string',
@@ -61,57 +62,11 @@ class UsoInfraestructura extends Model
         return self::IS_EDT;
     }
 
-    /**
-     * Elimina los datos de material_uso
-     *
-     * @param Collection $actividad
-     * @return void
-     */
-    public static function deleteUsoMateriales($actividad)
+    public function asesorable()
     {
-        foreach ($actividad->usoinfraestructuras as $key => $value) {
-            $value->usomateriales()->sync([]);
-        }
+        return $this->morphTo();
     }
 
-    /**
-     * Elimina los datos de uso_talento
-     *
-     * @param Collection $actividad
-     * @return void
-     */
-    public static function deleteUsoTalentos($actividad)
-    {
-        foreach ($actividad->usoinfraestructuras as $key => $value) {
-            $value->usotalentos()->sync([]);
-        }
-    }
-
-    /**
-     * Elimina los datos de equipo_uso
-     *
-     * @param Collection $actividad
-     * @return void
-     */
-    public static function deleteUsoEquipos($actividad)
-    {
-        foreach ($actividad->usoinfraestructuras as $key => $value) {
-            $value->usoequipos()->sync([]);
-        }
-    }
-
-    /**
-     * Elimina los datos de gestor_uso
-     *
-     * @param Collection $actividad
-     * @return void
-     */
-    public static function deleteUsoGestores($actividad)
-    {
-        foreach ($actividad->usoinfraestructuras as $key => $value) {
-            $value->usogestores()->sync([]);
-        }
-    }
 
     public function actividad()
     {
@@ -167,7 +122,58 @@ class UsoInfraestructura extends Model
         return ucwords(strtolower(trim($descripcion)));
     }
 
+    /**
+     * Elimina los datos de material_uso
+     *
+     * @param Collection $actividad
+     * @return void
+     */
+    public static function deleteUsoMateriales($actividad)
+    {
+        foreach ($actividad->usoinfraestructuras as $key => $value) {
+            $value->usomateriales()->sync([]);
+        }
+    }
 
+
+    /**
+     * Elimina los datos de uso_talento
+     *
+     * @param Collection $actividad
+     * @return void
+     */
+    public static function deleteUsoTalentos($actividad)
+    {
+        foreach ($actividad->usoinfraestructuras as $key => $value) {
+            $value->usotalentos()->sync([]);
+        }
+    }
+
+    /**
+     * Elimina los datos de equipo_uso
+     *
+     * @param Collection $actividad
+     * @return void
+     */
+    public static function deleteUsoEquipos($actividad)
+    {
+        foreach ($actividad->usoinfraestructuras as $key => $value) {
+            $value->usoequipos()->sync([]);
+        }
+    }
+
+    /**
+     * Elimina los datos de gestor_uso
+     *
+     * @param Collection $actividad
+     * @return void
+     */
+    public static function deleteUsoGestores($actividad)
+    {
+        foreach ($actividad->usoinfraestructuras as $key => $value) {
+            $value->usogestores()->sync([]);
+        }
+    }
 
     public static function TipoUsoInfraestructura($tipo_usoinfraestructura)
     {
@@ -188,7 +194,7 @@ class UsoInfraestructura extends Model
     public function scopeNodoActividad($query, $nodo)
     {
         if (isset($nodo) && $nodo != null && $nodo != 'all') {
-            return $query->whereHas('actividad.nodo',  function ($subquery) use ($nodo) {
+            return $query->whereHas('actividad.articulacion_proyecto.proyecto.nodo',  function ($subquery) use ($nodo) {
                 $subquery->where('id', $nodo);
             });
         }
@@ -199,13 +205,13 @@ class UsoInfraestructura extends Model
     {
         if ((session()->has('login_role') && session()->get('login_role') == User::IsGestor()) && (!empty($user) && $user != null && $user != 'all')) {
             if ((!empty($actividad) && $actividad != null && $actividad != 'all')) {
-                return $query->whereHas('actividad.gestor.user',  function ($subquery) use ($user) {
+                return $query->whereHas('actividad.articulacion_proyecto.proyecto.asesor.user',  function ($subquery) use ($user) {
                     $subquery->where('id', $user);
-                })->whereHas('actividad',  function ($subquery) use ($actividad) {
+                })->whereHas('actividad.articulacion_proyecto.proyecto',  function ($subquery) use ($actividad) {
                     $subquery->where('id', $actividad);
                 });
             } elseif ((!empty($actividad) && $actividad != null && $actividad == 'all')) {
-                return $query->whereHas('actividad.gestor.user',  function ($subquery) use ($user) {
+                return $query->whereHas('actividad.articulacion_proyecto.proyecto.asesor.user',  function ($subquery) use ($user) {
                     $subquery->where('id', $user);
                 });
             }
@@ -233,11 +239,11 @@ class UsoInfraestructura extends Model
     public function scopeGestorActividad($query, $gestor)
     {
         if (!empty($gestor) && $gestor != null && $gestor == 'all') {
-            return $query->has('actividad.gestor');
+            return $query->has('actividad.articulacion_proyecto.proyecto.asesor');
         }
 
         if ((!empty($gestor) && $gestor != null && $gestor != 'all')) {
-            return $query->wherehas('actividad.gestor', function ($query) use ($gestor) {
+            return $query->wherehas('actividad.articulacion_proyecto.proyecto.asesor', function ($query) use ($gestor) {
                 $query->where(function ($subquery) use ($gestor) {
                     $subquery->where('id', $gestor);
                 });
@@ -266,11 +272,11 @@ class UsoInfraestructura extends Model
     public function scopeYearAsesoria($query, $year)
     {
         if (!empty($year) && $year != null && $year == 'all') {
-            return $query->has('actividad');
+            return $query->has('actividad.articulacion_proyecto.proyecto');
         }
 
         if ((!empty($year) && $year != null && $year != 'all')) {
-            return $query->whereYear('fecha', $year)->orWhereYear('created_at', $year)->has('actividad');
+            return $query->whereYear('fecha', $year)->orWhereYear('created_at', $year)->has('actividad.articulacion_proyecto.proyecto');
         }
         return $query;
     }

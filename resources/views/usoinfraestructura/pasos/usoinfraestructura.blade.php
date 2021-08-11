@@ -40,9 +40,9 @@
                 <div class="input-field col s12 m12 l12">
                     <p class="center p-v-xs">
 
-                        @if(isset($usoinfraestructura->tipo_usoinfraestructura))
+                        @if(isset($usoinfraestructura->asesorable))
                             @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsTalento()))
-                            <input class="with-gap" id="IsProyecto" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->tipo_usoinfraestructura == App\Models\UsoInfraestructura::IsProyecto() ? 'checked' : old('txttipousoinfraestructura')}}  value="0"/>
+                            <input class="with-gap" id="IsProyecto" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->asesorable_type == App\Models\Proyecto::class ? 'checked' : old('txttipousoinfraestructura')}}  value="0"/>
                             <label for="IsProyecto">
                                 Proyectos
                             </label>
@@ -80,8 +80,8 @@
             </div>
         
             <div class="row">
-                @if(isset($usoinfraestructura->actividad->nodo_id))
-                    <input type="hidden" name="txtnodo" id="txtnodo" value="{{$usoinfraestructura->actividad->nodo_id}}">
+                @if(isset($usoinfraestructura->asesorable->nodo_id))
+                    <input type="hidden" name="txtnodo" id="txtnodo" value="{{$usoinfraestructura->asesorable->nodo_id}}">
                 @else
                     <input type="hidden" name="txtnodo" id="txtnodo">
                 @endif
@@ -112,15 +112,15 @@
                     </i>
                     
                     @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
-                        @if(isset($usoinfraestructura->actividad->gestor->lineatecnologica))
-                            <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$usoinfraestructura->actividad->gestor->lineatecnologica->nombre}}"/>
+                        @if(isset($usoinfraestructura->asesorable->asesor->lineatecnologica))
+                            <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$usoinfraestructura->asesorable->asesor->lineatecnologica->nombre}}"/>
                         @else
                             <input id="txtlinea" name="txtlinea" readonly="" type="text" value="Por favor seleccione un tipo de asesoría y uso"/>
                         @endif
                    
                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
-                        @if(isset($usoinfraestructura->actividad->gestor->lineatecnologica))
-                            <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$usoinfraestructura->actividad->gestor->lineatecnologica->nombre}}"/>
+                        @if(isset($usoinfraestructura->asesorable->asesor->lineatecnologica))
+                            <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$usoinfraestructura->asesorable->asesor->lineatecnologica->nombre}}"/>
                         @else
                             <input id="txtlinea" name="txtlinea" readonly="" type="text" value="Por favor seleccione un tipo de asesoría y uso"/>
                         @endif
@@ -178,8 +178,8 @@
                         </i>
                         
                         
-                            @if(isset($usoinfraestructura->actividad->gestor->lineatecnologica))
-                                <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$usoinfraestructura->actividad->gestor->lineatecnologica->nombre}}"/>
+                            @if(isset($usoinfraestructura->asesorable->asesor->lineatecnologica))
+                                <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$usoinfraestructura->asesorable->asesor->nombre}}"/>
                             @else
                                 <input id="txtlinea" name="txtlinea" readonly="" type="text" value="Por favor seleccione un tipo de asesoría y uso"/>
                             @endif
@@ -198,14 +198,14 @@
                         account_circle
                     </i>
                     
-                        @if(isset($usoinfraestructura->actividad->gestor->user))
-                            <input id="txtgestor" name="txtgestor" readonly="" type="text" value="{{$usoinfraestructura->actividad->gestor->user->documento}} - {{$usoinfraestructura->actividad->gestor->user->nombres}} {{$usoinfraestructura->actividad->gestor->user->apellidos}}"/>
+                        @if(isset($usoinfraestructura->asesorable->asesor->user))
+                            <input id="txtgestor" name="txtgestor" readonly="" type="text" value="{{$usoinfraestructura->asesorable->asesor->user->documento}} - {{$usoinfraestructura->asesorable->asesor->user->nombres}} {{$usoinfraestructura->asesorable->asesor->user->apellidos}}"/>
                         @else
                             <input id="txtgestor" name="txtgestor" readonly="" type="text" value="Por favor seleccione un tipo de asesoría y uso"/>
                         @endif
                     
                     <label class="active" for="txtgestor">
-                        Gestor a cargo
+                        Experto a cargo
                         <span class="red-text">
                             *
                         </span>
@@ -224,11 +224,12 @@
                     <i class="material-icons prefix">
                         library_books
                     </i>
-                    @if(isset($usoinfraestructura->actividad->nombre))
-                        <input id="txtactividad" name="txtactividad"  type="text" value="{{ isset($usoinfraestructura->actividad->codigo_actividad) ? $usoinfraestructura->actividad->codigo_actividad :  old('txtactividad')}} - {{ isset($usoinfraestructura->actividad->nombre) ? $usoinfraestructura->actividad->nombre : old('txtactividad')}}" readonly />
+                    @if(isset($usoinfraestructura->asesorable_type) && ($usoinfraestructura->asesorable_type == App\Models\Proyecto::class))
+                        {{-- <p>dddddddddddddddd</p> --}}
+                        <input id="txtactividad" name="txtactividad"  type="text" value="{{ isset($usoinfraestructura->asesorable->articulacion_proyecto->actividad->codigo_actividad) ? $usoinfraestructura->asesorable->articulacion_proyecto->actividad->codigo_actividad :  old('txtactividad')}} - {{ isset($usoinfraestructura->asesorable->articulacion_proyecto->actividad->nombre) ? $usoinfraestructura->asesorable->articulacion_proyecto->actividad->nombre : old('txtactividad')}}" readonly />
                         <label for="txtactividad">
-                            @if($usoinfraestructura->tipo_usoinfraestructura == App\Models\UsoInfraestructura::IsProyecto())
-                                Proyecto
+                            Proyecto
+                            {{-- @if($usoinfraestructura->asesorable_type == Proyecto::class)
                             @elseif($usoinfraestructura->tipo_usoinfraestructura == App\Models\UsoInfraestructura::IsArticulacion())
                                 Articulación
                             @else
@@ -236,7 +237,7 @@
                             @endif
                             <span class="red-text">
                                 *
-                            </span>
+                            </span> --}}
                         </label>
                     @else
                         <input id="txtactividad" name="txtactividad"  type="text" readonly />

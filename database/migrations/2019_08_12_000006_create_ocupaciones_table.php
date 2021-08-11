@@ -10,7 +10,7 @@ class CreateOcupacionesTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'ocupaciones';
+    protected $tableName = 'ocupaciones';
 
     /**
      * Run the migrations.
@@ -24,7 +24,6 @@ class CreateOcupacionesTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('nombre', 200);
-
             $table->unique(["nombre"], 'ocupaciones_nombre_unique');
             $table->nullableTimestamps();
         });
@@ -35,8 +34,8 @@ class CreateOcupacionesTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+        public function down()
+        {
+        Schema::dropIfExists($this->tableName);
+        }
 }

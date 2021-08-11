@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateComiteGestorTable extends Migration
 {
-    public $tableName = 'comite_gestor';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'comite_gestor';
     /**
      * Run the migrations.
      *

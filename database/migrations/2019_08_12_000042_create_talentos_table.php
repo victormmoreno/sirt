@@ -10,7 +10,7 @@ class CreateTalentosTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'talentos';
+    protected $tableName = 'talentos';
 
     /**
      * Run the migrations.

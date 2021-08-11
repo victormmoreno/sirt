@@ -10,7 +10,7 @@ class CreateDepartamentosTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'departamentos';
+    protected $tableName = 'departamentos';
 
     /**
      * Run the migrations.
@@ -32,8 +32,8 @@ class CreateDepartamentosTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

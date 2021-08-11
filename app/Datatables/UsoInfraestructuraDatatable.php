@@ -41,4 +41,38 @@ class UsoInfraestructuraDatatable
             ->rawColumns(['fecha', 'actividad', 'gestorEncargado', 'fase', 'asesoria_directa', 'asesoria_indirecta', 'detail'])
             ->make(true);
     }
+
+    public function indexDatatableUsosProyectos($usoinfraestructura)
+    {
+        return datatables()->of($usoinfraestructura)
+            ->editColumn('fecha', function ($data) {
+                return $data->present()->fechaUsoInfraestructura();
+                // return $data->fecha->isoFormat('YYYY-MM-DD');
+            })
+            ->editColumn('actividad', function ($data) {
+                return $data->present()->actividadUsoInfraestructura();
+                
+            })
+            ->editColumn('fase', function ($data) {
+                return $data->present()->faseActividad();
+                // return "{$data->asesorable->fase->nombre}";
+            })
+            ->editColumn('asesoria_directa', function ($data) {
+                return $data->present()->asesoriaDirecta();
+            })
+            ->editColumn('asesoria_indirecta', function ($data) {
+                return $data->present()->asesoriaIndirecta();
+            })
+            ->addColumn('gestorEncargado', function ($data) {
+                return $data->present()->expertoEncargado();
+            })
+            ->addColumn('detail', function ($data) {
+
+                $button = '<a class="btn tooltipped green-complement  m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="' . route("usoinfraestructura.show", $data->id) . '" ><i class="material-icons">visibility</i></a>';
+
+                return $button;
+            })
+            ->rawColumns(['fecha', 'actividad', 'gestorEncargado', 'fase', 'asesoria_directa', 'asesoria_indirecta', 'detail'])
+            ->make(true);
+    }
 }

@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateArchivoModelTable extends Migration
 {
-    public $tableName = 'archivo_model';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'archivo_model';
     /**
      * Run the migrations.
      *

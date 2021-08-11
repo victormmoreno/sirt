@@ -200,11 +200,10 @@ class ProyectoController extends Controller
     public function proyectosCostos(string $anho)
     {
         if (Session::get('login_role') == User::IsGestor()) {
-            $id = auth()->user()->gestor->id;
-            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('gestores.id', $id)->get();
+            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('gestores.id', auth()->user()->gestor->id)->get();
         } else {
-            $id = auth()->user()->dinamizador->nodo_id;
-            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('nodos.id', $id)->get();
+
+            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
         }
         return response()->json([
             'proyectos' => $proyectos

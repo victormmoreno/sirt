@@ -10,7 +10,7 @@ class CreateProyectosTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'proyectos';
+    protected $tableName = 'proyectos';
 
     /**
      * Run the migrations.
@@ -74,8 +74,8 @@ class CreateProyectosTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

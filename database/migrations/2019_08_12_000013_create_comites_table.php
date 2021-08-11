@@ -10,7 +10,7 @@ class CreateComitesTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'comites';
+    protected $tableName = 'comites';
 
     /**
      * Run the migrations.
@@ -38,8 +38,8 @@ class CreateComitesTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

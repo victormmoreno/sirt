@@ -6,8 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddSedeToArticulacionPbt extends Migration
 {
-
-    public $tableName = 'articulacion_pbts';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'articulacion_pbts';
     /**
      * Run the migrations.
      *
@@ -17,7 +20,6 @@ class AddSedeToArticulacionPbt extends Migration
     {
         Schema::table($this->tableName, function (Blueprint $table) {
             $table->unsignedInteger('sede_id')->nullable()->after('proyecto_id');
-
             $table->foreign('sede_id')->references('id')->on('sedes')->onDelete('cascade');
         });
     }

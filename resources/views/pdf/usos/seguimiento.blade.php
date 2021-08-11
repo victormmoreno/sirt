@@ -28,14 +28,14 @@
         <tbody>
             <tr>
                 @if ($tipo_actividad == 'proyecto')
-                <td>{{ $actividad->present()->proyectoCode() }}</td>
-                <td>{{ $actividad->present()->proyectoName()}}</td>
-                <td>{{ $actividad->present()->proyectoUserAsesor() }}</td>
-                <td>{{ $actividad->present()->proyectoAbreviaturaLinea() }} - {{ $actividad->present()->proyectoSublinea() }}</td>
+                <td>{{$module->present()->proyectoCode() }}</td>
+                <td>{{$module->present()->proyectoName()}}</td>
+                <td>{{$module->present()->proyectoUserAsesor() }}</td>
+                <td>{{$module->present()->proyectoAbreviaturaLinea() }} - {{$module->present()->proyectoSublinea() }}</td>
                 @else
-                <td>{{ $actividad->actividad->codigo_actividad }}</td>
-                <td>{{ $actividad->actividad->nombre }}</td>
-                <td>{{ $actividad->articulacion_proyecto->proyecto->present()->proyectoUserAsesor() }}</td>
+                <td>{{$module->present()->articulacionCode()}}</td>
+                <td>{{$module->present()->articulacionName() }}</td>
+                <td>{{$module->present()->articulacionPbtUserRolesAsesor() }}</td>
                 @endif
             </tr>
         </tbody>
@@ -266,7 +266,7 @@
         <div class="column">
         <div>__________________________________________________________</div>
         @if ($tipo_actividad == 'proyecto')
-        <small>Firma del experto - {{ $actividad->articulacion_proyecto->proyecto->present()->proyectoUserAsesor() }}</small>
+        <small>Firma del experto - {{$module->articulacion_proyecto->proyecto->present()->proyectoUserAsesor() }}</small>
         @else
         <small>Firma del Articulador(a) - {{$actividad->actividad->gestor->user->nombres}} {{$actividad->actividad->gestor->user->apellidos}}</small>
         @endif

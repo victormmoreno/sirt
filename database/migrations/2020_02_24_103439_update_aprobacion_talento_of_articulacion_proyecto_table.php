@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class UpdateAprobacionTalentoOfArticulacionProyectoTable extends Migration
 {
-    public $tableName = 'articulacion_proyecto';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'articulacion_proyecto';
     /**
      * Run the migrations.
      *

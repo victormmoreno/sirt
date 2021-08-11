@@ -15,20 +15,19 @@ class AdvisorActivtiesToDaughterTables extends Seeder
         //proyectos
         $proyectos = Actividad::with(['articulacion_proyecto.proyecto'])->whereHas('articulacion_proyecto.proyecto')->get();
 
-
         foreach ($proyectos as $key => $proyecto) {
             if ($proyecto->articulacion_proyecto->proyecto != null) {
 
                 $proyecto->articulacion_proyecto->proyecto->update([
-                    'asesor_id' => $proyecto->gestor->id,
+                    'asesor_id' => $proyecto->gestor_id,
                     'nodo_id' => $proyecto->nodo_id
                 ]);
             }
         }
 
-        $edts = Actividad::with(['edt'])->whereHas('edt')->first();
+        // $edts = Actividad::with(['edt'])->whereHas('edt')->first();
 
-        return $edts->edt->entidades;
+        // return $edts->edt->entidades;
         // foreach ($edts as $key => $val) {
         //     if ($val->edt != null) {
 
@@ -45,17 +44,17 @@ class AdvisorActivtiesToDaughterTables extends Seeder
         //     }
         // }
 
-        $articulaciones = Actividad::with(['articulacion_proyecto.articulacion'])->whereHas('articulacion_proyecto.articulacion')->get();
+        // $articulaciones = Actividad::with(['articulacion_proyecto.articulacion'])->whereHas('articulacion_proyecto.articulacion')->get();
 
-        foreach ($articulaciones as $key => $articulacion) {
-            if ($articulacion->articulacion_proyecto->articulacion != null) {
+        // foreach ($articulaciones as $key => $articulacion) {
+        //     if ($articulacion->articulacion_proyecto->articulacion != null) {
 
-                $articulacion->articulacion_proyecto->articulacion->update([
-                    'asesor_id' => $articulacion->gestor->user_id,
-                    'nodo_id' => $articulacion->nodo_id
-                ]);
-            }
-        }
+        //         $articulacion->articulacion_proyecto->articulacion->update([
+        //             'asesor_id' => $articulacion->gestor->user_id,
+        //             'nodo_id' => $articulacion->nodo_id
+        //         ]);
+        //     }
+        // }
 
         $artpbts = Actividad::with(['articulacionpbt'])->whereHas('articulacionpbt')->get();
 
@@ -63,7 +62,7 @@ class AdvisorActivtiesToDaughterTables extends Seeder
             if ($artpbt->articulacionpbt != null) {
 
                 $artpbt->articulacionpbt->update([
-                    'asesor_id' => $artpbt->gestor->user->id,
+                    'asesor_id' => $artpbt->gestor->user_id,
                     'nodo_id' => $artpbt->nodo_id,
                     'articulable_id' => $this->articulableId($artpbt),
                     'articulable_type' => $this->articulableModel($artpbt),

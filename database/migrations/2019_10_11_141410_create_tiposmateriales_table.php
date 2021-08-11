@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateTiposmaterialesTable extends Migration
 {
-    public $tableName = 'tiposmateriales';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'tiposmateriales';
     /**
      * Run the migrations.
      *

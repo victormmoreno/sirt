@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateObjetivosEspecificosTable extends Migration
 {
-    public $tableName = 'objetivos_especificos';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'objetivos_especificos';
     /**
      * Run the migrations.
      *

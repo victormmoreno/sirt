@@ -54,6 +54,7 @@ class ArticulacionPbt extends Model
         'informe_noaprobado',
         'recibira',
         'pdf_aprobacion',
+        'pdf_noaprobacion',
         'informe',
         'documento_postulacion',
         'documento_convocatoria',
@@ -110,6 +111,11 @@ class ArticulacionPbt extends Model
     public function articulable()
     {
         return $this->MorphTo();
+    }
+
+    public function usoinfraestructura()
+    {
+        return $this->morphOne(UsoInfraestructura::class, 'asesorable');
     }
 
     // public function actividad()

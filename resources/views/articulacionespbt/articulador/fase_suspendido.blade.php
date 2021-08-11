@@ -16,7 +16,7 @@
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">Inicio</a></li>
                     <li ><a href="{{route('articulaciones.index')}}">Articulaciones PBT</a></li>
-                    <li ><a href="{{route('articulaciones.show', $actividad->articulacionpbt->id)}}">detalle</a></li>
+                    <li ><a href="{{route('articulaciones.show', $articulacion->id)}}">detalle</a></li>
                     <li class="active">Suspender</li>
                 </ol>
             </div>
@@ -28,9 +28,9 @@
                         <div class="col s12 m12 l12">
                             <div class="mailbox-options">
                             <ul>
-                                <li class="text-mailbox ">La articulación se encuentra actualmente en la fase de {{$actividad->articulacionpbt->present()->articulacionPbtNameFase()}}</li>
+                                <li class="text-mailbox ">La articulación se encuentra actualmente en la fase de {{$articulacion->present()->articulacionPbtNameFase()}}</li>
                                 <div class="right">
-                                    <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>
+                                    <li class="text-mailbox">Fecha Inicio: {{$articulacion->present()->articulacionPbtStartDate()}}</li>
                                 </div>
                             </ul>
                             </div>
@@ -38,10 +38,10 @@
                                 <div class="mailbox-view-header no-m-b no-m-t">
                                     <div class="right mailbox-buttons no-s">
 
-                                    @if (!$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()))
-                                        @if(!$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsSuspendido()))
+                                    @if (!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()))
+                                        @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsSuspendido()))
                                         @if ($ultimo_movimiento == null || $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsCambiar() || $ultimo_movimiento->movimiento->movimiento  == App\Models\Movimiento::IsNoAprobar() || $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsReversar())
-                                            <a href="{{route('articulacion.notificar.suspension',$actividad->articulacionpbt->id)}}" class="waves-effect waves-orange btn orange m-t-xs">
+                                            <a href="{{route('articulacion.notificar.suspension',$articulacion->id)}}" class="waves-effect waves-orange btn orange m-t-xs">
                                                 Solicitar al dinamizador que apruebe la suspensión de la articulación
                                             </a>
                                             @else
@@ -62,15 +62,15 @@
                                 </div>
                                 <div class="mailbox-view-header">
                                     <div class="left">
-                                        <span class="mailbox-title p-v-lg">{{$actividad->present()->actividadCode()}} - {{$actividad->present()->actividadName()}}</span>
+                                        <span class="mailbox-title p-v-lg">{{$articulacion->present()->articulacionCode()}} - {{$articulacion->present()->articulacionName()}}</span>
                                         <div class="left">
-                                            <span class="mailbox-title">{{$actividad->present()->actividadUserAsesor()}}</span>
-                                            <span class="mailbox-author">{{$actividad->present()->actividadUserRolesAsesor()}} </span>
+                                            <span class="mailbox-title">{{$articulacion->present()->articulacionPbtUserAsesor()}}</span>
+                                            <span class="mailbox-author">{{$articulacion->present()->articulacionPbtUserRolesAsesor()}} </span>
                                         </div>
                                     </div>
                                     <div class="right mailbox-buttons p-v-lg">
                                         <div class="right">
-                                            <span class="mailbox-title">Nodo</span>
+                                            <span class="mailbox-title">{{$articulacion->present()->articulacionPbtNodo()}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -87,8 +87,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    @if (!$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()))
-                                        @if ($actividad->articulacionpbt->aprobacion_dinamizador_suspender == 0)
+                                    @if (!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()))
+                                        @if ($articulacion->aprobacion_dinamizador_suspender == 0)
                                             <div class="card-panel teal">
                                                 <div class="dropzone" id="fase_suspendido_articulacion"></div>
                                             </div>
@@ -110,7 +110,7 @@
     <script>
         datatablesArticulacionSuspendido();
         var Dropzone = new Dropzone('#fase_suspendido_articulacion', {
-            url: '{{ route('articulacion.files.upload', $actividad->articulacionpbt->id) }}',
+            url: '{{ route('articulacion.files.upload', $articulacion->id) }}',
             headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
@@ -177,7 +177,7 @@
         order: false,
         "lengthChange": false,
         ajax:{
-        url: "{{route('articulacion.files', [$actividad->articulacionpbt->id, 'Suspendido'])}}",
+        url: "{{route('articulacion.files', [$articulacion->id, 'Suspendido'])}}",
         type: "get",
         },
         columns: [
@@ -191,7 +191,7 @@
             name: 'download',
             orderable: false,
         },
-        @if (!$actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()))
+        @if (!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()))
         {
             data: 'delete',
             name: 'delete',

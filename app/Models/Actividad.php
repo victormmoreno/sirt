@@ -61,16 +61,6 @@ class Actividad extends Model
         ->orderBy('movimientos_actividades_users_roles.created_at');
     }
 
-    /**
-    * Consulta las actividades
-    * @param Collection $query Propia de los scopes de laravel
-    * @return Builder
-    */
-    public function scopeConsultarActividades($query)
-    {
-        return $query->select('id')
-        ->selectRaw('CONCAT(codigo_actividad, " / ", nombre) AS proyecto');
-    }
 
     public function articulacion_proyecto()
     {
@@ -111,10 +101,10 @@ class Actividad extends Model
     //     return $this->belongsTo(Gestor::class, 'gestor_id', 'id');
     // }
 
-    // public function articulacionpbt()
-    // {
-    //     return $this->hasOne(ArticulacionPbt::class, 'actividad_id', 'id');
-    // }
+    public function articulacionpbt()
+    {
+        return $this->hasOne(ArticulacionPbt::class, 'actividad_id', 'id');
+    }
 
     // public function nodo()
     // {

@@ -14,17 +14,17 @@
                                     <li class="text-mailbox">Ejecución</li>
                                     <li class="text-mailbox">Cierre</li>
                                     <div class="right">
-                                        <li class="text-mailbox "> Fase actual: {{$actividad->articulacionpbt->present()->articulacionPbtNameFase()}}</li>
-                                        <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>
+                                        <li class="text-mailbox "> Fase actual: {{$articulacion->present()->articulacionPbtNameFase()}}</li>
+                                        <li class="text-mailbox">Fecha Inicio: {{$articulacion->present()->articulacionPbtstartDate()}}</li>
                                     </div>
                                 </ul>
                             </div>
                             <div class="mailbox-view no-s">
                                 <div class="mailbox-view-header no-m-b no-m-t">
                                     <div class="right mailbox-buttons no-s">
-                                        @if ($actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio()))
-                                            @if ($ultimo_movimiento != null && $actividad->articulacionpbt->present()->articulacionPbtNameFase() == "Inicio" && $ultimo_movimiento->movimiento->movimiento == "solicitó al talento" && $actividad->articulacionpbt->talentos()->wherePivot('talento_lider', 1)->first()->user->id == auth()->user()->id)
-                                            <form action="{{route('articulacion.aprobacion', [$actividad->articulacionpbt->id, 'Inicio'])}}" method="POST" name="frmInicioTalento">
+                                        @if ($articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio()))
+                                            @if ($ultimo_movimiento != null && $articulacion->present()->articulacionPbtNameFase() == "Inicio" && $ultimo_movimiento->movimiento->movimiento == "solicitó al talento" && $articulacion->talentos()->wherePivot('talento_lider', 1)->first()->user->id == auth()->user()->id)
+                                            <form action="{{route('articulacion.aprobacion', [$articulacion->id, 'Inicio'])}}" method="POST" name="frmInicioTalento">
                                                 {!! method_field('PUT')!!}
                                                 @csrf
 
@@ -57,15 +57,15 @@
                                 </div>
                                 <div class="mailbox-view-header">
                                     <div class="left">
-                                        <span class="mailbox-title p-v-lg">{{$actividad->present()->actividadCode()}} - {{$actividad->present()->actividadName()}}</span>
+                                        <span class="mailbox-title p-v-lg">{{$articulacion->present()->articulacionCode()}} - {{$articulacion->present()->articulacionName()}}</span>
                                         <div class="left">
-                                            <span class="mailbox-title">{{$actividad->present()->actividadUserAsesor()}}</span>
-                                            <span class="mailbox-author">{{$actividad->present()->actividadUserRolesAsesor()}} </span>
+                                            <span class="mailbox-title">{{$articulacion->present()->articulacionPbtUserAsesor()}}</span>
+                                            <span class="mailbox-author">{{$articulacion->present()->articulacionPbtUserRolesAsesor()}} </span>
                                         </div>
                                     </div>
                                     <div class="right mailbox-buttons p-v-lg">
                                         <div class="right">
-                                            <span class="mailbox-title">Nodo</span>
+                                            <span class="mailbox-title">{{$articulacion->present()->articulacionPbtNodo()}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -103,7 +103,7 @@
         serverSide: true,
         order: false,
         ajax:{
-            url: "{{route('articulacion.files', [$actividad->articulacionpbt->id, 'Inicio'])}}",
+            url: "{{route('articulacion.files', [$articulacion->id, 'Inicio'])}}",
         type: "get",
         },
         columns: [
