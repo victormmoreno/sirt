@@ -10,8 +10,10 @@ use App\Models\Gestor;
 use App\Models\Material;
 use App\Models\{Nodo, Proyecto};
 use App\Models\UsoInfraestructura;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Session;
 
 class UsoInfraestructuraRepository
 {
@@ -22,23 +24,31 @@ class UsoInfraestructuraRepository
      * @param $request
      * @author devjul
      */
-    public function store($request)
+    public function storeUsoInfraestructuraProyecto($request)
     {
+        $model = null;
+        $actividad = Actividad::where('codigo_actividad', explode(" - ", $request->txtactividad)[0])
+            ->first();
+        if (Session::get('login_role') == User::IsGestor() || Session::get('login_role') == User::IsTalento()) {
+            $model = $actividad->articulacion_proyecto->proyecto;
+            // Agrego esto para solucionar un problema de merge
+            
+        } else {
+            // En caso de ser una articulación pbt que solo lo puedo hacer el articulador
+            // code...
+        }
+        //llamado de metodo para guardar un uso de infraestructura
+        $usoInfraestructura = $this->storeUsoInfraestructura($model, $request);
+        //llamado de metodo para guardar talentos asociados al uso de infraestructura
+        $this->storeTalentoToUsoInfraestructura($usoInfraestructura, $request);
+        //llamado de metodo para guardar Gestores y horas de asesoria asociados al uso de infraestructura
+        $this->storeGestorUsoToUsoInfraestructura($usoInfraestructura, $request);
+        //llamado de metodo para guardar materiales y costos de material asociados al uso de infraestructura
+        $this->storeMaterialUsoToUsoInfraestructura($usoInfraestructura, $request);
+
+        $this->storeEquipoUsoToUsoInfraestructura($usoInfraestructura, $request);
         DB::beginTransaction();
         try {
-
-            $actividad = Actividad::where('codigo_actividad', explode(" - ", $request->txtactividad)[0])
-                ->first()->id;
-            //llamado de metodo para guardar un uso de infraestructura
-            $usoInfraestructura = $this->storeUsoInfraestructura($actividad, $request);
-            //llamado de metodo para guardar talentos asociados al uso de infraestructura
-            $this->storeTalentoToUsoInfraestructura($usoInfraestructura, $request);
-            //llamado de metodo para guardar Gestores y horas de asesoria asociados al uso de infraestructura
-            $this->storeGestorUsoToUsoInfraestructura($usoInfraestructura, $request);
-            //llamado de metodo para guardar materiales y costos de material asociados al uso de infraestructura
-            $this->storeMaterialUsoToUsoInfraestructura($usoInfraestructura, $request);
-
-            $this->storeEquipoUsoToUsoInfraestructura($usoInfraestructura, $request);
 
             DB::commit();
             return 'true';
@@ -54,16 +64,22 @@ class UsoInfraestructuraRepository
      * @param $request
      * @author devjul
      */
-    private function storeUsoInfraestructura($actividad, $request)
+    private function storeUsoInfraestructura($model, $request)
     {
-        return UsoInfraestructura::create([
-            'actividad_id'            => $actividad,
-            'tipo_usoinfraestructura' => $request->get('txttipousoinfraestructura'),
+        return $model->asesorias()->create([
             'fecha'                   => $request->txtfecha,
             'descripcion'             => $request->txtdescripcion,
             'compromisos'             => $request->get('txtcompromisos'),
             'estado'                  => 1,
         ]);
+        // return UsoInfraestructura::create([
+        //     'actividad_id'            => $actividad,
+        //     'tipo_usoinfraestructura' => $request->get('txttipousoinfraestructura'),
+        //     'fecha'                   => $request->txtfecha,
+        //     'descripcion'             => $request->txtdescripcion,
+        //     'compromisos'             => $request->get('txtcompromisos'),
+        //     'estado'                  => 1,
+        // ]);
     }
 
     /**
@@ -305,14 +321,14 @@ class UsoInfraestructuraRepository
     private function updateUsoInfraestructura($id, $request)
     {
 
-        $actividad = Actividad::where('codigo_actividad', explode(" - ", $request->txtactividad)[0])
-            ->first()->id;
+        // $actividad = Actividad::where('codigo_actividad', explode(" - ", $request->txtactividad)[0])
+        //     ->first()->id;
 
         $usoInfraestructura = UsoInfraestructura::find($id);
 
         $usoInfraestructura->update([
-            'actividad_id'            => $actividad,
-            'tipo_usoinfraestructura' => $request->get('txttipousoinfraestructura'),
+            // 'actividad_id'            => $actividad,
+            // 'tipo_usoinfraestructura' => $request->get('txttipousoinfraestructura'),
             'fecha'                   => $request->txtfecha,
             'asesoria_directa'        => isset($request->txtasesoriadirecta) ? $request->txtasesoriadirecta : '0',
             'asesoria_indirecta'      => isset($request->txtasesoriaindirecta) ? $request->txtasesoriaindirecta : '0',

@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use App\Models\UsoInfraestructura;
+use App\Models\Proyecto;
 
 class UsoInfraestructuraPresenter extends Presenter
 {
@@ -59,25 +60,31 @@ class UsoInfraestructuraPresenter extends Presenter
         return $this->uso->has('actividad.gestor.lineatecnologica') ? "{$this->uso->actividad->gestor->lineatecnologica->abreviatura} - {$this->uso->actividad->gestor->lineatecnologica->nombre}" : 'No Registra';
     }
 
-    public function gestorEncargado()
+    public function expertoEncargado()
     {
-        return $this->uso->has('actividad.gestor.user') ? $this->uso->actividad->gestor->user->present()->userFullName() : 'No Registra';
+        return "{$this->uso->asesorable->asesor->user->nombres} {$this->uso->asesorable->asesor->user->apellidos}";
     }
 
     public function actividadUsoInfraestructura()
     {
-        return $this->uso->has('actividad') ? "{$this->uso->actividad->codigo_actividad} - {$this->uso->actividad->nombre}" : 'No Registra';
+        if ($this->uso->asesorable_type == Proyecto::class) {
+            return "{$this->uso->asesorable->articulacion_proyecto->actividad->codigo_actividad} - {$this->uso->asesorable->articulacion_proyecto->actividad->nombre}";
+        } else {
+            return 'Otro';
+        }
     }
 
     public function faseActividad()
     {
-        if ($this->uso->has('actividad.articulacion_proyecto.proyecto.fase') && isset($this->uso->actividad->articulacion_proyecto->proyecto->fase)) {
-            return $this->uso->actividad->articulacion_proyecto->proyecto->fase->nombre;
-        } else if ($this->uso->has('actividad.articulacionpbt.fase') && isset($this->uso->actividad->articulacionpbt->fase)) {
-            return $this->uso->actividad->articulacionpbt->fase->nombre;
-        } else {
-            return "No Aplica";
-        }
+        return $this->uso->asesorable->fase->nombre;
+        // if ($this->uso->whereHasMorph('asesorable.fase')) {
+        // }
+        // if ($this->uso->has('actividad.articulacion_proyecto.proyecto.fase') && isset($this->uso->actividad->articulacion_proyecto->proyecto->fase)) {
+        // } else if ($this->uso->has('actividad.articulacionpbt.fase') && isset($this->uso->actividad->articulacionpbt->fase)) {
+        //     return $this->uso->actividad->articulacionpbt->fase->nombre;
+        // } else {
+        //     return "No Aplica";
+        // }
     }
 
     public function asesoriaDirecta()

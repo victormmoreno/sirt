@@ -305,6 +305,21 @@ class ProyectoRepository
             });
             });
     }
+
+    public function asesoriasDeProyecto()
+    {
+        return Proyecto::with([
+            'asesorias',
+            'asesor',
+            'asesor.user',
+            'nodo',
+            'nodo.entidad',
+            'articulacion_proyecto',
+            'articulacion_proyecto.talentos',
+            'articulacion_proyecto.talentos.user',
+        ]);
+    }
+
     public function proyectosIndicadoresSeparados_Repository()
     {
         return Proyecto::with([

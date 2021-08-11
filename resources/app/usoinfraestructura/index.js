@@ -49,6 +49,7 @@ var usoinfraestructuraIndex = {
                     data: 'fecha',
                     name: 'fecha',
                     width: '10%',
+                    orderable: false,
                 }, {
                     data: 'gestorEncargado',
                     name: 'gestorEncargado',

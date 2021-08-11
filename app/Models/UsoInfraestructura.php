@@ -194,7 +194,7 @@ class UsoInfraestructura extends Model
     public function scopeNodoActividad($query, $nodo)
     {
         if (isset($nodo) && $nodo != null && $nodo != 'all') {
-            return $query->whereHas('actividad.nodo',  function ($subquery) use ($nodo) {
+            return $query->whereHas('actividad.articulacion_proyecto.proyecto.nodo',  function ($subquery) use ($nodo) {
                 $subquery->where('id', $nodo);
             });
         }
@@ -205,13 +205,13 @@ class UsoInfraestructura extends Model
     {
         if ((session()->has('login_role') && session()->get('login_role') == User::IsGestor()) && (!empty($user) && $user != null && $user != 'all')) {
             if ((!empty($actividad) && $actividad != null && $actividad != 'all')) {
-                return $query->whereHas('actividad.gestor.user',  function ($subquery) use ($user) {
+                return $query->whereHas('actividad.articulacion_proyecto.proyecto.asesor.user',  function ($subquery) use ($user) {
                     $subquery->where('id', $user);
-                })->whereHas('actividad',  function ($subquery) use ($actividad) {
+                })->whereHas('actividad.articulacion_proyecto.proyecto',  function ($subquery) use ($actividad) {
                     $subquery->where('id', $actividad);
                 });
             } elseif ((!empty($actividad) && $actividad != null && $actividad == 'all')) {
-                return $query->whereHas('actividad.gestor.user',  function ($subquery) use ($user) {
+                return $query->whereHas('actividad.articulacion_proyecto.proyecto.asesor.user',  function ($subquery) use ($user) {
                     $subquery->where('id', $user);
                 });
             }
@@ -239,11 +239,11 @@ class UsoInfraestructura extends Model
     public function scopeGestorActividad($query, $gestor)
     {
         if (!empty($gestor) && $gestor != null && $gestor == 'all') {
-            return $query->has('actividad.gestor');
+            return $query->has('actividad.articulacion_proyecto.proyecto.asesor');
         }
 
         if ((!empty($gestor) && $gestor != null && $gestor != 'all')) {
-            return $query->wherehas('actividad.gestor', function ($query) use ($gestor) {
+            return $query->wherehas('actividad.articulacion_proyecto.proyecto.asesor', function ($query) use ($gestor) {
                 $query->where(function ($subquery) use ($gestor) {
                     $subquery->where('id', $gestor);
                 });
@@ -272,11 +272,11 @@ class UsoInfraestructura extends Model
     public function scopeYearAsesoria($query, $year)
     {
         if (!empty($year) && $year != null && $year == 'all') {
-            return $query->has('actividad');
+            return $query->has('actividad.articulacion_proyecto.proyecto');
         }
 
         if ((!empty($year) && $year != null && $year != 'all')) {
-            return $query->whereYear('fecha', $year)->orWhereYear('created_at', $year)->has('actividad');
+            return $query->whereYear('fecha', $year)->orWhereYear('created_at', $year)->has('actividad.articulacion_proyecto.proyecto');
         }
         return $query;
     }

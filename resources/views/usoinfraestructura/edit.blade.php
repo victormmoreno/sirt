@@ -44,7 +44,9 @@
                                     <span class="card-title center-align">
                                         Editar Uso Infraestructura |
                                         <strong>
-                                            {{$usoinfraestructura->actividad->codigo_actividad}}  {{$usoinfraestructura->actividad->nombre}}
+                                            @if ($usoinfraestructura->asesorable_type == 'App\Models\Proyecto')
+                                                {{$usoinfraestructura->asesorable->articulacion_proyecto->actividad->codigo_actividad}}  {{$usoinfraestructura->asesorable->articulacion_proyecto->actividad->nombre}}
+                                            @endif
                                         </strong>
                                     </span>
                                     <i class="Small material-icons prefix">
@@ -75,8 +77,8 @@
 <script>
     $(document).ready(function() {
             usoInfraestructuraUpdate.checkTipoUsoInfraestrucuta();
-            @if(isset($usoinfraestructura->actividad->articulacion_proyecto->proyecto))
-            usoInfraestructuraUpdate.getSelectTalentoProyecto({{$usoinfraestructura->actividad->articulacion_proyecto->proyecto->id}});
+            @if(isset($usoinfraestructura->asesorable->articulacion_proyecto))
+            usoInfraestructuraUpdate.getSelectTalentoProyecto({{$usoinfraestructura->asesorable->id}});
             @endif
             @if(isset($usoinfraestructura->actividad->articulacionpbt))
             usoInfraestructuraUpdate.getSelectTalentoArticulacion({{$usoinfraestructura->actividad->articulacionpbt->id}});
