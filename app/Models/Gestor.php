@@ -96,22 +96,6 @@ class Gestor extends Model
     // }
 
     /**
-     * Define a many-to-many relationship gestores and usos de infraestructura.
-     * @author devjul
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function usoinfraestructuras()
-    {
-        return $this->belongsToMany(UsoInfraestructura::class, 'gestor_uso', 'usoinfraestructura_id', 'gestor_id')
-            ->withTimestamps()
-            ->withPivot([
-                'asesoria_directa',
-                'asesoria_indirecta',
-                'costo_asesoria',
-            ]);
-    }
-
-    /**
      * Define a many-to-many relationship gestores and comites.
      * @author dum
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

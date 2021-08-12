@@ -3,28 +3,28 @@
 
 @section('content')
 	<main class="mn-inner inner-active-sidebar">
-	    <div class="content">
-	        <div class="row no-m-t no-m-b">
-	            <div class="col s12 m12 l12">
-	                <div class="row">
-	                    <div class="col s12 m8 l10">
-	                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
-	                            <a class="footer-text left-align" href="{{route('usoinfraestructura.index')}}">
+        <div class="content">
+            <div class="row no-m-t no-m-b">
+                <div class="col s12 m12 l12">
+                    <div class="row">
+                        <div class="col s12 m8 l10">
+                            <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
+                                <a class="footer-text left-align" href="{{route('usoinfraestructura.index')}}">
                                     <i class="material-icons arrow-l">
                                         arrow_back
                                     </i>
                                 </a>
-	                            Asesoría y Uso
-	                        </h5>
-	                    </div>
-	                    <div class="col s12 m4 l2 rigth-align show-on-large hide-on-med-and-down">
-	                        <ol class="breadcrumbs">
-	                            <li><a href="{{route('home')}}">Inicio</a></li>
-	                            <li class="active">Asesoría y Uso </li>
-	                        </ol>
-	                    </div>
-	                </div>
-	                <div class="row">
+                                Asesoría y Uso
+                            </h5>
+                        </div>
+                        <div class="col s12 m4 l2 rigth-align show-on-large hide-on-med-and-down">
+                            <ol class="breadcrumbs">
+                                <li><a href="{{route('home')}}">Inicio</a></li>
+                                <li class="active">Asesoría y Uso </li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col s12 m12 l12">
                             <div class="card mailbox-content">
                                 <div class="card-content">
@@ -34,7 +34,7 @@
                                                 <div class="mailbox-view-header">
                                                     <div class="left">
                                                         <span class="mailbox-title orange-text text-darken-3">
-                                                            Asesoría y uso | {{$usoinfraestructura->asesorable->articulacion_proyecto->actividad->codigo_actividad}} - {{$usoinfraestructura->asesorable->articulacion_proyecto->actividad->nombre}}
+                                                            {{-- Asesoría y uso | {{$usoinfraestructura->asesorable->articulacion_proyecto->actividad->codigo_actividad}} - {{$usoinfraestructura->asesorable->articulacion_proyecto->actividad->nombre}} --}}
                                                         </span>
                                                         <span class="mailbox-author">
                                                             <b>Nodo: </b> Tecnoparque nodo {{$usoinfraestructura->asesorable->nodo->entidad->nombre}}, {{$usoinfraestructura->asesorable->nodo->entidad->ciudad->nombre}} ({{$usoinfraestructura->asesorable->nodo->entidad->ciudad->departamento->nombre}})<br/>
@@ -42,7 +42,7 @@
                                                             <b>Linea Tecnológica: </b> {{isset($usoinfraestructura->asesorable->asesor->lineatecnologica->nombre) ? $usoinfraestructura->asesorable->asesor->lineatecnologica->nombre : 'No registra'}} <br/>
                                                             @endif
                                                             <b>Asesor: </b>
-                                                            {{$usoinfraestructura->asesorable->asesor->user()->withTrashed()->first()->documento}} - {{$usoinfraestructura->asesorable->asesor->user()->withTrashed()->first()->nombres}} {{$usoinfraestructura->asesorable->asesor->user()->withTrashed()->first()->apellidos}}<br/>
+                                                            {{$usoinfraestructura->asesorable->asesor->documento}} - {{$usoinfraestructura->asesorable->asesor->nombres}} {{$usoinfraestructura->asesorable->asesor->apellidos}}<br/>
                                                         </span>
                                                     </div>
                                                     @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsTalento()))
@@ -67,7 +67,7 @@
                                                             </div>
                                                             <div class="left">
                                                                 <ul class="collection">
-                                                                    <li class="collection-item ">
+                                                                    {{-- <li class="collection-item ">
                                                                         <p>
                                                                             <strong class="cyan-text text-darken-3"> Código del proyecto o articulación:</strong>
                                                                             {{$usoinfraestructura->asesorable->articulacion_proyecto->actividad->codigo_actividad}}
@@ -95,7 +95,7 @@
                                                                                 {{isset($usoinfraestructura->asesorable->fase) ? $usoinfraestructura->asesorable->fase->nombre : 'No registra' }}
                                                                             </p>
                                                                         @endif
-                                                                    </li>
+                                                                    </li> --}}
                                                                 </ul>
                                                             </div>
                                                             <div class="divider mailbox-divider"></div>
@@ -216,10 +216,12 @@
                                                                     <div class="divider mailbox-divider"></div>
                                                                     <ul class="collection">
                                                                         @forelse ($usoinfraestructura->usogestores as $usogestor)
+
+
                                                                         <li class="collection-item ">
                                                                             @if(isset( $usogestor))
                                                                                 <p class="title">
-                                                                                    <strong class="cyan-text text-darken-3">Asesor: </strong>{{$usogestor->user()->withTrashed()->first()->documento}} - {{$usogestor->user()->withTrashed()->first()->nombres}} {{$usogestor->user()->withTrashed()->first()->apellidos}}
+                                                                                    <strong class="cyan-text text-darken-3">Asesor: </strong>{{$usogestor->present()->userDocumento()}} - {{$usogestor->present()->userFullName()}}
                                                                                 </p>
                                                                             @endif
                                                                             @if ($usogestor->pivot->asesoria_directa == 1)
@@ -369,8 +371,8 @@
                             </div>
                         </div>
                     </div>
-	            </div>
-	        </div>
-	    </div>
+                </div>
+            </div>
+        </div>
 	</main>
 @endsection

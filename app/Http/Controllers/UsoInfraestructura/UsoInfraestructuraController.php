@@ -204,18 +204,18 @@ class UsoInfraestructuraController extends Controller
             case User::IsGestor():
                 $nodo = auth()->user()->gestor->nodo_id;
                 $user = auth()->user()->gestor->user->id;
-                $asesor = auth()->user()->gestor->id;
+                $asesor = auth()->user()->id;
                 $actividad = $request->filter_actividad;
                 break;
             case User::IsArticulador():
                 $nodo = auth()->user()->articulador->nodo_id;
                 $user = auth()->user()->id;
-                $asesor = auth()->user()->articulador->id;
+                $asesor = auth()->user()->id;
                 $actividad = $request->filter_actividad;
                 break;
             case User::IsTalento():
                 $nodo = null;
-                $user = auth()->user()->talento->user->id;
+                $user = auth()->user()->id;
                 $asesor = null;
                 $actividad = $request->filter_actividad;
                 break;
@@ -226,41 +226,17 @@ class UsoInfraestructuraController extends Controller
 
         if ($request->ajax()) {
 
-            $proyectos = [];
             $usos = [];
-            if (Session::get('login_role') == User::IsGestor()) {
 
-                $proyectos = $this->getProyectoRepository()->asesoriasDeProyecto()
-                ->whereHas('asesorias', function($query) use ($request) {
-                    $query->whereYear('fecha', $request->filter_year);
-                })
-                ->whereHas('asesor', function ($query) use ($asesor){
-                    $query->where('id', $asesor);
-                })
-                ->get();
+            if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null) && ($request->filled('filter_gestor') || $request->filter_gestor == null)  && ($request->filled('filter_actividad') || $request->filter_actividad == null)) {
+                $usos = UsoInfraestructura::nodoAsesoria($nodo)
+                    ->yearAsesoria($request->filter_year)
+                    // ->asesoria($actividad, $user)
+                    // ->asesor($asesor)
+                    ->orderBy('usoinfraestructuras.created_at', 'desc')
+                    ->get();
             }
-            if (Session::get('login_role') == User::IsTalento()) {
-                $proyectos = $this->getProyectoRepository()->asesoriasDeProyecto()
-                ->whereHas('asesorias', function($query) use ($request) {
-                    $query->whereYear('fecha', $request->filter_year);
-                })
-                ->whereHas('articulacion_proyecto.talentos.user', function ($query) use ($user){
-                    $query->where('id', $user);
-                })
-                ->get();
-            }
-            $usos = $this->getUsosDeProyectos($proyectos);
-
-            return $usoDatatable->indexDatatableUsosProyectos($usos);
-
-            // if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null) && ($request->filled('filter_gestor') || $request->filter_gestor == null)  && ($request->filled('filter_actividad') || $request->filter_actividad == null)) {
-            //     $usos = UsoInfraestructura::nodoActividad($nodo)
-            //         ->yearAsesoria($request->filter_year)
-            //         ->actividad($actividad, $user)
-            //         ->gestorActividad($gestor)
-            //         ->orderBy('usoinfraestructuras.created_at', 'desc')
-            //         ->get();
-            // }
+            return $usoDatatable->indexDatatable($usos);
         }
 
         switch (Session::get('login_role')) {
@@ -286,6 +262,8 @@ class UsoInfraestructuraController extends Controller
                 return view('usoinfraestructura.index');
                 break;
             case User::IsArticulador():
+                // $uso = UsoInfraestructura::first();
+                // dd($uso->usogestores);
                 return view('usoinfraestructura.index');
                 break;
             case User::IsTalento():
@@ -468,12 +446,7 @@ class UsoInfraestructuraController extends Controller
      */
     public function show($id)
     {
-        // $relations          = $this->getUsoInfraestructuraRepository()->getDataIndex();
-        // $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
-        //     ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'descripcion','compromisos', 'estado', 'created_at')
-        //     ->findOrFail($id);
         $usoinfraestructura = UsoInfraestructura::findOrFail($id);
-        // dd($usoinfraestructura);
         $equipos = [];
         if ($usoinfraestructura->has('usoequipos')) {
             $equipos = $usoinfraestructura->usoequipos()->withTrashed()->get();

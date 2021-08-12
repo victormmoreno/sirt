@@ -113,6 +113,11 @@ class ArticulacionPbt extends Model
         return $this->MorphTo();
     }
 
+    public function asesorias()
+    {
+        return $this->morphMany(UsoInfraestructura::class, 'asesorable');
+    }
+
     public function usoinfraestructura()
     {
         return $this->morphOne(UsoInfraestructura::class, 'asesorable');

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\Presenters\UsoInfraestructuraPresenter;
+use Illuminate\Database\Eloquent\Builder;
 
 class UsoInfraestructura extends Model
 {
@@ -103,8 +104,15 @@ class UsoInfraestructura extends Model
 
     public function usogestores()
     {
-        return $this->belongsToMany(Gestor::class, 'gestor_uso', 'usoinfraestructura_id', 'gestor_id')
-            ->withTimestamps()
+        // return $this->belongsToMany(Gestor::class, 'gestor_uso', 'usoinfraestructura_id', 'gestor_id')
+        //     ->withTimestamps()
+        //     ->withPivot([
+        //         'asesoria_directa',
+        //         'asesoria_indirecta',
+        //         'costo_asesoria',
+        //     ]);
+
+            return $this->morphedByMany(User::class, 'asesorable', 'gestor_uso', 'usoinfraestructura_id')->withTimestamps()
             ->withPivot([
                 'asesoria_directa',
                 'asesoria_indirecta',
@@ -191,93 +199,148 @@ class UsoInfraestructura extends Model
         return $query->with($relations);
     }
 
-    public function scopeNodoActividad($query, $nodo)
+    public function scopeNodoAsesoria($query, $nodo)
     {
         if (isset($nodo) && $nodo != null && $nodo != 'all') {
-            return $query->whereHas('actividad.articulacion_proyecto.proyecto.nodo',  function ($subquery) use ($nodo) {
-                $subquery->where('id', $nodo);
-            });
+            $query->whereHasMorph(
+                'asesorable',
+                [ \App\Models\Proyecto::class, \App\Models\ArticulacionPbt::class],
+                function (Builder $subquery) use($nodo) {
+                    $subquery->where('nodo_id', $nodo);
+                }
+            );
         }
         return $query;
     }
 
-    public function scopeActividad($query, $actividad, $user)
-    {
-        if ((session()->has('login_role') && session()->get('login_role') == User::IsGestor()) && (!empty($user) && $user != null && $user != 'all')) {
+    public function scopeAsesoria($query, $actividad, $user)
+    {   if ((session()->has('login_role') && session()->get('login_role') == User::IsArticulador()) && (!empty($user) && $user != null && $user != 'all')) {
             if ((!empty($actividad) && $actividad != null && $actividad != 'all')) {
-                return $query->whereHas('actividad.articulacion_proyecto.proyecto.asesor.user',  function ($subquery) use ($user) {
-                    $subquery->where('id', $user);
-                })->whereHas('actividad.articulacion_proyecto.proyecto',  function ($subquery) use ($actividad) {
-                    $subquery->where('id', $actividad);
-                });
+
+                $query->whereHasMorph(
+                    'asesorable',
+                    [ \App\Models\ArticulacionPbt::class],
+                    function (Builder $subquery) use($actividad, $user) {
+                        return $subquery->where('id', $actividad)
+                        ->orWhereHas('asesor', function ($subquery) use ($user) {
+                            $subquery->where('id', $user);
+                        });
+                    }
+                );
+
+
             } elseif ((!empty($actividad) && $actividad != null && $actividad == 'all')) {
-                return $query->whereHas('actividad.articulacion_proyecto.proyecto.asesor.user',  function ($subquery) use ($user) {
-                    $subquery->where('id', $user);
-                });
+
+                $query->whereHasMorph(
+                    'asesorable.asesor',
+                    [ \App\Models\ArticulacionPbt::class],
+                    function (Builder $subquery) use( $user) {
+                        return $subquery->where('id', $user);
+                    }
+                );
+            }
+        }
+        else if ((session()->has('login_role') && session()->get('login_role') == User::IsGestor()) && (!empty($user) && $user != null && $user != 'all')) {
+            if ((!empty($actividad) && $actividad != null && $actividad != 'all')) {
+
+                $query->whereHasMorph(
+                    'asesorable',
+                    [ \App\Models\Proyecto::class],
+                    function (Builder $subquery) use($actividad, $user) {
+                        return $subquery->where('id', $actividad)
+                        ->orWhereHas('asesor.user', function ($subquery) use ($user) {
+                            $subquery->where('id', $user);
+                        });
+                    }
+                );
+
+                // return $query->whereHas('actividad.articulacion_proyecto.proyecto.asesor.user',  function ($subquery) use ($user) {
+                //     $subquery->where('id', $user);
+                // })->whereHas('actividad.articulacion_proyecto.proyecto',  function ($subquery) use ($actividad) {
+                //     $subquery->where('id', $actividad);
+                // });
+
+            } elseif ((!empty($actividad) && $actividad != null && $actividad == 'all')) {
+
+                $query->whereHasMorph(
+                    'asesorable.asesor.user',
+                    [ \App\Models\Proyecto::class],
+                    function (Builder $subquery) use( $user) {
+                        return $subquery->where('id', $user);
+                    }
+                );
+
+                // return $query->whereHas('actividad.articulacion_proyecto.proyecto.asesor.user',  function ($subquery) use ($user) {
+                //     $subquery->where('id', $user);
+                // });
             }
         } else if ((session()->has('login_role') && session()->get('login_role') == User::IsTalento()) && (!empty($user) && $user != null && $user != 'all')) {
             if ((!empty($actividad) && $actividad != null && $actividad != 'all')) {
+
                 return $query->whereHas('usotalentos.user',  function ($subquery) use ($user) {
                     $subquery->where('id', $user);
                 })->whereHas('actividad',  function ($subquery) use ($actividad) {
                     $subquery->where('id', $actividad);
                 });
+
             } elseif ((!empty($actividad) && $actividad != null && $actividad == 'all')) {
+
                 return $query->whereHas('usotalentos.user',  function ($subquery) use ($user) {
                     $subquery->where('id', $user);
                 });
+
             } elseif ((!empty($actividad) && $actividad == null && $actividad != 'all')) {
+
                 return $query->whereHas('usotalentos.user',  function ($subquery) use ($user) {
                     $subquery->where('id', $user);
                 });
+
             }
         }
 
         return $query;
     }
 
-    public function scopeGestorActividad($query, $gestor)
+    public function scopeAsesor($query, $asesor = null)
     {
-        if (!empty($gestor) && $gestor != null && $gestor == 'all') {
-            return $query->has('actividad.articulacion_proyecto.proyecto.asesor');
+        if (!empty($asesor) && $asesor != null && $asesor == 'all') {
+            return $query->has('asesorable');
         }
 
-        if ((!empty($gestor) && $gestor != null && $gestor != 'all')) {
-            return $query->wherehas('actividad.articulacion_proyecto.proyecto.asesor', function ($query) use ($gestor) {
-                $query->where(function ($subquery) use ($gestor) {
-                    $subquery->where('id', $gestor);
-                });
-            });
+        if ((!empty($asesor) && $asesor != null && $asesor != 'all')) {
+            return $query->wherehas('asesorable.asesor.user', function ($query) use ($asesor) {
+                        $query->where(function ($subquery) use ($asesor) {
+                            $subquery->where('id', $asesor);
+                        });
+                    })->orWhereHas('asesorable.asesor',function ($query) use ($asesor) {
+                        $query->where(function ($subquery) use ($asesor) {
+                            $subquery->where('id', $asesor);
+                        });
+                    });
         }
         return $query;
     }
 
 
-    public function scopeYearActividad($query, $year)
-    {
-        if (!empty($year) && $year != null && $year == 'all') {
-            return $query->has('actividad');
-        }
 
-        if ((!empty($year) && $year != null && $year != 'all')) {
-            return $query->wherehas('actividad', function ($query) use ($year) {
-                $query->where(function ($subquery) use ($year) {
-                    $subquery->whereYear('fecha_inicio', $year)->orWhereYear('fecha_cierre', $year);
-                });
-            });
-        }
-        return $query;
-    }
 
     public function scopeYearAsesoria($query, $year)
     {
         if (!empty($year) && $year != null && $year == 'all') {
-            return $query->has('actividad.articulacion_proyecto.proyecto');
+            return $query->has('asesorable');
         }
 
         if ((!empty($year) && $year != null && $year != 'all')) {
-            return $query->whereYear('fecha', $year)->orWhereYear('created_at', $year)->has('actividad.articulacion_proyecto.proyecto');
+            $query->whereHasMorph(
+                'asesorable',
+                [ \App\Models\Proyecto::class, \App\Models\ArticulacionPbt::class],
+                function (Builder $subquery) use($year) {
+                    return $subquery->whereYear('fecha', $year)->orWhereYear('created_at', $year);
+                }
+            );
         }
+
+
         return $query;
     }
 

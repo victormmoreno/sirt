@@ -30,7 +30,7 @@ class UsoInfraestructuraDatatable
             })
             ->addColumn('gestorEncargado', function ($data) {
 
-                return $data->present()->gestorEncargado();
+                return $data->present()->expertoEncargado();
             })
             ->addColumn('detail', function ($data) {
 
@@ -47,11 +47,11 @@ class UsoInfraestructuraDatatable
         return datatables()->of($usoinfraestructura)
             ->editColumn('fecha', function ($data) {
                 return $data->present()->fechaUsoInfraestructura();
-                // return $data->fecha->isoFormat('YYYY-MM-DD');
+
             })
             ->editColumn('actividad', function ($data) {
                 return $data->present()->actividadUsoInfraestructura();
-                
+
             })
             ->editColumn('fase', function ($data) {
                 return $data->present()->faseActividad();

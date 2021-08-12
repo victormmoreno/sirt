@@ -65,11 +65,11 @@ class UsoInfraestructuraPolicy
     {
         if ($user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsTalento()]) && session()->get('login_role') == User::IsAdministrador()) {
             return true;
-        } else if ($user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsTalento()]) && session()->get('login_role') == User::IsDinamizador() && $uso->actividad->nodo->id == $user->dinamizador->nodo->id) {
+        } else if ($user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsTalento()]) && session()->get('login_role') == User::IsDinamizador() && $uso->asesorable->nodo->id == $user->dinamizador->nodo->id) {
             return true;
         } else if ($user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsTalento()]) && session()->get('login_role') == User::IsGestor() && $uso->asesorable->asesor->user->id == $user->id) {
             return true;
-        } else if ($user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsArticulador(), User::IsGestor(), User::IsTalento()]) && session()->get('login_role') == User::IsArticulador() && $uso->actividad->gestor->user->id == $user->id) {
+        } else if ($user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsArticulador(), User::IsGestor(), User::IsTalento()]) && session()->get('login_role') == User::IsArticulador() && $uso->asesorable->asesor->id == $user->id) {
             return true;
         } else if ($user->hasAnyRole([User::IsTalento()]) && session()->get('login_role') == User::IsTalento() && $uso->asesorable->articulacion_proyecto->talentos->contains($user->talento->id)) {
             return true;

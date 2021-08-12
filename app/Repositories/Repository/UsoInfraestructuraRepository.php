@@ -6,7 +6,6 @@ use App\Models\Actividad;
 use App\Models\CostoAdministrativo;
 use App\Models\Equipo;
 use App\Models\EquipoMantenimiento;
-use App\Models\Gestor;
 use App\Models\Material;
 use App\Models\{Nodo, Proyecto};
 use App\Models\UsoInfraestructura;
@@ -27,15 +26,18 @@ class UsoInfraestructuraRepository
     public function storeUsoInfraestructuraProyecto($request)
     {
         $model = null;
-        $actividad = Actividad::where('codigo_actividad', explode(" - ", $request->txtactividad)[0])
-            ->first();
+        $asesorable = null;
+
         if (Session::get('login_role') == User::IsGestor() || Session::get('login_role') == User::IsTalento()) {
-            $model = $actividad->articulacion_proyecto->proyecto;
+            $asesorable = Actividad::where('codigo_actividad', explode(" - ", $request->txtactividad)[0])
+            ->first();
+            $model = $asesorable->articulacion_proyecto->proyecto;
             // Agrego esto para solucionar un problema de merge
 
-        } else {
-            // En caso de ser una articulación pbt que solo lo puedo hacer el articulador
-            // code...
+        } else if (Session::get('login_role') == User::IsArticulador() || Session::get('login_role') == User::IsTalento()) {
+            $asesorable = \App\Models\ArticulacionPbt::where('codigo', explode(" - ", $request->txtactividad)[0])
+            ->first();
+            $model = $asesorable;
         }
         //llamado de metodo para guardar un uso de infraestructura
         $usoInfraestructura = $this->storeUsoInfraestructura($model, $request);
@@ -73,8 +75,6 @@ class UsoInfraestructuraRepository
             'estado'                  => 1,
         ]);
         // return UsoInfraestructura::create([
-        //     'actividad_id'            => $actividad,
-        //     'tipo_usoinfraestructura' => $request->get('txttipousoinfraestructura'),
         //     'fecha'                   => $request->txtfecha,
         //     'descripcion'             => $request->txtdescripcion,
         //     'compromisos'             => $request->get('txtcompromisos'),
@@ -106,8 +106,9 @@ class UsoInfraestructuraRepository
      */
     private function storeGestorUsoToUsoInfraestructura($usoInfraestructura, $request)
     {
+
         if ($request->filled('gestor')) {
-            $syncData = $this->calculateCostoHorasAsesoria($request);
+            $syncData = $this->calculateCostoHorasAsesoria($usoInfraestructura,$request);
             $usoInfraestructura->usogestores()->sync($syncData);
         } else {
             $usoInfraestructura->usogestores()->sync([]);
@@ -121,26 +122,35 @@ class UsoInfraestructuraRepository
      * @param $request
      * @author devjul
      */
-    private function calculateCostoHorasAsesoria($request)
+    private function calculateCostoHorasAsesoria($usoInfraestructura,$request)
     {
 
         $syncData            = [];
         $honorario           = [];
         $horasAsesoriaGestor = [];
+        $asesor = null;
 
         foreach ($request->get('gestor') as $id => $value) {
 
-            //calculo de costo de horas de asesoria
-            $honorarioGestor = Gestor::where('id', $value)->first()->honorarios;
+            if($usoInfraestructura->asesorable_type == Proyecto::class){
+                $asesor = User::whereHas('gestor', function($query) use($value){
+                    $query->where('id', $value);
+                })->first();
+                $honorarioAsesor = $asesor->gestor->honorarios;
+            }else if($usoInfraestructura->asesorable_type == \App\Models\ArticulacionPbt::class){
+                $asesor = User::where('id', $value)->first();
+                $honorarioAsesor = $asesor->articulador->honorarios;
+            }
             //suma de las horas de asesoria directa y horas de asesoria indirecta
             $horasAsesoriaGestor[$id] = $request->get('asesoriadirecta')[$id] + $request->get('asesoriaindirecta')[$id];
 
             //calculo de honorario de valor hora del gestor * horas de asesoriria
-            $honorario[$id] = round(($honorarioGestor / CostoAdministrativo::DIAS_AL_MES / CostoAdministrativo::HORAS_AL_DIA) * (int) $horasAsesoriaGestor[$id]);
+            $honorario[$id] = round(($honorarioAsesor / CostoAdministrativo::DIAS_AL_MES / CostoAdministrativo::HORAS_AL_DIA) * (int) $horasAsesoriaGestor[$id]);
 
             //array que almacena los datos a guardar
             $syncData[$id] = [
-                'gestor_id'          => $value,
+                // 'asesorable_id' => $asesor->id,
+                // 'asesorable_type' => User::class,
                 'asesoria_directa'   => $request->get('asesoriadirecta')[$id] != null ? $request->get('asesoriadirecta')[$id] : 0,
                 'asesoria_indirecta' => $request->get('asesoriaindirecta')[$id] != null ? $request->get('asesoriaindirecta')[$id] : 0,
                 'costo_asesoria'     => $honorario[$id],
