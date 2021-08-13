@@ -4,8 +4,6 @@ use Illuminate\Database\Seeder;
 
 use App\User;
 use App\Models\UserNodo;
-use App\Models\Gestor;
-use App\Models\Actividad;
 
 class ArticuladoresToUserNodoTableSeeder extends Seeder
 {
@@ -23,7 +21,7 @@ class ArticuladoresToUserNodoTableSeeder extends Seeder
                 $userNodo = UserNodo::find($user->gestor->id);
                 if($userNodo == null)
                 {
-                    $usernodo = UserNodo::create([
+                    UserNodo::create([
                         'user_id' => $user->id,
                         'nodo_id' => $user->gestor->nodo_id,
                         'role' => User::IsArticulador(),

@@ -21,7 +21,7 @@ class ArticulacionPbt extends Model
      */
     protected $fillable = [
         'tipo_vinculacion',
-        // 'actividad_id',
+        'actividad_id',
         'asesor_id',
         'nodo_id',
         // 'proyecto_id',
@@ -123,10 +123,10 @@ class ArticulacionPbt extends Model
         return $this->morphOne(UsoInfraestructura::class, 'asesorable');
     }
 
-    // public function actividad()
-    // {
-    //     return $this->belongsTo(Actividad::class, 'actividad_id', 'id');
-    // }
+    public function actividad()
+    {
+        return $this->belongsTo(Actividad::class, 'actividad_id', 'id');
+    }
 
     // public function proyecto()
     // {

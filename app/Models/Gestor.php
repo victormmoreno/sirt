@@ -90,10 +90,10 @@ class Gestor extends Model
      * @author devjul
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    // public function actividades()
-    // {
-    //     return $this->hasMany(Actividad::class, 'gestor_id', 'id');
-    // }
+    public function actividades()
+    {
+        return $this->hasMany(Actividad::class, 'gestor_id', 'id');
+    }
 
     /**
      * Define a many-to-many relationship gestores and comites.
@@ -150,5 +150,16 @@ class Gestor extends Model
             ->where('nodos.id', $id)
             ->where('users.deleted_at', null)
             ->orderBy('users.nombres');
+    }
+    //eliminar despues de la migracion
+    public function usoinfraestructuras()
+    {
+        return $this->belongsToMany(UsoInfraestructura::class, 'gestor_uso', 'usoinfraestructura_id', 'gestor_id')
+            ->withTimestamps()
+            ->withPivot([
+                'asesoria_directa',
+                'asesoria_indirecta',
+                'costo_asesoria',
+            ]);
     }
 }

@@ -21,6 +21,8 @@ class UsoInfraestructura extends Model
      * @var array
      */
     protected $fillable = [
+        'asesorable_id',
+        'asesorable_type',
         'actividad_id',
         'tipo_usoinfraestructura',
         'fecha',
@@ -112,12 +114,12 @@ class UsoInfraestructura extends Model
         //         'costo_asesoria',
         //     ]);
 
-            return $this->morphedByMany(User::class, 'asesorable', 'gestor_uso', 'usoinfraestructura_id')->withTimestamps()
-            ->withPivot([
-                'asesoria_directa',
-                'asesoria_indirecta',
-                'costo_asesoria',
-            ]);
+        return $this->morphedByMany(User::class, 'asesorable', 'gestor_uso', 'usoinfraestructura_id')->withTimestamps()
+        ->withPivot([
+            'asesoria_directa',
+            'asesoria_indirecta',
+            'costo_asesoria',
+        ]);
     }
 
     public function setDescripcionAttribute($descripcion)

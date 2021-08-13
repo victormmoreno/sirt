@@ -175,13 +175,11 @@
                         {{ \NodoHelper::returnNodoUsuario() }}
                     @else
                         @if (\Session::get('login_role') == App\User::IsTalento())
-                        Talento de Tecnoparque
+                            Talento de Tecnoparque
                         @elseif (\Session::get('login_role') == App\User::IsAdministrador())
-                        Administrador de Tecnoparque
-                        @elseif (\Session::get('login_role') == App\User::IsArticulador())
-                        Articulador
+                            Administrador de Tecnoparque
                         @else
-                        Desarrollador de Tecnoparque
+                            Desarrollador de Tecnoparque
                         @endif
 
                     @endif
@@ -241,36 +239,26 @@
             </li>
             @switch( \Session::get('login_role'))
             @case(App\User::IsInfocenter())
-
-            @include('layouts.navrole.infocenter')
-
+                @include('layouts.navrole.infocenter')
             @break
-
             @case(App\User::IsGestor())
-
-            @include('layouts.navrole.gestor')
-
+                @include('layouts.navrole.gestor')
             @break
-
             @case(App\User::IsTalento())
-
-            @include('layouts.navrole.talento')
+                @include('layouts.navrole.talento')
             @break
-
             @case(App\User::IsIngreso())
-            @include('layouts.navrole.ingreso')
+                @include('layouts.navrole.ingreso')
             @break
-
-            @case('Dinamizador')
-
-            @if(\Session::has('login_role') && \Session::get('login_role') == 'Dinamizador')
-                @include('layouts.navrole.dinamizador')
-            @endif
+            @case(App\User::IsDinamizador())
+                @if(\Session::has('login_role') && \Session::get('login_role') == 'Dinamizador')
+                    @include('layouts.navrole.dinamizador')
+                @endif
             @break
             @case(App\User::IsAdministrador())
-            @if(\Session::has('login_role') && \Session::get('login_role') == App\User::IsAdministrador())
-                @include('layouts.navrole.admin')
-            @endif
+                @if(\Session::has('login_role') && \Session::get('login_role') == App\User::IsAdministrador())
+                    @include('layouts.navrole.admin')
+                @endif
             @break
 
             @case(App\User::IsDesarrollador())

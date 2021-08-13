@@ -13,47 +13,60 @@ class AdviceAndUseOfPolymorphicInfrastructure extends Seeder
     public function run()
     {
 
-        $asesorias = UsoInfraestructura::with(['actividad.articulacion_proyecto.proyecto'])->whereHas('actividad.articulacion_proyecto.proyecto')->get();
+        // $asesorias = UsoInfraestructura::with(['actividad.articulacion_proyecto.proyecto'])->whereHas('actividad.articulacion_proyecto.proyecto')->get();
+        $asesorias = UsoInfraestructura::all();
 
-        foreach ($asesorias as $key => $asesoria) {
-            if ($asesoria->actividad->articulacion_proyecto->proyecto != null) {
+        $asesorias->each(function ($item, $key)  {
+            if($item->tipo_usoinfraestructura == 0 && isset($item->actividad->articulacion_proyecto->proyecto)){
 
-                $asesoria->update([
-                    'asesorable_id' => $this->asesorableId($asesoria),
-                    'asesorable_type' => $this->asesorableType($asesoria),
+
+                $item->update([
+                        'asesorable_id' => $item->actividad->articulacion_proyecto->proyecto->id,
+                        'asesorable_type' => \App\Models\Proyecto::class
                 ]);
+
+
             }
-        }
+            if($item->tipo_usoinfraestructura == 1 && isset($item->actividad->articulacionpbt)){
 
-        $usos = UsoInfraestructura::with(['actividad.articulacionpbt'])->whereHas('actividad.articulacionpbt')->get();
-
-        foreach ($usos as $key => $uso) {
-            if ($uso->actividad->articulacionpbt->id != null) {
-
-                $asesoria->update([
-                    'asesorable_id' => $this->asesorableId($uso),
-                    'asesorable_type' => $this->asesorableType($uso),
-                ]);
+                $item->update([
+                        'asesorable_id' => $item->actividad->articulacionpbt->id,
+                        'asesorable_type' => \App\Models\ArticulacionPbt::class
+                    ]);
             }
-        }
+            // dd($item->usogestores);
+            $item->usogestores->each(function ($item1, $key) use($item) {
+                if(isset($item1->user)){
+                    $user = App\User::where('id', $item1->user_id)->first();
+
+                    $item->usogestores()->update([
+                        'asesorable_id' => $user->id,
+                        'asesorable_type' => \App\User::class
+                    ]);
+                }
+
+
+            });
+        });
     }
 
     protected function asesorableId($model){
-        if(isset($model->actividad->articulacion_proyecto->proyecto)){
-            return $model->actividad->articulacion_proyecto->proyecto->id;
-        }
-        if($model->actividad->articulacionpbt  != null){
-            return $model->actividad->articulacionpbt->id;
+        return $model->id;
+        // return null;
+    }
+
+    protected function asesorableIdUser($model){
+
+        if(isset($model)){
+            return  $model->id;
         }
         return null;
     }
 
-    protected function asesorableType($model){
-        if($model->actividad->articulacion_proyecto->proyecto->id != null){
-            return \App\Models\Proyecto::class;
-        }
-        if($model->actividad->articulacionpbt->id != null){
-            return \App\Models\ArticulacionPbt::class;
+    protected function asesorableTypeUser($model){
+
+        if(isset($model)){
+            return \App\User::class;
         }
         return null;
     }

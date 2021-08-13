@@ -53,13 +53,10 @@ DB::listen(function ($query) {
 =            ruta para revisar funcionaliddes de prueba          =
 ===========================================================*/
 
-Route::get('email/{documento}', function ($documento) {
+Route::get('email', function () {
 // return new App\Mail\Idea\IdeaAceptadaParaComite(App\Models\Idea::first(), 'Aceptada');
-    $user = \App\User::withTrashed()->where('documento', $documento)->firstOrFail();
-    $projects = $user->asesorarticulacionpbt()->articulacionesArticulador();
-
-    dd($projects);
-
+$asesorias = App\Models\UsoInfraestructura::with(['actividad.articulacion_proyecto.proyecto'])->whereHas('actividad.articulacion_proyecto.proyecto')->get();
+// dd($asesorias->count());
 
 });
 

@@ -59,11 +59,7 @@ class Entidad extends Model
     {
         return trim($email_entidad);
     }
-    /*=====  End of asesores eloquent  ======*/
 
-    /*========================================
-    =            mutador eloquent            =
-    ========================================*/
 
     public function setNombreAttribute($nombre)
     {

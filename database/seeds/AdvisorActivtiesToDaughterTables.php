@@ -25,36 +25,42 @@ class AdvisorActivtiesToDaughterTables extends Seeder
             }
         }
 
-        // $edts = Actividad::with(['edt'])->whereHas('edt')->first();
+        $edts = Actividad::with(['edt'])->whereHas('edt')->get();
 
-        // return $edts->edt->entidades;
-        // foreach ($edts as $key => $val) {
-        //     if ($val->edt != null) {
+        foreach ($edts as $key => $val) {
 
-        //         $val->edt->update([
-        //             'asesor_id' => $val->gestor->user_id,
-        //             'nodo_id' => $val->nodo_id
-        //         ]);
+            if ($val->edt != null) {
 
-        //         $val->edt->entidades->each(function ($entidad) use($val) {
-        //             $entidad->update([
-        //                 'edtable_id' => $val->
-        //             ]);
-        //         });
-        //     }
-        // }
+                $val->edt->update([
+                    'asesor_id' => $val->gestor->user_id,
+                    'nodo_id' => $val->nodo_id
+                ]);
 
-        // $articulaciones = Actividad::with(['articulacion_proyecto.articulacion'])->whereHas('articulacion_proyecto.articulacion')->get();
+                // $val->edt->entidades->each(function ($entidad) use($val) {
+                //     if(isset($entidad->empresa)){
+                //         dd($entidad->empresa);
+                //     }
 
-        // foreach ($articulaciones as $key => $articulacion) {
-        //     if ($articulacion->articulacion_proyecto->articulacion != null) {
+                //     $entidad->update([
+                //         'edtable_id' => $val->edt->id,
+                //         'edtable_type'  => \App\Models\Sede::class
+                //     ]);
 
-        //         $articulacion->articulacion_proyecto->articulacion->update([
-        //             'asesor_id' => $articulacion->gestor->user_id,
-        //             'nodo_id' => $articulacion->nodo_id
-        //         ]);
-        //     }
-        // }
+                // });
+            }
+        }
+
+        $articulaciones = Actividad::with(['articulacion_proyecto.articulacion'])->whereHas('articulacion_proyecto.articulacion')->get();
+
+        foreach ($articulaciones as $key => $articulacion) {
+            if ($articulacion->articulacion_proyecto->articulacion != null) {
+
+                $articulacion->articulacion_proyecto->articulacion->update([
+                    'asesor_id' => $articulacion->gestor->user_id,
+                    'nodo_id' => $articulacion->nodo_id
+                ]);
+            }
+        }
 
         $artpbts = Actividad::with(['articulacionpbt'])->whereHas('articulacionpbt')->get();
 
@@ -76,7 +82,6 @@ class AdvisorActivtiesToDaughterTables extends Seeder
                 ]);
             }
         }
-
     }
 
     protected function articulableId($model){
