@@ -37,9 +37,9 @@
                         <div class="row">
                             <div class="col s12 m6 l6 center">
                                 <a href="{{route('csibt.evidencias', $comite->id)}}">
-                                  <div class="card-panel blue-grey white-text">
-                                    <i class="material-icons left">library_books</i>Evidencias del comité.
-                                  </div>
+                                    <div class="card-panel blue-grey white-text">
+                                        <i class="material-icons left">library_books</i>Evidencias del comité.
+                                    </div>
                                 </a>
                             </div>
                             <div class="col s12 m6 l6 center">

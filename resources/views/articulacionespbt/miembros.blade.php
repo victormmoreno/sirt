@@ -2,24 +2,21 @@
 @section('meta-title', 'Articulaciones PBT')
 @section('content')
 @php
-  $year = Carbon\Carbon::now()->year;
+    $year = Carbon\Carbon::now()->year;
 @endphp
 <main class="mn-inner">
     <div class="content">
         <div class="row no-m-t no-m-b">
             <div class="col s8 m8 l5">
                 <h5 class="left-align orange-text text-darken-3">
-                    <i class="material-icons left">
-                      autorenew
-                    </i>
-                    Articulaciones PBT
+                    <i class="material-icons left"> autorenew</i> Articulaciones PBT
                 </h5>
             </div>
             <div class="col s4 m4 l5 offset-l2  rigth-align show-on-large hide-on-med-and-down">
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">Inicio</a></li>
                     <li ><a href="{{route('articulaciones.index')}}">Articulaciones PBT</a></li>
-                    <li ><a href="{{route('articulaciones.show', $actividad->articulacionpbt->id)}}">detalle</a></li>
+                    <li ><a href="{{route('articulaciones.show', $articulacion->id)}}">detalle</a></li>
                     <li class="active">Miembros</li>
                 </ol>
             </div>
@@ -32,25 +29,25 @@
                             <div class="col s12 m12 l12">
                                 <div class="mailbox-options">
                                     <ul>
-                                        <li class="text-mailbox ">La articulación se encuentra actualmente en la fase de {{$actividad->articulacionpbt->present()->articulacionPbtNameFase()}}</li>
+                                        <li class="text-mailbox ">La articulación se encuentra actualmente en la fase de {{$articulacion->present()->articulacionPbtNameFase()}}</li>
                                         <div class="right">
-                                            <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>   
+                                            <li class="text-mailbox">Fecha Inicio: {{$articulacion->present()->articulacionPbtstartDate()}}</li>
                                         </div>
                                     </ul>
                                 </div>
                                 <div class="mailbox-view no-s">
-                                    
+
                                     <div class="mailbox-view-header">
                                         <div class="left">
-                                            <span class="mailbox-title p-v-lg">{{$actividad->present()->actividadCode()}} - {{$actividad->present()->actividadName()}}</span>
+                                            <span class="mailbox-title p-v-lg">{{$articulacion->present()->articulacionCode()}} - {{$articulacion->present()->articulacionName()}}</span>
                                             <div class="left">
-                                                <span class="mailbox-title">{{$actividad->present()->actividadUserAsesor()}}</span>
-                                                <span class="mailbox-author">{{$actividad->present()->actividadUserRolesAsesor()}} </span>
+                                                <span class="mailbox-title">{{$articulacion->present()->articulacionPbtUserAsesor()}}</span>
+                                                <span class="mailbox-author">{{$articulacion->present()->articulacionPbtUserRolesAsesor()}} </span>
                                             </div>
                                         </div>
                                         <div class="right mailbox-buttons p-v-lg">
                                             <div class="right">
-                                                <span class="mailbox-title">{{$actividad->present()->actividadNode()}}</span>
+                                                <span class="mailbox-title">{{$articulacion->present()->articulacionPbtNodo()}}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -58,13 +55,13 @@
                                     <div class="mailbox-text">
                                         <div class="row">
                                             <div class="col s12 m12 l12">
-                                                <form id="frmUpdateArticulacionMiembros" action="{{route('articulacion.update.miembros', $actividad->articulacionpbt->id)}}" method="POST" onsubmit="return checkSubmit()">
+                                                <form id="frmUpdateArticulacionMiembros" action="{{route('articulacion.update.miembros', $articulacion->id)}}" method="POST" onsubmit="return checkSubmit()">
                                                     {!! method_field('PUT')!!}
                                                     {!! csrf_field() !!}
                                                     @include('articulacionespbt.form.form_miembros', ['btnText' => 'Modificar'])
                                                 </form>
                                             </div>
-                                            
+
                                         </div>
                                     </div>
                                 </div>
@@ -85,7 +82,7 @@
     datatableArchiveArticulacion_inicio();
 
     var Dropzone = new Dropzone('#fase_inicio_articulacion', {
-        url: '{{ route('articulacion.files.upload', $actividad->articulacionpbt->id) }}',
+        url: '{{ route('articulacion.files.upload', $articulacion->id) }}',
         headers: {
         'X-CSRF-TOKEN': '{{ csrf_token() }}'
         },
@@ -133,7 +130,7 @@
         serverSide: true,
         order: false,
         ajax:{
-        url: "{{route('articulacion.files', [$actividad->articulacionpbt->id, 'Inicio'])}}",
+        url: "{{route('articulacion.files', [$articulacion->id, 'Inicio'])}}",
         type: "get",
         },
         columns: [
@@ -147,13 +144,13 @@
             name: 'download',
             orderable: false,
         },
-      
+
         {
             data: 'delete',
             name: 'delete',
             orderable: false,
         },
-       
+
         ],
     });
     }

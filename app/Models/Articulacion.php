@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Http\Traits\ArticulacionTrait\ArticulacionTrait;
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class Articulacion extends Model
 {
@@ -43,12 +44,31 @@ class Articulacion extends Model
             ->withPivot('logrado');
     }
 
+    /**
+     * Define an inverse one-to-one or many relationship between articulaciones and users
+     * @author devjul
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function asesor()
+    {
+        return $this->belongsTo(User::class, 'asesor_id', 'id');
+    }
+
+    /**
+     * Define an inverse one-to-one or many relationship between articulaciones and node
+     * @author devjul
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function nodo()
+    {
+        return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
+    }
+
     public function fase()
     {
         return $this->belongsTo(Fase::class, 'fase_id', 'id');
     }
 
-    // Relacion muchos a muchos con talentos
     public function talentos()
     {
         return $this->belongsToMany(Talento::class, 'articulacion_talento')
@@ -61,25 +81,14 @@ class Articulacion extends Model
         return $this->belongsTo(ArticulacionProyecto::class, 'articulacion_proyecto_id', 'id');
     }
 
-    /*====================================================================================
-    =            scope para consultar articulaciones por tipo de articulacion            =
-    ====================================================================================*/
 
     public function scopeArticulacionesForTipoArticulacion($query, int $tipoArticulacion)
     {
         $query->where('tipo_articulacion', $tipoArticulacion);
     }
 
-    /*=====  End of scope para consultar articulaciones por tipo de articulacion  ======*/
-
-    /*===================================================================
-    =            scope para consultar articulaciones           =
-    ===================================================================*/
-
     public function scopeArticulacionesWithRelations($query, array $relations)
     {
         return $query->with($relations);
     }
-
-    /*=====  End of scope para consultar por estado de proyecto  ======*/
 }

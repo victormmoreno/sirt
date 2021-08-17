@@ -13,8 +13,7 @@
                                     </div>
                                     <div class="left">
                                         <span class="mailbox-title">
-                                            Tecnoparque nodo
-                                            {{$articulacion->articulacion_proyecto->actividad->nodo->entidad->nombre}}
+                                            {{$articulacion->present()->articulacionPbtNodo()}}
                                         </span>
                                     </div>
                                 </div>
@@ -22,19 +21,16 @@
                                     <span class="mailbox-title">
                                         <p class="center">
                                             Información de la articulación en la fase de planeación -
-                                            {{$articulacion->articulacion_proyecto->actividad->nombre}}
+                                            {{$articulacion->present()->articulacionName()}}
                                         </p>
-                                        <br />
-                                        <p class="center">Linea Tecnológica:
-                                            {{$articulacion->articulacion_proyecto->actividad->gestor->lineatecnologica->abreviatura}} - {{$articulacion->articulacion_proyecto->actividad->gestor->lineatecnologica->nombre}}
-                                        </p>
+
                                     </span>
                                 </div>
                             </div>
                             <div class="right">
                                 <small>
                                     <b>Fecha de inicio de la articulación: </b>
-                                    {{optional($articulacion->articulacion_proyecto->actividad->created_at)->isoFormat('LL')}}
+                                    {{$articulacion->present()->articulacionPbtcreatedAt()}}
                                 </small>
                             </div>
                             <div class="divider mailbox-divider"></div>
@@ -45,8 +41,8 @@
                                             <span class="mailbox-title">
                                                 <i class="material-icons">build</i>
                                                 Información de la articulación
-                                                {{$articulacion->articulacion_proyecto->actividad->codigo_actividad}} -
-                                                {{$articulacion->articulacion_proyecto->actividad->nombre}}
+                                                {{$articulacion->present()->articulacionCode()}} -
+                                                {{$articulacion->present()->articulacionName()}}
                                             </span>
                                         </div>
                                         <div class="divider mailbox-divider"></div>

@@ -64,7 +64,6 @@
         thead {
             border-bottom: 1px solid #d0d0d0;
         }
-
         td, th {
             display: table-cell;
             text-align: left;
@@ -77,59 +76,6 @@
             text-align: center;
         }
     @media only screen and (max-width: 992px) {
-        table.responsive-table {
-            width: 100%;
-            border-collapse: collapse;
-            border-spacing: 0;
-            display: block;
-            position: relative;
-            /* sort out borders */
-        }
-        table.responsive-table td:empty:before {
-            content: '\00a0';
-        }
-        table.responsive-table th,
-        table.responsive-table td {
-
-            vertical-align: top;
-        }
-        table.responsive-table th {
-            text-align: left;
-        }
-        table.responsive-table thead {
-            display: block;
-            float: left;
-        }
-        table.responsive-table thead tr {
-            display: block;
-            padding: 0 0 0 0;
-        }
-        table.responsive-table thead tr th::before {
-            content: "\00a0";
-        }
-        table.responsive-table tbody {
-            display: block;
-            width: auto;
-            position: relative;
-            overflow-x: auto;
-            white-space: nowrap;
-        }
-        table.responsive-table tbody tr {
-            display: inline-block;
-            vertical-align: top;
-        }
-        table.responsive-table th {
-            display: block;
-            text-align: right;
-        }
-        table.responsive-table td {
-            display: block;
-            min-height: 1.25em;
-            text-align: left;
-        }
-        table.responsive-table tr {
-            padding: 0 0px;
-        }
         table.responsive-table thead {
             border: 0;
             border-right: 1px solid #d0d0d0;
@@ -166,6 +112,17 @@
             background-color: #bdbdbd;
             }
         }
+        footer {
+            position: fixed;
+            bottom: -1cm;
+            left: 0cm;
+            right: 0cm;
+            height: 1cm;
+            background-color: white;
+            color: black;
+            text-align: center;
+            line-height: 35px;
+        }
         </style>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -187,61 +144,59 @@
                 <td colspan="5" class="centered"><b>Acta de Inicio<b></td>
             </tr>
             <tr>
-                <td colspan="5" class="centered"><b>ACTA No. {{ substr($proyecto->articulacion_proyecto->actividad->codigo_actividad, -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b></td>
+                <td colspan="5" class="centered"><b>ACTA No. {{ substr($proyecto->articulacion_proyecto->actividad->present()->actividadCode(), -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b></td>
             </tr>
         </table>
         <br>
         <table class="bordered">
             <tr>
-                <td  scope="row" colspan="6"><b>TÍTULO DE PROYECTO: {{$proyecto->articulacion_proyecto->actividad->nombre}}</b></td>
+                <td  scope="row" colspan="6"><b>TÍTULO DE PROYECTO: {{$proyecto->articulacion_proyecto->actividad->present()->actividadName()}}</b></td>
             </tr>
             <tr>
-                <td colspan="1" scope="row">Nodo: <b>{{$proyecto->articulacion_proyecto->actividad->nodo->entidad->nombre}}</b></td>
-                <td colspan="2">Fecha: <b>{{$proyecto->articulacion_proyecto->actividad->fecha_inicio->isoFormat('YYYY-MM-DD')}}</b></td>
-                <td colspan="3">Código del Proyecto: <b>{{$proyecto->articulacion_proyecto->actividad->codigo_actividad}}</b></td>
+                <td colspan="1" scope="row">Nodo: <b>{{$proyecto->present()->proyectoNode()}}</b></td>
+                <td colspan="2">Fecha: <b>{{$proyecto->articulacion_proyecto->actividad->present()->startDate()}}</b></td>
+                <td colspan="3">Código del Proyecto: <b>{{$proyecto->articulacion_proyecto->actividad->present()->startDate()}}</b></td>
             </tr>
             <tr class="tr-striped">
                 <td colspan="6" ><b>DATOS DEL PROYECTO<b></td>
             </tr>
             <tr>
-                <td colspan="3">Código de la Idea de Proyecto: <b>{{$proyecto->idea->codigo_idea}}</b></td>
-                <td colspan="3">Nombre de la Idea de Proyecto: <b>{{$proyecto->idea->nombre_proyecto}}</b></td>
+                <td colspan="3">Código de la Idea de Proyecto: <b>{{$proyecto->idea->present()->ideaCode()}}</b></td>
+                <td colspan="3">Nombre de la Idea de Proyecto: <b>{{$proyecto->idea->present()->ideaName()}}</b></td>
             </tr>
             <tr>
                 <td colspan="3">
-                    Área de conocimiento: <b>{{$proyecto->areaconocimiento->nombre}}</b>
-                    @if ($proyecto->areaconocimiento->nombre == 'Otro')
+                    Área de conocimiento: <b>{{$proyecto->present()->proyectoAreaConocimiento()}}</b>
                     <br>
-                    {{$proyecto->otro_areaconocimiento}}
-                    @endif
+                    {{$proyecto->present()->proyectoOtroAreaConocimiento()}}
                 </td>
-                <td colspan="3">Sublínea: <b>{{$proyecto->sublinea->nombre}}</b></td>
+                <td colspan="3">Sublínea: <b>{{$proyecto->present()->proyectoSublinea()}}</b></td>
             </tr>
             <tr>
-                <td colspan="2">TRL que se pretende realizar: <b>{{$proyecto->trl_esperado == 0 ? 'TRL6' : 'TRL 7 - TRL 8'}}</b></td>
-                <td colspan="2">¿Recibido a través de fábrica de productividad?: <b>{{$proyecto->fabrica_productividad == 0 ? 'NO' : 'SI'}}</b></td>
-                <td colspan="2">¿Recibido a través del área de emprendimiento SENA?: <b>{{$proyecto->reci_ar_emp == 0 ? 'NO' : 'SI'}}</b></td>
+                <td colspan="2">TRL que se pretende realizar: <b>{{$proyecto->present()->proyectoTrlEsperado()}}</b></td>
+                <td colspan="2">¿Recibido a través de fábrica de productividad?: <b>{{$proyecto->present()->proyectoFabricaProductividad()}}</b></td>
+                <td colspan="2">¿Recibido a través del área de emprendimiento SENA?: <b>{{$proyecto->present()->proyectoRecibidoAreaEmprendimiento()}}</b></td>
             </tr>
             <tr>
                 <td colspan="2">
-                    ¿El proyecto pertenece a la economía naranja?: <b>{{$proyecto->economia_naranja == 0 ? 'NO' : 'SI'}}</b>
+                    ¿El proyecto pertenece a la economía naranja?: <b>{{$proyecto->present()->proyectoEconomiaNaranja() == 0 ? 'NO' : 'SI'}}</b>
                     @if ($proyecto->economia_naranja == 1)
                     <br>
-                    Tipo de economía naranja: <b>{{$proyecto->tipo_economianaranja}}</b>
+                    Tipo de economía naranja: <b>{{$proyecto->present()->proyectoTipoEconomiaNaranja()}}</b>
                     @endif
                 </td>
                 <td colspan="2">
-                    ¿El proyecto está dirigido a personas en condición de discapacidad?: <b>{{$proyecto->dirigido_discapacitados == 0 ? 'NO' : 'SI'}}</b>
+                    ¿El proyecto está dirigido a personas en condición de discapacidad?: <b>{{$proyecto->present()->proyectoDirigidoDiscapacitados()}}</b>
                     @if ($proyecto->dirigido_discapacitados == 1)
                     <br>
-                    Tipo de discapacidad: <b>{{$proyecto->tipo_discapacitados}}</b></p>
+                    Tipo de discapacidad: <b>{{$proyecto->present()->proyectoDirigidoTipoDiscapacitados()}}</b></p>
                     @endif
                 </td>
                 <td colspan="2">
-                    Articulado con CT+i: <b>{{$proyecto->art_cti == 0 ? 'NO' : 'SI'}}</b>
+                    Articulado con CT+i: <b>{{$proyecto->present()->proyectoActorCTi()}}</b>
                     @if ($proyecto->art_cti == 1)
                     <br>
-                    Nombre del Actor CT+i: <b>{{$proyecto->nom_act_cti}}</b>
+                    Nombre del Actor CT+i: <b>{{$proyecto->present()->proyectoNombreActorCTi()}}</b>
                     @endif
                 </td>
             </tr>
@@ -259,7 +214,7 @@
                 @else
                 <td colspan="1" >NO</td>
                 @endif
-                <td colspan="5" >{{$talento->user->documento}} - {{$talento->user->nombres}} {{$talento->user->apellidos}}</td>
+                <td colspan="5" >{{$talento->user->present()->userDocumento()}} - {{$talento->user->present()->userFullName()}}</td>
             </tr>
             @empty
             <tr>
@@ -273,7 +228,7 @@
             <tr>
                 <td colspan="1"><b>OBJETIVO GENERAL</b></td>
                 <td colspan="5">
-                    {{$proyecto->articulacion_proyecto->actividad->objetivo_general}}
+                    {{$proyecto->present()->proyectoObjetivoGeneral()}}
                 </td>
             </tr>
             <tr class="tr-striped">
@@ -281,24 +236,24 @@
             </tr>
             <tr>
                 <td colspan="1"><b>1</b></td>
-                <td colspan="5">{{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->objetivo}}</td>
+                <td colspan="5">{{$proyecto->present()->proyectoPrimerObjetivo()}}</td>
             </tr>
             <tr>
                 <td colspan="1"><b>2</b></td>
-                <td colspan="5">{{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo}}</td>
+                <td colspan="5">{{$proyecto->present()->proyectoSegundoObjetivo()}}</td>
             </tr>
             <tr>
                 <td colspan="1"><b>3</b></td>
-                <td colspan="5">{{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo}}</td>
+                <td colspan="5">{{$proyecto->present()->proyectoTercerObjetivo()}}</td>
             </tr>
             <tr>
                 <td colspan="1"><b>4</b></td>
-                <td colspan="5">{{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo}}</td>
+                <td colspan="5">{{$proyecto->present()->proyectoCuartoObjetivo()}}</td>
             </tr>
             <tr>
                 <td colspan="1"><b>ALCANCE DEL PROYECTO</b></td>
                 <td colspan="5">
-                    {{$proyecto->alcance_proyecto}}
+                    {{$proyecto->present()->proyectoAlcance()}}
                 </td>
             </tr>
             <tr class="tr-striped">
@@ -372,7 +327,7 @@
             <tr></tr>
             <tr></tr>
             <tr>
-                <td colspan="6" >{{$proyecto->articulacion_proyecto->actividad->gestor->user->nombres}} {{$proyecto->articulacion_proyecto->actividad->gestor->user->apellidos}} - Experto</td>
+                <td colspan="6" >{{$proyecto->present()->proyectoUserAsesor()}} - Experto</td>
             </tr>
             <tr>
                 <td colspan="6" rowspan="5"></td>
@@ -382,7 +337,7 @@
             <tr></tr>
             <tr></tr>
             <tr>
-                <td colspan="6" >{{$proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', '=', 1)->first()->user->nombres}} {{$proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', '=', 1)->first()->user->apellidos}} - Talento Interlocutor</td>
+                <td colspan="6" >{{$proyecto->present()->talentoInterlocutor()}} - Talento Interlocutor</td>
             </tr>
         </table>
     </div>

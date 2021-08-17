@@ -10,7 +10,7 @@ class CreateLineastecnologicasTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'lineastecnologicas';
+    protected $tableName = 'lineastecnologicas';
 
     /**
      * Run the migrations.
@@ -25,9 +25,7 @@ class CreateLineastecnologicasTable extends Migration
             $table->increments('id');
             $table->string('nombre', 45)->unique();
             $table->string('abreviatura', 5);
-
             $table->unique(["abreviatura"], 'abreviatura_UNIQUE');
-
             $table->unique(["nombre"], 'nombre_UNIQUE');
             $table->nullableTimestamps();
         });
@@ -38,8 +36,8 @@ class CreateLineastecnologicasTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+    Schema::dropIfExists($this->tableName);
+    }
 }

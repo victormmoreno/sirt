@@ -214,23 +214,20 @@
                                                 </div>
                                             @endif
 
-                                            @if($user->isUserExperto() || $user->isUserArticulador())
                                             @if($user->isUserExperto())
                                                 <span class="orange-text">Información {{App\User::IsGestor()}}</span>
-                                            @else
-                                                <span class="orange-text">Información {{App\User::IsArticulador()}}</span>
-                                            @endif
+
                                                 <div class="server-load row">
                                                     <div class="server-stat col s12 m4 l4">
                                                         <p>{{$user->present()->userGestorNombreNodo()}}</p>
                                                         <span>Nodo</span>
                                                     </div>
-                                                    @if($user->isUserExperto())
+
                                                     <div class="server-stat col s12 m4 l4">
                                                         <p>{{$user->present()->userGestorNombreLinea()}}</p>
                                                         <span>Linea</span>
                                                     </div>
-                                                    @endif
+
                                                     <div class="server-stat col s12 m4 l4">
                                                         <p>{{$user->present()->userGestorHonorarios()}}</p>
                                                         <span>Honorario</span>

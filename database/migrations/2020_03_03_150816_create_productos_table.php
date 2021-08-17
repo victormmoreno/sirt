@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateProductosTable extends Migration
 {
-    public $tableName = 'productos';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'productos';
     /**
      * Run the migrations.
      *

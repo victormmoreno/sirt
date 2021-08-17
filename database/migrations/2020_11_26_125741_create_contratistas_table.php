@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateContratistasTable extends Migration
 {
-    public $tableName = 'contratistas';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'contratistas';
     /**
      * Run the migrations.
      *
@@ -25,14 +29,14 @@ class CreateContratistasTable extends Migration
             $table->index(["nodo_id"], 'fk_contratista_nodos1_idx');
 
             $table->foreign('user_id', 'fk_contratista_user1_idx')
-            ->references('id')->on('users')
-            ->onDelete('no action')
-            ->onUpdate('no action');
+                ->references('id')->on('users')
+                ->onDelete('no action')
+                ->onUpdate('no action');
 
             $table->foreign('nodo_id', 'fk_contratista_nodos1_idx')
-            ->references('id')->on('nodos')
-            ->onDelete('no action')
-            ->onUpdate('no action');
+                ->references('id')->on('nodos')
+                ->onDelete('no action')
+                ->onUpdate('no action');
         });
     }
 

@@ -18,38 +18,37 @@
                             <br />
                             @include('proyectos.detalle_fase_cierre')
                             @if ($ultimo_movimiento->fase == "Cierre" && $ultimo_movimiento->movimiento == "solicitó al talento" && $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first()->user->id == auth()->user()->id)
-                            <form action="{{route('proyecto.aprobacion', [$proyecto->id, 'Cierre'])}}" method="POST" name="frmCierreTalento">
-                              {!! method_field('PUT')!!}
-                              @csrf
-                              <div class="divider"></div>
-                              <center>
-                                <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
-                                <input type="hidden" type="text" name="decision" id="decision">
-                                <button type="submit" onclick="preguntaCierreRechazar(event)" class="waves-effect deep-orange darken-1 btn center-aling">
-                                  <i class="material-icons right">close</i>
-                                  No aprobar la fase de cierre
-                                </button>
-                                <button type="submit" onclick="preguntaCierre(event)" class="waves-effect cyan darken-1 btn center-aling">
-                                  <i class="material-icons right">done</i>
-                                  Aprobar fase de cierre
-                                </button>
-                                <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-                                  <i class="material-icons right">backspace</i>Cancelar
-                                </a>
-                              </center>
-                            </form>
-                          @else
-                              <center>
-                                <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-                                 <i class="material-icons right">backspace</i>Cancelar
-                                </a>
-                              </center>
-                          @endif
+                                <form action="{{route('proyecto.aprobacion', [$proyecto->id, 'Cierre'])}}" method="POST" name="frmCierreTalento">
+                                    {!! method_field('PUT')!!}
+                                    @csrf
+                                    <div class="divider"></div>
+                                    <center>
+                                        <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
+                                        <input type="hidden" type="text" name="decision" id="decision">
+                                        <button type="submit" onclick="preguntaCierreRechazar(event)" class="waves-effect deep-orange darken-1 btn center-aling">
+                                        <i class="material-icons right">close</i>
+                                        No aprobar la fase de cierre
+                                        </button>
+                                        <button type="submit" onclick="preguntaCierre(event)" class="waves-effect cyan darken-1 btn center-aling">
+                                        <i class="material-icons right">done</i>
+                                        Aprobar fase de cierre
+                                        </button>
+                                        <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                                        <i class="material-icons right">backspace</i>Cancelar
+                                        </a>
+                                    </center>
+                                </form>
+                            @else
+                                <center>
+                                    <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                                    <i class="material-icons right">backspace</i>Cancelar
+                                    </a>
+                                </center>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </main>
@@ -57,98 +56,98 @@
 @push('script')
 <script>
     $( document ).ready(function() {
-    datatableArchivosDeUnProyecto_cierre();
-  });
-  function changeToPlaneacion() {
-    window.location.href = "{{ route('proyecto.planeacion', $proyecto->id) }}";
-  }
-
-  function changeToInicio() {
-    window.location.href = "{{ route('proyecto.inicio', $proyecto->id) }}";
-  }
-
-  function changeToEjecucion() {
-    window.location.href = "{{ route('proyecto.ejecucion', $proyecto->id) }}";
-  }
-
-  function changeToCierre() {
-    window.location.href = "{{ route('proyecto.cierre', $proyecto->id) }}";
-  }
-
-  function preguntaCierre(e){
-    e.preventDefault();
-    Swal.fire({
-    title: '¿Está seguro(a) de aprobar la fase de cierre de este proyecto?',
-    text: 'Al hacerlo estás aceptando y aprobando toda la información de esta fase, los documento adjuntos y las asesorias recibidas.',
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    cancelButtonText: 'Cancelar',
-    confirmButtonText: 'Sí!'
-  }).then((result) => {
-    if (result.value) {
-      $('#decision').val('aceptado');
-      document.frmCierreTalento.submit();
+        datatableArchivosDeUnProyecto_cierre();
+    });
+    function changeToPlaneacion() {
+        window.location.href = "{{ route('proyecto.planeacion', $proyecto->id) }}";
     }
-  })
-}
 
-function preguntaCierreRechazar(e){
-    e.preventDefault();
-    Swal.fire({
-    title: '¿Está seguro(a) de no aprobar la fase de cierre de este proyecto?',
-    input: 'text',
-    type: 'warning',
-    inputValidator: (value) => {
-      if (!value) {
-        return 'Las observaciones deben ser obligatorias!'
-      } else {
-        $('#decision').val('rechazado');
-        $('#motivosNoAprueba').val(value);
-      }
-    },
-    inputAttributes: {
-      maxlength: 100,
-      placeHolder: '¿Por qué?'
-    },
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    cancelButtonText: 'Cancelar',
-    confirmButtonText: 'Enviar observaciones!'
-    }).then((result) => {
-      if (result.value) {
-        document.frmCierreTalento.submit();
-      }
-    })
-  }
+    function changeToInicio() {
+        window.location.href = "{{ route('proyecto.inicio', $proyecto->id) }}";
+    }
 
-  function datatableArchivosDeUnProyecto_cierre() {
-  $('#archivosDeUnProyecto').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    order: false,
-    ajax:{
-      url: "{{route('proyecto.files', [$proyecto->id, 'Cierre'])}}",
-      type: "get",
-    },
-    columns: [
-      {
-        data: 'file',
-        name: 'file',
-        orderable: false,
-      },
-      {
-        data: 'download',
-        name: 'download',
-        orderable: false,
-      },
-    ],
-  });
-}
+    function changeToEjecucion() {
+        window.location.href = "{{ route('proyecto.ejecucion', $proyecto->id) }}";
+    }
+
+    function changeToCierre() {
+        window.location.href = "{{ route('proyecto.cierre', $proyecto->id) }}";
+    }
+
+    function preguntaCierre(e){
+        e.preventDefault();
+        Swal.fire({
+            title: '¿Está seguro(a) de aprobar la fase de cierre de este proyecto?',
+            text: 'Al hacerlo estás aceptando y aprobando toda la información de esta fase, los documento adjuntos y las asesorias recibidas.',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Sí!'
+        }).then((result) => {
+                if (result.value) {
+                $('#decision').val('aceptado');
+                document.frmCierreTalento.submit();
+                }
+        })
+    }
+
+    function preguntaCierreRechazar(e){
+        e.preventDefault();
+        Swal.fire({
+        title: '¿Está seguro(a) de no aprobar la fase de cierre de este proyecto?',
+        input: 'text',
+        type: 'warning',
+        inputValidator: (value) => {
+            if (!value) {
+                return 'Las observaciones deben ser obligatorias!'
+            } else {
+                $('#decision').val('rechazado');
+                $('#motivosNoAprueba').val(value);
+            }
+        },
+        inputAttributes: {
+            maxlength: 100,
+            placeHolder: '¿Por qué?'
+        },
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Enviar observaciones!'
+        }).then((result) => {
+            if (result.value) {
+                document.frmCierreTalento.submit();
+            }
+        })
+    }
+
+    function datatableArchivosDeUnProyecto_cierre() {
+        $('#archivosDeUnProyecto').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            processing: true,
+            serverSide: true,
+            order: false,
+            ajax:{
+                url: "{{route('proyecto.files', [$proyecto->id, 'Cierre'])}}",
+                type: "get",
+            },
+            columns: [
+                {
+                    data: 'file',
+                    name: 'file',
+                    orderable: false,
+                },
+                {
+                    data: 'download',
+                    name: 'download',
+                    orderable: false,
+                },
+            ],
+        });
+    }
 </script>
 @endpush

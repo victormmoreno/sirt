@@ -2,301 +2,197 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Actividad};
-use App\Repositories\Repository\{ActividadRepository, ProyectoRepository};
+use App\Models\Proyecto;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Http\Request;
 use App\User;
 
 class CostoController extends Controller
 {
+    /**
+     * Index principal para los costos de actividades
+    *
+    * @return \Illuminate\Http\Response
+    */
+    public function index()
+    {
+        switch (Session::get('login_role')) {
+            case User::IsArticulador():
+                abort('403');
+                break;
+            case User::IsGestor():
+                $projects = Proyecto::where('asesor_id', auth()->user()->gestor->id)->get()->pluck('proyecto', 'id');
+                break;
+            case User::IsDinamizador():
+                $projects = Proyecto::with(['articulacion_proyecto.actividad'])->where('nodo_id', auth()->user()->dinamizador->nodo_id)->get()->pluck('articulacion_proyecto.actividad.nombre', 'id');
+                break;
 
-  /**
-   * Objeto para la clase ActividadRepository
-   *
-   * @var ActividadRepository
-   */
-  private $actividadRepository;
+            default:
+                abort('403');
+                break;
+        }
 
-  /**
-   * Objeto para la clase ProyectoRepository
-   *
-   * @var ProyectoRepository
-   */
-  private $proyectoRepository;
+        return view('costos.index', [
+            'projects' => $projects,
+            // 'articulaciones' => $articulaciones
+        ]);
 
-  public function __construct(ActividadRepository $actividadRepository, ProyectoRepository $proyectoRepository) {
-    $this->setActividadRepository($actividadRepository);
-    $this->setProyectoRepository($proyectoRepository);
-  }
-
-  /**
-  * Index principal para los costos de actividades
-  *
-  * @return \Illuminate\Http\Response
-  */
-  public function index()
-  {
-    if ( Session::get('login_role') == User::IsGestor() ) {
-      $actividades = Actividad::ConsultarActividades()->where('gestor_id', auth()->user()->gestor->id)->get()->pluck('proyecto', 'id');
-      return view('costos.gestor.index', [
-        'actividades' => $actividades
-      ]);
-    } else if ( Session::get('login_role') == User::IsDinamizador() ) {
-      $actividades = Actividad::ConsultarActividades()->where('nodo_id', auth()->user()->dinamizador->nodo_id)->get()->pluck('proyecto', 'id');
-      return view('costos.dinamizador.index', [
-        'actividades' => $actividades
-      ]);
-    } else {
-      abort('403');
-    }
-  }
-
-  /**
-   * Retorna los costos de un proyecto
-   *
-   * @param int $id Id de la actividad
-   * @return Response
-   * @author dum
-   */
-  public function costosDeUnaActividad($id)
-  {
-    // Actividad
-    $actividad = $this->getActividadRepository()->getActividad_Repository($id);
-    // Usos de infraestructuras de la actividad
-    $usos = $actividad->usoinfraestructuras;
-    // Costos en pesos
-    $costosEquipos = $this->calcularCostosDeEquipos($usos);
-    $costosAsesorias = $this->calcularCostosDeAsesorias($usos);
-    $costosAdministrativos = $this->calcularCostosAdministrativos($usos);
-    $costosMateriales = $this->calcularCostosDeMateriales($usos);
-    $costosTotales = $this->calcularCostosTotales($costosEquipos, $costosAsesorias, $costosAdministrativos, $costosMateriales);
-    // Tiempos
-    $horasEquipos = $this->calcularHorasDeUsoDeEquipos($usos);
-    $horasAsesorias = $this->calcularHorasDeAsesorias($usos);
-    // Gestor
-    $gestor = $this->getGestorActividad($actividad);
-    // Linea
-    $linea = $this->getLineaActividad($actividad);
-    // C贸digo
-    $codigo = $this->getCodigoActividad($actividad);
-
-    return response()->json([
-      'costosEquipos' => $costosEquipos,
-      'costosAsesorias' => $costosAsesorias,
-      'costosAdministrativos' => $costosAdministrativos,
-      'costosMateriales' => $costosMateriales,
-      'costosTotales' => $costosTotales,
-      'horasEquipos' => $horasEquipos,
-      'horasAsesorias' => $horasAsesorias,
-      'gestorActividad' => $gestor,
-      'lineaActividad' => $linea,
-      'codigoActividad' => $codigo
-    ]);
-  }
-
-  /**
-  * Obtiene el c贸digo de la actividad
-  *
-  * @param Collection $actividad
-  * @return string
-  * @author dum
-  */
-  private function getCodigoActividad($actividad)
-  {
-    return $actividad->codigo_actividad;
-  }
-
-  /**
-  * Obtiene la linea del experto a cargo de la actividad
-  *
-  * @param Collection $actividad
-  * @return string
-  * @author dum
-  */
-  private function getLineaActividad($actividad)
-  {
-    return $actividad->gestor->lineatecnologica->nombre;
-  }
-
-  /**
-  * Obtiene el nombre del experto a cargo de la actividad
-  *
-  * @param Collection $actividad
-  * @return string
-  * @author dum
-  */
-  private function getGestorActividad($actividad)
-  {
-    return $actividad->gestor->user()->withTrashed()->first()->nombres . " " . $actividad->gestor->user()->withTrashed()->first()->apellidos;
-  }
-
-  /**
-  * Calcula las horas de asesorias de un proyecto
-  *
-  * @param Collection $datos
-  * @return int
-  * @author dum
-  */
-  private function calcularHorasDeAsesorias($datos)
-  {
-    $horasAsesorias = 0;
-
-    foreach ($datos as $key => $uso) {
-      $horasAsesorias += $uso->usogestores->sum('pivot.asesoria_directa') + $uso->usogestores->sum('pivot.asesoria_indirecta');
     }
 
-    return $horasAsesorias;
-  }
+    /**
+     * Retorna los costos de un proyecto
+     *
+     * @param int $id Id del proyecto
+     * @return Response
+     * @author devjul
+     */
+    public function costoProject($id)
+    {
+        $proyect = Proyecto::find($id);
+        $usos = $proyect->usoinfraestructuras;
+        // Costos en pesos
+        $costosEquipos = $this->calcularCostosDeEquipos($usos);
+        $costosAsesorias = $this->calcularCostosDeAsesorias($usos);
+        $costosAdministrativos = $this->calcularCostosAdministrativos($usos);
+        $costosMateriales = $this->calcularCostosDeMateriales($usos);
+        $costosTotales = $this->calcularCostosTotales($costosEquipos, $costosAsesorias, $costosAdministrativos, $costosMateriales);
+        // Tiempos
+        $horasEquipos = $this->calcularHorasDeUsoDeEquipos($usos);
+        $horasAsesorias = $this->calcularHorasDeAsesorias($usos);
 
-  /**
-  * Calcula las horas de uso de equipos
-  *
-  * @param Collection $datos
-  * @return int
-  * @author dum
-  */
-  private function calcularHorasDeUsoDeEquipos($datos)
-  {
-    $horasEquipos = 0;
+        $expert = $proyect->present()->proyectoUserAsesor();
+        $line = $proyect->present()->proyectoLinea();
+        $codigo = $proyect->present()->proyectoCode();
 
-    foreach ($datos as $key => $uso) {
-      $horasEquipos += $uso->usoequipos->sum('pivot.tiempo');
+        return response()->json([
+            'costosEquipos' => $costosEquipos,
+            'costosAsesorias' => $costosAsesorias,
+            'costosAdministrativos' => $costosAdministrativos,
+            'costosMateriales' => $costosMateriales,
+            'costosTotales' => $costosTotales,
+            'horasEquipos' => $horasEquipos,
+            'horasAsesorias' => $horasAsesorias,
+            'gestorActividad' => $expert,
+            'lineaActividad' => $line,
+            'codigoActividad' => $codigo
+        ]);
     }
 
-    return $horasEquipos;
-  }
+    /**
+     * Calcula las horas de asesorias de un proyecto
+    *
+    * @param Collection $datos
+    * @return int
+    * @author dum
+    */
+    private function calcularHorasDeAsesorias($datos)
+    {
+        $horasAsesorias = 0;
 
-  /**
-  * Calcula el costo total
-  *
-  * @param double $equipos Costos de equipos
-  * @param double $asesorias Costos de asesorias
-  * @param double $administrativos Costos administrativos
-  * @return double
-  * @author dum
-  */
-  public function calcularCostosTotales($equipos, $asesorias, $administrativos, $materiales)
-  {
-    $totales = 0;
-    $totales = $equipos + $asesorias + $administrativos + $materiales;
-    return $totales;
-  }
-
-  /**
-  * Calcula los costos de materiales
-  *
-  * @param Collection $datos
-  * @return double
-  * @author dum
-  */
-  public function calcularCostosDeMateriales($datos)
-  {
-    $materiales = 0;
-
-    foreach ($datos as $key => $uso) {
-      $materiales += $uso->usomateriales->sum('pivot.costo_material');
+        foreach ($datos as $key => $uso) {
+            $horasAsesorias += $uso->usogestores->sum('pivot.asesoria_directa') + $uso->usogestores->sum('pivot.asesoria_indirecta');
+        }
+        return $horasAsesorias;
     }
 
-    return $materiales;
+    /**
+     * Calcula las horas de uso de equipos
+    *
+    * @param Collection $datos
+    * @return int
+    * @author dum
+    */
+    private function calcularHorasDeUsoDeEquipos($datos)
+    {
+        $horasEquipos = 0;
 
-  }
+        foreach ($datos as  $uso) {
+            $horasEquipos += $uso->usoequipos->sum('pivot.tiempo');
+        }
 
-  /**
-  * Calcula los costos administrativos
-  *
-  * @param Collection $datos
-  * @return double
-  * @author dum
-  */
-  public function calcularCostosAdministrativos($datos)
-  {
-    $administrativos = 0;
-
-    foreach ($datos as $key => $uso) {
-      $administrativos += $uso->usoequipos->sum('pivot.costo_administrativo');
+        return $horasEquipos;
     }
 
-    return $administrativos;
-  }
-
-  /**
-  * Calcula los costos de equipos
-  *
-  * @param Collection $datos
-  * @return double
-  * @author dum
-  */
-  public function calcularCostosDeEquipos($datos) {
-    $equipos = 0;
-    foreach ($datos as $key => $uso) {
-      $equipos += $uso->usoequipos->sum('pivot.costo_equipo');
+    /**
+     * Calcula el costo total
+    *
+    * @param double $equipos Costos de equipos
+    * @param double $asesorias Costos de asesorias
+    * @param double $administrativos Costos administrativos
+    * @return double
+    * @author dum
+    */
+    public function calcularCostosTotales($equipos, $asesorias, $administrativos, $materiales)
+    {
+        $totales = 0;
+        $totales = $equipos + $asesorias + $administrativos + $materiales;
+        return $totales;
     }
 
-    return $equipos;
-  }
+    /**
+     * Calcula los costos de materiales
+    *
+    * @param Collection $datos
+    * @return double
+    * @author dum
+    */
+    public function calcularCostosDeMateriales($datos)
+    {
+        $materiales = 0;
 
-  /**
-  * Calcula los costos de asesorias
-  *
-  * @param Collection @datos
-  * @return double
-  * @author dum
-  */
-  public function calcularCostosDeAsesorias($datos)
-  {
-    $asesorias = 0;
-    foreach ($datos as $key => $uso) {
-      $asesorias += $uso->usogestores->sum('pivot.costo_asesoria');
+        foreach ($datos as  $uso) {
+            $materiales += $uso->usomateriales->sum('pivot.costo_material');
+        }
+
+        return $materiales;
+
     }
 
-    return $asesorias;
-  }
+    /**
+     * Calcula los costos administrativos
+    *
+    * @param Collection $datos
+    * @return double
+    * @author dum
+    */
+    public function calcularCostosAdministrativos($datos)
+    {
+        $administrativos = 0;
 
-  /**
-   * Asigna un valor a $actividadRepository
-   *
-   * @param ActividadRepository
-   * @return void
-   * @author dum
-   */
-   private function setActividadRepository(ActividadRepository $actividadRepository)
-  {
-    $this->actividadRepository = $actividadRepository;
-  }
+        foreach ($datos as $uso) {
+            $administrativos += $uso->usoequipos->sum('pivot.costo_administrativo');
+        }
+        return $administrativos;
+    }
 
-  /**
-   * Retorna el valor de $actividadRepository
-   *
-   * @return ActividadRepository
-   * @author dum
-   */
-  public function getActividadRepository()
-  {
-    return $this->actividadRepository;
-  }
+    /**
+     * Calcula los costos de equipos
+    *
+    * @param Collection $datos
+    * @return double
+    * @author dum
+    */
+    public function calcularCostosDeEquipos($datos) {
+        $equipos = 0;
+        foreach ($datos as  $uso) {
+            $equipos += $uso->usoequipos->sum('pivot.costo_equipo');
+        }
 
-  /**
-   * Asigna un valor a $proyectoRepository
-   *
-   * @param ProyectoRepository
-   * @return void
-   * @author dum
-   */
-   private function setProyectoRepository(ProyectoRepository $proyectoRepository)
-  {
-    $this->proyectoRepository = $proyectoRepository;
-  }
+        return $equipos;
+    }
 
-  /**
-   * Retorna el valor de $proyectoRepository
-   *
-   * @return ProyectoRepository
-   * @author dum
-   */
-  public function getProyectoRepository()
-  {
-    return $this->proyectoRepository;
-  }
-
+    /**
+     * Calcula los costos de asesorias
+    *
+    * @param Collection @datos
+    * @return double
+    * @author dum
+    */
+    public function calcularCostosDeAsesorias($datos)
+    {
+        $asesorias = 0;
+        foreach ($datos as  $uso) {
+            $asesorias += $uso->usogestores->sum('pivot.costo_asesoria');
+        }
+        return $asesorias;
+    }
 }

@@ -34,7 +34,6 @@
             @endfor
           </ul>
         </div>
-      </div>
-    </div>
-  </li>
+        </div>
+    </li>
 </ul>

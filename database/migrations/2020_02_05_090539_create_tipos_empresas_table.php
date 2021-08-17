@@ -6,8 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateTiposEmpresasTable extends Migration
 {
-
-    public $tableName = 'tipos_empresas';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'tipos_empresas';
     /**
      * Run the migrations.
      *

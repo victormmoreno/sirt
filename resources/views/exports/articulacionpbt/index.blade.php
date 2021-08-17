@@ -49,29 +49,29 @@
             <th>
                 Talentos participantes
             </th>
-            
+
         </tr>
     </thead>
     <tbody>
         @forelse($articulaciones as $articulacion)
         <tr>
             <td>
-                {{$articulacion->actividad->present()->actividadNode()}}
+                {{$articulacion->present()->articulacionPbtNodo()}}
             </td>
             <td>
-                {{$articulacion->actividad->present()->actividadCode()}}
+                {{$articulacion->present()->articulacionPbtCode()}}
             </td>
             <td>
-                {{$articulacion->actividad->present()->actividadName()}}
+                {{$articulacion->present()->articulacionPbtName()}}
             </td>
             <td>
-                {{$articulacion->actividad->present()->actividadUserAsesor()}}
+                {{$articulacion->present()->articulacionPbtUserAsesor()}}
             </td>
             <td>
                 {{$articulacion->present()->articulacionPbtNameFase()}}
             </td>
             <td>
-                {{$articulacion->actividad->present()->startDate()}}
+                {{$articulacion->present()->articulacionPbtstartDate()}}
             </td>
             <td>
                 {{$articulacion->present()->articulacionPbtCodeProyecto()}} - {{$articulacion->present()->articulacionPbtNameProyecto()}}

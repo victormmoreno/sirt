@@ -47,10 +47,10 @@ class ArticulacionAprobarInicioDinamizador extends Notification implements Shoul
      */
     public function toMail($notifiable)
     {
-        
+
         return (new MailMessage)
-            ->subject("Aprobación fase de {$this->fase} | {$this->articulacion->actividad->codigo_actividad} - {$this->articulacion->actividad->nombre}" )
-            ->markdown('emails.articulacionespbt.approval-start-dinamizador', ['data' => $this->articulacion, 'fase' => $this->fase, 'user' => $this->talento, 'movimiento' => $this->movimiento]);
+            ->subject("Aprobación fase de {$this->fase} | {$this->articulacion->present()->articulacionCode()} - {$this->articulacion->present()->articulacionName()}" )
+            ->markdown('emails.articulacionespbt.approval-start-dinamizador', ['data' => $this->articulacion, 'fase' => $this->fase, 'talent' => $this->talento, 'movimiento' => $this->movimiento]);
     }
 
     /**
@@ -66,8 +66,7 @@ class ArticulacionAprobarInicioDinamizador extends Notification implements Shoul
             'icon'  => 'autorenew',
             'color' => 'orange',
             'autor' => "{$this->talento->nombres} {$this->talento->apellidos}",
-            'text'  => "El {$this->movimiento->role->name} ha aprobado la fase de {$this->fase} | {$this->articulacion->actividad->codigo_actividad} - {$this->articulacion->actividad->nombre}",
-          ];
+            'text'  => "El {$this->movimiento->role->name} ha aprobado la fase de {$this->fase} | {$this->articulacion->present()->articulacionCode()} - {$this->articulacion->present()->articulacionName()}",
+        ];
     }
-
 }

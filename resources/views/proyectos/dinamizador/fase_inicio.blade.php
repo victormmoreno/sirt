@@ -2,168 +2,165 @@
 @section('meta-title', 'Proyectos de Base Tecnológica')
 @section('content')
 <main class="mn-inner inner-active-sidebar">
-  <div class="content">
-    <div class="row no-m-t no-m-b">
-      <div class="col s12 m12 l12">
-        <h5>
-          <a class="footer-text left-align" href="{{route('proyecto')}}">
-            <i class="material-icons arrow-l left">arrow_back</i>
-          </a> Proyectos de Base Tecnológica
-        </h5>
-        <div class="card">
-          <div class="card-content">
-            <div class="row">
-              @include('proyectos.navegacion_fases')
-              <div class="divider"></div>
-              <br />
-              @include('proyectos.detalle_fase_inicio')
-              @if ($ultimo_movimiento != null && $ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->fase == "Inicio" && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsAprobar())
-              <form action="{{route('proyecto.aprobacion', [$proyecto->id, 'Inicio'])}}" method="POST" name="frmInicioDinamizador">
-                {!! method_field('PUT')!!}
-                @csrf
+    <div class="content">
+        <div class="row no-m-t no-m-b">
+        <div class="col s12 m12 l12">
+            <h5>
+            <a class="footer-text left-align" href="{{route('proyecto')}}">
+                <i class="material-icons arrow-l left">arrow_back</i>
+            </a> Proyectos de Base Tecnológica
+            </h5>
+            <div class="card">
+            <div class="card-content">
+                <div class="row">
+                @include('proyectos.navegacion_fases')
                 <div class="divider"></div>
-                <center>
-                  <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
-                  <input type="hidden" type="text" name="decision" id="decision">
-                  <button type="submit" onclick="preguntaInicioRechazar(event)" class="waves-effect deep-orange darken-1 btn center-aling">
-                    <i class="material-icons right">close</i>
-                    No aprobar la fase de Inicio
-                  </button>
-                  <button type="submit" onclick="preguntaInicio(event)" class="waves-effect cyan darken-1 btn center-aling">
-                    <i class="material-icons right">done</i>
-                    Aprobar fase de inicio
-                  </button>
-                  <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-                    <i class="material-icons right">backspace</i>Cancelar
-                  </a>
-                </center>
-              </form>
-              @else
-                  <center>
+                <br />
+                @include('proyectos.detalle_fase_inicio')
+                @if ($ultimo_movimiento != null && $ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->fase == "Inicio" && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsAprobar())
+                <form action="{{route('proyecto.aprobacion', [$proyecto->id, 'Inicio'])}}" method="POST" name="frmInicioDinamizador">
+                    {!! method_field('PUT')!!}
+                    @csrf
+                    <div class="divider"></div>
+                    <center>
+                    <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
+                    <input type="hidden" type="text" name="decision" id="decision">
+                    <button type="submit" onclick="preguntaInicioRechazar(event)" class="waves-effect deep-orange darken-1 btn center-aling">
+                        <i class="material-icons right">close</i>
+                        No aprobar la fase de Inicio
+                    </button>
+                    <button type="submit" onclick="preguntaInicio(event)" class="waves-effect cyan darken-1 btn center-aling">
+                        <i class="material-icons right">done</i>
+                        Aprobar fase de inicio
+                    </button>
                     <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-                      <i class="material-icons right">backspace</i>Cancelar
+                        <i class="material-icons right">backspace</i>Cancelar
                     </a>
-                  </center>
-              @endif
-              <center>
+                    </center>
+                </form>
+                @else
+                    <center>
+                        <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                        <i class="material-icons right">backspace</i>Cancelar
+                        </a>
+                    </center>
+                @endif
+                <center>
 
+                </div>
             </div>
-          </div>
+            </div>
         </div>
-      </div>
 
+        </div>
     </div>
-  </div>
 </main>
 @endsection
 @push('script')
 <script>
-  $( document ).ready(function() {
-  @if($proyecto->areaconocimiento->nombre == 'Otro')
-    divOtroAreaConocmiento.show();
-  @endif
-  @if($proyecto->economia_naranja == 1)
-  divEconomiaNaranja.show();
-  @endif
-  @if($proyecto->dirigido_discapacitados == 1)
-  divDiscapacidad.show();
-  @endif
-  @if($proyecto->art_cti == 1)
-  divNombreActorCTi.show();
-  @endif
+    $( document ).ready(function() {
+        @if($proyecto->areaconocimiento->nombre == 'Otro')
+            divOtroAreaConocmiento.show();
+        @endif
+        @if($proyecto->present()->isProyectoEconomiaNaranja() == 1)
+            divEconomiaNaranja.show();
+        @endif
+        @if($proyecto->present()->isProyectoDirigidoDiscapacitados()  == 1)
+            divDiscapacidad.show();
+        @endif
+        @if($proyecto->present()->isProyectoActorCTi() == 1)
+            divNombreActorCTi.show();
+        @endif
+        datatableArchivosDeUnProyecto_inicio();
+    });
 
-  datatableArchivosDeUnProyecto_inicio();
-  });
+    function preguntaInicioRechazar(e){
+        e.preventDefault();
+        Swal.fire({
+        title: '¿Está seguro(a) de no aprobar la fase de inicio de este proyecto?',
+        input: 'text',
+        type: 'warning',
+        inputValidator: (value) => {
+        if (!value) {
+            return 'Las observaciones deben ser obligatorias!'
+        } else {
+            $('#decision').val('rechazado');
+            $('#motivosNoAprueba').val(value);
+        }
+        },
+        inputAttributes: {
+        maxlength: 100
+        },
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Enviar observaciones!'
+        }).then((result) => {
+        if (result.value) {
+            document.frmInicioDinamizador.submit();
+        }
+        })
+    }
 
-  function preguntaInicioRechazar(e){
-    e.preventDefault();
-    Swal.fire({
-    title: '¿Está seguro(a) de no aprobar la fase de inicio de este proyecto?',
-    input: 'text',
-    type: 'warning',
-    inputValidator: (value) => {
-      if (!value) {
-        return 'Las observaciones deben ser obligatorias!'
-      } else {
-        $('#decision').val('rechazado');
-        $('#motivosNoAprueba').val(value);
-      }
-    },
-    inputAttributes: {
-      maxlength: 100
-    },
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    cancelButtonText: 'Cancelar',
-    confirmButtonText: 'Enviar observaciones!'
-    }).then((result) => {
-      if (result.value) {
-        document.frmInicioDinamizador.submit();
-      }
-    })
-  }
+    function preguntaInicio(e){
+        e.preventDefault();
+        Swal.fire({
+        title: '¿Está seguro(a) de aprobar la fase de inicio de este proyecto?',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Sí!'
+        }).then((result) => {
+        if (result.value) {
+            $('#decision').val('aceptado');
+            document.frmInicioDinamizador.submit();
+        }
+        })
+    }
+    function changeToPlaneacion() {
+        window.location.href = "{{ route('proyecto.planeacion', $proyecto->id) }}";
+    }
 
-  function preguntaInicio(e){
-    e.preventDefault();
-    Swal.fire({
-    title: '¿Está seguro(a) de aprobar la fase de inicio de este proyecto?',
-    // text: "You won't be able to revert this!",
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    cancelButtonText: 'Cancelar',
-    confirmButtonText: 'Sí!'
-    }).then((result) => {
-      if (result.value) {
-        $('#decision').val('aceptado');
-        document.frmInicioDinamizador.submit();
-      }
-    })
-  }
-  
-  function changeToPlaneacion() {
-    window.location.href = "{{ route('proyecto.planeacion', $proyecto->id) }}";
-  }
+    function changeToInicio() {
+        window.location.href = "{{ route('proyecto.inicio', $proyecto->id) }}";
+    }
 
-  function changeToInicio() {
-    window.location.href = "{{ route('proyecto.inicio', $proyecto->id) }}";
-  }
+    function changeToEjecucion() {
+        window.location.href = "{{ route('proyecto.ejecucion', $proyecto->id) }}";
+    }
 
-  function changeToEjecucion() {
-    window.location.href = "{{ route('proyecto.ejecucion', $proyecto->id) }}";
-  }
+    function changeToCierre() {
+        window.location.href = "{{ route('proyecto.cierre', $proyecto->id) }}";
+    }
 
-  function changeToCierre() {
-    window.location.href = "{{ route('proyecto.cierre', $proyecto->id) }}";
-  }
-
-  function datatableArchivosDeUnProyecto_inicio() {
-  $('#archivosDeUnProyecto').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    order: false,
-    ajax:{
-      url: "{{route('proyecto.files', [$proyecto->id, 'Inicio'])}}",
-      type: "get",
-    },
-    columns: [
-      {
-        data: 'file',
-        name: 'file',
-        orderable: false,
-      },
-      {
-        data: 'download',
-        name: 'download',
-        orderable: false,
-      },
-    ],
-  });
-}
+    function datatableArchivosDeUnProyecto_inicio() {
+        $('#archivosDeUnProyecto').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            processing: true,
+            serverSide: true,
+            order: false,
+            ajax:{
+                url: "{{route('proyecto.files', [$proyecto->id, 'Inicio'])}}",
+                type: "get",
+            },
+            columns: [
+                {
+                    data: 'file',
+                    name: 'file',
+                    orderable: false,
+                },
+                {
+                    data: 'download',
+                    name: 'download',
+                    orderable: false,
+                },
+            ],
+        });
+    }
 </script>
 @endpush

@@ -10,11 +10,10 @@ use App\User;
 use App\Models\Etnia;
 use Illuminate\Http\Request;
 use Illuminate\Support\{Facades\Validator};
-use PDF;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class ProfileController extends Controller
 {
-
     use SendsPasswordResetEmailsToUserAuthenticated;
 
     public $userRepository;
@@ -176,13 +175,7 @@ class ProfileController extends Controller
 
     public function activities()
     {
-
-        $user = User::find(auth()->user()->id);
-
-        if ($user == null) {
-            $user = User::onlyTrashed()->find(auth()->user()->id);
-        }
-
+        $user = User::withTrashed()->find(auth()->user()->id);
         $this->authorize('viewActivities', $user);
 
         if (\Session::get('login_role') == User::IsTalento()) {

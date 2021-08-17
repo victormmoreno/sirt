@@ -10,7 +10,7 @@ use App\Helpers\ArrayHelper;
 use App\Http\Controllers\CostoController;
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use App\User;
-use Alert;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ArticulacionController extends Controller
 {
@@ -87,7 +87,7 @@ class ArticulacionController extends Controller
 
     /**
      * Modifica los datos de una articulación en el estado de planeación
-     * 
+     *
      * @param \Illuminate\Http\Request $request
      * @param int $id Id de la articulación
      * @return \Illuminate\Http\Response
@@ -148,7 +148,7 @@ class ArticulacionController extends Controller
 
     /**
      * Cambia los datos de la articulación en estado de cierre
-     * 
+     *
      * @param Request $request
      * @param int $id Id de la articulación
      * @author dum
@@ -283,7 +283,7 @@ class ArticulacionController extends Controller
         $historico = Actividad::consultarHistoricoActividad($articulacion->articulacion_proyecto->actividad->id)->get();
         switch (Session::get('login_role')) {
             case User::IsDinamizador();
-                $gestores = $this->gestorRepository->consultarGestoresPorLineaTecnologicaYNodoRepository($articulacion->articulacion_proyecto->actividad->gestor->lineatecnologica->id, auth()->user()->dinamizador->nodo_id)->pluck('gestor', 'id');
+                $gestores = $this->gestorRepository->consultarGestoresPorLineaTecnologicaYNodoRepository($articulacion->asesor->gestor->lineatecnologica->id, auth()->user()->dinamizador->nodo_id)->pluck('gestor', 'id');
                 return view('articulaciones.dinamizador.cambiar_gestor', [
                     'articulacion' => $articulacion,
                     'historico' => $historico,
@@ -299,7 +299,7 @@ class ArticulacionController extends Controller
 
     /**
      * Cambia el estado de la articulación a suspendido
-     * 
+     *
      * @param Request $request
      * @param int $id
      * @return Response
@@ -309,7 +309,6 @@ class ArticulacionController extends Controller
     {
         if (Session::get('login_role') == User::IsDinamizador()) {
             $update = $this->articulacionRepository->updateAprobacionSuspendido($id);
-            // dd($update);
             if ($update) {
                 Alert::success('Modificación Exitosa!', 'La fase de suspendido de la articulación se aprobó!')->showConfirmButton('Ok', '#3085d6');
                 return redirect('articulacion');
@@ -387,7 +386,7 @@ class ArticulacionController extends Controller
 
     /**
      * Vista para subir las entregables de una articulacion en la fase de cierre
-     * 
+     *
      * @param int $id Id de la articulación
      * @return Response
      * @author dum
@@ -406,7 +405,7 @@ class ArticulacionController extends Controller
 
     /**
      * Fase de inicio de la articulación
-     * 
+     *
      * @param int $id Id de la articulación
      * @return Response
      * @author dum
@@ -693,7 +692,7 @@ class ArticulacionController extends Controller
 
     /**
      * Notifica al dinamizador para que apruebe la articulación en la fase de inicio
-     * 
+     *
      * @param int $id Id del articulacion
      * @return Response
      * @author dum
@@ -711,7 +710,7 @@ class ArticulacionController extends Controller
 
     /**
      * Notifica al dinamizador para que apruebe la articulación en la fase de planeacion
-     * 
+     *
      * @param int $id Id del articulacion
      * @return Response
      * @author dum
@@ -747,7 +746,7 @@ class ArticulacionController extends Controller
 
     /**
      * Notifica al dinamizador para que apruebe la articulación en la fase de cierre
-     * 
+     *
      * @param int $id Id de la articulación
      * @return Response
      * @author dum
@@ -1007,8 +1006,7 @@ class ArticulacionController extends Controller
                     'pivot' => $pivot,
                 ]);
             } else {
-                // dd($articulacion->articulacion_proyecto->actividad->gestor->lineatecnologica->id);
-                $gestores = $this->gestorRepository->consultarGestoresPorLineaTecnologicaYNodoRepository($articulacion->articulacion_proyecto->actividad->gestor->lineatecnologica->id, auth()->user()->dinamizador->nodo_id)->pluck('gestor', 'id');
+                $gestores = $this->gestorRepository->consultarGestoresPorLineaTecnologicaYNodoRepository($articulacion->asesor->gestor->lineatecnologica->id, auth()->user()->dinamizador->nodo_id)->pluck('gestor', 'id');
                 return view('articulaciones.dinamizador.edit', [
                     'articulacion' => $articulacion,
                     'gestores' => $gestores

@@ -10,7 +10,7 @@ class CreateActividadesTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'actividades';
+    protected $tableName = 'actividades';
 
     /**
      * Run the migrations.
@@ -55,8 +55,8 @@ class CreateActividadesTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

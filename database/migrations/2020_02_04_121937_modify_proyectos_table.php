@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class ModifyProyectosTable extends Migration
 {
-    public $tableName = 'proyectos';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'proyectos';
     /**
      * Run the migrations.
      *
@@ -15,7 +19,6 @@ class ModifyProyectosTable extends Migration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            // Nuevos campos
             $table->string('tipo_economianaranja', 100)->nullable()->default(null)->after('economia_naranja');
             $table->unsignedInteger('fase_id')->nullable()->after('areaconocimiento_id');
             $table->string('otro_areaconocimiento', 100)->nullable()->default(null)->after('fase_id');
@@ -43,9 +46,7 @@ class ModifyProyectosTable extends Migration
     {
         Schema::table($this->tableName, function (Blueprint $table) {
             $table->dropColumn(['alcance_proyecto', 'tipo_economianaranja', 'dirigido_discapacitados', 'tipo_discapacitados', 'otro_areaconocimiento', 'trl_esperado', 'trl_obtenido']);
-
             $table->dropIndex(['fase_id']);
-
             $table->dropColumn(['fase_id']);
         });
     }

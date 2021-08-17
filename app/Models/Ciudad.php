@@ -30,10 +30,6 @@ class Ciudad extends Model
 
     public $timestamps = false;
 
-    /*===========================================
-    =            relaciones eloquent            =
-    ===========================================*/
-
     public function departamento()
     {
         return $this->belongsTo(Departamento::class, 'departamento_id', 'id');
@@ -59,19 +55,10 @@ class Ciudad extends Model
         return $this->hasMany(Entidad::class, 'ciudad_id', 'id');
     }
 
-    /*=====  End of relaciones eloquent  ======*/
-
-    /*================================================================================
-    =            metodo para consultar las ciudades según el departamento            =
-    ================================================================================*/
-
     public function scopeAllCiudadDepartamento($query, $departamento)
     {
 
         return $query->select('ciudades.id', 'ciudades.nombre')->where('ciudades.departamento_id', $departamento);
 
     }
-
-    /*=====  End of metodo para consultar las ciudades según el departamento  ======*/
-
 }

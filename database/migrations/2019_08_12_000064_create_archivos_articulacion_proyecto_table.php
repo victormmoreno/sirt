@@ -10,7 +10,7 @@ class CreateArchivosArticulacionProyectoTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'archivos_articulacion_proyecto';
+    protected $tableName = 'archivos_articulacion_proyecto';
 
     /**
      * Run the migrations.
@@ -52,8 +52,8 @@ class CreateArchivosArticulacionProyectoTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

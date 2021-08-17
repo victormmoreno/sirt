@@ -53,7 +53,7 @@
                 {{$ingreso->user->present()->userEmail()}}
             </td>
             <td>
-                {{isset($ingreso->user->celular) ? $ingreso->user->celular : isset($ingreso->user->telefono) ? $ingreso->user->telefono : 'No registra'}}
+                {{isset($ingreso->user->celular) ? $ingreso->user->celular : (isset($ingreso->user->telefono) ? $ingreso->user->telefono : 'No registra')}}
             </td>
             <td>
                 {{$ingreso->user->present()->userGenero()}}

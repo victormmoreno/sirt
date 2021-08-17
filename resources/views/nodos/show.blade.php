@@ -2,7 +2,6 @@
 @section('meta-title', 'Tecnoparque nodo '. $nodo->entidad->present()->entidadName())
 
 @section('content')
-
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
         <div class="row no-m-t no-m-b">
@@ -198,7 +197,7 @@
                                                         </div>
                                                         <div class="row">
                                                             <div class="center">
-                                                                <span class="zurich-bt-fonts orange-text text-darken-2"><b>Expertos y Articulador</b></span>
+                                                                <span class="zurich-bt-fonts orange-text text-darken-2"><b>Expertos</b></span>
                                                             </div>
                                                             <div class="divider mailbox-divider">
                                                             </div>
@@ -223,7 +222,7 @@
                                                                         </li>
                                                                     </ul>
                                                                     @endif
-                                                                    
+
                                                                 </div>
                                                             @empty
                                                                 <div class="col s12 m12 l6">
@@ -239,7 +238,90 @@
                                                             @endforelse
                                                         </div>
                                                         <div class="row">
-                                                            
+                                                            <div class="center">
+                                                                <span class="zurich-bt-fonts orange-text text-darken-2"><b>Articuladores</b></span>
+                                                            </div>
+                                                            <div class="divider mailbox-divider">
+                                                            </div>
+                                                            @forelse($nodo->articuladores as $articulador)
+                                                                <div class="col s12 m12 l6">
+
+                                                                    @if(isset($articulador->user))
+                                                                    <ul class="collection">
+                                                                        <li class="collection-item">
+                                                                            <span class="title">
+                                                                                {{$articulador->user->present()->userFullName()}}
+                                                                            </span>
+                                                                            <p>
+                                                                                <b class="black-text text-darken-3">Número documento:</b> {{$articulador->user->present()->userDocumento()}}<br/>
+                                                                                <b class="black-text text-darken-3">Correo Electrónco:</b> {{$articulador->user->present()->userEmail()}}<br/>
+                                                                                <b class="black-text text-darken-3">Teléfono:</b> {{$articulador->user->present()->userTelefono()}}<br/>
+                                                                                <b class="black-text text-darken-3">Celular: </b>
+                                                                                {{$articulador->user->present()->userCelular()}}<br/>
+                                                                                <b class="black-text text-darken-3">Roles: </b>
+                                                                                {{$articulador->user->present()->userRolesNames()}}<br/>
+                                                                            </p>
+                                                                        </li>
+                                                                    </ul>
+                                                                    @endif
+
+                                                                </div>
+                                                            @empty
+                                                                <div class="col s12 m12 l6">
+                                                                    <ul class="collection">
+                                                                        <div class="center">
+                                                                            <i class="large material-icons center">
+                                                                                block
+                                                                            </i>
+                                                                            <p class="center-align">Tecnoparque Nodo {{$nodo->entidad->present()->entidadName()}} no cuenta con un {{App\User::IsArticulador()}} aún</p>
+                                                                        </div>
+                                                                    </ul>
+                                                                </div>
+                                                            @endforelse
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="center">
+                                                                <span class="zurich-bt-fonts orange-text text-darken-2"><b>{{App\User::IsApoyoTecnico()}}</b></span>
+                                                            </div>
+                                                            <div class="divider mailbox-divider">
+                                                            </div>
+                                                            @forelse($nodo->apoyostecnicos as $apoyotecnico)
+                                                                <div class="col s12 m12 l6">
+
+                                                                    @if(isset($apoyotecnico->user))
+                                                                    <ul class="collection">
+                                                                        <li class="collection-item">
+                                                                            <span class="title">
+                                                                                {{$apoyotecnico->user->present()->userFullName()}}
+                                                                            </span>
+                                                                            <p>
+                                                                                <b class="black-text text-darken-3">Número documento:</b> {{$apoyotecnico->user->present()->userDocumento()}}<br/>
+                                                                                <b class="black-text text-darken-3">Correo Electrónco:</b> {{$apoyotecnico->user->present()->userEmail()}}<br/>
+                                                                                <b class="black-text text-darken-3">Teléfono:</b> {{$apoyotecnico->user->present()->userTelefono()}}<br/>
+                                                                                <b class="black-text text-darken-3">Celular: </b>
+                                                                                {{$apoyotecnico->user->present()->userCelular()}}<br/>
+                                                                                <b class="black-text text-darken-3">Roles: </b>
+                                                                                {{$apoyotecnico->user->present()->userRolesNames()}}<br/>
+                                                                            </p>
+                                                                        </li>
+                                                                    </ul>
+                                                                    @endif
+
+                                                                </div>
+                                                            @empty
+                                                                <div class="col s12 m12 l6">
+                                                                    <ul class="collection">
+                                                                        <div class="center">
+                                                                            <i class="large material-icons center">
+                                                                                block
+                                                                            </i>
+                                                                            <p class="center-align">Tecnoparque Nodo {{$nodo->entidad->present()->entidadName()}} no cuenta con un {{App\User::IsApoyoTecnico()}} aún</p>
+                                                                        </div>
+                                                                    </ul>
+                                                                </div>
+                                                            @endforelse
+                                                        </div>
+                                                        <div class="row">
                                                             <div class="col s12 m12 l12">
                                                                 <div class="center">
                                                                     <span class="zurich-bt-fonts orange-text text-darken-2"><b>Ingreso</b></span>
@@ -277,8 +359,8 @@
                                                                         </ul>
                                                                     </div>
                                                                 @endforelse
-                                                                </div>
                                                             </div>
+                                                        </div>
                                                     </div>
 
                                             </div>

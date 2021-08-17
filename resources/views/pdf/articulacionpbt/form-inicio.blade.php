@@ -1,19 +1,19 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <style>
+    <style>
         footer.page-footer {
-        margin-top: 20px;
-        padding-top: 20px;
-        background-color: #ee6e73;
+            margin-top: 20px;
+            padding-top: 20px;
+            background-color: #ee6e73;
         }
 
         footer.page-footer .footer-copyright {
-        overflow: hidden;
-        height: 50px;
-        line-height: 50px;
-        color: rgba(255, 255, 255, 0.8);
-        background-color: rgba(51, 51, 51, 0.08);
+            overflow: hidden;
+            height: 50px;
+            line-height: 50px;
+            color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(51, 51, 51, 0.08);
         }
 
     .center-image{
@@ -37,7 +37,7 @@
 
     table.bordered > thead > tr,
     table.bordered > tbody > tr {
-    border-bottom: 2px solid #050505;
+        border-bottom: 2px solid #050505;
     }
 
     table.striped > tbody > tr:nth-child(odd) {
@@ -185,7 +185,7 @@
                 <td colspan="5" class="centered"><b>Acta de Inicio<b></td>
             </tr>
             <tr>
-                <td colspan="5" class="centered"><b>ACTA No. {{ substr($articulacion->actividad->codigo_actividad, -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b></td>
+                <td colspan="5" class="centered"><b>ACTA No. {{ substr($articulacion->present()->articulacionCode(), -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b></td>
             </tr>
         </table>
         <br>
@@ -195,19 +195,19 @@
             </tr>
             <tr>
                 <td><b>Código Articulación<b></td>
-                <td colspan="3">{{$articulacion->actividad->codigo_actividad}}</td>
+                <td colspan="3">{{$articulacion->present()->articulacionCode()}}</td>
                 <td><b>Tipo Convocatoria</b></td>
                 <td>{{$articulacion->present()->articulacionPbtNameTipoVinculacion()}}</td>
             </tr>
             <tr>
                 <td><b>Nombre Articulación</b></td>
-                <td colspan="5">{{$articulacion->actividad->nombre}}</td>
+                <td colspan="5">{{$articulacion->present()->articulacionName()}}</td>
             </tr>
             <tr>
                 <td><b>Nodo</b></td>
-                <td>{{$articulacion->actividad->nodo->entidad->nombre}}</td>
+                <td>{{$articulacion->present()->articulacionPbtNodo()}}</td>
                 <td><b>Fecha</b></td>
-                <td>{{$articulacion->actividad->fecha_inicio->isoFormat('DD-MM-YYYY')}}</td>
+                <td>{{$articulacion->present()->articulacionPbtstartDate()}}</td>
                 <td><b>Fecha esperada de finalización</b></td>
                 <td>{{$articulacion->present()->articulacionPbtFechaFinalizacion()}}</td>
             </tr>
@@ -242,9 +242,6 @@
                 <td colspan="5">{{$articulacion->present()->articulacionPbtObjetivo()}}</td>
             </tr>
             @if($articulacion->present()->articulacionPbtTipoVinculacion(App\Models\ArticulacionPbt::IsPbt()))
-            <tr class="tr-striped">
-                <td colspan="6" ><b>Información Proyecto de Base Tecnológica (PBT)<b></td>
-            </tr>
             <tr>
                 <td colspan="1"><b>Código Idea<b></td>
                 <td colspan="2">{{$articulacion->present()->articulacionPbtCodeIdeaProyecto()}}</td>
@@ -272,7 +269,7 @@
                 @else
                 <td colspan="1" >NO</td>
                 @endif
-                <td colspan="5" >{{$talento->user->documento}} - {{$talento->user->nombres}} {{$talento->user->apellidos}}</td>
+                <td colspan="5" >{{$talento->user->present()->userDocumento()}} - {{$talento->user->present()->userFullName()}}</td>
             </tr>
             @empty
             <tr>
@@ -301,7 +298,7 @@
             <tr></tr>
             <tr></tr>
             <tr>
-            <td colspan="6" >{{$articulacion->actividad->present()->actividadUserAsesor()}} - Articulador</td>
+            <td colspan="6" >{{$articulacion->present()->articulacionPbtUserAsesor()}} - Articulador</td>
             </tr>
         </table>
     </div>

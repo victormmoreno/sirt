@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Alert;
 use App\Http\Requests\LineaFormRequest;
 use App\Models\LineaTecnologica;
 use App\Datatables\LineaTecnologicaDatatable;
 use App\Repositories\Repository\LineaRepository;
 use App\User;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class LineaController extends Controller
 {

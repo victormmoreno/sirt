@@ -6,8 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddEvidenciasTrlToProyectosTable extends Migration
 {
-
-    public $tableName = 'proyectos';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'proyectos';
     /**
      * Run the migrations.
      *

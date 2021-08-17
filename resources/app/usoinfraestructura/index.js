@@ -33,7 +33,7 @@ var usoinfraestructuraIndex = {
             "lengthChange": false,
             processing: true,
             serverSide: true,
-            "order": [[ 2, "desc" ]],
+            "order": [[ 0, "desc" ]],
             ajax:{
                 url: "/usoinfraestructura",
                 type: "get",
@@ -49,14 +49,21 @@ var usoinfraestructuraIndex = {
                     data: 'fecha',
                     name: 'fecha',
                     width: '10%',
+                    orderable: false,
                 }, {
                     data: 'gestorEncargado',
                     name: 'gestorEncargado',
                     width: '20%',
-                },{
+                },
+                {
+                    data: 'tipo_asesoria',
+                    name: 'tipo_asesoria',
+                    width: '10%',
+                },
+                {
                     data: 'actividad',
                     name: 'actividad',
-                    width: '45%',
+                    width: '35%',
                 }, {
                     data: 'fase',
                     name: 'fase',

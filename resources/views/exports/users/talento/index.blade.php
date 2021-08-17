@@ -55,26 +55,26 @@
         @foreach($proyectos as $proyecto)
             @foreach ($proyecto->articulacion_proyecto->talentos as $talento)
                 <tr>
-                    <td>{{ $proyecto->articulacion_proyecto->actividad->codigo_actividad }}</td>
-                    <td>{{ $proyecto->articulacion_proyecto->actividad->nodo->entidad->nombre }}</td>
-                    <td>{{ $proyecto->articulacion_proyecto->actividad->nombre }}</td>
-                    <td>{{ $proyecto->articulacion_proyecto->actividad->gestor->user->present()->userFullName() }}</td>
-                    <td>{{ $proyecto->sublinea->linea->nombre }}</td>
-                    <td>{{ $proyecto->sublinea->nombre }}</td>
-                    <td>{{ $proyecto->idea->codigo_idea }} - {{ $proyecto->idea->nombre_proyecto }}</td>
-                    <td>{{ $proyecto->areaconocimiento->nombre }}</td>
+                    <td>{{ $proyecto->present()->proyectoCode()}}</td>
+                    <td>{{ $proyecto->present()->proyectoNode() }}</td>
+                    <td>{{ $proyecto->present()->proyectoName()}}</td>
+                    <td>{{ $proyecto->present()->proyectoUserAsesor() }}</td>
+                    <td>{{ $proyecto->present()->proyectoLinea() }}</td>
+                    <td>{{ $proyecto->present()->proyectoSublinea() }}</td>
+                    <td>{{ $proyecto->idea->present()->ideaCode() }} - {{ $proyecto->idea->present()->ideaName()}}</td>
+                    <td>{{ $proyecto->present()->proyectoAreaConocimiento() }}</td>
                     <td>{{ $proyecto->present()->proyectoOtroAreaConocimiento() }}</td>
-                    <td>{{ $proyecto->articulacion_proyecto->actividad->fecha_inicio->isoFormat('YYYY-MM-DD') }}</td>
-                    <td>{{ $proyecto->fase->nombre }}</td>
+                    <td>{{ $proyecto->articulacion_proyecto->actividad->present()->startDate()}}</td>
+                    <td>{{ $proyecto->present()->proyectoFase() }}</td>
                     <td>{{ $proyecto->present()->proyectoFechaCierre() }}</td>
 
-                    @if ($proyecto->fase->nombre == 'Finalizado' || $proyecto->fase->nombre == 'Suspendido')
+                    @if ($proyecto->present()->proyectoFase() == 'Finalizado' || $proyecto->present()->proyectoFase() == 'Suspendido')
                     <td>{{ $proyecto->articulacion_proyecto->actividad->fecha_cierre->isoFormat('YYYY') }}</td>
                     @else
                     <td>El proyecto no se ha cerrado</td>
                     @endif
-                    
-                    @if ($proyecto->fase->nombre == 'Finalizado' || $proyecto->fase->nombre == 'Suspendido')
+
+                    @if ($proyecto->present()->proyectoFase() == 'Finalizado' || $proyecto->present()->proyectoFase() == 'Suspendido')
                     <td>{{ $proyecto->articulacion_proyecto->actividad->fecha_cierre->isoFormat('MM') }}</td>
                     @else
                     <td>El proyecto no se ha cerrado</td>

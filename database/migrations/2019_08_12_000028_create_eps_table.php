@@ -10,7 +10,7 @@ class CreateEpsTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'eps';
+    protected $tableName = 'eps';
 
     /**
      * Run the migrations.
@@ -26,9 +26,7 @@ class CreateEpsTable extends Migration
             $table->string('codigo', 10);
             $table->string('nombre', 100);
             $table->tinyInteger('estado')->default('1');
-
             $table->unique(["codigo"], 'eps_codigo_unique');
-
             $table->unique(["nombre"], 'eps_nombre_unique');
             $table->nullableTimestamps();
         });
@@ -39,8 +37,8 @@ class CreateEpsTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

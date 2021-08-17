@@ -8,7 +8,7 @@
 <div class="row">
     <div class="col s6 m6 l6">
         <p class="p-v-xs">
-            <input type="checkbox" disabled {{ $actividad->seguimiento == 1 ? 'checked' : '' }}
+            <input type="checkbox" disabled {{ $articulacion->seguimiento == 1 ? 'checked' : '' }}
                 id="txtseguimiento" name="txtseguimiento" value="1">
             <label for="txtseguimiento">
                 Seguimiento y usos de infraestructuras.
@@ -17,10 +17,10 @@
     </div>
     <div class="col s6 m6 l6">
         <p class="p-v-xs">
-            <input type="checkbox" disabled {{ $actividad->articulacionpbt->present()->articulacionPbtDocumentoConvocatoria() == 1 ? 'checked' : '' }}
+            <input type="checkbox" disabled {{ $articulacion->present()->articulacionPbtDocumentoConvocatoria() == 1 ? 'checked' : '' }}
                 id="txtdoc_convocatoria" name="txtdoc_convocatoria" value="1">
             <label for="txtdoc_convocatoria">
-                Documentos de convocatoria 
+                Documentos de convocatoria
             </label>
         </p>
     </div>

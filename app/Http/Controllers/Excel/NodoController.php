@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Excel;
 use App\Exports\Nodo\NodoExport;
 use App\Exports\Nodo\{NodoInfoExport};
 use App\Http\Controllers\Controller;
-use Excel;
+use Maatwebsite\Excel\Facades\Excel;
 use Repositories\Repository\NodoRepository;
 
 class NodoController extends Controller

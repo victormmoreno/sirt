@@ -52,7 +52,7 @@
                 {{$gestor->user->present()->userEmail()}}
             </td>
             <td>
-                {{isset($gestor->user->celular) ? $gestor->user->celular : isset($gestor->user->telefono) ? $gestor->user->telefono : 'No registra'}}
+                {{isset($gestor->user->celular) ? $gestor->user->celular : (isset($gestor->user->telefono) ? $gestor->user->telefono : 'No registra')}}
             </td>
             <td>
                 {{$gestor->user->present()->userGenero()}}

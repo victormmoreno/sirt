@@ -20,7 +20,7 @@ class UsoInfraestructuraExport extends FatherExport
         $this->request = $request;
         $this->query = $query;
         $this->setCount($this->query->count() + 1);
-        $this->setRangeHeadingCell('A1:K1');
+        $this->setRangeHeadingCell('A1:L1');
     }
 
     public function registerEvents(): array
@@ -47,7 +47,7 @@ class UsoInfraestructuraExport extends FatherExport
         $event->sheet->getStyle($this->getRangeHeadingCell())->getFont()->setSize(14)->setBold(1);
         // Estilos para los registros de la consulta
         $init = 'A';
-        for ($i = 0; $i < 11; $i++) {
+        for ($i = 0; $i < 12; $i++) {
             $temp = $init++;
             $coordenadas = $temp . '1:' . $temp . $this->getCount();
             $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArray());

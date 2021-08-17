@@ -10,7 +10,7 @@ class CreateArticulacionProyectoTalentoTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'articulacion_proyecto_talento';
+    protected $tableName = 'articulacion_proyecto_talento';
 
     /**
      * Run the migrations.
@@ -50,8 +50,8 @@ class CreateArticulacionProyectoTalentoTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

@@ -5,27 +5,9 @@
 $yearNow = Carbon\Carbon::now()->isoFormat('YYYY');
 @endphp
 <main class="mn-inner inner-active-sidebar">
-  <div class="content">
-    <div class="row no-m-t no-m-b">
-      <div class="col s12 m12 l12">
-        <div class="row">
-          <div class="col s8 m8 l10">
-            <h5 class="left-align">
-              <i class="material-icons left">
-                search
-              </i>
-              Seguimiento
-            </h5>
-          </div>
-          <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
-            <ol class="breadcrumbs">
-              <li><a href="{{route('home')}}">Inicio</a></li>
-              <li class="active">Seguimiento</li>
-            </ol>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-content">
+    <div class="content">
+        <div class="row no-m-t no-m-b">
+        <div class="col s12 m12 l12">
             <div class="row">
               <ul class="collapsible">
                 <li>
@@ -171,16 +153,15 @@ $yearNow = Carbon\Carbon::now()->isoFormat('YYYY');
                 </li>
               </ul>
             </div>
-          </div>
+            </div>
         </div>
-      </div>
+        </div>
     </div>
-  </div>
 </main>
 @endsection
 @push('script')
     <script>
-      consultarSeguimientoEsperadoDeUnNodo(0);
-      consultarSeguimientoDeUnNodoFases(0);
+        consultarSeguimientoEsperadoDeUnNodo(0);
+        consultarSeguimientoDeUnNodoFases(0);
     </script>
 @endpush

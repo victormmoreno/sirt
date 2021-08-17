@@ -10,7 +10,7 @@ class CreateVisitantesTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'visitantes';
+    protected $tableName = 'visitantes';
 
     /**
      * Run the migrations.
@@ -39,7 +39,6 @@ class CreateVisitantesTable extends Migration
             $table->unique(["documento"], 'documento_UNIQUE');
             $table->nullableTimestamps();
 
-
             $table->foreign('tipodocumento_id', 'fk_visitantes_tiposdocumentos1_idx')
                 ->references('id')->on('tiposdocumentos')
                 ->onDelete('no action')
@@ -57,8 +56,8 @@ class CreateVisitantesTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

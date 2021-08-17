@@ -7,8 +7,11 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateEquipoMantenimientoTable extends Migration
 {
-
-     public $tableName = 'equipo_mantenimiento';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'equipo_mantenimiento';
     /**
      * Run the migrations.
      *

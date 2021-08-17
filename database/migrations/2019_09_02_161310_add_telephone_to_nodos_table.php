@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 class AddTelephoneToNodosTable extends Migration
 {
-
-    public $tableName = 'nodos';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'nodos';
     /**
      * Run the migrations.
      *

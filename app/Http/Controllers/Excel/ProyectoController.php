@@ -13,8 +13,8 @@ use Excel;
 
 class ProyectoController extends Controller
 {
-  private $query;
-  private $proyectoRepository;
+    private $query;
+    private $proyectoRepository;
 
   public function __construct(ProyectoRepository $proyectoRepository)
   {

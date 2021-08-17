@@ -6,8 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateTamanhosEmpresasTable extends Migration
 {
-
-    public $tableName = 'tamanhos_empresas';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'tamanhos_empresas';
     /**
      * Run the migrations.
      *
@@ -19,7 +22,6 @@ class CreateTamanhosEmpresasTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('nombre', 40);
-
             $table->unique(["nombre"], 'nombre_UNIQUE');
             $table->nullableTimestamps();
         });

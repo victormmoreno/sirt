@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 class AddLugarExpedicionDocumentoToUsersTable extends Migration
 {
-
-    public $tableName = 'users';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'users';
     /**
      * Run the migrations.
      *

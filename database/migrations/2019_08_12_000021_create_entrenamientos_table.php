@@ -10,7 +10,7 @@ class CreateEntrenamientosTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'entrenamientos';
+    protected $tableName = 'entrenamientos';
 
     /**
      * Run the migrations.
@@ -29,7 +29,6 @@ class CreateEntrenamientosTable extends Migration
             $table->tinyInteger('correos')->nullable()->default('0');
             $table->tinyInteger('fotos')->nullable()->default('0');
             $table->tinyInteger('listado_asistencia')->nullable()->default('0');
-
             $table->unique(["codigo_entrenamiento"], 'codigo_entrenamiento_UNIQUE');
             $table->nullableTimestamps();
         });
@@ -40,8 +39,8 @@ class CreateEntrenamientosTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

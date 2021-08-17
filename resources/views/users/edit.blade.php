@@ -72,7 +72,7 @@
                                                                                     @else
                                                                                         <option value="{{$value->id}}" {{old('txttipo_documento') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option>
                                                                                     @endif
-                                                                                 @endforeach
+                                                                                @endforeach
                                                                             </select>
                                                                             <label for="txttipo_documento">Tipo Documento <span class="red-text">*</span></label>
                                                                             <small id="txttipo_documento-error" class="error red-text"></small>
@@ -283,12 +283,12 @@
                                                     <div class="divider mailbox-divider">
                                                     </div>
                                                     <div class="row">
-                                                        
+
                                                         <div class="col s12 m9 l9 offset-l5 offset-m5 "><br>
                                                             <div class="row">
                                                                 <div class="input-field col s12 m12 l12">
                                                                     <div class="switch m-b-md">
-                                                                      
+
                                                                       <label class="active">Genero*</label>
                                                                         <label>
                                                                             Masculino
@@ -379,7 +379,7 @@
                                                                 <small id="txttitulo-error"  class="error red-text"></small>
                                                             </div>
                                                             <div class="input-field col s12 m6 l6">
-                                            
+
                                                                 <input class="validate datepicker" id="txtfechaterminacion" name="txtfechaterminacion" type="text" value="{{ isset($user->fecha_terminacion) ? optional($user->fecha_terminacion)->toDateString() : old('txtfechaterminacion')}}">
                                                                 <label for="txtfechaterminacion">Fecha Terminación <span class="red-text">*</span></label>
                                                                 <small id="txtfechaterminacion-error"  class="error red-text"></small>
@@ -407,7 +407,7 @@
                             </div>
                         </div>
                     </div>
-                
+
             </div>
         </div>
     </div>

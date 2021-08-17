@@ -4,6 +4,7 @@
             <th >Nodo</th>
             <th >Linea Tecnológica</th>
             <th >Fecha</th>
+            <th >Tipo Asesoria</th>
             <th >Nombre de Actividad</th>
             <th >Fase</th>
             <th >Total horas Asesoria Directa</th>
@@ -25,6 +26,9 @@
             </td>
             <td>
                 {{$uso->present()->fechaUsoInfraestructura()}}
+            </td>
+            <td>
+                {{$uso->present()->tipoUsoInfraestructura()}}
             </td>
             <td>
                 {{$uso->present()->actividadUsoInfraestructura()}}
