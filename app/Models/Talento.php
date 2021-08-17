@@ -57,7 +57,7 @@ class Talento extends Model
 
     public function idea()
     {
-      return $this->belongsTo(Idea::class, 'talento_id', 'id');
+        return $this->belongsTo(Idea::class, 'talento_id', 'id');
     }
 
     public function tipoformacion()
@@ -70,7 +70,6 @@ class Talento extends Model
         return $this->belongsTo(Entidad::class, 'entidad_id', 'id');
     }
 
-
     public function tipoestudio()
     {
         return $this->belongsTo(TipoEstudio::class, 'tipo_estudio_id', 'id');
@@ -81,8 +80,6 @@ class Talento extends Model
         return $this->belongsTo(TipoTalento::class, 'tipo_talento_id', 'id');
     }
 
-    // Métodos scope
-    // Consulta los talentos de tecnoparque
     public function scopeConsultarTalentosDeTecnoparque($query)
     {
         return $query->select('users.documento', 'talentos.id', 'users.id AS user_id')
@@ -98,10 +95,6 @@ class Talento extends Model
             ->join('users', 'users.id', '=', 'talentos.user_id')
             ->where('talentos.id', $id);
     }
-
-    /*==========================================
-    =            mutadores eloquent            =
-    ==========================================*/
 
     public function setUniversidadAttribute($universidad)
     {
@@ -122,7 +115,4 @@ class Talento extends Model
     {
         $this->attributes['empresa'] = ucwords(mb_strtolower(trim($empresa), 'UTF-8'));
     }
-
-
-    /*=====  End of mutadores eloquent  ======*/
 }

@@ -18,6 +18,9 @@ class UsoInfraestructuraDatatable
             ->editColumn('actividad', function ($data) {
                 return $data->present()->actividadUsoInfraestructura();
             })
+            ->editColumn('tipo_asesoria', function ($data) {
+                return $data->present()->tipoUsoInfraestructura();
+            })
             ->editColumn('fase', function ($data) {
                 return $data->present()->faseActividad();
             })
@@ -30,7 +33,7 @@ class UsoInfraestructuraDatatable
             })
             ->addColumn('gestorEncargado', function ($data) {
 
-                return $data->present()->expertoEncargado();
+                return $data->present()->asesor();
             })
             ->addColumn('detail', function ($data) {
 
@@ -38,7 +41,7 @@ class UsoInfraestructuraDatatable
 
                 return $button;
             })
-            ->rawColumns(['fecha', 'actividad', 'gestorEncargado', 'fase', 'asesoria_directa', 'asesoria_indirecta', 'detail'])
+            ->rawColumns(['fecha','tipo_asesoria', 'actividad', 'gestorEncargado', 'fase', 'asesoria_directa', 'asesoria_indirecta', 'detail'])
             ->make(true);
     }
 
@@ -47,15 +50,15 @@ class UsoInfraestructuraDatatable
         return datatables()->of($usoinfraestructura)
             ->editColumn('fecha', function ($data) {
                 return $data->present()->fechaUsoInfraestructura();
-
             })
             ->editColumn('actividad', function ($data) {
                 return $data->present()->actividadUsoInfraestructura();
-
+            })
+            ->editColumn('tipo_asesoria', function ($data) {
+                return $data->present()->tipoUsoInfraestructura();
             })
             ->editColumn('fase', function ($data) {
                 return $data->present()->faseActividad();
-                // return "{$data->asesorable->fase->nombre}";
             })
             ->editColumn('asesoria_directa', function ($data) {
                 return $data->present()->asesoriaDirecta();
@@ -64,15 +67,13 @@ class UsoInfraestructuraDatatable
                 return $data->present()->asesoriaIndirecta();
             })
             ->addColumn('gestorEncargado', function ($data) {
-                return $data->present()->expertoEncargado();
+                return $data->present()->asesor();
             })
             ->addColumn('detail', function ($data) {
-
                 $button = '<a class="btn tooltipped green-complement  m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="' . route("usoinfraestructura.show", $data->id) . '" ><i class="material-icons">visibility</i></a>';
-
                 return $button;
             })
-            ->rawColumns(['fecha', 'actividad', 'gestorEncargado', 'fase', 'asesoria_directa', 'asesoria_indirecta', 'detail'])
+            ->rawColumns(['fecha','tipo_asesoria', 'actividad', 'gestorEncargado', 'fase', 'asesoria_directa', 'asesoria_indirecta', 'detail'])
             ->make(true);
     }
 }

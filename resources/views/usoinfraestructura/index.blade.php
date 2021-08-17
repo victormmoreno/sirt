@@ -4,7 +4,7 @@
 
 @section('content')
 @php
-  $year = Carbon\Carbon::now()->year;
+    $year = Carbon\Carbon::now()->year;
 @endphp
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
@@ -30,7 +30,7 @@
                     <div class="card-content">
                         <div class="row no-m-t no-m-b">
                             <div class="col s12 m12 l12">
-                                
+
                                 <div class="mailbox-view">
                                     <div class="mailbox-view-header center-align ">
                                         <div class="row no-m-t no-m-b">
@@ -38,28 +38,28 @@
                                                 <div class="col s12 m12 l12">
                                                     <span class="card-title center-align absolute-center hand-of-Sean-fonts orange-text text-darken-3">
                                                         Asesorias y usos de Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }}
-                                                    </span>  
+                                                    </span>
                                                 </div>
                                             @else
                                                 <div class="col s12 m8 l8">
                                                     <span class="card-title center-align absolute-center hand-of-Sean-fonts orange-text text-darken-3">
-                                                        Asesorias y usos de Infraestructura 
-                                                    </span>  
+                                                        Asesorias y usos de Infraestructura
+                                                    </span>
                                                 </div>
                                                 <div class="col s12 m4 l4 show-on-large hide-on-med-and-down">
-                                                    @if(session()->has('login_role') == App\User::IsGestor() || session()->has('login_role') == App\User::IsArticulador()) 
+                                                    @if(session()->has('login_role') == App\User::IsGestor() || session()->has('login_role') == App\User::IsArticulador())
                                                         <a  href="{{route('usoinfraestructura.create')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nueva Asesoria</a>
                                                     @else
                                                         <a  href="{{route('usoinfraestructura.create')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo uso de Infraestructura</a>
                                                     @endif
                                                 </div>
                                             @endif
-                                        </div>                                    
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="divider">
                         </div>
                         <div class=" mailbox-view mailbox-text">
@@ -74,9 +74,9 @@
                                     </select>
                                 </div>
                                 @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
-                                
+
                                 <div class="input-field col s12 m4 l4">
-                                    
+
                                     <select class="js-states browser-default select2" name="filter_gestor" id="filter_gestor" >
                                         <option value="all" >todos</option>
                                         @foreach($gestores as $id => $gestor)
@@ -87,7 +87,7 @@
                                 @endif
 
                                 @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsTalento()))
-                                
+
                                 <div class="input-field col s12 m4 l4">
                                     <label class="active" for="filter_actividad">Actividad <span class="red-text">*</span></label>
                                     <select name="filter_actividad" id="filter_actividad">
@@ -105,7 +105,8 @@
                                 <thead>
                                     <th width="10%">Fecha</th>
                                     <th width="20%">Asesor</th>
-                                    <th width="45%">Nombre</th>
+                                    <th width="10%">Tipo Asesoria</th>
+                                    <th width="35%">Nombre</th>
                                     <th width="10%">Fase</th>
                                     <th width="5%">Asesoría Directa</th>
                                     <th width="5%">Asesoría Indirecta</th>

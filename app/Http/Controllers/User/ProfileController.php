@@ -175,13 +175,7 @@ class ProfileController extends Controller
 
     public function activities()
     {
-
-        $user = User::find(auth()->user()->id);
-
-        if ($user == null) {
-            $user = User::onlyTrashed()->find(auth()->user()->id);
-        }
-
+        $user = User::withTrashed()->find(auth()->user()->id);
         $this->authorize('viewActivities', $user);
 
         if (\Session::get('login_role') == User::IsTalento()) {

@@ -23,7 +23,6 @@ class UsoInfraestructura extends Model
     protected $fillable = [
         'asesorable_id',
         'asesorable_type',
-        'actividad_id',
         'tipo_usoinfraestructura',
         'fecha',
         'descripcion',
@@ -41,7 +40,6 @@ class UsoInfraestructura extends Model
      * @var array
      */
     protected $casts = [
-        // 'actividad_id'            => 'integer',
 
         'tipo_usoinfraestructura' => 'integer',
         'fecha'                   => 'date:Y-m-d',
@@ -71,10 +69,10 @@ class UsoInfraestructura extends Model
     }
 
 
-    public function actividad()
-    {
-        return $this->belongsTo(Actividad::class, 'actividad_id', 'id');
-    }
+    // public function actividad()
+    // {
+    //     return $this->belongsTo(Actividad::class, 'actividad_id', 'id');
+    // }
 
     public function usoequipos()
     {
@@ -119,7 +117,7 @@ class UsoInfraestructura extends Model
             'asesoria_directa',
             'asesoria_indirecta',
             'costo_asesoria',
-        ]);
+        ])->withTrashed();
     }
 
     public function setDescripcionAttribute($descripcion)
@@ -135,12 +133,12 @@ class UsoInfraestructura extends Model
     /**
      * Elimina los datos de material_uso
      *
-     * @param Collection $actividad
+     * @param Collection $data
      * @return void
      */
-    public static function deleteUsoMateriales($actividad)
+    public static function deleteUsoMateriales($data)
     {
-        foreach ($actividad->usoinfraestructuras as $key => $value) {
+        foreach ($data->usoinfraestructuras as $key => $value) {
             $value->usomateriales()->sync([]);
         }
     }
@@ -149,12 +147,12 @@ class UsoInfraestructura extends Model
     /**
      * Elimina los datos de uso_talento
      *
-     * @param Collection $actividad
+     * @param Collection $data
      * @return void
      */
-    public static function deleteUsoTalentos($actividad)
+    public static function deleteUsoTalentos($data)
     {
-        foreach ($actividad->usoinfraestructuras as $key => $value) {
+        foreach ($data->usoinfraestructuras as $key => $value) {
             $value->usotalentos()->sync([]);
         }
     }
@@ -162,12 +160,12 @@ class UsoInfraestructura extends Model
     /**
      * Elimina los datos de equipo_uso
      *
-     * @param Collection $actividad
+     * @param Collection $data
      * @return void
      */
-    public static function deleteUsoEquipos($actividad)
+    public static function deleteUsoEquipos($data)
     {
-        foreach ($actividad->usoinfraestructuras as $key => $value) {
+        foreach ($data->usoinfraestructuras as $key => $value) {
             $value->usoequipos()->sync([]);
         }
     }
@@ -175,12 +173,12 @@ class UsoInfraestructura extends Model
     /**
      * Elimina los datos de gestor_uso
      *
-     * @param Collection $actividad
+     * @param Collection $data
      * @return void
      */
-    public static function deleteUsoGestores($actividad)
+    public static function deleteUsoGestores($data)
     {
-        foreach ($actividad->usoinfraestructuras as $key => $value) {
+        foreach ($data->usoinfraestructuras as $key => $value) {
             $value->usogestores()->sync([]);
         }
     }
@@ -218,118 +216,139 @@ class UsoInfraestructura extends Model
     public function scopeAsesoria($query, $actividad, $user)
     {   if ((session()->has('login_role') && session()->get('login_role') == User::IsArticulador()) && (!empty($user) && $user != null && $user != 'all')) {
             if ((!empty($actividad) && $actividad != null && $actividad != 'all')) {
-
                 $query->whereHasMorph(
                     'asesorable',
-                    [ \App\Models\ArticulacionPbt::class],
+                    \App\Models\ArticulacionPbt::class,
                     function (Builder $subquery) use($actividad, $user) {
                         return $subquery->where('id', $actividad)
                         ->orWhereHas('asesor', function ($subquery) use ($user) {
                             $subquery->where('id', $user);
                         });
                     }
-                );
-
-
+                )->whereHasMorph('asesorable', \App\Models\Proyecto::class);
             } elseif ((!empty($actividad) && $actividad != null && $actividad == 'all')) {
-
                 $query->whereHasMorph(
                     'asesorable.asesor',
-                    [ \App\Models\ArticulacionPbt::class],
+                    \App\Models\ArticulacionPbt::class,
                     function (Builder $subquery) use( $user) {
                         return $subquery->where('id', $user);
                     }
-                );
+                )->whereHasMorph('asesorable', \App\Models\Proyecto::class);
             }
         }
         else if ((session()->has('login_role') && session()->get('login_role') == User::IsGestor()) && (!empty($user) && $user != null && $user != 'all')) {
             if ((!empty($actividad) && $actividad != null && $actividad != 'all')) {
-
                 $query->whereHasMorph(
                     'asesorable',
                     [ \App\Models\Proyecto::class],
                     function (Builder $subquery) use($actividad, $user) {
-                        return $subquery->where('id', $actividad)
+                        return $subquery->whereHas('articulacion_proyecto.actividad', function($q) use($actividad){
+                            $q->where('id', $actividad);
+                        })
                         ->orWhereHas('asesor.user', function ($subquery) use ($user) {
                             $subquery->where('id', $user);
                         });
                     }
-                );
-
-                // return $query->whereHas('actividad.articulacion_proyecto.proyecto.asesor.user',  function ($subquery) use ($user) {
-                //     $subquery->where('id', $user);
-                // })->whereHas('actividad.articulacion_proyecto.proyecto',  function ($subquery) use ($actividad) {
-                //     $subquery->where('id', $actividad);
-                // });
-
+                )->whereHasMorph('asesorable', \App\Models\Proyecto::class);
             } elseif ((!empty($actividad) && $actividad != null && $actividad == 'all')) {
-
                 $query->whereHasMorph(
-                    'asesorable.asesor.user',
+                    'asesorable',
                     [ \App\Models\Proyecto::class],
                     function (Builder $subquery) use( $user) {
-                        return $subquery->where('id', $user);
+                        return $subquery->whereHas('asesor.user', function ($subquery) use ($user) {
+                            $subquery->where('id', $user);
+                        });
                     }
-                );
-
-                // return $query->whereHas('actividad.articulacion_proyecto.proyecto.asesor.user',  function ($subquery) use ($user) {
-                //     $subquery->where('id', $user);
-                // });
+                )->whereHasMorph('asesorable', \App\Models\Proyecto::class);
             }
         } else if ((session()->has('login_role') && session()->get('login_role') == User::IsTalento()) && (!empty($user) && $user != null && $user != 'all')) {
             if ((!empty($actividad) && $actividad != null && $actividad != 'all')) {
-
-                return $query->whereHas('usotalentos.user',  function ($subquery) use ($user) {
-                    $subquery->where('id', $user);
-                })->whereHas('actividad',  function ($subquery) use ($actividad) {
-                    $subquery->where('id', $actividad);
-                });
-
+                return $query->whereHas(
+                    'usotalentos.user',
+                    function (Builder $query) use($user) {
+                        return $query->where('id', $user);
+                    }
+                );
             } elseif ((!empty($actividad) && $actividad != null && $actividad == 'all')) {
-
                 return $query->whereHas('usotalentos.user',  function ($subquery) use ($user) {
                     $subquery->where('id', $user);
                 });
-
             } elseif ((!empty($actividad) && $actividad == null && $actividad != 'all')) {
-
                 return $query->whereHas('usotalentos.user',  function ($subquery) use ($user) {
                     $subquery->where('id', $user);
                 });
-
             }
         }
-
         return $query;
     }
 
     public function scopeAsesor($query, $asesor = null)
     {
         if (!empty($asesor) && $asesor != null && $asesor == 'all') {
-            return $query->has('asesorable');
+            return $query->whereHasMorph(
+                'asesorable',
+                [ \App\Models\Proyecto::class, \App\Models\ArticulacionPbt::class]
+            );
         }
 
         if ((!empty($asesor) && $asesor != null && $asesor != 'all')) {
-            return $query->wherehas('asesorable.asesor.user', function ($query) use ($asesor) {
-                        $query->where(function ($subquery) use ($asesor) {
-                            $subquery->where('id', $asesor);
-                        });
-                    })->orWhereHas('asesorable.asesor',function ($query) use ($asesor) {
-                        $query->where(function ($subquery) use ($asesor) {
-                            $subquery->where('id', $asesor);
-                        });
-                    });
+
+            if((session()->has('login_role') && session()->get('login_role') == User::IsArticulador())){
+                return $query->whereHas(
+                    'usogestores',
+                    function (Builder $query) use($asesor) {
+                        return $query->where('users.id', $asesor);
+
+                    }
+                )->whereHasMorph('asesorable', \App\Models\ArticulacionPbt::class);
+            }
+            if((session()->has('login_role') && (session()->get('login_role') == User::IsApoyoTecnico() || session()->get('login_role') == User::IsGestor()))){
+                return $query->whereHas(
+                    'usogestores',
+                    function (Builder $query) use($asesor) {
+                        return $query->where('users.id', $asesor);
+                    }
+                )->whereHasMorph('asesorable', \App\Models\Proyecto::class);
+            }
+            return $query->whereHas(
+                'usogestores',
+                function (Builder $query) use($asesor) {
+                    return $query->where('users.id', $asesor);
+                }
+            );
+            // return $query->whereHasMorph(
+            //     'asesorable',
+            //     [ \App\Models\Proyecto::class],
+            //     function (Builder $subquery) use($asesor) {
+            //         return $subquery->wherehas('asesor.user', function ($query) use ($asesor) {
+            //             $query->where(function ($subquery) use ($asesor) {
+            //                 $subquery->where('id', $asesor);
+            //             });
+            //         });
+
+            //     }
+            // )->orWhereHasMorph(
+            //     'asesorable',
+            //     [\App\Models\ArticulacionPbt::class],
+            //     function (Builder $subquery) use($asesor) {
+            //         return $subquery->whereHas('asesor',function ($query) use ($asesor) {
+            //             $query->where(function ($subquery) use ($asesor) {
+            //                 $subquery->where('id', $asesor);
+            //             });
+            //         });
+            //     }
+            // );
         }
         return $query;
     }
 
-
-
-
     public function scopeYearAsesoria($query, $year)
     {
         if (!empty($year) && $year != null && $year == 'all') {
-            return $query->has('asesorable');
+            return $query->whereHasMorph(
+                'asesorable',
+                [ \App\Models\Proyecto::class, \App\Models\ArticulacionPbt::class]
+            );
         }
 
         if ((!empty($year) && $year != null && $year != 'all')) {
@@ -341,8 +360,6 @@ class UsoInfraestructura extends Model
                 }
             );
         }
-
-
         return $query;
     }
 

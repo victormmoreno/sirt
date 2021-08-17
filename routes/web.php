@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
 
 
 Route::get('/', function () {
@@ -53,10 +54,20 @@ DB::listen(function ($query) {
 =            ruta para revisar funcionaliddes de prueba          =
 ===========================================================*/
 
-Route::get('email', function () {
+Route::get('email/{id}', function ($asesor) {
 // return new App\Mail\Idea\IdeaAceptadaParaComite(App\Models\Idea::first(), 'Aceptada');
-$asesorias = App\Models\UsoInfraestructura::with(['actividad.articulacion_proyecto.proyecto'])->whereHas('actividad.articulacion_proyecto.proyecto')->get();
-// dd($asesorias->count());
+$asesorias = App\Models\UsoInfraestructura::with(['usotalentos.user'=> function($query){
+    $query->withTrashed();
+}])
+->whereHas(
+    'usotalentos.user',
+    function (Builder $query) use($asesor) {
+        return $query->where('id', $asesor);
+    }
+)
+->where('id', 6176)
+->first();
+dd($asesorias);
 
 });
 
@@ -906,7 +917,7 @@ Route::get('empresas/sede/{id}', 'EmpresaController@filterSede')->name('empresa.
 
 Route::get('articulaciones/export', 'ArticulacionPbtController@export')->name('articulacion.export')->middleware('role_session:Administrador|Articulador|Dinamizador');
 Route::get('articulaciones/download/inicio/{id}', 'PDF\PdfArticulacionPbtController@downloadFormInicio')->name('pdf.articulacion.inicio')->middleware('role_session:Articulador');
-Route::get('articulaciones/download/cierre/{id}', 'PDF\PdfArticulacionPbtController@downloadFormCierre')->name('pdf.articulacion.cierre')->middleware('role_session:Articulador');
+Route::get('articulaciones/download/cierre/{id}', 'PDF\PdfArticulacionPbtController@downloadFormCierre')->name('pdf.articulacion.cierre')->middleware('role_session:Articulador|Administrador');
 
 
 Route::delete('articulaciones/file/{idFile}', 'ArchivoController@destroyFileArticulacion')->name('articulacion.files.destroy')->middleware('role_session:Articulador');

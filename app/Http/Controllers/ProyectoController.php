@@ -66,11 +66,11 @@ class ProyectoController extends Controller
     {
         $proyecto = Proyecto::findOrFail($id);
         $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
-        $costo = $this->costoController->costosDeUnaActividad($proyecto->articulacion_proyecto->actividad->id);
+        // $costo = $this->costoController->costosDeUnaActividad($proyecto->articulacion_proyecto->actividad->id);
 
         return view('proyectos.detalle', [
             'proyecto' => $proyecto,
-            'costo' => $costo,
+            'costo' => $costo = 0,
             'historico' => $historico
         ]);
     }

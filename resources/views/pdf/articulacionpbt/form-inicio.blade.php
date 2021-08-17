@@ -1,19 +1,19 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <style>
+    <style>
         footer.page-footer {
-        margin-top: 20px;
-        padding-top: 20px;
-        background-color: #ee6e73;
+            margin-top: 20px;
+            padding-top: 20px;
+            background-color: #ee6e73;
         }
 
         footer.page-footer .footer-copyright {
-        overflow: hidden;
-        height: 50px;
-        line-height: 50px;
-        color: rgba(255, 255, 255, 0.8);
-        background-color: rgba(51, 51, 51, 0.08);
+            overflow: hidden;
+            height: 50px;
+            line-height: 50px;
+            color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(51, 51, 51, 0.08);
         }
 
     .center-image{
@@ -37,7 +37,7 @@
 
     table.bordered > thead > tr,
     table.bordered > tbody > tr {
-    border-bottom: 2px solid #050505;
+        border-bottom: 2px solid #050505;
     }
 
     table.striped > tbody > tr:nth-child(odd) {

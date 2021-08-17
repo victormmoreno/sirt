@@ -10,10 +10,8 @@
                 <div class="row">
                     <div class="col s10 m10 l10">
                         <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
-                            <i class="material-icons left">
-                                supervised_user_circle
-                            </i>
-                             Perfil | Actividades
+                            <i class="material-icons left">supervised_user_circle</i>
+                            Perfil | Actividades
                         </h5>
                     </div>
                 </div>
@@ -26,14 +24,12 @@
                                         <div class="row">
                                             @include('users.profile.nav.nav-profile')
                                         </div>
-
                                     </div>
                                     <div class="col s12 m7 l9">
                                         @include('users.profile.nav.navbar')
                                         <div class="mailbox-view">
                                             <div class="mailbox-view-header">
                                                 @include('users.profile.nav.header')
-
                                             </div>
                                             <div class="right">
                                                 <small>
@@ -48,7 +44,6 @@
                                                         <div class="card-panel grey lighten-5 z-depth-1">
                                                             <div class="row valign-wrapper">
                                                                 @if(\Session::get('login_role') == App\User::IsTalento() && isset($actividad->actividad))
-
                                                                     <div class="col s12">
                                                                         <div class="black-text">
                                                                             @if(isset($actividad->actividad->articulacion_proyecto->proyecto) && $actividad->actividad->articulacion_proyecto->proyecto != null)
@@ -63,26 +58,22 @@
                                                                             <p class="blue-grey-text ">{{optional($actividad->actividad->fecha_inicio)->isoFormat('LL')}}   Tecnoparque Nodo {{$actividad->actividad->nodo->entidad->nombre}}
                                                                             </p>
                                                                         </div>
-                                                                    </div
-                                                                @elseif(\Session::get('login_role') == App\User::IsGestor() && isset($actividad))
-                                                                <div class="col s12">
-                                                                    <div class="black-text">
-
-                                                                        @if(isset($actividad->articulacion_proyecto->proyecto) && $actividad->articulacion_proyecto->proyecto != null)
-                                                                            <a href="{{route('proyecto.detalle',$actividad->articulacion_proyecto->proyecto->id)}}" class="heading-title">{{$actividad->codigo_actividad}} - {{$actividad->nombre}} </a>
-                                                                            <a href="{{route('proyecto.detalle',$actividad->articulacion_proyecto->proyecto->id)}}" class="green-text">{{route('proyecto.detalle',$actividad->articulacion_proyecto->proyecto->id)}}</a>
-                                                                        @elseif(isset($actividad->articulacion_proyecto->articulacion) && $actividad->articulacion_proyecto->articulacion != null)
-                                                                            <a href="{{route('articulacion.detalle',$actividad->articulacion_proyecto->articulacion->id)}}" class="heading-title">{{$actividad->codigo_actividad}} - {{$actividad->nombre}} </a>
-                                                                            <a href="{{route('articulacion.detalle',$actividad->articulacion_proyecto->articulacion->id)}}" class="green-text">{{route('articulacion.detalle',$actividad->articulacion_proyecto->articulacion->id)}}</a>
-                                                                        @else
-                                                                            {{$actividad->codigo_actividad}} - {{$actividad->nombre}}
-                                                                        @endif
-
-                                                                        <p class="blue-grey-text ">{{optional($actividad->fecha_inicio)->isoFormat('LL')}}
-
-                                                                        </p>
                                                                     </div>
-                                                                </div>
+                                                                @elseif(\Session::get('login_role') == App\User::IsGestor() && isset($actividad))
+                                                                    <div class="col s12">
+                                                                        <div class="black-text">
+                                                                            @if(isset($actividad->articulacion_proyecto->proyecto) && $actividad->articulacion_proyecto->proyecto != null)
+                                                                                <a href="{{route('proyecto.detalle',$actividad->articulacion_proyecto->proyecto->id)}}" class="heading-title">{{$actividad->codigo_actividad}} - {{$actividad->nombre}} </a>
+                                                                                <a href="{{route('proyecto.detalle',$actividad->articulacion_proyecto->proyecto->id)}}" class="green-text">{{route('proyecto.detalle',$actividad->articulacion_proyecto->proyecto->id)}}</a>
+                                                                            @elseif(isset($actividad->articulacion_proyecto->articulacion) && $actividad->articulacion_proyecto->articulacion != null)
+                                                                                <a href="{{route('articulacion.detalle',$actividad->articulacion_proyecto->articulacion->id)}}" class="heading-title">{{$actividad->codigo_actividad}} - {{$actividad->nombre}} </a>
+                                                                                <a href="{{route('articulacion.detalle',$actividad->articulacion_proyecto->articulacion->id)}}" class="green-text">{{route('articulacion.detalle',$actividad->articulacion_proyecto->articulacion->id)}}</a>
+                                                                            @else
+                                                                                {{$actividad->codigo_actividad}} - {{$actividad->nombre}}
+                                                                            @endif
+                                                                            <p class="blue-grey-text ">{{optional($actividad->fecha_inicio)->isoFormat('LL')}}</p>
+                                                                        </div>
+                                                                    </div>
                                                                 @endif
                                                             </div>
                                                         </div>

@@ -4,7 +4,7 @@
 
 @section('content')
 @php
-  $year = Carbon\Carbon::now()->year;
+    $year = Carbon\Carbon::now()->year;
 @endphp
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
@@ -82,13 +82,13 @@
                                 <thead>
                                     <th width="10%">Fecha</th>
                                     <th width="20%">Asesor</th>
-                                    <th width="45%">Nombre</th>
+                                    <th width="10%">Tipo Asesoria</th>
+                                    <th width="35%">Nombre</th>
                                     <th width="10%">Fase</th>
                                     <th width="5%">Asesoría Directa</th>
                                     <th width="5%">Asesoría Indirecta</th>
                                     <th width="5%">Detalles</th>
                                 </thead>
-
                             </table>
                         </div>
                     </div>

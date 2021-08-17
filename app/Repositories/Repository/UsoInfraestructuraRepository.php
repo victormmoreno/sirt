@@ -28,7 +28,7 @@ class UsoInfraestructuraRepository
         $model = null;
         $asesorable = null;
 
-        if (Session::get('login_role') == User::IsGestor() || Session::get('login_role') == User::IsTalento()) {
+        if (Session::get('login_role') == User::IsGestor() || Session::get('login_role') == User::IsTalento() || Session::get('login_role') == User::IsApoyoTecnico()) {
             $asesorable = Actividad::where('codigo_actividad', explode(" - ", $request->txtactividad)[0])
             ->first();
             $model = $asesorable->articulacion_proyecto->proyecto;
@@ -131,15 +131,23 @@ class UsoInfraestructuraRepository
         $asesor = null;
 
         foreach ($request->get('gestor') as $id => $value) {
-
+            $asesor = null;
             if($usoInfraestructura->asesorable_type == Proyecto::class){
-                $asesor = User::whereHas('gestor', function($query) use($value){
-                    $query->where('id', $value);
-                })->first();
-                $honorarioAsesor = $asesor->gestor->honorarios;
+                $asesor = User::where('id', $value)->first();
+
+
             }else if($usoInfraestructura->asesorable_type == \App\Models\ArticulacionPbt::class){
                 $asesor = User::where('id', $value)->first();
+            }
+
+            if(isset($asesor->gestor) && \Session::get('login_role') == User::IsGestor()){
+                $honorarioAsesor = $asesor->gestor->honorarios;
+            }else if(isset($asesor->articulador) && \Session::get('login_role') == User::IsArticulador()){
                 $honorarioAsesor = $asesor->articulador->honorarios;
+            }else if(isset($asesor->apoyotecnico) && \Session::get('login_role') == User::IsApoyoTecnico()){
+                $honorarioAsesor = $asesor->apoyotecnico->honorarios;
+            }else{
+                $honorarioAsesor = 0;
             }
             //suma de las horas de asesoria directa y horas de asesoria indirecta
             $horasAsesoriaGestor[$id] = $request->get('asesoriadirecta')[$id] + $request->get('asesoriaindirecta')[$id];
@@ -149,8 +157,8 @@ class UsoInfraestructuraRepository
 
             //array que almacena los datos a guardar
             $syncData[$id] = [
-                // 'asesorable_id' => $asesor->id,
-                // 'asesorable_type' => User::class,
+                'asesorable_id' => $asesor->id,
+                'asesorable_type' => User::class,
                 'asesoria_directa'   => $request->get('asesoriadirecta')[$id] != null ? $request->get('asesoriadirecta')[$id] : 0,
                 'asesoria_indirecta' => $request->get('asesoriaindirecta')[$id] != null ? $request->get('asesoriaindirecta')[$id] : 0,
                 'costo_asesoria'     => $honorario[$id],
