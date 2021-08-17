@@ -1,35 +1,32 @@
 @if(\Session::get('login_role') == App\User::IsGestor())
 <table id="tblproyectosGestorPorAnho" class="display responsive-table datatable-example dataTable" style="width: 100%">
-  <thead>
-    <tr>
-      <th>Código de Proyecto</th>
-      <th>Nombre</th>
-      <th>Fase</th>
-      <th>Información</th>
-      <th>Proceso</th>
-    </tr>
-  </thead>
-  <tfoot>
-    <tr>
-      <th>
-        <input type="text" name="codigo_proyecto" class="codigo_proyecto" placeholder="Buscar por Código de Proyecto">
-      </th>
-      <th>
-        <input type="text" name="nombre" class="nombre" placeholder="Buscar por Nombre">
-      </th>
-      <th>
-        <input type="text" name="nombre_fase" class="sublinea_nombre" placeholder="Buscar por Fase">
-      </th>
-      <th></th>
-      <th></th>
-    </tr>
-  </tfoot>
-  <tbody>
-
-  </tbody>
+    <thead>
+        <tr>
+        <th>Código de Proyecto</th>
+        <th>Nombre</th>
+        <th>Fase</th>
+        <th>Información</th>
+        <th>Proceso</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+        <th>
+            <input type="text" name="codigo_proyecto" class="codigo_proyecto" placeholder="Buscar por Código de Proyecto">
+        </th>
+        <th>
+            <input type="text" name="nombre" class="nombre" placeholder="Buscar por Nombre">
+        </th>
+        <th>
+            <input type="text" name="nombre_fase" class="sublinea_nombre" placeholder="Buscar por Fase">
+        </th>
+        <th></th>
+        <th></th>
+        </tr>
+    </tfoot>
+    <tbody></tbody>
 </table>
 @endif
-
 @if(\Session::get('login_role') == App\User::IsDinamizador() || \Session::get('login_role') == App\User::IsInfocenter())
 <table id="tblproyectosDelNodoPorAnho" class="display responsive-table datatable-example dataTable" style="width: 100%">
   <thead>
@@ -73,7 +70,6 @@
   </tbody>
 </table>
 @endif
-
 @if(\Session::get('login_role') == App\User::IsAdministrador())
 <table id="tblproyectosDelNodoPorAnho_Administrador" class="display responsive-table datatable-example dataTable" style="width: 100%">
   <thead>

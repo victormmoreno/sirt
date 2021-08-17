@@ -34,10 +34,7 @@ class ActividadesTableSeeder extends Seeder
         })->get()->random();
 
         //proyectos
-        factory(Actividad::class, 20)->create([
-            'gestor_id' => $gestor->id,
-            'nodo_id' => $entidad->nodo->id,
-        ])
+        factory(Actividad::class, 20)->create([])
             ->each(function ($actividad) use ($user, $entEmpresa, $entGrupoInvestigacion, $userGestor, $equipos, $materiales) {
                 $actividad->objetivos_especificos()->save(factory(ObjetivoEspecifico::class)->make());
                 $actividad->objetivos_especificos()->save(factory(ObjetivoEspecifico::class)->make());
@@ -189,10 +186,7 @@ class ActividadesTableSeeder extends Seeder
             });
 
         //edts
-        factory(Actividad::class, 50)->create([
-            'gestor_id' => $gestor->id,
-            'nodo_id' => $entidad->nodo->id,
-        ])->each(function ($actividad) use ($entEmpresa) {
+        factory(Actividad::class, 50)->create([])->each(function ($actividad) use ($entEmpresa) {
 
             $actividad->edt()->save(factory(Edt::class)->make());
             $actividad->edt->entidades()->sync($entEmpresa->empresa->id);

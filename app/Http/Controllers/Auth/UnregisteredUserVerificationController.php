@@ -38,7 +38,6 @@ class UnregisteredUserVerificationController extends Controller
      */
     public function verificationUser(Request $request)
     {
-      
         $validator = Validator::make($this->credentials($request), [
             'document_type' => 'required',
             'document' => 'required|digits_between:6,11|numeric',
@@ -47,7 +46,7 @@ class UnregisteredUserVerificationController extends Controller
             'document.required'               => 'El número de documento es obligatorio.',
             'document.digits_between'         => 'El número de documento debe tener entre 6 y 11 digitos',
             'document.numeric'                => 'El número de documento debe ser numérico',
-    
+
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -55,7 +54,6 @@ class UnregisteredUserVerificationController extends Controller
                 'errors' => $validator->errors(),
             ]);
         }
-
         $this->credentials($request);
 
         $user = User::withTrashed()->select('documento')
@@ -65,15 +63,14 @@ class UnregisteredUserVerificationController extends Controller
             return response()->json([
                 'data' => [
                     'user' => true,
-                ]                
+                ]
             ]);
 
         }else{
             return response()->json([
                 'data' => [
                     'user' => false,
-                ]  
-            
+                ]
             ]);
         }
     }

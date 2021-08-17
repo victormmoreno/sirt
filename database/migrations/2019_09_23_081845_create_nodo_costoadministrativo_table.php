@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateNodoCostoadministrativoTable extends Migration
 {
-
-    public $tableName = 'nodo_costoadministrativo';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'nodo_costoadministrativo';
     /**
      * Run the migrations.
      *

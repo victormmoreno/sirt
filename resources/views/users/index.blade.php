@@ -2,7 +2,7 @@
 @section('meta-title', 'Usuarios')
 @section('content')
 @php
-  $year = Carbon\Carbon::now()->year;
+    $year = Carbon\Carbon::now()->year;
 @endphp
 <main class="mn-inner inner-active-sidebar">
     <div class="content">

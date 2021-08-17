@@ -16,7 +16,6 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         'App\Events\User\UserWasRegistered' => [
-            // 'App\Listeners\User\SendActivationLink',
             'App\Listeners\User\SendWelcomeEmail',
         ],
         'Illuminate\Auth\Events\Login'      => [
@@ -28,7 +27,7 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Idea\IdeaHasReceived' => [
             'App\Listeners\Idea\IdeaHasBeenReceived'
         ],
-        
+
         'App\Events\Comite\ComiteWasRegistered' => [
             'App\Listeners\Comite\IdeaWasRegisteredInComite',
         ],

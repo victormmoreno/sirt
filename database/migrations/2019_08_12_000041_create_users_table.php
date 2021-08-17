@@ -10,7 +10,7 @@ class CreateUsersTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'users';
+    protected $tableName = 'users';
 
     /**
      * Run the migrations.
@@ -98,8 +98,8 @@ class CreateUsersTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

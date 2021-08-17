@@ -46,7 +46,6 @@ class EntidadesTableSeeder extends Seeder
                 'ciudad_id' => 1064,
                 'nombre'    => 'Calí',
                 'slug'      => 'Tecnoparque nodo Calí'
-
             ]);
 
             Entidad::create([

@@ -7,13 +7,19 @@ use Illuminate\Database\Migrations\Migration;
 class CreateNoticiasTable extends Migration
 {
     /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'noticias';
+
+    /**
      * Run the migrations.
      *
      * @return void
      */
     public function up()
     {
-        Schema::create('noticias', function (Blueprint $table) {
+        Schema::create($this->tableName, function (Blueprint $table) {
             $table->increments('id');
             $table->string('Titulo',120);
             $table->string('Imagen');
@@ -29,6 +35,6 @@ class CreateNoticiasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('noticias');
+        Schema::dropIfExists($this->tableName);
     }
 }

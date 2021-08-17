@@ -60,7 +60,6 @@ class ArticulacionPbtPolicy
      */
     public function datatable(User $user)
     {
-
         return (bool) ($user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsArticulador(), User::IsTalento()]) &&
         session()->has('login_role')
         && session()->get('login_role') == User::IsAdministrador()
@@ -92,7 +91,6 @@ class ArticulacionPbtPolicy
      */
     public function updateEntregable(User $user)
     {
-
         return (bool) collect($user->getRoleNames())->contains(User::IsArticulador()) && session()->get('login_role') == User::IsArticulador();
     }
 }

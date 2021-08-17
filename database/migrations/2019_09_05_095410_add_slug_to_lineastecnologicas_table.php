@@ -6,8 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddSlugToLineastecnologicasTable extends Migration
 {
-
-    public $tableName = 'lineastecnologicas';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'lineastecnologicas';
     /**
      * Run the migrations.
      *

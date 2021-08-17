@@ -50,7 +50,7 @@
                 {{$infocenter->user->present()->userEmail()}}
             </td>
             <td>
-                {{isset($infocenter->user->celular) ? $infocenter->user->celular : isset($infocenter->user->telefono) ? $infocenter->user->telefono : 'No registra'}}
+                {{isset($infocenter->user->celular) ? $infocenter->user->celular : (isset($infocenter->user->telefono) ? $infocenter->user->telefono : 'No registra')}}
             </td>
             <td>
                 {{$infocenter->user->present()->userGenero()}}

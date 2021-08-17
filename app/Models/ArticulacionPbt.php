@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ArticulacionPbtPresenter;
+use App\User;
 
 class ArticulacionPbt extends Model
 {
@@ -21,11 +22,21 @@ class ArticulacionPbt extends Model
     protected $fillable = [
         'tipo_vinculacion',
         'actividad_id',
-        'proyecto_id',
-        'sede_id',
+        'asesor_id',
+        'nodo_id',
+        // 'proyecto_id',
+        // 'sede_id',
         'fase_id',
         'tipo_articulacion_id',
         'alcance_articulacion_id',
+        'articulable_id',
+        'articulable_type',
+        'codigo',
+        'nombre',
+        'fecha_inicio',
+        'fecha_cierre',
+        'formulario_inicio',
+        'seguimiento',
         'entidad',
         'nombre_contacto',
         'email_entidad',
@@ -33,6 +44,7 @@ class ArticulacionPbt extends Model
         'objetivo',
         'fecha_esperada_finalizacion',
         'lecciones_aprendidas',
+        'aprobacion_dinamizador',
         'aprobacion_dinamizador_ejecucion',
         'aprobacion_dinamizador_suspender',
         'postulacion',
@@ -42,6 +54,7 @@ class ArticulacionPbt extends Model
         'informe_noaprobado',
         'recibira',
         'pdf_aprobacion',
+        'pdf_noaprobacion',
         'informe',
         'documento_postulacion',
         'documento_convocatoria',
@@ -49,7 +62,10 @@ class ArticulacionPbt extends Model
     ];
 
     protected $dates = [
-        'fecha_esperada_finalizacion', 'cuando'
+        'fecha_esperada_finalizacion',
+        'cuando',
+        'fecha_inicio',
+        'fecha_cierre'
     ];
 
     public static function IsPbt()
@@ -67,15 +83,55 @@ class ArticulacionPbt extends Model
         return self::IS_COLINNOVA;
     }
 
+    /**
+     * Define an inverse one-to-one or many relationship between articulacion_pbts and users
+     * @author devjul
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function asesor()
+    {
+        return $this->belongsTo(User::class, 'asesor_id', 'id');
+    }
+
+    /**
+     * Define an inverse one-to-one or many relationship between articulacion_pbts and node
+     * @author devjul
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function nodo()
+    {
+        return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
+    }
+
+    /**
+     * Define a polymorphic, inverse many-to-many relationship between articulacion_pbts and projects
+     * @author dum
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function articulable()
+    {
+        return $this->MorphTo();
+    }
+
+    public function asesorias()
+    {
+        return $this->morphMany(UsoInfraestructura::class, 'asesorable');
+    }
+
+    public function usoinfraestructura()
+    {
+        return $this->morphOne(UsoInfraestructura::class, 'asesorable');
+    }
+
     public function actividad()
     {
         return $this->belongsTo(Actividad::class, 'actividad_id', 'id');
     }
 
-    public function proyecto()
-    {
-        return $this->belongsTo(Proyecto::class, 'proyecto_id', 'id');
-    }
+    // public function proyecto()
+    // {
+    //     return $this->belongsTo(Proyecto::class, 'proyecto_id', 'id');
+    // }
 
     public function fase()
     {
@@ -97,16 +153,21 @@ class ArticulacionPbt extends Model
         return $this->morphOne(ArchivoModel::class, 'model');
     }
 
-    public function sede()
-    {
-        return $this->belongsTo(Sede::class, 'sede_id', 'id');
-    }
+    // public function sede()
+    // {
+    //     return $this->belongsTo(Sede::class, 'sede_id', 'id');
+    // }
 
     public function talentos()
     {
         return $this->belongsToMany(Talento::class, 'articulaciones_pbt_talento')
             ->withTimestamps()
             ->withPivot('talento_lider');
+    }
+
+    public function historial()
+    {
+        return $this->morphMany(HistorialEntidad::class, 'model');
     }
 
     public function scopeTipoArticulacion($query, $tipoArticulacion)
@@ -128,9 +189,8 @@ class ArticulacionPbt extends Model
     public function scopeNodo($query, $nodo)
     {
         if (!empty($nodo) && $nodo != null && $nodo != 'all') {
-            return $query->whereHas('actividad', function ($subQuery) use ($nodo) {
-                $subQuery->where('nodo_id', $nodo);
-            });
+            return $query->where('nodo_id', $nodo);
+
         }
         return $query;
     }
@@ -138,9 +198,8 @@ class ArticulacionPbt extends Model
     public function scopeStarEndDate($query, $year)
     {
         if (!empty($year) && $year != null && $year != 'all') {
-            return $query->whereHas('actividad', function ($subQuery) use ($year) {
-                $subQuery->whereYear('fecha_inicio', $year)->orWhereYear('fecha_cierre', $year);
-            });
+            return $query->whereYear('fecha_inicio', $year)->orWhereYear('fecha_cierre', $year);
+
         }
         return $query;
     }
@@ -153,6 +212,18 @@ class ArticulacionPbt extends Model
         return $query;
     }
 
+    public function scopeArticulacionesArticulador($query)
+    {
+        return $query
+            ->where(function($subquery){
+                $subquery->where('fase_id', Fase::IsInicio())
+                ->orwhere('fase_id', Fase::IsPlaneacion())
+                ->orwhere('fase_id', Fase::IsEjecucion());
+            })->get()
+            ->pluck('nombre','codigo' );
+
+    }
+
     public function scopeTalents($query, $talent){
         if (!empty($talent) && $talent != 'all' && $talent != null) {
             return $query->whereHas('talentos', function($query) use($talent){
@@ -162,14 +233,18 @@ class ArticulacionPbt extends Model
         return $query;
     }
 
+    public function scopeAsesor($query, $user = null){
+        if (!empty($user) && $user != 'all' && $user != null) {
+            return $query->whereHas('asesor', function($query) use($user){
+                $query->where('id', $user);
+            });
+        }
+        return $query;
+    }
+
     public function present()
     {
         return new ArticulacionPbtPresenter($this);
-    }
-
-    public function historial()
-    {
-        return $this->morphMany(HistorialEntidad::class, 'model');
     }
 
     public function registerHistoryArticulacion($movimiento, $role, $comentario, $descripcion)
@@ -183,12 +258,8 @@ class ArticulacionPbt extends Model
         ]);
     }
 
-    /*===================================================================
-    =            scope para consultar articulaciones           =
-    ===================================================================*/
     public function scopeArticulacionesWithRelations($query, array $relations)
     {
         return $query->with($relations);
     }
-    /*=====  End of scope para consultar por estado de proyecto  ======*/
 }

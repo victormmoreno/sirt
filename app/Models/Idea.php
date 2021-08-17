@@ -6,6 +6,7 @@ use App\Http\Traits\IdeaTrait\IdeaTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\EstadoIdea;
+use App\Presenters\IdeaPresenter;
 
 
 class Idea extends Model
@@ -121,18 +122,18 @@ class Idea extends Model
     public function registrarHistorialIdea($movimiento, $role, $comentario, $descripcion)
     {
         return $this->historial()->create([
-            'movimiento_id' => Movimiento::where('movimiento', $movimiento)->first()->id, 
+            'movimiento_id' => Movimiento::where('movimiento', $movimiento)->first()->id,
             'user_id' => auth()->user()->id,
             'role_id' => Role::where('name', $role)->first()->id,
             'comentarios' => $comentario,
             'descripcion' => $descripcion
-          ]);
+        ]);
     }
 
     public function validarAcuerdoConfidencialidad()
     {
         // return $this;
-        if ($this->acuerdo_no_confidencialidad == 0) { 
+        if ($this->acuerdo_no_confidencialidad == 0) {
             return false;
         }
         return true;
@@ -354,5 +355,15 @@ class Idea extends Model
             return $query->where('convocatoria', 'LIKE', "%$convocatoria%");
         }
         return $query;
+    }
+
+    /**
+     * returns an instance of the ProjectPresenter class
+     * @author devjul
+     * @return void
+     */
+    public function present()
+    {
+        return new IdeaPresenter($this);
     }
 }

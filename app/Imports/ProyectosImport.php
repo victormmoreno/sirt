@@ -107,17 +107,13 @@ class ProyectosImport implements ToCollection, WithHeadingRow
                 if (!$validacion) {
                     return $validacion;
                 }
-                // Validar trl esperado
-                // $validacion = $this->validarTrl($row['trl_esperado'], $key, 'esperado');
-                // if (!$validacion) {
-                //     return $validacion;
-                // }
+
                 // Validar	objetivo_general
                 $validacion = $this->validaciones->validarTamanhoCelda($row['objetivo_general'], $key, 'Objetivo general del proyecto', 500, $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
-                // Validar	conclusiones	
+                // Validar	conclusiones
                 $validacion = $this->validaciones->validarTamanhoCelda($row['conclusiones'], $key, 'Conclusiones del proyecto', 1000, $this->hoja);
                 if (!$validacion) {
                     return $validacion;
@@ -147,11 +143,7 @@ class ProyectosImport implements ToCollection, WithHeadingRow
                 if (!$validacion) {
                     return $validacion;
                 }
-                // Validar trl obtenido
-                // $validacion = $this->validarTrl($row['trl_obtenido'], $key, 'obtenido');
-                // if (!$validacion) {
-                //     return $validacion;
-                // }
+
                 // Validar las evidencias producto: prototipo_producto
                 $validacion = $this->validaciones->validarTamanhoCelda($row['prototipo_producto'], $key, 'Prototipo producto del proyecto', 300, $this->hoja);
                 if (!$validacion) {
@@ -174,32 +166,31 @@ class ProyectosImport implements ToCollection, WithHeadingRow
                 }
 
                 $talentos = explode(',', $row['talentos_ejecutores']);
-                // dd($talentos);
-                
+
                 $actividad = Actividad::where('codigo_actividad', $row['codigo_proyecto'])->first();
                 $idea_id = $this->getIdeaProyecto($row['codigo_idea'], $key);
                 $entidad_id = Entidad::where('nombre', 'No Aplica')->get()->last()->id;
-                
+
                 if ($actividad == null) {
                     // Registrar nuevo proyecto
                     $codigo_actividad = $this->generarCodigoDeProyecto($row['codigo_proyecto'], $sublinea, $gestor, $row['fecha_inicio']);
-                    $actividad = $this->registrarNuevaActividad($codigo_actividad, $row, $gestor);
+                    $actividad = $this->registrarNuevaActividad($codigo_actividad, $row);
                     $articulacion_proyecto = $this->registrarArticulacionProyecto($actividad, $entidad_id);
-                    $this->registrarNuevoProyecto($actividad, $row, $idea_id, $area_conocimiento->id, $sublinea->id, $talentos);
+                    $this->registrarNuevoProyecto($actividad,$gestor, $row, $idea_id, $area_conocimiento->id, $sublinea->id, $talentos);
                 } else {
                     // Actualizar proyecto existente
-                    if ($this->nodo == $actividad->nodo_id) {
-                        $this->actualizarActividadExistente($actividad, $gestor, $row);
+                    if ($this->nodo == $actividad->articulacion_proyecto->proyecto->nodo_id) {
+                        $this->actualizarActividadExistente($actividad, $row);
                         if ($actividad->articulacion_proyecto == null) {
                             $this->registrarArticulacionProyecto($actividad, $entidad_id);
                         }
                         if ($actividad->articulacion_proyecto->proyecto == null) {
-                            $this->registrarNuevoProyecto($actividad, $row, $idea_id, $area_conocimiento->id, $sublinea->id, $talentos);
+                            $this->registrarNuevoProyecto($actividad, $gestor, $row, $idea_id, $area_conocimiento->id, $sublinea->id, $talentos);
                         } else {
-                            $this->actualizarProyectoExistente($actividad, $row, $idea_id, $area_conocimiento->id, $sublinea->id, $talentos);
+                            $this->actualizarProyectoExistente($actividad,$gestor, $row, $idea_id, $area_conocimiento->id, $sublinea->id, $talentos);
                         }
                     } else {
-                        session()->put('errorMigracion', 'Error en la hoja de "'.$this->hoja.'": El código de proyecto '.$row['codigo_proyecto'].' en el registro de la fila #' . ($key+2) . ' ya se encuentra registrado en un proyecto del nodo '.$actividad->nodo->entidad->nombre.' 
+                        session()->put('errorMigracion', 'Error en la hoja de "'.$this->hoja.'": El código de proyecto '.$row['codigo_proyecto'].' en el registro de la fila #' . ($key+2) . ' ya se encuentra registrado en un proyecto del nodo '.$actividad->articulacion_proyecto->proyecto->nodo->entidad->nombre.'
                         (Se recomienda cambiar el código de los proyecto, ya que la base de datos no permite códigos duplicados).');
                     }
                 }
@@ -215,10 +206,10 @@ class ProyectosImport implements ToCollection, WithHeadingRow
 
     private function obtenerTalentosProyecto($talentos_ejecutores, $talento_lider)
     {
-        // $talento_temporal = null;
+
         $talentos = array();
         if (count($talentos_ejecutores) != 0) {
-            for ($i=0; $i < count($talentos_ejecutores) ; $i++) { 
+            for ($i=0; $i < count($talentos_ejecutores) ; $i++) {
                 $talento_temporal = User::where('documento', $talentos_ejecutores[$i])->withTrashed()->first();
                 if ($talento_temporal != null) {
                     if ($talento_temporal->talento != null) {
@@ -241,7 +232,7 @@ class ProyectosImport implements ToCollection, WithHeadingRow
         $user_temporal = null;
         $duenhos = array();
         if (count($arrUsers) != 0) {
-            for ($i=0; $i < count($arrUsers) ; $i++) { 
+            for ($i=0; $i < count($arrUsers) ; $i++) {
                 $user_temporal = User::where('documento', $arrUsers[$i])->withTrashed()->first();
                 if ($user_temporal != null) {
                     $duenhos[$i] = $user_temporal->id;
@@ -258,7 +249,7 @@ class ProyectosImport implements ToCollection, WithHeadingRow
         $empresa_temporal = null;
         $duenhos = array();
         if (count($arrEmpresas) != 0) {
-            for ($i=0; $i < count($arrEmpresas) ; $i++) { 
+            for ($i=0; $i < count($arrEmpresas) ; $i++) {
                 $empresa_temporal = Empresa::where('nit', $arrEmpresas[$i])->first();
                 if ($empresa_temporal != null) {
                     $duenhos[$i] = $empresa_temporal->id;
@@ -275,7 +266,7 @@ class ProyectosImport implements ToCollection, WithHeadingRow
         $grupo_temporal = null;
         $duenhos = array();
         if (count($arrGrupos) != 0) {
-            for ($i=0; $i < count($arrGrupos) ; $i++) { 
+            for ($i=0; $i < count($arrGrupos) ; $i++) {
                 $grupo_temporal = GrupoInvestigacion::where('codigo_grupo', $arrGrupos[$i])->first();
                 if ($grupo_temporal != null) {
                     $duenhos[$i] = $grupo_temporal->id;
@@ -341,23 +332,21 @@ class ProyectosImport implements ToCollection, WithHeadingRow
             $idProyecto = Proyecto::selectRaw('MAX(id+1) AS max')->get()->last();
             $idProyecto->max == null ? $idProyecto->max = 1 : $idProyecto->max = $idProyecto->max;
             $idProyecto->max = sprintf("%04d", $idProyecto->max);
-        
+
             return 'P' . $anho . '-' . $tecnoparque . $linea . $gestor . '-' . $idProyecto->max;
         }
         return $codigo_proyecto;
     }
-    private function registrarNuevaActividad($codigo_actividad, $row, $user_gestor)
+    private function registrarNuevaActividad($codigo_actividad, $row)
     {
         return Actividad::create([
-            'gestor_id' => $user_gestor->gestor->id,
-            'nodo_id' => $this->nodo,
             'codigo_actividad' => $codigo_actividad,
             'nombre' => $row['nombre_proyecto'],
             'fecha_inicio' => $row['fecha_inicio'],
             'fecha_cierre' => $row['fecha_cierre'],
             'conclusiones' => $row['conclusiones'],
             'objetivo_general' => $row['objetivo_general']
-          ]);
+        ]);
     }
 
     private function registrarArticulacionProyecto($actividad, $entidad_id)
@@ -365,81 +354,80 @@ class ProyectosImport implements ToCollection, WithHeadingRow
         return ArticulacionProyecto::create([
             'entidad_id' => $entidad_id,
             'actividad_id' => $actividad->id
-          ]);
+        ]);
     }
 
-    private function registrarNuevoProyecto($actividad, $row, $idea_id, $area_conocimiento_id, $sublinea_id, $talentos)
+    private function registrarNuevoProyecto($actividad, $user, $row, $idea_id, $area_conocimiento_id, $sublinea_id, $talentos)
     {
         $trl_esperado = $this->getTrlEsperado($row['trl_esperado']);
         $trl_obtenido = $this->getTrlObtenido($row['trl_obtenido']);
 
         $proyecto = Proyecto::create([
-          'articulacion_proyecto_id' => $actividad->articulacion_proyecto->id,
-          'fase_id' => Fase::where('nombre', 'Cierre')->first()->id,
-          'idea_id' => $idea_id,
-          'areaconocimiento_id' => $area_conocimiento_id,
-          'otro_areaconocimiento' => $row['otra_area_conocimento'],
-          'sublinea_id' => $sublinea_id,
-          'trl_esperado' => $trl_esperado,
-          'reci_ar_emp' => $row['area_emprendiemiento_sena'] == 'SI' ? 1 : 0,
-          'economia_naranja' => $row['economia_naranja'] == 'SI' ? 1 : 0,
-          'tipo_economianaranja' => $row['economia_naranja'] == 'SI' ? $row['tipo_economia_naranja'] : null,
-          'dirigido_discapacitados' => $row['proyecto_dirigido_discapacitados'] == 'SI' ? 1 : 0,
-          'tipo_discapacitados' => $row['proyecto_dirigido_discapacitados'] == 'SI' ? $row['tipo_discapacitado'] : null,
-          'art_cti' => $row['articulado_cti'] == 'SI' ? 1 : 0,
-          'nom_act_cti' => $row['articulado_cti'] == 'SI' ? $row['actor_cti'] : null,
-          'alcance_proyecto' => $row['alcance_proyecto'],
-          'fabrica_productividad' => $row['fabrica_productividad'] == 'SI' ? 1 : 0,
-          'trl_obtenido' => $trl_obtenido,
-          'trl_prototipo' => $row['prototipo_producto'],
-          'trl_modelo' => $row['modelo_negocio'],
-          'trl_pruebas' => $row['pruebas_documentadas'],
-          'trl_normatividad' => $row['evidencias_normatividad']
+            'asesor_id' => $user->gestor->id,
+            'nodo_id' => $this->nodo,
+            'articulacion_proyecto_id' => $actividad->articulacion_proyecto->id,
+            'fase_id' => Fase::where('nombre', 'Cierre')->first()->id,
+            'idea_id' => $idea_id,
+            'areaconocimiento_id' => $area_conocimiento_id,
+            'otro_areaconocimiento' => $row['otra_area_conocimento'],
+            'sublinea_id' => $sublinea_id,
+            'trl_esperado' => $trl_esperado,
+            'reci_ar_emp' => $row['area_emprendiemiento_sena'] == 'SI' ? 1 : 0,
+            'economia_naranja' => $row['economia_naranja'] == 'SI' ? 1 : 0,
+            'tipo_economianaranja' => $row['economia_naranja'] == 'SI' ? $row['tipo_economia_naranja'] : null,
+            'dirigido_discapacitados' => $row['proyecto_dirigido_discapacitados'] == 'SI' ? 1 : 0,
+            'tipo_discapacitados' => $row['proyecto_dirigido_discapacitados'] == 'SI' ? $row['tipo_discapacitado'] : null,
+            'art_cti' => $row['articulado_cti'] == 'SI' ? 1 : 0,
+            'nom_act_cti' => $row['articulado_cti'] == 'SI' ? $row['actor_cti'] : null,
+            'alcance_proyecto' => $row['alcance_proyecto'],
+            'fabrica_productividad' => $row['fabrica_productividad'] == 'SI' ? 1 : 0,
+            'trl_obtenido' => $trl_obtenido,
+            'trl_prototipo' => $row['prototipo_producto'],
+            'trl_modelo' => $row['modelo_negocio'],
+            'trl_pruebas' => $row['pruebas_documentadas'],
+            'trl_normatividad' => $row['evidencias_normatividad']
         ]);
-      
-          $syncData = array();
-          $syncData = $this->obtenerTalentosProyecto($talentos, $row['talento_interlocutor']);
-          
-          $actividad->articulacion_proyecto->talentos()->sync($syncData, false);
-          
-          $actividad->objetivos_especificos()->create([
-            'objetivo' => $row['primer_objetivo'] == null ? 'No registra' : $row['primer_objetivo'],
-            'cumplido' => $row['cumplio_primer_objetivo'] == 'SI' ? 1 : 0
-          ]);
-    
-          $actividad->objetivos_especificos()->create([
-            'objetivo' => $row['segundo_objetivo'] == null ? 'No registra' : $row['segundo_objetivo'],
-            'cumplido' => $row['cumplio_segundo_objetivo'] == 'SI' ? 1 : 0
-          ]);
-    
-          $actividad->objetivos_especificos()->create([
-            'objetivo' => $row['tercer_objetivo'] == null ? 'No registra' : $row['tercer_objetivo'],
-            'cumplido' => $row['cumplio_tercer_objetivo'] == 'SI' ? 1 : 0
-          ]);
-    
-          $actividad->objetivos_especificos()->create([
-            'objetivo' => $row['cuarto_objetivo'] == null ? 'No registra' : $row['cuarto_objetivo'],
-            'cumplido' => $row['cumplio_cuarto_objetivo'] == 'SI' ? 1 : 0
-          ]);
+        $syncData = array();
+        $syncData = $this->obtenerTalentosProyecto($talentos, $row['talento_interlocutor']);
 
-          $users_propietarios = array();
-          $users_propietarios = $this->obtenerUsersPropietarios($row['talento_duenho']);
-          $proyecto->users_propietarios()->attach($users_propietarios);
+        $actividad->articulacion_proyecto->talentos()->sync($syncData, false);
 
-          $empresas_propietarias = array();
-          $empresas_propietarias = $this->obtenerEmpresasPropietarias($row['empresa_duenha']);
-          $proyecto->empresas()->attach($empresas_propietarias);
-          
-          $grupos_duenhos = array();
-          $grupos_duenhos = $this->obtenerGruposPropietarios($row['grupo_investigacion_duenho']);
-          $proyecto->gruposinvestigacion()->attach($grupos_duenhos);
+        $actividad->objetivos_especificos()->create([
+        'objetivo' => $row['primer_objetivo'] == null ? 'No registra' : $row['primer_objetivo'],
+        'cumplido' => $row['cumplio_primer_objetivo'] == 'SI' ? 1 : 0
+        ]);
+
+        $actividad->objetivos_especificos()->create([
+        'objetivo' => $row['segundo_objetivo'] == null ? 'No registra' : $row['segundo_objetivo'],
+        'cumplido' => $row['cumplio_segundo_objetivo'] == 'SI' ? 1 : 0
+        ]);
+
+        $actividad->objetivos_especificos()->create([
+        'objetivo' => $row['tercer_objetivo'] == null ? 'No registra' : $row['tercer_objetivo'],
+        'cumplido' => $row['cumplio_tercer_objetivo'] == 'SI' ? 1 : 0
+        ]);
+
+        $actividad->objetivos_especificos()->create([
+        'objetivo' => $row['cuarto_objetivo'] == null ? 'No registra' : $row['cuarto_objetivo'],
+        'cumplido' => $row['cumplio_cuarto_objetivo'] == 'SI' ? 1 : 0
+        ]);
+
+        $users_propietarios = array();
+        $users_propietarios = $this->obtenerUsersPropietarios($row['talento_duenho']);
+        $proyecto->users_propietarios()->attach($users_propietarios);
+
+        $empresas_propietarias = array();
+        $empresas_propietarias = $this->obtenerEmpresasPropietarias($row['empresa_duenha']);
+        $proyecto->empresas()->attach($empresas_propietarias);
+
+        $grupos_duenhos = array();
+        $grupos_duenhos = $this->obtenerGruposPropietarios($row['grupo_investigacion_duenho']);
+        $proyecto->gruposinvestigacion()->attach($grupos_duenhos);
     }
 
-    private function actualizarActividadExistente($actividad, $user_gestor, $row)
+    private function actualizarActividadExistente($actividad, $row)
     {
         return $actividad->update([
-            'gestor_id' => $user_gestor->gestor->id,
-            // 'nodo_id' => $this->nodo,
             'nombre' => $row['nombre_proyecto'],
             'fecha_inicio' => $row['fecha_inicio'],
             'fecha_cierre' => $row['fecha_cierre'],
@@ -448,40 +436,36 @@ class ProyectosImport implements ToCollection, WithHeadingRow
         ]);
     }
 
-    private function actualizarProyectoExistente($actividad, $row, $idea_id, $area_conocimiento_id, $sublinea_id, $talentos)
+    private function actualizarProyectoExistente($actividad,$user, $row, $idea_id, $area_conocimiento_id, $sublinea_id, $talentos)
     {
         $trl_esperado = $this->getTrlEsperado($row['trl_esperado']);
         $trl_obtenido = $this->getTrlObtenido($row['trl_obtenido']);
-        
 
-            
         $actividad->articulacion_proyecto->proyecto->update([
-              'fase_id' => Fase::where('nombre', 'Cierre')->first()->id,
-              'idea_id' => $idea_id,
-              'areaconocimiento_id' => $area_conocimiento_id,
-              'otro_areaconocimiento' => $row['otra_area_conocimento'],
-              'sublinea_id' => $sublinea_id,
-              'trl_esperado' => $trl_esperado,
-              'reci_ar_emp' => $row['area_emprendiemiento_sena'] == 'SI' ? 1 : 0,
-              'economia_naranja' => $row['economia_naranja'] == 'SI' ? 1 : 0,
-              'tipo_economianaranja' => $row['economia_naranja'] == 'SI' ? $row['tipo_economia_naranja'] : null,
-              'dirigido_discapacitados' => $row['proyecto_dirigido_discapacitados'] == 'SI' ? 1 : 0,
-              'tipo_discapacitados' => $row['proyecto_dirigido_discapacitados'] == 'SI' ? $row['tipo_discapacitado'] : null,
-              'art_cti' => $row['articulado_cti'] == 'SI' ? 1 : 0,
-              'nom_act_cti' => $row['actor_cti'] == 'SI' ? $row['actor_cti'] : null,
-              'alcance_proyecto' => $row['alcance_proyecto'],
-              'fabrica_productividad' => $row['fabrica_productividad'] == 'SI' ? 1 : 0,
-              'trl_obtenido' => $trl_obtenido,
-              'trl_prototipo' => $row['prototipo_producto'],
-              'trl_modelo' => $row['modelo_negocio'],
-              'trl_pruebas' => $row['pruebas_documentadas'],
-              'trl_normatividad' => $row['evidencias_normatividad']
+            'asesor_id' => $user->gestor->id,
+            'fase_id' => Fase::where('nombre', 'Cierre')->first()->id,
+            'idea_id' => $idea_id,
+            'areaconocimiento_id' => $area_conocimiento_id,
+            'otro_areaconocimiento' => $row['otra_area_conocimento'],
+            'sublinea_id' => $sublinea_id,
+            'trl_esperado' => $trl_esperado,
+            'reci_ar_emp' => $row['area_emprendiemiento_sena'] == 'SI' ? 1 : 0,
+            'economia_naranja' => $row['economia_naranja'] == 'SI' ? 1 : 0,
+            'tipo_economianaranja' => $row['economia_naranja'] == 'SI' ? $row['tipo_economia_naranja'] : null,
+            'dirigido_discapacitados' => $row['proyecto_dirigido_discapacitados'] == 'SI' ? 1 : 0,
+            'tipo_discapacitados' => $row['proyecto_dirigido_discapacitados'] == 'SI' ? $row['tipo_discapacitado'] : null,
+            'art_cti' => $row['articulado_cti'] == 'SI' ? 1 : 0,
+            'nom_act_cti' => $row['actor_cti'] == 'SI' ? $row['actor_cti'] : null,
+            'alcance_proyecto' => $row['alcance_proyecto'],
+            'fabrica_productividad' => $row['fabrica_productividad'] == 'SI' ? 1 : 0,
+            'trl_obtenido' => $trl_obtenido,
+            'trl_prototipo' => $row['prototipo_producto'],
+            'trl_modelo' => $row['modelo_negocio'],
+            'trl_pruebas' => $row['pruebas_documentadas'],
+            'trl_normatividad' => $row['evidencias_normatividad']
         ]);
-              
-              
         $syncData = array();
         $syncData = $this->obtenerTalentosProyecto($talentos, $row['talento_interlocutor']);
-              
         $actividad->articulacion_proyecto->talentos()->sync($syncData, true);
 
         // Primero objetivo especifico
@@ -547,7 +531,7 @@ class ProyectosImport implements ToCollection, WithHeadingRow
         $empresas_propietarias = array();
         $empresas_propietarias = $this->obtenerEmpresasPropietarias($row['empresa_duenha']);
         $actividad->articulacion_proyecto->proyecto->empresas()->attach($empresas_propietarias);
-          
+
         $grupos_duenhos = array();
         $grupos_duenhos = $this->obtenerGruposPropietarios($row['grupo_investigacion_duenho']);
         $actividad->articulacion_proyecto->proyecto->gruposinvestigacion()->attach($grupos_duenhos);

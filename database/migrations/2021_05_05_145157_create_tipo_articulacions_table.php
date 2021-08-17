@@ -6,8 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateTipoArticulacionsTable extends Migration
 {
-
-    public $tableName = 'tipo_articulaciones';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'tipo_articulaciones';
     /**
      * Run the migrations.
      *

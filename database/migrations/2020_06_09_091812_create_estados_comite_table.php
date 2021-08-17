@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateEstadosComiteTable extends Migration
 {
-    public $tableName = 'estados_comite';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'estados_comite';
     /**
      * Run the migrations.
      *

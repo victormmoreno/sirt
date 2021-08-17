@@ -2,7 +2,7 @@
 @section('meta-title', 'Usuarios')
 @section('content')
 @php
-  $year = Carbon\Carbon::now()->year;
+    $year = Carbon\Carbon::now()->year;
 @endphp
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
@@ -61,7 +61,7 @@
                             <div class="input-field col s12 m2 l2">
                                 <label class="active" for="filter_nodo">Nodo <span class="red-text">*</span></label>
                                 <select class="js-states browser-default select2" name="filter_nodo" id="filter_nodo">
-                                    
+
                                     @forelse($nodos as $id => $name)
                                         <option value="{{$id}}">{{$name}}</option>
                                     @empty

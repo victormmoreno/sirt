@@ -22,10 +22,6 @@ class ComiteIdea extends Model
         'direccion'
     ];
 
-    /*=========================================
-    =            asesores eloquent            =
-    =========================================*/
-
     public function getAdmitidoAttribute($admitido)
     {
         return trim($admitido);
@@ -41,12 +37,6 @@ class ComiteIdea extends Model
         return ucfirst(strtolower(trim($observaciones)));
     }
 
-    /*=====  End of asesores eloquent  ======*/
-
-    /*========================================
-    =            mutador eloquent            =
-    ========================================*/
-
     public function setAdmitidoAttribute($admitido)
     {
         $this->attributes['admitido'] = trim($admitido);
@@ -60,7 +50,4 @@ class ComiteIdea extends Model
     {
         $this->attributes['observaciones'] = ucfirst(strtolower(trim($observaciones)));
     }
-
-    /*=====  End of mutador eloquent  ======*/
-
 }

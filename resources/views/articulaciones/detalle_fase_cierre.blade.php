@@ -26,7 +26,7 @@
                                         </p>
                                         <br />
                                         <p class="center">Linea Tecnológica:
-                                            {{$articulacion->articulacion_proyecto->actividad->gestor->lineatecnologica->abreviatura}} - {{$articulacion->articulacion_proyecto->actividad->gestor->lineatecnologica->nombre}}
+                                            {{$articulacion->asesor->gestor->lineatecnologica->abreviatura}} - {{$articulacion->asesor->gestor->lineatecnologica->nombre}}
                                         </p>
                                     </span>
                                 </div>

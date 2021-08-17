@@ -6,8 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreatePropietariosTable extends Migration
 {
-
-    public $tableName = 'propietarios';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'propietarios';
     /**
      * Run the migrations.
      *

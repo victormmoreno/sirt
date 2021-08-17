@@ -11,22 +11,19 @@
                                         <i class="material-icons fas fa-building"></i>
                                     </div>
                                     <div class="left">
-                                        <span class="mailbox-title">
-                                            Tecnoparque nodo
-                                            {{$proyecto->articulacion_proyecto->actividad->nodo->entidad->nombre}}
-                                        </span>
+                                        <span class="mailbox-title">{{$proyecto->present()->proyectoNode()}}</span>
                                     </div>
                                 </div>
                                 <div class="right mailbox-buttons">
                                     <span class="mailbox-title">
                                         <p class="center">
                                             Información de Proyecto en la fase de suspendido -
-                                            {{$proyecto->articulacion_proyecto->actividad->nombre}}
+                                            {{$proyecto->articulacion_proyecto->actividad->present()->actividadName()}}
                                         </p>
                                         <br />
                                         <p class="center">Linea Tecnológica:
-                                            {{$proyecto->sublinea->linea->abreviatura}} -
-                                            {{$proyecto->sublinea->linea->nombre}}
+                                            {{$proyecto->present()->proyectoAbreviaturaLinea()}} -
+                                            {{$proyecto->present()->proyectoLinea()}}
                                         </p>
                                     </span>
                                 </div>
@@ -34,7 +31,7 @@
                             <div class="right">
                                 <small>
                                     <b>Fecha de inicio del proyecto: </b>
-                                    {{optional($proyecto->articulacion_proyecto->actividad->created_at)->isoFormat('LL')}}
+                                    {{$proyecto->articulacion_proyecto->actividad->present()->actividadcreatedAt()}}
                                 </small>
                             </div>
                             <div class="divider mailbox-divider">
@@ -46,8 +43,8 @@
                                             <span class="mailbox-title">
                                                 <i class="material-icons">build</i>
                                                 Información del Proyecto
-                                                {{$proyecto->articulacion_proyecto->actividad->codigo_actividad}} -
-                                                {{$proyecto->articulacion_proyecto->actividad->nombre}}
+                                                {{$proyecto->articulacion_proyecto->actividad->present()->actividadCode()}} -
+                                                {{$proyecto->articulacion_proyecto->actividad->present()->actividadName()}}
                                             </span>
                                         </div>
                                         <div class="divider mailbox-divider"></div>

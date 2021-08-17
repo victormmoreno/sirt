@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateHistorialEntidadTable extends Migration
 {
-    public $tableName = 'historial_entidad';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'historial_entidad';
     /**
      * Run the migrations.
      *

@@ -74,6 +74,11 @@ trait UsersTrait
         return self::IS_ARTICULADOR;
     }
 
+    public static function IsApoyoTecnico()
+    {
+        return self::IS_APOYO_TECNICO;
+    }
+
     public static function IsProveedor()
     {
         return self::IS_PROVEEDOR;

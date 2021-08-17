@@ -10,7 +10,7 @@ class CreateAreasconocimientoTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'areasconocimiento';
+    protected $tableName = 'areasconocimiento';
 
     /**
      * Run the migrations.
@@ -24,7 +24,6 @@ class CreateAreasconocimientoTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('nombre', 40);
-
             $table->unique(["nombre"], 'nombre_UNIQUE');
             $table->nullableTimestamps();
         });
@@ -35,8 +34,8 @@ class CreateAreasconocimientoTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

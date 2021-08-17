@@ -9,7 +9,7 @@
                             Idea de Proyecto
                         </span>
                         <p>
-                            <a class="orange-text text-darken-1" onclick="detallesIdeaPorId({{$proyecto->idea->id}})">{{$proyecto->idea->codigo_idea}} - {{$proyecto->idea->nombre_proyecto}}</a>
+                            <a class="orange-text text-darken-1" onclick="detallesIdeaPorId({{$proyecto->idea->id}})">{{$proyecto->idea->present()->ideaCode()}} - {{$proyecto->idea->present()->ideaName()}}</a>
                         </p>
                     </li>
                     <li class="collection-item">
@@ -17,13 +17,13 @@
                             ¿La idea viene de una convocatoria?
                         </span>
                         <p>
-                            {{$proyecto->idea->viene_convocatoria == 1 ? 'Si': 'No'}}
+                            {{$proyecto->idea->present()->ideaVieneConvocatoria()}}
                         </p>
                         <span class="title black-text text-darken-3">
                             Nombre de convocatoria
                         </span>
                         <p>
-                            {{$proyecto->idea->viene_convocatoria == 1 ? $proyecto->idea->convocatoria: 'No Aplica'}}
+                            {{$proyecto->idea->present()->ideaNombreConvocatoria()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -31,7 +31,7 @@
                             Código del Proyecto
                         </span>
                         <p>
-                            {{$proyecto->articulacion_proyecto->actividad->codigo_actividad}}
+                            {{$proyecto->articulacion_proyecto->actividad->present()->actividadCode()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -39,7 +39,7 @@
                             Nombre del Proyecto
                         </span>
                         <p>
-                            {{$proyecto->articulacion_proyecto->actividad->nombre}}
+                            {{$proyecto->articulacion_proyecto->actividad->present()->actividadName()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -47,7 +47,7 @@
                             Linea Tecnológica
                         </span>
                         <p>
-                            {{$proyecto->sublinea->linea->nombre}}
+                            {{$proyecto->present()->proyectoLinea()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -55,7 +55,7 @@
                             Sublínea
                         </span>
                         <p>
-                            {{$proyecto->sublinea->nombre}}
+                            {{$proyecto->present()->proyectoSublinea()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -63,7 +63,7 @@
                             Área de Conocimiento
                         </span>
                         <p>
-                            {{$proyecto->areaconocimiento->nombre}} {{$proyecto->areaconocimiento->nombre == 'Otro' ? '(' . $proyecto->otro_areaconocimiento .')' : ''}}
+                            {{$proyecto->present()->proyectoAreaConocimiento()}} {{$proyecto->present()->proyectoOtroAreaConocimiento()}}
                         </p>
                     </li>
                 </ul>
@@ -75,7 +75,7 @@
                             TRL que se pretende realizar
                         </span>
                         <p>
-                            {{$proyecto->trl_esperado == 0 ? 'TRL 6' : 'TRL 7 - TRL 8'}}
+                            {{$proyecto->present()->proyectoTrlEsperado()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -83,7 +83,7 @@
                             ¿Recibido a través de fábrica de productividad?
                         </span>
                         <p>
-                            {{$proyecto->fabrica_productividad == 0 ? 'NO' : 'SI'}}
+                            {{$proyecto->present()->proyectoFabricaProductividad()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -91,7 +91,7 @@
                             ¿Recibido a través del área de emprendimiento SENA?
                         </span>
                         <p>
-                            {{$proyecto->reci_ar_emp == 0 ? 'NO' : 'SI'}}
+                            {{$proyecto->present()->proyectoRecibidoAreaEmprendimiento()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -99,7 +99,7 @@
                             ¿El proyecto pertenece a la economía naranja?
                         </span>
                         <p>
-                            {{$proyecto->economia_naranja == 0 ? 'NO' : 'SI'}} {{$proyecto->economia_naranja == 1 ? '(' . $proyecto->tipo_economianaranja .')' : ''}}
+                            {{$proyecto->present()->proyectoEconomiaNaranja()}} {{$proyecto->present()->proyectoTipoEconomiaNaranja()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -107,7 +107,7 @@
                             ¿El proyecto está dirigido a discapacitados?
                         </span>
                         <p>
-                            {{$proyecto->dirigido_discapacitados == 0 ? 'NO' : 'SI'}} {{$proyecto->dirigido_discapacitados == 1 ? '(' . $proyecto->tipo_discapacitados .')' : ''}}
+                            {{$proyecto->present()->proyectoDirigidoDiscapacitados()}} {{$proyecto->present()->proyectoDirigidoTipoDiscapacitados()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -115,7 +115,7 @@
                             ¿Articulado con CT+i?
                         </span>
                         <p>
-                            {{$proyecto->art_cti == 0 ? 'NO' : 'SI'}} {{$proyecto->art_cti == 1 ? '(' . $proyecto->nom_act_cti .')' : ''}}
+                            {{$proyecto->present()->proyectoActorCTi()}} {{$proyecto->present()->proyectoNombreActorCTi()}}
                         </p>
                     </li>
                 </ul>
@@ -127,7 +127,7 @@
                             Alcance del Proyecto
                         </span>
                         <p>
-                            {{$proyecto->alcance_proyecto}}
+                            {{$proyecto->present()->proyectoAlcance()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -135,7 +135,7 @@
                             Objetivo General del Proyecto
                         </span>
                         <p>
-                            {{$proyecto->articulacion_proyecto->actividad->objetivo_general}}
+                            {{$proyecto->present()->proyectoObjetivoGeneral()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -143,9 +143,7 @@
                             Primer objetivo específico
                         </span>
                         <p>
-                            @if (isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->objetivo))
-                            {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->objetivo}}
-                            @endif
+                            {{$proyecto->present()->proyectoPrimerObjetivo()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -153,9 +151,7 @@
                             Segundo objetivo específico
                         </span>
                         <p>
-                            @if (isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo))
-                            {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo}}
-                            @endif
+                            {{$proyecto->present()->proyectoSegundoObjetivo()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -163,9 +159,7 @@
                             Tercer objetivo específico
                         </span>
                         <p>
-                            @if (isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo))
-                            {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo}}
-                            @endif
+                            {{$proyecto->present()->proyectoTercerObjetivo()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -173,9 +167,7 @@
                             Cuarto objetivo específico
                         </span>
                         <p>
-                            @if (isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo))
-                            {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo}}
-                            @endif
+                            {{$proyecto->present()->proyectoCuartoObjetivo()}}
                         </p>
                     </li>
                 </ul>
@@ -227,7 +219,7 @@
                     @else
                     <li class="collection-item">
                         No se han encontrado empresas dueña(s) de la propiedad intelectual.
-                    </li>                                       
+                    </li>
                     @endif
                 </ul>
             </div>
@@ -245,7 +237,7 @@
                     @else
                     <li class="collection-item">
                         No se han encontrado talento(s) dueño(s) de la propiedad intelectual.
-                    </li>                                       
+                    </li>
                     @endif
                 </ul>
             </div>
@@ -263,7 +255,7 @@
                     @else
                     <li class="collection-item">
                         No se han encontrado grupo(s) de investigación dueño(s) de la propiedad intelectual.
-                    </li>                                       
+                    </li>
                     @endif
                 </ul>
             </div>

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CategoriaMaterial extends Model
 {
-     protected $table = 'categoria_material';
+    protected $table = 'categoria_material';
 
     /**
      * The attributes that are mass assignable.
@@ -29,7 +29,7 @@ class CategoriaMaterial extends Model
 
     public function materiales()
 	{
-	   return $this->hasMany(Material::class, 'categoria_material_id', 'id');
+        return $this->hasMany(Material::class, 'categoria_material_id', 'id');
 	}
 
 
@@ -53,6 +53,5 @@ class CategoriaMaterial extends Model
     {
         return $query->select('nombre','id')
         ->orderBy($orderBy);
-        
     }
 }

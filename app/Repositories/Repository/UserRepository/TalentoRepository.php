@@ -83,12 +83,14 @@ class TalentoRepository
             ->join('proyectos', 'proyectos.id', '=', 'propietarios.proyecto_id')
             ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
             ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-            ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+
             ->join('gruposanguineos', 'gruposanguineos.id', '=', 'users.gruposanguineo_id')
-            ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+
 			->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
             ->join('ciudades', 'ciudades.id', '=', 'users.ciudad_id')
 			->join('proyectos AS pp', 'pp.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+            ->join('nodos', 'nodos.id', '=', 'pp.nodo_id')
+            ->join('gestores', 'gestores.id', '=', 'pp.asesor_id')
             ->join('fases', 'fases.id', '=', 'pp.fase_id')
             ->join('eps', 'eps.id', '=', 'users.eps_id')
             ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
@@ -107,11 +109,11 @@ class TalentoRepository
 				->orWhere(function($query) use ($fecha_inicio, $fecha_cierre) {
 					$query->where(function($query) use ($fecha_inicio, $fecha_cierre) {
 					$query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
-					$query->orWhere(function ($query) {
-					  $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
-					});
-				  });
-				  });
+                        $query->orWhere(function ($query) {
+                            $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
+                        });
+                    });
+				});
             })
             ->orderBy('codigo_actividad')
             ->withTrashed();
@@ -178,12 +180,12 @@ class TalentoRepository
 		->join('articulacion_proyecto', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
 		->join('proyectos', 'proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
 		->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-		->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
 		->join('gruposanguineos', 'gruposanguineos.id', '=', 'users.gruposanguineo_id')
-		->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
 		->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
 		->join('ciudades', 'ciudades.id', '=', 'users.ciudad_id')
 		->join('proyectos AS pp', 'pp.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+        ->join('gestores', 'gestores.id', '=', 'pp.asesor_id')
+        ->join('nodos', 'nodos.id', '=', 'pp.nodo_id')
 		->join('fases', 'fases.id', '=', 'pp.fase_id')
 		->join('eps', 'eps.id', '=', 'users.eps_id')
 		->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
@@ -201,11 +203,11 @@ class TalentoRepository
 			->orWhere(function($query) use ($fecha_inicio, $fecha_cierre) {
 				$query->where(function($query) use ($fecha_inicio, $fecha_cierre) {
 				$query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
-				$query->orWhere(function ($query) {
-				  $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
-				});
-			  });
-			  });
+                    $query->orWhere(function ($query) {
+                        $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
+                    });
+                });
+			});
 		})
 		->orderBy('codigo_actividad')
 		->withTrashed();
@@ -225,7 +227,7 @@ class TalentoRepository
 		->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulacion_proyecto_talento.articulacion_proyecto_id')
 		->join('proyectos', 'proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
 		->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-		->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+		->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
 		->groupBy('talentos.id');
 	}
 }

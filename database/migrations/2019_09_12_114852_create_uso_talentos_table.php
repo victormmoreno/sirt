@@ -6,7 +6,12 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateUsoTalentosTable extends Migration
 {
-    public $tableName = 'uso_talentos';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'uso_talentos';
+
     /**
      * Run the migrations.
      *

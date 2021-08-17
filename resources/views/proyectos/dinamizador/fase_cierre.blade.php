@@ -19,37 +19,36 @@
                             @include('proyectos.detalle_fase_cierre')
                             @if ($ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->fase == "Cierre" && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsAprobar())
                             <form action="{{route('proyecto.aprobacion', [$proyecto->id, 'Cierre'])}}" method="POST" name="frmCierreDinamizador">
-                              {!! method_field('PUT')!!}
-                              @csrf
-                              <div class="divider"></div>
-                              <center>
-                                <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
-                                <input type="hidden" type="text" name="decision" id="decision">
-                                <button type="submit" onclick="preguntaCierreRechazar(event)" class="waves-effect deep-orange darken-1 btn center-aling">
-                                  <i class="material-icons right">close</i>
-                                  No aprobar la fase de cierre
-                                </button>
-                                <button type="submit" onclick="preguntaCierre(event)" class="waves-effect cyan darken-1 btn center-aling">
-                                  <i class="material-icons right">done</i>
-                                  Aprobar fase de cierre
-                                </button>
-                                <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-                                  <i class="material-icons right">backspace</i>Cancelar
-                                </a>
-                              </center>
+                                {!! method_field('PUT')!!}
+                                @csrf
+                                <div class="divider"></div>
+                                <center>
+                                    <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
+                                    <input type="hidden" type="text" name="decision" id="decision">
+                                    <button type="submit" onclick="preguntaCierreRechazar(event)" class="waves-effect deep-orange darken-1 btn center-aling">
+                                        <i class="material-icons right">close</i>
+                                        No aprobar la fase de cierre
+                                    </button>
+                                    <button type="submit" onclick="preguntaCierre(event)" class="waves-effect cyan darken-1 btn center-aling">
+                                        <i class="material-icons right">done</i>
+                                        Aprobar fase de cierre
+                                    </button>
+                                    <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                                        <i class="material-icons right">backspace</i>Cancelar
+                                    </a>
+                                </center>
                             </form>
-                          @else
-                              <center>
-                                <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-                                  <i class="material-icons right">backspace</i>Cancelar
-                                </a>
-                              </center>
-                          @endif
+                            @else
+                                <center>
+                                    <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                                    <i class="material-icons right">backspace</i>Cancelar
+                                    </a>
+                                </center>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </main>
@@ -57,96 +56,95 @@
 @push('script')
 <script>
     $( document ).ready(function() {
-    datatableArchivosDeUnProyecto_cierre();
-  });
+        datatableArchivosDeUnProyecto_cierre();
+    });
+    function preguntaCierreRechazar(e){
+        e.preventDefault();
+        Swal.fire({
+        title: '¿Está seguro(a) de no aprobar la fase de cierre de este proyecto?',
+        input: 'text',
+        type: 'warning',
+        inputValidator: (value) => {
+            if (!value) {
+                return 'Las observaciones deben ser obligatorias!'
+            } else {
+                $('#decision').val('rechazado');
+                $('#motivosNoAprueba').val(value);
+            }
+        },
+        inputAttributes: {
+            maxlength: 100
+        },
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Enviar observaciones!'
+        }).then((result) => {
+            if (result.value) {
+                document.frmCierreDinamizador.submit();
+            }
+        })
+    }
 
-  function preguntaCierreRechazar(e){
-    e.preventDefault();
-    Swal.fire({
-    title: '¿Está seguro(a) de no aprobar la fase de cierre de este proyecto?',
-    input: 'text',
-    type: 'warning',
-    inputValidator: (value) => {
-      if (!value) {
-        return 'Las observaciones deben ser obligatorias!'
-      } else {
-        $('#decision').val('rechazado');
-        $('#motivosNoAprueba').val(value);
-      }
-    },
-    inputAttributes: {
-      maxlength: 100
-    },
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    cancelButtonText: 'Cancelar',
-    confirmButtonText: 'Enviar observaciones!'
-    }).then((result) => {
-      if (result.value) {
-        document.frmCierreDinamizador.submit();
-      }
-    })
-  }
+    function preguntaCierre(e){
+        e.preventDefault();
+        Swal.fire({
+        title: '¿Está seguro(a) de aprobar la fase de cierre de este proyecto?',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Sí!'
+        }).then((result) => {
+        if (result.value) {
+            $('#decision').val('aceptado');
+            document.frmCierreDinamizador.submit();
+        }
+        })
+    }
+    function changeToPlaneacion() {
+        window.location.href = "{{ route('proyecto.planeacion', $proyecto->id) }}";
+    }
 
-  function preguntaCierre(e){
-    e.preventDefault();
-    Swal.fire({
-    title: '¿Está seguro(a) de aprobar la fase de cierre de este proyecto?',
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    cancelButtonText: 'Cancelar',
-    confirmButtonText: 'Sí!'
-    }).then((result) => {
-      if (result.value) {
-        $('#decision').val('aceptado');
-        document.frmCierreDinamizador.submit();
-      }
-    })
-  }
-  function changeToPlaneacion() {
-    window.location.href = "{{ route('proyecto.planeacion', $proyecto->id) }}";
-  }
+    function changeToInicio() {
+        window.location.href = "{{ route('proyecto.inicio', $proyecto->id) }}";
+    }
 
-  function changeToInicio() {
-    window.location.href = "{{ route('proyecto.inicio', $proyecto->id) }}";
-  }
+    function changeToEjecucion() {
+        window.location.href = "{{ route('proyecto.ejecucion', $proyecto->id) }}";
+    }
 
-  function changeToEjecucion() {
-    window.location.href = "{{ route('proyecto.ejecucion', $proyecto->id) }}";
-  }
+    function changeToCierre() {
+        window.location.href = "{{ route('proyecto.cierre', $proyecto->id) }}";
+    }
 
-  function changeToCierre() {
-    window.location.href = "{{ route('proyecto.cierre', $proyecto->id) }}";
-  }
-
-  function datatableArchivosDeUnProyecto_cierre() {
-  $('#archivosDeUnProyecto').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    order: false,
-    ajax:{
-      url: "{{route('proyecto.files', [$proyecto->id, 'Cierre'])}}",
-      type: "get",
-    },
-    columns: [
-      {
-        data: 'file',
-        name: 'file',
-        orderable: false,
-      },
-      {
-        data: 'download',
-        name: 'download',
-        orderable: false,
-      },
-    ],
-  });
-}
+    function datatableArchivosDeUnProyecto_cierre() {
+        $('#archivosDeUnProyecto').DataTable({
+            language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            processing: true,
+            serverSide: true,
+            order: false,
+            ajax:{
+            url: "{{route('proyecto.files', [$proyecto->id, 'Cierre'])}}",
+            type: "get",
+            },
+            columns: [
+            {
+                data: 'file',
+                name: 'file',
+                orderable: false,
+            },
+            {
+                data: 'download',
+                name: 'download',
+                orderable: false,
+            },
+            ],
+        });
+    }
 </script>
 @endpush

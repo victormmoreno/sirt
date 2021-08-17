@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class AlterEmpresasTableVersion2 extends Migration
 {
-    public $tableName = 'empresas';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'empresas';
     /**
      * Run the migrations.
      *

@@ -166,7 +166,6 @@
 @endsection
 @push('script')
   <script>
-    // $(document).ready(function(){});
     function getGestorYLineasDeUnNodo(id) {
       if (id == '') {
         Swal.fire('Advertencia!', 'Seleccione un nodo válido!', 'warning');
@@ -179,14 +178,12 @@
             $('#txtgestor_id').empty();
             $('#txtgestor_id').append('<option value="">Seleccione el experto</option>')
             $.each(data.gestores, function(i, e) {
-              // console.log(e.nombres_gestor);
               $('#txtgestor_id').append('<option value="'+e.id+'">'+e.nombres_gestor+'</option>');
             })
 
             $('#txtlinea_tecnologica').empty();
             $('#txtlinea_tecnologica').append('<option value="">Seleccione la Línea Tecnológica</option>')
             $.each(data.lineas, function(i, e) {
-              // console.log(e.nombres_gestor);
               $('#txtlinea_tecnologica').append('<option value="'+e.id+'">'+e.nombre+'</option>');
             })
             $('#txtgestor_id').material_select();

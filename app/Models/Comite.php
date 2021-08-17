@@ -9,112 +9,91 @@ use Illuminate\Database\Eloquent\Model;
 class Comite extends Model
 {
 
-  protected $table = 'comites';
+    protected $table = 'comites';
 
-  protected $casts = [
-    'fechacomite' => 'date:Y-m-d',
-  ];
+    protected $casts = [
+        'fechacomite' => 'date:Y-m-d',
+    ];
 
-  /**
-  * The attributes that are mass assignable.
-  *
-  * @var array
-  */
-  protected $fillable = [
-    'codigo',
-    'fechacomite',
-    'observaciones',
-    'estado_comite_id'
-  ];
+    /**
+     * The attributes that are mass assignable.
+    *
+    * @var array
+    */
+    protected $fillable = [
+        'codigo',
+        'fechacomite',
+        'observaciones',
+        'estado_comite_id'
+    ];
 
-  /*=========================================
-  =            asesores eloquent            =
-  =========================================*/
+    public function getCodigoAttribute($codigo)
+    {
+        return trim($codigo);
+    }
 
-  public function getCodigoAttribute($codigo)
-  {
-    return trim($codigo);
-  }
+    public function getObservacionesAttribute($observaciones)
+    {
+        return ucfirst(strtolower(trim($observaciones)));
+    }
 
+    public function historial()
+    {
+        return $this->morphMany(HistorialEntidad::class, 'model');
+    }
 
-  public function getObservacionesAttribute($observaciones)
-  {
-    return ucfirst(strtolower(trim($observaciones)));
-  }
+    public function registrarHistorialComite($movimiento, $role, $comentario, $descripcion)
+    {
+        return $this->historial()->create([
+            'movimiento_id' => Movimiento::where('movimiento', $movimiento)->first()->id,
+            'user_id' => auth()->user()->id,
+            'role_id' => Role::where('name', $role)->first()->id,
+            'comentarios' => $comentario,
+            'descripcion' => $descripcion
+            ]);
+    }
 
-  public function historial()
-  {
-      return $this->morphMany(HistorialEntidad::class, 'model');
-  }
+    public function setCodigoAttribute($codigo)
+    {
+        $this->attributes['codigo'] = trim($codigo);
+    }
 
-  public function registrarHistorialComite($movimiento, $role, $comentario, $descripcion)
-  {
-      return $this->historial()->create([
-          'movimiento_id' => Movimiento::where('movimiento', $movimiento)->first()->id, 
-          'user_id' => auth()->user()->id,
-          'role_id' => Role::where('name', $role)->first()->id,
-          'comentarios' => $comentario,
-          'descripcion' => $descripcion
-        ]);
-  }
+    public function estado()
+    {
+        return $this->belongsTo(EstadoComite::class, 'estado_comite_id', 'id');
+    }
 
-  /*=====  End of asesores eloquent  ======*/
+    public function setFechaComiteAttribute($fechacomite)
+    {
+        $this->attributes['fechacomite'] = Carbon::parse($fechacomite)->format('Y-m-d');
+    }
 
-  /*========================================
-  =            mutador eloquent            =
-  ========================================*/
+    public function setObservacionesAttribute($observaciones)
+    {
+        $this->attributes['observaciones'] = ucfirst(strtolower(trim($observaciones)));
+    }
 
-  public function setCodigoAttribute($codigo)
-  {
-    $this->attributes['codigo'] = trim($codigo);
-  }
+    public function archivos()
+    {
+        return $this->hasMany(ArchivoComite::class, 'comite_id', 'id');
+    }
 
-  public function estado()
-  {
-    return $this->belongsTo(EstadoComite::class, 'estado_comite_id', 'id');
-  }
+    public function rutamodel()
+    {
+        return $this->morphMany(RutaModel::class, 'model');
+    }
 
-  public function setFechaComiteAttribute($fechacomite)
-  {
-    $this->attributes['fechacomite'] = Carbon::parse($fechacomite)->format('Y-m-d');
-  }
+    public function ideas()
+    {
+        return $this->belongsToMany(Idea::class, 'comite_idea')
+        ->withTimestamps()
+        ->withPivot(['hora', 'admitido', 'asistencia', 'observaciones', 'direccion']);
+    }
 
-  public function setObservacionesAttribute($observaciones)
-  {
-    $this->attributes['observaciones'] = ucfirst(strtolower(trim($observaciones)));
-  }
-
-  /*=====  End of mutador eloquent  ======*/
-
-  /*===========================================
-  =            relaciones eloquent            =
-  ===========================================*/
-
-  public function archivos()
-  {
-    return $this->hasMany(ArchivoComite::class, 'comite_id', 'id');
-  }
-
-  public function rutamodel()
-  {
-    return $this->morphMany(RutaModel::class, 'model');
-  }
-
-  public function ideas()
-  {
-    return $this->belongsToMany(Idea::class, 'comite_idea')
-    ->withTimestamps()
-    ->withPivot(['hora', 'admitido', 'asistencia', 'observaciones', 'direccion']);
-  }
-
-  public function gestores()
-  {
-    return $this->belongsToMany(Gestor::class, 'comite_gestor')
-    ->withTimestamps()
-    ->withPivot(['hora_inicio', 'hora_fin']);
-  }
-
-  /*=====  End of relaciones eloquent  ======*/
-
-
+    public function gestores()
+    {
+        return $this->belongsToMany(Gestor::class, 'comite_gestor')
+        ->withTimestamps()
+        ->withPivot(['hora_inicio', 'hora_fin']);
+    }
 }

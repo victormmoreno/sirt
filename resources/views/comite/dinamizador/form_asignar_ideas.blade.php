@@ -91,14 +91,14 @@
                                 @if ($value->pivot->admitido == 1)
                                 <a href="javascript:void(0)" onclick="confirmacionDuplicidad( event, '{{route('idea.derivar', [$value->id, $comite->id])}}' )">
                                     <div class="card-panel green lighten-3 black-text center">
-                                      Duplicar idea de proyecto.
-                                    </div>
-                                  </a>
+                                        Duplicar idea de proyecto.
+                                        </div>
+                                    </a>
                                 @else
-                                  <a href="javascript:void(0)">
-                                      <div class="card-panel grey black-text center">
-                                        Idea de proyecto no admitida.
-                                      </div>
+                                    <a href="javascript:void(0)">
+                                        <div class="card-panel grey black-text center">
+                                            Idea de proyecto no admitida.
+                                        </div>
                                     </a>
                                 @endif
                             </td>
@@ -126,18 +126,18 @@
       </p>
     </div>
     <div class="modal-footer">
-      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Ok.</a>
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Ok.</a>
     </div>
 </div>
 <div id="modalDerivarIdea" class="modal">
     <div class="modal-content">
-      <h4>Derivar idea de proyecto</h4>
-      <p>
-          En caso de que en una idea de proyecto se va a realizar mas de un TRL, se presiona este botón para hacer una duplicación de la idea de proyecto 
-          con la intención de que se pueda asignar a mas de un experto.
-      </p>
+        <h4>Derivar idea de proyecto</h4>
+        <p>
+            En caso de que en una idea de proyecto se va a realizar mas de un TRL, se presiona este botón para hacer una duplicación de la idea de proyecto
+            con la intención de que se pueda asignar a mas de un experto.
+        </p>
     </div>
     <div class="modal-footer">
-      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Ok.</a>
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Ok.</a>
     </div>
 </div>

@@ -13,6 +13,22 @@ class ArticulacionPbtPresenter extends Presenter
         $this->articulacionpbt = $articulacionpbt;
     }
 
+    public function articulacionCode()
+    {
+        if (isset($this->articulacionpbt->codigo)) {
+            return $this->articulacionpbt->codigo;
+        }
+        return "No registra";
+    }
+
+    public function articulacionName()
+    {
+        if (isset($this->articulacionpbt->nombre)) {
+            return $this->articulacionpbt->nombre;
+        }
+        return "No registra";
+    }
+
     public function articulacionPbtNameFase(){
         if ($this->articulacionpbt->has('fase') && isset($this->articulacionpbt->fase)) {
             return $this->articulacionpbt->fase->nombre;
@@ -31,75 +47,110 @@ class ArticulacionPbtPresenter extends Presenter
 
     public function articulacionPbtNameProyecto()
     {
-        if ($this->articulacionpbt->has('proyecto') && isset($this->articulacionpbt->proyecto->articulacion_proyecto->actividad)) {
-            return $this->articulacionpbt->proyecto->articulacion_proyecto->actividad->nombre;
+        if(
+            $this->articulacionpbt->whereHasMorph(
+                'articulable',
+                [ \App\Models\Proyecto::class],
+            ) && isset($this->articulacionpbt->articulable->articulacion_proyecto->actividad)
+        ){
+            return $this->articulacionpbt->articulable->articulacion_proyecto->actividad->present()->actividadName();
         }
+
+
         return "No registra";
     }
 
     public function articulacionPbtCodeProyecto()
     {
-        if ($this->articulacionpbt->has('proyecto') && isset($this->articulacionpbt->proyecto->articulacion_proyecto->actividad)) {
-            return $this->articulacionpbt->proyecto->articulacion_proyecto->actividad->codigo_actividad;
+        if(
+            $this->articulacionpbt->whereHasMorph(
+                'articulable',
+                [ \App\Models\Proyecto::class],
+            ) && isset($this->articulacionpbt->articulable->articulacion_proyecto->actividad)
+        ){
+            return $this->articulacionpbt->articulable->articulacion_proyecto->actividad->present()->actividadCode();
         }
         return "No registra";
     }
 
     public function articulacionPbtClosingDateProyecto()
     {
-        if ($this->articulacionpbt->has('proyecto') && isset($this->articulacionpbt->proyecto->articulacion_proyecto->actividad->fecha_cierre)) {
-            return $this->articulacionpbt->proyecto->articulacion_proyecto->actividad->fecha_cierre->isoFormat('YYYY-MM-DD');
+        if(
+            $this->articulacionpbt->whereHasMorph(
+                'articulable',
+                [ \App\Models\Proyecto::class],
+            ) && isset($this->articulacionpbt->articulable->articulacion_proyecto->actividad)
+        ){
+            return optional($this->articulacionpbt->articulable->articulacion_proyecto->actividad->fecha_cierre)->isoFormat('YYYY-MM-DD');
         }
         return "No registra";
     }
 
     public function articulacionPbtObjetivoProyecto()
     {
-        if ($this->articulacionpbt->has('proyecto') && isset($this->articulacionpbt->proyecto)) {
-            return $this->articulacionpbt->proyecto->articulacion_proyecto->actividad->objetivo_general;
+        if(
+            $this->articulacionpbt->whereHasMorph(
+                'articulable',
+                [ \App\Models\Proyecto::class],
+            ) && isset($this->articulacionpbt->articulable->articulacion_proyecto->actividad)
+        ){
+            return $this->articulacionpbt->articulable->articulacion_proyecto->actividad->objetivo_general;
         }
         return "No registra";
     }
 
     public function articulacionPbtIdProyecto()
     {
-        if ($this->articulacionpbt->has('proyecto') && isset($this->articulacionpbt->proyecto)) {
-            return $this->articulacionpbt->proyecto->id;
+        if(
+            $this->articulacionpbt->whereHasMorph(
+                'articulable',
+                [ \App\Models\Proyecto::class],
+            ) && isset($this->articulacionpbt->articulable)
+        ){
+            return $this->articulacionpbt->articulable->id;
         }
         return "No registra";
     }
 
     public function articulacionPbtNameIdeaProyecto()
     {
-        if ($this->articulacionpbt->has('proyecto.idea') && isset($this->articulacionpbt->proyecto->idea)) {
-            return $this->articulacionpbt->proyecto->idea->nombre_proyecto;
+        if(
+            $this->articulacionpbt->whereHasMorph(
+                'articulable',
+                [ \App\Models\Proyecto::class],
+            ) && isset($this->articulacionpbt->articulable->idea)
+        ){
+            return $this->articulacionpbt->articulable->idea->nombre_proyecto;
         }
         return "No registra";
     }
 
     public function articulacionPbtCodeIdeaProyecto()
     {
-        if ($this->articulacionpbt->has('proyecto.idea') && isset($this->articulacionpbt->proyecto->idea)) {
-            return $this->articulacionpbt->proyecto->idea->codigo_idea;
+        if(
+            $this->articulacionpbt->whereHasMorph(
+                'articulable',
+                [ \App\Models\Proyecto::class],
+            ) && isset($this->articulacionpbt->articulable->idea)
+        ){
+            return $this->articulacionpbt->articulable->idea->codigo_idea;
         }
         return "No registra";
     }
 
     public function articulacionPbtIdIdeaProyecto()
     {
-        if ($this->articulacionpbt->has('proyecto.idea') && isset($this->articulacionpbt->proyecto->idea)) {
-            return $this->articulacionpbt->proyecto->idea->id;
+        if(
+            $this->articulacionpbt->whereHasMorph(
+                'articulable',
+                [ \App\Models\Proyecto::class],
+            ) && isset($this->articulacionpbt->articulable->idea)
+        ){
+            return $this->articulacionpbt->articulable->idea->id;
         }
         return "No registra";
     }
 
-    public function articulacionPbtName()
-    {
-        if ($this->articulacionpbt->has('actividad') && isset($this->articulacionpbt->actividad)) {
-            return $this->articulacionpbt->actividad->nombre;
-        }
-        return "No registra";
-    }
 
     public function articulacionPbtNameTipoVinculacion()
     {
@@ -125,8 +176,26 @@ class ArticulacionPbtPresenter extends Presenter
 
     public function articulacionPbtSedeEmpresa()
     {
-        if ($this->articulacionpbt->sede && isset($this->articulacionpbt->sede)) {
-            return $this->articulacionpbt->sede->nombre_sede;
+        if(
+            $this->articulacionpbt->whereHasMorph(
+                'articulable',
+                [ \App\Models\Sede::class],
+            ) && isset($this->articulacionpbt->articulable)
+        ){
+            return $this->articulacionpbt->articulable->nombre_sede;
+        }
+        return "No registra";
+    }
+
+    public function articulacionPbtSedeEmpresaId()
+    {
+        if(
+            $this->articulacionpbt->whereHasMorph(
+                'articulable',
+                [ \App\Models\Sede::class],
+            ) && isset($this->articulacionpbt->articulable)
+        ){
+            return $this->articulacionpbt->articulable->id;
         }
         return "No registra";
     }
@@ -143,7 +212,7 @@ class ArticulacionPbtPresenter extends Presenter
     public function articulacionPbtFechaFinalizacion()
     {
         if ($this->articulacionpbt && isset($this->articulacionpbt)) {
-            return $this->articulacionpbt->fecha_esperada_finalizacion->isoFormat('YYYY-MM-DD');
+            return optional($this->articulacionpbt->fecha_esperada_finalizacion)->isoFormat('YYYY-MM-DD');
         }
         return "No registra";
     }
@@ -291,7 +360,7 @@ class ArticulacionPbtPresenter extends Presenter
     public function articulacionPbtFechaCuando()
     {
         if ($this->articulacionpbt && isset($this->articulacionpbt->cuando)) {
-            return $this->articulacionpbt->cuando->isoFormat('YYYY-MM-DD');
+            return optional($this->articulacionpbt->cuando)->isoFormat('YYYY-MM-DD');
         }
         return;
     }
@@ -306,7 +375,7 @@ class ArticulacionPbtPresenter extends Presenter
 
     public function articulacionPbtNoPdfAprobacion()
     {
-        if ($this->articulacionpbt && isset($this->articulacionpbt) && $this->articulacionpbt->pdf_noaprobacion == 1) {
+        if (isset($this->articulacionpbt) && $this->articulacionpbt->pdf_noaprobacion == 1) {
             return 1;
         }
         return 0;
@@ -327,5 +396,60 @@ class ArticulacionPbtPresenter extends Presenter
         }
         return 0;
     }
+
+    public function articulacionPbtName()
+    {
+        if (isset($this->articulacionpbt)) {
+            return $this->articulacionpbt->nombre;
+        }
+        return "No registra";
+    }
+
+    public function articulacionPbtCode()
+    {
+        if (isset($this->articulacionpbt)) {
+            return $this->articulacionpbt->codigo;
+        }
+        return "No registra";
+    }
+
+    public function articulacionPbtstartDate(){
+        if (isset($this->articulacionpbt)) {
+            return optional($this->articulacionpbt->fecha_inicio)->isoFormat('YYYY-MM-DD');
+        }
+        return "No registra";
+    }
+
+    public function articulacionPbtUserAsesor(){
+        if (isset($this->articulacionpbt)) {
+            return $this->articulacionpbt->asesor->present()->userFullName();
+        }
+        return "No registra";
+    }
+
+    public function articulacionPbtUserRolesAsesor()
+    {
+        if ($this->articulacionpbt->has('asesor') && isset($this->articulacionpbt->asesor)) {
+            return $this->articulacionpbt->asesor->present()->userRolesNames();
+        }
+        return "No registra";
+    }
+
+    public function articulacionPbtNodo()
+    {
+        if ($this->articulacionpbt->has('nodo.entidad') && isset($this->articulacionpbt->nodo->entidad)) {
+            return "Tecnoparque Nodo {$this->articulacionpbt->nodo->entidad->nombre}";
+        }
+        return "No registra";
+    }
+
+    public function articulacionPbtcreatedAt()
+    {
+        if (isset($this->articulacionpbt)) {
+            return optional($this->articulacionpbt->created_at)->isoFormat('LL');
+        }
+        return "No registra";
+    }
+
 
 }

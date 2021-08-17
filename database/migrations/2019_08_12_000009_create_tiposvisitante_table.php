@@ -10,7 +10,7 @@ class CreateTiposvisitanteTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'tiposvisitante';
+    protected $tableName = 'tiposvisitante';
 
     /**
      * Run the migrations.
@@ -35,8 +35,8 @@ class CreateTiposvisitanteTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

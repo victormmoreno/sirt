@@ -10,7 +10,7 @@ class ArticulacionAprobarPlaneacion extends Notification implements ShouldQueue
 {
     use Queueable;
     private $articulacion;
-    
+
     /**
      * Create a new notification instance.
      *

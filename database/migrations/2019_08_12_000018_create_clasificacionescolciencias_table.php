@@ -10,7 +10,7 @@ class CreateClasificacionescolcienciasTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'clasificacionescolciencias';
+    protected $tableName = 'clasificacionescolciencias';
 
     /**
      * Run the migrations.
@@ -34,8 +34,8 @@ class CreateClasificacionescolcienciasTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

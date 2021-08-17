@@ -11,8 +11,6 @@ $factory->define(Actividad::class, function (Faker $faker) {
     $gestor = Gestor::where('nodo_id', $entidadNodo->nodo->id)->get()->random();
 
     return [
-        'nodo_id' => $entidadNodo->nodo->id,
-        'gestor_id' => $gestor->id,
         'codigo_actividad' => $faker->unique()->bothify('P####-######-###'),
         'nombre' => $faker->text($maxNbChars = 200),
         'objetivo_general' => $faker->text($maxNbChars = 500),

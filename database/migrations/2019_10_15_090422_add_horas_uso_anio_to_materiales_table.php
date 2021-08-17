@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddHorasUsoAnioToMaterialesTable extends Migration
 {
-    public $tableName = 'materiales';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'materiales';
     /**
      * Run the migrations.
      *
@@ -27,7 +31,7 @@ class AddHorasUsoAnioToMaterialesTable extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $this->dropColumn(['horas_uso_anio']);
+            $table->dropColumn(['horas_uso_anio']);
         });
     }
 }

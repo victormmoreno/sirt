@@ -46,7 +46,7 @@ class ArticulacionNoAprobarFase extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject("Fase {$this->fase} de la articulación no aprobada | {$this->articulacion->actividad->codigo_actividad} - {$this->articulacion->actividad->nombre}" )
+            ->subject("Fase {$this->fase} de la articulación no aprobada | {$this->articulacion->present()->articulacionCode()} - {$this->articulacion->present()->articulacionName()}" )
             ->markdown('emails.articulacionespbt.phase-not-passed', ['articulacion' => $this->articulacion, 'movimiento' => $this->movimiento, 'fase' => $this->fase]);
     }
 
@@ -64,7 +64,7 @@ class ArticulacionNoAprobarFase extends Notification implements ShouldQueue
             'icon'  => 'autorenew',
             'color' => 'orange',
             'autor' => "{$this->movimiento->user->nombres} {$this->movimiento->user->apellidos}",
-            'text'  => "Fase {$this->fase} de la articulación no aprobada: {$this->articulacion->actividad->codigo_actividad} - {$this->articulacion->actividad->nombre}",
-          ];
+            'text'  => "Fase {$this->fase} de la articulación no aprobada: {$this->articulacion->present()->articulacionCode()} - {$this->articulacion->present()->articulacionName()}",
+        ];
     }
 }
