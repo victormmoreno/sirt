@@ -10,8 +10,7 @@ class ArticulacionSuspendidaAprobada extends Notification implements ShouldQueue
 {
     use Queueable;
     private $articulacion;
-  
-  
+
     /**
     * Create a new notification instance.
     *
@@ -19,9 +18,9 @@ class ArticulacionSuspendidaAprobada extends Notification implements ShouldQueue
     */
     public function __construct($articulacion)
     {
-      $this->setArticulacion($articulacion);
+        $this->setArticulacion($articulacion);
     }
-  
+
     /**
     * Get the notification's delivery channels.
     *
@@ -30,9 +29,9 @@ class ArticulacionSuspendidaAprobada extends Notification implements ShouldQueue
     */
     public function via($notifiable)
     {
-      return ['database'];
+        return ['database'];
     }
-  
+
     /**
     * Get the array representation of the notification.
     *
@@ -41,15 +40,15 @@ class ArticulacionSuspendidaAprobada extends Notification implements ShouldQueue
     */
     public function toArray($notifiable)
     {
-      return [
-        'link'  => route('articulacion.suspender', $this->getArticulacion()->id),
-        'icon'  => 'autorenew',
-        'color' => 'orange',
-        'autor' => "{$this->getArticulacion()->actividad->gestor->user->nombres} {$this->getArticulacion()->actividad->gestor->user->apellidos}",
-        'text'  => "Se aprobó la suspensión de la articulación | {$this->getArticulacion()->actividad->codigo_actividad} - {$this->getArticulacion()->actividad->nombre}",
-      ];
+        return [
+            'link'  => route('articulacion.suspender', $this->getArticulacion()->id),
+            'icon'  => 'autorenew',
+            'color' => 'orange',
+            'autor' => "{$this->getArticulacion()->present()->articulacionPbtUserAsesor()}",
+            'text'  => "Se aprobó la suspensión de la articulación | {$this->articulacion->present()->articulacionCode()} - {$this->articulacion->present()->articulacionName()}",
+        ];
     }
-  
+
     /**
      * Asigna un valor a $articulacion
      *
@@ -58,9 +57,9 @@ class ArticulacionSuspendidaAprobada extends Notification implements ShouldQueue
      */
     private function setArticulacion($articulacion)
     {
-      $this->articulacion = $articulacion;
+        $this->articulacion = $articulacion;
     }
-  
+
     /**
      * Retorna el valor de $articulacion
      *
@@ -69,6 +68,6 @@ class ArticulacionSuspendidaAprobada extends Notification implements ShouldQueue
      */
     private function getArticulacion()
     {
-      return $this->articulacion;
+        return $this->articulacion;
     }
 }

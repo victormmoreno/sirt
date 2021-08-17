@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddTipoVinculacionToArticulacionPbt extends Migration
 {
-    public $tableName = 'articulacion_pbts';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'articulacion_pbts';
     /**
      * Run the migrations.
      *
@@ -16,7 +20,6 @@ class AddTipoVinculacionToArticulacionPbt extends Migration
     {
         Schema::table($this->tableName, function (Blueprint $table) {
             $table->integer('tipo_vinculacion')->default(1)->after('id'); //defaul-pbt
-            // $table->integer('proyecto_id')->nullable()->change();
         });
     }
 

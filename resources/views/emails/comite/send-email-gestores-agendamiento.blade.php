@@ -1,18 +1,18 @@
 @component('mail::message')
 # Programación para el Comité de Selección de Ideas | Tecnoparque Nodo {{$nodo}}.
 
-Expertos
+Experto(a)
 <br>
 Cordial Saludo.
 <br>
 Dando respuesta al registro de idea para la Red Tecnoparque tenemos el gusto de informar la fecha y dirección donde se realizará el comité de selección de ideas.
-Se dará un espacio de cinco minutos para presentar un pitch donde se evaluará claridad de la idea y/o la solución, grado de innovación, 
-impacto y equipo de trabajo. También se contara con un espacio de cinco minutos para preguntas del comité. 
+Se dará un espacio de cinco minutos para presentar un pitch donde se evaluará claridad de la idea y/o la solución, grado de innovación,
+impacto y equipo de trabajo. También se contara con un espacio de cinco minutos para preguntas del comité.
 <br>
 @component('mail::panel')
-	
+
 	<h1 class="tittle">📑 Programación para el Comité de Selección de Ideas</h1>
-	
+
 @endcomponent
 <h4>Comité del día: {{$comite->fechacomite->isoFormat('LL')}}</h4>
 
@@ -20,7 +20,7 @@ impacto y equipo de trabajo. También se contara con un espacio de cinco minutos
 @component('mail::promotion')
     <center>
         @foreach ($comite->ideas as $idea)
-            <h3 class="subtittle">Código Idea:</h3> 
+            <h3 class="subtittle">Código Idea:</h3>
             <h3 class="subtittle-value">{{$idea->codigo_idea}}</h3>
             <h3 class="subtittle">Nombre Idea de proyecto: </h3>
             <h3 class="subtittle-value">{{$idea->nombre_proyecto}}</h3>

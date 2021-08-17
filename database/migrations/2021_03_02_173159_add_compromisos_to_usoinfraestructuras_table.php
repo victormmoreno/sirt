@@ -7,13 +7,18 @@ use Illuminate\Database\Migrations\Migration;
 class AddCompromisosToUsoinfraestructurasTable extends Migration
 {
     /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'usoinfraestructuras';
+    /**
      * Run the migrations.
      *
      * @return void
      */
     public function up()
     {
-        Schema::table('usoinfraestructuras', function (Blueprint $table) {
+        Schema::table($this->tableName, function (Blueprint $table) {
             $table->string('compromisos', 2400)->nullable()->after('descripcion');
         });
     }
@@ -25,7 +30,7 @@ class AddCompromisosToUsoinfraestructurasTable extends Migration
      */
     public function down()
     {
-        Schema::table('usoinfraestructuras', function (Blueprint $table) {
+        Schema::table($this->tableName, function (Blueprint $table) {
             $table->dropColumn(['compromisos']);
         });
     }

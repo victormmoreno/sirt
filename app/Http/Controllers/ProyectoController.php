@@ -8,7 +8,7 @@ use Illuminate\Support\{Str, Facades\Session, Facades\Validator, Facades\DB};
 use App\Http\Requests\{ProyectoFaseInicioFormRequest, ProyectoFaseCierreFormRequest};
 use Illuminate\Http\{Request, Response};
 use App\User;
-use Alert;
+use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Controllers\CostoController;
 
 class ProyectoController extends Controller
@@ -42,7 +42,6 @@ class ProyectoController extends Controller
     {
 
         if (Session::get('login_role') == User::IsDinamizador()) {
-            // $this->getProyectoRepository()->eliminarProyecto_Repository($id);
             $delete = $this->getProyectoRepository()->eliminarProyecto_Repository($id);
             return response()->json([
                 'retorno' => $delete
@@ -67,7 +66,7 @@ class ProyectoController extends Controller
     {
         $proyecto = Proyecto::findOrFail($id);
         $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
-        $costo = $this->costoController->costosDeUnaActividad($proyecto->articulacion_proyecto->actividad->id);
+        $costo = $this->costoController->costoProject($proyecto->id);
         return view('proyectos.detalle', [
             'proyecto' => $proyecto,
             'costo' => $costo,
@@ -213,11 +212,10 @@ class ProyectoController extends Controller
     public function proyectosCostos(string $anho)
     {
         if (Session::get('login_role') == User::IsGestor()) {
-            $id = auth()->user()->gestor->id;
-            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('gestores.id', $id)->get();
+            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('gestores.id', auth()->user()->gestor->id)->get();
         } else {
-            $id = auth()->user()->dinamizador->nodo_id;
-            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('nodos.id', $id)->get();
+
+            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
         }
         return response()->json([
             'proyectos' => $proyectos
@@ -305,7 +303,7 @@ class ProyectoController extends Controller
     {
         if (request()->ajax()) {
             $ideas = Idea::ConsultarIdeasAprobadasEnComite(auth()->user()->gestor->nodo_id, auth()->user()->gestor->id)->get();
-    
+
             return datatables()->of($ideas)
             ->addColumn('checkbox', function ($data) {
                     $checkbox = '
@@ -327,19 +325,13 @@ class ProyectoController extends Controller
     // Datatable para listar las ideas de proyectos con emprendedores (que aprobaron el CSIBT)
     public function datatableIdeasConEmpresasGrupo()
     {
-
-        // dd('$ideas');
         if (request()->ajax()) {
             $ideas = Idea::ConsultarIdeasConEmpresasGrupos(auth()->user()->gestor->nodo_id)->get();
-            // dd($ideas);
             return datatables()->of($ideas)
                 ->addColumn('checkbox', function ($data) {
-                    $checkbox = '
-        <a class="btn blue" onclick="asociarIdeaDeProyectoAProyecto(' . $data->consecutivo . ', \'' . $data->nombre_proyecto . '\', \'' . $data->codigo_idea . '\')">
-
-          <i class="material-icons">done</i>
-        </a>
-        ';
+                    $checkbox = '<a class="btn blue" onclick="asociarIdeaDeProyectoAProyecto(' . $data->consecutivo . ', \'' . $data->nombre_proyecto . '\', \'' . $data->codigo_idea . '\')">
+                                <i class="material-icons">done</i>
+                            </a>';
                     return $checkbox;
                 })->rawColumns(['checkbox'])->make(true);
         }
@@ -353,11 +345,11 @@ class ProyectoController extends Controller
             return datatables()->of($centros)
                 ->addColumn('checkbox', function ($data) {
                     $checkbox = '
-        <input type="radio" class="with-gap" name="txtentidad_centrofomacion_id"
-        onclick="asociarCentroDeFormacionAProyecto(' . $data->id_entidad . ', \'' . $data->codigo_centro . '\', \'' . $data->nombre . '\')" id="radioButton' . $data->id_entidad . '"
-        value="' . $data->id_entidad . '"/>
-        <label for ="radioButton' . $data->id_entidad . '"></label>
-        ';
+                        <input type="radio" class="with-gap" name="txtentidad_centrofomacion_id"
+                        onclick="asociarCentroDeFormacionAProyecto(' . $data->id_entidad . ', \'' . $data->codigo_centro . '\', \'' . $data->nombre . '\')" id="radioButton' . $data->id_entidad . '"
+                        value="' . $data->id_entidad . '"/>
+                        <label for ="radioButton' . $data->id_entidad . '"></label>
+                        ';
                     return $checkbox;
                 })->rawColumns(['checkbox'])->make(true);
         }
@@ -371,11 +363,11 @@ class ProyectoController extends Controller
             return datatables()->of($nodos)
                 ->addColumn('checkbox', function ($data) {
                     $checkbox = '
-        <input type="radio" class="with-gap" name="txtentidad_nodo_id"
-        onclick="asociarNodoAProyecto(' . $data->id_entidad . ', \'' . $data->codigo_centro . '\', \'' . $data->nombre_nodo . '\', \'' . $data->centro . '\')" id="radioButton' . $data->id_entidad . '"
-        value="' . $data->id_entidad . '"/>
-        <label for ="radioButton' . $data->id_entidad . '"></label>
-        ';
+                        <input type="radio" class="with-gap" name="txtentidad_nodo_id"
+                        onclick="asociarNodoAProyecto(' . $data->id_entidad . ', \'' . $data->codigo_centro . '\', \'' . $data->nombre_nodo . '\', \'' . $data->centro . '\')" id="radioButton' . $data->id_entidad . '"
+                        value="' . $data->id_entidad . '"/>
+                        <label for ="radioButton' . $data->id_entidad . '"></label>
+                        ';
                     return $checkbox;
                 })->rawColumns(['checkbox'])->make(true);
         }
@@ -389,11 +381,11 @@ class ProyectoController extends Controller
                 ->addColumn('checkbox', function ($data) {
                     $nombre   = strval($data->nombre);
                     $checkbox = '
-        <input type="radio" class="with-gap" name="txtentidad_tecnoacademia_id"
-        onclick="asociarTecnoacademiaAProyecto(' . $data->id_entidad . ', \'' . $data->codigo_centro . '\', \'' . $nombre . '\', \'' . $data->codigo . '\')" id="radioButton' . $data->id_entidad . '"
-        value="' . $data->id_entidad . '"/>
-        <label for ="radioButton' . $data->id_entidad . '"></label>
-        ';
+                        <input type="radio" class="with-gap" name="txtentidad_tecnoacademia_id"
+                        onclick="asociarTecnoacademiaAProyecto(' . $data->id_entidad . ', \'' . $data->codigo_centro . '\', \'' . $nombre . '\', \'' . $data->codigo . '\')" id="radioButton' . $data->id_entidad . '"
+                        value="' . $data->id_entidad . '"/>
+                        <label for ="radioButton' . $data->id_entidad . '"></label>
+                        ';
                     return $checkbox;
                 })->rawColumns(['checkbox'])->make(true);
         }
@@ -413,11 +405,11 @@ class ProyectoController extends Controller
             ->addColumn('checkbox', function ($data) {
                 $nombre   = strval($data->nombre);
                 $checkbox = '
-      <input type="radio" class="with-gap" name="txtentidad_grupo_id"
-      onclick="asociarGrupoInvestigacionAProyecto(' . $data->id_entidad . ', \'' . $data->codigo_grupo . '\', \'' . $nombre . '\')" id="radioButton' . $data->id_entidad . '"
-      value="' . $data->id_entidad . '"/>
-      <label for ="radioButton' . $data->id_entidad . '"></label>
-      ';
+                    <input type="radio" class="with-gap" name="txtentidad_grupo_id"
+                    onclick="asociarGrupoInvestigacionAProyecto(' . $data->id_entidad . ', \'' . $data->codigo_grupo . '\', \'' . $nombre . '\')" id="radioButton' . $data->id_entidad . '"
+                    value="' . $data->id_entidad . '"/>
+                    <label for ="radioButton' . $data->id_entidad . '"></label>
+                    ';
                 return $checkbox;
             })->rawColumns(['checkbox'])->make(true);
     }
@@ -431,17 +423,17 @@ class ProyectoController extends Controller
                 ->addColumn('checkbox', function ($data) {
                     $nombre   = strval($data->nombre_empresa);
                     $checkbox = '
-        <input type="radio" class="with-gap" name="txtentidad_id"
-        onclick="asociarEmpresaAProyecto(' . $data->id_entidad . ', ' . $data->nit . ', \'' . $nombre . '\')" id="radioButton' . $data->id_entidad . '"
-        value="' . $data->id_entidad . '"/>
-        <label for ="radioButton' . $data->id_entidad . '"></label>
-        ';
+                        <input type="radio" class="with-gap" name="txtentidad_id"
+                        onclick="asociarEmpresaAProyecto(' . $data->id_entidad . ', ' . $data->nit . ', \'' . $nombre . '\')" id="radioButton' . $data->id_entidad . '"
+                        value="' . $data->id_entidad . '"/>
+                        <label for ="radioButton' . $data->id_entidad . '"></label>
+                        ';
                     return $checkbox;
                 })->rawColumns(['checkbox'])->make(true);
         }
     }
 
-    //
+
     public function datatableEntidadesTecnoparque($id)
     {
         if (request()->ajax()) {
@@ -548,7 +540,7 @@ class ProyectoController extends Controller
         $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
         $ultimo_movimiento = $historico->last();
 
-     
+
         switch (Session::get('login_role')) {
             case User::IsGestor():
                 return view('proyectos.gestor.fase_inicio', [
@@ -562,7 +554,7 @@ class ProyectoController extends Controller
 
             case User::IsDinamizador():
                 return view('proyectos.dinamizador.fase_inicio', [
-                    'sublineas' => Sublinea::SubLineasDeUnaLinea($proyecto->articulacion_proyecto->actividad->gestor->lineatecnologica_id)->get()->pluck('nombre', 'id'),
+                    'sublineas' => Sublinea::SubLineasDeUnaLinea($proyecto->asesor->lineatecnologica_id)->get()->pluck('nombre', 'id'),
                     'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
                     'proyecto' => $proyecto,
                     'historico' => $historico,
@@ -572,7 +564,7 @@ class ProyectoController extends Controller
 
             case User::IsTalento():
                 return view('proyectos.talento.fase_inicio', [
-                    'sublineas' => Sublinea::SubLineasDeUnaLinea($proyecto->articulacion_proyecto->actividad->gestor->lineatecnologica_id)->get()->pluck('nombre', 'id'),
+                    'sublineas' => Sublinea::SubLineasDeUnaLinea($proyecto->asesor->lineatecnologica_id)->get()->pluck('nombre', 'id'),
                     'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
                     'proyecto' => $proyecto,
                     'ultimo_movimiento' => $ultimo_movimiento,
@@ -665,7 +657,6 @@ class ProyectoController extends Controller
                         'ultimo_movimiento' => $ultimo_movimiento
                     ]);
                     break;
-
                 case User::IsDinamizador():
                     return view('proyectos.dinamizador.fase_ejecucion', [
                         'proyecto' => $proyecto,
@@ -673,7 +664,6 @@ class ProyectoController extends Controller
                         'ultimo_movimiento' => $ultimo_movimiento
                     ]);
                     break;
-
                 case User::IsTalento():
                     return view('proyectos.talento.fase_ejecucion', [
                         'proyecto' => $proyecto,
@@ -681,21 +671,18 @@ class ProyectoController extends Controller
                         'ultimo_movimiento' => $ultimo_movimiento
                     ]);
                     break;
-
                 case User::IsAdministrador():
                     return view('proyectos.administrador.fase_ejecucion', [
                         'proyecto' => $proyecto,
                         'historico' => $historico
                     ]);
                     break;
-
                 case User::IsInfocenter():
                     return view('proyectos.infocenter.fase_ejecucion', [
                         'proyecto' => $proyecto,
                         'historico' => $historico
                     ]);
                     break;
-
                 default:
                     return abort(Response::HTTP_FORBIDDEN);
                     break;
@@ -728,7 +715,6 @@ class ProyectoController extends Controller
                         'ultimo_movimiento' => $ultimo_movimiento
                     ]);
                     break;
-
                 case User::IsDinamizador():
                     return view('proyectos.dinamizador.fase_cierre', [
                         'proyecto' => $proyecto,
@@ -737,7 +723,6 @@ class ProyectoController extends Controller
                         'ultimo_movimiento' => $ultimo_movimiento
                     ]);
                     break;
-
                 case User::IsTalento():
                     return view('proyectos.talento.fase_cierre', [
                         'proyecto' => $proyecto,
@@ -746,7 +731,6 @@ class ProyectoController extends Controller
                         'ultimo_movimiento' => $ultimo_movimiento
                     ]);
                     break;
-
                 case User::IsAdministrador():
                     return view('proyectos.administrador.fase_cierre', [
                         'proyecto' => $proyecto,
@@ -754,7 +738,6 @@ class ProyectoController extends Controller
                         'historico' => $historico
                     ]);
                     break;
-
                 case User::IsInfocenter():
                     return view('proyectos.infocenter.fase_cierre', [
                         'proyecto' => $proyecto,
@@ -762,12 +745,10 @@ class ProyectoController extends Controller
                         'historico' => $historico
                     ]);
                     break;
-
                 default:
                     return abort(Response::HTTP_FORBIDDEN);
                     break;
             }
-
         }
     }
 
@@ -824,7 +805,7 @@ class ProyectoController extends Controller
                 break;
 
             default:
-                # code...
+                return abort(403);
                 break;
         }
     }
@@ -889,6 +870,8 @@ class ProyectoController extends Controller
                     return response()->json(['state' => 'no_update']);
                 }
             }
+        }else{
+            return abort(403);
         }
     }
 
@@ -1103,7 +1086,6 @@ class ProyectoController extends Controller
     {
         if (Session::get('login_role') == User::IsDinamizador()) {
             $update = $this->getProyectoRepository()->updateAprobacionSuspendido($id);
-            // dd($update);
             if ($update) {
                 Alert::success('Modificación Exitosa!', 'La fase de suspendido del proyecto se aprobó!')->showConfirmButton('Ok', '#3085d6');
                 return redirect('proyecto');
@@ -1263,17 +1245,15 @@ class ProyectoController extends Controller
      */
     public function detailActivityByCode(string $code)
     {
-        if (request()->ajax()) {
+        // if (request()->ajax()) {
             $actividad =  Actividad::with([
                 'objetivos_especificos',
-                'gestor' => function ($query) {
-                    $query->select('id', 'user_id', 'nodo_id', 'lineatecnologica_id');
-                },
-                'gestor.user' => function ($query) {
+
+                'articulacion_proyecto.proyecto.asesor.user' => function ($query) {
                     $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
                         ->orWhere('deleted_at', '!=', null);
                 },
-                'gestor.lineatecnologica' => function ($query) {
+                'articulacion_proyecto.proyecto.asesor.user.gestor.lineatecnologica' => function ($query) {
                     $query->select('id', 'abreviatura', 'nombre');
                 },
                 'articulacion_proyecto.proyecto',
@@ -1295,24 +1275,32 @@ class ProyectoController extends Controller
                 'articulacion_proyecto.proyecto.idea' => function ($query) {
                     $query->select('id', 'nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'telefono_contacto', 'nombre_proyecto', 'codigo_idea');
                 },
+                'articulacion_proyecto.proyecto.nodo' => function ($query) {
+                    $query->select('id', 'entidad_id', 'direccion', 'telefono');
+                },
+                'articulacion_proyecto.proyecto.nodo.entidad' => function ($query) {
+                    $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
+                },
                 'edt',
                 'edt.entidades',
                 'edt.areaconocimiento',
                 'edt.tipoedt',
+                'edt.nodo' => function ($query) {
+                    $query->select('id', 'entidad_id', 'direccion', 'telefono');
+                },
+                'edt.nodo.entidad' => function ($query) {
+                    $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
+                },
                 'articulacion_proyecto.articulacion',
                 'articulacion_proyecto.articulacion.productos',
                 'articulacion_proyecto.articulacion.fase',
-                'nodo' => function ($query) {
-                    $query->select('id', 'entidad_id', 'direccion', 'telefono');
-                },
-                'nodo.entidad' => function ($query) {
-                    $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
-                }
+
 
             ])->where('codigo_actividad', $code)->first();
 
 
-            $costo = $this->costoController->costosDeUnaActividad($actividad->id);
+            // $costo = $this->costoController->costosDeUnaActividad($actividad->id);
+            $costo = 0;
             return response()->json([
                 'data' => [
                     'actividad' => $actividad,
@@ -1320,13 +1308,13 @@ class ProyectoController extends Controller
                     'total_usos' => $actividad->usoinfraestructuras->count(),
                 ]
             ]);
-        }
-        return abort(Response::HTTP_FORBIDDEN);
+        // }
+        // return abort(Response::HTTP_FORBIDDEN);
     }
 
     public function filterByCode($value)
     {
-                
+
         $proyecto = Proyecto::select('id','idea_id','fase_id','articulacion_proyecto_id','alcance_proyecto')
         ->with([
             'idea',
@@ -1353,7 +1341,7 @@ class ProyectoController extends Controller
                 ]
             ],Response::HTTP_OK);
         }
-        
+
         return response()->json([
             'data' => [
                 'proyecto' => null,
@@ -1364,7 +1352,6 @@ class ProyectoController extends Controller
 
     public function datatableProyectosFinalizados(Request $request)
     {
-        
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
                 $nodo = $request->filter_nodo_art;
@@ -1373,15 +1360,15 @@ class ProyectoController extends Controller
                 $nodo = auth()->user()->dinamizador->nodo_id;
                 break;
             case User::IsArticulador():
-                $nodo = auth()->user()->gestor->nodo_id;
+                $nodo = auth()->user()->articulador->nodo_id;
                 break;
             default:
                 return abort('403');
                 break;
         }
         $proyectos = [];
-        
-        if (!empty($request->filter_year_pro)) {    
+
+        if (!empty($request->filter_year_pro)) {
             $proyectos = Proyecto::select('id','idea_id','fase_id','articulacion_proyecto_id','alcance_proyecto')
             ->with([
                 'fase',
@@ -1394,7 +1381,7 @@ class ProyectoController extends Controller
             ])
             ->nodo($nodo)
             ->starEndDate($request->filter_year_pro)
-            ->whereIn('fase_id', [Fase::IsFinalizado(), Fase::IsEjecucion(), Fase::IsCierre()]) 
+            ->whereIn('fase_id', [Fase::IsFinalizado(), Fase::IsEjecucion(), Fase::IsCierre()])
             ->get();
         }
 
@@ -1415,13 +1402,13 @@ class ProyectoController extends Controller
             })
             ->editColumn('codigo_proyecto', function ($data) {
                 if (isset($data->articulacion_proyecto->actividad)) {
-                    return  $data->articulacion_proyecto->actividad->codigo_actividad;
+                    return  $data->articulacion_proyecto->actividad->present()->actividadCode();
                 }
                 return "No registra";
             })
             ->editColumn('nombre', function ($data) {
                 if (isset($data->articulacion_proyecto->actividad)) {
-                    return  $data->articulacion_proyecto->actividad->nombre;
+                    return  $data->articulacion_proyecto->actividad->present()->actividadName();
                 }
                 return "No registra";
             })
@@ -1432,7 +1419,7 @@ class ProyectoController extends Controller
                 return "No registra";
             })
             ->rawColumns(['codigo_proyecto','nombre','fase','show','add_proyecto'])->make(true);
-            
+
     }
 
     /**

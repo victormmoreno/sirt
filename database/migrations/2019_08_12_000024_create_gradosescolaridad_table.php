@@ -10,7 +10,7 @@ class CreateGradosescolaridadTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'gradosescolaridad';
+    protected $tableName = 'gradosescolaridad';
 
     /**
      * Run the migrations.
@@ -35,8 +35,8 @@ class CreateGradosescolaridadTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

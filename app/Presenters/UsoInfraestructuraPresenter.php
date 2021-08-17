@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use App\Models\UsoInfraestructura;
+use Illuminate\Database\Eloquent\Builder;
 
 class UsoInfraestructuraPresenter extends Presenter
 {
@@ -15,15 +16,23 @@ class UsoInfraestructuraPresenter extends Presenter
 
     public function tipoUsoInfraestructura()
     {
-        if($this->uso->tipo_usoinfraestructura == UsoInfraestructura::IsProyecto()) {
-            return  'Proyecto';
-        }else if($this->uso->tipo_usoinfraestructura == UsoInfraestructura::IsArticulacion()){
-            return 'Articulación';
-        }else if($this->uso->tipo_usoinfraestructura == UsoInfraestructura::IsEst()){
-            return 'EDT';
-        }else{
-            return 'No Registra';
+        if(
+            $this->uso->whereHasMorph(
+                'asesorable',
+                \App\Models\Proyecto::class
+            ) && isset($this->uso->asesorable->articulacion_proyecto)
+        ){
+            return  "Proyecto";
         }
+        if(
+            $this->uso->whereHasMorph(
+                'asesorable',
+                \App\Models\ArticulacionPbt::class
+            ) && isset($this->uso->asesorable->tipoarticulacion)
+        ){
+            return 'Articulación';
+        }
+        return "No registra";
     }
 
     public function fechaUsoInfraestructura()
@@ -48,36 +57,130 @@ class UsoInfraestructuraPresenter extends Presenter
 
     public function nodoUso()
     {
-        if($this->uso->has('actividad.nodo.entidad')){
-            return "Tecnparque Nodo {$this->uso->actividad->nodo->entidad->nombre}";
+        if(
+            $this->uso->whereHasMorph(
+                'asesorable',
+                [ \App\Models\Proyecto::class],
+            ) && isset($this->uso->asesorable->articulacion_proyecto)
+        ){
+            return $this->uso->asesorable->nodo->entidad->nombre;
+        }else if(
+            $this->uso->whereHasMorph(
+                'asesorable',
+                [ \App\Models\ArticulacionPbt::class],
+            ) && isset($this->uso->asesorable->tipoarticulacion)
+        ){
+            return $this->uso->asesorable->nodo->entidad->nombre;
         }
-        return 'No Registra';
+        return "No registra";
     }
 
     public function actividadLinea()
     {
-        return $this->uso->has('actividad.gestor.lineatecnologica') ? "{$this->uso->actividad->gestor->lineatecnologica->abreviatura} - {$this->uso->actividad->gestor->lineatecnologica->nombre}" : 'No Registra';
+        if(
+            $this->uso->whereHasMorph(
+                'asesorable',
+                [ \App\Models\Proyecto::class],
+            ) && isset($this->uso->asesorable->articulacion_proyecto)
+        ){
+            return $this->uso->asesorable->asesor->lineatecnologica->nombre;
+        }else if(
+            $this->uso->whereHasMorph(
+                'asesorable',
+                [ \App\Models\ArticulacionPbt::class],
+            ) && isset($this->uso->asesorable->tipoarticulacion)
+        ){
+            return "No registra";
+        }
+        return "No registra";
     }
 
-    public function gestorEncargado()
+    public function expertoEncargado()
     {
-        return $this->uso->has('actividad.gestor.user') ? $this->uso->actividad->gestor->user->present()->userFullName() : 'No Registra';
+        if(
+            $this->uso->whereHasMorph(
+                'asesorable',
+                [ \App\Models\Proyecto::class],
+            ) && (isset($this->uso->asesorable->asesor->user) && isset($this->uso->asesorable->articulacion_proyecto))
+        ){
+            return $this->uso->asesorable->asesor->user->present()->userFullName();
+        }else if(
+            $this->uso->whereHasMorph(
+                'asesorable',
+                [ \App\Models\ArticulacionPbt::class],
+            ) && (isset($this->uso->asesorable->tipoarticulacion) && isset($this->uso->asesorable->asesor))
+        ){
+            return $this->uso->asesorable->asesor->present()->userFullName();
+        }
+        return "No registra";
     }
+
+    public function asesor()
+    {
+        if($this->uso->usogestores->isNotEmpty()){
+            return $this->uso->usogestores->map(function ($item) {
+                if(isset($item)){
+                    return $item->present()->userDocumento() . ' - ' . $item->present()->userFullName();
+                }
+                return "No registra";
+            })->implode(', ');
+        }
+        else if($this->uso->usotalentos->isNotEmpty()){
+            return $this->uso->usotalentos->map(function ($item) {
+                if(isset($item->user)){
+                    return $item->user->present()->userDocumento() . ' - ' . $item->user->present()->userFullName() . ' - Talento';
+                }
+                return "No registra";
+            })->implode(', ');
+        }
+        return "No registra";
+    }
+
+
 
     public function actividadUsoInfraestructura()
     {
-        return $this->uso->has('actividad') ? "{$this->uso->actividad->codigo_actividad} - {$this->uso->actividad->nombre}" : 'No Registra';
+        if(
+            $this->uso->whereHasMorph(
+                'asesorable',
+                [ \App\Models\Proyecto::class],
+            ) && isset($this->uso->asesorable->articulacion_proyecto)
+        ){
+            return "{$this->uso->asesorable->articulacion_proyecto->actividad->codigo_actividad} - {$this->uso->asesorable->articulacion_proyecto->actividad->nombre}";
+        }else if(
+            $this->uso->whereHasMorph(
+                'asesorable',
+                [ \App\Models\ArticulacionPbt::class],
+            ) && isset($this->uso->asesorable->tipoarticulacion)
+        ){
+            return "{$this->uso->asesorable->present()->articulacionCode()} - {$this->uso->asesorable->present()->articulacionName()}";
+        }
+        return "No registra";
+    }
+
+    public function actividadUsoInfraestructuraStartDate()
+    {
+        if(
+            $this->uso->whereHasMorph(
+                'asesorable',
+                [ \App\Models\Proyecto::class],
+            ) && isset($this->uso->asesorable->articulacion_proyecto)
+        ){
+            return "{$this->uso->asesorable->articulacion_proyecto->actividad->fecha_inicio->isoformat('LL')}";
+        }else if(
+            $this->uso->whereHasMorph(
+                'asesorable',
+                [ \App\Models\ArticulacionPbt::class],
+            ) && isset($this->uso->asesorable->tipoarticulacion)
+        ){
+            return "{$this->uso->asesorable->present()->articulacionPbtstartDate()}";
+        }
+        return "No registra";
     }
 
     public function faseActividad()
     {
-        if ($this->uso->has('actividad.articulacion_proyecto.proyecto.fase') && isset($this->uso->actividad->articulacion_proyecto->proyecto->fase)) {
-            return $this->uso->actividad->articulacion_proyecto->proyecto->fase->nombre;
-        } else if ($this->uso->has('actividad.articulacionpbt.fase') && isset($this->uso->actividad->articulacionpbt->fase)) {
-            return $this->uso->actividad->articulacionpbt->fase->nombre;
-        } else {
-            return "No Aplica";
-        }
+        return $this->uso->asesorable->fase->nombre;
     }
 
     public function asesoriaDirecta()
@@ -106,9 +209,16 @@ class UsoInfraestructuraPresenter extends Presenter
 
     public function usoGestores()
     {
-        return $this->uso->has('usogestores.user') ? $this->uso->usogestores->map(function ($item, $key) {
-            return $item->user->present()->userTipoDocuento() . ' - ' . $item->user->present()->userFullName() . '- ' . "Asesoria Directa: {$item->pivot->asesoria_directa}, Asesoria Indirecta: {$item->pivot->asesoria_indirecta}";
-        })->implode(', ') : 'No Registra';
+        return $this->uso->usogestores->map(function ($item) {
+                if(isset($item->user)){
+                    return $item->user->present()->userTipoDocuento() . ' - ' . $item->user->present()->userFullName() . '- ' . "Asesoria Directa: {$item->pivot->asesoria_directa}, Asesoria Indirecta: {$item->pivot->asesoria_indirecta}";
+                }
+                if(isset($item)){
+                    return $item->present()->userTipoDocuento() . ' - ' . $item->present()->userFullName() . '- ' . "Asesoria Directa: {$item->pivot->asesoria_directa}, Asesoria Indirecta: {$item->pivot->asesoria_indirecta}";
+                }
+                return "No registra";
+
+            })->implode(', ');
     }
 
     public function usoTalentos()

@@ -13,7 +13,5 @@ class AlcanceArticulacion extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'nombre',
-    ];
+    protected $fillable = [ 'nombre'];
 }

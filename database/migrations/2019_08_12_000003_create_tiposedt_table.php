@@ -7,10 +7,11 @@ use Illuminate\Database\Migrations\Migration;
 class CreateTiposedtTable extends Migration
 {
     /**
-     * Schema table name to migrate
+     * the attribute that names the table.
+     *
      * @var string
      */
-    public $tableName = 'tiposedt';
+    protected $tableName = 'tiposedt';
 
     /**
      * Run the migrations.
@@ -36,8 +37,8 @@ class CreateTiposedtTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

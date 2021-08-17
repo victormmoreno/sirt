@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddTalentoIdToIdeasTable extends Migration
 {
-    public $tableName = 'ideas';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'ideas';
     /**
      * Run the migrations.
      *
@@ -20,10 +24,9 @@ class AddTalentoIdToIdeasTable extends Migration
             $table->index(["talento_id"], 'fk_talentos_ideas1_idx');
 
             $table->foreign('talento_id', 'fk_talentos_ideas1_idx')
-            ->references('id')->on('talentos')
-            ->onDelete('no action')
-            ->onUpdate('no action');
-
+                ->references('id')->on('talentos')
+                ->onDelete('no action')
+                ->onUpdate('no action');
         });
     }
 
@@ -35,7 +38,6 @@ class AddTalentoIdToIdeasTable extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            // $table->dropIndex(['fk_talentos_ideas1_idx']);
             $table->dropColumn(['talento_id']);
         });
     }

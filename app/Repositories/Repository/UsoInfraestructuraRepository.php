@@ -6,12 +6,13 @@ use App\Models\Actividad;
 use App\Models\CostoAdministrativo;
 use App\Models\Equipo;
 use App\Models\EquipoMantenimiento;
-use App\Models\Gestor;
 use App\Models\Material;
 use App\Models\{Nodo, Proyecto};
 use App\Models\UsoInfraestructura;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Session;
 
 class UsoInfraestructuraRepository
 {
@@ -22,27 +23,38 @@ class UsoInfraestructuraRepository
      * @param $request
      * @author devjul
      */
-    public function store($request)
+    public function storeUsoInfraestructuraProyecto($request)
     {
+        $model = null;
+        $asesorable = null;
+
+        if (Session::get('login_role') == User::IsGestor() || Session::get('login_role') == User::IsTalento() || Session::get('login_role') == User::IsApoyoTecnico()) {
+            $asesorable = Actividad::where('codigo_actividad', explode(" - ", $request->txtactividad)[0])
+            ->first();
+            $model = $asesorable->articulacion_proyecto->proyecto;
+            // Agrego esto para solucionar un problema de merge
+
+        } else if (Session::get('login_role') == User::IsArticulador() || Session::get('login_role') == User::IsTalento()) {
+            $asesorable = \App\Models\ArticulacionPbt::where('codigo', explode(" - ", $request->txtactividad)[0])
+            ->first();
+            $model = $asesorable;
+        }
+        //llamado de metodo para guardar un uso de infraestructura
+        $usoInfraestructura = $this->storeUsoInfraestructura($model, $request);
+        //llamado de metodo para guardar talentos asociados al uso de infraestructura
+        $this->storeTalentoToUsoInfraestructura($usoInfraestructura, $request);
+        //llamado de metodo para guardar Gestores y horas de asesoria asociados al uso de infraestructura
+        $this->storeGestorUsoToUsoInfraestructura($usoInfraestructura, $request);
+        //llamado de metodo para guardar materiales y costos de material asociados al uso de infraestructura
+        $this->storeMaterialUsoToUsoInfraestructura($usoInfraestructura, $request);
+
+        $this->storeEquipoUsoToUsoInfraestructura($usoInfraestructura, $request);
         DB::beginTransaction();
         try {
 
-            $actividad = Actividad::where('codigo_actividad', explode(" - ", $request->txtactividad)[0])
-                ->first()->id;
-            //llamado de metodo para guardar un uso de infraestructura
-            $usoInfraestructura = $this->storeUsoInfraestructura($actividad, $request);
-            //llamado de metodo para guardar talentos asociados al uso de infraestructura
-            $this->storeTalentoToUsoInfraestructura($usoInfraestructura, $request);
-            //llamado de metodo para guardar Gestores y horas de asesoria asociados al uso de infraestructura
-            $this->storeGestorUsoToUsoInfraestructura($usoInfraestructura, $request);
-            //llamado de metodo para guardar materiales y costos de material asociados al uso de infraestructura
-            $this->storeMaterialUsoToUsoInfraestructura($usoInfraestructura, $request);
-
-            $this->storeEquipoUsoToUsoInfraestructura($usoInfraestructura, $request);
-
             DB::commit();
             return 'true';
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return 'false';
         }
@@ -51,25 +63,29 @@ class UsoInfraestructuraRepository
     /**
      * retorna registro de uso de infraestructura
      * @param $usoInfraestructura
-     * @param  array $request
+     * @param $request
      * @author devjul
      */
-    private function storeUsoInfraestructura($actividad, $request)
+    private function storeUsoInfraestructura($model, $request)
     {
-        return UsoInfraestructura::create([
-            'actividad_id'            => $actividad,
-            'tipo_usoinfraestructura' => $request->get('txttipousoinfraestructura'),
+        return $model->asesorias()->create([
             'fecha'                   => $request->txtfecha,
             'descripcion'             => $request->txtdescripcion,
             'compromisos'             => $request->get('txtcompromisos'),
             'estado'                  => 1,
         ]);
+        // return UsoInfraestructura::create([
+        //     'fecha'                   => $request->txtfecha,
+        //     'descripcion'             => $request->txtdescripcion,
+        //     'compromisos'             => $request->get('txtcompromisos'),
+        //     'estado'                  => 1,
+        // ]);
     }
 
     /**
      * retorna registro de talentos al uso de infraestrucutra
      * @param $usoInfraestructura
-     * @param  array $request
+     * @param $request
      * @author devjul
      */
     private function storeTalentoToUsoInfraestructura($usoInfraestructura, $request)
@@ -85,13 +101,14 @@ class UsoInfraestructuraRepository
     /**
      * retorna registro de gestores_uso al uso de infraestrucutra
      * @param $usoInfraestructura
-     * @param  array $request
+     * @param $request
      * @author devjul
      */
     private function storeGestorUsoToUsoInfraestructura($usoInfraestructura, $request)
     {
+
         if ($request->filled('gestor')) {
-            $syncData = $this->calculateCostoHorasAsesoria($request);
+            $syncData = $this->calculateCostoHorasAsesoria($usoInfraestructura,$request);
             $usoInfraestructura->usogestores()->sync($syncData);
         } else {
             $usoInfraestructura->usogestores()->sync([]);
@@ -102,29 +119,46 @@ class UsoInfraestructuraRepository
     /**
      * metodo retorna costo de horas de asesoria
      *
-     * @param array $request
+     * @param $request
      * @author devjul
      */
-    private function calculateCostoHorasAsesoria($request)
+    private function calculateCostoHorasAsesoria($usoInfraestructura,$request)
     {
 
         $syncData            = [];
         $honorario           = [];
         $horasAsesoriaGestor = [];
+        $asesor = null;
 
         foreach ($request->get('gestor') as $id => $value) {
+            $asesor = null;
+            if($usoInfraestructura->asesorable_type == Proyecto::class){
+                $asesor = User::where('id', $value)->first();
 
-            //calculo de costo de horas de asesoria
-            $honorarioGestor = Gestor::where('id', $value)->first()->honorarios;
+
+            }else if($usoInfraestructura->asesorable_type == \App\Models\ArticulacionPbt::class){
+                $asesor = User::where('id', $value)->first();
+            }
+
+            if(isset($asesor->gestor) && \Session::get('login_role') == User::IsGestor()){
+                $honorarioAsesor = $asesor->gestor->honorarios;
+            }else if(isset($asesor->articulador) && \Session::get('login_role') == User::IsArticulador()){
+                $honorarioAsesor = $asesor->articulador->honorarios;
+            }else if(isset($asesor->apoyotecnico) && \Session::get('login_role') == User::IsApoyoTecnico()){
+                $honorarioAsesor = $asesor->apoyotecnico->honorarios;
+            }else{
+                $honorarioAsesor = 0;
+            }
             //suma de las horas de asesoria directa y horas de asesoria indirecta
             $horasAsesoriaGestor[$id] = $request->get('asesoriadirecta')[$id] + $request->get('asesoriaindirecta')[$id];
 
             //calculo de honorario de valor hora del gestor * horas de asesoriria
-            $honorario[$id] = round(($honorarioGestor / CostoAdministrativo::DIAS_AL_MES / CostoAdministrativo::HORAS_AL_DIA) * (int) $horasAsesoriaGestor[$id]);
+            $honorario[$id] = round(($honorarioAsesor / CostoAdministrativo::DIAS_AL_MES / CostoAdministrativo::HORAS_AL_DIA) * (int) $horasAsesoriaGestor[$id]);
 
             //array que almacena los datos a guardar
             $syncData[$id] = [
-                'gestor_id'          => $value,
+                'asesorable_id' => $asesor->id,
+                'asesorable_type' => User::class,
                 'asesoria_directa'   => $request->get('asesoriadirecta')[$id] != null ? $request->get('asesoriadirecta')[$id] : 0,
                 'asesoria_indirecta' => $request->get('asesoriaindirecta')[$id] != null ? $request->get('asesoriaindirecta')[$id] : 0,
                 'costo_asesoria'     => $honorario[$id],
@@ -136,7 +170,7 @@ class UsoInfraestructuraRepository
     /**
      * retorna registro de material_uso al uso de infraestrucutra
      * @param $usoInfraestructura
-     * @param  array $request
+     * @param $request
      * @author devjul
      */
     private function storeMaterialUsoToUsoInfraestructura($usoInfraestructura, $request)
@@ -152,8 +186,7 @@ class UsoInfraestructuraRepository
 
     /**
      * metodo retorna costo de materiales
-     *
-     * @param array $request
+     * @param $request
      * @author devjul
      */
     private function calculateCostoMateriales($request)
@@ -183,7 +216,7 @@ class UsoInfraestructuraRepository
     /**
      * retorna registro de equipos_uso al uso de infraestrucutra
      * @param $usoInfraestructura
-     * @param  array $request
+     * @param $request
      * @author devjul
      */
     private function storeEquipoUsoToUsoInfraestructura($usoInfraestructura, $request)
@@ -291,7 +324,7 @@ class UsoInfraestructuraRepository
 
             DB::commit();
             return true;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return false;
         }
@@ -300,20 +333,20 @@ class UsoInfraestructuraRepository
     /**
      * retorna registro de equipos_uso al uso de infraestrucutra
      * @param $usoInfraestructura
-     * @param  array $request
+     * @param  $request
      * @author devjul
      */
     private function updateUsoInfraestructura($id, $request)
     {
 
-        $actividad = Actividad::where('codigo_actividad', explode(" - ", $request->txtactividad)[0])
-            ->first()->id;
+        // $actividad = Actividad::where('codigo_actividad', explode(" - ", $request->txtactividad)[0])
+        //     ->first()->id;
 
         $usoInfraestructura = UsoInfraestructura::find($id);
 
         $usoInfraestructura->update([
-            'actividad_id'            => $actividad,
-            'tipo_usoinfraestructura' => $request->get('txttipousoinfraestructura'),
+            // 'actividad_id'            => $actividad,
+            // 'tipo_usoinfraestructura' => $request->get('txttipousoinfraestructura'),
             'fecha'                   => $request->txtfecha,
             'asesoria_directa'        => isset($request->txtasesoriadirecta) ? $request->txtasesoriadirecta : '0',
             'asesoria_indirecta'      => isset($request->txtasesoriaindirecta) ? $request->txtasesoriaindirecta : '0',
@@ -389,9 +422,6 @@ class UsoInfraestructuraRepository
             },
             'actividad.articulacionpbt',
             'actividad.articulacionpbt.fase',
-            // 'actividad.articulacionpbt.tipoarticulacion',
-
-
             'actividad.gestor'                                              => function ($query) {
                 $query->select('id', 'user_id', 'nodo_id', 'lineatecnologica_id');
             },
@@ -408,13 +438,10 @@ class UsoInfraestructuraRepository
             'actividad.gestor.user'                                         => function ($query) {
                 $query->select('id', 'documento', 'nombres', 'apellidos');
             },
-
-            'actividad.articulacion_proyecto.actividad.gestor.lineatecnologica.equipos',
             'usotalentos',
             'usotalentos.user'                                              => function ($query) {
                 $query->select('id', 'documento', 'nombres', 'apellidos');
             },
-
             'usogestores',
             'usogestores.lineatecnologica'                                  => function ($query) {
                 $query->select('id', 'nombre', 'abreviatura');
@@ -433,7 +460,6 @@ class UsoInfraestructuraRepository
             'usoequipos.lineatecnologica'                                   => function ($query) {
                 $query->select('id', 'nombre', 'abreviatura');
             },
-
         ];
     }
 
@@ -445,9 +471,9 @@ class UsoInfraestructuraRepository
             ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombre_gestor')
             ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
             ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-            ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+            ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
             ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
-            ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+            ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
             ->join('users', 'users.id', '=', 'gestores.user_id')
             ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
             ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')

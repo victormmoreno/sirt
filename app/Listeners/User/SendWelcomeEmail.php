@@ -5,22 +5,9 @@ namespace App\Listeners\User;
 use App\Events\User\UserWasRegistered;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\User\Auth\{SendNotificationPassoword, SendLoginInstructionsEmail};
-
 use App\User;
-
-
 class SendWelcomeEmail
 {
-
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        
-    }
 
     /**
      * Handle the event.
@@ -33,9 +20,7 @@ class SendWelcomeEmail
         if ($event->user->hasRole(User::IsTalento())) {
             Mail::to($event->user->email)->send(new SendNotificationPassoword($event->user, $event->password));
         }else{
-            
             Mail::to($event->user->email)->send(new SendLoginInstructionsEmail($event->user, $event->password));
-             
-        }  
+        }
     }
 }

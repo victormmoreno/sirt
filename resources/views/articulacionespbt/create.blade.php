@@ -67,7 +67,7 @@
                                 </div>
                                 <ul class="collection collection-response">
                                     <li class="collection-item dismissable">
-                                        <span class="title">Sin resultados</span>                          
+                                        <span class="title">Sin resultados</span>
                                     </li>
                                 </ul>
                             </div>
@@ -76,7 +76,7 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
     @include('articulacionespbt.modal.project-modal')
     @include('articulacionespbt.modal.talent-modal')

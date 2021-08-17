@@ -127,7 +127,7 @@
                     <i class="material-icons">add</i></a>
                 </span>
             </h5>
-            <p>Si desea agregar mas expertos de tecnoparque por favor seleccione..</p>
+            <p>Si desea agregar más expertos de tecnoparque por favor seleccione..</p>
             <ul class="collapsible collapsible-accordion" data-collapsible="accordion">
                 <li>
                     <div class="collapsible-header active blue-grey lighten-1">

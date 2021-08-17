@@ -3,23 +3,16 @@
 @section('content')
 <link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <main class="mn-inner inner-active-sidebar">
-  <div class="content">
-    <div class="row no-m-t no-m-b">
-      <div class="col s12 m12 l12">
-        <h5>
-          <a class="footer-text left-align" href="{{route('articulacion')}}">
-            <i class="material-icons arrow-l left">arrow_back</i>
-          </a> Articulaciones con Grupos de Investigación
-        </h5>
-        <div class="card">
-          <div class="card-content">
-            <div class="row">
-              @include('articulaciones.navegacion_fases')
-              <div class="divider"></div>
-              <br />
-              <form action="{{route('articulacion.update.gestor', $articulacion->id)}}" method="POST" name="frmUpdateGestor">
-                {!! method_field('PUT')!!}
-                @csrf
+    <div class="content">
+        <div class="row no-m-t no-m-b">
+        <div class="col s12 m12 l12">
+            <h5>
+            <a class="footer-text left-align" href="{{route('articulacion')}}">
+                <i class="material-icons arrow-l left">arrow_back</i>
+            </a> Articulaciones con Grupos de Investigación
+            </h5>
+            <div class="card">
+            <div class="card-content">
                 <div class="row">
                     <div class="input-field col s12 m6 l6">
                       <select id="txtgestor_id" class="js-states" name="txtgestor_id" style="width: 100%;">
@@ -52,10 +45,8 @@
                 </center>
               </form>
             </div>
-          </div>
         </div>
-      </div>
+        </div>
     </div>
-  </div>
 </main>
 @endsection

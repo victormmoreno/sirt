@@ -10,7 +10,7 @@ class CreateIngresosTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'ingresos';
+    protected $tableName = 'ingresos';
 
     /**
      * Run the migrations.
@@ -49,8 +49,8 @@ class CreateIngresosTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

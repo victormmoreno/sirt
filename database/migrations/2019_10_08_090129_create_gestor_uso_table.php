@@ -6,8 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateGestorUsoTable extends Migration
 {
-
-    public $tableName = 'gestor_uso';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'gestor_uso';
     /**
      * Run the migrations.
      *
@@ -15,7 +18,7 @@ class CreateGestorUsoTable extends Migration
      */
     public function up()
     {
-        
+
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');

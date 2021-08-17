@@ -28,6 +28,8 @@ class Edt extends Model
         'actividad_id',
         'areaconocimiento_id',
         'tipoedt_id',
+        'asesor_id',
+        'nodo_id',
         'observaciones',
         'empleados',
         'instructores',
@@ -42,6 +44,26 @@ class Edt extends Model
     public function actividad()
     {
         return $this->belongsTo(Actividad::class, 'actividad_id', 'id');
+    }
+
+    /**
+     * Define an inverse one-to-one or many relationship between edts and users
+     * @author devjul
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function asesor()
+    {
+        return $this->belongsTo(User::class, 'asesor_id', 'id');
+    }
+
+    /**
+     * Define an inverse one-to-one or many relationship between edts and node
+     * @author devjul
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function nodo()
+    {
+        return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
     }
 
     public function entidades()

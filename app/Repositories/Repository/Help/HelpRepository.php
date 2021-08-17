@@ -22,14 +22,14 @@ class HelpRepository
     /*======================================================================
     =            metodo para consultar los centros por regional            =
     ======================================================================*/
-    
+
     public function getAllCentrosRegional($regional)
     {
-    	return Centro::AllCentrosRegional($regional)->get();
+        return Centro::AllCentrosRegional($regional)->get();
     }
-    
+
     /*=====  End of metodo para consultar los centros por regional  ======*/
-    
+
 }
 
 

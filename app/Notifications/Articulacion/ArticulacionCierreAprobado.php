@@ -21,7 +21,7 @@ class ArticulacionCierreAprobado extends Notification implements ShouldQueue
     {
       $this->setProyecto($articulacion);
     }
-  
+
     /**
     * Get the notification's delivery channels.
     *
@@ -32,7 +32,7 @@ class ArticulacionCierreAprobado extends Notification implements ShouldQueue
     {
       return ['database'];
     }
-  
+
     /**
     * Get the array representation of the notification.
     *
@@ -45,11 +45,11 @@ class ArticulacionCierreAprobado extends Notification implements ShouldQueue
         'link'  => route('articulacion.cierre', $this->getArticulacion()->id),
         'icon'  => 'library_books',
         'color' => 'green',
-        'autor' => "{$this->getArticulacion()->articulacion_proyecto->actividad->gestor->user->nombres} {$this->getArticulacion()->articulacion_proyecto->actividad->gestor->user->apellidos}",
+        'autor' => "{$this->getArticulacion()->articulacion_proyecto->asesor->nombres} {$this->getArticulacion()->asesor->user->apellidos}",
         'text'  => "Articulación aprobada en fase de cierre | {$this->getArticulacion()->articulacion_proyecto->actividad->codigo_actividad} - {$this->getArticulacion()->articulacion_proyecto->actividad->nombre}",
       ];
     }
-  
+
     /**
      * Asigna un valor a $articulacion
      *
@@ -60,7 +60,7 @@ class ArticulacionCierreAprobado extends Notification implements ShouldQueue
     {
       $this->articulacion = $articulacion;
     }
-  
+
     /**
      * Retorna el valor de $articulacion
      *

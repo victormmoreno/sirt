@@ -7,10 +7,11 @@ use Illuminate\Database\Migrations\Migration;
 class CreateFailedJobsTable extends Migration
 {
     /**
-     * Schema table name to migrate
+     * the attribute that names the table.
+     *
      * @var string
      */
-    public $tableName = 'failed_jobs';
+    protected $tableName = 'failed_jobs';
 
     /**
      * Run the migrations.
@@ -36,8 +37,8 @@ class CreateFailedJobsTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

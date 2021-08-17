@@ -2,24 +2,21 @@
 @section('meta-title', 'Articulaciones PBT')
 @section('content')
 @php
-  $year = Carbon\Carbon::now()->year;
+    $year = Carbon\Carbon::now()->year;
 @endphp
 <main class="mn-inner">
     <div class="content">
         <div class="row no-m-t no-m-b">
             <div class="col s8 m8 l5">
                 <h5 class="left-align orange-text text-darken-3">
-                    <i class="material-icons left">
-                      autorenew
-                    </i>
-                    Articulaciones PBT
+                    <i class="material-icons left">autorenew</i>Articulaciones PBT
                 </h5>
             </div>
             <div class="col s4 m4 l5 offset-l2  rigth-align show-on-large hide-on-med-and-down">
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">Inicio</a></li>
                     <li ><a href="{{route('articulaciones.index')}}">Articulaciones PBT</a></li>
-                    <li ><a href="{{route('articulaciones.show', $actividad->articulacionpbt->id)}}">detalle</a></li>
+                    <li ><a href="{{route('articulaciones.show', $articulacion->id)}}">detalle</a></li>
                     <li class="active">Cierre</li>
                 </ol>
             </div>
@@ -36,21 +33,21 @@
                                         <li class="text-mailbox ">Ejecución</li>
                                         <li class="text-mailbox active">Cierre</li>
                                         <div class="right">
-                                            <li class="text-mailbox "> Fase actual: {{$actividad->articulacionpbt->present()->articulacionPbtNameFase()}}</li>
-                                            <li class="text-mailbox">Fecha Inicio: {{$actividad->present()->startDate()}}</li>   
+                                            <li class="text-mailbox "> Fase actual: {{$articulacion->present()->articulacionPbtNameFase()}}</li>
+                                            <li class="text-mailbox">Fecha Inicio: {{$articulacion->present()->articulacionPbtStartDate()}}</li>
                                         </div>
                                     </ul>
                                 </div>
                                 <div class="mailbox-view no-s">
                                     <div class="mailbox-view-header no-m-b no-m-t">
                                         <div class="right mailbox-buttons no-s">
-                                            
-                                        @if ($actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsCierre()))
-                                            @if ($ultimo_movimiento != null && $actividad->articulacionpbt->present()->articulacionPbtIssetFase(App\Models\Fase::IsCierre()) && $ultimo_movimiento->movimiento->movimiento == "solicitó al talento" && $actividad->articulacionpbt->talentos()->wherePivot('talento_lider', 1)->first()->user->id == auth()->user()->id)
-                                            <form action="{{route('articulacion.aprobacion', [$actividad->articulacionpbt->id, 'Cierre'])}}" method="POST" name="frmCierreTalento">
+
+                                        @if ($articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsCierre()))
+                                            @if ($ultimo_movimiento != null && $articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsCierre()) && $ultimo_movimiento->movimiento->movimiento == "solicitó al talento" && $articulacion->talentos()->wherePivot('talento_lider', 1)->first()->user->id == auth()->user()->id)
+                                            <form action="{{route('articulacion.aprobacion', [$articulacion->id, 'Cierre'])}}" method="POST" name="frmCierreTalento">
                                                 {!! method_field('PUT')!!}
                                                 @csrf
-                                                
+
                                                 <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
                                                 <input type="hidden" type="text" name="decision" id="decision">
                                                 <button type="submit" onclick="preguntaCierre(event)" class="waves-effect waves-orange btn orange m-t-xs">
@@ -73,34 +70,32 @@
                                                     El talento interlocutor no aprobó la fase de cierre
                                                 </a>
                                                 @endif
-                                            @endif  
-                                        
-                                        @endif                               
+                                            @endif
+                                        @endif
                                         </div>
                                     </div>
                                         <div class="mailbox-view-header">
+                                        <div class="left">
+                                            <span class="mailbox-title p-v-lg">{{$articulacion->present()->articulacionCode()}} - {{$articulacion->present()->articulacionName()}}</span>
                                             <div class="left">
-                                                <span class="mailbox-title p-v-lg">{{$actividad->present()->actividadCode()}} - {{$actividad->present()->actividadName()}}</span>
-                                                <div class="left">
-                                                    <span class="mailbox-title">{{$actividad->present()->actividadUserAsesor()}}</span>
-                                                    <span class="mailbox-author">{{$actividad->present()->actividadUserRolesAsesor()}} </span>
-                                                </div>
-                                            </div>
-                                            <div class="right mailbox-buttons p-v-lg">
-                                                <div class="right">
-                                                    <span class="mailbox-title">{{$actividad->present()->actividadNode()}}</span>
-                                                </div>
+                                                <span class="mailbox-title">{{$articulacion->present()->articulacionPbtUserAsesor()}}</span>
+                                                <span class="mailbox-author">{{$articulacion->present()->articulacionPbtUserRolesAsesor()}} </span>
                                             </div>
                                         </div>
-                                        <div class="divider mailbox-divider"></div>
-                                        <div class="mailbox-text">
-                                            <div class="row">
-                                                <div class="col s12 m12 l12">  
-                                                    @include('articulacionespbt.detail.detail-fase-cierre')
-                                                </div>
+                                        <div class="right mailbox-buttons p-v-lg">
+                                            <div class="right">
+                                                <span class="mailbox-title">{{$articulacion->present()->articulacionPbtNodo()}}</span>
                                             </div>
                                         </div>
-                                    
+                                    </div>
+                                    <div class="divider mailbox-divider"></div>
+                                    <div class="mailbox-text">
+                                        <div class="row">
+                                            <div class="col s12 m12 l12">
+                                                @include('articulacionespbt.detail.detail-fase-cierre')
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -118,7 +113,7 @@
 $( document ).ready(function() {
     datatableArchivosArticulacion();
   });
- 
+
   function preguntaCierre(e){
     e.preventDefault();
     Swal.fire({
@@ -177,7 +172,7 @@ function datatableArchivosArticulacion() {
     serverSide: true,
     order: false,
     ajax:{
-      url: "{{route('articulacion.files', [$actividad->articulacionpbt->id, 'Cierre'])}}",
+      url: "{{route('articulacion.files', [$articulacion->id, 'Cierre'])}}",
       type: "get",
     },
     columns: [
@@ -191,7 +186,7 @@ function datatableArchivosArticulacion() {
         name: 'download',
         orderable: false,
       },
-      
+
     ],
   });
 }

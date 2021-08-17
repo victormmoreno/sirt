@@ -3,15 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\ArticulacionPbt;
-use App\Models\Fase;   
+use App\Models\Fase;
 use App\Models\Entidad;
 use App\Models\AlcanceArticulacion;
 use App\Models\TipoArticulacion;
-use App\Models\Actividad;
-use App\Models\Movimiento;
 use App\User;
-use Alert;
-use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
+use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\{Facades\Session, Facades\Validator};
 use Illuminate\Http\{Request, Response};
 use App\Http\Requests\ArticulacionPbt\{ArticulacionFaseInicioFormRequest, ArticulacionFaseCierreFormRequest, ArticulacionMiembrosFormRequest};
 use App\Repositories\Repository\ArticulacionPbtRepository;
@@ -61,7 +59,7 @@ class ArticulacionPbtController extends Controller
             $fases = Fase::orderBy('id')->whereNotIn('id', [Fase::IsPlaneacion()])->pluck('nombre', 'id');
             $alcances = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
             $tipoarticulaciones = TipoArticulacion::orderBy('nombre')->pluck('nombre', 'id');
-            return view('articulacionespbt.index', ['nodos' => $nodos, 'fases' => $fases, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones]);        
+            return view('articulacionespbt.index', ['nodos' => $nodos, 'fases' => $fases, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones]);
     }
 
     public function datatableFiltros(Request $request)
@@ -71,17 +69,21 @@ class ArticulacionPbtController extends Controller
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
                 $nodo = $request->filter_nodo_art;
+                $user = null;
                 break;
             case User::IsDinamizador():
                 $nodo = auth()->user()->dinamizador->nodo_id;
+                $user = null;
                 break;
             case User::IsArticulador():
-                $nodo = auth()->user()->gestor->nodo_id;
+                $nodo = auth()->user()->articulador->nodo_id;
+                $user = auth()->user()->id;
                 break;
             case User::IsTalento():
                 $nodo = null;
+                $user = null;
                 $talent = auth()->user()->talento->id;
-                break; 
+                break;
             default:
                 return abort('403');
                 break;
@@ -98,24 +100,15 @@ class ArticulacionPbtController extends Controller
                 'alcancearticulacion'=> function($query){
                     $query->select('id', 'nombre');
                 },
-                'actividad' => function($query){
-                    $query->select('id', 'gestor_id', 'nodo_id', 'codigo_actividad', 'nombre', 'fecha_inicio', 'fecha_cierre', 'created_at');
-                },
-                'actividad.gestor'  => function($query){
-                    $query->select('id', 'user_id',  'lineatecnologica_id');
-                },
-                'actividad.gestor.user' => function($query){
-                    $query->select('id', 'documento',  'nombres', 'apellidos');
-                },
-                'actividad.nodo',
-                'actividad.nodo.entidad'=> function($query){
-                    $query->select('id', 'ciudad_id',  'nombre', 'slug');
-                }
+                'asesor',
+                'nodo',
+                'nodo.entidad'
             ])
             ->tipoArticulacion($request->filter_tipo_articulacion)
             ->alcanceArticulacion($request->filter_alcance_articulacion)
             ->fase($request->filter_phase)
             ->nodo($nodo)
+            ->asesor($user)
             ->starEndDate($request->filter_year_art)
             ->talents($talent)
             ->orderBy('created_at', 'desc')
@@ -128,42 +121,42 @@ class ArticulacionPbtController extends Controller
     {
         return datatables()->of($articulaciones)
         ->editColumn('nodo', function ($data) {
-            if (isset($data->actividad->nodo->entidad)) {
-                return $data->actividad->nodo->entidad->nombre;
+            if (isset($data->nodo->entidad)) {
+                return $data->nodo->entidad->nombre;
             }
             return "No registra";
         })
         ->editColumn('codigo_articulacion', function ($data) {
-            if (isset($data->actividad)) {
-                return $data->actividad->codigo_actividad;
+            if (isset($data->codigo)) {
+                return $data->codigo;
             }
             return "No registra";
         })
         ->editColumn('nombre_articulacion', function ($data) {
-            if (isset($data->actividad)) {
-                return "{$data->actividad->nombre}";
+            if (isset($data->nombre)) {
+                return "{$data->nombre}";
             }
             return "No registra";
         })
         ->editColumn('articulador', function ($data) {
-            if (isset($data->actividad->gestor->user)) {
-                return "{$data->actividad->gestor->user->nombres} {$data->actividad->gestor->user->apellidos}";
+            if (isset($data->asesor)) {
+                return "{$data->asesor->nombres} {$data->asesor->apellidos}";
             }
             return "No registra";
         })
         ->editColumn('fase', function ($data) {
             if (isset($data->fase)) {
                 return $data->fase->nombre;
-            } 
+            }
             return "No registra";
         })
         ->editColumn('starDate', function ($data) {
-            if (isset($data->actividad)) {
-                return  $data->actividad->created_at->isoFormat('DD/MM/YYYY');
+            if (isset($data->created_at)) {
+                return  $data->created_at->isoFormat('DD/MM/YYYY');
             }
             return "No registra";
 
-    
+
         })->addColumn('show', function ($data) {
             $info = '<a class="btn m-b-xs modal-trigger" href='.route('articulaciones.show', $data->id).'>
             <i class="material-icons">search</i>
@@ -184,7 +177,7 @@ class ArticulacionPbtController extends Controller
         $alcances = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
         $tipoarticulaciones = TipoArticulacion::orderBy('nombre')->pluck('nombre', 'id');
         return view('articulacionespbt.create',  ['alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones]);
-        return abort('403'); 
+        return abort('403');
     }
 
     /**
@@ -208,7 +201,7 @@ class ArticulacionPbtController extends Controller
             if ($response != null) {
                 return response()->json([
                     'data' => $response,
-                    'url' => route('articulaciones.show', $response->articulacionpbt->id),
+                    'url' => route('articulaciones.show', $response->id),
                     'status_code' => Response::HTTP_CREATED,
                 ], Response::HTTP_CREATED);
             } else {
@@ -225,13 +218,9 @@ class ArticulacionPbtController extends Controller
      */
     public function show($id)
     {
-        $actividad = Actividad::with('articulacionpbt')
-        ->whereHas('articulacionpbt', function ($subQuery) use ($id) {
-            $subQuery->where('id', $id);
-        })
-        ->firstOrFail();
+        $articulacion = ArticulacionPbt::where('id', $id)->firstOrFail();
         $this->authorize('show', ArticulacionPbt::class);
-        return view('articulacionespbt.show', ['actividad' =>$actividad]);
+        return view('articulacionespbt.show', ['articulacion' =>$articulacion]);
     }
 
     /**
@@ -300,7 +289,7 @@ class ArticulacionPbtController extends Controller
         ->first();
 
         if (request()->ajax()) {
-           
+
             if($user != null){
                 return response()->json([
                     'data' => [
@@ -309,7 +298,7 @@ class ArticulacionPbtController extends Controller
                     ]
                 ],Response::HTTP_OK);
             }
-            
+
             return response()->json([
                 'data' => [
                     'user' => null,
@@ -321,28 +310,24 @@ class ArticulacionPbtController extends Controller
     }
 
     public function showFaseInicioArticulacion($id){
-        $actividad = Actividad::with('articulacionpbt')
-        ->whereHas('articulacionpbt', function ($subQuery) use ($id) {
-            $subQuery->where('id', $id);
-        })
-        ->firstOrFail();
-       
-        $ultimo_movimiento = $actividad->articulacionpbt->historial->last();
+        $articulacion = ArticulacionPbt::where('id', $id)->firstOrFail();
+
+        $ultimo_movimiento = $articulacion->historial->last();
 
         $alcances = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
         $tipoarticulaciones = TipoArticulacion::orderBy('nombre')->pluck('nombre', 'id');
 
         switch (Session::get('login_role')) {
             case User::IsArticulador():
-                return view('articulacionespbt.articulador.fase_inicio', ['actividad' =>$actividad, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.articulador.fase_inicio', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
 
             case User::IsDinamizador():
-                return view('articulacionespbt.dinamizador.fase_inicio', ['actividad' =>$actividad, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.dinamizador.fase_inicio', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
 
             case User::IsTalento():
-                return view('articulacionespbt.talento.fase_inicio', ['actividad' =>$actividad, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.talento.fase_inicio', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
             default:
                 return abort(Response::HTTP_FORBIDDEN);
@@ -353,29 +338,25 @@ class ArticulacionPbtController extends Controller
 
 
     public function showFaseEjecucionArticulacion($id){
-        $actividad = Actividad::with('articulacionpbt')
-        ->whereHas('articulacionpbt', function ($subQuery) use ($id) {
-            $subQuery->where('id', $id);
-        })
-        ->firstOrFail();
+        $articulacion = ArticulacionPbt::where('id', $id)->firstOrFail();
 
-       
-        $ultimo_movimiento = $actividad->articulacionpbt->historial->last();
+
+        $ultimo_movimiento = $articulacion->historial->last();
 
         $alcances = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
         $tipoarticulaciones = TipoArticulacion::orderBy('nombre')->pluck('nombre', 'id');
 
         switch (Session::get('login_role')) {
             case User::IsArticulador():
-                return view('articulacionespbt.articulador.fase_ejecucion', ['actividad' =>$actividad, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.articulador.fase_ejecucion', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
 
             case User::IsDinamizador():
-                return view('articulacionespbt.dinamizador.fase_ejecucion', ['actividad' =>$actividad, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.dinamizador.fase_ejecucion', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
 
             case User::IsTalento():
-                return view('articulacionespbt.talento.fase_ejecucion', ['actividad' =>$actividad, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.talento.fase_ejecucion', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
             default:
                 return abort(Response::HTTP_FORBIDDEN);
@@ -385,29 +366,23 @@ class ArticulacionPbtController extends Controller
 
     public function showFaseCierreArticulacion($id)
     {
-        $actividad = Actividad::with('articulacionpbt')
-        ->whereHas('articulacionpbt', function ($subQuery) use ($id) {
-            $subQuery->where('id', $id);
-        })
-        ->firstOrFail();
-
-       
-        $ultimo_movimiento = $actividad->articulacionpbt->historial->last();
+        $articulacion = ArticulacionPbt::where('id', $id)->firstOrFail();
+        $ultimo_movimiento = $articulacion->historial->last();
 
         $alcances = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
         $tipoarticulaciones = TipoArticulacion::orderBy('nombre')->pluck('nombre', 'id');
 
         switch (Session::get('login_role')) {
             case User::IsArticulador():
-                return view('articulacionespbt.articulador.fase_cierre', ['actividad' =>$actividad, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.articulador.fase_cierre', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
 
             case User::IsDinamizador():
-                return view('articulacionespbt.dinamizador.fase_cierre', ['actividad' =>$actividad, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.dinamizador.fase_cierre', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
 
             case User::IsTalento():
-                return view('articulacionespbt.talento.fase_cierre', ['actividad' =>$actividad, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.talento.fase_cierre', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
 
             default:
@@ -417,12 +392,8 @@ class ArticulacionPbtController extends Controller
     }
 
     public function entregablesInicio($id){
-        $actividad = Actividad::with('articulacionpbt')
-        ->whereHas('articulacionpbt', function ($subQuery) use ($id) {
-            $subQuery->where('id', $id);
-        })
-        ->firstOrFail();
-        return view('articulacionespbt.entregables.entregables-inicio', ['actividad' =>$actividad]);
+        $articulacion = ArticulacionPbt::where('id', $id)->firstOrFail();
+        return view('articulacionespbt.entregables.entregables-inicio', ['articulacion' =>$articulacion]);
     }
 
     /**
@@ -477,7 +448,7 @@ class ArticulacionPbtController extends Controller
     {
         $fase = nameFase($fase);
         $update = $this->getArticulacionRepository()->aprobacionFase($request, $id, $fase);
-        
+
         if ($update['state']) {
             Alert::success($update['title'], $update['mensaje'])->showConfirmButton('Ok', '#3085d6');
             return redirect()->route('articulaciones.show', $update['data']->id);
@@ -496,18 +467,14 @@ class ArticulacionPbtController extends Controller
      **/
     public function suspender(int $id)
     {
-        
-        $actividad = Actividad::with('articulacionpbt')
-        ->whereHas('articulacionpbt', function ($subQuery) use ($id) {
-            $subQuery->where('id', $id);
-        })
-        ->firstOrFail();
 
-        $ultimo_movimiento = $actividad->articulacionpbt->historial->last();
+        $articulacion = ArticulacionPbt::where('id', $id)->firstOrFail();
+
+        $ultimo_movimiento = $articulacion->historial->last();
         switch (Session::get('login_role')) {
             case User::IsArticulador():
                 return view('articulacionespbt.articulador.fase_suspendido', [
-                    'actividad' => $actividad,
+                    'articulacion' => $articulacion,
                     'ultimo_movimiento' => $ultimo_movimiento
                 ]);
                 break;
@@ -515,7 +482,7 @@ class ArticulacionPbtController extends Controller
             case User::IsDinamizador():
 
                 return view('articulacionespbt.dinamizador.fase_suspendido', [
-                    'actividad' => $actividad,
+                    'articulacion' => $articulacion,
                     'ultimo_movimiento' => $ultimo_movimiento
                 ]);
                 break;
@@ -534,12 +501,12 @@ class ArticulacionPbtController extends Controller
      */
     public function updateCierre(Request $request, int $id)
     {
-       
+
         if (Session::get('login_role') == User::IsArticulador()) {
             $articulacion = ArticulacionPbt::findOrFail($id);
-            if ($articulacion->actividad->aprobacion_dinamizador == 1) {
+            if ($articulacion->aprobacion_dinamizador == 1) {
 
-                
+
             } else {
                 $req = new ArticulacionFaseCierreFormRequest;
                 $validator = Validator::make($request->all(), $req->rules(), $req->messages());
@@ -557,30 +524,10 @@ class ArticulacionPbtController extends Controller
                     }
                 }
             }
-        } else {
-            // if ($request->decision == 'aceptado') {
-            //     $update = $this->getArticulacionRepository()->updateAprobacionDinamizador($id);
-            //     if ($update) {
-            //         Alert::success('Modificación Exitosa!', 'La fase de cierre se aprobó!')->showConfirmButton('Ok', '#3085d6');
-            //         return redirect('proyecto');
-            //     } else {
-            //         Alert::error('Modificación Errónea!', 'La fase de cierre no se aprobó!')->showConfirmButton('Ok', '#3085d6');
-            //         return back();
-            //     }
-            // } else {
-            //     $update = $this->getArticulacionRepository()->noAprobarFaseProyecto($request, $id, 'Cierre');
-            //     if ($update) {
-            //         Alert::success('Notificación Exitosa!', 'Se le ha notificado al gestor del proyecto los motivos por los que no se aprueba esta fase del proyecto!')->showConfirmButton('Ok', '#3085d6');
-            //         return redirect('proyecto');
-            //     } else {
-            //         Alert::error('Notificación Errónea!', 'No se ha podido enviar la notificación al gestor del proyecto!')->showConfirmButton('Ok', '#3085d6');
-            //         return back();
-            //     }
-            // }
         }
     }
 
-   /**
+    /**
      * Notifica al dinamizador para que una articulacion se suspenda
      * @param int $id Id de la articulacion
      * @return Reponse
@@ -608,7 +555,7 @@ class ArticulacionPbtController extends Controller
     public function updateSuspendido(Request $request, int $id)
     {
         $articulacion = ArticulacionPbt::findOrFail($id);
-        
+
         $response = $this->getArticulacionRepository()->suspenderArticulacion($request, $articulacion);
         if ($response != null) {
             Alert::success('Modificación Exitosa!', 'La fase de suspendido de la articulación se aprobó!')->showConfirmButton('Ok', '#3085d6');
@@ -685,7 +632,7 @@ class ArticulacionPbtController extends Controller
     }
 
     /**
-     * listado de talentos que participan de la articulacion 
+     * listado de talentos que participan de la articulacion
      *
      * @param int $id Id de la articulacion
      * @return Response
@@ -693,20 +640,16 @@ class ArticulacionPbtController extends Controller
      **/
     public function miembros($id)
     {
-        $actividad = Actividad::with('articulacionpbt')
-        ->whereHas('articulacionpbt', function ($subQuery) use ($id) {
-            $subQuery->where('id', $id);
-        })
-        ->firstOrFail();
+        $articulacion = ArticulacionPbt::where('id', $id)->firstOrFail();
 
-        $historico =  $actividad->articulacionpbt->historial;
+        $historico =  $articulacion->historial;
 
         return view('articulacionespbt.miembros', [
-            'actividad' => $actividad,
+            'articulacion' => $articulacion,
             'historico' => $historico
         ]);
 
-        
+
 
     }
 
@@ -755,12 +698,12 @@ class ArticulacionPbtController extends Controller
                 $nodo = auth()->user()->dinamizador->nodo_id;
                 break;
             case User::IsArticulador():
-                $nodo = auth()->user()->gestor->nodo_id;
+                $nodo = auth()->user()->articulador->nodo_id;
                 break;
             case User::IsTalento():
                 $nodo = null;
                 $talent = auth()->user()->talento->id;
-                break; 
+                break;
             default:
                 return abort('403');
                 break;
@@ -774,17 +717,11 @@ class ArticulacionPbtController extends Controller
             'alcancearticulacion'=> function($query){
                 $query->select('id', 'nombre');
             },
-            'actividad' => function($query){
-                $query->select('id', 'gestor_id', 'nodo_id', 'codigo_actividad', 'nombre', 'fecha_inicio', 'fecha_cierre', 'created_at');
-            },
-            'actividad.gestor'  => function($query){
-                $query->select('id', 'user_id',  'lineatecnologica_id');
-            },
-            'actividad.gestor.user' => function($query){
+            'asesor' => function($query){
                 $query->select('id', 'documento',  'nombres', 'apellidos');
             },
-            'actividad.nodo',
-            'actividad.nodo.entidad'=> function($query){
+            'nodo',
+            'nodo.entidad'=> function($query){
                 $query->select('id', 'ciudad_id',  'nombre', 'slug');
             }
         ])
@@ -797,8 +734,6 @@ class ArticulacionPbtController extends Controller
         ->orderBy('created_at', 'desc')
         ->get();
 
-
-    
         return (new ArticulacionesPbtExport($articulaciones))->download("Articulaciones PBT - " . config('app.name') . ".{$extension}");
     }
 
@@ -811,18 +746,14 @@ class ArticulacionPbtController extends Controller
     **/
     public function changeArticulador(UserRepository $userRepository, int $id)
     {
-        $actividad = Actividad::with('articulacionpbt')
-        ->whereHas('articulacionpbt', function ($subQuery) use ($id) {
-            $subQuery->where('id', $id);
-        })
-        ->firstOrFail();
+        $articulacion = ArticulacionPbt::where('id', $id)->firstOrFail();
 
-        $historico =  $actividad->articulacionpbt->historial;
+        $historico =  $articulacion->historial;
 
-        $articuladores = $userRepository->getArticuladorForNode($actividad->nodo_id)->pluck('articulador', 'id');
-        
+        $articuladores = $userRepository->getArticuladorForNode($articulacion->nodo_id)->pluck('articulador', 'id');
+
         return view('articulacionespbt.dinamizador.cambiar_articulador', [
-            'actividad' => $actividad,
+            'articulacion' => $articulacion,
             'historico' => $historico,
             'articuladores' => $articuladores
         ]);

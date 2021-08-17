@@ -20,11 +20,11 @@
                                 <div class="right mailbox-buttons">
                                     <span class="mailbox-title">
                                         <p class="center">
-                                            Información de la articulación en la fase de inicio - {{$articulacion->articulacion_proyecto->actividad->nombre}} 
+                                            Información de la articulación en la fase de inicio - {{$articulacion->articulacion_proyecto->actividad->nombre}}
                                         </p>
                                         <br />
                                         <p class="center">Linea Tecnológica:
-                                            {{$articulacion->articulacion_proyecto->actividad->gestor->lineatecnologica->abreviatura}} - {{$articulacion->articulacion_proyecto->actividad->gestor->lineatecnologica->nombre}}
+                                            {{$articulacion->asesor->gestor->lineatecnologica->abreviatura}} - {{$articulacion->asesor->lineatecnologica->nombre}}
                                         </p>
                                     </span>
                                 </div>

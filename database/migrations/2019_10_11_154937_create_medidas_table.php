@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateMedidasTable extends Migration
 {
-    public $tableName = 'medidas';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'medidas';
     /**
      * Run the migrations.
      *

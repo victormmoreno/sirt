@@ -14,70 +14,68 @@
                     <div class="card-content">
                         <div class="row">
                             @include('proyectos.navegacion_fases')
+                            <div class="divider"></div><br />
+                            @include('proyectos.detalle_fase_cierre')
                             <div class="divider"></div>
-                            <br />
-                                @include('proyectos.detalle_fase_cierre')
-                                <div class="divider"></div>
-                                <center>
-                                    <a href="{{route('proyecto.ejecucion', $proyecto->id)}}" class="waves-effect red lighten-2 btn center-aling">
-                                        <i class="material-icons right">backspace</i>Cancelar
-                                    </a>
-                                </center>
+                            <center>
+                                <a href="{{route('proyecto.ejecucion', $proyecto->id)}}" class="waves-effect red lighten-2 btn center-aling">
+                                    <i class="material-icons right">backspace</i>Cancelar
+                                </a>
+                            </center>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </main>
 @endsection
 @push('script')
-<script>
-    $( document ).ready(function() {
-    datatableArchivosDeUnProyecto_cierre();
-  });
-  function changeToPlaneacion() {
-    window.location.href = "{{ route('proyecto.planeacion', $proyecto->id) }}";
-  }
+    <script>
+        $( document ).ready(function() {
+        datatableArchivosDeUnProyecto_cierre();
+    });
+    function changeToPlaneacion() {
+        window.location.href = "{{ route('proyecto.planeacion', $proyecto->id) }}";
+    }
 
-  function changeToInicio() {
-    window.location.href = "{{ route('proyecto.inicio', $proyecto->id) }}";
-  }
+    function changeToInicio() {
+        window.location.href = "{{ route('proyecto.inicio', $proyecto->id) }}";
+    }
 
-  function changeToEjecucion() {
-    window.location.href = "{{ route('proyecto.ejecucion', $proyecto->id) }}";
-  }
+    function changeToEjecucion() {
+        window.location.href = "{{ route('proyecto.ejecucion', $proyecto->id) }}";
+    }
 
-  function changeToCierre() {
-    window.location.href = "{{ route('proyecto.cierre', $proyecto->id) }}";
-  }
+    function changeToCierre() {
+        window.location.href = "{{ route('proyecto.cierre', $proyecto->id) }}";
+    }
 
-  function datatableArchivosDeUnProyecto_cierre() {
-  $('#archivosDeUnProyecto').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    order: false,
-    ajax:{
-      url: "{{route('proyecto.files', [$proyecto->id, 'Cierre'])}}",
-      type: "get",
-    },
-    columns: [
-      {
-        data: 'file',
-        name: 'file',
-        orderable: false,
-      },
-      {
-        data: 'download',
-        name: 'download',
-        orderable: false,
-      },
-    ],
-  });
-}
+    function datatableArchivosDeUnProyecto_cierre() {
+    $('#archivosDeUnProyecto').DataTable({
+        language: {
+        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        processing: true,
+        serverSide: true,
+        order: false,
+        ajax:{
+        url: "{{route('proyecto.files', [$proyecto->id, 'Cierre'])}}",
+        type: "get",
+        },
+        columns: [
+        {
+            data: 'file',
+            name: 'file',
+            orderable: false,
+        },
+        {
+            data: 'download',
+            name: 'download',
+            orderable: false,
+        },
+        ],
+    });
+    }
 </script>
 @endpush

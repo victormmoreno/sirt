@@ -8,15 +8,6 @@ use Illuminate\Support\Facades\Mail;
 
 class ProyectoWasntApprovedInPhase
 {
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
 
     /**
      * Handle the event.
@@ -26,6 +17,6 @@ class ProyectoWasntApprovedInPhase
      */
     public function handle(ProyectoWasntApproved $event)
     {
-        Mail::to([$event->proyecto->articulacion_proyecto->actividad->gestor->user->email, auth()->user()->email])->send(new SendEmailProyectoNoAprobado($event->proyecto, $event->movimiento));
+        Mail::to([$event->proyecto->asesor->user->email, auth()->user()->email])->send(new SendEmailProyectoNoAprobado($event->proyecto, $event->movimiento));
     }
 }

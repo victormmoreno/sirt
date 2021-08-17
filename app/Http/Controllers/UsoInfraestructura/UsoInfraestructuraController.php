@@ -4,10 +4,10 @@ namespace App\Http\Controllers\UsoInfraestructura;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsoInfraestructura\UsoInfraestructuraFormRequest;
-use App\Models\{ArticulacionPbt, UsoInfraestructura, Actividad, Articulacion, Talento, Proyecto, Nodo, Fase, Edt, Equipo, Gestor, LineaTecnologica, Material, Entidad};
+use App\Models\{ArticulacionPbt, UsoInfraestructura, Actividad, Talento, Proyecto, Nodo, Fase, Equipo, Gestor, LineaTecnologica, Material, Entidad};
 use App\Datatables\UsoInfraestructuraDatatable;
 use App\Repositories\Repository\UserRepository\GestorRepository;
-use App\Repositories\Repository\{EdtRepository, LineaRepository, ProyectoRepository,  UsoInfraestructuraRepository};
+use App\Repositories\Repository\{LineaRepository, ProyectoRepository,  UsoInfraestructuraRepository};
 use App\Repositories\Repository\ArticulacionPbtRepository;
 use App\User;
 use Carbon\Carbon;
@@ -16,18 +16,13 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Exports\UsoInfraestructura\UsoInfraestructuraExport;
 
-
 class UsoInfraestructuraController extends Controller
 {
-
-    private $UsoInfraestructuraEdtRepository;
     private $UsoInfraestructuraProyectoRepository;
     private $UsoInfraestructuraArticulacionRepository;
     private $UsoInfraestructuraRepository;
     private $lineaRepository;
-    private $UsoInfraestructuraDatatables;
     private $proyectoRepository;
-
 
     public function __construct(
         ProyectoRepository $UsoInfraestructuraProyectoRepository,
@@ -35,17 +30,12 @@ class UsoInfraestructuraController extends Controller
         UsoInfraestructuraRepository $UsoInfraestructuraRepository,
         GestorRepository $gestorRepository,
         LineaRepository $lineaRepository,
-        UsoInfraestructuraDatatable $UsoInfraestructuraDatatables,
         ProyectoRepository $proyectoRepository
-
-
     ) {
-        $this->middleware(['auth', 'role_session:Administrador|Dinamizador|Articulador|Experto|Talento']);
+        $this->middleware(['auth', 'role_session:Administrador|Dinamizador|Articulador|'.User::IsGestor().'|Talento|'.User::IsApoyoTecnico()]);
         $this->setUsoIngraestructuraProyectoRepository($UsoInfraestructuraProyectoRepository);
-    
         $this->setUsoIngraestructuraArtculacionRepository($setUsoIngraestructuraArtculacionRepository);
         $this->setUsoInfraestructuraRepository($UsoInfraestructuraRepository);
-
         $this->setGestorRepository($gestorRepository);
         $this->setLineaTecnologicaRepository($lineaRepository);
         $this->setProyectoRepository($proyectoRepository);
@@ -178,7 +168,6 @@ class UsoInfraestructuraController extends Controller
     {
         return $this->proyectoRepository;
     }
-
     /**
      * Display a listing of the resource.
      *
@@ -187,58 +176,59 @@ class UsoInfraestructuraController extends Controller
     public function index(Request $request, UsoInfraestructuraDatatable $usoDatatable)
     {
         $this->authorize('index', UsoInfraestructura::class);
-
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
                 $nodo = $request->filter_nodo;
-                $gestor = $request->filter_gestor;
+                $asesor = $request->filter_gestor;
                 $user = null;
                 $actividad = null;
                 break;
             case User::IsDinamizador():
                 $nodo = auth()->user()->dinamizador->nodo_id;
-                $gestor = $request->filter_gestor;
+                $asesor = $request->filter_gestor;
                 $user = null;
                 $actividad = null;
                 break;
             case User::IsGestor():
                 $nodo = auth()->user()->gestor->nodo_id;
                 $user = auth()->user()->gestor->user->id;
-                $gestor = auth()->user()->gestor->id;
+                $asesor = auth()->user()->id;
                 $actividad = $request->filter_actividad;
                 break;
             case User::IsArticulador():
-                $nodo = auth()->user()->gestor->nodo_id;
-                $user = auth()->user()->gestor->user->id;
-                $gestor = auth()->user()->gestor->id;
+                $nodo = auth()->user()->articulador->nodo_id;
+                $user = auth()->user()->id;
+                $asesor = auth()->user()->id;
+                $actividad = $request->filter_actividad;
+                break;
+            case User::IsApoyoTecnico():
+                $nodo = auth()->user()->apoyotecnico->nodo_id;
+                $user = auth()->user()->id;
+                $asesor = auth()->user()->id;
                 $actividad = $request->filter_actividad;
                 break;
             case User::IsTalento():
                 $nodo = null;
-                $user = auth()->user()->talento->user->id;
-                $gestor = null;
+                $user = auth()->user()->id;
+                $asesor = null;
                 $actividad = $request->filter_actividad;
                 break;
             default:
                 return abort('403');
                 break;
         }
-
         if ($request->ajax()) {
-
             $usos = [];
-
             if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null) && ($request->filled('filter_gestor') || $request->filter_gestor == null)  && ($request->filled('filter_actividad') || $request->filter_actividad == null)) {
-                $usos = UsoInfraestructura::nodoActividad($nodo)
+                $usos = UsoInfraestructura::nodoAsesoria($nodo)
                     ->yearAsesoria($request->filter_year)
-                    ->actividad($actividad, $user)
-                    ->gestorActividad($gestor)
+                    ->asesoria($actividad, $user)
+                    ->asesor($asesor)
                     ->orderBy('usoinfraestructuras.created_at', 'desc')
                     ->get();
             }
             return $usoDatatable->indexDatatable($usos);
         }
-
         switch (Session::get('login_role')) {
             case User::IsAdministrador():
                 return view('usoinfraestructura.administrador.index', [
@@ -253,15 +243,15 @@ class UsoInfraestructuraController extends Controller
                     ->role(User::IsGestor())
                     ->withTrashed()
                     ->pluck('user', 'idgestor');
-
                 return view('usoinfraestructura.index', ['gestores' => $gestores]);
                 break;
-
             case User::IsGestor():
-
                 return view('usoinfraestructura.index');
                 break;
             case User::IsArticulador():
+                return view('usoinfraestructura.index');
+                break;
+            case User::IsApoyoTecnico():
                 return view('usoinfraestructura.index');
                 break;
             case User::IsTalento():
@@ -269,12 +259,10 @@ class UsoInfraestructuraController extends Controller
                 $proyectos = $this->getUsoInfraestructuraRepository()->getProyectosForUser($user)
                     ->where('user_talento.id', $user)
                     ->pluck('nombre', 'proyectos.id');
-
                 return view('usoinfraestructura.index', [
                     'proyectos' => $proyectos,
                 ]);
                 break;
-
             default:
                 return abort('403');
                 break;
@@ -286,6 +274,19 @@ class UsoInfraestructuraController extends Controller
         ]);
     }
 
+    private function getUsosDeProyectos($proyectos)
+    {
+        $usos_models = [];
+        foreach ($proyectos as $ke1 => $proyecto) {
+            foreach ($proyecto->asesorias as $key2 => $usos) {
+                if ($usos != null) {
+                    $usos_models[] = $usos;
+                }
+            }
+        }
+        return $usos_models;
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -293,102 +294,105 @@ class UsoInfraestructuraController extends Controller
      */
     public function create()
     {
-
         $this->authorize('create', UsoInfraestructura::class);
         $sumasArray   = [];
-        
         $date         = Carbon::now()->format('Y-m-d');
-
-        if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
-            $projects     = $this->getDataProjectsForUser()->count();
-
-            $sumasArray = [            
-                'projects'       => $projects,
-            ];
-            $cantActividades = array_sum($sumasArray);
-
-            $relations = [
-                'user'             => function ($query) {
-                    $query->select('id', 'documento', 'nombres', 'apellidos');
-                },
-                'lineatecnologica' => function ($query) {
-                    $query->select('id', 'nombre', 'abreviatura');
-                },
-            ];
-            $user             = auth()->user()->id;
-            $nodo             = auth()->user()->gestor->nodo->id;
-            $lineaTecnologica = auth()->user()->gestor->lineatecnologica->id;
-            $gestores         = $this->getGestorRepository()->getInfoGestor($relations)
-                ->whereHas('user', function ($query) use ($user) {
-                    $query->where('id', '!=', $user)->where('estado', User::IsActive());
-                })
-                ->whereHas('nodo', function ($query) use ($nodo) {
-                    $query->where('id', $nodo);
-                })->get();
-
-            $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
-
-            return view('usoinfraestructura.create', [
-
-                'gestores'            => $gestores,
-                'lineastecnologicas'  => $lineastecnologicas,
-                'date'                => $date,
-                'cantidadActividades' => $cantActividades,
-            ]);
-        }else if (Session::has('login_role') && Session::get('login_role') == User::IsArticulador()) {
-            
-            $artulaciones = $this->getDataArticulaciones()->count();
-            $sumasArray = [
-                'articulaciones' => $artulaciones,
-            ];
-            $cantActividades = array_sum($sumasArray);
-
-            $relations = [
-                'user'             => function ($query) {
-                    $query->select('id', 'documento', 'nombres', 'apellidos');
-                },
-                'lineatecnologica' => function ($query) {
-                    $query->select('id', 'nombre', 'abreviatura');
-                },
-            ];
-            $user             = auth()->user()->id;
-            $nodo             = auth()->user()->gestor->nodo->id;
-            $lineaTecnologica = auth()->user()->gestor->lineatecnologica->id;
-            $gestores         = $this->getGestorRepository()->getInfoGestor($relations)
-                ->whereHas('user', function ($query) use ($user) {
-                    $query->where('id', '!=', $user)->where('estado', User::IsActive());
-                })
-                ->whereHas('nodo', function ($query) use ($nodo) {
-                    $query->where('id', $nodo);
-                })->get();
-
-            $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
-
-            return view('usoinfraestructura.create', [
-
-                'gestores'            => $gestores,
-                'lineastecnologicas'  => $lineastecnologicas,
-                'date'                => $date,
-                'cantidadActividades' => $cantActividades,
-            ]);
-        } 
-        
-        else if (Session::has('login_role') && Session::get('login_role') == User::IsTalento()) {
-            $artulaciones = $this->getDataArticulaciones()->count();
-            $projects     = $this->getDataProjectsForUser()->count();
-            $sumasArray = [
-                'articulaciones' => $artulaciones,
-                'projects'       => $projects,
-            ];
-
-            $cantActividades = array_sum($sumasArray);
-            return view('usoinfraestructura.create', [
-                'date'                => $date,
-                'cantidadActividades' => $cantActividades,
-            ]);
-        } else {
-            abort('403');
+        switch (\Session::get('login_role')) {
+            case User::IsGestor():
+                $projects     = $this->getDataProjectsForUser()->count();
+                $sumasArray = ['projects'=> $projects];
+                $cantActividades = array_sum($sumasArray);
+                $relations = [
+                    'user'             => function ($query) {
+                        $query->select('id', 'documento', 'nombres', 'apellidos');
+                    },
+                    'lineatecnologica' => function ($query) {
+                        $query->select('id', 'nombre', 'abreviatura');
+                    },
+                ];
+                $user             = auth()->user()->id;
+                $nodo             = auth()->user()->gestor->nodo->id;
+                $gestores         = $this->getGestorRepository()->getInfoGestor($relations)
+                    ->whereHas('user', function ($query) use ($user) {
+                        $query->where('id', '!=', $user)->where('estado', User::IsActive());
+                    })
+                    ->whereHas('nodo', function ($query) use ($nodo) {
+                        $query->where('id', $nodo);
+                    })->get();
+                $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
+                break;
+            case User::IsArticulador():
+                $artulaciones = $this->getDataArticulaciones()->count();
+                $sumasArray = [
+                    'articulaciones' => $artulaciones,
+                ];
+                $cantActividades = array_sum($sumasArray);
+                $relations = [
+                    'user'             => function ($query) {
+                        $query->select('id', 'documento', 'nombres', 'apellidos');
+                    },
+                    'lineatecnologica' => function ($query) {
+                        $query->select('id', 'nombre', 'abreviatura');
+                    },
+                ];
+                $user             = auth()->user()->id;
+                $nodo             = auth()->user()->articulador->nodo->id;
+                $gestores         = $this->getGestorRepository()->getInfoGestor($relations)
+                    ->whereHas('user', function ($query) use ($user) {
+                        $query->where('id', '!=', $user)->where('estado', User::IsActive());
+                    })
+                    ->whereHas('nodo', function ($query) use ($nodo) {
+                        $query->where('id', $nodo);
+                    })->get();
+                $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
+                break;
+            case User::IsApoyoTecnico():
+                $projects     = $this->getDataProjectsForUser()->count();
+                $sumasArray = [
+                    'projects'       => $projects,
+                ];
+                $cantActividades = array_sum($sumasArray);
+                $relations = [
+                    'user'             => function ($query) {
+                        $query->select('id', 'documento', 'nombres', 'apellidos');
+                    },
+                    'lineatecnologica' => function ($query) {
+                        $query->select('id', 'nombre', 'abreviatura');
+                    },
+                ];
+                $user             = auth()->user()->id;
+                $nodo             = auth()->user()->apoyotecnico->nodo->id;
+                $gestores         = $this->getGestorRepository()->getInfoGestor($relations)
+                    ->whereHas('user', function ($query) use ($user) {
+                        $query->where('id', '!=', $user)->where('estado', User::IsActive());
+                    })
+                    ->whereHas('nodo', function ($query) use ($nodo) {
+                        $query->where('id', $nodo);
+                    })->get();
+                $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
+                break;
+            case User::IsTalento():
+                $projects     = $this->getDataProjectsForUser()->count();
+                $sumasArray = [
+                    'projects'       => $projects,
+                ];
+                $cantActividades = array_sum($sumasArray);
+                return view('usoinfraestructura.create', [
+                    'date'                => $date,
+                    'cantidadActividades' => $cantActividades,
+                ]);
+                break;
+            default:
+                return abort('403');
+                break;
         }
+
+        return view('usoinfraestructura.create', [
+            'gestores'            => $gestores,
+            'lineastecnologicas'  => $lineastecnologicas,
+            'date'                => $date,
+            'cantidadActividades' => $cantActividades,
+        ]);
     }
 
     /**
@@ -408,9 +412,7 @@ class UsoInfraestructuraController extends Controller
                 'errors' => $validator->errors(),
             ]);
         }
-
-        $result = $this->getUsoInfraestructuraRepository()->store($request);
-
+        $result = $this->getUsoInfraestructuraRepository()->storeUsoInfraestructuraProyecto($request);
         if ($result == 'false') {
             return response()->json([
                 'fail'         => false,
@@ -432,10 +434,14 @@ class UsoInfraestructuraController extends Controller
      */
     public function show($id)
     {
-        $relations          = $this->getUsoInfraestructuraRepository()->getDataIndex();
-        $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
-            ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'descripcion','compromisos', 'estado', 'created_at')
-            ->findOrFail($id);
+        $usoinfraestructura = UsoInfraestructura::with(
+            ['usotalentos.user'=> function($query){
+                $query->withTrashed();
+            },'usogestores' => function($query){
+                $query->withTrashed();
+            }
+        ])->findOrFail($id);
+        // dd($usoinfraestructura);
         $equipos = [];
         if ($usoinfraestructura->has('usoequipos')) {
             $equipos = $usoinfraestructura->usoequipos()->withTrashed()->get();
@@ -462,94 +468,113 @@ class UsoInfraestructuraController extends Controller
      */
     public function edit($id)
     {
-        $relations          = $this->getUsoInfraestructuraRepository()->getDataIndex();
-        $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
-            ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'descripcion','compromisos', 'estado', 'created_at')
-            ->findOrFail($id);
-
-
+        $usoinfraestructura = UsoInfraestructura::with(
+            ['usotalentos.user'=> function($query){
+                $query->withTrashed();
+            },'usogestores' => function($query){
+                $query->withTrashed();
+            }]
+        )->findOrFail($id);
         $this->authorize('edit', $usoinfraestructura);
-
         $equipos = [];
         if ($usoinfraestructura->has('usoequipos')) {
             $equipos = $usoinfraestructura->usoequipos()->withTrashed()->get();
         }
-
         $date = Carbon::now()->format('Y-m-d');
-
-        if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
-            
-            $relations = [
-                'user'             => function ($query) {
-                    $query->select('id', 'documento', 'nombres', 'apellidos');
-                },
-                'lineatecnologica' => function ($query) {
-                    $query->select('id', 'nombre', 'abreviatura');
-                },
-            ];
-            $user             = auth()->user()->id;
-            $nodo             = auth()->user()->gestor->nodo->id;
-            $lineaTecnologica = auth()->user()->gestor->lineatecnologica->id;
-            $gestores         = $this->getGestorRepository()->getInfoGestor($relations)
-                ->whereHas('user', function ($query) use ($user) {
-                    $query->where('id', '!=', $user)->where('estado', User::IsActive());
-                })
-                ->whereHas('nodo', function ($query) use ($nodo) {
-                    $query->where('id', $nodo);
-                })->get();
-
-            $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
-
-            return view('usoinfraestructura.edit', [
-                'usoinfraestructura' => $usoinfraestructura,
-                'gestores'           => $gestores,
-                'lineastecnologicas' => $lineastecnologicas,
-                'equipos' => $equipos,
-                'date'               => $date,
-
-            ]);
-        } 
-        elseif (Session::has('login_role') && Session::get('login_role') == User::IsArticulador()) {
-            
-            $relations = [
-                'user'             => function ($query) {
-                    $query->select('id', 'documento', 'nombres', 'apellidos');
-                },
-                'lineatecnologica' => function ($query) {
-                    $query->select('id', 'nombre', 'abreviatura');
-                },
-            ];
-            $user             = auth()->user()->id;
-            $nodo             = auth()->user()->gestor->nodo->id;
-            
-            $gestores         = $this->getGestorRepository()->getInfoGestor($relations)
-                ->whereHas('user', function ($query) use ($user) {
-                    $query->where('id', '!=', $user)->where('estado', User::IsActive());
-                })
-                ->whereHas('nodo', function ($query) use ($nodo) {
-                    $query->where('id', $nodo);
-                })->get();
-
-            $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
-
-            return view('usoinfraestructura.edit', [
-                'usoinfraestructura' => $usoinfraestructura,
-                'gestores'           => $gestores,
-                'lineastecnologicas' => $lineastecnologicas,
-                'equipos' => $equipos,
-                'date'               => $date,
-            ]);
+        switch (\Session::get('login_role')) {
+            case User::IsGestor():
+                $relations = [
+                    'user'             => function ($query) {
+                        $query->select('id', 'documento', 'nombres', 'apellidos');
+                    },
+                    'lineatecnologica' => function ($query) {
+                        $query->select('id', 'nombre', 'abreviatura');
+                    },
+                ];
+                $user             = auth()->user()->id;
+                $nodo             = auth()->user()->gestor->nodo->id;
+                $gestores         = $this->getGestorRepository()->getInfoGestor($relations)
+                    ->whereHas('user', function ($query) use ($user) {
+                        $query->where('id', '!=', $user)->where('estado', User::IsActive());
+                    })
+                    ->whereHas('nodo', function ($query) use ($nodo) {
+                        $query->where('id', $nodo);
+                    })->get();
+                $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
+            break;
+            case User::IsArticulador():
+                $artulaciones = $this->getDataArticulaciones()->count();
+                $sumasArray = [
+                    'articulaciones' => $artulaciones,
+                ];
+                $cantActividades = array_sum($sumasArray);
+                $relations = [
+                    'user'             => function ($query) {
+                        $query->select('id', 'documento', 'nombres', 'apellidos');
+                    },
+                    'lineatecnologica' => function ($query) {
+                        $query->select('id', 'nombre', 'abreviatura');
+                    },
+                ];
+                $user             = auth()->user()->id;
+                $nodo             = auth()->user()->articulador->nodo->id;
+                $gestores         = $this->getGestorRepository()->getInfoGestor($relations)
+                    ->whereHas('user', function ($query) use ($user) {
+                        $query->where('id', '!=', $user)->where('estado', User::IsActive());
+                    })
+                    ->whereHas('nodo', function ($query) use ($nodo) {
+                        $query->where('id', $nodo);
+                    })->get();
+                $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
+                break;
+            case User::IsApoyoTecnico():
+                $projects     = $this->getDataProjectsForUser()->count();
+                $sumasArray = [
+                    'projects'       => $projects,
+                ];
+                $cantActividades = array_sum($sumasArray);
+                $relations = [
+                    'user'             => function ($query) {
+                        $query->select('id', 'documento', 'nombres', 'apellidos');
+                    },
+                    'lineatecnologica' => function ($query) {
+                        $query->select('id', 'nombre', 'abreviatura');
+                    },
+                ];
+                $user             = auth()->user()->id;
+                $nodo             = auth()->user()->apoyotecnico->nodo->id;
+                $gestores         = $this->getGestorRepository()->getInfoGestor($relations)
+                    ->whereHas('user', function ($query) use ($user) {
+                        $query->where('id', '!=', $user)->where('estado', User::IsActive());
+                    })
+                    ->whereHas('nodo', function ($query) use ($nodo) {
+                        $query->where('id', $nodo);
+                    })->get();
+                $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
+                break;
+            case User::IsTalento():
+                $projects     = $this->getDataProjectsForUser()->count();
+                $sumasArray = [
+                    'projects'       => $projects,
+                ];
+                $cantActividades = array_sum($sumasArray);
+                return view('usoinfraestructura.create', [
+                    'date'                => $date,
+                    'cantidadActividades' => $cantActividades,
+                ]);
+                break;
+            default:
+                return abort('403');
+                break;
         }
-        else if (Session::has('login_role') && Session::get('login_role') == User::IsTalento()) {
 
-            return view('usoinfraestructura.edit', [
-                'usoinfraestructura' => $usoinfraestructura,
-                'equipos' => $equipos,
-                'date'               => $date,
-            ]);
-        }else{
-            return abort('403');
-        }
+        return view('usoinfraestructura.edit', [
+            'usoinfraestructura' => $usoinfraestructura,
+            'gestores'           => $gestores,
+            'lineastecnologicas' => $lineastecnologicas,
+            'equipos' => $equipos,
+            'date'               => $date,
+        ]);
     }
 
     /**
@@ -560,11 +585,7 @@ class UsoInfraestructuraController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $relations          = $this->getUsoInfraestructuraRepository()->getDataIndex();
-        $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
-            ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha',  'descripcion', 'estado', 'created_at')
-            ->findOrFail($id);
-
+        $usoinfraestructura = UsoInfraestructura::findOrFail($id);
         $this->authorize('update', $usoinfraestructura);
 
         $req       = new UsoInfraestructuraFormRequest;
@@ -606,16 +627,16 @@ class UsoInfraestructuraController extends Controller
             return datatables()->of($artulaciones)
                 ->addColumn('checkbox', function ($data) {
                     $checkbox = '
-                    <a class="btn cyan m-b-xs" onclick="asociarArticulacionAUsoInfraestructura(' . $data->id . ', \'' . $data->actividad->codigo_actividad . '\', \'' . $this->reemplezarComillas($data->actividad->nombre) . '\')">
+                    <a class="btn cyan m-b-xs" onclick="asociarArticulacionAUsoInfraestructura(' . $data->id . ', \'' . $data->present()->articulacionCode() . '\', \'' . $this->reemplezarComillas($data->present()->articulacionName()) . '\')">
                         <i class="material-icons">done_all</i>
                     </a>';
 
                     return $checkbox;
                 })->editColumn('codigo_actividad', function ($data) {
-                    return $data->actividad->codigo_actividad;
+                    return $data->present()->articulacionCode();
                 })
                 ->editColumn('nombre', function ($data) {
-                    return $data->actividad->nombre;
+                    return $data->present()->articulacionName();
                 })
                 ->editColumn('fase', function ($data) {
                     return $data->fase->nombre;
@@ -633,39 +654,26 @@ class UsoInfraestructuraController extends Controller
         $fase = [
             Fase::IsInicio(),
             Fase::IsEjecucion(),
+            Fase::IsCierre(),
         ];
 
         $relations = [
             'fase'                => function ($query) {
                 $query->select('id', 'nombre');
             },
-            'actividad' => function ($query) {
-                $query->select('id', 'codigo_actividad', 'nombre', 'fecha_inicio');
-            },
         ];
 
         if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
-
-            return $this->getUsoIngraestructuraArtculacionRepository()
-                ->getArticulacionesForUser($relations)
-
-                ->whereHas('actividad.gestor.user', function ($query) use ($user) {
-                    $query->withTrashed();
-                })
-                ->whereHas('actividad.gestor.user', function ($query) use ($user) {
-                    $query->where('documento', $user);
-                })
-                ->whereIn('fase_id', $fase)
-                ->get();
+            return [];
         }elseif(Session::has('login_role') && Session::get('login_role') == User::IsArticulador()) {
 
             return $this->getUsoIngraestructuraArtculacionRepository()
                 ->getArticulacionesForUser($relations)
 
-                ->whereHas('actividad.gestor.user', function ($query) use ($user) {
+                ->whereHas('asesor', function ($query) use ($user) {
                     $query->withTrashed();
                 })
-                ->whereHas('actividad.gestor.user', function ($query) use ($user) {
+                ->whereHas('asesor', function ($query) use ($user) {
                     $query->where('documento', $user);
                 })
                 ->whereIn('fase_id', $fase)
@@ -675,7 +683,7 @@ class UsoInfraestructuraController extends Controller
             return $this->getUsoIngraestructuraArtculacionRepository()
                 ->getArticulacionesForUser($relations)
 
-                ->whereHas('actividad.gestor.user', function ($query) use ($user) {
+                ->whereHas('asesor', function ($query) use ($user) {
                     $query->withTrashed();
                 })
                 ->whereHas('talentos.user', function ($query) use ($user) {
@@ -713,6 +721,8 @@ class UsoInfraestructuraController extends Controller
         ];
 
         $relations = [
+            'asesor',
+            'asesor.user',
             'articulacion_proyecto'               => function ($query) {
                 $query->select('id', 'actividad_id');
             },
@@ -727,10 +737,15 @@ class UsoInfraestructuraController extends Controller
         if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
 
             return $this->getUsoIngraestructuraProyectoRepository()->getProjectsForFaseById($relations, $fase)
-                ->whereHas('articulacion_proyecto.actividad.gestor.user', function ($query) use ($user) {
+                ->whereHas('asesor.user', function ($query) use ($user) {
                     $query->where('documento', $user);
                 })
                 ->get();
+        }else if(Session::has('login_role') && Session::get('login_role') == User::IsApoyoTecnico()){
+            return $this->getUsoIngraestructuraProyectoRepository()->getProjectsForFaseById($relations, $fase)
+                ->whereHas('nodo', function($query){
+                    $query->where('id', auth()->user()->apoyotecnico->nodo->id);
+                })->get();
         } else if (Session::has('login_role') && Session::get('login_role') == User::IsTalento()) {
 
             return $this->getUsoIngraestructuraProyectoRepository()->getProjectsForFaseById($relations, $fase)
@@ -740,13 +755,13 @@ class UsoInfraestructuraController extends Controller
                 ->get();
         }else if (Session::has('login_role') && Session::get('login_role') == User::IsArticulador()){
             return [];
-        } 
+        }
         else {
             abort('403');
         }
     }
 
-   
+
 
     /**
      * devuelve consulta con los talentos por proyecto
@@ -764,16 +779,20 @@ class UsoInfraestructuraController extends Controller
                 Fase::IsEjecucion(),
             ];
 
-            $proyectoNodo = Proyecto::findOrFail($id)->articulacion_proyecto->actividad->nodo_id;
+            $proyectoNodo = Proyecto::findOrFail($id)->nodo_id;
 
-            $proyectoTalento = Proyecto::select('proyectos.*', 'actividades.id as actividad_id', 'actividades.gestor_id as actividad_gestor_id', 'actividades.nodo_id as actividad_nodo_id', 'actividades.codigo_actividad', 'actividades.nombre as actividades_nombre', 'gestores.id as gestor_id', 'gestores.lineatecnologica_id as gestor_lineatecnologica_id', 'gestores.honorarios', 'users.id as user_id', 'users.documento', 'users.nombres', 'users.apellidos', 'nodos.id as nodo_id', 'lineastecnologicas.abreviatura', 'lineastecnologicas.id as lineatecnologica_id', 'lineastecnologicas.nombre as lineatecnologica_nombre')
+            $proyectoTalento = Proyecto::select('proyectos.*', 'actividades.id as actividad_id', 'proyectos.asesor_id as actividad_gestor_id',
+            'proyectos.nodo_id as actividad_nodo_id', 'actividades.codigo_actividad', 'actividades.nombre as actividades_nombre', 'gestores.id as gestor_id',
+            'gestores.lineatecnologica_id as gestor_lineatecnologica_id', 'gestores.honorarios', 'users.id as user_id', 'users.documento', 'users.nombres',
+            'users.apellidos', 'nodos.id as nodo_id', 'lineastecnologicas.abreviatura', 'lineastecnologicas.id as lineatecnologica_id',
+            'lineastecnologicas.nombre as lineatecnologica_nombre')
                 ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
                 ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
                 ->join('actividades', 'articulacion_proyecto.actividad_id', '=', 'actividades.id')
-                ->join('gestores', 'gestores.id', '=', 'actividades.gestor_id')
+                ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
                 ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'gestores.lineatecnologica_id')
                 ->join('users', 'users.id', '=', 'gestores.user_id')
-                ->join('nodos', 'nodos.id', '=', 'actividades.nodo_id')
+                ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
                 ->whereIn('fases.id', $fase)
                 ->findOrFail($id);
 
@@ -834,24 +853,25 @@ class UsoInfraestructuraController extends Controller
     {
         if (request()->ajax()) {
 
-            $articulacionNodo = ArticulacionPbt::findOrFail($id)->actividad->nodo_id;
+            $articulacionNodo = ArticulacionPbt::findOrFail($id)->nodo->id;
 
             $fase = [
                 Fase::IsInicio(),
                 Fase::IsEjecucion(),
+                Fase::IsCierre(),
             ];
 
-            $articulacion = ArticulacionPbt::with(['actividad','actividad.gestor', 
-            'actividad.gestor.user'=> function($query){
-                $query->select('id', 'documento', 'nombres', 'apellidos');
-            }])
-                ->whereIn('fase_id', $fase)
-                ->findOrFail($id);
+            $articulacion = ArticulacionPbt::with([
+                'asesor'=> function($query){
+                    $query->select('id', 'documento', 'nombres', 'apellidos');
+                }])
+                    ->whereIn('fase_id', $fase)
+                    ->findOrFail($id);
 
             $lineastecnologicas = LineaTecnologica::join('lineastecnologicas_nodos', 'lineastecnologicas_nodos.linea_tecnologica_id', '=', 'lineastecnologicas.id')
                 ->where('lineastecnologicas_nodos.nodo_id', $articulacionNodo)
                 ->get();
-           
+
 
             $equipos = Equipo::where('nodo_id', $articulacionNodo)->get();
 
@@ -863,7 +883,7 @@ class UsoInfraestructuraController extends Controller
 
             $talentos = $articulacion->talentos()->with('user')->get();
 
-        
+
             return response()->json([
                 'articulacion'       => $articulacion,
                 'lineastecnologicas' => $lineastecnologicas,
@@ -892,7 +912,7 @@ class UsoInfraestructuraController extends Controller
                 ->addColumn('checkbox', function ($data) {
                     $checkbox = '<a class="btn cyan m-b-xs" onclick="asociarProyectoAUsoInfraestructura(' . $data->id . ', \'' . $data->articulacion_proyecto->actividad->codigo_actividad . '\', \'' . $this->reemplezarComillas($data->articulacion_proyecto->actividad->nombre) . '\')">
                         <i class="material-icons">done_all</i>
-                      </a>';
+                    </a>';
                     return $checkbox;
                 })->editColumn('codigo_actividad', function ($data) {
                     return $data->articulacion_proyecto->actividad->codigo_actividad;
@@ -916,14 +936,14 @@ class UsoInfraestructuraController extends Controller
 
                 $activities =  Actividad::select('id')
                     ->selectRaw('CONCAT(codigo_actividad, " - ", nombre) as nombre')
-                    ->whereHas('gestor', function ($query) use ($gestor) {
+                    ->whereHas('articulacion_proyecto.proyecto.asesor', function ($query) use ($gestor) {
                         $query->where('id', $gestor);
                     })
                     ->where(function ($query) use ($anio) {
                         $query->whereYear('fecha_inicio', $anio)->orWhereYear('fecha_cierre', $anio);
                     })
                     ->pluck('nombre', 'id');
-                    
+
             } elseif ((!empty($anio) && $anio != null && $anio == 'all')) {
                 $activities =  Actividad::select('id')
                     ->selectRaw('CONCAT(codigo_actividad, " - ", nombre) as nombre')
@@ -965,10 +985,8 @@ class UsoInfraestructuraController extends Controller
 
     public function destroy(int $id)
     {
-        $relations          = $this->getUsoInfraestructuraRepository()->getDataIndex();
-        $usoinfraestructura = $this->getUsoInfraestructuraRepository()->getUsoInfraestructuraForUser($relations)
-            ->select('id', 'actividad_id', 'tipo_usoinfraestructura', 'fecha', 'descripcion', 'estado', 'created_at')
-            ->findOrFail($id);
+        $usoinfraestructura = UsoInfraestructura::findOrFail($id);
+        $this->authorize('destroy', $usoinfraestructura);
 
         $usoinfraestructura->usoequipos()->sync([]);
         $usoinfraestructura->usotalentos()->sync([]);
@@ -989,32 +1007,38 @@ class UsoInfraestructuraController extends Controller
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
                 $nodo = $request->filter_nodo;
-                $gestor = $request->filter_gestor;
+                $asesor = $request->filter_gestor;
                 $user = null;
                 $actividad = null;
                 break;
             case User::IsDinamizador():
                 $nodo = auth()->user()->dinamizador->nodo_id;
-                $gestor = $request->filter_gestor;
+                $asesor = $request->filter_gestor;
                 $user = null;
                 $actividad = null;
                 break;
             case User::IsGestor():
                 $nodo = auth()->user()->gestor->nodo_id;
                 $user = auth()->user()->gestor->user->id;
-                $gestor = auth()->user()->gestor->id;
+                $asesor = auth()->user()->id;
                 $actividad = $request->filter_actividad;
                 break;
             case User::IsArticulador():
-                $nodo = auth()->user()->gestor->nodo_id;
-                $user = auth()->user()->gestor->user->id;
-                $gestor = auth()->user()->gestor->id;
+                $nodo = auth()->user()->articulador->nodo_id;
+                $user = auth()->user()->id;
+                $asesor = auth()->user()->id;
+                $actividad = $request->filter_actividad;
+                break;
+            case User::IsApoyoTecnico():
+                $nodo = auth()->user()->apoyotecnico->nodo_id;
+                $user = auth()->user()->id;
+                $asesor = auth()->user()->id;
                 $actividad = $request->filter_actividad;
                 break;
             case User::IsTalento():
                 $nodo = null;
-                $user = auth()->user()->talento->user->id;
-                $gestor = null;
+                $user = auth()->user()->id;
+                $asesor = null;
                 $actividad = $request->filter_actividad;
                 break;
             default:
@@ -1025,14 +1049,14 @@ class UsoInfraestructuraController extends Controller
         $usos = [];
 
         if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null) && ($request->filled('filter_gestor') || $request->filter_gestor == null)  && ($request->filled('filter_actividad') || $request->filter_actividad == null)) {
-            $usos = UsoInfraestructura::nodoActividad($nodo)
-                ->yearActividad($request->filter_year)
-                ->actividad($actividad, $user)
-                ->gestorActividad($gestor)
-                ->orderBy('usoinfraestructuras.created_at', 'desc')
-                ->get();
+            $usos = UsoInfraestructura::
+            nodoAsesoria($nodo)
+                    ->yearAsesoria($request->filter_year)
+                    ->asesoria($actividad, $user)
+                    ->asesor($asesor)
+                    ->orderBy('usoinfraestructuras.created_at', 'desc')
+                    ->get();
         }
-
         return (new UsoInfraestructuraExport($request, $usos))->download("Usos de infraestructura - " . config('app.name') . ".{$extension}");
     }
 }

@@ -6,8 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateCategoriaMaterialTable extends Migration
 {
-
-    public $tableName = 'categoria_material';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'categoria_material';
     /**
      * Run the migrations.
      *

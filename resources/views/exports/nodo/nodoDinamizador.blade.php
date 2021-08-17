@@ -49,7 +49,7 @@
                 {{$dinamizador->user->present()->userEmail()}}
             </td>
             <td>
-                {{isset($dinamizador->user->celular) ? $dinamizador->user->celular : isset($dinamizador->user->telefono) ? $dinamizador->user->telefono : 'No registra'}}
+                {{isset($dinamizador->user->celular) ? $dinamizador->user->celular : (isset($dinamizador->user->telefono) ? $dinamizador->user->telefono : 'No registra')}}
             </td>
             <td>
                 {{$dinamizador->user->present()->userGenero()}}

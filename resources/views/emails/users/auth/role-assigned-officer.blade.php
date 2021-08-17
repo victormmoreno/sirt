@@ -2,9 +2,9 @@
 # Confirmación acceso a {{config('app.name')}}
 
 <br>
-Hola, 
+Hola,
 {{$user->nombres}} {{$user->apellidos}}<br>
-{{$user->getRoleNames()->implode(', ')}} {{$user->present()->userGestorNombreNodo()}}
+{{$user->getRoleNames()->implode(', ')}}
 
 Cordial Saludo.
 

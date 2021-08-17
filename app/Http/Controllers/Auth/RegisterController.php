@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\{Hash, Notification, Validator};
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Auth\Events\Registered;
 use App\Models\{Contratista, TipoTalento, TipoFormacion, TipoEstudio, Etnia, Eps, Ocupacion, Talento, Entidad};
 use App\Repositories\Repository\UserRepository\UserRepository;
 use App\Http\Requests\UsersRequests\{UserFormRequest, ConfirmUserRequest};
@@ -17,21 +16,8 @@ use Illuminate\Support\Facades\DB;
 use App\Events\User\UserWasRegistered;
 use App\Repositories\Repository\UserRepository\DinamizadorRepository;
 use App\Notifications\User\{NewContractor, RoleAssignedOfficer};
-
-
-
 class RegisterController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Register Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
-    | provide this functionality without requiring any additional code.
-    |
-    */
 
     use RegistersUsers;
 
@@ -56,20 +42,6 @@ class RegisterController extends Controller
         $this->middleware('guest')->except(['confirmContratorInformation', 'showConfirmContratorInformationForm']);
         $this->userRepository = $userRepository;
     }
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-    }
 
 
     /**
@@ -87,7 +59,6 @@ class RegisterController extends Controller
             'eps'                 => $this->userRepository->getAllEpsActivas(),
             'departamentos'     => $this->userRepository->getAllDepartamentos(),
             'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-            // 'nodos'             => $this->userRepository->getAllNodo(),
             'nodos'             => $this->userRepository->getAllNodoPrueba(),
             'regionales'        => $this->userRepository->getAllRegionales(),
             'tipotalentos' => TipoTalento::pluck('nombre', 'id'),
@@ -102,10 +73,9 @@ class RegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function register(Request $request){
-
+    public function register(Request $request)
+    {
         $req = new UserFormRequest;
-
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
 
         if ($validator->fails()) {
@@ -115,27 +85,14 @@ class RegisterController extends Controller
                 'errors' => $validator->errors(),
             ]);
         } else {
-
-            //generar una contraseña
-            $password = User::generatePasswordRamdom();
-            //creamos el usuario
-            $user = $this->store($request, $password);
-
+            $user = $this->store($request);
             if ($user != null) {
-                //evento para crear token para activacion de cuenta
-                // $this->userRepository->activationToken($user->id);
-
-                //envio de email con contraseña
-                event(new UserWasRegistered($user, $password));
-
                 $message = "";
-
                 if($request->input('txttipousuario') == 'talento'){
                     $message = "Bienvenido(a) {$user->nombres} {$user->apellidos} a " . config('app.name').", ahora puedes acceder a registrar tu idea.";
                 }else{
                     $message = "Bienvenido(a) {$user->nombres} {$user->apellidos} a " . config('app.name') . ", ahora debes esperar a que validemos tu información.";
                 }
-
                 return response()->json([
                     'state'   => 'success',
                     'message' => $message,
@@ -143,7 +100,6 @@ class RegisterController extends Controller
                     'user' => $user,
                 ]);
             } else {
-
                 return response()->json([
                     'state'   => 'error',
                     'message' => 'El Usuario no se ha creado',
@@ -151,26 +107,21 @@ class RegisterController extends Controller
                 ]);
             }
         }
-
     }
 
-    protected function store($request, $password)
+    protected function store($request)
     {
-
         DB::beginTransaction();
         try {
-
+            $password = User::generatePasswordRamdom();
             $user = $this->createUser($request, $password);
-
             $user->ocupaciones()->sync($request->get('txtocupaciones'));
 
             if ($request->filled('txttipousuario') && $request->input('txttipousuario') == 'talento') {
                 $this->storeTalento($request, $user);
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleTalento'));
             }
-
             if ($request->filled('txttipousuario') && $request->input('txttipousuario') == 'contratista') {
-
                 Contratista::create([
                     "user_id"   => $user->id,
                     "nodo_id"   => $request->input('txtnodo'),
@@ -178,18 +129,18 @@ class RegisterController extends Controller
                 ]);
 
                 $dinamizadorRepository = new DinamizadorRepository;
-
                 $dinamizador = $dinamizadorRepository->getAllDinamizadoresPorNodo($request->input('txtnodo'))->first();
 
                 if($dinamizador != null){
                     Notification::send($dinamizador, new NewContractor($user, $dinamizador));
                 }
-                
             }
-
+            if($user != null){
+                event(new UserWasRegistered($user, $password));
+            }
             DB::commit();
             return $user;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return false;
         }
@@ -218,8 +169,8 @@ class RegisterController extends Controller
             "telefono"             => $request->input('txttelefono'),
             "fechanacimiento"      => $request->input('txtfecha_nacimiento'),
             "genero"               => $request->input('txtgenero') == 'on' ? $request['txtgenero'] = 0 : $request['txtgenero'] = 1,
-            "mujerCabezaFamilia"            => $request->input('txtmadrecabezafamilia'),
-            "desplazadoPorViolencia"            => $request->input('txtdesplazadoporviolencia'),
+            "mujerCabezaFamilia"   => $request->input('txtmadrecabezafamilia'),
+            "desplazadoPorViolencia" => $request->input('txtdesplazadoporviolencia'),
             "otra_eps"             => $request->input('txteps') == Eps::where('nombre', Eps::OTRA_EPS)->first()->id ? $request->input('txtotraeps') : null,
             "estado"               => $this->stateUser($request),
             "institucion"          => $request->input('txtinstitucion'),
@@ -270,10 +221,8 @@ class RegisterController extends Controller
             "dependencia"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_SENA) ?
                 $request->input('txtdependencia') : null,
 
-
             "universidad"           => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
                 $request->input('txtuniversidad') : null,
-
 
             "carrera_universitaria" => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
                 $request->input('txtcarrera') : null,
@@ -297,18 +246,6 @@ class RegisterController extends Controller
     protected function guard()
     {
         return Auth::guard();
-    }
-
-    /**
-     * The user has been registered.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $user
-     * @return mixed
-     */
-    protected function registered(Request $request, $user)
-    {
-        //
     }
 
     private function assignRoleUser($user, $role)
@@ -342,6 +279,7 @@ class RegisterController extends Controller
     public function showConfirmContratorInformationForm(int $documento){
 
         $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
+
         $this->authorize('confirmContratorInformation', $user);
         return view('auth.confirm-contractor-information', [
             'user' => $user,
@@ -358,12 +296,11 @@ class RegisterController extends Controller
     public function confirmContratorInformation(Request $request, int $documento){
 
         $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
-        $this->authorize('confirmContratorInformation', $user);
+
+        // $this->authorize('confirmContratorInformation', $user);
 
         $req = new ConfirmUserRequest;
-
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-
         if ($validator->fails()) {
             return response()->json([
                 'state'   => 'error_form',
@@ -371,14 +308,12 @@ class RegisterController extends Controller
                 'errors' => $validator->errors(),
             ]);
         } else {
-            
             if ($user != null) {
                 $userUpdate = $this->userRepository->UpdateUserConfirm($request, $user);
 
                 if($userUpdate != null){
                     Notification::send($userUpdate, new RoleAssignedOfficer($userUpdate));
                 }
-
                 return response()->json([
                     'state'   => 'success',
                     'message' => 'El Usuario ha sido modificado satisfactoriamente',
@@ -392,8 +327,6 @@ class RegisterController extends Controller
                     'url' => false
                 ]);
             }
-        }   
-
+        }
     }
-
 }

@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddConclusionesToActividadesTable extends Migration
 {
-    public $tableName = 'actividades';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'actividades';
     /**
      * Run the migrations.
      *

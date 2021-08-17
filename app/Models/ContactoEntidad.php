@@ -31,10 +31,6 @@ class ContactoEntidad extends Model
         return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
     }
 
-    /*=========================================
-    =            asesores eloquent            =
-    =========================================*/
-
     public function getNombresContactoAttribute($nombres_contacto)
     {
         return ucwords(mb_strtolower(trim($nombres_contacto), 'UTF-8'));
@@ -50,12 +46,6 @@ class ContactoEntidad extends Model
         return trim($telefono_contacto);
     }
 
-    /*=====  End of asesores eloquent  ======*/
-
-    /*========================================
-    =            mutador eloquent            =
-    ========================================*/
-
     public function setNombresContactoAttribute($nombres_contacto)
     {
         $this->attributes['nombres_contacto'] = ucwords(mb_strtolower(trim($nombres_contacto), 'UTF-8'));
@@ -68,6 +58,4 @@ class ContactoEntidad extends Model
     {
         $this->attributes['telefono_contacto'] = trim($telefono_contacto);
     }
-
-    /*=====  End of mutador eloquent  ======*/
 }

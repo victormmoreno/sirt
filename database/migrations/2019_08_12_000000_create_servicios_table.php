@@ -7,10 +7,11 @@ use Illuminate\Database\Migrations\Migration;
 class CreateServiciosTable extends Migration
 {
     /**
-     * Schema table name to migrate
+     * the attribute that names the table.
+     *
      * @var string
      */
-    public $tableName = 'servicios';
+    protected $tableName = 'servicios';
 
     /**
      * Run the migrations.
@@ -24,7 +25,6 @@ class CreateServiciosTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('nombre', 45);
-
             $table->unique(["nombre"], 'nombre_UNIQUE');
             $table->nullableTimestamps();
         });
@@ -35,8 +35,8 @@ class CreateServiciosTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+    Schema::dropIfExists($this->tableName);
+    }
 }

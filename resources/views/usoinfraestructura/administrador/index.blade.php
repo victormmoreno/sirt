@@ -4,7 +4,7 @@
 
 @section('content')
 @php
-  $year = Carbon\Carbon::now()->year;
+    $year = Carbon\Carbon::now()->year;
 @endphp
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
@@ -46,7 +46,7 @@
                                 <div class="input-field col s12 m2 l2">
                                     <label class="active" for="filter_nodo">Nodo <span class="red-text">*</span></label>
                                     <select class="js-states browser-default select2" name="filter_nodo" id="filter_nodo" onchange="usoinfraestructuraIndex.queryGestoresByNodo()">
-                                        
+
                                         @forelse($nodos as $id => $name)
                                             <option value="{{$id}}">{{$name}}</option>
                                         @empty
@@ -56,7 +56,7 @@
                                     </select>
                                 </div>
                                 <div class="input-field col s12 m4 l4">
-                                    <label class="active" for="filter_gestor">Experto asesor <span class="red-text">*</span></label>
+                                    <label class="active" for="filter_gestor">Asesor <span class="red-text">*</span></label>
                                     <select class="js-states browser-default select2" name="filter_gestor" id="filter_gestor" >
                                         <option value="" >Seleccione primero el nodo</option>
                                     </select>
@@ -82,13 +82,13 @@
                                 <thead>
                                     <th width="10%">Fecha</th>
                                     <th width="20%">Asesor</th>
-                                    <th width="45%">Nombre</th>
+                                    <th width="10%">Tipo Asesoria</th>
+                                    <th width="35%">Nombre</th>
                                     <th width="10%">Fase</th>
                                     <th width="5%">Asesoría Directa</th>
                                     <th width="5%">Asesoría Indirecta</th>
                                     <th width="5%">Detalles</th>
                                 </thead>
-
                             </table>
                         </div>
                     </div>

@@ -6,7 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddTipoContratistaToContratistasTable extends Migration
 {
-    public $tableName = 'contratistas';
+    /**
+     * Schema table name to migrate
+     * @var string
+     */
+    protected $tableName = 'contratistas';
     /**
      * Run the migrations.
      *

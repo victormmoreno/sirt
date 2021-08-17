@@ -10,7 +10,7 @@ class CreateTiposdocumentosTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $tableName = 'tiposdocumentos';
+    protected $tableName = 'tiposdocumentos';
 
     /**
      * Run the migrations.
@@ -24,7 +24,6 @@ class CreateTiposdocumentosTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('nombre', 45);
-
             $table->unique(["nombre"], 'nombre_UNIQUE');
             $table->nullableTimestamps();
         });

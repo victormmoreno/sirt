@@ -19,7 +19,7 @@ class EntidadPresenter extends Presenter
             return "{$this->entidad->nombre}";
         }
         return $this->message('Información no disponible');
-            
+
     }
 
     public function entidadSlug()
@@ -57,8 +57,6 @@ class EntidadPresenter extends Presenter
 
     public function entidadLugar()
     {
-        
         return "{$this->entidadCity()} ({$this->entidadDepartamento()})";
-        
     }
 }

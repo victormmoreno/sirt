@@ -78,7 +78,7 @@ class NewContractor extends Notification implements ShouldQueue
     {
         return [
             'link'  => route('user.contractor.confirm.request', $this->getUserFrom()->documento),
-            'icon'  => 'lightbulb',
+            'icon'  => 'supervised_user_circle',
             'color' => 'cyan',
             'autor' => "Nuevo funcionario | {$this->getUserFrom()->nombres} {$this->getUserFrom()->apellidos}",
             'text'  => "{$this->getUserFrom()->nombres} {$this->getUserFrom()->apellidos} está haciendo una petición de registro en el aplicativo",

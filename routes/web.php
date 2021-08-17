@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
 
 
 Route::get('/', function () {
@@ -53,10 +54,22 @@ DB::listen(function ($query) {
 =            ruta para revisar funcionaliddes de prueba          =
 ===========================================================*/
 
-// Route::get('email', function () {
-// return new App\Mail\Comite\SendEmailIdeaComite(App\Models\Idea::first());
+Route::get('email/{id}', function ($asesor) {
+// return new App\Mail\Idea\IdeaAceptadaParaComite(App\Models\Idea::first(), 'Aceptada');
+$asesorias = App\Models\UsoInfraestructura::with(['usotalentos.user'=> function($query){
+    $query->withTrashed();
+}])
+->whereHas(
+    'usotalentos.user',
+    function (Builder $query) use($asesor) {
+        return $query->where('id', $asesor);
+    }
+)
+->where('id', 6176)
+->first();
+dd($asesorias);
 
-// });
+});
 
 /*=====  End of ruta para revisafuncionaliddes de prueba  ======*/
 
@@ -128,8 +141,6 @@ Route::group(
         Route::put('/updateacceso/{documento}', 'UserController@updateAcceso')->name('usuario.usuarios.updateacceso')->middleware('disablepreventback');
         Route::get('/talento/getEdadTalento/{id}', 'TalentoController@getEdad');
 
-
-        // Route::get('/usuarios/{id}', 'UserController@edit')->name('usuario.usuarios.edit')->where('documento', '[0-9]+');;
 
         Route::get('/usuarios/crear/{documento?}', 'UserController@create')->name('usuario.usuarios.create')->where('documento', '[0-9]+');
 
@@ -404,7 +415,6 @@ Route::group(
         Route::get('/eliminar/{id}', 'EntrenamientoController@eliminar_idea')->middleware('role_session:Infocenter');
         Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileEntrenamiento')->name('entrenamientos.files.download');
         Route::get('/datatableArchivosDeUnEntrenamiento/{id}', 'ArchivoController@datatableArchivosDeUnEntrenamiento');
-        // Route::put('/{id}', 'EntrenamientoController@update')->name('entrenamientos.update');
         Route::put('/updateEvidencias/{id}', 'EntrenamientoController@updateEvidencias')->name('entrenamientos.update.evidencias')->middleware('role_session:Articulador');
         Route::post('/', 'EntrenamientoController@store')->name('entrenamientos.store')->middleware('role_session:Articulador');
         Route::post('/addidea', 'EntrenamientoController@add_idea')->middleware('role_session:Infocenter');
@@ -496,7 +506,6 @@ Route::group(
     }
 );
 
-//-------------------Route group para el módulo de Comité
 Route::group(
     [
         'prefix'     => 'articulacion',
@@ -621,30 +630,30 @@ Route::group(
 /**
  * Route group para el módulo de edt (Eventos de Divulgación Tecnológica)
  */
-Route::group(
-    [
-        'prefix'     => 'edt',
-        'middleware' => ['auth', 'role_session:Experto|Dinamizador|Administrador'],
-    ],
-    function () {
-        //
-        Route::get('/', 'EdtController@index')->name('edt');
-        Route::get('/eliminarEdt/{id}', 'EdtController@eliminarEdt')->name('edt.delete')->middleware('role_session:Dinamizador');
-        Route::get('/create', 'EdtController@create')->name('edt.create')->middleware('role_session:Experto');
-        Route::get('/{id}/edit', 'EdtController@edit')->name('edt.edit')->middleware('role_session:Experto|Dinamizador');
-        Route::get('/{id}/entregables', 'EdtController@entregables')->name('edt.entregables');
-        Route::get('/consultarEdtsDeUnGestor/{id}/{anho}', 'EdtController@consultarEdtsDeUnGestor')->name('edt.gestor');
-        Route::get('/consultarEdtsDeUnNodo/{id}/{anho}', 'EdtController@consultarEdtsDeUnNodo')->name('edt.nodo')->middleware('role_session:Dinamizador|Administrador');
-        Route::get('/consultarDetallesDeUnaEdt/{id}/{tipo}', 'EdtController@consultarDetallesDeUnaEdt')->name('edt.entidades');
-        Route::get('/archivosDeUnaEdt/{id}', 'ArchivoController@datatableArchivosDeUnaEdt')->name('edt.files');
-        Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileEdt')->name('edt.files.download');
-        Route::put('/{id}', 'EdtController@update')->name('edt.update')->middleware('role_session:Experto|Dinamizador');
-        Route::put('/updateEntregables/{id}', 'EdtController@updateEntregables')->name('edt.update.evidencias')->middleware('role_session:Experto');
-        Route::post('/', 'EdtController@store')->name('edt.store')->middleware('role_session:Experto');
-        Route::post('/store/{id}/files', 'ArchivoController@uploadFileEdt')->name('edt.files.upload')->middleware('role_session:Experto');
-        Route::delete('/file/{idFile}', 'ArchivoController@destroyFileEdt')->name('edt.files.destroy')->middleware('role_session:Experto');
-    }
-);
+// Route::group(
+//     [
+//         'prefix'     => 'edt',
+//         'middleware' => ['auth', 'role_session:Gestor|Dinamizador|Administrador'],
+//     ],
+//     function () {
+//         //
+//         Route::get('/', 'EdtController@index')->name('edt');
+//         Route::get('/eliminarEdt/{id}', 'EdtController@eliminarEdt')->name('edt.delete')->middleware('role_session:Dinamizador');
+//         Route::get('/create', 'EdtController@create')->name('edt.create')->middleware('role_session:Gestor');
+//         Route::get('/{id}/edit', 'EdtController@edit')->name('edt.edit')->middleware('role_session:Gestor|Dinamizador');
+//         Route::get('/{id}/entregables', 'EdtController@entregables')->name('edt.entregables');
+//         Route::get('/consultarEdtsDeUnGestor/{id}/{anho}', 'EdtController@consultarEdtsDeUnGestor')->name('edt.gestor');
+//         Route::get('/consultarEdtsDeUnNodo/{id}/{anho}', 'EdtController@consultarEdtsDeUnNodo')->name('edt.nodo')->middleware('role_session:Dinamizador|Administrador');
+//         Route::get('/consultarDetallesDeUnaEdt/{id}/{tipo}', 'EdtController@consultarDetallesDeUnaEdt')->name('edt.entidades');
+//         Route::get('/archivosDeUnaEdt/{id}', 'ArchivoController@datatableArchivosDeUnaEdt')->name('edt.files');
+//         Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileEdt')->name('edt.files.download');
+//         Route::put('/{id}', 'EdtController@update')->name('edt.update')->middleware('role_session:Gestor|Dinamizador');
+//         Route::put('/updateEntregables/{id}', 'EdtController@updateEntregables')->name('edt.update.evidencias')->middleware('role_session:Gestor');
+//         Route::post('/', 'EdtController@store')->name('edt.store')->middleware('role_session:Gestor');
+//         Route::post('/store/{id}/files', 'ArchivoController@uploadFileEdt')->name('edt.files.upload')->middleware('role_session:Gestor');
+//         Route::delete('/file/{idFile}', 'ArchivoController@destroyFileEdt')->name('edt.files.destroy')->middleware('role_session:Gestor');
+//     }
+// );
 
 /**
  * Route group para el módulo visitantes
@@ -789,7 +798,7 @@ Route::group(
     ],
     function () {
         Route::get('/', 'CostoController@index')->name('costos');
-        Route::get('/costosDeUnaActividad/{id}', 'CostoController@costosDeUnaActividad');
+        Route::get('/proyecto/{id}', 'CostoController@costoProject');
         Route::get('/costosDeProyectos/{idnodo}/{tipos_proyecto}/{estado_proyecto}/{fecha_inicio}/{fecha_fin}/{type}', 'CostoController@costosDeProyectos')->middleware('role_session:Dinamizador|Administrador');
     }
 );
@@ -912,7 +921,7 @@ Route::get('empresas/sede/{id}', 'EmpresaController@filterSede')->name('empresa.
 
 Route::get('articulaciones/export', 'ArticulacionPbtController@export')->name('articulacion.export')->middleware('role_session:Administrador|Articulador|Dinamizador');
 Route::get('articulaciones/download/inicio/{id}', 'PDF\PdfArticulacionPbtController@downloadFormInicio')->name('pdf.articulacion.inicio')->middleware('role_session:Articulador');
-Route::get('articulaciones/download/cierre/{id}', 'PDF\PdfArticulacionPbtController@downloadFormCierre')->name('pdf.articulacion.cierre')->middleware('role_session:Articulador');
+Route::get('articulaciones/download/cierre/{id}', 'PDF\PdfArticulacionPbtController@downloadFormCierre')->name('pdf.articulacion.cierre')->middleware('role_session:Articulador|Administrador');
 
 
 Route::delete('articulaciones/file/{idFile}', 'ArchivoController@destroyFileArticulacion')->name('articulacion.files.destroy')->middleware('role_session:Articulador');

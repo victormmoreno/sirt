@@ -10,8 +10,7 @@ class ProyectoSuspendidoAprobado extends Notification implements ShouldQueue
 {
     use Queueable;
     private $proyecto;
-  
-  
+
     /**
     * Create a new notification instance.
     *
@@ -19,9 +18,9 @@ class ProyectoSuspendidoAprobado extends Notification implements ShouldQueue
     */
     public function __construct($proyecto)
     {
-      $this->setProyecto($proyecto);
+        $this->setProyecto($proyecto);
     }
-  
+
     /**
     * Get the notification's delivery channels.
     *
@@ -30,9 +29,9 @@ class ProyectoSuspendidoAprobado extends Notification implements ShouldQueue
     */
     public function via($notifiable)
     {
-      return ['database'];
+        return ['database'];
     }
-  
+
     /**
     * Get the array representation of the notification.
     *
@@ -41,15 +40,15 @@ class ProyectoSuspendidoAprobado extends Notification implements ShouldQueue
     */
     public function toArray($notifiable)
     {
-      return [
-        'link'  => route('proyecto.suspender', $this->getProyecto()->id),
-        'icon'  => 'library_books',
-        'color' => 'green',
-        'autor' => "{$this->getProyecto()->articulacion_proyecto->actividad->gestor->user->nombres} {$this->getProyecto()->articulacion_proyecto->actividad->gestor->user->apellidos}",
-        'text'  => "Se aprobó la suspensión del proyecto | {$this->getProyecto()->articulacion_proyecto->actividad->codigo_actividad} - {$this->getProyecto()->articulacion_proyecto->actividad->nombre}",
-      ];
+        return [
+            'link'  => route('proyecto.suspender', $this->getProyecto()->id),
+            'icon'  => 'library_books',
+            'color' => 'green',
+            'autor' => "{$this->getProyecto()->present()->proyectoUserAsesor()}",
+            'text'  => "Se aprobó la suspensión del proyecto | {$this->getProyecto()->present()->proyectoCode()} - {$this->getProyecto()->present()->proyectoName()}",
+        ];
     }
-  
+
     /**
      * Asigna un valor a $proyecto
      *
@@ -58,9 +57,9 @@ class ProyectoSuspendidoAprobado extends Notification implements ShouldQueue
      */
     private function setProyecto($proyecto)
     {
-      $this->proyecto = $proyecto;
+        $this->proyecto = $proyecto;
     }
-  
+
     /**
      * Retorna el valor de $proyecto
      *
@@ -69,6 +68,6 @@ class ProyectoSuspendidoAprobado extends Notification implements ShouldQueue
      */
     private function getProyecto()
     {
-      return $this->proyecto;
+        return $this->proyecto;
     }
 }

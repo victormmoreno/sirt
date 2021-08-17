@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,168 +7,163 @@
     <title>CERTIFICACIÓN EMPRESARIOS CONSULTORÍA RED TP</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <style>
-    @font-face {
-        font-family: 'Josefin Sans Bold';
-        src: url({{ storage_path('fonts/josefin-sans-bold.ttf') }}) format("truetype");
-    }
-    @font-face {
-        font-family: 'Josefin Sans';
-        src: url({{ storage_path('fonts/josefin-sans.ttf') }}) format("truetype");
-    }
+        @font-face {
+            font-family: 'Josefin Sans Bold';
+            src: url({{ storage_path('fonts/josefin-sans-bold.ttf') }}) format("truetype");
+        }
+        @font-face {
+            font-family: 'Josefin Sans';
+            src: url({{ storage_path('fonts/josefin-sans.ttf') }}) format("truetype");
+        }
 
-    * {
-    padding: 0;
-    margin: 0 auto;
-    list-style: none;
-    text-decoration: none;
-    box-sizing: border-box;
-    font-family: 'Josefin Sans', arial;
-}
+        * {
+            padding: 0;
+            margin: 0 auto;
+            list-style: none;
+            text-decoration: none;
+            box-sizing: border-box;
+            font-family: 'Josefin Sans', arial;
+        }
 
+        #pdf {
+            width: 800px;
+            height: 800px;
+            margin-top: 10px;
+            padding-top: 30px;
+        }
 
-#pdf {
-    width: 800px;
-    height: 800px;
-    margin-top: 10px;
-    padding-top: 30px;
-}
+        #contenedor {
+            width: 700px;
+            height: 700px;
+            position: relative;
+        }
 
-#contenedor {
-    width: 700px;
-    height: 700px;
-    position: relative;
-}
-
-#contenedor h4 {
-    text-align: center;
-    font-family: 'Josefin Sans Bold', arial;
-}
-
-
-.titulo-principal {
-    margin-bottom: 50px;
-}
-
-.font-jose-bold {
-    font-family: 'Josefin Sans Bold', arial;
-    width: 20%;
-    height: 60px;
-    padding: 5px;
-    text-align: left;
-}
-
-.subtitulos1{
-    position: absolute;
-    text-align: center;
-    top: 60px;
-    left: 285px;
-}
-
-.subtitulos2{
-    position: absolute;
-    text-align: center;
-    top: 70px;
-    left: 170px;
-}
-.subtitulos3{
-    position: absolute;
-    text-align: center;
-    top: 90px;
-    left: 175px;
-}
-.subtitulos4{
-    position: absolute;
-    text-align: center;
-    top: 110px;
-    left: 290px;
-}
-
-.parrafo {
-    position: absolute;
-    top: 130px;
-}
+        #contenedor h4 {
+            text-align: center;
+            font-family: 'Josefin Sans Bold', arial;
+        }
 
 
-#contenedor p {
-    font-size: 1em ;
-    margin-top: 10px;
-    line-height: 1.2;
-    margin-bottom: 10px;
-}
+        .titulo-principal {
+            margin-bottom: 50px;
+        }
 
-.jb-parr {
- font-family: 'Josefin Sans Bold', arial;
- text-align: center;
-}
+        .font-jose-bold {
+            font-family: 'Josefin Sans Bold', arial;
+            width: 20%;
+            height: 60px;
+            padding: 5px;
+            text-align: left;
+        }
 
-table,
-td,
-th {
-    border: 1px solid black;
-}
+        .subtitulos1{
+            position: absolute;
+            text-align: center;
+            top: 60px;
+            left: 285px;
+        }
 
+        .subtitulos2{
+            position: absolute;
+            text-align: center;
+            top: 70px;
+            left: 170px;
+        }
+        .subtitulos3{
+            position: absolute;
+            text-align: center;
+            top: 90px;
+            left: 175px;
+        }
+        .subtitulos4{
+            position: absolute;
+            text-align: center;
+            top: 110px;
+            left: 290px;
+        }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    position: absolute;
-    top: 250px;
-}
-
-th {
-    width: 20%;
-    height: 60px;
-    padding: 5px;
-    text-align: left;
-}
-
-td {
-    padding: 5px;
-}
-
-.parra{
-    position: absolute;
-    top: 750px;
-}
-
-.p-1{
-    position: absolute;
-    top: 830px;
-    right: 0px;
-}
-
-.p-2{
-    position: absolute;
-    top: 850px;
-    right: 0px;
-}
-
-.p-3{
-    position: absolute;
-    top: 870px;
-    right: 0px;
-}
-
-.p-4{
-    position: absolute;
-    top: 890px;
-    right: 0px;
-}
+        .parrafo {
+            position: absolute;
+            top: 130px;
+        }
 
 
-.linea {
-    width: 400px;
-    height: 1px;
-    background-color: black;
-    position: absolute;
-    top: 820px;
-    right: 0px;
-}
+        #contenedor p {
+            font-size: 1em ;
+            margin-top: 10px;
+            line-height: 1.2;
+            margin-bottom: 10px;
+        }
+
+        .jb-parr {
+            font-family: 'Josefin Sans Bold', arial;
+            text-align: center;
+        }
+
+        table,
+        td,
+        th {
+            border: 1px solid black;
+        }
+
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            position: absolute;
+            top: 250px;
+        }
+
+        th {
+            width: 20%;
+            height: 60px;
+            padding: 5px;
+            text-align: left;
+        }
+
+        td {
+            padding: 5px;
+        }
+
+        .parra{
+            position: absolute;
+            top: 750px;
+        }
+
+        .p-1{
+            position: absolute;
+            top: 830px;
+            right: 0px;
+        }
+
+        .p-2{
+            position: absolute;
+            top: 850px;
+            right: 0px;
+        }
+
+        .p-3{
+            position: absolute;
+            top: 870px;
+            right: 0px;
+        }
+
+        .p-4{
+            position: absolute;
+            top: 890px;
+            right: 0px;
+        }
+        .linea {
+            width: 400px;
+            height: 1px;
+            background-color: black;
+            position: absolute;
+            top: 820px;
+            right: 0px;
+        }
     </style>
 </head>
-
-
 <body>
     <div id="pdf">
         <div id="contenedor">
@@ -178,28 +172,28 @@ td {
             <p class="subtitulos2 jb-parr">{{$request->txtnombre_rep}} C.C. No. {{$request->txtdocumento_rep}}</p>
             <p class="subtitulos3 jb-parr">EN CALIDAD DE REPRESENTANTE</p>
             <p class="subtitulos4 jb-parr">CERTIFICA:</p>
-            <p class="parrafo">Que {{$proyecto->articulacion_proyecto->actividad->gestor->user->nombres}} {{$proyecto->articulacion_proyecto->actividad->gestor->user->apellidos}} , 
-                integrante del equipo de profesionales de Tecnoparque {{$proyecto->articulacion_proyecto->actividad->nodo->entidad->nombre}} del {{$proyecto->articulacion_proyecto->actividad->nodo->centro->entidad->nombre}}, avalado institucionalmente por el Servicio Nacional de Aprendizaje (SENA), ha participado en la siguiente consultoría científico-técnica
+            <p class="parrafo">Que {{$proyecto->present()->proyectoUserAsesor()}} ,
+                integrante del equipo de profesionales de Tecnoparque {{$proyecto->present()->proyectoNode()}} del {{$proyecto->present()->proyectoNodoCentro()}}, avalado institucionalmente por el Servicio Nacional de Aprendizaje (SENA), ha participado en la siguiente consultoría científico-técnica
                 utilizada para toma de decisión para la creación y/o mejoramiento de nuevos productos y servicios:</p>
             <table>
                 <tr>
                     <td class="font-jose-bold">TÍTULO DE LA CONSULTORÍA</td>
-                    <td>{{$proyecto->articulacion_proyecto->actividad->nombre}}</td>
+                    <td>{{$proyecto->present()->proyectoName()}}</td>
                 </tr>
 
                 <tr>
                     <td class="font-jose-bold">FECHA DE INICIO DE LA CONSULTORÍA</td>
-                    <td>{{$proyecto->articulacion_proyecto->actividad->fecha_inicio->isoFormat('YYYY-MM-DD')}}</td>
+                    <td>{{$proyecto->articulacion_proyecto->actividad->present()->startDate()}}</td>
                 </tr>
 
                 <tr>
                     <td class="font-jose-bold">OBJETO DE LA CONSULTORÍA</td>
-                    <td>{{$proyecto->articulacion_proyecto->actividad->objetivo_general}}</td>
+                    <td>{{$proyecto->present()->proyectoObjetivoGeneral()}}</td>
                 </tr>
 
                 <tr>
                     <td class="font-jose-bold">FECHA DE FINAL DE LA CONSULTORÍA</td>
-                    <td>{{$proyecto->articulacion_proyecto->actividad->fecha_cierre->isoFormat('YYYY-MM-DD')}}</td>
+                    <td>{{$proyecto->articulacion_proyecto->actividad->present()->endDate()}}</td>
                 </tr>
                 <tr>
                     <td class="font-jose-bold">TRL OBTENIDO DEL PROTOTIPO O PRODUCTO / SERVICIO</td>
@@ -233,5 +227,4 @@ td {
         </div>
     </div>
 </body>
-
 </html>

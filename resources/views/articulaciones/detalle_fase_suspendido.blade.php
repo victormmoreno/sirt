@@ -13,8 +13,7 @@
                                     </div>
                                     <div class="left">
                                         <span class="mailbox-title">
-                                            Tecnoparque nodo
-                                            {{$articulacion->articulacion_proyecto->actividad->nodo->entidad->nombre}}
+                                            {{$articulacion->present()->articulacionPbtNodo()}}
                                         </span>
                                     </div>
                                 </div>
@@ -22,7 +21,7 @@
                                     <span class="mailbox-title">
                                         <p class="center">
                                             Información de la articulación en la fase de suspendido -
-                                            {{$articulacion->articulacion_proyecto->actividad->nombre}}
+                                            {{$articulacion->present()->articulacionName()}}
                                         </p>
                                         <br />
                                         <p class="center">Linea Tecnológica:

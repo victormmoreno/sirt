@@ -8,16 +8,16 @@
                             Tipo Convocatoria
                         </span>
                         <p>
-                            {{$actividad->articulacionpbt->present()->articulacionPbtNameTipoVinculacion()}}
+                            {{$articulacion->present()->articulacionPbtNameTipoVinculacion()}}
                         </p>
                     </li>
-                    @if($actividad->articulacionpbt->present()->articulacionPbtTipoVinculacion(App\Models\ArticulacionPbt::IsPbt()))
+                    @if($articulacion->present()->articulacionPbtTipoVinculacion(App\Models\ArticulacionPbt::IsPbt()))
                         <li class="collection-item">
                             <span class="title black-text text-darken-3">
                                 Idea
                             </span>
                             <p>
-                                <a class="orange-text text-darken-1" onclick="detallesIdeaPorId({{$actividad->articulacionpbt->present()->articulacionPbtIdIdeaProyecto()}})">{{$actividad->articulacionpbt->present()->articulacionPbtCodeIdeaProyecto()}} - {{$actividad->articulacionpbt->present()->articulacionPbtNameIdeaProyecto()}}</a>
+                                <a class="orange-text text-darken-1" onclick="detallesIdeaPorId({{$articulacion->present()->articulacionPbtIdIdeaProyecto()}})">{{$articulacion->present()->articulacionPbtCodeIdeaProyecto()}} - {{$articulacion->present()->articulacionPbtNameIdeaProyecto()}}</a>
                             </p>
                         </li>
                         <li class="collection-item">
@@ -25,7 +25,7 @@
                                 Proyecto
                             </span>
                             <p>
-                                <a class="orange-text text-darken-1" target="_blank" href="{{route('proyecto.detalle', $actividad->articulacionpbt->present()->articulacionPbtIdProyecto())}}">{{$actividad->articulacionpbt->present()->articulacionPbtCodeProyecto()}} - {{$actividad->articulacionpbt->present()->articulacionPbtNameProyecto()}}</a>
+                                <a class="orange-text text-darken-1" target="_blank" href="{{route('proyecto.detalle', $articulacion->present()->articulacionPbtIdProyecto())}}">{{$articulacion->present()->articulacionPbtCodeProyecto()}} - {{$articulacion->present()->articulacionPbtNameProyecto()}}</a>
                             </p>
                         </li>
                     @else
@@ -34,7 +34,7 @@
                             Empresa
                         </span>
                         <p>
-                            {{$actividad->articulacionpbt->present()->articulacionPbtSedeEmpresa()}}
+                            {{$articulacion->present()->articulacionPbtSedeEmpresa()}}
                         </p>
                     </li>
                     @endif
@@ -43,7 +43,7 @@
                             Articulación
                         </span>
                         <p>
-                           {{$actividad->present()->actividadCode()}} - {{$actividad->present()->actividadName()}}
+                            {{$articulacion->present()->articulacionPbtCode()}} - {{$articulacion->present()->articulacionPbtName()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -51,7 +51,7 @@
                             Fecha Incio de la Articulación
                         </span>
                         <p>
-                            {{$actividad->present()->startDate()}}
+                            {{$articulacion->present()->articulacionPbtstartDate()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -59,7 +59,7 @@
                             Fecha esperada de finalización de la Articulación
                         </span>
                         <p>
-                           {{$actividad->articulacionpbt->present()->articulacionPbtFechaFinalizacion()}}
+                            {{$articulacion->present()->articulacionPbtFechaFinalizacion()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -67,7 +67,7 @@
                             Tipo Articulación
                         </span>
                         <p>
-                            {{$actividad->articulacionpbt->present()->articulacionPbtNombreTipoArticulacion()}}
+                            {{$articulacion->present()->articulacionPbtNombreTipoArticulacion()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -75,7 +75,7 @@
                             Alcance Articulación
                         </span>
                         <p>
-                            {{$actividad->articulacionpbt->present()->articulacionPbtNombreAlcanceArticulacion()}}
+                            {{$articulacion->present()->articulacionPbtNombreAlcanceArticulacion()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -83,7 +83,7 @@
                             Nombre de convocatoria
                         </span>
                         <p>
-                            {{$actividad->articulacionpbt->present()->articulacionPbtNombreConvocatoria()}}
+                            {{$articulacion->present()->articulacionPbtNombreConvocatoria()}}
                         </p>
                     </li>
                 </ul>
@@ -95,7 +95,7 @@
                             Entidad con la que se realiza la articulación
                         </span>
                         <p>
-                            {{$actividad->articulacionpbt->present()->articulacionPbtEntidad()}}
+                            {{$articulacion->present()->articulacionPbtEntidad()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -103,7 +103,7 @@
                             Nombre de contacto
                         </span>
                         <p>
-                            {{$actividad->articulacionpbt->present()->articulacionPbtNombreContacto()}}
+                            {{$articulacion->present()->articulacionPbtNombreContacto()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -111,7 +111,7 @@
                             Mail institucional de contacto de la organización
                         </span>
                         <p>
-                            {{$actividad->articulacionpbt->present()->articulacionPbtEmail()}}
+                            {{$articulacion->present()->articulacionPbtEmail()}}
                         </p>
                     </li>
 
@@ -120,7 +120,7 @@
                             Objetivo de la articulación
                         </span>
                         <p>
-                            {{$actividad->articulacionpbt->present()->articulacionPbtObjetivo()}}
+                            {{$articulacion->present()->articulacionPbtObjetivo()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -140,20 +140,20 @@
                             Se realizo la postulación al convenio, convocatoria y/o instrumento
                         </span>
                         <p>
-                            @if ($actividad->articulacionpbt->present()->articulacionPbtPostulacion() == 1)
+                            @if ($articulacion->present()->articulacionPbtPostulacion() == 1)
                                 SI
                             @else
                                 NO
                             @endif
                         </p>
                     </li>
-                    @if ($actividad->articulacionpbt->present()->articulacionPbtPostulacion() == 0)
+                    @if ($articulacion->present()->articulacionPbtPostulacion() == 0)
                         <li class="collection-item">
                             <span class="title black-text text-darken-3">
                                 PDF justificativo firmado por el Talento
                             </span>
                             <p>
-                                @if ($actividad->articulacionpbt->present()->articulacionPbtInformeJustificado() == 1)
+                                @if ($articulacion->present()->articulacionPbtInformeJustificado() == 1)
                                     SI
                                 @else
                                     NO
@@ -165,7 +165,7 @@
                                 Justificación
                             </span>
                             <p>
-                                {{$actividad->articulacionpbt->present()->articulacionPbtJustificacion()}}
+                                {{$articulacion->present()->articulacionPbtJustificacion()}}
                             </p>
                         </li>
                     @else
@@ -174,20 +174,20 @@
                                 Aprobación
                             </span>
                             <p>
-                                @if ($actividad->articulacionpbt->present()->articulacionPbtAprobacion() == 1)
+                                @if ($articulacion->present()->articulacionPbtAprobacion() == 1)
                                     Aprobado
                                 @else
                                     No Aprobado
                                 @endif
                             </p>
                         </li>
-                        @if ($actividad->articulacionpbt->present()->articulacionPbtAprobacion() == 1)
+                        @if ($articulacion->present()->articulacionPbtAprobacion() == 1)
                             <li class="collection-item">
                                 <span class="title black-text text-darken-3">
                                     Qué recibirá
                                 </span>
                                 <p>
-                                    {{$actividad->articulacionpbt->present()->articulacionPbtRecibira()}}
+                                    {{$articulacion->present()->articulacionPbtRecibira()}}
                                 </p>
                             </li>
                             <li class="collection-item">
@@ -195,7 +195,7 @@
                                     Cuando
                                 </span>
                                 <p>
-                                    {{$actividad->articulacionpbt->present()->articulacionPbtFechaCuando()}}
+                                    {{$articulacion->present()->articulacionPbtFechaCuando()}}
                                 </p>
                             </li>
                             <li class="collection-item">
@@ -203,7 +203,7 @@
                                     PDF de aprobación
                                 </span>
                                 <p>
-                                    @if ($actividad->articulacionpbt->present()->articulacionPbtPdfAprobacion() == 1)
+                                    @if ($articulacion->present()->articulacionPbtPdfAprobacion() == 1)
                                         SI
                                     @else
                                         NO
@@ -215,7 +215,7 @@
                                     PDF de documentos de postulación
                                 </span>
                                 <p>
-                                    @if ($actividad->articulacionpbt->present()->articulacionPbtPostulacion() == 1)
+                                    @if ($articulacion->present()->articulacionPbtPostulacion() == 1)
                                         SI
                                     @else
                                         NO
@@ -228,7 +228,7 @@
                                     Informe
                                 </span>
                                 <p>
-                                    {{$actividad->articulacionpbt->present()->articulacionPbtInforme()}}
+                                    {{$articulacion->present()->articulacionPbtInforme()}}
                                 </p>
                             </li>
                             <li class="collection-item">
@@ -236,7 +236,7 @@
                                     PDF de no aprobación
                                 </span>
                                 <p>
-                                    @if ($actividad->articulacionpbt->present()->articulacionPbtNoPdfAprobacion() == 1)
+                                    @if ($articulacion->present()->articulacionPbtNoPdfAprobacion() == 1)
                                         SI
                                     @else
                                         NO
@@ -248,7 +248,7 @@
                                     PDF de documentos de postulación
                                 </span>
                                 <p>
-                                    @if ($actividad->articulacionpbt->present()->articulacionPbtDocumentoPostualcion() == 1)
+                                    @if ($articulacion->present()->articulacionPbtDocumentoPostualcion() == 1)
                                         SI
                                     @else
                                         NO
@@ -262,7 +262,7 @@
                             Lecciones aprendidas
                         </span>
                         <p>
-                            {{$actividad->articulacionpbt->present()->articulacionPbtLeccionesAprendidas()}}
+                            {{$articulacion->present()->articulacionPbtLeccionesAprendidas()}}
                         </p>
                     </li>
                 </ul>

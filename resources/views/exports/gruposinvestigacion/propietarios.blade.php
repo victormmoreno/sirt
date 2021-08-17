@@ -16,8 +16,8 @@
         @foreach($proyectos as $proyecto)
             @foreach ($proyecto->gruposinvestigacion as $grupo)
                 <tr>
-                    <td>{{ $proyecto->articulacion_proyecto->actividad->codigo_actividad }}</td>
-                    <td>{{ $proyecto->articulacion_proyecto->actividad->nodo->entidad->nombre }}</td>
+                    <td>{{ $proyecto->present()->proyectoCode() }}</td>
+                    <td>{{ $proyecto->present()->proyectoNode() }}</td>
                     <td>{{ $grupo->codigo_grupo }}</td>
                     <td>{{ $grupo->entidad->nombre }}</td>
                     <td>{{ $grupo->present()->grupoTipo() }}</td>

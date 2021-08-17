@@ -6,7 +6,7 @@
                     Idea de Proyecto
                 </span>
                 <p>
-                    <a class="orange-text text-darken-1" onclick="detallesIdeaPorId({{$proyecto->idea->id}})">{{$proyecto->idea->codigo_idea}} - {{$proyecto->idea->nombre_proyecto}}</a>
+                    <a class="orange-text text-darken-1" onclick="detallesIdeaPorId({{$proyecto->idea->id}})">{{$proyecto->idea->present()->ideaCode()}} - {{$proyecto->idea->present()->ideaName()}}</a>
                 </p>
             </li>
             <li class="collection-item">
@@ -14,13 +14,13 @@
                     ¿La idea viene de una convocatoria?
                 </span>
                 <p>
-                    {{$proyecto->idea->viene_convocatoria == 1 ? 'Si': 'No'}} 
+                    {{$proyecto->idea->present()->ideaVieneConvocatoria()}}
                 </p>
                 <span class="title black-text text-darken-3">
                     Nombre de convocatoria
                 </span>
                 <p>
-                    {{$proyecto->idea->viene_convocatoria == 1 ? $proyecto->idea->convocatoria: 'No Aplica'}} 
+                    {{$proyecto->idea->present()->ideaNombreConvocatoria()}}
                 </p>
             </li>
             <li class="collection-item">
@@ -28,7 +28,7 @@
                     Código del Proyecto
                 </span>
                 <p>
-                    {{$proyecto->articulacion_proyecto->actividad->codigo_actividad}}
+                    {{$proyecto->articulacion_proyecto->actividad->present()->actividadCode()}}
                 </p>
             </li>
             <li class="collection-item">
@@ -36,7 +36,7 @@
                     Nombre del Proyecto
                 </span>
                 <p>
-                    {{$proyecto->articulacion_proyecto->actividad->nombre}}
+                    {{$proyecto->articulacion_proyecto->actividad->present()->actividadName()}}
                 </p>
             </li>
             <li class="collection-item">
@@ -44,7 +44,7 @@
                     Linea Tecnológica
                 </span>
                 <p>
-                    {{$proyecto->sublinea->linea->nombre}}
+                    {{$proyecto->present()->proyectoLinea()}}
                 </p>
             </li>
             <li class="collection-item">
@@ -52,7 +52,7 @@
                     Sublínea
                 </span>
                 <p>
-                    {{$proyecto->sublinea->nombre}}
+                    {{$proyecto->present()->proyectoSublinea()}}
                 </p>
             </li>
             <li class="collection-item">
@@ -60,7 +60,7 @@
                     Área de Conocimiento
                 </span>
                 <p>
-                    {{$proyecto->areaconocimiento->nombre}} {{$proyecto->areaconocimiento->nombre == 'Otro' ? '(' . $proyecto->otro_areaconocimiento .')' : ''}}
+                    {{$proyecto->present()->proyectoAreaConocimiento()}} {{$proyecto->present()->proyectoOtroAreaConocimiento()}}
                 </p>
             </li>
         </ul>
@@ -72,9 +72,9 @@
                     ¿TRL obtenido?
                 </span>
                 <p>
-                    @if ($proyecto->trl_obtenido == 0)
+                    @if ($proyecto->present()->isProyectoTrlObtenido() == 0)
                         TRL 6
-                    @elseif ($proyecto->trl_obtenido == 1)
+                    @elseif ($proyecto->present()->isProyectoTrlObtenido() == 1)
                         TRL 7
                     @else
                         TRL 8
@@ -86,7 +86,7 @@
                     ¿Dirigido a área de emprendimiento SENA?
                 </span>
                 <p>
-                    {{$proyecto->diri_ar_emp == 0 ? 'NO' : 'SI'}}
+                    {{$proyecto->present()->proyectoDirigidoAreaEmprendimiento()}}
                 </p>
             </li>
             <li class="collection-item">
@@ -102,10 +102,10 @@
                     Conclusiones y siguiente paso del proyecto
                 </span>
                 <p>
-                    {{$proyecto->articulacion_proyecto->actividad->conclusiones}}
+                    {{$proyecto->present()->proyectoConclusiones()}}
                 </p>
             </li>
-            
+
         </ul>
     </div>
     <div class="col s12 m4 l4">
@@ -114,15 +114,15 @@
                 <span class="title black-text text-darken-3">
                     Primer objetivo específico
                 </span>
-                @if (isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->objetivo))
+                @if ($proyecto->has('articulacion_proyecto.actividad') && isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->objetivo))
                 <p>
-                    {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->objetivo}}
+                    {{$proyecto->present()->proyectoPrimerObjetivo()}}
                 </p>
                 <span class="title black-text text-darken-3">
                     ¿Se cumplió?
                 </span>
                 <p>
-                    {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->cumplido == 0 ? 'NO' : 'SI'}}
+                    {{$proyecto->articulacion_proyecto->actividad->present()->isActividadCumplioPrimerObjetivo()}}
                 </p>
                 @else
                 <p>
@@ -134,15 +134,15 @@
                 <span class="title black-text text-darken-3">
                     Segundo objetivo específico
                 </span>
-                @if (isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo))
+                @if ($proyecto->has('articulacion_proyecto.actividad') && isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo))
                 <p>
-                    {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo}}
+                    {{$proyecto->present()->proyectoSegundoObjetivo()}}
                 </p>
                 <span class="title black-text text-darken-3">
                     ¿Se cumplió?
                 </span>
                 <p>
-                    {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->cumplido == 0 ? 'NO' : 'SI'}}
+                    {{$proyecto->articulacion_proyecto->actividad->present()->isActividadCumplioSegundoObjetivo()}}
                 </p>
                 @else
                 <p>
@@ -154,15 +154,15 @@
                 <span class="title black-text text-darken-3">
                     Tercer objetivo específico
                 </span>
-                @if (isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo))
+                @if ($proyecto->has('articulacion_proyecto.actividad') && isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo))
                 <p>
-                    {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo}}
+                    {{$proyecto->present()->proyectoTercerObjetivo()}}
                 </p>
                 <span class="title black-text text-darken-3">
                     ¿Se cumplió?
                 </span>
                 <p>
-                    {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->cumplido == 0 ? 'NO' : 'SI'}}
+                    {{$proyecto->articulacion_proyecto->actividad->present()->isActividadCumplioTercerObjetivo()}}
                 </p>
                 @else
                 <p>
@@ -174,15 +174,15 @@
                 <span class="title black-text text-darken-3">
                     Cuarto objetivo específico
                 </span>
-                @if (isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo))
+                @if ($proyecto->has('articulacion_proyecto.actividad') && isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo))
                 <p>
-                    {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo}}
+                    {{$proyecto->present()->proyectoCuartoObjetivo()}}
                 </p>
                 <span class="title black-text text-darken-3">
                     ¿Se cumplió?
                 </span>
                 <p>
-                    {{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->cumplido == 0 ? 'NO' : 'SI'}}
+                    {{$proyecto->articulacion_proyecto->actividad->present()->isActividadCumplioCuartoObjetivo()}}
                 </p>
                 @else
                 <p>
@@ -202,9 +202,7 @@
                     Evidencias Prototipo producto
                 </span>
                 <p>
-                    {{$proyecto->trl_prototipo}}
-
-
+                    {{$proyecto->present()->proyectoTrlPrototipo()}}
                 </p>
             </li>
             <li class="collection-item">
@@ -212,7 +210,7 @@
                     Evidencias Pruebas documentadas
                 </span>
                 <p>
-                    {{$proyecto->trl_pruebas}}
+                    {{$proyecto->present()->proyectoEvidenciasPruebasDocumentadas()}}
                 </p>
             </li>
         </ul>
@@ -224,7 +222,7 @@
                     Evidencias Modelo de negocio
                 </span>
                 <p>
-                    {{$proyecto->trl_modelo}}
+                    {{$proyecto->present()->proyectoEvidenciasModeloNegocio()}}
                 </p>
             </li>
             <li class="collection-item">
@@ -232,13 +230,12 @@
                     Evidencias Normatividad
                 </span>
                 <p>
-                    {{$proyecto->trl_normatividad}}
+                    {{$proyecto->present()->proyectoEvidenciasNormatividad()}}
                 </p>
             </li>
         </ul>
     </div>
 </div>
-
 <div class="center">
     <span class="mailbox-title orange-text">
         <i class="material-icons">attach_file</i>
@@ -249,13 +246,13 @@
 <div class="row">
     <div class="col s6 m3 l3">
         <p class="p-v-xs">
-            <input type="checkbox" disabled {{ $proyecto->evidencia_trl == 1 ? 'checked' : '' }} id="txtevidencia_trl" name="txtevidencia_trl" value="1">
+            <input type="checkbox" disabled {{ $proyecto->present()->proyectoEvidenciaTrl() == 1 ? 'checked' : '' }} id="txtevidencia_trl" name="txtevidencia_trl" value="1">
             <label for="txtevidencia_trl">Evidencias según el trl.</label>
         </p>
     </div>
     <div class="col s6 m3 l3">
         <p class="p-v-xs">
-            <input type="checkbox" disabled {{ $proyecto->articulacion_proyecto->actividad->formulario_final == 1 ? 'checked' : '' }} id="txtformulario_final" name="txtformulario_final" value="1">
+            <input type="checkbox" disabled {{ $proyecto->articulacion_proyecto->actividad->present()->isActividadFormularioFinal() == 1 ? 'checked' : '' }} id="txtformulario_final" name="txtformulario_final" value="1">
             <label for="txtformulario_final">Acta de Cierre.</label>
         </p>
     </div>

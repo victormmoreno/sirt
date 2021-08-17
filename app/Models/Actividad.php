@@ -14,25 +14,22 @@ class Actividad extends Model
 
     /**
      * The attributes that should be cast to native types.
-     *
      * @var array
      */
     protected $casts = [
-        'gestor_id'        => 'integer',
-        'nodo_id'          => 'integer',
+        'codigo_actividad' => 'string',
+        'nombre'           => 'string',
         'fecha_inicio'     => 'date:Y-m-d',
         'fecha_cierre'     => 'date:Y-m-d',
-
     ];
 
     /**
      * The attributes that are mass assignable.
-     *
      * @var array
      */
     protected $fillable = [
-        'gestor_id',
-        'nodo_id',
+        // 'gestor_id',
+        // 'nodo_id',
         'codigo_actividad',
         'nombre',
         'fecha_inicio',
@@ -45,7 +42,6 @@ class Actividad extends Model
         'seguimiento',
         'evidencia_final',
         'formulario_final'
-
     ];
 
     /**
@@ -55,26 +51,16 @@ class Actividad extends Model
      * @author dum
      */
     public static function consultarHistoricoActividad($id) {
-      return DB::table('movimientos_actividades_users_roles')->select('movimiento', 'fases.nombre AS fase', 'roles.name AS rol', 'comentarios', 'movimientos_actividades_users_roles.created_at')
-      ->selectRaw('concat(nombres, " ", apellidos) AS usuario')
-      ->where('actividad_id', $id)
-      ->join('movimientos', 'movimientos.id', 'movimientos_actividades_users_roles.movimiento_id')
-      ->join('fases', 'fases.id', '=', 'movimientos_actividades_users_roles.fase_id')
-      ->join('users', 'users.id', '=', 'movimientos_actividades_users_roles.user_id')
-      ->join('roles', 'roles.id', '=', 'movimientos_actividades_users_roles.role_id')
-      ->orderBy('movimientos_actividades_users_roles.created_at');
+        return DB::table('movimientos_actividades_users_roles')->select('movimiento', 'fases.nombre AS fase', 'roles.name AS rol', 'comentarios', 'movimientos_actividades_users_roles.created_at')
+        ->selectRaw('concat(nombres, " ", apellidos) AS usuario')
+        ->where('actividad_id', $id)
+        ->join('movimientos', 'movimientos.id', 'movimientos_actividades_users_roles.movimiento_id')
+        ->join('fases', 'fases.id', '=', 'movimientos_actividades_users_roles.fase_id')
+        ->join('users', 'users.id', '=', 'movimientos_actividades_users_roles.user_id')
+        ->join('roles', 'roles.id', '=', 'movimientos_actividades_users_roles.role_id')
+        ->orderBy('movimientos_actividades_users_roles.created_at');
     }
 
-    /**
-    * Consulta las actividades
-    * @param Collection $query Propia de los scopes de laravel
-    * @return Builder
-    */
-    public function scopeConsultarActividades($query)
-    {
-      return $query->select('id')
-      ->selectRaw('CONCAT(codigo_actividad, " / ", nombre) AS proyecto');
-    }
 
     public function articulacion_proyecto()
     {
@@ -83,26 +69,26 @@ class Actividad extends Model
 
     public function movimientos()
     {
-      return $this->belongsToMany(Movimiento::class, 'movimientos_actividades_users_roles')
-      ->withTimestamps();
+        return $this->belongsToMany(Movimiento::class, 'movimientos_actividades_users_roles')
+        ->withTimestamps();
     }
 
     public function users_movimientos()
     {
-      return $this->belongsToMany(User::class, 'movimientos_actividades_users_roles')
-      ->withTimestamps();
+        return $this->belongsToMany(User::class, 'movimientos_actividades_users_roles')
+        ->withTimestamps();
     }
 
     public function roles_movimientos()
     {
-      return $this->belongsToMany(Role::class, 'movimientos_actividades_users_roles')
-      ->withTimestamps();
+        return $this->belongsToMany(Role::class, 'movimientos_actividades_users_roles')
+        ->withTimestamps();
     }
 
     public function fases_movimientos()
     {
-      return $this->belongsToMany(Fase::class, 'movimientos_actividades_users_roles')
-      ->withTimestamps();
+        return $this->belongsToMany(Fase::class, 'movimientos_actividades_users_roles')
+        ->withTimestamps();
     }
 
     public function edt()
@@ -120,10 +106,6 @@ class Actividad extends Model
         return $this->hasOne(ArticulacionPbt::class, 'actividad_id', 'id');
     }
 
-    /**
-     * Devolver relacion entre actividades y nodo
-     * @author julian londoño
-     */
     public function nodo()
     {
         return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
@@ -136,24 +118,11 @@ class Actividad extends Model
 
     public function objetivos_especificos()
     {
-      return $this->hasMany(ObjetivoEspecifico::class, 'actividad_id', 'id');
-    }
-
-    public function scopeActivitiesGestor($query)
-    {
-        return $query->with(['articulacion_proyecto.proyecto', 'articulacion_proyecto.articulacion'])
-        ->wherehas('articulacion_proyecto.proyecto', function ($query)  {
-            $query->where(function($subquery){
-                $subquery->where('fase_id', Fase::IsInicio())
-                ->orwhere('fase_id', Fase::IsPlaneacion())
-                ->orwhere('fase_id', Fase::IsEjecucion());
-            });
-        })
-        ->orderBy('fecha_inicio', 'ASC')->pluck('nombre','codigo_actividad');
+        return $this->hasMany(ObjetivoEspecifico::class, 'actividad_id', 'id');
     }
 
     public function present()
     {
         return new ActividadPresenter($this);
-    } 
+    }
 }

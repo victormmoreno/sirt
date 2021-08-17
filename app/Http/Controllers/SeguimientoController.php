@@ -165,7 +165,7 @@ class SeguimientoController extends Controller
     return $datos;
   }
 
-  /** 
+  /**
    * Retorna un array con los valores del seguimiento por fase actual
    * @param array $abiertos Array con los totales de proyectos activos
    * @param array $cerrados Array con los totales de proyectos cerrados
