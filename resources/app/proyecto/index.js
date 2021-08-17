@@ -3,6 +3,40 @@ $(document).ready(function() {
   consultarProyectosDelNodoPorAnho();
 });
 
+function verHorasDeExpertosEnProyecto(id) {
+  $.ajax({
+    dataType:'json',
+    type:'get',
+    url:"/proyecto/consultarHorasExpertos/"+id
+  }).done(function(respuesta){
+    $("#horasAsesoriasExpertosPorProyeto_table").empty();
+    if (respuesta.horas.length == 0 ) {
+      Swal.fire({
+        title: 'Ups!!',
+        text: "No se encontraron horas de asesorías de los expertos en este proyecto!",
+        type: 'error',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      })
+    } else {
+      $("#horasAsesoriasExpertosPorProyeto_titulo").empty();
+      $("#horasAsesoriasExpertosPorProyeto_titulo").append("<span class='cyan-text text-darken-3'>Horas de los experto en el proyecto</span>");
+      $.each(respuesta.horas, function (i, item) {
+        // console.log(item.experto);
+        $("#horasAsesoriasExpertosPorProyeto_table").append(
+          '<tr>'
+          +'<td>'+item.experto+'</td>'
+          +'<td>'+item.horas_directas+'</td>'
+          +'<td>'+item.horas_indirectas+'</td>'
+          +'</tr>'
+        );
+      });
+      $('#horasAsesoriasExpertosPorProyeto_modal').openModal();
+    }
+  });
+}
+
 function consultarProyectosDeTalentos () {
 
   $('#tblProyectoDelTalento').dataTable().fnDestroy();
@@ -294,7 +328,7 @@ function consultarProyectosDelNodoPorAnho() {
         name: 'nombre_fase',
       },
       {
-        width: '8%',
+        width: '6%',
         data: 'info',
         name: 'info',
         orderable: false
@@ -309,6 +343,12 @@ function consultarProyectosDelNodoPorAnho() {
         width: '6%',
         data: 'download_trazabilidad',
         name: 'download_trazabilidad',
+        orderable: false
+      },
+      {
+        width: '6%',
+        data: 'ver_horas',
+        name: 'ver_horas',
         orderable: false
       },
 

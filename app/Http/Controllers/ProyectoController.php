@@ -60,7 +60,6 @@ class ProyectoController extends Controller
     public function datatableProyectoTalento(Request $request)
     {
         $proyectos = $this->getProyectoRepository()->proyectosDelTalento(auth()->user()->talento->id);
-        // dd($proyectos);
         return $this->datatableProyectos($request, $proyectos);
     }
 
@@ -69,20 +68,21 @@ class ProyectoController extends Controller
         $proyecto = Proyecto::findOrFail($id);
         $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
         $costo = $this->costoController->costosDeUnaActividad($proyecto->articulacion_proyecto->actividad->id);
-        // foreach ($propietarios as $key => $propietario) {
-            // $empresa = Empresa::find($propietario->propietario_id);
-            // $sede = $empresa->sedes->first()->id;
-            // dd($propietario->update());
-            // $propietario->update([
-            //     'propietario_id' => $sede,
-            //     'propietario_type' => 'App\Models\Sede'
-            // ]);
-        // }
         return view('proyectos.detalle', [
             'proyecto' => $proyecto,
             'costo' => $costo,
             'historico' => $historico
         ]);
+    }
+
+    public function consultarHorasDeExpertos(int $id)
+    {
+        $horas = [];
+        $horas = $this->getProyectoRepository()->horasAsesoriaPorExperto($id)->get();
+        return response()->json([
+            'horas' => $horas
+        ]);
+        // dd($proyecto->articulacion_proyecto->actividad->usoinfraestructuras->usogestores);
     }
 
     /**
@@ -110,6 +110,9 @@ class ProyectoController extends Controller
                 return $seguimiento;
             })->addColumn('download_trazabilidad', function ($data) {
                 $seguimiento = '<a class="btn green lighten-1 m-b-xs" href=' . route('excel.proyecto.trazabilidad', $data->actividad_id) . '  target="_blank"><i class="far fa-file-excel"></i></a>';
+                return $seguimiento;
+            })->addColumn('ver_horas', function ($data) {
+                $seguimiento = '<a class="btn brown lighten-1 m-b-xs" onclick="verHorasDeExpertosEnProyecto('.$data->id.')"><i class="material-icons">access_time</i></a>';
                 return $seguimiento;
             })->addColumn('proceso', function ($data) {
                 if ($data->nombre_fase == 'Finalizado' || $data->nombre_fase == 'Suspendido') {
@@ -166,7 +169,7 @@ class ProyectoController extends Controller
                         return false;
                     });
                 }
-            })->rawColumns(['info', 'details', 'proceso', 'download_seguimiento', 'download_trazabilidad'])->make(true);
+            })->rawColumns(['info', 'details', 'proceso', 'download_seguimiento', 'download_trazabilidad', 'ver_horas'])->make(true);
     }
 
     public function carta_certificacion($id)

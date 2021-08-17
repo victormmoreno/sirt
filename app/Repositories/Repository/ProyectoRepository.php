@@ -258,6 +258,19 @@ class ProyectoRepository
     ->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
   }
 
+  public function horasAsesoriaPorExperto(int $id)
+  {
+    return Proyecto::selectRaw('sum(gu.asesoria_directa) AS horas_directas, sum(gu.asesoria_indirecta) AS horas_indirectas, CONCAT(u.nombres, " ", u.apellidos) AS experto')
+    ->join('articulacion_proyecto AS ap', 'ap.id', '=', 'proyectos.articulacion_proyecto_id')
+    ->join('actividades AS a', 'a.id', '=', 'ap.actividad_id')
+    ->join('usoinfraestructuras AS uso', 'a.id', '=', 'uso.actividad_id')
+    ->join('gestor_uso AS gu', 'gu.usoinfraestructura_id', '=', 'uso.id')
+    ->join('gestores AS g', 'g.id', '=', 'gu.gestor_id')
+    ->join('users AS u', 'u.id', '=', 'g.user_id')
+    ->where('proyectos.id', $id)
+    ->groupBy('experto');
+  }
+
   public function proyectosIndicadores_Repository(string $fecha_inicio, string $fecha_cierre)
   {
       return Proyecto::with([
@@ -343,6 +356,8 @@ class ProyectoRepository
           },
           'articulacion_proyecto.actividad.nodo',
           'articulacion_proyecto.actividad.nodo.entidad',
+          'articulacion_proyecto.actividad.usoinfraestructuras',
+          'articulacion_proyecto.actividad.usoinfraestructuras.usogestores',
           'articulacion_proyecto.proyecto',
           'articulacion_proyecto.proyecto.fase',
           'articulacion_proyecto.proyecto.idea',
@@ -467,7 +482,7 @@ class ProyectoRepository
    */
   public function proyectosDelTalento($id)
   {
-    return Proyecto::select('proyectos.id', 'actividades.codigo_actividad AS codigo_proyecto', 'actividades.nombre', 'fases.nombre AS nombre_fase')
+    return Proyecto::select('proyectos.id', 'actividades.codigo_actividad AS codigo_proyecto', 'actividades.nombre', 'fases.nombre AS nombre_fase', 'actividades.id AS actividad_id')
       ->selectRaw('concat(codigo_idea, " - ", nombre_proyecto) AS nombre_idea')
       ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombre_gestor')
       ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')

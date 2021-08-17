@@ -245,6 +245,30 @@
     <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat">Cerrar</a>
   </div>
 </div>
+
+<div id="horasAsesoriasExpertosPorProyeto_modal" class="modal">
+  <div class="modal-content">
+    <center><h4 id="horasAsesoriasExpertosPorProyeto_titulo" class="center-aling"></h4></center>
+    <div class="divider"></div>
+    <div>
+      <table class="striped">
+        <thead>
+          <tr>
+            <th>Experto</th>
+            <th>Horas de asesoría directa</th>
+            <th>Horas de asesoría indirecta</th>
+          </tr>
+        </thead>
+        <tbody id="horasAsesoriasExpertosPorProyeto_table">
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer  white-text">
+    <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat">Cerrar</a>
+  </div>
+</div>
 <div id="info_actividad_modal" class="modal modal-fixed-footer">
     <div class="modal-content" >
         <h4 id="actividad_titulo" class="valign-wrapper truncate center-align "></h4>

@@ -42,6 +42,7 @@
       <th>Información</th>
       <th>Proceso</th>
       <th>Trazabilidad</th>
+      <th>Horas de expertos</th>
     </tr>
   </thead>
   <tfoot>
@@ -61,6 +62,7 @@
       <th>
         <input type="text" name="nombre_fase" id="fase_nombre_tblProyectosDelNodoPorAnho" placeholder="Buscar por fase">
       </th>
+      <th></th>
       <th></th>
       <th></th>
       <th></th>
