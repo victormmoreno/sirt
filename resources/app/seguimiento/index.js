@@ -22,7 +22,7 @@ function alertaNodoNoValido() {
   Swal.fire('Advertencia!', 'Seleccione un nodo', 'warning');
 };
 // 0 para cuando el Dinamizador consultar
-// 1 para cuando el gestor consulta
+// 1 para cuando el experto consulta
 
 function consultarSeguimientoDeUnGestor(gestor_id) {
   $.ajax({

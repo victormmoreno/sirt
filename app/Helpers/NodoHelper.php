@@ -10,7 +10,7 @@ class NodoHelper
     public static function returnNodoUsuario()
     {
         if (\Session::get('login_role') == User::IsGestor() && isset(auth()->user()->gestor->nodo_id)) {
-            return User::IsGestor(). ' nodo ' . Nodo::userNodo(auth()->user()->gestor->nodo_id)->first()->nombre;
+            return 'Experto nodo ' . Nodo::userNodo(auth()->user()->gestor->nodo_id)->first()->nombre;
         } else if (\Session::get('login_role') == User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo_id)) {
             return User::IsDinamizador(). ' nodo ' . Nodo::userNodo(auth()->user()->dinamizador->nodo_id)->first()->nombre;
         } else if (\Session::get('login_role') == User::IsInfocenter() && isset(auth()->user()->infocenter->nodo_id)) {

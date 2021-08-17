@@ -2,7 +2,7 @@
     <thead>
     <tr>
         <th>Nodo</th>
-        <th>Gestor a cargo</th>
+        <th>Experto a cargo</th>
         <th>Línea Tecnológica</th>
         <th>Código de la actividad</th>
         <th>Nombre</th>

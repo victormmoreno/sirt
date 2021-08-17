@@ -77,9 +77,9 @@
                           <div class="col s12 m4 l4">
                             <div class="input-field col s12 m12 l12">
                               <select id="txtgestor_id" name="txtgestor_id" style="width: 100%" tabindex="-1">
-                                <option value="">Seleccione el Gestor</option>
+                                <option value="">Seleccione el experto</option>
                               </select>
-                              <label for="txtgestor_id">Gestor</label>
+                              <label for="txtgestor_id">Experto</label>
                             </div>
                             <div class="input-field col s12 m6 l6">
                               <input type="text" id="txtfecha_inicio_Grafico2" name="txtfecha_inicio_Grafico2" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, 1, 1)->toDateString() }}">
@@ -176,7 +176,7 @@
           url: '/grafico/consultarGestoresYLineasDeUnNodo/'+id,
           success: function (data) {
             $('#txtgestor_id').empty();
-            $('#txtgestor_id').append('<option value="">Seleccione el Gestor</option>')
+            $('#txtgestor_id').append('<option value="">Seleccione el experto</option>')
             $.each(data.gestores, function(i, e) {
               $('#txtgestor_id').append('<option value="'+e.id+'">'+e.nombres_gestor+'</option>');
             })

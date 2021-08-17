@@ -120,51 +120,51 @@
 </div>
 </div>
 <div id="modalInfoNotificacionComite" class="modal">
-<div class="modal-content">
-    <h4>Notificaciones del comité</h4>
-    <p>
-        Este apartado te permitirá enviar un correo de notificación con información relacionada con el comité.
-        <br>
-        ¿Cúal opción debo usar?
-        <br>
-        A continuación podrá ver el funcionamiento de los diferentes botones para enviar la notificación del comité.
-        <ul class="collection">
-            <li class="collection-item">
-            <a href="javascript:void(0)">
-                <div class="card-panel blue-grey lighten-3 black-text center">
-                    <i class="material-icons left">notifications</i>Enviar citación al talento.
-                </div>
-            </a>
-            Este botón enviará una notificación únicamente al talento que inscribió la idea de proyecto.
-            </li>
-            <li class="collection-item">
-            <a href="javascript:void(0)">
-                <div class="card-panel blue-grey lighten-3 black-text center">
-                    <i class="material-icons left">notifications</i>Enviar citación a talentos.
-                </div>
-            </a>
-            Este botón enviará una notificación a todos los talentos.
-            </li>
-            <li class="collection-item">
-            <a href="javascript:void(0)">
-                <div class="card-panel blue-grey lighten-3 black-text center">
-                    <i class="material-icons left">notifications</i>Enviar citación a expertos.
-                </div>
-            </a>
-            Este botón enviará una notificación a todos los expertos.
-            </li>
-            <li class="collection-item">
-            <a href="">
-                <div class="card-panel blue-grey lighten-3 black-text center">
-                    <i class="material-icons left">notifications</i>Enviar citación a todos los participantes.
-                </div>
-            </a>
-            Este botón enviará una notificación del comité a todos los participantes, tanto expertos como talentos.
-            </li>
-        </ul>
-    </p>
-</div>
-<div class="modal-footer">
-    <a href="#!" class="modal-close waves-effect waves-green btn-flat">Ok.</a>
-</div>
+    <div class="modal-content">
+      <h4>Notificaciones del comité</h4>
+      <p>
+          Este apartado te permitirá enviar un correo de notificación con información relacionada con el comité.
+          <br>
+          ¿Cúal opción debo usar?
+          <br>
+          A continuación podrá ver el funcionamiento de los diferentes botones para enviar la notificación del comité.
+          <ul class="collection">
+              <li class="collection-item">
+                <a href="javascript:void(0)">
+                    <div class="card-panel blue-grey lighten-3 black-text center">
+                        <i class="material-icons left">notifications</i>Enviar citación al talento.
+                    </div>
+                </a>
+                Este botón enviará una notificación únicamente al talento que inscribió la idea de proyecto.
+              </li>
+              <li class="collection-item">
+                <a href="javascript:void(0)">
+                    <div class="card-panel blue-grey lighten-3 black-text center">
+                        <i class="material-icons left">notifications</i>Enviar citación a talentos.
+                    </div>
+                </a>
+                Este botón enviará una notificación a todos los talentos.
+              </li>
+              <li class="collection-item">
+                <a href="javascript:void(0)">
+                    <div class="card-panel blue-grey lighten-3 black-text center">
+                        <i class="material-icons left">notifications</i>Enviar citación a expertos.
+                    </div>
+                </a>
+                Este botón enviará una notificación a todos los expertos.
+              </li>
+              <li class="collection-item">
+                <a href="">
+                    <div class="card-panel blue-grey lighten-3 black-text center">
+                        <i class="material-icons left">notifications</i>Enviar citación a todos los participantes.
+                    </div>
+                </a>
+                Este botón enviará una notificación del comité a todos los participantes, tanto expertos como talentos.
+              </li>
+          </ul>
+      </p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Ok.</a>
+    </div>
 </div>

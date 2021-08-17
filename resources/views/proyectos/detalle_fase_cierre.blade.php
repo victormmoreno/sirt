@@ -94,7 +94,7 @@
                     Costo Aproximado del Proyecto
                 </span>
                 <p>
-                    {{-- $ {{$costo->getData()->costosTotales}} --}}
+                    $ {{$costo->getData()->costosTotales}}
                 </p>
             </li>
             <li class="collection-item">

@@ -76,7 +76,6 @@
             text-align: center;
         }
     @media only screen and (max-width: 992px) {
-
         table.responsive-table thead {
             border: 0;
             border-right: 1px solid #d0d0d0;

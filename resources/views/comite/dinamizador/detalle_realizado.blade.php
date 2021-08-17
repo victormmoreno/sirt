@@ -45,7 +45,7 @@
                             <div class="col s12 m6 l6 center">
                                 <a href="{{route('csibt.asignar', $comite->id)}}">
                                     <div class="card-panel yellow lighten-3 black-text center">
-                                        <i class="material-icons left">edit</i>Asignar Expertos a las ideas de proyecto.
+                                        <i class="material-icons left">edit</i>Asignar expertos a las ideas de proyecto.
                                     </div>
                                 </a>
                             </div>

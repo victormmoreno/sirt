@@ -904,9 +904,9 @@
             showConfirmButton: false,
             timer: 1500,
             type: 'success',
-            title: 'Gestor eliminado.'
-        });
-    }
+            title: 'Experto eliminado.'
+          });
+        }
 
     function eliminarMaterial(index){
         $('#filaMaterial'+ index).remove();

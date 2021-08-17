@@ -128,24 +128,6 @@ class ProyectoRepository
     }
 
     /**
-     * Consulta la cantidad de proyectos por fecha de inicio y estados diferente a los de cierre
-     * @param string $fecha_inicio Primera fecha para realizar el fitro
-     * @param string $fecha_fin Segunda fecha para realizar el filtro
-     * @return Builder
-     * @author dum
-     */
-    public function consultarProyectoInscritosEntreFecha($fecha_inicio, $fecha_fin)
-    {
-        return Proyecto::selectRaw('count(proyectos.id) AS cantidad')
-        ->join('fases AS f', 'f.id', '=', 'proyectos.fase_id')
-        ->join('articulacion_proyecto AS ap', 'ap.id', '=', 'proyectos.articulacion_proyecto_id')
-        ->join('actividades AS a', 'a.id', '=', 'ap.actividad_id')
-        ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
-        ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
-        ->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
-    }
-
-    /**
      * Consulta trls esperado entre fechas de inicio
      * @param string $field Trl que se va a consultar
      * @param string $field_date Campo por el que se va a filtrar (fecha)

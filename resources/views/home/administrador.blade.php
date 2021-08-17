@@ -44,18 +44,19 @@
             </div>
             </div>
         </div>
-        <div class="col s12 m6 l3">
-            <div class="card stats-card">
-            <div class="card-options">
-                <ul class="hide-on-med-only">
-                    <li class="red-text"><span class="badge cyan lighten-1">{{$countTalentosActivos}} Talentos Activos</span></li>
-                </ul>
-            </div>
-            <div class="card-content">
-                <span class="card-title "><b>Talentos</b> </span>
-                <span class="stats-counter"><small> Total de Talentos: {{$totalTalentos}}</small></span>
-            </div>
-            </div>
+      </div>
+
+      <div class="col s12 m6 l3">
+        <div class="card stats-card">
+          <div class="card-options">
+              <ul class="hide-on-med-only">
+                <li class="red-text"><span class="badge cyan lighten-1">{{$countGestoresActivos}} Expertos activos</span></li>
+              </ul>
+          </div>
+          <div class="card-content">
+            <span class="card-title "><b>Expertos</b> </span>
+            <span class="stats-counter"><small> Total de expertos: {{$totalGestores}}</small></span>
+          </div>
         </div>
         </div>
 

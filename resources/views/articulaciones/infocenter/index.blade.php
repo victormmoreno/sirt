@@ -39,7 +39,7 @@ $year = Carbon\Carbon::now(); $year = $year->isoFormat('YYYY');
                 <div class="col s12 m12 l12">
                 <ul class="tabs" style="width: 100%;">
                     <li class="tab col s3"><a href="#articulaciones_por_nodo" class="active">Articulaciones del Nodo</a></li>
-                    <li class="tab col s3"><a href="#articulaciones_por_gestor">Articulaciones por Experto</a></li>
+                    <li class="tab col s3"><a href="#articulaciones_por_gestor">Articulaciones por experto</a></li>
                     <div class="indicator" style="right: 580.5px; left: 0px;"></div>
                 </ul>
                 <br>
@@ -57,13 +57,13 @@ $year = Carbon\Carbon::now(); $year = $year->isoFormat('YYYY');
                 </div>
                 </div>
                 <div class="input-field col s12 m6 l6">
-                <select class="initialized" id="txtgestor_id" name="txtgestor_id" style="width: 100%" tabindex="-1">
-                    <option value="">Seleccione un experto* </option>
+                  <select class="initialized" id="txtgestor_id" name="txtgestor_id" style="width: 100%" tabindex="-1">
+                    <option value="">Seleccione un experto del nodo * </option>
                     @foreach($gestores as $id => $nombres_gestor)
                     <option value="{{$id}}">{{$nombres_gestor}}</option>
                     @endforeach
-                </select>
-                <label for="txtgestor_id">Experto</label>
+                  </select>
+                  <label for="txtgestor_id">Experto</label>
                 </div>
                 <div class="row">
                 <div class="col s12 m4 l4 offset-l4">

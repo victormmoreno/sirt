@@ -3,6 +3,40 @@ $(document).ready(function() {
     consultarProyectosDelNodoPorAnho();
 });
 
+function verHorasDeExpertosEnProyecto(id) {
+  $.ajax({
+    dataType:'json',
+    type:'get',
+    url:"/proyecto/consultarHorasExpertos/"+id
+  }).done(function(respuesta){
+    $("#horasAsesoriasExpertosPorProyeto_table").empty();
+    if (respuesta.horas.length == 0 ) {
+      Swal.fire({
+        title: 'Ups!!',
+        text: "No se encontraron horas de asesorías de los expertos en este proyecto!",
+        type: 'error',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+      })
+    } else {
+      $("#horasAsesoriasExpertosPorProyeto_titulo").empty();
+      $("#horasAsesoriasExpertosPorProyeto_titulo").append("<span class='cyan-text text-darken-3'>Horas de los experto en el proyecto</span>");
+      $.each(respuesta.horas, function (i, item) {
+        // console.log(item.experto);
+        $("#horasAsesoriasExpertosPorProyeto_table").append(
+          '<tr>'
+          +'<td>'+item.experto+'</td>'
+          +'<td>'+item.horas_directas+'</td>'
+          +'<td>'+item.horas_indirectas+'</td>'
+          +'</tr>'
+        );
+      });
+      $('#horasAsesoriasExpertosPorProyeto_modal').openModal();
+    }
+  });
+}
+
 function consultarProyectosDeTalentos () {
 
     $('#tblProyectoDelTalento').dataTable().fnDestroy();
@@ -102,7 +136,7 @@ function verTalentosDeUnProyecto(id){
     });
 }
 
-// Ajax que muestra los proyectos de un gestor por año
+// Ajax que muestra los proyectos de un experto por año
 function consultarProyectosDelGestorPorAnho() {
     let anho = $('#anho_proyectoPorAnhoGestorNodo').val();
     $('#tblproyectosGestorPorAnho').dataTable().fnDestroy();
@@ -240,63 +274,77 @@ function preguntaReversarEjecucion(e){
 * Consulta los proyectos del nodo por año
 */
 function consultarProyectosDelNodoPorAnho() {
-    let anho_proyectos_nodo = $('#anho_proyectoPorNodoYAnho').val();
-    $('#tblproyectosDelNodoPorAnho').dataTable().fnDestroy();
-    $('#tblproyectosDelNodoPorAnho').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        processing: true,
-        serverSide: true,
-        order: [ 0, 'desc' ],
-        "lengthChange": false,
-        ajax:{
-            url: "/proyecto/datatableProyectosDelNodoPorAnho/"+0+"/"+anho_proyectos_nodo,
-            data: function (d) {
-                d.codigo_proyecto = $('#codigo_proyecto_tblProyectosDelNodoPorAnho').val(),
-                d.gestor = $('#gestor_tblProyectosDelNodoPorAnho').val(),
-                d.nombre = $('#nombre_tblProyectosDelNodoPorAnho').val(),
-                d.sublinea_nombre = $('#sublinea_nombre_tblProyectosDelNodoPorAnho').val(),
-                d.nombre_fase = $('#fase_nombre_tblProyectosDelNodoPorAnho').val(),
-                d.search = $('input[type="search"]').val()
-            }
-        },
-        columns: [
-            {
-                width: '15%',
-                data: 'codigo_proyecto',
-                name: 'codigo_proyecto',
-            },
-            {
-                data: 'gestor',
-                name: 'gestor',
-            },
-            {
-                data: 'nombre',
-                name: 'nombre',
-            },
-            {
-                data: 'sublinea_nombre',
-                name: 'sublinea_nombre',
-            },
-            {
-                data: 'nombre_fase',
-                name: 'nombre_fase',
-            },
-            {
-                width: '8%',
-                data: 'info',
-                name: 'info',
-                orderable: false
-            },
-            {
-                width: '6%',
-                data: 'proceso',
-                name: 'proceso',
-                orderable: false
-            },
-        ],
-    });
+  let anho_proyectos_nodo = $('#anho_proyectoPorNodoYAnho').val();
+  $('#tblproyectosDelNodoPorAnho').dataTable().fnDestroy();
+  $('#tblproyectosDelNodoPorAnho').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    order: [ 0, 'desc' ],
+    "lengthChange": false,
+    ajax:{
+      url: "/proyecto/datatableProyectosDelNodoPorAnho/"+0+"/"+anho_proyectos_nodo,
+      data: function (d) {
+        d.codigo_proyecto = $('#codigo_proyecto_tblProyectosDelNodoPorAnho').val(),
+        d.gestor = $('#gestor_tblProyectosDelNodoPorAnho').val(),
+        d.nombre = $('#nombre_tblProyectosDelNodoPorAnho').val(),
+        d.sublinea_nombre = $('#sublinea_nombre_tblProyectosDelNodoPorAnho').val(),
+        d.nombre_fase = $('#fase_nombre_tblProyectosDelNodoPorAnho').val(),
+        d.search = $('input[type="search"]').val()
+      }
+      // type: "get",
+    },
+    columns: [
+      {
+        width: '15%',
+        data: 'codigo_proyecto',
+        name: 'codigo_proyecto',
+      },
+      {
+        data: 'gestor',
+        name: 'gestor',
+      },
+      {
+        data: 'nombre',
+        name: 'nombre',
+      },
+      {
+        data: 'sublinea_nombre',
+        name: 'sublinea_nombre',
+      },
+      {
+        data: 'nombre_fase',
+        name: 'nombre_fase',
+      },
+      {
+        width: '6%',
+        data: 'info',
+        name: 'info',
+        orderable: false
+      },
+      {
+        width: '6%',
+        data: 'proceso',
+        name: 'proceso',
+        orderable: false
+      },
+      {
+        width: '6%',
+        data: 'download_trazabilidad',
+        name: 'download_trazabilidad',
+        orderable: false
+      },
+      {
+        width: '6%',
+        data: 'ver_horas',
+        name: 'ver_horas',
+        orderable: false
+      },
+
+    ],
+  });
 }
 
 function eliminarProyectoPorId_event(id, e) {
@@ -452,7 +500,7 @@ var infoActividad = {
                     <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.nombre)}</TD>
                 </TR>
                 <TR>
-                    <TH width="25%">Gestor</TH>
+                    <TH width="25%">Experto</TH>
                     <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.articulacion.asesor.documento)} - ${response.data.actividad.articulacion_proyecto.articulacion.asesor.nombres} ${response.data.actividad.articulacion_proyecto.articulacion.asesor.apellidos}</TD>
                     <TH width="25%">Correo Electrónico</TH>
                     <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.articulacion.asesor.email)}</TD>

@@ -221,7 +221,7 @@ class ArticulacionController extends Controller
     public function updateGestor(Request $request, int $id)
     {
         $messages = [
-            'txtgestor_id.required' => 'El Gestor es obligatorio.',
+            'txtgestor_id.required' => 'El experto es obligatorio.',
         ];
 
         $validator = Validator::make($request->all(), [
@@ -236,10 +236,10 @@ class ArticulacionController extends Controller
 
         $update = $this->articulacionRepository->updateGestor($request, $id);
         if ($update) {
-            Alert::success('Se ha cambiado el gestor de la articulación!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
+            Alert::success('Se ha cambiado el experto de la articulación!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
             return redirect('articulacion');
         } else {
-            Alert::error('No se ha cambiado el gestor de la articulación!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+            Alert::error('No se ha cambiado el experto de la articulación!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
     }
@@ -1050,16 +1050,16 @@ class ArticulacionController extends Controller
         } else {
             $validator = Validator::make($request->all(), [
                 'txtgestor_id' => 'required'
-            ], ['txtgestor_id.required' => 'El Gestor es obligatorio.']);
+            ], ['txtgestor_id.required' => 'El experto es obligatorio.']);
             if ($validator->fails()) {
                 return back()->withErrors($validator)->withInput();
             }
             $update = $this->articulacionRepository->updateGestorArticulacion_Repository($request, $id);
             if ($update) {
-                Alert::success('Modificación Exitosa!', 'El gestor de la articulación se ha cambiado!')->showConfirmButton('Ok', '#3085d6');
+                Alert::success('Modificación Exitosa!', 'El experto de la articulación se ha cambiado!')->showConfirmButton('Ok', '#3085d6');
                 return redirect('articulacion');
             } else {
-                Alert::error('Modificación Errónea!', 'El gestor de la articulación no se ha cambiado!')->showConfirmButton('Ok', '#3085d6');
+                Alert::error('Modificación Errónea!', 'El experto de la articulación no se ha cambiado!')->showConfirmButton('Ok', '#3085d6');
                 return back();
             }
         }

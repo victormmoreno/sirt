@@ -25,7 +25,7 @@
                 <div class="row">
                     <div class="input-field col s12 m6 l6 offset-m3 offset-l3">
                       <select id="txtgestor_id" class="js-states" name="txtgestor_id" style="width: 100%;">
-                        <option value="">Seleccione el Experto</option>
+                        <option value="">Seleccione el experto</option>
                         @forelse ($gestores as $id => $nombres_gestor)
                           <option value="{{$id}}" {{ $id == $idea->gestor_id ? 'selected' : '' }} {{ old('txtgestor_id') == $id ? 'selected':'' }} >{{$nombres_gestor}}</option>
                         @empty
@@ -42,7 +42,7 @@
                 <center>
                   <button type="submit" value="send" class="waves-effect cyan darken-1 btn center-aling">
                     <i class="material-icons right">done</i>
-                    Cambiar Experto.
+                    Cambiar experto.
                   </button>
                   <a href="{{route('csibt.detalle', $comite->id)}}" class="waves-effect red lighten-2 btn center-aling">
                     <i class="material-icons right">backspace</i>Cancelar

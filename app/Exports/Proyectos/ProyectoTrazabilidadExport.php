@@ -1,29 +1,43 @@
 <?php
 
-namespace App\Exports\User;
+namespace App\Exports\Proyectos;
 
-use Maatwebsite\Excel\Events\AfterSheet;
 use Illuminate\Contracts\View\View;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use App\Exports\FatherExport;
+use Maatwebsite\Excel\Events\{AfterSheet};
 
-class GestorSheetExport extends FatherExport
+class ProyectoTrazabilidadExport extends FatherExport
 {
 
-    private $request;
-    private $query;
-
-    public function __construct($request, $query)
+    public $proyecto_local;
+    public function __construct($historial, $proyecto)
     {
-        $this->request = $request;
-        $this->query = $query;
-        $this->setCount($this->query->count() + 1);
-        $this->setRangeHeadingCell('A1:AA1');
+        $this->proyecto_local = $proyecto;
+        $this->setQuery($historial);
+        $this->setCount($this->getQuery()->count() + 1);
+        $this->setRangeHeadingCell('A1:K1');
     }
 
+    /**
+     * @abstract
+     */
+    public function view(): View
+    {
+        return view('exports.proyectos.trazabilidad', [
+            'historial' => $this->getQuery(),
+            'proyecto' => $this->proyecto_local
+        ]);
+    }
+
+    /**
+     * Método para aplicar estilos al archivo excel después de que se genera la hoja de excel
+     * @return array
+     * @abstract
+     * @author dum
+     */
     public function registerEvents(): array
     {
-        $columnPar = $this->styleArrayColumnsPar();
-        $columnImPar = $this->styleArrayColumnsImPar();
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 $this->styledCells($event);
@@ -32,19 +46,12 @@ class GestorSheetExport extends FatherExport
         ];
     }
 
-    /**
-     * Aplica estilos a las celdas
-     * @param AfterSheet $event
-     * @return void
-     * @author dum
-     */
-    private function styledCells(AfterSheet $event)
-    {
-        // Estilos para los nombres de las columnas
+
+    private function styledCells(AfterSheet $event) {
         $event->sheet->getStyle($this->getRangeHeadingCell())->getFont()->setSize(14)->setBold(1);
-        // Estilos para los registros de la consulta
+        $event->sheet->getDelegate()->getComment('K1')->getText()->createTextRun('Fecha en la que se realizó la acción');
         $init = 'A';
-        for ($i = 0; $i < 27; $i++) {
+        for ($i = 0; $i < 11; $i++) {
             $temp = $init++;
             $coordenadas = $temp . '1:' . $temp . $this->getCount();
             $event->sheet->getStyle($coordenadas)->applyFromArray($this->styleArray());
@@ -57,16 +64,6 @@ class GestorSheetExport extends FatherExport
     }
 
     /**
-     * @abstract
-     */
-    public function view(): View
-    {
-        return view('exports.users.gestor', [
-            'users' => $this->query,
-        ]);
-    }
-
-    /**
      * Asigna el nombre para la hoja de excel
      * @return string
      * @abstract
@@ -74,7 +71,6 @@ class GestorSheetExport extends FatherExport
      */
     public function title(): String
     {
-        return "Expertos";
+        return 'Trazabilidad';
     }
-
 }

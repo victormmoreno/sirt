@@ -43,7 +43,7 @@ class ComiteRepository
     }
 
     /**
-     * Une los correos de los gestores de un comité en un array
+     * Une los correos de los expertos de un comité en un array
      * @param Comite $comite
      * @return array
      * @author dum
@@ -61,7 +61,7 @@ class ComiteRepository
      * Envía el correo con los datos del agendamiento
      * @param int $id Id del comité
      * @param int $idea Id de la idea
-     * @param string $rol Se indica a que tipo de usuario se le va a enviar la notificación (gestores/talentos)
+     * @param string $rol Se indica a que tipo de usuario se le va a enviar la notificación (expertos/talentos)
      * @return boolean
      * @author dum
      */
@@ -73,7 +73,7 @@ class ComiteRepository
             $comite = Comite::findOrFail($id);
 
             if ($rol == 'todos') {
-                // La notificación se le enviará a todos los participantes, tanto talentos como gestores
+                // La notificación se le enviará a todos los participantes, tanto talentos como expertos
                 event(new GestoresWereRegistered($comite, $this->getEmailGestoresDelComite($comite)));
                 foreach ($comite->ideas as $key => $value) {
                     event(new AgendamientoWasRegistered($value, $comite));
@@ -224,7 +224,7 @@ class ComiteRepository
     }
 
     /**
-     * Asignar gestores a cargo de ideas de proyecto
+     * Asignar expertos a cargo de ideas de proyecto
      * @param $request
      * @param int $id
      * @return boolean
@@ -250,7 +250,7 @@ class ComiteRepository
     }
 
     /**
-     * Asigna a los gestores las ideas de proyectos que se aprobaron en el comité
+     * Asigna a los expertos las ideas de proyectos que se aprobaron en el comité
      * @param Comite $comite
      * @param $request
      * @return void
@@ -495,7 +495,7 @@ class ComiteRepository
     }
 
     /**
-     * Cambia el gestor de una idea de proyecto
+     * Cambia el experto de una idea de proyecto
      *
      * @param Type $var Description
      * @return type
@@ -534,7 +534,7 @@ class ComiteRepository
     }
 
     /**
-     * Retorna un array con los datos de los gestores que se van a presentar en el comité
+     * Retorna un array con los datos de los expertos que se van a presentar en el comité
      * @param $request Datos del formulario
      * @return array
      * @author dum

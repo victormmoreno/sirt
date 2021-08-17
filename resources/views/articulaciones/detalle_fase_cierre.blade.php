@@ -148,7 +148,7 @@
                                     <div class="col s6 m6 l6">
                                         <p class="p-v-xs">
                                             <input type="checkbox" disabled {{ $articulacion->articulacion_proyecto->actividad->formulario_final == 1 ? 'checked' : '' }} id="txtformulario_final" name="txtformulario_final" value="1">
-                                            <label for="txtformulario_final">Formularios con firmas del gestor y talentos.</label>
+                                            <label for="txtformulario_final">Formularios con firmas del experto y talentos.</label>
                                         </p>
                                     </div>
                                 </div>

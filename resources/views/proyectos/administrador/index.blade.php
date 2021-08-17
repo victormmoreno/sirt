@@ -25,8 +25,11 @@
                 <div class="card-content">
                 <div class="row">
                     <div class="col s12 m12 l12">
-                    <div class="center-align">
-                        <span class="card-title center-align">Proyectos de Tecnoparque</span>
+                      <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
+                        <li class="tab col s3"><a href="#proyectos_por_nodo" class="active">Proyectos Por Nodo</a></li>
+                        <div class="indicator" style="right: 580.5px; left: 0px;"></div>
+                      </ul>
+                      <br>
                     </div>
                     <div class="divider"></div>
                     <div class="row">

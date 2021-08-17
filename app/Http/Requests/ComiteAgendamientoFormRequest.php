@@ -38,7 +38,7 @@ class ComiteAgendamientoFormRequest extends FormRequest
 
         'ideas.required' => 'Se requiere por lo menos de una idea de proyecto',
         
-        'gestores.required' => 'Se requiere por lo menos de un gestor',
+        'gestores.required' => 'Se requiere por lo menos de un experto',
       ];
     }
 

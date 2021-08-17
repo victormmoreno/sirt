@@ -44,9 +44,9 @@ class ProyectoAprobarCierre extends Notification implements ShouldQueue
             'link'  => route('proyecto.cierre', $this->getProyecto()->id),
             'icon'  => 'library_books',
             'color' => 'green',
-            'autor' => "{$this->getProyecto()->asesor->user->nombres} {$this->getProyecto()->asesor->user->apellidos}",
-            'text'  => "El gestor ha solicitado aprobar la fase de cierre | {$this->getProyecto()->articulacion_proyecto->actividad->codigo_actividad} - {$this->getProyecto()->articulacion_proyecto->actividad->nombre}",
-        ];
+            'autor' => "{$this->getProyecto()->articulacion_proyecto->actividad->gestor->user->nombres} {$this->getProyecto()->articulacion_proyecto->actividad->gestor->user->apellidos}",
+            'text'  => "El experto ha solicitado aprobar la fase de cierre | {$this->getProyecto()->articulacion_proyecto->actividad->codigo_actividad} - {$this->getProyecto()->articulacion_proyecto->actividad->nombre}",
+          ];
     }
 
     public function setProyecto($proyecto)

@@ -12,7 +12,7 @@
                 @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor()))
                 <li class="collection-item">
                     <span class="title"><b>Paso 2</b></span>
-                    <p>señor(a) usuario, si la asesoria fue acompañada por otro experto agregue a este en la sección de expertos Asesores, pulsando el boton agregar experto.</p>
+                    <p>Señor(a) usuario, si la asesoria fue acompañada por otro experto agregue a este en la sección de expertos Asesores, pulsando el boton agregar experto.</p>
                 </li>
                 @endif
             </ul>

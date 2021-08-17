@@ -85,7 +85,7 @@
                             </p>
                             @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
                             <p>
-                                Aún no tienes proyectos en fase de inicio, planeacion o en fase de ejecución o puedes que no esten aprobados. Por favor consulta con el gestor asesor.
+                                Aún no tienes proyectos en fase de inicio, planeacion o en fase de ejecución o puedes que no esten aprobados. Por favor consulta con el experto asesor.
                             </p>
                             @endif
                         </div>
@@ -350,7 +350,8 @@
                         let cont;
                         let a = document.getElementsByName("gestor[]");
                         let fila ="";
-                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td>'+response.proyecto.abreviatura + ' - ' + response.proyecto.lineatecnologica_nombre+'</td><td><input type="hidden" name="gestor[]"  value="'+response.proyecto.gestor_id+'">'+response.proyecto.documento + ' -  ' + response.proyecto.nombres+' '+  response.proyecto.apellidos+' - Gestor a cargo'+'</td><td><input type="number" min="0" step="0.1" name="asesoriadirecta[]" min="0" maxlength="6" value="0"><label class="error" for="asesoriadirecta" id="asesoriadirecta-error"></label></td><td><input type="number" min="0" step="0.1" name="asesoriaindirecta[]" min="0" maxlength="6" value="0"/><label class="error" for="asesoriaindirecta" id="asesoriaindirecta-error"></label></td></td><td></tr>';
+
+                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td>'+response.proyecto.abreviatura + ' - ' + response.proyecto.lineatecnologica_nombre+'</td><td><input type="hidden" name="gestor[]"  value="'+response.proyecto.gestor_id+'">'+response.proyecto.documento + ' -  ' + response.proyecto.nombres+' '+  response.proyecto.apellidos+' - Experto a cargo'+'</td><td><input type="number" min="0" step="0.1" name="asesoriadirecta[]" min="0" maxlength="6" value="0"><label class="error" for="asesoriadirecta" id="asesoriadirecta-error"></label></td><td><input type="number" min="0" step="0.1" name="asesoriaindirecta[]" min="0" maxlength="6" value="0"/><label class="error" for="asesoriaindirecta" id="asesoriaindirecta-error"></label></td></td><td></tr>';
                         cont++;
                         $('#detallesGestores').append(fila);
                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsApoyoTecnico())
@@ -971,7 +972,7 @@
                     showConfirmButton: false,
                     timer: 1500,
                     type: 'warning',
-                    title: 'Debe seleccionar un Gestor'
+                    title: 'Debe seleccionar un experto'
                 });
 
             }else{
@@ -984,7 +985,7 @@
                         showConfirmButton: false,
                         timer: 1500,
                         type: 'error',
-                        title: 'El Gestor ' + nombreGestor + ' ya esta listado.'
+                        title: 'El experto ' + nombreGestor + ' ya esta listado.'
                       });
 
                     $("#txtgestorasesor").val();
@@ -1032,7 +1033,7 @@
                         showConfirmButton: false,
                         timer: 1500,
                         type: 'success',
-                        title: 'El Gestor ' + nombreGestor + ' agregado.'
+                        title: 'El experto ' + nombreGestor + ' ha sido agregado.'
                       });
 
 
@@ -1063,7 +1064,7 @@
             showConfirmButton: false,
             timer: 1500,
             type: 'success',
-            title: 'Gestor eliminado.'
+            title: 'Experto eliminado.'
           });
         }
 

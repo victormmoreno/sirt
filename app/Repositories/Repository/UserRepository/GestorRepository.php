@@ -8,7 +8,7 @@ use App\Models\Gestor;
 class GestorRepository
 {
 
-    // Consulta los gestores de una línea tecnológica por nodo
+    // Consulta los expertos de una línea tecnológica por nodo
     public function consultarGestoresPorLineaTecnologicaYNodoRepository($id, $idnodo)
     {
         return User::select('gestores.id')
@@ -32,7 +32,7 @@ class GestorRepository
 
 
     /**
-     * Consulta los datos de un gestor por el id de la tabla de gestores
+     * Consulta los datos de un experto por el id de la tabla de gestores
      * @param int $id Id del gestor por el que se consultaran los datos
      * @return Collection
      * @author Victor Manuel Moreno Vega

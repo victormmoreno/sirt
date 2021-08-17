@@ -5,13 +5,18 @@
         <div class="content">
         <div class="row no-m-t no-m-b">
             <div class="row">
-                <div class="col s8 m8 l10">
-                    <h5 class="left-align">
-                        <i class="material-icons left">
-                            library_books
-                        </i>
-                        Proyectos de Base Tecnológica
-                    </h5>
+              <div class="center-align">
+                <span class="card-title center-align">Proyectos de Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }} </span>
+              </div>
+              <div class="divider"></div>
+              <div class="row">
+                <div class="col s12 m12 l12">
+                  <ul class="tabs" style="width: 100%;">
+                    <li class="tab col s3"><a href="#proyectos_por_nodo" class="active">Proyectos del Nodo</a></li>
+                    <li class="tab col s3"><a class="" href="#proyectos_por_gestor">Proyectos por experto</a></li>
+                    <div class="indicator" style="right: 580.5px; left: 0px;"></div>
+                  </ul>
+                  <br>
                 </div>
                 <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
                     <ol class="breadcrumbs">
@@ -28,14 +33,24 @@
                 </div>
                 <div class="divider"></div>
                 <div class="row">
-                    <div class="col s12 m12 l12">
-                    <ul class="tabs" style="width: 100%;">
-                        <li class="tab col s3"><a href="#proyectos_por_nodo" class="active">Proyectos del Nodo</a></li>
-                        <li class="tab col s3"><a class="" href="#proyectos_por_gestor">Proyectos por Gestor</a></li>
-                        <div class="indicator" style="right: 580.5px; left: 0px;"></div>
-                    </ul>
-                    <br>
-                    </div>
+                  <div class="input-field col s12 m6 l6">
+                    <select class="js-states"  tabindex="-1" style="width: 100%" id="anho_proyectoPorAnhoGestorNodo" name="anho_proyectoPorAnhoGestorNodo">
+                      {!! $year = Carbon\Carbon::now(); $year = $year->isoFormat('YYYY'); !!}
+                      @for ($i=2016; $i <= $year; $i++)
+                        <option value="{{$i}}" {{ $i == Carbon\Carbon::now()->isoFormat('YYYY') ? 'selected' : '' }}>{{$i}}</option>
+                      @endfor
+                    </select>
+                    <label for="anho_proyectoPorAnhoGestorNodo">Seleccione el Año</label>
+                  </div>
+                  <div class="input-field col s12 m6 l6">
+                    <select id="txtgestor_id" name="txtgestor_id" style="width: 100%" tabindex="-1">
+                      <option value="">Seleccione un experto del nodo</option>
+                      @foreach($gestores as $id => $nombres_gestor)
+                        <option value="{{$id}}">{{$nombres_gestor}}</option>
+                      @endforeach
+                    </select>
+                    <label for="txtgestor_id">Experto</label>
+                  </div>
                 </div>
                 <div id="proyectos_por_nodo">
                     <div class="row">

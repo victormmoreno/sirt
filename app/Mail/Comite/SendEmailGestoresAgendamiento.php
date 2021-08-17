@@ -12,7 +12,7 @@ class SendEmailGestoresAgendamiento extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
     public $comite;
     public $nodo;
-    public $subject = "Agendamiento del CSIBT - Gestores";
+    public $subject = "Agendamiento del CSIBT - Expertos";
 
     /**
      * Create a new message instance.
