@@ -178,39 +178,43 @@
           }
         },
         columns: [
-          {
-            width: '15%',
-            data: 'codigo_proyecto',
-            name: 'codigo_proyecto',
-          },
-          {
-            data: 'gestor',
-            name: 'gestor',
-          },
-          {
-            data: 'nombre',
-            name: 'nombre',
-          },
-          {
-            data: 'sublinea_nombre',
-            name: 'sublinea_nombre',
-          },
-          {
-            data: 'nombre_fase',
-            name: 'nombre_fase',
-          },
-          {
+            {
+                width: '15%',
+                data: 'codigo_proyecto',
+                name: 'codigo_proyecto',
+            },
+            {
+                data: 'gestor',
+                name: 'gestor',
+            },
+            {
+                data: 'nombre',
+                name: 'nombre',
+            },
+            {
+                data: 'sublinea_nombre',
+                name: 'sublinea_nombre',
+            },
+            {
+                data: 'nombre_fase',
+                name: 'nombre_fase',
+            },
+            {
+                    width: '8%',
+                    data: 'info',
+                    name: 'info',
+                    orderable: false
+            },
+            {
                 width: '8%',
-                data: 'info',
-                name: 'info',
+                data: 'proceso',
+                name: 'proceso',
                 orderable: false
-           },
-          {
-            width: '8%',
-            data: 'proceso',
-            name: 'proceso',
-            orderable: false
-          },
+            },
+        ]
+      });
+    }
+  }
 
     $("#sublinea_nombre_tblproyectosDelGestorPorAnho").keyup(function(){
         $('#tblproyectosDelGestorPorAnho').DataTable().draw();
@@ -286,6 +290,6 @@
             ],
         });
     }
-    }
+
 </script>
 @endpush

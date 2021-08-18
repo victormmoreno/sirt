@@ -1,21 +1,11 @@
 {
-<<<<<<< HEAD
-    "/js/app.js": "/js/app.js?id=bf821c3d85ef297a5e0e",
-    "/js/app.min.js": "/js/app.min.js?id=bf821c3d85ef297a5e0e",
-=======
-    "/js/app.js": "/js/app.js?id=f07ddb019e14cb2d4625",
-    "/js/app.min.js": "/js/app.min.js?id=f07ddb019e14cb2d4625",
->>>>>>> 07bc4982e9e8b2aecb3a03aae0a20fab2f8af61e
+    "/js/app.js": "/js/app.js?id=75bc7b5f4f34789c7967",
+    "/js/app.min.js": "/js/app.min.js?id=75bc7b5f4f34789c7967",
     "/css/libs.css": "/css/libs.css?id=6226f82efb9e9263a3fd",
     "/css/libs.min.css": "/css/libs.min.css?id=6226f82efb9e9263a3fd",
     "/js/libs.js": "/js/libs.js?id=6755aa0d506a7657366c",
     "/js/libs.min.js": "/js/libs.min.js?id=6755aa0d506a7657366c",
-<<<<<<< HEAD
-    "/js/app2.js": "/js/app2.js?id=ce885c53c66ea1cb0b97",
-    "/js/app2.min.js": "/js/app2.min.js?id=ce885c53c66ea1cb0b97",
-=======
-    "/js/app2.js": "/js/app2.js?id=e90c372251b5301da305",
-    "/js/app2.min.js": "/js/app2.min.js?id=e90c372251b5301da305",
->>>>>>> 07bc4982e9e8b2aecb3a03aae0a20fab2f8af61e
+    "/js/app2.js": "/js/app2.js?id=859b190d333b62a0ebe7",
+    "/js/app2.min.js": "/js/app2.min.js?id=859b190d333b62a0ebe7",
     "/js/web.js": "/js/web.js?id=fc671af1b3ebe558665a"
 }
