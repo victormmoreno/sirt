@@ -50,7 +50,7 @@ class ArticulacionPbtPresenter extends Presenter
         if(
             $this->articulacionpbt->whereHasMorph(
                 'articulable',
-                [ \App\Models\Proyecto::class],
+                [ \App\Models\Proyecto::class]
             ) && isset($this->articulacionpbt->articulable->articulacion_proyecto->actividad)
         ){
             return $this->articulacionpbt->articulable->articulacion_proyecto->actividad->present()->actividadName();
@@ -65,7 +65,7 @@ class ArticulacionPbtPresenter extends Presenter
         if(
             $this->articulacionpbt->whereHasMorph(
                 'articulable',
-                [ \App\Models\Proyecto::class],
+                [ \App\Models\Proyecto::class]
             ) && isset($this->articulacionpbt->articulable->articulacion_proyecto->actividad)
         ){
             return $this->articulacionpbt->articulable->articulacion_proyecto->actividad->present()->actividadCode();
@@ -78,7 +78,7 @@ class ArticulacionPbtPresenter extends Presenter
         if(
             $this->articulacionpbt->whereHasMorph(
                 'articulable',
-                [ \App\Models\Proyecto::class],
+                [ \App\Models\Proyecto::class]
             ) && isset($this->articulacionpbt->articulable->articulacion_proyecto->actividad)
         ){
             return optional($this->articulacionpbt->articulable->articulacion_proyecto->actividad->fecha_cierre)->isoFormat('YYYY-MM-DD');
@@ -91,7 +91,7 @@ class ArticulacionPbtPresenter extends Presenter
         if(
             $this->articulacionpbt->whereHasMorph(
                 'articulable',
-                [ \App\Models\Proyecto::class],
+                [ \App\Models\Proyecto::class]
             ) && isset($this->articulacionpbt->articulable->articulacion_proyecto->actividad)
         ){
             return $this->articulacionpbt->articulable->articulacion_proyecto->actividad->objetivo_general;
@@ -104,7 +104,7 @@ class ArticulacionPbtPresenter extends Presenter
         if(
             $this->articulacionpbt->whereHasMorph(
                 'articulable',
-                [ \App\Models\Proyecto::class],
+                [ \App\Models\Proyecto::class]
             ) && isset($this->articulacionpbt->articulable)
         ){
             return $this->articulacionpbt->articulable->id;
@@ -117,7 +117,7 @@ class ArticulacionPbtPresenter extends Presenter
         if(
             $this->articulacionpbt->whereHasMorph(
                 'articulable',
-                [ \App\Models\Proyecto::class],
+                [ \App\Models\Proyecto::class]
             ) && isset($this->articulacionpbt->articulable->idea)
         ){
             return $this->articulacionpbt->articulable->idea->nombre_proyecto;
@@ -130,7 +130,7 @@ class ArticulacionPbtPresenter extends Presenter
         if(
             $this->articulacionpbt->whereHasMorph(
                 'articulable',
-                [ \App\Models\Proyecto::class],
+                [ \App\Models\Proyecto::class]
             ) && isset($this->articulacionpbt->articulable->idea)
         ){
             return $this->articulacionpbt->articulable->idea->codigo_idea;
@@ -143,7 +143,7 @@ class ArticulacionPbtPresenter extends Presenter
         if(
             $this->articulacionpbt->whereHasMorph(
                 'articulable',
-                [ \App\Models\Proyecto::class],
+                [ \App\Models\Proyecto::class]
             ) && isset($this->articulacionpbt->articulable->idea)
         ){
             return $this->articulacionpbt->articulable->idea->id;
@@ -179,7 +179,7 @@ class ArticulacionPbtPresenter extends Presenter
         if(
             $this->articulacionpbt->whereHasMorph(
                 'articulable',
-                [ \App\Models\Sede::class],
+                [ \App\Models\Sede::class]
             ) && isset($this->articulacionpbt->articulable)
         ){
             return $this->articulacionpbt->articulable->nombre_sede;
@@ -192,7 +192,7 @@ class ArticulacionPbtPresenter extends Presenter
         if(
             $this->articulacionpbt->whereHasMorph(
                 'articulable',
-                [ \App\Models\Sede::class],
+                [ \App\Models\Sede::class]
             ) && isset($this->articulacionpbt->articulable)
         ){
             return $this->articulacionpbt->articulable->id;
