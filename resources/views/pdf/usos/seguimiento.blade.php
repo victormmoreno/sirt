@@ -197,12 +197,12 @@
 
     <div class="card-content">
         <table class="bordered">
-            <tr>
+            {{-- <tr>
                 <td colspan="1" rowspan="2"><img class="center-image" src="{{asset('img/web.png')}}"></td>
                 <td colspan="7" class="centered"><b>Seguimiento de Asesorias y Uso Infraestructura<b></td>
-            </tr>
+            </tr> --}}
             <tr>
-                <td colspan="7" class="centered">
+                <td colspan="8" class="centered">
                 @if ($tipo_actividad == 'proyecto')
                     <b>ACTA No. {{ substr($data->present()->proyectoCode(), -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b>
                 @elseif($tipo_actividad == 'articulacion')

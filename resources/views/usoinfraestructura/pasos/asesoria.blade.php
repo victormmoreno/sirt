@@ -99,13 +99,13 @@
                         <option value="">Seleccione Experto</option>
                         @if(isset($usoinfraestructura->usogestores))
                             @foreach($gestores as $gestor)
-                                <option value="{{$gestor->id}}">
+                                <option value="{{$gestor->user->id}}">
                                     {{$gestor->user()->withTrashed()->first()->documento}} - {{$gestor->user()->withTrashed()->first()->nombres}} {{$gestor->user()->withTrashed()->first()->apellidos}} / {{$gestor->lineatecnologica->nombre}}
                                 </option>
                             @endforeach
                         @else
                             @foreach($gestores as $gestor)
-                            <option value="{{$gestor->id}}">
+                            <option value="{{$gestor->user->id}}">
                                 {{$gestor->user()->withTrashed()->first()->documento}} - {{$gestor->user()->withTrashed()->first()->nombres}} {{$gestor->user()->withTrashed()->first()->apellidos}} / {{$gestor->lineatecnologica->nombre}}
                             </option>
                             @endforeach
