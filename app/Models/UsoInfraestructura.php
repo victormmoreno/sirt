@@ -69,10 +69,10 @@ class UsoInfraestructura extends Model
     }
 
 
-    // public function actividad()
-    // {
-    //     return $this->belongsTo(Actividad::class, 'actividad_id', 'id');
-    // }
+    public function actividad()
+    {
+        return $this->belongsTo(Actividad::class, 'actividad_id', 'id');
+    }
 
     public function usoequipos()
     {
