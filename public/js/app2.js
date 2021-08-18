@@ -4817,65 +4817,6 @@ function preguntaReversarEjecucion(e){
 * Consulta los proyectos del nodo por año
 */
 function consultarProyectosDelNodoPorAnho() {
-<<<<<<< HEAD
-    let anho_proyectos_nodo = $('#anho_proyectoPorNodoYAnho').val();
-    $('#tblproyectosDelNodoPorAnho').dataTable().fnDestroy();
-    $('#tblproyectosDelNodoPorAnho').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        processing: true,
-        serverSide: true,
-        order: [ 0, 'desc' ],
-        "lengthChange": false,
-        ajax:{
-            url: "/proyecto/datatableProyectosDelNodoPorAnho/"+0+"/"+anho_proyectos_nodo,
-            data: function (d) {
-                d.codigo_proyecto = $('#codigo_proyecto_tblProyectosDelNodoPorAnho').val(),
-                d.gestor = $('#gestor_tblProyectosDelNodoPorAnho').val(),
-                d.nombre = $('#nombre_tblProyectosDelNodoPorAnho').val(),
-                d.sublinea_nombre = $('#sublinea_nombre_tblProyectosDelNodoPorAnho').val(),
-                d.nombre_fase = $('#fase_nombre_tblProyectosDelNodoPorAnho').val(),
-                d.search = $('input[type="search"]').val()
-            }
-        },
-        columns: [
-            {
-                width: '15%',
-                data: 'codigo_proyecto',
-                name: 'codigo_proyecto',
-            },
-            {
-                data: 'gestor',
-                name: 'gestor',
-            },
-            {
-                data: 'nombre',
-                name: 'nombre',
-            },
-            {
-                data: 'sublinea_nombre',
-                name: 'sublinea_nombre',
-            },
-            {
-                data: 'nombre_fase',
-                name: 'nombre_fase',
-            },
-            {
-                width: '8%',
-                data: 'info',
-                name: 'info',
-                orderable: false
-            },
-            {
-                width: '6%',
-                data: 'proceso',
-                name: 'proceso',
-                orderable: false
-            },
-        ],
-    });
-=======
   let anho_proyectos_nodo = $('#anho_proyectoPorNodoYAnho').val();
   $('#tblproyectosDelNodoPorAnho').dataTable().fnDestroy();
   $('#tblproyectosDelNodoPorAnho').DataTable({
@@ -4947,7 +4888,6 @@ function consultarProyectosDelNodoPorAnho() {
 
     ],
   });
->>>>>>> 07bc4982e9e8b2aecb3a03aae0a20fab2f8af61e
 }
 
 function eliminarProyectoPorId_event(id, e) {
@@ -5103,13 +5043,8 @@ var infoActividad = {
                     <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.nombre)}</TD>
                 </TR>
                 <TR>
-<<<<<<< HEAD
-                    <TH width="25%">Gestor</TH>
-                    <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.articulacion.asesor.documento)} - ${response.data.actividad.articulacion_proyecto.articulacion.asesor.nombres} ${response.data.actividad.articulacion_proyecto.articulacion.asesor.apellidos}</TD>
-=======
                     <TH width="25%">Experto</TH>
-                    <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.gestor.user.documento)} - ${response.data.actividad.gestor.user.nombres} ${response.data.actividad.gestor.user.apellidos}</TD>
->>>>>>> 07bc4982e9e8b2aecb3a03aae0a20fab2f8af61e
+                    <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.articulacion.asesor.documento)} - ${response.data.actividad.articulacion_proyecto.articulacion.asesor.nombres} ${response.data.actividad.articulacion_proyecto.articulacion.asesor.apellidos}</TD>
                     <TH width="25%">Correo Electrónico</TH>
                     <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.articulacion.asesor.email)}</TD>
                 </TR>
