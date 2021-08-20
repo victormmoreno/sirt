@@ -1151,4 +1151,76 @@ class UserRepository
         }
     }
 
+    public function exportarUsersAJson()
+    {
+        return User::with(
+            [
+                'tipodocumento' => function ($query) {
+                    $query->select('id', 'nombre');
+                },
+                'roles' => function ($query) {
+                    $query->select('id', 'name');
+                },
+                'ocupaciones',
+                'eps' => function ($query)
+                {
+                    $query->select('id', 'nombre');
+                },
+                'gradoescolaridad' => function ($query)
+                {
+                    $query->select('id', 'nombre');
+                },
+                'gruposanguineo'  => function ($query)
+                {
+                    $query->select('id', 'nombre');
+                },
+                'ciudad'  => function ($query)
+                {
+                    $query->select('id', 'nombre');
+                },
+                'ciudad.departamento'  => function ($query)
+                {
+                    $query->select('id', 'nombre');
+                },
+                'ciudadexpedicion.departamento'  => function ($query)
+                {
+                    $query->select('id', 'nombre');
+                },
+                'dinamizador',
+                'dinamizador.nodo',
+                'dinamizador.nodo.entidad',
+                'gestor',
+                'gestor.nodo',
+                'gestor.nodo.entidad',
+                'gestor.nodo.centro',
+                'gestor.nodo.centro.regional',
+                'gestor.nodo.centro.entidad',
+                'gestor.lineatecnologica',
+                'infocenter',
+                'infocenter.nodo',
+                'infocenter.nodo.entidad',
+                'talento',
+                'talento.entidad',
+                'ingreso.nodo.entidad',
+            ]
+        )->withTrashed();
+
+
+        // return User::select('tp.nombre AS tipodocumento', 'ge.nombre AS gradoescolaridad', 'gs.nombre AS gruposanguineo',
+        // 'e.nombre AS eps', 'otra_eps', 'cr.nombre AS ciudad_residencia', 'dr.nombre AS departamento_residencia', 'ce.nombre AS ciudad_expedicion', 'de.nombre AS departamento_expedicion',
+        // 'et.nombre AS etnia', 'nombres', 'apellidos', 'documento', 'email', 'email_verified_at', 'barrio', 'direccion', 'celular', 'telefono', 'fechanacimiento', 'genero', 'mujerCabezaFamilia',
+        // 'desplazadoPorViolencia', 'grado_discapacidad', 'descripcion_grado_discapacidad', 'users.estado', 'institucion', 'titulo_obtenido', 'fecha_terminacion', 'remember_token', 'ultimo_login',
+        // 'password', 'estrato', 'otra_ocupacion', 'users.created_at', 'users.updated_at', 'users.deleted_at')
+        // ->join('tiposdocumentos as tp', 'tp.id', '=', 'users.tipodocumento_id')
+        // ->join('gradosescolaridad as ge', 'ge.id', '=', 'users.gradoescolaridad_id')
+        // ->join('gruposanguineos as gs', 'gs.id', '=', 'users.gruposanguineo_id')
+        // ->join('eps as e', 'e.id', '=', 'users.eps_id')
+        // ->join('ciudades as cr', 'cr.id', '=', 'users.ciudad_id')
+        // ->join('departamentos as dr', 'dr.id', '=', 'cr.departamento_id')
+        // ->join('ciudades as ce', 'ce.id', '=', 'users.ciudad_expedicion_id')
+        // ->join('departamentos as de', 'de.id', '=', 'ce.departamento_id')
+        // ->join('etnias as et', 'et.id', '=', 'users.etnia_id')
+        // ;
+    }
+
 }

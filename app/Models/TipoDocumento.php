@@ -8,6 +8,7 @@ class TipoDocumento extends Model
 {
 
     protected $table = 'tiposdocumentos';
+    // protected $hidden = ['id'];
 
     /**
      * The attributes that are mass assignable.
