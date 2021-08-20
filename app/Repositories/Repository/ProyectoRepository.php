@@ -457,7 +457,7 @@ class ProyectoRepository
      */
     public function proyectosDelTalento($id)
     {
-        return Proyecto::select('proyectos.id', 'actividades.codigo_actividad AS codigo_proyecto', 'actividades.nombre', 'fases.nombre AS nombre_fase')
+        return Proyecto::select('proyectos.id', 'actividades.codigo_actividad AS codigo_proyecto', 'actividades.nombre', 'fases.nombre AS nombre_fase', 'actividades.id AS actividad_id')
         ->selectRaw('concat(codigo_idea, " - ", nombre_proyecto) AS nombre_idea')
         ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombre_gestor')
         ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')

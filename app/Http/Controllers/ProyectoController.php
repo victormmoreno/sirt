@@ -705,7 +705,7 @@ class ProyectoController extends Controller
         } else {
             $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
             $ultimo_movimiento = $historico->last();
-            $costo = $this->costoController->costosDeUnaActividad($proyecto->articulacion_proyecto->actividad->id);
+            $costo = $this->costoController->costoProject($proyecto->id);
             switch (Session::get('login_role')) {
                 case User::IsGestor():
                     return view('proyectos.gestor.fase_cierre', [

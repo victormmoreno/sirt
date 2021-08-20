@@ -18,7 +18,7 @@ class PdfProyectoController extends Controller
     public function printFormularioCierre($id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        $costo = $this->costoController->costosDeUnaActividad($proyecto->articulacion_proyecto->actividad->id);
+        $costo = $this->costoController->costoProject($proyecto->id);
         $pdf = PDF::loadView('pdf.proyecto.form_cierre', ['proyecto' => $proyecto, 'costo' => $costo]);
         return $pdf->stream();
     }

@@ -44,7 +44,7 @@
         @if($proyecto->present()->isProyectoDirigidoDiscapacitados() == 1)
             divDiscapacidad.show();
         @endif
-        @if($proyecto->->present()->isProyectoActorCTi() == 1)
+        @if($proyecto->present()->isProyectoActorCTi() == 1)
             divNombreActorCTi.show();
         @endif
         datatableArchivosDeUnProyecto_inicio();
