@@ -1185,6 +1185,8 @@ class UserRepository
                 'dinamizador',
                 'dinamizador.nodo',
                 'dinamizador.nodo.entidad',
+                'articulador',
+                'apoyotecnico',
                 'gestor',
                 'gestor.nodo',
                 'gestor.nodo.entidad',
@@ -1198,6 +1200,8 @@ class UserRepository
                 'talento',
                 'talento.entidad',
                 'talento.tipotalento',
+                'talento.tipoformacion',
+                'talento.tipoestudio',
                 'ingreso.nodo.entidad',
             ]
         )->withTrashed();
