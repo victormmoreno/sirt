@@ -35,7 +35,7 @@ class IndicadorController extends Controller
         if (Session::get('login_role') == User::IsAdministrador()) {
 
         if ($idnodo == 'all') {
-            $query = $this->getProyectoRepository()->proyectosIndicadores_Repository($fecha_inicio, $fecha_fin)->get();
+            $query = $this->getProyectoRepository()->proyectosIndicadores_Repository($fecha_inicio, $fecha_fin)->dd();
         } else {
             $query = $this->getProyectoRepository()->proyectosIndicadores_Repository($fecha_inicio, $fecha_fin)->whereHas('nodo', function($query) use ($idnodo) {
             $query->where('id', $idnodo);

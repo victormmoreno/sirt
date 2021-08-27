@@ -28,7 +28,18 @@ class ExportJsonController extends Controller
             foreach ($user->roles as $key => $rol) {
                 unset($rol->pivot);
             }
-            // echo $user->roles->pivot . '<br>';
+            $user['nombre_tipo_documento'] = $user->tipodocumento->nombre;
+            $user['nombre_eps'] = $user->eps->nombre;
+            unset($user->tipodocumento_id);
+            unset($user->gradoescolaridad_id);
+            unset($user->gruposanguineo_id);
+            unset($user->eps_id);
+            unset($user->ciudad_id);
+            unset($user->ciudad_expedicion_id);
+            unset($user->etnia_id);
+            unset($user->nombre_completo);
+            unset($user->tipodocumento);
+            unset($user->eps);
         }
         // dd($query->toJson(JSON_PRETTY_PRINT));
         // $query = $this->userRepository->exportarUsersAJson()->get()->toJson(JSON_PRETTY_PRINT);

@@ -1174,10 +1174,6 @@ class UserRepository
                 {
                     $query->select('id', 'nombre');
                 },
-                'ciudad'  => function ($query)
-                {
-                    $query->select('id', 'nombre');
-                },
                 'ciudad.departamento'  => function ($query)
                 {
                     $query->select('id', 'nombre');
@@ -1201,6 +1197,7 @@ class UserRepository
                 'infocenter.nodo.entidad',
                 'talento',
                 'talento.entidad',
+                'talento.tipotalento',
                 'ingreso.nodo.entidad',
             ]
         )->withTrashed();

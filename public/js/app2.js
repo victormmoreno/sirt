@@ -3292,7 +3292,7 @@ $(document).ready(function() {
     let filter_role = $('#filter_rol').val();
     let filter_nodo = $('#filter_nodo').val();
     let filter_state = $('#filter_state').val();
-    let filter_year = $('#filter_year').val();
+    let filter_year = $('#filter_year_activo').val();
 
     $('#users_data_table').dataTable().fnDestroy();
     if((filter_nodo != '' || filter_nodo != null) && (filter_role !='' || filter_role != null) && filter_state != '' && filter_year !=''){
@@ -5265,7 +5265,7 @@ function mensajesProyectoCreate(data) {
             confirmButtonText: 'Ok'
         });
         setTimeout(function () {
-            window.location.replace("/proyecto");
+            window.location.replace(data.url);
         }, 1000);
     }
     if (data.state == 'no_registro') {
@@ -5290,7 +5290,7 @@ function mensajesProyectoUpdate(data) {
             confirmButtonText: 'Ok'
         });
         setTimeout(function () {
-            window.location.replace("/proyecto");
+            window.location.replace(data.url);
         }, 1000);
     }
     if (data.state == 'no_update') {
@@ -5955,7 +5955,7 @@ function mensajesProyectoCierre(data) {
             confirmButtonText: 'Ok'
         });
         setTimeout(function () {
-            window.location.replace("/proyecto");
+            window.location.replace(data.url);
         }, 1000);
     }
     if (data.state == 'no_update') {

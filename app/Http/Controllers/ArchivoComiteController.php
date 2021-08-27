@@ -66,4 +66,5 @@ class ArchivoComiteController extends Controller
       $fileUrl = $file->storeAs("public/" . auth()->user()->infocenter->nodo_id . '/'.Carbon::now()->format('Y').'/CSIBT//' . $id, $fileName);
       $this->archivoComiteRepository->store($id, Storage::url($fileUrl));
     }
+  }
 }
