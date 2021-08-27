@@ -4,7 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsersRequests\UserFormEditRequest;
-use App\Models\{Nodo,Fase, Entidad, Etnia, TipoTalento, TipoFormacion, TipoEstudio, Eps, Ocupacion, LineaTecnologica};
+use App\Models\{Entidad, Etnia, TipoTalento, TipoFormacion, TipoEstudio, LineaTecnologica};
 use App\Repositories\Repository\{UserRepository\UserRepository, ProfileRepository\ProfileRepository};
 use App\User;
 use Illuminate\Http\Request;
@@ -14,9 +14,7 @@ use Illuminate\Http\Response;
 use App\Exports\User\UserExport;
 use App\Http\Requests\UsersRequests\ConfirmUserRequest;
 use Illuminate\Support\Facades\Notification;
-use App\Notifications\User\{NewContractor, RoleAssignedOfficer, NodeChanged};
-
-
+use App\Notifications\User\NodeChanged;
 
 class UserController extends Controller
 {
@@ -95,7 +93,7 @@ class UserController extends Controller
                 ]);
                 break;
             case User::IsArticulador():
-                $role = [User::IsGestor(), User::IsArticulador(), User::IsInfocenter(), User::IsTalento(), User::IsIngreso()];
+                $role = [User::IsTalento()];
                 return view('users.index', [
                     'roles' => $this->userRepository->getRoleWhereInRole($role),
                 ]);
@@ -144,7 +142,6 @@ class UserController extends Controller
     public function show($documento)
     {
         $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
-
         if (request()->ajax()) {
             return response()->json([
                 'data' => [
@@ -152,6 +149,7 @@ class UserController extends Controller
                 ]
             ]);
         }
+        $this->authorize('show', $user);
         return view('users.show', ['user' => $user]);
     }
 
@@ -514,5 +512,12 @@ class UserController extends Controller
                 ]);
             }
         }
+    }
+
+    public function generatePassword(int $document)
+    {
+        $user = User::withTrashed()->where('documento', $document)->firstOrFail();
+        $this->authorize('generatePassword', $user);
+        return $this->userRepository->generateNewPasswordToUser($user);
     }
 }

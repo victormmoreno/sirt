@@ -1151,4 +1151,63 @@ class UserRepository
         }
     }
 
+
+    /**
+     * @author devjul
+     * generate new password to user
+     * @return void
+     */
+    public function generateNewPasswordToUser(User $user){
+        DB::beginTransaction();
+        try {
+            $password = $this->generateFomatizedPassword($user);
+            $user->update([
+                "password"=> $password,
+            ]);
+            DB::commit();
+            return $this->sendGeneratePasswordResponse($password);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return $this->sendGeneratePasswordFailedResponse($e->getMessage());
+        }
+    }
+
+    /**
+     * Get the response for a successful generate password.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    protected function sendGeneratePasswordResponse(string $password)
+    {
+        return back()->with('status', "Contraseña generada: {$password}");
+    }
+
+    /**
+     * Get the response for a failed generate password.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    protected function sendGeneratePasswordFailedResponse($error)
+    {
+        return back()
+            ->withErrors('error', $error);
+    }
+
+    /**
+     * Get the response for a failed generate password.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    private function generateFomatizedPassword($user)
+    {
+        return config('auth.format_password'). substr($user->documento ,6);
+    }
+
 }

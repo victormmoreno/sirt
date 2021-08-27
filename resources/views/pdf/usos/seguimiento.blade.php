@@ -187,7 +187,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <title>Acta de Cierre</title>
+    <title>Seguimiento</title>
 </head>
 <body>
     <footer>
@@ -197,12 +197,12 @@
 
     <div class="card-content">
         <table class="bordered">
-            {{-- <tr>
+            <tr>
                 <td colspan="1" rowspan="2"><img class="center-image" src="{{asset('img/web.png')}}"></td>
                 <td colspan="7" class="centered"><b>Seguimiento de Asesorias y Uso Infraestructura<b></td>
-            </tr> --}}
+            </tr>
             <tr>
-                <td colspan="8" class="centered">
+                <td colspan="7" class="centered">
                 @if ($tipo_actividad == 'proyecto')
                     <b>ACTA No. {{ substr($data->present()->proyectoCode(), -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b>
                 @elseif($tipo_actividad == 'articulacion')
@@ -351,59 +351,61 @@
                     <td colspan="8">No Registra</td>
                 </tr>
                 @endforelse
-            @if ($tipo_actividad == 'proyecto')
+
                 <tr class="tr-striped">
                     <td colspan="8" ><b>Certificación<b></td>
                 </tr>
+               <!--<tr>-->
+               <!--     <td rowspan="3" colspan="8"></td>-->
+               <!-- </tr>-->
+               <!-- <tr>-->
+
+               <!-- </tr>-->
+               <!-- <tr>-->
+
+               <!-- </tr>-->
                 <tr>
-                    <td colspan="8" rowspan="5"></td>
-                </tr>
-                <tr></tr>
-                <tr></tr>
-                <tr></tr>
-                <tr></tr>
-                <tr>
-                    <td colspan="8" >{{$data->present()->proyectoUserAsesor()}} - Experto</td>
-                </tr>
-                <tr>
-                    <td colspan="8" rowspan="5"></td>
-                </tr>
-                <tr></tr>
-                <tr></tr>
-                <tr></tr>
-                <tr></tr>
-                <tr>
-                    <td colspan="8" >{{$data->present()->talentoInterlocutor()}} - Talento Interlocutor</td>
-                </tr>
-            @elseif($tipo_actividad == 'articulacion')
-                <tr class="tr-striped">
-                    <td colspan="8" ><b>Certificación<b></td>
+                    <td colspan="8" >
+                        @if ($tipo_actividad == 'proyecto')
+                        {{$data->present()->proyectoUserAsesor()}} - Experto
+                        @elseif($tipo_actividad == 'articulacion')
+                        {{$data->present()->articulacionPbtUserAsesor()}} - Articulador
+                        @else
+                            No Registra
+                        @endif
+                    </td>
                 </tr>
                 <tr>
-                    <td colspan="8" rowspan="5"></td>
-                </tr>
-                <tr></tr>
-                <tr></tr>
-                <tr></tr>
-                <tr></tr>
-                <tr>
-                    <td colspan="8" >{{$data->present()->articulacionPbtUserAsesor()}} - Articulador</td>
+                    <td rowspan="3" colspan="8"></td>
                 </tr>
                 <tr>
-                    <td colspan="8" rowspan="5"></td>
+
                 </tr>
-                <tr></tr>
-                <tr></tr>
-                <tr></tr>
-                <tr></tr>
                 <tr>
-                    <td colspan="8" >{{$data->present()->fullNameTalentInterlocutor()}} - Talento Interlocutor</td>
+
                 </tr>
-            @else
-            <tr>
-                <td colspan="8">No Registra</td>
-            </tr>
-            @endif
+
+                <tr>
+                    <td colspan="8" >
+                        @if ($tipo_actividad == 'proyecto')
+                        {{$data->present()->talentoInterlocutor()}} - Talento Interlocutor
+                        @elseif($tipo_actividad == 'articulacion')
+                        {{$data->present()->fullNameTalentInterlocutor()}} - Talento Interlocutor
+                        @else
+                            No Registra
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td rowspan="3" colspan="8"></td>
+                </tr>
+                <tr>
+
+                </tr>
+                <tr>
+
+                </tr>
+
         </table>
     </div>
 </body>
