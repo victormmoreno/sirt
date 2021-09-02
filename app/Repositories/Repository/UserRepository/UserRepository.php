@@ -23,6 +23,7 @@ use App\Models\{
     TipoDocumento,
     UserNodo
 };
+use App\Events\User\UserHasNewPasswordGenerated;
 use App\User;
 use Cache;
 use Carbon\Carbon;
@@ -1164,6 +1165,8 @@ class UserRepository
             $user->update([
                 "password"=> $password,
             ]);
+            $message = "Nueva contraseña generada | " . config('app.name');
+            event(new UserHasNewPasswordGenerated($user, $password, $message));
             DB::commit();
             return $this->sendGeneratePasswordResponse($password);
 
@@ -1207,7 +1210,7 @@ class UserRepository
      */
     private function generateFomatizedPassword($user)
     {
-        return config('auth.format_password'). substr($user->documento ,6);
+        return config('auth.format_password'). substr($user->documento ,6).'*';
     }
 
 }

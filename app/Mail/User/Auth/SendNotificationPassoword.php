@@ -11,7 +11,7 @@ class SendNotificationPassoword extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $subject = 'Credenciales de ingreso a Plataforma Red Tecnoparque Colombia';
+    public $subject;
     public $user;
     public $password;
 
@@ -20,10 +20,11 @@ class SendNotificationPassoword extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($user,$password)
+    public function __construct($user,$password, $subject = null)
     {
         $this->user     = $user;
         $this->password = $password;
+        $this->subject = $subject;
     }
 
     /**
@@ -34,6 +35,6 @@ class SendNotificationPassoword extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->markdown('emails.users.auth.send-notificacion-password')
-                    ->subject('Credenciales de ingreso a  '.config('app.name'));
+                    ->subject($this->subject);
     }
 }

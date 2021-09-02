@@ -23,18 +23,6 @@
             background-color: rgba(51, 51, 51, 0.08);
         }
 
-        footer {
-            position: fixed;
-            bottom: 0cm;
-            left: 0cm;
-            right: 0cm;
-            height: 1cm;
-            background-color: white;
-            color: black;
-            text-align: center;
-            line-height: 35px;
-        }
-
         .center-image{
             vertical-align: middle;
             width: 45px;
@@ -190,19 +178,14 @@
     <title>Seguimiento</title>
 </head>
 <body>
-    <footer>
-        GD-F-007 V01
-
-    </footer>
-
     <div class="card-content">
         <table class="bordered">
             <tr>
-                <td colspan="1" rowspan="2"><img class="center-image" src="{{asset('img/web.png')}}"></td>
-                <td colspan="7" class="centered"><b>Seguimiento de Asesorias y Uso Infraestructura<b></td>
+                {{-- <td colspan="1" rowspan="2"><img class="center-image" src="{{asset('img/web.png')}}"></td> --}}
+                <td colspan="8" class="centered"><b>Seguimiento de Asesorias y Uso Infraestructura<b></td>
             </tr>
             <tr>
-                <td colspan="7" class="centered">
+                <td colspan="8" class="centered">
                 @if ($tipo_actividad == 'proyecto')
                     <b>ACTA No. {{ substr($data->present()->proyectoCode(), -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b>
                 @elseif($tipo_actividad == 'articulacion')
@@ -323,7 +306,7 @@
             <tr>
             </tr>
 
-                @forelse ($data->asesorias as $value)
+                @forelse ($data->asesorias->sortBy('fecha')->values()->all() as $value)
                 <tr>
                     <td>{{ $value->fecha->isoFormat('YYYY-MM-DD') }}</td>
                     <td>{{ $value->usogestores->sum('pivot.asesoria_directa') }}</td>
@@ -351,61 +334,59 @@
                     <td colspan="8">No Registra</td>
                 </tr>
                 @endforelse
-
+            @if ($tipo_actividad == 'proyecto')
                 <tr class="tr-striped">
                     <td colspan="8" ><b>Certificación<b></td>
                 </tr>
-               <!--<tr>-->
-               <!--     <td rowspan="3" colspan="8"></td>-->
-               <!-- </tr>-->
-               <!-- <tr>-->
-
-               <!-- </tr>-->
-               <!-- <tr>-->
-
-               <!-- </tr>-->
                 <tr>
-                    <td colspan="8" >
-                        @if ($tipo_actividad == 'proyecto')
-                        {{$data->present()->proyectoUserAsesor()}} - Experto
-                        @elseif($tipo_actividad == 'articulacion')
-                        {{$data->present()->articulacionPbtUserAsesor()}} - Articulador
-                        @else
-                            No Registra
-                        @endif
-                    </td>
+                    <td colspan="8" rowspan="5"></td>
+                </tr>
+                <tr></tr>
+                <tr></tr>
+                <tr></tr>
+                <tr></tr>
+                <tr>
+                    <td colspan="8" >{{$data->present()->proyectoUserAsesor()}} - Experto</td>
                 </tr>
                 <tr>
-                    <td rowspan="3" colspan="8"></td>
+                    <td colspan="8" rowspan="5"></td>
+                </tr>
+                <tr></tr>
+                <tr></tr>
+                <tr></tr>
+                <tr></tr>
+                <tr>
+                    <td colspan="8" >{{$data->present()->talentoInterlocutor()}} - Talento Interlocutor</td>
+                </tr>
+            @elseif($tipo_actividad == 'articulacion')
+                <tr class="tr-striped">
+                    <td colspan="8" ><b>Certificación<b></td>
                 </tr>
                 <tr>
-
+                    <td colspan="8" rowspan="5"></td>
+                </tr>
+                <tr></tr>
+                <tr></tr>
+                <tr></tr>
+                <tr></tr>
+                <tr>
+                    <td colspan="8" >{{$data->present()->articulacionPbtUserAsesor()}} - Articulador</td>
                 </tr>
                 <tr>
-
+                    <td colspan="8" rowspan="5"></td>
                 </tr>
-
+                <tr></tr>
+                <tr></tr>
+                <tr></tr>
+                <tr></tr>
                 <tr>
-                    <td colspan="8" >
-                        @if ($tipo_actividad == 'proyecto')
-                        {{$data->present()->talentoInterlocutor()}} - Talento Interlocutor
-                        @elseif($tipo_actividad == 'articulacion')
-                        {{$data->present()->fullNameTalentInterlocutor()}} - Talento Interlocutor
-                        @else
-                            No Registra
-                        @endif
-                    </td>
+                    <td colspan="8" >{{$data->present()->fullNameTalentInterlocutor()}} - Talento Interlocutor</td>
                 </tr>
-                <tr>
-                    <td rowspan="3" colspan="8"></td>
-                </tr>
-                <tr>
-
-                </tr>
-                <tr>
-
-                </tr>
-
+            @else
+            <tr>
+                <td colspan="8">No Registra</td>
+            </tr>
+            @endif
         </table>
     </div>
 </body>

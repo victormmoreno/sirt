@@ -136,7 +136,8 @@ class RegisterController extends Controller
                 }
             }
             if($user != null){
-                event(new UserWasRegistered($user, $password));
+                $message = "Credenciales de ingreso a " . config('app.name');
+                event(new UserWasRegistered($user, $password, $message));
             }
             DB::commit();
             return $user;

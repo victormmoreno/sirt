@@ -36062,14 +36062,14 @@ $(document).ready(function() {
     });
 
     $('.datepicker-min-date').bootstrapMaterialDatePicker({
-      time:false,
-      date:true,
-      year:true,
-      format: 'YYYY-MM-DD',
-      minDate : new Date(),
-      language: 'es',
-      weekStart : 1, cancelText : 'Cancelar',
-      okText: 'Guardar'
+        time:false,
+        date:true,
+        year:true,
+        format: 'YYYY-MM-DD',
+        minDate : new Date(),
+        language: 'es',
+        weekStart : 1, cancelText : 'Cancelar',
+        okText: 'Guardar'
     });
     // $('.datepicker').pickadate({
     //     selectMonths: true,

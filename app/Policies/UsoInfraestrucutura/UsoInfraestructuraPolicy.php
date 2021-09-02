@@ -5,6 +5,8 @@ namespace App\Policies\UsoInfraestrucutura;
 use App\Models\UsoInfraestructura;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Database\Eloquent\Builder;
+use App\Models\Fase;
 
 class UsoInfraestructuraPolicy
 {
@@ -114,11 +116,21 @@ class UsoInfraestructuraPolicy
      */
     public function edit(User $user, UsoInfraestructura $uso)
     {
+
         if ($user->hasAnyRole([ User::IsGestor()]) && session()->get('login_role') == User::IsGestor() && $uso->whereHas(
             'usogestores',
             function ($query) use($user) {
                 return $query->where('users.id', $user->id);
             })
+            // && $uso->whereHasMorph(
+            //     'asesorable',
+            //     [ \App\Models\Proyecto::class],
+            //     function (Builder $subquery) {
+            //         return $subquery->whereHas('fase', function ($subquery)  {
+            //             $subquery->where('id','!=' ,Fase::where('nombre', 'Finalizado')->first()->id);
+            //         });
+            //     }
+            // )->whereHasMorph('asesorable', \App\Models\Proyecto::class)
         ) {
             return true;
         } else if ($user->hasAnyRole([User::IsArticulador()]) && session()->get('login_role') == User::IsArticulador() && $uso->whereHas(
@@ -160,6 +172,7 @@ class UsoInfraestructuraPolicy
      */
     public function update(User $user, UsoInfraestructura $uso)
     {
+
         if ($user->hasAnyRole([ User::IsGestor()]) && session()->get('login_role') == User::IsGestor() && $uso->whereHas(
             'usogestores',
             function ($query) use($user) {
