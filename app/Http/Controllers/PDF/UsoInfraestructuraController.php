@@ -20,8 +20,6 @@ class UsoInfraestructuraController extends Controller
     {
         if ($tipoActividad == 'proyecto') {
             $data = Proyecto::findOrFail($id);
-            // dd($data->asesorias);
-            // $uso = UsoInfraestructura::findOrFail($id);
             $pdf = PDF::loadView('pdf.usos.seguimiento', ['data' => $data, 'tipo_actividad' => $tipoActividad]);
 
             $pdf->setPaper(strtolower('LETTER'), $orientacion = 'landscape');

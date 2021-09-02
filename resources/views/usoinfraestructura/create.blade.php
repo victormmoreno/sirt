@@ -367,6 +367,15 @@
                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
                         $('#txtgestor').val(response.proyecto.documento+ ' - '+ response.proyecto.nombres + ' ' + response.proyecto.apellidos);
                         $("label[for='txtgestor']").addClass('active');
+                        let userid = {{auth()->user()->id}}
+                        let userdocument = {{auth()->user()->documento }}
+                        let username = "{{auth()->user()->present()->userFullName()}}";
+                        let cont;
+                        let a = document.getElementsByName("talento[]");
+                        let fila ="";
+                        fila = '<tr class="selected" id="filaTalento'+cont+'"><td><input type="hidden" name="talento[]" value="'+userid+'">'+userdocument+'-'+username+'</td><td>tú</td></tr>';
+                        cont++;
+                        $('#detalleTalento').append(fila);
 
                     @endif
                     $('#txtlinea').val(response.proyecto.abreviatura+ ' - '+ response.proyecto.lineatecnologica_nombre);

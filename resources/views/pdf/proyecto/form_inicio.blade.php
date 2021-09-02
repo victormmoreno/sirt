@@ -155,7 +155,7 @@
             <tr>
                 <td colspan="1" scope="row">Nodo: <b>{{$proyecto->present()->proyectoNode()}}</b></td>
                 <td colspan="2">Fecha: <b>{{$proyecto->articulacion_proyecto->actividad->present()->startDate()}}</b></td>
-                <td colspan="3">Código del Proyecto: <b>{{$proyecto->articulacion_proyecto->actividad->present()->startDate()}}</b></td>
+                <td colspan="3">Código del Proyecto: <b>{{$proyecto->articulacion_proyecto->actividad->present()->actividadCode()}}</b></td>
             </tr>
             <tr class="tr-striped">
                 <td colspan="6" ><b>DATOS DEL PROYECTO<b></td>

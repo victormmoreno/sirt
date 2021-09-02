@@ -65,13 +65,10 @@ class UserPolicy
     {
         if (auth()->user()->id == $this->user->id) {
             return false;
-        } elseif ($this->user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsTalento()]) && session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
+        }else if(session()->get('login_role') == User::IsTalento() || session()->get('login_role') == User::IsApoyoTecnico() || session()->get('login_role') == User::IsIngreso()){
             return false;
-        } elseif ($this->user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsInfocenter(), User::IsIngreso()]) && session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
-            return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     /**
@@ -273,6 +270,21 @@ class UserPolicy
             && session()->get('login_role') == User::IsAdministrador())
             || (collect($authUser->getRoleNames())->contains(User::IsDinamizador())
             && session()->get('login_role') == User::IsDinamizador())) && ( isset($user->contratista) && $user->estado == User::IsInactive());
+    }
+
+    public function generatePassword(User $authuser, User $user): bool
+    {
+        if(($authuser->documento == $user->documento)){
+            return false;
+        }elseif(session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()){
+            return true;
+
+        }else if(session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() && !$user->hasAnyRole([User::IsDinamizador(), User::IsAdministrador()])){
+            return true;
+        }else if(session()->has('login_role') && (session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsArticulador()) && !$user->present()->userChangeAccess()){
+            return true;
+        }
+        return false;
     }
 
 }

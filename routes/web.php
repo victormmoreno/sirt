@@ -107,6 +107,7 @@ Route::resource('nodo', 'Nodo\NodoController')->middleware('disablepreventback')
 /*======================================================================
 =            rutas para las funcionalidades de los usuarios            =
 ======================================================================*/
+Route::get('usuario/{documento}/password/reset', 'User\UserController@generatePassword')->name('user.newpassword')->middleware('disablepreventback');
 Route::get('usuario/getciudad/{departamento?}', 'User\UserController@getCiudad');
 Route::get('usuario/export', 'User\UserController@export')->name('usuario.export');
 Route::get('usuario/export-talentos', 'User\UserController@exportMyTalentos')->name('usuario.export.talentos');
@@ -359,6 +360,7 @@ Route::resource('perfil', 'User\ProfileController', ['only' => ['update', 'destr
 
 Route::get('help/getciudades/{departamento?}', 'Help\HelpController@getCiudad')->name('help.getciudades');
 Route::get('help/getcentrosformacion/{regional?}', 'Help\HelpController@getCentrosRegional')->name('help.getcentrosformacion');
+Route::get('help/handbook', 'Help\HelpController@downloadHandbook')->name('help.handbook');
 
 /*=====  End of sesccion para las rutas de ayuda  ======*/
 
@@ -611,7 +613,7 @@ Route::group(
         Route::post('/', 'ProyectoController@store')->name('proyecto.store')->middleware('role_session:Experto');
         Route::post('/store/{id}/files', 'ArchivoController@uploadFileProyecto')->name('proyecto.files.upload')->middleware('role_session:Experto');
         Route::delete('/file/{idFile}', 'ArchivoController@destroyFileProyecto')->name('proyecto.files.destroy')->middleware('role_session:Experto');
-       
+
     }
 );
 

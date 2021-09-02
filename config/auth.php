@@ -98,4 +98,6 @@ return [
         ],
     ],
 
+    'format_password' => env('APP_FORMAT_PASSWORD', config('app.name')),
+
 ];

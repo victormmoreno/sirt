@@ -558,7 +558,9 @@ class UsoInfraestructuraController extends Controller
                     'projects'       => $projects,
                 ];
                 $cantActividades = array_sum($sumasArray);
-                return view('usoinfraestructura.create', [
+                return view('usoinfraestructura.edit', [
+                    'usoinfraestructura' => $usoinfraestructura,
+                    'equipos' => $equipos,
                     'date'                => $date,
                     'cantidadActividades' => $cantActividades,
                 ]);

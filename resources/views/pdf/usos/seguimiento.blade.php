@@ -23,18 +23,6 @@
             background-color: rgba(51, 51, 51, 0.08);
         }
 
-        footer {
-            position: fixed;
-            bottom: 0cm;
-            left: 0cm;
-            right: 0cm;
-            height: 1cm;
-            background-color: white;
-            color: black;
-            text-align: center;
-            line-height: 35px;
-        }
-
         .center-image{
             vertical-align: middle;
             width: 45px;
@@ -187,20 +175,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <title>Acta de Cierre</title>
+    <title>Seguimiento</title>
 </head>
 <body>
-    <footer>
-        GD-F-007 V01
-
-    </footer>
-
     <div class="card-content">
         <table class="bordered">
-            {{-- <tr>
-                <td colspan="1" rowspan="2"><img class="center-image" src="{{asset('img/web.png')}}"></td>
-                <td colspan="7" class="centered"><b>Seguimiento de Asesorias y Uso Infraestructura<b></td>
-            </tr> --}}
+            <tr>
+                {{-- <td colspan="1" rowspan="2"><img class="center-image" src="{{asset('img/web.png')}}"></td> --}}
+                <td colspan="8" class="centered"><b>Seguimiento de Asesorias y Uso Infraestructura<b></td>
+            </tr>
             <tr>
                 <td colspan="8" class="centered">
                 @if ($tipo_actividad == 'proyecto')
@@ -323,7 +306,7 @@
             <tr>
             </tr>
 
-                @forelse ($data->asesorias as $value)
+                @forelse ($data->asesorias->sortBy('fecha')->values()->all() as $value)
                 <tr>
                     <td>{{ $value->fecha->isoFormat('YYYY-MM-DD') }}</td>
                     <td>{{ $value->usogestores->sum('pivot.asesoria_directa') }}</td>

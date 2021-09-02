@@ -187,9 +187,14 @@ class UserPresenter extends Presenter
     {
         return $this->user->has('articulador.nodo.entidad') ? "Tecnoparque Nodo {$this->user->articulador->nodo->entidad->nombre}" : $this->message('No Registra');
     }
-    public function userApoyoTecnicoName()
+    public function userApoyoTecnicoNodoName()
     {
         return $this->user->has('apoyotecnico.nodo.entidad') ? "Tecnoparque Nodo {$this->user->apoyotecnico->nodo->entidad->nombre}" : $this->message('No Registra');
+    }
+
+    public function userApoyoTecnicoHonorarios()
+    {
+        return $this->user->has('apoyotecnico') ? "{$this->user->apoyotecnico->honorarios}" : $this->message('No Registra');
     }
 
     public function userGestorNombreLinea()
@@ -347,5 +352,19 @@ class UserPresenter extends Presenter
         if ($this->user->has('contratista') && isset($this->user->contratista->nodo)) {
             return $this->user->contratista->nodo->entidad->nombre;
         }
+    }
+
+    public function userChangeAccess(): bool
+    {
+        return $this->user->hasAnyRole([
+            User::IsDinamizador(),
+            User::IsAdministrador(),
+            User::IsInfocenter(),
+            User::IsArticulador(),
+            User::IsIngreso(),
+            User::IsDesarrollador(),
+            User::IsGestor(),
+            User::IsApoyoTecnico()
+        ]) ? true : false;
     }
 }

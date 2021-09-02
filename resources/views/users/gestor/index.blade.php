@@ -4,7 +4,7 @@
 
 @section('content')
 @php
-  $year = Carbon\Carbon::now()->year;
+    $year = Carbon\Carbon::now()->year;
 @endphp
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
@@ -63,7 +63,6 @@
                                 <div class="input-field col s12 m2 l2">
                                     <label class="active" for="filter_rol">Rol <span class="red-text">*</span></label>
                                     <select  name="filter_rol" id="filter_rol">
-
                                         @forelse($roles as $id => $name)
                                             <option value="{{$name}}">{{$name}}</option>
                                         @empty
@@ -72,7 +71,6 @@
                                         <option value="all" >todos</option>
                                     </select>
                                 </div>
-
                                 <div class="input-field col s12 m2 l2">
                                     <label class="active" for="filter_state">Acceso sistema <span class="red-text">*</span></label>
                                     <select name="filter_state" id="filter_state">
@@ -100,16 +98,14 @@
                                     <th>Detalles</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-
-                                </tbody>
+                                <tbody></tbody>
                             </table>
                         </div>
                     </div>
                 </div>
                 <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
                     <a href="{{route('usuario.search')}}"  class="btn tooltipped btn-floating btn-large grey darken-1 white-text" data-position="left" data-delay="50" data-tooltip="Buscar Usuario">
-                         <i class="material-icons">add_circle</i>
+                        <i class="material-icons">add_circle</i>
                     </a>
                 </div>
             </div>
