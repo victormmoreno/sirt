@@ -119,7 +119,7 @@
                 @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor()|| session()->get('login_role') == App\User::IsTalento() || session()->get('login_role') == App\User::IsArticulador() ))
                 <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
                 <a href="{{route('usoinfraestructura.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="{{session()->has('login_role') == App\User::IsGestor() ? 'Nueva Asesoria' : 'Nuevo uso de Infraestructura'}}">
-                        <i class="material-icons">add_circle</i>
+                        <i class="material-icons">add</i>
                     </a>
                 </div>
                 @endif

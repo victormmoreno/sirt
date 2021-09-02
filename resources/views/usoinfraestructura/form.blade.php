@@ -11,7 +11,7 @@
 
 <center>
    
-    <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>{{isset($btnText) ? $btnText : 'Guardar'}}</button> 
+    <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>{{isset($btnText) ? $btnText : 'Guardar'}}</button>
     <a class="btn waves-effect red lighten-2 center-aling" href="{{route('usoinfraestructura.index')}}">
         <i class="material-icons right">
             backspace

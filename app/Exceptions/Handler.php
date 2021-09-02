@@ -32,10 +32,10 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return void
      */
-    public function report(Exception $exception)
-    {
-        parent::report($exception);
-    }
+    // public function report(Exception $exception)
+    // {
+    //     parent::report($exception);
+    // }
 
     /**
      * Render an exception into an HTTP response.
@@ -44,11 +44,11 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $exception)
-    {
-        if ($request->fullUrlIs($request->root() . '/ideas')) {
-            return redirect()->route('idea.create');
-        }
-        return parent::render($request, $exception);
-    }
+    // public function render($request, Exception $exception)
+    // {
+    //     if ($request->fullUrlIs($request->root() . '/ideas')) {
+    //         return redirect()->route('idea.create');
+    //     }
+    //     return parent::render($request, $exception);
+    // }
 }
