@@ -44,6 +44,7 @@
         <th>Etnia a la que pertenece</th>
         <th>¿Tiene algún grado de discapacidad?</th>
         <th>¿Cuál es el grado de discapacidad?</th>
+        <th>¿Es madre cabeza de familia?</th>
         <th>Grado de escolaridad</th>
         <th>Institución</th>
         <th>Título obtenido</th>
@@ -109,6 +110,7 @@
                     <td>{{ $talento->user->present()->userEtnia() }}</td>
                     <td>{{ $talento->user->present()->userGradoDiscapacidad() }}</td>
                     <td>{{ $talento->user->present()->userDescripcionGradoDiscapacidad() }}</td>
+                    <td>{{ $talento->user->present()->userMujerCabezaFamilia() }}</td>
                     <td>{{ $talento->user->present()->userGradoEscolaridad() }}</td>
                     <td>{{ $talento->user->present()->userInstitucion() }}</td>
                     <td>{{ $talento->user->present()->userTituloObtenido() }}</td>

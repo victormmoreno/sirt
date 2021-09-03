@@ -97,7 +97,7 @@ h5.breadcrumbs-header {
 
 .swal2-cancelar-custom {
     margin-right: 30px;
-    margin-left: 30px; 
+    margin-left: 30px;
     border: 0;
     border-radius: 0.25em;
     background: initial;
@@ -112,7 +112,7 @@ h5.breadcrumbs-header {
 
 .swal2-guardar-custom {
     margin-right: 30px;
-    margin-left: 30px; 
+    margin-left: 30px;
     border: 0;
     border-radius: 0.25em;
     background: initial;
@@ -127,7 +127,7 @@ h5.breadcrumbs-header {
 
 .swal2-postular-custom {
     margin-right: 30px;
-    margin-left: 30px; 
+    margin-left: 30px;
     border: 0;
     border-radius: 0.25em;
     background: initial;
@@ -183,15 +183,15 @@ h5.breadcrumbs-header {
     top: 45vh;
     width: 20vw;
   }
-  
+
   .bootstrap .popover {
     transition: left 400ms ease-out, top 250ms ease-in;
   }
-  
+
   .popover-content > div {
     text-align: center;
   }
-  
+
   .popover-content > div > a:link {
     border: 1px solid lavender;
     border-radius: 8px;
@@ -200,7 +200,7 @@ h5.breadcrumbs-header {
     text-decoration: none;
     transition: all 250ms;
   }
-  
+
   .popover-content > div > a:hover {
     background-color: #eeeeff;
     border-color: #AFAFBF;
@@ -208,7 +208,7 @@ h5.breadcrumbs-header {
     box-shadow: 0 0 4px #ccc;
   }
 
-  
+
 .tabs {
     box-shadow: 0 1px 2px rgba(0,0,0,0.15);
 }
@@ -237,7 +237,22 @@ h5.breadcrumbs-header {
     background-color: rgba(241, 195, 93, 0.548);
     /*Custom Background Color While Active*/
 }
+<<<<<<< HEAD
+=======
 
+>>>>>>> a3507599d6f1284b11d0150f314891447db8e981
+.fixed-action-btn {
+    position: fixed;
+    top: 63%;
+    right: 3%;
+    bottom: 23px;
+    padding-top: 15px;
+    margin-bottom: 0;
+    z-index: 998;
+  }
+<<<<<<< HEAD
+=======
   
+>>>>>>> a3507599d6f1284b11d0150f314891447db8e981
 
 

@@ -2631,7 +2631,7 @@ calendar-times:
       - schedule
       - time
       - when
-      - x
+      
   styles:
     - solid
     - regular
@@ -16133,7 +16133,7 @@ slash:
       - mute
       - 'off'
       - stop
-      - x
+      
   styles:
     - solid
   unicode: f715
@@ -18284,7 +18284,7 @@ times:
       - notify
       - problem
       - wrong
-      - x
+      
   styles:
     - solid
   unicode: f00d
@@ -18305,7 +18305,7 @@ times-circle:
       - notify
       - problem
       - wrong
-      - x
+      
   styles:
     - solid
     - regular
@@ -19585,7 +19585,7 @@ user-times:
       - archive
       - delete
       - remove
-      - x
+      
   styles:
     - solid
   unicode: f235

@@ -12,12 +12,12 @@
     <tbody>
         @foreach($talentos as $value)
             <tr>
-            <td>{{ $value->codigo_actividad }}</td>
-            <td>{{ $value->documento }}</td>
-            <td>{{ $value->nombres }}</td>
-            <td>{{ $value->apellidos }}</td>
-            <td>{{ $value->email }}</td>
-            <td>{{ $value->contactos }}</td>
+                <td>{{ $value->codigo_actividad }}</td>
+                <td>{{ $value->documento }}</td>
+                <td>{{ $value->nombres }}</td>
+                <td>{{ $value->apellidos }}</td>
+                <td>{{ $value->email }}</td>
+                <td>{{ $value->contactos }}</td>
             </tr>
         @endforeach
     </tbody>

@@ -56,8 +56,9 @@
 
                                             @if($user->documento != auth()->user()->documento)
                                                 @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
-                                                <a href="{{route('usuario.usuarios.acceso', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar Acceso</a>
-                                                <!-- Dropdown Trigger -->
+                                                    <a href="{{route('usuario.usuarios.acceso', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar Acceso</a>
+                                                    <a href="{{route('user.newpassword', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Generar nueva contraseña</a>
+
                                                     <a class='dropdown-button btn waves-effect waves-orange btn-flat m-t-xs' href='#' data-activates='dropdown-actions'>Cambiar información</a>
                                                     <!-- Dropdown Structure -->
                                                     <ul id='dropdown-actions' class='dropdown-content'>
@@ -68,16 +69,42 @@
                                                 @endif
                                                 @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && !$user->hasAnyRole([App\User::IsDinamizador(), App\User::IsAdministrador() ]))
                                                     <a href="{{route('usuario.usuarios.acceso', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar Acceso</a>
-                                                    <a href="{{route('usuario.usuarios.changenode', $user->present()->userDocumento())}}"  class="waves-effect waves-orange btn-flat m-t-xs">Cambiar Roles y Nodos</a>
+                                                    <a href="{{route('user.newpassword', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Generar nueva contraseña</a>
+                                                    <a class='dropdown-button btn waves-effect waves-orange btn-flat m-t-xs' href='#' data-activates='dropdown-actions'>Cambiar información</a>
+                                                    <!-- Dropdown Structure -->
+                                                    <ul id='dropdown-actions' class='dropdown-content'>
+                                                        <li><a href="{{route('usuario.usuarios.edit', $user->present()->userDocumento())}}">Cambiar Información personal</a></li>
+                                                        <li class="divider"></li>
+                                                        <li><a  href="{{route('usuario.usuarios.changenode', $user->present()->userDocumento())}}">Cambiar Roles y Nodos</a></li>
+                                                    </ul>
                                                 @endif
-                                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor() && !$user->hasAnyRole([App\User::IsDinamizador(), App\User::IsAdministrador(), App\User::IsInfocenter(), App\User::IsArticulador(), App\User::IsIngreso(), App\User::IsDesarrollador() ]))
+                                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsArticulador()) && !$user->present()->userChangeAccess())
                                                     <a href="{{route('usuario.usuarios.acceso', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar Acceso</a>
+                                                    <a href="{{route('user.newpassword', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Generar nueva contraseña</a>
+                                                    <a href="{{route('usuario.usuarios.edit', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar información</a>
                                                 @endif
                                             @endif
                                         </div>
                                     </div>
                                     <div class="divider mailbox-divider"></div>
                                     <div class="mailbox-text">
+                                        @if(session()->has('status') || session()->has('error'))
+                                            <div class="center">
+                                                <div class="card  {{session('status') ? 'green': ''}} {{session('error') ? 'red': ''}}  darken-1">
+                                                    <div class="row">
+                                                        <div class="col s12 m10">
+                                                            <div class="card-content white-text">
+                                                                <p>
+                                                                    <i class="material-icons left">info_outline</i>
+                                                                    {{session('status') ? : session('error')}}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        @endif
                                         <div class="card-content">
                                             <span class="card-title orange-text center">Información básica</span>
                                             <span class="badge green lighten-1 white-text">{{$user->present()->userAcceso()}}</span>
@@ -269,7 +296,19 @@
                                                         <span>Otra información {{App\User::IsTalento()}}</span>
                                                     </div>
                                                 </div>
-
+                                            @endif
+                                            @if($user->isUserApoyoTecnico())
+                                            <span class="orange-text">Información {{App\User::IsApoyoTecnico()}}</span>
+                                                <div class="server-load row">
+                                                    <div class="server-stat col s12 m4 l4">
+                                                        <p>{{$user->present()->userApoyoTecnicoNodoName()}}</p>
+                                                        <span>Nodo</span>
+                                                    </div>
+                                                    <div class="server-stat col s12 m4 l4">
+                                                        <p>{{$user->present()->userApoyoTecnicoHonorarios()}}</p>
+                                                        <span>Honorario</span>
+                                                    </div>
+                                                </div>
                                             @endif
                                         </div>
                                     </div>
