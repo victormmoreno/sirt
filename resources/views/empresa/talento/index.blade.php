@@ -52,9 +52,16 @@
                 </div>
             </div>
             <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-                <a href="{{route('empresa.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nueva Empresa">
-                    <i class="material-icons">add</i>
-                </a>
+                <p>
+                    <a href="{{route('empresa.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nueva Empresa">
+                        <i class="material-icons">add</i>
+                    </a>
+                </p>
+                <p>
+                    <a href="{{route('empresa.search')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Buscar Usuario">
+                        <i class="material-icons">search</i>
+                    </a>
+                </p>
             </div>
         </div>
     </div>
