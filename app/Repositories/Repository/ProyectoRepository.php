@@ -757,8 +757,8 @@ class ProyectoRepository
         }
 
 
-        $proyecto->articulacion_proyecto->actividad()->update([
-            'gestor_id' => $request->txtgestor_id
+        $proyecto->update([
+            'asesor_id' => $request->txtgestor_id
         ]);
 
         DB::commit();

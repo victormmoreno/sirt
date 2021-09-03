@@ -43,7 +43,7 @@
                       </a>
                     </li>
                     @endif
-                    @if ($idea->estadoIdea->nombre == 'Rechazado por comité')
+                    @if ($idea->estadoIdea->nombre == 'Rechazado por comité' || $idea->estadoIdea->nombre == 'En PBT')
                     <li class="collection-item">
                       <form action="{{route('idea.duplicar', $idea->id)}}" method="POST" id="frmDuplicarIdea" name="frmDuplicarIdea">
                         {!! method_field('PUT')!!}

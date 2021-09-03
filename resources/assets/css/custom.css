@@ -238,6 +238,15 @@ h5.breadcrumbs-header {
     /*Custom Background Color While Active*/
 }
 
+.fixed-action-btn {
+    position: fixed;
+    top: 63%;
+    right: 3%;
+    bottom: 23px;
+    padding-top: 15px;
+    margin-bottom: 0;
+    z-index: 998;
+  }
   
 
 
