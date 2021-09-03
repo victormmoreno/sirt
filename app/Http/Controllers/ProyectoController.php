@@ -705,7 +705,7 @@ class ProyectoController extends Controller
         } else {
             $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
             $ultimo_movimiento = $historico->last();
-            $costo = $this->costoController->costosDeUnaActividad($proyecto->articulacion_proyecto->actividad->id);
+            $costo = $this->costoController->costoProject($proyecto->id);
             switch (Session::get('login_role')) {
                 case User::IsGestor():
                     return view('proyectos.gestor.fase_cierre', [
@@ -865,7 +865,10 @@ class ProyectoController extends Controller
             } else {
                 $result = $this->getProyectoRepository()->update($request, $id);
                 if ($result) {
-                    return response()->json(['state' => 'update']);
+                    return response()->json([
+                        'state' => 'update',
+                        'url' => route('proyecto.inicio', $id)
+                ]);
                 } else {
                     return response()->json(['state' => 'no_update']);
                 }
@@ -909,7 +912,7 @@ class ProyectoController extends Controller
             $update = $this->getProyectoRepository()->updateEntregablesPlaneacionProyectoRepository($request, $id);
             if ($update) {
                 Alert::success('Modificación Exitosa!', 'Los entregables del proyecto en la fase de planeación se han modificado!')->showConfirmButton('Ok', '#3085d6');
-                return redirect('proyecto');
+                return back();
             } else {
                 Alert::error('Modificación Errónea!', 'Los entregables del proyecto en la fase de planeación no se han modificado!')->showConfirmButton('Ok', '#3085d6');
                 return back();
@@ -950,7 +953,7 @@ class ProyectoController extends Controller
             $update = $this->getProyectoRepository()->updateEntregablesEjecucionProyectoRepository($request, $id);
             if ($update) {
                 Alert::success('Modificación Exitosa!', 'Los entregables del proyecto en la fase de ejecución se han modificado!')->showConfirmButton('Ok', '#3085d6');
-                return redirect('proyecto');
+                return back();
             } else {
                 Alert::error('Modificación Errónea!', 'Los entregables del proyecto en la fase de ejecución no se han modificado!')->showConfirmButton('Ok', '#3085d6');
                 return back();
@@ -986,7 +989,7 @@ class ProyectoController extends Controller
                 $update = $this->getProyectoRepository()->updateEntregableCierreProyectoRepository($request, $id);
                 if ($update) {
                     Alert::success('Modificación Exitosa!', 'Los entregables del proyecto en la fase de cierre se han modificado!')->showConfirmButton('Ok', '#3085d6');
-                    return redirect('proyecto');
+                    return back();
                 } else {
                     Alert::error('Modificación Errónea!', 'Los entregables del proyecto en la fase de cierre no se han modificado!')->showConfirmButton('Ok', '#3085d6');
                     return back();
@@ -1009,46 +1012,22 @@ class ProyectoController extends Controller
     {
         if (Session::get('login_role') == User::IsGestor()) {
             $proyecto = Proyecto::findOrFail($id);
-            if ($proyecto->articulacion_proyecto->actividad->aprobacion_dinamizador == 1) {
-
-                $validator = Validator::make(
-                    $request->all(),
-                    [
-                        'txtfecha_cierre' => 'required|date_format:"Y-m-d"',
-                    ],
-                    [
-                        'txtfecha_cierre.required' => 'La fecha de cierre del proyecto es obligatoria.',
-                        'txtfecha_cierre.date_format' => 'El formato de la fecha de cierre es incorrecto ("AAAA-MM-DD")'
-                    ]
-                );
-                if ($validator->fails()) {
-                    return response()->json([
-                        'state'   => 'error_form',
-                        'errors' => $validator->errors(),
-                    ]);
-                } else {
-                    $cerrar = $this->getProyectoRepository()->cerrarProyecto($request, $proyecto);
-                    if ($cerrar) {
-                        return response()->json(['state' => 'update']);
-                    } else {
-                        return response()->json(['state' => 'no_update']);
-                    }
-                }
+            $req = new ProyectoFaseCierreFormRequest;
+            $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+            if ($validator->fails()) {
+                return response()->json([
+                    'state'   => 'error_form',
+                    'errors' => $validator->errors(),
+                ]);
             } else {
-                $req = new ProyectoFaseCierreFormRequest;
-                $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-                if ($validator->fails()) {
+                $result = $this->getProyectoRepository()->updateCierreProyectoRepository($request, $id);
+                if ($result) {
                     return response()->json([
-                        'state'   => 'error_form',
-                        'errors' => $validator->errors(),
-                    ]);
+                        'state' => 'update',
+                        'url' => route('proyecto.cierre', $id)
+                ]);
                 } else {
-                    $result = $this->getProyectoRepository()->updateCierreProyectoRepository($request, $id);
-                    if ($result) {
-                        return response()->json(['state' => 'update']);
-                    } else {
-                        return response()->json(['state' => 'no_update']);
-                    }
+                    return response()->json(['state' => 'no_update']);
                 }
             }
         } else {

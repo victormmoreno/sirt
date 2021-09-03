@@ -68,8 +68,8 @@
                                 </select>
                             </div>
                             <div class="input-field col s12 m2 l2" id="divyear" style="display:none;">
-                                <label class="active" for="filter_year">Año actividad <span class="red-text">*</span></label>
-                                <select class="js-states browser-default select2"  name="filter_year" id="filter_year" >
+                                <label class="active" for="filter_year_activo">Año actividad <span class="red-text">*</span></label>
+                                <select class="js-states browser-default select2"  name="filter_year_activo" id="filter_year_activo" >
                                     @for ($i=$year; $i >= 2016; $i--)
                                         <option value="{{$i}}" >{{$i}}</option>
                                     @endfor

@@ -67,4 +67,5 @@ class ArchivoComiteController extends Controller
         $this->archivoComiteRepository->store($id, Storage::url($fileUrl));
         }
     }
+  }
 }

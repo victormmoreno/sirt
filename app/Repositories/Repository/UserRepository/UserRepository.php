@@ -1152,6 +1152,61 @@ class UserRepository
         }
     }
 
+    public function exportarUsersAJson()
+    {
+        return User::with(
+            [
+                'tipodocumento' => function ($query) {
+                    $query->select('id', 'nombre');
+                },
+                'roles' => function ($query) {
+                    $query->select('id', 'name');
+                },
+                'ocupaciones',
+                'eps' => function ($query)
+                {
+                    $query->select('id', 'nombre');
+                },
+                'gradoescolaridad' => function ($query)
+                {
+                    $query->select('id', 'nombre');
+                },
+                'gruposanguineo'  => function ($query)
+                {
+                    $query->select('id', 'nombre');
+                },
+                'ciudad.departamento'  => function ($query)
+                {
+                    $query->select('id', 'nombre');
+                },
+                'ciudadexpedicion.departamento'  => function ($query)
+                {
+                    $query->select('id', 'nombre');
+                },
+                'dinamizador',
+                'dinamizador.nodo',
+                'dinamizador.nodo.entidad',
+                'articulador',
+                'apoyotecnico',
+                'gestor',
+                'gestor.nodo',
+                'gestor.nodo.entidad',
+                'gestor.nodo.centro',
+                'gestor.nodo.centro.regional',
+                'gestor.nodo.centro.entidad',
+                'gestor.lineatecnologica',
+                'infocenter',
+                'infocenter.nodo',
+                'infocenter.nodo.entidad',
+                'talento',
+                'talento.entidad',
+                'talento.tipotalento',
+                'talento.tipoformacion',
+                'talento.tipoestudio',
+                'ingreso.nodo.entidad',
+            ]
+        )->withTrashed();
+    }
 
     /**
      * @author devjul

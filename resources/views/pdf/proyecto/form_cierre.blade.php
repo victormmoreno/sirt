@@ -193,10 +193,10 @@
     </footer>
     <div class="card-content">
         <table class="bordered">
-            <tr>
+            {{-- <tr>
                 <td colspan="1" rowspan="2"><img class="center-image" src="{{asset('img/web.png')}}"></td>
                 <td colspan="5" class="centered"><b>Acta de Cierre<b></td>
-            </tr>
+            </tr> --}}
             <tr>
                 <td colspan="5" class="centered"><b>ACTA No. {{ substr($proyecto->present()->proyectoCode(), -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b></td>
             </tr>

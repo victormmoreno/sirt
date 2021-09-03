@@ -851,6 +851,16 @@ Route::group([
     Route::post('/importar', 'MigracionController@import')->name('migracion.proyectos.store')->middleware('role_session:Desarrollador');
 });
 
+    //-------------------------------- Route group para el módulo de exportar
+Route::group([
+    'prefix' => 'exportar',
+    'middleware' => ['auth']
+], function () {
+    Route::get('/', 'ExportJsonController@index')->name('exportar.index')->middleware('role_session:Desarrollador');
+    Route::get('/export_user_json', 'ExportJsonController@exportJsonUsers')->name('exportar.json.user')->middleware('role_session:Desarrollador');
+    // Route::post('/importar', 'MigracionController@import')->name('migracion.proyectos.store')->middleware('role_session:Desarrollador');
+});
+
 /*=====  End of rutas para las funcionalidades de los usuarios  ======*/
 
 Route::get('/notificaciones', 'NotificationsController@index')
