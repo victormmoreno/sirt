@@ -281,24 +281,28 @@
                 <td colspan="6" ><b>Certificación del Talento Interlocutor y Articulador Asesor<b></td>
             </tr>
             <tr>
-            <td colspan="6" rowspan="5"></td>
+                <td colspan="6" >{{$articulacion->present()->fullNameTalentInterlocutor()}} - Talento Interlocutor</td>
             </tr>
-            <tr></tr>
-            <tr></tr>
-            <tr></tr>
-            <tr></tr>
-            <tr>
-            <td colspan="6" >{{$articulacion->present()->fullNameTalentInterlocutor()}} - Talento Interlocutor</td>
+             <tr>
+                    <td rowspan="3" colspan="6"></td>
             </tr>
             <tr>
-            <td colspan="6" rowspan="5"></td>
+
             </tr>
-            <tr></tr>
-            <tr></tr>
-            <tr></tr>
-            <tr></tr>
             <tr>
-            <td colspan="6" >{{$articulacion->present()->articulacionPbtUserAsesor()}} - Articulador</td>
+
+            </tr>
+            <tr>
+                 <td colspan="6" >{{$articulacion->present()->articulacionPbtUserAsesor()}} - Articulador</td>
+            </tr>
+            <tr>
+                    <td rowspan="3" colspan="6"></td>
+            </tr>
+            <tr>
+
+            </tr>
+            <tr>
+
             </tr>
         </table>
     </div>

@@ -18,6 +18,10 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\User\UserWasRegistered' => [
             'App\Listeners\User\SendWelcomeEmail',
         ],
+        'App\Events\User\UserHasNewPasswordGenerated' => [
+            'App\Listeners\User\SendEmailNewPasswordGenerated',
+        ],
+
         'Illuminate\Auth\Events\Login'      => [
             'App\Listeners\User\Auth\LogSuccessfulLogin',
         ],

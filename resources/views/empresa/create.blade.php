@@ -37,7 +37,7 @@
                     <center>
                         <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>Registrar</button>
                         <a href="{{route('empresa')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
-                    </center>
+                    <center>
                     </form>
                 </div>
                 </div>

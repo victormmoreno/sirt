@@ -18,7 +18,7 @@ class SendWelcomeEmail
     public function handle(UserWasRegistered $event)
     {
         if ($event->user->hasRole(User::IsTalento())) {
-            Mail::to($event->user->email)->send(new SendNotificationPassoword($event->user, $event->password));
+            Mail::to($event->user->email)->send(new SendNotificationPassoword($event->user, $event->password, $event->message));
         }else{
             Mail::to($event->user->email)->send(new SendLoginInstructionsEmail($event->user, $event->password));
         }

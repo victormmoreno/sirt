@@ -245,7 +245,7 @@ class UsoInfraestructura extends Model
                         return $subquery->whereHas('articulacion_proyecto.actividad', function($q) use($actividad){
                             $q->where('id', $actividad);
                         })
-                        ->orWhereHas('asesor.user', function ($subquery) use ($user) {
+                        ->whereHas('asesor.user', function ($subquery) use ($user) {
                             $subquery->where('id', $user);
                         });
                     }
@@ -316,28 +316,6 @@ class UsoInfraestructura extends Model
                     return $query->where('users.id', $asesor);
                 }
             );
-            // return $query->whereHasMorph(
-            //     'asesorable',
-            //     [ \App\Models\Proyecto::class],
-            //     function (Builder $subquery) use($asesor) {
-            //         return $subquery->wherehas('asesor.user', function ($query) use ($asesor) {
-            //             $query->where(function ($subquery) use ($asesor) {
-            //                 $subquery->where('id', $asesor);
-            //             });
-            //         });
-
-            //     }
-            // )->orWhereHasMorph(
-            //     'asesorable',
-            //     [\App\Models\ArticulacionPbt::class],
-            //     function (Builder $subquery) use($asesor) {
-            //         return $subquery->whereHas('asesor',function ($query) use ($asesor) {
-            //             $query->where(function ($subquery) use ($asesor) {
-            //                 $subquery->where('id', $asesor);
-            //             });
-            //         });
-            //     }
-            // );
         }
         return $query;
     }
