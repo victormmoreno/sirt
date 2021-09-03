@@ -69,7 +69,7 @@ function mensajesProyectoCreate(data) {
             confirmButtonText: 'Ok'
         });
         setTimeout(function () {
-            window.location.replace("/proyecto");
+            window.location.replace(data.url);
         }, 1000);
     }
     if (data.state == 'no_registro') {
@@ -94,7 +94,7 @@ function mensajesProyectoUpdate(data) {
             confirmButtonText: 'Ok'
         });
         setTimeout(function () {
-            window.location.replace("/proyecto");
+            window.location.replace(data.url);
         }, 1000);
     }
     if (data.state == 'no_update') {

@@ -9,6 +9,8 @@ use App\User;
 class Role extends RoleSpatie
 {
 
+  protected $hidden = ['pivot', 'id'];
+
   public function historial()
   {
       return $this->hasMany(HistorialEntidad::class, 'role_id', 'id');
