@@ -29,6 +29,20 @@ function addGestorComite() {
     }
 }
 
+function addGestorComite2(value) {
+    if ($('#gestor-' + value).is(':checked')) {
+        $('#gestorFila'+value).addClass('grey darken-1');
+        $('#txthorainiciogestor-' + value).removeAttr('disabled');
+        $('#txthorafingestor-' + value).removeAttr('disabled');
+    } else {
+        $('#gestorFila'+value).removeClass();
+        $('#txthorainiciogestor-' + value).attr('disabled', 'disabled');
+        $('#txthorainiciogestor-' + value).val(null);
+        $('#txthorafingestor-' + value).attr('disabled', 'disabled');
+        $('#txthorafingestor-' + value).val(null);
+    }
+}
+
 $('#txthoraidea').bootstrapMaterialDatePicker({
     time:true,
     date:false,
@@ -40,7 +54,7 @@ $('#txthoraidea').bootstrapMaterialDatePicker({
     okText: 'Guardar'
 });
   
-$('#txthorafingestor').bootstrapMaterialDatePicker({ 
+$('input[name*="horas_fin"]').bootstrapMaterialDatePicker({ 
     time:true,
     date:false,
     shortTime:true,
@@ -50,7 +64,7 @@ $('#txthorafingestor').bootstrapMaterialDatePicker({
     okText: 'Guardar'
 });
  
-$('#txthorainiciogestor').bootstrapMaterialDatePicker({ 
+$('input[name*="horas_inicio"]').bootstrapMaterialDatePicker({ 
     time:true,
     date:false,
     shortTime: true,
