@@ -1,16 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
-
 
 Route::get('/', function () {
     return view('spa');
 })->name('/');
 
-
 Route::get('politica-de-confidencialidad', function () {
-
     return view('seguridad.terminos');
 })->name('terminos');
 
@@ -32,12 +28,6 @@ Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail'
 Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
 Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
 
-// Email Verification Routes...
-//Route::get('email/verify', 'Auth\VerificationController@show')->name('verification.notice');
-//Route::get('email/verify/{id}', 'Auth\VerificationController@verify')->name('verification.verify');
-//Route::get('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
-
-
 //verificar usuario no registrado
 Route::post('user/verify', 'Auth\UnregisteredUserVerificationController@verificationUser')->name('user.verify');
 
@@ -50,63 +40,22 @@ DB::listen(function ($query) {
 // echo "<pre>{$query->time}</pre>";
 });
 
-/*===========================================================
-=            ruta para revisar funcionaliddes de prueba          =
-===========================================================*/
 
-Route::get('email/{id}', function ($asesor) {
-// return new App\Mail\Idea\IdeaAceptadaParaComite(App\Models\Idea::first(), 'Aceptada');
-$asesorias = App\Models\UsoInfraestructura::with(['usotalentos.user'=> function($query){
-    $query->withTrashed();
-}])
-->whereHas(
-    'usotalentos.user',
-    function (Builder $query) use($asesor) {
-        return $query->where('id', $asesor);
-    }
-)
-->where('id', 6176)
-->first();
-dd($asesorias);
+
+Route::get('email', function () {
+    return new App\Mail\Contact\AutomaticMessageSent(App\Models\Contact::first());
 
 });
 
-/*=====  End of ruta para revisafuncionaliddes de prueba  ======*/
-
-
-/*================================================================
-=            ruta para cambiar la session del usuario            =
-================================================================*/
 Route::post('cambiar-role', 'User\RolesPermissions@changeRoleSession')
     ->name('user.changerole')
     ->middleware('disablepreventback');
-/*=====  End of ruta para cambiar la session del usuario  ======*/
 
-/*=======================================================
-=            rutas para activacion de cuenta            =
-=======================================================*/
-// Route::get('activate/{token}', 'ActivationTokenController@activate')->name('activation');
-/*=====  End of rutas para activacion de cuenta  ======*/
-
-/*===========================================================
-=            ruta principal apenas se hace login            =
-===========================================================*/
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('disablepreventback');
 
-/*=====  End of ruta principal apenas se hace login  ======*/
-
-/*===================================================================
-=            rutas para las funcionalidades de los nodos            =
-===================================================================*/
-
 Route::resource('nodo', 'Nodo\NodoController')->middleware('disablepreventback');
 
-/*=====  End of rutas para las funcionalidades de los nodos  ======*/
-
-/*======================================================================
-=            rutas para las funcionalidades de los usuarios            =
-======================================================================*/
 Route::get('usuario/{documento}/password/reset', 'User\UserController@generatePassword')->name('user.newpassword')->middleware('disablepreventback');
 Route::get('usuario/getciudad/{departamento?}', 'User\UserController@getCiudad');
 Route::get('usuario/export', 'User\UserController@export')->name('usuario.export');
@@ -171,10 +120,7 @@ Route::group(
     }
 );
 
-/*========================================================================
-=            seccion para las rutas de costos administrativos            =
-========================================================================*/
-
+//costos administrativos
 Route::get('costos-administrativos/costoadministrativo/{nodo}', 'CostoAdministrativoController@getCostoAdministrativoPorNodo')->name('costoadministrativo.costosadministrativosfornodo');
 
 Route::resource('costos-administrativos', 'CostoAdministrativoController', [
@@ -196,11 +142,7 @@ Route::resource('costos-administrativos', 'CostoAdministrativoController', [
 
 Route::get('costos-administrativos/costoadministrativo/{nodo}', 'CostoAdministrativoController@getCostoAdministrativoPorNodo')->name('costoadministrativo.costosadministrativosfornodo');
 
-/*=====  End of seccion para las rutas de costos administrativos  ======*/
-
-/*===============================================
-=            seccion para los equipo            =
-===============================================*/
+//equipos
 Route::get('/equipos/export', 'EquipoController@export')->name('equipo.export');
 Route::get('/equipos/getequiposporlinea/{nodo}/{lineatecnologica}', 'EquipoController@getEquiposPorLinea')
     ->name('equipo.getequiposporlinea');
@@ -222,12 +164,7 @@ Route::resource('equipos', 'EquipoController', [
         'equipos' => 'id',
     ]);
 
-/*=====  End of seccion para los equipo  ======*/
-
-/*===============================================
-=            seccion para los materiales            =
-===============================================*/
-
+//materiales
 Route::get('/materiales/getmaterialespornodo/{nodo}', 'MaterialController@getMaterialesPorNodo')
     ->name('material.getmaterialespornodo');
 
@@ -249,13 +186,7 @@ Route::resource('materiales', 'MaterialController', [
         'materiales' => 'id',
     ]);
 
-/*=====  End of seccion para los materiales  ======*/
-
-
-
-/*========================================================
-=            seccion para los mantenimientos             =
-========================================================*/
+//mantenimientos
 Route::get('/mantenimientos/getmantenimientosequipospornodo/{nodo}', 'MantenimientoController@getMantenimientosEquiposPorNodo')
     ->name('mantenimiento.getmantenimientosequipospornodo');
 
@@ -277,14 +208,7 @@ Route::resource('mantenimientos', 'MantenimientoController', [
         'mantenimientos' => 'id',
     ]);
 
-
-/*=====  End of seccion para los mantenimientos   ======*/
-
-
-/*======================================================================
-=            seccion para las rutas de uso de infraestructa            =
-======================================================================*/
-
+//uso infraestrucutra
 Route::get('usoinfraestructura/export', 'UsoInfraestructura\UsoInfraestructuraController@export')->name('usoinfraestructura.export');
 
 Route::group([
@@ -329,19 +253,11 @@ Route::group([
         ->name('usoinfraestructura.destroy');
 });
 
-/*=====  End of seccion para las rutas de uso de infraestructa  ======*/
-
-/*=========================================================
-=            seccion para las rutas del centro de formacion            =
-=========================================================*/
+//centros de formación
 Route::get('centro-formacion/getcentrosregional/{regional}', 'CentroController@getAllCentrosForRegional')->name('centro.getcentrosregional');
 Route::resource('centro-formacion', 'CentroController');
 
-/*=====  End of seccion para las rutas del centro de formacion  ======*/
-
-/*=========================================================
-=            seccion para las rutas del perfil            =
-=========================================================*/
+//profile
 Route::get('perfil/actividades', 'User\ProfileController@activities')->name('perfil.actividades')->middleware('disablepreventback');
 Route::get('certificado', 'User\ProfileController@downloadCertificatedPlataform')->name('certificado');
 Route::get('perfil/cuenta', 'User\ProfileController@account')->name('perfil.cuenta')->middleware('disablepreventback');
@@ -352,18 +268,14 @@ Route::get('perfil/password/reset', 'User\ProfileController@passwordReset')->nam
 Route::get('perfil/editar', 'User\ProfileController@editAccount')->name('perfil.edit')->middleware('disablepreventback');
 Route::resource('perfil', 'User\ProfileController', ['only' => ['update', 'destroy']])->middleware('disablepreventback');
 
-/*=====  End of seccion para las rutas del perfil  ======*/
-
-/*========================================================
-=            sesccion para las rutas de ayuda            =
-========================================================*/
-
+//ayuda
 Route::get('help/getciudades/{departamento?}', 'Help\HelpController@getCiudad')->name('help.getciudades');
 Route::get('help/getcentrosformacion/{regional?}', 'Help\HelpController@getCentrosRegional')->name('help.getcentrosformacion');
 Route::get('help/handbook', 'Help\HelpController@downloadHandbook')->name('help.handbook');
-Route::get('help/pqrs', 'Help\HelpController@pqrs')->name('help.pqrs');
 
-/*=====  End of sesccion para las rutas de ayuda  ======*/
+//contactenos
+Route::get('contactenos', 'ContactController@send')->name('contact.send')->middleware('auth');
+Route::resource('contacts', 'ContactController', ['except' => ['create']])->middleware(['auth', 'disablepreventback']);
 
 //-------------------Route group para el módulo de ideas
 Route::get('/registrar-idea', 'IdeaController@create')->name('idea.create')->middleware(['auth', 'role_session:Talento']);

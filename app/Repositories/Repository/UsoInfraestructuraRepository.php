@@ -74,12 +74,6 @@ class UsoInfraestructuraRepository
             'compromisos'             => $request->get('txtcompromisos'),
             'estado'                  => 1,
         ]);
-        // return UsoInfraestructura::create([
-        //     'fecha'                   => $request->txtfecha,
-        //     'descripcion'             => $request->txtdescripcion,
-        //     'compromisos'             => $request->get('txtcompromisos'),
-        //     'estado'                  => 1,
-        // ]);
     }
 
     /**

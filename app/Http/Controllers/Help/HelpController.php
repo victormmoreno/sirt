@@ -95,9 +95,6 @@ class HelpController extends Controller
         }
     }
 
-    public function pqrs()
-    {
-        return view('pqrs.send', ['user' => auth()->user()]);
-    }
+
 
 }
