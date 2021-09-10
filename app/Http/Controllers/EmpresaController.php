@@ -46,6 +46,9 @@ class EmpresaController extends Controller
             case User::IsAdministrador():
                 return view('empresa.administrador.show', ['empresa' => $empresa]);
                 break;
+            case User::IsDinamizador():
+                return view('empresa.show_no_option', ['empresa' => $empresa]);
+                break;
             case User::IsGestor():
                 return view('empresa.show_no_option', ['empresa' => $empresa]);
                 break;
@@ -56,7 +59,7 @@ class EmpresaController extends Controller
                 return view('empresa.show_no_option', ['empresa' => $empresa]);
                 break;
             default:
-                
+                return abort('403');
                 break;
         }
     }
@@ -179,7 +182,7 @@ class EmpresaController extends Controller
                 'message' => 'La empresa no se ha creado',
                 'url' => false
             ]);
-        }    
+        }
     }
 
     /**
@@ -202,7 +205,7 @@ class EmpresaController extends Controller
             'tamanhos' => TamanhoEmpresa::all(),
             'tipos' => TipoEmpresa::all()
         ]);
-        
+
     }
 
     public function ajaxDeUnaSede(string $id)
@@ -289,7 +292,7 @@ class EmpresaController extends Controller
         $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
         if (!$this->validarAccesoForms($empresa))
             return back();
-        
+
         if ($request->input('txttype_search') == 1) {
             $messages = [
                 'txtsearch_user.required' => 'El número de documento es obligatorio.',
@@ -328,7 +331,7 @@ class EmpresaController extends Controller
         $result = $this->empresaRepository->update_responsable($request, $empresa);
         if ($result['state']) {
             return response()->json([
-                'state' => 'update', 
+                'state' => 'update',
                 'url' => route('empresa.detalle', $id),
                 'title' => $result['title'],
                 'msg' => $result['msg'],
@@ -336,7 +339,7 @@ class EmpresaController extends Controller
             ]);
         } else {
             return response()->json([
-                'state' => 'no_update', 
+                'state' => 'no_update',
                 'title' => $result['title'],
                 'msg' => $result['msg'],
                 'type' => $result['type']
@@ -375,7 +378,7 @@ class EmpresaController extends Controller
             $result = $this->empresaRepository->update($request, $empresa);
             if ($result['state']) {
                 return response()->json([
-                    'state' => 'update', 
+                    'state' => 'update',
                     'url' => route('empresa.detalle', $id),
                     'title' => $result['title'],
                     'msg' => $result['msg'],
@@ -383,7 +386,7 @@ class EmpresaController extends Controller
                 ]);
             } else {
                 return response()->json([
-                    'state' => 'no_update', 
+                    'state' => 'no_update',
                     'title' => $result['title'],
                     'msg' => $result['msg'],
                     'type' => $result['type']
@@ -414,7 +417,7 @@ class EmpresaController extends Controller
             $result = $this->empresaRepository->updateSedes($request, $sede);
             if ($result['state']) {
                 return response()->json([
-                    'state' => 'update', 
+                    'state' => 'update',
                     'url' => route('empresa.detalle', $id),
                     'title' => $result['title'],
                     'msg' => $result['msg'],
@@ -422,7 +425,7 @@ class EmpresaController extends Controller
                 ]);
             } else {
                 return response()->json([
-                    'state' => 'no_update', 
+                    'state' => 'no_update',
                     'title' => $result['title'],
                     'msg' => $result['msg'],
                     'type' => $result['type']
@@ -450,7 +453,7 @@ class EmpresaController extends Controller
             $result = $this->empresaRepository->storeSede($request, $empresa);
             if ($result['state']) {
                 return response()->json([
-                    'state' => 'store', 
+                    'state' => 'store',
                     'url' => route('empresa.detalle', $id),
                     'title' => $result['title'],
                     'msg' => $result['msg'],
@@ -458,7 +461,7 @@ class EmpresaController extends Controller
                 ]);
             } else {
                 return response()->json([
-                    'state' => 'no_store', 
+                    'state' => 'no_store',
                     'title' => $result['title'],
                     'msg' => $result['msg'],
                     'type' => $result['type']
@@ -469,11 +472,11 @@ class EmpresaController extends Controller
 
     public function filterByCode($value)
     {
-                
-        if (request()->ajax()) {      
+
+        if (request()->ajax()) {
             $company = Empresa::with([
                 'entidad',
-                'sedes',            
+                'sedes',
             ])->where('nit', $value)
             ->first();
 
@@ -485,7 +488,7 @@ class EmpresaController extends Controller
                     ]
                 ],Response::HTTP_OK);
             }
-            
+
             return response()->json([
                 'data' => [
                     'empresa' => null,
@@ -509,7 +512,7 @@ class EmpresaController extends Controller
                     ]
                 ],Response::HTTP_OK);
             }
-            
+
             return response()->json([
                 'data' => [
                     'empresa' => null,

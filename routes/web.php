@@ -361,6 +361,7 @@ Route::resource('perfil', 'User\ProfileController', ['only' => ['update', 'destr
 Route::get('help/getciudades/{departamento?}', 'Help\HelpController@getCiudad')->name('help.getciudades');
 Route::get('help/getcentrosformacion/{regional?}', 'Help\HelpController@getCentrosRegional')->name('help.getcentrosformacion');
 Route::get('help/handbook', 'Help\HelpController@downloadHandbook')->name('help.handbook');
+Route::get('help/pqrs', 'Help\HelpController@pqrs')->name('help.pqrs');
 
 /*=====  End of sesccion para las rutas de ayuda  ======*/
 

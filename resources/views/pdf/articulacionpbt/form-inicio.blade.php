@@ -283,28 +283,10 @@
             <tr>
                 <td colspan="6" >{{$articulacion->present()->fullNameTalentInterlocutor()}} - Talento Interlocutor</td>
             </tr>
-             <tr>
-                    <td rowspan="3" colspan="6"></td>
-            </tr>
             <tr>
-
-            </tr>
-            <tr>
-
-            </tr>
-            <tr>
-                 <td colspan="6" >{{$articulacion->present()->articulacionPbtUserAsesor()}} - Articulador</td>
-            </tr>
-            <tr>
-                    <td rowspan="3" colspan="6"></td>
-            </tr>
-            <tr>
-
-            </tr>
-            <tr>
-
+                <td colspan="6" >{{$articulacion->present()->articulacionPbtUserAsesor()}} - Articulador</td>
             </tr>
         </table>
     </div>
     </body>
-    </html>
+</html>

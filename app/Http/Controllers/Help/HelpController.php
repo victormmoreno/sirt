@@ -36,7 +36,12 @@ class HelpController extends Controller
 
     public function downloadHandbook()
     {
-        $path =   public_path(). "\documents\handbooks\\". $this->base_sesion();
+        if (app()->environment() == 'production') {
+            $path =   public_path(). "/documents/handbooks/". $this->base_sesion();
+        }else{
+            $path =   public_path(). "\documents\handbooks\\". $this->base_sesion();
+        }
+
         if(!$this->downloadFile($path)){
             return redirect()->back();
         }
@@ -90,5 +95,9 @@ class HelpController extends Controller
         }
     }
 
+    public function pqrs()
+    {
+        return view('pqrs.send', ['user' => auth()->user()]);
+    }
 
 }

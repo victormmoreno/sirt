@@ -179,7 +179,7 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    ¿El proyecto pertenece a la economía naranja?: <b>{{$proyecto->present()->proyectoEconomiaNaranja() == 0 ? 'NO' : 'SI'}}</b>
+                    ¿El proyecto pertenece a la economía naranja?: <b>{{$proyecto->present()->proyectoEconomiaNaranja()}}</b>
                     @if ($proyecto->economia_naranja == 1)
                     <br>
                     Tipo de economía naranja: <b>{{$proyecto->present()->proyectoTipoEconomiaNaranja()}}</b>
@@ -320,24 +320,12 @@
                 <td colspan="6" ><b>ASISTENTES<b></td>
             </tr>
             <tr>
-                <td colspan="6" rowspan="5"></td>
-            </tr>
-            <tr></tr>
-            <tr></tr>
-            <tr></tr>
-            <tr></tr>
-            <tr>
-                <td colspan="6" >{{$proyecto->present()->proyectoUserAsesor()}} - Experto</td>
+                <td colspan="2" >{{$proyecto->present()->proyectoUserAsesor()}} - Experto</td>
+                <td colspan="4" ></td>
             </tr>
             <tr>
-                <td colspan="6" rowspan="5"></td>
-            </tr>
-            <tr></tr>
-            <tr></tr>
-            <tr></tr>
-            <tr></tr>
-            <tr>
-                <td colspan="6" >{{$proyecto->present()->talentoInterlocutor()}} - Talento Interlocutor</td>
+                <td colspan="2" >{{$proyecto->present()->talentoInterlocutor()}} - Talento Interlocutor</td>
+                <td colspan="4" ></td>
             </tr>
         </table>
     </div>

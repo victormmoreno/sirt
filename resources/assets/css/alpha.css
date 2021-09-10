@@ -4131,8 +4131,6 @@ body.mailbox .page-footer {
     float: right;
     text-align: right;
     width: 50%;
-    position: absolute;
-    right: 3%;
 }
 
 .page-footer .footer-grid .footer-grid-l .footer-text {
@@ -4343,7 +4341,4 @@ select {
                 border-right:0px solid white;
             }
         }
-
-
-
 

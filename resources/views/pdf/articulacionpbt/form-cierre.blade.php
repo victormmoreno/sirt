@@ -163,6 +163,7 @@
             .tr-striped {
                 background-color: #bdbdbd;
             }
+
         }
     </style>
     <meta charset="utf-8">
@@ -250,7 +251,6 @@
                     <td colspan="4">{{$articulacion->present()->articulacionPbtFechaCuando()}}</td>
                 </tr>
             @endif
-
             @endif
             @if($articulacion->present()->articulacionPbtPostulacion() == 1 && $articulacion->present()->articulacionPbtAprobacion() == 0)
             <tr>
@@ -304,26 +304,9 @@
             <tr>
                 <td colspan="6" >{{$articulacion->present()->fullNameTalentInterlocutor()}} - Talento Interlocutor</td>
             </tr>
-             <tr>
-                    <td rowspan="3" colspan="6"></td>
-            </tr>
-            <tr>
 
-            </tr>
             <tr>
-
-            </tr>
-            <tr>
-                 <td colspan="6" >{{$articulacion->present()->articulacionPbtUserAsesor()}} - Articulador</td>
-            </tr>
-            <tr>
-                    <td rowspan="3" colspan="6"></td>
-            </tr>
-            <tr>
-
-            </tr>
-            <tr>
-
+                <td colspan="6" >{{$articulacion->present()->articulacionPbtUserAsesor()}} - Articulador</td>
             </tr>
         </table>
     </div>
