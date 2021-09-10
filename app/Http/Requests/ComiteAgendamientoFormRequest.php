@@ -38,7 +38,6 @@ class ComiteAgendamientoFormRequest extends FormRequest
       $messages = [
         'txtfechacomite_create.required' => 'La Fecha del Comité es obligatoria.',
         'txtfechacomite_create.date_format' => 'La Fecha del Comité no tiene un formato válido.',
-        // 'horas_inicio.*.required' => 'La hora de inicio del experto :value no tiene un formato válido.',
 
         'ideas.required' => 'Se requiere por lo menos de una idea de proyecto',
         
