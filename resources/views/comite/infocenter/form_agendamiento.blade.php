@@ -120,7 +120,7 @@
     <i class="Small material-icons prefix">info</i>
 </center>
 <div class="row">
-    <div class="col s12 m12 l12">
+    <div class="col s12 m6 l6 offset-l3 offset-m3">
         <div class="card-content">
             <h5>
                 <span class="red-text text-darken-2">
@@ -130,7 +130,7 @@
                 </span>
             </h5>
             <div class="row">
-                <table class="responsive-table" style="width: 100%">
+                <table class="responsive-table striped" style="width: 100%">
                     <thead>
                         <tr>
                             <th style="width: 30%">Nombre del experto</th>
