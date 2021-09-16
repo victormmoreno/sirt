@@ -1,28 +1,25 @@
 <?php
 
-namespace App\Events\Contact;
+namespace App\Events\Support;
 
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+
 
 class MessageWasSent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $contact;
+    public $message;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($contact)
+    public function __construct($message)
     {
-        $this->contact = $contact;
+        $this->message = $message;
     }
 }

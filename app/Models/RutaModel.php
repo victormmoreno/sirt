@@ -26,7 +26,7 @@ class RutaModel extends Model
     public function getDominoAttribute($ruta)
     {
         return mb_strtolower(trim($ruta), 'UTF-8');
-    }   
+    }
 
     /*=====  End of asesores eloquent  ======*/
 

@@ -31,13 +31,11 @@ class ComiteAsignarFormRequest extends FormRequest
     public function messages()
     {
         $messages = [];
-    
-        // dd(request());
-        // exit();
-      foreach(request()->get('txtgestores') as $key => $val)
-      {
-        $messages['txtgestores.'.$key.'.required'] = 'El experto a cargo de la idea de proyecto #'.($key+1).' es obligatorio.';
-      }
-      return $messages;
+
+        foreach(request()->get('txtgestores') as $key => $val)
+        {
+            $messages['txtgestores.'.$key.'.required'] = 'El experto a cargo de la idea de proyecto #'.($key+1).' es obligatorio.';
+        }
+        return $messages;
     }
 }

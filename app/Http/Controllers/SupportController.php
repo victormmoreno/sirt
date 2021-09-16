@@ -2,28 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ContactRequest;
-use App\Models\Contact;
-use App\Repositories\Repository\ContactRepository;
+use App\Http\Requests\SupportRequest;
+use App\Models\Support;
+use App\Repositories\Repository\SupportRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class ContactController extends Controller
+class SupportController extends Controller
 {
 
-    private $contactRepository;
+    private $supportRepository;
 
-    public function __construct(ContactRepository $contactRepository)
+    public function __construct(SupportRepository $supportRepository)
     {
-        $this->middleware(['auth', 'role_session:Administrador|Dinamizador']);
-        $this->contactRepository = $contactRepository;
+        $this->middleware(['auth']);
+        $this->supportRepository = $supportRepository;
     }
 
     public function send()
     {
-        return view('contacts.send', ['user' => auth()->user()]);
+        return view('supports.send', ['user' => auth()->user()]);
     }
 
+    public function index()
+    {
+
+        return view('supports.index');
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -33,36 +38,37 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-
-        $req       = new ContactRequest;
+        $req       = new SupportRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
             return response()->json([
                 'fail'   => true,
                 'errors' => $validator->errors(),
+                'redirect_url' => null,
             ]);
         }
-        $result = $this->contactRepository->storeContact($request);
+        $result = $this->supportRepository->storeContact($request);
         if (!$result) {
             return response()->json([
                 'fail'         => true,
-                'redirect_url' => false,
+                'errors'       => $this->supportRepository->getError(),
+                'redirect_url' => null,
             ]);
         }
         return response()->json([
             'fail'         => false,
-            'redirect_url' => url(route('contacts.index')),
+            'errors'       => null,
+            'redirect_url' => url(route('support.send')),
         ]);
-        dd($request->all());
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Contact  $contact
+     * @param  \App\Models\Support  $support
      * @return \Illuminate\Http\Response
      */
-    public function show(Contact $contact)
+    public function show(Support $support)
     {
         //
     }
@@ -70,10 +76,10 @@ class ContactController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Contact  $contact
+     * @param  \App\Models\Contact  $support
      * @return \Illuminate\Http\Response
      */
-    public function edit(Contact $contact)
+    public function edit(Support $support)
     {
         //
     }
@@ -82,10 +88,10 @@ class ContactController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Contact  $contact
+     * @param  \App\Models\Support  $support
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Contact $contact)
+    public function update(Request $request, Support $support)
     {
         //
     }
@@ -93,10 +99,10 @@ class ContactController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Contact  $contact
+     * @param  \App\Models\Support  $support
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Contact $contact)
+    public function destroy(Support $support)
     {
         //
     }

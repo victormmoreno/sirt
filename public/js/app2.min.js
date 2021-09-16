@@ -7327,9 +7327,8 @@ $(document).ready(function() {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
         "lengthChange": false,
-         retrieve: true,
-       	processing: true,
-        // serverSide: true,
+        retrieve: true,
+        processing: true,
         ajax: {
             url: "/costos-administrativos",
             type: "get",
@@ -7362,10 +7361,8 @@ $(document).ready(function() {
             orderable: false,
             width: '8%'
         }, ],
-
         "footerCallback": function ( row, data, start, end, display ) {
             var api = this.api(), data;
- 
             // Remove the formatting to get integer data for summation
             var intVal = function ( i ) {
                 return typeof i === 'string' ?
@@ -7373,7 +7370,6 @@ $(document).ready(function() {
                     typeof i === 'number' ?
                         i : 0;
             };
- 
             // Total over all pages
             totalCostosHora = api
                 .column( 4 )
@@ -7381,21 +7377,18 @@ $(document).ready(function() {
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 );
-
             totalCostosDia = api
                 .column( 3 )
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 );
-
             totalCostosMes = api
                 .column( 2 )
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 );
- 
             // Total over this page
             pageTotalCostosHora = api
                 .column( 4, { page: 'current'} )
@@ -7403,46 +7396,40 @@ $(document).ready(function() {
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 );
-
             pageTotalCostosDia = api
                 .column( 3, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 );
-
             pageTotalCostosMes = api
                 .column( 2, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 );
- 
- 
             // Update footer
             $( api.column( 4 ).footer() ).html(
                 '$ '+pageTotalCostosHora +' ( $'+ totalCostosHora +' total)'
             );
-
             $( api.column( 3 ).footer() ).html(
                 '$ '+pageTotalCostosDia +' ( $'+ totalCostosDia +' total)'
             );
-
             $( api.column( 2 ).footer() ).html(
                 '$ '+pageTotalCostosMes +' ( $'+ totalCostosMes +' total)'
             );
         }
     });
 });
+
 $(document).ready(function() {
     $('#costoadministrativo_dinamizador_table1').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
         "lengthChange": false,
-         retrieve: true,
-       	processing: true,
-        // serverSide: true,
+        retrieve: true,
+        processing: true,
         ajax: {
             url: "/costos-administrativos",
             type: "get",
@@ -7475,10 +7462,8 @@ $(document).ready(function() {
             orderable: false,
             width: '8%'
         }, ],
-
         "footerCallback": function ( row, data, start, end, display ) {
             var api = this.api(), data;
- 
             // Remove the formatting to get integer data for summation
             var intVal = function ( i ) {
                 return typeof i === 'string' ?
@@ -7486,7 +7471,6 @@ $(document).ready(function() {
                     typeof i === 'number' ?
                         i : 0;
             };
- 
             // Total over all pages
             totalCostosHora = api
                 .column( 4 )
@@ -7494,21 +7478,18 @@ $(document).ready(function() {
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 );
-
             totalCostosDia = api
                 .column( 3 )
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 );
-
             totalCostosMes = api
                 .column( 2 )
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 );
- 
             // Total over this page
             pageTotalCostosHora = api
                 .column( 4, { page: 'current'} )
@@ -7516,37 +7497,32 @@ $(document).ready(function() {
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 );
-
             pageTotalCostosDia = api
                 .column( 3, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 );
-
             pageTotalCostosMes = api
                 .column( 2, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 );
- 
- 
             // Update footer
             $( api.column( 4 ).footer() ).html(
                 '$ '+pageTotalCostosHora +' ( $'+ totalCostosHora +' total)'
             );
-
             $( api.column( 3 ).footer() ).html(
                 '$ '+pageTotalCostosDia +' ( $'+ totalCostosDia +' total)'
             );
-
             $( api.column( 2 ).footer() ).html(
                 '$ '+pageTotalCostosMes +' ( $'+ totalCostosMes +' total)'
             );
         }
     });
 });
+
 $(document).ready(function() {
 
     let filter_nodo = $('#filter_nodo').val();
@@ -8425,27 +8401,7 @@ $(document).ready(function() {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
         "pagingType": "full_numbers",
-        // dom: 'Bfrtip',
-        // buttons: [
-        //     {
-        //         text:      '<i class="fa fa-files-o"></i>',
-        //         titleAttr: 'EXCEL',
-        //         className: 'waves-effect waves-light btn',
-        //         action: function ( e, dt, node, config ) {
-        //             alert( 'Button activated' );
-        //         }
-        //     },
-        //     {
-        //         text: 'PDF',
-        //         className: 'waves-effect waves-light btn red',
-        //         action: function ( e, dt, node, config ) {
-        //             alert( 'Button activated' );
-        //         }
-        //     }
-        // ],
-
     });
-
 });
 
 var selectCostoAdministrativoNodo = {
@@ -8453,7 +8409,7 @@ var selectCostoAdministrativoNodo = {
         let nodo = $('#selectnodo').val();
         $('#costoadministrativo_administrador_table').dataTable().fnDestroy();
         if (nodo != '') {
-            
+
             $('#costoadministrativo_administrador_table').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -8462,40 +8418,35 @@ var selectCostoAdministrativoNodo = {
                 serverSide: true,
                 "lengthChange": false,
                 "order": [[ 1, "asc" ]],
-                 fixedHeader: {
+                fixedHeader: {
                     header: true,
                     footer: true
                 },
-                // "paging":   false,
-                // "ordering": false,
-                // "info":     false,
-                // "dom": '<"top"i>rt<"bottom"flp><"clear">',
-                // stateSave: true,
-                // "scrollY":        "200px",
-                // // "scrollCollapse": true,
+
                 "pagingType": "full_numbers",
                 ajax: {
                     url: "/costos-administrativos/costoadministrativo/" + nodo,
                     type: "get",
                 },
-                columns: [{
-			            data: 'entidad',
-			            name: 'entidad',
-			            width: '30%'
-			        }, {
-			            data: 'costoadministrativo',
-			            name: 'costoadministrativo',
-			            width: '30%'
-			        }, {
-			            data: 'valor',
-			            name: 'valor',
-			            width: '15%'
-			        },
-			        {
-			            data: 'costosadministrativospordia',
-			            name: 'costosadministrativospordia',
-			            width: '15%'
-			        },
+                columns: [
+                    {
+                        data: 'entidad',
+                        name: 'entidad',
+                        width: '30%'
+                    }, {
+                        data: 'costoadministrativo',
+                        name: 'costoadministrativo',
+                        width: '30%'
+                    }, {
+                        data: 'valor',
+                        name: 'valor',
+                        width: '15%'
+                    },
+                    {
+                        data: 'costosadministrativospordia',
+                        name: 'costosadministrativospordia',
+                        width: '15%'
+                    },
                     {
                         data: 'costosadministrativosporhora',
                         name: 'costosadministrativosporhora',
@@ -8504,7 +8455,6 @@ var selectCostoAdministrativoNodo = {
 			    ],
                 "footerCallback": function ( row, data, start, end, display ) {
                     var api = this.api(), data;
-         
                     // Remove the formatting to get integer data for summation
                     var intVal = function ( i ) {
                         return typeof i === 'string' ?
@@ -8512,8 +8462,6 @@ var selectCostoAdministrativoNodo = {
                             typeof i === 'number' ?
                                 i : 0;
                     };
-         
-                    // Total over all pages
                     totalCostosHora = api
                         .column( 4 )
                         .data()
@@ -8534,7 +8482,6 @@ var selectCostoAdministrativoNodo = {
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
-         
                     // Total over this page
                     pageTotalCostosHora = api
                         .column( 4, { page: 'current'} )
@@ -8556,8 +8503,6 @@ var selectCostoAdministrativoNodo = {
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
-         
-         
                     // Update footer
                     $( api.column( 4 ).footer() ).html(
                         '$ '+pageTotalCostosHora +' ( $'+ totalCostosHora +' total)'
@@ -8571,10 +8516,7 @@ var selectCostoAdministrativoNodo = {
                         '$ '+pageTotalCostosMes +' ( $'+ totalCostosMes +' total)'
                     );
                 }
-
-           	});
-
-
+            });
         }else{
             $('#costoadministrativo_administrador_table').DataTable({
                 language: {
@@ -8584,9 +8526,9 @@ var selectCostoAdministrativoNodo = {
                 "pagingType": "full_numbers",
             }).clear().draw();
         }
-        
     },
 }
+
 $(document).ready(function() {
 
     usoinfraestructuraIndex.queryActivitiesByAnio();
@@ -10779,3 +10721,69 @@ $('#txtfecha_fin').bootstrapMaterialDatePicker({
   weekStart : 1, cancelText : 'Cancelar',
   okText: 'Guardar'
 });
+
+
+    $("#formSupport").on('submit', function(e){
+        e.preventDefault();
+        let form = $(this);
+        let data = new FormData($(this)[0]);
+        let url = form.attr("action");
+        $.ajax({
+            type: form.attr('method'),
+            url: url,
+            data: data,
+            contentType: false,
+            cache: false,
+            processData:false,
+            beforeSend: function(){
+                $('.error').hide();
+                $('#formSupport').css("opacity",".5");
+            },
+            success: function(response){
+                $('.error').hide();
+                printErrorsForm(response);
+                if(!response.fail && response.errors == null){
+                    Swal.fire({
+                        title: 'Registro Exitoso',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok',
+                    });
+                    // $('#formSupport')[0].reset();
+                    setTimeout(function () {
+                        window.location.href = response.redirect_url;
+                    }, 1500);
+                }
+            },
+            error: function (ajaxContext) {
+                Swal.fire({
+                    title: 'Registro erróneo, vuelve a intentarlo',
+                    html: ajaxContext.responseText,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok',
+                });
+            }
+        });
+    });
+
+function printErrorsForm(data) {
+    if (data.fail) {
+        let errores = "";
+        for (control in data.errors) {
+            errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
+            $('#' + control + '-error').html(data.errors[control]);
+            $('#' + control + '-error').show();
+        }
+        Swal.fire({
+            title: 'Advertencia!',
+            html: 'Estas ingresando mal los datos.',
+            type: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+        });
+    }
+}

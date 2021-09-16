@@ -153,7 +153,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{route('contact.send')}}">
+                            <a href="{{route('support.send')}}">
                                 <div class="notification">
                                 <div class="notification-icon circle orange">
                                     <i class="material-icons">sms</i>

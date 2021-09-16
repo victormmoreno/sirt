@@ -11,10 +11,11 @@
                         <div class="card-content  white-text">
                             <div class="row">
                                 <div class="col s12 m6 l6">
-                                    <h4>Contactenos</h4>
+                                    <h4>{{config('app.technical_support.title')}}</h4>
                                     <address>
-                                        Medellín, Antioquia<br>
-                                        calle 56 # 11 - piso 7
+                                        {{config('app.technical_support.contact.email')}}<br>
+                                        {{config('app.technical_support.contact.address')}}
+                                        {{config('app.technical_support.contact.phone')}}
                                     </address>
                                 </div>
                                 <div class="col s12 m6 l6 right-align hide-on-small-only">
@@ -32,17 +33,13 @@
         <div class="col s12 m10 l6 offset-l3 offset-m1 z-depth-3">
             <div class="card card-transparent mt-2 ">
                 <div class="card-content ">
-                    {{-- <span class="card-title">PQRS</span> --}}
                     <address>
                         <strong>{{config('app.name')}}</strong><br>
-                        {{-- 795 Folsom Ave, Suite 600<br>
-                        San Francisco, CA 94107<br> --}}
-                        {{-- <abbr title="Phone">P:</abbr> (123) 456-7890 --}}
                     </address>
                 </div>
                 <div class="card-content ">
                     <span class="card-title">MANTENGÁMONOS EN CONTACTO</span>
-                    @include('contacts.form')
+                    @include('supports.form')
                 </div>
             </div>
         </div>

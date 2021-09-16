@@ -31,13 +31,13 @@ class ArticulacionFaseCierreFormRequest extends FormRequest
 
     public function messages()
     {
-      return $messages = [
-        'txtconclusiones.required' => 'Las conclusiones de la articulación son obligatorias.',
-        'txtconclusiones.max' => 'Las conclusiones de la articulación debe ser máximo de 1000 carácteres.',
+        return $messages = [
+            'txtconclusiones.required' => 'Las conclusiones de la articulación son obligatorias.',
+            'txtconclusiones.max' => 'Las conclusiones de la articulación debe ser máximo de 1000 carácteres.',
 
-        'txtsiguientes_investigaciones.required' => 'El siguiente paso de la articulación es obligatorio.',
-        'txtsiguientes_investigaciones.max' => 'El siguiente paso de la articulación debe ser máximo de 1000 carácteres.',
+            'txtsiguientes_investigaciones.required' => 'El siguiente paso de la articulación es obligatorio.',
+            'txtsiguientes_investigaciones.max' => 'El siguiente paso de la articulación debe ser máximo de 1000 carácteres.',
         ];
-      }
+    }
 
 }

@@ -68,17 +68,4 @@ class EmpresaFormRequest extends FormRequest
             'txtcodigo_ciiu_empresa.max' => 'El código CIIU de la empresa debe ser máximo de 15 carácteres.',
         ];
     }
-
-    // public function attributes()
-    // {
-    //     return [
-    //         'nombre' => 'Nombre de la Empresa',
-    //         'nit' => 'Nit de la Empresa',
-    //         'email_entidad' => 'Email de la Empresa',
-    //         'direccion' => 'Dirección de la Empresa',
-    //         'txtdepartamento' => 'Departamento de la Empresa',
-    //         'txtciudad_id' => 'Ciudad de la Empresa',
-    //         'txtsector' => 'Sector de la Empresa',
-    //     ];
-    // }
 }

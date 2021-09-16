@@ -4,13 +4,13 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateContactsTable extends Migration
+class CreateSupportsTable extends Migration
 {
     /**
      * Schema table name to migrate
      * @var string
      */
-    protected $tableName = 'contacts';
+    protected $tableName = 'Supports';
 
     /**
      * Run the migrations.

@@ -2,10 +2,10 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\Contact;
+use App\Models\Support;
 use Faker\Generator as Faker;
 
-$factory->define(Contact::class, function (Faker $faker) {
+$factory->define(Support::class, function (Faker $faker) {
     return [
         'ticket'       => $faker->unique()->numerify('T#######'),
         'name'         => $faker->firstName,

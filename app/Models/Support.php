@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Presenters\SupportPresenter;
 
-class Contact extends Model
+class Support extends Model
 {
     const IS_PENDIENTE = "Pendiente";
     const IS_EN_ESPERA = "En Espera";
@@ -36,5 +37,10 @@ class Contact extends Model
     public static function IsSolucionado()
     {
         return self::IS_SOLUCIONADO;
+    }
+
+    public function present()
+    {
+        return new SupportPresenter($this);
     }
 }
