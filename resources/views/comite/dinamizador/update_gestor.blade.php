@@ -26,8 +26,8 @@
                     <div class="input-field col s12 m6 l6 offset-m3 offset-l3">
                       <select id="txtgestor_id" class="js-states" name="txtgestor_id" style="width: 100%;">
                         <option value="">Seleccione el experto</option>
-                        @forelse ($gestores as $id => $nombres_gestor)
-                          <option value="{{$id}}" {{ $id == $idea->gestor_id ? 'selected' : '' }} {{ old('txtgestor_id') == $id ? 'selected':'' }} >{{$nombres_gestor}}</option>
+                        @forelse ($gestores as $id => $gestor)
+                          <option value="{{$gestor->gestor->id}}" {{ $gestor->gestor->id == $idea->gestor_id ? 'selected' : '' }} {{ old('txtgestor_id') == $gestor->gestor->id ? 'selected':'' }} >{{$gestor->nombre}}</option>
                         @empty
                           <option value="">No hay información disponible</option>
                         @endforelse

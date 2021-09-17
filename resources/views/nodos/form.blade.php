@@ -54,7 +54,7 @@
                             <select class="js-states browser-default select2" id="txtcentro" name="txtcentro" style="width: 100%" tabindex="-1">
                                 <option value="">Seleccione Primero la regional</option> 
                             </select>
-                            <label for="txtcentro" class="active">Centro de fomracion <span class="red-text">*</span></label>
+                            <label for="txtcentro" class="active">Centro de formacion <span class="red-text">*</span></label>
                             @error('txtcentro')
                                 <label id="txtcentro-error" class="error" for="txtcentro">{{ $message }}</label>
                             @enderror 
@@ -76,11 +76,20 @@
                                 <label id="txtemail_entidad-error" class="error" for="txtemail_entidad">{{ $message }}</label>
                             @enderror
                         </div>
-                        <div class="input-field col s12 m3 l3">
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12 m6 l6">
                             <input class="validate" id="txttelefono" name="txttelefono" type="text"  value="{{ isset($nodo->entidad->nodo->telefono) ? $nodo->entidad->nodo->telefono : old('txttelefono')}}"/>
-                            <label for="txttelefono">Teléfono <span class="red-text">*</span></label>
+                            <label for="txttelefono">Teléfono</label>
                             @error('txttelefono')
                                 <label id="txttelefono-error" class="error" for="txttelefono">{{ $message }}</label>
+                            @enderror
+                        </div>
+                        <div class="input-field col s12 m6 l6">
+                            <input id="txtextension" name="txtextension" type="text" value="{{ isset($nodo->entidad->nodo->extension) ? $nodo->entidad->nodo->extension : old('txtextension')}}">
+                            <label for="txtextension">Extensión</label>
+                            @error('txtextension')
+                                <label id="txtextension-error" class="error" for="txtextension">{{ $message }}</label>
                             @enderror
                         </div>
                     </div>
