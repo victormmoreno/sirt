@@ -158,7 +158,7 @@
                                 <div class="notification-icon circle orange">
                                     <i class="material-icons">sms</i>
                                 </div>
-                                <div class="notification-text"><p>PQRS</p></div>
+                                <div class="notification-text"><p>{{config('app.technical_support.title')}}</p></div>
                                 </div>
                             </a>
                         </li>

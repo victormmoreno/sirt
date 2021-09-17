@@ -39,8 +39,37 @@ class Support extends Model
         return self::IS_SOLUCIONADO;
     }
 
+    public function getRouteKeyName()
+    {
+        return 'ticket'; // db column name
+    }
+
     public function present()
     {
         return new SupportPresenter($this);
+    }
+
+    public function scopeCreatedAt($query, $created_at)
+    {
+        if (!empty($created_at) && $created_at != 'all' && $created_at != null) {
+            return $query->whereYear('created_at', $created_at);
+        }
+        return $query;
+    }
+
+    public function scopeStatus($query, $status)
+    {
+        if (!empty($status) && $status != 'all' && $status != null) {
+            return $query->where('status', $status);
+        }
+        return $query;
+    }
+
+    public function scopeDifficulty($query, $difficulty)
+    {
+        if (!empty($difficulty) && $difficulty != 'all' && $difficulty != null) {
+            return $query->where('difficulty', $difficulty);
+        }
+        return $query;
     }
 }

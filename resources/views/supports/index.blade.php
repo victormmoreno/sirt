@@ -47,36 +47,33 @@
                         <div class="input-field col s12 m3 l4">
                             <label class="active" for="filter_request_support">Tipo Solicitud<span class="red-text">*</span></label>
                             <select name="filter_request_support" id="filter_request_support">
-                                <option value="" disabled selected>Seleccione una opción</option>
+                                <option value="all">Todos</option>
                                 <option value="Incidencia">Incidencia</option>
                                 <option value="Requerimiento">Requerimiento</option>
-                                <option value="all">Todos</option>
                             </select>
                         </div>
                         <div class="input-field col s12 m2 l2">
                             <label class="active" for="filter_state_support">Estado</label>
                             <select  name="filter_state_support" id="filter_state_support">
+                                <option value="Pendiente">Pendiente</option>
                                 <option value="En Espera">En Espera</option>
                                 <option value="Solucionado">Solucionado</option>
-                                <option value="Pendiente">Pendiente</option>
                                 <option value="all">Todos</option>
                             </select>
                         </div>
                         <div class="col s12 m6 l4 offset-m3 right">
-                        <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_excel"><i class="material-icons">cloud_download</i>Descargar</button>
-                            <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_idea"><i class="material-icons">search</i>Buscar</button>
+
+                            <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_support"><i class="material-icons">search</i>Buscar</button>
                         </div>
                     </div>
                     <table id="support_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
                         <thead>
                         <tr>
                             <th>Ticket</th>
-                            <th>Documento</th>
+                            <th>Fecha</th>
                             <th>Persona</th>
                             <th>Correo</th>
-                            <th>Fecha</th>
                             <th>Asunto</th>
-                            <th>Nombre de la Idea</th>
                             <th>Estado</th>
                             <th>Detalles</th>
                         </tr>

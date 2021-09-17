@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'PQRS')
+@section('meta-title', config('app.technical_support.title'))
 @section('content')
 <main class="mn-inner inner-active-sidebar">
 

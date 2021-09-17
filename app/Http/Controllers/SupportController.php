@@ -7,7 +7,6 @@ use App\Models\Support;
 use App\Repositories\Repository\SupportRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-
 class SupportController extends Controller
 {
 
@@ -24,9 +23,11 @@ class SupportController extends Controller
         return view('supports.send', ['user' => auth()->user()]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-
+        if (request()->ajax()) {
+            return $this->supportRepository->filterSupports($request);;
+        }
         return view('supports.index');
     }
 
@@ -70,18 +71,7 @@ class SupportController extends Controller
      */
     public function show(Support $support)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Contact  $support
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Support $support)
-    {
-        //
+        return view('supports.show', ['support' => $support]);
     }
 
     /**
@@ -93,7 +83,13 @@ class SupportController extends Controller
      */
     public function update(Request $request, Support $support)
     {
-        //
+        $support->update([
+            'status'        => $request->status,
+        ]);
+        return response()->json([
+            'fail'         => false,
+            'redirect_url' => route('support.show', $support->ticket),
+        ]);
     }
 
     /**
@@ -104,6 +100,10 @@ class SupportController extends Controller
      */
     public function destroy(Support $support)
     {
-        //
+        $support->delete();
+        return response()->json([
+            'fail'         => false,
+            'redirect_url' => route('support.index'),
+        ]);
     }
 }

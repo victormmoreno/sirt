@@ -54,17 +54,17 @@ class SupportPresenter extends Presenter
     }
     public function description()
     {
-        return  $this->Support->subject ? : 'No Registra';
+        return  $this->Support->description ? : 'No Registra';
     }
 
     public function difficulty()
     {
-        return  $this->Support->subject ? : 'No Registra';
+        return  $this->Support->difficulty ? : 'No Registra';
     }
 
     public function status()
     {
-        return  $this->Support->subject ? : 'No Registra';
+        return  $this->Support->status ? : 'No Registra';
     }
 
 }

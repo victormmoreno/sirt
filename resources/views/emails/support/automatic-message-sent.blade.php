@@ -8,7 +8,7 @@ Señor(a)<br>
 Esta es una confirmación automática para indicarle que su caso de soporte ha sido recibido y
 aceptado por nuestro sistema
 
-Recibirá una respuesta en un plazo no mayor de 60 minutos
+Recibirá una respuesta en un plazo no mayor de {{config('app.technical_support.response_time')}}
 
 Por favor recuerde envíar con el mayor detalle posible su requerimiento,
 de esta manera nuestro equipo técnico trabajará de manera mas eficiente.

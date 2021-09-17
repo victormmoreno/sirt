@@ -275,7 +275,7 @@ Route::get('help/handbook', 'Help\HelpController@downloadHandbook')->name('help.
 
 //contactenos
 Route::get('contactenos', 'SupportController@send')->name('support.send')->middleware('auth');
-Route::resource('support', 'SupportController', ['except' => ['create']])->middleware(['auth', 'disablepreventback']);
+Route::resource('support', 'SupportController', ['except' => ['create', 'edit']])->middleware(['auth','role_session:Desarrollador', 'disablepreventback']);
 
 //-------------------Route group para el módulo de ideas
 Route::get('/registrar-idea', 'IdeaController@create')->name('idea.create')->middleware(['auth', 'role_session:Talento']);
