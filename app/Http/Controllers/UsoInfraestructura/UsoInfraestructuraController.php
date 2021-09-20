@@ -191,7 +191,7 @@ class UsoInfraestructuraController extends Controller
                 break;
             case User::IsGestor():
                 $nodo = auth()->user()->gestor->nodo_id;
-                $user = auth()->user()->gestor->user->id;
+                $user = auth()->user()->id;
                 $asesor = auth()->user()->id;
                 $actividad = $request->filter_actividad;
                 break;
@@ -922,7 +922,10 @@ class UsoInfraestructuraController extends Controller
                 ->editColumn('nombre', function ($data) {
                     return $data->articulacion_proyecto->actividad->nombre;
                 })
-                ->rawColumns(['checkbox', 'codigo_actividad'])->make(true);
+                ->editColumn('fase', function ($data) {
+                    return $data->present()->proyectoFase();
+                })
+                ->rawColumns(['checkbox', 'codigo_actividad', 'nombre','fase'])->make(true);
         } else {
             abort('403');
         }
@@ -1060,5 +1063,95 @@ class UsoInfraestructuraController extends Controller
                     ->get();
         }
         return (new UsoInfraestructuraExport($request, $usos))->download("Usos de infraestructura - " . config('app.name') . ".{$extension}");
+    }
+
+    /**
+     * retorna query con las ideas
+     * @return collection
+     * @author devjul
+     */
+    public function ideasForNode()
+    {
+        $ideas = $this->getDataIdeas();
+
+        if (request()->ajax()) {
+
+            return datatables()->of($ideas)
+                ->addColumn('checkbox', function ($data) {
+                    $checkbox = '
+                    <a class="btn cyan m-b-xs" onclick="asociarIdeaAUsoInfraestructura(' . $data->id . ', \'' . $data->present()->ideaCode() . '\', \'' . $this->reemplezarComillas($data->present()->ideaName()) . '\')">
+                        <i class="material-icons">done_all</i>
+                    </a>';
+
+                    return $checkbox;
+                })->editColumn('codigo_idea', function ($data) {
+                    return $data->present()->ideaCode();
+                })
+                ->editColumn('nombre_proyecto', function ($data) {
+                    return $data->present()->ideaName();
+                })
+                ->editColumn('estadoIdea', function ($data) {
+                    return $data->estadoIdea->nombre;
+                })
+                ->rawColumns(['checkbox', 'codigo_idea', 'nombre_proyecto', 'estadoIdea'])->make(true);
+        } else {
+            abort('403');
+        }
+    }
+
+    private function getDataIdeas()
+    {
+        $fase = [
+            \App\Models\EstadoIdea::IsRegistro(),
+            \App\Models\EstadoIdea::IsConvocado(),
+            \App\Models\EstadoIdea::IsPostulado(),
+        ];
+
+        $relations = [
+            'estadoIdea'                => function ($query) {
+                $query->select('id', 'nombre');
+            },
+        ];
+
+        if(Session::has('login_role') && Session::get('login_role') == User::IsArticulador()) {
+            $user = auth()->user()->articulador;
+            return $this->getUsoInfraestructuraRepository()
+                ->getIdeasForUser($relations)
+
+                ->whereHas('nodo', function ($query) use ($user) {
+                    $query->where('id', $user->nodo_id);
+                })
+                ->whereHas('estadoIdea',function($query)use ($fase){
+                    $query->whereIn('nombre', $fase);
+                })
+
+                ->get();
+        } else {
+            response()->json([
+                'error' => 'no tienes permisos'
+            ]);
+        }
+    }
+
+    public  function infoidea(int $id)
+    {
+        if (request()->ajax()) {
+
+            $relations = [
+                'estadoIdea'                => function ($query) {
+                    $query->select('id', 'nombre');
+                },
+            ];
+
+            $idea = $this->getUsoInfraestructuraRepository()
+                ->getIdeasForUser($relations)
+                ->findOrFail($id);
+
+            return response()->json([
+                'idea'       => $idea,
+            ]);
+        } else {
+            abort('403');
+        }
     }
 }

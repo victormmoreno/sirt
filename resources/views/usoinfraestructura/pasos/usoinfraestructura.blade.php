@@ -15,7 +15,7 @@
                 @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsArticulador())
                     <li class="collection-item">
                         <span class="title"><b>Paso 1</b></span>
-                        <p>Por favor seleccione el tipo de asesoría y uso (Articulaciones)</p>
+                        <p>Por favor seleccione el tipo de asesoría y uso</p>
                     </li>
                 @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
                     <li class="collection-item">
@@ -37,23 +37,30 @@
             <div class="row">
                 <div class="input-field col s12 m12 l12">
                     <p class="center p-v-xs">
+
                         @if(isset($usoinfraestructura->asesorable))
                             @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsTalento() || session()->get('login_role') == App\User::IsApoyoTecnico()))
                             <input class="with-gap" id="IsProyecto" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->asesorable_type == App\Models\Proyecto::class ? 'checked' : old('txttipousoinfraestructura')}}  value="0"/>
                             <label for="IsProyecto">Proyectos</label>
                             @endif
                             @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsArticulador()))
-                                <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->tipo_usoinfraestructura == App\Models\UsoInfraestructura::IsArticulacion() ? 'checked' : old('txttipousoinfraestructura')}} value="1"/>
-                                <label for="IsArticulacion">Articulaciones</label>
+                                <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->asesorable_type == App\Models\ArticulacionPbt::class ? 'checked' : old('txttipousoinfraestructura')}} value="1"/>
+                                <label for="IsIdea">Articulaciones</label>
+                                <input class="with-gap" id="IsIdea" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->asesorable_type == App\Models\Idea::class ? 'checked' : old('txttipousoinfraestructura')}} value="2"/>
+                                <label for="IsIdea">Ideas</label>
                             @endif
+
                         @else
                             @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsTalento() || session()->get('login_role') == App\User::IsApoyoTecnico()))
                             <input class="with-gap" id="IsProyecto" name="txttipousoinfraestructura" type="radio" value="0"/>
                             <label for="IsProyecto">Proyectos</label>
                             @endif
                             @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsArticulador()))
+
                                 <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" value="1"/>
                                 <label for="IsArticulacion">Articulaciones</label>
+                                <input class="with-gap" id="IsIdea" name="txttipousoinfraestructura" type="radio" value="2"/>
+                                <label for="IsIdea">Ideas</label>
                             @endif
                         @endif
                     </p>
@@ -153,10 +160,17 @@
                         @if(isset($usoinfraestructura->asesorable_type) && ($usoinfraestructura->asesorable_type == App\Models\Proyecto::class))
                             <input id="txtactividad" name="txtactividad"  type="text" value="{{ isset($usoinfraestructura->asesorable->articulacion_proyecto->actividad->codigo_actividad) ? $usoinfraestructura->asesorable->articulacion_proyecto->actividad->codigo_actividad :  old('txtactividad')}} - {{ isset($usoinfraestructura->asesorable->articulacion_proyecto->actividad->nombre) ? $usoinfraestructura->asesorable->articulacion_proyecto->actividad->nombre : old('txtactividad')}}" readonly />
                             <label for="txtactividad">Proyecto</label>
-                        @else
-                            <input id="txtactividad" name="txtactividad"  type="text" readonly />
+                        @elseif(isset($usoinfraestructura->asesorable_type) && ($usoinfraestructura->asesorable_type == App\Models\ArticulacionPbt::class))
+                            <input id="txtactividad" name="txtactividad"  type="text" value="{{ isset($usoinfraestructura->asesorable->codigo) ? $usoinfraestructura->asesorable->codigo :  old('txtactividad')}} - {{ isset($usoinfraestructura->asesorable->nombre) ? $usoinfraestructura->asesorable->nombre : old('txtactividad')}}" readonly />
                             <label for="txtactividad">seleccione un tipo de asesoría y uso<span class="red-text">*</span></label>
+                        @elseif(isset($usoinfraestructura->asesorable_type) && ($usoinfraestructura->asesorable_type == App\Models\Idea::class))
+                            <input id="txtactividad" name="txtactividad"  type="text" value="{{ isset($usoinfraestructura->asesorable->codigo_idea) ? $usoinfraestructura->asesorable->codigo_idea :  old('txtactividad')}} - {{ isset($usoinfraestructura->asesorable->nombre_proyecto) ? $usoinfraestructura->asesorable->nombre_proyecto : old('txtactividad')}}" readonly />
+                            <label for="txtactividad">seleccione un tipo de asesoría y uso<span class="red-text">*</span></label>
+                        @else
+                        <input id="txtactividad" name="txtactividad"  type="text" readonly />
+                        <label class="active" for="txtactividad">
                         @endif
+
                         <label class="error" for="txtactividad" id="txtactividad-error"></label>
                     </div>
                 </div>
@@ -175,7 +189,6 @@
                         <label class="error" for="txtdescripcion" id="txtdescripcion-error"></label>
                     </div>
                 </div>
-
         </fieldset>
     </div>
 </div>

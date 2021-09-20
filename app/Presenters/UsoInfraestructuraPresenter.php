@@ -32,6 +32,14 @@ class UsoInfraestructuraPresenter extends Presenter
         ){
             return 'Articulación';
         }
+        if(
+            $this->uso->whereHasMorph(
+                'asesorable',
+                \App\Models\Idea::class
+            ) && isset($this->uso->asesorable->estadoIdea)
+        ){
+            return 'Idea';
+        }
         return "No registra";
     }
 
@@ -72,6 +80,14 @@ class UsoInfraestructuraPresenter extends Presenter
         ){
             return $this->uso->asesorable->nodo->entidad->nombre;
         }
+        else if(
+            $this->uso->whereHasMorph(
+                'asesorable',
+                [ \App\Models\Idea::class]
+            ) && isset($this->uso->asesorable->estadoIdea)
+        ){
+            return $this->uso->asesorable->nodo->entidad->nombre;
+        }
         return "No registra";
     }
 
@@ -107,7 +123,7 @@ class UsoInfraestructuraPresenter extends Presenter
         }else if(
             $this->uso->whereHasMorph(
                 'asesorable',
-                [ \App\Models\ArticulacionPbt::class]
+                [ \App\Models\ArticulacionPbt::class, \App\Models\Idea::class]
             ) && (isset($this->uso->asesorable->tipoarticulacion) && isset($this->uso->asesorable->asesor))
         ){
             return $this->uso->asesorable->asesor->present()->userFullName();
@@ -154,6 +170,13 @@ class UsoInfraestructuraPresenter extends Presenter
             ) && isset($this->uso->asesorable->tipoarticulacion)
         ){
             return "{$this->uso->asesorable->present()->articulacionCode()} - {$this->uso->asesorable->present()->articulacionName()}";
+        }else if(
+            $this->uso->whereHasMorph(
+                'asesorable',
+                [ \App\Models\Idea::class]
+            ) && isset($this->uso->asesorable->estadoIdea)
+        ){
+            return "{$this->uso->asesorable->present()->IdeaCode()} - {$this->uso->asesorable->present()->IdeaName()}";
         }
         return "No registra";
     }
@@ -174,12 +197,27 @@ class UsoInfraestructuraPresenter extends Presenter
             ) && isset($this->uso->asesorable->tipoarticulacion)
         ){
             return "{$this->uso->asesorable->present()->articulacionPbtstartDate()}";
+        }else if(
+            $this->uso->whereHasMorph(
+                'asesorable',
+                [ \App\Models\Idea::class]
+            ) && isset($this->uso->asesorable->tipoarticulacion)
+        ){
+            return "{$this->uso->asesorable->present()->ideastartDate()}";
         }
         return "No registra";
     }
 
     public function faseActividad()
     {
+        if(
+            $this->uso->whereHasMorph(
+                'asesorable',
+                [ \App\Models\Idea::class]
+            ) && isset($this->uso->asesorable->estadoIdea)
+        ){
+            return "{$this->uso->asesorable->estadoIdea->nombre}";
+        }
         return $this->uso->asesorable->fase->nombre;
     }
 

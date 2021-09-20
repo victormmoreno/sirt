@@ -31,17 +31,14 @@ class ComiteRealizarFormRequest extends FormRequest
 
     public function messages()
     {
-        $messages = [];
-      $messages = [
-        'txtobservacionescomite.max' => 'Las observaciones del comité deben ser máximo 1000 carácteres.'
-      ];
+        $messages = [
+            'txtobservacionescomite.max' => 'Las observaciones del comité deben ser máximo 1000 carácteres.'
+        ];
 
-        // dd(request());
-        // exit();
-      foreach(request()->get('txtestadoidea') as $key => $val)
-      {
-        $messages['txtestadoidea.'.$key.'.required'] = 'El próximo estado de la idea de proyecto #'.($key+1).' es obligatorio.';
-      }
-      return $messages;
+        foreach(request()->get('txtestadoidea') as $key => $val)
+        {
+            $messages['txtestadoidea.'.$key.'.required'] = 'El próximo estado de la idea de proyecto #'.($key+1).' es obligatorio.';
+        }
+        return $messages;
     }
 }

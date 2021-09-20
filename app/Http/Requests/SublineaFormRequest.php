@@ -26,7 +26,6 @@ class SublineaFormRequest extends FormRequest
         return [
             'txtnombre' => 'required|min:1|max:100|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|unique:sublineas,nombre,' . $this->route('sublinea'),
             'txtlinea'  => 'required',
-
         ];
     }
 

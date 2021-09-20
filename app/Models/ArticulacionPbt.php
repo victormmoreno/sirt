@@ -24,8 +24,6 @@ class ArticulacionPbt extends Model
         'actividad_id',
         'asesor_id',
         'nodo_id',
-        // 'proyecto_id',
-        // 'sede_id',
         'fase_id',
         'tipo_articulacion_id',
         'alcance_articulacion_id',
@@ -128,11 +126,6 @@ class ArticulacionPbt extends Model
         return $this->belongsTo(Actividad::class, 'actividad_id', 'id');
     }
 
-    // public function proyecto()
-    // {
-    //     return $this->belongsTo(Proyecto::class, 'proyecto_id', 'id');
-    // }
-
     public function fase()
     {
         return $this->belongsTo(Fase::class, 'fase_id', 'id');
@@ -152,11 +145,6 @@ class ArticulacionPbt extends Model
     {
         return $this->morphOne(ArchivoModel::class, 'model');
     }
-
-    // public function sede()
-    // {
-    //     return $this->belongsTo(Sede::class, 'sede_id', 'id');
-    // }
 
     public function talentos()
     {

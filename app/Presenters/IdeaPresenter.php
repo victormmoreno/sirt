@@ -43,4 +43,11 @@ class IdeaPresenter extends Presenter
         return $this->idea->viene_convocatoria == 1 ? $this->idea->convocatoria: 'No Aplica';
     }
 
+    public function ideastartDate(){
+        if (isset($this->idea)) {
+            return optional($this->idea->created_at)->isoFormat('YYYY-MM-DD');
+        }
+        return "No registra";
+    }
+
 }

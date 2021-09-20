@@ -34,11 +34,13 @@
                     @if(isset($usoinfraestructura->asesorable->nodo->materiales))
                         <select class="js-states browser-default select2 " tabindex="-1" name="txtmaterial" id="txtmaterial"  onchange="getSelectMaterial()">
                             <option value="">Seleccione Material de  Formación</option>
+                            @if(isset($usoinfraestructura->asesorable->nodo->equipos) && isset($usoinfraestructura->asesorable->asesor->lineatecnologica_id))
                             @foreach($usoinfraestructura->asesorable->nodo->materiales->where('lineatecnologica_id', $usoinfraestructura->asesorable->asesor->lineatecnologica_id) as $material)
                                 <option value="{{$material->id}}">
                                     {{$material->codigo_material}} - {{$material->presentacion->nombre}} {{str_limit($material->nombre,70 ,"...")}} x {{$material->medida->nombre}}
                                 </option>
                             @endforeach
+                            @endif
                         </select>
                     @else
                         <select class="js-states browser-default select2 " tabindex="-1" with="100%" style="width: 100%" name="txtmaterial" id="txtmaterial"  onchange="getSelectMaterial()">
