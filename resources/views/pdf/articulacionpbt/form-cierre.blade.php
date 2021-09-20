@@ -251,6 +251,7 @@
                     <td colspan="4">{{$articulacion->present()->articulacionPbtFechaCuando()}}</td>
                 </tr>
             @endif
+
             @endif
             @if($articulacion->present()->articulacionPbtPostulacion() == 1 && $articulacion->present()->articulacionPbtAprobacion() == 0)
             <tr>
@@ -304,7 +305,6 @@
             <tr>
                 <td colspan="6" >{{$articulacion->present()->fullNameTalentInterlocutor()}} - Talento Interlocutor</td>
             </tr>
-
             <tr>
                 <td colspan="6" >{{$articulacion->present()->articulacionPbtUserAsesor()}} - Articulador</td>
             </tr>

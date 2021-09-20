@@ -195,7 +195,7 @@
         <table class="bordered">
             <tr>
                 <td colspan="1" rowspan="2"><img class="center-image" src="{{asset('img/web.png')}}"></td>
-                <td colspan="5" class="centered"><b>Acta de Inicio<b></td>
+                <td colspan="5" class="centered"><b>Acta de Cierre<b></td>
             </tr>
             <tr>
                 <td colspan="5" class="centered"><b>ACTA No. {{ substr($proyecto->present()->proyectoCode(), -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b></td>
@@ -329,12 +329,10 @@
                 <td colspan="6" ><b>ASISTENTES<b></td>
             </tr>
             <tr>
-                <td colspan="2" >{{$proyecto->present()->proyectoUserAsesor()}} - Experto</td>
-                <td colspan="4" ></td>
+                <td colspan="6" >{{$proyecto->present()->proyectoUserAsesor()}} - Experto</td>
             </tr>
             <tr>
-                <td colspan="2" >{{$proyecto->present()->talentoInterlocutor()}} - Talento Interlocutor</td>
-                <td colspan="4" ></td>
+                <td colspan="6" >{{$proyecto->present()->talentoInterlocutor()}} - Talento Interlocutor</td>
             </tr>
         </table>
     </div>

@@ -34,8 +34,8 @@
             },
             error: function (ajaxContext) {
                 Swal.fire({
-                    title: 'Registro erróneo, vuelve a intentarlo',
-                    html: ajaxContext.responseText,
+                    title: ' Registro erróneo, vuelve a intentarlo',
+                    html: ajaxContext.status + ' - ' + ajaxContext.responseJSON.message,
                     type: 'error',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',

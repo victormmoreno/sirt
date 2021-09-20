@@ -56,16 +56,24 @@
 @push('script')
 <script>
     $(document).ready(function() {
-        usoInfraestructuraUpdate.checkTipoUsoInfraestrucuta();
-        @if(isset($usoinfraestructura->asesorable->articulacion_proyecto))
+        // usoInfraestructuraUpdate.checkTipoUsoInfraestrucuta();
+        @if(isset($usoinfraestructura->asesorable) && $usoinfraestructura->asesorable_type == App\Models\Proyecto::class)
             usoInfraestructuraUpdate.getSelectTalentoProyecto({{$usoinfraestructura->asesorable->id}});
+            usoInfraestructuraUpdate.removeDisableButtonGestorAsesor();
         @endif
-        @if(isset($usoinfraestructura->asesorable->articulacionpbt))
-            usoInfraestructuraUpdate.getSelectTalentoArticulacion({{$usoinfraestructura->asesorable->articulacionpbt->id}});
+        @if(isset($usoinfraestructura->asesorable) && $usoinfraestructura->asesorable_type == App\Models\ArticulacionPbt::class)
+            usoInfraestructuraUpdate.addDisableButtonEquipos();
+            usoInfraestructuraUpdate.addDisableButtonMaterial();
+        @endif
+        @if(isset($usoinfraestructura->asesorable) && $usoinfraestructura->asesorable_type == App\Models\Idea::class)
+            usoInfraestructuraUpdate.addDisableButtonEquipos();
+            usoInfraestructuraUpdate.addDisableButtonTalento();
+            usoInfraestructuraUpdate.addDisableButtonMaterial();
         @endif
 	});
 	var usoInfraestructuraUpdate = {
         checkTipoUsoInfraestrucuta:function () {
+
             $( "input[name='txttipousoinfraestructura']" ).change(function (){
                 if ( $("#IsProyecto").is(":checked") ) {
                     Swal.fire({
@@ -92,7 +100,9 @@
                     usoInfraestructuraUpdate.removeDisableButtonTalento();
                     usoInfraestructuraUpdate.removeDisableButtonMaterial();
                     usoInfraestructuraUpdate.DatatableProjectsForUser();
-                } else if ( $("#IsArticulacion").is(":checked") ) {
+                }
+                else if ( $("#IsArticulacion").is(":checked") ) {
+                    console,log("aqui");
                     Swal.fire({
                         toast: true,
                         position: 'bottom-end',
@@ -117,7 +127,32 @@
                     usoInfraestructuraUpdate.addDisableButtonMaterial();
                     usoInfraestructuraUpdate.dataTableArtculacionFindByUser();
                 }
-                });
+                else if( $("#IsIdea").is(":checked")) {
+                    Swal.fire({
+                        toast: true,
+                        position: 'bottom-end',
+                        title: 'Idea',
+                        text: "por favor seleccione una idea     ",
+                        type: 'warning',
+                        showConfirmButton: false,
+                        timer: 10000
+                    });
+                    usoInfraestructuraUpdate.limpiarInputsActividad();
+                    usoInfraestructuraUpdate.limpiarInputNodo();
+                    usoInfraestructuraUpdate.eliminarContentTables();
+                    usoInfraestructuraUpdate.limpiarListaTalentos();
+                    usoInfraestructuraUpdate.limpiarListaEquipos();
+                    usoInfraestructuraUpdate.limpiarListaMateriales();
+                    usoInfraestructuraUpdate.limpiarListaGestorACargo();
+                    usoInfraestructuraUpdate.limpiarListaGestorAsesores();
+                    usoInfraestructuraUpdate.removeDisableSelectButtons();
+                    usoInfraestructuraUpdate.removeDisableButtonGestorAsesor();
+                    usoInfraestructuraUpdate.removeDisableButtonTalento();
+                    usoInfraestructuraUpdate.addDisableButtonEquipos();
+                    usoInfraestructuraUpdate.addDisableButtonMaterial();
+                    usoInfraestructuraUpdate.dataTableIdeas();
+                }
+            });
         },
         removeValueLineaGestor: function(){
             $('#txtlinea').removeAttr('value');
@@ -165,10 +200,10 @@
             $('#txtasesoriaindirecta').attr("readonly", true);
         },
         addDisableButtonEquipos: function () {
-                $(".btnAgregarEquipo").removeAttr('onclick', 'agregarEquipoAusoInfraestructura()').attr("disabled");
-                $('#txtlineatecnologica').attr("disabled", true).select2();
-                $('#txtequipo').attr("disabled", true).select2();
-                $('#txttiempouso').attr("readonly", true);
+            $(".btnAgregarEquipo").removeAttr('onclick', 'agregarEquipoAusoInfraestructura()').attr("disabled");
+            $('#txtlineatecnologica').attr("disabled", true).select2();
+            $('#txtequipo').attr("disabled", true).select2();
+            $('#txttiempouso').attr("readonly", true);
         },
         addDisableButtonMaterial: function () {
             $(".btnAgregarMaterial").removeAttr('onclick', 'addMaterialesAUso()').attr("disabled");
@@ -244,14 +279,20 @@
                         name: 'nombre',
                     },
                     {
+                        title: 'Fase',
+                        data: 'fase',
+                        name: 'fase',
+                    },
+                    {
                         width: '20%',
+                        title: 'Seleccionar Proyecto',
                         data: 'checkbox',
                         name: 'checkbox',
                         orderable: false,
                     },
                 ],
             });
-            $('#modalUsoIngraestrucuta_proyjects_modal').openModal({
+            $('#modalUsoIngraestrucuta_modal').openModal({
                 dismissible: false,
             });
         },
@@ -364,8 +405,8 @@
         },
         //ARTICULACIONES
         dataTableArtculacionFindByUser: function () {
-            $('#usoinfraestrucutaArticulacionesForUserTable').dataTable().fnDestroy();
-            $('#usoinfraestrucutaArticulacionesForUserTable').DataTable({
+            $('#modalUsoIngraestrucuta_modal').dataTable().fnDestroy();
+            $('#modalUsoIngraestrucuta_modal').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
                 },
@@ -386,7 +427,7 @@
                         name: 'codigo_actividad',
                     },
                     {
-                        title: 'Nombre del Proyecto',
+                        title: 'Nombre de Articulación',
                         data: 'nombre',
                         name: 'nombre',
                     },
@@ -397,6 +438,7 @@
                     },
                     {
                         width: '20%',
+                        title: 'Seleccionar Articulación',
                         data: 'checkbox',
                         name: 'checkbox',
                         orderable: false,
@@ -405,7 +447,7 @@
             });
             $('#txttalento').empty();
             $('#txtequipo').empty();
-            $('#modalUsoIngraestrucuta_articulaciones_modal').openModal({
+            $('#usoinfraestrucutaTable').openModal({
                 dismissible: false,
             });
         },
@@ -506,6 +548,96 @@
                 $('#txtmaterial').select2();
                 $('#txtequipo').select2();
                 $('#txtlineatecnologica').select2();
+            });
+        },
+
+        dataTableIdeas: function () {
+            $('#usoinfraestrucutaTable').dataTable().fnDestroy();
+            $('#usoinfraestrucutaTable').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                "lengthChange": false,
+                pageLength: 5,
+                order: [ 0, 'desc' ],
+                ajax:{
+                    url: "/usoinfraestructura/ideasfornode",
+                    type: "get",
+                },
+                select: true,
+                columns: [
+                    {
+                        title: 'Codigo de idea',
+                        data: 'codigo_idea',
+                        name: 'codigo_idea',
+                    },
+                    {
+                        title: 'Nombre de idea',
+                        data: 'nombre_proyecto',
+                        name: 'nombre_proyecto',
+                    },
+                    {
+                        title: 'Estado',
+                        data: 'estadoIdea',
+                        name: 'estadoIdea',
+                    },
+                    {
+                        width: '20%',
+                        title: 'Seleccionar Idea',
+                        data: 'checkbox',
+                        name: 'checkbox',
+                        orderable: false,
+                    },
+                ],
+            });
+            $('#txttalento').empty();
+            $('#txtequipo').empty();
+            $('#modalUsoIngraestrucuta_modal').openModal({
+                dismissible: false,
+            });
+        },
+
+        getSelectInfoIdea:function (id){
+            $.ajax({
+                dataType:'json',
+                type:'get',
+                url:'/usoinfraestructura/idea/'+id
+            }).done(function(response){
+
+                $('#txttalento').empty();
+                $('#txtequipo').empty();
+                $('#txtlinea').empty();
+                $('#txtlineatecnologica').empty();
+                $('#txtmaterial').empty();
+
+                $('#txtlinea').removeAttr('value');
+                $('#detallesGestores').children("tr").remove();
+
+                $('#txttalento').append('<option value="">Seleccione el talento</option>');
+                $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
+                $('#txtmaterial').append('<option value="">Seleccione el material de formación</option>');
+
+                if (response.idea.length != 0) {
+                    @if(session()->has('login_role') && ( session()->get('login_role') == App\User::IsArticulador()))
+                        let userid = {{auth()->user()->id}}
+                        let userdocument = {{auth()->user()->documento }}
+                        let username = "{{auth()->user()->present()->userFullName()}}";
+                        let cont;
+                        let a = document.getElementsByName("gestor[]");
+                        let fila ="";
+                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td><input type="hidden" name="gestor[]"  value="'+userid+'">'+userdocument + ' -  ' +username+'</td><td><input type="number" min="0" step="0.1" name="asesoriadirecta[]" min="0" maxlength="6" value="0"><label class="error" for="asesoriadirecta" id="asesoriadirecta-error"></label></td><td><input type="number" min="0" step="0.1" name="asesoriaindirecta[]" min="0" maxlength="6" value="0"/><label class="error" for="asesoriaindirecta" id="asesoriaindirecta-error"></label></td></td><td></tr>';
+                        cont++;
+                        $('#detallesGestores').append(fila);
+                    @endif
+
+
+                    $('#txtnodo').val(response.idea.nodo_id);
+                    $("label[for='txtlinea']").addClass('active');
+                }else{
+                    $('#txtnodo').val();
+                }
             });
         },
 
@@ -622,7 +754,7 @@
         }
     }
     function asociarProyectoAUsoInfraestructura(id, codigo_actividad, nombre) {
-        $('#modalUsoIngraestrucuta_proyjects_modal').closeModal();
+        $('#modalUsoIngraestrucuta_modal').closeModal();
         Swal.fire({
             toast: true,
             position: 'top-end',
@@ -721,7 +853,7 @@
     }
     // Función para cerrar el modal y asignarle un valor al proyecto
     function asociarArticulacionAUsoInfraestructura(id, codigo_actividad, nombre) {
-        $('#modalUsoIngraestrucuta_articulaciones_modal').closeModal();
+        $('#usoinfraestrucutaTable').closeModal();
         Swal.fire({
             toast: true,
             position: 'top-end',

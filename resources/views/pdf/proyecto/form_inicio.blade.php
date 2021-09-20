@@ -320,12 +320,10 @@
                 <td colspan="6" ><b>ASISTENTES<b></td>
             </tr>
             <tr>
-                <td colspan="2" >{{$proyecto->present()->proyectoUserAsesor()}} - Experto</td>
-                <td colspan="4" ></td>
+                <td colspan="6" >{{$proyecto->present()->proyectoUserAsesor()}} - Experto</td>
             </tr>
             <tr>
-                <td colspan="2" >{{$proyecto->present()->talentoInterlocutor()}} - Talento Interlocutor</td>
-                <td colspan="4" ></td>
+                <td colspan="6" >{{$proyecto->present()->talentoInterlocutor()}} - Talento Interlocutor</td>
             </tr>
         </table>
     </div>

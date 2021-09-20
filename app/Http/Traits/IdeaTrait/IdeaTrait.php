@@ -10,9 +10,9 @@ use App\Models\RutaModel;
 use App\Models\Comite;
 use App\Models\Talento;
 use App\Models\Gestor;
-use App\Models\Empresa;
 use App\Models\Entrenamiento;
 use App\Models\HistorialEntidad;
+use App\Models\UsoInfraestructura;
 
 trait IdeaTrait
 {
@@ -99,9 +99,10 @@ trait IdeaTrait
     }
 
 
-    /*=========================================
-  =            asesores eloquent            =
-  =========================================*/
+    public function asesorias()
+    {
+        return $this->morphMany(UsoInfraestructura::class, 'asesorable');
+    }
 
     public function getNombresContactoAttribute($nombres_contacto)
     {

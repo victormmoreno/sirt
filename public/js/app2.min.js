@@ -3750,24 +3750,24 @@ function consultarGruposInvestigacion_FaseInicio_Articulaciones() {
 
 function addGrupoArticulacion(id) {
     $.ajax({
-      dataType:'json',
-      type:'get',
-      url:"/grupo/ajaxDetallesDeUnGrupoInvestigacion/"+id
+        dataType:'json',
+        type:'get',
+        url:"/grupo/ajaxDetallesDeUnGrupoInvestigacion/"+id
     }).done(function(respuesta){
-      $('#txtgrupoInvestigacion').val(respuesta.detalles.codigo_grupo + ' - ' + respuesta.detalles.entidad.nombre);
-      $("label[for='txtgrupoInvestigacion']").addClass('active');
-      $('#txtgrupo_id').val(respuesta.detalles.id);
-      Swal.fire({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        type: 'success',
-        title: 'El código del grupo de investigación con el que se realizará la articulación es: ' + respuesta.detalles.codigo_grupo
-      })
-      $('#gruposDeInvestigacion_ArticulacionInicio_modal').closeModal();
-    })
-  }
+        $('#txtgrupoInvestigacion').val(respuesta.detalles.codigo_grupo + ' - ' + respuesta.detalles.entidad.nombre);
+        $("label[for='txtgrupoInvestigacion']").addClass('active');
+        $('#txtgrupo_id').val(respuesta.detalles.id);
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            type: 'success',
+            title: 'El código del grupo de investigación con el que se realizará la articulación es: ' + respuesta.detalles.codigo_grupo
+        })
+        $('#gruposDeInvestigacion_ArticulacionInicio_modal').closeModal();
+        })
+    }
 
   // Datatable que muestra los talentos que se encuentran registrados en Tecnoparque
 function consultarTalentosDeTecnoparque_Articulacion_FaseInicio_table(tableName, fieldName) {
@@ -3778,7 +3778,6 @@ function consultarTalentosDeTecnoparque_Articulacion_FaseInicio_table(tableName,
         },
         processing: true,
         serverSide: true,
-        // order: false,
         ajax: {
             url: "/usuario/talento/getTalentosDeTecnoparque/",
             type: "get"
@@ -3818,13 +3817,21 @@ function ajaxSendFormArticulacion(form, data, url, fase) {
                 mensajesArticulacionUpdate(data);
             }
         },
-        error: function (xhr, textStatus, errorThrown) {
-            alert("Error: " + errorThrown);
+        error: function (ajaxContext) {
+            console.log(ajaxContext);
+            Swal.fire({
+                title: ' Registro erróneo, vuelve a intentarlo',
+                html: ajaxContext.status + ' - ' + ajaxContext.responseJSON.message,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok',
+            });
         }
     });
-  };
+};
 
-  function mensajesArticulacionCreate(data) {
+function mensajesArticulacionCreate(data) {
     if (data.state == 'registro') {
         Swal.fire({
             title: 'Registro Exitoso',
@@ -3956,6 +3963,7 @@ function addTalentoArticulacion(id) {
         pintarTalentoEnTabla_Fase_Inicio_Articulacion(id);
     }
 }
+
 // Enviar formulario para modificar el articulacion en fase de cierre
 $(document).on('submit', 'form#frmArticulaciones_FaseCierre_Update', function (event) { // $('button[type="submit"]').prop("disabled", true);
     $('button[type="submit"]').attr('disabled', 'disabled');
@@ -10758,8 +10766,8 @@ $('#txtfecha_fin').bootstrapMaterialDatePicker({
             },
             error: function (ajaxContext) {
                 Swal.fire({
-                    title: 'Registro erróneo, vuelve a intentarlo',
-                    html: ajaxContext.responseText,
+                    title: ' Registro erróneo, vuelve a intentarlo',
+                    html: ajaxContext.status + ' - ' + ajaxContext.responseJSON.message,
                     type: 'error',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',

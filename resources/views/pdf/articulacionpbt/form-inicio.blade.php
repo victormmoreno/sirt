@@ -286,7 +286,8 @@
             <tr>
                 <td colspan="6" >{{$articulacion->present()->articulacionPbtUserAsesor()}} - Articulador</td>
             </tr>
+
         </table>
     </div>
     </body>
-</html>
+    </html>

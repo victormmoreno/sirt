@@ -164,16 +164,16 @@
                                     @forelse ($usoinfraestructura->usogestores as $key => $user)
                                             <tr id="filaGestorAsesor{{$user->id}}">
                                                 @if($user->id != auth()->user()->id)
-                                                <td>
-                                                    <input type="hidden" name="gestor[]" value="{{$user->id}}"/>{{$user->present()->userDocumento()}} - {{$user->present()->userFullName()}} / {{$user->gestor->lineatecnologica->nombre}}
-                                                </td>
-                                                <td><input type="number" name="asesoriadirecta[]" value="{{$user->pivot->asesoria_directa}}"></td>
-                                                <td><input type="number" name="asesoriaindirecta[]" value="{{$user->pivot->asesoria_indirecta}}"></td>
-                                                <td>
-                                                    <a class="waves-effect red lighten-3 btn" onclick="eliminarGestorAsesor({{$user->id}});">
-                                                        <i class="material-icons">delete_sweep</i>
-                                                    </a>
-                                                </td>
+                                                    <td>
+                                                        <input type="hidden" name="gestor[]" value="{{$user->id}}"/>{{$user->present()->userDocumento()}} - {{$user->present()->userFullName()}} / {{$user->gestor->lineatecnologica->nombre}}
+                                                    </td>
+                                                    <td><input type="number" name="asesoriadirecta[]" value="{{$user->pivot->asesoria_directa}}"></td>
+                                                    <td><input type="number" name="asesoriaindirecta[]" value="{{$user->pivot->asesoria_indirecta}}"></td>
+                                                    <td>
+                                                        <a class="waves-effect red lighten-3 btn" onclick="eliminarGestorAsesor({{$user->id}});">
+                                                            <i class="material-icons">delete_sweep</i>
+                                                        </a>
+                                                    </td>
                                                 @endif
                                             </tr>
                                     @empty

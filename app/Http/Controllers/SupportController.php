@@ -14,7 +14,7 @@ class SupportController extends Controller
 
     public function __construct(SupportRepository $supportRepository)
     {
-        $this->middleware(['auth']);
+        $this->middleware(['auth', 'role_session:Desarrollador'])->except(['send', 'store']);
         $this->supportRepository = $supportRepository;
     }
 
