@@ -166,12 +166,12 @@
                     usoInfraestructuraCreate.addDisableButtonEquipos();
                     usoInfraestructuraCreate.addDisableButtonMaterial();
                     usoInfraestructuraCreate.removeDisableButtonGestorAsesor();
-                } else if( $("#IsEdt").is(":checked")) {
+                } else if( $("#IsIdea").is(":checked")) {
                     Swal.fire({
                         toast: true,
                         position: 'bottom-end',
-                        title: 'EDT',
-                        text: "por favor seleccione una edt ",
+                        title: 'Idea',
+                        text: "por favor seleccione una idea     ",
                         type: 'warning',
                         showConfirmButton: false,
                         timer: 10000
@@ -187,6 +187,7 @@
                     usoInfraestructuraCreate.limpiarListaGestorACargo();
                     usoInfraestructuraCreate.limpiarListaGestorAsesores();
                     usoInfraestructuraCreate.removeDisableButtonGestorAsesor();
+                    usoInfraestructuraCreate.dataTableIdeas();
                 }
             });
         },
@@ -285,8 +286,8 @@
             $('#detallesGestoresAsesores').children("tr").remove();
         },
         DatatableProjectsForUser: function () {
-            $('#usoinfraestrucutaProjectsForUserTable').dataTable().fnDestroy();
-                $('#usoinfraestrucutaProjectsForUserTable').DataTable({
+            $('#usoinfraestrucutaTable').dataTable().fnDestroy();
+                $('#usoinfraestrucutaTable').DataTable({
                     language: {
                         "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
                     },
@@ -312,18 +313,23 @@
                             name: 'nombre',
                         },
                         {
+                            title: 'Fase',
+                            data: 'fase',
+                            name: 'fase',
+                        },
+                        {
                             width: '20%',
+                            title: 'Seleccionar Proyecto',
                             data: 'checkbox',
                             name: 'checkbox',
                             orderable: false,
                         },
                     ],
                 });
-            $('#modalUsoIngraestrucuta_proyjects_modal').openModal({
+            $('#modalUsoIngraestrucuta_modal').openModal({
                 dismissible: false,
             });
         },
-
         getSelectTalentoProyecto:function (id){
             $.ajax({
                 dataType:'json',
@@ -367,7 +373,7 @@
                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
                         $('#txtgestor').val(response.proyecto.documento+ ' - '+ response.proyecto.nombres + ' ' + response.proyecto.apellidos);
                         $("label[for='txtgestor']").addClass('active');
-                        let userid = {{auth()->user()->id}}
+                        let userid = {{auth()->user()->talento->id}}
                         let userdocument = {{auth()->user()->documento }}
                         let username = "{{auth()->user()->present()->userFullName()}}";
                         let cont;
@@ -440,30 +446,24 @@
                         }else{
                             $('#txtmaterial').append('<option  value="'+material.material_id+'">'+ material.presentacion_nombre + ' '+ material.material_nombre + ' x ' +material.medida_nombre  +'</option>');
                         }
-
-
                     });
                 }else{
                     $('#txtmaterial').append('<option value="">no se encontraron resultados</option>');
                 }
-
                 $('#txttalento').select2();
                 $('#txtequipo').select2();
                 $('#txtlineaselect').select2();
                 $('#txtlineatecnologica').select2();
                 $('#txtmaterial').select2();
-
-
             });
 
         },
-
         //ARTICULACIONES
         dataTableArtculacionFindByUser: function () {
-            $('#usoinfraestrucutaArticulacionesForUserTable').dataTable().fnDestroy();
-            $('#usoinfraestrucutaArticulacionesForUserTable').DataTable({
+            $('#usoinfraestrucutaTable').dataTable().fnDestroy();
+            $('#usoinfraestrucutaTable').DataTable({
                 language: {
-                  "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
                 },
                 processing: true,
                 serverSide: true,
@@ -471,39 +471,38 @@
                 pageLength: 5,
                 order: [ 0, 'desc' ],
                 ajax:{
-                  url: "/usoinfraestructura/articulacionesforuser",
-                  type: "get",
+                    url: "/usoinfraestructura/articulacionesforuser",
+                    type: "get",
                 },
                 select: true,
                 columns: [
-                  {
-                    title: 'Codigo de Articulación',
-                    data: 'codigo_actividad',
-                    name: 'codigo_actividad',
-                  },
-                  {
-                    title: 'Nombre de Articulación',
-                    data: 'nombre',
-                    name: 'nombre',
-                  },
-                  {
-                    title: 'fase',
-                    data: 'fase',
-                        name: 'fase',
-                  },
-                  {
-                    width: '20%',
-                    data: 'checkbox',
-                    name: 'checkbox',
-                    orderable: false,
-                  },
+                    {
+                        title: 'Codigo de Articulación',
+                        data: 'codigo_actividad',
+                        name: 'codigo_actividad',
+                    },
+                    {
+                        title: 'Nombre de Articulación',
+                        data: 'nombre',
+                        name: 'nombre',
+                    },
+                    {
+                        title: 'fase',
+                        data: 'fase',
+                            name: 'fase',
+                    },
+                    {
+                        width: '20%',
+                        title: 'Seleccionar Articulación',
+                        data: 'checkbox',
+                        name: 'checkbox',
+                        orderable: false,
+                    },
                 ],
-              });
-
+            });
             $('#txttalento').empty();
             $('#txtequipo').empty();
-
-            $('#modalUsoIngraestrucuta_articulaciones_modal').openModal({
+            $('#modalUsoIngraestrucuta_modal').openModal({
                 dismissible: false,
             });
         },
@@ -614,22 +613,107 @@
 
             });
         },
-
-        noRepeatTalento: function (id) {
-            let idtalento = $("#txttalento").val();
-              let a = document.getElementsByName("talento[]");
-              validacion = true;
-              if (a.length >= 1) {
-                for (x=0;x<a.length;x++){
-                  if (a[x].value == idtalento) {
-                    validacion = false;
-                  }
-                }
-              }
-            return validacion;
-
+        //IDEAS
+        dataTableIdeas: function () {
+            $('#usoinfraestrucutaTable').dataTable().fnDestroy();
+            $('#usoinfraestrucutaTable').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                "lengthChange": false,
+                pageLength: 5,
+                order: [ 0, 'desc' ],
+                ajax:{
+                    url: "/usoinfraestructura/ideasfornode",
+                    type: "get",
+                },
+                select: true,
+                columns: [
+                    {
+                        title: 'Codigo de idea',
+                        data: 'codigo_idea',
+                        name: 'codigo_idea',
+                    },
+                    {
+                        title: 'Nombre de idea',
+                        data: 'nombre_proyecto',
+                        name: 'nombre_proyecto',
+                    },
+                    {
+                        title: 'Estado',
+                        data: 'estadoIdea',
+                        name: 'estadoIdea',
+                    },
+                    {
+                        width: '20%',
+                        title: 'Seleccionar Idea',
+                        data: 'checkbox',
+                        name: 'checkbox',
+                        orderable: false,
+                    },
+                ],
+            });
+            $('#txttalento').empty();
+            $('#txtequipo').empty();
+            $('#modalUsoIngraestrucuta_modal').openModal({
+                dismissible: false,
+            });
         },
 
+        getSelectInfoIdea:function (id){
+            $.ajax({
+                dataType:'json',
+                type:'get',
+                url:'/usoinfraestructura/idea/'+id
+            }).done(function(response){
+                console.log(response);
+                $('#txttalento').empty();
+                $('#txtequipo').empty();
+                $('#txtlinea').empty();
+                $('#txtlineatecnologica').empty();
+                $('#txtmaterial').empty();
+
+                $('#txtlinea').removeAttr('value');
+                $('#detallesGestores').children("tr").remove();
+
+                $('#txttalento').append('<option value="">Seleccione el talento</option>');
+                $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
+                $('#txtmaterial').append('<option value="">Seleccione el material de formación</option>');
+
+                if (response.idea.length != 0) {
+                    @if(session()->has('login_role') && ( session()->get('login_role') == App\User::IsArticulador()))
+                        let userid = {{auth()->user()->id}}
+                        let userdocument = {{auth()->user()->documento }}
+                        let username = "{{auth()->user()->present()->userFullName()}}";
+                        let cont;
+                        let a = document.getElementsByName("gestor[]");
+                        let fila ="";
+                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td><input type="hidden" name="gestor[]"  value="'+userid+'">'+userdocument + ' -  ' +username+'</td><td><input type="number" min="0" step="0.1" name="asesoriadirecta[]" min="0" maxlength="6" value="0"><label class="error" for="asesoriadirecta" id="asesoriadirecta-error"></label></td><td><input type="number" min="0" step="0.1" name="asesoriaindirecta[]" min="0" maxlength="6" value="0"/><label class="error" for="asesoriaindirecta" id="asesoriaindirecta-error"></label></td></td><td></tr>';
+                        cont++;
+                        $('#detallesGestores').append(fila);
+                    @endif
+                    $('#txtnodo').val(response.idea.nodo_id);
+                    $("label[for='txtlinea']").addClass('active');
+                }else{
+                    $('#txtnodo').val();
+                }
+            });
+        },
+        noRepeatTalento: function (id) {
+            let idtalento = $("#txttalento").val();
+            let a = document.getElementsByName("talento[]");
+            validacion = true;
+            if (a.length >= 1) {
+                for (x=0;x<a.length;x++){
+                    if (a[x].value == idtalento) {
+                    validacion = false;
+                    }
+                }
+            }
+            return validacion;
+        },
         validateTiempoUso: function (){
             let tiempouso = $("#txttiempouso").val();
             let re = new RegExp("^[0-9]{1,2}(?:.[0-9]{1})?$");
@@ -638,9 +722,7 @@
             }else{
                 return false;
             };
-
         },
-
         noRepeatEquipo: function () {
             let idequipo = $("#txtequipo").val();
             let a = document.getElementsByName("equipo[]");
@@ -654,7 +736,6 @@
             }
             return validacion;
         },
-
         noRepeatGestor: function () {
             let idequipo = $("#txtgestorasesor").val();
             let a = document.getElementsByName("gestor[]");
@@ -735,26 +816,56 @@
     }
 
     function asociarProyectoAUsoInfraestructura(id, codigo_actividad, nombre) {
-            $('#modalUsoIngraestrucuta_proyjects_modal').closeModal();
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 1500,
-              type: 'success',
-              title: 'El proyecto  ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
-            });
-
-
-            $('#txtactividad').val(codigo_actividad+ ' - '+ nombre);
-            $("label[for='txtactividad']").addClass('active');
-            $("label[for='txtactividad']").text("Proyecto");
-            $divActividad.show();
-
-            usoInfraestructuraCreate.getSelectTalentoProyecto(id);
-
+        $('#modalUsoIngraestrucuta_modal').closeModal();
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            type: 'success',
+            title: 'El proyecto  ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
+        });
+        $('#txtactividad').val(codigo_actividad+ ' - '+ nombre);
+        $("label[for='txtactividad']").addClass('active');
+        $("label[for='txtactividad']").text("Proyecto");
+        $divActividad.show();
+        usoInfraestructuraCreate.getSelectTalentoProyecto(id);
     }
 
+    // Función para cerrar el modal y asignarle un valor al proyecto
+    function asociarArticulacionAUsoInfraestructura(id, codigo_actividad, nombre) {
+        $('#modalUsoIngraestrucuta_modal').closeModal();
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            type: 'success',
+            title: 'La articulacion  ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
+        });
+        $('#txtactividad').val(codigo_actividad+ ' - '+ nombre);
+        $("label[for='txtactividad']").addClass('active');
+        $("label[for='txtactividad']").text("Articulación");
+        $divActividad.show();
+        usoInfraestructuraCreate.getSelectTalentoArticulacion(id);
+    }
+
+    function asociarIdeaAUsoInfraestructura(id, code, name) {
+        $('#modalUsoIngraestrucuta_modal').closeModal();
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            type: 'success',
+            title: 'La idea  ' + code +  ' - ' + name + ' se ha asociado  al uso de infraestructua'
+        });
+        $('#txtactividad').val(code+ ' - '+ name);
+        $("label[for='txtactividad']").addClass('active');
+        $("label[for='txtactividad']").text("Idea");
+        $divActividad.show();
+        usoInfraestructuraCreate.getSelectInfoIdea(id);
+    }
     function volverModalusoInfrestructura(){
         $('#txtactividad').val('');
         $("label[for='txtactividad']").removeClass('active');
@@ -767,7 +878,6 @@
         usoInfraestructuraCreate.limpiarInputNodo();
         $divActividad.show();
     }
-
     function agregarEquipoAusoInfraestructura(){
 
             let  cont = 0;
@@ -776,15 +886,14 @@
             let nombreEquipo = $('#txtequipo option:selected').text();
 
             if ($("#txtequipo").val() == ""){
-                  Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    type: 'warning',
-                    title: 'Debe seleccionar un equipo.'
-                  });
-
+                Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1500,
+                type: 'warning',
+                title: 'Debe seleccionar un equipo.'
+                });
             }else  if ($("#txttiempouso").val() == ""){
                 Swal.fire({
                     toast: true,
@@ -846,47 +955,6 @@
             $("#txtequipo option[value='']").attr("selected", true);
             $('#txtequipo').select2();
             $("#txttiempouso").val(1);
-
-        }
-
-        // Función para cerrar el modal y asignarle un valor al proyecto
-        function asociarArticulacionAUsoInfraestructura(id, codigo_actividad, nombre) {
-            $('#modalUsoIngraestrucuta_articulaciones_modal').closeModal();
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 1500,
-              type: 'success',
-              title: 'La articulacion  ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
-            });
-
-            $('#txtactividad').val(codigo_actividad+ ' - '+ nombre);
-            $("label[for='txtactividad']").addClass('active');
-            $("label[for='txtactividad']").text("Articulación");
-            $divActividad.show();
-
-            usoInfraestructuraCreate.getSelectTalentoArticulacion(id);
-
-        }
-
-        function asociarEdtAUsoInfraestructura(id, codigo_actividad, nombre) {
-            $('#modalUsoIngraestrucuta_edt_modal').closeModal();
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 1500,
-              type: 'success',
-              title: 'La edt ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
-            });
-
-            $('#txtactividad').val(codigo_actividad+ ' - '+ nombre);
-            $("label[for='txtactividad']").addClass('active');
-            $("label[for='txtactividad']").text("Edt");
-            $divActividad.show();
-
-
 
         }
 

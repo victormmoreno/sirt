@@ -338,49 +338,27 @@
                 <tr class="tr-striped">
                     <td colspan="8" ><b>Certificación<b></td>
                 </tr>
+
                 <tr>
-                    <td colspan="8" rowspan="5"></td>
+                    <td colspan="4" >{{$data->present()->proyectoUserAsesor()}} - Experto</td>
+                    <td colspan="4" ></td>
                 </tr>
-                <tr></tr>
-                <tr></tr>
-                <tr></tr>
-                <tr></tr>
+
                 <tr>
-                    <td colspan="8" >{{$data->present()->proyectoUserAsesor()}} - Experto</td>
-                </tr>
-                <tr>
-                    <td colspan="8" rowspan="5"></td>
-                </tr>
-                <tr></tr>
-                <tr></tr>
-                <tr></tr>
-                <tr></tr>
-                <tr>
-                    <td colspan="8" >{{$data->present()->talentoInterlocutor()}} - Talento Interlocutor</td>
+                    <td colspan="4" >{{$data->present()->talentoInterlocutor()}} - Talento Interlocutor</td>
+                    <td colspan="4" ></td>
                 </tr>
             @elseif($tipo_actividad == 'articulacion')
                 <tr class="tr-striped">
                     <td colspan="8" ><b>Certificación<b></td>
                 </tr>
                 <tr>
-                    <td colspan="8" rowspan="5"></td>
-                </tr>
-                <tr></tr>
-                <tr></tr>
-                <tr></tr>
-                <tr></tr>
-                <tr>
-                    <td colspan="8" >{{$data->present()->articulacionPbtUserAsesor()}} - Articulador</td>
+                    <td colspan="4" >{{$data->present()->articulacionPbtUserAsesor()}} - Articulador</td>
+                    <td colspan="4" ></td>
                 </tr>
                 <tr>
-                    <td colspan="8" rowspan="5"></td>
-                </tr>
-                <tr></tr>
-                <tr></tr>
-                <tr></tr>
-                <tr></tr>
-                <tr>
-                    <td colspan="8" >{{$data->present()->fullNameTalentInterlocutor()}} - Talento Interlocutor</td>
+                    <td colspan="4" >{{$data->present()->fullNameTalentInterlocutor()}} - Talento Interlocutor</td>
+                    <td colspan="4" ></td>
                 </tr>
             @else
             <tr>

@@ -23,29 +23,29 @@ class ComiteAgendamientoFormRequest extends FormRequest
      */
     public function rules()
     {
-      return [
-        'txtfechacomite_create' => 'required|date_format:"Y-m-d"',
-        'ideas' => 'required',
-        'gestores' => 'required',
-      ];
+        return [
+            'txtfechacomite_create' => 'required|date_format:"Y-m-d"',
+            'ideas' => 'required',
+            'gestores' => 'required',
+        ];
     }
 
     public function messages()
     {
-      return $messages = [
-        'txtfechacomite_create.required' => 'La Fecha del Comité es obligatoria.',
-        'txtfechacomite_create.date_format' => 'La Fecha del Comité no tiene un formato válido.',
+        return $messages = [
+            'txtfechacomite_create.required' => 'La Fecha del Comité es obligatoria.',
+            'txtfechacomite_create.date_format' => 'La Fecha del Comité no tiene un formato válido.',
 
-        'ideas.required' => 'Se requiere por lo menos de una idea de proyecto',
-        
-        'gestores.required' => 'Se requiere por lo menos de un experto',
-      ];
+            'ideas.required' => 'Se requiere por lo menos de una idea de proyecto',
+
+            'gestores.required' => 'Se requiere por lo menos de un experto',
+        ];
     }
 
     public function attributes()
     {
-      return [
-        'txtfechacomite_create' => 'Fecha del Comité',
-      ];
+        return [
+            'txtfechacomite_create' => 'Fecha del Comité',
+        ];
     }
 }

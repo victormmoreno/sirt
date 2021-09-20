@@ -36,23 +36,23 @@ class ArticulacionFaseInicioFormRequest extends FormRequest
 
     public function messages()
     {
-      return $messages = [
-        'txtgrupo_id.required' => 'El Grupo de Investigación es obligatorio.',
+        return $messages = [
+            'txtgrupo_id.required' => 'El Grupo de Investigación es obligatorio.',
 
-        'txtnombre.required' => 'El Nombre de la Articulación es obligatorio.',
-        'txtnombre.max' => 'El Nombre de la Articulación debe ser máximo 500 carácteres.',
+            'txtnombre.required' => 'El Nombre de la Articulación es obligatorio.',
+            'txtnombre.max' => 'El Nombre de la Articulación debe ser máximo 500 carácteres.',
 
-        'talentos.required' => 'Debe asociar por lo menos un talento al proyecto.',
+            'talentos.required' => 'Debe asociar por lo menos un talento al proyecto.',
 
-        'radioTalentoLider.required' => 'El talento interlocutor de la articulación es obligatorio.',
+            'radioTalentoLider.required' => 'El talento interlocutor de la articulación es obligatorio.',
 
-        'productos.required' => 'Se debe elegir uno o más productos a alcanzar.',
+            'productos.required' => 'Se debe elegir uno o más productos a alcanzar.',
 
-        'txtacuerdos.required' => 'El acuerdo de coautoría de la articulación es obligatorio.',
-        'txtacuerdos.max' => 'El acuerdo de coautoría de la articulación debe ser máximo de 1000 carácteres.',
+            'txtacuerdos.required' => 'El acuerdo de coautoría de la articulación es obligatorio.',
+            'txtacuerdos.max' => 'El acuerdo de coautoría de la articulación debe ser máximo de 1000 carácteres.',
 
-        'txtalcance_articulacion.required' => 'El alcance de la articulación es obligatorio.',
-        'txtalcance_articulacion.max' => 'El alcance de la articulación debe ser máximo de 1000 carácteres.',
+            'txtalcance_articulacion.required' => 'El alcance de la articulación es obligatorio.',
+            'txtalcance_articulacion.max' => 'El alcance de la articulación debe ser máximo de 1000 carácteres.',
         ];
-      }
+    }
 }

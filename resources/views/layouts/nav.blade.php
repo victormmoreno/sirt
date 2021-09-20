@@ -14,42 +14,37 @@
             </div>
             <ul class="right col s10 m10 l10 nav-right-menu">
                 <li class="hide-on-med-and-down">
-                    <a href="{{route('help.handbook')}}">Ayuda</a>
+                    <a href="javascript:void(0)" data-activates="dropdown-help" class="dropdown-button dropdown-right show-on-large">
+                        <i class="material-icons">help_outline</i>
+                    </a>
                 </li>
                 <li class="hide-on-small-and-down">
-                    <a href="javascript:void(0)" data-activates="dropdown1" class="dropdown-button dropdown-right show-on-large">
+                    <a href="javascript:void(0)" data-activates="dropdown-notification" class="dropdown-button dropdown-right show-on-large">
                         @if(auth()->user()->unreadNotifications->count() > 0)
-                        <i class="material-icons">notifications_active</i>
+                            <i class="material-icons">notifications_active</i>
                         @else
-                        <i class="material-icons">notifications_none</i>
+                            <i class="material-icons">notifications_none</i>
                         @endif
                         @if($count = auth()->user()->unreadNotifications->count())
-                        @if($count <= 9)
-                            <span class="badge">
-                            {{$count}}
-                            </span>
-                        @else
-                            <span class="badge">9+</span>
-                        @endif
+                            @if($count <= 9)
+                                <span class="badge">{{$count}}</span>
+                            @else<span class="badge">9+</span>@endif
                         @endif
                     </a>
                 </li>
-
                 <li>
-                    <a class="dropdown-button dropdown-right" data-activates="dropdown2" href="javascript:void(0)">
-                        @guest
-                        @else
+                    <a class="dropdown-button dropdown-right" data-activates="dropdown-logout" href="javascript:void(0)">
+                        @auth
                         {{optional(auth()->user())->nombres}} {{ optional(auth()->user())->apellidos}}
-                        @endguest
+                        @endauth
                     </a>
                 </li>
                 <li class="hide-on-med-and-down">
-                <clock>
-                </clock>
+                    <clock>
+                    </clock>
                 </li>
-
             </ul>
-            <ul class="dropdown-content notifications-dropdown" id="dropdown2">
+            <ul class="dropdown-content notifications-dropdown" id="dropdown-logout">
                 <li class="notificatoins-dropdown-container">
                     <ul>
                         <li class="notification-drop-title">
@@ -58,17 +53,10 @@
                                 <br>
                                 @guest
                                     @else
-                                    <b>
-                                    Último login:
-                                    </b>
-                                    {{ optional(auth()->user()->ultimo_login)->isoFormat('MMMM Do YYYY, h:mm:ss a') }}
+                                    <b>Último login:</b> {{ optional(auth()->user()->ultimo_login)->isoFormat('MMMM Do YYYY, h:mm:ss a') }}
                                     <br>
-
                                     @if(auth()->user()->fechanacimiento != null || isset(auth()->user()->fechanacimiento))
-                                    <b>
-                                    Edad:
-                                    </b>
-                                    {{ optional(auth()->user()->fechanacimiento)->age }} años
+                                    <b>Edad:</b>{{ optional(auth()->user()->fechanacimiento)->age }} años
                                     @endif
                                 @endguest
                             </center>
@@ -76,42 +64,28 @@
                         <li>
                             <a href="{{ route('perfil.index')}}" rel="canonical" title="Mi perfil">
                                 <div class="notification">
-                                <div class="notification-icon circle teal lighten-4">
-                                    <i class="material-icons">
-                                    perm_contact_calendar
-                                    </i>
-                                </div>
-                                <div class="notification-text">
-                                    <b>
-                                    Mi perfil
-                                    </b>
-                                </div>
+                                    <div class="notification-icon circle teal lighten-4"><i class="material-icons">perm_contact_calendar</i></div>
+                                    <div class="notification-text"><b>Mi perfil</b></div>
                                 </div>
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('logout') }}" rel="canonical" onclick="event.preventDefault(); document.getElementById('logout-form-nav').submit();">
                                 <div class="notification">
-                                <div class="notification-icon circle teal lighten-2">
-                                    <i class="material-icons">
-                                    power_settings_new
-                                    </i>
-                                </div>
-                                <div class="notification-text">
-                                    <b>
-                                    {{ __('Logout') }}
-                                    </b>
-                                    <form action="{{ route('logout') }}" id="logout-form-nav" method="POST" style="display: none;">
-                                    @csrf
-                                    </form>
-                                </div>
+                                    <div class="notification-icon circle teal lighten-2">
+                                        <i class="material-icons">power_settings_new</i>
+                                    </div>
+                                    <div class="notification-text">
+                                        <b>{{ __('Logout') }}</b>
+                                        <form action="{{ route('logout') }}" id="logout-form-nav" method="POST" style="display: none;">@csrf</form>
+                                    </div>
                                 </div>
                             </a>
                         </li>
                     </ul>
                 </li>
             </ul>
-            <ul id="dropdown1" class="dropdown-content notifications-dropdown">
+            <ul id="dropdown-notification" class="dropdown-content notifications-dropdown">
                 <li class="notificatoins-dropdown-container">
                     <ul>
                         <li class="notification-drop-title center">
@@ -159,6 +133,39 @@
                     </ul>
                 </li>
             </ul>
+            <ul id="dropdown-help" class="dropdown-content notifications-dropdown">
+                <li class="notificatoins-dropdown-container">
+                    <ul>
+                        <li class="notification-drop-title center">
+                        <div class="center">
+                            Ayuda
+                        </div>
+                        </li>
+                        <li class="divider" tabindex="-1"></li>
+                        <li>
+                            <a href="{{route('help.handbook')}}">
+                                <div class="notification">
+                                <div class="notification-icon circle orange">
+                                    <i class="material-icons">book</i>
+                                </div>
+                                <div class="notification-text"><p> Descargar Manual</p></div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{route('support.send')}}">
+                                <div class="notification">
+                                <div class="notification-icon circle orange">
+                                    <i class="material-icons">sms</i>
+                                </div>
+                                <div class="notification-text"><p>{{config('app.technical_support.title')}}</p></div>
+                                </div>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+            </ul>
         </div>
     </nav>
 </header>
@@ -167,32 +174,24 @@
         <div class="sidebar-profile">
             <div class="sidebar-profile-info">
                 <a class="account-settings-link" href="javascript:void(0);">
-                <p>
-                    @guest
-                    @else
-                    {{ auth()->user()->nombres}} {{auth()->user()->apellidos}}
-                    @endguest
-                </p>
-                <span>
-                    @guest
-                    @else
-                    @if( \Session::get('login_role') != App\User::IsTalento() && \Session::get('login_role') != App\User::IsAdministrador() && \Session::get('login_role') != App\User::IsDesarrollador() )
-                        {{ \NodoHelper::returnNodoUsuario() }}
-                    @else
-                        @if (\Session::get('login_role') == App\User::IsTalento())
-                            Talento de Tecnoparque
-                        @elseif (\Session::get('login_role') == App\User::IsAdministrador())
-                            Administrador de Tecnoparque
+                    <p>@auth{{ auth()->user()->nombres}} {{auth()->user()->apellidos}}@endauth</p>
+                    <span>
+                        @guest
                         @else
-                            Desarrollador de Tecnoparque
+                        @if( \Session::get('login_role') != App\User::IsTalento() && \Session::get('login_role') != App\User::IsAdministrador() && \Session::get('login_role') != App\User::IsDesarrollador() )
+                            {{ \NodoHelper::returnNodoUsuario() }}
+                        @else
+                            @if (\Session::get('login_role') == App\User::IsTalento())
+                                Talento de Tecnoparque
+                            @elseif (\Session::get('login_role') == App\User::IsAdministrador())
+                                Administrador de Tecnoparque
+                            @else
+                                Desarrollador de Tecnoparque
+                            @endif
                         @endif
-
-                    @endif
-                    <i class="material-icons right">
-                    arrow_drop_down
-                    </i>
-                    @endguest
-                </span>
+                        <i class="material-icons right">arrow_drop_down</i>
+                        @endguest
+                    </span>
                 </a>
             </div>
         </div>
@@ -200,29 +199,21 @@
             <ul>
                 <li class="no-padding">
                 <a class="waves-effect waves-grey " href="{{ route('perfil.index')}}" rel="canonical" title="Mi Perfil">
-                    <i class="material-icons">
-                    perm_contact_calendar
-                    </i>
-                    Mi Perfil
+                    <i class="material-icons">perm_contact_calendar</i>Mi Perfil
                 </a>
                 </li>
-                <li class="divider">
-                </li>
+                <li class="divider"></li>
                 <li class="no-padding">
                     <a class="waves-effect waves-grey" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" rel="canonical">
-                        <i class="material-icons">
-                        power_settings_new
-                        </i>
+                        <i class="material-icons">power_settings_new</i>
                         <form action="{{ route('logout') }}" id="logout-form" method="POST" style="display: none;">
-                        @csrf
-                        </form>
-                        {{ __('Logout') }}
+                            @csrf
+                        </form>{{ __('Logout') }}
                     </a>
                 </li>
             </ul>
         </div>
         <ul class="sidebar-menu collapsible collapsible-accordion" data-collapsible="accordion">
-
             <div class="row">
                 <div class="input-field col s12 m12 offset-m0">
                     <select name="change-role" id="change-role" onchange="roleUserSession.setRoleSession(this)">
@@ -236,10 +227,7 @@
                 </div>
             <li class="no-padding {{setActiveRoute('home')}}">
                 <a href="{{route('home')}}" class="{{setActiveRouteActivePage('home')}}" rel="canonical" title="Inicio">
-                <i class="large material-icons {{setActiveRouteActiveIcon('home')}}">
-                    home
-                </i>
-                Inicio
+                    <i class="large material-icons {{setActiveRouteActiveIcon('home')}}">home</i>Inicio
                 </a>
             </li>
             @switch( \Session::get('login_role'))

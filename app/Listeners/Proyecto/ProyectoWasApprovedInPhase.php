@@ -5,7 +5,7 @@ namespace App\Listeners\Proyecto;
 use App\Events\Proyecto\ProyectoWasApproved;
 use App\Mail\Proyecto\SendEmailProyectoAprobado;
 use Illuminate\Support\Facades\Mail;
-use App\User;
+
 
 class ProyectoWasApprovedInPhase
 {

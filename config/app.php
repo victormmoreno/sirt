@@ -243,5 +243,14 @@ return [
         'NodoHelper'   => App\Helpers\NodoHelper::class,
 
     ],
+    'technical_support' => [
+        'title' => env('TEC_SUPP_TITLE', config('app.name')),
+        'contact' => [
+            'email' => env('TEC_SUPP_EMAIL', config('mail.from.address')),
+            'phone' => env('TEC_SUPP_PHONE', null),
+            'address' => env('TEC_SUPP_ADDRESS', null),
+        ],
+        'response_time' => env('TEC_SUPP_RESPONSE_TIME', '72 horas')
+    ],
 
 ];

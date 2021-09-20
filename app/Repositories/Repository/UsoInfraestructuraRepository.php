@@ -35,6 +35,10 @@ class UsoInfraestructuraRepository
             // Agrego esto para solucionar un problema de merge
 
         } else if (Session::get('login_role') == User::IsArticulador() || Session::get('login_role') == User::IsTalento()) {
+            if($request->filled('txttipousoinfraestructura') && $request->txttipousoinfraestructura == UsoInfraestructura::IsIdea()){
+                $asesorable = \App\Models\Idea::where('codigo_idea', explode(" - ", $request->txtactividad)[0])
+            ->first();
+            }else if($request->filled('txttipousoinfraestructura') && $request->txttipousoinfraestructura == UsoInfraestructura::IsArticulacion())
             $asesorable = \App\Models\ArticulacionPbt::where('codigo', explode(" - ", $request->txtactividad)[0])
             ->first();
             $model = $asesorable;
@@ -74,12 +78,6 @@ class UsoInfraestructuraRepository
             'compromisos'             => $request->get('txtcompromisos'),
             'estado'                  => 1,
         ]);
-        // return UsoInfraestructura::create([
-        //     'fecha'                   => $request->txtfecha,
-        //     'descripcion'             => $request->txtdescripcion,
-        //     'compromisos'             => $request->get('txtcompromisos'),
-        //     'estado'                  => 1,
-        // ]);
     }
 
     /**
@@ -134,9 +132,9 @@ class UsoInfraestructuraRepository
             $asesor = null;
             if($usoInfraestructura->asesorable_type == Proyecto::class){
                 $asesor = User::where('id', $value)->first();
-
-
             }else if($usoInfraestructura->asesorable_type == \App\Models\ArticulacionPbt::class){
+                $asesor = User::where('id', $value)->first();
+            }else if($usoInfraestructura->asesorable_type == \App\Models\Idea::class){
                 $asesor = User::where('id', $value)->first();
             }
 
@@ -479,5 +477,15 @@ class UsoInfraestructuraRepository
             ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
             ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
             ->join('users AS user_talento', 'user_talento.id', '=', 'talentos.id');
+    }
+
+    /**
+     * retorna query con las ideas en fase Inicio, En ejecución por usuarios
+    * @return collection
+    * @author devjul
+    */
+    public function getIdeasForUser(array $relations)
+    {
+        return \App\Models\Idea::ideaWithRelations($relations);
     }
 }
