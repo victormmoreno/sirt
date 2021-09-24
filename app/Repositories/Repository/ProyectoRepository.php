@@ -79,6 +79,19 @@ class ProyectoRepository
         }
     }
 
+    public function horasAsesoriaPorExperto($id)
+    {
+        $proyecto = Proyecto::find($id);
+        foreach ($proyecto->asesorias as $key => $asesoria) {
+            foreach ($asesoria->usogestores as $key => $value) {
+                echo $value->sum('pivot.asesoria_directa') . '<br>';
+                
+            }
+        }
+        exit;
+        // dd($proyecto->asesorias->pivot);
+    }
+
     /**
      * Elimina los datos de un proyectos
      * @param int $id id del proyecto que se va a eliminar
