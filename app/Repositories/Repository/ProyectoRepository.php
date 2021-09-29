@@ -78,6 +78,21 @@ class ProyectoRepository
         return $route;
         }
     }
+    
+    // public function horasAsesoriaPorExperto(int $id)
+    // {
+    //     $horas_exp = null;
+    //     $proyecto = Proyecto::find($id);
+    //     $asesorias = $proyecto->asesorias;
+    //     foreach ($asesorias as $key => $asesoria) {
+    //         echo $asesoria->usogestores->sum('pivot.asesoria_directa') . '<br>';
+    //         // foreach ($asesoria->usogestores as $key => $horas) {
+    //         //     $horas_exp[] = $horas->pivot->asesoria_directa;
+    //         // }
+    //         // echo $asesoria->usogestores->asesoria_indirecta . '<br>';
+    //     }
+    //     return $proyecto;
+    // }
 
     /**
      * Elimina los datos de un proyectos

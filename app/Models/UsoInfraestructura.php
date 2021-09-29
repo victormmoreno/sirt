@@ -104,14 +104,6 @@ class UsoInfraestructura extends Model
 
     public function usogestores()
     {
-        // return $this->belongsToMany(Gestor::class, 'gestor_uso', 'usoinfraestructura_id', 'gestor_id')
-        //     ->withTimestamps()
-        //     ->withPivot([
-        //         'asesoria_directa',
-        //         'asesoria_indirecta',
-        //         'costo_asesoria',
-        //     ]);
-
         return $this->morphedByMany(User::class, 'asesorable', 'gestor_uso', 'usoinfraestructura_id')->withTimestamps()
         ->withPivot([
             'asesoria_directa',

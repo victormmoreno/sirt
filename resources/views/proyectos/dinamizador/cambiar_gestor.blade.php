@@ -21,7 +21,7 @@
                 @csrf
                 <div class="row">
                     <div class="input-field col s12 m6 l6">
-                      <select id="txtgestor_id" class="js-states" name="txtgestor_id" style="width: 100%;">
+                      <select id="txtgestor_id" class="js-states browser-default select2" name="txtgestor_id" style="width: 100%;">
                         <option value="">Seleccione el experto</option>
                         @forelse ($gestores as $id => $value)
                           <option value="{{$id}}" {{ $id == $proyecto->articulacion_proyecto->actividad->gestor_id ? 'selected' : '' }} {{ old('txtgestor_id') == $id ? 'selected':'' }} >{{$value}}</option>
