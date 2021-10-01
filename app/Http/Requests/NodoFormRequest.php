@@ -100,7 +100,6 @@ class NodoFormRequest extends FormRequest
             'txtnombre'    => 'nombre',
             'txtdireccion' => 'dirección',
             'txtlineas'    => 'linea',
-
         ];
     }
 }

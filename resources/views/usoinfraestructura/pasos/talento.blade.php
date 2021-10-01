@@ -29,28 +29,20 @@
             <div class="row">
                 <div class="input-field col s12 m9 l9">
                     <select class="js-states browser-default select2" id="txttalento" name="txttalento" style="width: 100%" tabindex="-1">
-
+                        <option value="">Seleccione Talento</option>
                         @if(isset($usoinfraestructura->actividad->articulacion_proyecto->talentos->user))
-                            <option value="">
-                                Seleccione Talento
-                            </option>
                             @foreach($usoinfraestructura->actividad->articulacion_proyecto->talentos as $talento)
-                            @if(isset($talento->user))
                                 <option value="{{$talento->id}}">
                                     {{$talento->user()->withTrashed()->first()->documento}} - {{$talento->user()->withTrashed()->first()->nombres}} {{$talento->user->apellidos}}
                                 </option>
-                            @endif
+
                             @endforeach
-                        @else
-                            @if(isset($usoinfraestructura->tipo_usoinfraestructura) && $usoinfraestructura->tipo_usoinfraestructura ==  App\Models\UsoInfraestructura::IsEdt() )
-                                <option value="">
-                                    No se encontraron resultados
+                        @elseif(isset($usoinfraestructura->asesorable->talentos))
+                            @foreach($usoinfraestructura->asesorable->talentos as $talento)
+                                <option value="{{$talento->id}}">
+                                    {{$talento->user()->withTrashed()->first()->documento}} - {{$talento->user()->withTrashed()->first()->nombres}} {{$talento->user->apellidos}}
                                 </option>
-                            @else
-                                <option value="">
-                                    Seleccione primero el tipo de asesoría y uso
-                                </option>
-                            @endif
+                            @endforeach
                         @endif
                     </select>
                     <label class="active" for="txttalento">

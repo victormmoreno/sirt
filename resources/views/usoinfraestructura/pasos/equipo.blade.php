@@ -47,7 +47,7 @@
                 </div>
                 <div class="input-field col s12 m5 l4">
                     <select class="js-states browser-default select2" id="txtequipo" name="txtequipo" style="width: 100%" tabindex="-1">
-                        @if(isset($usoinfraestructura->asesorable->nodo->equipos))
+                        @if(isset($usoinfraestructura->asesorable->nodo->equipos) && isset($usoinfraestructura->asesorable->asesor->lineatecnologica_id))
                             <option value="">
                                 Seleccione el equipo
                             </option>

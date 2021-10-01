@@ -38,7 +38,6 @@ class MantenimientoFormRequest extends FormRequest
             'txtequipo.required'           => 'El equipo es obligatorio.',
             'txtanio.required'             => 'El año de mantenimiento es obligatorio.',
             'txtanio.date_format'          => 'El año de mantenimiento no corresponde al formato de año.',
-
             'txtvalor.required'            => 'El valor del mantenimiento es obligatorio.',
             'txtvalor.between'             => 'El valor del mantenimiento tiene que estar entre 0 - 999999999999.99.',
             'txtvalor.numeric'             => 'El valor del mantenimiento debe ser numérico.',

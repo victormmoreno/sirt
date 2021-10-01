@@ -56,6 +56,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Idea\IdeasWasRejected' => [
             'App\Listeners\Idea\IdeasWasRejectedToComite',
         ],
+        'App\Events\Support\MessageWasSent' => [
+            'App\Listeners\Support\AutoReplyMessage',
+        ],
     ];
 
     /**

@@ -142,7 +142,7 @@
                                                                 </div>
                                                                 <ul class="collection">
                                                                     @forelse($nodo->dinamizador as $dinamizador)
-                                                                        @if(isset($dinamizador->user))
+                                                                        @if(isset($dinamizador->user) && $dinamizador->user->hasRole(App\User::IsDinamizador()) && $dinamizador->user->estado == App\User::IsActive() &&  $dinamizador->user->deleted_at == null)
                                                                         <li class="collection-item">
                                                                             <span class="title">
                                                                                 {{$dinamizador->user->present()->userFullName()}}
@@ -172,7 +172,7 @@
                                                                 </div>
                                                                 <ul class="collection">
                                                                     @forelse($nodo->infocenter as $infocenter)
-                                                                    @if(isset($infocenter->user))
+                                                                    @if(isset($infocenter->user) && $infocenter->user->hasRole(App\User::IsInfocenter()) && $infocenter->user->estado == App\User::IsActive() &&  $infocenter->user->deleted_at == null)
                                                                     <li class="collection-item">
                                                                         <span class="title">
                                                                             {{$infocenter->user->present()->userFullName()}}
@@ -201,12 +201,10 @@
                                                             <div class="center">
                                                                 <span class="zurich-bt-fonts orange-text text-darken-2"><b>Expertos</b></span>
                                                             </div>
-                                                            <div class="divider mailbox-divider">
-                                                            </div>
+                                                            <div class="divider mailbox-divider"></div>
                                                             @forelse($nodo->gestores as $gestor)
                                                                 <div class="col s12 m12 l6">
-
-                                                                    @if(isset($gestor->user))
+                                                                    @if(isset($gestor->user) && $gestor->user->hasRole(App\User::IsGestor()) && $gestor->user->estado == App\User::IsActive() &&  $gestor->user->deleted_at == null)
                                                                     <ul class="collection">
                                                                         <li class="collection-item">
                                                                             <span class="title">
@@ -224,7 +222,6 @@
                                                                         </li>
                                                                     </ul>
                                                                     @endif
-
                                                                 </div>
                                                             @empty
                                                                 <div class="col s12 m12 l6">
@@ -247,8 +244,7 @@
                                                             </div>
                                                             @forelse($nodo->articuladores as $articulador)
                                                                 <div class="col s12 m12 l6">
-
-                                                                    @if(isset($articulador->user))
+                                                                    @if(isset($articulador->user) && $articulador->user->hasRole(App\User::IsArticulador()) && $articulador->user->estado == App\User::IsActive() &&  $articulador->user->deleted_at == null)
                                                                     <ul class="collection">
                                                                         <li class="collection-item">
                                                                             <span class="title">
@@ -290,7 +286,7 @@
                                                             @forelse($nodo->apoyostecnicos as $apoyotecnico)
                                                                 <div class="col s12 m12 l6">
 
-                                                                    @if(isset($apoyotecnico->user))
+                                                                    @if(isset($apoyotecnico->user) && $apoyotecnico->user->hasRole(App\User::IsApoyoTecnico()) && $apoyotecnico->user->estado == App\User::IsActive() &&  $apoyotecnico->user->deleted_at == null)
                                                                     <ul class="collection">
                                                                         <li class="collection-item">
                                                                             <span class="title">
@@ -332,7 +328,7 @@
                                                                 </div>
                                                                 @forelse($nodo->ingresos as $ingreso)
                                                                     <div class="col s12 m12 l6">
-                                                                        @if(isset($ingreso->user))
+                                                                        @if(isset($ingreso->user) && $ingreso->user->hasRole(App\User::IsIngreso()) && $ingreso->user->estado == App\User::IsActive() &&  $ingreso->user->deleted_at == null)
                                                                         <ul class="collection">
                                                                             <li class="collection-item">
                                                                                 <span class="title">

@@ -13,7 +13,7 @@ class UsoInfraestructura extends Model
 
     const IS_PROYECTO     = 0;
     const IS_ARTICULACION = 1;
-    const IS_EDT          = 2;
+    const IS_IDEA          = 2;
 
     /**
      * The attributes that are mass assignable.
@@ -58,9 +58,9 @@ class UsoInfraestructura extends Model
         return self::IS_ARTICULACION;
     }
 
-    public static function IsEdt()
+    public static function IsIdea()
     {
-        return self::IS_EDT;
+        return self::IS_IDEA;
     }
 
     public function asesorable()
@@ -196,7 +196,7 @@ class UsoInfraestructura extends Model
         if (isset($nodo) && $nodo != null && $nodo != 'all') {
             $query->whereHasMorph(
                 'asesorable',
-                [ \App\Models\Proyecto::class, \App\Models\ArticulacionPbt::class],
+                [ \App\Models\Proyecto::class, \App\Models\ArticulacionPbt::class, \App\Models\Idea::class],
                 function (Builder $subquery) use($nodo) {
                     $subquery->where('nodo_id', $nodo);
                 }
@@ -210,22 +210,22 @@ class UsoInfraestructura extends Model
             if ((!empty($actividad) && $actividad != null && $actividad != 'all')) {
                 $query->whereHasMorph(
                     'asesorable',
-                    \App\Models\ArticulacionPbt::class,
+                    [\App\Models\ArticulacionPbt::class, \App\Models\Idea::class],
                     function (Builder $subquery) use($actividad, $user) {
                         return $subquery->where('id', $actividad)
                         ->orWhereHas('asesor', function ($subquery) use ($user) {
                             $subquery->where('id', $user);
                         });
                     }
-                )->whereHasMorph('asesorable', \App\Models\Proyecto::class);
+                )->whereHasMorph('asesorable', [\App\Models\ArticulacionPbt::class, \App\Models\Idea::class]);
             } elseif ((!empty($actividad) && $actividad != null && $actividad == 'all')) {
                 $query->whereHasMorph(
                     'asesorable.asesor',
-                    \App\Models\ArticulacionPbt::class,
+                    [\App\Models\ArticulacionPbt::class, \App\Models\Idea::class],
                     function (Builder $subquery) use( $user) {
                         return $subquery->where('id', $user);
                     }
-                )->whereHasMorph('asesorable', \App\Models\Proyecto::class);
+                )->whereHasMorph('asesorable', [\App\Models\ArticulacionPbt::class, \App\Models\Idea::class]);
             }
         }
         else if ((session()->has('login_role') && session()->get('login_role') == User::IsGestor()) && (!empty($user) && $user != null && $user != 'all')) {
@@ -260,15 +260,15 @@ class UsoInfraestructura extends Model
                     function (Builder $query) use($user) {
                         return $query->where('id', $user);
                     }
-                );
+                )->whereHasMorph('asesorable', \App\Models\Proyecto::class);
             } elseif ((!empty($actividad) && $actividad != null && $actividad == 'all')) {
                 return $query->whereHas('usotalentos.user',  function ($subquery) use ($user) {
                     $subquery->where('id', $user);
-                });
+                })->whereHasMorph('asesorable', \App\Models\Proyecto::class);
             } elseif ((!empty($actividad) && $actividad == null && $actividad != 'all')) {
                 return $query->whereHas('usotalentos.user',  function ($subquery) use ($user) {
                     $subquery->where('id', $user);
-                });
+                })->whereHasMorph('asesorable', \App\Models\Proyecto::class);
             }
         }
         return $query;
@@ -279,7 +279,7 @@ class UsoInfraestructura extends Model
         if (!empty($asesor) && $asesor != null && $asesor == 'all') {
             return $query->whereHasMorph(
                 'asesorable',
-                [ \App\Models\Proyecto::class, \App\Models\ArticulacionPbt::class]
+                [ \App\Models\Proyecto::class, \App\Models\ArticulacionPbt::class, \App\Models\Idea::class]
             );
         }
 
@@ -292,7 +292,7 @@ class UsoInfraestructura extends Model
                         return $query->where('users.id', $asesor);
 
                     }
-                )->whereHasMorph('asesorable', \App\Models\ArticulacionPbt::class);
+                )->whereHasMorph('asesorable', [\App\Models\ArticulacionPbt::class, \App\Models\Idea::class]);
             }
             if((session()->has('login_role') && (session()->get('login_role') == User::IsApoyoTecnico() || session()->get('login_role') == User::IsGestor()))){
                 return $query->whereHas(
@@ -317,14 +317,14 @@ class UsoInfraestructura extends Model
         if (!empty($year) && $year != null && $year == 'all') {
             return $query->whereHasMorph(
                 'asesorable',
-                [ \App\Models\Proyecto::class, \App\Models\ArticulacionPbt::class]
+                [ \App\Models\Proyecto::class, \App\Models\ArticulacionPbt::class, \App\Models\Idea::class]
             );
         }
 
         if ((!empty($year) && $year != null && $year != 'all')) {
             $query->whereHasMorph(
                 'asesorable',
-                [ \App\Models\Proyecto::class, \App\Models\ArticulacionPbt::class],
+                [ \App\Models\Proyecto::class, \App\Models\ArticulacionPbt::class, \App\Models\Idea::class],
                 function (Builder $subquery) use($year) {
                     return $subquery->whereYear('fecha', $year)->orWhereYear('created_at', $year);
                 }

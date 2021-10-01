@@ -14,10 +14,6 @@ class Idea extends Model
 
     use IdeaTrait;
 
-        /*=================================================================
-    =            constantes para conocer los tipos de idea            =
-    =================================================================*/
-
     const IS_EMPRENDEDOR        = 1;
     const IS_EMPRESA            = 2;
     const IS_GRUPOINVESTIGACION = 3;
@@ -132,7 +128,6 @@ class Idea extends Model
 
     public function validarAcuerdoConfidencialidad()
     {
-        // return $this;
         if ($this->acuerdo_no_confidencialidad == 0) {
             return false;
         }
@@ -355,6 +350,11 @@ class Idea extends Model
             return $query->where('convocatoria', 'LIKE', "%$convocatoria%");
         }
         return $query;
+    }
+
+    public function scopeIdeaWithRelations($query, array $relations)
+    {
+        return $query->with($relations);
     }
 
     /**

@@ -163,6 +163,7 @@
             .tr-striped {
                 background-color: #bdbdbd;
             }
+
         }
     </style>
     <meta charset="utf-8">
@@ -304,26 +305,8 @@
             <tr>
                 <td colspan="6" >{{$articulacion->present()->fullNameTalentInterlocutor()}} - Talento Interlocutor</td>
             </tr>
-             <tr>
-                    <td rowspan="3" colspan="6"></td>
-            </tr>
             <tr>
-
-            </tr>
-            <tr>
-
-            </tr>
-            <tr>
-                 <td colspan="6" >{{$articulacion->present()->articulacionPbtUserAsesor()}} - Articulador</td>
-            </tr>
-            <tr>
-                    <td rowspan="3" colspan="6"></td>
-            </tr>
-            <tr>
-
-            </tr>
-            <tr>
-
+                <td colspan="6" >{{$articulacion->present()->articulacionPbtUserAsesor()}} - Articulador</td>
             </tr>
         </table>
     </div>

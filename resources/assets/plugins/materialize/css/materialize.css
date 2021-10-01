@@ -4670,7 +4670,7 @@ small {
 }
 
 .card .card-content {
-  padding: 2px;
+  padding: 20px;
   border-radius: 0 0 2px 2px;
 }
 
@@ -5028,8 +5028,7 @@ button.btn-floating {
 
 .fixed-action-btn {
   position: fixed;
-  top: 63%;
-  right: 3%;
+  right: 23px;
   bottom: 23px;
   padding-top: 15px;
   margin-bottom: 0;

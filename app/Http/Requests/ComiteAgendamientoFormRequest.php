@@ -58,8 +58,8 @@ class ComiteAgendamientoFormRequest extends FormRequest
 
     public function attributes()
     {
-      return [
-        'txtfechacomite_create' => 'Fecha del Comité',
-      ];
+        return [
+            'txtfechacomite_create' => 'Fecha del Comité',
+        ];
     }
 }
