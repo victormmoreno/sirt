@@ -4,13 +4,9 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddTipoVinculacionToArticulacionPbt extends Migration
+class AddExtensionNodosTable extends Migration
 {
-    /**
-     * Schema table name to migrate
-     * @var string
-     */
-    protected $tableName = 'articulacion_pbts';
+    public $tableName = 'nodos';
     /**
      * Run the migrations.
      *
@@ -19,7 +15,7 @@ class AddTipoVinculacionToArticulacionPbt extends Migration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->integer('tipo_vinculacion')->default(1)->after('id'); //defaul-pbt
+            $table->string('extension', 15)->nullable()->after('telefono');
         });
     }
 
@@ -31,7 +27,7 @@ class AddTipoVinculacionToArticulacionPbt extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->dropColumn(['tipo_vinculacion']);
+            $table->dropColumn(['extension']);
         });
     }
 }

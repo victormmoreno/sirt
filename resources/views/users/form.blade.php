@@ -137,12 +137,6 @@
 
                 <small id="txtnodoinfocenter-error" class="error red-text"></small>
             </div>
-            <div class="input-field col s12 m12 l12">
-
-                <input id="txtextension" name="txtextension" type="text" value="{{ isset($user->infocenter->extension) && collect($user->roles)->contains('name',App\User::IsInfocenter()) ? $user->infocenter->extension : old('txtextension')}}" {{isset($user->infocenter->extension) && session()->get('login_role') == App\User::IsGestor() ||    (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->gestor->nodo->id ) &&   $user->gestor->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : ''}}>
-                <label for="txtextension">Extensión <span class="red-text">*</span></label>
-                <small id="txtextension-error" class="error red-text"></small>
-            </div>
         </div>
         <div id="ingreso">
             <div class="input-field col s12 m12 l12">

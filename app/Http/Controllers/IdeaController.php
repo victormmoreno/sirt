@@ -46,6 +46,27 @@ class IdeaController extends Controller
     }
 
     /**
+     * Formulario para reasignar una idea de nodo
+     *
+     * @param int $id Id de la idea de proyecto
+     * @return Response
+     * @author dum
+     **/
+    public function reasignar_nodo(int $id)
+    {
+        $idea = Idea::find($id);
+        if ($idea->nodo->id == auth()->user()->articulador->nodo_id) {
+            return view('ideas.articulador.reasignar', [
+                'nodos' => $this->ideaRepository->getSelectNodo(),
+                'idea' => $idea
+            ]);
+        } else {
+            Alert::error('Error!', 'Esta idea no pertenece a tu nodo!')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -210,7 +231,7 @@ class IdeaController extends Controller
                 $nodo = auth()->user()->infocenter->nodo_id;
                 break;
             case User::IsArticulador():
-                $nodo = auth()->user()->gestor->nodo_id;
+                $nodo = auth()->user()->articulador->nodo_id;
                 break;
             default:
                 return abort('403');

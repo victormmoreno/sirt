@@ -33,6 +33,7 @@ class Nodo extends Model
         'entidad_id',
         'direccion',
         'telefono',
+        'extension',
         'anho_inicio',
     ];
 
@@ -46,6 +47,7 @@ class Nodo extends Model
         'entidad_id'  => 'integer',
         'direccion'   => 'string',
         'telefono'    => 'string',
+        'extension'    => 'string',
         'anho_inicio' => 'year',
     ];
     public function articuladores()

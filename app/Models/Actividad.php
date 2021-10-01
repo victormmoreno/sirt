@@ -40,7 +40,6 @@ class Actividad extends Model
         'formulario_inicio',
         'cronograma',
         'seguimiento',
-        'evidencia_final',
         'formulario_final'
     ];
 

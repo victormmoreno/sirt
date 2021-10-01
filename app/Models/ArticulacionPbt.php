@@ -20,7 +20,6 @@ class ArticulacionPbt extends Model
      * @var array
      */
     protected $fillable = [
-        'tipo_vinculacion',
         'actividad_id',
         'asesor_id',
         'nodo_id',
