@@ -90,6 +90,7 @@ class NodoRepository
                 'direccion'   => $request->input('txtdireccion'),
                 'anho_inicio' => Carbon::now()->format('Y'),
                 'telefono'    => $request->input('txttelefono'),
+                'extension'    => $request->input('txtextension'),
             ]);
 
             if ($request->filled('txtlineas')) {
@@ -145,6 +146,7 @@ class NodoRepository
                 'centro_id' => $request->input('txtcentro'),
                 'direccion' => $request->input('txtdireccion'),
                 'telefono'  => $request->input('txttelefono'),
+                'extension'  => $request->input('txtextension'),
             ]);
 
             if ($request->filled('txtlineas')) {

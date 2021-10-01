@@ -40,6 +40,8 @@
                                                         {{$nodo->entidad->present()->entidadEmail()}}<br/>
                                                         <b class="black-text text-darken-3">Teléfono: </b>
                                                         {{isset($nodo->telefono) ? $nodo->telefono : 'No registra'}}<br/>
+                                                        <b class="black-text text-darken-3">Extensión: </b>
+                                                        {{isset($nodo->extension) ? $nodo->extension : 'No registra'}}<br/>
                                                     </span>
                                                     </div>
                                                 </div>

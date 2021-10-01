@@ -16,10 +16,15 @@ Se ha enviado este correo para informarte de la decisión que se dió en el Comi
 Para conocer el resultado, debe abrir el archivo adjunto a este email.
 <br>
 
-@if( $datosIdea->nodo->infocenter->isEmpty())
-Para más información puede ocudir a las instalaciones de Tecnoparque nodo {{$datosIdea->nodo->entidad->nombre}} ubicado en {{$datosIdea->nodo->direccion}} en {{$datosIdea->nodo->entidad->ciudad->nombre}} ({{$datosIdea->nodo->entidad->ciudad->departamento->nombre}}).
-@else
-Para más información puede contactarse al telefono ☎️  <b>{{ $datosIdea->nodo->telefono}}</b> ext <b>{{ $extensiones }}</b>o acudir a las instalaciones de 🏬 <strong>Tecnoparque nodo {{$datosIdea->nodo->entidad->nombre}}</strong>  ubicado en {{$datosIdea->nodo->direccion}} en {{$datosIdea->nodo->entidad->ciudad->nombre}} ({{$datosIdea->nodo->entidad->ciudad->departamento->nombre}}).
+Para más información puede contactarse con el nodo de las siguientes formas: <br>
+@if (isset($datosIdea->nodo->entidad->email_entidad))
+Email 📧: <b> {{ $datosIdea->nodo->entidad->email_entidad }}. </b> <br>
+@endif
+@if (isset($datosIdea->nodo->telefono))
+Teléfono ☎️: <b>{{ $datosIdea->nodo->telefono }}</b>{!! isset($datosIdea->nodo->extension) ? ' ext <b>' . $datosIdea->nodo->extension . '</b>' : '' !!}. <br>
+@endif
+@if (isset($datosIdea->nodo->direccion))
+Acudir a las instalaciones de 🏬 <strong>Tecnoparque nodo {{$datosIdea->nodo->entidad->nombre}}</strong>  ubicado en {{$datosIdea->nodo->direccion}} en {{$datosIdea->nodo->entidad->ciudad->nombre}} ({{$datosIdea->nodo->entidad->ciudad->departamento->nombre}}). <br>
 @endif
 
 Gracias,<br>

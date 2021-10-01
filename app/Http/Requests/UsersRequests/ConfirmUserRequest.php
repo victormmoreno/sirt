@@ -41,7 +41,6 @@ class ConfirmUserRequest extends FormRequest
             'txtlinea'                  => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor())) . '|nullable',
             'txthonorario'              => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor())) . '|nullable|digits_between:1,10|numeric',
             'txtnodoinfocenter'         => Rule::requiredIf(collect(request()->role)->contains(User::IsInfocenter())) . '|nullable',
-            'txtextension'              => Rule::requiredIf(collect(request()->role)->contains(User::IsInfocenter())) . '|nullable|digits_between:1,7|numeric',
             'txttipotalento'            => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento())) . '|nullable',
             'txtnodoingreso'            => Rule::requiredIf(collect(request()->role)->contains(User::IsIngreso())) . '|nullable',
             'txtregional_aprendiz'      => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
@@ -162,9 +161,6 @@ class ConfirmUserRequest extends FormRequest
             'txttipotalento.required'                  => 'El tipo de talento es obligatorio.',
             'txttipoestudio.required'                  => 'El tipo de estudio es obligatorio.',
 
-            'txtextension.required'               => 'La extensión es obligatoria.',
-            'txtextension.numeric'                => 'La extensión debe ser numérica',
-            'txtextension.digits_between'         => 'La extensión debe tener entre 6 y 7 digitos',
             'txtnodoinfocenter.required'          => 'El nodo del infocenter es obligatorio',
         ];
     }

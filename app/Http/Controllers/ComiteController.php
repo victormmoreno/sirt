@@ -89,7 +89,7 @@ class ComiteController extends Controller
   public function asignar(int $id)
   {
     $comite = Comite::findOrFail($id);
-    $gestores = Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id');
+    $gestores = $this->getGestorRepository()->getAllGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->get();
     return view('comite.dinamizador.asignar_ideas', [
       'comite' => $comite,
       'gestores' => $gestores
@@ -256,7 +256,7 @@ class ComiteController extends Controller
       alert()->error('Error!','Esta idea de proyecto no pertenece a tu nodo.')->showConfirmButton('Ok', '#3085d6');
       return back(); 
     } else {
-      $gestores = Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id');
+      $gestores = $this->getGestorRepository()->getAllGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->get();
       return view('comite.dinamizador.update_gestor', [
       'idea' => $idea,
       'comite' => $comite,

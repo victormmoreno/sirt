@@ -22,8 +22,7 @@ class AlterActividadesTable extends Migration
             $table->tinyInteger('formulario_inicio')->default(0)->after('fecha_cierre');
             $table->tinyInteger('cronograma')->default(0)->after('formulario_inicio');
             $table->tinyInteger('seguimiento')->default(0)->after('cronograma');
-            $table->tinyInteger('evidencia_final')->default(0)->after('seguimiento');
-            $table->tinyInteger('formulario_final')->default(0)->after('evidencia_final');
+            $table->tinyInteger('formulario_final')->default(0)->after('seguimiento');
         });
     }
 
@@ -35,7 +34,7 @@ class AlterActividadesTable extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->dropColumn(['formulario_inicio', 'cronograma', 'seguimiento', 'evidencia_final', 'formulario_final']);
+            $table->dropColumn(['formulario_inicio', 'cronograma', 'seguimiento', 'formulario_final']);
         });
     }
 }
