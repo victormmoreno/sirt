@@ -7,10 +7,23 @@
         <div class="container ">
             <div class="row">
                 <div class="col s12 m12 l12">
-                    <div class="card card-transparent no-m ">
-                        <div class="row">
-                            <div class="col s12 m6 l6">
-                                <div class="page-title">Configuración</div>
+                    <div class="card card-transparent  ">
+                        <div class="row mt-2">
+                            <div class="left left-align">
+                                <a class="footer-text mt-2" href="{{route('tipoarticulaciones.index')}}">
+                                    <i class="material-icons arrow-l mt-2">
+                                        arrow_back
+                                    </i>
+                                </a>
+                                Configuración
+                            </div>
+                            <div class="right right-align">
+                                <ol class="breadcrumbs">
+                                    <li><a href="{{route('home')}}">Inicio</a></li>
+                                    <li ><a href="{{route('articulaciones.index')}}">Articulaciones PBT</a></li>
+                                    <li ><a href="{{route('tipoarticulaciones.index')}}">Tipos Articulaciones</a></li>
+                                    <li class="active">Detalle</li>
+                                </ol>
                             </div>
                         </div>
                         <div class="row">
@@ -44,6 +57,7 @@
                                                 </div>
                                             </div>
                                             <div class="right mailbox-buttons">
+                                                <a href="{{ route('tipoarticulaciones.edit', $typeArticulation->id) }}" class="waves-effect waves-orange btn-flat m-t-xs" >Cambiar información</a>
                                                 <a href="javascript:void(0)" class="waves-effect waves-red btn-flat m-t-xs" >Eliminar</a>
                                             </div>
                                         </div>
@@ -83,9 +97,7 @@
                                             <div class="divider mailbox-divider"></div>
 
                                                 <div class="row details-list" style="display: block;">
-                                                    <div class="left left-align">
 
-                                                    </div>
                                                     <div class="right right-alignl">
                                                         <span>Fecha actualización: </span>
                                                         <span>{{optional($typeArticulation->updated_at)->isoFormat('lll')}} ({{optional($typeArticulation->updated_at)->diffForHumans()}})</span>

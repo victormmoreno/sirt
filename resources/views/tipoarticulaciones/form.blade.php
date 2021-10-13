@@ -1,17 +1,17 @@
 {!! csrf_field() !!}
 <div class="row p-v-xs">
     <div class="input-field col s12">
-        <input id="txtnombre" type="text" name="txtnombre" class="validate">
+        <input id="txtnombre" type="text" name="txtnombre" value="{{ isset($typeArticulation->nombre) ? $typeArticulation->nombre : old('txtnombre')}}" class="validate">
         <label for="txtnombre">Nombre del tipo de articulación<span class="red-text">*</span></label>
         <small id="txtnombre-error" class="error red-text"></small>
     </div>
     <div class="input-field col s12">
-        <input id="txtdescripcion" type="text" name="txtdescripcion" class="validate">
+        <input id="txtdescripcion" type="text" name="txtdescripcion" value="{{ isset($typeArticulation->descripcion) ? $typeArticulation->descripcion : old('txtdescripcion')}}" class="validate">
         <label for="txtdescripcion">Descripción</label>
         <small id="txtdescripcion-error" class="error red-text"></small>
     </div>
     <div class="input-field col s12">
-        <input id="txtentidad" type="text" name="txtentidad" class="validate">
+        <input id="txtentidad" type="text" name="txtentidad" class="validate" {{ isset($typeArticulation->entidad) ? $typeArticulation->entidad : old('txtentidad')}}>
         <label for="txtentidad">Entidad (aparecerá por defecto)</label>
         <small id="txtentidad-error" class="error red-text"></small>
     </div>
@@ -19,7 +19,12 @@
         <div class="switch p-v-xs">
             <label>
                 Ocultar
-                <input type="checkbox" name="checkestado" id="checkestado" checked>
+                {{-- <input type="checkbox" name="checkestado" id="checkestado" checked> --}}
+                @if(isset($typeArticulation->estado))
+                <input type="checkbox" id="checkestado" name="checkestado" {{$typeArticulation->estado == App\Models\TipoArticulacion::mostrar() ? 'checked' : old('checkestado')}}>
+                @else
+                <input type="checkbox" id="checkestado" name="checkestado" {{old('checkestado') == 'on' ? '' : 'checked'}}>
+                @endif
                 <span class="lever"></span>
                 Mostrar
             </label>
@@ -44,7 +49,11 @@
     @foreach($nodos as $id => $name)
         <div class="col s12 m4 l3">
             <p class="p-h-xs p-v-xs">
-                <input type="checkbox" value="{{$id}}" name="checknode" class="filled-in filled-in-node" id="filled-in-{{$id}}">
+                @if(isset($typeArticulation))
+                <input type="checkbox" value="{{$id}}" {{collect(old('checknode',$typeArticulation->nodos->pluck('id')))->contains($id) ? 'checked' : ''  }} name="checknode[]" class="filled-in filled-in-node" id="filled-in-{{$id}}">
+                @else
+                <input type="checkbox" value="{{$id}}" name="checknode[]" class="filled-in filled-in-node" id="filled-in-{{$id}}" >
+                @endif
                 <label for="filled-in-{{$id}}">{{$name}}</label>
             </p>
         </div>
@@ -52,5 +61,5 @@
     <small id="checknode-error" class="error red-text"></small>
 </div>
 <div class="row">
-    <button type="submit" class="waves-effect waves-light btn orange m-b-xs right">Guardar</button>
+    <button type="submit" class="waves-effect waves-light btn orange m-b-xs right">{{isset($btnText) ? $btnText : 'Guardar'}}</button>
 </div>

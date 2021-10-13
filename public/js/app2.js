@@ -10724,14 +10724,13 @@ $("#formTypeArticulation").on('submit', function(e){
         processData:false,
         beforeSend: function(){
             $('.error').hide();
-            // $('#formTypeArticulation').css("opacity",".5");
         },
         success: function(response){
             $('.error').hide();
             printErrorsForm(response);
             if(!response.fail && response.errors == null){
                 Swal.fire({
-                    title: 'Registro Exitoso',
+                    title: response.message,
                     type: 'success',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',

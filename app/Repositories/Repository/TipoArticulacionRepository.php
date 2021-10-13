@@ -72,6 +72,30 @@ class TipoArticulacionRepository
                 'estado'         => $request->filled('checkestado') ? TipoArticulacion::mostrar() : TipoArticulacion::ocultar(),
             ]);
 
+            $typeArticulation->nodos()->sync($request->input('checknode'));
+
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            $this->strError = $e->getMessage();
+            DB::rollback();
+            return false;
+        }
+    }
+
+    public function updateTypeArticulation($request, $typeArticulation){
+        DB::beginTransaction();
+        try {
+
+            $typeArticulation->update([
+                'nombre'          => $request->input('txtnombre'),
+                'descripcion'      => $request->input('txtdescripcion'),
+                'entidad'      => $request->input('txtentidad'),
+                'estado'         => $request->filled('checkestado') ? TipoArticulacion::mostrar() : TipoArticulacion::ocultar(),
+            ]);
+
+            $typeArticulation->nodos()->sync($request->input('checknode'));
+
             DB::commit();
             return true;
         } catch (\Exception $e) {

@@ -21,7 +21,7 @@
                                     <li><a href="{{route('home')}}">Inicio</a></li>
                                     <li ><a href="{{route('articulaciones.index')}}">Articulaciones PBT</a></li>
                                     <li ><a href="{{route('tipoarticulaciones.index')}}">Tipos Articulaciones</a></li>
-                                    <li class="active">Nuevo tipo Articulación</li>
+                                    <li class="active">Editar    tipo Articulación</li>
                                 </ol>
                             </div>
                         </div>
@@ -45,8 +45,9 @@
                                             <strong>General</strong><br>
                                             <p>Ingresa y selecciona la visibilidad del tipo de articulación</p>
                                         </address>
-                                        <form  class="m-t-md" action="{{ route('tipoarticulaciones.store')}}" id="formTypeArticulation" method="POST">
-                                            @include('tipoarticulaciones.form', ['btnText' => 'Guardar'])
+                                        <form  class="m-t-md" action="{{ route('tipoarticulaciones.update', $typeArticulation->id)}}" id="formTypeArticulation" method="POST">
+                                            {!! method_field('PUT')!!}
+                                            @include('tipoarticulaciones.form', ['btnText' => 'Guardar Cambios'])
                                         </form>
                                     </div>
                                 </div>

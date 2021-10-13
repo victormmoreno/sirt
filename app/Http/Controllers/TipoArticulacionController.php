@@ -54,13 +54,14 @@ class TipoArticulacionController extends Controller
      */
     public function store(Request $request)
     {
-        // return var_dump($request->filled('checkestado')) ;
+        // return $request->input('checknode');
         $req       = new TipoArticulacionRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
             return response()->json([
                 'fail'   => true,
                 'errors' => $validator->errors(),
+                'message' => null,
                 'redirect_url' => null,
             ]);
         }
@@ -68,13 +69,15 @@ class TipoArticulacionController extends Controller
         if (!$result) {
             return response()->json([
                 'fail'         => true,
-                'errors'       => $this->supportRepository->getError(),
+                'errors'       => $this->tipoArticulacionRepository->getError(),
+                'message' => null,
                 'redirect_url' => null,
             ]);
         }
         return response()->json([
             'fail'         => false,
             'errors'       => null,
+            'message' => "Registro extioso",
             'redirect_url' => url(route('tipoarticulaciones.index')),
         ]);
     }
@@ -94,24 +97,52 @@ class TipoArticulacionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $typeArticulation
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($typeArticulation)
     {
-        //
+        $nodos = Entidad::has('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id');
+        $typeArticulation = TipoArticulacion::findOrFail($typeArticulation);
+        return view('tipoarticulaciones.edit', ['typeArticulation' => $typeArticulation, 'nodos' => $nodos]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  int  $typeArticulation
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $typeArticulation)
     {
-        //
+        $typeArticulation = TipoArticulacion::findOrFail($typeArticulation);
+        $req       = new TipoArticulacionRequest;
+        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+        if ($validator->fails()) {
+            return response()->json([
+                'fail'   => true,
+                'errors' => $validator->errors(),
+                'message' => null,
+                'redirect_url' => null,
+            ]);
+        }
+        $result = $this->tipoArticulacionRepository->updateTypeArticulation($request, $typeArticulation);
+        if (!$result) {
+            return response()->json([
+                'fail'         => true,
+                'errors'       => $this->tipoArticulacionRepository->getError(),
+                'message' => null,
+                'redirect_url' => null,
+            ]);
+        }
+        return response()->json([
+            'fail'         => false,
+            'errors'       => null,
+            'message' => "Actualización Exitosa",
+            'redirect_url' => url(route('tipoarticulaciones.index')),
+        ]);
+
     }
 
     /**
