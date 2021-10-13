@@ -5,19 +5,9 @@ $(document).ready(function() {
 
     if((filter_year_support == '' || filter_year_support == null) && (filter_state_support == '' || filter_state_support == null) && (filter_request_support == '' || filter_request_support == null)){
         support.fill_datatatables_actions_support(filter_year_support = null, filter_state_support= null, filter_request_support = null);
-        // support.fill_datatatables_ideas(filter_year_support, filter_state_support, filter_request_support);
     }else if( (filter_year_support !='' || filter_year_support != null) && (filter_state_support != '' || filter_state_support != null) && (filter_request_support != '' || filter_request_support != null)){
         support.fill_datatatables_actions_support( filter_year_support, filter_state_support, filter_request_support);
-        // support.fill_datatatables_ideas( filter_year_support, filter_state_support, filter_request_support);
     }else{
-        // $('#ideas_data_action_table').DataTable({
-        //     language: {
-        //         "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        //     },
-        //     pageLength: 20,
-        //     "lengthChange": false,
-        // }).clear().draw();
-
         $('#support_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -31,7 +21,6 @@ $('#filter_support').click(function () {
     let filter_year_support = $('#filter_year_support').val();
     let filter_state_support = $('#filter_state_support').val();
     let filter_request_support = $('#filter_request_support').val();
-    // $('#ideas_data_action_table').dataTable().fnDestroy();
     $('#support_data_table').dataTable().fnDestroy();
     if((filter_year_support =='' || filter_year_support == null) && (filter_state_support == '' || filter_state_support == null) && (filter_request_support == '' || filter_request_support == null)){
         support.fill_datatatables_actions_support(filter_year_support = null, filter_state_support= null, filter_request_support = null);

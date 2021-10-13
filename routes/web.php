@@ -844,7 +844,7 @@ Route::group([
 });
 
 //-----------------------Fin ruta sección noticias-----------------------------------
-
+Route::get('usuarios/filtro-talento/{documento}', 'ArticulacionPbtController@filterTalento')->name('articulacion.usuario.talento.search');
 
 Route::get('empresas/filter-code/{value}', 'EmpresaController@filterByCode')->name('empresa.filterbycode');
 Route::get('empresas/sede/{id}', 'EmpresaController@filterSede')->name('empresa.sede.filter');
@@ -858,6 +858,8 @@ Route::delete('articulaciones/file/{idFile}', 'ArchivoController@destroyFileArti
 Route::get('articulaciones/downloadFile/{id}', 'ArchivoController@downloadFileArticulacion')->name('articulacion.files.download');
 Route::get('articulaciones/archivos-articulacion/{id}/{fase}', 'ArchivoController@datatableArchiveArticulacion')->name('articulacion.files');
 Route::post('articulaciones/store/{id}/files', 'ArchivoController@uploadFileArticulacionPbt')->name('articulacion.files.upload')->middleware('role_session:Articulador');
+
+
 
 Route::put('articulaciones/update-articulador/{id}', 'ArticulacionPbtController@updateArticulador')->name('articulacion.update.articulador')->middleware('role_session:Dinamizador');
 Route::get('articulaciones/cambiar-articulador/{id}', 'ArticulacionPbtController@changeArticulador')->name('articulacion.cambiar')->middleware('role_session:Dinamizador');
@@ -877,5 +879,8 @@ Route::get('articulaciones/inicio/{id}', 'ArticulacionPbtController@showFaseInic
 Route::get('articulaciones/ejecucion/{id}', 'ArticulacionPbtController@showFaseEjecucionArticulacion')->name('articulacion.show.ejecucion')->middleware('role_session:Articulador|Dinamizador|Administrador|Talento');
 Route::get('articulaciones/cierre/{id}', 'ArticulacionPbtController@showFaseCierreArticulacion')->name('articulacion.show.cierre')->middleware('role_session:Articulador|Dinamizador|Administrador|Talento');
 Route::get('articulaciones/datatable_filtros', 'ArticulacionPbtController@datatableFiltros')->name('articulacion.datatable.filtros')->middleware('role_session:Articulador|Dinamizador|Administrador|Talento');
-Route::get('usuarios/filtro-talento/{documento}', 'ArticulacionPbtController@filterTalento')->name('articulacion.usuario.talento.search');
+
+Route::resource('articulaciones/tipoarticulaciones', 'TipoArticulacionController');
 Route::resource('articulaciones', 'ArticulacionPbtController', ['except' => ['edit', 'delete']]);
+
+

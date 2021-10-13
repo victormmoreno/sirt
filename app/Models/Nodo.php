@@ -108,14 +108,6 @@ class Nodo extends Model
         return $this->hasMany(Material::class, 'nodo_id', 'id');
     }
 
-    /**
-     * Devolver relacion entre actividades y nodo
-     * @author devjul
-     */
-    // public function actividades()
-    // {
-    //     return $this->hasMany(Actividad::class, 'nodo_id', 'id');
-    // }
 
     /**
      * Devolver relacion entre proyectos y nodo
@@ -166,6 +158,12 @@ class Nodo extends Model
     public function contactosentidades()
     {
         return $this->hasMany(ContactoEntidad::class, 'nodo_id', 'id');
+    }
+
+    public function tiposarticulaciones()
+    {
+        return $this->belongsToMany(User::class, 'nodo_tipoarticulacion')
+            ->withTimestamps();
     }
 
     public function scopeNodoDeTecnoparque($query)

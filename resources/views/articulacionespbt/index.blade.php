@@ -27,10 +27,14 @@
                 <div class="col s12 m12 l12">
                     <div class="row">
                     @if((session()->has('login_role') && session()->get('login_role') === App\User::IsAdministrador()))
-                        <div class="col s12 m12 l12">
-                        <div class="center-align orange-text text-darken-3">
-                            <span class="card-title center-align">Articulaciones PBT -  {{config('app.name')}}</span>
+                        <div class="col s12 m8 l8">
+                            <div class="center-align orange-text text-darken-3">
+                                <span class="card-title center-align">Articulaciones PBT -  {{config('app.name')}}</span>
+                            </div>
+
                         </div>
+                        <div class="col s12 m4 l4 ">
+                            <a  href="{{route('tipoarticulaciones.index')}}" class="waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down"><i class="material-icons left">settings</i>tipos de Articulaciones</a>
                         </div>
                     @elseif((session()->has('login_role') && session()->get('login_role') === App\User::IsDinamizador()))
                     <div class="col s12 m12 l12">

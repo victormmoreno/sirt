@@ -6,7 +6,7 @@ use App\Models\ArticulacionPbt;
 use App\Models\Fase;
 use App\Models\Entidad;
 use App\Models\AlcanceArticulacion;
-use App\Models\TipoArticulacion;
+// use App\Models\TipoArticulacion;
 use App\User;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\{Facades\Session, Facades\Validator};
@@ -55,11 +55,11 @@ class ArticulacionPbtController extends Controller
     public function index(Request $request)
     {
             $this->authorize('index', ArticulacionPbt::class);
-            $nodos = Entidad::has('nodo')->with('nodo')->get()->pluck('nombre', 'nodo.id');
+            $nodos = Entidad::has('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id');
             $fases = Fase::orderBy('id')->whereNotIn('id', [Fase::IsPlaneacion()])->pluck('nombre', 'id');
             $alcances = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
-            $tipoarticulaciones = TipoArticulacion::orderBy('nombre')->pluck('nombre', 'id');
-            return view('articulacionespbt.index', ['nodos' => $nodos, 'fases' => $fases, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones]);
+            // $tipoarticulaciones = TipoArticulacion::orderBy('nombre')->pluck('nombre', 'id');
+            return view('articulacionespbt.index', ['nodos' => $nodos, 'fases' => $fases, 'alcances' => $alcances, 'tipoarticulaciones' => []]);
     }
 
     public function datatableFiltros(Request $request)
@@ -175,8 +175,8 @@ class ArticulacionPbtController extends Controller
     {
         $this->authorize('create', ArticulacionPbt::class);
         $alcances = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
-        $tipoarticulaciones = TipoArticulacion::orderBy('nombre')->pluck('nombre', 'id');
-        return view('articulacionespbt.create',  ['alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones]);
+        // $tipoarticulaciones = TipoArticulacion::orderBy('nombre')->pluck('nombre', 'id');
+        return view('articulacionespbt.create',  ['alcances' => $alcances, 'tipoarticulaciones' => []]);
         return abort('403');
     }
 
@@ -315,19 +315,19 @@ class ArticulacionPbtController extends Controller
         $ultimo_movimiento = $articulacion->historial->last();
 
         $alcances = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
-        $tipoarticulaciones = TipoArticulacion::orderBy('nombre')->pluck('nombre', 'id');
+        // $tipoarticulaciones = TipoArticulacion::orderBy('nombre')->pluck('nombre', 'id');
 
         switch (Session::get('login_role')) {
             case User::IsArticulador():
-                return view('articulacionespbt.articulador.fase_inicio', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.articulador.fase_inicio', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => [], 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
 
             case User::IsDinamizador():
-                return view('articulacionespbt.dinamizador.fase_inicio', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.dinamizador.fase_inicio', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => [], 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
 
             case User::IsTalento():
-                return view('articulacionespbt.talento.fase_inicio', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.talento.fase_inicio', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => [], 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
             default:
                 return abort(Response::HTTP_FORBIDDEN);
@@ -344,19 +344,19 @@ class ArticulacionPbtController extends Controller
         $ultimo_movimiento = $articulacion->historial->last();
 
         $alcances = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
-        $tipoarticulaciones = TipoArticulacion::orderBy('nombre')->pluck('nombre', 'id');
+        // $tipoarticulaciones = TipoArticulacion::orderBy('nombre')->pluck('nombre', 'id');
 
         switch (Session::get('login_role')) {
             case User::IsArticulador():
-                return view('articulacionespbt.articulador.fase_ejecucion', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.articulador.fase_ejecucion', ['articulacion' =>[], 'alcances' => $alcances, 'tipoarticulaciones' => [], 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
 
             case User::IsDinamizador():
-                return view('articulacionespbt.dinamizador.fase_ejecucion', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.dinamizador.fase_ejecucion', ['articulacion' =>[], 'alcances' => $alcances, 'tipoarticulaciones' => [], 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
 
             case User::IsTalento():
-                return view('articulacionespbt.talento.fase_ejecucion', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.talento.fase_ejecucion', ['articulacion' =>[], 'alcances' => $alcances, 'tipoarticulaciones' => [], 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
             default:
                 return abort(Response::HTTP_FORBIDDEN);
@@ -370,19 +370,19 @@ class ArticulacionPbtController extends Controller
         $ultimo_movimiento = $articulacion->historial->last();
 
         $alcances = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
-        $tipoarticulaciones = TipoArticulacion::orderBy('nombre')->pluck('nombre', 'id');
+        // $tipoarticulaciones = TipoArticulacion::orderBy('nombre')->pluck('nombre', 'id');
 
         switch (Session::get('login_role')) {
             case User::IsArticulador():
-                return view('articulacionespbt.articulador.fase_cierre', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.articulador.fase_cierre', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => [], 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
 
             case User::IsDinamizador():
-                return view('articulacionespbt.dinamizador.fase_cierre', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.dinamizador.fase_cierre', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => [], 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
 
             case User::IsTalento():
-                return view('articulacionespbt.talento.fase_cierre', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
+                return view('articulacionespbt.talento.fase_cierre', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => [], 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
 
             default:

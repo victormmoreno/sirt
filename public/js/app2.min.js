@@ -10612,6 +10612,151 @@ function graficoCostos(data, name, title) {
 }
 
 $(document).ready(function() {
+    let filter_nodo_type_art = $('#filter_nodo_type_art').val();
+    let filter_state_type_art = $('#filter_state_type_art').val();
+
+    if((filter_nodo_type_art == '' || filter_nodo_type_art == null)  &&  (filter_state_type_art == '' || filter_state_type_art == null)){
+        typeArticulacion.fillDatatatablesTypeArt(filter_nodo_type_art = null, filter_state_type_art = null);
+    }else if((filter_nodo_type_art != '' || filter_nodo_type_art != null)  && (filter_state_type_art != '' || filter_state_type_art != null)){
+        typeArticulacion.fillDatatatablesTypeArt(filter_nodo_type_art,  filter_state_type_art);
+    }else{
+
+        $('#type_art_data_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false
+        }).clear().draw();
+    }
+});
+
+$('#filter_type_art').click(function () {
+    let filter_nodo_type_art = $('#filter_nodo_type_art').val();
+    let filter_state_type_art = $('#filter_state_type_art').val();
+
+    $('#type_art_data_table').dataTable().fnDestroy();
+    if((filter_nodo_type_art == '' || filter_nodo_type_art == null)  &&  (filter_state_type_art == '' || filter_state_type_art == null)){
+        typeArticulacion.fillDatatatablesTypeArt(filter_nodo_type_art = null, filter_state_type_art = null);
+    }else if((filter_nodo_type_art != '' || filter_nodo_type_art != null)  && (filter_state_type_art != '' || filter_state_type_art != null)){
+        typeArticulacion.fillDatatatablesTypeArt(filter_nodo_type_art,  filter_state_type_art);
+    }else{
+
+        $('#type_art_data_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false
+        }).clear().draw();
+    }
+});
+
+let typeArticulacion ={
+    fillDatatatablesTypeArt: function(filter_nodo_type_art = null,filter_state_type_art = null){
+        $('#type_art_data_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            pageLength: 20,
+            "lengthChange": false,
+            processing: false,
+            serverSide: false,
+            "order": [[ 1, "desc" ]],
+            ajax:{
+                url: "/articulaciones/tipoarticulaciones",
+                type: "get",
+
+                data: {
+                    filter_nodo_type_art: filter_nodo_type_art,
+                    filter_state_type_art: filter_state_type_art,
+                }
+            },
+            columns: [
+                {
+                    data: 'created_at',
+                    name: 'created_at',
+                },
+                {
+                    data: 'nombre',
+                    name: 'nombre',
+                },
+                {
+                    data: 'descripcion',
+                    name: 'descripcion',
+                },
+                {
+                    data: 'entidad',
+                    name: 'entidad',
+                },
+                {
+                    data: 'estado',
+                    name: 'estado',
+                },
+                {
+                    data: 'show',
+                    name: 'show',
+                    orderable: false
+                },
+            ],
+        });
+    },
+
+}
+
+$('#check-all-nodes').click(function() {
+    if ($(this).prop('checked')) {
+        $('.filled-in-node').prop('checked', true);
+    } else {
+        $('.filled-in-node').prop('checked', false);
+    }
+});
+
+$("#formTypeArticulation").on('submit', function(e){
+    e.preventDefault();
+    let form = $(this);
+    let data = new FormData($(this)[0]);
+    let url = form.attr("action");
+    $.ajax({
+        type: form.attr('method'),
+        url: url,
+        data: data,
+        contentType: false,
+        cache: false,
+        processData:false,
+        beforeSend: function(){
+            $('.error').hide();
+            // $('#formTypeArticulation').css("opacity",".5");
+        },
+        success: function(response){
+            $('.error').hide();
+            printErrorsForm(response);
+            if(!response.fail && response.errors == null){
+                Swal.fire({
+                    title: 'Registro Exitoso',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok',
+                });
+                // $('#formSupport')[0].reset();
+                setTimeout(function () {
+                    window.location.href = response.redirect_url;
+                }, 1500);
+            }
+        },
+        error: function (ajaxContext) {
+            Swal.fire({
+                title: ' Registro erróneo, vuelve a intentarlo',
+                html: ajaxContext.status + ' - ' + ajaxContext.responseJSON.message,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok',
+            });
+        }
+    });
+});
+
+$(document).ready(function() {
   consultarPublicacionesOtros();
   consultarPublicacionesDesarrollador();
 })
@@ -10803,19 +10948,9 @@ $(document).ready(function() {
 
     if((filter_year_support == '' || filter_year_support == null) && (filter_state_support == '' || filter_state_support == null) && (filter_request_support == '' || filter_request_support == null)){
         support.fill_datatatables_actions_support(filter_year_support = null, filter_state_support= null, filter_request_support = null);
-        // support.fill_datatatables_ideas(filter_year_support, filter_state_support, filter_request_support);
     }else if( (filter_year_support !='' || filter_year_support != null) && (filter_state_support != '' || filter_state_support != null) && (filter_request_support != '' || filter_request_support != null)){
         support.fill_datatatables_actions_support( filter_year_support, filter_state_support, filter_request_support);
-        // support.fill_datatatables_ideas( filter_year_support, filter_state_support, filter_request_support);
     }else{
-        // $('#ideas_data_action_table').DataTable({
-        //     language: {
-        //         "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        //     },
-        //     pageLength: 20,
-        //     "lengthChange": false,
-        // }).clear().draw();
-
         $('#support_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -10829,7 +10964,6 @@ $('#filter_support').click(function () {
     let filter_year_support = $('#filter_year_support').val();
     let filter_state_support = $('#filter_state_support').val();
     let filter_request_support = $('#filter_request_support').val();
-    // $('#ideas_data_action_table').dataTable().fnDestroy();
     $('#support_data_table').dataTable().fnDestroy();
     if((filter_year_support =='' || filter_year_support == null) && (filter_state_support == '' || filter_state_support == null) && (filter_request_support == '' || filter_request_support == null)){
         support.fill_datatatables_actions_support(filter_year_support = null, filter_state_support= null, filter_request_support = null);
