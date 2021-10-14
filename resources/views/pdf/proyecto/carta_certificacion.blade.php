@@ -204,7 +204,7 @@
                     <td>TRL 7</td>
                     @endif
                     @if ($proyecto->trl_obtenido == App\Models\Proyecto::IsTrl8Obtenido())
-                    <td>TRL 7</td>
+                    <td>TRL 8</td>
                     @endif
                 </tr>
 

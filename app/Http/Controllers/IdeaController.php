@@ -66,6 +66,19 @@ class IdeaController extends Controller
         }
     }
 
+    public function updateNodoIdea(Request $request, $id)
+    {
+        $update = $this->ideaRepository->update_nodo($request);
+
+        if ($update) {
+          alert()->success('La idea de proyecto ha cambiado de nodo satisfactoriamente','Actualización exitosa.')->showConfirmButton('Ok', '#3085d6');
+          return redirect()->route('idea.index');
+        } else {
+          alert()->success('La idea no ha cambiado de nodo','Actualización errónea.')->showConfirmButton('Ok', '#3085d6');
+          return back()->withInput();
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      *
