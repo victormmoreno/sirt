@@ -1,9 +1,10 @@
 <div class="row">
+  <input type="hidden" name="txtidea_id" value="{{$idea->id}}">
     <div class="input-field col s12 m6 l6">
       <select id="txtnodo_id" class="js-states" name="txtnodo_id" style="width: 100%;">
         <option value="">Seleccione el nodo</option>
         @foreach ($nodos as $nodo)
-          <option value="{{$nodo->id}}" {{ $nodo->id == $idea->nodo->id ? 'selected' : '' }} {{ old('txtnodo_id') == $nodo->id ? 'selected':'' }} >Tecnoparque nodo {{$nodo->nodos}}</option>
+          <option value="{{$nodo->id}}" {{ $nodo->id == $idea->nodo->id ? 'selected' : '' }} {{ old('txtnodo_id') == $nodo->id ? 'selected':'' }} >{{$nodo->nodos}}</option>
         @endforeach
       </select>
       <label for="txtnodo_id">Nodos <span class="red-text">*</span></label>
