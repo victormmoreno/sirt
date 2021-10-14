@@ -72,12 +72,14 @@
                     ¿TRL obtenido?
                 </span>
                 <p>
-                    @if ($proyecto->present()->isProyectoTrlObtenido() == 0)
+                    @if (isset($proyecto->trl_obtenido) && $proyecto->trl_obtenido == 0)
                         TRL 6
-                    @elseif ($proyecto->present()->isProyectoTrlObtenido() == 1)
+                    @elseif (isset($proyecto->trl_obtenido) && $proyecto->trl_obtenido == 1)
                         TRL 7
-                    @else
+                    @elseif (isset($proyecto->trl_obtenido) && $proyecto->trl_obtenido == 2)
                         TRL 8
+                    @else
+                        No Registra
                     @endif
                 </p>
             </li>
