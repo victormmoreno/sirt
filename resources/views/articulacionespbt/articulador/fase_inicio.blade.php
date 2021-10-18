@@ -135,8 +135,4 @@
     @include('ideas.modals')
 </main>
 @endsection
-@push('script')
-    <script>
-        checkTipoVinculacion({{$articulacion->tipo_vinculacion}});
-    </script>
-@endpush
+

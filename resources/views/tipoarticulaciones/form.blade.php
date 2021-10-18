@@ -6,12 +6,12 @@
         <small id="txtnombre-error" class="error red-text"></small>
     </div>
     <div class="input-field col s12">
-        <input id="txtdescripcion" type="text" name="txtdescripcion" value="{{ isset($typeArticulation->descripcion) ? $typeArticulation->descripcion : old('txtdescripcion')}}" class="validate">
+        <textarea  name="txtdescripcion" class="materialize-textarea" length="5000" maxlength="5000" id="txtdescripcion">{{ isset($typeArticulation->descripcion) ? $typeArticulation->descripcion : old('txtdescripcion')}}</textarea>
         <label for="txtdescripcion">Descripción</label>
         <small id="txtdescripcion-error" class="error red-text"></small>
     </div>
     <div class="input-field col s12">
-        <input id="txtentidad" type="text" name="txtentidad" class="validate" {{ isset($typeArticulation->entidad) ? $typeArticulation->entidad : old('txtentidad')}}>
+        <input id="txtentidad" type="text" name="txtentidad" class="validate" value="{{ isset($typeArticulation->entidad) ? $typeArticulation->entidad : old('txtentidad')}}">
         <label for="txtentidad">Entidad (aparecerá por defecto)</label>
         <small id="txtentidad-error" class="error red-text"></small>
     </div>

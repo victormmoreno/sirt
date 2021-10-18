@@ -46,4 +46,23 @@ class NodoHelper
             return 'No hay información disponible.';
         }
     }
+
+    public static function returnIdNodoUser()
+    {
+        if (\Session::get('login_role') == User::IsGestor() && isset(auth()->user()->gestor->nodo_id)) {
+            return auth()->user()->gestor->nodo_id;
+        } else if (\Session::get('login_role') == User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo_id)) {
+            return auth()->user()->dinamizador->nodo_id;
+        } else if (\Session::get('login_role') == User::IsInfocenter() && isset(auth()->user()->infocenter->nodo_id)) {
+            return auth()->user()->infocenter->nodo_id;
+        } else if (\Session::get('login_role') == User::IsIngreso() && isset(auth()->user()->ingreso->nodo_id)) {
+            return auth()->user()->ingreso->nodo_id;
+        }else if (\Session::get('login_role') == User::IsApoyoTecnico() && isset(auth()->user()->apoyotecnico->nodo_id)) {
+            return auth()->user()->apoyotecnico->nodo_id;
+        }else if (\Session::get('login_role') == User::IsArticulador() && isset(auth()->user()->articulador->nodo_id)) {
+            return auth()->user()->articulador->nodo_id;
+        }  else {
+            return 0;
+        }
+    }
 }
