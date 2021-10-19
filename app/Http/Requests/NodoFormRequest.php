@@ -54,7 +54,8 @@ class NodoFormRequest extends FormRequest
             'txtnombre'        => 'required|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|min:1|max:100|unique:entidades,nombre,' . $this->route('nodo'),
             'txtdireccion'     => 'required|min:1|max:2000',
             'txtemail_entidad' => 'required|email|min:1|max:100',
-            'txttelefono'      => 'required|digits_between:6,7|numeric',
+            'txttelefono'      => 'nullable|digits_between:6,7|numeric',
+            'txtextension'     => 'nullable|numeric',
         ];
     }
 
@@ -84,6 +85,9 @@ class NodoFormRequest extends FormRequest
             'txttelefono.required'       => 'El teléfono es obligatorio.',
             'txttelefono.numeric'        => 'El teléfono debe ser numérico',
             'txttelefono.digits_between' => 'El teléfono debe tener entre 6 y 7 digitos',
+
+            'txtextension.required'       => 'La extensión es obligatoria.',
+            'txtextension.numeric'        => 'La extensión debe ser numérica.',
 
         ];
     }

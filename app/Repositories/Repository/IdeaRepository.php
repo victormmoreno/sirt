@@ -52,6 +52,26 @@ class IdeaRepository
             ->last();
     }
 
+    public function update_nodo($request)
+    {
+        DB::beginTransaction();
+        try {
+            $idea = Idea::find($request->txtidea_id);
+            $nodo = Nodo::find($request->txtnodo_id);
+            $idea->registrarHistorialIdea(Movimiento::IsReasignar(), Session::get('login_role'), null, 'la idea de proyecto del nodo ' . $idea->nodo->entidad->nombre . ' a ' . $nodo->entidad->nombre);
+            $idea->update([
+                'nodo_id' => $nodo->id,
+                'estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsRegistro())->first()->id
+            ]);
+            DB::commit();
+            return true;
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return false;
+        }
+    }
+
     /**
      * El articulador aceptó la postulación de una idea de proyecto para que se presente en el comité
      *

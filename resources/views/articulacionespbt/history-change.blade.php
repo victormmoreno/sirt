@@ -11,40 +11,41 @@
                         </li>
                     @foreach ($articulacion->historial as $value)
                         <li class="collection-item">
-                            @if ($value->movimiento->movimiento == App\Models\Movimiento::IsSolicitarTalento())
+                            <!--{{$value->user}}-->
+                            @if ( isset($value->user) && $value->movimiento->movimiento == App\Models\Movimiento::IsSolicitarTalento())
                                 El {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}} aprobar la fase
                                 {{$value->descripcion}} en la fecha {{$value->created_at->isoFormat('DD-MM-YYYY')}}
                             @endif
-                            @if ($value->movimiento->movimiento == App\Models\Movimiento::IsSolicitarDinamizador())
+                            @if ( isset($value->user) && $value->movimiento->movimiento == App\Models\Movimiento::IsSolicitarDinamizador())
                                 El {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}}
                                 {{$value->descripcion}} la articulación en la fecha {{$value->created_at->isoFormat('DD-MM-YYYY')}}
                             @endif
-                            @if ($value->movimiento->movimiento == App\Models\Movimiento::IsAprobar())
+                            @if ( isset($value->user) && $value->movimiento->movimiento == App\Models\Movimiento::IsAprobar())
                                 El {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}}
                                 la fase {{$value->descripcion}} en la fecha {{$value->created_at->isoFormat('DD-MM-YYYY')}}
                             @endif
-                                @if ( $value->movimiento->movimiento == App\Models\Movimiento::IsNoAprobar())
+                                @if ( isset($value->user) && $value->movimiento->movimiento == App\Models\Movimiento::IsNoAprobar())
                                 El {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}}
                                 la fase {{$value->descripcion}} en la fecha {{$value->created_at->isoFormat('DD-MM-YYYY')}} por los siguientes motivos:  {{$value->comentarios}}
                             @endif
-                            @if ($value->movimiento->movimiento == App\Models\Movimiento::IsPostular() || $value->movimiento->movimiento == App\Models\Movimiento::IsDuplicar())
+                            @if ( isset($value->user) && $value->movimiento->movimiento == App\Models\Movimiento::IsPostular() || $value->movimiento->movimiento == App\Models\Movimiento::IsDuplicar())
                                 El {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}}
                                 la articulación {{$value->descripcion}} en la fecha {{$value->created_at}}
                             @endif
 
-                            @if ($value->movimiento->movimiento == App\Models\Movimiento::IsRegistrar() || $value->movimiento->movimiento == App\Models\Movimiento::IsCalificar())
+                            @if ( isset($value->user) && $value->movimiento->movimiento == App\Models\Movimiento::IsRegistrar() || $value->movimiento->movimiento == App\Models\Movimiento::IsCalificar())
                                 El día {{$value->created_at->isoFormat('DD-MM-YYYY')}} el {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}}
                                 la articulación {{$value->descripcion}}.
                             @endif
-                            @if ($value->movimiento->movimiento == App\Models\Movimiento::IsAsignar())
+                            @if ( isset($value->user) && $value->movimiento->movimiento == App\Models\Movimiento::IsAsignar())
                                 El día {{$value->created_at}} el {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}}
                                 la articulación al experto {{$value->descripcion}}.
                             @endif
-                            @if ($value->movimiento->movimiento == App\Models\Movimiento::IsCambiar())
+                            @if ( isset($value->user) && $value->movimiento->movimiento == App\Models\Movimiento::IsCambiar())
                                 El día {{$value->created_at}} el {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}}
                                 el experto de la articulación {{$value->descripcion}}.
                             @endif
-                            @if ( $value->movimiento->movimiento == App\Models\Movimiento::IsReversar())
+                            @if ( isset($value->user) && $value->movimiento->movimiento == App\Models\Movimiento::IsReversar())
                                 El {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}} la articulación a
                                 la fase {{$value->descripcion}} en la fecha {{$value->created_at->isoFormat('DD-MM-YYYY')}}
                             @endif

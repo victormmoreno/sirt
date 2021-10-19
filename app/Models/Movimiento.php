@@ -21,6 +21,7 @@ class Movimiento extends Model
     const IS_DUPLICAR = 'duplicó';
     const IS_INHABILITAR = 'inhabilitó';
     const IS_NOTIFICAR = 'notificó';
+    const IS_REASIGNAR = 'reasignó';
     protected $table = 'movimientos';
 
     /**
@@ -101,6 +102,11 @@ class Movimiento extends Model
     public static function IsNotificar()
     {
         return self::IS_NOTIFICAR;
+    }
+
+    public static function IsReasignar()
+    {
+        return self::IS_REASIGNAR;
     }
 
     // public function historial()

@@ -27,6 +27,10 @@
                     El día {{$value->created_at}} el {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}}
                     la idea de proyecto al experto {{$value->descripcion}}.
                     @endif
+                    @if ($value->movimiento->movimiento == App\Models\Movimiento::IsReasignar())
+                    El día {{$value->created_at}} el {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}} 
+                    {{$value->descripcion}}.
+                    @endif
                     @if ($value->movimiento->movimiento == App\Models\Movimiento::IsCambiar())
                     El día {{$value->created_at}} el {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}}
                     el experto de la idea de proyecto {{$value->descripcion}}.

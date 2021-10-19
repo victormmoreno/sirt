@@ -48,6 +48,15 @@
                       </form>
                     </li>
                     @endif
+                    @if ($idea->estadoIdea->nombre == 'En registro' || $idea->estadoIdea->nombre == 'Postulado')
+                    <li class="collection-item">
+                      <a href="{{route('idea.reasignar.nodo', $idea->id)}}">
+                        <div class="card-panel green lighten-2 black-text center">
+                          Cambiar idea de nodo<button data-target="modal1" class="btn-floating btn-flat modal-trigger"><i class="material-icons right black-text">help</i></button>
+                        </div>
+                      </a>
+                    </li>
+                    @endif
                     <li class="collection-item">
                       @include('ideas.historial_cambios')
                     </li>
@@ -69,6 +78,15 @@
     </div>
   </div>
 </main>
+<div id="modal1" class="modal">
+  <div class="modal-content">
+    <h4>Cambiar idea de nodo</h4>
+    <p>En caso de que el talento ha registrado la idea de proyecto en el nodo por equivocado, el articulador puede reasignar la idea de proyecto de nodo.</p>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-close waves-effect waves-green btn-flat">Ok</a>
+  </div>
+</div>
 @endsection
 @push('script')
     <script>

@@ -33,12 +33,16 @@ En los próximos días se le enviará un correo con los datos para asistir al co
     </center>
 @endcomponent
 
-@if( $idea->nodo->infocenter->isEmpty())
-Para más información puede ocudir a las instalaciones de 🏬 <strong>Tecnoparque nodo {{$idea->nodo->entidad->nombre}}</strong> ubicado en {{$idea->nodo->direccion}} en {{$idea->nodo->entidad->ciudad->nombre}} ({{$idea->nodo->entidad->ciudad->departamento->nombre}}).
-@else
-Para más información puede contactarse al telefono ☎️  <b>{{ $idea->nodo->telefono}}</b> ext <b><pre>{{ collect($idea->nodo->infocenter)->last()->extension}}</pre></b>, o ocudir a las instalaciones de 🏬 <strong>Tecnoparque nodo {{$idea->nodo->entidad->nombre}}</strong>  ubicado en {{$idea->nodo->direccion}} en {{$idea->nodo->entidad->ciudad->nombre}} ({{$idea->nodo->entidad->ciudad->departamento->nombre}}).
+Para más información puede contactarse con el nodo de las siguientes formas: <br>
+@if (isset($idea->nodo->entidad->email_entidad))
+Email 📧: <b> {{ $idea->nodo->entidad->email_entidad }}. </b> <br>
 @endif
-
+@if (isset($idea->nodo->telefono))
+Teléfono ☎️: <b>{{ $idea->nodo->telefono }}</b>{!! isset($idea->nodo->extension) ? ' ext <b>' . $idea->nodo->extension . '</b>' : '' !!}. <br>
+@endif
+@if (isset($idea->nodo->direccion))
+Acudir a las instalaciones de 🏬 <strong>Tecnoparque nodo {{$idea->nodo->entidad->nombre}}</strong>  ubicado en {{$idea->nodo->direccion}} en {{$idea->nodo->entidad->ciudad->nombre}} ({{$idea->nodo->entidad->ciudad->departamento->nombre}}). <br>
+@endif
 
 Gracias,<br>
 <strong>_{{config('mail.from.name')}}_</strong> <br>
