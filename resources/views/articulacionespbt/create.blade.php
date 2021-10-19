@@ -7,7 +7,7 @@
 <main class="mn-inner">
     <div class="content">
         <div class="row no-m-t no-m-b">
-            <div class="col s12 m12 l6">
+            <div class="left left-align">
                 <h5 class="left-align orange-text text-darken-3">
                     <i class="material-icons left">
                         autorenew
@@ -15,11 +15,12 @@
                     Articulaciones PBT
                 </h5>
             </div>
-            <div class="col s12 m12 l5 offset-l1 rigth-align show-on-large hide-on-med-and-down">
+
+            <div class="right right-align show-on-large hide-on-med-and-down">
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">Inicio</a></li>
                     <li class="active"><a href="{{route('articulaciones.index')}}">Articulaciones PBT</a></li>
-                    <li class="active">NuevaArticulación</li>
+                    <li class="active">Nueva Articulación</li>
                 </ol>
             </div>
         </div>

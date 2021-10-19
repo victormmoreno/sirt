@@ -44,10 +44,7 @@ class Support extends Model
         return 'ticket'; // db column name
     }
 
-    public function present()
-    {
-        return new SupportPresenter($this);
-    }
+
 
     public function scopeCreatedAt($query, $created_at)
     {
@@ -71,5 +68,10 @@ class Support extends Model
             return $query->where('difficulty', $difficulty);
         }
         return $query;
+    }
+
+    public function present()
+    {
+        return new SupportPresenter($this);
     }
 }

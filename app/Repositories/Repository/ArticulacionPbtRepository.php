@@ -32,7 +32,7 @@ class ArticulacionPbtRepository
                 'codigo' => $codigo_actividad,
                 'nombre' => request()->txtnombre_articulacion,
                 'fecha_inicio' => request()->txtfecha_inicio,
-                'tipo_vinculacion' =>request()->txttipovinculacion,
+                'tipo_vinculacion' => ArticulacionPbt::IsPbt(),
                 'articulable_id' => $this->articulableId($request),
                 'articulable_type' => $this->articulableModel($request),
                 'fase_id' => Fase::IsInicio(),
@@ -61,9 +61,6 @@ class ArticulacionPbtRepository
     private function articulableId($request){
         if($request->txtpbt != null){
             return $request->txtpbt;
-        }
-        if($request->txtsede != null){
-            return $request->txtsede;
         }
         return null;
     }
@@ -145,7 +142,7 @@ class ArticulacionPbtRepository
                 'nodo_id' =>  $this->nodeArticulacion(),
                 'nombre' => request()->txtnombre_articulacion,
                 'fecha_inicio' => request()->txtfecha_inicio,
-                'tipo_vinculacion' =>request()->txttipovinculacion,
+                'tipo_vinculacion' => ArticulacionPbt::IsPbt(),
                 'articulable_id' => $this->articulableId($request),
                 'articulable_type' => $this->articulableModel($request),
                 'fase_id' => Fase::IsInicio(),
