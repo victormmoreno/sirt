@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\TipoArticulacion;
+use App\Models\Nodo;
 use Illuminate\Database\Seeder;
 
 class TipoArticulacionTableSeeder extends Seeder
@@ -12,20 +13,10 @@ class TipoArticulacionTableSeeder extends Seeder
      */
     public function run()
     {
-        TipoArticulacion::create([
-            'nombre' => 'Convenio',
-        ]);
-
-        TipoArticulacion::create([
-            'nombre' => 'Presentación a convocatoria',
-        ]);
-
-        TipoArticulacion::create([
-            'nombre' => 'UPI',
-        ]);
-
-        TipoArticulacion::create([
-            'nombre' => 'Creación empresa',
-        ]);
+        $nodes = Nodo::first();
+        factory(TipoArticulacion::class, 10)->create()
+        ->each(function ($type) use ($nodes) {
+            $type->nodos()->sync($nodes->id);
+        });
     }
 }

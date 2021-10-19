@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use App\Models\TipoArticulacion;
 
 class CreateTipoArticulacionsTable extends Migration
 {
@@ -19,12 +20,13 @@ class CreateTipoArticulacionsTable extends Migration
     public function up()
     {
         Schema::create($this->tableName, function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-            $table->charset = 'utf8mb4';
-            $table->collation = 'utf8mb4_unicode_ci';
             $table->bigIncrements('id');
-            $table->string('nombre')->unique();
+            $table->string('nombre', 100)->unique();
+            $table->string('descripcion',5000)->nullable();
+            $table->string('entidad', 100)->nullable();
+            $table->enum('estado', [TipoArticulacion::mostrar(),TipoArticulacion::ocultar()])->default(TipoArticulacion::mostrar());
             $table->timestamps();
+
         });
     }
 

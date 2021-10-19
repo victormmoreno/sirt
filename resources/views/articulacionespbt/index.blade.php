@@ -7,12 +7,12 @@
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
         <div class="row no-m-t no-m-b">
-            <div class="col s8 m8 l9">
+            <div class="left left-align">
                 <h5 class="left-align orange-text text-darken-3">
                     <i class="material-icons left">autorenew</i>Articulaciones PBT
                 </h5>
             </div>
-            <div class="col s4 m4 l3 rigth-align show-on-large hide-on-med-and-down">
+            <div class="right right-align show-on-large hide-on-med-and-down">
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">Inicio</a></li>
                     <li class="active">Articulaciones PBT</li>
@@ -27,10 +27,14 @@
                 <div class="col s12 m12 l12">
                     <div class="row">
                     @if((session()->has('login_role') && session()->get('login_role') === App\User::IsAdministrador()))
-                        <div class="col s12 m12 l12">
-                        <div class="center-align orange-text text-darken-3">
-                            <span class="card-title center-align">Articulaciones PBT -  {{config('app.name')}}</span>
+                        <div class="col s12 m8 l8">
+                            <div class="center-align orange-text text-darken-3">
+                                <span class="card-title center-align">Articulaciones PBT -  {{config('app.name')}}</span>
+                            </div>
+
                         </div>
+                        <div class="col s12 m4 l4 ">
+                            <a  href="{{route('tipoarticulaciones.index')}}" class="waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down"><i class="material-icons left">settings</i>Nuevo tipo de Articulación</a>
                         </div>
                     @elseif((session()->has('login_role') && session()->get('login_role') === App\User::IsDinamizador()))
                     <div class="col s12 m12 l12">
