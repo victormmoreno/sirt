@@ -16,16 +16,17 @@
                 @include('proyectos.navegacion_fases')
                 <div class="row">
                     <div class="col s12 m6 l6 offset-s3 offset-m3 offset-l3 center">
-                    @if ($proyecto->present()->isAprobacionDinamizadorSuspender() == 0)
+                    @if ($ultimo_movimiento->movimiento != App\Models\Movimiento::IsSolicitarDinamizador())
                     <a href="{{route('proyecto.notificar.suspension', $proyecto->id)}}">
                         <div class="card-panel yellow accent-1 black-text">
                         Solicitar al dinamizador que apruebe la suspensión del proyecto.
                         </div>
                     </a>
-                    @else
+                    @endif
+                    @if ($ultimo_movimiento->movimiento == App\Models\Movimiento::IsSolicitarDinamizador() && $ultimo_movimiento->fase == 'Suspendido')
                     <a disabled>
                         <div class="card-panel yellow accent-1 black-text">
-                        Esta fase ya ha sido aprobada por el dinamizador.
+                        Se ha enviado la notificación al dinamizador para que apruebe la fase de suspendido.
                         </div>
                     </a>
                     @endif
@@ -37,14 +38,6 @@
                     <div class="row">
                     @include('proyectos.archivos_table_fase', ['fase' => 'suspendido'])
                     </div>
-                    <center>
-                    @if ($proyecto->present()->isAprobacionDinamizadorSuspender() == 1)
-                    <button type="submit" onclick="preguntaSuspender(event)" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Suspender</button>
-                    @else
-                    <button disabled class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>El dinamizador no ha aprobado la suspensión de este proyecto</button>
-                    @endif
-                    <a href="{{ route('proyecto.inicio', $proyecto->id) }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
-                    </center>
                 </form>
                 </div>
             </div>

@@ -7,7 +7,7 @@ use App\Models\{Proyecto, Entidad, Fase, Actividad, ArticulacionProyecto, Archiv
 use Illuminate\Support\Facades\{DB, Notification, Storage, Session};
 use App\Notifications\Proyecto\{ProyectoCierreAprobado, ProyectoAprobarInicio, ProyectoAprobarPlaneacion, ProyectoAprobarEjecucion, ProyectoAprobarCierre, ProyectoAprobarInicioDinamizador, ProyectoAprobarSuspendido, ProyectoSuspendidoAprobado, ProyectoNoAprobarFase};
 use Carbon\Carbon;
-use App\Events\Proyecto\{ProyectoWasntApproved, ProyectoWasApproved, ProyectoApproveWasRequested};
+use App\Events\Proyecto\{ProyectoWasntApproved, ProyectoWasApproved, ProyectoApproveWasRequested, ProyectoSuspenderWasRequested};
 use App\User;
 use App\Repositories\Repository\UserRepository\DinamizadorRepository;
 
@@ -629,41 +629,6 @@ class ProyectoRepository
     }
 
     /**
-     * Cambia el estado del proyecto a Cierre y asigna un fecha de cierre al proyecto
-     * @param Request $request
-     * @param Proyecto $proyecto
-     * @return boolean
-     * @author dum
-     */
-    public function cerrarProyecto($request, $proyecto)
-    {
-        DB::beginTransaction();
-        try {
-
-            $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Cerró')->first(), [
-                'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
-                'user_id' => auth()->user()->id,
-                'fase_id' => Fase::where('nombre', 'Finalizado')->first()->id,
-                'role_id' => Role::where('name', Session::get('login_role'))->first()->id
-            ]);
-
-            $proyecto->update([
-                'fase_id' => Fase::where('nombre', 'Cierre')->first()->id
-            ]);
-
-            $proyecto->articulacion_proyecto->actividad()->update([
-                'fecha_cierre' => $request->txtfecha_cierre
-            ]);
-
-            DB::commit();
-            return true;
-        } catch (\Throwable $th) {
-            DB::rollback();
-            return false;
-        }
-    }
-
-    /**
      * Suspende un proyecto
      * @param Request $request
      * @param int $id Id del proyecto
@@ -674,10 +639,15 @@ class ProyectoRepository
     {
         DB::beginTransaction();
         try {
+            $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'suspendió')->first(), [
+                'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
+                'user_id' => auth()->user()->id,
+                'fase_id' => Fase::where('nombre', $proyecto->fase->nombre)->first()->id,
+                'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+            ]);
             $proyecto->update([
                 'fase_id' => Fase::where('nombre', 'Suspendido')->first()->id
             ]);
-
             $proyecto->articulacion_proyecto->actividad()->update([
                 'fecha_cierre' => $request->txtfecha_cierre
             ]);
@@ -1229,7 +1199,11 @@ class ProyectoRepository
             $dinamizadorRepository = new DinamizadorRepository;
             $proyecto = Proyecto::findOrFail($id);
             $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->nodo_id)->get();
+            $destinatarios = $dinamizadorRepository->getAllDinamizadorPorNodoArray($dinamizadores);
             Notification::send($dinamizadores, new ProyectoAprobarSuspendido($proyecto));
+            $this->crearMovimiento($proyecto, 'Suspendido', 'solicitó al dinamizador', null);
+            $movimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
+            event(new ProyectoSuspenderWasRequested($proyecto, $movimiento, $destinatarios));
             DB::commit();
         return true;
         } catch (\Throwable $th) {
@@ -1276,8 +1250,12 @@ class ProyectoRepository
         DB::beginTransaction();
         try {
             $proyecto = Proyecto::findOrFail($id);
-            $proyecto->articulacion_proyecto()->update([
-                'aprobacion_dinamizador_suspender' => 1
+            $this->crearMovimiento($proyecto, 'Suspendido', 'Aprobó', null);
+            $proyecto->update([
+                'fase_id' => Fase::where('nombre', 'Suspendido')->first()->id
+            ]);
+            $proyecto->articulacion_proyecto->actividad()->update([
+                'fecha_cierre' => Carbon::now()
             ]);
             Notification::send(User::findOrFail($proyecto->asesor->user->id), new ProyectoSuspendidoAprobado($proyecto));
             DB::commit();
