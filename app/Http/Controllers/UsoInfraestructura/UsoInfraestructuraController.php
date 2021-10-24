@@ -325,6 +325,7 @@ class UsoInfraestructuraController extends Controller
                 $artulaciones = $this->getDataArticulaciones()->count();
                 $sumasArray = [
                     'articulaciones' => $artulaciones,
+                    'ideas' => 1
                 ];
                 $cantActividades = array_sum($sumasArray);
                 $relations = [

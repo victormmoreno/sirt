@@ -19,25 +19,22 @@ class CreateNodoTipoarticulacionTable extends Migration
     public function up()
     {
         Schema::create($this->tableName, function (Blueprint $table) {
-            $table->engine = 'InnoDB';
+            // $table->engine = 'InnoDB';
             $table->bigIncrements('id');
             $table->unsignedInteger('nodo_id');
-            $table->unsignedBigInteger('tipo_articulacion_id');
+            $table->bigInteger('tipo_articulacion_id')->unsigned();
             $table->timestamps();
 
-            $table->index(["nodo_id"], 'fk_tipoarticulacion_nodo_nodo1_idx');
-            $table->index(["tipo_articulacion_id"], 'fk_tipoarticulacion_nodo_tipo_articulacion1_idx');
-
-
-            $table->foreign('nodo_id', 'fk_tipoarticulacion_nodo_nodo1_idx')
+            $table->foreign('nodo_id')
                 ->references('id')->on('nodos')
                 ->onDelete('no action')
                 ->onUpdate('no action');
 
-            $table->foreign('tipo_articulacion_id', 'fk_tipoarticulacion_nodo_tipo_articulacion1_idx')
+            $table->foreign('tipo_articulacion_id')
                 ->references('id')->on('tipo_articulaciones')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('set null')
+                ->onUpdate('set null');
+
         });
     }
 

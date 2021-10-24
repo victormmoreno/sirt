@@ -18,19 +18,30 @@
                 </i>
                 <select id="txtnodo" name="txtnodo" style="width: 100%" tabindex="-1">
                     <option value="">Seleccione Nodo</option>
-                        @foreach($nodos as $nodo)
-                            @if($existe)
-                                @if ($idea->nodo_id == $nodo->id)
-                                <option value="{{$nodo->id}}" selected>{{$nodo->nodos}}</option> 
+                    @foreach($nodos as $nodo)
+                        @if($existe)
+                            @if ($idea->nodo_id == $nodo->id)
+
+                                @if($nodo->id == 20)
+                                    <option value="{{$nodo->id}}" selected>Hub Innovación Medellín</option>
                                 @else
-                                <option value="{{$nodo->id}}">{{$nodo->nodos}}</option> 
+                                    <option value="{{$nodo->id}}" selected>{{$nodo->nodos}}</option>
                                 @endif
                             @else
-                            <option value="{{$nodo->id}}">
-                                {{$nodo->nodos}}
-                            </option>
+                                @if($nodo->id == 20)
+                                    <option value="{{$nodo->id}}">Hub Innovación Medellín</option>
+                                @else
+                                    <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
+                                @endif
                             @endif
-                        @endforeach
+                        @else
+                            @if($nodo->nodos == "Tecnoparque Nodo Hub Medellín")
+                                <option value="{{$nodo->id}}">Hub Innovación Medellín</option>
+                            @else
+                                <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
+                            @endif
+                        @endif
+                    @endforeach
                 </select>
                 <label class="truncate" for="txtnodo">Seleccione el nodo donde se presentará la idea <span class="red-text">*</span></label>
                 <small id="txtnodo-error" class="error red-text"></small>
@@ -449,7 +460,7 @@
                 <textarea class="materialize-textarea" id="txtnecesidades" length="3400" name="txtnecesidades"></textarea>
                 @endif
                 <label for="txtnecesidades">
-                    ¿Qué necesidades de los clientes satisfacemos? 
+                    ¿Qué necesidades de los clientes satisfacemos?
                 </label>
                 <small id="txtnecesidades-error" class="error red-text"></small>
             </div>
@@ -465,7 +476,7 @@
                 <textarea class="materialize-textarea" id="txtquien_compra" length="1400" name="txtquien_compra"></textarea>
                 @endif
                 <label for="txtquien_compra">
-                    ¿Quién comprará la solución, producto o servicio? 
+                    ¿Quién comprará la solución, producto o servicio?
                 </label>
                 <small id="txtquien_compra-error" class="error red-text"></small>
             </div>
@@ -479,7 +490,7 @@
                 <textarea class="materialize-textarea" id="txtquien_usa" length="1400" name="txtquien_usa"></textarea>
                 @endif
                 <label for="txtquien_usa">
-                    ¿Quién usará la solución, producto o servicio? 
+                    ¿Quién usará la solución, producto o servicio?
                 </label>
                 <small id="txtquien_usa-error" class="error red-text"></small>
             </div>
@@ -501,7 +512,7 @@
                 <textarea class="materialize-textarea" id="txtdistribucion" length="1400" name="txtdistribucion"></textarea>
                 @endif
                 <label for="txtdistribucion">
-                    ¿Cuáles son los canales de distribución de tus productos/servicios? ¿Cómo se va a entregar/prestar al cliente? 
+                    ¿Cuáles son los canales de distribución de tus productos/servicios? ¿Cómo se va a entregar/prestar al cliente?
                 </label>
                 <small id="txtdistribucion-error" class="error red-text"></small>
             </div>
@@ -515,7 +526,7 @@
                 <textarea class="materialize-textarea" id="txtquien_entrega" length="1400" name="txtquien_entrega"></textarea>
                 @endif
                 <label for="txtquien_entrega">
-                    ¿Vas a entregar directamente el producto y/o a través de intermediarios? ¿Por qué canales, on-line, punto de venta? 
+                    ¿Vas a entregar directamente el producto y/o a través de intermediarios? ¿Por qué canales, on-line, punto de venta?
                 </label>
                 <small id="txtquien_entrega-error" class="error red-text"></small>
             </div>
@@ -571,7 +582,7 @@
                 <textarea class="materialize-textarea" id="txtmedio_venta" length="2100" name="txtmedio_venta"></textarea>
                 @endif
                 <label for="txtmedio_venta">
-                    ¿Por qué medio se venderá el producto o servicio desarrollado?  
+                    ¿Por qué medio se venderá el producto o servicio desarrollado?
                 </label>
                 <small id="txtmedio_venta-error" class="error red-text"></small>
             </div>
@@ -760,7 +771,7 @@
                 <textarea class="materialize-textarea" id="txtforma_juridica" length="1400" name="txtforma_juridica"></textarea>
                 @endif
                 <label for="txtforma_juridica">
-                    ¿Qué forma jurídica va a tener el negocio y por qué?  
+                    ¿Qué forma jurídica va a tener el negocio y por qué?
                 </label>
                 <small id="txtforma_juridica-error" class="error red-text"></small>
             </div>
@@ -854,7 +865,7 @@
                 <textarea class="materialize-textarea" id="txtcantidad_prototipos" length="2100" name="txtcantidad_prototipos"></textarea>
                 @endif
                 <label for="txtcantidad_prototipos">
-                    ¿Cuáles y cuántos prototipos necesita desarrollar con la Red Tecnoparques?  
+                    ¿Cuáles y cuántos prototipos necesita desarrollar con la Red Tecnoparques?
                 </label>
                 <small id="txtcantidad_prototipos-error" class="error red-text"></small>
             </div>
