@@ -86,5 +86,49 @@ let typeArticulacion ={
             ],
         });
     },
+    destroyTypeArticulation: function(id){
+        Swal.fire({
+            title: '¿Estas seguro de eliminar este tipo de articulación?',
+            text: "Recuerde que si lo elimina no lo podrá recuperar.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'si, eliminar',
+            cancelButtonText: 'No, cancelar',
+        }).then((result) => {
+            if (result.value) {
+                let token = $("meta[name='csrf-token']").attr("content");
+                $.ajax(
+                {
+                    url: "/articulaciones/tipoarticulaciones/"+id,
+                    type: 'DELETE',
+                    data: {
+                        "id": id,
+                        "_token": token,
+                    },
+                    success: function (data){
+                        if(!data.fail){
+                            Swal.fire(
+                                'Eliminado!',
+                                'El tipo de articulación ha sido eliminado satisfactoriamente.',
+                                'success'
+                            );
+                            location.href = data.redirect_url;
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert("Error: " + errorThrown);
+                    }
+                });
 
+            }else if ( result.dismiss === Swal.DismissReason.cancel ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelado',
+                    'El tipo de articulación está a salvo',
+                    'error'
+                )
+            }
+        })
+    },
 }

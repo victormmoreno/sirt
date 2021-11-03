@@ -38,6 +38,11 @@ class TipoArticulacion extends Model
             ->withTimestamps();
     }
 
+    public function articulacionespbt()
+    {
+        return $this->hasMany(ArticulacionPbt::class, 'tipo_articulacion_id', 'id');
+    }
+
     public function scopeNode($query, $node)
     {
         if (isset($node) && $node != null && $node != 'all') {
@@ -60,4 +65,6 @@ class TipoArticulacion extends Model
     {
         return new TipoArticulacionPresenter($this);
     }
+
+
 }

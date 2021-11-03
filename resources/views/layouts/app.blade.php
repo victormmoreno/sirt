@@ -6,8 +6,6 @@
         <title>
             {{config('app.name')}} | @yield('meta-title',   config('app.name') )
         </title>
-
-
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet"/>
         <link href="{{ asset('sweetalert2/sweetalert2.css') }}" rel="stylesheet"/>
         <link href="{{ asset('img/web.png') }}" rel="shortcut icon" type="image/x-icon"/>

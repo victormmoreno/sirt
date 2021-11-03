@@ -58,7 +58,9 @@
                                             </div>
                                             <div class="right mailbox-buttons">
                                                 <a href="{{ route('tipoarticulaciones.edit', $typeArticulation->id) }}" class="waves-effect waves-orange btn-flat m-t-xs" >Cambiar información</a>
-                                                <a href="javascript:void(0)" class="waves-effect waves-red btn-flat m-t-xs" >Eliminar</a>
+                                                @if(!$typeArticulation->articulacionespbt->count() > 0 )
+                                                <a href="javascript:void(0)" class="waves-effect waves-red btn-flat m-t-xs" onclick="typeArticulacion.destroyTypeArticulation('{{$typeArticulation->id}}')">Eliminar</a>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="divider mailbox-divider"></div>
@@ -82,7 +84,7 @@
                                                     <span class="mailbox-author">Estado</span>
                                                 </div>
                                                 <div class="card-content mt-2">
-                                                    <span class="mailbox-title">{{optional($typeArticulation->updated_at)->isoFormat('lll')}}</span>
+                                                    <span class="mailbox-title">{{optional($typeArticulation->created_at)->isoFormat('lll')}}</span>
                                                     <span class="mailbox-author">Fecha registro</span>
                                                 </div>
                                                 <div class="card-content mt-2">

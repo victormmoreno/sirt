@@ -15,7 +15,7 @@ class TipoArticulacionController extends Controller
 
     public function __construct(TipoArticulacionRepository $tipoArticulacionRepository)
     {
-        $this->middleware(['auth', 'role_session:Administrador']);
+        $this->middleware(['auth', 'role_session:Administrador'])->except(['show']);
         $this->tipoArticulacionRepository = $tipoArticulacionRepository;
     }
 
@@ -91,6 +91,12 @@ class TipoArticulacionController extends Controller
     public function show( $typeArticulation)
     {
         $typeArticulation = TipoArticulacion::findOrFail($typeArticulation);
+
+        if (request()->ajax()) {
+            return response()->json([
+                'data' => $typeArticulation
+            ]);
+        }
         return view('tipoarticulaciones.show', ['typeArticulation' => $typeArticulation]);
     }
 
@@ -151,8 +157,21 @@ class TipoArticulacionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($typeArticulation)
     {
-        //
+        $typeArticulation = TipoArticulacion::findOrFail($typeArticulation);
+        if($typeArticulation->articulacionespbt->count() > 0 ){
+            return response()->json([
+                'fail'         => true,
+                'redirect_url' => route('tipoarticulaciones.show', $typeArticulation->id),
+            ]);
+        }
+        $typeArticulation->nodos()->detach();
+        $typeArticulation->delete();
+        return response()->json([
+            'fail'         => false,
+            'redirect_url' => route('tipoarticulaciones.index'),
+        ]);
     }
+
 }
