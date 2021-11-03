@@ -1,0 +1,82 @@
+
+@media(max-width:768px){
+
+#charlasInformativasNodo_table > thead, #charlasInformativasNodo_table > tbody {
+    width: 100% !important;
+  }
+  
+  .waves-effect .waves-light .btn-large{
+    letter-spacing: -3.5px;
+  }
+
+  .mailbox-content .row{
+    margin-left: -10px !important;
+    margin-right: -10px !important;
+  }
+
+  .collection{
+    margin: 0px -21px 0 -22px;
+  }
+
+  .col.s12.m6.l4.right{
+    display: grid !important;
+  }
+
+  .row .col.s4{
+    width: auto !important;
+  }
+
+  table{
+    display: block !important;
+  }
+
+  table > thead, table > tbody{
+    width: 100% !important;
+  }
+
+  table > thead > tr > th{
+    text-align: center !important;
+  }
+
+  .mn-inner .inner-active-sidebar .hidden-fixed-sidebar{
+    display: contents !important;
+  }
+
+  .page-footer .footer-grid .footer-grid-r .footer-text{
+    padding-right: 10%;
+  }
+
+  /* Header*/
+
+  html, body, .mn-content{
+    font-size: 12px !important;
+  }
+
+  .chapter-title {
+    width: 150px;
+    padding-top: 10px;
+  }
+
+  /* Numeracion */
+
+  .dataTables_paginate .paging_simple_numbers{
+    display: grid !important;
+  }
+
+  /*Loading*/
+
+  #loadingModal{
+    width: 40% !important;
+    height: 20% !important;
+  }
+
+  .modal .modal-content{
+    padding-top: 30px !important;
+  }
+
+  /*Numeracion*/
+
+  .dataTables_wrapper .dataTables_paginate .paginate_button, .dataTables_wrapper .dataTables_paginate .paginate_button:hover, .dataTables_wrapper .dataTables_paginate .paginate_button:focus, .dataTables_wrapper .dataTables_paginate .paginate_button:active{
+    display: inherit !important;
+  }
+}

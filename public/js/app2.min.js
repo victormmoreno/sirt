@@ -1504,19 +1504,17 @@ function addIdeaComite() {
     }
 }
 
-
-function addGestorComite() {
-    let id = $('#txtidgestor').val();
-    let hora_inicio = $('#txthorainiciogestor').val();
-    let hora_fin = $('#txthorafingestor').val();
-    if (id == 0 || hora_inicio == '' || hora_fin == '') {
-        datosIncompletosGestorAgendamiento();
+function addGestorComite2(value) {
+    if ($('#gestor-' + value).is(':checked')) {
+        // $('#gestorFila'+value).addClass('grey darken-2');
+        $('#txthorainiciogestor-' + value).removeAttr('disabled');
+        $('#txthorafingestor-' + value).removeAttr('disabled');
     } else {
-        if (noRepeatGestoresAgendamiento(id) == false) {
-            gestorYaSeEncuentraAsociadoAgendamiento();
-        } else {
-            pintarGestorEnLaTabla(id, hora_inicio, hora_fin);
-        }
+        $('#gestorFila'+value).removeClass();
+        $('#txthorainiciogestor-' + value).attr('disabled', 'disabled');
+        $('#txthorainiciogestor-' + value).val(null);
+        $('#txthorafingestor-' + value).attr('disabled', 'disabled');
+        $('#txthorafingestor-' + value).val(null);
     }
 }
 
@@ -1531,7 +1529,7 @@ $('#txthoraidea').bootstrapMaterialDatePicker({
     okText: 'Guardar'
 });
   
-$('#txthorafingestor').bootstrapMaterialDatePicker({ 
+$('input[name*="horas_fin"]').bootstrapMaterialDatePicker({ 
     time:true,
     date:false,
     shortTime:true,
@@ -1541,7 +1539,7 @@ $('#txthorafingestor').bootstrapMaterialDatePicker({
     okText: 'Guardar'
 });
  
-$('#txthorainiciogestor').bootstrapMaterialDatePicker({ 
+$('input[name*="horas_inicio"]').bootstrapMaterialDatePicker({ 
     time:true,
     date:false,
     shortTime: true,
@@ -1705,19 +1703,6 @@ function pintarIdeaEnLaTabla(id, hora, direccion) {
     });
 }
 
-function pintarGestorEnLaTabla(id, hora_inicio, hora_fin) {
-$.ajax({
-    dataType: 'json',
-    type: 'get',
-    url: '/usuario/consultarUserPorId/' + id
-}).done(function (ajax) {
-    let fila = prepararFilaEnLaTablaDeGestores(ajax, hora_inicio, hora_fin);
-    $('#tblGestoresComiteCreate').append(fila);
-    gestorSeAsocioAlAgendamiento();
-    reiniciarCamposGestorAgendamiento();
-});
-}
-
 function prepararFilaEnLaTablaDeIdeas(ajax, hora, direccion) {
 let idIdea = ajax.detalles.id;
 let fila = '<tr class="selected" id=ideaAsociadaAgendamiento' + idIdea + '>' + 
@@ -1725,17 +1710,6 @@ let fila = '<tr class="selected" id=ideaAsociadaAgendamiento' + idIdea + '>' +
     '<td><input type="hidden" name="horas[]" value="' + hora + '">' + hora + '</td>' +
     '<td><input type="hidden" name="direcciones[]" value="' + direccion + '">' + direccion + '</td>' +
     '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarIdeaDelAgendamiento(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' + 
-    '</tr>';
-return fila;
-}
-
-function prepararFilaEnLaTablaDeGestores(ajax, hora_inicio, hora_fin) {
-let idGestor = ajax.user.gestor.id;
-let fila = '<tr class="selected" id=gestorAsociadoAgendamiento' + idGestor + '>' + 
-    '<td><input type="hidden" name="gestores[]" value="' + idGestor + '">' + ajax.user.documento + ' - ' + ajax.user.nombres + ' ' + ajax.user.apellidos + '</td>' +
-    '<td><input type="hidden" name="horas_inicio[]" value="' + hora_inicio + '">' + hora_inicio + '</td>' +
-    '<td><input type="hidden" name="horas_fin[]" value="' + hora_fin + '">' + hora_fin + '</td>' +
-    '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarGestorDelAgendamiento(' + idGestor + ');"><i class="material-icons">delete_sweep</i></a></td>' + 
     '</tr>';
 return fila;
 }
@@ -1751,16 +1725,6 @@ Swal.fire({
 })
 }
 
-function datosIncompletosGestorAgendamiento() {
-Swal.fire({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 3000,
-    type: 'error',
-    title: 'Estás ingresando mal los datos del experto'
-})
-}
 
 function ideaSeAsocioAlAgendamiento() {
 Swal.fire({
@@ -1770,17 +1734,6 @@ Swal.fire({
           timer: 3000,
           type: 'success',
           title: 'La idea de proyecto se asoció con éxito al comité'
-        })
-}
-
-function gestorSeAsocioAlAgendamiento() {
-Swal.fire({
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 3000,
-          type: 'success',
-          title: 'El experto se asoció con éxito al comité'
         })
 }
 
@@ -1795,37 +1748,12 @@ Swal.fire({
 });
 }
 
-function gestorYaSeEncuentraAsociadoAgendamiento() {
-Swal.fire({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 1500,
-    type: 'warning',
-    title: 'El experto ya se encuentra asociado en este comité!'
-});
-}
-
-
 function noRepeatIdeasAgendamiento(id) {
 let idIdea = id;
 let retorno = true;
 let a = document.getElementsByName("ideas[]");
 for (x = 0; x < a.length; x ++) {
     if (a[x].value == idIdea) {
-        retorno = false;
-        break;
-    }
-}
-return retorno;
-}
-
-function noRepeatGestoresAgendamiento(id) {
-let idGestor = id;
-let retorno = true;
-let a = document.getElementsByName("gestores[]");
-for (x = 0; x < a.length; x ++) {
-    if (a[x].value == idGestor) {
         retorno = false;
         break;
     }
@@ -1841,15 +1769,6 @@ $("#txtobservacionesidea").val('');
 $('#txtdireccion').val('');
 $("label[for='txtdireccion']").removeClass('active');
 $("label[for='txthoraidea']").removeClass('active');
-}
-
-function reiniciarCamposGestorAgendamiento() {
-$("#txtidgestor").val('0');
-$("#txtidgestor").select2();
-$('#txthorainiciogestor').val('');
-$("label[for='txthorainiciogestor']").removeClass('active');
-$('#txthorafingestor').val('');
-$("label[for='txthorafingestor']").removeClass('active');
 }
 $(document).on('submit', 'form#formComiteRealizadoCreate', function (event) {
     event.preventDefault();
