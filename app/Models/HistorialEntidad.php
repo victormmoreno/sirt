@@ -21,7 +21,7 @@ class HistorialEntidad extends Model
     // {
     //     return $this->hasMany(HistorialEntidad::class, 'role_id', 'id');
     // }
-    
+
     public function historial_entidad()
     {
         return $this->morphTo();
@@ -29,16 +29,16 @@ class HistorialEntidad extends Model
 
     public function movimiento()
     {
-      return $this->belongsTo(Movimiento::class, 'movimiento_id');
+        return $this->belongsTo(Movimiento::class, 'movimiento_id');
     }
 
     public function user()
     {
-      return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id')->withTrashed();
     }
 
     public function role()
     {
-      return $this->belongsTo(Role::class, 'role_id', 'id');
+        return $this->belongsTo(Role::class, 'role_id', 'id');
     }
 }

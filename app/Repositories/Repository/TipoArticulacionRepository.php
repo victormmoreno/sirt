@@ -31,7 +31,7 @@ class TipoArticulacionRepository
         return datatables()->of($typeArts)
         ->editColumn('created_at', function ($data) {
             return $data->created_at
-            ->settings(['formatFunction' => 'translatedFormat'])
+            // ->settings(['formatFunction' => 'translatedFormat'])
             ->isoFormat('lll');
         })
         ->editColumn('nombre', function ($data) {

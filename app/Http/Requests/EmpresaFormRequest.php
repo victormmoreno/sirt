@@ -25,7 +25,7 @@ class EmpresaFormRequest extends FormRequest
     public function rules($sit = null)
     {
         return [
-            'txtnit_empresa' => Rule::requiredIf($sit != 'just_hq').'|digits_between:9,13|unique:empresas,nit,' . request()->route('id'),
+            'txtnit_empresa' => Rule::requiredIf($sit != 'just_hq').'|digits_between:8,13|unique:empresas,nit,' . request()->route('id'),
             'txtcodigo_ciiu_empresa' => 'max:15|nullable',
             'txtnombre_empresa' => Rule::requiredIf($sit != 'just_hq') . '|min:1|max:300',
             'txtnombre_sede' =>  Rule::requiredIf($sit != 'just_comp') . '|min:1|max:300',
@@ -54,7 +54,7 @@ class EmpresaFormRequest extends FormRequest
             'txtnit_empresa.required' => 'El nit de la empresa es obligatorio.',
             'txtnit_empresa.numeric' => 'El nit de la empresa debe ser numérico (Sin puntos ni número de verificación).',
             'txtnit_empresa.unique' => 'El nit de la empresa ya se encuentra registrado.',
-            'txtnit_empresa.digits_between' => 'El nit de la empresa debe tener entre 9 y 13 dígitos.',
+            'txtnit_empresa.digits_between' => 'El nit de la empresa debe tener entre 8 y 13 dígitos.',
             'txtemail_entidad.email' => 'El formato del email de la empresa es incorrecto.',
             'txtemail_entidad.min' => 'El email de la empresa debe ser mínimo de 7 caracteres.',
             'txtemail_entidad.max' => 'El email de la empresa debe ser máximo de 200 caracteres.',
