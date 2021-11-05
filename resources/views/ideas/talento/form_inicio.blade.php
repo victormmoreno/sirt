@@ -17,15 +17,22 @@
                     domain
                 </i>
                 <select id="txtnodo" name="txtnodo" style="width: 100%" tabindex="-1">
-                    <option value="">Seleccione Nodo</option>
-                    @foreach($nodos as $nodo)
-                        @if($existe)
-                            @if ($idea->nodo_id == $nodo->id)
+                    <option value disabled>Seleccione Nodo</option>
+                        @foreach($nodos as $nodo)
+                            @if($existe)
+                                @if ($idea->nodo_id == $nodo->id)
 
-                                @if($nodo->id == 20)
-                                    <option value="{{$nodo->id}}" selected>Hub Innovación Medellín</option>
+                                    @if($nodo->id == 20)
+                                        <option value="{{$nodo->id}}" selected>Hub Innovación Medellín</option>
+                                    @else
+                                        <option value="{{$nodo->id}}" selected>{{$nodo->nodos}}</option>
+                                    @endif
                                 @else
-                                    <option value="{{$nodo->id}}" selected>{{$nodo->nodos}}</option>
+                                    @if($nodo->id == 20)
+                                        <option value="{{$nodo->id}}">Hub Innovación Medellín</option>
+                                    @else
+                                        <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
+                                    @endif
                                 @endif
                             @else
                                 @if($nodo->id == 20)
@@ -34,14 +41,7 @@
                                     <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
                                 @endif
                             @endif
-                        @else
-                            @if($nodo->nodos == "Tecnoparque Nodo Hub Medellín")
-                                <option value="{{$nodo->id}}">Hub Innovación Medellín</option>
-                            @else
-                                <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
-                            @endif
-                        @endif
-                    @endforeach
+                        @endforeach
                 </select>
                 <label class="truncate" for="txtnodo">Seleccione el nodo donde se presentará la idea <span class="red-text">*</span></label>
                 <small id="txtnodo-error" class="error red-text"></small>

@@ -32,7 +32,7 @@ class ArticulacionPbtRepository
                 'codigo' => $codigo_actividad,
                 'nombre' => request()->txtnombre_articulacion,
                 'fecha_inicio' => request()->txtfecha_inicio,
-                'tipo_vinculacion' => ArticulacionPbt::IsPbt(),
+                'tipo_vinculacion' =>request()->txttipovinculacion,
                 'articulable_id' => $this->articulableId($request),
                 'articulable_type' => $this->articulableModel($request),
                 'fase_id' => Fase::IsInicio(),
@@ -62,6 +62,9 @@ class ArticulacionPbtRepository
         if($request->txtpbt != null){
             return $request->txtpbt;
         }
+        if($request->txtsede != null){
+            return $request->txtsede;
+        }
         return null;
     }
 
@@ -74,6 +77,7 @@ class ArticulacionPbtRepository
         }
         return null;
     }
+
 
     /**
      * Genera un código para la articulacion
@@ -133,8 +137,8 @@ class ArticulacionPbtRepository
      */
     public function updateInicio($request, $id)
     {
-        DB::beginTransaction();
-        try {
+        // DB::beginTransaction();
+        // try {
             $articulacion = ArticulacionPbt::find($id);
 
             $articulacion->update([
@@ -142,7 +146,7 @@ class ArticulacionPbtRepository
                 'nodo_id' =>  $this->nodeArticulacion(),
                 'nombre' => request()->txtnombre_articulacion,
                 'fecha_inicio' => request()->txtfecha_inicio,
-                'tipo_vinculacion' => ArticulacionPbt::IsPbt(),
+                'tipo_vinculacion' =>request()->txttipovinculacion,
                 'articulable_id' => $this->articulableId($request),
                 'articulable_type' => $this->articulableModel($request),
                 'fase_id' => Fase::IsInicio(),
@@ -162,13 +166,15 @@ class ArticulacionPbtRepository
 
             User::enableTalentsArticulacion($articulacion);
 
-            DB::commit();
+            // DB::commit();
             return $articulacion;
-        } catch (\Exception $e) {
-            DB::rollback();
-            return null;
-        }
+        // } catch (\Exception $e) {
+        //     DB::rollback();
+        //     return null;
+        // }
     }
+
+
 
     /**
    * modifica los entregables de la fase de inicio de una articulación

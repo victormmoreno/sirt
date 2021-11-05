@@ -136,6 +136,12 @@ $('#filter_code_project').click(function () {
     }
 });
 
+$('#filter_nit_company').click(function () {
+    let filter_nit_company = $('#filter_nit').val();
+    if((filter_nit_company != '' || filter_nit_company != null || filter_nit_company.length  > 0)){
+        filter_project.fill_nit_company(filter_nit_company);
+    }
+});
 
 $('#filter_project_advanced').click(function () {
     let filter_year_pro = $('#filter_year_pro').val();
@@ -147,7 +153,10 @@ $('#filter_project_modal').click(function () {
     filter_project.queryProyectosFaseInicioTable(filter_year_pro);
 });
 
+$('#filter_company_advanced').click(function () {
 
+    filter_project.queryCompaniesTable();
+});
 
 $('#search_talent').click(function () {
     let filter_user = $('#txtsearch_user').val();
@@ -181,8 +190,9 @@ var filter_project = {
                 if(response.data.status_code == 200){
                     let activity = response.data.proyecto.articulacion_proyecto.actividad;
                     let data = response.data;
+                    $('#txtnombre_articulacion').val(activity.nombre);
+                    $("label[for='txtnombre_articulacion']").addClass('active');
 
-                    console.log(data.proyecto.articulacion_proyecto.talentos[0].pivot.talento_lider);
                     $('.alert-response').append(`
                     <div class="row">
                         <div class="col s12 m12 l12">
@@ -232,11 +242,9 @@ var filter_project = {
                                             <div class="card-content">
                                                 <span class="card-title p-h-lg"> `+talento.user.documento+ ` - `+talento.user.nombres+ ` `+talento.user.apellidos+`</span>
                                                 <input type="hidden" name="talentos[]" value="`+talento.id+`"/>
-
                                                 <div class="p-h-lg">
-                                                    <input type="radio"  `+ filter_project.isTalentInterlocutor(talento.pivot.talento_lider) +` class="with-gap" name="txttalento_interlocutor" id="radioInterlocutor`+talento.id+`" value="`+talento.id+`" /><label for ="radioInterlocutor`+talento.id+`">Talento Interlocutor</label>
+                                                    <input type="radio" checked class="with-gap" name="txttalento_interlocutor" id="radioInterlocutor`+talento.id+`" value="`+talento.id+`" /><label for ="radioInterlocutor`+talento.id+`">Talento Interlocutor</label>
                                                 </div>
-
                                                 <div class="position-top-right p f-12 mail-date hide-on-med-and-down">  Acceso al sistema: `+ userSearch.state(talento.user.estado) +`</div>
                                                 <p class="hide-on-med-and-down"> Miembro desde `+filter_project.formatDate(talento.user.created_at)+`</p>
                                             </div>
@@ -274,16 +282,107 @@ var filter_project = {
         }
 
     },
-    isTalentInterlocutor(talentInterlocutor){
-        if(talentInterlocutor == 1){
-            return 'checked';
+    fill_nit_company:function(filter_code_company = null){
+
+        filter_project.emptyResult('alert-response');
+
+        filter_project.emptyResult('alert-response-sedes');
+        // filter_project.emptyResult('alert-response-company');
+
+        if(filter_code_company.length > 0){
+            $.ajax({
+                dataType: 'json',
+                type: 'get',
+                url: '/empresas/filter-code/' + filter_code_company
+            }).done(function (response) {
+                if(response.data.status_code == 200){
+                    let data = response.data;
+
+
+                    if (data.empresa.sedes.length != 0) {
+                        $.each(data.empresa.sedes, function(e, sede) {
+
+                            $('.alert-response-sedes').append(`<div class="row card-talent`+sede.id+`">
+                                    <div class="col s12 m12 l12">
+                                        <div class="card bs-dark">
+                                            <div class="card-content">
+                                                <span class="card-title p-h-lg"> `+sede.nombre_sede+ `</span>
+                                                <input type="hidden" name="sedes" value="`+sede.id+`"/>
+
+                                                <div class="position-top-right p f-12 mail-date hide-on-med-and-down"> Empresa: `+data.empresa.nit+` - `+data.empresa.nombre+`</div>
+
+                                            </div>
+                                            <div class="card-action">
+                                                <a onclick="filter_project.addSedeArticulacionPbt( `+sede.id+ `);" class="waves-effect waves-red btn-flat m-b-xs orange-text">Agregar sede</a>
+                                                <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs orange-text" href="/empresa/detalle/`+data.empresa.id+ `"><i class="material-icons left"> link</i>Ver más</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`);
+                        });
+                    }else{
+
+                        filter_project.notFound('alert-response-sedes');
+                        filter_project.notFound('alert-response-company');
+                    }
+
+
+
+                }else{
+
+                    filter_project.notFound('alert-response-sedes');
+                    filter_project.notFound('alert-response-company');
+                }
+            });
+        }else{
+            filter_project.notFound('alert-response');
+            filter_project.notFound('alert-response-sedes');
         }
+
+    },
+    sedesEmpresa: function(sedes) {
+        let fila = "";
+        sedes.forEach(element => {
+            fila += `<li class="collection-item">
+            ` + element.nombre_sede + ` - ` + element.direccion + `
+            <a href="#!" class="secondary-content" onclick="filter_project.addSedeArticulacionPbt(`+element.id+`)">Asociar esta sede a la articulación</a></div>
+          </li>`;
+        });
+        return fila;
     },
     addSedeArticulacionPbt: function(value){
         filter_project.printSede(value);
         $('#sedes_modal').closeModal();
         $('#company_modal').closeModal();
+
     },
+    printSede: function(id){
+        filter_project.emptyResult('alert-response-company');
+        $.ajax({
+            dataType: 'json',
+            type: 'get',
+            url: '/empresas/sede/' + id
+        }).done(function (response) {
+            if(response.data.status_code == 200){
+            $('.alert-response-company').append(`
+                <div class="row">
+                    <div class="col s12 m12 l12">
+                        <div class="card transparent bs-dark">
+                            <div class="card-content">
+                                <span class="card-title p-h-lg"> `+response.data.sede.nombre_sede+ `</span>
+                                <input type="hidden" name="txtsede" value="`+response.data.sede.id+`"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `);
+            }else{
+                filter_project.notFound('alert-response-company');
+            }
+        });
+
+    },
+
     deleteTalent:function(id){
         $('.card-talent'+ id).remove();
         Swal.fire({
@@ -329,7 +428,39 @@ var filter_project = {
         });
         $('#filter_project_advanced_modal').openModal();
     },
-
+    queryCompaniesTable:function() {
+        filter_project.emptyResult('alert-response-sedes');
+        filter_project.emptyResult('alert-response-company');
+        filter_project.notFound('alert-response-sedes');
+        filter_project.notFound('alert-response-company');
+        $('#companies_table').dataTable().fnDestroy();
+        $('#companies_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            processing: true,
+            serverSide: true,
+            // order: false,
+            ajax: {
+                url: "/empresa/datatableEmpresasDeTecnoparque",
+                type: "get"
+            },
+            columns: [
+                {
+                    data: 'nit',
+                    name: 'nit'
+                }, {
+                    data: 'nombre_empresa',
+                    name: 'nombre_empresa'
+                }, {
+                    data: 'add_company_art',
+                    name: 'add_company_art',
+                    orderable: false
+                },
+            ]
+        });
+        $('#company_modal').openModal();
+    },
     queryTalentos: function(){
         $('#datatable_talents_art').dataTable().fnDestroy();
         $('#datatable_talents_art').DataTable({
@@ -473,7 +604,7 @@ var filter_project = {
                                 <div class="card-content">
                                     <span class="card-title"> `+data.talento.documento+ ` - `+data.talento.talento+ `</span>
                                     <input type="hidden" name="talentos[]" value="`+data.talento.id+`"/>
-                                    <input type="radio" class="with-gap" name="txttalento_interlocutor" id="radioInterlocutor`+data.talento.id+`" value="`+data.talento.id+`" /><label for ="radioInterlocutor`+data.talento.id+`">Talento Interlocutor</label>
+                                    <input type="radio" checked class="with-gap" name="txttalento_interlocutor" id="radioInterlocutor`+data.talento.id+`" value="`+data.talento.id+`" /><label for ="radioInterlocutor`+data.talento.id+`">Talento Interlocutor</label>
                                 </div>
                                 <div class="card-action">
                                     <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs orange-text" href="/usuario/usuarios/`+data.talento.documento+ `"><i class="material-icons left"> link</i>Ver más</a>
@@ -514,6 +645,12 @@ var filter_project = {
     hideSeccionProject: function (){
         $('.section-projects').hide();
     },
+    showSeccionCompany: function (){
+        $('.section-company').show();
+    },
+    hideSeccionCompany: function (){
+        $('.section-company').hide();
+    },
     showsectionCollapseTalent: function(collap,collapheader,el){
 
         collap[0].classList.remove('active');
@@ -538,27 +675,54 @@ var filter_project = {
         $('#txtnombre_articulacion').val();
     }
 }
-$( "#txt_tipo_articulacion" ).change(function() {
+
+
+function checkTipoVinculacion(val) {
+    let collap =document.getElementsByClassName('collapsible-li');
+    let collapheader =document.getElementsByClassName('collapsible-header grey lighten-2');
+    let el = document.getElementsByClassName('collapsible-body');
+
+    if ( $("#IsPbt").is(":checked") ) {
+        filter_project.emptyResult('alert-response-sedes');
+        filter_project.emptyResult('alert-response-company');
+        filter_project.notFound('alert-response-sedes');
+        filter_project.notFound('alert-response-company');
+        filter_project.showSeccionProject();
+        filter_project.hideSeccionCompany();
+        filter_project.hidesectionCollapseTalent(collap,collapheader,el);
+    }
+    else if ($("#IsSenaInnova").is(":checked") ) {
+
+        filter_project.emptyResult('alert-response');
+        filter_project.emptyResult('collection-response');
+        filter_project.hideSeccionProject();
+        filter_project.showSeccionCompany();
+        filter_project.showsectionCollapseTalent(collap,collapheader,el);
+    }
+     else if( $("#IsColinnova").is(":checked")) {
+
+        filter_project.emptyResult('alert-response');
+        filter_project.emptyResult('collection-response');
+        filter_project.hideSeccionProject();
+        filter_project.showSeccionCompany();
+        filter_project.showsectionCollapseTalent(collap,collapheader,el);
+    }
+
+}
+
+function addCompanyArticulacion(id){
+    $('#sedes_detail').empty();
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/articulaciones/tipoarticulaciones/' + $( this ).val()
-    }).done(function (response) {
-        if(response.data.descripcion != null){
-            $('#description-type-art').text('Descripción ' + response.data.nombre +': ' + response.data.descripcion);
-        }else{
-            $('#description-type-art').text("");
+        url : '/empresa/ajaxDetallesDeUnaEmpresa/'+id+'/id',
+        success: function (response) {
+            let filas_sedes = filter_project.sedesEmpresa(response.empresa.sedes);
+            $('#sedes_detail').append(filas_sedes);
+            $('#sedes_modal').openModal();
+        },
+        error: function (xhr, textStatus, errorThrown) {
+          alert("Error: " + errorThrown);
         }
-
-        if(response.data.entidad != null){
-            $('#txtname_entidad').val(response.data.entidad);
-            $("label[for='txtname_entidad']").addClass('active');
-        }else{
-            $('#txtname_entidad').val("");
-        }
-
-    });
-});
-
-
-
+      })
+}

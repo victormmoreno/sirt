@@ -519,8 +519,8 @@ class ProyectoController extends Controller
             ]);
         } else {
             $result = $this->getProyectoRepository()->store($request);
-            if ($result) {
-                return response()->json(['state' => 'registro']);
+            if ($result['state']) {
+                return response()->json(['state' => 'registro', 'url' => route('proyecto.inicio', $result['id'])]);
             } else {
                 return response()->json(['state' => 'no_registro']);
             }
