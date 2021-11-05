@@ -197,7 +197,7 @@ class ArticulacionPbtPresenter extends Presenter
         ){
             return $this->articulacionpbt->articulable->id;
         }
-        return "No registra";
+        return;
     }
 
 
