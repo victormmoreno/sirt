@@ -18,7 +18,6 @@ function setActiveRouteActiveIcon($name){
 
 function arrayRecursiveDiff($aArray1, $aArray2) {
     $aReturn = array();
-  
     foreach ($aArray1 as $mKey => $mValue) {
         if (array_key_exists($mKey, $aArray2)) {
             if (is_array($mValue)) {
@@ -33,7 +32,6 @@ function arrayRecursiveDiff($aArray1, $aArray2) {
             $aReturn[$mKey] = $mValue;
         }
     }
-  
     return $aReturn;
 }
 
@@ -57,11 +55,9 @@ function nameFase($fase){
         case 'Cierre':
             $fase = 'cierre';
             break;
-        
         default:
             $fase = 'inicio';
             break;
     }
-
     return $fase;
 }

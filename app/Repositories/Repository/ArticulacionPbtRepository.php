@@ -78,6 +78,7 @@ class ArticulacionPbtRepository
         return null;
     }
 
+
     /**
      * Genera un código para la articulacion
      * @return string
@@ -136,8 +137,8 @@ class ArticulacionPbtRepository
      */
     public function updateInicio($request, $id)
     {
-        DB::beginTransaction();
-        try {
+        // DB::beginTransaction();
+        // try {
             $articulacion = ArticulacionPbt::find($id);
 
             $articulacion->update([
@@ -165,13 +166,15 @@ class ArticulacionPbtRepository
 
             User::enableTalentsArticulacion($articulacion);
 
-            DB::commit();
+            // DB::commit();
             return $articulacion;
-        } catch (\Exception $e) {
-            DB::rollback();
-            return null;
-        }
+        // } catch (\Exception $e) {
+        //     DB::rollback();
+        //     return null;
+        // }
     }
+
+
 
     /**
    * modifica los entregables de la fase de inicio de una articulación

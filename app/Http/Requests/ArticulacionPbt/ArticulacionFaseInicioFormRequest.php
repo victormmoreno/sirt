@@ -40,7 +40,7 @@ class ArticulacionFaseInicioFormRequest extends FormRequest
             'txtemail'    => 'required|email|min:1|max:100',
             'txtnombre_convocatoria'    => 'nullable|min:1|max:191',
             'txtfecha_esperada' => 'required|date|date_format:Y-m-d|after_or_equal:' . date('Y-m-d'),
-            'txtfecha_inicio' => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
+            'txtfecha_inicio' => 'required|date|date_format:Y-m-d|before_or_equal:txtfecha_esperada',
             'txtobjetivo' => 'required|min:2|max:10000',
         ];
     }

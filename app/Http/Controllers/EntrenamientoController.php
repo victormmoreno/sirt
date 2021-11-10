@@ -9,7 +9,7 @@ use App\Repositories\Repository\{EntrenamientoRepository, IdeaRepository};
 use Illuminate\Support\Facades\{DB, Session, Validator};
 use App\User;
 use RealRashid\SweetAlert\Facades\Alert;
-use Carbon\Carbon;
+Use Carbon\Carbon;
 
 class EntrenamientoController extends Controller
 {

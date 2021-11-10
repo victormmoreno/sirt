@@ -6,8 +6,6 @@
         <title>
             {{config('app.name')}} | @yield('meta-title',   config('app.name') )
         </title>
-
-
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet"/>
         <link href="{{ asset('sweetalert2/sweetalert2.css') }}" rel="stylesheet"/>
         <link href="{{ asset('img/web.png') }}" rel="shortcut icon" type="image/x-icon"/>
@@ -70,11 +68,11 @@
         @stack('script')
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-129874326-1"></script>
         <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-        
-          gtag('config', 'UA-129874326-1');
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'UA-129874326-1');
         </script>
     </body>
 </html>

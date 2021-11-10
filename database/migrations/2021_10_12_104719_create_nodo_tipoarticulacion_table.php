@@ -3,15 +3,14 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use App\Models\TipoArticulacion;
 
-class CreateTipoArticulacionsTable extends Migration
+class CreateNodoTipoarticulacionTable extends Migration
 {
     /**
      * Schema table name to migrate
      * @var string
      */
-    protected $tableName = 'tipo_articulaciones';
+    protected $tableName = 'nodo_tipoarticulacion';
     /**
      * Run the migrations.
      *
@@ -20,13 +19,21 @@ class CreateTipoArticulacionsTable extends Migration
     public function up()
     {
         Schema::create($this->tableName, function (Blueprint $table) {
-            $table->engine = 'InnoDB';
+            // $table->engine = 'InnoDB';
             $table->bigIncrements('id');
-            $table->string('nombre', 100)->unique();
-            $table->string('descripcion',5000)->nullable();
-            $table->string('entidad', 100)->nullable();
-            $table->enum('estado', [TipoArticulacion::mostrar(),TipoArticulacion::ocultar()])->default(TipoArticulacion::mostrar());
+            $table->unsignedInteger('nodo_id');
+            $table->bigInteger('tipo_articulacion_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('nodo_id')
+                ->references('id')->on('nodos')
+                ->onDelete('no action')
+                ->onUpdate('no action');
+
+            $table->foreign('tipo_articulacion_id')
+                ->references('id')->on('tipo_articulaciones')
+                ->onDelete('set null')
+                ->onUpdate('set null');
 
         });
     }

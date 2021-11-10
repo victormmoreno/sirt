@@ -25,7 +25,6 @@ class ArticulacionMiembrosFormRequest extends FormRequest
     public function rules()
     {
         return [
-         
             'talentos' => 'required',
             'txttalento_interlocutor'=>'required',
         ];
@@ -34,12 +33,9 @@ class ArticulacionMiembrosFormRequest extends FormRequest
     public function messages()
     {
         return $messages = [
-                
             'txttalento_interlocutor.required'=>'Debe haber un interlocutor',
-    
-     
             'talentos.required' => 'Debe asociar por lo menos un talento a la articulación.'
-           
+
         ];
     }
 }

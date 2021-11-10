@@ -78,7 +78,7 @@ class ProyectoRepository
         return $route;
         }
     }
-    
+
     // public function horasAsesoriaPorExperto(int $id)
     // {
     //     $horas_exp = null;
@@ -100,7 +100,7 @@ class ProyectoRepository
         foreach ($proyecto->asesorias as $key => $asesoria) {
             foreach ($asesoria->usogestores as $key => $value) {
                 echo $value->sum('pivot.asesoria_directa') . '<br>';
-                
+
             }
         }
         exit;
@@ -497,7 +497,7 @@ class ProyectoRepository
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
         ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
         ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
-        ->join('users AS user_talento', 'user_talento.id', '=', 'talentos.id')
+        ->join('users AS user_talento', 'user_talento.id', '=', 'talentos.user_id')
         ->where('talentos.id', $id)
         ->get();
     }
@@ -1469,10 +1469,10 @@ class ProyectoRepository
             $proyecto->idea->registrarHistorialIdea(Movimiento::IsRegistrar(), Session::get('login_role'), null, 'como un PBT asociado con el código ' . $actividad->codigo_actividad);
 
             DB::commit();
-            return true;
+            return ['state' => true, 'id' => $proyecto->id];
         } catch (\Exception $e) {
             DB::rollback();
-            return false;
+            return ['state' => false];
         }
     }
 

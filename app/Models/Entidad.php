@@ -10,7 +10,6 @@ use App\Presenters\EntidadPresenter;
 class Entidad extends Model
 {
     protected $table = 'entidades';
-
     /**
      * The attributes that are mass assignable.
      *
@@ -33,7 +32,6 @@ class Entidad extends Model
         'nombre'        => 'string',
         'slug'          => 'string',
         'email_entidad' => 'string',
-
     ];
 
     /**
@@ -46,24 +44,9 @@ class Entidad extends Model
         return 'slug';
     }
 
-    /*=========================================
-    =            asesores eloquent            =
-    =========================================*/
-
-    public function getNombreAttribute($nombre)
-    {
-        return ucwords(mb_strtolower(trim($nombre), 'UTF-8'));
-    }
-
     public function getEmailEntidadAttribute($email_entidad)
     {
         return trim($email_entidad);
-    }
-
-
-    public function setNombreAttribute($nombre)
-    {
-        $this->attributes['nombre'] = ucwords(mb_strtolower(trim($nombre), 'UTF-8'));
     }
 
     public function setEmailEntidadAttribute($email_entidad)
@@ -76,10 +59,6 @@ class Entidad extends Model
     {
         $this->attributes['slug'] = Str::slug($nombre, '-');
     }
-
-    /*===========================================
-    =            relaciones eloquent            =
-    ===========================================*/
 
     /**
      * Relación muchos a muchos con la tabla de edts
@@ -100,7 +79,6 @@ class Entidad extends Model
         return $this->hasOne(Empresa::class, 'entidad_id', 'id');
     }
 
-    // Relación con la tabla de gruposinvestigacion
     public function grupoinvestigacion()
     {
         return $this->hasOne(GrupoInvestigacion::class, 'entidad_id', 'id');
@@ -121,7 +99,6 @@ class Entidad extends Model
         return $this->belongsTo(Ciudad::class, 'ciudad_id', 'id');
     }
 
-    // Relación a la tabla de articulaciones
     public function articulaciones()
     {
         return $this->hasMany(Articulacion::class, 'entidad_id', 'id');
@@ -132,11 +109,6 @@ class Entidad extends Model
         return $this->hasMany(ContactoEntidad::class, 'entidad_id', 'id');
     }
 
-    /*=====  End of relaciones eloquent  ======*/
-
-    /*========================================================================
-    =            scope para consultar los grupos de investigacion            =
-    ========================================================================*/
 
     public function scopeAllGrupoInvestigacionForCiudad($query, $ciudad)
     {
@@ -145,8 +117,6 @@ class Entidad extends Model
             ->join('gruposinvestigacion', 'gruposinvestigacion.entidad_id', 'entidades.id')
             ->where('entidades.ciudad_id', '=', $ciudad);
     }
-
-    /*=====  End of scope para consultar los grupos de investigacion  ======*/
 
     public function present()
     {
