@@ -60,7 +60,7 @@
                                                         </div>
                                                         <div class="row">
                                                             <div class="input-field col s6  center-align offset-s3">
-                                                                <button  type="submit" class="waves-effect waves-light btn-large"><i class="material-icons right">search</i>Buscar Usuario</button>
+                                                                <button  type="submit" class="waves-effect waves-light btn-large"><i class="material-icons right">search</i><span class="Nombre-usuario">Buscar Usuario</span></button>
                                                             </div>
                                                         </div>
                                                     </form>
