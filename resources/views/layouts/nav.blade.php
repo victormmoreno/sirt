@@ -9,7 +9,8 @@
             </section>
             <div class="header-title col s2 m2 l2">
                 <a href="{{route('home')}}">
-                <img class="chapter-title " src="{{ asset('img/logonacional_Blanco.png') }}" alt="{{config('app.name')}}" width="200px">
+                    <img class="chapter-title desktop" src="{{ asset('img/logonacional_Blanco.png') }}" alt="{{config('app.name')}}" width="200px">
+                    <img class="chapter-title mobile" src="{{ asset('img/logonacional_Blanco_Mobile.png') }}" alt="{{config('app.name')}}">
                 </a>
             </div>
             <ul class="right col s10 m10 l10 nav-right-menu">

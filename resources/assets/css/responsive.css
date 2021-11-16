@@ -1,4 +1,12 @@
 
+.chapter-title.mobile{
+  display: none;
+}
+
+.cyan-text.text-darken-3 {
+  color: #ff8f00 !important;
+}
+
 @media(max-width:768px){
 
 #charlasInformativasNodo_table > thead, #charlasInformativasNodo_table > tbody {
@@ -53,8 +61,8 @@
   }
 
   .chapter-title {
-    width: 150px;
-    padding-top: 10px;
+    width: 200% !important;
+    padding-top: 10px !important;
   }
 
   /* Numeracion */
@@ -78,5 +86,40 @@
 
   .dataTables_wrapper .dataTables_paginate .paginate_button, .dataTables_wrapper .dataTables_paginate .paginate_button:hover, .dataTables_wrapper .dataTables_paginate .paginate_button:focus, .dataTables_wrapper .dataTables_paginate .paginate_button:active{
     display: inherit !important;
+  }
+
+  /*Logo header mobile*/
+  .chapter-title.mobile{
+    display: block;
+  }
+
+  .chapter-title.desktop{
+    display: none;
+  }
+
+  .cyan-text.text-darken-3 {
+    color:#ff8f00 !important;
+  }
+
+  .mn-inner.inner-active-sidebar.hidden-fixed-sidebar{
+    padding: 0 !important;
+  }
+
+  /*Arreglo de botones*/
+  .Nombre-usuario{
+    display: none;
+  }
+
+  .material-icons.right{
+    margin: 0;
+  }
+
+    /*centrado de titulos*/
+
+  .sorting_desc{
+    width: auto !important;
+  }
+  .sorting_disabled{
+    width: auto !important;
   }
 }
