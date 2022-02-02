@@ -243,7 +243,7 @@ class UserPresenter extends Presenter
 
     public function userTipoTalento()
     {
-        if ($this->user->has('talento.tipotalento')) {
+        if ($this->user->has('talento.tipotalento') && isset($this->user->talento->tipotalento)) {
             if (
                 $this->user->talento->tipotalento->nombre == TipoTalento::IS_APRENDIZ_SENA_CON_APOYO ||
                 $this->user->talento->tipotalento->nombre == TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO
