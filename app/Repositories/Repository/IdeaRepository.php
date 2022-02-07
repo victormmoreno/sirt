@@ -411,7 +411,15 @@ class IdeaRepository
             if ($idea->estadoIdea->nombre != 'En registro' && $idea->estadoIdea->nombre != 'Postulado' && $idea->estadoIdea->nombre != 'Admitido') {
                 return [
                     'state' => false,
-                    'msg' => 'La idea no se ha inhabilitado, solo se pueden inhabilitar ideas en estado "En registro", "Admitido" o "Posutaldo"!',
+                    'msg' => 'La idea no se ha inhabilitado, solo se pueden inhabilitar ideas en estado "En registro", "Admitido" o "Postulado"!',
+                    'title' => 'Inhabilitación errónea!',
+                    'type' => 'error'
+                ];
+            }
+            if (Session::get('login_role') == User::IsDinamizador() && $idea->nodo_id != auth()->user()->dinamizador->nodo_id) {
+                return [
+                    'state' => false,
+                    'msg' => 'La idea no se ha inhabilitado, solo se puedes inhabilitar ideas de tu nodo!',
                     'title' => 'Inhabilitación errónea!',
                     'type' => 'error'
                 ];
