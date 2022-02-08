@@ -367,4 +367,36 @@ class UserPresenter extends Presenter
             User::IsApoyoTecnico()
         ]) ? true : false;
     }
+
+    public function userNode()
+    {
+        if($this->user->has('dinamizador') && isset($this->user->dinamizador->nodo)){
+            return $this->user->present()->userDinamizadorNombreNodo();
+        }
+
+        if($this->user->has('gestor') && isset($this->user->gestor->nodo)){
+            return $this->user->present()->userGestorNombreNodo();
+        }
+
+        if($this->user->has('articulador') && isset($this->user->articulador->nodo)){
+            return $this->user->present()->userArticuladorName();
+        }
+
+        if($this->user->has('infocenter') && isset($this->user->infocenter->nodo)){
+            return $this->user->present()->userInfocenterNombreNodo();
+        }
+
+        if($this->user->has('apoyotecnico') && isset($this->user->apoyotecnico->nodo)){
+            return $this->user->present()->userApoyoTecnicoNodoName();
+        }
+
+        if($this->user->has('ingreso') && isset($this->user->ingreso->nodo)){
+            return $this->user->present()->userIngresoNombreNodo();
+        }
+
+        if ($this->user->has('talento') && isset($this->user->talento)) {
+            return "No Aplica";
+        }
+
+    }
 }
