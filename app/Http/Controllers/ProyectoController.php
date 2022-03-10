@@ -32,6 +32,15 @@ class ProyectoController extends Controller
         $this->middleware(['auth']);
     }
 
+    public function validarAccesoAExpertoACambiarTalentos($proyecto)
+    {
+        if ( (Session::get('login_role') == User::IsGestor()) && ($proyecto->asesor_id != auth()->user()->gestor->id) ) {
+            Alert::error('Acceso no permitido!', 'No puedes cambiar los talentos de un proyecto que no estás asesorando!')->showConfirmButton('Ok', '#3085d6');
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Elimina un proyecto de la base de datos
      * @param int $id Id del proyecto a eliminar
@@ -72,6 +81,56 @@ class ProyectoController extends Controller
             'costo' => $costo,
             'historico' => $historico
         ]);
+    }
+
+    /**
+     * Formulario que permite cambiar los talentos de un proyecto en cualquier fase
+     * 
+     * @param int id del proyecto
+     * @return Response
+     * @author dum
+     */
+    public function cambiar_talento($id)
+    {
+        $proyecto = Proyecto::find($id);
+        if ($this->validarAccesoAExpertoACambiarTalentos($proyecto))
+            return back();
+        $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+        return view('proyectos.gestor.form_cambio_talentos', [
+            'proyecto' => $proyecto,
+            'historico' => $historico
+        ]);
+    }
+
+    /**
+     * Cambia los talentos de un proyecto
+     * 
+     * @param Request $request
+     * @param int id del proyecto
+     * @return Response
+     */
+    public function updateTalentos(Request $request, $id)
+    {
+        $proyecto = Proyecto::find($id);
+        if ($this->validarAccesoAExpertoACambiarTalentos($proyecto))
+            return back();
+        
+        $req = new ProyectoFaseInicioFormRequest;
+        $validator = Validator::make($request->all(), $req->rulesTalentos(), $req->messages());
+        if ($validator->fails()) {
+            return response()->json([
+                'state'   => 'error_form',
+                'errors' => $validator->errors(),
+            ]);
+        } else {
+            $update = $this->getProyectoRepository()->update_talentos($request, $proyecto);
+            if ($update) {
+                return response()->json(['state' => 'update', 'url' => route('proyecto.inicio', $update['id'])]);
+            } else {
+                return response()->json(['state' => 'no_update']);
+            }
+        }
+
     }
 
     public function consultarHorasDeExpertos(int $id)

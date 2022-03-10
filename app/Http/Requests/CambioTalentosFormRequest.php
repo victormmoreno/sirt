@@ -2,11 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Models\AreaConocimiento;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class ProyectoFaseInicioFormRequest extends FormRequest
+class CambioTalentosFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,31 +22,6 @@ class ProyectoFaseInicioFormRequest extends FormRequest
      * @return array
      */
     public function rules()
-    {
-        return [
-            'txtidea_id' => 'required',
-            'txtnombre' => 'required|min:4|max:200',
-            'txtareaconocimiento_id' => 'required',
-            'txtotro_areaconocimiento' => Rule::requiredIf(request()->txtareaconocimiento_id == AreaConocimiento::where('nombre', 'Otro')->first()->id) . '|max:100',
-            'txtsublinea_id' => 'required',
-            'txttipo_economianaranja' => Rule::requiredIf(isset(request()->txteconomia_naranja)) . '|max:100',
-            'txttipo_discapacitados' => Rule::requiredIf(isset(request()->txtdirigido_discapacitados)) . '|max:100',
-            'txtnom_act_cti' => Rule::requiredIf(isset(request()->txtarti_cti)) . '|max:100',
-            'talentos' => 'required',
-            'radioTalentoLider' => 'required',
-            'txtobjetivo' => 'required|max:500',
-            'txtalcance_proyecto' => 'required|max:1000',
-            'txtobjetivo_especifico1' => 'required|max:500',
-            'txtobjetivo_especifico2' => 'required|max:500',
-            'txtobjetivo_especifico3' => 'required|max:500',
-            'txtobjetivo_especifico4' => 'required|max:500',
-            'propietarios_user' => Rule::requiredIf(!isset(request()->propietarios_sedes) && !isset(request()->propietarios_grupos)),
-            'propietarios_sedes' => Rule::requiredIf(!isset(request()->propietarios_user) && !isset(request()->propietarios_grupos)),
-            'propietarios_grupos' => Rule::requiredIf(!isset(request()->propietarios_sedes) && !isset(request()->propietarios_user)),
-        ];
-    }
-
-    public function rulesTalentos()
     {
         return [
             'talentos' => 'required',

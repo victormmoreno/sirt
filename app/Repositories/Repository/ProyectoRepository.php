@@ -108,6 +108,113 @@ class ProyectoRepository
     }
 
     /**
+     * Verifica que el nuevo talento interlocutor, sea diferente al actual
+     *
+     * @param Request $request
+     * @param $talentos
+     * @return type
+     * @author dum
+     **/
+    private function verificarCambioDeTalentoInterlocutor($talentos_nuevos, $proyecto)
+    {
+        $talento_nuevo = $this->verificarNuevoTalento($talentos_nuevos);
+        $talento_actual = $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first()->id;
+        if ($talento_nuevo == $talento_actual) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Verifica el id del nuevo talento interlocutor
+     *
+     * @param array $talentos_nuevos Nuevos talento de un proyecto
+     * @return int
+     * @author dum
+     **/
+    private function verificarNuevoTalento($talentos_nuevos)
+    {
+        for ($i=0; $i < count($talentos_nuevos); $i++) { 
+            if ($talentos_nuevos[$i]['talento_lider'] == 1) {
+                return $talentos_nuevos[$i]['talento_id'];
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Verifica que los talentos ejecutores del proyecto se hayan cambiado
+     *
+     * @param $talentos_actuales
+     * @param $talentos_nuevos
+     * @return bool
+     * @author dum
+     **/
+    public function verificarCambioDeTalentos($talentos_actuales, $talentos_nuevos)
+    {
+        if ($talentos_nuevos->count() >= $talentos_actuales->count()) {
+            if( $talentos_nuevos->diff($talentos_actuales)->count() == 0 ) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            if( $talentos_actuales->diff($talentos_nuevos)->count() == 0 ) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    /**
+     * Cambia los talentos del proyecto
+     *
+     * @param Request $request
+     * @param Proyecto $proyecto
+     * @return array
+     * @author dum
+     **/
+    public function update_talentos($request, $proyecto)
+    {
+        DB::beginTransaction();
+        try {
+            $proyecto_actual = $proyecto;
+            $talentos_actuales = $proyecto_actual->articulacion_proyecto->talentos()->orderBy('id')->get();
+            $syncData = array();
+            $syncData = $this->arraySyncTalentosDeUnProyecto($request);
+            $cambio_talento_interlocutor = $this->verificarCambioDeTalentoInterlocutor($syncData, $proyecto_actual);
+            $proyecto->articulacion_proyecto->talentos()->sync($syncData, true);
+            $cambio_talentos_proyecto = $this->verificarCambioDeTalentos($talentos_actuales, $proyecto->articulacion_proyecto->talentos()->orderBy('id')->get());
+            if ($cambio_talento_interlocutor) {
+                // Historial del cambio de talento interlocutor
+                $this->registrarHistorialProyecto($proyecto, 'cambió el talento interlocutor');
+            }
+            if ($cambio_talentos_proyecto) {
+                // Historial del cambio de talentos ejecutores
+                $this->registrarHistorialProyecto($proyecto, 'cambió los talentos del proyecto');
+            }
+            ArticulacionProyecto::habilitarTalentos($proyecto->articulacion_proyecto);
+            DB::commit();
+            return ['state' => true, 'id' => $proyecto->id];
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+            return ['state' => false];
+        }
+    }
+
+    public function registrarHistorialProyecto($proyecto, $movimiento)
+    {
+        $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', $movimiento)->first(), [
+            'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
+            'user_id' => auth()->user()->id,
+            'fase_id' => $proyecto->fase_id,
+            'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+        ]);
+    }
+
+    /**
      * Elimina los datos de un proyectos
      * @param int $id id del proyecto que se va a eliminar
      * @return boolean

@@ -5145,6 +5145,16 @@ $(document).on('submit', 'form#frmProyectos_FaseInicio', function (event) { // $
     ajaxSendFormProyecto(form, data, url, 'create');
 });
 
+// Enviar formulario para cambiar los talentos del proyecto
+$(document).on('submit', 'form#frmUpdateTalentos', function (event) {
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    ajaxSendFormProyecto(form, data, url, 'update');
+});
+
 
 // Enviar formulario para modificar datos del proyecto (Fase de Inicio)
 $(document).on('submit', 'form#frmProyectos_FaseInicio_Update', function (event) { // $('button[type="submit"]').prop("disabled", true);
@@ -5210,7 +5220,7 @@ function mensajesProyectoUpdate(data) {
     if (data.state == 'update') {
         Swal.fire({
             title: 'Modificación Exitosa',
-            text: "El proyecto ha sido registrado satisfactoriamente",
+            text: "El proyecto ha sido cambiado satisfactoriamente",
             type: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',

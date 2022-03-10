@@ -66,11 +66,7 @@
             onchange="selectAreaConocimiento_Proyecto_FaseInicio();">
             <option value="">Seleccione el área de conocimiento</option>
             @forelse ($areasconocimiento as $id => $value)
-<<<<<<< HEAD
-            <option value="{{$id}}" {{ !isset($proyecto) ? '' : ($proyecto->areaconocimiento_id == $id ? 'selected' : '') }}>{{$value}}</option>
-=======
             <option value="{{$id}}" {{ $proyecto->areaconocimiento_id == $id ? 'selected' : '' }}>{{$value}}</option>
->>>>>>> 07bc4982e9e8b2aecb3a03aae0a20fab2f8af61e
             @empty
             <option value=""> No hay información disponible</option>
             @endforelse
@@ -94,11 +90,7 @@
         <select {{$proyecto->present()->proyectoFase() != 'Inicio' ? 'disabled' : '' }} id="txtsublinea_id" class="js-states" name="txtsublinea_id" style="width: 100%">
             <option value="">Seleccione la Sublínea</option>
             @forelse ($sublineas as $key => $value)
-<<<<<<< HEAD
-            <option value="{{$key}}" {{ $btnText == 'Guardar' ? '' : ($proyecto->sublinea_id == $key ? 'selected' : '') }}>{{$value}}</option>
-=======
             <option value="{{$key}}" {{ $proyecto->sublinea_id == $key ? 'selected' : '' }}>{{$value}}</option>
->>>>>>> 07bc4982e9e8b2aecb3a03aae0a20fab2f8af61e
             @empty
             <option value="">No hay información disponible</option>
             @endforelse
