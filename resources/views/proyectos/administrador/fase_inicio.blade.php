@@ -11,20 +11,22 @@
             </a> Proyectos de Base Tecnológica
             </h5>
             <div class="card">
-            <div class="card-content">
-                <div class="row">
-                @include('proyectos.navegacion_fases')
-                <div class="divider"></div>
-                <br />
+                <div class="card-content">
+                    <div class="row">
+                    @include('proyectos.titulo')
+                    @include('proyectos.navegacion')
+                    @include('proyectos.historial_cambios')
+                    <div class="col offset-m3 offset-l3"></div>
+                    @include('proyectos.detalle_general')
                     @include('proyectos.detalle_fase_inicio')
                     <div class="divider"></div>
                     <center>
-                    <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-                        <i class="material-icons right">backspace</i>Cancelar
-                    </a>
+                        <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                            <i class="material-icons right">backspace</i>Cancelar
+                        </a>
                     </center>
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
         </div>
@@ -34,36 +36,8 @@
 @push('script')
     <script>
     $( document ).ready(function() {
-        @if($proyecto->areaconocimiento->nombre == 'Otro')
-            divOtroAreaConocmiento.show();
-        @endif
-        @if($proyecto->present()->isProyectoEconomiaNaranja() == 1)
-            divEconomiaNaranja.show();
-        @endif
-        @if($proyecto->present()->isProyectoDirigidoDiscapacitados() == 1)
-            divDiscapacidad.show();
-        @endif
-        @if($proyecto->present()->isProyectoActorCTi() == 1)
-            divNombreActorCTi.show();
-        @endif
         datatableArchivosDeUnProyecto_inicio();
     });
-
-    function changeToPlaneacion() {
-        window.location.href = "{{ route('proyecto.planeacion', $proyecto->id) }}";
-    }
-
-    function changeToInicio() {
-        window.location.href = "{{ route('proyecto.inicio', $proyecto->id) }}";
-    }
-
-    function changeToEjecucion() {
-        window.location.href = "{{ route('proyecto.ejecucion', $proyecto->id) }}";
-    }
-
-    function changeToCierre() {
-        window.location.href = "{{ route('proyecto.cierre', $proyecto->id) }}";
-    }
 
     function datatableArchivosDeUnProyecto_inicio() {
     $('#archivosDeUnProyecto').DataTable({

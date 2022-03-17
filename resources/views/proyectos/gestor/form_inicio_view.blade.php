@@ -14,16 +14,11 @@
             <div class="card-content">
                 <div class="row">
                     @include('proyectos.titulo')
-                    @include('proyectos.navegacion')
-                    @include('proyectos.historial_cambios')
-                    @include('proyectos.options_always')
-                    @include('proyectos.detalle_general')
-                    @include('proyectos.detalle_fase_inicio')
-                    {{-- <form id="frmProyectos_FaseInicio_Update" action="{{route('proyecto.update.inicio', $proyecto->id)}}" method="POST">
+                    <form id="frmProyectos_FaseInicio_Update" action="{{route('proyecto.update.inicio', $proyecto->id)}}" method="POST">
                         {!! method_field('PUT')!!}
-                        @include('proyectos.gestor.form_inicio', [
+                        @include('proyectos.gestor.forms.form_inicio', [
                         'btnText' => 'Modificar'])
-                    </form> --}}
+                    </form>
                     </div>
                 </div>
             </div>
@@ -37,7 +32,6 @@
 @push('script')
 <script>
     $( document ).ready(function() {
-        {{--
         @if($proyecto->present()->proyectoFase() == 'Inicio')
             consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table('#talentosDeTecnoparque_Proyecto_FaseInicio_table', 'add_proyecto');
         @endif
@@ -54,40 +48,7 @@
         @if($proyecto->present()->isProyectoActorCTi() == 1)
             divNombreActorCTi.show();
         @endif
-        --}}
-        datatableArchivosDeUnProyecto_inicio();
     });
-    
-    function datatableArchivosDeUnProyecto_inicio() {
-        $('#archivosDeUnProyecto').DataTable({
-            language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            processing: true,
-            serverSide: true,
-            order: false,
-            ajax:{
-            url: "{{route('proyecto.files', [$proyecto->id, 'Inicio'])}}",
-            type: "get",
-            },
-            columns: [
-            {
-                data: 'file',
-                name: 'file',
-                orderable: false,
-            },
-            {
-                data: 'download',
-                name: 'download',
-                orderable: false,
-            },
-            {
-                data: 'delete',
-                name: 'delete',
-                orderable: false,
-            }
-            ],
-        });
-    }
+
 </script>
 @endpush

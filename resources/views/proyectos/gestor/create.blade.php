@@ -7,7 +7,7 @@
         <div class="col s12 m12 l12">
             <h5 class="orange-text">
             <a class="footer-text left-align " href="{{route('proyecto')}}">
-                <i class="material-icons arrow-l">arrow_back</i>
+                <i class="material-icons arrow-l left">arrow_back</i>
             </a> Proyectos de Base Tecnológica
             </h5>
             <div class="card">
@@ -28,7 +28,7 @@
                 </div>
                 <br/>
                 <form id="frmProyectos_FaseInicio" action="{{route('proyecto.store')}}" method="POST">
-                @include('proyectos.gestor.form_inicio', [
+                @include('proyectos.gestor.forms.form_inicio', [
                 'btnText' => 'Guardar'])
                 </form>
                 </div>
@@ -45,6 +45,19 @@
 <script>
     $( document ).ready(function() {
     consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table('#talentosDeTecnoparque_Proyecto_FaseInicio_table', 'add_proyecto');
+
+    @if($proyecto->areaconocimiento->nombre == 'Otro')
+            divOtroAreaConocmiento.show();
+        @endif
+        @if($proyecto->present()->isProyectoEconomiaNaranja() == 1)
+            divEconomiaNaranja.show();
+        @endif
+        @if($proyecto->present()->isProyectoDirigidoDiscapacitados()  == 1)
+            divDiscapacidad.show();
+        @endif
+        @if($proyecto->present()->isProyectoActorCTi() == 1)
+            divNombreActorCTi.show();
+        @endif
     });
 </script>
 @endpush

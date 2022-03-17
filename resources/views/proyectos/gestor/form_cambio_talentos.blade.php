@@ -6,15 +6,19 @@
     <div class="row no-m-t no-m-b">
       <div class="col s12 m12 l12">
         <h5>
-          <a class="footer-text left-align" href="{{route('proyecto')}}">
+          <a class="footer-text left-align" href="{{ route('proyecto.inicio', $proyecto->id) }}">
             <i class="material-icons arrow-l left">arrow_back</i>
           </a> Proyectos de Base Tecnológica
         </h5>
         <div class="card">
           <div class="card-content">
             <div class="row">
-              @include('proyectos.navegacion_fases')
-              <div class="divider"></div>
+              @include('proyectos.titulo')
+              @include('proyectos.historial_cambios')
+              <div class="col s12 offset-m3 offset-l3">
+                @include('proyectos.detalle_general')
+              </div>
+              {{-- <div class="divider"></div> --}}
               <br />
               <form action="{{route('proyecto.update.talentos', $proyecto->id)}}" method="POST" id="frmUpdateTalentos" name="frmUpdateTalentos">
                 {!! method_field('PUT')!!}
@@ -26,7 +30,7 @@
                     <i class="material-icons right">done</i>
                     Guardar
                   </button>
-                  <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                  <a href="{{ route('proyecto.inicio', $proyecto->id) }}" class="waves-effect red lighten-2 btn center-aling">
                     <i class="material-icons right">backspace</i>Cancelar
                   </a>
                 </center>

@@ -586,6 +586,29 @@ class ProyectoController extends Controller
         }
     }
 
+
+    /**
+     * Muestra el formulario para cambiar los datos de la fase de inicio de un proyecto
+     *
+     * @param int $id Id del proyecto
+     * @return Response
+     * @author dum
+     **/
+    public function form_inicio($id)
+    {
+        $proyecto = Proyecto::findOrFail($id);
+        if ($proyecto->fase->nombre == Proyecto::IsInicio()) {
+            return view('proyectos.gestor.create', [
+                'sublineas' => Sublinea::SubLineasDeUnaLinea(auth()->user()->gestor->lineatecnologica->id)->get()->pluck('nombre', 'id'),
+                'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
+                'proyecto' => $proyecto
+            ]);
+        } else {
+            Alert::error('Error!', 'No es posible cambiar la información de la fase de inicio, el proyecto debe estar en esta fase!')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -597,49 +620,41 @@ class ProyectoController extends Controller
     {
         $proyecto = Proyecto::findOrFail($id);
         $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
-        $ultimo_movimiento = $historico->last();
 
 
         switch (Session::get('login_role')) {
             case User::IsGestor():
                 return view('proyectos.gestor.fase_inicio', [
-                    'sublineas' => Sublinea::SubLineasDeUnaLinea(auth()->user()->gestor->lineatecnologica->id)->get()->pluck('nombre', 'id'),
-                    'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
                     'proyecto' => $proyecto,
-                    'historico' => $historico,
-                    'ultimo_movimiento' => $ultimo_movimiento
+                    'historico' => $historico
                 ]);
                 break;
 
             case User::IsDinamizador():
                 return view('proyectos.dinamizador.fase_inicio', [
-                    'sublineas' => Sublinea::SubLineasDeUnaLinea($proyecto->asesor->lineatecnologica_id)->get()->pluck('nombre', 'id'),
-                    'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
                     'proyecto' => $proyecto,
-                    'historico' => $historico,
-                    'ultimo_movimiento' => $ultimo_movimiento
+                    'historico' => $historico
                 ]);
                 break;
 
             case User::IsTalento():
                 return view('proyectos.talento.fase_inicio', [
-                    'sublineas' => Sublinea::SubLineasDeUnaLinea($proyecto->asesor->lineatecnologica_id)->get()->pluck('nombre', 'id'),
-                    'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
                     'proyecto' => $proyecto,
-                    'ultimo_movimiento' => $ultimo_movimiento,
                     'historico' => $historico
                 ]);
                 break;
 
             case User::IsAdministrador():
                 return view('proyectos.administrador.fase_inicio', [
-                    'proyecto' => $proyecto
+                    'proyecto' => $proyecto,
+                    'historico' => $historico 
                 ]);
                 break;
 
             case User::IsInfocenter():
                 return view('proyectos.infocenter.fase_inicio', [
-                    'proyecto' => $proyecto
+                    'proyecto' => $proyecto,
+                    'historico' => $historico 
                 ]);
                 break;
 

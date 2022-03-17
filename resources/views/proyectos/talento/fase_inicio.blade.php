@@ -11,41 +11,38 @@
             </a> Proyectos de Base Tecnológica
             </h5>
             <div class="card">
-            <div class="card-content">
-                <div class="row">
-                @include('proyectos.navegacion_fases')
-                <br />
-                    @include('proyectos.detalle_fase_inicio')
-                    @if ($ultimo_movimiento != null && $ultimo_movimiento->fase == "Inicio" && $ultimo_movimiento->movimiento == "solicitó al talento" && $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first()->user->id == auth()->user()->id)
-                    <form action="{{route('proyecto.aprobacion', [$proyecto->id, 'Inicio'])}}" method="POST" name="frmInicioTalento">
-                    {!! method_field('PUT')!!}
-                    @csrf
-                    <div class="divider"></div>
-                    <center>
-                        <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
-                        <input type="hidden" type="text" name="decision" id="decision">
-                        <button type="submit" onclick="preguntaInicioRechazar(event)" class="waves-effect deep-orange darken-1 btn center-aling">
-                        <i class="material-icons right">close</i>
-                        No aprobar la fase de Inicio
-                        </button>
-                        <button type="submit" onclick="preguntaInicio(event)" class="waves-effect cyan darken-1 btn center-aling">
-                        <i class="material-icons right">done</i>
-                        Aprobar fase de inicio
-                        </button>
-                        <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-                        <i class="material-icons right">backspace</i>Cancelar
-                        </a>
-                    </center>
-                    </form>
-                    @else
+                <div class="card-content">
+                    <div class="row">
+                        @include('proyectos.titulo')
+                        @include('proyectos.navegacion')
+                        @include('proyectos.historial_cambios')
+                        <div class="col offset-m3 offset-l3"></div>
+                        @include('proyectos.detalle_general')
+                        @include('proyectos.detalle_fase_inicio')
+                        
+                        <form action="{{route('proyecto.aprobacion', [$proyecto->id, 'Inicio'])}}" method="POST" name="frmInicioTalento">
+                        {!! method_field('PUT')!!}
+                        @csrf
+                        <div class="divider"></div>
                         <center>
-                        <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                            <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
+                            <input type="hidden" type="text" name="decision" id="decision">
+                            <button type="submit" onclick="preguntaInicioRechazar(event)" class="waves-effect deep-orange darken-1 btn center-aling">
+                            <i class="material-icons right">close</i>
+                            No aprobar la fase de Inicio
+                            </button>
+                            <button type="submit" onclick="preguntaInicio(event)" class="waves-effect cyan darken-1 btn center-aling">
+                            <i class="material-icons right">done</i>
+                            Aprobar fase de inicio
+                            </button>
+                            <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
                             <i class="material-icons right">backspace</i>Cancelar
-                        </a>
+                            </a>
                         </center>
-                    @endif
+                        </form>
+                        
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
 

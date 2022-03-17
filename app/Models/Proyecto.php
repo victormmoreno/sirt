@@ -28,6 +28,16 @@ class Proyecto extends Model
     const IS_TRL7_8_ESPERADO = 1;
 
     /**
+     * Constantes para la fase de proyecto
+     */
+    const IS_INICIO = 'Inicio';
+    const IS_PLANEACION = 'Planeación';
+    const IS_EJECUCION = 'Ejecución';
+    const IS_CIERRE = 'Cierre';
+    const IS_FINALIZADO = 'Finalizado';
+    const IS_SUSPENDIDO = 'Suspendido';
+
+    /**
      * Constante para el campo trl_obtenido
      * @var int
      * @author dum
@@ -72,6 +82,32 @@ class Proyecto extends Model
         'trl_normatividad',
         'evidencia_trl'
     ];
+
+
+    public static function IsInicio() {
+        return self::IS_INICIO;
+    }
+
+    public static function IsPlaneacion() {
+        return self::IS_PLANEACION;
+    }
+
+    public static function IsEjecucion() {
+        return self::IS_EJECUCION;
+    }
+
+    public static function IsCierre() {
+        return self::IS_CIERRE;
+    }
+
+    public static function IsFinalizado() {
+        return self::IS_FINALIZADO;
+    }
+
+    public static function IsSuspendido() {
+        return self::IS_SUSPENDIDO;
+    }
+
     /**
      * returns the obtained trl
      * @author dum

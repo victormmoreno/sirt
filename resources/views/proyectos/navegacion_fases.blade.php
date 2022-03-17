@@ -16,6 +16,7 @@
         </ul>
     </div>
 </div>
+@include('proyectos.historial_cambios')
 @if (Session::get('login_role') == App\User::IsGestor() || Session::get('login_role') == App\User::IsDinamizador())
 <div class="divider"></div>
 <div class="row">
@@ -54,12 +55,4 @@
         </div>
     @endif
 </div>
-    <div class="col s12 m12 l12">
-        @include('proyectos.historial_cambios')
-    </div>
-@endif
-@if (Session::get('login_role') == App\User::IsTalento())
-    <div class="col s12 m12 l12">
-        @include('proyectos.historial_cambios')
-    </div>
 @endif

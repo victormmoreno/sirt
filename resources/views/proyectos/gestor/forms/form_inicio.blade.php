@@ -37,7 +37,7 @@
                 <div class="row">
                     <div class="input-field col s12 m12 l12">
                         @if ($existe)
-                        <input type="text" {{$proyecto->present()->proyectoFase() != 'Inicio' ? 'disabled' : '' }} id="txtnombre" name="txtnombre" value="{{ $proyecto->articulacion_proyecto->actividad->nombre }}">
+                        <input type="text" id="txtnombre" name="txtnombre" value="{{ $proyecto->articulacion_proyecto->actividad->nombre }}">
                         @else
                         <input type="text" id="txtnombre" name="txtnombre" value="">
                         @endif
@@ -62,7 +62,7 @@
 <div class="row">
     <div class="input-field col s12 m6 l6">
         @if ($existe)
-        <select {{$proyecto->present()->proyectoFase() != 'Inicio' ? 'disabled' : '' }} style="width: 100%" class="js-states" id="txtareaconocimiento_id" name="txtareaconocimiento_id"
+        <select style="width: 100%" class="js-states" id="txtareaconocimiento_id" name="txtareaconocimiento_id"
             onchange="selectAreaConocimiento_Proyecto_FaseInicio();">
             <option value="">Seleccione el área de conocimiento</option>
             @forelse ($areasconocimiento as $id => $value)
@@ -87,7 +87,7 @@
     </div>
     <div class="input-field col s12 m6 l6">
         @if ($existe)
-        <select {{$proyecto->present()->proyectoFase() != 'Inicio' ? 'disabled' : '' }} id="txtsublinea_id" class="js-states" name="txtsublinea_id" style="width: 100%">
+        <select id="txtsublinea_id" class="js-states" name="txtsublinea_id" style="width: 100%">
             <option value="">Seleccione la Sublínea</option>
             @forelse ($sublineas as $key => $value)
             <option value="{{$key}}" {{ $proyecto->sublinea_id == $key ? 'selected' : '' }}>{{$value}}</option>
@@ -112,7 +112,7 @@
 <div class="row" id="otroAreaConocimiento_content">
     <div class="input-field col s12 m12 l12">
         @if ($existe)
-        <input {{$proyecto->present()->proyectoFase() != 'Inicio' ? 'disabled' : '' }} type="text" id="txtotro_areaconocimiento" name="txtotro_areaconocimiento" value="{{ $btnText == 'Guardar' ? '' : $proyecto->otro_areaconocimiento }}">
+        <input type="text" id="txtotro_areaconocimiento" name="txtotro_areaconocimiento" value="{{ $btnText == 'Guardar' ? '' : $proyecto->otro_areaconocimiento }}">
         @else
         <input type="text" id="txtotro_areaconocimiento" name="txtotro_areaconocimiento" value="">
         @endif
@@ -127,7 +127,7 @@
             <label>
                 TRL 6
                 @if ($existe)
-                <input {{$proyecto->present()->proyectoFase() != 'Inicio' ? 'disabled' : '' }} type="checkbox" name="trl_esperado" id="trl_esperado" value="1" {{ $btnText == 'Guardar' ? '' : ($proyecto->trl_esperado == 0 ? '' : 'checked') }}>
+                <input type="checkbox" name="trl_esperado" id="trl_esperado" value="1" {{ $btnText == 'Guardar' ? '' : ($proyecto->trl_esperado == 0 ? '' : 'checked') }}>
                 @else
                 <input type="checkbox" name="trl_esperado" id="trl_esperado" value="1">
                 @endif
@@ -142,7 +142,7 @@
             <label>
                 No
                 @if ($existe)
-                <input {{$proyecto->present()->proyectoFase() != 'Inicio' ? 'disabled' : '' }} type="checkbox" name="txtfabrica_productividad" id="txtfabrica_productividad" value="1" {{ $btnText == 'Guardar' ? '' : ($proyecto->fabrica_productividad == 0 ? '' : 'checked') }}>
+                <input type="checkbox" name="txtfabrica_productividad" id="txtfabrica_productividad" value="1" {{ $btnText == 'Guardar' ? '' : ($proyecto->fabrica_productividad == 0 ? '' : 'checked') }}>
                 @else
                 <input type="checkbox" name="txtfabrica_productividad" id="txtfabrica_productividad" value="1">
                 @endif
@@ -157,7 +157,7 @@
             <label>
                 No
                 @if ($existe)
-                <input {{$proyecto->present()->proyectoFase() != 'Inicio' ? 'disabled' : '' }} type="checkbox" name="txtreci_ar_emp" id="txtreci_ar_emp" value="1" {{ $btnText == 'Guardar' ? '' : ($proyecto->reci_ar_emp == 0 ? '' : 'checked') }}>
+                <input type="checkbox" name="txtreci_ar_emp" id="txtreci_ar_emp" value="1" {{ $btnText == 'Guardar' ? '' : ($proyecto->reci_ar_emp == 0 ? '' : 'checked') }}>
                 @else
                 <input type="checkbox" name="txtreci_ar_emp" id="txtreci_ar_emp" value="1">
                 @endif
@@ -175,7 +175,7 @@
                 <label>
                     No
                     @if ($existe)
-                    <input {{$proyecto->present()->proyectoFase() != 'Inicio' ? 'disabled' : '' }} type="checkbox" name="txteconomia_naranja" id="txteconomia_naranja" value="1" {{ $btnText == 'Guardar' ? '' : ($proyecto->economia_naranja == 0 ? '' : 'checked') }} onchange="showInput_EconomiaNaranja()">
+                    <input type="checkbox" name="txteconomia_naranja" id="txteconomia_naranja" value="1" {{ $proyecto->economia_naranja == 0 ? '' : 'checked' }} onchange="showInput_EconomiaNaranja()">
                     @else
                     <input type="checkbox" name="txteconomia_naranja" id="txteconomia_naranja" value="1" onchange="showInput_EconomiaNaranja()">
                     @endif
@@ -187,7 +187,7 @@
         <div class="row" id="economiaNaranja_content">
             <div class="input-field col s12 m12 l12">
                 @if ($existe)
-                <input {{$proyecto->present()->proyectoFase() != 'Inicio' ? 'disabled' : '' }} type="text" id="txttipo_economianaranja" name="txttipo_economianaranja" value="{{ $btnText == 'Guardar' ? '' : $proyecto->tipo_economianaranja }}">
+                <input type="text" id="txttipo_economianaranja" name="txttipo_economianaranja" value="{{ $btnText == 'Guardar' ? '' : $proyecto->tipo_economianaranja }}">
                 @else
                 <input type="text" id="txttipo_economianaranja" name="txttipo_economianaranja" value="">
                 @endif
@@ -203,7 +203,7 @@
                 <label>
                     No
                     @if ($existe)
-                    <input {{$proyecto->present()->proyectoFase() != 'Inicio' ? 'disabled' : '' }} type="checkbox" name="txtdirigido_discapacitados" id="txtdirigido_discapacitados" value="1" {{ $btnText == 'Guardar' ? '' : ($proyecto->dirigido_discapacitados == 0 ? '' : 'checked') }} onchange="showInput_Discapacidad()">
+                    <input type="checkbox" name="txtdirigido_discapacitados" id="txtdirigido_discapacitados" value="1" {{ $btnText == 'Guardar' ? '' : ($proyecto->dirigido_discapacitados == 0 ? '' : 'checked') }} onchange="showInput_Discapacidad()">
                     @else
                     <input type="checkbox" name="txtdirigido_discapacitados" id="txtdirigido_discapacitados" value="1" onchange="showInput_Discapacidad()">
                     @endif
@@ -215,7 +215,7 @@
         <div class="row" id="discapacidad_content">
             <div class="input-field col s12 m12 l12">
                 @if ($existe)
-                <input {{$proyecto->present()->proyectoFase() != 'Inicio' ? 'disabled' : '' }} type="text" id="txttipo_discapacitados" name="txttipo_discapacitados" value="{{ $btnText == 'Guardar' ? '' : $proyecto->tipo_discapacitados }}">
+                <input type="text" id="txttipo_discapacitados" name="txttipo_discapacitados" value="{{ $btnText == 'Guardar' ? '' : $proyecto->tipo_discapacitados }}">
                 @else
                 <input type="text" id="txttipo_discapacitados" name="txttipo_discapacitados" value="">
                 @endif
@@ -231,7 +231,7 @@
                 <label>
                     No
                     @if ($existe)
-                    <input {{$proyecto->present()->proyectoFase() != 'Inicio' ? 'disabled' : '' }} type="checkbox" name="txtarti_cti" id="txtarti_cti" value="1" {{ $btnText == 'Guardar' ? '' : ($proyecto->art_cti == 0 ? '' : 'checked') }} onchange="showInput_ActorCTi()">
+                    <input type="checkbox" name="txtarti_cti" id="txtarti_cti" value="1" {{ $btnText == 'Guardar' ? '' : ($proyecto->art_cti == 0 ? '' : 'checked') }} onchange="showInput_ActorCTi()">
                     @else
                     <input type="checkbox" name="txtarti_cti" id="txtarti_cti" value="1" onchange="showInput_ActorCTi()">
                     @endif
@@ -243,7 +243,7 @@
         <div class="row" id="nombreActorCTi_content">
             <div class="input-field col s12 m12 l12">
                 @if ($existe)
-                <input {{$proyecto->present()->proyectoFase() != 'Inicio' ? 'disabled' : '' }} type="text" name="txtnom_act_cti" id="txtnom_act_cti" value="{{ $btnText == 'Guardar' ? '' : $proyecto->nom_act_cti }}">
+                <input type="text" name="txtnom_act_cti" id="txtnom_act_cti" value="{{ $btnText == 'Guardar' ? '' : $proyecto->nom_act_cti }}">
                 @else
                 <input type="text" name="txtnom_act_cti" id="txtnom_act_cti" value="">
                 @endif
@@ -346,7 +346,7 @@
                                                         @if ($existe)
                                                             @foreach ($proyecto->articulacion_proyecto->talentos as $key => $value)
                                                                 <tr id="talentoAsociadoAProyecto{{$value->id}}">
-                                                                <td><input type="radio" {{$proyecto->present()->proyectoFase() != 'Inicio' ? 'disabled' : '' }} class="with-gap" {{$value->pivot->talento_lider == 1 ? 'checked' : ''}} name="radioTalentoLider" id="radioButton'{{$value->id}}'" value="{{$value->id}}"/><label for ="radioButton'{{$value->id}}'"></label></td>
+                                                                <td><input type="radio" class="with-gap" {{$value->pivot->talento_lider == 1 ? 'checked' : ''}} name="radioTalentoLider" id="radioButton'{{$value->id}}'" value="{{$value->id}}"/><label for ="radioButton'{{$value->id}}'"></label></td>
                                                                 <td><input type="hidden" name="talentos[]" value="{{$value->id}}">{{$value->user()->withTrashed()->first()->documento}} - {{$value->user()->withTrashed()->first()->nombres}} {{$value->user()->withTrashed()->first()->apellidos}}</td>
                                                                 @if ($proyecto->present()->proyectoFase() == 'Inicio')
                                                                 <td><a class="waves-effect red lighten-3 btn" onclick="eliminarTalentoDeProyecto_FaseInicio({{$value->id}});"><i class="material-icons">delete_sweep</i></a></td>
@@ -376,7 +376,7 @@
     <div class="col s12 m6 l6">
         <div class="input-field col s12 m12 l12">
             @if ($existe)
-            <textarea {{$proyecto->present()->proyectoFase() != 'Inicio' ? 'disabled' : '' }} name="txtobjetivo" class="materialize-textarea" length="500" maxlength="500" id="txtobjetivo">{{ $btnText == 'Guardar' ? '' : $proyecto->articulacion_proyecto->actividad->objetivo_general }}</textarea>
+            <textarea name="txtobjetivo" class="materialize-textarea" length="500" maxlength="500" id="txtobjetivo">{{ $proyecto->articulacion_proyecto->actividad->objetivo_general }}</textarea>
             @else
             <textarea name="txtobjetivo" class="materialize-textarea" length="500" maxlength="500" id="txtobjetivo"></textarea>
             @endif
@@ -387,7 +387,7 @@
     <div class="col s12 m6 l6">
         <div class="input-field col s12 m12 l12">
             @if ($existe)
-            <textarea {{$proyecto->present()->proyectoFase() != 'Inicio' ? 'disabled' : '' }} name="txtalcance_proyecto" class="materialize-textarea" length="1000" maxlength="1000" id="txtalcance_proyecto">{{ $btnText == 'Guardar' ? '' : $proyecto->alcance_proyecto }}</textarea>
+            <textarea name="txtalcance_proyecto" class="materialize-textarea" length="1000" maxlength="1000" id="txtalcance_proyecto">{{ $proyecto->alcance_proyecto }}</textarea>
             @else
             <textarea name="txtalcance_proyecto" class="materialize-textarea" length="1000" maxlength="1000" id="txtalcance_proyecto"></textarea>
             @endif
@@ -400,7 +400,7 @@
     <div class="col s12 m12 l12">
         <div class="input-field col s12 m12 l12">
             @if ($existe)
-            <input {{$proyecto->present()->proyectoFase() != 'Inicio' ? 'disabled' : '' }} type="text" id="txtobjetivo_especifico1" name="txtobjetivo_especifico1" value="{{ $btnText == 'Guardar' ? '' : $proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->objetivo }}">
+            <input type="text" id="txtobjetivo_especifico1" name="txtobjetivo_especifico1" value="{{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->objetivo}}">
             @else
             <input type="text" id="txtobjetivo_especifico1" name="txtobjetivo_especifico1" value="">
             @endif
@@ -409,7 +409,7 @@
         </div>
         <div class="input-field col s12 m12 l12">
             @if ($existe)
-            <input {{$proyecto->present()->proyectoFase() != 'Inicio' ? 'disabled' : '' }} type="text" id="txtobjetivo_especifico2" name="txtobjetivo_especifico2" value="{{ $btnText == 'Guardar' ? '' : $proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo }}">
+            <input type="text" id="txtobjetivo_especifico2" name="txtobjetivo_especifico2" value="{{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo }}">
             @else
             <input type="text" id="txtobjetivo_especifico2" name="txtobjetivo_especifico2" value="">
             @endif
@@ -418,7 +418,7 @@
         </div>
         <div class="input-field col s12 m12 l12">
             @if ($existe)
-            <input {{$proyecto->present()->proyectoFase() != 'Inicio' ? 'disabled' : '' }} type="text" id="txtobjetivo_especifico3" name="txtobjetivo_especifico3" value="{{ $btnText == 'Guardar' ? '' : $proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo }}">
+            <input type="text" id="txtobjetivo_especifico3" name="txtobjetivo_especifico3" value="{{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo }}">
             @else
             <input type="text" id="txtobjetivo_especifico3" name="txtobjetivo_especifico3" value="">
             @endif
@@ -427,7 +427,7 @@
         </div>
         <div class="input-field col s12 m12 l12">
             @if ($existe)
-            <input {{$proyecto->present()->proyectoFase() != 'Inicio' ? 'disabled' : '' }} type="text" id="txtobjetivo_especifico4" name="txtobjetivo_especifico4" value="{{ $btnText == 'Guardar' ? '' : $proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo }}">
+            <input type="text" id="txtobjetivo_especifico4" name="txtobjetivo_especifico4" value="{{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo }}">
             @else
             <input type="text" id="txtobjetivo_especifico4" name="txtobjetivo_especifico4" value="">
             @endif
@@ -445,13 +445,11 @@
                 <h5 class="center">Talentos dueños de la propiedad intelectual.</h5>
             </div>
             @if ($existe)
-                @if ($proyecto->present()->proyectoFase() == 'Inicio')
-                    <div class="row center">
-                        <a class="btn btn-medium green" onclick="consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table('#posiblesPropietarios_Personas_table', 'add_propiedad');">
-                            Agregar
-                        </a>
-                    </div>
-                @endif
+                <div class="row center">
+                    <a class="btn btn-medium green" onclick="consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table('#posiblesPropietarios_Personas_table', 'add_propiedad');">
+                        Agregar
+                    </a>
+                </div>
             @else
             <div class="row center">
                 <a class="btn btn-medium green" onclick="consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table('#posiblesPropietarios_Personas_table', 'add_propiedad');">
@@ -464,11 +462,9 @@
                     <tr>
                         <th style="width: 80%">Propietario de la Propiedad Intelectual.</th>
                         @if ($existe)
-                            @if ($proyecto->present()->proyectoFase() == 'Inicio')
                             <th style="width: 20%">Eliminar</th>
-                            @endif
                         @else
-                        <th style="width: 20%">Eliminar</th>
+                            <th style="width: 20%">Eliminar</th>
                         @endif
                     </tr>
                 </thead>
