@@ -11,11 +11,9 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
 HeadingRowFormatter::default('slug');
-
 class EquipoImport implements ToCollection, WithHeadingRow
 {
     public $nodo;
-    public $ideaRepository;
     public $validaciones;
     public $hoja = 'Equipos';
 
@@ -32,25 +30,14 @@ class EquipoImport implements ToCollection, WithHeadingRow
         $validacion = null;
         try {
             foreach ($rows as $key => $row) {
-                // quitar espacios a los campos que no los necesita
                 $row['linea'] = ltrim(rtrim($row['linea']));
-                $row['tipo_material'] = ltrim(rtrim($row['tipo_material']));
-                $row['categoria_material'] = ltrim(rtrim($row['categoria_material']));
-                $row['presentacion'] = ltrim(rtrim( $row['presentacion']));
-                $row['medida'] = ltrim(rtrim( $row['medida']));
-                $row['nombre'] = ltrim(rtrim($row['nombre']));
-                $row['cantidad'] = ltrim(rtrim($row['cantidad']));
-                $row['valor_compra'] = ltrim(rtrim($row['valor_compra']));
-                $row['proveedor'] = ltrim(rtrim($row['proveedor']));
-                $row['marca'] = ltrim(rtrim($row['marca']));
-                // Mayúsculas
-
-                $row['nombre'] = strtoupper($row['nombre']);
-                $row['cantidad'] = strtoupper($row['cantidad']);
-                $row['valor_compra'] = strtoupper($row['valor_compra']);
-                $row['proveedor'] = strtoupper($row['proveedor']);
-                $row['marca'] = strtoupper($row['marca']);
-
+                $row['referencia'] = ltrim(rtrim($row['referencia']));
+                $row['nombre_equipo'] = ltrim(rtrim($row['nombre_equipo']));
+                $row['marca'] = ltrim(rtrim( $row['marca']));
+                $row['costo_adquisicion'] = ltrim(rtrim( $row['costo_adquisicion']));
+                $row['vida_util'] = ltrim(rtrim($row['vida_util']));
+                $row['anio_compra'] = ltrim(rtrim($row['anio_compra']));
+                $row['promedio_horas_uso'] = ltrim(rtrim($row['promedio_horas_uso']));
 
                 // Validar linea
                 $linea = \App\Models\LineaTecnologica::where('nombre', $row['linea'])->first();
@@ -59,109 +46,97 @@ class EquipoImport implements ToCollection, WithHeadingRow
                     return $validacion;
                 }
 
-
-                // Validar tipo_material
-                $tipoMaterial = \App\Models\TipoMaterial::where('nombre', $row['tipo_material'])->first();
-                $validacion = $this->validaciones->validarQuery($tipoMaterial, $row['tipo_material'], $key, 'tipo material', $this->hoja);
+                // Validar referencia
+                $validacion = $this->validaciones->validarCelda($row['referencia'], $key, 'referencia', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                // Validar categoria_material
-                $categoria = \App\Models\CategoriaMaterial::where('nombre', $row['categoria_material'])->first();
-                $validacion = $this->validaciones->validarQuery($categoria, $row['categoria_material'], $key, 'categoria material', $this->hoja);
+                $validacion = $this->validaciones->validarTamanhoCelda($row['referencia'], $key, 'referencia', 200, $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                // Validar presentacion
-                $presentacion = \App\Models\Presentacion::where('nombre', $row['presentacion'])->first();
-                $validacion = $this->validaciones->validarQuery($presentacion, $row['presentacion'], $key, 'presentacion', $this->hoja);
-                if (!$validacion) {
-                    return $validacion;
-                }
-                // Validar Medida
-                $medida = \App\Models\Medida::where('nombre', $row['medida'])->first();
-                $validacion = $this->validaciones->validarQuery($medida, $row['medida'], $key, 'medida', $this->hoja);
-                if (!$validacion) {
-                    return $validacion;
-                }
-                $validacion = $this->validaciones->validarCelda($row['fecha'], $key, 'Fecha', $this->hoja);
-                if (!$validacion) {
-                    return $validacion;
-                }
                 // Validar nombre
-                $validacion = $this->validaciones->validarCelda($row['nombre'], $key, 'Nombre', $this->hoja);
-                if (!$validacion) {
-                    return $validacion;
-                }
-                // Validar cantidad
-                $validacion = $this->validaciones->validarCelda($row['cantidad'], $key, 'cantidad', $this->hoja);
+                $validacion = $this->validaciones->validarCelda($row['nombre_equipo'], $key, 'nombre equipo', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                // Validar valor_compra
-                $validacion = $this->validaciones->validarCelda($row['valor_compra'], $key, 'valor compra', $this->hoja);
+                $validacion = $this->validaciones->validarTamanhoCelda($row['nombre_equipo'], $key, 'nombre equipo', 200, $this->hoja);
+                if (!$validacion) {
+                    return $validacion;
+                }
+                // Validar marca
+                $validacion = $this->validaciones->validarCelda($row['marca'], $key, 'marca', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                // $validacion = $this->validaciones->validarCelda($row['proveedor'], $key, 'proveedor', $this->hoja);
-                // if (!$validacion) {
-                //     return $validacion;
-                // }
-
-                // $validacion = $this->validaciones->validarCelda($row['marca'], $key, 'marca', $this->hoja);
-                // if (!$validacion) {
-                //     return $validacion;
-                // }
-
-                $validacion = $this->validaciones->validarTamanhoCelda($row['nombre'], $key, 'nombre', 1000, $this->hoja);
+                $validacion = $this->validaciones->validarTamanhoCelda($row['marca'], $key, 'marca', 200, $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                $validacion = $this->validaciones->validarTamanhoCelda($row['proveedor'], $key, 'proveedor', 100, $this->hoja);
+                // Validar costo_adquisicion
+                $validacion = $this->validaciones->validarCelda($row['costo_adquisicion'], $key, 'costo adquisición', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
-                $validacion = $this->validaciones->validarTamanhoCelda($row['marca'], $key, 'marca', 45, $this->hoja);
+
+                $validacion = $this->validaciones->validarTamanhoCelda($row['costo_adquisicion'], $key, 'costo_adquisicion', 45, $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
-                
-                $material = Material::where('codigo_material', $row['codigo_material'])->first();
-                if (!isset($material) && $material == null) {
-                    
-                    $codeMaterial = $this->generateCodigoMaterial($linea->id);
-                    $material = $this->registerMaterial(
-                        $codeMaterial,
+
+                // Validar vida_util
+                $validacion = $this->validaciones->validarCelda($row['vida_util'], $key, 'vida util', $this->hoja);
+                if (!$validacion) {
+                    return $validacion;
+                }
+
+                $validacion = $this->validaciones->validarTamanhoCelda($row['vida_util'], $key, 'vida_util', 11, $this->hoja);
+                if (!$validacion) {
+                    return $validacion;
+                }
+
+                // Validar anio_compra
+                $validacion = $this->validaciones->validarCelda($row['anio_compra'], $key, 'año compra', $this->hoja);
+                if (!$validacion) {
+                    return $validacion;
+                }
+
+                // Validar promedio_horas_uso
+                $validacion = $this->validaciones->validarCelda($row['promedio_horas_uso'], $key, 'promedio horas de uso', $this->hoja);
+                if (!$validacion) {
+                    return $validacion;
+                }
+
+                $validacion = $this->validaciones->validarTamanhoCelda($row['promedio_horas_uso'], $key, 'promedio horas de uso', 11, $this->hoja);
+                if (!$validacion) {
+                    return $validacion;
+                }
+                $equipo = Equipo::where('nombre', $row['nombre_equipo'])
+                ->where('nodo_id', $this->nodo)
+                                ->first();
+                if (!isset($equipo) && $equipo == null) {
+                    $equipo = $this->registerEquipo(
                         $params = [
-                            'line' => $linea->id,
-                            'tipomaterial' => $tipoMaterial->id,
-                            'categoria' => $categoria->id,
-                            'presentacion' => $presentacion->id,
-                            'medida' => $medida->id,
+                            'line' => $linea->id
                         ],
                         $row
                     );
                 } else {
-                    if ($this->nodo == $material->nodo_id) {
-                        $this->updateMaterial(
-                            $material,
+                    if ($this->nodo == $equipo->nodo_id) {
+                        $this->updateEquipo(
+                            $equipo,
                             $params = [
-                                'line' => $linea->id,
-                                'tipomaterial' => $tipoMaterial->id,
-                                'categoria' => $categoria->id,
-                                'presentacion' => $presentacion->id,
-                                'medida' => $medida->id,
+                                'line' => $linea->id
                             ],
                             $row
                         );
                     } else {
-                        session()->put('errorMigracion', 'Error en la hoja de "'.$this->hoja.'": El código de proyecto '.$row['codigo_material'].' en el registro de la fila #' . ($key+2) . ' ya se encuentra registrado en un material del nodo '.$material->nodo->entidad->nombre.'
-                        (Se recomienda cambiar el código de los proyecto, ya que la base de datos no permite códigos duplicados).');
+                        session()->put('errorMigracion', 'Error en la hoja de "'.$this->hoja.'": El equipo '.$row['nombre_equipo'].' en el registro de la fila #' . ($key+2) . ' ya se encuentra registrado en un equipo del nodo '.$equipo->nodo->entidad->nombre);
                     }
                 }
             }
@@ -174,52 +149,33 @@ class EquipoImport implements ToCollection, WithHeadingRow
         }
     }
 
-
-
-    private function generateCodigoMaterial( $line)
+    private function registerEquipo($params = [], $row)
     {
-        
-            $anho = Carbon::now()->isoFormat('YYYY');
-            $tecnoparque = sprintf("%02d", $this->nodo);
-            $material = Material::selectRaw('MAX(id+1) AS max')->get()->last();
-            $material->max == null ? $material->max = 1 : $material->max = $material->max;
-            $material->max = sprintf("%04d", $material->max);
-
-            return 'MAT' . $anho . '-' . $tecnoparque .sprintf("%02d", $line)  . '-' . $material->max;
-    }
-    private function registerMaterial($code, $params = [], $row)
-    {
-        return Material::create([
-            'nodo_id' => $this->nodo,
+        return Equipo::create([
+            'nodo_id'               => $this->nodo,
             'lineatecnologica_id'   => $params['line'],
-            'tipomaterial_id'       => $params['tipomaterial'],
-            'categoria_material_id' => $params['categoria'],
-            'presentacion_id'       => $params['presentacion'],
-            'medida_id'             => $params['medida'],
-            'codigo_material'       => $code,
-            'fecha'                 => Carbon::parse($row['fecha'])->format('Y-m-d'),
-            'nombre'                => $row['nombre'],
-            'cantidad'              => $row['cantidad'],
-            'valor_compra'          => $row['valor_compra'],
-            'proveedor'             => $row['proveedor'],
+            'referencia'            => $row['referencia'],
+            'nombre'                => $row['nombre_equipo'],
             'marca'                 => $row['marca'],
+            'costo_adquisicion'     => $row['costo_adquisicion'],
+            'vida_util'             => $row['vida_util'],
+            'anio_compra'           => Carbon::parse($row['anio_compra'])->format('Y'),
+            'horas_uso_anio'        => $row['promedio_horas_uso'],
         ]);
     }
 
-    private function updateMaterial($material,$params = [], $row)
+    private function updateEquipo($equipo,$params = [], $row)
     {
-        return $material->update([
+        return $equipo->update([
+            'nodo_id'               => $this->nodo,
             'lineatecnologica_id'   => $params['line'],
-            'tipomaterial_id'       => $params['tipomaterial'],
-            'categoria_material_id' => $params['categoria'],
-            'presentacion_id'       => $params['presentacion'],
-            'medida_id'             => $params['medida'],
-            'fecha'                 => Carbon::parse($row['fecha'])->format('Y-m-d'),
-            'nombre'                => $row['nombre'],
-            'cantidad'              => $row['cantidad'],
-            'valor_compra'          => $row['valor_compra'],
-            'proveedor'             => $row['proveedor'],
+            'referencia'            => $row['referencia'],
+            'nombre'                => $row['nombre_equipo'],
             'marca'                 => $row['marca'],
+            'costo_adquisicion'     => $row['costo_adquisicion'],
+            'vida_util'             => $row['vida_util'],
+            'anio_compra'           => Carbon::parse($row['anio_compra'])->format('Y'),
+            'horas_uso_anio'        => $row['promedio_horas_uso'],
         ]);
     }
 }
