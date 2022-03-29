@@ -1,60 +1,40 @@
 @extends('layouts.app')
-@section('meta-title', 'Proyectos de Base Tecnológica')
+@section('meta-title', 'Proyectos de Desarrollo Tecnológico')
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
         <div class="row no-m-t no-m-b">
-        <div class="col s12 m12 l12">
-            <h5>
-            <a class="footer-text left-align" href="{{route('proyecto')}}">
-                <i class="material-icons arrow-l left">arrow_back</i>
-            </a> Proyectos de Base Tecnológica
-            </h5>
-            <div class="card">
-            <div class="card-content">
-                <div class="row">
-                    @include('proyectos.titulo')
-                    @include('proyectos.navegacion')
-                    @include('proyectos.historial_cambios')
-                    @include('proyectos.options_always')
-                    @include('proyectos.detalle_general')
-                    @include('proyectos.detalle_fase_inicio')
-                    {{-- <form id="frmProyectos_FaseInicio_Update" action="{{route('proyecto.update.inicio', $proyecto->id)}}" method="POST">
-                        {!! method_field('PUT')!!}
-                        @include('proyectos.gestor.form_inicio', [
-                        'btnText' => 'Modificar'])
-                    </form> --}}
+            <div class="col s12 m12 l12">
+                <h5>
+                <a class="footer-text left-align" href="{{route('proyecto')}}">
+                    <i class="material-icons arrow-l left">arrow_back</i>
+                </a> Proyectos de Base Tecnológica
+                </h5>
+                <div class="card">
+                    <div class="card-content">
+                        <div class="row">
+                            @include('proyectos.titulo')
+                            @include('proyectos.navegacion')
+                            @include('proyectos.historial_cambios')
+                            @include('proyectos.options_always')
+                            @include('proyectos.detalle_general')
+                            @include('proyectos.detalle_fase_inicio')
+                            <center>
+                                <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                                    <i class="material-icons right">backspace</i>Cancelar
+                                </a>
+                            </center>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        </div>
     </div>
 </main>
-@include('proyectos.modals')
 @endsection
 @push('script')
 <script>
     $( document ).ready(function() {
-        {{--
-        @if($proyecto->present()->proyectoFase() == 'Inicio')
-            consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table('#talentosDeTecnoparque_Proyecto_FaseInicio_table', 'add_proyecto');
-        @endif
-        
-        @if($proyecto->areaconocimiento->nombre == 'Otro')
-            divOtroAreaConocmiento.show();
-        @endif
-        @if($proyecto->present()->isProyectoEconomiaNaranja() == 1)
-            divEconomiaNaranja.show();
-        @endif
-        @if($proyecto->present()->isProyectoDirigidoDiscapacitados()  == 1)
-            divDiscapacidad.show();
-        @endif
-        @if($proyecto->present()->isProyectoActorCTi() == 1)
-            divNombreActorCTi.show();
-        @endif
-        --}}
         datatableArchivosDeUnProyecto_inicio();
     });
     

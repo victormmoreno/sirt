@@ -4,56 +4,52 @@
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
         <div class="row no-m-t no-m-b">
-        <h5>
-            <a class="footer-text left-align" href="{{ route('proyecto.cierre', $proyecto->id) }}">
-            <i class="left material-icons">arrow_back</i>
-            </a> Proyectos de Desarrollo Tecnológico
-        </h5>
-        <div class="card">
-            <div class="card-content">
-            <div class="row">
-                <h5 class="center">Entregables de la fase de cierre.</h5>
-            </div>
-            <div class="row">
-                <div class="col s12 m12 l12">
-                <form action="{{route('proyecto.update.entregables.cierre', $proyecto->id)}}" method="POST" onsubmit="return checkSubmit()">
-                    @include('proyectos.gestor.form_entregables_cierre')
+        <div class="col s12 m12 l12">
+            <h5>
+            <a class="footer-text left-align" href="{{route('proyecto.ejecucion', $proyecto->id)}}">
+                <i class="material-icons arrow-l left">arrow_back</i>
+            </a> Proyectos de Base Tecnológica
+            </h5>
+            <div class="card">
+                <div class="card-content">
                     <div class="row">
-                    @include('proyectos.archivos_table_fase', ['fase' => 'cierre'])
+                        @include('proyectos.titulo')
+                        <form method="POST" action="{{route('proyecto.update.ejecucion', $proyecto->id)}}">
+                            @include('proyectos.gestor.forms.form_ejecucion')
+                            @include('proyectos.archivos_table_fase', ['fase' => 'ejecucion'])
+                            <center>
+                            <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
+                            <a href="{{ route('proyecto.ejecucion', $proyecto->id) }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
+                            </center>
+                        </form>
                     </div>
-                    <center>
-                    @if ($proyecto->articulacion_proyecto->actividad->present()->actividadAprobacionDinamizador() == 0)
-                    <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
-                    @endif
-                    <a href="{{ route('proyecto.cierre', $proyecto->id) }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
-                    </center>
-                </form>
                 </div>
             </div>
-            </div>
         </div>
+
         </div>
     </div>
 </main>
 @endsection
 @push('script')
 <script>
-    datatableArchivosDeUnProyecto_cierre();
-    var Dropzone = new Dropzone('#fase_cierre_proyecto', {
+    datatableArchivosDeUnProyecto_ejecucion();
+
+    var Dropzone = new Dropzone('#fase_ejecucion_proyecto', {
         url: '{{ route('proyecto.files.upload', $proyecto->id) }}',
         headers: {
         'X-CSRF-TOKEN': '{{ csrf_token() }}'
         },
         dictDefaultMessage: 'Arrastra los archivos aquí para subirlos.',
         params: {
-        fase: 'Cierre'
+        fase: 'Ejecución'
         },
         paramName: 'nombreArchivo'
     });
 
     Dropzone.on('success', function (res) {
         $('#archivosDeUnProyecto').dataTable().fnDestroy();
-        datatableArchivosDeUnProyecto_cierre();
+        datatableArchivosDeUnProyecto_ejecucion();
         Swal.fire({
         toast: true,
         position: 'top-end',
@@ -77,8 +73,7 @@
         });
     })
     Dropzone.autoDiscover = false;
-
-    function datatableArchivosDeUnProyecto_cierre() {
+    function datatableArchivosDeUnProyecto_ejecucion() {
         $('#archivosDeUnProyecto').DataTable({
             language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -87,7 +82,7 @@
             serverSide: true,
             order: false,
             ajax:{
-            url: "{{route('proyecto.files', [$proyecto->id, 'Cierre'])}}",
+            url: "{{route('proyecto.files', [$proyecto->id, 'Ejecución'])}}",
             type: "get",
             },
             columns: [
@@ -101,7 +96,7 @@
                 name: 'download',
                 orderable: false,
             },
-            @if ($proyecto->fase->nombre == "Cierre")
+            @if ($proyecto->present()->proyectoFase() == 'Ejecución')
             {
                 data: 'delete',
                 name: 'delete',

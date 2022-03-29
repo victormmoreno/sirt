@@ -19,22 +19,12 @@
                         <div class="col offset-m3 offset-l3"></div>
                         @include('proyectos.detalle_general')
                         @include('proyectos.detalle_fase_inicio')
-                        
-                        <form action="{{route('proyecto.aprobacion', [$proyecto->id, 'Inicio'])}}" method="POST" name="frmInicioTalento">
+                        <form action="{{route('proyecto.aprobacion', [$proyecto->id])}}" method="POST" name="frmAprobacionProyecto">
                         {!! method_field('PUT')!!}
                         @csrf
                         <div class="divider"></div>
                         <center>
-                            <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
-                            <input type="hidden" type="text" name="decision" id="decision">
-                            <button type="submit" onclick="preguntaInicioRechazar(event)" class="waves-effect deep-orange darken-1 btn center-aling">
-                            <i class="material-icons right">close</i>
-                            No aprobar la fase de Inicio
-                            </button>
-                            <button type="submit" onclick="preguntaInicio(event)" class="waves-effect cyan darken-1 btn center-aling">
-                            <i class="material-icons right">done</i>
-                            Aprobar fase de inicio
-                            </button>
+                            @include('proyectos.botones_aprobacion_component')
                             <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
                             <i class="material-icons right">backspace</i>Cancelar
                             </a>
@@ -54,36 +44,9 @@
 @push('script')
 <script>
     $( document ).ready(function() {
-        @if($proyecto->areaconocimiento->nombre == 'Otro')
-            divOtroAreaConocmiento.show();
-        @endif
-        @if($proyecto->present()->isProyectoEconomiaNaranja() == 1)
-            divEconomiaNaranja.show();
-        @endif
-        @if($proyecto->present()->isProyectoDirigidoDiscapacitados() == 1)
-            divDiscapacidad.show();
-        @endif
-        @if($proyecto->present()->isProyectoActorCTi() == 1)
-            divNombreActorCTi.show();
-        @endif
         datatableArchivosDeUnProyecto_inicio();
     });
 
-    function changeToPlaneacion() {
-        window.location.href = "{{ route('proyecto.planeacion', $proyecto->id) }}";
-    }
-
-    function changeToInicio() {
-        window.location.href = "{{ route('proyecto.inicio', $proyecto->id) }}";
-    }
-
-    function changeToEjecucion() {
-        window.location.href = "{{ route('proyecto.ejecucion', $proyecto->id) }}";
-    }
-
-    function changeToCierre() {
-        window.location.href = "{{ route('proyecto.cierre', $proyecto->id) }}";
-    }
 
     function datatableArchivosDeUnProyecto_inicio() {
         $('#archivosDeUnProyecto').DataTable({
@@ -112,53 +75,53 @@
         });
     }
 
-    function preguntaInicioRechazar(e){
-        e.preventDefault();
-        Swal.fire({
-            title: '¿Está seguro(a) de no aprobar la fase de inicio de este proyecto?',
-            input: 'text',
-            type: 'warning',
-            inputValidator: (value) => {
-                if (!value) {
-                    return 'Las observaciones deben ser obligatorias!'
-                } else {
-                    $('#decision').val('rechazado');
-                    $('#motivosNoAprueba').val(value);
-                }
-            },
-            inputAttributes: {
-            maxlength: 100,
-            placeHolder: '¿Por qué?'
-            },
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            cancelButtonText: 'Cancelar',
-            confirmButtonText: 'Enviar observaciones!'
-        }).then((result) => {
-            if (result.value) {
-                document.frmInicioTalento.submit();
-            }
-        })
-    }
+    // function preguntaRechazarAprobacionProyecto(e){
+    //     e.preventDefault();
+    //     Swal.fire({
+    //         title: '¿Está seguro(a) de no aprobar la fase de inicio de este proyecto?',
+    //         input: 'text',
+    //         type: 'warning',
+    //         inputValidator: (value) => {
+    //             if (!value) {
+    //                 return 'Las observaciones deben ser obligatorias!'
+    //             } else {
+    //                 $('#decision').val('rechazado');
+    //                 $('#motivosNoAprueba').val(value);
+    //             }
+    //         },
+    //         inputAttributes: {
+    //         maxlength: 100,
+    //         placeHolder: '¿Por qué?'
+    //         },
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#3085d6',
+    //         cancelButtonColor: '#d33',
+    //         cancelButtonText: 'Cancelar',
+    //         confirmButtonText: 'Enviar observaciones!'
+    //     }).then((result) => {
+    //         if (result.value) {
+    //             document.frmAprobacionTalento.submit();
+    //         }
+    //     })
+    // }
 
-    function preguntaInicio(e){
-        e.preventDefault();
-        Swal.fire({
-            title: '¿Está seguro(a) de aprobar la fase de inicio de este proyecto?',
-            text: 'Al hacerlo estás aceptando y aprobando toda la información de esta fase, los documento adjuntos y las asesorias recibidas.',
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            cancelButtonText: 'Cancelar',
-            confirmButtonText: 'Sí!'
-        }).then((result) => {
-            if (result.value) {
-                $('#decision').val('aceptado');
-                document.frmInicioTalento.submit();
-            }
-        })
-    }
+    // function preguntaAprobacion(e){
+    //     e.preventDefault();
+    //     Swal.fire({
+    //         title: '¿Está seguro(a) de aprobar la fase de inicio de este proyecto?',
+    //         text: 'Al hacerlo estás aceptando y aprobando toda la información de esta fase, los documento adjuntos y las asesorias recibidas.',
+    //         type: 'warning',
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#3085d6',
+    //         cancelButtonColor: '#d33',
+    //         cancelButtonText: 'Cancelar',
+    //         confirmButtonText: 'Sí!'
+    //     }).then((result) => {
+    //         if (result.value) {
+    //             $('#decision').val('aceptado');
+    //             document.frmAprobacionTalento.submit();
+    //         }
+    //     })
+    // }
 </script>
 @endpush

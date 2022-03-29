@@ -26,16 +26,7 @@
                             @csrf
                             <div class="divider"></div>
                             <center>
-                            <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
-                            <input type="hidden" type="text" name="decision" id="decision">
-                            <button type="submit" onclick="preguntaInicioRechazar(event)" class="waves-effect deep-orange darken-1 btn center-aling">
-                                <i class="material-icons right">close</i>
-                                No aprobar la fase de Inicio
-                            </button>
-                            <button type="submit" onclick="preguntaInicio(event)" class="waves-effect cyan darken-1 btn center-aling">
-                                <i class="material-icons right">done</i>
-                                Aprobar fase de inicio
-                            </button>
+                            @include('proyectos.botones_aprobacion_component')
                             <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
                                 <i class="material-icons right">backspace</i>Cancelar
                             </a>

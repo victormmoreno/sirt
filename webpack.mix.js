@@ -102,6 +102,7 @@ mix.scripts([
     'resources/app/intervenciones/gestor/index.js',
     'resources/app/intervenciones/index.js',
     'resources/app/proyecto/index.js',
+    'resources/app/proyecto/forms_aprobacion.js',
     'resources/app/proyecto/gestor/form.js',
     'resources/app/proyecto/gestor/form_cierre.js',
     'resources/app/edt/gestor/form.js',

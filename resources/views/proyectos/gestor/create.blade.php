@@ -18,15 +18,6 @@
                     <span class="card-title center-align orange-text"><b>Nuevo Proyecto - {{ auth()->user()->nombres }} {{ auth()->user()->apellidos }}</b></span>
                 </center>
                 <div class="divider"></div>
-                <div class="col s12 m12 l12">
-                    <div class="card-content red lighten-3 white-text">
-                    <p>
-                        <i class="material-icons left">info_outline</i>
-                        Los elementos con (*) son obligatorios
-                    </p>
-                    </div>
-                </div>
-                <br/>
                 <form id="frmProyectos_FaseInicio" action="{{route('proyecto.store')}}" method="POST">
                 @include('proyectos.gestor.forms.form_inicio', [
                 'btnText' => 'Guardar'])
@@ -45,19 +36,6 @@
 <script>
     $( document ).ready(function() {
     consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table('#talentosDeTecnoparque_Proyecto_FaseInicio_table', 'add_proyecto');
-
-    @if($proyecto->areaconocimiento->nombre == 'Otro')
-            divOtroAreaConocmiento.show();
-        @endif
-        @if($proyecto->present()->isProyectoEconomiaNaranja() == 1)
-            divEconomiaNaranja.show();
-        @endif
-        @if($proyecto->present()->isProyectoDirigidoDiscapacitados()  == 1)
-            divDiscapacidad.show();
-        @endif
-        @if($proyecto->present()->isProyectoActorCTi() == 1)
-            divNombreActorCTi.show();
-        @endif
     });
 </script>
 @endpush

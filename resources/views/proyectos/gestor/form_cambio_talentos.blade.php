@@ -18,7 +18,6 @@
               <div class="col s12 offset-m3 offset-l3">
                 @include('proyectos.detalle_general')
               </div>
-              {{-- <div class="divider"></div> --}}
               <br />
               <form action="{{route('proyecto.update.talentos', $proyecto->id)}}" method="POST" id="frmUpdateTalentos" name="frmUpdateTalentos">
                 {!! method_field('PUT')!!}
