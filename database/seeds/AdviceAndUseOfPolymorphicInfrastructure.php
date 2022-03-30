@@ -21,19 +21,6 @@ class AdviceAndUseOfPolymorphicInfrastructure extends Seeder
                         'asesorable_type' => \App\Models\Proyecto::class
                 ]);
             }
-            if($item->tipo_usoinfraestructura == 1 && isset($item->actividad->articulacionpbt)){
-                $item->update([
-                        'asesorable_id' => $item->actividad->articulacionpbt->id,
-                        'asesorable_type' => \App\Models\ArticulacionPbt::class
-                ]);
-            }
-            if( isset($item->actividad->articulacion_proyecto->articulacion)){
-                $item->update([
-                    'asesorable_id' => $item->actividad->articulacion_proyecto->articulacion->id,
-                    'asesorable_type' => \App\Models\Articulacion::class
-                ]);
-            }
-
             if( isset($item->actividad->edt)){
                 $item->update([
                     'asesorable_id' => $item->actividad->edt->id,

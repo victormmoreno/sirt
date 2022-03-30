@@ -28,12 +28,6 @@
         <i class="material-icons {{setActiveRouteActiveIcon('proyecto')}}">library_books</i>PBT
     </a>
 </li>
-<li class="no-padding {{setActiveRoute('articulacion')}}">
-    <a href="{{ route('articulaciones.index') }}" class="{{setActiveRouteActivePage('articulacion')}}" rel="canonical" title="Articulaciones">
-        <i class="material-icons {{setActiveRouteActiveIcon('articulacion')}}">autorenew</i>Articulación PBT
-    </a>
-</li>
-
 <li class="no-padding {{setActiveRoute('materiales')}}">
     <a href="{{route('material.index')}}" class="{{setActiveRouteActivePage('materiales')}}" rel="canonical" title="Materiales de Formación">
         <i class="material-icons {{setActiveRouteActiveIcon('materiales')}}">local_library</i>Materiales de Formación
@@ -114,8 +108,4 @@
         <i class="material-icons {{setActiveRouteActiveIcon('empresa')}}">business_center</i>Empresas
     </a>
 </li>
-<li class="no-padding {{setActiveRoute('noticias')}}">
-    <a class="waves-effect waves-grey {{setActiveRouteActivePage('noticias')}}" href="{{url('noticias')}}" title="Noticias">
-        <i class="material-icons {{setActiveRouteActiveIcon('noticias')}}">local_library</i>Noticias
-    </a>
-</li>
+

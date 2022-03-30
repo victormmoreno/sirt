@@ -13,10 +13,6 @@
         <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas
     </a>
 </li>
-<li class="no-padding {{setActiveRoute('articulacion')}}">
-    <a href="{{ route('articulaciones.index') }}" class="{{setActiveRouteActivePage('articulacion')}}" rel="canonical" title="Articulaciones">
-    <i class="material-icons {{setActiveRouteActiveIcon('articulacion')}}">autorenew</i>Articulación PBT</a>
-</li>
 <li class="no-padding {{setActiveRoute('usoinfraestructura')}}">
     <a class="waves-effect waves-grey {{setActiveRouteActivePage('usoinfraestructura')}}" href="{{route('usoinfraestructura.index')}}" rel="canonical" title="Asesorias y usos">
         <i class="material-icons {{setActiveRouteActiveIcon('usoinfraestructura')}}">domain</i>Asesorias y usos

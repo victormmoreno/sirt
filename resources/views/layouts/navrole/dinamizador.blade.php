@@ -43,21 +43,6 @@
         <i class="material-icons {!! setActiveRouteActiveIcon('costos-administrativos') !!}">settings_input_svideo</i>Costos Administrativos
     </a>
 </li>
-{{-- <li class="no-padding {{setActiveRoute('articulacion')}}">
-    <a class="waves-effect waves-grey {{setActiveRouteActivePage('articulacion')}}" href="{{route('articulacion')}}" rel="canonical" title="Articulaciones">
-        <i class="material-icons {{ setActiveRouteActiveIcon('articulacion') }}">autorenew</i>AGI
-    </a>
-</li> --}}
-<li class="no-padding {{setActiveRoute('articulacion')}}">
-    <a href="{{ route('articulaciones.index') }}" class="{{setActiveRouteActivePage('articulacion')}}" rel="canonical" title="Articulaciones">
-        <i class="material-icons {{setActiveRouteActiveIcon('articulacion')}}">autorenew</i>Articulaciones
-    </a>
-</li>
-{{-- <li class="{!! setActiveRoute('edt') !!}">
-    <a class="waves-effect waves-grey {!! setActiveRouteActivePage('edt') !!}" href="{{route('edt')}}" rel="canonical" title="EDT's">
-        <i class="material-icons {!! setActiveRouteActiveIcon('edt') !!}">hearing</i>EDT's
-    </a>
-</li> --}}
 <li class="no-padding {{setActiveRoute('materiales')}}">
     <a href="{{route('material.index')}}" class="{{setActiveRouteActivePage('materiales')}}" rel="canonical" title="Materiales de Formación">
         <i class="material-icons {{setActiveRouteActiveIcon('materiales')}}">local_library</i>Materiales de Formación

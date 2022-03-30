@@ -1406,20 +1406,5 @@ $(document).ready(function() {
             $("#contenido-nodo-cali").slideUp("slow");
             inodocali = 1
         }
-
     })
-
-    /*-------noticias----------*/
-    $(".not-cel").click(function() {
-        $(".botones").css({
-            display: "block"
-        })
-    })
-    $(".contenedor-principal, .botones-cel, .botones-cel button").click(function() {
-        $(".botones").css({
-            display: "none"
-        })
-    })
-
-
 });

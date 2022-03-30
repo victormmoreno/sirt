@@ -149,26 +149,6 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Edt::class, 'asesor_id', 'id');
     }
 
-    /**
-     * Define a one-to-many relationship between users and articulaciones.
-     * @author devjul
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function asesorarticulaciones()
-    {
-        return $this->hasMany(\App\Models\Articulacion::class, 'asesor_id', 'id');
-    }
-
-    /**
-     * Define a one-to-many relationship between users and articulacion_pbts.
-     * @author devjul
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function asesorarticulacionpbt()
-    {
-        return $this->hasMany(\App\Models\ArticulacionPbt::class, 'asesor_id', 'id');
-    }
-
     public function etnia()
     {
         return $this->belongsTo(Etnia::class, 'etnia_id', 'id');
@@ -546,15 +526,6 @@ class User extends Authenticatable implements JWTSubject
     {
         return (bool) $this->documento == \Auth::user()->documento;
     }
-
-    public static function enableTalentsArticulacion($articulacion)
-    {
-        foreach ($articulacion->talentos as $value) {
-            $value->user()->withTrashed()->first()->restore();
-            $value->user()->withTrashed()->first()->update(['estado' => User::IsActive()]);
-        }
-    }
-
 
     public function present()
     {

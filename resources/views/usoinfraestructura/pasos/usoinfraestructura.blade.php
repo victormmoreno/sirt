@@ -44,7 +44,7 @@
                             <label for="IsProyecto">Proyectos</label>
                             @endif
                             @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsArticulador()))
-                                <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->asesorable_type == App\Models\ArticulacionPbt::class ? 'checked' : old('txttipousoinfraestructura')}} value="1"/>
+                                <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" value="1"/>
                                 <label for="IsIdea">Articulaciones</label>
                                 <input class="with-gap" id="IsIdea" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->asesorable_type == App\Models\Idea::class ? 'checked' : old('txttipousoinfraestructura')}} value="2"/>
                                 <label for="IsIdea">Ideas</label>
@@ -159,10 +159,6 @@
                         <i class="material-icons prefix">library_books</i>
                         @if(isset($usoinfraestructura->asesorable_type) && ($usoinfraestructura->asesorable_type == App\Models\Proyecto::class))
                             <input id="txtactividad" name="txtactividad"  type="text" value="{{ isset($usoinfraestructura->asesorable->articulacion_proyecto->actividad->codigo_actividad) ? $usoinfraestructura->asesorable->articulacion_proyecto->actividad->codigo_actividad :  old('txtactividad')}} - {{ isset($usoinfraestructura->asesorable->articulacion_proyecto->actividad->nombre) ? $usoinfraestructura->asesorable->articulacion_proyecto->actividad->nombre : old('txtactividad')}}" readonly />
-                            <label for="txtactividad">Proyecto</label>
-                        @elseif(isset($usoinfraestructura->asesorable_type) && ($usoinfraestructura->asesorable_type == App\Models\ArticulacionPbt::class))
-                            <input id="txtactividad" name="txtactividad"  type="text" value="{{ isset($usoinfraestructura->asesorable->codigo) ? $usoinfraestructura->asesorable->codigo :  old('txtactividad')}} - {{ isset($usoinfraestructura->asesorable->nombre) ? $usoinfraestructura->asesorable->nombre : old('txtactividad')}}" readonly />
-                            <label for="txtactividad">seleccione un tipo de asesoría y uso<span class="red-text">*</span></label>
                         @elseif(isset($usoinfraestructura->asesorable_type) && ($usoinfraestructura->asesorable_type == App\Models\Idea::class))
                             <input id="txtactividad" name="txtactividad"  type="text" value="{{ isset($usoinfraestructura->asesorable->codigo_idea) ? $usoinfraestructura->asesorable->codigo_idea :  old('txtactividad')}} - {{ isset($usoinfraestructura->asesorable->nombre_proyecto) ? $usoinfraestructura->asesorable->nombre_proyecto : old('txtactividad')}}" readonly />
                             <label for="txtactividad">seleccione un tipo de asesoría y uso<span class="red-text">*</span></label>

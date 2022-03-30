@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\PDF;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Proyecto, ArticulacionPbt, UsoInfraestructura};
+use App\Models\{Proyecto, UsoInfraestructura};
 use Barryvdh\DomPDF\Facade as PDF;
 
 class UsoInfraestructuraController extends Controller
@@ -25,11 +25,6 @@ class UsoInfraestructuraController extends Controller
             $pdf->setPaper(strtolower('LETTER'), $orientacion = 'landscape');
             return $pdf->stream('Seguimiento_' . $data->articulacion_proyecto->actividad->present()->actividadCode() . '.pdf');
 
-        } else if($tipoActividad == 'articulacion'){
-            $data = ArticulacionPbt::findOrFail($id);
-            $pdf = PDF::loadView('pdf.usos.seguimiento', ['data' => $data, 'tipo_actividad' => $tipoActividad]);
-            $pdf->setPaper(strtolower('LETTER'), $orientacion = 'landscape');
-            return $pdf->stream('Seguimiento_' . $data->present()->articulacionCode(). '.pdf');
         }else{
             return abort('404');
         }

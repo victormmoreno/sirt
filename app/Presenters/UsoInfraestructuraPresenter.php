@@ -27,14 +27,6 @@ class UsoInfraestructuraPresenter extends Presenter
         if(
             $this->uso->whereHasMorph(
                 'asesorable',
-                \App\Models\ArticulacionPbt::class
-            ) && isset($this->uso->asesorable->tipoarticulacion)
-        ){
-            return 'Articulación';
-        }
-        if(
-            $this->uso->whereHasMorph(
-                'asesorable',
                 \App\Models\Idea::class
             ) && isset($this->uso->asesorable->estadoIdea)
         ){
@@ -72,13 +64,6 @@ class UsoInfraestructuraPresenter extends Presenter
             ) && isset($this->uso->asesorable->articulacion_proyecto)
         ){
             return $this->uso->asesorable->nodo->entidad->nombre;
-        }else if(
-            $this->uso->whereHasMorph(
-                'asesorable',
-                [ \App\Models\ArticulacionPbt::class]
-            ) && isset($this->uso->asesorable->tipoarticulacion)
-        ){
-            return $this->uso->asesorable->nodo->entidad->nombre;
         }
         else if(
             $this->uso->whereHasMorph(
@@ -100,13 +85,6 @@ class UsoInfraestructuraPresenter extends Presenter
             ) && isset($this->uso->asesorable->articulacion_proyecto)
         ){
             return $this->uso->asesorable->asesor->lineatecnologica->nombre;
-        }else if(
-            $this->uso->whereHasMorph(
-                'asesorable',
-                [ \App\Models\ArticulacionPbt::class]
-            ) && isset($this->uso->asesorable->tipoarticulacion)
-        ){
-            return "No registra";
         }
         return "No registra";
     }
@@ -123,8 +101,8 @@ class UsoInfraestructuraPresenter extends Presenter
         }else if(
             $this->uso->whereHasMorph(
                 'asesorable',
-                [ \App\Models\ArticulacionPbt::class, \App\Models\Idea::class]
-            ) && (isset($this->uso->asesorable->tipoarticulacion) && isset($this->uso->asesorable->asesor))
+                [ \App\Models\Idea::class]
+            ) && ( isset($this->uso->asesorable->asesor))
         ){
             return $this->uso->asesorable->asesor->present()->userFullName();
         }
@@ -166,13 +144,6 @@ class UsoInfraestructuraPresenter extends Presenter
         }else if(
             $this->uso->whereHasMorph(
                 'asesorable',
-                [ \App\Models\ArticulacionPbt::class]
-            ) && isset($this->uso->asesorable->tipoarticulacion)
-        ){
-            return "{$this->uso->asesorable->present()->articulacionCode()} - {$this->uso->asesorable->present()->articulacionName()}";
-        }else if(
-            $this->uso->whereHasMorph(
-                'asesorable',
                 [ \App\Models\Idea::class]
             ) && isset($this->uso->asesorable->estadoIdea)
         ){
@@ -193,15 +164,8 @@ class UsoInfraestructuraPresenter extends Presenter
         }else if(
             $this->uso->whereHasMorph(
                 'asesorable',
-                [ \App\Models\ArticulacionPbt::class]
-            ) && isset($this->uso->asesorable->tipoarticulacion)
-        ){
-            return "{$this->uso->asesorable->present()->articulacionPbtstartDate()}";
-        }else if(
-            $this->uso->whereHasMorph(
-                'asesorable',
                 [ \App\Models\Idea::class]
-            ) && isset($this->uso->asesorable->tipoarticulacion)
+            )
         ){
             return "{$this->uso->asesorable->present()->ideastartDate()}";
         }

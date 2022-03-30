@@ -11,7 +11,6 @@ use App\Models\LineaTecnologica;
 use App\Models\Nodo;
 use App\Models\Material;
 use App\Models\UsoInfraestructura;
-use App\Models\ArticulacionPbt;
 use App\Policies\CostoAdministrativo\CostoAdministrativoPolicy;
 use App\Policies\Empresa\EmpresaPolicy;
 use App\Policies\Equipo\EquipoPolicy;
@@ -22,7 +21,6 @@ use App\Policies\User\UserPolicy;
 use App\Policies\UsoInfraestrucutura\UsoInfraestructuraPolicy;
 use App\Policies\Material\MaterialPolicy;
 use App\Policies\Idea\IdeaPolicy;
-use App\Policies\ArticulacionPbt\ArticulacionPbtPolicy;
 use App\User;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -45,7 +43,6 @@ class AuthServiceProvider extends ServiceProvider
         Material::class => MaterialPolicy::class,
         Idea::class => IdeaPolicy::class,
         Empresa::class => EmpresaPolicy::class,
-        ArticulacionPbt::class  => ArticulacionPbtPolicy::class,
     ];
 
     /**

@@ -16,12 +16,4 @@ class Producto extends Model
     protected $fillable = [
         'nombre'
     ];
-
-    public function articulaciones()
-    {
-        return $this->belongsToMany(Articulacion::class, 'articulaciones_productos')
-            ->withTimestamps()
-            ->withPivot('logrado');
-    }
-
 }

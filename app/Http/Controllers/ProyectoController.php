@@ -1273,9 +1273,9 @@ class ProyectoController extends Controller
                 'edt.nodo.entidad' => function ($query) {
                     $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
                 },
-                'articulacion_proyecto.articulacion',
-                'articulacion_proyecto.articulacion.productos',
-                'articulacion_proyecto.articulacion.fase',
+                // 'articulacion_proyecto.articulacion',
+                // 'articulacion_proyecto.articulacion.productos',
+                // 'articulacion_proyecto.articulacion.fase',
 
 
             ])->where('codigo_actividad', $code)->first();

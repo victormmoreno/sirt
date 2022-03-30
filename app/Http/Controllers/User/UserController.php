@@ -520,4 +520,39 @@ class UserController extends Controller
         $this->authorize('generatePassword', $user);
         return $this->userRepository->generateNewPasswordToUser($user);
     }
+
+    /**
+     * Display the specified resource of talents.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function filterTalento($documento)
+    {
+        $user = User::withTrashed()
+        ->with(['talento'])
+        ->role(User::IsTalento())
+        ->where('documento', $documento)
+        ->first();
+
+        if (request()->ajax()) {
+
+            if($user != null){
+                return response()->json([
+                    'data' => [
+                        'user' => $user,
+                        'status_code' => Response::HTTP_OK
+                    ]
+                ],Response::HTTP_OK);
+            }
+
+            return response()->json([
+                'data' => [
+                    'user' => null,
+                    'status_code' => Response::HTTP_NOT_FOUND,
+                ]
+            ]);
+        }
+        return view('users.show', ['user' => $user]);
+    }
 }
