@@ -771,7 +771,7 @@ Route::get('creditos', function () {
     return view('configuracion.creditos');
 })->name('creditos');
 
-Route::get('usuarios/filtro-talento/{documento}', 'UserController@filterTalento')->name('articulacion.usuario.talento.search');
+Route::get('usuarios/filtro-talento/{documento}', 'User\UserController@filterTalento')->name('articulacion.usuario.talento.search');
 
 Route::get('empresas/filter-code/{value}', 'EmpresaController@filterByCode')->name('empresa.filterbycode');
 Route::get('empresas/sede/{id}', 'EmpresaController@filterSede')->name('empresa.sede.filter');
@@ -779,4 +779,15 @@ Route::get('empresas/sede/{id}', 'EmpresaController@filterSede')->name('empresa.
 Route::resource('articulaciones/tipoarticulaciones', 'TipoArticulacionController');
 
 
+Route::group(
+    [
+        'prefix' => 'articulaciones',
+        'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Talento|Articulador',]
+    ],
+    function () {
+        Route::get('/', 'Articulation\ArticulationListController@index')->name('articulation.accompaniments');
+        Route::get('/crear', 'Articulation\ArticulationRegisterController@create')->name('articulation.create');
+        Route::post('/', 'Articulation\ArticulationRegisterController@store')->name('articulation.store');
 
+    }
+);

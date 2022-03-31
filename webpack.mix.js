@@ -38,6 +38,7 @@ mix.scripts([
 		'resources/assets/plugins/materialize/js/materialize.min.js',
 		'resources/assets/plugins/jquery-blockui/jquery.blockui.js',
 		'resources/assets/plugins/jquery-validation/jquery.validate.js',
+		'resources/assets/plugins/jquery-steps/jquery.steps.min.js',
 		'resources/assets/plugins/datatables/js/jquery.dataTables.js',
 		'resources/assets/plugins/datatables/js/datatables.buttons.min.js',
 		'resources/assets/plugins/font-awesome/js/all.js',
