@@ -788,6 +788,7 @@ Route::group(
         Route::get('/', 'Articulation\ArticulationListController@index')->name('articulation.accompaniments');
         Route::get('/crear', 'Articulation\ArticulationRegisterController@create')->name('articulation.create');
         Route::post('/', 'Articulation\ArticulationRegisterController@store')->name('articulation.store');
+        Route::get('/show/{id}', 'Articulation\ArticulationShowController@show')->name('articulation.show');
 
     }
 );

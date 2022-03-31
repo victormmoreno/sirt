@@ -94,6 +94,30 @@
                         </tr>
                         </thead>
                         <tbody>
+                        <tr>
+                            <td>Bogotá</td>
+                            <td>A2022-0535233-4234</td>
+                            <td>Acompañamiento Sennainnva - Postobon</td>
+                            <td>Abierta</td>
+                            <td>14/03/2022</td>
+                            <td><a class="btn m-b-xs" href="{{route('articulation.show', 1)}}"><i class="material-icons">search</i></a></td>
+                        </tr>
+                        <tr>
+                            <td>Bogotá</td>
+                            <td>A2022-736634-5487</td>
+                            <td>Acompañamiento Ecommerce Online</td>
+                            <td>Cerrada</td>
+                            <td>01/03/2022</td>
+                            <td><a class="btn m-b-xs" href="{{route('articulation.show', 1)}}"><i class="material-icons">search</i></a></td>
+                        </tr>
+                        <tr>
+                            <td>Bogotá</td>
+                            <td>A2022-65457466-6325</td>
+                            <td>Acompañamiento UPI</td>
+                            <td>Abierta</td>
+                            <td>04/03/2022</td>
+                            <td><a class="btn m-b-xs" href="{{route('articulation.show', 1)}}"><i class="material-icons">search</i></a></td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
