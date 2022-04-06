@@ -935,13 +935,6 @@
   background-color: #00838f !important;
 }
 
-<<<<<<< HEAD
-=======
-.cyan-text.text-darken-3 {
-  color: #00838f !important;
-}
-
->>>>>>> 84e62e3a12c2088575ac867952c70a38a88a1b64
 .cyan.darken-4 {
   background-color: #006064 !important;
 }
@@ -8475,12 +8468,9 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   }
 }
 
-<<<<<<< HEAD
 .cyan-text.text-darken-3 {
   color:#ff8f00 !important;
 }
-=======
->>>>>>> 84e62e3a12c2088575ac867952c70a38a88a1b64
 /* fallback */
 @font-face {
   font-family: 'Material Icons';
@@ -18532,7 +18522,6 @@ h5.breadcrumbs-header {
 
 
 
-<<<<<<< HEAD
 
 
 .chapter-title.mobile{
@@ -18659,5 +18648,3 @@ h5.breadcrumbs-header {
     width: auto !important;
   }
 }
-=======
->>>>>>> 84e62e3a12c2088575ac867952c70a38a88a1b64
