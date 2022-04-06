@@ -22,11 +22,16 @@
                     @include('proyectos.detalle_fase_suspendido')
                     <div class="divider"></div>
                     <center>
-                    <button type="submit" onclick="preguntaSuspendido(event)" value="send" {{$proyecto->articulacion_proyecto->aprobacion_dinamizador_suspendido == 0 ? '' : 'disabled'}}
-                        class="waves-effect cyan darken-1 btn center-aling">
-                        <i class="material-icons right">done</i>
-                        {{$proyecto->articulacion_proyecto->aprobacion_dinamizador_suspendido == 0 ? 'Aprobar suspensión del proyecto' : 'Este proyecto ya se ha suspendido'}}
-                    </button>
+                        @if ($ultimo_movimiento->movimiento == App\Models\Movimiento::IsSolicitarDinamizador() && $ultimo_movimiento->fase == 'Suspendido')
+                        <button type="submit" onclick="preguntaSuspendido(event)" value="send" class="waves-effect cyan darken-1 btn center-aling">
+                            <i class="material-icons right">done</i>
+                            Aprobar suspensión del proyecto
+                        </button>
+                        @else
+                        <a href="!#" class="waves-effect red lighten-2 btn center-aling disabled">
+                            <i class="material-icons right">done</i>Se necesita de la solicitud del experto para suspender el proyecto.
+                        </a>
+                        @endif
                     <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
                         <i class="material-icons right">backspace</i>Cancelar
                     </a>

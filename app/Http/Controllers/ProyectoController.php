@@ -519,8 +519,8 @@ class ProyectoController extends Controller
             ]);
         } else {
             $result = $this->getProyectoRepository()->store($request);
-            if ($result) {
-                return response()->json(['state' => 'registro']);
+            if ($result['state']) {
+                return response()->json(['state' => 'registro', 'url' => route('proyecto.inicio', $result['id'])]);
             } else {
                 return response()->json(['state' => 'no_registro']);
             }
@@ -763,11 +763,13 @@ class ProyectoController extends Controller
     {
         $proyecto = Proyecto::findOrFail($id);
         $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+        $ultimo_movimiento = $historico->last();
         switch (Session::get('login_role')) {
             case User::IsGestor():
                 return view('proyectos.gestor.fase_suspendido', [
                     'proyecto' => $proyecto,
-                    'historico' => $historico
+                    'historico' => $historico,
+                    'ultimo_movimiento' => $ultimo_movimiento
                 ]);
                 break;
 
@@ -775,7 +777,8 @@ class ProyectoController extends Controller
 
                 return view('proyectos.dinamizador.fase_suspendido', [
                     'proyecto' => $proyecto,
-                    'historico' => $historico
+                    'historico' => $historico,
+                    'ultimo_movimiento' => $ultimo_movimiento
                 ]);
             default:
                 return abort(Response::HTTP_FORBIDDEN);

@@ -47,6 +47,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Proyecto\ProyectoApproveWasRequested' => [
             'App\Listeners\Proyecto\ProyectoApproveWasRequestedInPhase',
         ],
+        'App\Events\Proyecto\ProyectoSuspenderWasRequested' => [
+            'App\Listeners\Proyecto\ProyectoSuspenderWasRequestedExperto',
+        ],
         'App\Events\Comite\GestoresWereRegistered' => [
             'App\Listeners\Comite\GestoresWereRegisteredInAgendamiento',
         ],

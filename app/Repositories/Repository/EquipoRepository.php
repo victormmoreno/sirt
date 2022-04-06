@@ -24,7 +24,7 @@ class EquipoRepository
 
     public function storeEquipo($request)
     {
-       
+
         DB::beginTransaction();
 
         try {
@@ -57,7 +57,7 @@ class EquipoRepository
      */
     public function updateEquipo($request, $equipo)
     {
-        
+
         DB::beginTransaction();
 
         try {
@@ -92,6 +92,6 @@ class EquipoRepository
         if (session()->get('login_role') == User::IsDinamizador()) {
             return auth()->user()->dinamizador->nodo_id;
         }
-        
+
     }
 }

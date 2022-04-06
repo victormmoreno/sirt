@@ -25,6 +25,12 @@
                   @elseif($historico[$i]->movimiento == 'solicitó al talento')
                   El {{$historico[$i]->rol}} {{$historico[$i]->usuario}}
                   {{$historico[$i]->movimiento}} aprobar la fase de {{$historico[$i]->fase}} del proyecto el día {{$historico[$i]->created_at}}.
+                  @elseif($historico[$i]->movimiento == 'solicitó al dinamizador')
+                  El {{$historico[$i]->rol}} {{$historico[$i]->usuario}}
+                  {{$historico[$i]->movimiento}} aprobar la fase de {{$historico[$i]->fase}} del proyecto el día {{$historico[$i]->created_at}}.
+                  @elseif($historico[$i]->movimiento == 'suspendió')
+                  El {{$historico[$i]->rol}} {{$historico[$i]->usuario}}
+                  {{$historico[$i]->movimiento}} el proyecto cuando se encontraba en la fase de {{$historico[$i]->fase}} el día {{$historico[$i]->created_at}}.
                   @else
                   El {{$historico[$i]->rol}} {{$historico[$i]->usuario}}
                   {{$historico[$i]->movimiento}} la fase de {{$historico[$i]->fase}} el día {{$historico[$i]->created_at}}.

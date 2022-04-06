@@ -243,7 +243,7 @@ class UserPresenter extends Presenter
 
     public function userTipoTalento()
     {
-        if ($this->user->has('talento.tipotalento')) {
+        if ($this->user->has('talento.tipotalento') && isset($this->user->talento->tipotalento)) {
             if (
                 $this->user->talento->tipotalento->nombre == TipoTalento::IS_APRENDIZ_SENA_CON_APOYO ||
                 $this->user->talento->tipotalento->nombre == TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO
@@ -366,5 +366,37 @@ class UserPresenter extends Presenter
             User::IsGestor(),
             User::IsApoyoTecnico()
         ]) ? true : false;
+    }
+
+    public function userNode()
+    {
+        if($this->user->has('dinamizador') && isset($this->user->dinamizador->nodo)){
+            return $this->user->present()->userDinamizadorNombreNodo();
+        }
+
+        if($this->user->has('gestor') && isset($this->user->gestor->nodo)){
+            return $this->user->present()->userGestorNombreNodo();
+        }
+
+        if($this->user->has('articulador') && isset($this->user->articulador->nodo)){
+            return $this->user->present()->userArticuladorName();
+        }
+
+        if($this->user->has('infocenter') && isset($this->user->infocenter->nodo)){
+            return $this->user->present()->userInfocenterNombreNodo();
+        }
+
+        if($this->user->has('apoyotecnico') && isset($this->user->apoyotecnico->nodo)){
+            return $this->user->present()->userApoyoTecnicoNodoName();
+        }
+
+        if($this->user->has('ingreso') && isset($this->user->ingreso->nodo)){
+            return $this->user->present()->userIngresoNombreNodo();
+        }
+
+        if ($this->user->has('talento') && isset($this->user->talento)) {
+            return "No Aplica";
+        }
+
     }
 }
