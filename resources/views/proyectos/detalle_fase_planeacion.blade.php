@@ -1,9 +1,10 @@
-<div class="center">
-    <span class="mailbox-title orange-text">
-        <i class="material-icons">attach_file</i>
-        Evidencias de la fase de Planeación.
-    </span>
-</div>
+<div class="divider mailbox-divider"></div>
+    <div class="center">
+        <span class="mailbox-title orange-text">
+            <i class="material-icons">attach_file</i>
+            Evidencias de la fase de planeación.
+        </span>
+    </div>
 <div class="divider mailbox-divider"></div>
 <div class="row">
     <div class="col s6 m6 l6">
@@ -17,9 +18,7 @@
     </div>
     <div class="col s6 m6 l6">
         <p class="p-v-xs">
-            <input type="checkbox" disabled
-                {{ $proyecto->estado_arte == 1 ? 'checked' : '' }} id="txtestado_arte"
-                name="txtestado_arte" value="1">
+            <input type="checkbox" disabled {{ $proyecto->estado_arte == 1 ? 'checked' : '' }} id="txtestado_arte" name="txtestado_arte" value="1">
             <label for="txtestado_arte">Estado del arte y/o Canvas</label>
         </p>
     </div>

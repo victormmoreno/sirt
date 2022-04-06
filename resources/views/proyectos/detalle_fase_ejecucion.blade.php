@@ -1,3 +1,4 @@
+<div class="divider mailbox-divider"></div>
 <div class="center">
     <span class="mailbox-title orange-text">
         <i class="material-icons">attach_file</i>

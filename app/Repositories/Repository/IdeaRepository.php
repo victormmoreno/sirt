@@ -408,6 +408,22 @@ class IdeaRepository
     {
         DB::beginTransaction();
         try {
+            if ($idea->estadoIdea->nombre != 'En registro' && $idea->estadoIdea->nombre != 'Postulado' && $idea->estadoIdea->nombre != 'Admitido') {
+                return [
+                    'state' => false,
+                    'msg' => 'La idea no se ha inhabilitado, solo se pueden inhabilitar ideas en estado "En registro", "Admitido" o "Postulado"!',
+                    'title' => 'Inhabilitación errónea!',
+                    'type' => 'error'
+                ];
+            }
+            if (Session::get('login_role') == User::IsDinamizador() && $idea->nodo_id != auth()->user()->dinamizador->nodo_id) {
+                return [
+                    'state' => false,
+                    'msg' => 'La idea no se ha inhabilitado, solo se puedes inhabilitar ideas de tu nodo!',
+                    'title' => 'Inhabilitación errónea!',
+                    'type' => 'error'
+                ];
+            }
             $idea->registrarHistorialIdea(Movimiento::IsInhabilitar(), Session::get('login_role'), null, 'mientras estaba en estado "' . $idea->estadoIdea->nombre . '"');
             $idea->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsInhabilitado())->first()->id]);
             DB::commit();
@@ -429,13 +445,10 @@ class IdeaRepository
     }
 
     /**
-     * undocumented function summary
+     * Funcion que duplica una idea aprobada por el comité
      *
-     * Undocumented function long description
-     *
-     * @param Type $var Description
-     * @return type
-     * @throws conditon
+     * @return void
+     * @author dum
      **/
     public function duplicarIdeaComite($comite, $comite_idea, $duplicado)
     {

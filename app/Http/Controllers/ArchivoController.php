@@ -328,7 +328,7 @@ class ArchivoController extends Controller
         // Creando la ruta
         $entrenamiento = $this->entrenamientoRepository->consultarEntrenamientoPorId($id);
         $route = "";
-        $nodo = sprintf("%02d", auth()->user()->gestor->nodo_id);
+        $nodo = sprintf("%02d", auth()->user()->articulador->nodo_id);
         $anho = $entrenamiento->fecha_sesion1->isoFormat('YYYY');
         $route = 'public/' . $nodo . '/' . $anho . '/Entrenamientos' . '/' . $id;
         $fileUrl = $file->storeAs($route, $fileName);

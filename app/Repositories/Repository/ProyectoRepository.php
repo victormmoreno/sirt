@@ -3,13 +3,14 @@
 namespace App\Repositories\Repository;
 
 
-use App\Models\{Proyecto, Entidad, Fase, Actividad, ArticulacionProyecto, ArchivoArticulacionProyecto, Movimiento, UsoInfraestructura, Role, Idea, EstadoIdea};
+use App\Models\{Proyecto, Entidad, Fase, Actividad, ArticulacionProyecto, ArchivoArticulacionProyecto, ControlNotificaciones, Movimiento, UsoInfraestructura, Role, Idea, EstadoIdea};
 use Illuminate\Support\Facades\{DB, Notification, Storage, Session};
-use App\Notifications\Proyecto\{ProyectoCierreAprobado, ProyectoAprobarInicio, ProyectoAprobarPlaneacion, ProyectoAprobarEjecucion, ProyectoAprobarCierre, ProyectoAprobarInicioDinamizador, ProyectoAprobarSuspendido, ProyectoSuspendidoAprobado, ProyectoNoAprobarFase};
+use App\Notifications\Proyecto\{ProyectoCierreAprobado, ProyectoAprobarFase, ProyectoAprobarPlaneacion, ProyectoAprobarEjecucion, ProyectoAprobarCierre, ProyectoAprobarFaseDinamizador, ProyectoAprobarSuspendido, ProyectoSuspendidoAprobado, ProyectoNoAprobarFase};
 use Carbon\Carbon;
 use App\Events\Proyecto\{ProyectoWasntApproved, ProyectoWasApproved, ProyectoApproveWasRequested, ProyectoSuspenderWasRequested};
 use App\User;
 use App\Repositories\Repository\UserRepository\DinamizadorRepository;
+use Illuminate\Support\Arr;
 
 class ProyectoRepository
 {
@@ -105,6 +106,113 @@ class ProyectoRepository
         }
         exit;
         // dd($proyecto->asesorias->pivot);
+    }
+
+    /**
+     * Verifica que el nuevo talento interlocutor, sea diferente al actual
+     *
+     * @param Request $request
+     * @param $talentos
+     * @return type
+     * @author dum
+     **/
+    private function verificarCambioDeTalentoInterlocutor($talentos_nuevos, $proyecto)
+    {
+        $talento_nuevo = $this->verificarNuevoTalento($talentos_nuevos);
+        $talento_actual = $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first()->id;
+        if ($talento_nuevo == $talento_actual) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Verifica el id del nuevo talento interlocutor
+     *
+     * @param array $talentos_nuevos Nuevos talento de un proyecto
+     * @return int
+     * @author dum
+     **/
+    private function verificarNuevoTalento($talentos_nuevos)
+    {
+        for ($i=0; $i < count($talentos_nuevos); $i++) { 
+            if ($talentos_nuevos[$i]['talento_lider'] == 1) {
+                return $talentos_nuevos[$i]['talento_id'];
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Verifica que los talentos ejecutores del proyecto se hayan cambiado
+     *
+     * @param $talentos_actuales
+     * @param $talentos_nuevos
+     * @return bool
+     * @author dum
+     **/
+    public function verificarCambioDeTalentos($talentos_actuales, $talentos_nuevos)
+    {
+        if ($talentos_nuevos->count() >= $talentos_actuales->count()) {
+            if( $talentos_nuevos->diff($talentos_actuales)->count() == 0 ) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            if( $talentos_actuales->diff($talentos_nuevos)->count() == 0 ) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    /**
+     * Cambia los talentos del proyecto
+     *
+     * @param Request $request
+     * @param Proyecto $proyecto
+     * @return array
+     * @author dum
+     **/
+    public function update_talentos($request, $proyecto)
+    {
+        DB::beginTransaction();
+        try {
+            $proyecto_actual = $proyecto;
+            $talentos_actuales = $proyecto_actual->articulacion_proyecto->talentos()->orderBy('id')->get();
+            $syncData = array();
+            $syncData = $this->arraySyncTalentosDeUnProyecto($request);
+            $cambio_talento_interlocutor = $this->verificarCambioDeTalentoInterlocutor($syncData, $proyecto_actual);
+            $proyecto->articulacion_proyecto->talentos()->sync($syncData, true);
+            $cambio_talentos_proyecto = $this->verificarCambioDeTalentos($talentos_actuales, $proyecto->articulacion_proyecto->talentos()->orderBy('id')->get());
+            if ($cambio_talento_interlocutor) {
+                // Historial del cambio de talento interlocutor
+                $this->registrarHistorialProyecto($proyecto, 'cambió el talento interlocutor');
+            }
+            if ($cambio_talentos_proyecto) {
+                // Historial del cambio de talentos ejecutores
+                $this->registrarHistorialProyecto($proyecto, 'cambió los talentos del proyecto');
+            }
+            ArticulacionProyecto::habilitarTalentos($proyecto->articulacion_proyecto);
+            DB::commit();
+            return ['state' => true, 'id' => $proyecto->id];
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+            return ['state' => false];
+        }
+    }
+
+    public function registrarHistorialProyecto($proyecto, $movimiento)
+    {
+        $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', $movimiento)->first(), [
+            'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
+            'user_id' => auth()->user()->id,
+            'fase_id' => $proyecto->fase_id,
+            'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+        ]);
     }
 
     /**
@@ -944,7 +1052,7 @@ class ProyectoRepository
      * @param $id Id del proyecto
      * @param $fase Fase que se está aprobando
      */
-    public function aprobacionFaseInicio($request, $id, $fase)
+    public function aprobacionFaseInicio($request, $id)
     {
         DB::beginTransaction();
         try {
@@ -952,7 +1060,7 @@ class ProyectoRepository
             $movimiento = null;
             $mensaje = null;
             $title = null;
-
+    
             $proyecto = Proyecto::findOrFail($id);
             $dinamizadorRepository = new DinamizadorRepository;
             $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->nodo_id)->get();
@@ -960,52 +1068,58 @@ class ProyectoRepository
             array_push($destinatarios, ['email' => $proyecto->asesor->user->email]);
             $talento_lider = $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first();
             $talento_lider = $talento_lider->user;
-
+            $notificacion_act = ControlNotificaciones::find($request->control_notificacion_id);
+    
             if ($request->decision == 'rechazado') {
                 $title = 'Aprobación rechazada!';
                 $mensaje = 'Se le han notificado al experto los motivos por los cuales no se aprueba el cambio de fase del proyecto';
                 $comentario = $request->motivosNoAprueba;
                 $movimiento = Movimiento::IsNoAprobar();
-
-                $this->crearMovimiento($proyecto, $fase, $movimiento, $comentario);
+    
+                $this->crearMovimiento($proyecto, $proyecto->fase->nombre, $movimiento, $comentario);
                 // Recuperar el útlimo registro de movimientos ya que el método attach no retorna nada
                 $regMovimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
                 // Envio de un correo informando porque no se aprobó el cambio de fase
                 event(new ProyectoWasntApproved($proyecto, $regMovimiento));
-
+    
                 Notification::send($proyecto->asesor->user, new ProyectoNoAprobarFase($proyecto, $regMovimiento));
-
+                $notificacion_act->update(['estado' => $notificacion_act->IsRechazado()]);
+    
             } else {
                 $title = 'Aprobación Exitosa!';
-                $mensaje = 'Se ha aprobado la fase de ' . $fase . ' de este proyecto';
+                $mensaje = 'Se ha aprobado la fase de ' . $proyecto->fase->nombre . ' de este proyecto';
                 $movimiento = Movimiento::IsAprobar();
-
-                $this->crearMovimiento($proyecto, $fase, $movimiento, $comentario);
+    
+                $this->crearMovimiento($proyecto, $proyecto->fase->nombre, $movimiento, $comentario);
                 $regMovimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
-
+    
                 event(new ProyectoWasApproved($proyecto, $regMovimiento, $destinatarios));
                 if (Session::get('login_role') == User::IsTalento()) {
-                Notification::send($dinamizadores, new ProyectoAprobarInicioDinamizador($proyecto, $talento_lider, $regMovimiento));
+                    // dd($request->control_notificacion_id);
+                    $notificacion_act->update(['fecha_aceptacion' => Carbon::now(), 'estado' => $notificacion_act->IsAceptado()]);
+                    // $this->notificarAprobacionDeFase($proyecto);
+                    $notificacion = $proyecto->registerNotifyProject($dinamizadores->last()->id, User::IsDinamizador());
+                    Notification::send($dinamizadores, new ProyectoAprobarFase($notificacion));
                 }
-                if (Session::get('login_role') == User::IsDinamizador() && $fase == "Inicio") {
+                if (Session::get('login_role') == User::IsDinamizador() && $proyecto->fase->nombre == "Inicio") {
                 // Cambiar el proyecto de fase
                 $proyecto->update([
                     'fase_id' => Fase::where('nombre', 'Planeación')->first()->id
                 ]);
                 }
-                if (Session::get('login_role') == User::IsDinamizador() && $fase == "Planeación") {
+                if (Session::get('login_role') == User::IsDinamizador() && $proyecto->fase->nombre == "Planeación") {
                 // Cambiar el proyecto de fase
                 $proyecto->update([
                     'fase_id' => Fase::where('nombre', 'Ejecución')->first()->id
                 ]);
                 }
-                if (Session::get('login_role') == User::IsDinamizador() && $fase == "Ejecución") {
+                if (Session::get('login_role') == User::IsDinamizador() && $proyecto->fase->nombre == "Ejecución") {
                 // Cambiar el proyecto de fase
                 $proyecto->update([
                     'fase_id' => Fase::where('nombre', 'Cierre')->first()->id
                 ]);
                 }
-                if (Session::get('login_role') == User::IsDinamizador() && $fase == "Cierre") {
+                if (Session::get('login_role') == User::IsDinamizador() && $proyecto->fase->nombre == "Cierre") {
                 // Cambiar el proyecto de fase
                 $proyecto->update([
                     'fase_id' => Fase::where('nombre', 'Finalizado')->first()->id
@@ -1163,26 +1277,118 @@ class ProyectoRepository
     /**
      * Notifica al dinamizador para que apruebe el proyecto en la fase de inicio
      *
-     * @param int $id Id del proyecto
-     * @return boolean
+     * @param Proyecto $proyecto Proyecto
+     * @return array
      * @author dum
      */
-    public function notificarAlTalento_Inicio(int $id, string $fase)
+    public function notificarAprobacionDeFase(Proyecto $proyecto)
     {
         DB::beginTransaction();
         try {
-            $proyecto = Proyecto::findOrFail($id);
-            $talento_lider = $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first();
-            Notification::send($talento_lider->user, new ProyectoAprobarInicio($proyecto, $fase));
-            $this->crearMovimiento($proyecto, $fase, 'solicitó al talento', null);
-            $movimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
-            event(new ProyectoApproveWasRequested($proyecto, $talento_lider->user, $movimiento));
+            $notificacion_fase_actual = $proyecto->notificaciones()->where('fase_id',  $proyecto->fase_id)->whereNull('fecha_aceptacion')->get()->last();
+            // dd($notificacion_fase_actual);
+            $msg = 'No se ha podido enviar la solicitud de aprobación, inténtalo nuevamente';
+            $conf_envios = false;
+            // dd($notificacion_fase_actual);
+            if ($notificacion_fase_actual == null) {
+                $conf_envios = $this->configuracionNotificacionTalento($proyecto);
+                $msg = 'Se le ha enviado una notificación al talento interlocutor para que apruebe la fase de ' . $proyecto->fase->nombre . ' del proyecto!';
+            } else {
+                if ($notificacion_fase_actual->rol_receptor->name == User::IsTalento()) {
+                    $conf_envios = $this->configuracionNotificacionTalento($proyecto);
+                    $msg = 'Se le ha enviado una notificación al talento interlocutor para que apruebe la fase de ' . $proyecto->fase->nombre . ' del proyecto!';
+                } else {
+                    $conf_envios = $this->configuracionNotificacionDinamizador($proyecto);
+                    $msg = 'Se le ha enviado una notificación al dinamizador para que apruebe la fase de ' . $proyecto->fase->nombre . ' del proyecto!';
+                }
+            }
+
+            if ($conf_envios != false) {
+                // Registra el control de la notificación
+                $notificacion = $proyecto->registerNotifyProject($conf_envios['receptor'], $conf_envios['receptor_role']);
+                // Enviar notificación
+                Notification::send($notificacion->receptor, new ProyectoAprobarFase($notificacion));
+                // Enviar email
+                event(new ProyectoApproveWasRequested($notificacion, $conf_envios['destinatarios']));
+                // Registrar el historial
+                $this->crearMovimiento($proyecto, $notificacion->fase->nombre, $conf_envios['tipo_movimiento'], null);
+            }
+
             DB::commit();
-            return true;
+            return [
+                'notificacion' => true,
+                'msg' => $msg,
+                'notify' => $notificacion
+            ];
         } catch (\Throwable $th) {
             DB::rollBack();
-            return false;
+            return [
+                'notificacion' => false,
+                'msg' => 'Ha ocurrido un error ' . $th->getMessage()
+            ];
         }
+    }
+
+    /**
+     * Genera la información el talento al que se le enviarán las notificaciones de solicitud de aprobación de fase
+     * 
+     * @param Proyecto $proyecto
+     * @return array
+     * @author dum
+     */
+    public function configuracionNotificacionTalento($proyecto)
+    {
+        $talento_lider = $proyecto->getLeadTalent();
+        $destinatarios[] = $talento_lider->user->email;
+        if (Session::get('login_role') != User::IsTalento())
+            $destinatarios[] = auth()->user()->email;
+
+        return [
+            'receptor' => $talento_lider->user->id,
+            'receptor_role' => User::IsTalento(),
+            'tipo_movimiento' => Movimiento::IsSolicitarTalento(),
+            'destinatarios' => $destinatarios
+        ];
+    }
+
+    public function configuracionNotificacionDinamizador($proyecto)
+    {
+        $dinamizadorRepository = new DinamizadorRepository;
+        if (Session::get('login_role') != User::IsTalento())
+            $destinatarios[] = auth()->user()->email;
+        $dinamizador = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->nodo_id)->get()->last();
+        $destinatarios[] = $dinamizador->email;
+        return [
+            'receptor' => $dinamizador->id,
+            'receptor_role' => User::IsDinamizador(),
+            'tipo_movimiento' => Movimiento::IsSolicitarDinamizador(),
+            'destinatarios' => $destinatarios
+        ];
+    }
+
+    /**
+     * Consulta las notificaciones generadas para la fase actual de un proyecto
+     */
+    public function consultarNotificaciones($proyecto)
+    {
+        return $proyecto->with(['notificaciones', 'notificaciones.fase'])->whereHas(
+        'notificaciones.fase',
+            function ($query) use ($proyecto) {
+                $query->where('nombre', $proyecto->fase->nombre);
+            }
+        );
+    }
+
+    /**
+     * Verifica que notificacion se va a enviar
+     *
+     * @param $notificaciones
+     * @return type
+     * @author dum
+     **/
+    public function verificarTipoNotificacionAEnviar($notificaciones_fase_actual)
+    {
+        dd($notificaciones_fase_actual->notificaciones);
     }
 
     /**

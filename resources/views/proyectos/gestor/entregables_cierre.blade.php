@@ -5,7 +5,7 @@
     <div class="content">
         <div class="row no-m-t no-m-b">
         <h5>
-            <a class="footer-text left-align" href="{{ route('proyecto.inicio', $proyecto->id) }}">
+            <a class="footer-text left-align" href="{{ route('proyecto.cierre', $proyecto->id) }}">
             <i class="left material-icons">arrow_back</i>
             </a> Proyectos de Desarrollo Tecnológico
         </h5>
@@ -101,7 +101,7 @@
                 name: 'download',
                 orderable: false,
             },
-            @if ($proyecto->articulacion_proyecto->actividad->aprobacion_dinamizador == 0)
+            @if ($proyecto->fase->nombre == "Cierre")
             {
                 data: 'delete',
                 name: 'delete',

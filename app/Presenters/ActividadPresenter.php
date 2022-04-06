@@ -61,7 +61,7 @@ class ActividadPresenter extends Presenter
 
     public function actividadConclusiones()
     {
-        if (isset($this->actividad)) {
+        if (isset($this->actividad->conclusiones)) {
             return $this->actividad->conclusiones;
         }
         return "No registra";

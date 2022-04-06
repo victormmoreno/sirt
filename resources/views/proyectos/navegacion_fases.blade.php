@@ -16,6 +16,7 @@
         </ul>
     </div>
 </div>
+@include('proyectos.historial_cambios')
 @if (Session::get('login_role') == App\User::IsGestor() || Session::get('login_role') == App\User::IsDinamizador())
 <div class="divider"></div>
 <div class="row">
@@ -44,13 +45,14 @@
             </form>
         </div>
     @endif
+    @if (Session::get('login_role') == App\User::IsGestor())
+        <div class="col s12 m4 l4">
+            <a href="{{route('proyecto.cambiar.talentos', $proyecto->id)}}">
+                <div class="card-panel blue lighten-3 black-text center">
+                    Cambiar talentos que desarrollan el proyecto.
+                </div>
+            </a>
+        </div>
+    @endif
 </div>
-    <div class="col s12 m12 l12">
-        @include('proyectos.historial_cambios')
-    </div>
-@endif
-@if (Session::get('login_role') == App\User::IsTalento())
-    <div class="col s12 m12 l12">
-        @include('proyectos.historial_cambios')
-    </div>
 @endif
