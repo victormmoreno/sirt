@@ -22,8 +22,8 @@ class ValidacionesImport
             if ($fecha != null) {
                 $fecha_format = Carbon::parse($fecha);
                 if ($fecha_format->format('Y-m-d') != $fecha) {
-                session()->put('errorMigracion', 'Error en la hoja de "'.$hoja.'": ' . $nombre_campo . ' ' . $fecha . ' en el registro de la fila #' . ($i+2) . ' no existe.');
-                return false;
+                    session()->put('errorMigracion', 'Error en la hoja de "'.$hoja.'": ' . $nombre_campo . ' ' . Carbon::parse($fecha)->format('Y-m-d'). ' en el registro de la fila #' . ($i+2) . ' no existe.');
+                    return false;
                 }
             }
             return true;
