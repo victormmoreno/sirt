@@ -1,6 +1,7 @@
 <table>
     <thead>
         <tr>
+            <th>Nodo</th>
             <th>Tipo Documento</th>
             <th>Ciudad de Expedición Documento</th>
             <th>Número de Documento</th>
@@ -30,6 +31,9 @@
     <tbody>
         @forelse($users as $user)
         <tr>
+            <td>
+                {{$user->present()->userNode()}}
+            </td>
             <td>
                 {{$user->present()->userTipoDocuento()}}
             </td>

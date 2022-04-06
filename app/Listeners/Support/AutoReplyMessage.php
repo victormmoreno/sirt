@@ -18,6 +18,6 @@ class AutoReplyMessage
      */
     public function handle(MessageWasSent $event)
     {
-        Mail::to([$event->message['email'], config('mail.from.address')])->send(new AutomaticMessageSent($event->message ));
+        Mail::to([$event->message['email'], config('app.technical_support.contact.email')])->send(new AutomaticMessageSent($event->message ));
     }
 }
