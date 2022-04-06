@@ -13,38 +13,13 @@
                 <div class="card">
                     <div class="card-content">
                         <div class="row">
-                            @include('proyectos.navegacion_fases')
-                            <div class="divider"></div>
-                            <br />
-                                @include('proyectos.detalle_fase_planeacion')
-                                @if ($ultimo_movimiento->fase == "Planeación" && $ultimo_movimiento->movimiento == "solicitó al talento" && $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first()->user->id == auth()->user()->id)
-                                    <form action="{{route('proyecto.aprobacion', [$proyecto->id, 'Planeación'])}}" method="POST" name="frmPlaneacionTalento">
-                                        {!! method_field('PUT')!!}
-                                        @csrf
-                                        <div class="divider"></div>
-                                        <center>
-                                            <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
-                                            <input type="hidden" type="text" name="decision" id="decision">
-                                            <button type="submit" onclick="preguntaPlaneacionRechazar(event)" class="waves-effect deep-orange darken-1 btn center-aling">
-                                            <i class="material-icons right">close</i>
-                                            No aprobar la fase de planeación
-                                            </button>
-                                            <button type="submit" onclick="preguntaPlaneacion(event)" class="waves-effect cyan darken-1 btn center-aling">
-                                            <i class="material-icons right">done</i>
-                                            Aprobar fase de planeación
-                                            </button>
-                                            <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-                                            <i class="material-icons right">backspace</i>Cancelar
-                                            </a>
-                                        </center>
-                                    </form>
-                                @else
-                                    <center>
-                                        <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-                                            <i class="material-icons right">backspace</i>Cancelar
-                                        </a>
-                                    </center>
-                                @endif
+                            @include('proyectos.titulo')
+                            @include('proyectos.navegacion')
+                            @include('proyectos.historial_cambios')
+                            <div class="col offset-m3 offset-l3"></div>
+                            @include('proyectos.detalle_general')
+                            @include('proyectos.detalle_fase_planeacion')
+                            @include('proyectos.form_aprobacion')
                         </div>
                     </div>
                 </div>
@@ -58,71 +33,6 @@
     $( document ).ready(function() {
         datatableArchivosDeUnProyecto_planeacion();
     });
-
-    function changeToPlaneacion() {
-        window.location.href = "{{ route('proyecto.planeacion', $proyecto->id) }}";
-    }
-
-    function changeToInicio() {
-        window.location.href = "{{ route('proyecto.inicio', $proyecto->id) }}";
-    }
-
-    function changeToEjecucion() {
-        window.location.href = "{{ route('proyecto.ejecucion', $proyecto->id) }}";
-    }
-
-    function changeToCierre() {
-        window.location.href = "{{ route('proyecto.cierre', $proyecto->id) }}";
-    }
-
-    function preguntaPlaneacion(e){
-        e.preventDefault();
-        Swal.fire({
-        title: '¿Está seguro(a) de aprobar la fase de planeación de este proyecto?',
-        text: 'Al hacerlo estás aceptando y aprobando toda la información de esta fase, los documento adjuntos y las asesorias recibidas.',
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        cancelButtonText: 'Cancelar',
-        confirmButtonText: 'Sí!'
-    }).then((result) => {
-        if (result.value) {
-            $('#decision').val('aceptado');
-            document.frmPlaneacionTalento.submit();
-        }
-    })
-}
-
-    function preguntaPlaneacionRechazar(e){
-        e.preventDefault();
-        Swal.fire({
-            title: '¿Está seguro(a) de no aprobar la fase de planeación de este proyecto?',
-            input: 'text',
-            type: 'warning',
-            inputValidator: (value) => {
-            if (!value) {
-                return 'Las observaciones deben ser obligatorias!'
-            } else {
-                $('#decision').val('rechazado');
-                $('#motivosNoAprueba').val(value);
-            }
-            },
-            inputAttributes: {
-            maxlength: 100,
-            placeHolder: '¿Por qué?'
-            },
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            cancelButtonText: 'Cancelar',
-            confirmButtonText: 'Enviar observaciones!'
-        }).then((result) => {
-            if (result.value) {
-                document.frmPlaneacionTalento.submit();
-            }
-        })
-    }
 
     function datatableArchivosDeUnProyecto_planeacion() {
         $('#archivosDeUnProyecto').DataTable({

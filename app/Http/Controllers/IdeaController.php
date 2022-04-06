@@ -507,13 +507,24 @@ class IdeaController extends Controller
     public function detalle($id)
     {
         $idea = $this->ideaRepository->findByid($id);
-        // dd($idea->empresa_relation);
         $estadosIdea = EstadoIdea::all();
         $this->authorize('show', $idea);
-        if (Session::get('login_role') == User::IsTalento()) {
-            return view('ideas.talento.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
-        } else {
-            return view('ideas.articulador.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
+        switch (Session::get('login_role')) {
+            case User::IsTalento():
+                return view('ideas.talento.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
+                break;
+            case User::IsArticulador():
+                return view('ideas.articulador.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
+                break;
+            case User::IsAdministrador():
+                return view('ideas.administrador.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
+                break;
+            case User::IsDinamizador():
+                return view('ideas.administrador.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
+                break;
+            default:
+                return abort('403');
+                break;
         }
     }
 

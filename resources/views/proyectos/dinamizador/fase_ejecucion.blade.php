@@ -4,51 +4,24 @@
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
         <div class="row no-m-t no-m-b">
-        <div class="col s12 m12 l12">
-            <h5>
-            <a class="footer-text left-align" href="{{route('proyecto')}}">
-                <i class="material-icons arrow-l left">arrow_back</i>
-            </a> Proyectos de Base Tecnológica
-            </h5>
-            <div class="card">
-            <div class="card-content">
-                <div class="row">
-                @include('proyectos.navegacion_fases')
-                <div class="divider"></div>
-                @include('proyectos.detalle_fase_ejecucion')
-                <br />
-                @if ($ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->fase == "Ejecución" && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsAprobar())
-                    <form action="{{route('proyecto.aprobacion', [$proyecto->id, 'Ejecución'])}}" method="POST" name="frmEjecucionDinamizador">
-                    {!! method_field('PUT')!!}
-                    @csrf
-                    <div class="divider"></div>
-                    <center>
-                        <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
-                        <input type="hidden" type="text" name="decision" id="decision">
-                        <button type="submit" onclick="preguntaEjecucionRechazar(event)" class="waves-effect deep-orange darken-1 btn center-aling">
-                        <i class="material-icons right">close</i>
-                        No aprobar la fase de ejecución
-                        </button>
-                        <button type="submit" onclick="preguntaEjecucion(event)" class="waves-effect cyan darken-1 btn center-aling">
-                        <i class="material-icons right">done</i>
-                        Aprobar fase de ejecución
-                        </button>
-                        <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-                        <i class="material-icons right">backspace</i>Cancelar
-                        </a>
-                    </center>
-                    </form>
-                @else
-                    <center>
-                        <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-                        <i class="material-icons right">backspace</i>Cancelar
-                        </a>
-                    </center>
-                @endif
+            <div class="col s12 m12 l12">
+                <h5>
+                <a class="footer-text left-align" href="{{route('proyecto')}}">
+                    <i class="material-icons arrow-l left">arrow_back</i>
+                </a> Proyectos de Base Tecnológica
+                </h5>
+                <div class="card">
+                    <div class="card-content">
+                        @include('proyectos.titulo')
+                        @include('proyectos.navegacion')
+                        @include('proyectos.historial_cambios')
+                        @include('proyectos.options_always')
+                        @include('proyectos.detalle_general')
+                        @include('proyectos.detalle_fase_ejecucion')
+                        @include('proyectos.form_aprobacion')
+                    </div>
                 </div>
             </div>
-            </div>
-        </div>
         </div>
     </div>
 </main>

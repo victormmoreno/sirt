@@ -36449,8 +36449,8 @@ var idea ={
                     name: 'estado',
                 },
                 {
-                    data: 'details',
-                    name: 'details',
+                    data: 'info',
+                    name: 'info',
                     orderable: false
                 },
 

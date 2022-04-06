@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\Models\ArticulacionPbt;
 use App\Presenters\ProyectoPresenter;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Session;
 
 class Proyecto extends Model
 {
@@ -26,6 +28,16 @@ class Proyecto extends Model
     const IS_TRL6_ESPERADO = 0;
     // Estado que indica que el trl esperado es 7 u 8
     const IS_TRL7_8_ESPERADO = 1;
+
+    /**
+     * Constantes para la fase de proyecto
+     */
+    const IS_INICIO = 'Inicio';
+    const IS_PLANEACION = 'Planeación';
+    const IS_EJECUCION = 'Ejecución';
+    const IS_CIERRE = 'Cierre';
+    const IS_FINALIZADO = 'Finalizado';
+    const IS_SUSPENDIDO = 'Suspendido';
 
     /**
      * Constante para el campo trl_obtenido
@@ -72,6 +84,32 @@ class Proyecto extends Model
         'trl_normatividad',
         'evidencia_trl'
     ];
+
+
+    public static function IsInicio() {
+        return self::IS_INICIO;
+    }
+
+    public static function IsPlaneacion() {
+        return self::IS_PLANEACION;
+    }
+
+    public static function IsEjecucion() {
+        return self::IS_EJECUCION;
+    }
+
+    public static function IsCierre() {
+        return self::IS_CIERRE;
+    }
+
+    public static function IsFinalizado() {
+        return self::IS_FINALIZADO;
+    }
+
+    public static function IsSuspendido() {
+        return self::IS_SUSPENDIDO;
+    }
+
     /**
      * returns the obtained trl
      * @author dum
@@ -123,6 +161,11 @@ class Proyecto extends Model
     public function asesorias()
     {
         return $this->morphMany(UsoInfraestructura::class, 'asesorable');
+    }
+
+    public function notificaciones()
+    {
+        return $this->morphMany(ControlNotificaciones::class, 'notificable');
     }
 
     /**
@@ -295,6 +338,51 @@ class Proyecto extends Model
                 ->orwhere('fase_id', Fase::IsEjecucion());
             })->get()
             ->pluck('articulacion_proyecto.actividad.nombre','articulacion_proyecto.actividad.codigo_actividad' );
+    }
+
+    /**
+     * Registra el control de una notificación de un proyecto
+     * 
+     * @param int $receptor id del receptor de la notificacion
+     * @param string $rol_receptor Nombre del rol que espera la notificación
+     * @return ControlNotificacion
+     * @author dum
+     */
+    public function registerNotifyProject($receptor, $rol_receptor)
+    {
+        return $this->notificaciones()->create([
+            'fase_id' => $this->fase_id,
+            'remitente_id' => auth()->user()->id,
+            'rol_remitente_id' => Role::where('name', Session::get('login_role'))->first()->id,
+            'receptor_id' => $receptor,
+            'rol_receptor_id' => Role::where('name', $rol_receptor)->first()->id,
+            'fecha_envio' => Carbon::now(),
+            'fecha_aceptacion' => null
+        ]);
+    }
+
+    /**
+     * Retorna el talento lider de un proyecto
+     *
+     * @return Talento
+     * @author dum
+     **/
+    public function getLeadTalent()
+    {
+        return $this->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first();
+    }
+
+
+    public function consultarNotificaciones()
+    {
+        return $this->with([
+                'notificaciones', 
+                'notificaciones.fase',
+                'notificaciones.remitente',
+                'notificaciones.receptor',
+                'notificaciones.rol_receptor',
+                'notificaciones.rol_remitente'
+            ]);
     }
 
     /**

@@ -11,44 +11,29 @@
             </a> Proyectos de Base Tecnológica
             </h5>
             <div class="card">
-            <div class="card-content">
-                <div class="row">
-                @include('proyectos.navegacion_fases')
-                <div class="divider"></div>
-                <br />
-                @include('proyectos.detalle_fase_inicio')
-                @if ($ultimo_movimiento != null && $ultimo_movimiento->rol == App\User::IsTalento() && $ultimo_movimiento->fase == "Inicio" && $ultimo_movimiento->movimiento == App\Models\Movimiento::IsAprobar())
-                <form action="{{route('proyecto.aprobacion', [$proyecto->id, 'Inicio'])}}" method="POST" name="frmInicioDinamizador">
-                    {!! method_field('PUT')!!}
-                    @csrf
-                    <div class="divider"></div>
-                    <center>
-                    <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
-                    <input type="hidden" type="text" name="decision" id="decision">
-                    <button type="submit" onclick="preguntaInicioRechazar(event)" class="waves-effect deep-orange darken-1 btn center-aling">
-                        <i class="material-icons right">close</i>
-                        No aprobar la fase de Inicio
-                    </button>
-                    <button type="submit" onclick="preguntaInicio(event)" class="waves-effect cyan darken-1 btn center-aling">
-                        <i class="material-icons right">done</i>
-                        Aprobar fase de inicio
-                    </button>
-                    <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-                        <i class="material-icons right">backspace</i>Cancelar
-                    </a>
-                    </center>
-                </form>
-                @else
-                    <center>
-                        <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-                        <i class="material-icons right">backspace</i>Cancelar
-                        </a>
-                    </center>
-                @endif
-                <center>
-
+                <div class="card-content">
+                    <div class="row">
+                        @include('proyectos.titulo')
+                        @include('proyectos.navegacion')
+                        @include('proyectos.historial_cambios')
+                        @include('proyectos.options_always')
+                        @include('proyectos.detalle_general')
+                        @include('proyectos.detalle_fase_inicio')
+                        <div class="divider"></div>
+                        <br />
+                        <form action="{{route('proyecto.aprobacion', [$proyecto->id, 'Inicio'])}}" method="POST" name="frmInicioDinamizador">
+                            {!! method_field('PUT')!!}
+                            @csrf
+                            <div class="divider"></div>
+                            <center>
+                            @include('proyectos.botones_aprobacion_component')
+                            <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                                <i class="material-icons right">backspace</i>Cancelar
+                            </a>
+                            </center>
+                        </form>
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
 
@@ -59,18 +44,6 @@
 @push('script')
 <script>
     $( document ).ready(function() {
-        @if($proyecto->areaconocimiento->nombre == 'Otro')
-            divOtroAreaConocmiento.show();
-        @endif
-        @if($proyecto->present()->isProyectoEconomiaNaranja() == 1)
-            divEconomiaNaranja.show();
-        @endif
-        @if($proyecto->present()->isProyectoDirigidoDiscapacitados()  == 1)
-            divDiscapacidad.show();
-        @endif
-        @if($proyecto->present()->isProyectoActorCTi() == 1)
-            divNombreActorCTi.show();
-        @endif
         datatableArchivosDeUnProyecto_inicio();
     });
 
@@ -119,21 +92,6 @@
             document.frmInicioDinamizador.submit();
         }
         })
-    }
-    function changeToPlaneacion() {
-        window.location.href = "{{ route('proyecto.planeacion', $proyecto->id) }}";
-    }
-
-    function changeToInicio() {
-        window.location.href = "{{ route('proyecto.inicio', $proyecto->id) }}";
-    }
-
-    function changeToEjecucion() {
-        window.location.href = "{{ route('proyecto.ejecucion', $proyecto->id) }}";
-    }
-
-    function changeToCierre() {
-        window.location.href = "{{ route('proyecto.cierre', $proyecto->id) }}";
     }
 
     function datatableArchivosDeUnProyecto_inicio() {
