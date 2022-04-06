@@ -28,6 +28,7 @@ mix.styles([
 		'resources/assets/plugins/summernote/dist/summernote-lite.css',
 		'resources/assets/css/alpha.css',
 		'resources/assets/css/custom.css',
+        'resources/assets/css/responsive.css',
 	],'public/css/libs.css');
 
 mix.minify('public/css/libs.css')
