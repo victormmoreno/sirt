@@ -315,6 +315,19 @@ class Nodo extends Model
         return $query;
     }
 
+    public function scopeProyectosFinalizadosTrl6($query, $year, $nodo)
+    {
+        return $query->whereHas('proyectos.fase', function($query) {
+            $query->where('nombre', Proyecto::IsFinalizado());
+        })->whereHas('proyectos.articulacion_proyecto.actividad', function($query) use ($year) {
+            $query->whereYear('fecha_cierre', $year);
+        })->whereHas('proyectos', function($query) {
+            $query->where('trl_obtenido', Proyecto::IsTrl6Obtenido());
+        })->whereHas('proyectos', function($query) use ($nodo) {
+            $query->where('nodo_id', $nodo);
+        });
+    }
+
     /**
      * Devolver cantidad de nodos
      * @author devjul

@@ -191,6 +191,12 @@
                         </div>
                       </div>
                     </li>
+                    <li>
+                      <div class="collapsible-header"><i class="material-icons">assignment</i>Metas de tecnoparque</div>
+                      <div class="collapsible-body">
+                        @include('indicadores.componentes.metas')
+                      </div>
+                    </li>
                   </ul>
                   <div class="divider"></div>
                 </div>

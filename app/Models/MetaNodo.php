@@ -26,4 +26,15 @@ class MetaNodo extends Model
         return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
     }
 
+    public function scopeProyectosFinalizadosTrl6($query, $year)
+    {
+        return $query->whereHas('nodo.proyectos.fase', function($query) {
+            $query->where('nombre', Proyecto::IsFinalizado());
+        })->whereHas('nodo.proyectos.articulacion_proyecto.actividad', function($query) use ($year) {
+            $query->whereYear('fecha_cierre', $year);
+        })->whereHas('nodo.proyectos', function($query) {
+            $query->where('trl_obtenido', Proyecto::IsTrl6Obtenido());
+        });
+    }
+
 }

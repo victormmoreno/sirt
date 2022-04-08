@@ -26,13 +26,17 @@ class MigracionMetasImport extends \PhpOffice\PhpSpreadsheet\Cell\StringValueBin
 
     public function collection(Collection $rows)
     {
-        $validacion = null;
         try {
             $year = Carbon::now()->format('Y');
             foreach ($rows as $key => $row) {
+                // $validacion = true;
                 $nodo = Entidad::where('nombre', $row['tecnoparque'])->first();
-                $this->validar($nodo, $row, $key);
-                $meta = $nodo->nodo->metas_nodo()->whereYear('anho', $year)->first();
+                $validacion = $this->validar($nodo, $row, $key);
+                if (!$validacion) {
+                    return $validacion;
+                }
+                
+                $meta = $nodo->nodo->metas_nodo()->where('anho', $year)->first();
                 if ($meta == null) {
                     // Hace el registra de la meta
                     $nodo->nodo->metas_nodo()->create([
@@ -65,7 +69,6 @@ class MigracionMetasImport extends \PhpOffice\PhpSpreadsheet\Cell\StringValueBin
         if (!$validacion) {
             return $validacion;
         }
-
         $validacion = $this->validaciones->validarCelda($row['tecnoparque'], $key, 'Nodo', $this->hoja);
         if (!$validacion) {
             return $validacion;
@@ -86,5 +89,6 @@ class MigracionMetasImport extends \PhpOffice\PhpSpreadsheet\Cell\StringValueBin
         if (!$validacion) {
             return $validacion;
         }
+        return true;
     }
 }
