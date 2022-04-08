@@ -151,7 +151,8 @@ mix.browserSync({
             'resources/views/**/*',
             'resources/lang/**/*',
             'routes/**/*'
-        ]
+        ],
+        open: false
  });
 
 

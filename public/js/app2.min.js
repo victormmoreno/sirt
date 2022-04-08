@@ -891,12 +891,15 @@ $( document ).ready(function() {
             if(item == 'pbt'){
                 $('.section-company').hide();
                 $('.section-project').show();
+                $('.section-talent').show();
             }else if(item == 'empresa'){
                 $('.section-project').hide();
                 $('.section-company').show();
+                $('.section-talent').hide();
             }else{
                 $('.section-project').hide();
                 $('.section-company').hide();
+                $('.section-talent').hide();
             }
         });
     });

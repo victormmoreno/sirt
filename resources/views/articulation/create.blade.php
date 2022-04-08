@@ -160,17 +160,15 @@
                                             </div>
                                         </div>
                                         <div class="row search-tabs-row search-tabs-container white lighten-4 alert-response-sedes">
-
-
                                             <div class="row">
                                                 <div class="col s12 m12 l12">
-                                                <div class="card card-transparent">
-                                                    <div class="card-content">
-                                                        <div class="search-result">
-                                                            <p class="search-result-description">No se encontraron resultados</p>
+                                                    <div class="card card-transparent">
+                                                        <div class="card-content">
+                                                            <div class="search-result">
+                                                                <p class="search-result-description">No se encontraron resultados</p>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -194,7 +192,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-
+                                        </div>
                                     </div>
                                     <div class="section-talent" style="display: none;">
                                         <div class="row search-tabs-row search-tabs-header">
@@ -310,6 +308,50 @@
                                     <div class="section-articulation search-tabs-row search-tabs-header" style="display: none;">
                                         <div class="col m12">
                                             <div class="row">
+                                                <div class="input-field col m12 s12">
+                                                    <div class="radio-buttons">
+                                                        <label class="custom-radio">
+                                                        <input type="radio" name="radio" checked />
+                                                        <span class="radio-btn"
+                                                            ><i class="las la-check"></i>
+                                                            <div class="hobbies-icon">
+                                                            <i class="las la-biking"></i>
+                                                            <h3>Biking</h3>
+                                                            </div>
+                                                        </span>
+                                                        </label>
+                                                        <label class="custom-radio">
+                                                        <input type="radio" name="radio" />
+                                                        <span class="radio-btn"
+                                                            ><i class="las la-check"></i>
+                                                            <div class="hobbies-icon">
+                                                            <i class="las la-futbol"></i>
+                                                            <h3>Football</h3>
+                                                            </div>
+                                                        </span>
+                                                        </label>
+                                                        <label class="custom-radio">
+                                                        <input type="radio" name="radio" />
+                                                        <span class="radio-btn"
+                                                            ><i class="las la-check"></i>
+                                                            <div class="hobbies-icon">
+                                                            <i class="las la-table-tennis"></i>
+                                                            <h3>Table Tennis</h3>
+                                                            </div>
+                                                        </span>
+                                                        </label>
+                                                        <label class="custom-radio">
+                                                        <input type="radio" name="radio" />
+                                                        <span class="radio-btn"
+                                                            ><i class="las la-check"></i>
+                                                            <div class="hobbies-icon">
+                                                            <i class="las la-ellipsis-h"></i>
+                                                            <h3>Other</h3>
+                                                            </div>
+                                                        </span>
+                                                        </label>
+                                                    </div>
+                                                </div>
                                                 <div class="input-field col m12 s12">
                                                     <label for="name_articulation">Nombre Articulación</label>
                                                     <input id="name_articulation" name="name_articulation" type="text">
