@@ -26,4 +26,9 @@ class IndicadorController extends Controller
 
   }
 
+  public function form_import_metas()
+  {
+    return view('indicadores.administrador.register_metas');
+  }
+
 }

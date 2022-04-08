@@ -100,6 +100,11 @@ class Nodo extends Model
         return $this->hasMany(Idea::class, 'nodo_id', 'id');
     }
 
+    public function metas_nodo()
+    {
+        return $this->hasMany(MetaNodo::class, 'nodo_id', 'id');
+    }
+
     public function equipos()
     {
         return $this->hasMany(Equipo::class, 'nodo_id', 'id');
