@@ -799,34 +799,71 @@ function consultarIdeasEnviadasAlNodo () {
 $( document ).ready(function() {
     var form = $("#articulation-form");
     var validator = $("#articulation-form").validate({
+        onfocusout: false,
         rules: {
-            confirm: {
-                equalTo: "#password"
-            },
+            // confirm: {
+            //     equalTo: "#password"
+            // },
             accompaniment_type:{ required:true },
-            name_accompaniment:{ required:true },
-            scope_accompaniment:{ required:true },
-            name_articulation:{ required:true },
-            scope_articulation:{ required:true },
+            name_accompaniment:{
+                required:true,
+                minlength: 2,
+                maxlength: 255
+            },
+            description_accompaniment:{
+                minlength: 0,
+                maxlength: 3000
+            },
+            scope_accompaniment:{
+                required:true,
+                minlength: 2,
+                maxlength: 3000
+            },
+            name_articulation:{
+                required:true,
+                minlength: 2,
+                maxlength: 255
+            },
+            scope_articulation:{
+                required:true,
+                minlength: 2,
+                maxlength: 1000
+            },
         },
-
         messages:
         {
             accompaniment_type:
             {
-                required:"</br>Por favor selecciona el tipo de acompañamiento<br/>"
+                required:"</br>Por favor selecciona el tipo de acompañamiento<br/>",
             },
             name_accompaniment:
             {
-                required:"</br>El nombre del acompañamiento es obligatorio<br/>"
+                required:"</br>El nombre del acompañamiento es obligatorio<br/>",
+                minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+            },
+            description_accompaniment:
+            {
+                minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+            },
+            scope_accompaniment:
+            {
+                required:"</br>El alcalce del acompañamiento es obligatorio<br/>",
+                minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
             },
             name_articulation:
             {
-                required:"</br>El nombre de la articulación es obligatorio<br/>"
+                required:"</br>El nombre de la articulación es obligatorio<br/>",
+                minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
             },
             scope_articulation:
             {
-                required:"</br>El alcalce de la articulación es obligatorio<br/>"
+                required:"</br>El alcalce de la articulación es obligatorio<br/>",
+                minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
             }
         },
         errorPlacement: function(error, element)
@@ -836,7 +873,7 @@ $( document ).ready(function() {
                 error.appendTo( element.parents('.container-error') );
             }
             else
-            { // This is the default behavior
+            {
                 element.after(error);
             }
         }
@@ -887,7 +924,7 @@ $( document ).ready(function() {
     document.querySelectorAll('input[name="accompaniment_type"]').forEach((elem) => {
         elem.addEventListener("click", function(event){
             let item = event.target.value;
-            
+
             if(item == 'pbt'){
                 $('.section-company').hide();
                 $('.section-project').show();
@@ -907,7 +944,7 @@ $( document ).ready(function() {
     document.querySelectorAll('input[name="articulation"]').forEach((elem) => {
         elem.addEventListener("click", function(event){
             let item = event.target.value;
-            
+
             if(item == 'si'){
                 $('.section-articulation').show();
             }else if(item == 'no'){
@@ -918,8 +955,9 @@ $( document ).ready(function() {
         });
     });
 
-    
+
 });
+
 function consultarEntrenamientosPorNodo_Administrador(id) {
   $('#entrenamientosPorNodo_tableAdministrador').dataTable().fnDestroy();
   $('#entrenamientosPorNodo_tableAdministrador').DataTable({

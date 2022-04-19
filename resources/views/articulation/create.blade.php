@@ -43,24 +43,26 @@
                             <section>
                                 <div class="wizard-content">
                                     <div class="row">
-                                        <div class="col m12">
-                                            <div class="row valign-wrapper center-align">
-                                                <div class="input-field col s12 m6 offset-m3 valign-wrapper center-align">
-
-                                                    <div class="row m-t-lg">
-                                                        <h5><b>Selecciona el tipo de acompañamiento</b></h5>
-                                                        <div class="container-error center">
-                                                            <p class="p-v-xs">
-                                                                <input name="accompaniment_type" type="radio"  id="accompaniment_type_pbt" class="required validate" value="pbt"/>
-                                                                <label for="accompaniment_type_pbt">PBT</label>
-                                                            </p>
-                                                            <p class="p-v-xs">
-                                                                <input name="accompaniment_type" type="radio" id="accompaniment_type_company" class="required validate" value="empresa"/>
-                                                                <label for="accompaniment_type_company">Empresas</label>
-                                                            </p>
+                                        <div class="container">
+                                            <div class="plans container-error">
+                                                <div class="title">Selecciona el tipo de acompañamiento</div>
+                                                <label class="plan basic-plan" for="accompaniment_type_pbt">
+                                                    <input  type="radio" name="accompaniment_type" id="accompaniment_type_pbt" value="pbt"/>
+                                                    <div class="plan-content">
+                                                        <div class="plan-details">
+                                                            <span>Proyectos</span>
+                                                            <p>Para acompañamientos a articulaciones con proyectos de Base Tecnológica</p>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </label>
+                                                <label class="plan basic-plan" for="accompaniment_type_company">
+                                                    <input type="radio" name="accompaniment_type" id="accompaniment_type_company" value="empresa"/>
+                                                        <div class="plan-content"><div class="plan-details">
+                                                            <span>Empresas</span>
+                                                            <p>Para acompañamientos a articulaciones con empresas externas</p>
+                                                        </div>
+                                                    </div>
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
@@ -75,15 +77,15 @@
                                             <div class="row">
                                                 <div class="input-field col m12 s12">
                                                     <label for="name_accompaniment">Nombre</label>
-                                                    <input id="name_accompaniment" name="name_accompaniment" type="text" class="required validate">
+                                                    <input id="name_accompaniment" name="name_accompaniment" type="text">
                                                 </div>
                                                 <div class="input-field col m12 s12">
                                                     <label for="description_accompaniment">Descripción (Opcional)</label>
-                                                    <textarea id="description_accompaniment" name="description_accompaniment" type="text" class="materialize-textarea validate"></textarea>
+                                                    <textarea id="description_accompaniment" name="description_accompaniment" type="text" class="materialize-textarea"></textarea>
                                                 </div>
                                                 <div class="input-field col m12 s12">
                                                     <label for="scope_accompaniment">Alcance</label>
-                                                    <textarea id="scope_accompaniment" name="scope_accompaniment" type="text" class="materialize-textarea required validate"></textarea>
+                                                    <textarea id="scope_accompaniment" name="scope_accompaniment" type="text" class="materialize-textarea"></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -308,49 +310,28 @@
                                     <div class="section-articulation search-tabs-row search-tabs-header" style="display: none;">
                                         <div class="col m12">
                                             <div class="row">
-                                                <div class="input-field col m12 s12">
-                                                    <div class="radio-buttons">
-                                                        <label class="custom-radio">
-                                                        <input type="radio" name="radio" checked />
-                                                        <span class="radio-btn"
-                                                            ><i class="las la-check"></i>
-                                                            <div class="hobbies-icon">
-                                                            <i class="las la-biking"></i>
-                                                            <h3>Biking</h3>
-                                                            </div>
-                                                        </span>
-                                                        </label>
-                                                        <label class="custom-radio">
+
+
+                                                <div class="radio-buttons">
+                                                    <h5>Tipo Articulación</h5>
+                                                    <label class="custom-radio">
+                                                    <input type="radio" name="radio" checked />
+                                                    <span class="radio-btn">
+                                                        <h3>P.I</h3>
+                                                    </span>
+                                                    </label>
+                                                    <label class="custom-radio">
+                                                    <input type="radio" name="radio" />
+                                                    <span class="radio-btn">
+                                                        <h3>Creación empresas</h3>
+                                                    </span>
+                                                    </label>
+                                                    <label class="custom-radio">
                                                         <input type="radio" name="radio" />
-                                                        <span class="radio-btn"
-                                                            ><i class="las la-check"></i>
-                                                            <div class="hobbies-icon">
-                                                            <i class="las la-futbol"></i>
-                                                            <h3>Football</h3>
-                                                            </div>
+                                                        <span class="radio-btn">
+                                                            <h3>convocatoria</h3>
                                                         </span>
-                                                        </label>
-                                                        <label class="custom-radio">
-                                                        <input type="radio" name="radio" />
-                                                        <span class="radio-btn"
-                                                            ><i class="las la-check"></i>
-                                                            <div class="hobbies-icon">
-                                                            <i class="las la-table-tennis"></i>
-                                                            <h3>Table Tennis</h3>
-                                                            </div>
-                                                        </span>
-                                                        </label>
-                                                        <label class="custom-radio">
-                                                        <input type="radio" name="radio" />
-                                                        <span class="radio-btn"
-                                                            ><i class="las la-check"></i>
-                                                            <div class="hobbies-icon">
-                                                            <i class="las la-ellipsis-h"></i>
-                                                            <h3>Other</h3>
-                                                            </div>
-                                                        </span>
-                                                        </label>
-                                                    </div>
+                                                    </label>
                                                 </div>
                                                 <div class="input-field col m12 s12">
                                                     <label for="name_articulation">Nombre Articulación</label>
@@ -364,7 +345,11 @@
                                                     <label for="scope_articulation">Alcance Artuculación</label>
                                                     <textarea id="scope_articulation" name="scope_articulation" type="text" class="materialize-textarea"></textarea>
                                                 </div>
-                                                <div class="input-field col s12 m12 l12">
+
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="input-field col s12 m12 l6">
                                                     @if(isset($articulacion))
                                                         <input @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  id="txtfecha_inicio" name="txtfecha_inicio" type="text" class="datepicker picker__input" value="{{$articulacion->present()->articulacionPbtstartDate()}}">
                                                     @else
@@ -372,17 +357,6 @@
                                                     @endif
                                                     <label for="txtfecha_inicio">Fecha de inicio de la articulación <span class="red-text">*</span></label>
                                                     <small id="txtfecha_inicio-error" class="error red-text"></small>
-                                                </div>
-
-                                            </div>
-                                            <div class="row">
-                                                <div class="input-field col s12 m12 l6">
-                                                    <label class="active" for="txt_tipo_articulacion">Tipo Articulación<span class="red-text">*</span></label>
-                                                    <select  @if(isset($articulacion) && !$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  name="txt_tipo_articulacion" id="txt_tipo_articulacion">
-                                                        <option value="">Seleccione tipo Articulación</option>
-                                                        <option value="">SenaInnova</option>
-                                                        <option value="">ColInnova</option>
-                                                    </select>
                                                 </div>
                                                 <div class="input-field col s12 m12 l6">
                                                     <label class="active" for="txt_alcance_articulacion">Alcance<span class="red-text">*</span></label>
@@ -392,7 +366,7 @@
                                                         <option value="">Regional</option>
                                                         <option value="">Nacional</option>
                                                         <option value="">Internacional</option>
-                                                        
+
                                                     </select>
                                                 </div>
                                             </div>
