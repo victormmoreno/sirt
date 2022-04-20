@@ -325,7 +325,7 @@ class EquipoController extends Controller
 
         $this->authorize('destroy', $equipo);
 
-        if ($cantidadUso > 0 && $cantidadMantenimiento > 0) {
+        if ($cantidadUso > 0 || $cantidadMantenimiento > 0) {
             return response()->json([
                 'equipo' => $equipo,
                 'statusCode' => Response::HTTP_IM_USED,
