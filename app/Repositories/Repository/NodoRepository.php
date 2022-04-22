@@ -2,7 +2,7 @@
 
 namespace Repositories\Repository;
 
-use App\Models\{LineaTecnologica, Nodo, Entidad, CostoAdministrativo, Centro};
+use App\Models\{LineaTecnologica, Nodo, Entidad, CostoAdministrativo, Centro, MetaNodo};
 use App\User;
 use App\Models\Regional;
 use Carbon\Carbon;
@@ -228,4 +228,10 @@ class NodoRepository
     {
         return $this->getTeamTecnoparque()->findOrFailNodo($nodo);
     }
+
+    public function consultarMetasDeTecnoparque()
+    {
+        return MetaNodo::all();
+    }
+
 }

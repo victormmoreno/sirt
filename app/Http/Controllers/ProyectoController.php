@@ -709,6 +709,7 @@ class ProyectoController extends Controller
         $proyecto = Proyecto::findOrFail($id);
         $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
         $ult_notificacion = $proyecto->notificaciones()->where('fase_id',  $proyecto->fase_id)->whereNull('fecha_aceptacion')->get()->last();
+        $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
 
 
         switch (Session::get('login_role')) {
@@ -717,7 +718,8 @@ class ProyectoController extends Controller
                     return back();
                 return view('proyectos.gestor.fase_inicio', [
                     'proyecto' => $proyecto,
-                    'historico' => $historico
+                    'historico' => $historico,
+                    'rol_destinatario' => $rol_destinatario
                 ]);
                 break;
 
@@ -762,6 +764,7 @@ class ProyectoController extends Controller
         $proyecto = Proyecto::findOrFail($id);
         $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
         $ult_notificacion = $proyecto->notificaciones()->where('fase_id',  $proyecto->fase_id)->whereNull('fecha_aceptacion')->get()->last();
+        $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
 
         if ($proyecto->fase->nombre == 'Inicio') {
             Alert::error('Error!', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!')->showConfirmButton('Ok', '#3085d6');
@@ -772,7 +775,8 @@ class ProyectoController extends Controller
                     return back();
                 return view('proyectos.gestor.fase_planeacion', [
                     'proyecto' => $proyecto,
-                    'historico' => $historico
+                    'historico' => $historico,
+                    'rol_destinatario' => $rol_destinatario
                 ]);
             } else if (Session::get('login_role') == User::IsDinamizador()) {
                 return view('proyectos.dinamizador.fase_planeacion', [
@@ -813,6 +817,8 @@ class ProyectoController extends Controller
         $proyecto = Proyecto::findOrFail($id);
         $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
         $ult_notificacion = $proyecto->notificaciones()->where('fase_id',  $proyecto->fase_id)->whereNull('fecha_aceptacion')->get()->last();
+        $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
+
         if ($proyecto->fase->nombre == 'Inicio' || $proyecto->fase->nombre == 'Planeación') {
             Alert::error('Error!', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!')->showConfirmButton('Ok', '#3085d6');
             return back();
@@ -820,10 +826,11 @@ class ProyectoController extends Controller
             switch (Session::get('login_role')) {
                 case User::IsGestor():
                     if (!$this->validarExperto($proyecto))
-                        return back();
+                    return back();
                     return view('proyectos.gestor.fase_ejecucion', [
                         'proyecto' => $proyecto,
-                        'historico' => $historico
+                        'historico' => $historico,
+                        'rol_destinatario' => $rol_destinatario
                     ]);
                     break;
                 case User::IsDinamizador():
@@ -875,15 +882,17 @@ class ProyectoController extends Controller
             $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
             $ult_notificacion = $proyecto->notificaciones()->where('fase_id',  $proyecto->fase_id)->whereNull('fecha_aceptacion')->get()->last();
             $costo = $this->costoController->costoProject($proyecto->id);
+            $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
             switch (Session::get('login_role')) {
                 case User::IsGestor():
                     if (!$this->validarExperto($proyecto))
-                        return back();
+                    return back();
                     return view('proyectos.gestor.fase_cierre', [
                         'proyecto' => $proyecto,
                         'costo' => $costo,
                         'historico' => $historico,
-                        'ult_notificacion' => $ult_notificacion
+                        'ult_notificacion' => $ult_notificacion,
+                        'rol_destinatario' => $rol_destinatario
                     ]);
                     break;
                 case User::IsDinamizador():

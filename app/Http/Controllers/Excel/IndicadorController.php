@@ -7,6 +7,8 @@ use App\Repositories\Repository\{ProyectoRepository};
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Controller;
 use App\User;
+use App\Imports\MigracionMetasImport;
+use Illuminate\Http\Request;
 use App\Models\Proyecto;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -189,6 +191,19 @@ class IndicadorController extends Controller
         })->get();
         }
         return Excel::download(new Indicadores2020Export($query, $hoja), 'Indicadores_Actuales.xlsx');
+    }
+
+    public function importIndicadoresAll(Request $request)
+    {
+        session()->put('errorMigracion', null);
+        Excel::import(new MigracionMetasImport(), $request->file('nombreArchivo'));
+        if (Session::get('errorMigracion') == null) {
+            alert()->success('Migración Exitosa!', 'La información se ha migrado exitósamente!')->showConfirmButton('Ok', '#3085d6');
+        } else {
+            alert()->error('Migración Errónea!', Session::get('errorMigracion'))->showConfirmButton('Ok', '#3085d6');
+        }
+        session()->put('errorMigracion', null);
+        return back();
     }
 
     private function setProyectoRepository($proyectoRepository)
