@@ -1,0 +1,42 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateAccompanimentsTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('accompaniments', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('accompaniment_type'); //tipo acompañamiento
+            $table->string('code', 50); //codigo
+            $table->string('name', 100); //nombre
+            $table->text('description'); //descripcion
+            $table->text('scope'); //alcance
+            $table->boolean('confidentiality_format'); //formato de confidencialidad
+            $table->timestamp('terms_verified_at')->nullable()->default(null); //terminos y condiciones
+            $table->unsignedInteger('adviser_id')->nullable(); //asesor
+            $table->unsignedInteger('interlocutor_talent_id')->nullable(); //talento_interlocutor
+            $table->foreign('adviser_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('interlocutor_talent_id')->references('id')->on('users')->onDelete('set null');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('accompaniments');
+    }
+}
