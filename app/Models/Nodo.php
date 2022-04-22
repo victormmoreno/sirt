@@ -100,6 +100,11 @@ class Nodo extends Model
         return $this->hasMany(Idea::class, 'nodo_id', 'id');
     }
 
+    public function metas_nodo()
+    {
+        return $this->hasMany(MetaNodo::class, 'nodo_id', 'id');
+    }
+
     public function equipos()
     {
         return $this->hasMany(Equipo::class, 'nodo_id', 'id');
@@ -308,6 +313,19 @@ class Nodo extends Model
             return $query->with($relations);
         }
         return $query;
+    }
+
+    public function scopeProyectosFinalizadosTrl6($query, $year, $nodo)
+    {
+        return $query->whereHas('proyectos.fase', function($query) {
+            $query->where('nombre', Proyecto::IsFinalizado());
+        })->whereHas('proyectos.articulacion_proyecto.actividad', function($query) use ($year) {
+            $query->whereYear('fecha_cierre', $year);
+        })->whereHas('proyectos', function($query) {
+            $query->where('trl_obtenido', Proyecto::IsTrl6Obtenido());
+        })->whereHas('proyectos', function($query) use ($nodo) {
+            $query->where('nodo_id', $nodo);
+        });
     }
 
     /**

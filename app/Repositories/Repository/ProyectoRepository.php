@@ -95,18 +95,18 @@ class ProyectoRepository
     //     return $proyecto;
     // }
 
-    public function horasAsesoriaPorExperto($id)
-    {
-        $proyecto = Proyecto::find($id);
-        foreach ($proyecto->asesorias as $key => $asesoria) {
-            foreach ($asesoria->usogestores as $key => $value) {
-                echo $value->sum('pivot.asesoria_directa') . '<br>';
+    // public function horasAsesoriaPorExperto($id)
+    // {
+    //     $proyecto = Proyecto::find($id);
+    //     foreach ($proyecto->asesorias as $key => $asesoria) {
+    //         foreach ($asesoria->usogestores as $key => $value) {
+    //             echo $value->sum('pivot.asesoria_directa') . '<br>';
 
-            }
-        }
-        exit;
-        // dd($proyecto->asesorias->pivot);
-    }
+    //         }
+    //     }
+    //     exit;
+    //     // dd($proyecto->asesorias->pivot);
+    // }
 
     /**
      * Verifica que el nuevo talento interlocutor, sea diferente al actual
@@ -264,25 +264,27 @@ class ProyectoRepository
     }
 
     /**
-     * Consulta trls esperado entre fechas de inicio
+     * Consulta trls esperado entre fechas
      * @param string $field Trl que se va a consultar
      * @param string $field_date Campo por el que se va a filtrar (fecha)
-     * @param string $fecha_inicio
-     * @param string $fecha_cierre
+     * @param string $year Anño de cierre de los proyectos
+     * @param array $tipos_trl Tipo de trl que se va a consultar
      * @return Builder
      * @author dum
      **/
-    public function consultarTrl(string $field, string $field_date, string $fecha_inicio, string $fecha_cierre)
+    public function consultarTrl(string $field, string $field_date, string $year, array $tipos_trl)
     {
         return Proyecto::select($field)
-        ->selectRaw('count(proyectos.id) AS cantidad')
+        ->selectRaw('count(proyectos.id) AS cantidad, nodos.id AS nodo')
         ->join('articulacion_proyecto AS ap', 'ap.id', '=', 'proyectos.articulacion_proyecto_id')
         ->join('actividades AS a', 'a.id', '=', 'ap.actividad_id')
         ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
-        ->whereBetween($field_date, [$fecha_inicio, $fecha_cierre])
-        ->groupBy($field);
+        ->whereYear($field_date, $year)
+        ->whereIn($field, $tipos_trl)
+        ->where('fases.nombre', Proyecto::IsFinalizado())
+        ->groupBy('nodos.id');
     }
 
     /**
@@ -1274,6 +1276,21 @@ class ProyectoRepository
         ]);
     }
 
+    public function verificarDestinatarioNotificacion($notificacion)
+    {
+        $rol = null;
+        if ($notificacion == null) {
+            $rol = User::IsTalento();
+        } else {
+            if ($notificacion->rol_receptor->name == User::IsTalento()) {
+                $rol = User::IsTalento();
+            } else {
+                $rol = User::IsDinamizador();
+            }
+        }
+        return $rol;
+    }
+
     /**
      * Notifica al dinamizador para que apruebe el proyecto en la fase de inicio
      *
@@ -1286,10 +1303,8 @@ class ProyectoRepository
         DB::beginTransaction();
         try {
             $notificacion_fase_actual = $proyecto->notificaciones()->where('fase_id',  $proyecto->fase_id)->whereNull('fecha_aceptacion')->get()->last();
-            // dd($notificacion_fase_actual);
             $msg = 'No se ha podido enviar la solicitud de aprobación, inténtalo nuevamente';
             $conf_envios = false;
-            // dd($notificacion_fase_actual);
             if ($notificacion_fase_actual == null) {
                 $conf_envios = $this->configuracionNotificacionTalento($proyecto);
                 $msg = 'Se le ha enviado una notificación al talento interlocutor para que apruebe la fase de ' . $proyecto->fase->nombre . ' del proyecto!';

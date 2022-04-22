@@ -111,6 +111,12 @@
                         </div>
                       </div>
                     </li>
+                    <li>
+                      <div class="collapsible-header"><i class="material-icons">assignment</i>Metas del nodo</div>
+                      <div class="collapsible-body">
+                        @include('indicadores.componentes.metas')
+                      </div>
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -166,5 +172,70 @@
       let idnodo = 0;
       location.href = '/excel/export_proyectos_actuales/'+idnodo+'/all';
     }
+    
+    Highcharts.chart('container', {
+      chart: {
+          type: 'column'
+      },
+      title: {
+          text: 'Metas para la vigencia actual'
+      },
+      xAxis: {
+          categories: ['{{$metas_graph->nodo->entidad->nombre}}']
+      },
+      yAxis: {
+          min: 0,
+          title: {
+              text: 'Cantidad de proyectos'
+          },
+          stackLabels: {
+              enabled: true,
+              style: {
+                  fontWeight: 'bold',
+                  color: (
+                      Highcharts.defaultOptions.title.style &&
+                      Highcharts.defaultOptions.title.style.color
+                  ) || 'gray'
+              }
+          }
+      },
+      legend: {
+          align: 'right',
+          x: -30,
+          verticalAlign: 'top',
+          y: 25,
+          floating: true,
+          backgroundColor:
+              Highcharts.defaultOptions.legend.backgroundColor || 'white',
+          borderColor: '#CCC',
+          borderWidth: 1,
+          shadow: false
+      },
+      plotOptions: {
+          column: {
+              stacking: 'normal',
+              dataLabels: {
+                  enabled: true
+              }
+          }
+      },
+      series: [{
+          name: 'TRL6 obtenido (Finalizados)',
+          data: [{{$metas_graph->trl6_obtenido}}]
+      }, {
+          name: 'TRL7 y TRL8 obtenido (Finalizados)',
+          data: [{{$metas_graph->trl7_8_obtenido}}]
+      },{
+          type: 'spline',
+          name: 'Meta de proyectos',
+          data: [{{$metas_graph->trl6 + $metas_graph->trl7_trl8}}],
+          visible: false,
+          marker: {
+              lineWidth: 2,
+              lineColor: Highcharts.getOptions().colors[3],
+              fillColor: 'white'
+          }
+      }]
+  });
   </script>
 @endpush

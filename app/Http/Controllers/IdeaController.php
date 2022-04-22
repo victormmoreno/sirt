@@ -508,7 +508,6 @@ class IdeaController extends Controller
     {
         $idea = $this->ideaRepository->findByid($id);
         $estadosIdea = EstadoIdea::all();
-        $this->authorize('show', $idea);
         switch (Session::get('login_role')) {
             case User::IsTalento():
                 return view('ideas.talento.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);

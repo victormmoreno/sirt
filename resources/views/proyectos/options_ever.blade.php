@@ -22,7 +22,7 @@
             <i class="material-icons left">group</i>
             Cambiar talentos que desarrollan el proyecto.
         </a>
-        <a href="{{route('proyecto.solicitar.aprobacion', [$proyecto->id, $proyecto->fase->nombre])}}" class="collection-item">
+        <a href="{{route('proyecto.solicitar.aprobacion', [$proyecto->id, $proyecto->fase->nombre])}}" class="collection-item tooltipped" data-position="right" data-tooltip="La solicitud de aprobación se enviará al {{$rol_destinatario == 'Talento' ? 'talento interlocutor' : 'dinamizador'}}.">
             <i class="material-icons left">notifications</i>
             Enviar solicitud de aprobación de la fase de {{$proyecto->fase->nombre}}.
         </a>

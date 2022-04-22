@@ -155,7 +155,7 @@ class Equipo extends Model
 
     public function usoinfraestructuras()
     {
-        return $this->belongsToMany(UsoInfraestructura::class, 'equipo_uso', 'usoinfraestructura_id', 'equipo_id')
+        return $this->belongsToMany(UsoInfraestructura::class, 'equipo_uso', 'equipo_id', 'usoinfraestructura_id')
             ->withTimestamps()
             ->withPivot([
                 'tiempo',

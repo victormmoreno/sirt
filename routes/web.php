@@ -668,15 +668,18 @@ Route::group(
         Route::get('/export_proyectos_inscritos/{idnodo}/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicadoresProyectosInscritos')->name('indicador.proyectos.inscritos.export.excel');
         Route::get('/export_proyectos_actuales/{idnodo}/{hoja}', 'Excel\IndicadorController@exportIndicadoresProyectosActuales')->name('indicador.proyectos.actuales.export.excel');
         Route::get('/export_trazabilidad/{idproyecto}', 'Excel\ProyectoController@exportTrazabilidadProyecto')->name('excel.proyecto.trazabilidad');
-
+        Route::get('/import_metas_form', 'IndicadorController@form_import_metas')->name('indicadores.form.metas')->middleware('role_session:Administrador');
+        
         //Rutas para la generación de excel del módulo de nodo
         Route::get('/excelnodo', 'Excel\NodoController@exportQueryAllNodo')
-            ->middleware('role_session:Administrador')
-            ->name('excel.excelnodo');
-
+        ->middleware('role_session:Administrador')
+        ->name('excel.excelnodo');
+        
         Route::get('/exportexcelfornodo/{nodo}', 'Excel\NodoController@exportQueryForNodo')
-            ->middleware('role_session:Administrador|Dinamizador')
-            ->name('excel.exportexcelfornodo');
+        ->middleware('role_session:Administrador|Dinamizador')
+        ->name('excel.exportexcelfornodo');
+
+        Route::post('/import_metas', 'Excel\IndicadorController@importIndicadoresAll')->name('indicadores.import.metas')->middleware('role_session:Administrador');
     }
 );
 
