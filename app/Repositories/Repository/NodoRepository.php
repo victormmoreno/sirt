@@ -234,8 +234,4 @@ class NodoRepository
         return MetaNodo::all();
     }
 
-    public function consultarMetaProyectoFinalizadosTrl6()
-    {
-        return MetaNodo::all();
-    }
 }
