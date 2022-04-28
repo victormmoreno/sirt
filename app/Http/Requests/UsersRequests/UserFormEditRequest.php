@@ -5,6 +5,7 @@ namespace App\Http\Requests\UsersRequests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use \App\Models\{Eps, Ocupacion};
+use App\User;
 
 class UserFormEditRequest extends FormRequest
 {
@@ -42,6 +43,7 @@ class UserFormEditRequest extends FormRequest
             'txtapellidos'              => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
             'txtfecha_nacimiento'       => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
             'txtestrato'                => 'required',
+            'txtgenero' => 'required|'.Rule::in([User::IS_MASCULINO, User::IS_FEMENINO, User::IS_BINARIO]),
             'txtgrado_discapacidad'    => 'required',
             'txtdiscapacidad'          =>  Rule::requiredIf(request()->txtgrado_discapacidad == 1 || request()->txtgrado_discapacidad == '1') . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',
             'txtemail'                  => 'required|email|min:1|max:100|unique:users,email,' . request()->route('id'),
@@ -94,7 +96,7 @@ class UserFormEditRequest extends FormRequest
             'txtfecha_nacimiento.before_or_equal' => 'La fecha de nacimiento  debe ser una fecha anterior o igual a 2019-06-11.',
 
             'txtestrato.required'                 => 'El estrato es obligatorio.',
-
+            'txtgenero.required'                  => 'El género es obligatorio.',
             'txtemail.required'                   => 'El correo electrónico es obligatorio.',
             'txtemail.min'                        => 'El correo electrónico debe ser minimo 1 caracter',
             'txtemail.max'                        => 'El correo electrónico debe ser máximo 100 caracteres',

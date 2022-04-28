@@ -7,6 +7,7 @@ use App\Models\{TipoTalento};
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use \App\Models\Eps;
+use App\User;
 
 class UserFormRequest extends FormRequest
 {
@@ -47,6 +48,7 @@ class UserFormRequest extends FormRequest
             'txtfecha_nacimiento'       => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
             'txtestrato'                => 'required',
             'txtgrado_discapacidad'    => 'required',
+            'txtgenero' => 'required|'.Rule::in([User::IS_MASCULINO, User::IS_FEMENINO, User::IS_BINARIO]),
             'txtmadrecabezafamilia'                => 'required',
             'txtdesplazadoporviolencia'                => 'required',
             'txtdiscapacidad'          =>  Rule::requiredIf(request()->txtgrado_discapacidad == 1 || request()->txtgrado_discapacidad == '1') . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',

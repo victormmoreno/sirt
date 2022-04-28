@@ -69,11 +69,7 @@ class FuncionarioImport implements ToCollection, WithHeadingRow
                 if (!$vApellidos) {
                     return $vApellidos;
                 }
-                // Validar fecha de nacimiento
-                // $vFechaNacimiento = $this->validaciones->validarFecha($row['fecha_nacimiento'], $key, 'Fecha de nacimiento', $this->hoja);
-                // if (!$vFechaNacimiento) {
-                //     return $vFechaNacimiento;
-                // }
+
                 // Validar género
                 $vGenero = $this->validaciones->validarGenero($row['genero'], $key, $this->hoja);
                 if (!$vGenero) {
@@ -96,11 +92,7 @@ class FuncionarioImport implements ToCollection, WithHeadingRow
                 if (!$vCorreo) {
                     return $vCorreo;
                 }
-                // Validar fecha de terminación del último estudio
-                // $vFechaTerminacion = $this->validaciones->validarFecha($row['fecha_terminacion'], $key, 'Fecha de terminación', $this->hoja);
-                // if (!$vFechaTerminacion) {
-                //     return $vFechaTerminacion;
-                // }
+
                 // Validar grado de escolaridad
                 $queryGradoEscolaridad = GradoEscolaridad::where('nombre', $row['grado_escolaridad'])->first();
                 $user = User::where('documento', $documento)->withTrashed()->first();
@@ -109,7 +101,7 @@ class FuncionarioImport implements ToCollection, WithHeadingRow
                 $ocupaciones = explode(',', $row['ocupaciones']);
                 $ocupaciones = $this->getOcupaciones($ocupaciones);
 
-                
+
                 if ($user == null) {
                     // No hay registrado
                     if ($user_email == null) {
@@ -135,7 +127,7 @@ class FuncionarioImport implements ToCollection, WithHeadingRow
                     } else {
                         // No permite actualizar la información porque el correo se encuentra asociado a otra persona
                         return $this->validaciones->errorValidacionCorreo($row['correo'], $key, $user->documento, $this->hoja);
-                    } 
+                    }
                 }
             }
             DB::commit();
