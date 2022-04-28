@@ -19,7 +19,7 @@ class CreateAccompanimentablesTable extends Migration
             $table->string('accompanimentable_type');
             $table->unsignedBigInteger('accompaniment_id');
 
-            $table->foreign('accompanimentable_type')->references('id')->on('accompaniments')->onDelete('cascade');
+            $table->foreign('accompaniment_id')->references('id')->on('accompaniments')->onDelete('cascade');
             $table->timestamps();
         });
     }
