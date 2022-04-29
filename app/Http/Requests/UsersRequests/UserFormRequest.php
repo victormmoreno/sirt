@@ -55,7 +55,7 @@ class UserFormRequest extends FormRequest
             'txtemail'                  => 'required|email|min:1|max:100|unique:users,email,' . request()->route('id'),
             'txtbarrio'                 => 'required|min:1|max:100',
             'txtdireccion'              => 'required|min:1|max:200',
-            'txttelefono'               => 'nullable|digits_between:6,11|numeric',
+            'txttelefono'               => 'nullable|digits_between:6,10|numeric',
             'txtcelular'                => 'required|digits_between:10,11|numeric',
             'txtinstitucion'            => 'required|min:1|max:100|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
             'txttitulo'                 => 'required|min:1|max:200|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
@@ -183,7 +183,7 @@ class UserFormRequest extends FormRequest
             'txtbarrio.max'                       => 'El barrio debe ser máximo 100 caracteres',
 
             'txttelefono.numeric'                 => 'El teléfono debe ser numérico',
-            'txttelefono.digits_between'          => 'El teléfono debe tener entre 6 y 11 digitos',
+            'txttelefono.digits_between'          => 'El teléfono debe tener entre 6 y 10 digitos',
 
             'txtcelular.required'                  => 'El celular es obligatorio.',
             'txtcelular.numeric'                  => 'El celular debe ser numérico',
