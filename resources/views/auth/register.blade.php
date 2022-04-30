@@ -271,7 +271,7 @@
 
                                                 <label class="active">Genero<span class="red-text">*</span></label>
                                                 <p class="no-p-v">
-                                                    <input  class="with-gap " name="txtgenero" type="radio" id="masculino" value="1" {{isset($user->genero) && $user->genero == 1 ? 'checked' : old('txtgenero')}}>
+                                                    <input class="with-gap " name="txtgenero" type="radio" id="masculino" value="1" {{isset($user->genero) && $user->genero == 1 ? 'checked' : 'checked'}}>
                                                     <label for="masculino"class="p-h-md">Masculino</label>
                                                     <input class="with-gap"t name="txtgenero" type="radio" id="femenino" value="0" {{isset($user->genero) && $user->genero == 1 ? 'checked' : old('txtgenero')}}>
                                                     <label  for="femenino" class="p-h-md">Femenino</label>

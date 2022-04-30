@@ -144,7 +144,7 @@ class EntrenamientoController extends Controller
     {
         switch (Session::get('login_role')) {
             case User::IsArticulador():
-                $nodo_id = auth()->user()->gestor->nodo_id;
+                $nodo_id = auth()->user()->articulador->nodo_id;
                 break;
             case User::IsDinamizador():
                 $nodo_id = auth()->user()->dinamizador->nodo_id;
@@ -193,7 +193,7 @@ class EntrenamientoController extends Controller
     public function create()
     {
         $now = Carbon::now()->isoFormat('YYYY');
-        $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('nodo_id', auth()->user()->gestor->nodo_id)->whereYear('created_at', $now)->get();
+        $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('nodo_id', auth()->user()->articulador->nodo_id)->whereYear('created_at', $now)->get();
         if (Session::get('login_role') == User::IsArticulador()) {
             return view('entrenamientos.articulador.create', ['ideas' => $ideas]);
         } else {
