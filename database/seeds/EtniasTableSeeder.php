@@ -312,7 +312,7 @@ class EtniasTableSeeder extends Seeder
             'codigo' => '55',
             'nombre' => 'Puinave'
         ]);
-        	
+
 
         Etnia::create([
             'codigo' => '56',
@@ -373,7 +373,7 @@ class EtniasTableSeeder extends Seeder
             'codigo' => '67',
             'nombre' => 'Tucano (Desea) o Tukano'
         ]);
-        
+
         Etnia::create([
             'codigo' => '68',
             'nombre' => 'Tule (Kuna)'
@@ -389,7 +389,7 @@ class EtniasTableSeeder extends Seeder
             'nombre' => "U' wa (Tunebo)"
         ]);
 
-        
+
         Etnia::create([
             'codigo' => '71',
             'nombre' => "Wanano"
@@ -404,11 +404,26 @@ class EtniasTableSeeder extends Seeder
             'codigo' => '73',
             'nombre' => "Uitoto"
         ]);
-		
+
         Etnia::create([
             'codigo' => '74',
             'nombre' => "Wiwa (Arzario)"
         ]);
-	
+
+        Etnia::create([
+            'codigo' => '75',
+            'nombre' => "Raizal"
+        ]);
+
+        Etnia::create([
+            'codigo' => '76',
+            'nombre' => "Kankuamo, kankuaka, kankui o kankuané"
+        ]);
+
+        Etnia::create([
+            'codigo' => '77',
+            'nombre' => "Afrodescendiente"
+        ]);
+
     }
 }

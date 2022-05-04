@@ -32,7 +32,7 @@ class ProfileRepository
             "celular"              => $request->input('txtcelular'),
             "telefono"             => $request->input('txttelefono'),
             "fechanacimiento"      => $request->input('txtfecha_nacimiento'),
-            "genero"               => $request->input('txtgenero') == 'on' ? $request['txtgenero'] = 0 : $request['txtgenero'] = 1,
+            "genero"               => $request->input('txtgenero'),
             "otra_eps"             => $request->input('txteps') == Eps::where('nombre', Eps::OTRA_EPS)->first()->id ? $request->input('txtotraeps') : null,
             "institucion"          => $request->input('txtinstitucion'),
             "titulo_obtenido"      => $request->get('txttitulo'),
