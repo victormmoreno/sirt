@@ -26,7 +26,7 @@
                                         <div class="row">
                                             @include('users.profile.nav.nav-profile')
                                         </div>
-                                        
+
                                     </div>
                                     <div class="col s12 m7 l9">
                                         @include('users.profile.nav.navbar')
@@ -51,7 +51,7 @@
                                                                             Cambiar Información
                                                                         </a>
                                                                     </li>
-                                                                    
+
                                                                     @if(collect($user->getRoleNames())->contains(App\User::IsTalento()))
                                                                     <li class="divider">
                                                                     </li>
@@ -210,7 +210,7 @@
                                                             </div>
                                                         </div>
                                                     @endif
-                                                    
+
                                                     @if($user->isUserExperto() || $user->isUserArticulador())
                                                     @if($user->isUserExperto())
                                                         <span class="orange-text">Información {{App\User::IsGestor()}}</span>
@@ -219,7 +219,7 @@
                                                     @endif
                                                         <div class="server-load row">
                                                             <div class="server-stat col s12 m4 l4">
-                                                                <p>{{$user->present()->userGestorNombreNodo()}}</p>
+                                                                <p>{{$user->present()->userArticuladorName()}}</p>
                                                                 <span>Nodo</span>
                                                             </div>
                                                             @if($user->isUserExperto())
@@ -227,15 +227,16 @@
                                                                 <p>{{$user->present()->userGestorNombreLinea()}}</p>
                                                                 <span>Linea</span>
                                                             </div>
-                                                            @endif
+
                                                             <div class="server-stat col s12 m4 l4">
                                                                 <p>{{$user->present()->userGestorHonorarios()}}</p>
                                                                 <span>Honorario</span>
                                                             </div>
+                                                            @endif
                                                         </div>
                                                     @endif
                                                     @if($user->isUserInfocenter())
-                                                        
+
                                                         <span class="orange-text">Información {{App\User::IsInfocenter()}}</span>
                                                         <div class="server-load row">
                                                             <div class="server-stat col s12 m6 l6">
@@ -269,11 +270,11 @@
                                                                 <span>Otra información {{App\User::IsTalento()}}</span>
                                                             </div>
                                                         </div>
-                                                        
+
                                                     @endif
                                                 </div>
-                                                    
-                                                    
+
+
                                                 <div class="divider mailbox-divider">
                                                 </div>
                                                 <div class="right">

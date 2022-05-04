@@ -53,10 +53,6 @@
                                                                         <span class="title"><b>Configuración principal</b></span>
                                                                         <p>Esta información aparecerá en tu perfil</p>
                                                                     </li>
-                                                                    {{-- <li class="collection-item">
-                                                                        <span class="title"><b>Perfil</b></span>
-                                                                        <p>Después de una actualización correcta del perfil, se le redirigirá a la página de inicio de sesión donde podrá iniciar sesión nuevamente.</p>
-                                                                    </li> --}}
                                                                 </ul>
                                                             </blockquote>
                                                         </div>
@@ -74,7 +70,7 @@
                                                                                     @else
                                                                                         <option value="{{$value->id}}" {{old('txttipo_documento') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option>
                                                                                     @endif
-                                                                                 @endforeach
+                                                                                @endforeach
                                                                             </select>
                                                                             <label for="txttipo_documento">Tipo Documento <span class="red-text">*</span></label>
                                                                             <small id="txttipo_documento-error" class="error red-text"></small>
@@ -300,18 +296,15 @@
                                                             <div class="row">
                                                                 <div class="input-field col s12 m12 l12 offset-l5 m5 s5">
                                                                     <div class="switch m-b-md">
-                                                                      <i class="material-icons prefix">wc</i>
-                                                                      <label class="active">Genero*</label>
-                                                                        <label>
-                                                                            Masculino
-                                                                            @if(isset($user->genero))
-                                                                            <input type="checkbox" id="txtgenero" name="txtgenero" {{$user->genero != 1 ? 'checked' : old('txtgenero')}}>
-                                                                            @else
-                                                                            <input type="checkbox" id="txtgenero" name="txtgenero" {{old('txtgenero') == 'on' ? 'checked' : ''}}>
-                                                                            @endif
-                                                                            <span class="lever"></span>
-                                                                            Femenino
-                                                                        </label>
+                                                                        <label class="active">Genero<span class="red-text">*</span></label>
+                                                                        <p class="no-p-v">
+                                                                            <input  class="with-gap " name="txtgenero" type="radio" id="masculino" value="1" {{isset($user->genero) && $user->genero == 1 ? 'checked' : old('txtgenero')}}>
+                                                                            <label for="masculino"class="p-h-md">Masculino</label>
+                                                                            <input class="with-gap"t name="txtgenero" type="radio" id="femenino" value="0" {{isset($user->genero) && $user->genero == 0 ? 'checked' : old('txtgenero')}}>
+                                                                            <label  for="femenino" class="p-h-md">Femenino</label>
+                                                                            <input class="with-gap" name="txtgenero" type="radio" id="binario" value="2" {{isset($user->genero) && $user->genero == 2 ? 'checked' : old('txtgenero')}}>
+                                                                            <label for="binario" class="p-h-md">Binario</label>
+                                                                        </p>
                                                                     </div>
                                                                 </div>
                                                             </div>
