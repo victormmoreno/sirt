@@ -21,13 +21,14 @@ class CreateAccompanimentsTable extends Migration
             $table->string('name', 100); //nombre
             $table->text('description')->nullable(); //descripcion
             $table->text('scope'); //alcance
+            $table->boolean('status')->default(Accompaniment::STATUS_OPEN); //Estado
+            $table->timestamp('start_date'); //fecha inicio
+            $table->timestamp('end_date')->nullable(); //fecha fin
             $table->boolean('confidentiality_format')->default(Accompaniment::CONFIDENCIALITY_FORMAT_NO); //formato de confidencialidad
             $table->timestamp('terms_verified_at')->nullable()->default(null); //terminos y condiciones
             $table->unsignedInteger('node_id')->nullable(); //nodo
-            $table->unsignedInteger('adviser_id')->nullable(); //asesor
             $table->unsignedInteger('interlocutor_talent_id')->nullable(); //talento_interlocutor
             $table->foreign('node_id')->references('id')->on('nodos')->onDelete('set null');
-            $table->foreign('adviser_id')->references('id')->on('users')->onDelete('set null');
             $table->foreign('interlocutor_talent_id')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();
         });

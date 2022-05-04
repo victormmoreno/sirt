@@ -19,6 +19,7 @@ class CreateArticulationsTable extends Migration
             $table->string('name', 100); //nombre
             $table->text('description'); //descripcion
             $table->timestamp('start_date'); //fecha inicio
+            $table->timestamp('end_date')->nullable(); //fecha inicio
             $table->timestamp('expected_end_date')->nullable(); //fecha esperada
             $table->string('entity')->nullable();  //fecha esperada
             $table->string('contact_name')->nullable(); //nombre_contacto
@@ -27,9 +28,9 @@ class CreateArticulationsTable extends Migration
             $table->text('objective')->nullable(); //objetivo
 
             $table->unsignedBigInteger('accompaniment_id');
-            $table->unsignedInteger('scope_id')->nullable(); //alcance
+            $table->unsignedBigInteger('scope_id')->nullable(); //alcance
             $table->unsignedInteger('phase_id')->nullable(); //fase
-            $table->unsignedInteger('articulation_type_id')->nullable(); //tipo articulacion
+            $table->unsignedBigInteger('articulation_type_id')->nullable(); //tipo articulacion
 
             $table->foreign('accompaniment_id')->references('id')->on('accompaniments')->onDelete('cascade');
             $table->foreign('scope_id')->references('id')->on('alcance_articulaciones')->onDelete('set null');

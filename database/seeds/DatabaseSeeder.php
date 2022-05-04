@@ -192,13 +192,13 @@ class DatabaseSeeder extends Seeder
                 'tamanhos_empresas',
                 'alcance_articulaciones',
                 'tipo_articulaciones',
+                'articulations',
+                'accompanimentables',
+                'articulations',
             ]);
         } else {
             echo "NO PUEDES TRUNCAR TABLAS";
         }
-
-
-
 
         collect(config('seeders')[app()->environment()])
             ->where('callable', true)

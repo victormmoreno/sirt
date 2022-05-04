@@ -785,10 +785,11 @@ Route::group(
         'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Talento|Articulador',]
     ],
     function () {
-        Route::get('/', 'Articulation\ArticulationListController@index')->name('articulation.accompaniments');
+        Route::get('/', 'Articulation\AccompanimentListController@index')->name('articulation.accompaniments');
+        Route::get('/datatable_filtros', 'Articulation\AccompanimentListController@datatableFiltros')->name('articulation.accompaniments.datatable.filtros');
         Route::get('/crear', 'Articulation\ArticulationRegisterController@create')->name('articulation.create');
         Route::post('/', 'Articulation\ArticulationRegisterController@store')->name('articulation.store');
-        Route::get('/show/{id}', 'Articulation\ArticulationShowController@show')->name('articulation.show');
+        Route::get('/show/{id}', 'Articulation\ArticulationShowController@show')->name('articulation.accompaniments.show');
 
     }
 );

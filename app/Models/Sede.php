@@ -39,4 +39,13 @@ class Sede extends Model
     {
         return $this->morphToMany(Proyecto::class, 'propietario')->withTimestamps();
     }
+
+    /**
+     * The polymorfic relation much to much
+     *
+     * @return void
+     */
+    public function sedes(){
+        return $this->morphMany(Accompaniment::class, 'accompanimentable');
+    }
 }

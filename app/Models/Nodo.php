@@ -143,6 +143,17 @@ class Nodo extends Model
         return $this->hasMany(ContactoEntidad::class, 'nodo_id', 'id');
     }
 
+    /**
+     * Define one to many relationship between accompanient and node
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function accompaniments()
+    {
+        return $this->hasMany(Accompaniment::class, 'node_id', 'id');
+    }
+
+
     public function tiposarticulaciones()
     {
         return $this->belongsToMany(User::class, 'nodo_tipoarticulacion')

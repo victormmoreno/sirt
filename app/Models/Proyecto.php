@@ -145,6 +145,15 @@ class Proyecto extends Model
     }
 
     /**
+     * The polymorfic relation much to much
+     *
+     * @return void
+     */
+    public function projects(){
+        return $this->morphMany(Accompaniment::class, 'accompanimentable');
+    }
+
+    /**
      * Define an inverse one-to-one or many relationship between projects and node
      * @author devjul
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Articulation extends Model
 {
+
+    /**
+     * The attributes that guarded.
+     *
+     * @var array
+     */
+    protected $guarded = ['id', 'phase_id'];
+
     /**
      * The inverse relation one to much
      *
@@ -13,5 +21,10 @@ class Articulation extends Model
      */
     public function accompaniment(){
         return $this->belongsTo(Accompaniment::class, 'accompaniment_id');
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(\App\User::class, 'articulation_user', 'articulation_id', 'user_id');
     }
 }

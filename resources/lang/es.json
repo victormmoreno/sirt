@@ -56,6 +56,9 @@
     "Created_at": "Fecha registro",
     "Name Accompaniment": "Nombre Acompañamiento",
     "Phase": "Fase",
+    "Status": "Estado",
+    "Adviser": "Asesor",
+    "Count Articulations": "Cantidad articulaciones",
     "Download": "Descargar",
     "Filter": "Filtrar",
     "Home" : "Inicio"

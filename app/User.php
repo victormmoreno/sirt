@@ -256,6 +256,17 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(Talento::class, 'user_id', 'id');
     }
 
+    public function articulations()
+    {
+        return $this->belongsToMany(\App\Models\Articulation::class, 'articulation_user', 'user_id', 'articulation_id');
+    }
+
+    public function accompaniments()
+    {
+        return $this->hasMany(\App\Models\Accompaniment::class, 'nodo_id', 'id')->where('role', User::IsArticulador());
+    }
+
+
     public function token()
     {
         return $this->hasOne(ActivationToken::class);
