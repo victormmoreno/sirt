@@ -7,7 +7,7 @@
     <div class="input-field col s12 m6 l6">
         <input name="txtcodigo_proyecto" disabled
             value="{{ $proyecto->articulacion_proyecto->actividad->present()->actividadCode() }}" id="txtcodigo_proyecto">
-        <label class="active" for="txtcodigo_proyecto">C贸digo de Proyecto</label>
+        <label class="active" for="txtcodigo_proyecto">Código de Proyecto</label>
     </div>
     <div class="input-field col s12 m6 l6">
         <input name="txtnombre" value="{{ $proyecto->articulacion_proyecto->actividad->present()->actividadName() }}" disabled
@@ -24,7 +24,7 @@
     </div>
     <div class="input-field col s12 m6 l6">
         <input name="txtlinea" id="txtlinea" value="{{ $proyecto->present()->proyectoLinea() }}" disabled>
-        <label class="active" for="txtlinea">L铆nea Tecnol贸gica</label>
+        <label class="active" for="txtlinea">Línea Tecnológica</label>
     </div>
 </div>
 <div class="divider"></div>
@@ -33,7 +33,7 @@
     <div class="col s6 m6 l6">
         <p class="p-v-xs">
             <input type="checkbox" {{ $disabled }} {{ $proyecto->present()->proyectoEvidenciaTrl() == 1 ? 'checked' : '' }} id="txtevidencia_trl" name="txtevidencia_trl" value="1">
-            <label for="txtevidencia_trl">Evidencias seg煤n trl.</label>
+            <label for="txtevidencia_trl">Evidencias según trl.</label>
         </p>
     </div>
     <div class="col s6 m6 l6">

@@ -88,7 +88,7 @@ class ArticulacionPbt extends Model
      */
     public function asesor()
     {
-        return $this->belongsTo(User::class, 'asesor_id', 'id');
+        return $this->belongsTo(User::class, 'asesor_id', 'id')->withTrashed();
     }
 
     /**

@@ -48,6 +48,14 @@ class ProyectoFaseInicioFormRequest extends FormRequest
         ];
     }
 
+    public function rulesTalentos()
+    {
+        return [
+            'talentos' => 'required',
+            'radioTalentoLider' => 'required',
+        ];
+    }
+
     public function messages()
     {
         return $messages = [

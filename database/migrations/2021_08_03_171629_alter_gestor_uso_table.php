@@ -24,7 +24,7 @@ class AlterGestorUsoTable extends Migration
             $table->index(["asesorable_type", "asesorable_id"], 'gestor_uso_asesorable_type_asesorable_id_index');
         });
     }
-
+    
     /**
      * Reverse the migrations.
      *

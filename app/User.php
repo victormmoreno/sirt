@@ -21,6 +21,7 @@ use App\Models\{
     Talento,
     TipoDocumento,
     Contratista,
+    ControlNotificaciones,
     UserNodo,
 };
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -133,6 +134,16 @@ class User extends Authenticatable implements JWTSubject
     /*===========================================
     =            relaciones eloquent            =
     ===========================================*/
+
+    public function notificaciones_remitidas()
+    {
+        return $this->hasMany(ControlNotificaciones::class, 'remitente_id', 'id');
+    }
+
+    public function notificaciones_recibidas()
+    {
+        return $this->hasMany(ControlNotificaciones::class, 'receptor_id', 'id');
+    }
 
     public function proyectos()
     {

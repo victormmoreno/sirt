@@ -304,7 +304,7 @@ class ProyectoPresenter extends Presenter
 
     public function proyectoTrlPrototipo()
     {
-        if (isset($this->proyecto)) {
+        if (isset($this->proyecto->trl_prototipo)) {
             return $this->proyecto->trl_prototipo;
         }
         return "No registra";
@@ -312,7 +312,7 @@ class ProyectoPresenter extends Presenter
 
     public function proyectoEvidenciasPruebasDocumentadas()
     {
-        if (isset($this->proyecto)) {
+        if (isset($this->proyecto->trl_pruebas)) {
             return $this->proyecto->trl_pruebas;
         }
         return "No registra";
@@ -320,7 +320,7 @@ class ProyectoPresenter extends Presenter
 
     public function proyectoEvidenciasModeloNegocio()
     {
-        if (isset($this->proyecto)) {
+        if (isset($this->proyecto->trl_modelo)) {
             return $this->proyecto->trl_modelo;
         }
         return "No registra";
@@ -328,7 +328,7 @@ class ProyectoPresenter extends Presenter
 
     public function proyectoEvidenciasNormatividad()
     {
-        if (isset($this->proyecto)) {
+        if (isset($this->proyecto->trl_normatividad)) {
             return $this->proyecto->trl_normatividad;
         }
         return "No registra";

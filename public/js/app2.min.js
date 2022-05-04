@@ -5121,6 +5121,54 @@ var infoActividad = {
 
 }
 
+function preguntaRechazarAprobacionProyecto(e){
+    e.preventDefault();
+    Swal.fire({
+        title: '¿Está seguro(a) de no aprobar esta fase del proyecto?',
+        input: 'text',
+        type: 'warning',
+        inputValidator: (value) => {
+            if (!value) {
+                return 'Las observaciones deben ser obligatorias!'
+            } else {
+                $('#decision').val('rechazado');
+                $('#motivosNoAprueba').val(value);
+            }
+        },
+        inputAttributes: {
+        maxlength: 100,
+        placeHolder: '¿Por qué?'
+        },
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Enviar observaciones!'
+    }).then((result) => {
+        if (result.value) {
+            document.frmAprobacionProyecto.submit();
+        }
+    })
+}
+
+function preguntaAprobacion(e){
+    e.preventDefault();
+    Swal.fire({
+        title: '¿Está seguro(a) de aprobar esta fase del proyecto?',
+        text: 'Al hacerlo estás aceptando y aprobando toda la información de esta fase, los documento adjuntos y las asesorias recibidas.',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Sí!'
+    }).then((result) => {
+        if (result.value) {
+            $('#decision').val('aceptado');
+            document.frmAprobacionProyecto.submit();
+        }
+    })
+}
 $(document).ready(function () {
     // Contenedores
     divOtroAreaConocmiento = $('#otroAreaConocimiento_content');
@@ -5143,6 +5191,16 @@ $(document).on('submit', 'form#frmProyectos_FaseInicio', function (event) { // $
     var data = new FormData($(this)[0]);
     var url = form.attr("action");
     ajaxSendFormProyecto(form, data, url, 'create');
+});
+
+// Enviar formulario para cambiar los talentos del proyecto
+$(document).on('submit', 'form#frmUpdateTalentos', function (event) {
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    ajaxSendFormProyecto(form, data, url, 'update');
 });
 
 
@@ -5210,7 +5268,7 @@ function mensajesProyectoUpdate(data) {
     if (data.state == 'update') {
         Swal.fire({
             title: 'Modificación Exitosa',
-            text: "El proyecto ha sido registrado satisfactoriamente",
+            text: "El proyecto ha sido cambiado satisfactoriamente",
             type: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
