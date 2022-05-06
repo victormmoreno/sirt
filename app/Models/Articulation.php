@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Presenters\ArticulationPresenter;
 
 class Articulation extends Model
 {
@@ -13,6 +14,8 @@ class Articulation extends Model
      * @var array
      */
     protected $guarded = ['id', 'phase_id'];
+
+
 
     /**
      * The inverse relation one to much
@@ -26,5 +29,15 @@ class Articulation extends Model
     public function users()
     {
         return $this->belongsToMany(\App\User::class, 'articulation_user', 'articulation_id', 'user_id');
+    }
+
+    /**
+     * The presenter
+     *
+     * @return void
+     */
+    public function present()
+    {
+        return new ArticulationPresenter($this);
     }
 }

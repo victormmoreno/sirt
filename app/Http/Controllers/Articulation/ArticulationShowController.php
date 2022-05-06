@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Articulation;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Articulation;
 
 class ArticulationShowController extends Controller
 {
@@ -15,8 +16,11 @@ class ArticulationShowController extends Controller
      */
     public function show($id)
     {
-        
-        return view('articulation.show');
+        $articulations = Articulation::with(['accompaniment'])->withCount('users')->where('accompaniment_id',$id)->paginate(6);
+
+        // return $articulations;
+
+        return view('articulation.show', compact('articulations'));
     }
 
 }

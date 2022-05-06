@@ -1,13 +1,14 @@
 $(document).ready(function() {
-    let filter_node = $('#filter_node').val();
-    let filter_year = $('#filter_year').val();
-    let filter_status = $('#filter_status').val();
+    let filter_node_accompaniment = $('#filter_node_accompaniment').val();
+    let filter_year_accompaniment = $('#filter_year_accompaniment').val();
+    let filter_status_accompaniment = $('#filter_status_accompaniment').val();
 
 
-    if((filter_node == '' || filter_node == null) && filter_year !='' && filter_status != ''){
-        accompaniment.filtersDatatableAccompanibles(filter_node = null,filter_year  = null, filter_status  = null);
-    }else if((filter_node != '' || filter_node != null) && filter_year !='' && filter_status != ''){
-        accompaniment.filtersDatatableAccompanibles(filter_node, filter_year, filter_status);
+
+    if((filter_node_accompaniment == '' || filter_node_accompaniment == null) && (filter_year_accompaniment =='' || filter_year_accompaniment == null) && (filter_status_accompaniment == '' || filter_status_accompaniment == null)){
+        accompaniment.filtersDatatableAccompanibles(filter_node_accompaniment = null,filter_year_accompaniment = null, filter_status_accompaniment = null);
+    }else if((filter_node_accompaniment != '' || filter_node_accompaniment != null) || filter_year_accompaniment !='' && filter_status_accompaniment != ''){
+        accompaniment.filtersDatatableAccompanibles(filter_node_accompaniment, filter_year_accompaniment, filter_status_accompaniment);
     }else{
 
         $('#accompaniment_data_table').DataTable({
@@ -20,15 +21,15 @@ $(document).ready(function() {
 });
 
 $('#filter_articulacion').click(function () {
-    let filter_node = $('#filter_node').val();
-    let filter_year = $('#filter_year').val();
-    let filter_status = $('#filter_status').val();
+    let filter_node_accompaniment = $('#filter_node_accompaniment').val();
+    let filter_year_accompaniment = $('#filter_year_accompaniment').val();
+    let filter_status_accompaniment = $('#filter_status_accompaniment').val();
 
     $('#accompaniment_data_table').dataTable().fnDestroy();
-    if((filter_node == '' || filter_node == null) && filter_year !='' && filter_status != ''){
-        accompaniment.filtersDatatableAccompanibles(filter_node = null,filter_year, filter_status);
-    }else if((filter_node != '' || filter_node != null) && filter_year !='' && filter_status != ''){
-        accompaniment.filtersDatatableAccompanibles(filter_node, filter_year, filter_status);
+    if((filter_node_accompaniment == '' || filter_node_accompaniment == null) && filter_year_accompaniment !='' && filter_status_accompaniment != ''){
+        accompaniment.filtersDatatableAccompanibles(filter_node_accompaniment = null,filter_year_accompaniment, filter_status_accompaniment);
+    }else if((filter_node_accompaniment != '' || filter_node_accompaniment != null) && filter_year_accompaniment !='' && filter_status_accompaniment != ''){
+        accompaniment.filtersDatatableAccompanibles(filter_node_accompaniment, filter_year_accompaniment, filter_status_accompaniment);
     }else{
         $('#accompaniment_data_table').DataTable({
             language: {
@@ -40,7 +41,7 @@ $('#filter_articulacion').click(function () {
 });
 
 var accompaniment ={
-    filtersDatatableAccompanibles: function(filter_node = null,filter_year=null, filter_status=null){
+    filtersDatatableAccompanibles: function(filter_node_accompaniment,filter_year_accompaniment, filter_status_accompaniment){
         $('#accompaniment_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -52,11 +53,10 @@ var accompaniment ={
             ajax:{
                 url: "/articulaciones/datatable_filtros",
                 type: "get",
-
                 data: {
-                    filter_node: filter_node,
-                    filter_year: filter_year,
-                    filter_status: filter_status,
+                    filter_node_accompaniment: filter_node_accompaniment,
+                    filter_year_accompaniment: filter_year_accompaniment,
+                    filter_status_accompaniment: filter_status_accompaniment,
                 }
             },
             columns: [

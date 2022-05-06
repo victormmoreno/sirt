@@ -35,37 +35,25 @@
                                     </ul>
                                 </div>
                                 <div class="mailbox-view no-s">
-                                        
-                                        @if((session()->has('login_role') && session()->get('login_role') != App\User::IsAdministrador()))
-                                            <div class="mailbox-view-header no-m-b no-m-t">
-                                                <div class="right mailbox-buttons no-s">
-                                                        <a href="" class="waves-effect waves-orange btn orange m-t-xs">Nueva Articulación</a>
-                                                    @if((session()->has('login_role') && session()->get('login_role') === App\User::IsDinamizador()) && !$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsSuspendido()))
-                                                        <a href="" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar articulador</a>
-                                                    @endif
-                                                    @if((session()->has('login_role') && session()->get('login_role') === App\User::IsArticulador()))
-
-                                                       
-                                                            <a href="" class="waves-effect waves-grey btn-flat m-t-xs">Miembros</a>
-                                                            <a href="" class="waves-effect waves-grey btn-flat m-t-xs">Suspender Acpmpañamiento</a>
-                                                        
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        @endif
                                     <div class="mailbox-view-header">
                                         <div class="left">
-                                            <span class="mailbox-title p-v-lg">A2022-464356-4645 Acompañamiento Ecommerce</span>
-
                                             <div class="left">
-                                                <span class="mailbox-title">Ana Milena Zapata</span>
-                                                <span class="mailbox-author">Articulador (Autor) </span>
+                                                <span class="mailbox-title">A2022-464356-4645 Acompañamiento Ecommerce lorem 125 <a href="" class="orange-text text-darken-2 pointer tooltipped" data-position="right" data-tooltip="editar acompañamiento"><i class="tiny material-icons">edit</i></a></span>
+                                                <span class="mailbox-title">Nodo Bogotá</span>
+                                                <span class="mailbox-author">Ana Milena Zapata (Talento interlocutor) <a href="" class="orange-text text-darken-2 pointer tooltipped" data-position="right" data-tooltip="cambiar talento interlocutor"><i class="tiny material-icons">edit</i></a></span>
                                             </div>
                                         </div>
-                                        <div class="right mailbox-buttons p-v-lg">
-                                            <div class="right">
-                                                <span class="mailbox-title">Nodo Bogotá</span>
-                                            </div>
+                                        <div class="right mailbox-buttons">
+
+                                            <a href="" class="waves-effect waves-orange btn orange m-t-xs">Nueva Articulación</a>
+                                            @if((session()->has('login_role') && session()->get('login_role') === App\User::IsDinamizador()) && !$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsSuspendido()))
+                                                <a href="" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar articulador</a>
+                                            @endif
+                                            @if((session()->has('login_role') && session()->get('login_role') === App\User::IsArticulador()))
+                                                <a href="" class="waves-effect waves-grey btn-flat m-t-xs">Descargar</a>
+                                                <a href="" class="waves-effect waves-orange btn-flat m-t-xs">Cerrar</a>
+                                            @endif
+                                            <a class="waves-effect waves-red btn-flat m-t-xs">Eliminar</a>
                                         </div>
                                     </div>
                                     <div class="divider mailbox-divider"></div>
@@ -74,111 +62,56 @@
                                             <div class="col s12">
                                             </div>
                                             <div class="row">
-                                                <div class="col s12 m12 l12">
-                                                    <div class="card card-transparent">
-                                                        <div class="row card-talent">
-                                                            <div class="col s12 m12 l4">
-                                                                <div class="card bs-dark ">
-                                                                    <div class="card-content">
-                                                                        <span class="card-title p-h-lg"> </span><p class="orange-text p-h-lg">A2022-6464645-6534 Ecommerce Recursos Sennova</p>
-                                                                        <div class=" p-h-lg mail-date hide-on-med-and-down"> Estado: Inicio</div>
+                                                @forelse($articulations as $articulation)
 
-                                                                        <p class="hide-on-med-and-down p-h-lg"> Descripción de la articulación</p>
-                                                                    </div>
-                                                                    <div class="card-action">
-                                                                        <a class="waves-effect waves-red btn-flat m-b-xs orange-text" href=""><i class="material-icons left"> link</i>Ver más</a>
+                                                    <div class="col s12 m12 l4">
+                                                        <div class="card card-panel server-card">
 
+                                                            <div class="card-content">
+                                                                <div class="card-options">
+                                                                    <ul>
+                                                                        <li><a class="dropdown-button "  href='#' data-activates="dropdown{{$articulation->id}}"><i class="material-icons">more_vert</i></a></li>
+                                                                    </ul>
+                                                                </div>
+                                                                <ul id="dropdown{{$articulation->id}}" class="dropdown-content">
+                                                                    <li><a href="#!">Editar</a></li>
+                                                                    {{-- <li class="divider"></li> --}}
+                                                                    <li><a href="#!" class="red-text">Elimnar</a></li>
+                                                                </ul>
+                                                                <span class="card-title">{{$articulation->present()->articulationCode()}} - {{$articulation->present()->articulationName()}}</span>
+                                                                <div class="server-load row">
+                                                                    <div class="server-stat col s4">
+                                                                        <p class="">{{$articulation->users_count}}</p>
+                                                                        <span>Talentos participantes</span>
                                                                     </div>
+                                                                    <div class="server-stat col s4">
+                                                                        <p>Inicio</p>
+                                                                        <span>Fase</span>
+                                                                    </div>
+                                                                    <div class="server-stat col s4">
+                                                                        <p>57.4%</p>
+                                                                        <span>Progreso</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="stats-info">
+                                                                    <ul>
+                                                                        <li>Google Chrome<div class="percent-info green-text right">32% <i class="material-icons">trending_up</i></div></li>
+                                                                        <li>Safari<div class="percent-info red-text right">20% <i class="material-icons">trending_down</i></div></li>
+                                                                        <li>Mozilla Firefox<div class="percent-info green-text right">18% <i class="material-icons">trending_up</i></div></li>
+                                                                    </ul>
                                                                 </div>
                                                             </div>
-                                                            <div class="col s12 m12 l4">
-                                                                <div class="card bs-dark ">
-                                                                    <div class="card-content">
-                                                                        <span class="card-title p-h-lg"> </span><p class="orange-text p-h-lg">A2022-6464645-6534 Ecommerce Recursos Sennova</p>
-                                                                        <div class=" p-h-lg mail-date hide-on-med-and-down"> Estado: Inicio</div>
-
-                                                                        <p class="hide-on-med-and-down p-h-lg"> Descripción de la articulación</p>
-                                                                    </div>
-                                                                    <div class="card-action">
-                                                                        <a class="waves-effect waves-red btn-flat m-b-xs orange-text" href=""><i class="material-icons left"> link</i>Ver más</a>
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col s12 m12 l4">
-                                                                <div class="card bs-dark ">
-                                                                    <div class="card-content">
-                                                                        <span class="card-title p-h-lg"> </span><p class="orange-text p-h-lg">A2022-6464645-6534 Ecommerce Recursos Sennova</p>
-                                                                        <div class=" p-h-lg mail-date hide-on-med-and-down"> Estado: Inicio</div>
-
-                                                                        <p class="hide-on-med-and-down p-h-lg"> Descripción de la articulación</p>
-                                                                    </div>
-                                                                    <div class="card-action">
-                                                                        <a class="waves-effect waves-red btn-flat m-b-xs orange-text" href=""><i class="material-icons left"> link</i>Ver más</a>
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col s12 m12 l4">
-                                                                <div class="card bs-dark ">
-                                                                    <div class="card-content">
-                                                                        <span class="card-title p-h-lg"> </span><p class="orange-text p-h-lg">A2022-6464645-6534 Ecommerce Recursos Sennova</p>
-                                                                        <div class=" p-h-lg mail-date hide-on-med-and-down"> Estado: Inicio</div>
-
-                                                                        <p class="hide-on-med-and-down p-h-lg"> Descripción de la articulación</p>
-                                                                    </div>
-                                                                    <div class="card-action">
-                                                                        <a class="waves-effect waves-red btn-flat m-b-xs orange-text" href=""><i class="material-icons left"> link</i>Ver más</a>
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col s12 m12 l4">
-                                                                <div class="card bs-dark ">
-                                                                    <div class="card-content">
-                                                                        <span class="card-title p-h-lg"> </span><p class="orange-text p-h-lg">A2022-6464645-6534 Ecommerce Recursos Sennova</p>
-                                                                        <div class=" p-h-lg mail-date hide-on-med-and-down"> Estado: Inicio</div>
-
-                                                                        <p class="hide-on-med-and-down p-h-lg"> Descripción de la articulación</p>
-                                                                    </div>
-                                                                    <div class="card-action">
-                                                                        <a class="waves-effect waves-red btn-flat m-b-xs orange-text" href=""><i class="material-icons left"> link</i>Ver más</a>
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col s12 m12 l4">
-                                                                <div class="card bs-dark ">
-                                                                    <div class="card-content">
-                                                                        <span class="card-title p-h-lg"> </span><p class="orange-text p-h-lg">A2022-6464645-6534 Ecommerce Recursos Sennova</p>
-                                                                        <div class=" p-h-lg mail-date hide-on-med-and-down"> Estado: Inicio</div>
-
-                                                                        <p class="hide-on-med-and-down p-h-lg"> Descripción de la articulación</p>
-                                                                    </div>
-                                                                    <div class="card-action">
-                                                                        <a class="waves-effect waves-red btn-flat m-b-xs orange-text" href=""><i class="material-icons left"> link</i>Ver más</a>
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col s12 m12 l4">
-                                                                <div class="card bs-dark ">
-                                                                    <div class="card-content">
-                                                                        <span class="card-title p-h-lg"> </span><p class="orange-text p-h-lg">A2022-6464645-6534 Ecommerce Recursos Sennova</p>
-                                                                        <div class=" p-h-lg mail-date hide-on-med-and-down"> Estado: Inicio</div>
-
-                                                                        <p class="hide-on-med-and-down p-h-lg"> Descripción de la articulación</p>
-                                                                    </div>
-                                                                    <div class="card-action">
-                                                                        <a class="waves-effect waves-red btn-flat m-b-xs orange-text" href=""><i class="material-icons left"> link</i>Ver más</a>
-
-                                                                    </div>
-                                                                </div>
+                                                            <div class="progress stats-card-progress">
+                                                                <div class="determinate" style="width: 70%"></div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                @empty
+
+                                                @endforelse
+
                                             </div>
+                                            {{$articulations->links()}}
                                         </div>
                                     </div>
                                 </div>

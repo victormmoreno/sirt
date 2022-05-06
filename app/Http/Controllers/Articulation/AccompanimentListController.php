@@ -34,7 +34,7 @@ class AccompanimentListController extends Controller
         $talent = null;
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
-                $node = $request->filter_node;
+                $node = $request->filter_node_accompaniment;
                 $user = null;
                 break;
             case User::IsDinamizador():
@@ -56,14 +56,14 @@ class AccompanimentListController extends Controller
         }
 
         $accompaniments = [];
-        if (!empty($request->filter_year) && !empty($request->filter_status)) {
+        if (!empty($request->filter_year_accompaniment) && !empty($request->filter_status_accompaniment)) {
 
             $accompaniments =  Accompaniment::with([
                 'node',
                 'node.entidad'
             ])
-            ->year($request->filter_year)
-            ->status($request->filter_status)
+            ->year($request->filter_year_accompaniment)
+            ->status($request->filter_status_accompaniment)
             ->node($node)
             ->interlocutorTalent($talent)
             ->orderBy('created_at', 'desc')
@@ -76,22 +76,13 @@ class AccompanimentListController extends Controller
     {
         return datatables()->of($accompaniments)
         ->editColumn('node', function ($data) {
-            if (isset($data->node->entidad)) {
-                return $data->node->entidad->nombre;
-            }
-            return "No registra";
+            return $data->present()->accompanimentNode();
         })
         ->editColumn('code', function ($data) {
-            if (isset($data->code)) {
-                return $data->code;
-            }
-            return "No registra";
+            return $data->present()->accompanimentCode();
         })
         ->editColumn('name', function ($data) {
-            if (isset($data->name)) {
-                return Str::limit("{$data->name}", 40, '...');
-            }
-            return "No registra";
+            return Str::limit("{$data->present()->accompanimentName()}", 40, '...');
         })
         ->editColumn('count_articulations', function ($data) {
             if (isset($data->articulations_count)) {
@@ -100,18 +91,16 @@ class AccompanimentListController extends Controller
             return 0;
         })
         ->editColumn('status', function ($data) {
-            if (isset($data->status)) {
-                return $data->status;
+            if($data->status == Accompaniment::STATUS_OPEN){
+                return  '<div class="chip green white-text text-darken-2">'.$data->present()->accompanimentStatus().'</div>';
             }
-            return "No registra";
+            if($data->status == Accompaniment::STATUS_CLOSE){
+                return  '<div class="chip red white-text text-darken-2">'.$data->present()->accompanimentStatus().'</div>';
+            }
+
         })
         ->editColumn('starDate', function ($data) {
-            if (isset($data->created_at)) {
-                return  $data->created_at->isoFormat('DD/MM/YYYY');
-            }
-            return "No registra";
-
-
+            return $data->present()->accompanimentStartDate();
         })->addColumn('show', function ($data) {
             $info = '<a class="btn m-b-xs modal-trigger" href='.route('articulation.accompaniments.show', $data->id).'>
             <i class="material-icons">search</i>

@@ -59,8 +59,8 @@
                                     <div class="row search-tabs-row search-tabs-header">
                                         @if((session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador()))
                                         <div class="input-field col s12 m2 l2">
-                                            <label class="active" for="filter_node">Nodo <span class="red-text">*</span></label>
-                                            <select name="filter_node" id="filter_node">
+                                            <label class="active" for="filter_node_accompaniment">Nodo <span class="red-text">*</span></label>
+                                            <select name="filter_node_accompaniment" id="filter_node_accompaniment">
                                                 <option value="all" >todos</option>
                                                 @foreach($nodos as $id => $name)
                                                     <option value="{{$id}}">{{$name}}</option>
@@ -69,8 +69,8 @@
                                         </div>
                                         @endif
                                         <div class="input-field col s12 m2 l1">
-                                            <label class="active" for="filter_year">Año <span class="red-text">*</span></label>
-                                            <select name="filter_year" id="filter_year">
+                                            <label class="active" for="filter_year_accompaniment">Año <span class="red-text">*</span></label>
+                                            <select name="filter_year_accompaniment" id="filter_year_accompaniment">
                                                 @for ($i=$year; $i >= 2016; $i--)
                                                     <option value="{{$i}}" >{{$i}}</option>
                                                 @endfor
@@ -78,8 +78,8 @@
                                             </select>
                                         </div>
                                         <div class="input-field col s12 m2 l1">
-                                            <label class="active" for="filter_status">{{__('Status')}} <span class="red-text">*</span></label>
-                                            <select name="filter_status" id="filter_status">
+                                            <label class="active" for="filter_status_accompaniment">{{__('Status')}} <span class="red-text">*</span></label>
+                                            <select name="filter_status_accompaniment" id="filter_status_accompaniment">
                                                 <option value="1" >Abierto</option>
                                                 <option value="0" >Cerrado</option>
                                                 <option value="all" >todos</option>

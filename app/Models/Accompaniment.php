@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Presenters\AccompanimentPresenter;
 
 class Accompaniment extends Model
 {
@@ -17,6 +18,17 @@ class Accompaniment extends Model
      * @var array
      */
     protected $guarded = ['id', 'status'];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'start_date'    => 'datetime',
+        'end_date'    => 'datetime',
+        'terms_verified_at'    => 'datetime',
+    ];
 
     /**
      * The attributes that withCount.
@@ -129,6 +141,13 @@ class Accompaniment extends Model
         return $query;
     }
 
-
-
+    /**
+     * The presenter
+     *
+     * @return void
+     */
+    public function present()
+    {
+        return new AccompanimentPresenter($this);
+    }
 }
