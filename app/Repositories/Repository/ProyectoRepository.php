@@ -5,7 +5,7 @@ namespace App\Repositories\Repository;
 
 use App\Models\{Proyecto, Entidad, Fase, Actividad, ArticulacionProyecto, ArchivoArticulacionProyecto, ControlNotificaciones, Movimiento, UsoInfraestructura, Role, Idea, EstadoIdea};
 use Illuminate\Support\Facades\{DB, Notification, Storage, Session};
-use App\Notifications\Proyecto\{ProyectoCierreAprobado, ProyectoAprobarFase, ProyectoAprobarPlaneacion, ProyectoAprobarEjecucion, ProyectoAprobarCierre, ProyectoAprobarFaseDinamizador, ProyectoAprobarSuspendido, ProyectoSuspendidoAprobado, ProyectoNoAprobarFase};
+use App\Notifications\Proyecto\{ProyectoCierreAprobado, ProyectoAprobarFase, ProyectoAprobarSuspendido, ProyectoSuspendidoAprobado, ProyectoNoAprobarFase};
 use Carbon\Carbon;
 use App\Events\Proyecto\{ProyectoWasntApproved, ProyectoWasApproved, ProyectoApproveWasRequested, ProyectoSuspenderWasRequested};
 use App\User;
@@ -1094,13 +1094,12 @@ class ProyectoRepository
     
                 $this->crearMovimiento($proyecto, $proyecto->fase->nombre, $movimiento, $comentario);
                 $regMovimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
+                $notificacion_act->update(['fecha_aceptacion' => Carbon::now(), 'estado' => $notificacion_act->IsAceptado()]);
     
                 event(new ProyectoWasApproved($proyecto, $regMovimiento, $destinatarios));
                 if (Session::get('login_role') == User::IsTalento()) {
-                    // dd($request->control_notificacion_id);
-                    $notificacion_act->update(['fecha_aceptacion' => Carbon::now(), 'estado' => $notificacion_act->IsAceptado()]);
-                    // $this->notificarAprobacionDeFase($proyecto);
                     $notificacion = $proyecto->registerNotifyProject($dinamizadores->last()->id, User::IsDinamizador());
+                    event(new ProyectoApproveWasRequested($notificacion, $destinatarios));
                     Notification::send($dinamizadores, new ProyectoAprobarFase($notificacion));
                 }
                 if (Session::get('login_role') == User::IsDinamizador() && $proyecto->fase->nombre == "Inicio") {
@@ -1298,29 +1297,35 @@ class ProyectoRepository
      * @return array
      * @author dum
      */
-    public function notificarAprobacionDeFase(Proyecto $proyecto)
+    public function notificarAprobacionDeFase(Proyecto $proyecto, string $fase = null)
     {
         DB::beginTransaction();
         try {
             $notificacion_fase_actual = $proyecto->notificaciones()->where('fase_id',  $proyecto->fase_id)->whereNull('fecha_aceptacion')->get()->last();
             $msg = 'No se ha podido enviar la solicitud de aprobación, inténtalo nuevamente';
             $conf_envios = false;
-            if ($notificacion_fase_actual == null) {
-                $conf_envios = $this->configuracionNotificacionTalento($proyecto);
-                $msg = 'Se le ha enviado una notificación al talento interlocutor para que apruebe la fase de ' . $proyecto->fase->nombre . ' del proyecto!';
+            if ($fase == $proyecto->IsSuspendido()) {
+                $conf_envios = $this->configuracionNotificacionDinamizador($proyecto);
+                $msg = 'Se le ha enviado una notificación al dinamizador para que apruebe la suspensión del proyecto!';
+                $notificacion = $proyecto->registerNotifyProject($conf_envios['receptor'], $conf_envios['receptor_role'], $fase);
             } else {
-                if ($notificacion_fase_actual->rol_receptor->name == User::IsTalento()) {
+                if ($notificacion_fase_actual == null) {
                     $conf_envios = $this->configuracionNotificacionTalento($proyecto);
                     $msg = 'Se le ha enviado una notificación al talento interlocutor para que apruebe la fase de ' . $proyecto->fase->nombre . ' del proyecto!';
                 } else {
-                    $conf_envios = $this->configuracionNotificacionDinamizador($proyecto);
-                    $msg = 'Se le ha enviado una notificación al dinamizador para que apruebe la fase de ' . $proyecto->fase->nombre . ' del proyecto!';
+                    if ($notificacion_fase_actual->rol_receptor->name == User::IsTalento()) {
+                        $conf_envios = $this->configuracionNotificacionTalento($proyecto);
+                        $msg = 'Se le ha enviado una notificación al talento interlocutor para que apruebe la fase de ' . $proyecto->fase->nombre . ' del proyecto!';
+                    } else {
+                        $conf_envios = $this->configuracionNotificacionDinamizador($proyecto);
+                        $msg = 'Se le ha enviado una notificación al dinamizador para que apruebe la fase de ' . $proyecto->fase->nombre . ' del proyecto!';
+                    }
                 }
+                // Registra el control de la notificación
+                $notificacion = $proyecto->registerNotifyProject($conf_envios['receptor'], $conf_envios['receptor_role']);
             }
 
             if ($conf_envios != false) {
-                // Registra el control de la notificación
-                $notificacion = $proyecto->registerNotifyProject($conf_envios['receptor'], $conf_envios['receptor_role']);
                 // Enviar notificación
                 Notification::send($notificacion->receptor, new ProyectoAprobarFase($notificacion));
                 // Enviar email
@@ -1395,18 +1400,6 @@ class ProyectoRepository
     }
 
     /**
-     * Verifica que notificacion se va a enviar
-     *
-     * @param $notificaciones
-     * @return type
-     * @author dum
-     **/
-    public function verificarTipoNotificacionAEnviar($notificaciones_fase_actual)
-    {
-        dd($notificaciones_fase_actual->notificaciones);
-    }
-
-    /**
      * Notifica al dinamizador para que apruebe el proyecto en la fase de suspendido
      *
      * @param int $id Id del proyecto
@@ -1466,11 +1459,14 @@ class ProyectoRepository
      * @return boolean
      * @author dum
      **/
-    public function updateAprobacionSuspendido(int $id)
+    public function updateAprobacionSuspendido(int $id, $request)
     {
         DB::beginTransaction();
         try {
+
             $proyecto = Proyecto::findOrFail($id);
+            $notificacion_act = ControlNotificaciones::find($request->control_notificacion_id);
+            $notificacion_act->update(['fecha_aceptacion' => Carbon::now(), 'estado' => $notificacion_act->IsAceptado()]);
             $this->crearMovimiento($proyecto, 'Suspendido', 'Aprobó', null);
             $proyecto->update([
                 'fase_id' => Fase::where('nombre', 'Suspendido')->first()->id

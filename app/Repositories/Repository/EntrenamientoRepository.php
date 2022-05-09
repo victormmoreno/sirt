@@ -148,11 +148,11 @@ class EntrenamientoRepository
     public function generarCodigoEntrenamiento()
     {
         $anho = Carbon::now()->isoFormat('YYYY');
-        $tecnoparque = sprintf("%02d", auth()->user()->gestor->nodo_id);
+        $tecnoparque = sprintf("%02d", auth()->user()->articulador->nodo_id);
         $id = Entrenamiento::selectRaw('MAX(id+1) AS max')->get()->last();
         $id->max == null ? $id->max = 1 : $id->max = $id->max;
         $id->max = sprintf("%04d", $id->max);
-        $infocenter = sprintf("%03d", auth()->user()->gestor->id);
+        $infocenter = sprintf("%03d", auth()->user()->articulador->id);
         $codigo_entrenamiento = 'E' . $anho . '-' . $tecnoparque . $infocenter . '-' . $id->max;
         return $codigo_entrenamiento;
     }

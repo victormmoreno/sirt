@@ -76,9 +76,9 @@
             </div>
             <div class="input-field col s12 m12 l6">
                 @if(isset($articulacion))
-                    <input @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsCierre())) disabled @endif  id="txtcuando" name="txtcuando" type="text" class="validate datepicker-min-date" value="{{$articulacion->present()->articulacionPbtFechaCuando()}}">
+                    <input @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsCierre())) disabled @endif  id="txtcuando" name="txtcuando" type="text" class="datepicker picker__input" value="{{$articulacion->present()->articulacionPbtFechaCuando()}}">
                 @else
-                    <input id="txtcuando" name="txtcuando" type="text" class="validate datepicker-min-date">
+                    <input id="txtcuando" name="txtcuando" type="text" class="datepicker picker__input">
                 @endif
 
                 <label for="txtcuando">Cuando <span class="red-text">*</span></label>

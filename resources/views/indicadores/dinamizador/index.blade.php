@@ -172,7 +172,7 @@
       let idnodo = 0;
       location.href = '/excel/export_proyectos_actuales/'+idnodo+'/all';
     }
-    
+    @if($metas_graph != null)
     Highcharts.chart('container', {
       chart: {
           type: 'column'
@@ -237,5 +237,6 @@
           }
       }]
   });
+  @endif
   </script>
 @endpush
