@@ -943,7 +943,8 @@ class ProyectoController extends Controller
     {
         $proyecto = Proyecto::findOrFail($id);
         $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
-        $ultimo_movimiento = $historico->last();
+        $ult_notificacion = $proyecto->notificaciones()->where('fase_id',  Fase::where('nombre', $proyecto->IsSuspendido())->first()->id)->whereNull('fecha_aceptacion')->get()->last();
+        $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
         switch (Session::get('login_role')) {
             case User::IsGestor():
                 if (!$this->validarExperto($proyecto))
@@ -951,7 +952,8 @@ class ProyectoController extends Controller
                 return view('proyectos.gestor.fase_suspendido', [
                     'proyecto' => $proyecto,
                     'historico' => $historico,
-                    'ultimo_movimiento' => $ultimo_movimiento
+                    'ult_notificacion' => $ult_notificacion,
+                    'rol_destinatario' => $rol_destinatario
                 ]);
                 break;
 
@@ -960,7 +962,8 @@ class ProyectoController extends Controller
                 return view('proyectos.dinamizador.fase_suspendido', [
                     'proyecto' => $proyecto,
                     'historico' => $historico,
-                    'ultimo_movimiento' => $ultimo_movimiento
+                    'ult_notificacion' => $ult_notificacion,
+                    'rol_destinatario' => $rol_destinatario
                 ]);
             default:
                 return abort(Response::HTTP_FORBIDDEN);
@@ -1002,7 +1005,7 @@ class ProyectoController extends Controller
      * @return Response
      * @author dum
      */
-    public function solicitar_aprobacion(int $id)
+    public function solicitar_aprobacion(int $id, string $fase = null)
     {
         $proyecto = Proyecto::find($id);
         if (!$this->validarExperto($proyecto))
@@ -1012,7 +1015,7 @@ class ProyectoController extends Controller
             Alert::error('Acceso no permitido!', 'No puedes enviar solicitudes de aprobación en un proyecto finalizado o suspendido!')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        $notificacion = $this->getProyectoRepository()->notificarAprobacionDeFase($proyecto);
+        $notificacion = $this->getProyectoRepository()->notificarAprobacionDeFase($proyecto, $fase);
         if ($notificacion['notificacion']) {
             Alert::success('Notificación Exitosa!', $notificacion['msg'])->showConfirmButton('Ok', '#3085d6');
         } else {
@@ -1257,7 +1260,7 @@ class ProyectoController extends Controller
     public function updateSuspendido(Request $request, int $id)
     {
         if (Session::get('login_role') == User::IsDinamizador()) {
-            $update = $this->getProyectoRepository()->updateAprobacionSuspendido($id);
+            $update = $this->getProyectoRepository()->updateAprobacionSuspendido($id, $request);
             if ($update) {
                 Alert::success('Modificación Exitosa!', 'La fase de suspendido del proyecto se aprobó!')->showConfirmButton('Ok', '#3085d6');
                 return redirect('proyecto');

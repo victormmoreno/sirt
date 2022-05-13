@@ -348,10 +348,16 @@ class Proyecto extends Model
      * @return ControlNotificacion
      * @author dum
      */
-    public function registerNotifyProject($receptor, $rol_receptor)
+    public function registerNotifyProject($receptor, $rol_receptor, $fase = null)
     {
+        $fase_conf = null;
+        if ($fase == $this->IsSuspendido()) {
+            $fase_conf = Fase::where('nombre', $this->IsSuspendido())->first()->id;
+        } else {
+            $fase_conf = $this->fase_id;
+        }
         return $this->notificaciones()->create([
-            'fase_id' => $this->fase_id,
+            'fase_id' => $fase_conf,
             'remitente_id' => auth()->user()->id,
             'rol_remitente_id' => Role::where('name', Session::get('login_role'))->first()->id,
             'receptor_id' => $receptor,

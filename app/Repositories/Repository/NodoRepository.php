@@ -229,9 +229,13 @@ class NodoRepository
         return $this->getTeamTecnoparque()->findOrFailNodo($nodo);
     }
 
-    public function consultarMetasDeTecnoparque()
+    public function consultarMetasDeTecnoparque($nodos = null)
     {
-        return MetaNodo::all();
+        if ($nodos == null) {
+            return MetaNodo::all();
+        } else {
+            return MetaNodo::whereIn('nodo_id', $nodos);
+        }
     }
 
 }

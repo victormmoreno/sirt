@@ -1,7 +1,9 @@
 @if ($proyecto->present()->proyectoFase() != App\Models\Proyecto::IsFinalizado() && $proyecto->present()->proyectoFase() != App\Models\Proyecto::IsSuspendido())
 <div class="collection with-header col s12 m4 l4">
     <h5 href="!#" class="collection-header">Opciones</h5>
-    @include('proyectos.options_ever')
+    @if (Route::currentRouteName() != 'proyecto.suspender')
+        @include('proyectos.options_ever')
+    @endif
     @if (Route::currentRouteName() == 'proyecto.inicio')
         @include('proyectos.options_inicio')
     @endif
@@ -13,6 +15,9 @@
     @endif
     @if (Route::currentRouteName() == 'proyecto.cierre')
         @include('proyectos.options_cierre')
+    @endif
+    @if (Route::currentRouteName() == 'proyecto.suspender')
+        @include('proyectos.options_suspender')
     @endif
 </div>
 @endif

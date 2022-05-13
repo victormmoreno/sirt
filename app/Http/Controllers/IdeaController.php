@@ -521,6 +521,12 @@ class IdeaController extends Controller
             case User::IsDinamizador():
                 return view('ideas.administrador.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
                 break;
+            case User::IsInfocenter():
+                return view('ideas.administrador.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
+                break;
+            case User::IsGestor():
+                return view('ideas.administrador.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
+                break;
             default:
                 return abort('403');
                 break;

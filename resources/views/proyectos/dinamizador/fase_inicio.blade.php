@@ -19,19 +19,7 @@
                         @include('proyectos.options_always')
                         @include('proyectos.detalle_general')
                         @include('proyectos.detalle_fase_inicio')
-                        <div class="divider"></div>
-                        <br />
-                        <form action="{{route('proyecto.aprobacion', [$proyecto->id, 'Inicio'])}}" method="POST" name="frmInicioDinamizador">
-                            {!! method_field('PUT')!!}
-                            @csrf
-                            <div class="divider"></div>
-                            <center>
-                            @include('proyectos.botones_aprobacion_component')
-                            <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-                                <i class="material-icons right">backspace</i>Cancelar
-                            </a>
-                            </center>
-                        </form>
+                        @include('proyectos.form_aprobacion')
                     </div>
                 </div>
             </div>
@@ -46,53 +34,6 @@
     $( document ).ready(function() {
         datatableArchivosDeUnProyecto_inicio();
     });
-
-    function preguntaInicioRechazar(e){
-        e.preventDefault();
-        Swal.fire({
-        title: '¿Está seguro(a) de no aprobar la fase de inicio de este proyecto?',
-        input: 'text',
-        type: 'warning',
-        inputValidator: (value) => {
-        if (!value) {
-            return 'Las observaciones deben ser obligatorias!'
-        } else {
-            $('#decision').val('rechazado');
-            $('#motivosNoAprueba').val(value);
-        }
-        },
-        inputAttributes: {
-        maxlength: 100
-        },
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        cancelButtonText: 'Cancelar',
-        confirmButtonText: 'Enviar observaciones!'
-        }).then((result) => {
-        if (result.value) {
-            document.frmInicioDinamizador.submit();
-        }
-        })
-    }
-
-    function preguntaInicio(e){
-        e.preventDefault();
-        Swal.fire({
-        title: '¿Está seguro(a) de aprobar la fase de inicio de este proyecto?',
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        cancelButtonText: 'Cancelar',
-        confirmButtonText: 'Sí!'
-        }).then((result) => {
-        if (result.value) {
-            $('#decision').val('aceptado');
-            document.frmInicioDinamizador.submit();
-        }
-        })
-    }
 
     function datatableArchivosDeUnProyecto_inicio() {
         $('#archivosDeUnProyecto').DataTable({

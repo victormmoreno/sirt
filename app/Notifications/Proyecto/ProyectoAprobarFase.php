@@ -41,7 +41,7 @@ class ProyectoAprobarFase extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'link'  => route('proyecto.inicio', $this->control->notificable->id),
+            'link'  => $this->control->notificable->present()->proyectoRutaActual(),
             'icon'  => 'library_books',
             'color' => 'green',
             'autor' => "{$this->control->remitente->nombres} {$this->control->remitente->nombres}",

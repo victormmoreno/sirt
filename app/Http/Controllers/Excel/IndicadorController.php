@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Excel;
 
 use App\Exports\Indicadores\Indicadores2020Export;
 use App\Repositories\Repository\{ProyectoRepository};
+use Repositories\Repository\NodoRepository;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Controller;
 use App\User;
@@ -16,10 +17,12 @@ class IndicadorController extends Controller
 {
 
     private $proyectoRepository;
+    private $nodoRepository;
 
-    public function __construct(ProyectoRepository $proyectoRepository)
+    public function __construct(ProyectoRepository $proyectoRepository, NodoRepository $nodoRepository)
     {
         $this->setProyectoRepository($proyectoRepository);
+        $this->nodoRepository = $nodoRepository;
     }
 
     /**
@@ -204,6 +207,14 @@ class IndicadorController extends Controller
         }
         session()->put('errorMigracion', null);
         return back();
+    }
+
+    public function downloadMetas(Request $request)
+    {
+        $query = null;
+        $metas = $this->nodoRepository->consultarMetasDeTecnoparque($request->txtnodo_metas_id)->get();
+        // dd($metas);
+        // dd($metas);
     }
 
     private function setProyectoRepository($proyectoRepository)
