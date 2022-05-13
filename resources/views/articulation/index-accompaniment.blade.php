@@ -99,6 +99,7 @@
                                             <th>{{__('Count Articulations')}}</th>
                                             <th>{{__('Status')}}</th>
                                             <th>{{__('Created_at')}}</th>
+                                            <th>{{__('Created_by')}}</th>
                                             <th>{{__('Process')}}</th>
                                         </tr>
                                     </thead>

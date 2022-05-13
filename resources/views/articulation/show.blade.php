@@ -59,58 +59,72 @@
                                     <div class="divider mailbox-divider"></div>
                                     <div class="mailbox-text">
                                         <div class="row">
-                                            <div class="col s12">
-                                            </div>
-                                            <div class="row">
-                                                @forelse($articulations as $articulation)
-
-                                                    <div class="col s12 m12 l4">
-                                                        <div class="card card-panel server-card">
-
-                                                            <div class="card-content">
-                                                                <div class="card-options">
-                                                                    <ul>
-                                                                        <li><a class="dropdown-button "  href='#' data-activates="dropdown{{$articulation->id}}"><i class="material-icons">more_vert</i></a></li>
-                                                                    </ul>
-                                                                </div>
-                                                                <ul id="dropdown{{$articulation->id}}" class="dropdown-content">
-                                                                    <li><a href="#!">Editar</a></li>
-                                                                    {{-- <li class="divider"></li> --}}
-                                                                    <li><a href="#!" class="red-text">Elimnar</a></li>
-                                                                </ul>
-                                                                <span class="card-title">{{$articulation->present()->articulationCode()}} - {{$articulation->present()->articulationName()}}</span>
-                                                                <div class="server-load row">
-                                                                    <div class="server-stat col s4">
-                                                                        <p class="">{{$articulation->users_count}}</p>
-                                                                        <span>Talentos participantes</span>
-                                                                    </div>
-                                                                    <div class="server-stat col s4">
-                                                                        <p>Inicio</p>
-                                                                        <span>Fase</span>
-                                                                    </div>
-                                                                    <div class="server-stat col s4">
-                                                                        <p>57.4%</p>
-                                                                        <span>Progreso</span>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="stats-info">
-                                                                    <ul>
-                                                                        <li>Google Chrome<div class="percent-info green-text right">32% <i class="material-icons">trending_up</i></div></li>
-                                                                        <li>Safari<div class="percent-info red-text right">20% <i class="material-icons">trending_down</i></div></li>
-                                                                        <li>Mozilla Firefox<div class="percent-info green-text right">18% <i class="material-icons">trending_up</i></div></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                            <div class="progress stats-card-progress">
-                                                                <div class="determinate" style="width: 70%"></div>
+                                            <div class="col s12 m12 l12">
+                                                <div class="card card-transparent card-panel server-card">
+                                                    <div class="card-content">
+                                                        <div class="server-load row">
+                                                            <div class="server-stat col s4">
+                                                                <p class="">{{$accompaniment->projects}}</p>
+                                                                <span>Talentos participantes</span>
                                                             </div>
                                                         </div>
+                                                        Here is a color palette based on the material design base colors. Each of these colors is defined with a base color class and an optional lighten or darken class.
                                                     </div>
-                                                @empty
-
-                                                @endforelse
-
+                                                </div>
                                             </div>
+                                        </div>
+                                        <div class="row">
+                                            @forelse($articulations as $articulation)
+
+                                                <div class="col s12 m12 l4">
+                                                    <div class="card card-panel server-card">
+
+                                                        <div class="card-content">
+                                                            <div class="card-options">
+                                                                <ul>
+                                                                    <li><a class="dropdown-button "  href='#' data-activates="dropdown{{$articulation->id}}"><i class="material-icons">more_vert</i></a></li>
+                                                                </ul>
+                                                            </div>
+                                                            <ul id="dropdown{{$articulation->id}}" class="dropdown-content">
+                                                                <li><a href="#!">Editar</a></li>
+
+                                                                <li><a href="#!" class="red-text">Elimnar</a></li>
+                                                            </ul>
+                                                            <span class="card-title">{{$articulation->present()->articulationCode()}} - {{$articulation->present()->articulationName()}}</span>
+                                                            <div class="server-load row">
+                                                                <div class="server-stat col s4">
+                                                                    <p class="">{{$articulation->users_count}}</p>
+                                                                    <span>Talentos participantes</span>
+                                                                </div>
+                                                                <div class="server-stat col s4">
+                                                                    <p>{{$articulation->present()->articulationPhase()}}</p>
+                                                                    <span>{{__('Phase')}}</span>
+                                                                </div>
+                                                                <div class="server-stat col s4">
+                                                                    <p>{{$articulation->progress}}%</p>
+                                                                    <span>{{__('Progress')}}</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="stats-info">
+                                                                <ul>
+                                                                    <li>{{__('Description')}}<div class="percent-info black-text right">{{Str::limit($articulation->present()->articulationDescription(),60)}} </div></li>
+                                                                    <li>{{__('Start Date')}}<div class="percent-info black-text right">{{$articulation->present()->articulationStartDate()}}</div></li>
+                                                                    <li>{{__('End Date')}}<div class="percent-info black-text right">{{$articulation->present()->articulationEndDate()}}</div></li>
+                                                                    <li>{{__('End Date')}}<div class="percent-info black-text right">{{$articulation->present()->articulationExpectedEndDate()}}</div></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress stats-card-progress ">
+                                                            <div class="determinate {{$articulation->progress >= 0 && $articulation->progress <=25 ? 'red' : ($articulation->progress > 25 && $articulation->progress <= 50 ? 'yellow' : ($articulation->progress > 50 && $articulation->progress <= 75 ? 'orange' : 'green' ))}}" style="width: {{$articulation->progress}}%"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @empty
+
+                                            @endforelse
+
+                                        </div>
+                                        <div class="center-align">
                                             {{$articulations->links()}}
                                         </div>
                                     </div>

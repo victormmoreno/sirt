@@ -28,8 +28,10 @@ class CreateAccompanimentsTable extends Migration
             $table->timestamp('terms_verified_at')->nullable()->default(null); //terminos y condiciones
             $table->unsignedInteger('node_id')->nullable(); //nodo
             $table->unsignedInteger('interlocutor_talent_id')->nullable(); //talento_interlocutor
+            $table->unsignedInteger('created_by')->nullable(); //creado por
             $table->foreign('node_id')->references('id')->on('nodos')->onDelete('set null');
             $table->foreign('interlocutor_talent_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();
         });
     }

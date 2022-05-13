@@ -31,11 +31,13 @@ class CreateArticulationsTable extends Migration
             $table->unsignedBigInteger('scope_id')->nullable(); //alcance
             $table->unsignedInteger('phase_id')->nullable(); //fase
             $table->unsignedBigInteger('articulation_type_id')->nullable(); //tipo articulacion
+            $table->unsignedInteger('created_by')->nullable(); //creado por
 
             $table->foreign('accompaniment_id')->references('id')->on('accompaniments')->onDelete('cascade');
             $table->foreign('scope_id')->references('id')->on('alcance_articulaciones')->onDelete('set null');
             $table->foreign('phase_id')->references('id')->on('fases')->onDelete('set null');
             $table->foreign('articulation_type_id')->references('id')->on('tipo_articulaciones')->onDelete('set null');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
 
             $table->timestamps();
         });

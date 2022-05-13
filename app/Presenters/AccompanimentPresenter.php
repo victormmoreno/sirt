@@ -33,6 +33,11 @@ class AccompanimentPresenter extends Presenter
         return isset($this->accompaniment->scope) ? $this->accompaniment->scope : 'No registra';
     }
 
+    public function accompanimentBy()
+    {
+        return isset($this->accompaniment->createdBy) ? $this->accompaniment->createdBy->present()->userFullName() : 'No registra';
+    }
+
     public function accompanimentStatus()
     {
         return $this->accompaniment->status == Accompaniment::STATUS_OPEN ? __('Open') : __('Close');

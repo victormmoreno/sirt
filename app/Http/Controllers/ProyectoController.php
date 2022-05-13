@@ -1350,7 +1350,7 @@ class ProyectoController extends Controller
         }
         $proyectos = [];
 
-        if (!empty($request->filter_year_pro)) {
+        if (isset($request->filter_year_pro)) {
             $proyectos = Proyecto::select('id','idea_id','fase_id','articulacion_proyecto_id','alcance_proyecto')
             ->with([
                 'fase',

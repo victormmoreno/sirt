@@ -22,9 +22,7 @@ class AccompanimentListController extends Controller
         $nodos = Entidad::has('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id');
 
 
-        // return dd($accompaniments->chunk(50, function($accompaniment){
 
-        // }));
         return view('articulation.index-accompaniment', ['nodos' => $nodos]);
     }
 
@@ -56,17 +54,18 @@ class AccompanimentListController extends Controller
         }
 
         $accompaniments = [];
-        if (!empty($request->filter_year_accompaniment) && !empty($request->filter_status_accompaniment)) {
+        if (isset($request->filter_status_accompaniment)) {
 
             $accompaniments =  Accompaniment::with([
                 'node',
                 'node.entidad'
             ])
-            ->year($request->filter_year_accompaniment)
             ->status($request->filter_status_accompaniment)
-            ->node($node)
-            ->interlocutorTalent($talent)
-            ->orderBy('created_at', 'desc')
+            ->year($request->filter_year_accompaniment)
+
+            // ->node($node)
+            // ->interlocutorTalent($talent)
+            // ->orderBy('created_at', 'desc')
             ->get();
         }
         return $this->datatableAccompaniments($accompaniments);
@@ -99,6 +98,9 @@ class AccompanimentListController extends Controller
             }
 
         })
+        ->editColumn('accompanimentBy', function ($data) {
+            return $data->present()->accompanimentBy();
+        })
         ->editColumn('starDate', function ($data) {
             return $data->present()->accompanimentStartDate();
         })->addColumn('show', function ($data) {
@@ -106,7 +108,7 @@ class AccompanimentListController extends Controller
             <i class="material-icons">search</i>
             </a>';
                 return $info;
-        })->rawColumns(['node','code','name','adviser','status','starDate','show'])->make(true);
+        })->rawColumns(['node','code','name','adviser','status','starDate','accompanimentBy','show'])->make(true);
     }
 
 

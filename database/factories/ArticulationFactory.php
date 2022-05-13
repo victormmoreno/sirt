@@ -22,9 +22,14 @@ $factory->define(Articulation::class, function (Faker $faker) {
         'email_entity' => $faker->companyEmail(),
         'summon_name' => $faker->sentence(),
         'objective' => $faker->paragraph(),
-        // 'accompaniment_id',
         'scope_id' => AlcanceArticulacion::all()->random()->id,
-        'phase_id' => Fase::all()->random()->id,
+        'phase_id' => Fase::whereIn('nombre', [
+            Articulation::START_PHASE,
+            Articulation::EXECUTION_PHASE,
+            Articulation::CLOSING_PHASE,
+            Articulation::FINISHED_PHASE,
+            Articulation::SUSPENDED_PHASE
+        ])->get()->random()->id,
         'articulation_type_id' => TipoArticulacion::all()->random()->id
     ];
 });

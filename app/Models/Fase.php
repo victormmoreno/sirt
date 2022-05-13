@@ -83,4 +83,13 @@ class Fase extends Model
         return $this->belongsToMany(Movimiento::class, 'movimientos_actividades_users_roles')
         ->withTimestamps();
     }
+
+    /**
+     * The inverse relation one to much articulations
+     *
+     * @return void
+     */
+    public function articulations(){
+        return $this->hasMany(Articulation::class, 'phase_id');
+    }
 }

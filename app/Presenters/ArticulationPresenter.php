@@ -33,10 +33,6 @@ class ArticulationPresenter extends Presenter
         return isset($this->articulation->scope) ? $this->articulation->scope : 'No registra';
     }
 
-    public function articulationStatus()
-    {
-        return $this->articulation->status == Accompaniment::STATUS_OPEN ? __('Open') : __('Close');
-    }
 
     public function articulationStartDate()
     {
@@ -46,6 +42,11 @@ class ArticulationPresenter extends Presenter
     public function articulationEndDate()
     {
         return optional($this->articulation->end_date)->isoFormat('DD/MM/YYYY');
+    }
+
+    public function articulationExpectedEndDate()
+    {
+        return optional($this->articulation->expected_end_date)->isoFormat('DD/MM/YYYY');
     }
 
     public function articulationNode()
@@ -66,5 +67,15 @@ class ArticulationPresenter extends Presenter
     public function articulationTermsVerifiedAt()
     {
         return optional($this->articulation->terms_verified_at)->isoFormat('DD/MM/YYYY');
+    }
+
+    public function articulationPhase()
+    {
+        return isset($this->articulation->phase) ? $this->articulation->phase->nombre : 'No registra';
+    }
+
+    public function articulationBy()
+    {
+        return isset($this->articulation->createdBy) ? $this->articulation->createdBy->present()->userFullName() : 'No registra';
     }
 }

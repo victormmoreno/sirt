@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Articulation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ArticulationRegisterController extends Controller
+class AccompanimentRegisterController extends Controller
 {
     /**
      * Show the form for creating a new resource.

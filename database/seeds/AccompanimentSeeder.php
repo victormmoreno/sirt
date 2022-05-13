@@ -14,19 +14,20 @@ class AccompanimentSeeder extends Seeder
      */
     public function run()
     {
-
-        factory(Accompaniment::class, 40)->create()->each(function($accompaniment){
-            factory(Articulation::class, 3)->create(['accompaniment_id' => $accompaniment->id])->each(function($articulation){
+        factory(Accompaniment::class, 40)->create([
+            'created_by' => 6176
+        ])->each(function($accompaniment){
+            factory(Articulation::class, 3)->create([
+                'accompaniment_id' => $accompaniment->id,
+                'created_by' => 6176
+            ])->each(function($articulation){
                 $articulation->users()->sync([
                     'user_id' => 6176
                 ]);
             });
-
             $accompaniment->projects()->sync([
                 'accompanimentable_id' => 8842,
             ]);
-
-
         });
     }
 }

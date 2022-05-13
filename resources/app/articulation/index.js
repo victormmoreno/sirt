@@ -85,6 +85,10 @@ var accompaniment ={
                     name: 'starDate',
                 },
                 {
+                    data: 'accompanimentBy',
+                    name: 'accompanimentBy',
+                },
+                {
                     data: 'show',
                     name: 'show',
                     orderable: false

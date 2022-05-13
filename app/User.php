@@ -274,20 +274,32 @@ class User extends Authenticatable implements JWTSubject
 
     public function usoinfraestructuras()
     {
-        // return $this->belongsToMany(UsoInfraestructura::class, 'gestor_uso', 'usoinfraestructura_id', 'gestor_id')
-        //     ->withTimestamps()
-        //     ->withPivot([
-        //         'asesoria_directa',
-        //         'asesoria_indirecta',
-        //         'costo_asesoria',
-        //     ]);
+        return $this->morphToMany(UsoInfraestructura::class, 'asesorable', 'gestor_uso', 'usoinfraestructura_id')->withTimestamps()
+        ->withPivot([
+            'asesoria_directa',
+            'asesoria_indirecta',
+            'costo_asesoria',
+        ]);
+    }
 
-            return $this->morphToMany(UsoInfraestructura::class, 'asesorable', 'gestor_uso', 'usoinfraestructura_id')->withTimestamps()
-            ->withPivot([
-                'asesoria_directa',
-                'asesoria_indirecta',
-                'costo_asesoria',
-            ]);
+    /**
+     * Define one to many relationship between accompanient and node
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function articulationsBy()
+    {
+        return $this->hasMany(\App\Models\Articulation::class, 'created_by', 'id');
+    }
+
+    /**
+     * Define one to many relationship between accompanient and node
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function accompanimentsBy()
+    {
+        return $this->hasMany(Accompaniment::class, 'created_by', 'id');
     }
 
     /*=====  End of relaciones eloquent  ======*/

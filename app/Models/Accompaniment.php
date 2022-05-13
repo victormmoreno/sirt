@@ -17,7 +17,7 @@ class Accompaniment extends Model
      *
      * @var array
      */
-    protected $guarded = ['id', 'status'];
+    protected $guarded = ['id', 'status', 'created_by'];
 
     /**
      * The attributes that should be cast to native types.
@@ -84,16 +84,24 @@ class Accompaniment extends Model
         return $this->belongsTo(\App\User::class, 'interlocutor_talent_id', 'id');
     }
 
-
+    /**
+     * Define an inverse one to many relationship between accompanient and node
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function createdBy()
+    {
+        return $this->belongsTo(\App\User::class, 'created_by', 'id');
+    }
 
     /**
      * The query scope status
      *
      * @return void
      */
-    public function scopeStatus($query, $status)
+    public function scopestatus($query, $status)
     {
-        if (!empty($status) && $status != 'all' && $status != null) {
+        if (isset($status) && $status != 'all' && $status != null) {
             return $query->where('status', $status);
         }
         return $query;
@@ -121,7 +129,8 @@ class Accompaniment extends Model
     public function scopeYear($query, $year)
     {
         if (!empty($year) && $year != null && $year != 'all') {
-            return $query->whereYear('start_date', $year)->orWhereYear('end_date', $year);
+            return $query->whereYear('end_date', $year)
+                    ->orWhereYear('start_date', $year);
 
         }
         return $query;
