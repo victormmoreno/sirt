@@ -5121,8 +5121,9 @@ var infoActividad = {
 
 }
 
-function preguntaRechazarAprobacionProyecto(e){
+function preguntaRechazarAprobacionProyecto(e) {
     e.preventDefault();
+    $('button[type="submit"]').attr('disabled', true);
     Swal.fire({
         title: '¿Está seguro(a) de no aprobar esta fase del proyecto?',
         input: 'text',
@@ -5151,8 +5152,9 @@ function preguntaRechazarAprobacionProyecto(e){
     })
 }
 
-function preguntaAprobacion(e){
+function preguntaAprobacion(e) {
     e.preventDefault();
+    $('button[type="submit"]').attr('disabled', true);
     Swal.fire({
         title: '¿Está seguro(a) de aprobar esta fase del proyecto?',
         text: 'Al hacerlo estás aceptando y aprobando toda la información de esta fase, los documento adjuntos y las asesorias recibidas.',

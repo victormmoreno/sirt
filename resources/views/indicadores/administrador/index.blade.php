@@ -40,7 +40,7 @@
                   </div>
                   <div class="row">
                     <div class="col s12 m4 l4 offset-m8 offset-l8">
-                      <a  href="{{route('indicadores.form.metas')}}" class="waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Registrar metas</a>
+                      <a href="{{route('indicadores.form.metas')}}" class="waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Registrar metas</a>
                     </div>
                   </div>
                   <ul class="collapsible">
@@ -194,7 +194,7 @@
                     <li>
                       <div class="collapsible-header"><i class="material-icons">assignment</i>Metas de tecnoparque</div>
                       <div class="collapsible-body">
-                        @include('indicadores.componentes.metas')
+                        @include('indicadores.componentes.metas.metas')
                       </div>
                     </li>
                   </ul>
@@ -259,6 +259,19 @@
       } else {
         location.href = '/excel/export_proyectos_inscritos/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+hoja;
       }
+    }
+
+    function selectAll(source) {
+      checkboxes = document.getElementsByClassName('metas_down');
+      for(var i=0, n=checkboxes.length;i<n;i++) {
+        checkboxes[i].checked = source.checked;
+      }
+    }
+
+    function downloadMetas(e) {
+      e.preventDefault();
+      let input = $("input[name='txtnodo_metas_id[]']");
+      document.frmDescargarMetas.submit();
     }
   </script>
 @endpush
