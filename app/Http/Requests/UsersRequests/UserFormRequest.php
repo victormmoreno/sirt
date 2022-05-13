@@ -7,6 +7,7 @@ use App\Models\{TipoTalento};
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use \App\Models\Eps;
+use App\User;
 
 class UserFormRequest extends FormRequest
 {
@@ -47,13 +48,14 @@ class UserFormRequest extends FormRequest
             'txtfecha_nacimiento'       => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
             'txtestrato'                => 'required',
             'txtgrado_discapacidad'    => 'required',
+            'txtgenero' => 'required|'.Rule::in([User::IS_MASCULINO, User::IS_FEMENINO, User::IS_BINARIO]),
             'txtmadrecabezafamilia'                => 'required',
             'txtdesplazadoporviolencia'                => 'required',
             'txtdiscapacidad'          =>  Rule::requiredIf(request()->txtgrado_discapacidad == 1 || request()->txtgrado_discapacidad == '1') . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',
             'txtemail'                  => 'required|email|min:1|max:100|unique:users,email,' . request()->route('id'),
             'txtbarrio'                 => 'required|min:1|max:100',
             'txtdireccion'              => 'required|min:1|max:200',
-            'txttelefono'               => 'nullable|digits_between:6,11|numeric',
+            'txttelefono'               => 'nullable|digits_between:6,10|numeric',
             'txtcelular'                => 'required|digits_between:10,11|numeric',
             'txtinstitucion'            => 'required|min:1|max:100|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
             'txttitulo'                 => 'required|min:1|max:200|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
@@ -181,7 +183,7 @@ class UserFormRequest extends FormRequest
             'txtbarrio.max'                       => 'El barrio debe ser máximo 100 caracteres',
 
             'txttelefono.numeric'                 => 'El teléfono debe ser numérico',
-            'txttelefono.digits_between'          => 'El teléfono debe tener entre 6 y 11 digitos',
+            'txttelefono.digits_between'          => 'El teléfono debe tener entre 6 y 10 digitos',
 
             'txtcelular.required'                  => 'El celular es obligatorio.',
             'txtcelular.numeric'                  => 'El celular debe ser numérico',

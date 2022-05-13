@@ -21,7 +21,8 @@ class UserPresenter extends Presenter
 
     public function userGenero()
     {
-        return $this->user->genero == User::IsMasculino() ? 'Masculino' : 'Femenino';
+        return $this->user->genero == User::IsBinario() ? 'Binario' :
+        ($this->user->genero == User::IsMasculino() ? 'Masculino' :'Femenino');
     }
 
     public function userMujerCabezaFamilia(){
@@ -229,7 +230,7 @@ class UserPresenter extends Presenter
         } elseif ($this->user->genero == User::IsFemenino()) {
             return "<img alt=\"{$this->user->nombres}\" class=\"circle mailbox-profile-image z-depth-1\" src=\"" . asset('img/profile-image-female.png') . "\"></img>";
         } else {
-            return "<img alt=\"{$this->user->nombres}\" class=\"circle mailbox-profile-image z-depth-1\" src=\"" . asset('img/profile-image-default.png') . "\"></img>";
+            return "<img alt=\"{$this->user->nombres}\" class=\"circle mailbox-profile-image z-depth-1\" src=\"" . asset('img/profile-img-default.png') . "\"></img>";
         }
     }
 
