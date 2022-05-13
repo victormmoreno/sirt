@@ -11,34 +11,18 @@
             </a> Proyectos de Base Tecnológica
             </h5>
             <div class="card">
-            <div class="card-content">
-                <div class="row">
-                @include('proyectos.navegacion_fases')
-                <div class="divider"></div>
-                <br />
-                <form action="{{route('proyecto.update.suspendido', $proyecto->id)}}" method="POST" name="frmSuspendidoDinamizador">
-                    {!! method_field('PUT')!!}
-                    @csrf
-                    @include('proyectos.detalle_fase_suspendido')
-                    <div class="divider"></div>
-                    <center>
-                        @if ($ultimo_movimiento->movimiento == App\Models\Movimiento::IsSolicitarDinamizador() && $ultimo_movimiento->fase == 'Suspendido')
-                        <button type="submit" onclick="preguntaSuspendido(event)" value="send" class="waves-effect cyan darken-1 btn center-aling">
-                            <i class="material-icons right">done</i>
-                            Aprobar suspensión del proyecto
-                        </button>
-                        @else
-                        <a href="!#" class="waves-effect red lighten-2 btn center-aling disabled">
-                            <i class="material-icons right">done</i>Se necesita de la solicitud del experto para suspender el proyecto.
-                        </a>
-                        @endif
-                    <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-                        <i class="material-icons right">backspace</i>Cancelar
-                    </a>
-                    </center>
-                </form>
+                <div class="card-content">
+                    <div class="row">
+                        @include('proyectos.titulo')
+                        @include('proyectos.navegacion')
+                        @include('proyectos.historial_cambios')
+                        @include('proyectos.options_always')
+                        @include('proyectos.detalle_general')
+                        @include('proyectos.detalle_fase_suspendido')
+                        @include('proyectos.dinamizador.form_aprobacion_suspendido')
+                    </div>
+                    
                 </div>
-            </div>
             </div>
         </div>
         </div>

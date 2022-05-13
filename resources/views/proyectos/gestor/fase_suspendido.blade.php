@@ -11,36 +11,22 @@
             </a> Proyectos de Base Tecnológica
             </h5>
             <div class="card">
-            <div class="card-content">
-                <div class="row">
-                @include('proyectos.navegacion_fases')
-                <div class="row">
-                    <div class="col s12 m6 l6 offset-s3 offset-m3 offset-l3 center">
-                    @if ($ultimo_movimiento->movimiento != App\Models\Movimiento::IsSolicitarDinamizador())
-                    <a href="{{route('proyecto.notificar.suspension', $proyecto->id)}}">
-                        <div class="card-panel yellow accent-1 black-text">
-                        Solicitar al dinamizador que apruebe la suspensión del proyecto.
-                        </div>
-                    </a>
-                    @endif
-                    @if ($ultimo_movimiento->movimiento == App\Models\Movimiento::IsSolicitarDinamizador() && $ultimo_movimiento->fase == 'Suspendido')
-                    <a disabled>
-                        <div class="card-panel yellow accent-1 black-text">
-                        Se ha enviado la notificación al dinamizador para que apruebe la fase de suspendido.
-                        </div>
-                    </a>
-                    @endif
-                    </div>
-                </div>
-                <form method="POST" name="frmSuspenderProyectoGestor" action="{{route('proyecto.update.suspendido', $proyecto->id)}}">
-                    @include('proyectos.gestor.form_suspendido', [
-                    'btnText' => 'Modificar'])
+                <div class="card-content">
                     <div class="row">
-                    @include('proyectos.archivos_table_fase', ['fase' => 'suspendido'])
+                        @include('proyectos.titulo')
+                        @include('proyectos.navegacion')
+                        @include('proyectos.historial_cambios')
+                        @include('proyectos.options_always')
+                        @include('proyectos.detalle_general')
+                        @include('proyectos.gestor.forms.form_suspendido')
+                        @include('proyectos.detalle_fase_suspendido')
+                        <center>
+                            <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+                                <i class="material-icons right">backspace</i>Cancelar
+                            </a>
+                        </center>
                     </div>
-                </form>
                 </div>
-            </div>
             </div>
         </div>
         </div>

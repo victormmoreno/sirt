@@ -86,7 +86,7 @@
                                 <input type="text" id="filter_convocatoria" placeholder="nombre de convocatoria">
                             </div>
                             <div class="col s12 m6 l4 offset-m3 right">
-                            <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_excel"><i class="material-icons">cloud_download</i>Descargar</button>
+                                <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_excel"><i class="material-icons">cloud_download</i>Descargar</button>
                                 <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_idea"><i class="material-icons">search</i>Buscar</button>
                             </div>
                         </div>

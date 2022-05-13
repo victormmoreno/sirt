@@ -11,7 +11,7 @@
 
 <li class="no-padding {{setActiveRoute('proyecto')}}">
     <a href="{{route('proyecto')}}" class="waves-effect waves-grey {{setActiveRouteActivePage('proyecto')}}" rel="canonical" title="Proyectos de Base Tecnológica">
-        <i class="material-icons {{ setActiveRouteActiveIcon('proyecto') }}">library_books</i>PBT
+        <i class="material-icons {{ setActiveRouteActiveIcon('proyecto') }}">library_books</i>Proyectos
     </a>
 </li>
 {{-- <li class="no-padding {{setActiveRoute('articulacion')}}">
@@ -77,6 +77,11 @@
 <li class="no-padding {{setActiveRoute('costos')}}">
     <a class="waves-effect waves-grey {{setActiveRouteActivePage('costos')}}" href="{{route('costos')}}" rel="canonical" title="Costos">
         <i class="material-icons {{setActiveRouteActiveIcon('costos')}}">attach_money</i>Costos
+    </a>
+</li>
+<li class="no-padding {{setActiveRoute('idea')}}">
+    <a href="{{route('idea.index')}} " class="{{setActiveRouteActivePage('idea')}}" rel="canonical" title="Ideas">
+        <i class="material-icons {{setActiveRouteActiveIcon('idea')}}">lightbulb</i>Ideas
     </a>
 </li>
 <li class="no-padding">

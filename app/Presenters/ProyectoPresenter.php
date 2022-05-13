@@ -40,6 +40,21 @@ class ProyectoPresenter extends Presenter
         }
     }
 
+    public function proyectoRutaActual()
+    {
+        if ($this->proyecto->fase->nombre == 'Finalizado' || $this->proyecto->fase->nombre == 'Suspendido') {
+            return route('proyecto.detalle', $this->proyecto->id);
+        } else if ($this->proyecto->fase->nombre == 'Inicio') {
+            return route('proyecto.inicio', $this->proyecto->id);
+        } else if ($this->proyecto->fase->nombre == 'Planeación') {
+            return route('proyecto.planeacion', $this->proyecto->id);
+        } else if ($this->proyecto->fase->nombre == 'Ejecución') {
+            return route('proyecto.ejecucion', $this->proyecto->id);
+        } else {
+            return route('proyecto.cierre', $this->proyecto->id);
+        }
+    }
+
     public function proyectoFechaCierre()
     {
         if ($this->proyecto->fase->nombre == 'Suspendido' || $this->proyecto->fase->nombre == 'Finalizado') {

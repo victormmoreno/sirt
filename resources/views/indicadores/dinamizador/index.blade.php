@@ -114,7 +114,7 @@
                     <li>
                       <div class="collapsible-header"><i class="material-icons">assignment</i>Metas del nodo</div>
                       <div class="collapsible-body">
-                        @include('indicadores.componentes.metas')
+                        @include('indicadores.componentes.metas.metas')
                       </div>
                     </li>
                   </ul>
@@ -172,7 +172,7 @@
       let idnodo = 0;
       location.href = '/excel/export_proyectos_actuales/'+idnodo+'/all';
     }
-    
+    @if($metas_graph != null)
     Highcharts.chart('container', {
       chart: {
           type: 'column'
@@ -237,5 +237,6 @@
           }
       }]
   });
+  @endif
   </script>
 @endpush

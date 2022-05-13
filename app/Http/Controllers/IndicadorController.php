@@ -26,7 +26,10 @@ class IndicadorController extends Controller
       $metas = $this->nodoRepository->consultarMetasDeTecnoparque()->where('nodo_id', auth()->user()->dinamizador->nodo_id);
       $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl6Obtenido()])->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
       $pbts_trl7_8 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl7Obtenido(), Proyecto::IsTrl8Obtenido()])->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
-      $metas = $this->retornarTodasLasMetasArray($metas, $pbts_trl6, $pbts_trl7_8);
+      $activos = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->select('nodo_id')->selectRaw('count(id) as cantidad')->whereHas('fase', function ($query) {
+        $query->whereIn('nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
+      })->where('nodo_id', auth()->user()->dinamizador->nodo_id)->groupBy('nodo_id')->get();
+      $metas = $this->retornarTodasLasMetasArray($metas, $pbts_trl6, $pbts_trl7_8, $activos);
       return view('indicadores.dinamizador.index', [
         'metas' => $metas,
         'metas_graph' => $metas->first()
@@ -35,7 +38,10 @@ class IndicadorController extends Controller
       $metas = $this->nodoRepository->consultarMetasDeTecnoparque();
       $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl6Obtenido()])->get();
       $pbts_trl7_8 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl7Obtenido(), Proyecto::IsTrl8Obtenido()])->get();
-      $metas = $this->retornarTodasLasMetasArray($metas, $pbts_trl6, $pbts_trl7_8);
+      $activos = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->select('nodo_id')->selectRaw('count(id) as cantidad')->whereHas('fase', function ($query) {
+        $query->whereIn('nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
+      })->groupBy('nodo_id')->get();
+      $metas = $this->retornarTodasLasMetasArray($metas, $pbts_trl6, $pbts_trl7_8, $activos);
       return view('indicadores.administrador.index', [
         'nodos' => Nodo::SelectNodo()->get(),
         'metas' => $metas
@@ -47,11 +53,12 @@ class IndicadorController extends Controller
     }
   }
 
-  public function retornarTodasLasMetasArray($metas, $trl6, $trl7_8)
+  public function retornarTodasLasMetasArray($metas, $trl6, $trl7_8, $activos)
   {
     foreach ($metas as $meta) {
       $cantidad_trl6 = $trl6->where('nodo', $meta->nodo_id)->first();
       $cantidad_trl7_8 = $trl7_8->where('nodo', $meta->nodo_id)->first();
+      $cantidad_activos = $activos->where('nodo_id', $meta->nodo_id)->first();
       if ($cantidad_trl6 == null) {
         $meta['trl6_obtenido'] = 0;
       } else {
@@ -62,6 +69,12 @@ class IndicadorController extends Controller
         $meta['trl7_8_obtenido'] = 0;
       } else {
         $meta['trl7_8_obtenido'] = $cantidad_trl7_8->cantidad;
+      }
+      
+      if ($cantidad_activos == null) {
+        $meta['activos'] = 0;
+      } else {
+        $meta['activos'] = $cantidad_activos->cantidad;
       }
 
       $meta['progreso_total'] = round(100*($meta->trl7_8_obtenido+$meta->trl6_obtenido)/($meta->trl6+$meta->trl7_trl8), 2);
