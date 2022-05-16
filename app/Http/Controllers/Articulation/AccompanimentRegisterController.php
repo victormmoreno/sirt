@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Articulation;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\AlcanceArticulacion;
 
 class AccompanimentRegisterController extends Controller
 {
@@ -14,7 +15,8 @@ class AccompanimentRegisterController extends Controller
      */
     public function create()
     {
-        return view('articulation.create');
+        $scopes = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
+        return view('articulation.create', compact('scopes'));
     }
 
     /**

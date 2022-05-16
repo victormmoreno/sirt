@@ -2,9 +2,9 @@
 <section>
     <div class="wizard-content">
         <div class="row">
-            <div class="container">
+            <div class="container ">
                 <div class="plans container-error">
-                    <div class="title">Selecciona el tipo de acompañamiento</div>
+                    <div class="title ">Selecciona el tipo de acompañamiento</div>
                     <label class="plan basic-plan" for="accompaniment_type_pbt">
                         <input  type="radio" name="accompaniment_type" id="accompaniment_type_pbt" value="pbt"/>
                         <div class="plan-content">
@@ -22,7 +22,6 @@
                             </div>
                         </div>
                     </label>
-                    <input id="hiddenInput" type="hidden" name="something" />
                 </div>
             </div>
         </div>

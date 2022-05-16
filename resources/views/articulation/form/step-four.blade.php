@@ -10,14 +10,15 @@
                             <label align="justify" class="black-text text-black">
                                 ¿Desea registrar una articulación?
                             </label>
-                            <input  class="articulation" id="articulation_yes" name="articulation" type="radio" value="si" onchange="articulacionCierre.checkedTypePostulacion()" />
-                            <label align="justify" for="articulation_yes" class="black-text text-black">
-                                Si
-                            </label>
-                            <input class="articulation" id="articulation_no" name="articulation" type="radio" value="no" checked onchange="articulacionCierre.checkedTypePostulacion()" />
+                            <input class="articulation" id="articulation_no" name="articulation" type="radio" value="no" checked />
                             <label align="justify" for="articulation_no" class="black-text text-black">
                                 No
                             </label>
+                            <input  class="articulation" id="articulation_yes" name="articulation" type="radio" value="si"/>
+                            <label align="justify" for="articulation_yes" class="black-text text-black">
+                                Si
+                            </label>
+
                         </p>
                         <small id="articulation-error" class="error red-text"></small>
                     </div>
@@ -30,19 +31,19 @@
                     <div class="radio-buttons">
                         <h5>Tipo Articulación</h5>
                         <label class="custom-radio">
-                        <input type="radio" name="radio" checked />
+                        <input type="radio" name="articulation_type" value="pi" checked />
                         <span class="radio-btn">
                             <h3>P.I</h3>
                         </span>
                         </label>
                         <label class="custom-radio">
-                        <input type="radio" name="radio" />
+                        <input type="radio" name="articulation_type" value="ce"/>
                         <span class="radio-btn">
                             <h3>Creación empresas</h3>
                         </span>
                         </label>
                         <label class="custom-radio">
-                            <input type="radio" name="radio" />
+                            <input type="radio" name="articulation_type" value="con"/>
                             <span class="radio-btn">
                                 <h3>convocatoria</h3>
                             </span>
@@ -64,86 +65,92 @@
                 <div class="row">
                     <div class="input-field col s12 m12 l6">
                         @if(isset($articulacion))
-                            <input @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  id="txtfecha_inicio" name="txtfecha_inicio" type="text" class="datepicker picker__input" value="{{$articulacion->present()->articulacionPbtstartDate()}}">
+                            <input @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  id="start_date" name="start_date" type="text" class="datepicker_accompaniable_max_dat" value="{{$articulacion->present()->articulacionPbtFechaFinalizacion()}}">
                         @else
-                            <input id="txtfecha_inicio" name="txtfecha_inicio" type="text" class="datepicker picker__input">
+                            <input id="start_date" name="start_date" type="text" class="datepicker_accompaniable_max_date">
                         @endif
-                        <label for="txtfecha_inicio">Fecha de inicio de la articulación <span class="red-text">*</span></label>
-                        <small id="txtfecha_inicio-error" class="error red-text"></small>
+
+                        <label for="start_date">Fecha de inicio articulación<span class="red-text">*</span></label>
+                        <small id="start_date-error" class="error red-text"></small>
                     </div>
                     <div class="input-field col s12 m12 l6">
-                        <label class="active" for="txt_alcance_articulacion">Alcance<span class="red-text">*</span></label>
-                        <select @if( isset($articulacion) && !$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  id="txt_alcance_articulacion" name="txt_alcance_articulacion" style="width: 100%" tabindex="-1">
+                        <label class="active" for="scope_articulacion">Alcance<span class="red-text">*</span></label>
+                        <select @if( isset($articulacion) && !$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  id="scope_articulacion" name="scope_articulacion" style="width: 100%" tabindex="-1">
                             <option value="">Seleccione Alcance Articulación</option>
-                            <option value="">Local</option>
-                            <option value="">Regional</option>
-                            <option value="">Nacional</option>
-                            <option value="">Internacional</option>
+                                @forelse($scopes  as $id => $name)
+                                    @if (isset($articulacion))
+                                        <option value="{{$id}}" {{ old('scope_articulacion', $articulacion->alcancearticulacion->id) == $id ? 'selected':'' }}>{{$name}}</option>
+                                    @else
+                                        <option value="{{$id}}" {{ old('scope_articulacion') == $id ? 'selected':'' }}>{{$name}}</option>
+                                    @endif
+                                @empty
+                                    <option>No se encontraron resultados</option>
+                                @endforelse
                         </select>
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-field col s12 m12 l6">
                         @if(isset($articulacion))
-                            <input @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  id="txtname_entidad" type="text" name="txtname_entidad" class="validate" value="{{$articulacion->present()->articulacionPbtEntidad()}}">
+                            <input @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  id="name_entity" type="text" name="name_entity" class="validate" value="{{$articulacion->present()->articulacionPbtEntidad()}}">
                         @else
-                            <input id="txtname_entidad" type="text" name="txtname_entidad" class="validate">
+                            <input id="name_entity" type="text" name="name_entity" class="validate">
                         @endif
-                        <label for="txtname_entidad">Entidad con la que se realiza la articulación<span class="red-text">*</span></label>
-                        <small id="txtname_entidad-error" class="error red-text"></small>
+                        <label for="name_entity">Entidad con la que se realiza la articulación<span class="red-text">*</span></label>
+                        <small id="name_entity-error" class="error red-text"></small>
                     </div>
                     <div class="input-field col s12 m12 l6">
                         @if(isset($articulacion))
-                            <input @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  id="txtname_contact" type="text" name="txtname_contact" class="validate" value="{{$articulacion->present()->articulacionPbtNombreContacto()}}">
+                            <input @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  id="name_contact" type="text" name="name_contact" class="validate" value="{{$articulacion->present()->articulacionPbtNombreContacto()}}">
                         @else
-                            <input id="txtname_contact" type="text" name="txtname_contact" class="validate">
+                            <input id="name_contact" type="text" name="name_contact" class="validate">
                         @endif
-                        <label for="txtname_contact">Nombre de contacto<span class="red-text">*</span></label>
-                        <small id="txtname_contact-error" class="error red-text"></small>
+                        <label for="name_contact">Nombre de contacto<span class="red-text">*</span></label>
+                        <small id="name_contact-error" class="error red-text"></small>
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-field col s12 m12 l12">
                         @if(isset($articulacion))
-                            <input @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  id="txtemail" name="txtemail" type="email" class="validate" value="{{$articulacion->present()->articulacionPbtEmail()}}">
+                            <input @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  id="email" name="email" type="email" value="{{$articulacion->present()->articulacionPbtEmail()}}">
                         @else
-                            <input id="txtemail" name="txtemail" type="email" class="validate">
+                            <input id="email" name="email" type="email">
                         @endif
-                        <label for="txtemail">Correo institucional de la entidad<span class="red-text">*</span></label>
-                        <small id="txtemail-error" class="error red-text"></small>
+                        <label for="email">Correo institucional de la entity<span class="red-text">*</span></label>
+                        <small id="email-error" class="error red-text"></small>
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-field col s12 m12 l6">
                         @if(isset($articulacion))
-                            <input @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  id="txtnombre_convocatoria" name="txtnombre_convocatoria" type="text" class="validate" value="{{$articulacion->present()->articulacionPbtNombreConvocatoria()}}">
+                            <input @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  id="call_name" name="call_name" type="text" class="validate" value="{{$articulacion->present()->articulacionPbtNombreConvocatoria()}}">
                         @else
-                            <input id="txtnombre_convocatoria" name="txtnombre_convocatoria" type="text" class="validate">
+                            <input id="call_name" name="call_name" type="text" class="validate">
                         @endif
-                        <label for="txtnombre_convocatoria">Nombre de convocatoria (Opcional)</label>
-                        <small id="txtnombre_convocatoria-error" class="error red-text"></small>
+                        <label for="call_name">Nombre de convocatoria (Opcional)</label>
+                        <small id="call_name-error" class="error red-text"></small>
                     </div>
                     <div class="input-field col s12 m12 l6">
                         @if(isset($articulacion))
-                            <input @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  id="txtfecha_esperada" name="txtfecha_esperada" type="text" class="validate datepicker-min-date" value="{{$articulacion->present()->articulacionPbtFechaFinalizacion()}}">
+                            <input @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  id="expected_date" name="expected_date" type="text" class="datepicker_accompaniable_date" value="{{$articulacion->present()->articulacionPbtFechaFinalizacion()}}">
                         @else
-                            <input id="txtfecha_esperada" name="txtfecha_esperada" type="text" class="validate datepicker-min-date">
+                            <input id="expected_date" name="expected_date" type="text" class="datepicker_accompaniable_date">
                         @endif
 
-                        <label for="txtfecha_esperada">Fecha esperada de finalización <span class="red-text">*</span></label>
-                        <small id="txtfecha_esperada-error" class="error red-text"></small>
+                        <label for="expected_date">Fecha esperada de finalización <span class="red-text">*</span></label>
+                        <small id="expected_date-error" class="error red-text"></small>
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-field col s12 m12 l12">
                         @if(isset($articulacion))
-                            <textarea  @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  name="txtobjetivo" class="materialize-textarea" length="500" maxlength="500" id="txtobjetivo">{{$articulacion->present()->articulacionPbtObjetivo()}}</textarea>
+                            <textarea  @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  name="objective" class="materialize-textarea" length="500" maxlength="500" id="objective">{{$articulacion->present()->articulacionPbtObjetivo()}}</textarea>
                         @else
-                            <textarea name="txtobjetivo" class="materialize-textarea" length="3500" maxlength="3500" id="txtobjetivo"></textarea>
+                            <textarea name="objective" class="materialize-textarea" length="3500" maxlength="3500" id="objective"></textarea>
                         @endif
 
-                        <label for="txtobjetivo">Objetivo<span class="red-text">*</span></label>
-                        <small id="txtobjetivo-error" class="error red-text"></small>
+                        <label for="objective">Objetivo<span class="red-text">*</span></label>
+                        <small id="objective-error" class="error red-text"></small>
                     </div>
                 </div>
             </div>

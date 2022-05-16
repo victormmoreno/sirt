@@ -22,10 +22,10 @@
             </div>
         </div>
         <div class="search-tabs-row search-tabs-header">
-            <div class="file-field input-field">
+            <div class="file-field input-field container-error">
                 <div class="btn orange lighten-1">
                     <span>Formato confidencial</span>
-                    <input type="file" value="" placeholder="Formato confidencial">
+                    <input type="file" name="confidency_format" placeholder="Formato confidencial">
                 </div>
                 <div class="file-path-wrapper">
                     <input class="file-path validate" type="text">

@@ -45,11 +45,15 @@ class TalentoController extends Controller
                     $propiedad = '<a onclick="addPersonaPropiedad(' . $data->user_id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
                     return $propiedad;
                 })
-                ->addColumn('add_articulacion_pbt', function ($data) {
-                    $add = '<a onclick="filter_project.addTalentArticulacionPbt(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+                ->addColumn('add_intertocutor_talent_articulation', function ($data) {
+                    $add = '<a onclick="filter_project.addInterlocutorTalentArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
                     return $add;
                 })
-                ->rawColumns(['add_articulacion', 'add_proyecto', 'add_propiedad', 'add_articulacion_pbt'])->make(true);
+                ->addColumn('add_talents_articulation', function ($data) {
+                    $add = '<a onclick="filter_project.addTalentArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+                    return $add;
+                })
+                ->rawColumns(['add_proyecto', 'add_proyecto', 'add_propiedad', 'add_talents_articulation', 'add_intertocutor_talent_articulation'])->make(true);
         }
         abort('404');
     }

@@ -52,8 +52,7 @@
 <script>
   $(document).ready(function() {
     @if($errors->any())
-    console.log('error');
-    EmpresaCreate.getCiudad();
+        EmpresaCreate.getCiudad();
     @endif
   });
   function getCiudadSede() {

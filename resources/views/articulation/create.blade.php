@@ -5,7 +5,7 @@
   $year = Carbon\Carbon::now()->year;
 @endphp
 <main class="mn-inner">
-    <div class="row">
+    <div class="row content">
         <div class="col s12">
             <div class="left left-align">
                 <h5 class="left-align orange-text text-darken-3">
@@ -26,7 +26,7 @@
         <div class="col s12 m12 l12">
             <div class="card mailbox-content">
                 <div class="card-content">
-                    <form id="articulation-form">
+                    <form id="accompaniment-form">
                         <div>
 
                             @include('articulation.form.step-one')
@@ -41,6 +41,7 @@
         </div>
     </div>
     @include('articulation.shared.project-modal')
+    @include('articulation.shared.interlocutor-talents-modal')
 </main>
 @endsection
 

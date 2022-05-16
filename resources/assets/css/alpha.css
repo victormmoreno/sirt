@@ -2766,11 +2766,11 @@ input[type=text]:focus:not([readonly])+label, input[type=password]:focus:not([re
 }
 
 .picker__weekday-display {
-    background-color: #00796b;
+    background-color: #eed1ab;
 }
 
 .picker__day.picker__day--today {
-    color: #26a69a ;
+    color: #ff8f00 ;
 }
 
 .picker__day--selected, .picker__day--selected:hover, .picker--focused .picker__day--selected {
