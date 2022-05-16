@@ -218,10 +218,7 @@
                                                         <span class="orange-text">Información {{App\User::IsArticulador()}}</span>
                                                     @endif
                                                         <div class="server-load row">
-                                                            <div class="server-stat col s12 m4 l4">
-                                                                <p>{{$user->present()->userArticuladorName()}}</p>
-                                                                <span>Nodo</span>
-                                                            </div>
+
                                                             @if($user->isUserExperto())
                                                             <div class="server-stat col s12 m4 l4">
                                                                 <p>{{$user->present()->userGestorNombreLinea()}}</p>
@@ -232,6 +229,11 @@
                                                                 <p>{{$user->present()->userGestorHonorarios()}}</p>
                                                                 <span>Honorario</span>
                                                             </div>
+                                                            @else
+                                                                <div class="server-stat col s12 m4 l4">
+                                                                    <p>{{$user->present()->userArticuladorName()}}</p>
+                                                                    <span>Nodo</span>
+                                                                </div>
                                                             @endif
                                                         </div>
                                                     @endif
@@ -273,8 +275,6 @@
 
                                                     @endif
                                                 </div>
-
-
                                                 <div class="divider mailbox-divider">
                                                 </div>
                                                 <div class="right">
