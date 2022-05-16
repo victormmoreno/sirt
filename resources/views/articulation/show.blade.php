@@ -121,6 +121,8 @@
                                                 </div>
                                             @empty
 
+                                            <i class="large material-icons orange-text text-darken-2">portable_wifi_off</i>
+                                            <span class="flow-text">Aún no registras articulaciones</span>
                                             @endforelse
 
                                         </div>

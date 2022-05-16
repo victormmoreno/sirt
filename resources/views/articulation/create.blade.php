@@ -26,14 +26,13 @@
         <div class="col s12 m12 l12">
             <div class="card mailbox-content">
                 <div class="card-content">
-                    <form id="accompaniment-form">
+                    <form id="accompaniment-form" action="{{route('articulation.accompaniments.store')}}" method="POST">
+                        @csrf
                         <div>
-
-                            @include('articulation.form.step-one')
-                            @include('articulation.form.step-two')
-                            @include('articulation.form.step-three')
-                            @include('articulation.form.step-four')
-
+                            @include('articulation.form.step-accompaniment-type')
+                            @include('articulation.form.step-basic-information-accompaniment')
+                            @include('articulation.form.step-accompaniment')
+                            @include('articulation.form.step-terms')
                         </div>
                     </form>
                 </div>

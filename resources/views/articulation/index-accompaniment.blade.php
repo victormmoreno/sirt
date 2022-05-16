@@ -45,7 +45,7 @@
                                         </div>
                                         </div>
                                         <div class="col s12 m4 l4 ">
-                                        <a  href="{{route('articulation.create')}}" class="waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">{{__('New Accompaniment')}}</a>
+                                        <a  href="{{route('articulation.accompaniments.create')}}" class="waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">{{__('New Accompaniment')}}</a>
                                         </div>
                                     @else
                                         <div class="col s12 m12 l12">
@@ -112,7 +112,7 @@
                 </div>
                 @if((session()->has('login_role') && session()->get('login_role') === App\User::IsArticulador()))
                     <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-                        <a href="{{route('articulation.create')}}"  class="btn tooltipped btn-floating btn-large grey" data-position="left" data-delay="50" data-tooltip="Nueva Articulación">
+                        <a href="{{route('articulation.accompaniments.create')}}"  class="btn tooltipped btn-floating btn-large grey" data-position="left" data-delay="50" data-tooltip="Nueva Articulación">
                             <i class="material-icons">add</i>
                         </a>
                     </div>

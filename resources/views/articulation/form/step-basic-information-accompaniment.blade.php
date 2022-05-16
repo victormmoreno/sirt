@@ -20,8 +20,5 @@
                 </div>
             </div>
         </div>
-        @include('articulation.shared.project-form')
-        @include('articulation.shared.company-form')
-        @include('articulation.shared.interlocutor-talent-form')
     </div>
 </section>

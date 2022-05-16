@@ -32,7 +32,6 @@
                 </div>
             </div>
         </div>
-
-        <p class="search-tabs-row search-tabs-header">¡Al hacer clic en Siguiente, ambos actores aceptan los Términos y condiciones!</p>
+        <p class="search-tabs-row search-tabs-header">¡Al hacer clic en guardar, ambos actores aceptan los Términos y condiciones!</p>
     </div>
 </section>

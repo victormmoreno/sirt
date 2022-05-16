@@ -147,52 +147,6 @@ $( document ).ready(function() {
                 required: jQuery.validator.format("El campo formato confidencial es obligatorio"),
                 accept: jQuery.validator.format("El formato permitido es PDF"),
             },
-            articulation:
-            {
-                required:"Por inidique si desea registrar una articulación",
-            },
-            articulation_type:
-            {
-                required:"Por favor seleccione el tipo de articulación",
-            },
-            start_date: {
-                required:"Por favor ingrese la fecha de inicio de la articulación",
-                date: "El valor permitido para este campo es una fecha"
-            },
-            scope_articulacion:
-            {
-                required:"Por favor selecciona el alcance de la articulación",
-            },
-            name_entity:
-            {
-                required:"La entidad es obligatoria",
-                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-            },
-            name_contact:
-            {
-                required:"El nombre del contacto es obligatorio",
-                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-            },
-            email:
-            {
-                required:"El correo electrónico es obligatorio",
-                email:"Por favor, introduce una dirección de correo electrónico válida.",
-                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-            },
-            call_name:
-            {
-                required:"El nombre de la convocatoria es obligatorio",
-                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-            },
-            expected_date: {
-                required:"Por favor ingrese la fecha esperada de finalización",
-                date: "El valor permitido para este campo es una fecha"
-            },
-            objective:
-            {
-                required:"El objetivo es obligatorio",
-                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-            }
 
         },
         errorPlacement: function(error, element)
@@ -232,7 +186,7 @@ $( document ).ready(function() {
         },
         onStepChanging: function (event, currentIndex, newIndex)
         {
-            if (currentIndex == 1) {
+            if (currentIndex == 2) {
                 form.validate().settings.ignore = ":disabled,:hidden:not(input[type='hidden'])";
             }
             return form.valid();
@@ -244,7 +198,28 @@ $( document ).ready(function() {
         },
         onFinished: function (event, currentIndex)
         {
-            alert("Submitted!");
+            event.preventDefault();
+            const data = new FormData(document.getElementById("accompaniment-form"));
+            const url = form.attr("action");
+
+            $.ajax({
+                type: form.attr('method'),
+                url: url,
+                data: data,
+                cache: false,
+                contentType: false,
+                dataType: 'json',
+                processData: false,
+                success: function (response) {
+                    $('button[type="submit"]').removeAttr('disabled');
+                    console.log(response);
+                    printErroresFormulario(response.data);
+                    filter_project.messageAccompaniable(response.data,  'registrada', 'Registro exitoso');
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert("Error: " + errorThrown);
+                }
+            });
         }
     });
 
@@ -760,6 +735,31 @@ const filter_project = {
         });
         return fila;
     },
+    messageAccompaniable: function(data, action, title) {
+        if (data.status_code == 201) {
+            Swal.fire({
+                title: title,
+                text: "El acomapañamiento ha sido "+action+" satisfactoriamente",
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+            });
+            setTimeout(function () {
+                window.location.replace(data.url);
+            }, 1000);
+        }
+        if (data.state == 404) {
+            Swal.fire({
+                title: 'El acomapañamiento no se ha '+action+', por favor inténtalo de nuevo',
+                type: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+            })
+        }
+    },
+
 }
 
 
