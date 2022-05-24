@@ -197,6 +197,12 @@
                         @include('indicadores.componentes.metas.metas')
                       </div>
                     </li>
+                    <li>
+                      <div class="collapsible-header"><i class="material-icons">assignment</i>Ideas de tecnoparque</div>
+                      <div class="collapsible-body">
+                        @include('indicadores.componentes.ideas.download_no_iniciadas')
+                      </div>
+                    </li>
                   </ul>
                   <div class="divider"></div>
                 </div>
@@ -261,8 +267,8 @@
       }
     }
 
-    function selectAll(source) {
-      checkboxes = document.getElementsByClassName('metas_down');
+    function selectAll(source, elementaName) {
+      checkboxes = document.getElementsByClassName(elementaName);
       for(var i=0, n=checkboxes.length;i<n;i++) {
         checkboxes[i].checked = source.checked;
       }

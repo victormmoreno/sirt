@@ -3,7 +3,7 @@
         {!! method_field('GET')!!}
         {!! csrf_field() !!}
         <p class="p-v-xs">
-            <input type="checkbox" id="txtall" name="txtall" onclick="selectAll(this)" value="all">
+            <input type="checkbox" id="txtall" name="txtall" onclick="selectAll(this, 'metas_down')" value="all">
             <label for="txtall">Todos.</label>
         </p>
         @foreach ($nodos as $nodo)
