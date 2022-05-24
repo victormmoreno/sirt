@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Accompaniment;
 use App\Models\Entidad;
+use App\Models\Articulation;
 use App\User;
 use Illuminate\Support\Str;
+use App\Exports\Accompaniment\AccompanimentExport;
 
 class AccompanimentListController extends Controller
 {
@@ -15,37 +17,31 @@ class AccompanimentListController extends Controller
      * method to show the list of accompaniments (index) with filters
      * @param Request $request
      * @return \Illuminate\Http\Response
-     * @author julicode
      */
-    public function index(Request $request)
+    public function index()
     {
-        $nodos = Entidad::has('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id');
-
-
-
+        $nodos = Entidad::with(['nodo'])->has('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id');
         return view('articulation.index-accompaniment', ['nodos' => $nodos]);
     }
 
     public function datatableFiltros(Request $request)
     {
+
         // $this->authorize('datatable', ArticulacionPbt::class);
         $talent = null;
+        $node = null;
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
                 $node = $request->filter_node_accompaniment;
-                $user = null;
                 break;
             case User::IsDinamizador():
                 $node = auth()->user()->dinamizador->nodo_id;
-                $user = null;
                 break;
             case User::IsArticulador():
                 $node = auth()->user()->articulador->nodo_id;
-                $user = auth()->user()->id;
                 break;
             case User::IsTalento():
                 $node = null;
-                $user = null;
                 $talent = auth()->user()->id;
                 break;
             default:
@@ -58,14 +54,14 @@ class AccompanimentListController extends Controller
 
             $accompaniments =  Accompaniment::with([
                 'node',
-                'node.entidad'
+                'node.entidad',
+                'createdBy'
             ])
             ->status($request->filter_status_accompaniment)
             ->year($request->filter_year_accompaniment)
-
-            // ->node($node)
-            // ->interlocutorTalent($talent)
-            // ->orderBy('created_at', 'desc')
+            ->node($node)
+            ->interlocutorTalent($talent)
+            ->orderBy('created_at', 'desc')
             ->get();
         }
         return $this->datatableAccompaniments($accompaniments);
@@ -104,12 +100,76 @@ class AccompanimentListController extends Controller
         ->editColumn('starDate', function ($data) {
             return $data->present()->accompanimentStartDate();
         })->addColumn('show', function ($data) {
-            $info = '<a class="btn m-b-xs modal-trigger" href='.route('articulation.accompaniments.show', $data->id).'>
+            $info = '<a class="btn m-b-xs modal-trigger" href='.route('accompaniments.show', $data->id).'>
             <i class="material-icons">search</i>
             </a>';
                 return $info;
         })->rawColumns(['node','code','name','adviser','status','starDate','accompanimentBy','show'])->make(true);
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $accompaniment = Accompaniment::with([
+                'node',
+                'createdBy',
+                'articulations',
+                'articulations.phase'
+
+            ])
+        ->findOrfail($id);
+
+        $articulations = $accompaniment->articulations()->latest('id')->paginate(2);
+
+        return view('articulation.show', compact('accompaniment', 'articulations'));
+    }
+
+    public function export(Request $request, $extension = 'xlsx')
+    {
+        $talent = null;
+        $node = null;
+        switch (\Session::get('login_role')) {
+            case User::IsAdministrador():
+                $node = $request->filter_node_accompaniment;
+                break;
+            case User::IsDinamizador():
+                $node = auth()->user()->dinamizador->nodo_id;
+                break;
+            case User::IsArticulador():
+                $node = auth()->user()->articulador->nodo_id;
+                break;
+            case User::IsTalento():
+                $node = null;
+                $talent = auth()->user()->id;
+                break;
+            default:
+                return abort('403');
+                break;
+        }
+
+        $accompaniments = [];
+        if (isset($request->filter_status_accompaniment)) {
+
+            $accompaniments =  Accompaniment::with([
+                'node',
+                'node.entidad',
+                'createdBy'
+            ])
+            ->status($request->filter_status_accompaniment)
+            ->year($request->filter_year_accompaniment)
+            ->node($node)
+            ->interlocutorTalent($talent)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        }
+        return (new AccompanimentExport($accompaniments))->download("Articulaciones PBT - " . config('app.name') . ".{$extension}");
+    }
+
 
 
 }

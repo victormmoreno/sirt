@@ -41,7 +41,7 @@ $( document ).ready(function() {
             },
             talent: {
                 required: function(element){
-                    return $("#accompaniment_type_pbt").is(":checked");
+                    return $("#accompaniment_type_pbt").is(":checked") || $("#accompaniment_type_company").is(":checked");
                 },
                 number: true
             },
@@ -188,7 +188,10 @@ $( document ).ready(function() {
         {
             if (currentIndex == 2) {
                 form.validate().settings.ignore = ":disabled,:hidden:not(input[type='hidden'])";
+            }else{
+                form.validate().settings.ignore = ":disabled,:hidden";
             }
+
             return form.valid();
         },
         onFinishing: function (event, currentIndex)
@@ -251,7 +254,7 @@ $( document ).ready(function() {
             }else if(item == 'empresa'){
                 $('.section-project').hide();
                 $('.section-company').show();
-                $('.section-talent').hide();
+                $('.section-talent').show();
             }else{
                 $('.section-project').hide();
                 $('.section-company').hide();
@@ -260,19 +263,6 @@ $( document ).ready(function() {
         });
     });
 
-    document.querySelectorAll('input[name="articulation"]').forEach((elem) => {
-        elem.addEventListener("click", function(event){
-            let item = event.target.value;
-
-            if(item == 'si'){
-                $('.section-articulation').show();
-            }else if(item == 'no'){
-                $('.section-articulation').hide();
-            }else{
-                $('.section-articulation').hide();
-            }
-        });
-    });
 
     $('#filter_code_project').click(function () {
         let filter_code_project = $('#filter_code').val();

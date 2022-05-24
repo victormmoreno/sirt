@@ -19,20 +19,20 @@
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">{{__('Home')}}</a></li>
                     <li class="active"><a href="{{route('accompaniments')}}">{{__('Accompaniments')}}</a></li>
-                    <li class="active">{{__('New Accompaniment')}}</li>
+                    <li class="active">{{__('New Articulation')}}</li>
                 </ol>
             </div>
         </div>
         <div class="col s12 m12 l12">
             <div class="card mailbox-content">
                 <div class="card-content">
-                    <form id="accompaniment-form" action="{{route('accompaniments.store')}}" method="POST">
+                    <form id="articulation-form" action="{{route('articulations.store')}}" method="POST">
                         @csrf
                         <div>
-                            @include('articulation.form.step-accompaniment-type')
-                            @include('articulation.form.step-basic-information-accompaniment')
-                            @include('articulation.form.step-accompaniment')
-                            @include('articulation.form.step-terms')
+                            @include('articulation.form.step-articulation-type')
+                            @include('articulation.form.step-articulation')
+                            @include('articulation.form.step-articulation-contact')
+                            @include('articulation.form.step-articulation-participants')
                         </div>
                     </form>
                 </div>
@@ -43,4 +43,3 @@
     @include('articulation.shared.interlocutor-talents-modal')
 </main>
 @endsection
-

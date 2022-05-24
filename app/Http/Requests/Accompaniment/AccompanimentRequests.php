@@ -27,10 +27,10 @@ class AccompanimentRequests extends FormRequest
         return [
             'accompaniment_type' => 'required|'. Rule::in(['pbt', 'empresa']),
             'name_accompaniment' => 'required|min:1|max:100',
-            'description_accompaniment'  => 'required|min:1|max:3000',
+            'description_accompaniment'  => 'max:3000',
             'scope_accompaniment'  => 'required|min:1|max:3000',
             'projects'  => Rule::requiredIf(request()->accompaniment_type == 'pbt'),
-            'talent'  => Rule::requiredIf(request()->accompaniment_type == 'pbt'),
+            'talent'  => Rule::requiredIf(request()->accompaniment_type == 'pbt' || request()->accompaniment_type == 'empresa'),
             'sedes'  => Rule::requiredIf(request()->accompaniment_type == 'empresa'),
             'confidency_format'  => 'required|file|max:50000|mimetypes:application/pdf|mimes:pdf',
         ];

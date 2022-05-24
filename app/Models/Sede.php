@@ -45,7 +45,7 @@ class Sede extends Model
      *
      * @return void
      */
-    public function sedes(){
-        return $this->morphMany(Accompaniment::class, 'accompanimentable');
+    public function accompaniamentables(){
+        return $this->morphToMany(Accompaniment::class, 'accompanimentable');
     }
 }

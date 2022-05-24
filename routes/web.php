@@ -781,15 +781,17 @@ Route::resource('articulaciones/tipoarticulaciones', 'TipoArticulacionController
 
 Route::group(
     [
-        'prefix' => 'articulaciones',
+        'prefix' => 'acompanamientos',
         'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Talento|Articulador',]
     ],
     function () {
-        Route::get('/', 'Articulation\AccompanimentListController@index')->name('articulation.accompaniments');
-        Route::get('/datatable_filtros', 'Articulation\AccompanimentListController@datatableFiltros')->name('articulation.accompaniments.datatable.filtros');
-        Route::get('/crear', 'Articulation\AccompanimentRegisterController@create')->name('articulation.accompaniments.create');
-        Route::post('/', 'Articulation\AccompanimentRegisterController@store')->name('articulation.accompaniments.store');
-        Route::get('/show/{id}', 'Articulation\ArticulationShowController@show')->name('articulation.accompaniments.show');
-
+        Route::get('/', 'Articulation\AccompanimentListController@index')->name('accompaniments');
+        Route::get('/datatable_filtros', 'Articulation\AccompanimentListController@datatableFiltros')->name('accompaniments.datatable.filtros');
+        Route::get('/crear', 'Articulation\AccompanimentRegisterController@create')->name('accompaniments.create');
+        Route::post('/', 'Articulation\AccompanimentRegisterController@store')->name('accompaniments.store');
+        Route::get('/ver/{id}', 'Articulation\AccompanimentListController@show')->name('accompaniments.show');
+        Route::get('/articulaciones/crear', 'Articulation\ArticulationRegisterController@create')->name('articulations.create');
+        Route::post('/articulaciones', 'Articulation\ArticulationRegisterController@store')->name('articulations.store');
+        Route::get('/export', 'Articulation\AccompanimentListController@export')->name('accompaniments.export')->middleware('role_session:Administrador|Articulador|Dinamizador');
     }
 );

@@ -15,11 +15,9 @@ class CreateAccompanimentablesTable extends Migration
     {
         Schema::create('accompanimentables', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('accompanimentable_id');
+            $table->bigInteger('accompanimentable_id');
             $table->string('accompanimentable_type');
-            $table->unsignedBigInteger('accompaniment_id');
-
-            $table->foreign('accompaniment_id')->references('id')->on('accompaniments')->onDelete('cascade');
+            $table->bigInteger('accompaniment_id');
         });
     }
 

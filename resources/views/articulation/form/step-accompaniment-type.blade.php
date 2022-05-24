@@ -6,7 +6,7 @@
                 <div class="plans container-error">
                     <div class="title ">Selecciona el tipo de acompañamiento</div>
                     <label class="plan basic-plan" for="accompaniment_type_pbt">
-                        <input  type="radio" name="accompaniment_type" id="accompaniment_type_pbt" value="pbt"/>
+                        <input  type="radio" name="accompaniment_type" id="accompaniment_type_pbt" value="pbt" checked/>
                         <div class="plan-content">
                             <div class="plan-details">
                                 <span>Proyectos</span>
@@ -15,8 +15,9 @@
                         </div>
                     </label>
                     <label class="plan basic-plan" for="accompaniment_type_company">
-                        <input type="radio" name="accompaniment_type" id="accompaniment_type_company" value="empresa"/>
-                            <div class="plan-content"><div class="plan-details">
+                        <input type="radio" name="accompaniment_type" id="accompaniment_type_company" value="empresa" />
+                        <div class="plan-content">
+                            <div class="plan-details">
                                 <span>Empresas</span>
                                 <p>Para acompañamientos a articulaciones con empresas externas</p>
                             </div>

@@ -1,4 +1,4 @@
-<div class="section-project" style="display: none;">
+<div class="section-project">
     <div class="row search-tabs-row search-tabs-header">
         <h5><b>Seleccione el Proyecto</b></h5>
         <div class="input-field col s12 m12 l4">

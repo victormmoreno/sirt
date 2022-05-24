@@ -124,6 +124,8 @@ class Proyecto extends Model
         return $this->morphMany(UsoInfraestructura::class, 'asesorable');
     }
 
+
+
     /**
      * Define a polymorphic, inverse many-to-many relationship between projects and sedes
      * @author dum
@@ -149,9 +151,12 @@ class Proyecto extends Model
      *
      * @return void
      */
-    public function projects(){
-        return $this->morphMany(Accompaniment::class, 'accompanimentable');
+    public function accompaniamentables()
+    {
+        return $this->morphToMany(Accompaniment::class, 'accompanimentable');
     }
+
+
 
     /**
      * Define an inverse one-to-one or many relationship between projects and node

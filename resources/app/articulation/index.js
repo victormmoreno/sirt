@@ -20,7 +20,7 @@ $(document).ready(function() {
     }
 });
 
-$('#filter_articulacion').click(function () {
+$('#filter_accompaniment').click(function () {
     let filter_node_accompaniment = $('#filter_node_accompaniment').val();
     let filter_year_accompaniment = $('#filter_year_accompaniment').val();
     let filter_status_accompaniment = $('#filter_status_accompaniment').val();
@@ -40,7 +40,25 @@ $('#filter_articulacion').click(function () {
     }
 });
 
-var accompaniment ={
+$('#download_accompaniment').click(function(){
+    let filter_node_accompaniment = $('#filter_node_accompaniment').val();
+    let filter_year_accompaniment = $('#filter_year_accompaniment').val();
+    let filter_status_accompaniment = $('#filter_status_accompaniment').val();
+    const query = {
+        filter_node_accompaniment: filter_node_accompaniment,
+        filter_year_accompaniment: filter_year_accompaniment,
+        filter_status_accompaniment: filter_status_accompaniment
+    }
+
+    const url = "/acompanamientos/export?" + $.param(query)
+
+    window.location = url;
+});
+
+
+
+
+let accompaniment ={
     filtersDatatableAccompanibles: function(filter_node_accompaniment,filter_year_accompaniment, filter_status_accompaniment){
         $('#accompaniment_data_table').DataTable({
             language: {
@@ -51,7 +69,7 @@ var accompaniment ={
             serverSide: false,
             "order": [[ 5, "desc" ]],
             ajax:{
-                url: "/articulaciones/datatable_filtros",
+                url: "/acompanamientos/datatable_filtros",
                 type: "get",
                 data: {
                     filter_node_accompaniment: filter_node_accompaniment,

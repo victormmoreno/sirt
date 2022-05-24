@@ -45,7 +45,7 @@
                                         </div>
                                         </div>
                                         <div class="col s12 m4 l4 ">
-                                        <a  href="{{route('articulation.accompaniments.create')}}" class="waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">{{__('New Accompaniment')}}</a>
+                                        <a  href="{{route('accompaniments.create')}}" class="waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">{{__('New Accompaniment')}}</a>
                                         </div>
                                     @else
                                         <div class="col s12 m12 l12">
@@ -86,8 +86,8 @@
                                             </select>
                                         </div>
                                         <div class="col s12 m6 l4 offset-m3 right">
-                                            <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_archive_art"><i class="material-icons">cloud_download</i>{{__('Download')}}</button>
-                                            <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_articulacion"><i class="material-icons">search</i>{{__('Filter')}}</button>
+                                            <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_accompaniment"><i class="material-icons">cloud_download</i>{{__('Download')}}</button>
+                                            <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_accompaniment"><i class="material-icons">search</i>{{__('Filter')}}</button>
                                         </div>
                                     </div>
                                 <table id="accompaniment_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
@@ -112,7 +112,7 @@
                 </div>
                 @if((session()->has('login_role') && session()->get('login_role') === App\User::IsArticulador()))
                     <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-                        <a href="{{route('articulation.accompaniments.create')}}"  class="btn tooltipped btn-floating btn-large grey" data-position="left" data-delay="50" data-tooltip="Nueva Articulación">
+                        <a href="{{route('accompaniments.create')}}"  class="btn tooltipped btn-floating btn-large grey" data-position="left" data-delay="50" data-tooltip="Nueva Articulación">
                             <i class="material-icons">add</i>
                         </a>
                     </div>

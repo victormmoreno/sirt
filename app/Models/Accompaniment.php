@@ -17,7 +17,7 @@ class Accompaniment extends Model
      *
      * @var array
      */
-    protected $guarded = ['id', 'status', 'created_by'];
+    protected $guarded = ['id', 'status'];
 
     /**
      * The attributes that should be cast to native types.
@@ -46,12 +46,14 @@ class Accompaniment extends Model
         return $this->hasMany(Articulation::class);
     }
 
+
     /**
      * The inverse polymorfic relation much to much
      *
      * @return void
      */
-    public function projects(){
+    public function projects()
+    {
         return $this->morphedByMany(Proyecto::class, 'accompanimentable');
     }
 
@@ -62,6 +64,11 @@ class Accompaniment extends Model
      */
     public function sedes(){
         return $this->morphedByMany(Sede::class, 'accompanimentable');
+    }
+
+    public function accompanimentable()
+    {
+        return $this->morphTo();
     }
 
     /**
@@ -102,7 +109,7 @@ class Accompaniment extends Model
     public function scopestatus($query, $status)
     {
         if (isset($status) && $status != 'all' && $status != null) {
-            return $query->where('status', $status);
+            return $query->orWhere('status', $status);
         }
         return $query;
     }
