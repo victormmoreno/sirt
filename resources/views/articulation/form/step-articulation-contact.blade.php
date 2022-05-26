@@ -5,9 +5,9 @@
             <div class="row">
                 <div class="row">
                     <div class="input-field col s12 m12 l6">
-                        <label class="active" for="scope_articulacion">Alcance<span class="red-text">*</span></label>
-                        <select @if( isset($articulacion) && !$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  id="scope_articulacion" name="scope_articulacion" style="width: 100%" tabindex="-1">
-                            <option value="">Seleccione Alcance Articulación</option>
+                        <label class="active" for="scope_articulation">Alcance de la articulación<span class="red-text">*</span></label>
+                        <select @if( isset($articulacion) && !$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif required  id="scope_articulation" name="scope_articulation" style="width: 100%" tabindex="-1">
+                            <option value>Seleccione Alcance Articulación</option>
                                 @forelse($scopes  as $id => $name)
                                     @if (isset($articulacion))
                                         <option value="{{$id}}" {{ old('scope_articulacion', $articulacion->alcancearticulacion->id) == $id ? 'selected':'' }}>{{$name}}</option>
@@ -46,7 +46,7 @@
                         @else
                             <input id="email" name="email" type="email">
                         @endif
-                        <label for="email">Correo institucional de la entity<span class="red-text">*</span></label>
+                        <label for="email">Correo institucional de la entidad<span class="red-text">*</span></label>
                         <small id="email-error" class="error red-text"></small>
                     </div>
                 </div>

@@ -23,8 +23,8 @@
                         <textarea id="description_articulation" name="description_articulation" type="text" class="materialize-textarea validate"></textarea>
                     </div>
                     <div class="input-field col m12 s12">
-                        <label for="scope_articulation">Alcance Artuculación</label>
-                        <textarea id="scope_articulation" name="scope_articulation" type="text" class="materialize-textarea"></textarea>
+                        <label for="scope">Alcance<span class="red-text">*</span></label>
+                        <textarea id="scope" name="scope" type="text" class="materialize-textarea"></textarea>
                     </div>
                 </div>
 

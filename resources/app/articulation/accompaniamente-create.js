@@ -2,7 +2,6 @@ $( document ).ready(function() {
     var form = $("#accompaniment-form");
     var validator = $("#accompaniment-form").validate({
         rules: {
-            accompaniment_type:{ required:true },
             name_accompaniment:{
                 required:true,
                 minlength: 2,
@@ -42,12 +41,6 @@ $( document ).ready(function() {
             talent: {
                 required: function(element){
                     return $("#accompaniment_type_pbt").is(":checked") || $("#accompaniment_type_company").is(":checked");
-                },
-                number: true
-            },
-            sedes:{
-                required: function(element){
-                    return $("#accompaniment_type_company").is(":checked")
                 },
                 number: true
             },
@@ -97,10 +90,6 @@ $( document ).ready(function() {
         },
         messages:
         {
-            accompaniment_type:
-            {
-                required:"Por favor selecciona el tipo de acompañamiento",
-            },
             name_accompaniment:
             {
                 required:"El nombre del acompañamiento es obligatorio",
@@ -118,18 +107,7 @@ $( document ).ready(function() {
                 minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
                 maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
             },
-            name_articulation:
-            {
-                required:"El nombre de la articulación es obligatorio",
-                minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-            },
-            scope_articulation:
-            {
-                required:"El alcalce de la articulación es obligatorio",
-                minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-            },
+
             projects:
             {
                 required:"Por favor agrega el proyecto",
@@ -138,15 +116,11 @@ $( document ).ready(function() {
             {
                 required:"Por favor agrega el talento interlocutor",
             },
-            sedes:
-            {
-                required:"Por favor agrega la sede",
-            },
             confidency_format:
             {
                 required: jQuery.validator.format("El campo formato confidencial es obligatorio"),
                 accept: jQuery.validator.format("El formato permitido es PDF"),
-            },
+            }
 
         },
         errorPlacement: function(error, element)
@@ -239,31 +213,6 @@ $( document ).ready(function() {
         return  (element.files[0].type == param)
     }, 'El archivo debe tener formato PDF');
 
-    $.validator.addMethod('requireif', function (value, element, param) {
-        return $('input:radio[name=accompaniment_type]:checked').val() == param;
-    }, 'Este campo es oblogatorio');
-
-    document.querySelectorAll('input[name="accompaniment_type"]').forEach((elem) => {
-        elem.addEventListener("click", function(event){
-            let item = event.target.value;
-
-            if(item == 'pbt'){
-                $('.section-company').hide();
-                $('.section-project').show();
-                $('.section-talent').show();
-            }else if(item == 'empresa'){
-                $('.section-project').hide();
-                $('.section-company').show();
-                $('.section-talent').show();
-            }else{
-                $('.section-project').hide();
-                $('.section-company').hide();
-                $('.section-talent').hide();
-            }
-        });
-    });
-
-
     $('#filter_code_project').click(function () {
         let filter_code_project = $('#filter_code').val();
         if((filter_code_project != '' || filter_code_project != null || filter_code_project.length  > 0)){
@@ -291,7 +240,6 @@ $( document ).ready(function() {
             filter_project.emptyResult('result-talents');
             filter_project.notFound('result-talents');
         }
-
     });
 
     $('#filter_talents_advanced').click(function () {

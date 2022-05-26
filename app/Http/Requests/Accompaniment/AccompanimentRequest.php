@@ -5,7 +5,7 @@ namespace App\Http\Requests\Accompaniment;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class AccompanimentRequests extends FormRequest
+class AccompanimentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -42,16 +42,16 @@ class AccompanimentRequests extends FormRequest
     }
 
     /**
- * Get custom attributes for validator errors.
- *
- * @return array
- */
-public function attributes()
-{
-    return [
-        'accompaniment_type' => 'tipo acompañamiento',
-        'sedes' => 'sede',
-        'confidency_format' => 'formato de confidencialidad',
-    ];
-}
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'accompaniment_type' => 'tipo acompañamiento',
+            'sedes' => 'sede',
+            'confidency_format' => 'formato de confidencialidad',
+        ];
+    }
 }

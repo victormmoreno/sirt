@@ -4,19 +4,16 @@
 <main class="mn-inner">
     <div class="content">
         <div class="row no-m-t no-m-b">
-            <div class="col s8 m8 l5">
+            <div class="left left-align">
                 <h5 class="left-align orange-text text-darken-3">
-                    <i class="material-icons left">
-                        autorenew
-                    </i>
-                    {{__('Accompaniments')}}
+                    <i class="material-icons left">autorenew</i>{{__('Accompaniments')}}
                 </h5>
             </div>
-            <div class="col s4 m4 l5 offset-l2  rigth-align show-on-large hide-on-med-and-down">
+            <div class="right right-align show-on-large hide-on-med-and-down">
                 <ol class="breadcrumbs">
-                    <li><a href="{{route('home')}}">Inicio</a></li>
+                    <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
                     <li ><a href="{{route('accompaniments')}}">{{__('Accompaniments')}}</a></li>
-                    <li class="active">detalle</li>
+                    <li class="active">{{ __('Details') }}</li>
                 </ol>
             </div>
         </div>
@@ -27,27 +24,25 @@
                         <div class="row no-m-t no-m-b">
                             <div class="col s12 m12 l12">
                                 <div class="mailbox-options">
-                                    {{-- <ul>
-                                        <li class="text-mailbox ">El acompañamiento se encuentra actualmente {{$accompaniment->present()->accompanimentStatus()}}</li>
+                                    <ul>
+                                        <li class="text-mailbox ">La {{__('Accompaniments')}}  se encuentra actualmente {{$accompaniment->present()->accompanimentStatus()}}</li>
                                         <div class="right">
-                                            <li class="text-mailbox">Fecha registro: {{$accompaniment->created_at}}</li>
+                                            <li class="text-mailbox">Fecha registro: {{$accompaniment->present()->accompanimentCreatedDate()}}</li>
                                         </div>
-                                    </ul> --}}
+                                    </ul>
                                 </div>
                                 <div class="mailbox-view no-s">
                                     <div class="mailbox-view-header">
                                         <div class="left">
                                             <div class="left">
                                                 <span class="mailbox-title">{{$accompaniment->code}} - {{$accompaniment->name}}
-                                                <a href="" class="orange-text text-darken-2 pointer tooltipped" data-position="right" data-tooltip="editar acompañamiento"><i class="tiny material-icons">edit</i></a></span>
-                                                <span class="mailbox-title">Nodo {{$accompaniment->present()->accompanimentNode()}}</span>
-                                                <span class="mailbox-author">{{$accompaniment->present()->accompanimentInterlocutorTalent()}} (Talento interlocutor) <a href="" class="orange-text text-darken-2 pointer tooltipped" data-position="right" data-tooltip="cambiar talento interlocutor"><i class="tiny material-icons">edit</i></a></span>
-                                                <span class="mailbox-title">Creada por: {{$accompaniment->createdBy->documento}} </span>
+                                                <a href="" class="orange-text text-darken-2 pointer tooltipped" data-position="right" data-tooltip="editar {{__('Accompaniments')}}"><i class="tiny material-icons">edit</i></a></span>
+                                                <span class="mailbox-title">{{__('Node')}} {{$accompaniment->present()->accompanimentNode()}}</span>
+                                                <span class="mailbox-author">{{$accompaniment->present()->accompanimentInterlocutorTalent()}} ({{__('Interlocutory talent')}}) <a href="" class="orange-text text-darken-2 pointer tooltipped" data-position="right" data-tooltip="cambiar {{__('Interlocutory talent')}}"><i class="tiny material-icons">edit</i></a></span>
                                             </div>
                                         </div>
                                         <div class="right mailbox-buttons">
-
-                                            <a href="{{route('articulations.create')}}" class="waves-effect waves-orange btn orange m-t-xs">Nueva Articulación</a>
+                                            <a href="{{route('articulations.create', $accompaniment->id )}}" class="waves-effect waves-orange btn orange m-t-xs">{{__('New Articulation')}}</a>
                                             @if((session()->has('login_role') && session()->get('login_role') === App\User::IsDinamizador()) && !$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsSuspendido()))
                                                 <a href="" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar articulador</a>
                                             @endif
@@ -60,20 +55,6 @@
                                     </div>
                                     <div class="divider mailbox-divider"></div>
                                     <div class="mailbox-text">
-                                        <div class="server-load row">
-                                            <div class="server-stat col s12 m4 l3">
-                                                <span>{{__('Code Accompaniment')}}</span>
-                                                <p>{{$accompaniment->present()->accompanimentCode()}}</p>
-                                            </div>
-                                            <div class="server-stat col s12 m4 l3">
-                                                <span>{{__('Name Accompaniment')}}</span>
-                                                <p>{{$accompaniment->present()->accompanimentName()}}</p>
-                                            </div>
-                                            <div class="server-stat col s12 m4 l3">
-                                                <span>Creada por</span>
-                                                <p>{{$accompaniment->present()->accompanimentBy()}}</p>
-                                            </div>
-                                        </div>
                                         <div class="col s12 m12 l12">
                                             <div class="card card-panel card-transparent server-card">
                                                 <div class="card-content">
@@ -113,22 +94,21 @@
                                                                     </ul>
                                                                 </div>
                                                                 <ul id="dropdown{{$articulation->id}}" class="dropdown-content">
-                                                                    <li><a href="#!">Editar</a></li>
-
+                                                                    <li><a href="{{route('articulations.show', $articulation->id)}}">Editar</a></li>
                                                                     <li><a href="#!" class="red-text">Elimnar</a></li>
                                                                 </ul>
-                                                                {{-- <span class="card-title">{{$articulation->present()->articulationCode()}} - {{$articulation->present()->articulationName()}}</span> --}}
+                                                                <span class="card-title">{{$articulation->present()->articulationCode()}} - {{$articulation->present()->articulationName()}}</span>
                                                                 <div class="server-load row">
                                                                     <div class="server-stat col s4">
                                                                         <p class="">{{$articulation->users_count}}</p>
                                                                         <span>Talentos participantes</span>
                                                                     </div>
                                                                     <div class="server-stat col s4">
-                                                                        {{-- <p>{{$articulation->present()->articulationPhase()}}</p> --}}
+                                                                        <p>{{$articulation->present()->articulationPhase()}}</p>
                                                                         <span>{{__('Phase')}}</span>
                                                                     </div>
                                                                     <div class="server-stat col s4">
-                                                                        {{-- <p>{{$articulation->progress}}%</p> --}}
+                                                                        <p>{{$articulation->progress}}%</p>
                                                                         <span>{{__('Progress')}}</span>
                                                                     </div>
                                                                 </div>
@@ -149,20 +129,15 @@
                                                 @empty
                                                 <div class="center-align">
                                                     <p><i class=" large material-icons orange-text text-darken-2">portable_wifi_off</i></p>
-                                                    <p><span class=" flow-text">Aún no registras articulaciones</span></p>
-                                                    <p><a href="{{route('articulations.create')}}" class="waves-effect waves-orange btn orange m-t-xs">Nueva Articulación</a></p>
-
+                                                    <p><span class=" flow-text">Aún no registras {{ __('Articulations') }}</span></p>
+                                                    <p><a href="{{route('articulations.create', $accompaniment->id )}}" class="waves-effect waves-orange btn orange m-t-xs">{{ __('New Articulation') }}</a></p>
                                                 </div>
-
-
                                                 @endforelse
-
                                             </div>
                                             <div class="center-align">
                                                 {!! $articulations->render() !!}
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>

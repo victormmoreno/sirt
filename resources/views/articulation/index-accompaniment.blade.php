@@ -14,7 +14,7 @@
             </div>
             <div class="right right-align show-on-large hide-on-med-and-down">
                 <ol class="breadcrumbs">
-                    <li><a href="{{route('home')}}">Inicio</a></li>
+                    <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
                     <li class="active">{{__('Accompaniments')}}</li>
                 </ol>
             </div>

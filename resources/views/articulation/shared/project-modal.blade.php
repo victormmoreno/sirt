@@ -62,7 +62,6 @@
         <div class="row">
             <h4>Sedes de la empresa</h4>
             <ul class="collection" id="sedes_detail">
-
             </ul>
         </div>
     </div>

@@ -45,7 +45,7 @@ class AccompanimentPresenter extends Presenter
 
     public function accompanimentCreatedDate()
     {
-        return optional($this->accompaniment->created_at)->isoFormat('MMMM Do YYYY, h:mm:ss a');
+        return optional($this->accompaniment->created_at)->isoFormat('DD/MM/YYYY');
     }
 
 
@@ -125,7 +125,7 @@ class AccompanimentPresenter extends Presenter
                 [ \App\Models\Sede::class]
             ) && $this->accompaniment->sedes->count() > 0
         ){
-            return "Sede - Empresa";
+            return "Sede";
         }
     }
 

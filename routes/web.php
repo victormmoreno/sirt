@@ -785,13 +785,14 @@ Route::group(
         'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Talento|Articulador',]
     ],
     function () {
-        Route::get('/', 'Articulation\AccompanimentListController@index')->name('accompaniments');
-        Route::get('/datatable_filtros', 'Articulation\AccompanimentListController@datatableFiltros')->name('accompaniments.datatable.filtros');
-        Route::get('/crear', 'Articulation\AccompanimentRegisterController@create')->name('accompaniments.create');
-        Route::post('/', 'Articulation\AccompanimentRegisterController@store')->name('accompaniments.store');
-        Route::get('/ver/{id}', 'Articulation\AccompanimentListController@show')->name('accompaniments.show');
-        Route::get('/articulaciones/crear', 'Articulation\ArticulationRegisterController@create')->name('articulations.create');
-        Route::post('/articulaciones', 'Articulation\ArticulationRegisterController@store')->name('articulations.store');
-        Route::get('/export', 'Articulation\AccompanimentListController@export')->name('accompaniments.export')->middleware('role_session:Administrador|Articulador|Dinamizador');
+        Route::get('/', 'Accompaniment\AccompanimentListController@index')->name('accompaniments');
+        Route::get('/datatable_filtros', 'Accompaniment\AccompanimentListController@datatableFiltros')->name('accompaniments.datatable.filtros');
+        Route::get('/crear', 'Accompaniment\AccompanimentRegisterController@create')->name('accompaniments.create');
+        Route::post('/', 'Accompaniment\AccompanimentRegisterController@store')->name('accompaniments.store');
+        Route::get('/{id}', 'Accompaniment\AccompanimentListController@show')->name('accompaniments.show');
+        Route::get('/{id}/articulaciones/crear', 'Accompaniment\ArticulationRegisterController@create')->name('articulations.create');
+        Route::post('/articulaciones/{id}', 'Accompaniment\ArticulationRegisterController@store')->name('articulations.store');
+        Route::get('/articulaciones/{id}', 'Accompaniment\ArticulationListController@show')->name('articulations.show');
+        Route::get('/export', 'Accompaniment\AccompanimentListController@export')->name('accompaniments.export')->middleware('role_session:Administrador|Articulador|Dinamizador');
     }
 );

@@ -2,7 +2,7 @@
 @section('meta-title', __('Accompaniments'))
 @section('content')
 @php
-  $year = Carbon\Carbon::now()->year;
+    $year = Carbon\Carbon::now()->year;
 @endphp
 <main class="mn-inner">
     <div class="row content">
@@ -26,10 +26,9 @@
         <div class="col s12 m12 l12">
             <div class="card mailbox-content">
                 <div class="card-content">
-                    <form id="accompaniment-form" action="{{route('accompaniments.store')}}" method="POST">
+                    <form method="POST" id="accompaniment-form" action="{{route('accompaniments.store')}}"  accept-charset="UTF-8" enctype="multipart/form-data">
                         @csrf
                         <div>
-                            @include('articulation.form.step-accompaniment-type')
                             @include('articulation.form.step-basic-information-accompaniment')
                             @include('articulation.form.step-accompaniment')
                             @include('articulation.form.step-terms')

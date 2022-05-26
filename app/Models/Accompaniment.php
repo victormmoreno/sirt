@@ -37,10 +37,12 @@ class Accompaniment extends Model
      */
     protected $withCount = ['articulations'];
 
+
+
     /**
      * The relation one to much
      *
-     * @return void
+     *
      */
     public function articulations(){
         return $this->hasMany(Articulation::class);
@@ -50,7 +52,7 @@ class Accompaniment extends Model
     /**
      * The inverse polymorfic relation much to much
      *
-     * @return void
+     *
      */
     public function projects()
     {
@@ -100,6 +102,12 @@ class Accompaniment extends Model
     {
         return $this->belongsTo(\App\User::class, 'created_by', 'id');
     }
+
+    public function file()
+    {
+        return $this->morphOne(ArchivoModel::class, 'model');
+    }
+
 
     /**
      * The query scope status

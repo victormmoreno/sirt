@@ -129,10 +129,6 @@ class User extends Authenticatable implements JWTSubject
         'fechanacimiento'      => 'date:Y-m-d',
     ];
 
-    /*===========================================
-    =            relaciones eloquent            =
-    ===========================================*/
-
     public function proyectos()
     {
         return $this->morphToMany(Proyecto::class, 'propietario')->withTimestamps();
@@ -153,8 +149,6 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsTo(Etnia::class, 'etnia_id', 'id');
     }
-
-    //relaciones muchos a muchos
 
     public function movimientos()
     {

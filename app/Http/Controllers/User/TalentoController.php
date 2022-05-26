@@ -49,8 +49,9 @@ class TalentoController extends Controller
                     $add = '<a onclick="filter_project.addInterlocutorTalentArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
                     return $add;
                 })
+
                 ->addColumn('add_talents_articulation', function ($data) {
-                    $add = '<a onclick="filter_project.addTalentArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+                    $add = '<a onclick="filter_articulations.addTalentToArticulation(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
                     return $add;
                 })
                 ->rawColumns(['add_proyecto', 'add_proyecto', 'add_propiedad', 'add_talents_articulation', 'add_intertocutor_talent_articulation'])->make(true);

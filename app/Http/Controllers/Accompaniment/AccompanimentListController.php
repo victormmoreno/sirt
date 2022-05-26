@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Articulation;
+namespace App\Http\Controllers\Accompaniment;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
