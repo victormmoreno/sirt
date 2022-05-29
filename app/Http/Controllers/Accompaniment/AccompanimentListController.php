@@ -6,13 +6,23 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Accompaniment;
 use App\Models\Entidad;
-use App\Models\Articulation;
 use App\User;
 use Illuminate\Support\Str;
 use App\Exports\Accompaniment\AccompanimentExport;
+use App\Repositories\Repository\Accompaniment\AccompanimentRepository;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class AccompanimentListController extends Controller
 {
+
+    private $accompanimentRepository;
+
+    public function __construct(AccompanimentRepository $accompanimentRepository)
+    {
+        $this->accompanimentRepository = $accompanimentRepository;
+        $this->middleware(['auth']);
+    }
     /**
      * method to show the list of accompaniments (index) with filters
      * @param Request $request
@@ -26,8 +36,6 @@ class AccompanimentListController extends Controller
 
     public function datatableFiltros(Request $request)
     {
-
-        // $this->authorize('datatable', ArticulacionPbt::class);
         $talent = null;
         $node = null;
         switch (\Session::get('login_role')) {
@@ -170,6 +178,69 @@ class AccompanimentListController extends Controller
         return (new AccompanimentExport($accompaniments))->download("Articulaciones PBT - " . config('app.name') . ".{$extension}");
     }
 
+    /**
+     * Método que elimina un archivo del servidor y su registro de la base de datos (RutaModel)
+    * @param int id Id del archivo del entrenamiento que se usará para eliminarlo del almacenamiento y de la base de datos
+    * @return Response
+    */
+    public function destroyFile($id)
+    {
+        $response = $this->accompanimentRepository->destroyFile($id);
 
+        if($response){
+            toast('El Archivo se ha eliminado con éxito!','success')->autoClose(2000)->position('top-end');
+            return back();
+        }
+        toast('El Archivo no se ha eliminado!','danger')->autoClose(2000)->position('top-end');
+        return back();
+    }
+
+    public function changeInterlocutor(Accompaniment $accompaniment)
+    {
+        return view('articulation.change-interlocutor', compact('accompaniment'));
+    }
+
+    /**
+     * Update los miembros de una etapa.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+
+    public function updateInterlocutor(Request $request, Accompaniment $accompaniment)
+    {
+        $validator = Validator::make($request->all(), [
+            'talent' => 'required'
+        ], [
+            'talent' => 'Debes seleccionar por lo menos un talento interlocutor'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'state'   => 'error_form',
+                'errors' => $validator->errors(),
+            ]);
+        } else {
+            $response = $this->accompanimentRepository->updateInterlocutor($request, $accompaniment);
+            if($response["isCompleted"]){
+                return response()->json([
+                    'data' => [
+                        'state'   => 'success',
+                        'url' => route('accompaniments.show', $response['data']->id),
+                        'status_code' => Response::HTTP_CREATED,
+                        'errors' => [],
+                    ],
+                ], Response::HTTP_CREATED);
+            }else{
+                return response()->json([
+                    'data' => [
+                        'state'   => 'danger',
+                        'errors' => [],
+                    ],
+                ]);
+            }
+        }
+
+    }
 
 }

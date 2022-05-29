@@ -14,7 +14,7 @@
                 {{__('Name Accompaniment')}}
             </th>
             <th>
-                Acompañamiento a
+                {{ __('Project') }}
             </th>
             <th>
                 {{__('Description')}}
@@ -32,19 +32,19 @@
                 {{__('End Date')}}
             </th>
             <th>
-                Fecha de registro
+                {{__('Created_at')}}
             </th>
             <th>
-                Talento interlocutor
+                {{__('Interlocutory talent')}}
             </th>
             <th>
-                Creado por
+                {{__('Created_by')}}
             </th>
             <th>
-                Cantidad de articulaciones
+                {{ __('Count Articulations') }}
             </th>
             <th>
-                Articulaciones
+                {{ __('Articulations') }}
             </th>
         </tr>
     </thead>
@@ -55,10 +55,10 @@
                 {{$accompaniment->present()->accompanimentNode()}}
             </td>
             <td>
-                {{$accompaniment->present()->accompanimentCode()}}
+                {{$accompaniment->present()->accompanimentableType()}}
             </td>
             <td>
-                {{$accompaniment->present()->accompanimentableType()}}
+                {{$accompaniment->present()->accompanimentCode()}}
             </td>
             <td>
                 {{$accompaniment->present()->accompanimentName()}}

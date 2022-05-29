@@ -29,13 +29,13 @@
             <div class="col s12 m12 l12">
                 <div class="card card-transparent p f-12">
                     <div class="card-content">
-                        <span class="card-title p f-12">{{$accom->present()->articulacionPbtCodeProyecto()}} - {{$articulacion->present()->articulacionPbtNameProyecto()}}</span>
-                        <div class="position-top-right p f-12 mail-date hide-on-med-and-down"> Fecha cierre: {{$articulacion->present()->articulacionPbtClosingDateProyecto()}}</div>
-                        <p>{{$articulacion->present()->articulacionPbtObjetivoProyecto()}}</p>
-                        <input type="hidden" id="proyect" name="proyect" value="{{$articulacion->present()->articulacionPbtIdProyecto()}}"/>
+                        <span class="card-title p f-12">{{isset($accompaniment) ? $accompaniment->present()->accompanimentables() : 'Aún no has asociado el proyecto'}}</span>
+                        <div class="position-top-right p f-12 mail-date hide-on-med-and-down"> Fecha cierre: {{$accompaniment->present()->accompanimentableEndDate()}}</div>
+                        <p>{{$accompaniment->present()->accompanimentableObjetive()}}</p>
+                        <input type="hidden" id="projects" name="projects" value="{{ old('projects', isset($accompaniment) ? $accompaniment->present()->accompanimentableId(): '') }}"/>
                     </div>
                     <div class="card-action">
-                    <a class="orange-text text-darken-1" target="_blank" href="{{route('proyecto.detalle', $articulacion->present()->articulacionPbtIdProyecto())}}">Ver más</a>
+                        <a class="orange-text text-darken-1" target="_blank" href="">Ver más</a>
                     </div>
                 </div>
             </div>

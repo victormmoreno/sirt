@@ -3,13 +3,11 @@
 namespace App\Repositories\Repository\Accompaniment;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use App\Models\Accompaniment;
-use App\Models\Sede;
-use App\Models\Proyecto;
-use App\Models\Fase;
+use App\User;
 use App\Models\Articulation;
+use App\Models\Fase;
 
 
 class ArticulationRepository
@@ -24,7 +22,6 @@ class ArticulationRepository
     {
         try {
             $accompaniment = $this->storeArticulation($request, $accompaniment);
-
             return  [
                 'data' => $accompaniment,
                 'message' => '',
@@ -55,12 +52,13 @@ class ArticulationRepository
             'email_entity' => $request->email,
             'summon_name' => $request->call_name,
             'objective' => $request->objective,
-            'phase_id' => Articulation::START_PHASE,
+            'phase_id' => Fase::where('nombre', Articulation::START_PHASE)->first()->id,
             'scope_id' => $request->scope_articulation,
             'created_by' => auth()->user()->id,
-            // 'accompaniment_id' => $accompaniment->id
         ]);
-
+        if($request->filled('talents')){
+            $articulation->users()->sync($request->talents);
+        }
         return $articulation;
     }
 

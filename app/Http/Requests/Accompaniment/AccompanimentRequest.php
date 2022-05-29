@@ -25,20 +25,31 @@ class AccompanimentRequest extends FormRequest
     public function rules()
     {
         return [
-            'accompaniment_type' => 'required|'. Rule::in(['pbt', 'empresa']),
-            'name_accompaniment' => 'required|min:1|max:100',
-            'description_accompaniment'  => 'max:3000',
-            'scope_accompaniment'  => 'required|min:1|max:3000',
-            'projects'  => Rule::requiredIf(request()->accompaniment_type == 'pbt'),
-            'talent'  => Rule::requiredIf(request()->accompaniment_type == 'pbt' || request()->accompaniment_type == 'empresa'),
-            'sedes'  => Rule::requiredIf(request()->accompaniment_type == 'empresa'),
+            'name' => 'required|min:1|max:100',
+            'description'  => 'max:3000',
+            'scope'  => 'required|min:1|max:3000',
+            'projects'  => 'required',
+            'talent'  => 'required',
             'confidency_format'  => 'required|file|max:50000|mimetypes:application/pdf|mimes:pdf',
         ];
     }
 
     public function messages()
     {
-        return $messages = [];
+        return [
+            'name.required'     => 'El nombre es obligatorio.',
+            'name.min'          => 'El nombre debe ser de al menos :min caracter.',
+            'name.max'          => 'El nombre no debe ser mayor a :max caracter(es)',
+            'description.max'   => 'La descripción no debe ser mayor a :max caracter(es)',
+            'scope.required'     => 'El alcance es obligatorio.',
+            'scope.min'          => 'El alcance debe ser de al menos :min caracter.',
+            'scope.max'          => 'El alcance no debe ser mayor a :max caracter(es)',
+            'projects.required'  => 'Selecciona por lo menos un proyecto',
+            'talent.required'  => 'Selecciona por lo menos un talento',
+            'confidency_format.required'     => 'El formato de confidencialidad es obligatorio.',
+            'confidency_format.min'          => 'El formato de confidencialidad debe ser de un archivo',
+            'confidency_format.max'          => 'El formato de confidencialidad no debe ser mayor a :max caracter(es)',
+        ];
     }
 
     /**
@@ -49,8 +60,6 @@ class AccompanimentRequest extends FormRequest
     public function attributes()
     {
         return [
-            'accompaniment_type' => 'tipo acompañamiento',
-            'sedes' => 'sede',
             'confidency_format' => 'formato de confidencialidad',
         ];
     }

@@ -59,15 +59,6 @@ class Accompaniment extends Model
         return $this->morphedByMany(Proyecto::class, 'accompanimentable');
     }
 
-    /**
-     * The inverse polymorfic relation much to much
-     *
-     * @return void
-     */
-    public function sedes(){
-        return $this->morphedByMany(Sede::class, 'accompanimentable');
-    }
-
     public function accompanimentable()
     {
         return $this->morphTo();

@@ -6,16 +6,16 @@
                 <h5><b>Ingresa la Información requerida</b></h5>
                 <div class="row">
                     <div class="input-field col m12 s12">
-                        <label for="name_accompaniment">Nombre</label>
-                        <input id="name_accompaniment" name="name_accompaniment" type="text">
+                        <label for="name">{{ __('Name Accompaniment') }}<span class="red-text">*</span></label>
+                        <input id="name" name="name" type="text"value="{{ old('name', isset($accompaniment->name) ? $accompaniment->name: '') }}">
                     </div>
                     <div class="input-field col m12 s12">
-                        <label for="description_accompaniment">Descripción (Opcional)</label>
-                        <textarea id="description_accompaniment" name="description_accompaniment" type="text" class="materialize-textarea"></textarea>
+                        <label for="description">{{ __('Description') }} (Opcional)</label>
+                        <textarea id="description" name="description" type="text" class="materialize-textarea">{{ old('description', isset($accompaniment->description) ? $accompaniment->description: '') }}</textarea>
                     </div>
                     <div class="input-field col m12 s12">
-                        <label for="scope_accompaniment">Alcance</label>
-                        <textarea id="scope_accompaniment" name="scope_accompaniment" type="text" class="materialize-textarea"></textarea>
+                        <label for="scope"> {{ __('Scope') }}<span class="red-text">*</span></label>
+                        <textarea id="scope" name="scope" type="text" class="materialize-textarea">{{ old('scope', isset($accompaniment->scope) ? $accompaniment->scope : '') }}</textarea>
                     </div>
                 </div>
             </div>

@@ -19,7 +19,7 @@ class Articulation extends Model
      *
      * @var array
      */
-    protected $guarded = ['id', 'phase_id'];
+    protected $guarded = ['id'];
 
     /**
      * The attributes that should be cast to native types.
@@ -88,7 +88,7 @@ class Articulation extends Model
     public function getProgressAttribute(): int
     {
         $progress = 0;
-        $this->phase->nombre == Self::START_PHASE ? $progress = round((100/4)*1, 1) :
+        isset($this->phase) && $this->phase->nombre == Self::START_PHASE ? $progress = round((100/4)*1, 1) :
         (
             $this->phase->nombre == Self::EXECUTION_PHASE ? $progress = round((100/4)*2, 1) :
             (

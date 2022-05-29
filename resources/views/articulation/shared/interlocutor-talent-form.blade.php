@@ -17,40 +17,31 @@
         </div>
     </div>
     <div class="row search-tabs-row search-tabs-container white lighten-4 result-talents container-error">
-        @if(isset($articulacion))
-            @foreach ($articulacion->talentos as $talento)
-                <div class="col s12 m12 l12">
-                    <div class="card bs-dark ">
-                        <div class="card-content ">
-
-                            <span class="card-title p-h-lg  p f-12"> {{$talento->user->present()->userDocumento()}} - {{$talento->user->present()->userFullName()}}</span>
-                            <input type="hidden" name="talentos[]" value="{{$talento->id}}"/>
-                            <div class="p-h-lg">
-                                <input  type="radio" @if($talento->pivot->talento_lider == 1) checked @endif @if(isset($articulacion) && !$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif class="with-gap" name="txttalento_interlocutor" id="radioInterlocutor{{$talento->id}}" value="{{$talento->id}}" />
-                                <label for ="radioInterlocutor{{$talento->id}}">Talento Interlocutor</label>
-                            </div>
-                            <div class="position-top-right p f-12 mail-date hide-on-med-and-down no-m-b">  Acceso al sistema: {{$talento->user->present()->userAcceso()}}</div>
-
-                            <p class="hide-on-med-and-down no-m-b"> Miembro desde {{$talento->user->present()->userCreatedAtFormat()}}</p>
-                        </div>
-                        <div class="card-action">
-                            <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs orange-text" href="{{route('usuario.usuarios.show',$talento->user->documento)}}"><i class="material-icons left"> link</i>Ver más</a>
-                            @if(isset($articulacion) && $articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio()))
-                            <a onclick="filter_project.deleteTalent({{$talento->user->id}});" class="waves-effect waves-red btn-flat m-b-xs red-text"><i class="material-icons left"> delete_sweep</i>Eliminar</a>
-                            @endif
-                        </div>
+    @if(isset($accompaniment->interlocutor))
+        <div class="col s12 m12 l12">
+            <div class="card card-transparent p f-12 m-t-lg">
+                <div class="card-content">
+                    <span class="card-title p f-12">{{$accompaniment->present()->accompanimentInterlocutorTalent()}}</span>
+                    <div class="input-field col m12 s12">
+                        <input type="hidden" name="talent" id="talent" value="{{$accompaniment->interlocutor->id}}"/>
                     </div>
+                    <div class="position-top-right p f-12 mail-date hide-on-med-and-down">  Acceso al sistema: {{$accompaniment->interlocutor->present()->userAcceso()}}</div>
+                    <p class="hide-on-med-and-down"> Miembro desde {{$accompaniment->interlocutor->present()->userCreatedAtFormat()}}</p>
                 </div>
-            @endforeach
-        @else
-            <div class="col s12 m12 l12">
-                <div class="card card-transparent p f-12 m-t-lg">
-                    <div class="card-content">
-                        <span class="card-title p-h-lg  p f-12">Aún no se han agregado talentos</span>
-                        <input type="hidden" name="talent" id="talent"/>
-                    </div>
+                <div class="card-action">
+                    <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs orange-text" href="{{route('usuario.usuarios.show',$accompaniment->interlocutor->documento)}}"><i class="material-icons left">link</i>Ver más</a>
                 </div>
             </div>
-        @endif
+        </div>
+    @else
+        <div class="col s12 m12 l12">
+            <div class="card card-transparent p f-12 m-t-lg">
+                <div class="card-content">
+                    <span class="card-title p-h-lg  p f-12">Aún no se han agregado talentos</span>
+                    <input type="hidden" name="talent" id="talent"/>
+                </div>
+            </div>
+        </div>
+    @endif
     </div>
 </div>

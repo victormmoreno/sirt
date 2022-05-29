@@ -790,6 +790,12 @@ Route::group(
         Route::get('/crear', 'Accompaniment\AccompanimentRegisterController@create')->name('accompaniments.create');
         Route::post('/', 'Accompaniment\AccompanimentRegisterController@store')->name('accompaniments.store');
         Route::get('/{id}', 'Accompaniment\AccompanimentListController@show')->name('accompaniments.show');
+        Route::delete('/file/{idFile}', 'Accompaniment\AccompanimentListController@destroyFile')->name('accompaniments.file.destroy')->middleware('role_session:Articulador');
+        Route::get('/{accompaniment}/editar', 'Accompaniment\AccompanimentRegisterController@edit')->name('accompaniments.edit');
+        Route::put('/{accompaniment}', 'Accompaniment\AccompanimentRegisterController@update')->name('accompaniments.update');
+        Route::get('/{accompaniment}/download', 'Accompaniment\AccompanimentRegisterController@downloadFile')->name('accompaniments.download');
+        Route::get('/{accompaniment}/cambiar-interlocutor', 'Accompaniment\AccompanimentListController@changeInterlocutor')->name('accompaniments.changeinterlocutor');
+        Route::put('/{accompaniment}/cambiar-interlocutor', 'Accompaniment\AccompanimentListController@updateInterlocutor')->name('accompaniments.updateinterlocutor');
         Route::get('/{id}/articulaciones/crear', 'Accompaniment\ArticulationRegisterController@create')->name('articulations.create');
         Route::post('/articulaciones/{id}', 'Accompaniment\ArticulationRegisterController@store')->name('articulations.store');
         Route::get('/articulaciones/{id}', 'Accompaniment\ArticulationListController@show')->name('articulations.show');

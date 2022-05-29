@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
 use App\Repositories\Repository\Accompaniment\AccompanimentRepository;
 
+
 class AccompanimentRegisterController extends Controller
 {
     private $accompanimentRepository;
@@ -26,7 +27,6 @@ class AccompanimentRegisterController extends Controller
      */
     public function create()
     {
-
         return view('articulation.create');
     }
 
@@ -69,4 +69,62 @@ class AccompanimentRegisterController extends Controller
             }
         }
     }
+
+    public function edit(\App\Models\Accompaniment $accompaniment)
+    {
+        return view('articulation.edit', compact('accompaniment'));
+    }
+
+    /**
+     * Update the given user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, \App\Models\Accompaniment $accompaniment)
+    {
+        $req = new AccompanimentRequest;
+        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+        if ($validator->fails()) {
+            return response()->json([
+                'data' => [
+                    'state'   => 'danger',
+                    'errors' => $validator->errors(),
+                ]
+            ]);
+        } else {
+
+            $response = $this->accompanimentRepository->update($request, $accompaniment);
+            if($response["isCompleted"]){
+                return response()->json([
+                    'data' => [
+                        'state'   => 'success',
+                        'url' => route('accompaniments.show', $response['data']->id),
+                        'status_code' => Response::HTTP_CREATED,
+                        'errors' => [],
+                    ],
+                ], Response::HTTP_CREATED);
+            }else{
+                return response()->json([
+                    'data' => [
+                        'state'   => 'danger',
+                        'errors' => [],
+                    ],
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Update file
+     * @return \Illuminate\Http\Response
+     */
+    public function downloadFile(\App\Models\Accompaniment $accompaniment)
+    {
+
+        return $this->accompanimentRepository->downloadFile($accompaniment);
+
+    }
+
 }

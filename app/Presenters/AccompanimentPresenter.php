@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use App\Models\Accompaniment;
+use Illuminate\Support\Facades\Storage;
 
 class AccompanimentPresenter extends Presenter
 {
@@ -94,17 +95,70 @@ class AccompanimentPresenter extends Presenter
                 return "No registra";
             })->implode(',');
         }
-        else if(
+    }
+
+
+
+    public function accompanimentableLink()
+    {
+        if( $this->accompaniment->projects->count() > 0 &&
             $this->accompaniment->whereHasMorph(
                 'accompanimentable',
-                [ \App\Models\Sede::class]
-            ) && $this->accompaniment->sedes->count() > 0
+                [\App\Models\Proyecto::class]
+            )
         ){
-            return $this->accompaniment->sedes->map(function ($item) {
+            return $this->accompaniment->projects->map(function ($item) {
                 if(isset($item)){
-                    return "{$item->nombre_sede} ({$item->empresa->nombre})";
+                    return '<a class="orange-text text-darken-1" target="_blank"  href="'.route('proyecto.detalle', $this->accompanimentableId()).'">'.$this->accompanimentables().'</a>';
                 }
-                return "No registra";
+            })->implode(',');
+        }
+    }
+
+    public function accompanimentableId()
+    {
+        if( $this->accompaniment->projects->count() > 0 &&
+            $this->accompaniment->whereHasMorph(
+                'accompanimentable',
+                [\App\Models\Proyecto::class]
+            )
+        ){
+            return $this->accompaniment->projects->map(function ($item) {
+                if(isset($item)){
+                    return $item->id;
+                }
+            })->implode(',');
+        }
+    }
+
+    public function accompanimentableObjetive()
+    {
+        if( $this->accompaniment->projects->count() > 0 &&
+            $this->accompaniment->whereHasMorph(
+                'accompanimentable',
+                [\App\Models\Proyecto::class]
+            )
+        ){
+            return $this->accompaniment->projects->map(function ($item) {
+                if(isset($item)){
+                    return $item->articulacion_proyecto->actividad->objetivo_general;
+                }
+            })->implode(',');
+        }
+    }
+
+    public function accompanimentableEndDate()
+    {
+        if( $this->accompaniment->projects->count() > 0 &&
+            $this->accompaniment->whereHasMorph(
+                'accompanimentable',
+                [\App\Models\Proyecto::class]
+            )
+        ){
+            return $this->accompaniment->projects->map(function ($item) {
+                if(isset($item)){
+                    return optional($item->articulacion_proyecto->actividad->fecha_cierre)->isoFormat('DD/MM/YYYY');
+                }
             })->implode(',');
         }
     }
@@ -119,13 +173,8 @@ class AccompanimentPresenter extends Presenter
         ){
             return "Proyecto";
         }
-        else if(
-            $this->accompaniment->whereHasMorph(
-                'accompanimentable',
-                [ \App\Models\Sede::class]
-            ) && $this->accompaniment->sedes->count() > 0
-        ){
-            return "Sede";
+        else{
+            return "No registra";
         }
     }
 
@@ -136,6 +185,28 @@ class AccompanimentPresenter extends Presenter
                 return "{$item->code}";
             }
         })->implode(', ');
+    }
 
+    public function accompanimentNameConfidentialityFormat()
+    {
+        // return $this->accompaniment->file;
+        if(isset($this->accompaniment->file)){
+            return '<li class="collection-item avatar">
+                    <i class="material-icons circle">insert_drive_file</i>
+                    <span class="title">'.__('Confidentiality Format').'</span>
+                    <p>'.basename( url($this->accompaniment->file->ruta) ).'<br>
+                        <a class="orange-text" target="_blank" href='.route('accompaniments.download', $this->accompaniment).'>Descargar</a>
+                    </p>
+                    <form method="POST" action="'.route('accompaniments.file.destroy', $this->accompaniment->file).'">
+                        '.csrf_field().'
+                        '.method_field('DELETE').'
+                        <button class="secondary-content red-text">
+                            <i class="material-icons">delete_forever</i>
+                        </button>
+                    </form>
+                </li>';
+        }
+
+        // return $this->accompaniment->file ? basename( url($this->accompaniment->file->ruta) ) : '';
     }
 }

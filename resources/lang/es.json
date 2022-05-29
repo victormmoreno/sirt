@@ -50,6 +50,7 @@
     "register new mail": "Registrar nuevo correo",
     "Accompaniments" : "Etapa de articulación",
     "New Accompaniment" : "Nueva etapa de articulación",
+    "Edit Accompaniment" : "Editar etapa de articulación",
     "New Articulation" : "Nueva Articulación",
     "Process" : "Proceso",
     "Node" : "Nodo",
@@ -62,8 +63,8 @@
     "Progress": "Progreso",
     "Status": "Estado",
     "Scope": "Alcance",
-    "Open": "Abierto",
-    "Close": "Cerrado",
+    "Open": "Abierta",
+    "Close": "Cerrada",
     "Description": "Descripción",
     "Adviser": "Asesor",
     "Start Date": "Fecha inicio",
@@ -74,5 +75,7 @@
     "Filter": "Filtrar",
     "Home" : "Inicio",
     "Details" : "Detalles",
-    "Interlocutory talent" : "Talento Interlocutor"
+    "Interlocutory talent" : "Talento Interlocutor",
+    "Project" : "Proyecto",
+    "Confidentiality Format" : "Formato de confidencialidad"
 }

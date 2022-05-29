@@ -55,7 +55,6 @@ class ArticulationRegisterController extends Controller
         } else {
 
             $response = $this->articulationRespository->store($request, $accompaniment);
-
             if($response["isCompleted"]){
                 return response()->json([
                     'data' => [

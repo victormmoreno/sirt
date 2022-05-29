@@ -149,7 +149,7 @@
                                         <div class="card-content ">
 
                                             <span class="card-title p-h-lg  p f-12"> {{$talento->user->present()->userDocumento()}} - {{$talento->user->present()->userFullName()}}</span>
-                                            <input type="hidden" name="talentos[]" value="{{$talento->id}}"/>
+                                            <input type="hidden" name="talents[]" value="{{$talento->id}}"/>
                                             <div class="p-h-lg">
                                                 <input  type="radio" @if($talento->pivot->talento_lider == 1) checked @endif  class="with-gap" name="txttalento_interlocutor" id="radioInterlocutor{{$talento->id}}" value="{{$talento->id}}" />
                                                 <label for ="radioInterlocutor{{$talento->id}}">Talento Interlocutor</label>
