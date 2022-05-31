@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\AccompanimentPresenter;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Session;
+
 
 class Accompaniment extends Model
 {
@@ -74,6 +77,12 @@ class Accompaniment extends Model
         return $this->belongsTo(Nodo::class, 'node_id', 'id');
     }
 
+    public function notifications()
+    {
+        return $this->morphMany(ControlNotificaciones::class, 'notificable');
+    }
+
+
     /**
      * Define an inverse one to many relationship between accompanient and node
      *
@@ -81,7 +90,7 @@ class Accompaniment extends Model
      */
     public function interlocutor()
     {
-        return $this->belongsTo(\App\User::class, 'interlocutor_talent_id', 'id');
+        return $this->belongsTo(\App\User::class, 'interlocutor_talent_id', 'id')->withTrashed();
     }
 
     /**
@@ -91,13 +100,19 @@ class Accompaniment extends Model
      */
     public function createdBy()
     {
-        return $this->belongsTo(\App\User::class, 'created_by', 'id');
+        return $this->belongsTo(\App\User::class, 'created_by', 'id')->withTrashed();
     }
 
     public function file()
     {
         return $this->morphOne(ArchivoModel::class, 'model');
     }
+
+    public function traceability()
+    {
+        return $this->morphMany(HistorialEntidad::class, 'model');
+    }
+
 
 
     /**
@@ -165,4 +180,37 @@ class Accompaniment extends Model
     {
         return new AccompanimentPresenter($this);
     }
+
+    /**
+     * Registra el control de una notificación
+     *
+     * @param int $receptor id del receptor de la notificacion
+     * @param string $rol_receptor Nombre del rol que espera la notificación
+     * @return ControlNotificacion
+     */
+    public function registerNotify($receptor, $rol_receptor, $fase = null)
+    {
+        return $this->notifications()->create([
+            'fase_id' => null,
+            'remitente_id' => auth()->user()->id,
+            'rol_remitente_id' => Role::where('name', Session::get('login_role'))->first()->id,
+            'receptor_id' => $receptor,
+            'rol_receptor_id' => Role::where('name', $rol_receptor)->first()->id,
+            'fecha_envio' => Carbon::now(),
+            'fecha_aceptacion' => null
+        ]);
+    }
+
+    public function createTraceability($movement, $comment, $description)
+    {
+        return $this->traceability()->create([
+            'movimiento_id' => Movimiento::where('movimiento', $movement)->first()->id,
+            'user_id' => auth()->user()->id,
+            'role_id' =>  Role::where('name', Session::get('login_role'))->first()->id,
+            'comentarios' => $comment,
+            'descripcion' => $description
+        ]);
+    }
+
+
 }

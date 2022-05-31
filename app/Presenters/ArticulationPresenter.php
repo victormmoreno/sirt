@@ -30,7 +30,12 @@ class ArticulationPresenter extends Presenter
 
     public function articulationScope()
     {
-        return isset($this->articulation->scope) ? $this->articulation->scope : 'No registra';
+        return isset($this->articulation->scope) ? $this->articulation->scope->nombre : 'No registra';
+    }
+
+    public function articulationObjetive()
+    {
+        return isset($this->articulation->objetive) ? $this->articulation->objetive : 'No registra';
     }
 
 
@@ -49,24 +54,24 @@ class ArticulationPresenter extends Presenter
         return optional($this->articulation->expected_end_date)->isoFormat('DD/MM/YYYY');
     }
 
-    public function articulationNode()
+    public function articulationEntity()
     {
-        return $this->articulation->has('node.entidad') ? $this->articulation->node->entidad->nombre : 'No Registra';
+        return isset($this->articulation->entity) ? $this->articulation->entity : 'No registra';
     }
 
-    public function articulationInterlocutorTalent()
+    public function articulationContactName()
     {
-        return $this->articulation->has('interlocutor') ? $this->articulation->interlocutor->present()->userFullName() : 'No Registra';
+        return isset($this->articulation->contact_name) ? $this->articulation->contact_name : 'No registra';
     }
 
-    public function articulationConfidentialityFormat()
+    public function articulationEmailEntity()
     {
-        return $this->articulation->confidentiality_format ? : 'No Registra';
+        return isset($this->articulation->email_entity) ? $this->articulation->email_entity : 'No registra';
     }
 
-    public function articulationTermsVerifiedAt()
+    public function articulationSummonName()
     {
-        return optional($this->articulation->terms_verified_at)->isoFormat('DD/MM/YYYY');
+        return isset($this->articulation->summon_name) ? $this->articulation->summon_name : 'No registra';
     }
 
     public function articulationPhase()

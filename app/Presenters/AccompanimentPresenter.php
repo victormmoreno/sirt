@@ -3,7 +3,6 @@
 namespace App\Presenters;
 
 use App\Models\Accompaniment;
-use Illuminate\Support\Facades\Storage;
 
 class AccompanimentPresenter extends Presenter
 {
@@ -191,13 +190,13 @@ class AccompanimentPresenter extends Presenter
     {
         // return $this->accompaniment->file;
         if(isset($this->accompaniment->file)){
-            return '<li class="collection-item avatar">
+            if(auth()->user()->can('update', $this->accompaniment)){
+                return '<li class="collection-item avatar">
                     <i class="material-icons circle">insert_drive_file</i>
                     <span class="title">'.__('Confidentiality Format').'</span>
                     <p>'.basename( url($this->accompaniment->file->ruta) ).'<br>
                         <a class="orange-text" target="_blank" href='.route('accompaniments.download', $this->accompaniment).'>Descargar</a>
-                    </p>
-                    <form method="POST" action="'.route('accompaniments.file.destroy', $this->accompaniment->file).'">
+                    </p><form method="POST" action="'.route('accompaniments.file.destroy', $this->accompaniment->file).'">
                         '.csrf_field().'
                         '.method_field('DELETE').'
                         <button class="secondary-content red-text">
@@ -205,6 +204,16 @@ class AccompanimentPresenter extends Presenter
                         </button>
                     </form>
                 </li>';
+            }else{
+                return '<li class="collection-item avatar">
+                    <i class="material-icons circle">insert_drive_file</i>
+                    <span class="title">'.__('Confidentiality Format').'</span>
+                    <p>'.basename( url($this->accompaniment->file->ruta) ).'<br>
+                        <a class="orange-text" target="_blank" href='.route('accompaniments.download', $this->accompaniment).'>Descargar</a>
+                    </p>
+                </li>';
+            }
+
         }
 
         // return $this->accompaniment->file ? basename( url($this->accompaniment->file->ruta) ) : '';

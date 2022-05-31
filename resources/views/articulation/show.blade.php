@@ -32,27 +32,9 @@
                                     </ul>
                                 </div>
                                 <div class="mailbox-view no-s">
-                                    <div class="mailbox-view-header">
-                                        <div class="left">
-                                            <div class="left">
-                                                <span class="mailbox-title">{{$accompaniment->code}} - {{$accompaniment->name}}
-                                                <a href="{{route('accompaniments.edit', $accompaniment)}}" class="orange-text text-darken-2 pointer tooltipped" data-position="right" data-tooltip="editar {{__('Accompaniments')}}"><i class="tiny material-icons">edit</i></a></span>
-                                                <span class="mailbox-title">{{__('Node')}} {{$accompaniment->present()->accompanimentNode()}}</span>
-                                                <span class="mailbox-author">{{$accompaniment->present()->accompanimentInterlocutorTalent()}} ({{__('Interlocutory talent')}}) <a href="{{ route('accompaniments.changeinterlocutor', $accompaniment) }}" class="orange-text text-darken-2 pointer tooltipped" data-position="right" data-tooltip="cambiar {{__('Interlocutory talent')}}"><i class="tiny material-icons">edit</i></a></span>
-                                            </div>
-                                        </div>
-                                        <div class="right mailbox-buttons">
-                                            <a href="{{route('articulations.create', $accompaniment->id )}}" class="waves-effect waves-orange btn orange m-t-xs">{{__('New Articulation')}}</a>
-                                            @if((session()->has('login_role') && session()->get('login_role') === App\User::IsDinamizador()) && !$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsSuspendido()))
-                                                <a href="" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar articulador</a>
-                                            @endif
-                                            @if((session()->has('login_role') && session()->get('login_role') === App\User::IsArticulador()))
-                                                <a href="" class="waves-effect waves-grey btn-flat m-t-xs">Descargar</a>
-                                                <a href="" class="waves-effect waves-orange btn-flat m-t-xs">Cerrar</a>
-                                            @endif
-                                            <a class="waves-effect waves-red btn-flat m-t-xs">Eliminar</a>
-                                        </div>
-                                    </div>
+
+                                    @include('articulation.options.options-accompaniment')
+
                                     <div class="divider mailbox-divider"></div>
                                     <div class="mailbox-text">
                                         <div class="row">
@@ -163,10 +145,13 @@
                                                                 </ul>
                                                             </div>
                                                             <ul id="dropdown{{$articulation->id}}" class="dropdown-content">
+                                                                <li><a href="{{route('articulations.show', $articulation->id)}}">Ver más</a></li>
                                                                 <li><a href="{{route('articulations.show', $articulation->id)}}">Editar</a></li>
                                                                 <li><a href="#!" class="red-text">Elimnar</a></li>
                                                             </ul>
-                                                            <span class="card-title">{{$articulation->present()->articulationCode()}} - {{$articulation->present()->articulationName()}}</span>
+                                                            <span class="card-title">
+                                                                <a href="{{route('articulations.show', $articulation)}}" class="orange-text">{{$articulation->present()->articulationCode()}} - {{$articulation->present()->articulationName()}}</a>
+                                                            </span>
                                                             <div class="server-load row">
                                                                 <div class="server-stat col s4">
                                                                     <p class="">{{$articulation->users_count}}</p>
@@ -199,7 +184,9 @@
                                             <div class="center-align">
                                                 <p><i class=" large material-icons orange-text text-darken-2">portable_wifi_off</i></p>
                                                 <p><span class=" flow-text">Aún no registras {{ __('Articulations') }}</span></p>
+                                                @can('update', $accompaniment)
                                                 <p><a href="{{route('articulations.create', $accompaniment->id )}}" class="waves-effect waves-orange btn orange m-t-xs">{{ __('New Articulation') }}</a></p>
+                                                @endcan
                                             </div>
                                             @endforelse
                                         </div>

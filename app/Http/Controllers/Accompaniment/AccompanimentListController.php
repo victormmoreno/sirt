@@ -132,9 +132,11 @@ class AccompanimentListController extends Controller
             ])
         ->findOrfail($id);
 
+        $ult_notificacion = $accompaniment->notifications()->whereNull('fecha_aceptacion')->get()->last();
+
         $articulations = $accompaniment->articulations()->latest('id')->paginate(2);
 
-        return view('articulation.show', compact('accompaniment', 'articulations'));
+        return view('articulation.show', compact('accompaniment', 'articulations', 'ult_notificacion'));
     }
 
     public function export(Request $request, $extension = 'xlsx')

@@ -787,8 +787,8 @@ Route::group(
     function () {
         Route::get('/', 'Accompaniment\AccompanimentListController@index')->name('accompaniments');
         Route::get('/datatable_filtros', 'Accompaniment\AccompanimentListController@datatableFiltros')->name('accompaniments.datatable.filtros');
-        Route::get('/crear', 'Accompaniment\AccompanimentRegisterController@create')->name('accompaniments.create');
-        Route::post('/', 'Accompaniment\AccompanimentRegisterController@store')->name('accompaniments.store');
+        Route::get('/crear', 'Accompaniment\AccompanimentRegisterController@create')->name('accompaniments.create')->middleware('role_session:Articulador');
+        Route::post('/', 'Accompaniment\AccompanimentRegisterController@store')->name('accompaniments.store')->middleware('role_session:Articulador');
         Route::get('/{id}', 'Accompaniment\AccompanimentListController@show')->name('accompaniments.show');
         Route::delete('/file/{idFile}', 'Accompaniment\AccompanimentListController@destroyFile')->name('accompaniments.file.destroy')->middleware('role_session:Articulador');
         Route::get('/{accompaniment}/editar', 'Accompaniment\AccompanimentRegisterController@edit')->name('accompaniments.edit');
@@ -796,9 +796,11 @@ Route::group(
         Route::get('/{accompaniment}/download', 'Accompaniment\AccompanimentRegisterController@downloadFile')->name('accompaniments.download');
         Route::get('/{accompaniment}/cambiar-interlocutor', 'Accompaniment\AccompanimentListController@changeInterlocutor')->name('accompaniments.changeinterlocutor');
         Route::put('/{accompaniment}/cambiar-interlocutor', 'Accompaniment\AccompanimentListController@updateInterlocutor')->name('accompaniments.updateinterlocutor');
-        Route::get('/{id}/articulaciones/crear', 'Accompaniment\ArticulationRegisterController@create')->name('articulations.create');
+        Route::get('/{id}/articulaciones/crear', 'Accompaniment\ArticulationRegisterController@create')->name('articulations.create')->middleware('role_session:Articulador');
         Route::post('/articulaciones/{id}', 'Accompaniment\ArticulationRegisterController@store')->name('articulations.store');
         Route::get('/articulaciones/{id}', 'Accompaniment\ArticulationListController@show')->name('articulations.show');
-        Route::get('/export', 'Accompaniment\AccompanimentListController@export')->name('accompaniments.export')->middleware('role_session:Administrador|Articulador|Dinamizador');
+        Route::get('/export', 'Accompaniment\AccompanimentListController@export')->name('accompaniments.export')->middleware('role_session:Administrador|Articulador|Dinamizador|Talento');
+
+        Route::get('/solicitar-aprobacion/{accompaniment}', 'Accompaniment\AccompanimentRegisterController@requestApproval')->name('accompaniments.requestapproval')->middleware('role_session:Articulador');
     }
 );

@@ -6,21 +6,20 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 
+
 class ProyectoApproveWasRequested
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $proyecto;
-    public $talento_lider;
-    public $movimiento;
+    public $notificacion;
+    public $destinatarios;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($proyecto, $talento_lider, $movimiento)
+    public function __construct($notificacion, $destinatarios)
     {
-        $this->proyecto = $proyecto;
-        $this->talento_lider = $talento_lider;
-        $this->movimiento = $movimiento;
+        $this->notificacion = $notificacion;
+        $this->destinatarios = $destinatarios;
     }
 }

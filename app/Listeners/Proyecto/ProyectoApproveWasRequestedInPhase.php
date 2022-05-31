@@ -26,6 +26,7 @@ class ProyectoApproveWasRequestedInPhase
      */
     public function handle(ProyectoApproveWasRequested $event)
     {
-        Mail::to([$event->talento_lider->email, auth()->user()->email])->send(new SendEmailAprobarProyecto($event->proyecto, $event->movimiento));
+        Mail::to($event->destinatarios)->send(new SendEmailAprobarProyecto($event->notificacion));
     }
 }
+

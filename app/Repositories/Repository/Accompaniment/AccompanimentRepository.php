@@ -6,10 +6,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use App\Models\Accompaniment;
-use App\Models\Sede;
 use App\Models\Proyecto;
 use App\Models\Fase;
 use App\Models\ArchivoModel;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\DB;
+use App\Repositories\Repository\UserRepository\DinamizadorRepository;
+use Illuminate\Support\Facades\Session;
+use App\User;
+use App\Models\Movimiento;
+use App\Models\Role;
+use App\Notifications\Articulation\AccompanyingApprovalNotification;
+use App\Events\Articulation\AccompanyingApprovalRequest;
 
 
 class AccompanimentRepository
@@ -252,6 +260,103 @@ class AccompanimentRepository
             ];
         }
 
+    }
+
+    /**
+     * Notifica al dinamizador para que apruebe el proyecto en la fase de inicio
+     *
+     * @param Model $model Model
+     * @return array
+     * @author dum
+     */
+    public function notifyPhaseApproval(\Illuminate\Database\Eloquent\Model $model)
+    {
+        DB::beginTransaction();
+        try {
+            $notificacion_fase_actual = $model->notifications()->whereNull('fecha_aceptacion')->get()->last();
+            // $msg = 'No se ha podido enviar la solicitud de aprobación, inténtalo nuevamente';
+            $conf_envios = false;
+            if ($model->status == Accompaniment::STATUS_CLOSE) {
+                $conf_envios = $this->configurationNotificationDynamizer($model);
+                $msg = 'Se le ha enviado una notificación al dinamizador para que apruebe el cierre!';
+                $notificacion = $model->registerNotify($conf_envios['receptor'], $conf_envios['receptor_role'], null);
+            } else {
+                if ($notificacion_fase_actual == null) {
+                    $conf_envios = $this->configurationNotificationTalent($model);
+                    $msg = "Se le ha enviado una notificación al talento interlocutor para que apruebe la ". __('Accompaniments');
+                } else {
+                    if ($notificacion_fase_actual->rol_receptor->name == User::IsTalento()) {
+                        $conf_envios = $this->configurationNotificationTalent($model);
+                        $msg = 'Se le ha enviado una notificación al talento interlocutor para que apruebe la '. __('Accompaniments');
+                    } else {
+                        $conf_envios = $this->configurationNotificationDynamizer($model);
+                        $msg = "Se le ha enviado una notificación al dinamizador para que apruebe la" . __('Accompaniments');
+                    }
+                }
+                // Registra el control de la notificación
+                $notificacion = $model->registerNotify($conf_envios['receptor'], $conf_envios['receptor_role']);
+            }
+
+            if ($conf_envios != false) {
+                $msg = "Enviar notificacion " . __('Accompaniments');
+
+                Notification::send($notificacion->receptor, new AccompanyingApprovalNotification($notificacion));
+                // Enviar email
+                event(new AccompanyingApprovalRequest($notificacion, $conf_envios['destinatarios']));
+                // Registrar el historial
+                $model->createTraceability($conf_envios['tipo_movimiento'],$conf_envios['tipo_movimiento'], null);
+            }
+
+            DB::commit();
+            return [
+                'notificacion' => true,
+                'msg' => $msg,
+                'notify' => $notificacion
+            ];
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return [
+                'notificacion' => false,
+                'msg' => 'Ha ocurrido un error ' . $th->getMessage()
+            ];
+        }
+    }
+
+    public function configurationNotificationDynamizer($model)
+    {
+        $dinamizadorRepository = new DinamizadorRepository;
+        if (Session::get('login_role') != User::IsTalento())
+            $recipients[] = auth()->user()->email;
+            $dinamizador = $dinamizadorRepository->getAllDinamizadoresPorNodo($model->node_id)->get()->last();
+            $recipients[] = $dinamizador->email;
+        return [
+            'receptor' => $dinamizador->id,
+            'receptor_role' => User::IsDinamizador(),
+            'tipo_movimiento' => Movimiento::IsSolicitarDinamizador(),
+            'destinatarios' => $recipients
+        ];
+    }
+
+    /**
+     * Genera la información el talento al que se le enviarán las notificaciones de solicitud de aprobación de fase
+     *
+     * @param Proyecto $model
+     * @return array
+     * @author dum
+     */
+    public function configurationNotificationTalent($model)
+    {
+        $interlocutor = $model->interlocutor;
+        $recipients[] = $interlocutor->email;
+        if (Session::get('login_role') != User::IsTalento())
+            $recipients[] = auth()->user()->email;
+
+        return [
+            'receptor' => $interlocutor->id,
+            'receptor_role' => User::IsTalento(),
+            'tipo_movimiento' => Movimiento::IsSolicitarTalento(),
+            'destinatarios' => $recipients
+        ];
     }
 
 }

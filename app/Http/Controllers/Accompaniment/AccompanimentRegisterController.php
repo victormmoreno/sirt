@@ -8,6 +8,9 @@ use App\Http\Requests\Accompaniment\AccompanimentRequest;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
 use App\Repositories\Repository\Accompaniment\AccompanimentRepository;
+use Illuminate\Database\Eloquent\Model;
+use RealRashid\SweetAlert\Facades\Alert;
+use App\Models\Accompaniment;
 
 
 class AccompanimentRegisterController extends Controller
@@ -70,7 +73,7 @@ class AccompanimentRegisterController extends Controller
         }
     }
 
-    public function edit(\App\Models\Accompaniment $accompaniment)
+    public function edit(Accompaniment $accompaniment)
     {
         return view('articulation.edit', compact('accompaniment'));
     }
@@ -82,7 +85,7 @@ class AccompanimentRegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, \App\Models\Accompaniment $accompaniment)
+    public function update(Request $request, Accompaniment $accompaniment)
     {
         $req = new AccompanimentRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
@@ -120,11 +123,48 @@ class AccompanimentRegisterController extends Controller
      * Update file
      * @return \Illuminate\Http\Response
      */
-    public function downloadFile(\App\Models\Accompaniment $accompaniment)
+    public function downloadFile(Accompaniment $accompaniment)
     {
-
         return $this->accompanimentRepository->downloadFile($accompaniment);
-
     }
+
+    /**
+     * request phase approval
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function requestApproval(Accompaniment $accompaniment)
+    {
+        if ($accompaniment->status == Accompaniment::STATUS_CLOSE) {
+            Alert::error('Acceso no permitido!', 'No puedes enviar solicitudes de aprobación!')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+        $notification = $this->accompanimentRepository->notifyPhaseApproval($accompaniment);
+        if ($notification['notificacion']) {
+            Alert::success('Notificación Exitosa!', $notification['msg'])->showConfirmButton('Ok', '#3085d6');
+        } else {
+            Alert::error('Notificación Errónea!', $notification['msg'])->showConfirmButton('Ok', '#3085d6');
+        }
+        return back();
+    }
+
+    /**
+     * Método que valida que un experto no pueda hacer operaciones sobre un proyecto que no está asesorando
+     *
+     * @param Model $model
+     * @return bool
+     * @author dum
+     */
+    private function validateAsesor(Model $model) {
+        if ($model->asesor->user->id != auth()->user()->id) {
+            Alert::error('Acceso no permitido!', 'No puedes ver/gestionar  que no estás asesorando!')->showConfirmButton('Ok', '#3085d6');
+            return false;
+        }
+        return true;
+    }
+
+
 
 }

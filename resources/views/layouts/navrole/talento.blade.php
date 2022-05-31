@@ -13,6 +13,11 @@
         <i class="material-icons {{ setActiveRouteActiveIcon('proyecto') }}">library_books</i>PBT
     </a>
 </li>
+<li class="no-padding {{setActiveRoute('acompanamientos')}}">
+    <a href="{{route('accompaniments')}}" class="{{setActiveRouteActivePage('acompanamientos')}}" rel="canonical" title="{{__('Accompaniments')}}">
+        <i class="material-icons {{setActiveRouteActiveIcon('acompanamientos')}}">autorenew</i>{{__('Accompaniments')}}
+    </a>
+</li>
 <li class="no-padding {{setActiveRoute('usoinfraestructura')}}">
     <a class="waves-effect waves-grey {{setActiveRouteActivePage('usoinfraestructura')}}" href="{{route('usoinfraestructura.index')}}" rel="canonical" title="Usos de infraestructura">
         <i class="material-icons {{setActiveRouteActiveIcon('usoinfraestructura')}}">domain</i>Usos de infraestructura
