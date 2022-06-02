@@ -9,7 +9,7 @@
         @foreach ($nodos as $nodo)
         <div class="col s6 m3 l3">
             <p class="p-v-xs">
-                <input type="checkbox" id="txtnodo_metas_id{{$nodo->id}}" name="txtnodo_metas_id[]" class="metas_down" value="{{$nodo->id}}">
+                <input type="checkbox" id="txtnodo_metas_id{{$nodo->id}}" name="txtnodo_metas_id[]" class="metas_down" value="{{$nodo->id}}" onclick="verificarChecks(this, 'txtall')">
                 <label for="txtnodo_metas_id{{$nodo->id}}">{{$nodo->nodos}}.</label>
             </p>
         </div>

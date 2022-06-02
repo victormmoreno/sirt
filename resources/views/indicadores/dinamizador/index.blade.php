@@ -117,6 +117,12 @@
                         @include('indicadores.componentes.metas.metas')
                       </div>
                     </li>
+                    <li>
+                      <div class="collapsible-header"><i class="material-icons">lightbulb</i>Ideas de tecnoparque</div>
+                      <div class="collapsible-body">
+                        @include('indicadores.componentes.ideas.download')
+                      </div>
+                    </li>
                   </ul>
                 </div>
               </div>

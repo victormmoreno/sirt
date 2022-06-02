@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Excel;
 
 use App\Exports\Indicadores\Indicadores2020Export;
 use App\Exports\Metas\MetasExport;
+use App\Exports\Idea\IdeasIndicadorExport;
 use App\Repositories\Repository\{IdeaRepository, ProyectoRepository};
 use Repositories\Repository\NodoRepository;
 use Illuminate\Support\Facades\Session;
@@ -219,8 +220,11 @@ class IndicadorController extends Controller
 
     public function downloadIdeas(Request $request)
     {
-        $ideas = $this->ideasRepository
-        return Excel::download(new MetasExport($metas), 'Metas.xlsx');
+        $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->whereHas('estadoIdea', function ($query) use ($request) {
+            $query->where('nombre', $request->txtestado_idea_download);
+        })->whereIn('nodo_id', $request->txtnodo_ideas_download)
+        ->orderBy('nodo_id')->get();
+        return Excel::download(new IdeasIndicadorExport($ideas), 'Ideas.xlsx');
     }
 
     public function downloadMetas(Request $request)

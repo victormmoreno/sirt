@@ -129,11 +129,10 @@ mix.scripts([
     'resources/app/graficos/index.js',
     'resources/app/seguimiento/index.js',
     'resources/app/costos/index.js',
-
     'resources/app/tipoarticulaciones/index.js',
     'resources/app/tipoarticulaciones/form.js',
-
-    'resources/app/publicacion/index.js',
+    'resources/app/tipoarticulaciones/form.js',
+    'resources/app/indicadores/index.js',
     'resources/app/publicacion/form.js',
     'resources/app/support/form.js',
     'resources/app/support/index.js'
