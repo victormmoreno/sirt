@@ -58,8 +58,8 @@ class SeguimientoController extends Controller
    * Agreupa por fases la cantidad de proyectos
    *
    * @param Builder $Pabiertos Query de los proyectos por fases (Inicio, Planeación, Ejecución, Cierre)
-   * @return type
-   * @throws conditon
+   * @return array
+   * @author dum
    **/
   public function agruparProyectosAbiertos($Pabiertos)
   {

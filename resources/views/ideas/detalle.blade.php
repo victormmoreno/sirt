@@ -500,7 +500,7 @@
                                                     </div>
                                                 </li>
                                             </ul>
-                                            <ul class="collection with-header">
+                                            {{-- <ul class="collection with-header">
                                                 <li class="collection-header"><h5>Talleres de fortalecimiento a los que ha asistido</h5></li>
                                                 <li class="collection-item">
                                                     <div class="row">
@@ -530,7 +530,7 @@
                                                         </div>
                                                     </div>
                                                 </li>
-                                            </ul>
+                                            </ul> --}}
                                         </div>
                                     </div>
                                 </div>
