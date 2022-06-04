@@ -65,7 +65,7 @@
 @push('script')
   <script>
   $(document).ready(function() {
-    datatableCharlasInformativasPorNodo({{auth()->user()->gestor->nodo_id}});
+    datatableCharlasInformativasPorNodo({{auth()->user()->articulador->nodo_id}});
   });
   function datatableCharlasInformativasPorNodo(id) {
     $('#charlasInformativasNodo_table').dataTable().fnDestroy();

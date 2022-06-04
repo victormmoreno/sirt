@@ -25,9 +25,9 @@ trait UsersTrait
         return self::IS_FEMENINO;
     }
 
-    public static function IsBinario()
+    public static function IsNoBinario()
     {
-        return self::IS_BINARIO;
+        return self:: IS_NO_BINARIO;
     }
 
     public static function IsActive()

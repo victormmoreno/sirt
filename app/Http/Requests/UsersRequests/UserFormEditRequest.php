@@ -43,7 +43,7 @@ class UserFormEditRequest extends FormRequest
             'txtapellidos'              => 'required|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
             'txtfecha_nacimiento'       => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
             'txtestrato'                => 'required',
-            'txtgenero' => 'required|'.Rule::in([User::IS_MASCULINO, User::IS_FEMENINO, User::IS_BINARIO]),
+            'txtgenero' => 'required|'.Rule::in([User::IS_MASCULINO, User::IS_FEMENINO, User:: IS_NO_BINARIO]),
             'txtgrado_discapacidad'    => 'required',
             'txtdiscapacidad'          =>  Rule::requiredIf(request()->txtgrado_discapacidad == 1 || request()->txtgrado_discapacidad == '1') . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',
             'txtemail'                  => 'required|email|min:1|max:100|unique:users,email,' . request()->route('id'),
