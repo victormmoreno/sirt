@@ -7,16 +7,16 @@
           <th>Meta de TRL6</th>
           <th>Meta de TRL7 y TRL8</th>
           <th class="green lighten-5">Proyectos activos del nodo (Inicio, Planeación, Ejecución y Cierre)</th>
-          <th class="green lighten-5">Progreso de proyectos TRL6 finalizados del nodo</th>
-          <th class="green lighten-5">Progreso de proyectos TRL7 y TRL8 finalizados del nodo</th>
-          <th class="green lighten-5">Progreso de proyectos finalizados del nodo</th>
+          <th class="green lighten-5">Total de proyectos TRL6 finalizados del nodo</th>
+          <th class="green lighten-5">Total de proyectos TRL7 y TRL8 finalizados del nodo</th>
+          <th class="green lighten-5">Total de proyectos finalizados del nodo</th>
       </tr>
     </thead>
     <tbody>
         @if ($metas->count() == 0)
             <tr>
                 <td colspan="6" class="center">No hay metas registradas para el año actual.</td>    
-            </tr>                
+            </tr>
         @else
             @foreach ($metas as $meta)
                 <tr>

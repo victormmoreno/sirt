@@ -3,13 +3,13 @@
         {!! method_field('GET')!!}
         {!! csrf_field() !!}
         <p class="p-v-xs">
-            <input type="checkbox" id="txtall" name="txtall" onclick="selectAll(this)" value="all">
+            <input type="checkbox" id="txtall" name="txtall" onclick="selectAll(this, 'metas_down')" value="all">
             <label for="txtall">Todos.</label>
         </p>
         @foreach ($nodos as $nodo)
         <div class="col s6 m3 l3">
             <p class="p-v-xs">
-                <input type="checkbox" id="txtnodo_metas_id{{$nodo->id}}" name="txtnodo_metas_id[]" class="metas_down" value="{{$nodo->id}}">
+                <input type="checkbox" id="txtnodo_metas_id{{$nodo->id}}" name="txtnodo_metas_id[]" class="metas_down" value="{{$nodo->id}}" onclick="verificarChecks(this, 'txtall')">
                 <label for="txtnodo_metas_id{{$nodo->id}}">{{$nodo->nodos}}.</label>
             </p>
         </div>

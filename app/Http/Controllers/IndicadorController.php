@@ -32,7 +32,8 @@ class IndicadorController extends Controller
       $metas = $this->retornarTodasLasMetasArray($metas, $pbts_trl6, $pbts_trl7_8, $activos);
       return view('indicadores.dinamizador.index', [
         'metas' => $metas,
-        'metas_graph' => $metas->first()
+        'metas_graph' => $metas->first(),
+        'nodos' => Nodo::SelectNodo()->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get()
       ]);
     } else if ( Session::get('login_role') == User::IsAdministrador() ) {
       $metas = $this->nodoRepository->consultarMetasDeTecnoparque();

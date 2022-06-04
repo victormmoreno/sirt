@@ -274,13 +274,15 @@ class ProyectoRepository
      **/
     public function consultarTrl(string $field, string $field_date, string $year, array $tipos_trl)
     {
+        $this->traducirMeses();
         return Proyecto::select($field)
-        ->selectRaw('count(proyectos.id) AS cantidad, nodos.id AS nodo')
+        ->selectRaw('count(proyectos.id) AS cantidad, nodos.id AS nodo, MONTHNAME(fecha_cierre) AS mes')
         ->join('articulacion_proyecto AS ap', 'ap.id', '=', 'proyectos.articulacion_proyecto_id')
         ->join('actividades AS a', 'a.id', '=', 'ap.actividad_id')
         ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
+        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
         ->whereYear($field_date, $year)
         ->whereIn($field, $tipos_trl)
         ->where('fases.nombre', Proyecto::IsFinalizado())
@@ -1099,7 +1101,7 @@ class ProyectoRepository
                 event(new ProyectoWasApproved($proyecto, $regMovimiento, $destinatarios));
                 if (Session::get('login_role') == User::IsTalento()) {
                     $notificacion = $proyecto->registerNotifyProject($dinamizadores->last()->id, User::IsDinamizador());
-                    event(new ProyectoApproveWasRequested($notificacion, $destinatarios));
+                    // event(new ProyectoApproveWasRequested($notificacion, $destinatarios));
                     Notification::send($dinamizadores, new ProyectoAprobarFase($notificacion));
                 }
                 if (Session::get('login_role') == User::IsDinamizador() && $proyecto->fase->nombre == "Inicio") {

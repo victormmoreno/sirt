@@ -8,7 +8,6 @@
         @include('indicadores.componentes.metas.show_metas')
     </div>
     <div id="descargar_metas">
-        <p>En construcción</p>
-        {{-- @include('indicadores.componentes.metas.download_metas') --}}
+        @include('indicadores.componentes.metas.download_metas')
     </div>
 </div>
