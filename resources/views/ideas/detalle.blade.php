@@ -500,6 +500,37 @@
                                                     </div>
                                                 </li>
                                             </ul>
+                                            {{-- <ul class="collection with-header">
+                                                <li class="collection-header"><h5>Talleres de fortalecimiento a los que ha asistido</h5></li>
+                                                <li class="collection-item">
+                                                    <div class="row">
+                                                        <div class="col s12 m6 l6" style="padding: 0">
+                                                            <ul class="collection">
+                                                                <li class="collection-item">
+                                                                    <span class="title cyan-text text-darken-3">
+                                                                        Código del taller de fortalecimiento
+                                                                    </span>
+                                                                    <p>
+                                                                        Código
+                                                                    </p>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="col s12 m6 l6" style="padding: 0">
+                                                            <ul class="collection">
+                                                                <li class="collection-item">
+                                                                    <span class="title cyan-text text-darken-3">
+                                                                        Fecha que se realizó el taller
+                                                                    </span>
+                                                                    <p>
+                                                                        Fecha
+                                                                    </p>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul> --}}
                                         </div>
                                     </div>
                                 </div>

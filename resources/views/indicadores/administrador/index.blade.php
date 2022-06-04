@@ -197,6 +197,12 @@
                         @include('indicadores.componentes.metas.metas')
                       </div>
                     </li>
+                    <li>
+                      <div class="collapsible-header"><i class="material-icons">lightbulb</i>Ideas de tecnoparque</div>
+                      <div class="collapsible-body">
+                        @include('indicadores.componentes.ideas.download')
+                      </div>
+                    </li>
                   </ul>
                   <div class="divider"></div>
                 </div>
@@ -259,19 +265,6 @@
       } else {
         location.href = '/excel/export_proyectos_inscritos/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+hoja;
       }
-    }
-
-    function selectAll(source) {
-      checkboxes = document.getElementsByClassName('metas_down');
-      for(var i=0, n=checkboxes.length;i<n;i++) {
-        checkboxes[i].checked = source.checked;
-      }
-    }
-
-    function downloadMetas(e) {
-      e.preventDefault();
-      let input = $("input[name='txtnodo_metas_id[]']");
-      document.frmDescargarMetas.submit();
     }
   </script>
 @endpush

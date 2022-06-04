@@ -153,7 +153,7 @@ class EntrenamientoController extends Controller
                 $nodo_id = $request->filter_nodo;
                 break;
             default:
-                # code...
+                return abort('403');
                 break;
         }
         $entrenamientos = $this->entrenamientoRepository->consultarEntrenamientosPorNodo($nodo_id);
