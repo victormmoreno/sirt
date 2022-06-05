@@ -83,7 +83,7 @@ class ArchivoController extends Controller
             if (Session::get('login_role') == User::IsInfocenter()) {
                 $nodo_id = auth()->user()->infocenter->nodo_id;
             } else {
-                $nodo_id = auth()->user()->gestor->nodo_id;
+                $nodo_id = auth()->user()->articulador->nodo_id;
             }
             $file = request()->file('nombreArchivo');
             $route = "";

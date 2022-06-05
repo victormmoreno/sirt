@@ -21,7 +21,7 @@ class UserPresenter extends Presenter
 
     public function userGenero()
     {
-        return $this->user->genero == User::IsBinario() ? 'Binario' :
+        return $this->user->genero == User::IsNoBinario() ? 'No binario' :
         ($this->user->genero == User::IsMasculino() ? 'Masculino' :'Femenino');
     }
 
