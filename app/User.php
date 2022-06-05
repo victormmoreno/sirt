@@ -37,7 +37,7 @@ class User extends Authenticatable implements JWTSubject
     use  SoftDeletes, Notifiable, HasRoles,  UsersTrait;
 
     const IS_MASCULINO     = 1;
-    const IS_BINARIO      = 2;
+    const IS_NO_BINARIO    = 2;
     const IS_FEMENINO      = 0;
     const IS_ACTIVE        = true;
     const IS_INACTIVE      = false;
