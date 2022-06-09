@@ -297,7 +297,7 @@
                     "lengthChange": false,
                     order: [ 0, 'desc' ],
                     ajax:{
-                        url: "/usoinfraestructura/projectsforuser",
+                        url: host_url + "/usoinfraestructura/projectsforuser",
                         type: "get",
                     },
                     select: true,
@@ -334,7 +334,7 @@
             $.ajax({
                 dataType:'json',
                 type:'get',
-                url:'/usoinfraestructura/talentosporproyecto/'+id
+                url: host_url + '/usoinfraestructura/talentosporproyecto/'+id
             }).done(function(response){
                 $('#txttalento').empty();
                 $('#txtequipo').empty();
@@ -471,7 +471,7 @@
                 pageLength: 5,
                 order: [ 0, 'desc' ],
                 ajax:{
-                    url: "/usoinfraestructura/articulacionesforuser",
+                    url: host_url + "/usoinfraestructura/articulacionesforuser",
                     type: "get",
                 },
                 select: true,
@@ -511,7 +511,7 @@
             $.ajax({
                 dataType:'json',
                 type:'get',
-                url:'/usoinfraestructura/talentosporarticulacion/'+id
+                url: host_url + '/usoinfraestructura/talentosporarticulacion/'+id
             }).done(function(response){
                 $('#txttalento').empty();
                 $('#txtequipo').empty();
@@ -626,7 +626,7 @@
                 pageLength: 5,
                 order: [ 0, 'desc' ],
                 ajax:{
-                    url: "/usoinfraestructura/ideasfornode",
+                    url: host_url + "/usoinfraestructura/ideasfornode",
                     type: "get",
                 },
                 select: true,
@@ -666,7 +666,7 @@
             $.ajax({
                 dataType:'json',
                 type:'get',
-                url:'/usoinfraestructura/idea/'+id
+                url: host_url + '/usoinfraestructura/idea/'+id
             }).done(function(response){
                 console.log(response);
                 $('#txttalento').empty();
@@ -771,7 +771,7 @@
             $.ajax({
                 dataType:'json',
                 type:'get',
-                url:'/equipos/getequiposporlinea/'+nodo+'/'+lineatecnologica
+                url: host_url + '/equipos/getequiposporlinea/'+nodo+'/'+lineatecnologica
             }).done(function(response){
                 $('#txtequipo').empty();
                 if (response.equipos == '' && response.equipos.length == 0) {
@@ -804,7 +804,7 @@
             $.ajax({
                 dataType:'json',
                 type:'get',
-                url:'/materiales/getmaterial/'+ material
+                url: host_url + '/materiales/getmaterial/'+ material
             }).done(function(response){
                 $("label[for='txtcantidad']").empty();
                 $("label[for='txtcantidad']").text('cantidad a gastar ('+response.material.medida.nombre+ ')');

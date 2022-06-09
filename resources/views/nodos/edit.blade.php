@@ -53,7 +53,7 @@ var Regional = {
       $.ajax({
         dataType:'json',
         type:'get',
-        url:'/help/getcentrosformacion/'+id
+        url: host_url + '/help/getcentrosformacion/'+id
       }).done(function(response){
       
 
@@ -80,7 +80,7 @@ var DepartamentsEdit = {
       $.ajax({
         dataType:'json',
         type:'get',
-        url:'/help/getciudades/'+id
+        url: host_url + '/help/getciudades/'+id
       }).done(function(response){
         $('#txtciudad').empty();
         $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')

@@ -161,7 +161,7 @@
     $.ajax({
       dataType:'json',
       type:'get',
-      url:'/grupo/ajaxContactosDeUnaEntidad/'+id
+      url: host_url + '/grupo/ajaxContactosDeUnaEntidad/'+id
     }).done(function (response) {
       $("#contactosDeUnaEntidad_titulo").empty();
       $("#contactosDeUnaEntidad_table").empty();

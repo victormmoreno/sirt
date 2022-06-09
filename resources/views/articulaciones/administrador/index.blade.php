@@ -98,7 +98,7 @@
           order: [ 0, 'desc' ],
           "lengthChange": false,
           ajax:{
-            url: "/articulacion/datatableArticulacionesDelNodo/"+id+"/"+anho,
+            url: host_url + "/articulacion/datatableArticulacionesDelNodo/"+id+"/"+anho,
             data: function (d) {
               d.codigo_articulacion = $('#codigo_articulacion_AdministradorTable').val(),
               d.nombre_gestor = $('#nombre_GestorAdministradorTable').val(),

@@ -7,7 +7,7 @@ $(document).ready(function() {
         retrieve: true,
         processing: true,
         ajax: {
-            url: "/costos-administrativos",
+            url: host_url + "/costos-administrativos",
             type: "get",
         },
         columns: [{

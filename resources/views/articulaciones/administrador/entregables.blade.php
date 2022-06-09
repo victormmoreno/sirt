@@ -93,7 +93,7 @@
         serverSide: true,
         order: false,
         ajax:{
-          url: "/articulacion/archivosDeUnaArticulacion/"+{{$articulacion->id}},
+          url: host_url + "/articulacion/archivosDeUnaArticulacion/"+{{$articulacion->id}},
           type: "get",
         },
         columns: [

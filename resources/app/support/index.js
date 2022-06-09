@@ -57,7 +57,7 @@ let support ={
             serverSide: true,
             "order": [[ 1, "desc" ]],
             ajax:{
-                url: "/support",
+                url: host_url + "/support",
                 type: "get",
                 data: {
                     filter_year_support: filter_year_support,
@@ -113,7 +113,7 @@ let support ={
                 let token = $("meta[name='csrf-token']").attr("content");
                 $.ajax(
                 {
-                    url: "/support/"+ticket,
+                    url: host_url + "/support/"+ticket,
                     type: 'DELETE',
                     data: {
                         "id": ticket,
@@ -158,7 +158,7 @@ let support ={
                 let token = $("meta[name='csrf-token']").attr("content");
                 $.ajax(
                 {
-                    url: "/support/"+ticket,
+                    url: host_url + "/support/"+ticket,
                     type: 'PUT',
                     data: {
                         "id": ticket,

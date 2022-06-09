@@ -8,7 +8,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax:{
-        	url: "/sublineas",
+        	url: host_url + "/sublineas",
             type: "get",
         },
         columns: [

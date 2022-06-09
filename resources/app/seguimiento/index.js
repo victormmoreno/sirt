@@ -28,7 +28,7 @@ function consultarSeguimientoDeUnGestor(gestor_id) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/seguimiento/seguimientoEsperadoDeUnGestor/'+gestor_id,
+    url: host_url + '/seguimiento/seguimientoEsperadoDeUnGestor/'+gestor_id,
     success: function (data) {
       graficoSeguimientoEsperado(data, graficosSeguimiento.gestor);
     },
@@ -62,7 +62,7 @@ function consultarSeguimientoEsperadoDeUnaLinea(bandera) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/seguimiento/seguimientoEsperadoDeUnaLinea/'+linea_id+'/'+nodo_id,
+    url: host_url + '/seguimiento/seguimientoEsperadoDeUnaLinea/'+linea_id+'/'+nodo_id,
     success: function (data) {
       graficoSeguimientoEsperado(data, graficosSeguimiento.linea_esperado);
     },
@@ -79,7 +79,7 @@ function consultarProyectosInscritosPorMes(gestor_id) {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/seguimiento/seguimientoInscritosPorMesExperto/'+gestor_id,
+      url: host_url + '/seguimiento/seguimientoInscritosPorMesExperto/'+gestor_id,
       success: function (data) {
         console.log(data.datos.meses);
         graficoSeguimientoPorMes(data, graficosSeguimiento.inscritos_mes);
@@ -112,7 +112,7 @@ function consultarSeguimientoActualDeUnaLinea(bandera) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/seguimiento/seguimientoActualDeUnaLinea/'+linea_id+'/'+nodo_id,
+    url: host_url + '/seguimiento/seguimientoActualDeUnaLinea/'+linea_id+'/'+nodo_id,
     success: function (data) {
       graficoSeguimientoFases(data, graficosSeguimiento.linea_actual);
     },
@@ -126,7 +126,7 @@ function consultarSeguimientoActualDeUnGestor(gestor_id) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/seguimiento/seguimientoActualDeUnGestor/'+gestor_id,
+    url: host_url + '/seguimiento/seguimientoActualDeUnGestor/'+gestor_id,
     success: function (data) {
       graficoSeguimientoFases(data, graficosSeguimiento.gestor_fases);
     },
@@ -141,7 +141,7 @@ function consultarSeguimientoEsperadoDeTecnoparque() {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/seguimiento/seguimientoEsperadoDeTecnoparque/',
+    url: host_url + '/seguimiento/seguimientoEsperadoDeTecnoparque/',
     success: function (data) {
       graficoSeguimientoEsperado(data, graficosSeguimiento.tecnoparque_esperado);
     },
@@ -159,7 +159,7 @@ function consultarSeguimientoEsperadoDeUnNodo(nodo_id) {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/seguimiento/seguimientoEsperadoDeUnNodo/'+nodo_id,
+      url: host_url + '/seguimiento/seguimientoEsperadoDeUnNodo/'+nodo_id,
       success: function (data) {
         graficoSeguimientoEsperado(data, graficosSeguimiento.nodo_esperado);
       },
@@ -177,7 +177,7 @@ function consultarSeguimientoDeUnNodoFases(nodo_id) {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/seguimiento/seguimientoDeUnNodoFases/'+nodo_id,
+      url: host_url + '/seguimiento/seguimientoDeUnNodoFases/'+nodo_id,
       success: function (data) {
         graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
       },
@@ -192,7 +192,7 @@ function consultarSeguimientoDeTecnoparqueFases() {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/seguimiento/seguimientoDeTecnoparqueFases/',
+    url: host_url + '/seguimiento/seguimientoDeTecnoparqueFases/',
     success: function (data) {
       graficoSeguimientoFases(data, graficosSeguimiento.tecnoparque_fases);
     },

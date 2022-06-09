@@ -7,7 +7,7 @@ $(document).ready(function() {
     serverSide: true,
     // order: false,
     ajax:{
-      url: "/grupo/datatableGruposInvestigacionDeTecnoparque",
+      url: host_url + "/grupo/datatableGruposInvestigacionDeTecnoparque",
       type: "get",
     },
     columns: [
@@ -61,7 +61,7 @@ $(document).ready(function() {
     processing: true,
     serverSide: true,
     ajax:{
-      url: "/grupo/datatableGruposInvestigacionDeTecnoparque",
+      url: host_url + "/grupo/datatableGruposInvestigacionDeTecnoparque",
       type: "get",
     },
     columns: [
@@ -102,7 +102,7 @@ var grupoInvestigacionIndex = {
     $.ajax({
       dataType:'json',
       type:'get',
-      url:"/grupo/ajaxDetallesDeUnGrupoInvestigacion/"+id
+      url: host_url + "/grupo/ajaxDetallesDeUnGrupoInvestigacion/"+id
     }).done(function(respuesta){
       $("#modalDetalleDeUnGrupoDeInvestigacion_titulo").empty();
       $("#modalDetalleDeUnGrupoDeInvestigacion_detalle_empresa").empty();

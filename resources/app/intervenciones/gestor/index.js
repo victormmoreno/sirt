@@ -8,7 +8,7 @@ function consultarIntervencionesEmpresaDelGestor(anho) {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/intervencion/datatableIntervencionEmpresaDelGestor/"+0+"/"+anho,
+      url: host_url + "/intervencion/datatableIntervencionEmpresaDelGestor/"+0+"/"+anho,
       // type: "get",
       data: function (d) {
         d.codigo_articulacion = $('#codigo_articulacion_GestorTable').val(),

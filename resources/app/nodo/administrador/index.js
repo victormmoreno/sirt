@@ -27,7 +27,7 @@ $(document).ready(function() {
             }
         }, ],
         ajax: {
-            url: "/nodo",
+            url: host_url + "/nodo",
         },
         columns: [{
             data: 'centro',

@@ -10,7 +10,7 @@ function consultarGruposInvestigacion_FaseInicio_Articulaciones() {
             0, 'desc'
         ],
         ajax: {
-            url: "/grupo/datatableGruposInvestigacionDeTecnoparque",
+            url: host_url + "/grupo/datatableGruposInvestigacionDeTecnoparque",
             type: "get"
         },
         select: true,
@@ -36,7 +36,7 @@ function addGrupoArticulacion(id) {
     $.ajax({
         dataType:'json',
         type:'get',
-        url:"/grupo/ajaxDetallesDeUnGrupoInvestigacion/"+id
+        url: host_url + "/grupo/ajaxDetallesDeUnGrupoInvestigacion/"+id
     }).done(function(respuesta){
         $('#txtgrupoInvestigacion').val(respuesta.detalles.codigo_grupo + ' - ' + respuesta.detalles.entidad.nombre);
         $("label[for='txtgrupoInvestigacion']").addClass('active');
@@ -63,7 +63,7 @@ function consultarTalentosDeTecnoparque_Articulacion_FaseInicio_table(tableName,
         processing: true,
         serverSide: true,
         ajax: {
-            url: "/usuario/talento/getTalentosDeTecnoparque/",
+            url: host_url + "/usuario/talento/getTalentosDeTecnoparque/",
             type: "get"
         },
         columns: [
@@ -215,7 +215,7 @@ function pintarTalentoEnTabla_Fase_Inicio_Articulacion(id) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/usuario/talento/consultarTalentoPorId/' + id
+        url: host_url + '/usuario/talento/consultarTalentoPorId/' + id
     }).done(function (ajax) {
         let fila = prepararFilaEnLaTablaDeTalentos_Articulacion(ajax);
         $('#detalleTalentosDeUnaArticulacion_Create').append(fila);

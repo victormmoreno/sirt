@@ -29,7 +29,7 @@ var selectMantenimientosEquiposPorNodo = {
                 },
                 "pagingType": "full_numbers",
                 ajax: {
-                    url: "/mantenimientos/getmantenimientosequipospornodo/" + nodo,
+                    url: host_url + "/mantenimientos/getmantenimientosequipospornodo/" + nodo,
                     type: "get",
                 },
                 columns: [{

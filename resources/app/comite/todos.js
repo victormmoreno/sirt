@@ -1,7 +1,7 @@
 function enviarNotificacionResultadosCSIBT(idea, comite) {
     $.ajax({
         type: 'get',
-        url: '/csibt/notificar_resultado/' + idea + '/' + comite,
+        url: host_url + '/csibt/notificar_resultado/' + idea + '/' + comite,
         dataType: 'json',
         processData: false,
         success: function (data) {

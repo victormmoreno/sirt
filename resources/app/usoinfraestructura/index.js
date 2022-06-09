@@ -35,7 +35,7 @@ var usoinfraestructuraIndex = {
             serverSide: true,
             "order": [[ 0, "desc" ]],
             ajax:{
-                url: "/usoinfraestructura",
+                url: host_url + "/usoinfraestructura",
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -94,7 +94,7 @@ var usoinfraestructuraIndex = {
         }else{
             $.ajax({
                 type: 'GET',
-                url: '/usuario/usuarios/gestores/nodo/'+ nodo,
+                url: host_url + '/usuario/usuarios/gestores/nodo/'+ nodo,
                 contentType: false,
                 dataType: 'json',
                 processData: false,
@@ -125,7 +125,7 @@ var usoinfraestructuraIndex = {
         }else{
             $.ajax({
                 type: 'GET',
-                url: '/usoinfraestructura/actividades/'+ anio,
+                url: host_url + '/usoinfraestructura/actividades/'+ anio,
                 contentType: false,
                 dataType: 'json',
                 processData: false,
@@ -160,7 +160,7 @@ var usoinfraestructuraIndex = {
                 let token = $("meta[name='csrf-token']").attr("content");
                 $.ajax(
                 {
-                    url: "/usoinfraestructura/"+id,
+                    url: host_url + "/usoinfraestructura/"+id,
                     type: 'DELETE',
                     data: {
                         "id": id,
@@ -225,6 +225,6 @@ $('#download_usoinfraestructura').click(function(){
         filter_gestor: filter_gestor,
         filter_actividad: filter_actividad,
     }
-    var url = "/usoinfraestructura/export?" + $.param(query)
+    var url = host_url + "/usoinfraestructura/export?" + $.param(query)
     window.location = url;
 });

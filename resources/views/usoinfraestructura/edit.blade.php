@@ -263,7 +263,7 @@
                 "lengthChange": false,
                 order: [ 0, 'desc' ],
                 ajax:{
-                    url: "/usoinfraestructura/projectsforuser",
+                    url: host_url + "/usoinfraestructura/projectsforuser",
                     type: "get",
                 },
                 select: true,
@@ -408,7 +408,7 @@
             $('#modalUsoIngraestrucuta_modal').dataTable().fnDestroy();
             $('#modalUsoIngraestrucuta_modal').DataTable({
                 language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                    "url": host_url + "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
                 },
                 processing: true,
                 serverSide: true,
@@ -416,7 +416,7 @@
                 pageLength: 5,
                 order: [ 0, 'desc' ],
                 ajax:{
-                    url: "/usoinfraestructura/articulacionesforuser",
+                    url: host_url + "/usoinfraestructura/articulacionesforuser",
                     type: "get",
                 },
                 select: true,
@@ -455,7 +455,7 @@
             $.ajax({
                 dataType:'json',
                 type:'get',
-                url:'/usoinfraestructura/talentosporarticulacion/'+id
+                url: host_url + '/usoinfraestructura/talentosporarticulacion/'+id
             }).done(function(response){
                 $('#txtequipo').empty();
                 $('#txtlineatecnologica').empty();
@@ -563,7 +563,7 @@
                 pageLength: 5,
                 order: [ 0, 'desc' ],
                 ajax:{
-                    url: "/usoinfraestructura/ideasfornode",
+                    url: host_url + "/usoinfraestructura/ideasfornode",
                     type: "get",
                 },
                 select: true,
@@ -603,7 +603,7 @@
             $.ajax({
                 dataType:'json',
                 type:'get',
-                url:'/usoinfraestructura/idea/'+id
+                url: host_url + '/usoinfraestructura/idea/'+id
             }).done(function(response){
 
                 $('#txttalento').empty();
@@ -711,7 +711,7 @@
             $.ajax({
                 dataType:'json',
                 type:'get',
-                url:'/equipos/getequiposporlinea/'+nodo+'/'+lineatecnologica
+                url: host_url + '/equipos/getequiposporlinea/'+nodo+'/'+lineatecnologica
             }).done(function(response){
                 $('#txtequipo').empty();
                 if (response.equipos == '' && response.equipos.length == 0) {
@@ -743,7 +743,7 @@
             $.ajax({
                 dataType:'json',
                 type:'get',
-                url:'/materiales/getmaterial/'+ material
+                url: host_url + '/materiales/getmaterial/'+ material
             }).done(function(response){
                 $("label[for='txtcantidad']").empty();
                 $("label[for='txtcantidad']").text('cantidad a gastar ('+response.material.medida.nombre+ ')');

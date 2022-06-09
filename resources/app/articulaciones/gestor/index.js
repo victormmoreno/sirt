@@ -9,7 +9,7 @@ function consultarArticulacionesDelGestor(anho) {
     order: [ 0, 'desc' ],
     "lengthChange": false,
     ajax:{
-      url: "/articulacion/datatableArticulacionesDelGestor/"+0+"/"+anho,
+      url: host_url + "/articulacion/datatableArticulacionesDelGestor/"+0+"/"+anho,
       data: function (d) {
         d.codigo_articulacion = $('#codigo_articulacion_GestorTable').val(),
         d.gestor = $('#nombre_GestorAdministradorTable').val(),

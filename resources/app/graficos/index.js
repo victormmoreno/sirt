@@ -297,7 +297,7 @@ function consultarProyectosFinalizadosPorTipoNodoYFecha_column(bandera) {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/grafico/consultarProyectosFinalizadosPorTipoNodoYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+      url: host_url + '/grafico/consultarProyectosFinalizadosPorTipoNodoYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
       success: function (data) {
         graficosProyectosAgrupados(data, graficosProyectoId.grafico5, 'Tipo de Proyecto');
       },
@@ -319,7 +319,7 @@ function consultarProyectosInscritosPorTipoNodoYFecha_column(bandera) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/grafico/consultarProyectosInscritosPorTipoNodoYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+    url: host_url + '/grafico/consultarProyectosInscritosPorTipoNodoYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
     success: function (data) {
       graficosProyectosAgrupados(data, graficosProyectoId.grafico3, 'Tipo de Proyecto');
     },
@@ -340,7 +340,7 @@ function consultarProyectosFinalizadosPorAnho_combinate(bandera) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/grafico/consultarProyectosFinalzadosPorAnho/'+id+'/'+anho,
+    url: host_url + '/grafico/consultarProyectosFinalzadosPorAnho/'+id+'/'+anho,
     success: function (data) {
       graficosProyectosPromedioCantidadesMeses(data, graficosProyectoId.grafico4);
     },
@@ -358,7 +358,7 @@ function consultarProyectosInscritosConEmpresasPorAnho_combinate(bandera, anho) 
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/grafico/consultarProyectosInscritosConEmpresasPorAnho/'+id+'/'+anho,
+    url: host_url + '/grafico/consultarProyectosInscritosConEmpresasPorAnho/'+id+'/'+anho,
     success: function (data) {
       graficosProyectosPromedioCantidadesMeses(data, graficosProyectoId.grafico2);
     },
@@ -376,7 +376,7 @@ function consultarProyectosInscritosPorAnho_combinate(bandera, anho) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/grafico/consultarProyectosInscritosPorAnho/'+id+'/'+anho,
+    url: host_url + '/grafico/consultarProyectosInscritosPorAnho/'+id+'/'+anho,
     success: function (data) {
       graficosProyectosPromedioCantidadesMeses(data, graficosProyectoId.grafico1);
     },
@@ -399,7 +399,7 @@ function consultarEdtsDelNodoPorAnho_variablepie(bandera) {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/grafico/consultarEdtsPorNodoYAnho/'+idnodo+'/'+anho,
+      url: host_url + '/grafico/consultarEdtsPorNodoYAnho/'+idnodo+'/'+anho,
       success: function (data) {
         Highcharts.chart(graficosEdtId.grafico4, {
           chart: {
@@ -462,7 +462,7 @@ function consultarEdtsPorLineaYFecha_stacked(bandera) {
       $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/grafico/consultarEdtsPorLineaYFecha/'+id+'/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
+        url: host_url + '/grafico/consultarEdtsPorLineaYFecha/'+id+'/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
         success: function (data) {
           // console.log(data);
           Highcharts.chart(graficosEdtId.grafico3, {
@@ -520,7 +520,7 @@ function consultarEdtsPorGestorYFecha_stacked(bandera) {
       $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/grafico/consultarEdtsPorGestorYFecha/'+id+'/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
+        url: host_url + '/grafico/consultarEdtsPorGestorYFecha/'+id+'/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
         success: function (data) {
           // console.log(data);
           Highcharts.chart(graficosEdtId.grafico2, {
@@ -574,7 +574,7 @@ function consultarEdtsPorNodoGestorYFecha_stacked(bandera) {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/grafico/consultarEdtsPorNodoGestorYFecha/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
+      url: host_url + '/grafico/consultarEdtsPorNodoGestorYFecha/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
       success: function (data) {
         var tamanho = data.consulta.length;
         var datos = {
@@ -665,7 +665,7 @@ function consultarTiposDeArticulacionesDelAnho_variablepie(bandera) {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/grafico/consultarArticulacionesPorNodoYAnho/'+idnodo+'/'+anho,
+      url: host_url + '/grafico/consultarArticulacionesPorNodoYAnho/'+idnodo+'/'+anho,
       success: function (data) {
         Highcharts.chart(graficosId.grafico4, {
           chart: {
@@ -716,7 +716,7 @@ function articulacionesGrafico1Ajax(id, fecha_inicio, fecha_fin) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/grafico/consultarArticulacionesPorNodo/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+    url: host_url + '/grafico/consultarArticulacionesPorNodo/'+id+'/'+fecha_inicio+'/'+fecha_fin,
     success: function (data) {
       var tamanho = data.consulta.length;
       // console.log(tamanho);
@@ -825,7 +825,7 @@ function consultarArticulacionesDeUnGestorPorFecha_stacked() {
       $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/grafico/consultarArticulacionesPorGestorYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+        url: host_url + '/grafico/consultarArticulacionesPorGestorYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
         success: function (data) {
           // console.log(data);
           Highcharts.chart(graficosId.grafico2, {
@@ -888,7 +888,7 @@ function consultarArticulacionesDeUnaLineaDelNodoPorFechas_stacked(bandera) {
       $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/grafico/consultarCantidadDeArticulacionesPorTipoDeUnaLineaTecnologicaYFecha/'+idnodo+'/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+        url: host_url + '/grafico/consultarCantidadDeArticulacionesPorTipoDeUnaLineaTecnologicaYFecha/'+idnodo+'/'+id+'/'+fecha_inicio+'/'+fecha_fin,
         error: function (xhr, textStatus, errorThrown) {
           alert("Error: " + errorThrown);
         },

@@ -8,7 +8,7 @@ function datatableVisitantesPorNodo_Ingreso() {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/visitante/consultarVisitantesRedTecnoparque",
+      url: host_url + "/visitante/consultarVisitantesRedTecnoparque",
       type: "get",
     },
     columns: [
@@ -57,7 +57,7 @@ function datatableVisitantesPorNodo_DinamizadorAdministrador() {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/visitante/consultarVisitantesRedTecnoparque",
+      url: host_url + "/visitante/consultarVisitantesRedTecnoparque",
       type: "get",
     },
     columns: [

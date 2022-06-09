@@ -118,7 +118,7 @@ $year = Carbon\Carbon::now(); $year = $year->isoFormat('YYYY');
         order: [ 0, 'desc' ],
         "lengthChange": false,
         ajax:{
-        url: "/articulacion/datatableArticulacionesDelNodo/"+0+"/"+anho,
+        url: host_url + "/articulacion/datatableArticulacionesDelNodo/"+0+"/"+anho,
         data: function (d) {
             d.codigo_articulacion = $('#codigo_articulacion_DinamizadorTable').val(),
             d.nombre_gestor = $('#nombre_GestorDinamizadorTable').val(),
@@ -190,7 +190,7 @@ $year = Carbon\Carbon::now(); $year = $year->isoFormat('YYYY');
         order: [ 0, 'desc' ],
         "lengthChange": false,
         ajax:{
-        url: "/articulacion/datatableArticulacionesDelGestor/"+id+"/"+anho,
+        url: host_url + "/articulacion/datatableArticulacionesDelGestor/"+id+"/"+anho,
         data: function (d) {
             d.codigo_articulacion = $('.codigo_articulacion').val(),
             d.nombre = $('.nombre').val(),
