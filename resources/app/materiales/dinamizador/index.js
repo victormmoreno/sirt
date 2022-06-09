@@ -8,7 +8,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: {
-            url: "/materiales",
+            url: host_url + "/materiales",
             type: "get",
         },
         columns: [{

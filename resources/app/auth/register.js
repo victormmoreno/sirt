@@ -19,7 +19,7 @@ var user = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:'/usuario/getciudad/'+id
+            url: host_url + '/usuario/getciudad/'+id
         }).done(function(response){
             $('#txtciudadexpedicion').empty();
             $.each(response.ciudades, function(i, e) {
@@ -43,7 +43,7 @@ var user = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:'/usuario/getciudad/'+id
+            url: host_url + '/usuario/getciudad/'+id
         }).done(function(response){
             $('#txtciudad').empty();
             $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')
@@ -253,7 +253,7 @@ var tipoTalento = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:'/centro-formacion/getcentrosregional/'+regional
+            url: host_url + '/centro-formacion/getcentrosregional/'+regional
         }).done(function(response){
             $('#txtcentroformacion_aprendiz').empty();
             $('#txtcentroformacion_aprendiz').append('<option value="">Seleccione el centro de formación</option>')
@@ -269,7 +269,7 @@ var tipoTalento = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:'/centro-formacion/getcentrosregional/'+regional
+            url: host_url + '/centro-formacion/getcentrosregional/'+regional
         }).done(function(response){
             $('#txtcentroformacion_egresado').empty();
             $('#txtcentroformacion_egresado').append('<option value="">Seleccione el centro de formación</option>')
@@ -284,7 +284,7 @@ var tipoTalento = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:'/centro-formacion/getcentrosregional/'+regional
+            url: host_url + '/centro-formacion/getcentrosregional/'+regional
         }).done(function(response){
             $('#txtcentroformacion_funcionarioSena').empty();
             $('#txtcentroformacion_funcionarioSena').append('<option value="">Seleccione el centro de formación</option>')
@@ -299,7 +299,7 @@ var tipoTalento = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:'/centro-formacion/getcentrosregional/'+regional
+            url: host_url + '/centro-formacion/getcentrosregional/'+regional
         }).done(function(response){
             $('#txtcentroformacion_instructorSena').empty();
             $('#txtcentroformacion_instructorSena').append('<option value="">Seleccione el centro de formación</option>')

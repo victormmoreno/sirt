@@ -20,7 +20,7 @@ function verDetalleDeLaEntidadAsocidadALaArticulacion(id) {
   $.ajax({
     dataType:'json',
     type:'get',
-    url:"/articulacion/consultarEntidadDeLaArticulacion/"+id
+    url: host_url + "/articulacion/consultarEntidadDeLaArticulacion/"+id
   }).done(function(respuesta){
     $("#detalleDeUnaArticulacion_titulo").empty();
     $("#detalleArticulacion_body").empty();
@@ -184,7 +184,7 @@ function eliminarArticulacionPorId_moment(id) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/articulacion/eliminarArticulacion/'+id,
+    url: host_url + '/articulacion/eliminarArticulacion/'+id,
     success: function (data) {
       if (data.retorno) {
         Swal.fire('Eliminación Exitosa!', 'La articulación se ha eliminado completamente!', 'success');

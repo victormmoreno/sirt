@@ -98,7 +98,7 @@
       serverSide: true,
       order: false,
       ajax:{
-        url: "/articulacion/archivosDeUnaArticulacion/"+{{$articulacion->id}},
+        url: host_url + "/articulacion/archivosDeUnaArticulacion/"+{{$articulacion->id}},
         type: "get",
       },
       columns: [
@@ -137,7 +137,7 @@
   }
 
   var DropzoneArticulacionCierre = new Dropzone('#fase_cierre_articulacion', {
-    url: '/articulacion/store/{{ $articulacion->id }}/files',
+    url: host_url + '/articulacion/store/{{ $articulacion->id }}/files',
     headers: {
       'X-CSRF-TOKEN': '{{ csrf_token() }}'
     },
@@ -149,7 +149,7 @@
   });
 
   var DropzoneArticulacionEjecucion = new Dropzone('#fase_ejecucion_articulacion', {
-    url: '/articulacion/store/{{ $articulacion->id }}/files',
+    url: host_url + '/articulacion/store/{{ $articulacion->id }}/files',
     headers: {
       'X-CSRF-TOKEN': '{{ csrf_token() }}'
     },
@@ -161,7 +161,7 @@
   });
 
   var DropzoneArticulacionInicio = new Dropzone('#fase_inicio_articulacion', {
-    url: '/articulacion/store/{{ $articulacion->id }}/files',
+    url: host_url + '/articulacion/store/{{ $articulacion->id }}/files',
     headers: {
       'X-CSRF-TOKEN': '{{ csrf_token() }}'
     },

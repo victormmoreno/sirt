@@ -246,7 +246,7 @@ function pintarTalentoEnTabla_Fase_Inicio(id, isInterlocutor) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/usuario/talento/consultarTalentoPorId/' + id
+        url: host_url + '/usuario/talento/consultarTalentoPorId/' + id
     }).done(function (ajax) {
 
         let fila = prepararFilaEnLaTablaDeTalentos(ajax, isInterlocutor);
@@ -260,7 +260,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual(id) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/usuario/consultarUserPorId/' + id
+        url: host_url + '/usuario/consultarUserPorId/' + id
     }).done(function (ajax) {
         let fila = prepararFilaEnLaTablaDePropietarios_Users(ajax);
         $('#propiedadIntelectual_Personas').append(fila);
@@ -273,7 +273,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Sede(sede_id)
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url : '/empresa/ajaxDetalleDeUnaSede/'+sede_id,
+        url : host_url + '/empresa/ajaxDetalleDeUnaSede/'+sede_id,
         success: function (response) {
           Swal.fire({
             toast: true,
@@ -298,7 +298,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Grupo(id) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/grupo/ajaxDetallesDeUnGrupoInvestigacion/' + id
+        url: host_url + '/grupo/ajaxDetallesDeUnGrupoInvestigacion/' + id
     }).done(function (ajax) {
         let fila = prepararFilaEnLaTablaDePropietarios_Grupos(ajax);
         // let fila = Grupos);
@@ -420,7 +420,7 @@ function addEntidadEmpresa(id) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url : '/empresa/ajaxDetallesDeUnaEmpresa/'+id+'/id',
+        url : host_url + '/empresa/ajaxDetallesDeUnaEmpresa/'+id+'/id',
         success: function (response) {
             let filas_sedes = prepararSedesEmpresa(response.empresa.sedes);
             $('#sedesPropietarias_Empresas_detalles').append(filas_sedes);
@@ -481,7 +481,7 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/idea/show/' + id
+        url: host_url + '/idea/show/' + id
     }).done(function (response) {
         let value = response.data.idea;
         if(idea =! null){
@@ -521,7 +521,7 @@ function consultarIdeasDeProyectoEmprendedores_Proyecto_FaseInicio() {
             0, 'desc'
         ],
         ajax: {
-            url: "/proyecto/datatableIdeasConEmprendedores",
+            url: host_url + "/proyecto/datatableIdeasConEmprendedores",
             type: "get"
         },
         select: true,
@@ -557,7 +557,7 @@ function consultarEmpresasDeTecnoparque_Proyecto_FaseInicio_table() {
         serverSide: true,
         // order: false,
         ajax: {
-            url: "/empresa/datatableEmpresasDeTecnoparque",
+            url: host_url + "/empresa/datatableEmpresasDeTecnoparque",
             type: "get"
         },
         columns: [
@@ -588,7 +588,7 @@ function consultarGruposDeTecnoparque_Proyecto_FaseInicio_table() {
         serverSide: true,
         // order: false,
         ajax: {
-            url: "/grupo/datatableGruposInvestigacionDeTecnoparque",
+            url: host_url + "/grupo/datatableGruposInvestigacionDeTecnoparque",
             type: "get"
         },
         columns: [
@@ -619,7 +619,7 @@ function consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table(tableName, fie
         serverSide: true,
         // order: false,
         ajax: {
-            url: "/usuario/talento/getTalentosDeTecnoparque/",
+            url: host_url + "/usuario/talento/getTalentosDeTecnoparque/",
             type: "get"
         },
         columns: [

@@ -1068,8 +1068,8 @@ class ProyectoRepository
             $proyecto = Proyecto::findOrFail($id);
             $dinamizadorRepository = new DinamizadorRepository;
             $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->nodo_id)->get();
-            $destinatarios = $dinamizadorRepository->getAllDinamizadorPorNodoArray($dinamizadores);
-            array_push($destinatarios, ['email' => $proyecto->asesor->user->email]);
+            //$destinatarios = $dinamizadorRepository->getAllDinamizadorPorNodoArray($dinamizadores);
+            $destinatarios = ['email' => $proyecto->asesor->user->email];
             $talento_lider = $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first();
             $talento_lider = $talento_lider->user;
             $notificacion_act = ControlNotificaciones::find($request->control_notificacion_id);

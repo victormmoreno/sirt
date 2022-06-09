@@ -2,7 +2,7 @@ function consultarDetallesDeUnaCharlaInformativa(id) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/charla/consultarDetallesDeUnaCharlaInformativa/'+id,
+    url: host_url + '/charla/consultarDetallesDeUnaCharlaInformativa/'+id,
     success: function (data) {
       $("#modalDetalleDeUnaCharlaInformativa_titulo").empty();
       $("#modalDetalleDeUnaCharlaInformativa_detalle_charla").empty();

@@ -75,7 +75,7 @@
             $.ajax({
                 dataType: 'json',
                 type: 'get',
-                url: '/proyecto/consultarProyectos_costos/' + anho
+                url: host_url + '/proyecto/consultarProyectos_costos/' + anho
             }).done(function(response) {
                 $.each(response.proyectos, function(i, e) {
                     $('#txtactividad_id').append('<option  value="' + e.id + '">' + e.codigo_proyecto + ' - ' + e.nombre + '</option>');
@@ -87,7 +87,7 @@
             $.ajax({
                 dataType: 'json',
                 type: 'get',
-                url: '/articulacion/consultarArticulaciones_costos/' + anho
+                url: host_url + '/articulacion/consultarArticulaciones_costos/' + anho
             }).done(function(response) {
                 $.each(response.articulaciones, function(i, e) {
                 $('#txtactividad_id').append('<option  value="' + e.id + '">' + e.codigo_articulacion + ' - ' + e.nombre + '</option>');

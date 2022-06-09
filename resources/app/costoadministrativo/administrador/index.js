@@ -28,7 +28,7 @@ var selectCostoAdministrativoNodo = {
 
                 "pagingType": "full_numbers",
                 ajax: {
-                    url: "/costos-administrativos/costoadministrativo/" + nodo,
+                    url: host_url + "/costos-administrativos/costoadministrativo/" + nodo,
                     type: "get",
                 },
                 columns: [

@@ -53,7 +53,7 @@ var articulacion_pbt ={
             serverSide: false,
             "order": [[ 5, "desc" ]],
             ajax:{
-                url: "/articulaciones/datatable_filtros",
+                url: host_url + "/articulaciones/datatable_filtros",
                 type: "get",
 
                 data: {
@@ -114,7 +114,7 @@ $('#download_archive_art').click(function(){
         filter_alcance_articulacion: filter_alcance_articulacion,
     }
 
-    var url = "/articulaciones/export?" + $.param(query)
+    var url = host_url + "/articulaciones/export?" + $.param(query)
 
     window.location = url;
 });

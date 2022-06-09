@@ -68,7 +68,7 @@ function consultarCostosDeProyectos(bandera, tipo) {
             $.ajax({
                 dataType: 'json',
                 type: 'get',
-                url: '/costos/costosDeProyectos/'+idnodo+'/'+tiposArr+'/'+estado+'/'+fecha_inicio+'/'+fecha_fin+'/'+tipo,
+                url: host_url + '/costos/costosDeProyectos/'+idnodo+'/'+tiposArr+'/'+estado+'/'+fecha_inicio+'/'+fecha_fin+'/'+tipo,
                 success: function (data) {
                 setValueInput(data, chart);
                 graficoCostos(data, tipo == 1 ? graficosCostos.proyectos : graficosCostos.proyectos_ipe, 'Proyectos');
@@ -91,7 +91,7 @@ function consultarCostoDeUnaActividad() {
         $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/costos/proyecto/'+id,
+        url: host_url + '/costos/proyecto/'+id,
         success: function (data) {
             let chart = '_actividad';
             console.log(data);

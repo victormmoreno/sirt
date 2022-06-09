@@ -8,7 +8,7 @@ $(document).ready(function() {
     serverSide: true,
     order: false,
     ajax:{
-      url: "/csibt",
+      url: host_url + "/csibt",
       type: "get",
     },
     columns: [

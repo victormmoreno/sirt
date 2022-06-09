@@ -144,7 +144,7 @@ function pintarIdeaEnLaTablaTaller(id, confirmacion, asistencia) {
   $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/idea/detallesIdea/' + id
+      url: host_url + '/idea/detallesIdea/' + id
   }).done(function (ajax) {
       let fila = prepararFilaEnLaTablaDeIdeasTaller(ajax, confirmacion, asistencia);
       $('#tblIdeasEntrenamientoForm').append(fila);

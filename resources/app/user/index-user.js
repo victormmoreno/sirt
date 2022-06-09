@@ -55,7 +55,7 @@ var UserIndex = {
             serverSide: true,
             "order": [[ 1, "desc" ]],
             ajax:{
-                url: "/usuario",
+                url: host_url + "/usuario",
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -107,7 +107,7 @@ var UserIndex = {
             serverSide: true,
             "order": [[ 1, "desc" ]],
             ajax:{
-                url: "/usuario/mistalentos",
+                url: host_url + "/usuario/mistalentos",
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -219,7 +219,7 @@ $('#download_users').click(function(){
         filter_year: filter_year,
     }
 
-    var url = "/usuario/export?" + $.param(query)
+    var url = host_url + "/usuario/export?" + $.param(query)
     window.location = url;
 });
 

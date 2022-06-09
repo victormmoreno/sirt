@@ -481,7 +481,7 @@ var user = {
         $.ajax({
           dataType:'json',
           type:'get',
-          url:'/usuario/getciudad/'+id
+          url: host_url + '/usuario/getciudad/'+id
         }).done(function(response){
           $('#txtciudadexpedicion').empty();
           $('#txtciudadexpedicion').append('<option value="">Seleccione la Ciudad</option>')
@@ -503,7 +503,7 @@ var user = {
         $.ajax({
           dataType:'json',
           type:'get',
-          url:'/usuario/getciudad/'+id
+          url: host_url + '/usuario/getciudad/'+id
         }).done(function(response){
           $('#txtciudad').empty();
           $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')

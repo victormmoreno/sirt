@@ -203,7 +203,7 @@ function pintarIdeaEnLaTabla(id, hora, direccion) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/idea/detallesIdea/' + id
+        url: host_url + '/idea/detallesIdea/' + id
     }).done(function (ajax) {
         let fila = prepararFilaEnLaTablaDeIdeas(ajax, hora, direccion);
         $('#tblIdeasComiteCreate').append(fila);

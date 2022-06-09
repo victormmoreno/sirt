@@ -8,7 +8,7 @@ $('.dataTables_length select').addClass('browser-default');
     serverSide: true,
     order: false,
     ajax:{
-      url: "/csibt",
+      url: host_url + "/csibt",
       type: "get",
     },
     columns: [
@@ -53,7 +53,7 @@ csibt = {
     $.ajax({
       dataType:'json',
       type:'get',
-      url:"/csibt/"+id,
+      url: host_url + "/csibt/"+id,
     }).done(function(respuesta){
       console.log(respuesta);
       $("#ideasProyectoDeUnComite").empty();
@@ -78,7 +78,7 @@ csibt = {
     $.ajax({
        dataType:'json',
        type:'get',
-       url:"/idea/detallesIdea/"+idIdea
+       url: host_url + "/idea/detallesIdea/"+idIdea
     }).done(function(respuesta){
       $("#titulo").empty();
       $("#detalle_idea").empty();

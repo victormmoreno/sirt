@@ -7,7 +7,7 @@ function verHorasDeExpertosEnProyecto(id) {
   $.ajax({
     dataType:'json',
     type:'get',
-    url:"/proyecto/consultarHorasExpertos/"+id
+    url: host_url + "/proyecto/consultarHorasExpertos/"+id
   }).done(function(respuesta){
     $("#horasAsesoriasExpertosPorProyeto_table").empty();
     if (respuesta.horas.length == 0 ) {
@@ -49,7 +49,7 @@ function consultarProyectosDeTalentos () {
         order: [ 0, 'desc' ],
         "lengthChange": false,
         ajax:{
-            url: "/proyecto/datatableProyectosDelTalento/",
+            url: host_url + "/proyecto/datatableProyectosDelTalento/",
             data: function (d) {
                 d.codigo_proyecto = $('.codigo_proyecto').val(),
                 d.nombre = $('.nombre').val(),
@@ -98,7 +98,7 @@ function verTalentosDeUnProyecto(id){
     $.ajax({
         dataType:'json',
         type:'get',
-        url:"/proyecto/ajaxConsultarTalentosDeUnProyecto/"+id
+        url: host_url + "/proyecto/ajaxConsultarTalentosDeUnProyecto/"+id
     }).done(function(respuesta){
         $("#talentosAsociadosAUnProyecto_table").empty();
         if (respuesta.talentos.length != 0 ) {
@@ -150,7 +150,7 @@ function consultarProyectosDelGestorPorAnho() {
         order: [ 0, 'desc' ],
         "lengthChange": false,
         ajax:{
-            url: "/proyecto/datatableProyectosDelGestorPorAnho/"+0+"/"+anho,
+            url: host_url + "/proyecto/datatableProyectosDelGestorPorAnho/"+0+"/"+anho,
             data: function (d) {
                 d.codigo_proyecto = $('.codigo_proyecto').val(),
                 d.nombre = $('.nombre').val(),
@@ -285,7 +285,7 @@ function consultarProyectosDelNodoPorAnho() {
     order: [ 0, 'desc' ],
     "lengthChange": false,
     ajax:{
-      url: "/proyecto/datatableProyectosDelNodoPorAnho/"+0+"/"+anho_proyectos_nodo,
+      url: host_url + "/proyecto/datatableProyectosDelNodoPorAnho/"+0+"/"+anho_proyectos_nodo,
       data: function (d) {
         d.codigo_proyecto = $('#codigo_proyecto_tblProyectosDelNodoPorAnho').val(),
         d.gestor = $('#gestor_tblProyectosDelNodoPorAnho').val(),
@@ -368,7 +368,7 @@ function eliminarProyectoPorId_moment(id) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/proyecto/eliminarProyecto/'+id,
+        url: host_url + '/proyecto/eliminarProyecto/'+id,
         success: function (data) {
             if (data.retorno) {
                 Swal.fire('Eliminación Exitosa!', 'El proyecto se ha eliminado completamente!', 'success');
@@ -389,7 +389,7 @@ var infoActividad = {
             $.ajax({
                 dataType:'json',
                 type:'get',
-                url:'/actividad/detalle/'+code
+                url: host_url + '/actividad/detalle/'+code
             }).done(function (response) {
                 $("#actividad_titulo").empty();
                 $("#detalleActividad").empty();
