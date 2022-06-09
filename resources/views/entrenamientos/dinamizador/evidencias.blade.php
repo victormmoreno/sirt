@@ -48,7 +48,7 @@
       serverSide: true,
       order: false,
       ajax:{
-        url: "/entrenamientos/datatableArchivosDeUnEntrenamiento/"+{{$entrenamiento->id}},
+        url: host_url + "/entrenamientos/datatableArchivosDeUnEntrenamiento/"+{{$entrenamiento->id}},
         type: "get",
       },
       columns: [

@@ -9,7 +9,7 @@ function consultarIdeasEnviadasAlNodo () {
       order: [ 0, 'desc' ],
       "lengthChange": false,
       ajax:{
-        url: "/idea/datatableIdeasDeTalentos/",
+        url: host_url + "/idea/datatableIdeasDeTalentos/",
       },
       columns: [
         {

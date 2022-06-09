@@ -62,7 +62,7 @@ function consultarIngresosDeUnNodo(id) {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/ingreso/consultarIngresosDeUnNodoTecnoparque/"+id,
+      url: host_url + "/ingreso/consultarIngresosDeUnNodoTecnoparque/"+id,
       type: "get",
     },
     columns: [

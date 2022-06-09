@@ -314,7 +314,7 @@ class ArchivoController extends Controller
     {
         if (request()->ajax()) {
         $this->validate(request(), [
-            'nombreArchivo' => 'max:50000|mimes:jpeg,png,jpg,docx,doc,pdf,exe,xlsl,xlsx,xls,pptx,sldx,ppsx,zip',
+            'nombreArchivo' => 'max:50000',
         ],
         [
             'nombreArchivo.mimes' => 'El tipo de archivo no es permitido',

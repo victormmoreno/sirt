@@ -7,7 +7,7 @@ function consultarEntrenamientosPorNodo_Administrador(id) {
     processing: true,
     serverSide: true,
     ajax:{
-      url: "/entrenamientos/consultarEntrenamientosPorNodo/",
+      url: host_url + "/entrenamientos/consultarEntrenamientosPorNodo/",
       type: "get",
       data: {
         filter_nodo: id.value,

@@ -119,7 +119,7 @@
         serverSide: true,
         order: [ 0, 'desc' ],
         ajax:{
-          url: "/intervencion/datatableIntervencionesDelNodo/"+0+"/"+anho,
+          url: host_url + "/intervencion/datatableIntervencionesDelNodo/"+0+"/"+anho,
           data: function (d) {
             d.codigo_articulacion = $('.codigo_articulacion').val(),
             d.nombre = $('.nombre').val(),
@@ -202,7 +202,7 @@
         serverSide: true,
         order: [ 0, 'desc' ],
         ajax:{
-          url: "/intervencion/datatableIntervencionesAEmpresasDelGestor/"+id+"/"+anho,
+          url: host_url + "/intervencion/datatableIntervencionesAEmpresasDelGestor/"+id+"/"+anho,
           data: function (d) {
             d.codigo_articulacion = $('.codigo_articulacion').val(),
             d.nombre = $('.nombre').val(),

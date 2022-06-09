@@ -103,7 +103,7 @@
       serverSide: true,
       order: false,
       ajax:{
-        url: "/csibt/archivosDeUnComite/"+{{$comite->id}},
+        url: host_url + "/csibt/archivosDeUnComite/"+{{$comite->id}},
         type: "get",
       },
       columns: [
@@ -137,7 +137,7 @@
   }
 
   var DropzoneComite = new Dropzone('.dropzone', {
-    url: '/csibt/store/{{ $comite->id }}/filesComite',
+    url: host_url + '/csibt/store/{{ $comite->id }}/filesComite',
     headers: {
       'X-CSRF-TOKEN': '{{ csrf_token() }}'
     },

@@ -7,7 +7,7 @@ $(document).ready(function() {
     processing: true,
     serverSide: true,
     ajax:{
-      url: "/empresa/datatableEmpresasDeTecnoparque",
+      url: host_url + "/empresa/datatableEmpresasDeTecnoparque",
       type: "get",
     },
     deferRender: true,
@@ -57,7 +57,7 @@ function addEmpresaAEdt(id) {
     $.ajax({
       dataType:'json',
       type:'get',
-      url:'/empresa/ajaxConsultarEmpresaPorIdEntidad/'+id,
+      url: host_url + '/empresa/ajaxConsultarEmpresaPorIdEntidad/'+id,
     }).done(function(ajax){
       let idEntidad = ajax.detalles.entidad_id;
       let fila = '<tr class="selected" id=entidadAsociadaAEdt'+idEntidad+'>'

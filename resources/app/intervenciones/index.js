@@ -2,7 +2,7 @@ function detallesDeUnaIntervencion(id){
     $.ajax({
        dataType:'json',
        type:'get',
-       url:"/intervencion/ajaxDetallesDeUnaArticulacion/"+id,
+       url: host_url + "/intervencion/ajaxDetallesDeUnaArticulacion/"+id,
     }).done(function(respuesta){
       $("#articulacionDetalle_titulo").empty();
       $("#detalleArticulacion").empty();
@@ -84,7 +84,7 @@ function detallesDeUnaIntervencion(id){
   $.ajax({
     dataType:'json',
     type:'get',
-    url:"/articulacion/consultarEntidadDeLaArticulacion/"+id
+    url: host_url + "/articulacion/consultarEntidadDeLaArticulacion/"+id
   }).done(function(respuesta){
     $("#detalleDeUnaArticulacion_titulo").empty();
     $("#detalleArticulacion_body").empty();
@@ -248,7 +248,7 @@ function detallesDeUnaIntervencion(id){
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/intervencion/eliminarArticulacion/'+id,
+      url: host_url + '/intervencion/eliminarArticulacion/'+id,
       success: function (data) {
         if (data.retorno) {
           Swal.fire('Eliminación Exitosa!', 'La Intervención a Empresa se ha eliminado completamente!', 'success');

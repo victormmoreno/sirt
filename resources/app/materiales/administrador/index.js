@@ -29,7 +29,7 @@ var selectMaterialesPorNodo = {
                 },
                 "pagingType": "full_numbers",
                 ajax: {
-                    url: "/materiales/getmaterialespornodo/" + nodo,
+                    url: host_url + "/materiales/getmaterialespornodo/" + nodo,
                     type: "get",
                 },
                 columns: [

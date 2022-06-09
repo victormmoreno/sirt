@@ -7,7 +7,7 @@ $(document).ready(function() {
     serverSide: true,
     paging: true,
     ajax:{
-      url: "/entrenamientos",
+      url: host_url + "/entrenamientos",
       type: "get",
     },
 
@@ -105,7 +105,7 @@ function cambiarEstadoDeIdeasDeProyectoDeEntrenamiento(idea, estado) {
   $.ajax({
     dataType:'json',
     type:'get',
-    url:"/entrenamientos/inhabilitarEntrenamiento/"+idea+"/"+estado,
+    url: host_url + "/entrenamientos/inhabilitarEntrenamiento/"+idea+"/"+estado,
     success: function (data) {
       console.log(data);
       if (data.update == "true") {

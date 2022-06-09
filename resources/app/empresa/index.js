@@ -7,7 +7,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax:{
-        url: "/empresa/datatableEmpresasDeTecnoparque",
+        url: host_url + "/empresa/datatableEmpresasDeTecnoparque",
         type: "get",
         },
         columns: [

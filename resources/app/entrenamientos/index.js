@@ -2,7 +2,7 @@ function detallesIdeasDelEntrenamiento(id){
   $.ajax({
      dataType:'json',
      type:'get',
-     url:"entrenamientos/"+id,
+     url: host_url + "entrenamientos/"+id,
      data: {
        identrenamiento: id,
      }
@@ -28,7 +28,7 @@ $(document).ready(function() {
     processing: true,
     serverSide: true,
     ajax:{
-      url: "/entrenamientos/consultarEntrenamientosPorNodo",
+      url: host_url + "/entrenamientos/consultarEntrenamientosPorNodo",
       type: "get",
     },
     columns: [
@@ -62,7 +62,7 @@ $(document).ready(function() {
     processing: true,
     serverSide: true,
     ajax:{
-      url: "/entrenamientos/consultarEntrenamientosPorNodo",
+      url: host_url + "/entrenamientos/consultarEntrenamientosPorNodo",
       type: "get",
       data: {
         nodo: null,

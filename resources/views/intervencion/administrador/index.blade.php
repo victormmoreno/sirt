@@ -104,7 +104,7 @@
           serverSide: true,
           order: [ 0, 'desc' ],
           ajax:{
-            url: "/intervencion/datatableIntervencionesDelNodo/"+id+"/"+anho,
+            url: host_url + "/intervencion/datatableIntervencionesDelNodo/"+id+"/"+anho,
             data: function (d) {
               d.codigo_articulacion = $('.codigo_articulacion').val(),
               d.nombre = $('.nombre').val(),

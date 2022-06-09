@@ -175,7 +175,7 @@
         $.ajax({
           dataType: 'json',
           type: 'get',
-          url: '/grafico/consultarGestoresYLineasDeUnNodo/'+id,
+          url: host_url + '/grafico/consultarGestoresYLineasDeUnNodo/'+id,
           success: function (data) {
             $('#txtgestor_id_edtGrafico2').empty();
             $('#txtgestor_id_edtGrafico2').append('<option value="">Seleccione el experto</option>')

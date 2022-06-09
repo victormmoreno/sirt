@@ -8,7 +8,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: {
-            url: "/materiales",
+            url: host_url + "/materiales",
             type: "get",
         },
         columns: [{
@@ -87,7 +87,7 @@ var materialFormacion = {
                 let token = $("meta[name='csrf-token']").attr("content");
                 $.ajax(
                 {
-                    url: "/materiales/"+id,
+                    url: host_url + "/materiales/"+id,
                     type: 'DELETE',
                     data: {
                         "id": id,

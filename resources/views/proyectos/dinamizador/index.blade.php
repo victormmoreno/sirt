@@ -151,7 +151,7 @@
         order: [ 0, 'desc' ],
         "lengthChange": false,
         ajax:{
-          url: "/proyecto/datatableProyectosDelGestorPorAnho/"+gestor+"/"+anho,
+          url: host_url + "/proyecto/datatableProyectosDelGestorPorAnho/"+gestor+"/"+anho,
           data: function (d) {
             d.codigo_proyecto = $('#codigo_proyecto_tblproyectosDelGestorPorAnho').val(),
             d.gestor = $('#gestor_tblproyectosDelGestorPorAnho').val(),

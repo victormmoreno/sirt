@@ -160,7 +160,7 @@
       serverSide: true,
       order: [ 0, 'desc' ],
       ajax:{
-        url: "/proyecto/datatableProyectosDelGestorPorAnho/"+{{ auth()->user()->gestor->id }}+"/"+anho,
+        url: host_url + "/proyecto/datatableProyectosDelGestorPorAnho/"+{{ auth()->user()->gestor->id }}+"/"+anho,
         data: function (d) {
           d.codigo_proyecto = $('#codigo_proyecto_tblproyectosDelGestorPorAnho_seguimiento').val(),
           d.nombre = $('#nombre_tblproyectosDelGestorPorAnho_seguimiento').val(),
@@ -200,7 +200,7 @@
       serverSide: true,
       order: [ 0, 'desc' ],
       ajax:{
-        url: "/articulacion/datatableArticulacionesDelGestor/"+{{ auth()->user()->gestor->id }}+"/"+anho,
+        url: host_url + "/articulacion/datatableArticulacionesDelGestor/"+{{ auth()->user()->gestor->id }}+"/"+anho,
         data: function (d) {
           d.search = $('input[type="search"]').val()
         }

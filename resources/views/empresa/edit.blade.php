@@ -159,7 +159,7 @@
         $.ajax({
             dataType: 'json',
             type: 'get',
-            url: '/usuario/getciudad/' + id
+            url: host_url + '/usuario/getciudad/' + id
         }).done(function(response) {
             $('#txtciudad_id_empresa').empty();
             $('#txtciudad_id_empresa').append('<option value="">Seleccione la Ciudad</option>')

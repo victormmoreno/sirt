@@ -54,7 +54,7 @@
       serverSide: true,
       order: false,
       ajax:{
-        url: "/entrenamientos/datatableArchivosDeUnEntrenamiento/"+{{$entrenamiento->id}},
+        url: host_url + "/entrenamientos/datatableArchivosDeUnEntrenamiento/"+{{$entrenamiento->id}},
         type: "get",
       },
       columns: [
@@ -88,7 +88,7 @@
   }
 
   var DropzoneEntrenamiento = new Dropzone('#evidencias_entrenamiento', {
-    url: '/entrenamientos/store/' + {{$entrenamiento->id}} + '/files',
+    url: host_url + '/entrenamientos/store/' + {{$entrenamiento->id}} + '/files',
     headers: {
       'X-CSRF-TOKEN': '{{ csrf_token() }}'
     },
