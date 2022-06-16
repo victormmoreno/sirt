@@ -40,14 +40,14 @@ class MaterialImport implements ToCollection, WithHeadingRow
                 $row['medida'] = ltrim(rtrim( $row['medida']));
                 $row['nombre'] = ltrim(rtrim($row['nombre']));
                 $row['cantidad'] = ltrim(rtrim($row['cantidad']));
-                $row['valor_compra'] = ltrim(rtrim($row['valor_compra']));
+                $row['valor_compra'] = ltrim(rtrim(str_slug($row['valor_compra'], '_')));
                 $row['proveedor'] = ltrim(rtrim($row['proveedor']));
                 $row['marca'] = ltrim(rtrim($row['marca']));
                 // Mayúsculas
 
                 $row['nombre'] = strtoupper($row['nombre']);
                 $row['cantidad'] = strtoupper($row['cantidad']);
-                $row['valor_compra'] = strtoupper($row['valor_compra']);
+                $row['valor_compra'] = strtoupper(str_slug($row['valor_compra'], '_'));
                 $row['proveedor'] = strtoupper($row['proveedor']);
                 $row['marca'] = strtoupper($row['marca']);
 
@@ -62,7 +62,7 @@ class MaterialImport implements ToCollection, WithHeadingRow
 
                 // Validar tipo_material
                 $tipoMaterial = \App\Models\TipoMaterial::where('nombre', $row['tipo_material'])->first();
-                $validacion = $this->validaciones->validarQuery($tipoMaterial, $row['tipo_material'], $key, 'tipo material', $this->hoja);
+                $validacion = $this->validaciones->validarQuery($tipoMaterial, str_slug($row['tipo_material'], '_'), $key, 'tipo material', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
@@ -102,20 +102,12 @@ class MaterialImport implements ToCollection, WithHeadingRow
                 }
 
                 // Validar valor_compra
-                $validacion = $this->validaciones->validarCelda($row['valor_compra'], $key, 'valor compra', $this->hoja);
+                $validacion = $this->validaciones->validarCelda(str_slug($row['valor_compra'], '_'), $key, 'valor compra', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                // $validacion = $this->validaciones->validarCelda($row['proveedor'], $key, 'proveedor', $this->hoja);
-                // if (!$validacion) {
-                //     return $validacion;
-                // }
 
-                // $validacion = $this->validaciones->validarCelda($row['marca'], $key, 'marca', $this->hoja);
-                // if (!$validacion) {
-                //     return $validacion;
-                // }
 
                 $validacion = $this->validaciones->validarTamanhoCelda($row['nombre'], $key, 'nombre', 1000, $this->hoja);
                 if (!$validacion) {
@@ -130,10 +122,10 @@ class MaterialImport implements ToCollection, WithHeadingRow
                 if (!$validacion) {
                     return $validacion;
                 }
-                
-                $material = Material::where('codigo_material', $row['codigo_material'])->first();
+
+                $material = Material::where('codigo_material', str_slug($row['codigo_material'], '_'))->first();
                 if (!isset($material) && $material == null) {
-                    
+
                     $codeMaterial = $this->generateCodigoMaterial($linea->id);
                     $material = $this->registerMaterial(
                         $codeMaterial,
@@ -178,7 +170,7 @@ class MaterialImport implements ToCollection, WithHeadingRow
 
     private function generateCodigoMaterial( $line)
     {
-        
+
             $anho = Carbon::now()->isoFormat('YYYY');
             $tecnoparque = sprintf("%02d", $this->nodo);
             $material = Material::selectRaw('MAX(id+1) AS max')->get()->last();

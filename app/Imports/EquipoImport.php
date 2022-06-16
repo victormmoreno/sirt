@@ -32,12 +32,12 @@ class EquipoImport implements ToCollection, WithHeadingRow
             foreach ($rows as $key => $row) {
                 $row['linea'] = ltrim(rtrim($row['linea']));
                 $row['referencia'] = ltrim(rtrim($row['referencia']));
-                $row['nombre_equipo'] = ltrim(rtrim($row['nombre_equipo']));
+                $row['nombre_equipo'] = ltrim(rtrim(str_slug($row['nombre_equipo'],'_')));
                 $row['marca'] = ltrim(rtrim( $row['marca']));
-                $row['costo_adquisicion'] = ltrim(rtrim( $row['costo_adquisicion']));
-                $row['vida_util'] = ltrim(rtrim($row['vida_util']));
-                $row['anio_compra'] = ltrim(rtrim($row['anio_compra']));
-                $row['promedio_horas_uso'] = ltrim(rtrim($row['promedio_horas_uso']));
+                $row['costo_adquisicion'] = ltrim(rtrim( str_slug($row['costo_adquisicion'], '_')));
+                $row['vida_util'] = ltrim(rtrim(str_slug($row['vida_util'],'_')));
+                $row['anio_compra'] = ltrim(rtrim(str_slug($row['anio_compra'], '_')));
+                $row['promedio_horas_uso'] = ltrim(rtrim(str_slug($row['promedio_horas_uso'], '_')));
 
                 // Validar linea
                 $linea = \App\Models\LineaTecnologica::where('nombre', $row['linea'])->first();
@@ -58,12 +58,12 @@ class EquipoImport implements ToCollection, WithHeadingRow
                 }
 
                 // Validar nombre
-                $validacion = $this->validaciones->validarCelda($row['nombre_equipo'], $key, 'nombre equipo', $this->hoja);
+                $validacion = $this->validaciones->validarCelda(str_slug($row['nombre_equipo'], '_'), $key, 'nombre equipo', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                $validacion = $this->validaciones->validarTamanhoCelda($row['nombre_equipo'], $key, 'nombre equipo', 200, $this->hoja);
+                $validacion = $this->validaciones->validarTamanhoCelda(str_slug($row['nombre_equipo'], '_'), $key, 'nombre equipo', 200, $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
@@ -79,44 +79,44 @@ class EquipoImport implements ToCollection, WithHeadingRow
                 }
 
                 // Validar costo_adquisicion
-                $validacion = $this->validaciones->validarCelda($row['costo_adquisicion'], $key, 'costo adquisición', $this->hoja);
+                $validacion = $this->validaciones->validarCelda(str_slug($row['costo_adquisicion'], '_'), $key, 'costo adquisición', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                $validacion = $this->validaciones->validarTamanhoCelda($row['costo_adquisicion'], $key, 'costo_adquisicion', 45, $this->hoja);
+                $validacion = $this->validaciones->validarTamanhoCelda(str_slug($row['costo_adquisicion'], '_'), $key, 'costo_adquisicion', 45, $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
                 // Validar vida_util
-                $validacion = $this->validaciones->validarCelda($row['vida_util'], $key, 'vida util', $this->hoja);
+                $validacion = $this->validaciones->validarCelda(str_slug($row['vida_util'], '_'), $key, 'vida util', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                $validacion = $this->validaciones->validarTamanhoCelda($row['vida_util'], $key, 'vida_util', 11, $this->hoja);
+                $validacion = $this->validaciones->validarTamanhoCelda(str_slug($row['vida_util'], '_'), $key, 'vida_util', 11, $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
                 // Validar anio_compra
-                $validacion = $this->validaciones->validarCelda($row['anio_compra'], $key, 'año compra', $this->hoja);
+                $validacion = $this->validaciones->validarCelda(str_slug($row['anio_compra'], '_'), $key, 'año compra', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
                 // Validar promedio_horas_uso
-                $validacion = $this->validaciones->validarCelda($row['promedio_horas_uso'], $key, 'promedio horas de uso', $this->hoja);
+                $validacion = $this->validaciones->validarCelda(str_slug($row['promedio_horas_uso'], '_'), $key, 'promedio horas de uso', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                $validacion = $this->validaciones->validarTamanhoCelda($row['promedio_horas_uso'], $key, 'promedio horas de uso', 11, $this->hoja);
+                $validacion = $this->validaciones->validarTamanhoCelda(str_slug($row['promedio_horas_uso'], '_'), $key, 'promedio horas de uso', 11, $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
-                $equipo = Equipo::where('nombre', $row['nombre_equipo'])
+                $equipo = Equipo::where('nombre', str_slug($row['nombre_equipo'], '_'))
                 ->where('nodo_id', $this->nodo)
                                 ->first();
                 if (!isset($equipo) && $equipo == null) {
@@ -155,12 +155,12 @@ class EquipoImport implements ToCollection, WithHeadingRow
             'nodo_id'               => $this->nodo,
             'lineatecnologica_id'   => $params['line'],
             'referencia'            => $row['referencia'],
-            'nombre'                => $row['nombre_equipo'],
+            'nombre'                => str_slug($row['nombre_equipo'], '_'),
             'marca'                 => $row['marca'],
-            'costo_adquisicion'     => $row['costo_adquisicion'],
-            'vida_util'             => $row['vida_util'],
-            'anio_compra'           => Carbon::parse($row['anio_compra'])->format('Y'),
-            'horas_uso_anio'        => $row['promedio_horas_uso'],
+            'costo_adquisicion'     => str_slug($row['costo_adquisicion'], '_'),
+            'vida_util'             => str_slug($row['vida_util'], '_'),
+            'anio_compra'           => Carbon::parse(str_slug($row['anio_compra'], '_'))->format('Y'),
+            'horas_uso_anio'        => str_slug($row['promedio_horas_uso'], '_'),
         ]);
     }
 
@@ -170,12 +170,12 @@ class EquipoImport implements ToCollection, WithHeadingRow
             'nodo_id'               => $this->nodo,
             'lineatecnologica_id'   => $params['line'],
             'referencia'            => $row['referencia'],
-            'nombre'                => $row['nombre_equipo'],
+            'nombre'                => str_slug($row['nombre_equipo'], '_'),
             'marca'                 => $row['marca'],
-            'costo_adquisicion'     => $row['costo_adquisicion'],
-            'vida_util'             => $row['vida_util'],
-            'anio_compra'           => Carbon::parse($row['anio_compra'])->format('Y'),
-            'horas_uso_anio'        => $row['promedio_horas_uso'],
+            'costo_adquisicion'     => str_slug($row['costo_adquisicion'], '_'),
+            'vida_util'             => str_slug($row['vida_util'], '_'),
+            'anio_compra'           => Carbon::parse(str_slug($row['anio_compra'], '_'))->format('Y'),
+            'horas_uso_anio'        => str_slug($row['promedio_horas_uso'], '_'),
         ]);
     }
 }
