@@ -29,6 +29,7 @@ class MaterialImport implements ToCollection, WithHeadingRow
     */
     public function collection(Collection $rows)
     {
+        DB::beginTransaction();
         $validacion = null;
         try {
             foreach ($rows as $key => $row) {
