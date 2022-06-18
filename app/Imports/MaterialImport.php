@@ -60,32 +60,35 @@ class MaterialImport implements ToCollection, WithHeadingRow
                     return $validacion;
                 }
 
-
                 // Validar tipo_material
                 $tipoMaterial = \App\Models\TipoMaterial::where('nombre', $row['tipo_material'])->first();
-                $validacion = $this->validaciones->validarQuery($tipoMaterial, str_slug($row['tipo_material'], '_'), $key, 'tipo material', $this->hoja);
-                if (!$validacion) {
-                    return $validacion;
+                if ($tipoMaterial == null) {
+                    $tipoMaterial = \App\Models\TipoMaterial::create([
+                        'nombre' => ltrim(rtrim($row['tipo_material']))
+                    ]);
                 }
 
                 // Validar categoria_material
                 $categoria = \App\Models\CategoriaMaterial::where('nombre', $row['categoria_material'])->first();
-                $validacion = $this->validaciones->validarQuery($categoria, $row['categoria_material'], $key, 'categoria material', $this->hoja);
-                if (!$validacion) {
-                    return $validacion;
+                if ($categoria == null) {
+                    $categoria = \App\Models\CategoriaMaterial::create([
+                        'nombre' => ltrim(rtrim($row['categoria_material']))
+                    ]);
                 }
-
                 // Validar presentacion
                 $presentacion = \App\Models\Presentacion::where('nombre', $row['presentacion'])->first();
-                $validacion = $this->validaciones->validarQuery($presentacion, $row['presentacion'], $key, 'presentacion', $this->hoja);
-                if (!$validacion) {
-                    return $validacion;
+                if ($presentacion == null) {
+                    $presentacion = \App\Models\Presentacion::create([
+                        'nombre' => ltrim(rtrim($row['presentacion']))
+                    ]);
                 }
+
                 // Validar Medida
                 $medida = \App\Models\Medida::where('nombre', $row['medida'])->first();
-                $validacion = $this->validaciones->validarQuery($medida, $row['medida'], $key, 'medida', $this->hoja);
-                if (!$validacion) {
-                    return $validacion;
+                if ($medida == null) {
+                    $medida = \App\Models\Medida::create([
+                        'nombre' => ltrim(rtrim($row['medida']))
+                    ]);
                 }
                 $validacion = $this->validaciones->validarCelda($row['fecha'], $key, 'Fecha', $this->hoja);
                 if (!$validacion) {
@@ -108,8 +111,6 @@ class MaterialImport implements ToCollection, WithHeadingRow
                     return $validacion;
                 }
 
-
-
                 $validacion = $this->validaciones->validarTamanhoCelda($row['nombre'], $key, 'nombre', 1000, $this->hoja);
                 if (!$validacion) {
                     return $validacion;
@@ -124,7 +125,9 @@ class MaterialImport implements ToCollection, WithHeadingRow
                     return $validacion;
                 }
 
-                $material = Material::where('codigo_material', str_slug($row['codigo_material'], '_'))->first();
+                $material = Material::where('codigo_material', $row['codigo_material'])
+                ->where('nodo_id', $this->nodo)
+                ->first();
                 if (!isset($material) && $material == null) {
 
                     $codeMaterial = $this->generateCodigoMaterial($linea->id);
