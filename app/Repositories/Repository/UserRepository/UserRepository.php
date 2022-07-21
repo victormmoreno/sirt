@@ -212,7 +212,7 @@ class UserRepository
         try {
             $user = $this->storeUser($request, $password);
             $user->ocupaciones()->sync($request->get('txtocupaciones'));
-            if ($this->existRoleInArray($request, User::IsAdministrador())) {
+            if ($this->existRoleInArray($request, User::IsActivador())) {
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleAdministrador'));
             }
             if ($this->existRoleInArray($request, User::IsDinamizador())) {
@@ -670,7 +670,7 @@ class UserRepository
             return $this->getInfoUsersTalentosWithProjects($anio)
                 ->where('nodos.id', $nodo)
                 ->where('gestores.id', $user);
-        } else if ($user == null && session()->get('login_role') == User::IsAdministrador()) {
+        } else if ($user == null && session()->get('login_role') == User::IsActivador()) {
             if ($nodo == null) {
                 $this->getInfoUsersTalentosWithProjects($anio);
             }
@@ -1265,7 +1265,7 @@ class UserRepository
      */
     private function generateFomatizedPassword($user)
     {
-        return config('auth.format_password'). substr($user->documento ,6).'*';
+        return config('auth.format_password'). substr($user->documento, -4).'*';
     }
 
 }

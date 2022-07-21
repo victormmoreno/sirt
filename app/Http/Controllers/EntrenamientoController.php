@@ -21,7 +21,7 @@ class EntrenamientoController extends Controller
     {
         $this->entrenamientoRepository = $entrenamientoRepository;
         $this->ideaRepository = $ideaRepository;
-        $this->middleware('auth', ['role_session:Infocenter|Administrador|Dinamizador']);
+        $this->middleware('auth', ['role_session:Infocenter|Activador|Dinamizador']);
     }
 
     /**
@@ -63,7 +63,7 @@ class EntrenamientoController extends Controller
                 'entrenamiento' => $entrenamiento,
             ]);
         }
-        if (\Session::get('login_role') == User::IsAdministrador()) {
+        if (\Session::get('login_role') == User::IsActivador()) {
             return view('entrenamientos.dinamizador.evidencias', [
                 'entrenamiento' => $entrenamiento,
             ]);
@@ -106,7 +106,7 @@ class EntrenamientoController extends Controller
             }
             $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
             return view('entrenamientos.infocenter.index', compact('nodo'));
-        } else if (\Session::get('login_role') == User::IsAdministrador()) {
+        } else if (\Session::get('login_role') == User::IsActivador()) {
             $nodos = Nodo::SelectNodo()->get();
             return view('entrenamientos.administrador.index', compact('nodos'));
         } else if (\Session::get('login_role') == User::IsDinamizador()) {
@@ -149,7 +149,7 @@ class EntrenamientoController extends Controller
             case User::IsDinamizador():
                 $nodo_id = auth()->user()->dinamizador->nodo_id;
                 break;
-            case User::IsAdministrador():
+            case User::IsActivador():
                 $nodo_id = $request->filter_nodo;
                 break;
             default:

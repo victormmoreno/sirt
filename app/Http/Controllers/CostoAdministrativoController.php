@@ -18,7 +18,7 @@ class CostoAdministrativoController extends Controller
 
     public function __construct(CostoAdministrativoRepository $costoAdministrativoRepository, NodoRepository $nodoRepository)
     {
-        $this->middleware(['auth', 'role_session:Administrador|Dinamizador']);
+        $this->middleware(['auth', 'role_session:Activador|Dinamizador']);
         $this->setCostoAdministrativoRepository($costoAdministrativoRepository);
         $this->setNodoRepository($nodoRepository);
     }
@@ -91,7 +91,7 @@ class CostoAdministrativoController extends Controller
         }
 
         switch (Session::get('login_role')) {
-            case User::IsAdministrador():
+            case User::IsActivador():
                 return view('costoadministrativo.index', [
                     'nodos' => $this->getNodoRepository()->getSelectNodo(),
                 ]);
@@ -115,7 +115,7 @@ class CostoAdministrativoController extends Controller
         $this->authorize('getCostoAdministrativoPorNodo', CostoAdministrativo::class);
 
         if (request()->ajax()) {
-            if (session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()) {
+            if (session()->has('login_role') && session()->get('login_role') == User::IsActivador()) {
                 $costos = $this->getCostoAdministrativoRepository()->getInfoCostoAdministrativoNodo()
                     ->where('nodo_costoadministrativo.anho', Carbon::now()->year)
                     ->where('nodos.id', $nodo)

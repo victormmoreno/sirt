@@ -35,7 +35,7 @@ class IndicadorController extends Controller
         'metas_graph' => $metas->first(),
         'nodos' => Nodo::SelectNodo()->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get()
       ]);
-    } else if ( Session::get('login_role') == User::IsAdministrador() ) {
+    } else if ( Session::get('login_role') == User::IsActivador() ) {
       $metas = $this->nodoRepository->consultarMetasDeTecnoparque();
       $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl6Obtenido()])->get();
       $pbts_trl7_8 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl7Obtenido(), Proyecto::IsTrl8Obtenido()])->get();

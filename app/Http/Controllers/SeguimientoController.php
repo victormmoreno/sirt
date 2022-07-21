@@ -45,7 +45,7 @@ class SeguimientoController extends Controller
       ]);
     } else if (Session::get('login_role') == User::IsGestor()) {
       return view('seguimiento.gestor.index');
-    } else if (Session::get('login_role') == User::IsAdministrador()) {
+    } else if (Session::get('login_role') == User::IsActivador()) {
       return view('seguimiento.administrador.index', [
         'nodos' => Nodo::SelectNodo()->get(),
       ]);

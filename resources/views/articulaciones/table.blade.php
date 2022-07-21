@@ -45,7 +45,7 @@
     </tfoot>
   </table>
 @endif
-@if (Session::get('login_role') == App\User::IsAdministrador())
+@if (Session::get('login_role') == App\User::IsActivador())
   <table id="articulacionesNodo_table" class="display responsive-table datatable-example dataTable">
     <thead>
       <tr>

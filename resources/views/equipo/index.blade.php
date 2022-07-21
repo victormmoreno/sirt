@@ -28,11 +28,11 @@
 
                         <div class="row">
                             <div class="row">
-                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsGestor()))
+                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsGestor()))
                                 <div class="col s12 m12 l12">
                                     <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
                                         <span class="card-title center-align">
-                                            @if(session()->get('login_role') == App\User::IsAdministrador())
+                                            @if(session()->get('login_role') == App\User::IsActivador())
                                                 Equipos {{ config('app.name')}}
                                             @elseif(session()->get('login_role') == App\User::IsGestor())
                                                 Equipos {{auth()->user()->gestor->lineatecnologica->nombre}} |  Tecnoparque Nodo {{\NodoHelper::returnNameNodoUsuario()}}
@@ -58,7 +58,7 @@
                             </div>
                             <div class="divider"></div>
                             <div class="row no-m-t no-m-b search-tabs-row search-tabs-header ">
-                                @if(session()->get('login_role') == App\User::IsAdministrador())
+                                @if(session()->get('login_role') == App\User::IsActivador())
                                 <div class="input-field col s12 m2 l2">
                                     <label class="active" for="filter_nodo">Nodo <span class="red-text">*</span></label>
                                     <select class="js-states browser-default select2" name="filter_nodo" id="filter_nodo">
@@ -85,7 +85,7 @@
                                 </div>
                             </div>
                             <br>
-                            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsGestor()))
+                            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsGestor()))
                             <table class="display responsive-table" id="equipo_data_table">
                                 <thead>
                                     <th width="15%">Linea Tecnológica</th>

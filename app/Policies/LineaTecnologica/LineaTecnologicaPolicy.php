@@ -17,7 +17,7 @@ class LineaTecnologicaPolicy
      */
     public function index(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+        return (bool) $user->hasAnyRole([User::IsActivador()]) && session()->has('login_role') && session()->get('login_role') == User::IsActivador();
     }
 
     /**
@@ -27,7 +27,7 @@ class LineaTecnologicaPolicy
      */
     public function create(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+        return (bool) $user->hasAnyRole([User::IsActivador()]) && session()->has('login_role') && session()->get('login_role') == User::IsActivador();
     }
 
     /**
@@ -37,23 +37,23 @@ class LineaTecnologicaPolicy
      */
     public function store(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+        return (bool) $user->hasAnyRole([User::IsActivador()]) && session()->has('login_role') && session()->get('login_role') == User::IsActivador();
     }
 
     public function show(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+        return (bool) $user->hasAnyRole([User::IsActivador()]) && session()->has('login_role') && session()->get('login_role') == User::IsActivador();
     }
 
     public function edit(User $user, LineaTecnologica $linea)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+        return (bool) $user->hasAnyRole([User::IsActivador()]) && session()->has('login_role') && session()->get('login_role') == User::IsActivador();
 
        
     }
 
     public function update(User $user, LineaTecnologica $linea)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+        return (bool) $user->hasAnyRole([User::IsActivador()]) && session()->has('login_role') && session()->get('login_role') == User::IsActivador();
     }
 }

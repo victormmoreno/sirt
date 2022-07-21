@@ -67,15 +67,15 @@ class ComiteController extends Controller
       return view('comite.gestor.detalle_asignado', [
         'comite' => $comite
       ]);
-    } else if (Session::get('login_role') == User::IsAdministrador() && $comite->estado->nombre == 'Programado') {
+    } else if (Session::get('login_role') == User::IsActivador() && $comite->estado->nombre == 'Programado') {
       return view('comite.administrador.detalle_agendamiento', [
         'comite' => $comite
       ]);
-    } else if (Session::get('login_role') == User::IsAdministrador() && $comite->estado->nombre == 'Realizado') {
+    } else if (Session::get('login_role') == User::IsActivador() && $comite->estado->nombre == 'Realizado') {
       return view('comite.administrador.detalle_realizado', [
         'comite' => $comite
       ]);
-    } else if (Session::get('login_role') == User::IsAdministrador() && $comite->estado->nombre == 'Proyectos asignados') {
+    } else if (Session::get('login_role') == User::IsActivador() && $comite->estado->nombre == 'Proyectos asignados') {
       return view('comite.administrador.detalle_asignado', [
         'comite' => $comite
       ]);
@@ -139,7 +139,7 @@ class ComiteController extends Controller
         })->rawColumns(['details'])->make(true);
       }
       return view('comite.gestor.index');
-    } else if ( Session::get('login_role') == User::IsAdministrador() ) {
+    } else if ( Session::get('login_role') == User::IsActivador() ) {
       $nodos = Nodo::SelectNodo()->get();
       return view('comite.administrador.index', compact('nodos'));
     } else if ( Session::get('login_role') == User::IsDinamizador() ) {

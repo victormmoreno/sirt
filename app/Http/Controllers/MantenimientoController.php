@@ -90,7 +90,7 @@ class MantenimientoController extends Controller
 
         }
         switch (session()->get('login_role')) {
-            case User::IsAdministrador():
+            case User::IsActivador():
                 return view('mantenimiento.index', [
                     'nodos' => $this->getNodoRepository()->getSelectNodo(),
                 ]);
@@ -118,7 +118,7 @@ class MantenimientoController extends Controller
     public function getMantenimientosEquiposPorNodo($nodo)
     {
         if (request()->ajax()) {
-            if (session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()) {
+            if (session()->has('login_role') && session()->get('login_role') == User::IsActivador()) {
 
                 $mantenimientos = $this->getMantenimientoRepository()->findInfoMantenimiento()
                         ->whereHas('equipo.nodo', function($query) use($nodo){

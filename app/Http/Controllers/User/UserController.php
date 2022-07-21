@@ -41,10 +41,13 @@ class UserController extends Controller
      */
     public function index(Request $request, UserDatatable $usersDatatables)
     {
-        $this->authorize('index', User::class);
+        //$this->authorize('index', User::class);
 
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
+                $nodo = $request->filter_nodo;
+                break;
+            case User::IsActivador():
                 $nodo = $request->filter_nodo;
                 break;
             case User::IsArticulador():
@@ -79,6 +82,13 @@ class UserController extends Controller
             return $usersDatatables->datatableUsers($users);
         }
         switch (session()->get('login_role')) {
+            case User::IsActivador():
+                $nodos = Entidad::has('nodo')->with('nodo')->orderby('nombre')->get()->pluck('nombre', 'nodo.id');
+                return view('users.administrador.index', [
+                    'roles' => $this->userRepository->getAllRoles(),
+                    'nodos' => $nodos,
+                ]);
+                break;
             case User::IsAdministrador():
                 $nodos = Entidad::has('nodo')->with('nodo')->orderby('nombre')->get()->pluck('nombre', 'nodo.id');
                 return view('users.administrador.index', [
@@ -222,6 +232,9 @@ class UserController extends Controller
         $this->authorize('export', User::class);
 
         switch (\Session::get('login_role')) {
+            case User::IsActivador():
+                $nodo = $request->filter_nodo;
+                break;
             case User::IsAdministrador():
                 $nodo = $request->filter_nodo;
                 break;
@@ -281,7 +294,7 @@ class UserController extends Controller
 
     public function userSearch()
     {
-        return view('users.search');
+       return view('users.search');
     }
 
     public function querySearchUser(Request $request)

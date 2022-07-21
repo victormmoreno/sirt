@@ -52,14 +52,14 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() || session()->get('login_role') == App\User::IsAdministrador())
+                                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() || session()->get('login_role') == App\User::IsActivador())
                                             <div class="right hide-on-med-and-down">
                                                 <small class="green-text text-darken-2">
                                                     <a class="waves-effect waves-green btn-flat" href="{{route('excel.exportexcelfornodo',$nodo->entidad->slug)}}">
                                                         <i class="fas fa-file-excel fa-lg"></i>Exportar a Excel
                                                     </a>
                                                 </small>
-                                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
+                                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
                                                 <small class="green-text text-darken-2">
                                                 <a href="{{route('nodo.edit', $nodo->entidad->slug)}}" class="waves-effect waves-blue btn-flat">
                                                         Cambiar Infomación

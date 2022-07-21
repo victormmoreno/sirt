@@ -27,7 +27,7 @@ class EmpresaPolicy
      */
     public function create(User $user)
     {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador();
+        return (bool) collect($user->getRoleNames())->contains(User::IsActivador()) && session()->get('login_role') == User::IsActivador();
     }
 
     /**
@@ -38,7 +38,7 @@ class EmpresaPolicy
      */
     public function store(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+        return (bool) $user->hasAnyRole([User::IsActivador()]) && session()->has('login_role') && session()->get('login_role') == User::IsActivador();
     }
 
     /**
@@ -49,7 +49,7 @@ class EmpresaPolicy
      */
     public function edit(Empresa $empresa)
     {
-        return (bool) session()->get('login_role') == User::IsAdministrador() || (session()->get('login_role') == User::IsTalento() && $empresa->user_id == auth()->user()->id);
+        return (bool) session()->get('login_role') == User::IsActivador() || (session()->get('login_role') == User::IsTalento() && $empresa->user_id == auth()->user()->id);
     }
 
     /**
@@ -60,7 +60,7 @@ class EmpresaPolicy
      */
     public function update(Empresa $empresa)
     {
-        return (bool) session()->get('login_role') == User::IsAdministrador() || (session()->get('login_role') == User::IsTalento() && $empresa->user_id == auth()->user()->id);
+        return (bool) session()->get('login_role') == User::IsActivador() || (session()->get('login_role') == User::IsTalento() && $empresa->user_id == auth()->user()->id);
     }
 
 }

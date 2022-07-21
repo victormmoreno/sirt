@@ -20,7 +20,7 @@ class UsoInfraestructuraPolicy
      */
     public function index(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsArticulador(), User::IsTalento(), User::IsApoyoTecnico()]) && session()->get('login_role') != User::IsIngreso() || session()->get('login_role') != User::IsInfocenter();
+        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsDinamizador(), User::IsGestor(), User::IsArticulador(), User::IsTalento(), User::IsApoyoTecnico()]) && session()->get('login_role') != User::IsIngreso() || session()->get('login_role') != User::IsInfocenter();
     }
 
     /**
@@ -53,7 +53,7 @@ class UsoInfraestructuraPolicy
      */
     public function getUsoInfraestructuraForNodo(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->get('login_role') == User::IsAdministrador();
+        return (bool) $user->hasAnyRole([User::IsActivador()]) && session()->get('login_role') == User::IsActivador();
     }
 
     /**
@@ -65,7 +65,7 @@ class UsoInfraestructuraPolicy
      */
     public function show(User $user, UsoInfraestructura $uso)
     {
-        if ($user->hasAnyRole([User::IsAdministrador()]) && session()->get('login_role') == User::IsAdministrador()) {
+        if ($user->hasAnyRole([User::IsActivador()]) && session()->get('login_role') == User::IsActivador()) {
             return true;
         } else if ($user->hasAnyRole([ User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador() && $uso->asesorable->nodo->id == $user->dinamizador->nodo->id) {
             return true;

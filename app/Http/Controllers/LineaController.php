@@ -18,7 +18,7 @@ class LineaController extends Controller
 
         $this->middleware([
             'auth',
-            'role_session:Administrador|Dinamizador|Experto|Talento',
+            'role_session:Activador|Dinamizador|Experto|Talento',
         ])->except('getAllLineasForNodo');
         $this->setLineaRepository($lineaRepository);
     }

@@ -122,8 +122,8 @@ class UserPolicy
      */
     public function index(User $user)
     {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador())
-            && session()->get('login_role') == User::IsAdministrador()
+        return (bool) collect($user->getRoleNames())->contains(User::IsActivador())
+            && session()->get('login_role') == User::IsActivador()
             || collect($user->getRoleNames())->contains(User::IsDinamizador())
             && session()->get('login_role') == User::IsDinamizador()
             || collect($user->getRoleNames())->contains(User::IsGestor())
@@ -142,7 +142,7 @@ class UserPolicy
     public function create(User $user)
     {
 
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador() || collect($user->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador() || collect($user->getRoleNames())->contains(User::IsGestor()) && session()->get('login_role') == User::IsGestor();
+        return (bool) collect($user->getRoleNames())->contains(User::IsActivador()) && session()->get('login_role') == User::IsActivador() || collect($user->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador() || collect($user->getRoleNames())->contains(User::IsGestor()) && session()->get('login_role') == User::IsGestor();
     }
 
     /**
@@ -153,13 +153,13 @@ class UserPolicy
     public function store(User $user)
     {
 
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador() || collect($user->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador() || collect($user->getRoleNames())->contains(User::IsGestor()) && session()->get('login_role') == User::IsGestor();
+        return (bool) collect($user->getRoleNames())->contains(User::IsActivador()) && session()->get('login_role') == User::IsActivador() || collect($user->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador() || collect($user->getRoleNames())->contains(User::IsGestor()) && session()->get('login_role') == User::IsGestor();
     }
 
     public function edit(User $authuser, User $user)
     {
         if (
-            session()->get('login_role') == User::IsAdministrador() && $user->hasAnyRole(Role::all()) && $authuser->documento != $user->documento ||
+            session()->get('login_role') == User::IsActivador() && $user->hasAnyRole(Role::all()) && $authuser->documento != $user->documento ||
             $user->roles->isEmpty()
         ) {
             return true;
@@ -185,7 +185,7 @@ class UserPolicy
     public function update(User $authuser, User $user)
     {
         if (
-            session()->get('login_role') == User::IsAdministrador() && $user->hasAnyRole(Role::all()) && $authuser->id != $user->id ||
+            session()->get('login_role') == User::IsActivador() && $user->hasAnyRole(Role::all()) && $authuser->id != $user->id ||
             $user->roles->isEmpty()
         ) {
             return true;
@@ -245,7 +245,9 @@ class UserPolicy
      */
     public function export(User $user)
     {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador())
+        return (bool) collect($user->getRoleNames())->contains(User::IsActivador())
+            && session()->get('login_role') == User::IsActivador()
+            || collect($user->getRoleNames())->contains(User::IsAdministrador())
             && session()->get('login_role') == User::IsAdministrador()
             || collect($user->getRoleNames())->contains(User::IsDinamizador())
             && session()->get('login_role') == User::IsDinamizador()
@@ -266,8 +268,8 @@ class UserPolicy
      */
     public function confirmContratorInformation(User $authUser, User $user)
     {
-        return (bool) ((collect($authUser->getRoleNames())->contains(User::IsAdministrador())
-            && session()->get('login_role') == User::IsAdministrador())
+        return (bool) ((collect($authUser->getRoleNames())->contains(User::IsActivador())
+            && session()->get('login_role') == User::IsActivador())
             || (collect($authUser->getRoleNames())->contains(User::IsDinamizador())
             && session()->get('login_role') == User::IsDinamizador())) && ( isset($user->contratista) && $user->estado == User::IsInactive());
     }
@@ -276,10 +278,10 @@ class UserPolicy
     {
         if(($authuser->documento == $user->documento)){
             return false;
-        }elseif(session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()){
+        }elseif(session()->has('login_role') && (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador())){
             return true;
 
-        }else if(session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() && !$user->hasAnyRole([User::IsDinamizador(), User::IsAdministrador()])){
+        }else if(session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() && !$user->hasAnyRole([User::IsDinamizador(), User::IsActivador()])){
             return true;
         }else if(session()->has('login_role') && (session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsArticulador()) && !$user->present()->userChangeAccess()){
             return true;

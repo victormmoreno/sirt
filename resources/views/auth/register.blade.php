@@ -382,7 +382,7 @@
                                     <div class="row">
                                         <div class="input-field col s12 m4 l4 ">
                                             <select class="js-states browser-default select2 select2-hidden-accessible" id="txttipotalento" name="txttipotalento" style="width: 100%" tabindex="-1" onchange="tipoTalento.getSelectTipoTalento(this)">
-                                                @if(isset($user->talento->tipotalento->id) && ((session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador())))
+                                                @if(isset($user->talento->tipotalento->id) && ((session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsDinamizador())))
                                                     <option value="{{$user->talento->tipotalento->id}}" selected>{{$user->talento->tipotalento->nombre}}</option>
                                                 @else
                                                     <option value="">Seleccione tipo de talento</option>
@@ -408,7 +408,7 @@
                                             <div class="row aprendizSena" style="display:none">
                                                 <div class="input-field col s12 m12 l12"  >
                                                     <select class=" js-states browser-default select2 select2-hidden-accessible" id="txtregional_aprendiz" name="txtregional_aprendiz" style="width: 100%" tabindex="-1" onchange="tipoTalento.getCentroFormacionAprendiz()" >
-                                                        @if(session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador())
+                                                        @if(session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsDinamizador())
                                                             @if(isset($user->talento->entidad->centro->regional->id))
                                                                 <option value="{{$user->talento->entidad->centro->regional->id}}" selected="">{{$user->talento->entidad->centro->regional->nombre}}</option>
                                                             @else
@@ -438,7 +438,7 @@
                                                 </div>
                                                 <div class="input-field col s12 m12 l12 ">
 
-                                                    <input class="validate" id="txtprogramaformacion_aprendiz" name="txtprogramaformacion_aprendiz" type="text"  value="{{ isset($user->talento->programa_formacion) ? $user->talento->programa_formacion : old('txtprogramaformacion_aprendiz')}}" {{session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
+                                                    <input class="validate" id="txtprogramaformacion_aprendiz" name="txtprogramaformacion_aprendiz" type="text"  value="{{ isset($user->talento->programa_formacion) ? $user->talento->programa_formacion : old('txtprogramaformacion_aprendiz')}}" {{session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
                                                     <label for="txtprogramaformacion_aprendiz">Programa de Formación <span class="red-text">*</span></label>
                                                     <small id="txtprogramaformacion_aprendiz-error"  class="error red-text"></small>
                                                 </div>
@@ -446,7 +446,7 @@
                                             <div class="row egresadoSena" style="display:none">
                                                 <div class="input-field col s12 m12 l12" >
                                                     <select class=" js-states browser-default select2 select2-hidden-accessible" id="txtregional_egresado" name="txtregional_egresado" style="width: 100%" tabindex="-1" onchange="tipoTalento.getCentroFormacionEgresadoSena()">
-                                                        @if(session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador())
+                                                        @if(session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsDinamizador())
                                                             @if(isset($user->talento->entidad->centro->regional->id))
                                                                 <option value="{{$user->talento->entidad->centro->regional->id}}" selected="">{{$user->talento->entidad->centro->regional->nombre}}</option>
                                                             @else
@@ -476,13 +476,13 @@
                                                 </div>
                                                 <div class="input-field col s12 m12 l12 ">
 
-                                                    <input class="validate" id="txtprogramaformacion_egresado" name="txtprogramaformacion_egresado" type="text"  value="{{ isset($user->talento->programa_formacion) ? $user->talento->programa_formacion : old('txtprogramaformacion_egresado')}}" {{session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
+                                                    <input class="validate" id="txtprogramaformacion_egresado" name="txtprogramaformacion_egresado" type="text"  value="{{ isset($user->talento->programa_formacion) ? $user->talento->programa_formacion : old('txtprogramaformacion_egresado')}}" {{session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
                                                     <label for="txtprogramaformacion_egresado">Programa de Formación <span class="red-text">*</span></label>
                                                     <small id="txtprogramaformacion_egresado-error"  class="error red-text"></small>
                                                 </div>
                                                 <div class="input-field col s12 m12 l12 ">
                                                     <select class="" id="txttipoformacion" name="txttipoformacion" style="width: 100%" tabindex="-1" >
-                                                        @if(session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador())
+                                                        @if(session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsDinamizador())
                                                             @if(isset($user->talento->tipoformacion->id))
                                                                 <option value="{{$user->talento->tipoformacion->id}}" selected="">{{$user->talento->tipoformacion->nombre}}</option>
                                                             @else
@@ -507,7 +507,7 @@
                                             <div class="row funcionarioSena" style="display:none">
                                                 <div class="input-field col s12 m12 l12" >
                                                     <select class=" js-states browser-default select2 select2-hidden-accessible" id="txtregional_funcionarioSena" name="txtregional_funcionarioSena" style="width: 100%" tabindex="-1" onchange="tipoTalento.getCentroFormacionFuncionarioSena()" >
-                                                        @if(session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador())
+                                                        @if(session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsDinamizador())
                                                             @if(isset($user->talento->entidad->centro->regional->id))
                                                                 <option value="{{$user->talento->entidad->centro->regional->id}}" selected="">{{$user->talento->entidad->centro->regional->nombre}}</option>
                                                             @else
@@ -536,7 +536,7 @@
                                                 </div>
                                                 <div class="input-field col s12 m12 l12">
 
-                                                    <input class="validate" id="txtdependencia" name="txtdependencia" type="text"  value="{{ isset($user->talento->dependencia) ? $user->talento->dependencia : old('txtdependencia')}}" {{session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
+                                                    <input class="validate" id="txtdependencia" name="txtdependencia" type="text"  value="{{ isset($user->talento->dependencia) ? $user->talento->dependencia : old('txtdependencia')}}" {{session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
 
                                                     <label for="txtdependencia">Dependencia</label>
                                                     <small id="txtdependencia-error"  class="error red-text"></small>
@@ -545,7 +545,7 @@
                                             <div class="row instructorSena" style="display:none">
                                                 <div class="input-field col s12 m12 l12" >
                                                     <select class=" js-states browser-default select2 select2-hidden-accessible" id="txtregional_instructorSena" name="txtregional_instructorSena" style="width: 100%" tabindex="-1" onchange="tipoTalento.getCentroFormacionInstructorSena()" >
-                                                        @if(session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador())
+                                                        @if(session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsDinamizador())
                                                             @if(isset($user->talento->entidad->centro->regional->id))
                                                                 <option value="{{$user->talento->entidad->centro->regional->id}}" selected="">{{$user->talento->entidad->centro->regional->nombre}}</option>
                                                             @else
@@ -579,7 +579,7 @@
                                                 <div class="row universitario" style="display:none">
                                                     <div class="input-field col s12 m12 l12" >
                                                         <select class="" id="txttipoestudio" name="txttipoestudio" style="width: 100%" tabindex="-1" >
-                                                            @if(session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador())
+                                                            @if(session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsDinamizador())
                                                                 @if(isset($user->talento->tipoestudio->id))
                                                                     <option value="{{$user->talento->tipoestudio->id}}" selected="">{{$user->talento->tipoestudio->nombre}}</option>
                                                                 @else
@@ -601,13 +601,13 @@
                                                     </div>
 
                                                     <div class="input-field col s12 m12 l12" >
-                                                        <input class="validate" id="txtuniversidad" name="txtuniversidad" type="text"  value="{{ isset($user->talento->universidad) ? $user->talento->universidad : old('txtuniversidad')}}" {{session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
+                                                        <input class="validate" id="txtuniversidad" name="txtuniversidad" type="text"  value="{{ isset($user->talento->universidad) ? $user->talento->universidad : old('txtuniversidad')}}" {{session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
                                                         <label for="txtuniversidad">Universidad <span class="red-text">*</span></label>
                                                         <small id="txtuniversidad-error"  class="error red-text"></small>
                                                     </div>
 
                                                     <div class="input-field col s12 m12 l12" >
-                                                        <input class="validate" id="txtcarrera" name="txtcarrera" type="text"  value="{{ isset($user->talento->carrera_universitaria) ? $user->talento->carrera_universitaria : old('txtcarrera')}}" {{session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
+                                                        <input class="validate" id="txtcarrera" name="txtcarrera" type="text"  value="{{ isset($user->talento->carrera_universitaria) ? $user->talento->carrera_universitaria : old('txtcarrera')}}" {{session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
                                                         <label for="txtcarrera">Nombre de la Carrera <span class="red-text">*</span></label>
                                                         <small id="txtcarrera-error"  class="error red-text"></small>
                                                     </div>
@@ -616,7 +616,7 @@
 
 
                                                     <div class="input-field col s12 m12 l12" >
-                                                        <input class="validate" id="txtempresa" name="txtempresa" type="text"  value="{{ isset($user->talento->empresa) ? $user->talento->empresa : old('txtempresa')}}" {{session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
+                                                        <input class="validate" id="txtempresa" name="txtempresa" type="text"  value="{{ isset($user->talento->empresa) ? $user->talento->empresa : old('txtempresa')}}" {{session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
                                                         <label for="txtempresa">Nombre de la Empresa <span class="red-text">*</span></label>
                                                         <small id="txtempresa-error"  class="error red-text"></small>
                                                     </div>

@@ -19,9 +19,9 @@ class ArticulacionPbtPolicy
     public function index(User $user)
     {
 
-        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsArticulador(), User::IsTalento()]) &&
+        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsDinamizador(), User::IsArticulador(), User::IsTalento()]) &&
             session()->has('login_role')
-            && session()->get('login_role') == User::IsAdministrador()
+            && session()->get('login_role') == User::IsActivador()
             || session()->get('login_role') == User::IsDinamizador()
             || session()->get('login_role') == User::IsArticulador()
             || session()->get('login_role') == User::IsTalento();
@@ -60,9 +60,9 @@ class ArticulacionPbtPolicy
      */
     public function datatable(User $user)
     {
-        return (bool) ($user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsArticulador(), User::IsTalento()]) &&
+        return (bool) ($user->hasAnyRole([User::IsActivador(), User::IsDinamizador(), User::IsArticulador(), User::IsTalento()]) &&
         session()->has('login_role')
-        && session()->get('login_role') == User::IsAdministrador()
+        && session()->get('login_role') == User::IsActivador()
         || session()->get('login_role') == User::IsDinamizador()
         || session()->get('login_role') == User::IsArticulador()
         || session()->get('login_role') == User::IsTalento()) && request()->ajax();
@@ -76,9 +76,9 @@ class ArticulacionPbtPolicy
      */
     public function show(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsArticulador(), User::IsTalento()]) &&
+        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsDinamizador(), User::IsArticulador(), User::IsTalento()]) &&
         session()->has('login_role')
-        && session()->get('login_role') == User::IsAdministrador()
+        && session()->get('login_role') == User::IsActivador()
         || session()->get('login_role') == User::IsDinamizador()
         || session()->get('login_role') == User::IsArticulador()
         || session()->get('login_role') == User::IsTalento();

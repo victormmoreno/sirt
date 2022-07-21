@@ -20,7 +20,7 @@ class MaterialController extends Controller
 
     public function __construct(MaterialRepository $materialRepository, LineaRepository $lineaRepository, NodoRepository $nodoRepository)
     {
-        $this->middleware(['auth', 'role_session:Administrador|Dinamizador|Articulador|Experto|Talento|'.User::IsApoyoTecnico()]);
+        $this->middleware(['auth', 'role_session:Activador|Dinamizador|Articulador|Experto|Talento|'.User::IsApoyoTecnico()]);
         $this->setMaterialRepository($materialRepository);
         $this->setLineaTecnologicaRepository($lineaRepository);
         $this->setNodoRepository($nodoRepository);
@@ -123,7 +123,7 @@ class MaterialController extends Controller
         }
 
         switch (Session::get('login_role')) {
-            case User::IsAdministrador():
+            case User::IsActivador():
                 return view('materiales.index', [
                     'nodos' => $this->getNodoRepository()->getSelectNodo(),
                 ]);
@@ -152,7 +152,7 @@ class MaterialController extends Controller
 
         if (request()->ajax()) {
 
-            if (session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()) {
+            if (session()->has('login_role') && session()->get('login_role') == User::IsActivador()) {
 
                 $materiales = $this->getMaterialRepository()->getInfoDataMateriales()
                     ->whereHas('nodo', function ($query) use ($nodo) {

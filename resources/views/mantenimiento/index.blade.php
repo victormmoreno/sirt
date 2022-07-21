@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
+@if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
     @section('meta-title', 'Mantenimientos '. config('app.name'))
 @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
     @section('meta-title', 'Mantenimientos' . 'Tecnoparque Nodo ' . \NodoHelper::returnNameNodoUsuario())
@@ -26,7 +26,7 @@
                 </div>
                 <div class="card ">
                     <div class="card-content">
-                        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador() )
+                        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador() )
                         <div class="row">
                             <div class="row">
                                 <div class="col s12 m12 l12">

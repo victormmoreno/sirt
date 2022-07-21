@@ -3,7 +3,7 @@
         <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>Usuarios
     </a>
 </li>
-{{-- <li class="no-padding {{setActiveRoute('nodo')}}">
+<li class="no-padding {{setActiveRoute('nodo')}}">
     <a class="waves-effect waves-grey {{setActiveRouteActivePage('nodo')}}" href="{{route('nodo.index')}}" rel="canonical" title="Nodo">
         <i class="material-icons {{ setActiveRouteActiveIcon('nodo') }}">location_city</i>Nodo
     </a>
@@ -118,4 +118,4 @@
     <a class="waves-effect waves-grey {{setActiveRouteActivePage('noticias')}}" href="{{url('noticias')}}" title="Noticias">
         <i class="material-icons {{setActiveRouteActiveIcon('noticias')}}">local_library</i>Noticias
     </a>
-</li> --}}
+</li>

@@ -46,7 +46,7 @@ class IndicadorController extends Controller
     {
         $query = null;
 
-        if (Session::get('login_role') == User::IsAdministrador()) {
+        if (Session::get('login_role') == User::IsActivador()) {
 
         if ($idnodo == 'all') {
             $query = $this->getProyectoRepository()->proyectosIndicadores_Repository($fecha_inicio, $fecha_fin)->get();
@@ -77,7 +77,7 @@ class IndicadorController extends Controller
     {
         $query = null;
 
-        if (Session::get('login_role') == User::IsAdministrador()) {
+        if (Session::get('login_role') == User::IsActivador()) {
 
         if ($idnodo == 'all') {
             $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('articulacion_proyecto.actividad', function ($query) use ($fecha_inicio, $fecha_fin) {
@@ -131,7 +131,7 @@ class IndicadorController extends Controller
     {
         $query = null;
 
-        if (Session::get('login_role') == User::IsAdministrador()) {
+        if (Session::get('login_role') == User::IsActivador()) {
 
         if ($idnodo == 'all') {
             $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('articulacion_proyecto.actividad', function ($query) use ($fecha_inicio, $fecha_fin) {
@@ -170,7 +170,7 @@ class IndicadorController extends Controller
     {
         $query = null;
 
-        if (Session::get('login_role') == User::IsAdministrador()) {
+        if (Session::get('login_role') == User::IsActivador()) {
 
         if ($idnodo == 'all') {
             $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('fase', function ($query) {

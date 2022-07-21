@@ -1,4 +1,4 @@
-@if (\Session::get('login_role') == App\User::IsAdministrador() || \Session::get('login_role') == App\User::IsDinamizador() || \Session::get('login_role') == App\User::IsTalento())
+@if (\Session::get('login_role') == App\User::IsActivador() || \Session::get('login_role') == App\User::IsDinamizador() || \Session::get('login_role') == App\User::IsTalento())
     @if ($idea->estadoIdea->nombre == 'Admitido' || $idea->estadoIdea->nombre == 'En registro' || $idea->estadoIdea->nombre == 'Postulado')
         <li class="collection-item">
             <form action="{{route('idea.inhabilitar', $idea->id)}}" method="POST" id="frmInhabilitarIdea" name="frmInhabilitarIdea">

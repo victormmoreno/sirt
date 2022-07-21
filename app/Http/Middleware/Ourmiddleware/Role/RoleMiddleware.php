@@ -17,6 +17,9 @@ class RoleMiddleware
      */
     public function handle($request, Closure $next, $role)
     {
+        if (session()->get('login_role') == 'Administrador') {
+            return $next($request);
+        }
         if (Auth::guest()) {
             throw UnauthorizedException::notLoggedIn();
         }

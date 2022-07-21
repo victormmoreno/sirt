@@ -41,6 +41,7 @@ class User extends Authenticatable implements JWTSubject
     const IS_FEMENINO      = 0;
     const IS_ACTIVE        = true;
     const IS_INACTIVE      = false;
+    const IS_ACTIVADOR = "Activador";
     const IS_ADMINISTRADOR = "Administrador";
     const IS_DINAMIZADOR   = "Dinamizador";
     const IS_GESTOR        = "Experto";
@@ -349,7 +350,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function scopeNodoUser($query, $role, $nodo)
     {
-        if ((!empty($role) && $role != null && $role != 'all' && ($role != User::IsTalento() || $role != User::IsAdministrador())) && !empty($nodo) && $nodo != null && $nodo != 'all') {
+        if ((!empty($role) && $role != null && $role != 'all' && ($role != User::IsTalento() || $role != User::IsActivador())) && !empty($nodo) && $nodo != null && $nodo != 'all') {
             if ($role == User::IsDinamizador()) {
                 return $query->whereHas('dinamizador.nodo', function ($subQuery) use ($nodo) {
                     $subQuery->where('id', $nodo);
@@ -513,6 +514,11 @@ class User extends Authenticatable implements JWTSubject
 
 
         return $query;
+    }
+
+    public function isUserActivador(): bool
+    {
+        return (bool) $this->hasRole(User::IsActivador());
     }
 
     public function isUserAdministrador(): bool

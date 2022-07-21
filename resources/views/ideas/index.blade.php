@@ -31,7 +31,7 @@
                     <div class="row">
                     <div class="col s12 m12 l12">
                         <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
-                            @if((session()->has('login_role') && session()->get('login_role') === App\User::IsAdministrador() ))
+                            @if((session()->has('login_role') && session()->get('login_role') === App\User::IsActivador() ))
                                 <span class="card-title center-align">Ideas de {{config('app.name')}}</span>
                             @else
                                 <span class="card-title center-align">Ideas de Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}</span>
@@ -42,7 +42,7 @@
                     <div class="divider"></div>
 
                         <div class="row search-tabs-row search-tabs-header">
-                            @if((session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador()))
+                            @if((session()->has('login_role') && session()->get('login_role') == App\User::IsActivador()))
                             <div class="input-field col s12 m2 l2">
                                 <label class="active" for="filter_nodo">Nodo <span class="red-text">*</span></label>
                                 <select name="filter_nodo" id="filter_nodo">

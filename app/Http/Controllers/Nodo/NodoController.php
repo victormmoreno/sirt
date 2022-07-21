@@ -22,7 +22,7 @@ class NodoController extends Controller
         $this->middleware('auth');
         $this->middleware([
             'auth',
-            'role_session:Administrador|Dinamizador|Experto|Infocenter|Talento',
+            'role_session:Activador|Dinamizador|Experto|Infocenter|Talento',
         ]);
         $this->setNodoRepository($nodoRepository);
         $this->setDepartamentoRepository($departamentoRepository);
@@ -81,7 +81,7 @@ class NodoController extends Controller
         $this->authorize('index', Nodo::class);
 
         switch (session()->get('login_role')) {
-            case User::IsAdministrador():
+            case User::IsActivador():
                 if (request()->ajax()) {
                     return $nodoDatatable->indexDatatable($this->getNodoRepository()->getAlltNodo());
                 }

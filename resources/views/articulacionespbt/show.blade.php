@@ -48,7 +48,7 @@
                                             </div>
                                         </div>
                                         @endif
-                                        @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()) && (session()->has('login_role') && session()->get('login_role') != App\User::IsAdministrador()))
+                                        @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()) && (session()->has('login_role') && session()->get('login_role') != App\User::IsActivador()))
                                             <div class="mailbox-view-header no-m-b no-m-t">
                                                 <div class="right mailbox-buttons no-s">
                                                     @if($articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio()))

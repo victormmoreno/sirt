@@ -43,7 +43,7 @@ class EmpresaController extends Controller
             case User::IsTalento():
                 return view('empresa.talento.show', ['empresa' => $empresa]);
                 break;
-            case User::IsAdministrador():
+            case User::IsActivador():
                 return view('empresa.administrador.show', ['empresa' => $empresa]);
                 break;
             case User::IsDinamizador():

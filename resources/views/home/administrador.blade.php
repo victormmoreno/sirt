@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('meta-title','Incio')
+@section('meta-title','Inicio')
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="middle-content">

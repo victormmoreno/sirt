@@ -179,13 +179,13 @@
                     <span>
                         @guest
                         @else
-                        @if( \Session::get('login_role') != App\User::IsTalento() && \Session::get('login_role') != App\User::IsAdministrador() && \Session::get('login_role') != App\User::IsDesarrollador() )
+                        @if( \Session::get('login_role') != App\User::IsTalento() && \Session::get('login_role') != App\User::IsActivador() && \Session::get('login_role') != App\User::IsDesarrollador() )
                             {{ \NodoHelper::returnNodoUsuario() }}
                         @else
                             @if (\Session::get('login_role') == App\User::IsTalento())
                                 Talento de Tecnoparque
-                            @elseif (\Session::get('login_role') == App\User::IsAdministrador())
-                                Administrador de Tecnoparque
+                            @elseif (\Session::get('login_role') == App\User::IsActivador())
+                                Activador de Tecnoparque
                             @else
                                 Desarrollador de Tecnoparque
                             @endif
@@ -249,12 +249,16 @@
                     @include('layouts.navrole.dinamizador')
                 @endif
             @break
+            @case(App\User::IsActivador())
+                @if(\Session::has('login_role') && \Session::get('login_role') == App\User::IsActivador())
+                    @include('layouts.navrole.activador')
+                @endif
+            @break
             @case(App\User::IsAdministrador())
                 @if(\Session::has('login_role') && \Session::get('login_role') == App\User::IsAdministrador())
                     @include('layouts.navrole.admin')
                 @endif
             @break
-
             @case(App\User::IsDesarrollador())
 
             @include('layouts.navrole.desarrollador')

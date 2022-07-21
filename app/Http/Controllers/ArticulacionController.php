@@ -444,7 +444,7 @@ class ArticulacionController extends Controller
                 ]);
                 break;
 
-            case User::IsAdministrador():
+            case User::IsActivador():
                 return view('articulaciones.administrador.fase_inicio', [
                     'productos' => $productos,
                     'articulacion' => $articulacion,
@@ -488,7 +488,7 @@ class ArticulacionController extends Controller
                     'articulacion' => $articulacion,
                     'historico' => $historico
                 ]);
-            } else if (Session::get('login_role') == User::IsAdministrador()) {
+            } else if (Session::get('login_role') == User::IsActivador()) {
                 return view('articulaciones.administrador.fase_planeacion', [
                     'articulacion' => $articulacion,
                     'historico' => $historico
@@ -534,7 +534,7 @@ class ArticulacionController extends Controller
                     ]);
                     break;
 
-                case User::IsAdministrador():
+                case User::IsActivador():
                     return view('articulaciones.administrador.fase_ejecucion', [
                         'articulacion' => $articulacion,
                         'historico' => $historico
@@ -585,7 +585,7 @@ class ArticulacionController extends Controller
                     ]);
                     break;
 
-                case User::IsAdministrador():
+                case User::IsActivador():
                     return view('articulaciones.administrador.fase_cierre', [
                         'articulacion' => $articulacion,
                         'costo' => $costo,
@@ -899,7 +899,7 @@ class ArticulacionController extends Controller
     public function index()
     {
         switch (\Session::get('login_role')) {
-            case User::IsAdministrador():
+            case User::IsActivador():
                 return view('articulaciones.administrador.index', [
                     'nodos' => Nodo::SelectNodo()->get(),
                 ]);

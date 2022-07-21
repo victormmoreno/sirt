@@ -231,7 +231,7 @@ class IdeaController extends Controller
     public function datatableFiltros(Request $request)
     {
         switch (\Session::get('login_role')) {
-            case User::IsAdministrador():
+            case User::IsActivador():
                 $nodo = $request->filter_nodo;
                 break;
             case User::IsDinamizador():
@@ -515,7 +515,7 @@ class IdeaController extends Controller
             case User::IsArticulador():
                 return view('ideas.articulador.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
                 break;
-            case User::IsAdministrador():
+            case User::IsActivador():
                 return view('ideas.administrador.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
                 break;
             case User::IsDinamizador():
@@ -537,7 +537,7 @@ class IdeaController extends Controller
     {
         $this->authorize('view', Idea::class);
         switch (\Session::get('login_role')) {
-            case User::IsAdministrador():
+            case User::IsActivador():
                 $nodo = $request->filter_nodo;
                 break;
             case User::IsDinamizador():

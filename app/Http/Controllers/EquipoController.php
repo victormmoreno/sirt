@@ -99,7 +99,7 @@ class EquipoController extends Controller
         $this->authorize('view', Equipo::class);
 
         switch (\Session::get('login_role')) {
-            case User::IsAdministrador():
+            case User::IsActivador():
                 $nodo = $request->filter_nodo;
                 $linea = null;
                 break;
@@ -129,7 +129,7 @@ class EquipoController extends Controller
         }
 
         switch (Session::get('login_role')) {
-            case User::IsAdministrador():
+            case User::IsActivador():
                 return view('equipo.index', [
                     'nodos' =>  Entidad::has('nodo')->with('nodo')->get()->pluck('nombre', 'nodo.id'),
                 ]);
@@ -368,7 +368,7 @@ class EquipoController extends Controller
         $this->authorize('view', Equipo::class);
 
         switch (\Session::get('login_role')) {
-            case User::IsAdministrador():
+            case User::IsActivador():
                 $nodo = $request->filter_nodo;
                 $linea = null;
                 break;

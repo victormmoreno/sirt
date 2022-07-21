@@ -32,7 +32,7 @@ class UsoInfraestructuraController extends Controller
         LineaRepository $lineaRepository,
         ProyectoRepository $proyectoRepository
     ) {
-        $this->middleware(['auth', 'role_session:Administrador|Dinamizador|Articulador|'.User::IsGestor().'|Talento|'.User::IsApoyoTecnico()]);
+        $this->middleware(['auth', 'role_session:Activador|Dinamizador|Articulador|'.User::IsGestor().'|Talento|'.User::IsApoyoTecnico()]);
         $this->setUsoIngraestructuraProyectoRepository($UsoInfraestructuraProyectoRepository);
         $this->setUsoIngraestructuraArtculacionRepository($setUsoIngraestructuraArtculacionRepository);
         $this->setUsoInfraestructuraRepository($UsoInfraestructuraRepository);
@@ -177,7 +177,7 @@ class UsoInfraestructuraController extends Controller
     {
         $this->authorize('index', UsoInfraestructura::class);
         switch (\Session::get('login_role')) {
-            case User::IsAdministrador():
+            case User::IsActivador():
                 $nodo = $request->filter_nodo;
                 $asesor = $request->filter_gestor;
                 $user = null;
@@ -230,7 +230,7 @@ class UsoInfraestructuraController extends Controller
             return $usoDatatable->indexDatatable($usos);
         }
         switch (Session::get('login_role')) {
-            case User::IsAdministrador():
+            case User::IsActivador():
                 return view('usoinfraestructura.administrador.index', [
                     'nodos' =>  Entidad::has('nodo')->with('nodo')->get()->pluck('nombre', 'nodo.id'),
                 ]);
@@ -1011,7 +1011,7 @@ class UsoInfraestructuraController extends Controller
         $this->authorize('index', UsoInfraestructura::class);
 
         switch (\Session::get('login_role')) {
-            case User::IsAdministrador():
+            case User::IsActivador():
                 $nodo = $request->filter_nodo;
                 $asesor = $request->filter_gestor;
                 $user = null;

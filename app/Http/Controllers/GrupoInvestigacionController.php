@@ -119,7 +119,7 @@ class GrupoInvestigacionController extends Controller
       case User::IsDinamizador():
       return view('gruposdeinvestigacion.dinamizador.index');
       break;
-      case User::IsAdministrador():
+      case User::IsActivador():
       return view('gruposdeinvestigacion.administrador.index');
       break;
       default:

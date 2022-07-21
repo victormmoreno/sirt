@@ -67,7 +67,7 @@ class ArticulacionPbtController extends Controller
         $this->authorize('datatable', ArticulacionPbt::class);
         $talent = null;
         switch (\Session::get('login_role')) {
-            case User::IsAdministrador():
+            case User::IsActivador():
                 $nodo = $request->filter_nodo_art;
                 $user = null;
                 break;
@@ -697,7 +697,7 @@ class ArticulacionPbtController extends Controller
         // $this->authorize('view', ArticulacionPbt::class);
         $talent = null;
         switch (\Session::get('login_role')) {
-            case User::IsAdministrador():
+            case User::IsActivador():
                 $nodo = $request->filter_nodo_art;
                 break;
             case User::IsDinamizador():

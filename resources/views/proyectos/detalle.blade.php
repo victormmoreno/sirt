@@ -71,7 +71,7 @@
                         <div class=" mailbox-view mailbox-text">
                             <div class="col s12 m12 l12">
                                 @if ($proyecto->fase->nombre == 'Cierre' || $proyecto->fase->nombre == 'Suspendido')
-                                    @if(Session::get('login_role') == App\User::IsAdministrador())
+                                    @if(Session::get('login_role') == App\User::IsActivador())
                                     <div class="col s12 m3 l3">
                                         <form action="{{route('proyecto.reversar', [$proyecto->id, 'Inicio'])}}" method="POST" name="frmReversarFase">
                                             {!! method_field('PUT')!!}

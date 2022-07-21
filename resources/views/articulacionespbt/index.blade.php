@@ -26,7 +26,7 @@
                 <div class="row">
                 <div class="col s12 m12 l12">
                     <div class="row">
-                    @if((session()->has('login_role') && session()->get('login_role') === App\User::IsAdministrador()))
+                    @if((session()->has('login_role') && session()->get('login_role') === App\User::IsActivador()))
                         <div class="col s12 m8 l8">
                             <div class="center-align orange-text text-darken-3">
                                 <span class="card-title center-align">Articulaciones PBT -  {{config('app.name')}}</span>
@@ -61,7 +61,7 @@
                     </div>
                     <div class="divider"></div>
                         <div class="row search-tabs-row search-tabs-header">
-                            @if((session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador()))
+                            @if((session()->has('login_role') && session()->get('login_role') == App\User::IsActivador()))
                             <div class="input-field col s12 m2 l2">
                                 <label class="active" for="filter_nodo_art">Nodo <span class="red-text">*</span></label>
                                 <select name="filter_nodo_art" id="filter_nodo_art">

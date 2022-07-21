@@ -55,7 +55,7 @@
                                         <div class="right mailbox-buttons">
 
                                             @if($user->documento != auth()->user()->documento)
-                                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
+                                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsAdministrador()))
                                                     <a href="{{route('usuario.usuarios.acceso', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar Acceso</a>
                                                     <a href="{{route('user.newpassword', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Generar nueva contraseña</a>
 
@@ -67,7 +67,7 @@
                                                         <li><a  href="{{route('usuario.usuarios.changenode', $user->present()->userDocumento())}}">Cambiar Roles y Nodos</a></li>
                                                     </ul>
                                                 @endif
-                                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && !$user->hasAnyRole([App\User::IsDinamizador(), App\User::IsAdministrador() ]))
+                                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && !$user->hasAnyRole([App\User::IsDinamizador(), App\User::IsActivador() ]))
                                                     <a href="{{route('usuario.usuarios.acceso', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar Acceso</a>
                                                     <a href="{{route('user.newpassword', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Generar nueva contraseña</a>
                                                     <a class='dropdown-button btn waves-effect waves-orange btn-flat m-t-xs' href='#' data-activates='dropdown-actions'>Cambiar información</a>
@@ -306,6 +306,19 @@
                                                     </div>
                                                     <div class="server-stat col s12 m4 l4">
                                                         <p>{{$user->present()->userApoyoTecnicoHonorarios()}}</p>
+                                                        <span>Honorario</span>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                            @if($user->isUserArticulador())
+                                            <span class="orange-text">Información {{App\User::IsArticulador()}}</span>
+                                                <div class="server-load row">
+                                                    <div class="server-stat col s12 m4 l4">
+                                                        <p>{{$user->present()->userArticuladorName()}}</p>
+                                                        <span>Nodo</span>
+                                                    </div>
+                                                    <div class="server-stat col s12 m4 l4">
+                                                        <p>{{$user->present()->userArticuladorHonorarios()}}</p>
                                                         <span>Honorario</span>
                                                     </div>
                                                 </div>

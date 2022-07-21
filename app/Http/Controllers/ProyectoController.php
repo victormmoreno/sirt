@@ -522,7 +522,7 @@ class ProyectoController extends Controller
                 ]);
                 break;
 
-            case User::IsAdministrador():
+            case User::IsActivador():
                 return view('proyectos.administrador.index', [
                     'nodos' => Nodo::SelectNodo()->get(),
                 ]);
@@ -739,7 +739,7 @@ class ProyectoController extends Controller
                 ]);
                 break;
 
-            case User::IsAdministrador():
+            case User::IsActivador():
                 return view('proyectos.administrador.fase_inicio', [
                     'proyecto' => $proyecto,
                     'historico' => $historico 
@@ -790,7 +790,7 @@ class ProyectoController extends Controller
                     'historico' => $historico,
                     'ult_notificacion' => $ult_notificacion
                 ]);
-            } else if (Session::get('login_role') == User::IsAdministrador()) {
+            } else if (Session::get('login_role') == User::IsActivador()) {
                 return view('proyectos.administrador.fase_planeacion', [
                     'proyecto' => $proyecto,
                     'historico' => $historico
@@ -847,7 +847,7 @@ class ProyectoController extends Controller
                         'ult_notificacion' => $ult_notificacion
                     ]);
                     break;
-                case User::IsAdministrador():
+                case User::IsActivador():
                     return view('proyectos.administrador.fase_ejecucion', [
                         'proyecto' => $proyecto,
                         'historico' => $historico
@@ -911,7 +911,7 @@ class ProyectoController extends Controller
                         'ult_notificacion' => $ult_notificacion
                     ]);
                     break;
-                case User::IsAdministrador():
+                case User::IsActivador():
                     return view('proyectos.administrador.fase_cierre', [
                         'proyecto' => $proyecto,
                         'costo' => $costo,
@@ -1528,7 +1528,7 @@ class ProyectoController extends Controller
     public function datatableProyectosFinalizados(Request $request)
     {
         switch (\Session::get('login_role')) {
-            case User::IsAdministrador():
+            case User::IsActivador():
                 $nodo = $request->filter_nodo_art;
                 break;
             case User::IsDinamizador():

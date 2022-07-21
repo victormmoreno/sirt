@@ -27,7 +27,7 @@
                     <div class="card-content">
                         <div class="row">
 
-                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
+                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
                                     <div class="row">
                                         <div class="col s12 m12 l12">
                                             <div class="center-align">
@@ -81,7 +81,7 @@
 
 
                             <br>
-                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
+                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
                                 <table class="display responsive-table" id="materiales_administrador_table"  style="width: 100%">
                                     <thead>
                                         <th width="15%">Fecha Compra</th>

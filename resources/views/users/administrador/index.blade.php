@@ -31,7 +31,7 @@
                                 <div class="row no-m-t no-m-b">
                                     <div class="col s12 m8 l8">
                                         <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
-                                            @if((session()->has('login_role') && session()->get('login_role') === App\User::IsAdministrador() ))
+                                            @if((session()->has('login_role') && (session()->get('login_role') === App\User::IsActivador() || session()->get('login_role') === App\User::IsAdministrador()) ))
                                                 <span class="card-title center-align">Usuarios de {{config('app.name')}}</span>
                                             @else
                                                 <span class="card-title center-align">Usuarios de Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}</span>
@@ -57,7 +57,7 @@
                                     @endforelse
                                 </select>
                             </div>
-                            @if((session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador()))
+                            @if((session()->has('login_role') && (session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsAdministrador())))
                             <div class="input-field col s12 m2 l2">
                                 <label class="active" for="filter_nodo">Nodo <span class="red-text">*</span></label>
                                 <select class="js-states browser-default select2" name="filter_nodo" id="filter_nodo">

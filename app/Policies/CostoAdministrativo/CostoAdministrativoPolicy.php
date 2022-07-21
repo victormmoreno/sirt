@@ -17,7 +17,7 @@ class CostoAdministrativoPolicy
      */
     public function index(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador()]);
+        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsDinamizador()]);
     }
 
     /**
@@ -28,7 +28,7 @@ class CostoAdministrativoPolicy
      */
     public function getCostoAdministrativoPorNodo(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+        return (bool) $user->hasAnyRole([User::IsActivador()]) && session()->has('login_role') && session()->get('login_role') == User::IsActivador();
     }
 
     /**

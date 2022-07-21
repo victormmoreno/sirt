@@ -77,7 +77,7 @@
                                                                 @forelse($roles as  $name)
                                                                     <p class="p-v-xs">
                                                                         @switch( \Session::get('login_role'))
-                                                                            @case(App\User::IsAdministrador())
+                                                                            @case(App\User::IsActivador())
                                                                                 @if(isset($user))
                                                                                     <input class="filled-in" type="checkbox" name="role[]" {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
                                                                                 @else
@@ -86,9 +86,9 @@
                                                                             @break
                                                                             @case(App\User::IsDinamizador())
                                                                                 @if(isset($user))
-                                                                                    <input type="checkbox" name="role[]"  {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  {{$name == App\User::IsAdministrador() ? 'onclick=this.checked=!this.checked;' : ($name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked;' : '' )}} value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
+                                                                                    <input type="checkbox" name="role[]"  {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  {{$name == App\User::IsActivador() ? 'onclick=this.checked=!this.checked;' : ($name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked;' : '' )}} value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
                                                                                 @else
-                                                                                    <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" {{$name == App\User::IsAdministrador() ? 'onclick=this.checked=!this.checked;' : ($name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked;' : '' )}} onchange="roles.getRoleSeleted(this)">
+                                                                                    <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" {{$name == App\User::IsActivador() ? 'onclick=this.checked=!this.checked;' : ($name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked;' : '' )}} onchange="roles.getRoleSeleted(this)">
                                                                                 @endif
                                                                             @break
                                                                             @case(App\User::IsGestor())
@@ -151,7 +151,7 @@
                                                                             <span class=" card-title activator grey-text text-darken-4 center-align">Información {{App\User::IsApoyoTecnico()}}</span>
                                                                             <div class="input-field col s12 m12 l12">
                                                                                 <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnodouser" name="txtnodouser"  style="width: 100%" tabindex="-1">
-                                                                                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
+                                                                                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
                                                                                         <option value="">Seleccione Nodo</option>
                                                                                         @foreach($nodos as $id => $nodo)
                                                                                             @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsGestor()))
@@ -185,7 +185,7 @@
                                                                             <span class=" card-title activator grey-text text-darken-4 center-align">Información {{App\User::IsArticulador()}}</span>
                                                                             <div class="input-field col s12 m12 l12">
                                                                                 <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnodoarticulador" name="txtnodoarticulador"  style="width: 100%" tabindex="-1">
-                                                                                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
+                                                                                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
                                                                                         <option value="">Seleccione Nodo</option>
                                                                                         @foreach($nodos as $id => $nodo)
                                                                                             @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsGestor()))
@@ -220,7 +220,7 @@
                                                                             <div class="input-field col s12 m12 l12">
                                                                                 <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnododinamizador" name="txtnododinamizador" style="width: 100%; display: none
                                                                                 " tabindex="-1">
-                                                                                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
+                                                                                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
                                                                                         <option value="">Seleccione Nodo</option>
                                                                                         @foreach($nodos as $id => $nodo)
                                                                                             @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsDinamizador()))
@@ -247,7 +247,7 @@
                                                                             <span class=" card-title activator grey-text text-darken-4 center-align">Información {{App\User::IsGestor()}}</span>
                                                                             <div class="input-field col s12 m12 l12">
                                                                                 <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnodogestor" name="txtnodogestor" onchange="linea.getSelectLineaForNodo()" style="width: 100%" tabindex="-1">
-                                                                                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
+                                                                                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
                                                                                         <option value="">Seleccione Nodo</option>
                                                                                         @foreach($nodos as $id => $nodo)
                                                                                             @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsGestor()))
@@ -298,7 +298,7 @@
                                                                             <span class="card-title activator grey-text text-darken-4 center-align">Información Infocenter</span>
                                                                             <div class="input-field col s12 m12 l12">
                                                                                 <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnodoinfocenter" name="txtnodoinfocenter"  style="width: 100%" tabindex="-1">
-                                                                                        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
+                                                                                        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
                                                                                             <option value="">Seleccione Nodo</option>
                                                                                             @foreach($nodos as $id => $nodo)
                                                                                                 @if(isset($user->infocenter) && collect($user->roles)->contains('name',App\User::IsInfocenter()))
@@ -336,7 +336,7 @@
                                                                             <span class="card-title activator grey-text text-darken-4 center-align">Información Ingreso</span>
                                                                             <div class="input-field col s12 m12 l12">
                                                                                 <select class="js-states browser-default select2 select2-hidden-accessible"  id="txtnodoingreso" name="txtnodoingreso"  style="width: 100%" tabindex="-1">
-                                                                                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
+                                                                                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
                                                                                         <option value="">Seleccione Nodo</option>
                                                                                         @foreach($nodos as $id => $nodo)
                                                                                             @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsIngreso()))
@@ -595,7 +595,7 @@ var roles = {
         $('#section-talento').hide();
         $('#section-ingreso').hide();
         $("input[type=checkbox]:checked").each(function(){
-            if ($(this).val() == '{{App\User::IsAdministrador()}}') {
+            if ($(this).val() == '{{App\User::IsActivador()}}') {
                 roles.hideSelectRole();
             }else if ($(this).val() == '{{App\User::IsApoyoTecnico()}}') {
                 roles.hideSelectRole();
