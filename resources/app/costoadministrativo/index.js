@@ -1,18 +1,13 @@
-$(document).ready(function() {
-    $('#costoadministrativo_administrador_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "pagingType": "full_numbers",
-    });
-});
-
 var selectCostoAdministrativoNodo = {
-	selectCostoAdministrativoForNodo: function() {
-        let nodo = $('#selectnodo').val();
-        $('#costoadministrativo_administrador_table').dataTable().fnDestroy();
+	selectCostoAdministrativoNodo: function(rol, nodo_id) {
+        let nodo = null;
+        if (rol == 'Administrador' || rol == 'Activador') {
+            nodo = $('#selectnodo').val();
+            $('#costoadministrativo_administrador_table').dataTable().fnDestroy();
+        } else {
+            nodo = nodo_id;
+        }
         if (nodo != '') {
-
             $('#costoadministrativo_administrador_table').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -53,6 +48,11 @@ var selectCostoAdministrativoNodo = {
                     {
                         data: 'costosadministrativosporhora',
                         name: 'costosadministrativosporhora',
+                        width: '15%'
+                    },
+                    {
+                        data: 'edit',
+                        name: 'edit',
                         width: '15%'
                     },
 			    ],

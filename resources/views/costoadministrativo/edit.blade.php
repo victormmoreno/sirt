@@ -34,7 +34,7 @@
                         <div class="row">
                             <div class="row">
                                 <center><span class="card-title center-align">Editar Costo Administrativo <b>{{$costoadministrativo->costoadministrativo}} - {{$costoadministrativo->anho}}</b></span> <i class="Small material-icons prefix">settings_input_svideo </i></center>
-                                <form action="{{ route('costoadministrativo.update', $costoadministrativo->id)}}" method="POST" onsubmit="return checkSubmit()">
+                                <form action="{{ route('costoadministrativo.update', [$costoadministrativo->id, $nodo])}}" method="POST" onsubmit="return checkSubmit()">
                                 	{!! method_field('PUT')!!}
 	                                @include('costoadministrativo.form', [
 								    	'btnText' => 'Modificar',

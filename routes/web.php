@@ -54,7 +54,7 @@ Route::post('cambiar-role', 'User\RolesPermissions@changeRoleSession')
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('disablepreventback');
 
-Route::resource('nodo', 'Nodo\NodoController')->middleware('disablepreventback');
+Route::resource('nodo', 'Nodo\NodoController')->middleware(['disablepreventback', 'role_session:Administrador|Activador|Dinamizador']);
 
 Route::get('usuario/{documento}/password/reset', 'User\UserController@generatePassword')->name('user.newpassword')->middleware('disablepreventback');
 Route::get('usuario/getciudad/{departamento?}', 'User\UserController@getCiudad');
@@ -130,15 +130,17 @@ Route::resource('costos-administrativos', 'CostoAdministrativoController', [
         'store',
         'destroy',
         'show',
+        'edit',
+        'update'
     ]
 ])->names([
-    'update'  => 'costoadministrativo.update',
-    'edit'    => 'costoadministrativo.edit',
     'index'   => 'costoadministrativo.index',
 ])
     ->parameters([
         'costos_administrativo' => 'id',
     ]);
+Route::get('costos-administrativos/edit/{id}/{nodo}', 'CostoAdministrativoController@edit')->name('costoadministrativo.edit')->middleware('role_session:Dinamizador');
+Route::put('costos-administrativos/update/{id}/{nodo}', 'CostoAdministrativoController@update')->name('costoadministrativo.update')->middleware('role_session:Dinamizador');
 
 Route::get('costos-administrativos/costoadministrativo/{nodo}', 'CostoAdministrativoController@getCostoAdministrativoPorNodo')->name('costoadministrativo.costosadministrativosfornodo');
 

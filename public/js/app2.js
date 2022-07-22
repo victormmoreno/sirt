@@ -7,7 +7,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: {
-            url: "lineas",
+            url: host_url + "lineas",
         },
         columns: [{
             data: 'abreviatura',
@@ -36,7 +36,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: {
-            url: "lineas",
+            url: host_url + "lineas",
         },
         columns: [{
             data: 'abreviatura',
@@ -80,7 +80,7 @@ $(document).ready(function() {
             }
         }, ],
         ajax: {
-            url: "/nodo",
+            url: host_url + "/nodo",
         },
         columns: [{
             data: 'centro',
@@ -148,7 +148,7 @@ function detallesIdeasDelEntrenamiento(id){
   $.ajax({
      dataType:'json',
      type:'get',
-     url:"entrenamientos/"+id,
+     url: host_url + "entrenamientos/"+id,
      data: {
        identrenamiento: id,
      }
@@ -174,7 +174,7 @@ $(document).ready(function() {
     processing: true,
     serverSide: true,
     ajax:{
-      url: "/entrenamientos/consultarEntrenamientosPorNodo",
+      url: host_url + "/entrenamientos/consultarEntrenamientosPorNodo",
       type: "get",
     },
     columns: [
@@ -208,7 +208,7 @@ $(document).ready(function() {
     processing: true,
     serverSide: true,
     ajax:{
-      url: "/entrenamientos/consultarEntrenamientosPorNodo",
+      url: host_url + "/entrenamientos/consultarEntrenamientosPorNodo",
       type: "get",
       data: {
         nodo: null,
@@ -309,7 +309,7 @@ function consultarEmpresaTecnoparque() {
           $.ajax({
             dataType: 'json',
             type: 'get',
-            url : '/empresa/ajaxDetallesDeUnaEmpresa/'+nit+'/'+field,
+            url : host_url + '/empresa/ajaxDetallesDeUnaEmpresa/'+nit+'/'+field,
             success: function (response) {
               if (response.empresa == null) {
                 divEmpresaRegistrada.hide();
@@ -355,7 +355,7 @@ function asociarSedeAIdeaProyecto(sede_id) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url : '/empresa/ajaxDetalleDeUnaSede/'+sede_id,
+    url : host_url + '/empresa/ajaxDetalleDeUnaSede/'+sede_id,
     success: function (response) {
       $('#txtsede_id').val(response.sede.id);
       $('#txtnombre_sede_disabled').val(response.sede.nombre_sede + ' - ' + response.sede.direccion + ' ' + response.sede.ciudad.nombre + ' (' + response.sede.ciudad.departamento.nombre + ')');
@@ -601,7 +601,7 @@ function consultarProyectosDeTalentos () {
     order: [ 0, 'desc' ],
     "lengthChange": false,
     ajax:{
-      url: "/proyecto/datatableProyectosDelTalento/",
+      url: host_url + "/proyecto/datatableProyectosDelTalento/",
       // type: "get",
       data: function (d) {
         d.codigo_proyecto = $('.codigo_proyecto').val(),
@@ -654,7 +654,7 @@ function consultarIdeasDelTalento () {
       order: [ 0, 'desc' ],
       "lengthChange": false,
       ajax:{
-        url: "/idea/datatableIdeasDeTalentos/",
+        url: host_url + "/idea/datatableIdeasDeTalentos/",
       },
       columns: [
         {
@@ -761,7 +761,7 @@ function consultarIdeasEnviadasAlNodo () {
       order: [ 0, 'desc' ],
       "lengthChange": false,
       ajax:{
-        url: "/idea/datatableIdeasDeTalentos/",
+        url: host_url + "/idea/datatableIdeasDeTalentos/",
       },
       columns: [
         {
@@ -805,7 +805,7 @@ function consultarEntrenamientosPorNodo_Administrador(id) {
     processing: true,
     serverSide: true,
     ajax:{
-      url: "/entrenamientos/consultarEntrenamientosPorNodo/",
+      url: host_url + "/entrenamientos/consultarEntrenamientosPorNodo/",
       type: "get",
       data: {
         filter_nodo: id.value,
@@ -858,7 +858,7 @@ $(document).ready(function() {
     serverSide: true,
     paging: true,
     ajax:{
-      url: "/entrenamientos",
+      url: host_url + "/entrenamientos",
       type: "get",
     },
 
@@ -956,7 +956,7 @@ function cambiarEstadoDeIdeasDeProyectoDeEntrenamiento(idea, estado) {
   $.ajax({
     dataType:'json',
     type:'get',
-    url:"/entrenamientos/inhabilitarEntrenamiento/"+idea+"/"+estado,
+    url: host_url + "/entrenamientos/inhabilitarEntrenamiento/"+idea+"/"+estado,
     success: function (data) {
       console.log(data);
       if (data.update == "true") {
@@ -1134,7 +1134,7 @@ function pintarIdeaEnLaTablaTaller(id, confirmacion, asistencia) {
   $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/idea/detallesIdea/' + id
+      url: host_url + '/idea/detallesIdea/' + id
   }).done(function (ajax) {
       let fila = prepararFilaEnLaTablaDeIdeasTaller(ajax, confirmacion, asistencia);
       $('#tblIdeasEntrenamientoForm').append(fila);
@@ -1182,7 +1182,7 @@ function getYesOrNot(value) {
 function enviarNotificacionResultadosCSIBT(idea, comite) {
     $.ajax({
         type: 'get',
-        url: '/csibt/notificar_resultado/' + idea + '/' + comite,
+        url: host_url + '/csibt/notificar_resultado/' + idea + '/' + comite,
         dataType: 'json',
         processData: false,
         success: function (data) {
@@ -1332,7 +1332,7 @@ $('.dataTables_length select').addClass('browser-default');
     serverSide: true,
     order: false,
     ajax:{
-      url: "/csibt",
+      url: host_url + "/csibt",
       type: "get",
     },
     columns: [
@@ -1377,7 +1377,7 @@ csibt = {
     $.ajax({
       dataType:'json',
       type:'get',
-      url:"/csibt/"+id,
+      url: host_url + "/csibt/"+id,
     }).done(function(respuesta){
       console.log(respuesta);
       $("#ideasProyectoDeUnComite").empty();
@@ -1402,7 +1402,7 @@ csibt = {
     $.ajax({
        dataType:'json',
        type:'get',
-       url:"/idea/detallesIdea/"+idIdea
+       url: host_url + "/idea/detallesIdea/"+idIdea
     }).done(function(respuesta){
       $("#titulo").empty();
       $("#detalle_idea").empty();
@@ -1694,7 +1694,7 @@ function pintarIdeaEnLaTabla(id, hora, direccion) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/idea/detallesIdea/' + id
+        url: host_url + '/idea/detallesIdea/' + id
     }).done(function (ajax) {
         let fila = prepararFilaEnLaTablaDeIdeas(ajax, hora, direccion);
         $('#tblIdeasComiteCreate').append(fila);
@@ -1851,7 +1851,7 @@ $(document).ready(function() {
     serverSide: true,
     order: false,
     ajax:{
-      url: "/csibt",
+      url: host_url + "/csibt",
       type: "get",
     },
     columns: [
@@ -1904,7 +1904,7 @@ function consultarCsibtPorNodo() {
     serverSide: true,
     order: false,
     ajax:{
-      url: "/csibt/"+id+"/consultarCsibtPorNodo",
+      url: host_url + "/csibt/"+id+"/consultarCsibtPorNodo",
       type: "get",
     },
     columns: [
@@ -1942,7 +1942,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax:{
-        url: "/empresa/datatableEmpresasDeTecnoparque",
+        url: host_url + "/empresa/datatableEmpresasDeTecnoparque",
         type: "get",
         },
         columns: [
@@ -2235,7 +2235,7 @@ $(document).ready(function() {
     serverSide: true,
     // order: false,
     ajax:{
-      url: "/grupo/datatableGruposInvestigacionDeTecnoparque",
+      url: host_url + "/grupo/datatableGruposInvestigacionDeTecnoparque",
       type: "get",
     },
     columns: [
@@ -2289,7 +2289,7 @@ $(document).ready(function() {
     processing: true,
     serverSide: true,
     ajax:{
-      url: "/grupo/datatableGruposInvestigacionDeTecnoparque",
+      url: host_url + "/grupo/datatableGruposInvestigacionDeTecnoparque",
       type: "get",
     },
     columns: [
@@ -2330,7 +2330,7 @@ var grupoInvestigacionIndex = {
     $.ajax({
       dataType:'json',
       type:'get',
-      url:"/grupo/ajaxDetallesDeUnGrupoInvestigacion/"+id
+      url: host_url + "/grupo/ajaxDetallesDeUnGrupoInvestigacion/"+id
     }).done(function(respuesta){
       $("#modalDetalleDeUnGrupoDeInvestigacion_titulo").empty();
       $("#modalDetalleDeUnGrupoDeInvestigacion_detalle_empresa").empty();
@@ -2550,7 +2550,7 @@ var user = {
         $.ajax({
           dataType:'json',
           type:'get',
-          url:'/usuario/getciudad/'+id
+          url: host_url + '/usuario/getciudad/'+id
         }).done(function(response){
           $('#txtciudadexpedicion').empty();
         //   $('#txtciudadexpedicion').append('<option value="">Seleccione la Ciudad</option>')
@@ -2579,7 +2579,7 @@ var user = {
         $.ajax({
           dataType:'json',
           type:'get',
-          url:'/usuario/getciudad/'+id
+          url: host_url + '/usuario/getciudad/'+id
         }).done(function(response){
           $('#txtciudad').empty();
           $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')
@@ -2823,7 +2823,7 @@ var tipoTalento = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:'/centro-formacion/getcentrosregional/'+regional
+            url: host_url + '/centro-formacion/getcentrosregional/'+regional
         }).done(function(response){
             $('#txtcentroformacion_aprendiz').empty();
             $('#txtcentroformacion_aprendiz').append('<option value="">Seleccione el centro de formación</option>')
@@ -2841,7 +2841,7 @@ var tipoTalento = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:'/centro-formacion/getcentrosregional/'+regional
+            url: host_url + '/centro-formacion/getcentrosregional/'+regional
         }).done(function(response){
             $('#txtcentroformacion_egresado').empty();
             $('#txtcentroformacion_egresado').append('<option value="">Seleccione el centro de formación</option>')
@@ -2859,7 +2859,7 @@ var tipoTalento = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:'/centro-formacion/getcentrosregional/'+regional
+            url: host_url + '/centro-formacion/getcentrosregional/'+regional
         }).done(function(response){
             $('#txtcentroformacion_funcionarioSena').empty();
             $('#txtcentroformacion_funcionarioSena').append('<option value="">Seleccione el centro de formación</option>')
@@ -2877,7 +2877,7 @@ var tipoTalento = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:'/centro-formacion/getcentrosregional/'+regional
+            url: host_url + '/centro-formacion/getcentrosregional/'+regional
         }).done(function(response){
             $('#txtcentroformacion_instructorSena').empty();
             $('#txtcentroformacion_instructorSena').append('<option value="">Seleccione el centro de formación</option>')
@@ -3264,7 +3264,7 @@ var UserIndex = {
             serverSide: true,
             "order": [[ 1, "desc" ]],
             ajax:{
-                url: "/usuario",
+                url: host_url + "/usuario",
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -3316,7 +3316,7 @@ var UserIndex = {
             serverSide: true,
             "order": [[ 1, "desc" ]],
             ajax:{
-                url: "/usuario/mistalentos",
+                url: host_url + "/usuario/mistalentos",
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -3428,7 +3428,7 @@ $('#download_users').click(function(){
         filter_year: filter_year,
     }
 
-    var url = "/usuario/export?" + $.param(query)
+    var url = host_url + "/usuario/export?" + $.param(query)
     window.location = url;
 });
 
@@ -3530,7 +3530,7 @@ var roleUserSession = {
         	    'role': nombre,
         	    '_token'  : $('meta[name="csrf-token"]').attr('content'),
             },
-            url:host_url+'/cambiar-role'
+            url: host_url+'/cambiar-role'
         }).done(function(response){
         	if (response.role != null) {
         		location.href= response.url;
@@ -3552,7 +3552,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax:{
-        	url: "/sublineas",
+        	url: host_url + "/sublineas",
             type: "get",
         },
         columns: [
@@ -3584,7 +3584,7 @@ function consultarArticulacionesDelGestor(anho) {
     order: [ 0, 'desc' ],
     "lengthChange": false,
     ajax:{
-      url: "/articulacion/datatableArticulacionesDelGestor/"+0+"/"+anho,
+      url: host_url + "/articulacion/datatableArticulacionesDelGestor/"+0+"/"+anho,
       data: function (d) {
         d.codigo_articulacion = $('#codigo_articulacion_GestorTable').val(),
         d.gestor = $('#nombre_GestorAdministradorTable').val(),
@@ -3645,7 +3645,7 @@ function consultarGruposInvestigacion_FaseInicio_Articulaciones() {
             0, 'desc'
         ],
         ajax: {
-            url: "/grupo/datatableGruposInvestigacionDeTecnoparque",
+            url: host_url + "/grupo/datatableGruposInvestigacionDeTecnoparque",
             type: "get"
         },
         select: true,
@@ -3671,7 +3671,7 @@ function addGrupoArticulacion(id) {
     $.ajax({
         dataType:'json',
         type:'get',
-        url:"/grupo/ajaxDetallesDeUnGrupoInvestigacion/"+id
+        url: host_url + "/grupo/ajaxDetallesDeUnGrupoInvestigacion/"+id
     }).done(function(respuesta){
         $('#txtgrupoInvestigacion').val(respuesta.detalles.codigo_grupo + ' - ' + respuesta.detalles.entidad.nombre);
         $("label[for='txtgrupoInvestigacion']").addClass('active');
@@ -3698,7 +3698,7 @@ function consultarTalentosDeTecnoparque_Articulacion_FaseInicio_table(tableName,
         processing: true,
         serverSide: true,
         ajax: {
-            url: "/usuario/talento/getTalentosDeTecnoparque/",
+            url: host_url + "/usuario/talento/getTalentosDeTecnoparque/",
             type: "get"
         },
         columns: [
@@ -3850,7 +3850,7 @@ function pintarTalentoEnTabla_Fase_Inicio_Articulacion(id) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/usuario/talento/consultarTalentoPorId/' + id
+        url: host_url + '/usuario/talento/consultarTalentoPorId/' + id
     }).done(function (ajax) {
         let fila = prepararFilaEnLaTablaDeTalentos_Articulacion(ajax);
         $('#detalleTalentosDeUnaArticulacion_Create').append(fila);
@@ -3961,7 +3961,7 @@ function verDetalleDeLaEntidadAsocidadALaArticulacion(id) {
   $.ajax({
     dataType:'json',
     type:'get',
-    url:"/articulacion/consultarEntidadDeLaArticulacion/"+id
+    url: host_url + "/articulacion/consultarEntidadDeLaArticulacion/"+id
   }).done(function(respuesta){
     $("#detalleDeUnaArticulacion_titulo").empty();
     $("#detalleArticulacion_body").empty();
@@ -4125,7 +4125,7 @@ function eliminarArticulacionPorId_moment(id) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/articulacion/eliminarArticulacion/'+id,
+    url: host_url + '/articulacion/eliminarArticulacion/'+id,
     success: function (data) {
       if (data.retorno) {
         Swal.fire('Eliminación Exitosa!', 'La articulación se ha eliminado completamente!', 'success');
@@ -4150,7 +4150,7 @@ function consultarIntervencionesEmpresaDelGestor(anho) {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/intervencion/datatableIntervencionEmpresaDelGestor/"+0+"/"+anho,
+      url: host_url + "/intervencion/datatableIntervencionEmpresaDelGestor/"+0+"/"+anho,
       // type: "get",
       data: function (d) {
         d.codigo_articulacion = $('#codigo_articulacion_GestorTable').val(),
@@ -4208,7 +4208,7 @@ function detallesDeUnaIntervencion(id){
     $.ajax({
        dataType:'json',
        type:'get',
-       url:"/intervencion/ajaxDetallesDeUnaArticulacion/"+id,
+       url: host_url + "/intervencion/ajaxDetallesDeUnaArticulacion/"+id,
     }).done(function(respuesta){
       $("#articulacionDetalle_titulo").empty();
       $("#detalleArticulacion").empty();
@@ -4290,7 +4290,7 @@ function detallesDeUnaIntervencion(id){
   $.ajax({
     dataType:'json',
     type:'get',
-    url:"/articulacion/consultarEntidadDeLaArticulacion/"+id
+    url: host_url + "/articulacion/consultarEntidadDeLaArticulacion/"+id
   }).done(function(respuesta){
     $("#detalleDeUnaArticulacion_titulo").empty();
     $("#detalleArticulacion_body").empty();
@@ -4454,7 +4454,7 @@ function detallesDeUnaIntervencion(id){
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/intervencion/eliminarArticulacion/'+id,
+      url: host_url + '/intervencion/eliminarArticulacion/'+id,
       success: function (data) {
         if (data.retorno) {
           Swal.fire('Eliminación Exitosa!', 'La Intervención a Empresa se ha eliminado completamente!', 'success');
@@ -4477,7 +4477,7 @@ function verHorasDeExpertosEnProyecto(id) {
   $.ajax({
     dataType:'json',
     type:'get',
-    url:"/proyecto/consultarHorasExpertos/"+id
+    url: host_url + "/proyecto/consultarHorasExpertos/"+id
   }).done(function(respuesta){
     $("#horasAsesoriasExpertosPorProyeto_table").empty();
     if (respuesta.horas.length == 0 ) {
@@ -4519,7 +4519,7 @@ function consultarProyectosDeTalentos () {
         order: [ 0, 'desc' ],
         "lengthChange": false,
         ajax:{
-            url: "/proyecto/datatableProyectosDelTalento/",
+            url: host_url + "/proyecto/datatableProyectosDelTalento/",
             data: function (d) {
                 d.codigo_proyecto = $('.codigo_proyecto').val(),
                 d.nombre = $('.nombre').val(),
@@ -4568,7 +4568,7 @@ function verTalentosDeUnProyecto(id){
     $.ajax({
         dataType:'json',
         type:'get',
-        url:"/proyecto/ajaxConsultarTalentosDeUnProyecto/"+id
+        url: host_url + "/proyecto/ajaxConsultarTalentosDeUnProyecto/"+id
     }).done(function(respuesta){
         $("#talentosAsociadosAUnProyecto_table").empty();
         if (respuesta.talentos.length != 0 ) {
@@ -4620,7 +4620,7 @@ function consultarProyectosDelGestorPorAnho() {
         order: [ 0, 'desc' ],
         "lengthChange": false,
         ajax:{
-            url: "/proyecto/datatableProyectosDelGestorPorAnho/"+0+"/"+anho,
+            url: host_url + "/proyecto/datatableProyectosDelGestorPorAnho/"+0+"/"+anho,
             data: function (d) {
                 d.codigo_proyecto = $('.codigo_proyecto').val(),
                 d.nombre = $('.nombre').val(),
@@ -4755,7 +4755,7 @@ function consultarProyectosDelNodoPorAnho() {
     order: [ 0, 'desc' ],
     "lengthChange": false,
     ajax:{
-      url: "/proyecto/datatableProyectosDelNodoPorAnho/"+0+"/"+anho_proyectos_nodo,
+      url: host_url + "/proyecto/datatableProyectosDelNodoPorAnho/"+0+"/"+anho_proyectos_nodo,
       data: function (d) {
         d.codigo_proyecto = $('#codigo_proyecto_tblProyectosDelNodoPorAnho').val(),
         d.gestor = $('#gestor_tblProyectosDelNodoPorAnho').val(),
@@ -4838,7 +4838,7 @@ function eliminarProyectoPorId_moment(id) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/proyecto/eliminarProyecto/'+id,
+        url: host_url + '/proyecto/eliminarProyecto/'+id,
         success: function (data) {
             if (data.retorno) {
                 Swal.fire('Eliminación Exitosa!', 'El proyecto se ha eliminado completamente!', 'success');
@@ -4859,7 +4859,7 @@ var infoActividad = {
             $.ajax({
                 dataType:'json',
                 type:'get',
-                url:'/actividad/detalle/'+code
+                url: host_url + '/actividad/detalle/'+code
             }).done(function (response) {
                 $("#actividad_titulo").empty();
                 $("#detalleActividad").empty();
@@ -5419,7 +5419,7 @@ function pintarTalentoEnTabla_Fase_Inicio(id, isInterlocutor) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/usuario/talento/consultarTalentoPorId/' + id
+        url: host_url + '/usuario/talento/consultarTalentoPorId/' + id
     }).done(function (ajax) {
 
         let fila = prepararFilaEnLaTablaDeTalentos(ajax, isInterlocutor);
@@ -5433,7 +5433,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual(id) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/usuario/consultarUserPorId/' + id
+        url: host_url + '/usuario/consultarUserPorId/' + id
     }).done(function (ajax) {
         let fila = prepararFilaEnLaTablaDePropietarios_Users(ajax);
         $('#propiedadIntelectual_Personas').append(fila);
@@ -5446,7 +5446,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Sede(sede_id)
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url : '/empresa/ajaxDetalleDeUnaSede/'+sede_id,
+        url : host_url + '/empresa/ajaxDetalleDeUnaSede/'+sede_id,
         success: function (response) {
           Swal.fire({
             toast: true,
@@ -5471,7 +5471,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Grupo(id) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/grupo/ajaxDetallesDeUnGrupoInvestigacion/' + id
+        url: host_url + '/grupo/ajaxDetallesDeUnGrupoInvestigacion/' + id
     }).done(function (ajax) {
         let fila = prepararFilaEnLaTablaDePropietarios_Grupos(ajax);
         // let fila = Grupos);
@@ -5593,7 +5593,7 @@ function addEntidadEmpresa(id) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url : '/empresa/ajaxDetallesDeUnaEmpresa/'+id+'/id',
+        url : host_url + '/empresa/ajaxDetallesDeUnaEmpresa/'+id+'/id',
         success: function (response) {
             let filas_sedes = prepararSedesEmpresa(response.empresa.sedes);
             $('#sedesPropietarias_Empresas_detalles').append(filas_sedes);
@@ -5654,7 +5654,7 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/idea/show/' + id
+        url: host_url + '/idea/show/' + id
     }).done(function (response) {
         let value = response.data.idea;
         if(idea =! null){
@@ -5694,7 +5694,7 @@ function consultarIdeasDeProyectoEmprendedores_Proyecto_FaseInicio() {
             0, 'desc'
         ],
         ajax: {
-            url: "/proyecto/datatableIdeasConEmprendedores",
+            url: host_url + "/proyecto/datatableIdeasConEmprendedores",
             type: "get"
         },
         select: true,
@@ -5730,7 +5730,7 @@ function consultarEmpresasDeTecnoparque_Proyecto_FaseInicio_table() {
         serverSide: true,
         // order: false,
         ajax: {
-            url: "/empresa/datatableEmpresasDeTecnoparque",
+            url: host_url + "/empresa/datatableEmpresasDeTecnoparque",
             type: "get"
         },
         columns: [
@@ -5761,7 +5761,7 @@ function consultarGruposDeTecnoparque_Proyecto_FaseInicio_table() {
         serverSide: true,
         // order: false,
         ajax: {
-            url: "/grupo/datatableGruposInvestigacionDeTecnoparque",
+            url: host_url + "/grupo/datatableGruposInvestigacionDeTecnoparque",
             type: "get"
         },
         columns: [
@@ -5792,7 +5792,7 @@ function consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table(tableName, fie
         serverSide: true,
         // order: false,
         ajax: {
-            url: "/usuario/talento/getTalentosDeTecnoparque/",
+            url: host_url + "/usuario/talento/getTalentosDeTecnoparque/",
             type: "get"
         },
         columns: [
@@ -5965,7 +5965,7 @@ $(document).ready(function() {
     processing: true,
     serverSide: true,
     ajax:{
-      url: "/empresa/datatableEmpresasDeTecnoparque",
+      url: host_url + "/empresa/datatableEmpresasDeTecnoparque",
       type: "get",
     },
     deferRender: true,
@@ -6015,7 +6015,7 @@ function addEmpresaAEdt(id) {
     $.ajax({
       dataType:'json',
       type:'get',
-      url:'/empresa/ajaxConsultarEmpresaPorIdEntidad/'+id,
+      url: host_url + '/empresa/ajaxConsultarEmpresaPorIdEntidad/'+id,
     }).done(function(ajax){
       let idEntidad = ajax.detalles.entidad_id;
       let fila = '<tr class="selected" id=entidadAsociadaAEdt'+idEntidad+'>'
@@ -6067,7 +6067,7 @@ function consultarEdtsDeUnGestor(id) {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/edt/consultarEdtsDeUnGestor/"+id+"/"+anho,
+      url: host_url + "/edt/consultarEdtsDeUnGestor/"+id+"/"+anho,
       type: "get",
     },
     columns: [
@@ -6157,7 +6157,7 @@ function eliminarEdtPorId_moment(id) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/edt/eliminarEdt/'+id,
+    url: host_url + '/edt/eliminarEdt/'+id,
     success: function (data) {
       if (data.retorno) {
         Swal.fire('Eliminación Exitosa!', 'La edt se ha eliminado completamente!', 'success');
@@ -6183,7 +6183,7 @@ function datatableEdtsPorNodo(id) {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/edt/consultarEdtsDeUnNodo/"+id+"/"+anho,
+      url: host_url + "/edt/consultarEdtsDeUnNodo/"+id+"/"+anho,
       type: "get",
     },
     columns: [
@@ -6262,7 +6262,7 @@ function verEntidadesDeUnaEdt(id) {
   $.ajax({
     dataType:'json',
     type:'get',
-    url:"/edt/consultarDetallesDeUnaEdt/"+id+"/"+1,
+    url: host_url + "/edt/consultarDetallesDeUnaEdt/"+id+"/"+1,
     success: function (response) {
       $("#entidadesEdt_table").empty();
       if (response.entidades.length != 0 ) {
@@ -6301,7 +6301,7 @@ function detallesDeUnaEdt(id) {
   $.ajax({
     dataType:'json',
     type:'get',
-    url:'/edt/consultarDetallesDeUnaEdt/'+id+"/"+0,
+    url: host_url + '/edt/consultarDetallesDeUnaEdt/'+id+"/"+0,
     success: function (response) {
       /**
       * Limpiando el modal
@@ -6496,7 +6496,7 @@ var articulacion_pbt ={
             serverSide: false,
             "order": [[ 5, "desc" ]],
             ajax:{
-                url: "/articulaciones/datatable_filtros",
+                url: host_url + "/articulaciones/datatable_filtros",
                 type: "get",
 
                 data: {
@@ -6557,7 +6557,7 @@ $('#download_archive_art').click(function(){
         filter_alcance_articulacion: filter_alcance_articulacion,
     }
 
-    var url = "/articulaciones/export?" + $.param(query)
+    var url = host_url + "/articulaciones/export?" + $.param(query)
 
     window.location = url;
 });
@@ -6766,7 +6766,7 @@ var filter_project = {
             $.ajax({
                 dataType: 'json',
                 type: 'get',
-                url: '/actividades/filter-code/' + filter_code_project
+                url: host_url + '/actividades/filter-code/' + filter_code_project
             }).done(function (response) {
                 if(response.data.status_code == 200){
                     let activity = response.data.proyecto.articulacion_proyecto.actividad;
@@ -6874,7 +6874,7 @@ var filter_project = {
             $.ajax({
                 dataType: 'json',
                 type: 'get',
-                url: '/empresas/filter-code/' + filter_code_company
+                url: host_url + '/empresas/filter-code/' + filter_code_company
             }).done(function (response) {
                 if(response.data.status_code == 200){
                     let data = response.data;
@@ -6942,7 +6942,7 @@ var filter_project = {
         $.ajax({
             dataType: 'json',
             type: 'get',
-            url: '/empresas/sede/' + id
+            url: host_url + '/empresas/sede/' + id
         }).done(function (response) {
             if(response.data.status_code == 200){
             $('.alert-response-company').append(`
@@ -6984,7 +6984,7 @@ var filter_project = {
             processing: true,
             serverSide: true,
             ajax: {
-                url: "/proyecto/datatableproyectosfinalizados",
+                url: host_url + "/proyecto/datatableproyectosfinalizados",
                 type: "get",
                 data: {
                     filter_year_pro: filter_year_pro,
@@ -7023,7 +7023,7 @@ var filter_project = {
             serverSide: true,
             // order: false,
             ajax: {
-                url: "/empresa/datatableEmpresasDeTecnoparque",
+                url: host_url + "/empresa/datatableEmpresasDeTecnoparque",
                 type: "get"
             },
             columns: [
@@ -7051,7 +7051,7 @@ var filter_project = {
             processing: true,
             serverSide: true,
             ajax: {
-                url: "/usuario/talento/getTalentosDeTecnoparque/",
+                url: host_url + "/usuario/talento/getTalentosDeTecnoparque/",
                 type: "get"
             },
             columns: [
@@ -7082,7 +7082,7 @@ var filter_project = {
             $.ajax({
                 dataType: 'json',
                 type: 'get',
-                url: '/usuarios/filtro-talento/' + document
+                url: host_url + '/usuarios/filtro-talento/' + document
             }).done(function (response) {
                 if(response.data.status_code == 200){
                     let user = response.data.user;
@@ -7171,7 +7171,7 @@ var filter_project = {
         $.ajax({
             dataType: 'json',
             type: 'get',
-            url: '/usuario/talento/consultarTalentoPorId/' + id
+            url: host_url + '/usuario/talento/consultarTalentoPorId/' + id
         }).done(function (response) {
             let fila = filter_project.prepareTableRowTalent(response);
             $('.alert-response-talents').append(fila);
@@ -7296,7 +7296,7 @@ function addCompanyArticulacion(id){
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url : '/empresa/ajaxDetallesDeUnaEmpresa/'+id+'/id',
+        url : host_url + '/empresa/ajaxDetallesDeUnaEmpresa/'+id+'/id',
         success: function (response) {
             let filas_sedes = filter_project.sedesEmpresa(response.empresa.sedes);
             $('#sedes_detail').append(filas_sedes);
@@ -7308,208 +7308,139 @@ function addCompanyArticulacion(id){
       })
 }
 
-$(document).ready(function() {
-    $('#costoadministrativo_dinamizador_table1').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-        retrieve: true,
-        processing: true,
-        ajax: {
-            url: "/costos-administrativos",
-            type: "get",
-        },
-        columns: [{
-            data: 'entidad',
-            name: 'entidad',
-            width: '30%'
-        }, {
-            data: 'costoadministrativo',
-            name: 'costoadministrativo',
-            width: '30%'
-        }, {
-            data: 'valor',
-            name: 'valor',
-            width: '15%'
-        }, {
-            data: 'costosadministrativospordia',
-            name: 'costosadministrativospordia',
-            width: '15%'
-        },
-        {
-            data: 'costosadministrativosporhora',
-            name: 'costosadministrativosporhora',
-            width: '15%'
-        },
-        {
-            data: 'edit',
-            name: 'edit',
-            orderable: false,
-            width: '8%'
-        }, ],
-        "footerCallback": function ( row, data, start, end, display ) {
-            var api = this.api(), data;
-            // Remove the formatting to get integer data for summation
-            var intVal = function ( i ) {
-                return typeof i === 'string' ?
-                    i.replace(/[\$,]/g, '')*1 :
-                    typeof i === 'number' ?
-                        i : 0;
-            };
-            // Total over all pages
-            totalCostosHora = api
-                .column( 4 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            totalCostosDia = api
-                .column( 3 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            totalCostosMes = api
-                .column( 2 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            // Total over this page
-            pageTotalCostosHora = api
-                .column( 4, { page: 'current'} )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            pageTotalCostosDia = api
-                .column( 3, { page: 'current'} )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            pageTotalCostosMes = api
-                .column( 2, { page: 'current'} )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            // Update footer
-            $( api.column( 4 ).footer() ).html(
-                '$ '+pageTotalCostosHora +' ( $'+ totalCostosHora +' total)'
-            );
-            $( api.column( 3 ).footer() ).html(
-                '$ '+pageTotalCostosDia +' ( $'+ totalCostosDia +' total)'
-            );
-            $( api.column( 2 ).footer() ).html(
-                '$ '+pageTotalCostosMes +' ( $'+ totalCostosMes +' total)'
-            );
+var selectCostoAdministrativoNodo = {
+	selectCostoAdministrativoNodo: function(rol, nodo_id) {
+        let nodo = null;
+        if (rol == 'Administrador' || rol == 'Activador') {
+            nodo = $('#selectnodo').val();
+            $('#costoadministrativo_administrador_table').dataTable().fnDestroy();
+        } else {
+            nodo = nodo_id;
         }
-    });
-});
+        if (nodo != '') {
+            $('#costoadministrativo_administrador_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                "lengthChange": false,
+                "order": [[ 1, "asc" ]],
+                fixedHeader: {
+                    header: true,
+                    footer: true
+                },
 
-$(document).ready(function() {
-    $('#costoadministrativo_dinamizador_table1').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-        retrieve: true,
-        processing: true,
-        ajax: {
-            url: "/costos-administrativos",
-            type: "get",
-        },
-        columns: [{
-            data: 'entidad',
-            name: 'entidad',
-            width: '30%'
-        }, {
-            data: 'costoadministrativo',
-            name: 'costoadministrativo',
-            width: '30%'
-        }, {
-            data: 'valor',
-            name: 'valor',
-            width: '15%'
-        }, {
-            data: 'costosadministrativospordia',
-            name: 'costosadministrativospordia',
-            width: '15%'
-        },
-        {
-            data: 'costosadministrativosporhora',
-            name: 'costosadministrativosporhora',
-            width: '15%'
-        },
-        {
-            data: 'edit',
-            name: 'edit',
-            orderable: false,
-            width: '8%'
-        }, ],
-        "footerCallback": function ( row, data, start, end, display ) {
-            var api = this.api(), data;
-            // Remove the formatting to get integer data for summation
-            var intVal = function ( i ) {
-                return typeof i === 'string' ?
-                    i.replace(/[\$,]/g, '')*1 :
-                    typeof i === 'number' ?
-                        i : 0;
-            };
-            // Total over all pages
-            totalCostosHora = api
-                .column( 4 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            totalCostosDia = api
-                .column( 3 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            totalCostosMes = api
-                .column( 2 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            // Total over this page
-            pageTotalCostosHora = api
-                .column( 4, { page: 'current'} )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            pageTotalCostosDia = api
-                .column( 3, { page: 'current'} )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            pageTotalCostosMes = api
-                .column( 2, { page: 'current'} )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            // Update footer
-            $( api.column( 4 ).footer() ).html(
-                '$ '+pageTotalCostosHora +' ( $'+ totalCostosHora +' total)'
-            );
-            $( api.column( 3 ).footer() ).html(
-                '$ '+pageTotalCostosDia +' ( $'+ totalCostosDia +' total)'
-            );
-            $( api.column( 2 ).footer() ).html(
-                '$ '+pageTotalCostosMes +' ( $'+ totalCostosMes +' total)'
-            );
+                "pagingType": "full_numbers",
+                ajax: {
+                    url: host_url + "/costos-administrativos/costoadministrativo/" + nodo,
+                    type: "get",
+                },
+                columns: [
+                    {
+                        data: 'entidad',
+                        name: 'entidad',
+                        width: '30%'
+                    }, {
+                        data: 'costoadministrativo',
+                        name: 'costoadministrativo',
+                        width: '30%'
+                    }, {
+                        data: 'valor',
+                        name: 'valor',
+                        width: '15%'
+                    },
+                    {
+                        data: 'costosadministrativospordia',
+                        name: 'costosadministrativospordia',
+                        width: '15%'
+                    },
+                    {
+                        data: 'costosadministrativosporhora',
+                        name: 'costosadministrativosporhora',
+                        width: '15%'
+                    },
+                    {
+                        data: 'edit',
+                        name: 'edit',
+                        width: '15%'
+                    },
+			    ],
+                "footerCallback": function ( row, data, start, end, display ) {
+                    var api = this.api(), data;
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function ( i ) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '')*1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
+                    totalCostosHora = api
+                        .column( 4 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    totalCostosDia = api
+                        .column( 3 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    totalCostosMes = api
+                        .column( 2 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                    // Total over this page
+                    pageTotalCostosHora = api
+                        .column( 4, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    pageTotalCostosDia = api
+                        .column( 3, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    pageTotalCostosMes = api
+                        .column( 2, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                    // Update footer
+                    $( api.column( 4 ).footer() ).html(
+                        '$ '+pageTotalCostosHora +' ( $'+ totalCostosHora +' total)'
+                    );
+
+                    $( api.column( 3 ).footer() ).html(
+                        '$ '+pageTotalCostosDia +' ( $'+ totalCostosDia +' total)'
+                    );
+
+                    $( api.column( 2 ).footer() ).html(
+                        '$ '+pageTotalCostosMes +' ( $'+ totalCostosMes +' total)'
+                    );
+                }
+            });
+        }else{
+            $('#costoadministrativo_administrador_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false,
+                "pagingType": "full_numbers",
+            }).clear().draw();
         }
-    });
-});
-
+    },
+}
 $(document).ready(function() {
 
     let filter_nodo = $('#filter_nodo').val();
@@ -7561,7 +7492,7 @@ var equipo = {
             },
             "pagingType": "full_numbers",
             ajax:{
-                url: "/equipos",
+                url: host_url + "/equipos",
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -7639,7 +7570,7 @@ var equipo = {
             },
             "pagingType": "full_numbers",
             ajax:{
-                url: "/equipos",
+                url: host_url + "/equipos",
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -7710,7 +7641,7 @@ var equipo = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:`/equipos/${id}`
+            url: host_url + `/equipos/${id}`
         }).done(function(response){
 
             $("#titulo").empty();
@@ -7812,7 +7743,7 @@ var equipo = {
                 let token = $("meta[name='csrf-token']").attr("content");
                 $.ajax(
                 {
-                    url: `/equipos/${id}`,
+                    url: host_url + `/equipos/${id}`,
                     type: 'DELETE',
                     data: {
                         "id": id,
@@ -7861,7 +7792,7 @@ var equipo = {
 
                 $.ajax(
                 {
-                    url: `/equipos/cambiar-estado/${id}`,
+                    url: host_url + `/equipos/cambiar-estado/${id}`,
                     type: 'GET',
 
                     success: function (response){
@@ -7946,7 +7877,7 @@ $('#download_equipos').click(function(){
         filter_state: filter_state,
     }
 
-    var url = "/equipos/export?" + $.param(query)
+    var url = host_url + "/equipos/export?" + $.param(query)
     window.location = url;
 });
 
@@ -7981,7 +7912,7 @@ var selectMantenimientosEquiposPorNodo = {
                 },
                 "pagingType": "full_numbers",
                 ajax: {
-                    url: "/mantenimientos/getmantenimientosequipospornodo/" + nodo,
+                    url: host_url + "/mantenimientos/getmantenimientosequipospornodo/" + nodo,
                     type: "get",
                 },
                 columns: [{
@@ -8030,7 +7961,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: {
-            url: "/mantenimientos",
+            url: host_url + "/mantenimientos",
             type: "get",
         },
         columns: [{
@@ -8071,7 +8002,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: {
-            url: "/mantenimientos",
+            url: host_url + "/mantenimientos",
             type: "get",
         },
         columns: [{
@@ -8128,7 +8059,7 @@ var selectMaterialesPorNodo = {
                 },
                 "pagingType": "full_numbers",
                 ajax: {
-                    url: "/materiales/getmaterialespornodo/" + nodo,
+                    url: host_url + "/materiales/getmaterialespornodo/" + nodo,
                     type: "get",
                 },
                 columns: [
@@ -8206,7 +8137,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: {
-            url: "/materiales",
+            url: host_url + "/materiales",
             type: "get",
         },
         columns: [{
@@ -8264,7 +8195,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: {
-            url: "/materiales",
+            url: host_url + "/materiales",
             type: "get",
         },
         columns: [{
@@ -8343,7 +8274,7 @@ var materialFormacion = {
                 let token = $("meta[name='csrf-token']").attr("content");
                 $.ajax(
                 {
-                    url: "/materiales/"+id,
+                    url: host_url + "/materiales/"+id,
                     type: 'DELETE',
                     data: {
                         "id": id,
@@ -8383,140 +8314,6 @@ var materialFormacion = {
 }
 
 $(document).ready(function() {
-    $('#costoadministrativo_administrador_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "pagingType": "full_numbers",
-    });
-});
-
-var selectCostoAdministrativoNodo = {
-	selectCostoAdministrativoForNodo: function() {
-        let nodo = $('#selectnodo').val();
-        $('#costoadministrativo_administrador_table').dataTable().fnDestroy();
-        if (nodo != '') {
-
-            $('#costoadministrativo_administrador_table').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                processing: true,
-                serverSide: true,
-                "lengthChange": false,
-                "order": [[ 1, "asc" ]],
-                fixedHeader: {
-                    header: true,
-                    footer: true
-                },
-
-                "pagingType": "full_numbers",
-                ajax: {
-                    url: "/costos-administrativos/costoadministrativo/" + nodo,
-                    type: "get",
-                },
-                columns: [
-                    {
-                        data: 'entidad',
-                        name: 'entidad',
-                        width: '30%'
-                    }, {
-                        data: 'costoadministrativo',
-                        name: 'costoadministrativo',
-                        width: '30%'
-                    }, {
-                        data: 'valor',
-                        name: 'valor',
-                        width: '15%'
-                    },
-                    {
-                        data: 'costosadministrativospordia',
-                        name: 'costosadministrativospordia',
-                        width: '15%'
-                    },
-                    {
-                        data: 'costosadministrativosporhora',
-                        name: 'costosadministrativosporhora',
-                        width: '15%'
-                    },
-			    ],
-                "footerCallback": function ( row, data, start, end, display ) {
-                    var api = this.api(), data;
-                    // Remove the formatting to get integer data for summation
-                    var intVal = function ( i ) {
-                        return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '')*1 :
-                            typeof i === 'number' ?
-                                i : 0;
-                    };
-                    totalCostosHora = api
-                        .column( 4 )
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0 );
-
-                    totalCostosDia = api
-                        .column( 3 )
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0 );
-
-                    totalCostosMes = api
-                        .column( 2 )
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0 );
-                    // Total over this page
-                    pageTotalCostosHora = api
-                        .column( 4, { page: 'current'} )
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0 );
-
-                    pageTotalCostosDia = api
-                        .column( 3, { page: 'current'} )
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0 );
-
-                    pageTotalCostosMes = api
-                        .column( 2, { page: 'current'} )
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0 );
-                    // Update footer
-                    $( api.column( 4 ).footer() ).html(
-                        '$ '+pageTotalCostosHora +' ( $'+ totalCostosHora +' total)'
-                    );
-
-                    $( api.column( 3 ).footer() ).html(
-                        '$ '+pageTotalCostosDia +' ( $'+ totalCostosDia +' total)'
-                    );
-
-                    $( api.column( 2 ).footer() ).html(
-                        '$ '+pageTotalCostosMes +' ( $'+ totalCostosMes +' total)'
-                    );
-                }
-            });
-        }else{
-            $('#costoadministrativo_administrador_table').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                "lengthChange": false,
-                "pagingType": "full_numbers",
-            }).clear().draw();
-        }
-    },
-}
-
-$(document).ready(function() {
 
     usoinfraestructuraIndex.queryActivitiesByAnio();
 
@@ -8553,7 +8350,7 @@ var usoinfraestructuraIndex = {
             serverSide: true,
             "order": [[ 0, "desc" ]],
             ajax:{
-                url: "/usoinfraestructura",
+                url: host_url + "/usoinfraestructura",
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -8612,7 +8409,7 @@ var usoinfraestructuraIndex = {
         }else{
             $.ajax({
                 type: 'GET',
-                url: '/usuario/usuarios/gestores/nodo/'+ nodo,
+                url: host_url + '/usuario/usuarios/gestores/nodo/'+ nodo,
                 contentType: false,
                 dataType: 'json',
                 processData: false,
@@ -8643,7 +8440,7 @@ var usoinfraestructuraIndex = {
         }else{
             $.ajax({
                 type: 'GET',
-                url: '/usoinfraestructura/actividades/'+ anio,
+                url: host_url + '/usoinfraestructura/actividades/'+ anio,
                 contentType: false,
                 dataType: 'json',
                 processData: false,
@@ -8678,7 +8475,7 @@ var usoinfraestructuraIndex = {
                 let token = $("meta[name='csrf-token']").attr("content");
                 $.ajax(
                 {
-                    url: "/usoinfraestructura/"+id,
+                    url: host_url + "/usoinfraestructura/"+id,
                     type: 'DELETE',
                     data: {
                         "id": id,
@@ -8743,7 +8540,7 @@ $('#download_usoinfraestructura').click(function(){
         filter_gestor: filter_gestor,
         filter_actividad: filter_actividad,
     }
-    var url = "/usoinfraestructura/export?" + $.param(query)
+    var url = host_url + "/usoinfraestructura/export?" + $.param(query)
     window.location = url;
 });
 
@@ -8757,7 +8554,7 @@ function datatableVisitantesPorNodo_Ingreso() {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/visitante/consultarVisitantesRedTecnoparque",
+      url: host_url + "/visitante/consultarVisitantesRedTecnoparque",
       type: "get",
     },
     columns: [
@@ -8806,7 +8603,7 @@ function datatableVisitantesPorNodo_DinamizadorAdministrador() {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/visitante/consultarVisitantesRedTecnoparque",
+      url: host_url + "/visitante/consultarVisitantesRedTecnoparque",
       type: "get",
     },
     columns: [
@@ -8903,7 +8700,7 @@ function consultarIngresosDeUnNodo(id) {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/ingreso/consultarIngresosDeUnNodoTecnoparque/"+id,
+      url: host_url + "/ingreso/consultarIngresosDeUnNodoTecnoparque/"+id,
       type: "get",
     },
     columns: [
@@ -8962,7 +8759,7 @@ function consultarVisitanteTecnoparque() {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url : '/visitante/consultarVisitantePorDocumento/'+doc,
+      url : host_url + '/visitante/consultarVisitantePorDocumento/'+doc,
       success: function (response) {
         if (response.visitante == null) {
           divVisitanteRegistrado.hide();
@@ -8987,7 +8784,7 @@ function consultarDetallesDeUnaCharlaInformativa(id) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/charla/consultarDetallesDeUnaCharlaInformativa/'+id,
+    url: host_url + '/charla/consultarDetallesDeUnaCharlaInformativa/'+id,
     success: function (data) {
       $("#modalDetalleDeUnaCharlaInformativa_titulo").empty();
       $("#modalDetalleDeUnaCharlaInformativa_detalle_charla").empty();
@@ -9381,7 +9178,7 @@ function consultarProyectosFinalizadosPorTipoNodoYFecha_column(bandera) {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/grafico/consultarProyectosFinalizadosPorTipoNodoYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+      url: host_url + '/grafico/consultarProyectosFinalizadosPorTipoNodoYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
       success: function (data) {
         graficosProyectosAgrupados(data, graficosProyectoId.grafico5, 'Tipo de Proyecto');
       },
@@ -9403,7 +9200,7 @@ function consultarProyectosInscritosPorTipoNodoYFecha_column(bandera) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/grafico/consultarProyectosInscritosPorTipoNodoYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+    url: host_url + '/grafico/consultarProyectosInscritosPorTipoNodoYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
     success: function (data) {
       graficosProyectosAgrupados(data, graficosProyectoId.grafico3, 'Tipo de Proyecto');
     },
@@ -9424,7 +9221,7 @@ function consultarProyectosFinalizadosPorAnho_combinate(bandera) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/grafico/consultarProyectosFinalzadosPorAnho/'+id+'/'+anho,
+    url: host_url + '/grafico/consultarProyectosFinalzadosPorAnho/'+id+'/'+anho,
     success: function (data) {
       graficosProyectosPromedioCantidadesMeses(data, graficosProyectoId.grafico4);
     },
@@ -9442,7 +9239,7 @@ function consultarProyectosInscritosConEmpresasPorAnho_combinate(bandera, anho) 
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/grafico/consultarProyectosInscritosConEmpresasPorAnho/'+id+'/'+anho,
+    url: host_url + '/grafico/consultarProyectosInscritosConEmpresasPorAnho/'+id+'/'+anho,
     success: function (data) {
       graficosProyectosPromedioCantidadesMeses(data, graficosProyectoId.grafico2);
     },
@@ -9460,7 +9257,7 @@ function consultarProyectosInscritosPorAnho_combinate(bandera, anho) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/grafico/consultarProyectosInscritosPorAnho/'+id+'/'+anho,
+    url: host_url + '/grafico/consultarProyectosInscritosPorAnho/'+id+'/'+anho,
     success: function (data) {
       graficosProyectosPromedioCantidadesMeses(data, graficosProyectoId.grafico1);
     },
@@ -9483,7 +9280,7 @@ function consultarEdtsDelNodoPorAnho_variablepie(bandera) {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/grafico/consultarEdtsPorNodoYAnho/'+idnodo+'/'+anho,
+      url: host_url + '/grafico/consultarEdtsPorNodoYAnho/'+idnodo+'/'+anho,
       success: function (data) {
         Highcharts.chart(graficosEdtId.grafico4, {
           chart: {
@@ -9546,7 +9343,7 @@ function consultarEdtsPorLineaYFecha_stacked(bandera) {
       $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/grafico/consultarEdtsPorLineaYFecha/'+id+'/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
+        url: host_url + '/grafico/consultarEdtsPorLineaYFecha/'+id+'/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
         success: function (data) {
           // console.log(data);
           Highcharts.chart(graficosEdtId.grafico3, {
@@ -9604,7 +9401,7 @@ function consultarEdtsPorGestorYFecha_stacked(bandera) {
       $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/grafico/consultarEdtsPorGestorYFecha/'+id+'/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
+        url: host_url + '/grafico/consultarEdtsPorGestorYFecha/'+id+'/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
         success: function (data) {
           // console.log(data);
           Highcharts.chart(graficosEdtId.grafico2, {
@@ -9658,7 +9455,7 @@ function consultarEdtsPorNodoGestorYFecha_stacked(bandera) {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/grafico/consultarEdtsPorNodoGestorYFecha/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
+      url: host_url + '/grafico/consultarEdtsPorNodoGestorYFecha/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
       success: function (data) {
         var tamanho = data.consulta.length;
         var datos = {
@@ -9749,7 +9546,7 @@ function consultarTiposDeArticulacionesDelAnho_variablepie(bandera) {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/grafico/consultarArticulacionesPorNodoYAnho/'+idnodo+'/'+anho,
+      url: host_url + '/grafico/consultarArticulacionesPorNodoYAnho/'+idnodo+'/'+anho,
       success: function (data) {
         Highcharts.chart(graficosId.grafico4, {
           chart: {
@@ -9800,7 +9597,7 @@ function articulacionesGrafico1Ajax(id, fecha_inicio, fecha_fin) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/grafico/consultarArticulacionesPorNodo/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+    url: host_url + '/grafico/consultarArticulacionesPorNodo/'+id+'/'+fecha_inicio+'/'+fecha_fin,
     success: function (data) {
       var tamanho = data.consulta.length;
       // console.log(tamanho);
@@ -9909,7 +9706,7 @@ function consultarArticulacionesDeUnGestorPorFecha_stacked() {
       $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/grafico/consultarArticulacionesPorGestorYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+        url: host_url + '/grafico/consultarArticulacionesPorGestorYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
         success: function (data) {
           // console.log(data);
           Highcharts.chart(graficosId.grafico2, {
@@ -9972,7 +9769,7 @@ function consultarArticulacionesDeUnaLineaDelNodoPorFechas_stacked(bandera) {
       $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/grafico/consultarCantidadDeArticulacionesPorTipoDeUnaLineaTecnologicaYFecha/'+idnodo+'/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+        url: host_url + '/grafico/consultarCantidadDeArticulacionesPorTipoDeUnaLineaTecnologicaYFecha/'+idnodo+'/'+id+'/'+fecha_inicio+'/'+fecha_fin,
         error: function (xhr, textStatus, errorThrown) {
           alert("Error: " + errorThrown);
         },
@@ -10042,7 +9839,7 @@ function consultarSeguimientoDeUnGestor(gestor_id) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/seguimiento/seguimientoEsperadoDeUnGestor/'+gestor_id,
+    url: host_url + '/seguimiento/seguimientoEsperadoDeUnGestor/'+gestor_id,
     success: function (data) {
       graficoSeguimientoEsperado(data, graficosSeguimiento.gestor);
     },
@@ -10076,7 +9873,7 @@ function consultarSeguimientoEsperadoDeUnaLinea(bandera) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/seguimiento/seguimientoEsperadoDeUnaLinea/'+linea_id+'/'+nodo_id,
+    url: host_url + '/seguimiento/seguimientoEsperadoDeUnaLinea/'+linea_id+'/'+nodo_id,
     success: function (data) {
       graficoSeguimientoEsperado(data, graficosSeguimiento.linea_esperado);
     },
@@ -10093,7 +9890,7 @@ function consultarProyectosInscritosPorMes(gestor_id) {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/seguimiento/seguimientoInscritosPorMesExperto/'+gestor_id,
+      url: host_url + '/seguimiento/seguimientoInscritosPorMesExperto/'+gestor_id,
       success: function (data) {
         console.log(data.datos.meses);
         graficoSeguimientoPorMes(data, graficosSeguimiento.inscritos_mes);
@@ -10126,7 +9923,7 @@ function consultarSeguimientoActualDeUnaLinea(bandera) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/seguimiento/seguimientoActualDeUnaLinea/'+linea_id+'/'+nodo_id,
+    url: host_url + '/seguimiento/seguimientoActualDeUnaLinea/'+linea_id+'/'+nodo_id,
     success: function (data) {
       graficoSeguimientoFases(data, graficosSeguimiento.linea_actual);
     },
@@ -10140,7 +9937,7 @@ function consultarSeguimientoActualDeUnGestor(gestor_id) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/seguimiento/seguimientoActualDeUnGestor/'+gestor_id,
+    url: host_url + '/seguimiento/seguimientoActualDeUnGestor/'+gestor_id,
     success: function (data) {
       graficoSeguimientoFases(data, graficosSeguimiento.gestor_fases);
     },
@@ -10155,7 +9952,7 @@ function consultarSeguimientoEsperadoDeTecnoparque() {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/seguimiento/seguimientoEsperadoDeTecnoparque/',
+    url: host_url + '/seguimiento/seguimientoEsperadoDeTecnoparque/',
     success: function (data) {
       graficoSeguimientoEsperado(data, graficosSeguimiento.tecnoparque_esperado);
     },
@@ -10173,7 +9970,7 @@ function consultarSeguimientoEsperadoDeUnNodo(nodo_id) {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/seguimiento/seguimientoEsperadoDeUnNodo/'+nodo_id,
+      url: host_url + '/seguimiento/seguimientoEsperadoDeUnNodo/'+nodo_id,
       success: function (data) {
         graficoSeguimientoEsperado(data, graficosSeguimiento.nodo_esperado);
       },
@@ -10191,7 +9988,7 @@ function consultarSeguimientoDeUnNodoFases(nodo_id) {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/seguimiento/seguimientoDeUnNodoFases/'+nodo_id,
+      url: host_url + '/seguimiento/seguimientoDeUnNodoFases/'+nodo_id,
       success: function (data) {
         graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
       },
@@ -10206,7 +10003,7 @@ function consultarSeguimientoDeTecnoparqueFases() {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/seguimiento/seguimientoDeTecnoparqueFases/',
+    url: host_url + '/seguimiento/seguimientoDeTecnoparqueFases/',
     success: function (data) {
       graficoSeguimientoFases(data, graficosSeguimiento.tecnoparque_fases);
     },
@@ -10456,7 +10253,7 @@ function consultarCostosDeProyectos(bandera, tipo) {
             $.ajax({
                 dataType: 'json',
                 type: 'get',
-                url: '/costos/costosDeProyectos/'+idnodo+'/'+tiposArr+'/'+estado+'/'+fecha_inicio+'/'+fecha_fin+'/'+tipo,
+                url: host_url + '/costos/costosDeProyectos/'+idnodo+'/'+tiposArr+'/'+estado+'/'+fecha_inicio+'/'+fecha_fin+'/'+tipo,
                 success: function (data) {
                 setValueInput(data, chart);
                 graficoCostos(data, tipo == 1 ? graficosCostos.proyectos : graficosCostos.proyectos_ipe, 'Proyectos');
@@ -10479,7 +10276,7 @@ function consultarCostoDeUnaActividad() {
         $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/costos/proyecto/'+id,
+        url: host_url + '/costos/proyecto/'+id,
         success: function (data) {
             let chart = '_actividad';
             console.log(data);
@@ -10641,7 +10438,7 @@ let typeArticulacion ={
             serverSide: false,
             "order": [[ 1, "desc" ]],
             ajax:{
-                url: "/articulaciones/tipoarticulaciones",
+                url: host_url + "/articulaciones/tipoarticulaciones",
                 type: "get",
 
                 data: {
@@ -10693,7 +10490,7 @@ let typeArticulacion ={
                 let token = $("meta[name='csrf-token']").attr("content");
                 $.ajax(
                 {
-                    url: "/articulaciones/tipoarticulaciones/"+id,
+                    url: host_url + "/articulaciones/tipoarticulaciones/"+id,
                     type: 'DELETE',
                     data: {
                         "id": id,
@@ -11033,7 +10830,7 @@ let support ={
             serverSide: true,
             "order": [[ 1, "desc" ]],
             ajax:{
-                url: "/support",
+                url: host_url + "/support",
                 type: "get",
                 data: {
                     filter_year_support: filter_year_support,
@@ -11089,7 +10886,7 @@ let support ={
                 let token = $("meta[name='csrf-token']").attr("content");
                 $.ajax(
                 {
-                    url: "/support/"+ticket,
+                    url: host_url + "/support/"+ticket,
                     type: 'DELETE',
                     data: {
                         "id": ticket,
@@ -11134,7 +10931,7 @@ let support ={
                 let token = $("meta[name='csrf-token']").attr("content");
                 $.ajax(
                 {
-                    url: "/support/"+ticket,
+                    url: host_url + "/support/"+ticket,
                     type: 'PUT',
                     data: {
                         "id": ticket,

@@ -3,7 +3,7 @@
         <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>Usuarios
     </a>
 </li>
-{{-- <li class="no-padding {{setActiveRoute('nodo')}}">
+<li class="no-padding {{setActiveRoute('nodo')}}">
     <a class="waves-effect waves-grey {{setActiveRouteActivePage('nodo')}}" href="{{route('nodo.index')}}" rel="canonical" title="Nodo">
         <i class="material-icons {{ setActiveRouteActiveIcon('nodo') }}">location_city</i>Nodo
     </a>
@@ -13,7 +13,7 @@
         <i class="material-icons {{ setActiveRouteActiveIcon('costos-administrativos') }}">settings_input_svideo</i>Costos Administrativos
     </a>
 </li>
-<li class="no-padding {{setActiveRoute('lineas')}}">
+{{-- <li class="no-padding {{setActiveRoute('lineas')}}">
     <a class="waves-effect waves-grey {{setActiveRouteActivePage('lineas')}}" href="{{route('lineas.index')}}" rel="canonical" title="Lineas Tecnológicas">
         <i class="material-icons {{ setActiveRouteActiveIcon('lineas') }}">linear_scale</i>Lineas Tecnológicas
     </a>

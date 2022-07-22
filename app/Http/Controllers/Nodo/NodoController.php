@@ -22,7 +22,6 @@ class NodoController extends Controller
         $this->middleware('auth');
         $this->middleware([
             'auth',
-            'role_session:Activador|Dinamizador|Experto|Infocenter|Talento',
         ]);
         $this->setNodoRepository($nodoRepository);
         $this->setDepartamentoRepository($departamentoRepository);
@@ -82,11 +81,15 @@ class NodoController extends Controller
 
         switch (session()->get('login_role')) {
             case User::IsActivador():
-                if (request()->ajax()) {
-                    return $nodoDatatable->indexDatatable($this->getNodoRepository()->getAlltNodo());
+                IsActivador: {
+                    if (request()->ajax()) {
+                        return $nodoDatatable->indexDatatable($this->getNodoRepository()->getAlltNodo());
+                    }
+                    return view('nodos.index');
+                    break;
                 }
-                return view('nodos.index');
-
+            case User::IsAdministrador():
+                goto IsActivador;
                 break;
             case User::IsDinamizador():
                 if (isset(auth()->user()->dinamizador)) {

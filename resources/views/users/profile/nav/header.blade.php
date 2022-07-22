@@ -14,7 +14,6 @@
             @if(isset($user->fechanacimiento))
             {{$user->fechanacimiento->age}} años
             @endif
-
         </span>
     </div>
 </div>

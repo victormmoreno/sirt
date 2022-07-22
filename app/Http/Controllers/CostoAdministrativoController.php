@@ -18,7 +18,7 @@ class CostoAdministrativoController extends Controller
 
     public function __construct(CostoAdministrativoRepository $costoAdministrativoRepository, NodoRepository $nodoRepository)
     {
-        $this->middleware(['auth', 'role_session:Activador|Dinamizador']);
+        $this->middleware(['auth', 'role_session:Administrador|Activador|Dinamizador']);
         $this->setCostoAdministrativoRepository($costoAdministrativoRepository);
         $this->setNodoRepository($nodoRepository);
     }
@@ -84,7 +84,7 @@ class CostoAdministrativoController extends Controller
                     ->where('nodo_costoadministrativo.anho', Carbon::now()->year)
                     ->where('nodos.id', $nodo)
                     ->get();
-                return $costoAdministrativoDatatables->indexDatatable($costos);
+                return $costoAdministrativoDatatables->getCostoAdministrativoPorNodoDatatables($costos, $nodo);
             } else {
                 abort('403');
             }
@@ -92,12 +92,17 @@ class CostoAdministrativoController extends Controller
 
         switch (Session::get('login_role')) {
             case User::IsActivador():
-                return view('costoadministrativo.index', [
-                    'nodos' => $this->getNodoRepository()->getSelectNodo(),
-                ]);
-                break;
+                IsActivador: {
+                    return view('costoadministrativo.index', [
+                        'nodos' => $this->getNodoRepository()->getSelectNodo(),
+                    ]);
+                    break;
+                }
             case User::IsDinamizador():
                 return view('costoadministrativo.index');
+                break;
+            case User::IsAdministrador():
+                goto IsActivador;
                 break;
             default:
                 return abort('403');
@@ -115,13 +120,13 @@ class CostoAdministrativoController extends Controller
         $this->authorize('getCostoAdministrativoPorNodo', CostoAdministrativo::class);
 
         if (request()->ajax()) {
-            if (session()->has('login_role') && session()->get('login_role') == User::IsActivador()) {
+            if (session()->has('login_role') && (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsDinamizador())) {
                 $costos = $this->getCostoAdministrativoRepository()->getInfoCostoAdministrativoNodo()
                     ->where('nodo_costoadministrativo.anho', Carbon::now()->year)
                     ->where('nodos.id', $nodo)
                     ->get();
 
-                return $costoAdministrativoDatatables->getCostoAdministrativoPorNodoDatatables($costos);
+                return $costoAdministrativoDatatables->getCostoAdministrativoPorNodoDatatables($costos, $nodo);
             } else {
                 return response()->json(['data' => 'no response']);
             }
@@ -136,17 +141,18 @@ class CostoAdministrativoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, $nodo)
     {
         $costoAdministrativo = $this->getCostoAdministrativoRepository()->getInfoCostoAdministrativo()
             ->where('nodo_costoadministrativo.anho', Carbon::now()->year)
-            ->where('nodos.id', auth()->user()->dinamizador->nodo->id)
+            ->where('nodos.id', $nodo)
             ->findOrFail($id);
 
-        $this->authorize('edit', $costoAdministrativo);
+        //$this->authorize('edit', $costoAdministrativo);
 
         return view('costoadministrativo.edit', [
             'costoadministrativo' => $costoAdministrativo,
+            'nodo' => $nodo
         ]);
     }
 
@@ -154,11 +160,11 @@ class CostoAdministrativoController extends Controller
      * Update the specified resource in storage.
      * @param  int  $id
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, $nodo)
     {
         $costoAdministrativo = $this->getCostoAdministrativoRepository()->getInfoCostoAdministrativo()
             ->where('nodo_costoadministrativo.anho', Carbon::now()->year)
-            ->where('nodos.id', auth()->user()->dinamizador->nodo->id)
+            ->where('nodos.id', $nodo)
             ->findOrFail($id);
 
         $this->authorize('update', $costoAdministrativo);

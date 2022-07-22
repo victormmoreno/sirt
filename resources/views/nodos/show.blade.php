@@ -48,18 +48,18 @@
                                                 <div class="right mailbox-buttons hide-on-med-and-down">
                                                     <span class="mailbox-title">
                                                         <p class="center">Información Tecnoparque Nodo {{$nodo->entidad->present()->entidadName()}}</p><br/>
-                                                        <p class="center">{{isset($nodo->centro->entidad->nombre) ? $nodo->centro->entidad->nombre : ''}} - {{isset($nodo->centro->entidad->ciudad->nombre) ? $nodo->centro->entidad->ciudad->nombre : ''}} ({{ isset($nodo->centro->entidad->ciudad->departamento->nombre) ? $nodo->centro->entidad->ciudad->departamento->nombre : ''}})</p>
+                                                        <p class="center">{{isset($nodo->centro->entidad->nombre) ? $nodo->centro->entidad->nombre : ''}} - {{isset($nodo->entidad->ciudad->nombre) ? $nodo->entidad->ciudad->nombre : ''}} ({{ isset($nodo->entidad->ciudad->departamento->nombre) ? $nodo->entidad->ciudad->departamento->nombre : ''}})</p>
                                                     </span>
                                                 </div>
                                             </div>
-                                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() || session()->get('login_role') == App\User::IsActivador())
+                                            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsDinamizador() || session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsAdministrador()))
                                             <div class="right hide-on-med-and-down">
                                                 <small class="green-text text-darken-2">
                                                     <a class="waves-effect waves-green btn-flat" href="{{route('excel.exportexcelfornodo',$nodo->entidad->slug)}}">
                                                         <i class="fas fa-file-excel fa-lg"></i>Exportar a Excel
                                                     </a>
                                                 </small>
-                                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
+                                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsAdministrador()))
                                                 <small class="green-text text-darken-2">
                                                 <a href="{{route('nodo.edit', $nodo->entidad->slug)}}" class="waves-effect waves-blue btn-flat">
                                                         Cambiar Infomación
@@ -151,9 +151,11 @@
                                                                                 <b class="black-text text-darken-3">Número documento:</b> {{$dinamizador->user->present()->userDocumento()}}<br/>
                                                                                 <b class="black-text text-darken-3">Correo Electrónco:</b> {{$dinamizador->user->present()->userEmail()}}<br/>
                                                                                 <b class="black-text text-darken-3">Teléfono:</b> {{$dinamizador->user->present()->userTelefono()}}<br/>
-                                                                                <b class="black-text text-darken-3">Celular: </b>
-                                                                                {{$dinamizador->user->present()->userCelular()}}<br/>
+                                                                                <b class="black-text text-darken-3">Celular: </b> {{$dinamizador->user->present()->userCelular()}} <br>
                                                                             </p>
+                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $dinamizador->user->documento)}}" class="orange-text text-darken-1">
+                                                                                Ver mas información del usuario. 
+                                                                            </a>
                                                                         </li>
                                                                         @endif
                                                                     @empty
@@ -184,6 +186,9 @@
                                                                             <b class="black-text text-darken-3">Celular: </b>
                                                                             {{$infocenter->user->present()->userCelular()}}<br/>
                                                                         </p>
+                                                                        <a target="_blank" href="{{route("usuario.usuarios.show", $infocenter->user->documento)}}" class="orange-text text-darken-1">
+                                                                            Ver mas información del usuario. 
+                                                                        </a>
                                                                     </li>
                                                                     @endif
                                                                     @empty
@@ -219,6 +224,9 @@
                                                                                 <b class="black-text text-darken-3">Roles: </b>
                                                                                 {{$gestor->user->present()->userRolesNames()}}<br/>
                                                                             </p>
+                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $gestor->user->documento)}}" class="orange-text text-darken-1">
+                                                                                Ver mas información del usuario. 
+                                                                            </a>
                                                                         </li>
                                                                     </ul>
                                                                     @endif
@@ -259,6 +267,9 @@
                                                                                 <b class="black-text text-darken-3">Roles: </b>
                                                                                 {{$articulador->user->present()->userRolesNames()}}<br/>
                                                                             </p>
+                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $articulador->user->documento)}}" class="orange-text text-darken-1">
+                                                                                Ver mas información del usuario. 
+                                                                            </a>
                                                                         </li>
                                                                     </ul>
                                                                     @endif
@@ -301,6 +312,9 @@
                                                                                 <b class="black-text text-darken-3">Roles: </b>
                                                                                 {{$apoyotecnico->user->present()->userRolesNames()}}<br/>
                                                                             </p>
+                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $apoyotecnico->user->documento)}}" class="orange-text text-darken-1">
+                                                                                Ver mas información del usuario. 
+                                                                            </a>
                                                                         </li>
                                                                     </ul>
                                                                     @endif
@@ -341,6 +355,9 @@
                                                                                     <b class="black-text text-darken-3">Celular: </b>
                                                                                     {{$ingreso->user->present()->userCelular()}}<br/>
                                                                                 </p>
+                                                                                <a target="_blank" href="{{route("usuario.usuarios.show", $ingreso->user->documento)}}" class="orange-text text-darken-1">
+                                                                                    Ver mas información del usuario. 
+                                                                                </a>
                                                                             </li>
                                                                         </ul>
                                                                         @endif
