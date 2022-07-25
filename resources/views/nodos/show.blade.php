@@ -81,6 +81,9 @@
                                                                     <span class="title">
                                                                         {{$value->abreviatura}} - {{$value->nombre}}
                                                                     </span>
+                                                                    <a href="{{route("lineas.show", $value->slug)}}" target="_blank" class="orange-text text-darken-1 tooltipped" data-position="bottom" data-tooltip="Ver más información">
+                                                                        <i class="material-icons right">info</i>
+                                                                    </a>
                                                                 </li>
                                                             @empty
                                                             <div class="center">

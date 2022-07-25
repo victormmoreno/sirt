@@ -13,7 +13,7 @@
         <i class="material-icons {{ setActiveRouteActiveIcon('costos-administrativos') }}">settings_input_svideo</i>Costos Administrativos
     </a>
 </li>
-{{-- <li class="no-padding {{setActiveRoute('lineas')}}">
+<li class="no-padding {{setActiveRoute('lineas')}}">
     <a class="waves-effect waves-grey {{setActiveRouteActivePage('lineas')}}" href="{{route('lineas.index')}}" rel="canonical" title="Lineas Tecnológicas">
         <i class="material-icons {{ setActiveRouteActiveIcon('lineas') }}">linear_scale</i>Lineas Tecnológicas
     </a>
@@ -28,7 +28,7 @@
         <i class="material-icons {{setActiveRouteActiveIcon('proyecto')}}">library_books</i>Proyectos
     </a>
 </li>
-<li class="no-padding {{setActiveRoute('articulacion')}}">
+{{-- <li class="no-padding {{setActiveRoute('articulacion')}}">
     <a href="{{ route('articulaciones.index') }}" class="{{setActiveRouteActivePage('articulacion')}}" rel="canonical" title="Articulaciones">
         <i class="material-icons {{setActiveRouteActiveIcon('articulacion')}}">autorenew</i>Articulación PBT
     </a>

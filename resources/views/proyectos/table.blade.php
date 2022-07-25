@@ -70,7 +70,7 @@
   </tbody>
 </table>
 @endif
-@if(\Session::get('login_role') == App\User::IsActivador())
+@if(\Session::get('login_role') == App\User::IsActivador() || \Session::get('login_role') == App\User::IsAdministrador())
 <table id="tblproyectosDelNodoPorAnho_Administrador" class="display responsive-table datatable-example dataTable" style="width: 100%">
   <thead>
     <tr>

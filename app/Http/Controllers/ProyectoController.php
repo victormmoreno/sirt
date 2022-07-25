@@ -511,38 +511,9 @@ class ProyectoController extends Controller
      */
     public function index()
     {
-        switch (Session::get('login_role')) {
-            case User::IsGestor():
-                return view('proyectos.gestor.index');
-                break;
-
-            case User::IsDinamizador():
-                return view('proyectos.dinamizador.index', [
-                    'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
-                ]);
-                break;
-
-            case User::IsActivador():
-                return view('proyectos.administrador.index', [
-                    'nodos' => Nodo::SelectNodo()->get(),
-                ]);
-                break;
-
-            case User::IsTalento():
-                return view('proyectos.talento.index');
-                break;
-
-            case User::IsInfocenter():
-                return view('proyectos.infocenter.index', [
-                    'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->infocenter->nodo_id)->pluck('nombres_gestor', 'id'),
-                ]);
-                break;
-
-            default:
-                return abort(Response::HTTP_FORBIDDEN);
-
-                break;
-        }
+        return view('proyectos.index', [
+            'nodos' => Nodo::SelectNodo()->get(),
+        ]);
     }
 
     /**

@@ -11,7 +11,7 @@
                     <div class="col s12 m6 l6">
                         <h5 class="left-align">
                             <a class="footer-text left-align" href="{{route('lineas.index')}}">
-                                  <i class="material-icons arrow-l">
+                                  <i class="material-icons arrow-l left">
                                       arrow_back
                                   </i>
                               </a>
@@ -56,59 +56,92 @@
                                             <div class="mailbox-text">
                                                 <div class="row">
                                                     <div class="col s12 m6 l6">
-														<div class="center-align">
-															<span class="mailbox-title center">
-													        	<i class="material-icons">
-									                                info
-									                            </i>
-									                            Información Linea Tecnologica
-													        </span>
-														</div>
-												        
-												        <div class="divider mailbox-divider">
-                                            			</div>
-												    
-                                                        <ul class="collection">
+                                                        <div class="row">
+                                                            <div class="center-align">
+                                                                <span class="mailbox-title center">
+                                                                    <i class="material-icons left">
+                                                                        info
+                                                                    </i>
+                                                                    Información Linea Tecnologica
+                                                                </span>
+                                                            </div>
                                                             
-                                                            <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                    dns
-                                                                </i>
-                                                                <span class="title">
-                                                                    Abreviatura
+                                                            <div class="divider mailbox-divider">
+                                                            </div>
+                                                        
+                                                            <ul class="collection">
+                                                                
+                                                                <li class="collection-item avatar">
+                                                                    <i class="material-icons circle orange darken-1">
+                                                                        dns
+                                                                    </i>
+                                                                    <span class="title">
+                                                                        Abreviatura
+                                                                    </span>
+                                                                    <p>
+                                                                       {{$linea->abreviatura}} 
+                                                                    </p>
+                                                                </li>
+                                                                <li class="collection-item avatar">
+                                                                    <i class="material-icons circle orange darken-1">
+                                                                        dns
+                                                                    </i>
+                                                                    <span class="title">
+                                                                        Nombre
+                                                                    </span>
+                                                                    <p>
+                                                                       {{$linea->nombre}} 
+                                                                    </p>
+                                                                </li>
+                                                                <li class="collection-item avatar">
+                                                                    <i class="material-icons circle orange darken-1">
+                                                                        speaker_notes
+                                                                    </i>
+                                                                    <span class="title">
+                                                                        Descripción
+                                                                    </span>
+                                                                    <p>
+                                                                       {{!empty($linea->descripcion) ? $linea->descripcion : 'No registra' }} 
+                                                                    </p>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="center-align">
+                                                                <span class="mailbox-title center">
+                                                                    <i class="material-icons left">
+                                                                        info
+                                                                    </i>
+                                                                    Sublineas de la linea de {{$linea->nombre}}
                                                                 </span>
-                                                                <p>
-                                                                   {{$linea->abreviatura}} 
-                                                                </p>
-                                                            </li>
-                                                            <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                    dns
-                                                                </i>
-                                                                <span class="title">
-                                                                    Nombre
-                                                                </span>
-                                                                <p>
-                                                                   {{$linea->nombre}} 
-                                                                </p>
-                                                            </li>
-                                                            <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                    speaker_notes
-                                                                </i>
-                                                                <span class="title">
-                                                                    Descripción
-                                                                </span>
-                                                                <p>
-                                                                   {{!empty($linea->descripcion) ? $linea->descripcion : 'No registra' }} 
-                                                                </p>
-                                                            </li>
-                                                        </ul>
+                                                            </div>
+                                                            
+                                                            <div class="divider mailbox-divider"></div>
+                                                        
+                                                            <ul class="collection">
+                                                                @forelse($linea->sublineas as $sublinea)
+                                                                <li class="collection-item avatar">
+                                                                    <i class="material-icons circle orange darken-1">
+                                                                        linear_scale
+                                                                    </i>
+                                                                    <span class="title">
+                                                                        {{$sublinea->nombre}} 
+                                                                    </span>
+                                                                    
+                                                                </li>
+                                                                @empty
+                                                                    <span class="title">
+                                                                        No hay sublineas asociadas a la linea de {{$linea->nombre}}
+                                                                    </span>
+                                                                @endforelse
+                                                                
+                                                            </ul>
+                                                        </div>
                                                     </div>
                                                     <div class="col s12 m6 l6">
 														<div class="center-align">
 															<span class="mailbox-title center">
-													        	<i class="material-icons">
+													        	<i class="material-icons left">
 									                                info
 									                            </i>
 									                            Nodos con la linea de {{$linea->nombre}}
@@ -121,7 +154,7 @@
                                                         <ul class="collection">
                                                             @forelse($linea->nodos as $nodo)
                                                             <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
+                                                                <i class="material-icons circle orange darken-1">
                                                                     domain
                                                                 </i>
                                                                 <span class="title">
@@ -136,10 +169,13 @@
                                                                 <p>
                                                                    <b>Dirección: </b> {{$nodo->direccion}} | {{$nodo->entidad->ciudad->nombre}} ({{$nodo->entidad->ciudad->departamento->nombre}})
                                                                 </p>
+                                                                <p>
+                                                                   <a href="{{route("nodo.show", $nodo->entidad->slug)}}" target="_blank" class="orange-text text-darken-1">Ver más información</a>
+                                                                </p>
                                                             </li>
                                                             @empty
 															<li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
+                                                                <i class="material-icons circle orange darken-1">
                                                                     info
                                                                 </i>
                                                                 <span class="title">
@@ -152,42 +188,7 @@
                                                         </ul>
                                                     </div>
                                             </div>
-                                            <div class="row">
-                                            	<div class="col s12 m6 l6">
-														<div class="center-align">
-															<span class="mailbox-title center">
-													        	<i class="material-icons">
-									                                info
-									                            </i>
-									                            Sublineas de la linea de {{$linea->nombre}}
-													        </span>
-														</div>
-												        
-												        <div class="divider mailbox-divider">
-                                            			</div>
-												    
-                                                        <ul class="collection">
-                                                            @forelse($linea->sublineas as $sublinea)
-                                                            <li class="collection-item avatar">
-                                                                <i class="material-icons circle teal darken-2">
-                                                                    linear_scale
-                                                                </i>
-                                                                <span class="title">
-                                                                    {{$sublinea->nombre}} 
-                                                                </span>
-                                                                
-                                                            </li>
-                                                            @empty
-																<span class="title">
-                                                                    No hay sublineas asociadas a la linea de {{$linea->nombre}}
-                                                                </span>
-                                                            @endforelse
-                                                            
-                                                        </ul>
-                                                    </div>
-                                            </div>
-                                            <div class="divider mailbox-divider">
-                                                </div>
+                                            <div class="divider mailbox-divider"></div>
                                         </div>
                                     </div>
                                 </div>
