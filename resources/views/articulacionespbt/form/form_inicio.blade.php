@@ -415,9 +415,9 @@
                             </div>
                             <div class="input-field col s12 m12 l6">
                                 @if(isset($articulacion))
-                                    <input @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  id="txtfecha_esperada" name="txtfecha_esperada" type="text" class="validate datepicker-min-date" value="{{$articulacion->present()->articulacionPbtFechaFinalizacion()}}">
+                                    <input @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  id="txtfecha_esperada" name="txtfecha_esperada" type="text" class="txtfecha_esperada" value="{{$articulacion->present()->articulacionPbtFechaFinalizacion()}}">
                                 @else
-                                    <input id="txtfecha_esperada" name="txtfecha_esperada" type="text" class="validate datepicker-min-date">
+                                    <input id="txtfecha_esperada" name="txtfecha_esperada" type="text" >
                                 @endif
 
                                 <label for="txtfecha_esperada">Fecha esperada de finalización <span class="red-text">*</span></label>

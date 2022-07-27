@@ -1425,8 +1425,7 @@ class ProyectoController extends Controller
                 'objetivos_especificos',
 
                 'articulacion_proyecto.proyecto.asesor.user' => function ($query) {
-                    $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
-                        ->orWhere('deleted_at', '!=', null);
+                    $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->withTrashed();
                 },
                 'articulacion_proyecto.proyecto.asesor.user.gestor.lineatecnologica' => function ($query) {
                     $query->select('id', 'abreviatura', 'nombre');

@@ -130,6 +130,7 @@ class ComiteRepository
     {
         DB::beginTransaction();
         try {
+            DB::statement("SET SESSION wait_timeout = 300");
             $extensiones = "";
             $comite = Comite::findOrFail($idComite);
             $idea = $comite->ideas()->wherePivot('idea_id', $id)->first();

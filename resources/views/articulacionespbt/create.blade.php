@@ -85,3 +85,17 @@
 </main>
 
 @endsection
+@push('script')
+    <script>
+        $('#txtfecha_esperada').bootstrapMaterialDatePicker({
+        changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+        language: 'es',
+        time:false,
+        cancelText : 'Cancelar',
+        okText: 'Guardar',
+        dateFormat: "yyyy-mm-dd"
+    });
+    </script>
+@endpush
