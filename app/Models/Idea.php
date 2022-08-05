@@ -158,16 +158,16 @@ class Idea extends Model
         )
             ->selectRaw('concat(nombres_contacto, " ", apellidos_contacto) AS nombres_contacto')
             ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombres_talento')
-            ->join('comite_idea', 'comite_idea.idea_id', '=', 'ideas.id')
-            ->join('comites', 'comites.id', '=', 'comite_idea.comite_id')
+            // ->join('comite_idea', 'comite_idea.idea_id', '=', 'ideas.id')
+            // ->join('comites', 'comites.id', '=', 'comite_idea.comite_id')
             ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
             ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
             ->leftjoin('talentos', 'talentos.id', '=', 'ideas.talento_id')
             ->leftjoin('users', 'users.id', '=', 'talentos.user_id')
             ->where('nodos.id', $idnodo)
-            ->where('comite_idea.admitido', 1)
+            // ->where('comite_idea.admitido', 1)
             ->where('estadosidea.nombre', EstadoIdea::IsAdmitido())
-            ->where('tipo_idea', $this->IsEmprendedor())
+            // ->where('tipo_idea', $this->IsEmprendedor())
             ->where('gestor_id', '=', $idgestor);
     }
 

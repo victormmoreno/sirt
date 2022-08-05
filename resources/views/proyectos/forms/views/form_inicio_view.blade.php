@@ -16,7 +16,7 @@
                     @include('proyectos.titulo')
                     <form id="frmProyectos_FaseInicio_Update" action="{{route('proyecto.update.inicio', $proyecto->id)}}" method="POST">
                         {!! method_field('PUT')!!}
-                        @include('proyectos.gestor.forms.form_inicio', [
+                        @include('proyectos.forms.form_inicio', [
                         'btnText' => 'Modificar'])
                     </form>
                     </div>

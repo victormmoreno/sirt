@@ -11,18 +11,65 @@
     </div>
 </div>
 <br>
-<div class="row">
-    <div class="input-field col s12 m6 l6">
-        <input disabled id="txtgestor" name="txtgestor"
-            value="{{ auth()->user()->nombres }} {{ auth()->user()->apellidos }}" type="text">
-        <label for="txtgestor" class="">Experto</label>
+@if (session()->get('login_role') == App\User::IsAdministrador() && Route::currentRouteName() != ('proyecto.inicio'))
+    <div class="row">
+        <div class="input-field col s12 m4 l4">
+            <select style="width: 100%" class="js-states" id="txtnodo_id" name="txtnodo_id" onchange="consultarExpertosDeUnNodo(this.value);">
+            <option value="">Seleccione el nodo del experto</option>
+            @if ($existe)
+                @forelse ($nodos as $id => $nodo)
+                <option value="{{$id}}" {{ $proyecto->asesor->nodo_id == $id ? 'selected' : '' }}>{{$nodo->nodos}}</option>
+                @empty
+                <option value=""> No hay información disponible</option>
+                @endforelse
+            @else
+                @forelse ($nodos as $id => $nodo)
+                <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
+                @empty
+                <option value=""> No hay información disponible</option>
+                @endforelse
+            @endif
+        </select>
+        </div>
+        <div class="input-field col s12 m4 l4">
+            <select style="width: 100%" class="js-states" id="txtexperto_id_proyecto" name="txtexperto_id_proyecto" onchange="consultarInformacionExperto(this.value);">
+            <option value="">Seleccione el experto</option>
+        </select>
+        </div>
+        <div class="input-field col s12 m4 l4">
+            <input disabled id="txtlinea" name="txtlinea" value="Debes seleccionar un experto" type="text">
+            <label for="txtlinea" class="">Línea Tecnológica</label>
+        </div>
     </div>
-    <div class="input-field col s12 m6 l6">
-        <input disabled id="txtlinea" name="txtlinea" value="{{ auth()->user()->gestor->lineatecnologica->nombre }}"
-            type="text">
-        <label for="txtlinea" class="">Línea Tecnológica</label>
-    </div>
-</div>
+@else
+    @if ($existe)
+        <div class="row">
+            <div class="input-field col s12 m6 l6">
+                <input disabled id="txtgestor" name="txtgestor"
+                    value="{{ $proyecto->asesor->user->nombres }} {{ $proyecto->asesor->user->apellidos }}" type="text">
+                <label for="txtgestor" class="">Experto</label>
+            </div>
+            <div class="input-field col s12 m6 l6">
+                <input disabled id="txtlinea" name="txtlinea" value="{{ $proyecto->asesor->lineatecnologica->nombre }}"
+                    type="text">
+                <label for="txtlinea" class="">Línea Tecnológica</label>
+            </div>
+        </div>
+    @else
+        <div class="row">
+            <div class="input-field col s12 m6 l6">
+                <input disabled id="txtgestor" name="txtgestor"
+                    value="{{ auth()->user()->nombres }} {{ auth()->user()->apellidos }}" type="text">
+                <label for="txtgestor" class="">Experto</label>
+            </div>
+            <div class="input-field col s12 m6 l6">
+                <input disabled id="txtlinea" name="txtlinea" value=""
+                    type="text">
+                <label for="txtlinea" class="">Línea Tecnológica</label>
+            </div>
+        </div>
+    @endif
+@endif
 <div class="row">
     <h5 class="center orange-text"><i class="material-icons">lightbulb</i>Idea de Proyecto.</h5>
 </div>
@@ -111,11 +158,15 @@
         @else
         <select id="txtsublinea_id" class="js-states" name="txtsublinea_id" style="width: 100%">
             <option value="">Seleccione la Sublínea</option>
-            @forelse ($sublineas as $key => $value)
-            <option value="{{$key}}">{{$value}}</option>
-            @empty
-            <option value="">No hay información disponible</option>
-            @endforelse
+            @if ($sublineas != null)
+                @forelse ($sublineas as $key => $value)
+                <option value="{{$key}}">{{$value}}</option>
+                @empty
+                <option value="">No hay información disponible</option>
+                @endforelse
+            @else
+                <option value="">No hay información disponible</option>
+            @endif
         </select>
         @endif
         <label for="txtsublinea_id">Sublínea <span class="red-text">*</span></label>
@@ -614,7 +665,7 @@
         {{isset($btnText) ? $btnText : 'error'}}
     </button>
     @endif
-    <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+    <a href="{{ $existe ? route('proyecto.inicio', $proyecto->id) : route('proyecto') }}" class="waves-effect red lighten-2 btn center-aling">
         <i class="material-icons right">backspace</i>Cancelar
     </a>
 </center>

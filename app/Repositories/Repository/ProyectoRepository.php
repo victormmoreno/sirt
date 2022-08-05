@@ -1566,12 +1566,13 @@ class ProyectoRepository
      * @return string
      * @author dum
      */
-    private function generarCodigoDeProyecto()
+    private function generarCodigoDeProyecto($experto)
     {
+        
         $anho = Carbon::now()->isoFormat('YYYY');
-        $tecnoparque = sprintf("%02d", auth()->user()->gestor->nodo_id);
-        $linea = auth()->user()->gestor->lineatecnologica_id;
-        $gestor = sprintf("%03d", auth()->user()->gestor->id);
+        $tecnoparque = sprintf("%02d", $experto->gestor->nodo_id);
+        $linea = $experto->gestor->lineatecnologica_id;
+        $gestor = sprintf("%03d", $experto->gestor->id);
         $idProyecto = Proyecto::selectRaw('MAX(id+1) AS max')->get()->last();
         $idProyecto->max == null ? $idProyecto->max = 1 : $idProyecto->max = $idProyecto->max;
         $idProyecto->max = sprintf("%04d", $idProyecto->max);
@@ -1589,7 +1590,13 @@ class ProyectoRepository
     {
         DB::beginTransaction();
         try {
-            $codigo_actividad = $this->generarCodigoDeProyecto();
+            if (isset(request()->txtexperto_id_proyecto)) {
+                $experto = User::find(request()->txtexperto_id_proyecto);
+            } else {
+                $experto = User::find(auth()->user()->id);
+            }
+            
+            $codigo_actividad = $this->generarCodigoDeProyecto($experto);
             $entidad_id = Entidad::all()->where('nombre', 'No Aplica')->last()->id;
 
             $trl_esperado = 1;
@@ -1642,8 +1649,8 @@ class ProyectoRepository
 
             $proyecto = Proyecto::create([
                 'articulacion_proyecto_id' => $articulacion_proyecto->id,
-                'asesor_id' => auth()->user()->gestor->id,
-                'nodo_id' => auth()->user()->gestor->nodo_id,
+                'asesor_id' => $experto->gestor->id,
+                'nodo_id' => $experto->gestor->nodo_id,
                 'fase_id' => Fase::where('nombre', 'Inicio')->first()->id,
                 'idea_id' => request()->txtidea_id,
                 'areaconocimiento_id' => request()->txtareaconocimiento_id,

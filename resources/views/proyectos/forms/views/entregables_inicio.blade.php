@@ -17,7 +17,7 @@
             <div class="row">
                 <div class="col s12 m12 l12">
                 <form action="{{route('proyecto.update.entregables.inicio', $proyecto->id)}}" method="POST" onsubmit="return checkSubmit()">
-                    @include('proyectos.gestor.form_entregables_inicio')
+                    @include('proyectos.forms.entregables.inicio')
                     @include('proyectos.archivos_table_fase', ['fase' => 'inicio'])
                     <div class="divider"></div>
                     <center>

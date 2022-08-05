@@ -16,13 +16,13 @@
               @include('proyectos.titulo')
               @include('proyectos.historial_cambios')
               <div class="col s12 offset-m3 offset-l3">
-                @include('proyectos.detalle_general')
+                @include('proyectos.detalles.detalle_general')
               </div>
               <br />
               <form action="{{route('proyecto.update.talentos', $proyecto->id)}}" method="POST" id="frmUpdateTalentos" name="frmUpdateTalentos">
                 {!! method_field('PUT')!!}
                 @csrf
-                @include('proyectos.gestor.componente_talentos_proyecto', ['proyecto' => $proyecto])
+                @include('proyectos.detalles.componente_talentos_proyecto', ['proyecto' => $proyecto])
                 <div class="divider"></div>
                 <center>
                   <button type="submit" class="waves-effect cyan darken-1 btn center-aling">

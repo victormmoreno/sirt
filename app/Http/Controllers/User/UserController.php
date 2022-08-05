@@ -30,7 +30,7 @@ class UserController extends Controller
     public function findUserById(int $id)
     {
         return response()->json([
-            'user' => User::withTrashed()->with(['gestor'])->where('id', $id)->first(),
+            'user' => User::withTrashed()->with(['gestor', 'gestor.lineatecnologica'])->where('id', $id)->first(),
         ]);
     }
 
@@ -214,13 +214,12 @@ class UserController extends Controller
 
     public function gestoresByNodo($nodo = null)
     {
-        $gestores = User::select('gestores.id')
+        $gestores = User::select('gestores.id', 'users.id AS user_id')
             ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) as nombre')
             ->join('gestores', 'gestores.user_id', 'users.id')
             ->role(User::IsGestor())
             ->where('gestores.nodo_id', $nodo)
-            ->withTrashed()
-            ->pluck('nombre', 'id');
+            ->get();
 
         return response()->json([
             'gestores' => $gestores

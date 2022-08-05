@@ -174,7 +174,11 @@
                     @foreach ($proyecto->articulacion_proyecto->talentos as $key => $value)
                         <tr>
                         <td>{{$value->pivot->talento_lider == 1 ? 'SI' : 'NO'}}</td>
-                        <td>{{$value->user()->withTrashed()->first()->documento}} - {{$value->user()->withTrashed()->first()->nombres}} {{$value->user()->withTrashed()->first()->apellidos}}</td>
+                        <td>
+                            <a target="_blank" href="{{route("usuario.usuarios.show", $value->user()->withTrashed()->first()->documento)}}" class="orange-text text-darken-1">
+                                {{$value->user()->withTrashed()->first()->documento}} - {{$value->user()->withTrashed()->first()->nombres}} {{$value->user()->withTrashed()->first()->apellidos}}
+                            </a>
+                        </td>
                         </tr>
                     @endforeach
                 </tbody>

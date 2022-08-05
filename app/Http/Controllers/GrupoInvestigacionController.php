@@ -151,43 +151,31 @@ class GrupoInvestigacionController extends Controller
     if (request()->ajax()) {
       $gruposInvestigacion = GrupoInvestigacion::ConsultarGruposDeInvestigaciónTecnoparque()->get();
       // dd($gruposInvestigacion);
-      if (\Session::get('login_role') == User::IsGestor()) {
-        return datatables()->of($gruposInvestigacion)
-        ->addColumn('details', function ($data) {
-          $button = '
-          <a class="btn light-blue m-b-xs modal-trigger" onclick="grupoInvestigacionIndex.consultarDetallesDeUnGrupoInvestigacion(' . $data->id . ')" href="#modal1">
-            <i class="material-icons">info</i>
-          </a>
-          ';
-          return $button;
-        })->addColumn('contacts', function ($data) {
-          $contact = '
-          <a class="btn orange lighten-3 m-b-xs modal-trigger" id="#contactosDeUnaEntidad_modal" onclick="consultarContactosDeUnaEntidad('.$data->id_entidad.');">
-          <i class="material-icons">local_phone</i>
-          </a>
-          ';
-          return $contact;
-        })->addColumn('edit', function ($data) {
-          $edit = '<a href="'. route("grupo.edit", $data->id) .'" class="btn m-b-xs"><i class="material-icons">edit</i></a>';
-          return $edit;
-        })->addColumn('add_articulacion', function ($data) {
-          $add = '<a onclick="addGrupoArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
-          return $add;
-        })->addColumn('add_propietario', function ($data) {
-          $add_propietario = '<a onclick="addGrupoPropietario(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
-          return $add_propietario;
-        })->rawColumns(['details', 'edit', 'add_articulacion', 'contacts', 'add_propietario'])->make(true);
-      } else {
-        return datatables()->of($gruposInvestigacion)
-        ->addColumn('details', function ($data) {
-          $button = '
-          <a class="btn light-blue m-b-xs modal-trigger" onclick="grupoInvestigacionIndex.consultarDetallesDeUnGrupoInvestigacion(' . $data->id . ')" href="#modal1">
-            <i class="material-icons">info</i>
-          </a>
-          ';
-          return $button;
-        })->rawColumns(['details'])->make(true);
-      }
+      return datatables()->of($gruposInvestigacion)
+      ->addColumn('details', function ($data) {
+        $button = '
+        <a class="btn light-blue m-b-xs modal-trigger" onclick="grupoInvestigacionIndex.consultarDetallesDeUnGrupoInvestigacion(' . $data->id . ')" href="#modal1">
+          <i class="material-icons">info</i>
+        </a>
+        ';
+        return $button;
+      })->addColumn('contacts', function ($data) {
+        $contact = '
+        <a class="btn orange lighten-3 m-b-xs modal-trigger" id="#contactosDeUnaEntidad_modal" onclick="consultarContactosDeUnaEntidad('.$data->id_entidad.');">
+        <i class="material-icons">local_phone</i>
+        </a>
+        ';
+        return $contact;
+      })->addColumn('edit', function ($data) {
+        $edit = '<a href="'. route("grupo.edit", $data->id) .'" class="btn m-b-xs"><i class="material-icons">edit</i></a>';
+        return $edit;
+      })->addColumn('add_articulacion', function ($data) {
+        $add = '<a onclick="addGrupoArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+        return $add;
+      })->addColumn('add_propietario', function ($data) {
+        $add_propietario = '<a onclick="addGrupoPropietario(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+        return $add_propietario;
+      })->rawColumns(['details', 'edit', 'add_articulacion', 'contacts', 'add_propietario'])->make(true);
     }
   }
 

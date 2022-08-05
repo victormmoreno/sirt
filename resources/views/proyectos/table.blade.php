@@ -1,4 +1,4 @@
-@if(\Session::get('login_role') == App\User::IsGestor())
+{{-- @if(\Session::get('login_role') == App\User::IsGestor())
 <table id="tblproyectosGestorPorAnho" class="display responsive-table datatable-example dataTable" style="width: 100%">
     <thead>
         <tr>
@@ -69,9 +69,9 @@
 
   </tbody>
 </table>
-@endif
-@if(\Session::get('login_role') == App\User::IsActivador() || \Session::get('login_role') == App\User::IsAdministrador())
-<table id="tblproyectosDelNodoPorAnho_Administrador" class="display responsive-table datatable-example dataTable" style="width: 100%">
+@endif --}}
+{{-- @if(\Session::get('login_role') == App\User::IsActivador() || \Session::get('login_role') == App\User::IsAdministrador()) --}}
+<table id="tblProyectos_Master" class="display responsive-table datatable-example dataTable" style="width: 100%">
   <thead>
     <tr>
       <th>Código de Proyecto</th>
@@ -86,19 +86,19 @@
   <tfoot>
     <tr>
       <th>
-        <input type="text" name="codigo_proyecto" id="codigo_proyecto_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por código de proyecto">
+        <input type="text" name="codigo_proyecto" id="codigo_proyecto_tblProyectos_Master" placeholder="Buscar por código de proyecto">
       </th>
       <th>
-        <input type="text" name="gestor" id="gestor_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por experto">
+        <input type="text" name="gestor" id="gestor_tblProyectos_Master" placeholder="Buscar por experto">
       </th>
       <th>
-        <input type="text" name="nombre" id="nombre_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por nombre">
+        <input type="text" name="nombre" id="nombre_tblProyectos_Master" placeholder="Buscar por nombre">
       </th>
       <th>
-        <input type="text" name="sublinea_nombre" id="sublinea_nombre_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por sublinea">
+        <input type="text" name="sublinea_nombre" id="sublinea_nombre_tblProyectos_Master" placeholder="Buscar por sublinea">
       </th>
       <th>
-        <input type="text" name="nombre_fase" id="sublinea_nombre_tblproyectosDelNodoPorAnho_Administrador" placeholder="Buscar por fase">
+        <input type="text" name="nombre_fase" id="sublinea_nombre_tblProyectos_Master" placeholder="Buscar por fase">
       </th>
       <th></th>
       <th></th>
@@ -108,9 +108,9 @@
 
   </tbody>
 </table>
-@endif
+{{-- @endif --}}
 
-@if (\Session::get('login_role') == App\User::IsTalento())
+{{-- @if (\Session::get('login_role') == App\User::IsTalento())
 <table id="tblProyectoDelTalento" class="display responsive-table datatable-example dataTable" style="width: 100%">
   <thead>
     <tr>
@@ -143,4 +143,4 @@
   </tfoot>
   </tbody>
 </table>
-@endif
+@endif --}}

@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\User;
-use App\Models\Proyecto;
+use App\Models\{Proyecto, Fase};
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ProyectoPolicy
@@ -51,6 +51,68 @@ class ProyectoPolicy
     {
         if (session()->get('login_role') == $user->IsGestor()) {
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * Determina quienes pueden ver las opciones que tiene el experto
+     * 
+     * @param \App\User $user
+     * @return bool
+     * @author dum
+     */
+    public function showOptionsForExperto(User $user)
+    {
+        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsGestor()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Determina quienes pueden ver las opciones que tiene el dinamizador
+     * 
+     * @param \App\User $user
+     * @return bool
+     * @author dum
+     */
+    public function showOptionsForDinamizador(User $user)
+    {
+        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsDinamizador()) {
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * Determina quienes y cuando se pueden ver los botones de aprobación o rechazo de un cambio de fase
+     *
+     * @param \App\User $user
+     * @param \App\Models\Proyecto $ult_notificacion
+     * @return bool
+     * @author dum
+     **/
+    public function showButtonAprobacion(User $user, Proyecto $proyecto)
+    {
+        $ult_notificacion = $proyecto->notificaciones()->where('fase_id',  Fase::where('nombre', $proyecto->IsSuspendido())->first()->id)->whereNull('fecha_aceptacion')->get()->last();
+        if ($ult_notificacion != null) {
+            if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsDinamizador() || session()->get('login_role') == $user->IsGestor()) {
+                if ($ult_notificacion->estado == $ult_notificacion->IsPendiente()) {
+                    if (session()->get('login_role') == $user->IsAdministrador()) {
+                        return true;
+                    } else {
+                        if ($ult_notificacion->receptor->id == auth()->user()->id && $ult_notificacion->rol_receptor->name == session()->get('login_role')) {
+                            return true;
+                        }
+                    }
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
         }
         return false;
     }

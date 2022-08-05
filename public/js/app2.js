@@ -5121,6 +5121,90 @@ var infoActividad = {
 
 }
 
+$("#codigo_proyecto_tblProyectos_Master").keyup(function(){
+    $('#tblProyectos_Master').DataTable().draw();
+});
+
+$("#gestor_tblProyectos_Master").keyup(function(){
+$('#tblProyectos_Master').DataTable().draw();
+});
+
+$("#nombre_tblProyectos_Master").keyup(function(){
+$('#tblProyectos_Master').DataTable().draw();
+});
+
+$("#sublinea_nombre_tblProyectos_Master").keyup(function(){
+$('#tblProyectos_Master').DataTable().draw();
+});
+
+$("#estado_nombre_tblProyectos_Master").keyup(function(){
+$('#tblProyectos_Master').DataTable().draw();
+});
+
+/**
+ * Consulta los proyectos de un nodo por año (Este método es para el dinamizador)
+ */
+function consultarProyectosUnNodoPorAnho() {
+let anho_proyectos_nodo = $('#anho_proyectoPorNodoYAnho').val();
+let nodo = $('#nodo_proyectoPorNodoYAnho').val();
+$('#tblProyectos_Master').dataTable().fnDestroy();
+$('#tblProyectos_Master').DataTable({
+    language: {
+    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    order: [ 0, 'desc' ],
+    "lengthChange": false,
+    ajax:{
+    url: host_url + "/proyecto/datatableProyectosDelNodoPorAnho/"+nodo+"/"+anho_proyectos_nodo,
+    data: function (d) {
+        d.codigo_proyecto = $('#codigo_proyecto_tblProyectos_Master').val(),
+        d.gestor = $('#gestor_tblProyectos_Master').val(),
+        d.nombre = $('#nombre_tblProyectos_Master').val(),
+        d.sublinea_nombre = $('#sublinea_nombre_tblProyectos_Master').val(),
+        d.estado_nombre = $('#estado_nombre_tblProyectos_Master').val(),
+        d.search = $('input[type="search"]').val()
+    }
+    // type: "get",
+    },
+    columns: [
+    {
+        width: '15%',
+        data: 'codigo_proyecto',
+        name: 'codigo_proyecto',
+    },
+    {
+        data: 'gestor',
+        name: 'gestor',
+    },
+    {
+        data: 'nombre',
+        name: 'nombre',
+    },
+    {
+        data: 'sublinea_nombre',
+        name: 'sublinea_nombre',
+    },
+    {
+        data: 'nombre_fase',
+        name: 'nombre_fase',
+    },
+    {
+        width: '8%',
+        data: 'info',
+        name: 'info',
+        orderable: false
+    },
+    {
+        width: '8%',
+        data: 'proceso',
+        name: 'proceso',
+        orderable: false
+    },
+    ],
+    });
+}
 function preguntaRechazarAprobacionProyecto(e) {
     e.preventDefault();
     $('button[type="submit"]').attr('disabled', true);
@@ -5658,7 +5742,6 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
     }).done(function (response) {
         let value = response.data.idea;
         if(idea =! null){
-            console.log(response);
             dumpAggregateValuesIntoTables();
             
             addValueToFields(nombre, codigo, value);
@@ -5683,6 +5766,10 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
 
 // Consultas las ideas de proyecto que fueron aprobadas en el comité
 function consultarIdeasDeProyectoEmprendedores_Proyecto_FaseInicio() {
+    let nodo = null;
+    let id_experto = null;
+    nodo = $('#txtnodo_id').val();
+    id_experto = $('#txtexperto_id_proyecto').val();
     $('#ideasDeProyectoConEmprendedores_proyecto_table').dataTable().fnDestroy();
     $('#ideasDeProyectoConEmprendedores_proyecto_table').DataTable({
         language: {
@@ -5694,7 +5781,7 @@ function consultarIdeasDeProyectoEmprendedores_Proyecto_FaseInicio() {
             0, 'desc'
         ],
         ajax: {
-            url: host_url + "/proyecto/datatableIdeasConEmprendedores",
+            url: host_url + "/proyecto/ideasAsociadasAExperto/"+nodo+"/"+id_experto,
             type: "get"
         },
         select: true,
@@ -5878,6 +5965,56 @@ function errorAjax(jqXHR, textStatus, errorThrown){
         alert('Uncaught Error: ' + jqXHR.responseText);
 
       }
+}
+
+function consultarExpertosDeUnNodo(nodo_id) {
+    $.ajax({
+        dataType:'json',
+        type:'get',
+        url: host_url + "/usuario/usuarios/gestores/nodo/"+nodo_id
+      }).done(function(response){
+          $("#txtexperto_id_proyecto").empty();
+          $('#txtexperto_id_proyecto').append('<option value="">Seleccione el experto</option>');
+          $.each(response.gestores, function(i, e) {
+            $('#txtexperto_id_proyecto').append('<option  value="'+e.user_id+'">'+e.nombre+'</option>');
+          })
+          $('#txtexperto_id_proyecto').material_select();
+    });
+}
+
+function consultarInformacionExperto(user) {
+    $.ajax({
+        dataType:'json',
+        type:'get',
+        url: host_url + "/usuario/consultarUserPorId/"+user
+      }).done(function(response){
+          printLinea(response);
+          consultarSublineas(response.user.gestor.lineatecnologica.id);
+    });
+}
+
+function consultarSublineas(linea) {
+    $.ajax({
+        dataType:'json',
+        type:'get',
+        url: host_url + "/proyecto/sublineas_of/"+linea
+    }).done(function (response) {
+          console.log(response);
+        printSublineas(response);
+    });
+}
+
+function printSublineas(response) {
+    $("#txtsublinea_id").empty();
+    $('#txtsublinea_id').append('<option value="">Seleccione la sublinea</option>');
+    $.each(response.sublineas, function(i, e) {
+      $('#txtsublinea_id').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+    })
+    $('#txtsublinea_id').material_select();
+}
+
+function printLinea(response) {
+    $('#txtlinea').val(response.user.gestor.lineatecnologica.nombre);
 }
 
 // Enviar formulario para modificar el proyecto en fase de cierre

@@ -360,7 +360,7 @@ class ArchivoController extends Controller
         // Creando la ruta
         $proyecto = Proyecto::findOrFail($id);
         $route = "";
-        $nodo = sprintf("%02d", auth()->user()->gestor->nodo_id);
+        $nodo = sprintf("%02d", $proyecto->nodo_id);
         $anho = Carbon::parse($proyecto->fecha_inicio)->isoFormat('YYYY');
         $linea = $proyecto->sublinea->lineatecnologica_id;
         $gestor = sprintf("%03d", $proyecto->asesor_id);
@@ -395,12 +395,50 @@ class ArchivoController extends Controller
     {
         try {
             $ruta = $this->archivoRepository->consultarRutaDeArchivoDeUnaArticulacionProyectoPorId($idFile);
+            if (!$this->verificarAccesoADescarga($ruta)) {
+                toast('No hacer parte de este proyecto, por lo que no lo puedes descargar!','warning')->autoClose(2000)->position('top-end');
+                return back();
+            }
             $path = str_replace('storage', 'public', $ruta->ruta);
             return Storage::response($path);
         } catch (\Exception $e) {
             return abort(404, $e->getMessage());
         }
 
+    }
+
+    public function verificarAccesoADescarga($file)
+    {
+        if (session()->get('login_role') == User::IsDinamizador()) {
+            if ($file->articulacion_proyecto->proyecto->nodo_id != auth()->user()->dinamizador->nodo_id) {
+                return false;
+            }
+        }
+        if (session()->get('login_role') == User::IsInfocenter()) {
+            if ($file->articulacion_proyecto->proyecto->nodo_id != auth()->user()->infocenter->nodo_id) {
+                return false;
+            }
+        }
+        if (session()->get('login_role') == User::IsGestor()) {
+            if ($file->articulacion_proyecto->proyecto->asesor_id != auth()->user()->gestor->nodo_id) {
+                return false;
+            }
+        }
+        if (session()->get('login_role') == User::IsArticulador()) {
+            if ($file->articulacion_proyecto->proyecto->nodo_id != auth()->user()->articulador->nodo_id) {
+                return false;
+            }
+        }
+        if (session()->get('login_role') == User::IsTalento()) {
+            $talento = $file->articulacion_proyecto->proyecto->articulacion_proyecto->talentos()->wherePivot('talento_id', auth()->user()->talento->id)->first();
+            if ($talento == null) {
+                return false;
+            }
+        }
+        if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsArticulador())
+            return true;
+        
+        return true;
     }
 
 
@@ -423,7 +461,7 @@ class ArchivoController extends Controller
     * @return Reponse
     * @author Victor Manuel Moreno Vega
     */
-    public function datatableArchivosArticulacionProyecto($query)
+    public function datatableArchivosArticulacionProyecto($query, $proyecto)
     {
         return datatables()->of($query)
         ->addColumn('download', function ($data) {
@@ -461,7 +499,7 @@ class ArchivoController extends Controller
         if (request()->ajax()) {
             $proyecto = Proyecto::findOrFail($id);
             $archivosDeUnProyecto = $this->archivoRepository->consultarRutasArchivosDeUnaArticulacionProyecto($proyecto->articulacion_proyecto_id, $fase)->get();
-            return $this->datatableArchivosArticulacionProyecto($archivosDeUnProyecto);
+            return $this->datatableArchivosArticulacionProyecto($archivosDeUnProyecto, $proyecto);
         }
     }
 
