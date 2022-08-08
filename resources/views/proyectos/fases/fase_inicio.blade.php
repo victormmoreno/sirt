@@ -21,7 +21,6 @@
                             @include('proyectos.detalles.detalle_fase_inicio')
                             @can('showButtonAprobacion', $proyecto)
                                 @include('proyectos.forms.form_aprobacion')
-                                
                             @endcan
                         </div>
                     </div>

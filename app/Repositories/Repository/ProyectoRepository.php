@@ -1027,25 +1027,25 @@ class ProyectoRepository
      **/
     public function noAprobarFaseProyecto($request, int $id, string $fase)
     {
-        $proyecto = Proyecto::findOrFail($id);
-        $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'no aprobó')->first(), [
-        'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
-            'user_id' => auth()->user()->id,
-            'fase_id' => Fase::where('nombre', $fase)->first()->id,
-            'role_id' => Role::where('name', Session::get('login_role'))->first()->id,
-            'comentarios' => $request->motivosNoAprueba
-        ]);
-
-        $movimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
-        event(new ProyectoWasntApproved($proyecto, $movimiento));
-        Notification::send($proyecto->asesor, new ProyectoNoAprobarFase($proyecto, $movimiento));
         DB::beginTransaction();
         try {
+            $proyecto = Proyecto::findOrFail($id);
+            $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'no aprobó')->first(), [
+            'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
+                'user_id' => auth()->user()->id,
+                'fase_id' => Fase::where('nombre', $fase)->first()->id,
+                'role_id' => Role::where('name', Session::get('login_role'))->first()->id,
+                'comentarios' => $request->motivosNoAprueba
+            ]);
+    
+            $movimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
+            event(new ProyectoWasntApproved($proyecto, $movimiento));
+            Notification::send($proyecto->asesor, new ProyectoNoAprobarFase($proyecto, $movimiento));
             DB::commit();
             return true;
         } catch (\Throwable $th) {
-        DB::rollBack();
-        return false;
+            DB::rollBack();
+            return false;
         }
     }
 
@@ -1103,36 +1103,37 @@ class ProyectoRepository
                     $notificacion = $proyecto->registerNotifyProject($dinamizadores->last()->id, User::IsDinamizador());
                     // event(new ProyectoApproveWasRequested($notificacion, $destinatarios));
                     Notification::send($dinamizadores, new ProyectoAprobarFase($notificacion));
-                }
-                if (Session::get('login_role') == User::IsDinamizador() && $proyecto->fase->nombre == "Inicio") {
-                // Cambiar el proyecto de fase
-                $proyecto->update([
-                    'fase_id' => Fase::where('nombre', 'Planeación')->first()->id
-                ]);
-                }
-                if (Session::get('login_role') == User::IsDinamizador() && $proyecto->fase->nombre == "Planeación") {
-                // Cambiar el proyecto de fase
-                $proyecto->update([
-                    'fase_id' => Fase::where('nombre', 'Ejecución')->first()->id
-                ]);
-                }
-                if (Session::get('login_role') == User::IsDinamizador() && $proyecto->fase->nombre == "Ejecución") {
-                // Cambiar el proyecto de fase
-                $proyecto->update([
-                    'fase_id' => Fase::where('nombre', 'Cierre')->first()->id
-                ]);
-                }
-                if (Session::get('login_role') == User::IsDinamizador() && $proyecto->fase->nombre == "Cierre") {
-                // Cambiar el proyecto de fase
-                $proyecto->update([
-                    'fase_id' => Fase::where('nombre', 'Finalizado')->first()->id
-                ]);
-                // Asignar la fecha de cierre el día actuyal
-                $proyecto->articulacion_proyecto->actividad()->update([
-                    'fecha_cierre' => Carbon::now()
-                ]);
-                // Crear el movimiento con el cierre del proyecto
-                $this->crearMovimiento($proyecto, 'Finalizado', 'Cerró', null);
+                } else {
+                    if ($proyecto->fase->nombre == "Inicio") {
+                    // Cambiar el proyecto de fase
+                    $proyecto->update([
+                        'fase_id' => Fase::where('nombre', 'Planeación')->first()->id
+                    ]);
+                    }
+                    if ($proyecto->fase->nombre == "Planeación") {
+                    // Cambiar el proyecto de fase
+                    $proyecto->update([
+                        'fase_id' => Fase::where('nombre', 'Ejecución')->first()->id
+                    ]);
+                    }
+                    if ($proyecto->fase->nombre == "Ejecución") {
+                    // Cambiar el proyecto de fase
+                    $proyecto->update([
+                        'fase_id' => Fase::where('nombre', 'Cierre')->first()->id
+                    ]);
+                    }
+                    if ($proyecto->fase->nombre == "Cierre") {
+                    // Cambiar el proyecto de fase
+                    $proyecto->update([
+                        'fase_id' => Fase::where('nombre', 'Finalizado')->first()->id
+                    ]);
+                    // Asignar la fecha de cierre el día actuyal
+                    $proyecto->articulacion_proyecto->actividad()->update([
+                        'fecha_cierre' => Carbon::now()
+                    ]);
+                    // Crear el movimiento con el cierre del proyecto
+                    $this->crearMovimiento($proyecto, 'Finalizado', 'Cerró', null);
+                    }
                 }
             }
             DB::commit();
@@ -1303,7 +1304,7 @@ class ProyectoRepository
     {
         DB::beginTransaction();
         try {
-            $notificacion_fase_actual = $proyecto->notificaciones()->where('fase_id',  $proyecto->fase_id)->whereNull('fecha_aceptacion')->get()->last();
+            $notificacion_fase_actual = $this->retornarUltimaNotificacionPendiente($proyecto);
             $msg = 'No se ha podido enviar la solicitud de aprobación, inténtalo nuevamente';
             $conf_envios = false;
             if ($fase == $proyecto->IsSuspendido()) {
@@ -1700,6 +1701,18 @@ class ProyectoRepository
             DB::rollback();
             return ['state' => false];
         }
+    }
+
+    /**
+     * Retonar la última notificacion pendiente para el proyecto
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function retornarUltimaNotificacionPendiente($proyecto)
+    {
+        return $proyecto->notificaciones()->where('fase_id',  $proyecto->fase_id)->where('estado', ControlNotificaciones::IsPendiente())->get()->last();
     }
 
     /*========================================================================

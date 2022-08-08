@@ -69,50 +69,21 @@
                         </div>
 
                         <div class=" mailbox-view mailbox-text">
-                            <div class="col s12 m12 l12">
-                                @if ($proyecto->fase->nombre == 'Cierre' || $proyecto->fase->nombre == 'Suspendido')
-                                    @if(Session::get('login_role') == App\User::IsActivador())
-                                    <div class="col s12 m3 l3">
-                                        <form action="{{route('proyecto.reversar', [$proyecto->id, 'Inicio'])}}" method="POST" name="frmReversarFase">
-                                            {!! method_field('PUT')!!}
-                                            @csrf
-                                            <button type="submit" onclick="preguntaReversar(event)" value="send" class="btn-flat">
-                                                Reversar fase del proyecto a Inicio.
-                                            </button>
-                                        </form>
-                                    </div>
-                                    <div class="col s12 m3 l3">
-                                        <form action="{{route('proyecto.reversar', [$proyecto->id, 'Planeación'])}}" method="POST" name="frmReversarFasePlaneacion">
-                                            {!! method_field('PUT')!!}
-                                            @csrf
-                                            <button type="submit" onclick="preguntaReversarPlaneacion(event)" value="send" class="btn-flat">
-                                                Reversar fase del proyecto a Planeación.
-                                            </button>
-                                        </form>
-                                    </div>
-                                    <div class="col s12 m3 l3">
-                                        <form action="{{route('proyecto.reversar', [$proyecto->id, 'Ejecución'])}}" method="POST" name="frmReversarFaseEjecucion">
-                                            {!! method_field('PUT')!!}
-                                            @csrf
-                                            <button type="submit" onclick="preguntaReversarEjecucion(event)" value="send" class="btn-flat">
-                                                Reversar fase del proyecto a Ejecución.
-                                            </button>
-                                        </form>
-                                    </div>
-                                    @endif
-                                @endif
+                            <div class="row">
+                                @include('proyectos.options.options')
+                                @include('proyectos.detalles.detalle_general')
                             </div>
                             <div id="inicio" class="col s12 m12 l12">
-                                @include('proyectos.detalle_fase_inicio')
+                                @include('proyectos.detalles.detalle_fase_inicio')
                             </div>
                             <div id="planeacion" class="col s12 m12 l12">
-                                @include('proyectos.detalle_fase_planeacion')
+                                @include('proyectos.detalles.detalle_fase_planeacion')
                             </div>
                             <div id="ejecucion" class="col s12 m12 l12">
-                                @include('proyectos.detalle_fase_ejecucion')
+                                @include('proyectos.detalles.detalle_fase_ejecucion')
                             </div>
                             <div id="cierre" class="col s12 m12 l12">
-                                @include('proyectos.detalle_fase_cierre')
+                                @include('proyectos.detalles.detalle_fase_cierre')
                             </div>
                         </div>
                         <center>

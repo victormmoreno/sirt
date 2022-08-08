@@ -43,11 +43,9 @@
         <a class="btn green lighten-1 m-b-xs" href="{{route('pdf.actividad.usos', [$proyecto->id, 'proyecto'])}}" target="_blank"><i class="far fa-file-pdf"></i></a>
     </div>
 </div>
-@if ($proyecto->present()->proyectoFase() == 'Ejecución')
 <div class="row">
     <div class="card-panel teal">
         <div class="dropzone" id="fase_ejecucion_proyecto"></div>
     </div>
 </div>
-@endif
 <div class="divider"></div>

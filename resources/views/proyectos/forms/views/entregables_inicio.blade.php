@@ -100,7 +100,7 @@
                 name: 'download',
                 orderable: false,
             },
-            @if ($proyecto->fase->nombre == 'Inicio')
+            @if ($proyecto->fase->nombre == 'Inicio' || $proyecto->fase->nombre == 'Finalizado')
             {
                 data: 'delete',
                 name: 'delete',

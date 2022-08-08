@@ -1,14 +1,26 @@
 {!! csrf_field() !!}
 <div class="row">
     <div class="input-field col s12 m6 l6">
-        <input disabled id="txtgestor" name="txtgestor"
-            value="{{ auth()->user()->nombres }} {{ auth()->user()->apellidos }}" type="text">
-        <label for="txtgestor" class="">Experto</label>
+        <input name="txtcodigo_proyecto" disabled
+            value="{{ $proyecto->articulacion_proyecto->actividad->present()->actividadCode() }}" id="txtcodigo_proyecto">
+        <label class="active" for="txtcodigo_proyecto">Código de Proyecto</label>
     </div>
     <div class="input-field col s12 m6 l6">
-        <input disabled id="txtlinea" name="txtlinea" value="{{ auth()->user()->gestor->lineatecnologica->nombre }}"
-            type="text">
-        <label for="txtlinea" class="">Línea Tecnológica</label>
+        <input name="txtnombre" value="{{ $proyecto->articulacion_proyecto->actividad->present()->actividadName() }}" disabled
+            id="txtnombre" required>
+        <label class="active" for="txtnombre">Nombre del Proyecto</label>
+    </div>
+</div>
+<div class="row">
+    <div class="input-field col s12 m6 l6">
+        <input name="txtgestor_id"
+            value="{{ $proyecto->present()->proyectoUserAsesor() }}"
+            disabled id="txtgestor_id">
+        <label class="active" for="txtgestor_id">Experto</label>
+    </div>
+    <div class="input-field col s12 m6 l6">
+        <input name="txtlinea" id="txtlinea" value="{{ $proyecto->present()->proyectoLinea() }}" disabled>
+        <label class="active" for="txtlinea">Línea Tecnológica</label>
     </div>
 </div>
 <div class="divider"></div>
@@ -125,12 +137,12 @@
 </div>
 <div class="divider"></div>
 <center>
-    @if ($proyecto->fase->nombre == 'Cierre')
-    <button type="submit" class="waves-effect cyan darken-1 btn center-aling">
-        <i class="material-icons right">done</i>
-        Guardar
-    </button>
-    @endif
+    @can('showUpdateButton', [$proyecto, 'Cierre'])
+        <button type="submit" class="waves-effect cyan darken-1 btn center-aling">
+            <i class="material-icons right">done</i>
+            Guardar
+        </button>
+    @endcan
     <a href="{{route('proyecto.ejecucion', $proyecto->id)}}" class="waves-effect red lighten-2 btn center-aling">
         <i class="material-icons right">backspace</i>Cancelar
     </a>

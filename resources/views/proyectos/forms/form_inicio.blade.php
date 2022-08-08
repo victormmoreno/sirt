@@ -11,7 +11,7 @@
     </div>
 </div>
 <br>
-@if (session()->get('login_role') == App\User::IsAdministrador() && Route::currentRouteName() != ('proyecto.inicio'))
+@if (session()->get('login_role') == App\User::IsAdministrador() && Route::currentRouteName() == ('proyecto.create'))
     <div class="row">
         <div class="input-field col s12 m4 l4">
             <select style="width: 100%" class="js-states" id="txtnodo_id" name="txtnodo_id" onchange="consultarExpertosDeUnNodo(this.value);">
@@ -653,17 +653,12 @@
 <div class="divider"></div>
 <center>
     @if ($existe)
-        @if ($proyecto->present()->proyectoFase() == 'Inicio')
+        @can('showUpdateButton', [$proyecto, 'Inicio'])
         <button type="submit" class="waves-effect cyan darken-1 btn center-aling">
-            <i class="material-icons right">{{ isset($btnText) ? $btnText == 'Modificar' ? 'done' : 'done_all' : '' }}</i>
+            <i class="material-icons right">{{ isset($btnText) ? $btnText == 'Guardar' ? 'done' : 'done_all' : '' }}</i>
             {{isset($btnText) ? $btnText : 'error'}}
         </button>
-        @endif
-    @else
-    <button type="submit" class="waves-effect cyan darken-1 btn center-aling">
-        <i class="material-icons right">{{ isset($btnText) ? $btnText == 'Modificar' ? 'done' : 'done_all' : '' }}</i>
-        {{isset($btnText) ? $btnText : 'error'}}
-    </button>
+        @endcan
     @endif
     <a href="{{ $existe ? route('proyecto.inicio', $proyecto->id) : route('proyecto') }}" class="waves-effect red lighten-2 btn center-aling">
         <i class="material-icons right">backspace</i>Cancelar

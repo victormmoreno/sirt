@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\User;
-use App\Models\{Proyecto, Fase};
+use App\Models\{Proyecto, ControlNotificaciones};
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ProyectoPolicy
@@ -23,6 +23,44 @@ class ProyectoPolicy
             return true;
         }
         return false;
+    }
+
+    /**
+     * Determina cuando se pueden ver los botones de update
+     *
+     * @param App\User $user
+     * @param App\Models\Proyecto $proyecto
+     * @param string $fase
+     * @return bool
+     * @author dum
+     **/
+    public function showUpdateButton(User $user, Proyecto $proyecto, string $fase)
+    {
+        if (session()->get('login_role') == $user->IsAdministrador()) {
+            return true;
+        } else {
+            if ($proyecto->present()->proyectoFase() == $fase) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    /**
+     * Determina cuando se puede ver el botón para enviar notificaciones de aprobación
+     *
+     * @param App\User $user
+     * @param App\Models\Proyecto $proyecto
+     * @return bool
+     * @author dum
+     **/
+    public function showNotificationButton(User $user, Proyecto $proyecto)
+    {
+        if ($proyecto->present()->proyectoFase() == $proyecto->IsFinalizado() || $proyecto->present()->proyectoFase() == $proyecto->IsSuspendido()) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -96,7 +134,12 @@ class ProyectoPolicy
      **/
     public function showButtonAprobacion(User $user, Proyecto $proyecto)
     {
-        $ult_notificacion = $proyecto->notificaciones()->where('fase_id',  Fase::where('nombre', $proyecto->IsSuspendido())->first()->id)->whereNull('fecha_aceptacion')->get()->last();
+        // if ($proyecto->fase->nombre == $proyecto->IsSuspendido()) {
+        //     $ult_notificacion = $proyecto->notificaciones()->where('fase_id',  Fase::where('nombre', $proyecto->IsSuspendido())->first()->id)->whereNull('fecha_aceptacion')->get()->last();
+
+        // } else {
+        // }
+        $ult_notificacion = $proyecto->notificaciones()->where('fase_id',  $proyecto->fase_id)->where('estado', ControlNotificaciones::IsPendiente())->get()->last();
         if ($ult_notificacion != null) {
             if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsDinamizador() || session()->get('login_role') == $user->IsGestor()) {
                 if ($ult_notificacion->estado == $ult_notificacion->IsPendiente()) {

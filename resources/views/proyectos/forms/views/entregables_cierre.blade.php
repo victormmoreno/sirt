@@ -17,7 +17,7 @@
             <div class="row">
                 <div class="col s12 m12 l12">
                 <form action="{{route('proyecto.update.entregables.cierre', $proyecto->id)}}" method="POST" onsubmit="return checkSubmit()">
-                    @include('proyectos.gestor.form_entregables_cierre')
+                    @include('proyectos.forms.entregables.cierre')
                     <div class="row">
                     @include('proyectos.archivos_table_fase', ['fase' => 'cierre'])
                     </div>
@@ -101,7 +101,7 @@
                 name: 'download',
                 orderable: false,
             },
-            @if ($proyecto->fase->nombre == "Cierre")
+            @if ($proyecto->fase->nombre == "Cierre" || $proyecto->fase->nombre == 'Finalizado')
             {
                 data: 'delete',
                 name: 'delete',

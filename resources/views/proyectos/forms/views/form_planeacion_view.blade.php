@@ -16,7 +16,7 @@
                     @include('proyectos.titulo')
                     <form id="frmProyectos_FasePlaneacion_Update" action="{{route('proyecto.update.planeacion', $proyecto->id)}}" method="POST">
                         {!! method_field('PUT')!!}
-                        @include('proyectos.gestor.forms.form_planeacion')
+                        @include('proyectos.forms.form_planeacion')
                         @include('proyectos.archivos_table_fase', ['fase' => 'planeacion'])
                         <center>
                             @if ($proyecto->present()->proyectoFase() == 'Planeación')
@@ -105,7 +105,7 @@
                 name: 'download',
                 orderable: false,
             },
-            @if ($proyecto->fase->nombre == 'Planeación')
+            @if ($proyecto->fase->nombre == 'Planeación' || $proyecto->fase->nombre == 'Finalizado')
             {
                 data: 'delete',
                 name: 'delete',

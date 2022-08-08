@@ -16,14 +16,12 @@
                     @include('proyectos.titulo')
                     @include('proyectos.navegacion')
                     @include('proyectos.historial_cambios')
-                    @include('proyectos.options_always')
-                    @include('proyectos.detalle_general')
-                    @include('proyectos.detalle_fase_ejecucion')
-                    <center>
-                        <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-                            <i class="material-icons right">backspace</i>Cancelar
-                        </a>
-                    </center>
+                    @include('proyectos.options.options')
+                    @include('proyectos.detalles.detalle_general')
+                    @include('proyectos.detalles.detalle_fase_ejecucion')
+                    @can('showButtonAprobacion', $proyecto)
+                        @include('proyectos.forms.form_aprobacion')
+                    @endcan
                 </div>
             </div>
         </div>

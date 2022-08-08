@@ -15,7 +15,7 @@
                     <div class="row">
                         @include('proyectos.titulo')
                         <form method="POST" action="{{route('proyecto.update.ejecucion', $proyecto->id)}}">
-                            @include('proyectos.gestor.forms.form_ejecucion')
+                            @include('proyectos.forms.form_ejecucion')
                             @include('proyectos.archivos_table_fase', ['fase' => 'ejecucion'])
                             <center>
                             <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
@@ -96,7 +96,7 @@
                 name: 'download',
                 orderable: false,
             },
-            @if ($proyecto->present()->proyectoFase() == 'Ejecución')
+            @if ($proyecto->present()->proyectoFase() == 'Ejecución' || $proyecto->fase->nombre == 'Finalizado')
             {
                 data: 'delete',
                 name: 'delete',

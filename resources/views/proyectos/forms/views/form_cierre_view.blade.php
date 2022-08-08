@@ -16,7 +16,7 @@
                             @include('proyectos.titulo')
                             <form id="frmProyectos_FaseCierre_Update" action="{{route('proyecto.update.cierre', $proyecto->id)}}" method="POST">
                                 {!! method_field('PUT')!!}
-                                @include('proyectos.gestor.forms.form_cierre')
+                                @include('proyectos.forms.form_cierre')
                             </form>
                         </div>
                     </div>
