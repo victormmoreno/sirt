@@ -80,7 +80,7 @@
     $.ajax({
       dataType:'json',
       type:'get',
-      url:"/publicacion/updateEstado/"+id+"/"+estado,
+      url: host_url + "/publicacion/updateEstado/"+id+"/"+estado,
       success: function (data) {
         console.log(data);
         let msg = '';

@@ -83,7 +83,7 @@ class ArchivoController extends Controller
             if (Session::get('login_role') == User::IsInfocenter()) {
                 $nodo_id = auth()->user()->infocenter->nodo_id;
             } else {
-                $nodo_id = auth()->user()->gestor->nodo_id;
+                $nodo_id = auth()->user()->articulador->nodo_id;
             }
             $file = request()->file('nombreArchivo');
             $route = "";
@@ -314,7 +314,7 @@ class ArchivoController extends Controller
     {
         if (request()->ajax()) {
         $this->validate(request(), [
-            'nombreArchivo' => 'max:50000|mimes:jpeg,png,jpg,docx,doc,pdf,exe,xlsl,xlsx,xls,pptx,sldx,ppsx,zip',
+            'nombreArchivo' => 'max:50000',
         ],
         [
             'nombreArchivo.mimes' => 'El tipo de archivo no es permitido',

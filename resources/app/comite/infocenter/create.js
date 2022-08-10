@@ -69,7 +69,7 @@ csibt_create = {
         $.ajax({
           dataType:'json',
           type:'post',
-          url:'/csibt/addIdeaComite',
+          url: host_url + '/csibt/addIdeaComite',
           data: {
             'Idea':idIdea,
             'hora':horaCitacionDeLaIdea,
@@ -109,7 +109,7 @@ csibt_create = {
     $.ajax({
       dataType:'json',
       type:'get',
-      url:'/csibt/getideasComiteCreate'
+      url: host_url + '/csibt/getideasComiteCreate'
     }).done(function(respuesta){
       $('#tblIdeasComiteCreate').empty();
       $.each(respuesta, function (i,elemento){
@@ -137,7 +137,7 @@ csibt_create = {
     $.ajax({
       type:'get',
       dataType:'json',
-      url:'/csibt/eliminarIdeaCC/'+idIdea,
+      url: host_url + '/csibt/eliminarIdeaCC/'+idIdea,
     }).done(function(respuesta){
       if (respuesta.data == 1) {
         Swal.fire({

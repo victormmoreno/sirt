@@ -185,7 +185,7 @@ var filter_project = {
             $.ajax({
                 dataType: 'json',
                 type: 'get',
-                url: '/actividades/filter-code/' + filter_code_project
+                url: host_url + '/actividades/filter-code/' + filter_code_project
             }).done(function (response) {
                 if(response.data.status_code == 200){
                     let activity = response.data.proyecto.articulacion_proyecto.actividad;
@@ -293,7 +293,7 @@ var filter_project = {
             $.ajax({
                 dataType: 'json',
                 type: 'get',
-                url: '/empresas/filter-code/' + filter_code_company
+                url: host_url + '/empresas/filter-code/' + filter_code_company
             }).done(function (response) {
                 if(response.data.status_code == 200){
                     let data = response.data;
@@ -361,7 +361,7 @@ var filter_project = {
         $.ajax({
             dataType: 'json',
             type: 'get',
-            url: '/empresas/sede/' + id
+            url: host_url + '/empresas/sede/' + id
         }).done(function (response) {
             if(response.data.status_code == 200){
             $('.alert-response-company').append(`
@@ -403,7 +403,7 @@ var filter_project = {
             processing: true,
             serverSide: true,
             ajax: {
-                url: "/proyecto/datatableproyectosfinalizados",
+                url: host_url + "/proyecto/datatableproyectosfinalizados",
                 type: "get",
                 data: {
                     filter_year_pro: filter_year_pro,
@@ -442,7 +442,7 @@ var filter_project = {
             serverSide: true,
             // order: false,
             ajax: {
-                url: "/empresa/datatableEmpresasDeTecnoparque",
+                url: host_url + "/empresa/datatableEmpresasDeTecnoparque",
                 type: "get"
             },
             columns: [
@@ -470,7 +470,7 @@ var filter_project = {
             processing: true,
             serverSide: true,
             ajax: {
-                url: "/usuario/talento/getTalentosDeTecnoparque/",
+                url: host_url + "/usuario/talento/getTalentosDeTecnoparque/",
                 type: "get"
             },
             columns: [
@@ -501,7 +501,7 @@ var filter_project = {
             $.ajax({
                 dataType: 'json',
                 type: 'get',
-                url: '/usuarios/filtro-talento/' + document
+                url: host_url + '/usuarios/filtro-talento/' + document
             }).done(function (response) {
                 if(response.data.status_code == 200){
                     let user = response.data.user;
@@ -590,7 +590,7 @@ var filter_project = {
         $.ajax({
             dataType: 'json',
             type: 'get',
-            url: '/usuario/talento/consultarTalentoPorId/' + id
+            url: host_url + '/usuario/talento/consultarTalentoPorId/' + id
         }).done(function (response) {
             let fila = filter_project.prepareTableRowTalent(response);
             $('.alert-response-talents').append(fila);
@@ -715,7 +715,7 @@ function addCompanyArticulacion(id){
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url : '/empresa/ajaxDetallesDeUnaEmpresa/'+id+'/id',
+        url : host_url + '/empresa/ajaxDetallesDeUnaEmpresa/'+id+'/id',
         success: function (response) {
             let filas_sedes = filter_project.sedesEmpresa(response.empresa.sedes);
             $('#sedes_detail').append(filas_sedes);

@@ -96,7 +96,7 @@
         serverSide: true,
         order: false,
         ajax:{
-          url: "/csibt/archivosDeUnComite/"+{{$comite->id}},
+          url: host_url + "/csibt/archivosDeUnComite/"+{{$comite->id}},
           type: "get",
         },
         columns: [

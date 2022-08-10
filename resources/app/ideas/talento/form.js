@@ -61,7 +61,7 @@ function consultarEmpresaTecnoparque() {
           $.ajax({
             dataType: 'json',
             type: 'get',
-            url : '/empresa/ajaxDetallesDeUnaEmpresa/'+nit+'/'+field,
+            url : host_url + '/empresa/ajaxDetallesDeUnaEmpresa/'+nit+'/'+field,
             success: function (response) {
               if (response.empresa == null) {
                 divEmpresaRegistrada.hide();
@@ -107,7 +107,7 @@ function asociarSedeAIdeaProyecto(sede_id) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url : '/empresa/ajaxDetalleDeUnaSede/'+sede_id,
+    url : host_url + '/empresa/ajaxDetalleDeUnaSede/'+sede_id,
     success: function (response) {
       $('#txtsede_id').val(response.sede.id);
       $('#txtnombre_sede_disabled').val(response.sede.nombre_sede + ' - ' + response.sede.direccion + ' ' + response.sede.ciudad.nombre + ' (' + response.sede.ciudad.departamento.nombre + ')');
@@ -353,7 +353,7 @@ function consultarProyectosDeTalentos () {
     order: [ 0, 'desc' ],
     "lengthChange": false,
     ajax:{
-      url: "/proyecto/datatableProyectosDelTalento/",
+      url: host_url + "/proyecto/datatableProyectosDelTalento/",
       // type: "get",
       data: function (d) {
         d.codigo_proyecto = $('.codigo_proyecto').val(),

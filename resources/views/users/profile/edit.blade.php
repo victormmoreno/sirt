@@ -302,8 +302,8 @@
                                                                             <label for="masculino"class="p-h-md">Masculino</label>
                                                                             <input class="with-gap"t name="txtgenero" type="radio" id="femenino" value="0" {{isset($user->genero) && $user->genero == 0 ? 'checked' : old('txtgenero')}}>
                                                                             <label  for="femenino" class="p-h-md">Femenino</label>
-                                                                            <input class="with-gap" name="txtgenero" type="radio" id="binario" value="2" {{isset($user->genero) && $user->genero == 2 ? 'checked' : old('txtgenero')}}>
-                                                                            <label for="binario" class="p-h-md">Binario</label>
+                                                                            <input class="with-gap" name="txtgenero" type="radio" id="no_binario" value="2" {{isset($user->genero) && $user->genero == 2 ? 'checked' : old('txtgenero')}}>
+                                                                            <label for="no_binario" class="p-h-md">No binario</label>
                                                                         </p>
                                                                     </div>
                                                                 </div>
@@ -481,7 +481,7 @@ var user = {
         $.ajax({
           dataType:'json',
           type:'get',
-          url:'/usuario/getciudad/'+id
+          url: host_url + '/usuario/getciudad/'+id
         }).done(function(response){
           $('#txtciudadexpedicion').empty();
           $('#txtciudadexpedicion').append('<option value="">Seleccione la Ciudad</option>')
@@ -503,7 +503,7 @@ var user = {
         $.ajax({
           dataType:'json',
           type:'get',
-          url:'/usuario/getciudad/'+id
+          url: host_url + '/usuario/getciudad/'+id
         }).done(function(response){
           $('#txtciudad').empty();
           $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')

@@ -126,7 +126,7 @@
       order: [ 0, 'desc' ],
       "lengthChange": false,
       ajax:{
-        url: "/proyecto/datatableProyectosDelNodoPorAnho/"+nodo+"/"+anho_proyectos_nodo,
+        url: host_url + "/proyecto/datatableProyectosDelNodoPorAnho/"+nodo+"/"+anho_proyectos_nodo,
         data: function (d) {
           d.codigo_proyecto = $('#codigo_proyecto_tblproyectosDelNodoPorAnho_Administrador').val(),
           d.gestor = $('#gestor_tblproyectosDelNodoPorAnho_Administrador').val(),

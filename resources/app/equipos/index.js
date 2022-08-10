@@ -49,7 +49,7 @@ var equipo = {
             },
             "pagingType": "full_numbers",
             ajax:{
-                url: "/equipos",
+                url: host_url + "/equipos",
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -127,7 +127,7 @@ var equipo = {
             },
             "pagingType": "full_numbers",
             ajax:{
-                url: "/equipos",
+                url: host_url + "/equipos",
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -198,7 +198,7 @@ var equipo = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:`/equipos/${id}`
+            url: host_url + `/equipos/${id}`
         }).done(function(response){
 
             $("#titulo").empty();
@@ -300,7 +300,7 @@ var equipo = {
                 let token = $("meta[name='csrf-token']").attr("content");
                 $.ajax(
                 {
-                    url: `/equipos/${id}`,
+                    url: host_url + `/equipos/${id}`,
                     type: 'DELETE',
                     data: {
                         "id": id,
@@ -349,7 +349,7 @@ var equipo = {
 
                 $.ajax(
                 {
-                    url: `/equipos/cambiar-estado/${id}`,
+                    url: host_url + `/equipos/cambiar-estado/${id}`,
                     type: 'GET',
 
                     success: function (response){
@@ -434,6 +434,6 @@ $('#download_equipos').click(function(){
         filter_state: filter_state,
     }
 
-    var url = "/equipos/export?" + $.param(query)
+    var url = host_url + "/equipos/export?" + $.param(query)
     window.location = url;
 });

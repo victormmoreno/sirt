@@ -697,7 +697,7 @@ var linea = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:'/lineas/getlineasnodo/'+nodo
+            url: host_url + '/lineas/getlineasnodo/'+nodo
         }).done(function(response){
             $('#txtlinea').empty();
             if (response.lineasForNodo.lineas == '') {
@@ -858,7 +858,7 @@ var tipoTalento = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:'/centro-formacion/getcentrosregional/'+regional
+            url: host_url + '/centro-formacion/getcentrosregional/'+regional
         }).done(function(response){
             $('#txtcentroformacion_aprendiz').empty();
             @if(isset($user->talento->entidad) && collect($user->roles)->contains('name',App\User::IsTalento()) &&  session()->get('login_role') != App\User::IsGestor())
@@ -883,7 +883,7 @@ var tipoTalento = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:'/centro-formacion/getcentrosregional/'+regional
+            url: host_url + '/centro-formacion/getcentrosregional/'+regional
         }).done(function(response){
             $('#txtcentroformacion_egresado').empty();
             $('#txtcentroformacion_egresado').append('<option value="">Seleccione el centro de formación</option>')
@@ -901,7 +901,7 @@ var tipoTalento = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:'/centro-formacion/getcentrosregional/'+regional
+            url: host_url + '/centro-formacion/getcentrosregional/'+regional
         }).done(function(response){
             $('#txtcentroformacion_funcionarioSena').empty();
             $('#txtcentroformacion_funcionarioSena').append('<option value="">Seleccione el centro de formación</option>')
@@ -919,7 +919,7 @@ var tipoTalento = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:'/centro-formacion/getcentrosregional/'+regional
+            url: host_url + '/centro-formacion/getcentrosregional/'+regional
         }).done(function(response){
             $('#txtcentroformacion_instructorSena').empty();
             $('#txtcentroformacion_instructorSena').append('<option value="">Seleccione el centro de formación</option>')

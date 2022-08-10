@@ -95,7 +95,7 @@ $('#download_excel').click(function(){
             filter_convocatoria: filter_convocatoria,
         }
 
-        var url = "/idea/export?" + $.param(query)
+        var url = host_url + "/idea/export?" + $.param(query)
 
         window.location = url;
     });
@@ -114,7 +114,7 @@ var idea ={
             serverSide: true,
             "order": [[ 1, "desc" ]],
             ajax:{
-                url: "/idea/datatable_filtros",
+                url: host_url + "/idea/datatable_filtros",
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -178,7 +178,7 @@ var idea ={
             pageLength: 20,
             "order": [[ 1, "desc" ]],
             ajax:{
-                url: "/idea/datatable_filtros",
+                url: host_url + "/idea/datatable_filtros",
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -242,7 +242,7 @@ var idea ={
             pageLength: 20,
             "order": [[ 1, "desc" ]],
             ajax:{
-                url: "/idea/datatable_filtros",
+                url: host_url + "/idea/datatable_filtros",
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -362,7 +362,7 @@ Swal.fire({
     $.ajax({
         dataType:'json',
         type:'get',
-        url:'/idea/updateEstadoIdea/'+id+'/'+estado,
+        url: host_url + '/idea/updateEstadoIdea/'+id+'/'+estado,
         success: function (data) {
         Swal.fire({
             title: 'El estado de la idea se ha cambiado exitosamente!',
@@ -387,7 +387,7 @@ function detallesIdeaPorId(id){
     $.ajax({
         dataType:'json',
         type:'get',
-        url:"/idea/modalIdeas/"+id
+        url: host_url + "/idea/modalIdeas/"+id
     }).done(function(respuesta){
         $("#detalle_idea").empty();
         if (respuesta == null) {

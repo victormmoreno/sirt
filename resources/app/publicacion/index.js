@@ -13,7 +13,7 @@ function consultarPublicacionesOtros() {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/publicacion/datatablePublicaciones",
+      url: host_url + "/publicacion/datatablePublicaciones",
       type: "get",
     },
     columns: [
@@ -46,7 +46,7 @@ function consultarPublicacionesDesarrollador() {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/publicacion/datatablePublicaciones",
+      url: host_url + "/publicacion/datatablePublicaciones",
       type: "get",
     },
     columns: [

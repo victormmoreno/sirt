@@ -13,7 +13,7 @@ function consultarVisitanteTecnoparque() {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url : '/visitante/consultarVisitantePorDocumento/'+doc,
+      url : host_url + '/visitante/consultarVisitantePorDocumento/'+doc,
       success: function (response) {
         if (response.visitante == null) {
           divVisitanteRegistrado.hide();

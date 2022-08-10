@@ -17,7 +17,7 @@ function consultarEdtsDeUnGestor(id) {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/edt/consultarEdtsDeUnGestor/"+id+"/"+anho,
+      url: host_url + "/edt/consultarEdtsDeUnGestor/"+id+"/"+anho,
       type: "get",
     },
     columns: [

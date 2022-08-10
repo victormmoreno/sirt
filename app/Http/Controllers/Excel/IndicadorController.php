@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Excel;
 
 use App\Exports\Indicadores\Indicadores2020Export;
-use App\Repositories\Repository\{ProyectoRepository};
+use App\Exports\Metas\MetasExport;
+use App\Exports\Idea\IdeasIndicadorExport;
+use App\Repositories\Repository\{IdeaRepository, ProyectoRepository};
 use Repositories\Repository\NodoRepository;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Controller;
@@ -12,17 +14,24 @@ use App\Imports\MigracionMetasImport;
 use Illuminate\Http\Request;
 use App\Models\Proyecto;
 use Maatwebsite\Excel\Facades\Excel;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
+use Illuminate\Support\Arr;
 
 class IndicadorController extends Controller
 {
 
     private $proyectoRepository;
     private $nodoRepository;
+    private $ideaRepository;
+    private $year_now;
 
-    public function __construct(ProyectoRepository $proyectoRepository, NodoRepository $nodoRepository)
+    public function __construct(ProyectoRepository $proyectoRepository, NodoRepository $nodoRepository, IdeaRepository $ideaRepository)
     {
         $this->setProyectoRepository($proyectoRepository);
         $this->nodoRepository = $nodoRepository;
+        $this->ideaRepository = $ideaRepository;
+        $this->year_now = Carbon::now()->format('Y');
     }
 
     /**
@@ -209,12 +218,66 @@ class IndicadorController extends Controller
         return back();
     }
 
-    public function downloadMetas(Request $request)
+    public function downloadIdeas(Request $request)
     {
-        $query = null;
+        $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->whereHas('estadoIdea', function ($query) use ($request) {
+            $query->where('nombre', $request->txtestado_idea_download);
+        })->whereIn('nodo_id', $request->txtnodo_ideas_download)
+        ->orderBy('nodo_id')->get();
+        return Excel::download(new IdeasIndicadorExport($ideas), 'Ideas.xlsx');
+    }
+
+    public function downloadMetas(Request $request)
+    {        
         $metas = $this->nodoRepository->consultarMetasDeTecnoparque($request->txtnodo_metas_id)->get();
-        // dd($metas);
-        // dd($metas);
+        $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $this->year_now, [Proyecto::IsTrl6Obtenido()])
+        ->whereIn('nodos.id', $request->txtnodo_metas_id)
+        ->groupBy('mes')
+        ->get();
+        $pbts_trl7_8 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $this->year_now, [Proyecto::IsTrl7Obtenido(), Proyecto::IsTrl8Obtenido()])
+        ->whereIn('nodos.id', $request->txtnodo_metas_id)
+        ->groupBy('mes')
+        ->get();
+        $activos = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->select('nodo_id')->selectRaw('count(id) as cantidad')->whereHas('fase', function ($query) {
+            $query->whereIn('nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
+        })->groupBy('nodo_id')->get();
+        $metas = $this->retornarTodasLasMetasToExcel($metas, $pbts_trl6, $pbts_trl7_8, $activos);
+        return Excel::download(new MetasExport($metas), 'Metas.xlsx');
+    }
+
+    private function pushValueToCollect($progreso_mes, $meta, $mes, $key) {
+        if ($progreso_mes->count() == 0) {
+            $valor = 0;
+        } else {
+            $valor = $progreso_mes->first()->cantidad;
+        }
+        $meta['progreso_total'] += $valor;
+        $meta[$key]->push(["$mes->monthName" => $valor]);
+        return $meta;
+    }
+
+    public function retornarTodasLasMetasToExcel($metas, $trl6, $trl7_8, $activos)
+    {
+        $meses = CarbonPeriod::create($this->year_now.'-01-01', '1 month', $this->year_now.'-12-31');
+        foreach ($metas as $meta) {
+            $meta['meses_trl6'] = collect([]);
+            $meta['meses_trl7_trl8'] = collect([]);
+            $progreso_trl6_nodo = $trl6->where('nodo', $meta->nodo_id);
+            $progreso_trl7_trl8_nodo = $trl7_8->where('nodo', $meta->nodo_id);
+            $cantidad_activos = $activos->where('nodo_id', $meta->nodo_id)->first();
+            foreach ($meses as $mes) {
+                $progreso_mes = $progreso_trl6_nodo->where('mes', $mes->monthName);
+                $meta = $this->pushValueToCollect($progreso_mes, $meta, $mes, 'meses_trl6');
+                $progreso_mes = $progreso_trl7_trl8_nodo->where('mes', $mes->monthName);
+                $meta = $this->pushValueToCollect($progreso_mes, $meta, $mes, 'meses_trl7_trl8');
+            }
+            if ($cantidad_activos == null) {
+              $meta['activos'] = 0;
+            } else {
+              $meta['activos'] = $cantidad_activos->cantidad;
+            }
+        }
+        return $metas;
     }
 
     private function setProyectoRepository($proyectoRepository)

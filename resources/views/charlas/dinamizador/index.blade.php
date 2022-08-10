@@ -62,7 +62,7 @@
       serverSide: true,
       order: [ 0, 'desc' ],
       ajax:{
-        url: "/charla/consultarCharlasInformativasPorNodo/"+id,
+        url: host_url + "/charla/consultarCharlasInformativasPorNodo/"+id,
         type: "get",
       },
       columns: [

@@ -23,7 +23,7 @@ function eliminarEdtPorId_moment(id) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/edt/eliminarEdt/'+id,
+    url: host_url + '/edt/eliminarEdt/'+id,
     success: function (data) {
       if (data.retorno) {
         Swal.fire('Eliminación Exitosa!', 'La edt se ha eliminado completamente!', 'success');
@@ -49,7 +49,7 @@ function datatableEdtsPorNodo(id) {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/edt/consultarEdtsDeUnNodo/"+id+"/"+anho,
+      url: host_url + "/edt/consultarEdtsDeUnNodo/"+id+"/"+anho,
       type: "get",
     },
     columns: [
@@ -128,7 +128,7 @@ function verEntidadesDeUnaEdt(id) {
   $.ajax({
     dataType:'json',
     type:'get',
-    url:"/edt/consultarDetallesDeUnaEdt/"+id+"/"+1,
+    url: host_url + "/edt/consultarDetallesDeUnaEdt/"+id+"/"+1,
     success: function (response) {
       $("#entidadesEdt_table").empty();
       if (response.entidades.length != 0 ) {
@@ -167,7 +167,7 @@ function detallesDeUnaEdt(id) {
   $.ajax({
     dataType:'json',
     type:'get',
-    url:'/edt/consultarDetallesDeUnaEdt/'+id+"/"+0,
+    url: host_url + '/edt/consultarDetallesDeUnaEdt/'+id+"/"+0,
     success: function (response) {
       /**
       * Limpiando el modal

@@ -10,7 +10,7 @@ function consultarCsibtPorNodo() {
     serverSide: true,
     order: false,
     ajax:{
-      url: "/csibt/"+id+"/consultarCsibtPorNodo",
+      url: host_url + "/csibt/"+id+"/consultarCsibtPorNodo",
       type: "get",
     },
     columns: [

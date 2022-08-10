@@ -76,7 +76,7 @@
                 $.ajax({
                     dataType:'json',
                     type:'get',
-                    url:'/equipos/getequiposporlinea/'+nodo+'/'+lineatecnologica
+                    url: host_url + '/equipos/getequiposporlinea/'+nodo+'/'+lineatecnologica
                 }).done(function(response){
                     $('#txtequipo').empty();
                                             

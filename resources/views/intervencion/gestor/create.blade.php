@@ -146,7 +146,7 @@
         processing: true,
         serverSide: true,
         ajax:{
-          url: "/empresa/datatableEmpresasDeTecnoparque",
+          url: host_url + "/empresa/datatableEmpresasDeTecnoparque",
           type: "get",
         },
         columns: [
@@ -225,7 +225,7 @@
       $.ajax({
         dataType:'json',
         type:'get',
-        url:"/empresa/ajaxDetallesDeUnaEmpresa/"+id
+        url: host_url + "/empresa/ajaxDetallesDeUnaEmpresa/"+id
       }).done(function(respuesta){
         $('#empresa').val(respuesta.detalles.nit + ' - ' + respuesta.detalles.nombre_empresa);
         $("label[for='empresa']").addClass('active');

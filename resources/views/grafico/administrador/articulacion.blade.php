@@ -173,7 +173,7 @@
         $.ajax({
           dataType: 'json',
           type: 'get',
-          url: '/grafico/consultarGestoresYLineasDeUnNodo/'+id,
+          url: host_url + '/grafico/consultarGestoresYLineasDeUnNodo/'+id,
           success: function (data) {
             $('#txtgestor_id').empty();
             $('#txtgestor_id').append('<option value="">Seleccione el experto</option>')

@@ -139,7 +139,17 @@ class IdeaRepository
 
     public function consultarIdeasDeProyecto()
     {
-        return Idea::with(['estadoIdea', 'nodo', 'nodo.entidad']);
+        return Idea::with([
+            'estadoIdea',
+            'nodo',
+            'nodo.entidad',
+            'entrenamiento',
+            'comites',
+            'comites.estado',
+            'gestor',
+            'gestor.user' => function($query) {
+                $query->withTrashed();
+            }]);
     }
 
     /**
