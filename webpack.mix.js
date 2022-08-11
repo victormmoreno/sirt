@@ -38,7 +38,8 @@ mix.scripts([
 		'resources/assets/plugins/jquery/dist/jquery.js',
 		'resources/assets/plugins/materialize/js/materialize.min.js',
 		'resources/assets/plugins/jquery-blockui/jquery.blockui.js',
-		'resources/assets/plugins/jquery-validation/jquery.validate.js',
+		'resources/assets/plugins/jquery-steps/jquery.steps.min.js',
+        'resources/assets/plugins/jquery-validation/jquery.validate.js',
 		'resources/assets/plugins/datatables/js/jquery.dataTables.js',
 		'resources/assets/plugins/datatables/js/datatables.buttons.min.js',
 		'resources/assets/plugins/font-awesome/js/all.js',
@@ -51,8 +52,8 @@ mix.scripts([
 		'resources/assets/plugins/highcharts/modules/exporting.js',
 		'resources/assets/plugins/highcharts/modules/export-data.js',
 		'resources/assets/plugins/highcharts/modules/variable-pie.js',
-    	'resources/assets/plugins/summernote/dist/summernote-lite.js',
-    	'resources/assets/plugins/summernote/dist/lang/summernote-es-ES.js',
+        'resources/assets/plugins/summernote/dist/summernote-lite.js',
+        'resources/assets/plugins/summernote/dist/lang/summernote-es-ES.js',
 		'resources/assets/js/alpha.js',
         'resources/assets/js/custom.js',
         'resources/app/ideas/index.js',
@@ -71,6 +72,9 @@ mix.scripts([
     'resources/app/ideas/talento/form.js',
     'resources/app/ideas/talento/index.js',
     'resources/app/ideas/articulador/index.js',
+    'resources/app/articulation/index.js',
+    'resources/app/articulation/accompaniament-form.js',
+    'resources/app/articulation/articulation-create.js',
     'resources/app/entrenamientos/administrador/index.js',
     'resources/app/entrenamientos/infocenter/index.js',
     'resources/app/entrenamientos/infocenter/create.js',
@@ -96,10 +100,7 @@ mix.scripts([
     'resources/app/user/edit-profile.js',
     'resources/app/user/role/roleuser.js',
     'resources/app/sublinea/administrador/index.js',
-    'resources/app/articulaciones/gestor/index.js',
-    'resources/app/articulaciones/gestor/form.js',
-    'resources/app/articulaciones/gestor/form_cierre.js',
-    'resources/app/articulaciones/index.js',
+
     'resources/app/intervenciones/gestor/index.js',
     'resources/app/intervenciones/index.js',
     'resources/app/proyecto/index.js',
@@ -109,8 +110,6 @@ mix.scripts([
     'resources/app/edt/gestor/form.js',
     'resources/app/edt/gestor/index.js',
     'resources/app/edt/index.js',
-    'resources/app/articulacionespbt/index.js',
-    'resources/app/articulacionespbt/form.js',
     'resources/app/costoadministrativo/dinamizador/index.js',
     'resources/app/costoadministrativo/dinamizador/index.js',
     'resources/app/equipos/index.js',
@@ -155,7 +154,8 @@ mix.browserSync({
             'resources/views/**/*',
             'resources/lang/**/*',
             'routes/**/*'
-        ]
+        ],
+        open: false
  });
 
 

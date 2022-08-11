@@ -8,14 +8,15 @@
         <i class="material-icons {{setActiveRouteActiveIcon('entrenamientos')}}">library_books</i>Taller de Fortalecimiento
     </a>
 </li>
+<li class="no-padding {{setActiveRoute('acompanamientos')}}">
+    <a href="{{route('accompaniments')}}" class="{{setActiveRouteActivePage('acompanamientos')}}" rel="canonical" title="{{__('Accompaniments')}}">
+        <i class="material-icons {{setActiveRouteActiveIcon('acompanamientos')}}">autorenew</i>{{__('Accompaniments')}}
+    </a>
+</li>
 <li class="no-padding {{setActiveRoute('charla')}}">
     <a href="{{route('charla')}}" class="{{setActiveRouteActivePage('charla')}}" rel="canonical" title="Charlas Informativas">
         <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas
     </a>
-</li>
-<li class="no-padding {{setActiveRoute('articulacion')}}">
-    <a href="{{ route('articulaciones.index') }}" class="{{setActiveRouteActivePage('articulacion')}}" rel="canonical" title="Articulaciones">
-    <i class="material-icons {{setActiveRouteActiveIcon('articulacion')}}">autorenew</i>Articulación PBT</a>
 </li>
 <li class="no-padding {{setActiveRoute('usoinfraestructura')}}">
     <a class="waves-effect waves-grey {{setActiveRouteActivePage('usoinfraestructura')}}" href="{{route('usoinfraestructura.index')}}" rel="canonical" title="Asesorias y usos">

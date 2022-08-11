@@ -4,7 +4,7 @@ namespace App\Exports\Indicadores;
 
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use App\Exports\Proyectos\{ProyectosExport};
-// use App\Exports\Articulaciones\{ArticulacionesExport};
+// use App\Exports\ es\{ esExport};
 use App\Exports\Empresas\{EmpresasExport};
 use App\Exports\GruposInvestigacion\{GruposExport};
 use App\Exports\User\Talento\TalentoUserExport;
@@ -13,7 +13,7 @@ class Indicadores2020Export implements WithMultipleSheets
 {
     private $query;
     private $hoja;
-    
+
     public function __construct($queryProyectos, $hoja) {
         $this->setQuery($queryProyectos);
         $this->hoja = $hoja;
@@ -29,7 +29,7 @@ class Indicadores2020Export implements WithMultipleSheets
             $sheets[] = new TalentoUserExport($this->getQuery(), 'Ejecutores');
             $sheets[] = new EmpresasExport($this->getQuery(), 'propietarias');
             $sheets[] = new GruposExport($this->getQuery(), 'propietarios');
-            $sheets[] = new TalentoUserExport($this->getQuery(), 'Propietarios'); 
+            $sheets[] = new TalentoUserExport($this->getQuery(), 'Propietarios');
         } else {
             if ($this->hoja == 'proyectos') {
                 $sheets[] = new ProyectosExport($this->getQuery());
@@ -44,7 +44,7 @@ class Indicadores2020Export implements WithMultipleSheets
                 $sheets[] = new GruposExport($this->getQuery(), 'propietarios');
             }
             if ($this->hoja == 'personas_duenhas') {
-                $sheets[] = new TalentoUserExport($this->getQuery(), 'Propietarios'); 
+                $sheets[] = new TalentoUserExport($this->getQuery(), 'Propietarios');
             }
         }
         return $sheets;

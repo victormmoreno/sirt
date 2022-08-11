@@ -161,32 +161,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Edt::class, 'asesor_id', 'id');
     }
 
-    /**
-     * Define a one-to-many relationship between users and articulaciones.
-     * @author devjul
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function asesorarticulaciones()
-    {
-        return $this->hasMany(\App\Models\Articulacion::class, 'asesor_id', 'id');
-    }
-
-    /**
-     * Define a one-to-many relationship between users and articulacion_pbts.
-     * @author devjul
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function asesorarticulacionpbt()
-    {
-        return $this->hasMany(\App\Models\ArticulacionPbt::class, 'asesor_id', 'id');
-    }
-
     public function etnia()
     {
         return $this->belongsTo(Etnia::class, 'etnia_id', 'id');
     }
-
-    //relaciones muchos a muchos
 
     public function movimientos()
     {
@@ -288,6 +266,17 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(Talento::class, 'user_id', 'id');
     }
 
+    public function articulations()
+    {
+        return $this->belongsToMany(\App\Models\Articulation::class, 'articulation_user', 'user_id', 'articulation_id');
+    }
+
+    public function accompaniments()
+    {
+        return $this->hasMany(\App\Models\Accompaniment::class, 'nodo_id', 'id')->where('role', User::IsArticulador());
+    }
+
+
     public function token()
     {
         return $this->hasOne(ActivationToken::class);
@@ -295,20 +284,32 @@ class User extends Authenticatable implements JWTSubject
 
     public function usoinfraestructuras()
     {
-        // return $this->belongsToMany(UsoInfraestructura::class, 'gestor_uso', 'usoinfraestructura_id', 'gestor_id')
-        //     ->withTimestamps()
-        //     ->withPivot([
-        //         'asesoria_directa',
-        //         'asesoria_indirecta',
-        //         'costo_asesoria',
-        //     ]);
+        return $this->morphToMany(UsoInfraestructura::class, 'asesorable', 'gestor_uso', 'usoinfraestructura_id')->withTimestamps()
+        ->withPivot([
+            'asesoria_directa',
+            'asesoria_indirecta',
+            'costo_asesoria',
+        ]);
+    }
 
-            return $this->morphToMany(UsoInfraestructura::class, 'asesorable', 'gestor_uso', 'usoinfraestructura_id')->withTimestamps()
-            ->withPivot([
-                'asesoria_directa',
-                'asesoria_indirecta',
-                'costo_asesoria',
-            ]);
+    /**
+     * Define one to many relationship between accompanient and node
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function articulationsBy()
+    {
+        return $this->hasMany(\App\Models\Articulation::class, 'created_by', 'id');
+    }
+
+    /**
+     * Define one to many relationship between accompanient and node
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function accompanimentsBy()
+    {
+        return $this->hasMany(Accompaniment::class, 'created_by', 'id');
     }
 
     /*=====  End of relaciones eloquent  ======*/
@@ -558,15 +559,6 @@ class User extends Authenticatable implements JWTSubject
     {
         return (bool) $this->documento == \Auth::user()->documento;
     }
-
-    public static function enableTalentsArticulacion($articulacion)
-    {
-        foreach ($articulacion->talentos as $value) {
-            $value->user()->withTrashed()->first()->restore();
-            $value->user()->withTrashed()->first()->update(['estado' => User::IsActive()]);
-        }
-    }
-
 
     public function present()
     {

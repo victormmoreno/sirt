@@ -51,6 +51,7 @@ return [
         ['name' => EquiposTableSeeder::class, 'callable' => true],
         ['name' => MaterialesTableSeeder::class, 'callable' => true],
         ['name' => ActividadesTableSeeder::class, 'callable' => true],
+        ['name' => AccompanimentSeeder::class, 'callable' => true],
 
     ],
 ];

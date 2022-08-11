@@ -189,7 +189,7 @@ class ProfileController extends Controller
         if (\Session::get('login_role') == User::IsGestor()) {
 
             $actividades = $user->gestor->actividades()
-                ->with(['articulacion_proyecto.proyecto', 'articulacion_proyecto.articulacion'])
+                ->with(['articulacion_proyecto.proyecto'])
                 ->orderBy('fecha_inicio', 'DESC')->paginate(10);
         }
         return view('users.profile.actividad', ['user' => $user, 'actividades' => $actividades]);

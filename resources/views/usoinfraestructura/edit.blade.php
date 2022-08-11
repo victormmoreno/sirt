@@ -56,15 +56,11 @@
 @push('script')
 <script>
     $(document).ready(function() {
-        // usoInfraestructuraUpdate.checkTipoUsoInfraestrucuta();
         @if(isset($usoinfraestructura->asesorable) && $usoinfraestructura->asesorable_type == App\Models\Proyecto::class)
             usoInfraestructuraUpdate.getSelectTalentoProyecto({{$usoinfraestructura->asesorable->id}});
             usoInfraestructuraUpdate.removeDisableButtonGestorAsesor();
         @endif
-        @if(isset($usoinfraestructura->asesorable) && $usoinfraestructura->asesorable_type == App\Models\ArticulacionPbt::class)
-            usoInfraestructuraUpdate.addDisableButtonEquipos();
-            usoInfraestructuraUpdate.addDisableButtonMaterial();
-        @endif
+
         @if(isset($usoinfraestructura->asesorable) && $usoinfraestructura->asesorable_type == App\Models\Idea::class)
             usoInfraestructuraUpdate.addDisableButtonEquipos();
             usoInfraestructuraUpdate.addDisableButtonTalento();

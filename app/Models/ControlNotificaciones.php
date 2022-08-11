@@ -77,5 +77,5 @@ class ControlNotificaciones extends Model
     {
         return $this->belongsTo(Fase::class, 'fase_id', 'id');
     }
-
 }
+

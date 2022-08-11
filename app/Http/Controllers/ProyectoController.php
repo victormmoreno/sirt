@@ -1466,9 +1466,9 @@ class ProyectoController extends Controller
                 'edt.nodo.entidad' => function ($query) {
                     $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
                 },
-                'articulacion_proyecto.articulacion',
-                'articulacion_proyecto.articulacion.productos',
-                'articulacion_proyecto.articulacion.fase',
+                // 'articulacion_proyecto.articulacion',
+                // 'articulacion_proyecto.articulacion.productos',
+                // 'articulacion_proyecto.articulacion.fase',
 
 
             ])->where('codigo_actividad', $code)->first();
@@ -1543,7 +1543,7 @@ class ProyectoController extends Controller
         }
         $proyectos = [];
 
-        if (!empty($request->filter_year_pro)) {
+        if (isset($request->filter_year_pro)) {
             $proyectos = Proyecto::select('id','idea_id','fase_id','articulacion_proyecto_id','alcance_proyecto')
             ->with([
                 'fase',
@@ -1569,7 +1569,7 @@ class ProyectoController extends Controller
             ->addColumn('add_proyecto', function ($data) {
                     $checkbox = '';
                     if (isset($data->articulacion_proyecto->actividad)) {
-                        $checkbox = '<a class="btn blue" onclick="filter_project.addProjectToArticulacion(\'' .($data->articulacion_proyecto->actividad->codigo_actividad) . '\')">
+                        $checkbox = '<a class="btn blue" onclick="accompaniment.addProjectToArticulacion(\'' .($data->articulacion_proyecto->actividad->codigo_actividad) . '\')">
                                         <i class="material-icons">done</i>
                                     </a>';
                     }

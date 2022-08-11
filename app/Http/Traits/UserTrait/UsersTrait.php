@@ -89,10 +89,6 @@ trait UsersTrait
         return self::IS_PROVEEDOR;
     }
 
-    /*==========================================
-    =            mutadores eloquent            =
-    ==========================================*/
-
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = Hash::make($password);
@@ -205,10 +201,6 @@ trait UsersTrait
 
     }
 
-    /*=====  End of metodo para generar token activacion users  ======*/
-    /*=================================================================
-    =            ejemplo para preguntar por fechas futuras            =
-    =================================================================*/
 
     public function isUpdated()
     {

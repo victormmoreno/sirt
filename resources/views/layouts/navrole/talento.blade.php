@@ -13,9 +13,9 @@
         <i class="material-icons {{ setActiveRouteActiveIcon('proyecto') }}">library_books</i>Proyectos
     </a>
 </li>
-<li class="no-padding {{setActiveRoute('articulacion')}}">
-    <a href="{{ route('articulaciones.index') }}" class="{{setActiveRouteActivePage('articulacion')}}" rel="canonical" title="Articulaciones">
-        <i class="material-icons {{setActiveRouteActiveIcon('articulacion')}}">autorenew</i>Articulaciones
+<li class="no-padding {{setActiveRoute('acompanamientos')}}">
+    <a href="{{route('accompaniments')}}" class="{{setActiveRouteActivePage('acompanamientos')}}" rel="canonical" title="{{__('Accompaniments')}}">
+        <i class="material-icons {{setActiveRouteActiveIcon('acompanamientos')}}">autorenew</i>{{__('Accompaniments')}}
     </a>
 </li>
 <li class="no-padding {{setActiveRoute('usoinfraestructura')}}">

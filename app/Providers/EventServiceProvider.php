@@ -62,6 +62,12 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Support\MessageWasSent' => [
             'App\Listeners\Support\AutoReplyMessage',
         ],
+        'App\Events\Proyecto\ProyectoApproveWasRequested' => [
+            'App\Listeners\Proyecto\ProyectoApproveWasRequestedInPhase',
+        ],
+        'App\Events\Articulation\AccompanyingApprovalRequest' => [
+            'App\Listeners\Articulation\AccompanyingApprovalRequestSent',
+        ],
     ];
 
     /**

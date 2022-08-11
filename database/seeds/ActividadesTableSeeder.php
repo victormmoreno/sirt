@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\{Actividad, Articulacion,  ArticulacionProyecto, Edt, Equipo, Entidad,  Gestor, Material,  ObjetivoEspecifico, Proyecto, Producto, UsoInfraestructura};
+use App\Models\{Actividad, ArticulacionProyecto, Edt, Equipo, Entidad,  Gestor, Material,  ObjetivoEspecifico, Proyecto, Producto, UsoInfraestructura};
 use App\User;
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
@@ -127,9 +127,8 @@ class ActividadesTableSeeder extends Seeder
                 $actividad->articulacion_proyecto()->save(factory(ArticulacionProyecto::class)->make([
                     'entidad_id' => $entGrupoInvestigacion->grupoinvestigacion->id,
                 ]));
-                $actividad->articulacion_proyecto->articulacion()->save(factory(Articulacion::class)->make());
                 $actividad->articulacion_proyecto->talentos()->sync($user->talento->id);
-                $actividad->articulacion_proyecto->articulacion->productos()->sync($productos->id);
+
 
                 $actividad->usoinfraestructuras()->save(factory(UsoInfraestructura::class)->make([
                     'tipo_usoinfraestructura' => UsoInfraestructura::IsArticulacion(),
@@ -159,9 +158,8 @@ class ActividadesTableSeeder extends Seeder
                 $actividad->articulacion_proyecto()->save(factory(ArticulacionProyecto::class)->make([
                     'entidad_id' => $entGrupoInvestigacion->grupoinvestigacion->id,
                 ]));
-                $actividad->articulacion_proyecto->articulacion()->save(factory(Articulacion::class)->make());
+
                 $actividad->articulacion_proyecto->talentos()->sync($user->talento->id);
-                $actividad->articulacion_proyecto->articulacion->productos()->sync($productos->id);
 
                 $actividad->usoinfraestructuras()->save(factory(UsoInfraestructura::class)->make([
                     'tipo_usoinfraestructura' => UsoInfraestructura::IsArticulacion(),

@@ -136,25 +136,6 @@ class Nodo extends Model
         return $this->hasMany(Edt::class, 'nodo_id', 'id');
     }
 
-    /**
-     * Devolver devjul entre articulacion_pbt y nodo
-     * @author devjil
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function articulaciopbts()
-    {
-        return $this->hasMany(ArticulacionPbt::class, 'nodo_id', 'id');
-    }
-
-    /**
-     * Devolver devjul entre articulaciones y nodo
-     * @author devjil
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function articulaciones()
-    {
-        return $this->hasMany(Articulacion::class, 'nodo_id', 'id');
-    }
 
     public function lineas()
     {
@@ -166,6 +147,17 @@ class Nodo extends Model
     {
         return $this->hasMany(ContactoEntidad::class, 'nodo_id', 'id');
     }
+
+    /**
+     * Define one to many relationship between accompanient and node
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function accompaniments()
+    {
+        return $this->hasMany(Accompaniment::class, 'node_id', 'id');
+    }
+
 
     public function tiposarticulaciones()
     {
