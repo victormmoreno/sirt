@@ -33,6 +33,14 @@
                 {{$proyecto->idea->present()->ideaNombreConvocatoria()}}
             </p>
         </li>
+        <li class="collection-item">
+            <span class="title black-text text-darken-3">
+                Fecha de inicio del proyecto
+            </span>
+            <p>
+                {{$proyecto->present()->proyectoFechaInicio()}}
+            </p>
+        </li>
     </ul>
 </div>
 @include('ideas.modals')

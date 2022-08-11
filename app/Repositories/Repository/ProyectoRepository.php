@@ -903,38 +903,12 @@ class ProyectoRepository
                 'fase_id' => Fase::where('nombre', $fase)->first()->id
             ]);
 
-            $proyecto->articulacion_proyecto()->update([
-                'aprobacion_dinamizador_suspender' => 0
-            ]);
-
-            if ($fase == 'Inicio' || $fase == 'Planeación' || $fase == 'Ejecución') {
-                $this->reversarAInicioPlaneacionEjecucion($proyecto);
-            }
-
             DB::commit();
             return true;
         } catch (\Throwable $th) {
             DB::rollBack();
             return false;
         }
-    }
-
-    /**
-     * Reversa un proyecto a la fase de inicio ó planeación
-     *
-     * @param Proyecto $proyecto
-     * @return void
-     * @author dum
-     **/
-    private function reversarAInicioPlaneacionEjecucion(Proyecto $proyecto)
-    {
-        $proyecto->articulacion_proyecto()->update([
-            'aprobacion_dinamizador_ejecucion' => 0
-        ]);
-
-        $proyecto->articulacion_proyecto->actividad()->update([
-            'aprobacion_dinamizador' => 0
-        ]);
     }
 
     /**

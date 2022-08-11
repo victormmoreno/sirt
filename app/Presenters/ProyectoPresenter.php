@@ -68,6 +68,15 @@ class ProyectoPresenter extends Presenter
         }
     }
 
+    public function proyectoFechaInicio()
+    {
+        if ($this->proyecto->articulacion_proyecto->actividad->fecha_inicio == null) {
+            return "No registra";
+        } else {
+            return $this->proyecto->articulacion_proyecto->actividad->fecha_inicio->isoFormat('YYYY-MM-DD');
+        }
+    }
+
     public function proyectoFabricaProductividad()
     {
         if ($this->proyecto->fabrica_productividad == 0) {

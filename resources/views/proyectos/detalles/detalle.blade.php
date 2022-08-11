@@ -57,7 +57,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <a class="waves-effect waves-teal btn-flat" href="{{route('proyecto.certificacion', $proyecto->id)}}">Generar carta de certificación</a>
                             <div class="divider"></div>
                             <ul class="tabs">
                             <li class="tab col s3"><a class="active" href="#inicio">Inicio</a></li>
@@ -70,7 +69,7 @@
 
                         <div class=" mailbox-view mailbox-text">
                             <div class="row">
-                                @include('proyectos.options.options')
+                                @include('proyectos.options.options_end')
                                 @include('proyectos.detalles.detalle_general')
                             </div>
                             <div id="inicio" class="col s12 m12 l12">

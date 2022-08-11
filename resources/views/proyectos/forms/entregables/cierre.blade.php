@@ -43,11 +43,9 @@
         </p>
     </div>
 </div>
-@if ($proyecto->present()->proyectoFase() == 'Cierre')
 <div class="row">
     <div class="card-panel teal">
         <div class="dropzone" id="fase_cierre_proyecto"></div>
     </div>
 </div>
-@endif
 <div class="divider"></div>
