@@ -17,6 +17,7 @@ use App\Exports\ArticulacionesPbt\ArticulacionesPbtExport;
 use App\Repositories\Repository\UserRepository\UserRepository;
 
 
+
 class ArticulacionPbtController extends Controller
 {
     private $articulacionPbtRepository;
@@ -695,25 +696,31 @@ class ArticulacionPbtController extends Controller
     public function export(Request $request, $extension = 'xlsx')
     {
         // $this->authorize('view', ArticulacionPbt::class);
+
         $talent = null;
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
-                $nodo = $request->filter_nodo_art;
+                $nodo = $request->filter_nodo;
+                $user = null;
                 break;
             case User::IsDinamizador():
                 $nodo = auth()->user()->dinamizador->nodo_id;
+                $user = null;
                 break;
             case User::IsArticulador():
                 $nodo = auth()->user()->articulador->nodo_id;
+                $user = auth()->user()->id;
                 break;
             case User::IsTalento():
                 $nodo = null;
+                $user = null;
                 $talent = auth()->user()->talento->id;
                 break;
             default:
                 return abort('403');
                 break;
         }
+
         $articulaciones =  ArticulacionPbt::with([
             'fase',
             'tipoarticulacion' => function($query){
@@ -734,10 +741,11 @@ class ArticulacionPbtController extends Controller
         ->alcanceArticulacion($request->filter_alcance_articulacion)
         ->fase($request->filter_phase)
         ->nodo($nodo)
-        ->starEndDate($request->filter_year_art)
+        ->starEndDate($request->filter_year)
         ->talents($talent)
         ->orderBy('created_at', 'desc')
         ->get();
+
         return (new ArticulacionesPbtExport($articulaciones))->download("Articulaciones PBT - " . config('app.name') . ".{$extension}");
     }
 
