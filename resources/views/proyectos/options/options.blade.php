@@ -1,10 +1,12 @@
 <div class="collection with-header col s12 m4 l4">
     <h5 href="!#" class="collection-header">Opciones</h5>
     @if (Route::currentRouteName() != 'proyecto.suspender')
-        <a href="{{route('proyecto.suspender', $proyecto->id)}}" class="collection-item">
-            <i class="material-icons left">priority_high</i>
-            Suspender proyecto.
-        </a>
+        @canany(['showOptionsForDinamizador', 'showOptionsForExperto'], App\Models\Proyecto::class)
+            <a href="{{route('proyecto.suspender', $proyecto->id)}}" class="collection-item">
+                <i class="material-icons left">priority_high</i>
+                Suspender proyecto.
+            </a>
+        @endcan
         @can('showOptionsForExperto', App\Models\Proyecto::class)
             @include('proyectos.options.options_ever_experto')
         @endcan

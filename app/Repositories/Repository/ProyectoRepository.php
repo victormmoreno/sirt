@@ -597,9 +597,9 @@ class ProyectoRepository
      */
     public function proyectosDelTalento($id)
     {
-        return Proyecto::select('proyectos.id', 'actividades.codigo_actividad AS codigo_proyecto', 'actividades.nombre', 'fases.nombre AS nombre_fase', 'actividades.id AS actividad_id')
+        return Proyecto::select('proyectos.id', 'sublineas.nombre as sublinea_nombre', 'actividades.codigo_actividad AS codigo_proyecto', 'actividades.nombre', 'fases.nombre AS nombre_fase', 'actividades.id AS actividad_id')
         ->selectRaw('concat(codigo_idea, " - ", nombre_proyecto) AS nombre_idea')
-        ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombre_gestor')
+        ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
         ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
         ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
@@ -607,6 +607,7 @@ class ProyectoRepository
         ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
         ->join('users', 'users.id', '=', 'gestores.user_id')
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
+        ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
         ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
         ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
         ->join('users AS user_talento', 'user_talento.id', '=', 'talentos.user_id')

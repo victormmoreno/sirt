@@ -67,7 +67,7 @@
                             @include('proyectos.historial_cambios')
                         </div>
 
-                        <div class=" mailbox-view mailbox-text">
+                        <div class="mailbox-view mailbox-text">
                             <div class="row">
                                 @include('proyectos.options.options_end')
                                 @include('proyectos.detalles.detalle_general')

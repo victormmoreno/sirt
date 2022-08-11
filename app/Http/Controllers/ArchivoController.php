@@ -383,10 +383,14 @@ class ArchivoController extends Controller
     public function destroyFileProyecto($idFile)
     {
         $file = ArchivoArticulacionProyecto::find($idFile);
-        $file->delete();
-        $filePath = str_replace('storage', 'public', $file->ruta);
-        Storage::delete($filePath);
-        toast('El Archivo se ha eliminado con éxito!','success')->autoClose(2000)->position('top-end');
+        if(!$this->authorize('delete', $file)) {
+            toast('No tienes permisos para borrar este archivo!','success')->autoClose(2000)->position('top-end');
+        } else {
+            $file->delete();
+            $filePath = str_replace('storage', 'public', $file->ruta);
+            Storage::delete($filePath);
+            toast('El Archivo se ha eliminado con éxito!','success')->autoClose(2000)->position('top-end');
+        }
         return back();
     }
 
@@ -396,7 +400,7 @@ class ArchivoController extends Controller
         try {
             $ruta = $this->archivoRepository->consultarRutaDeArchivoDeUnaArticulacionProyectoPorId($idFile);
             if (!$this->verificarAccesoADescarga($ruta)) {
-                toast('No hacer parte de este proyecto, por lo que no lo puedes descargar!','warning')->autoClose(2000)->position('top-end');
+                toast('No haces parte de este proyecto, por lo que no lo puedes descargar!','warning')->autoClose(2000)->position('top-end');
                 return back();
             }
             $path = str_replace('storage', 'public', $ruta->ruta);

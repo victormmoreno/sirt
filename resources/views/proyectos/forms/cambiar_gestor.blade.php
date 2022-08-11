@@ -13,9 +13,15 @@
         <div class="card">
           <div class="card-content">
             <div class="row">
-              @include('proyectos.navegacion_fases')
               <div class="divider"></div>
               <br />
+            <center>
+              <span class="card-title center-align"><b>Proyecto - {{ $proyecto->present()->proyectoCode() }}</b></span>
+            </center>
+            <div class="row card-panel green lighten-5">
+                <h5 class="center">Cambiando el experto asesor del proyecto</h5>
+            </div>
+            <div class="divider"></div>
               <form action="{{route('proyecto.update.gestor', $proyecto->id)}}" method="POST" name="frmUpdateGestor">
                 {!! method_field('PUT')!!}
                 @csrf
@@ -24,7 +30,7 @@
                       <select id="txtgestor_id" class="js-states browser-default select2" name="txtgestor_id" style="width: 100%;">
                         <option value="">Seleccione el experto</option>
                         @forelse ($gestores as $id => $value)
-                          <option value="{{$id}}" {{ $id == $proyecto->articulacion_proyecto->actividad->gestor_id ? 'selected' : '' }} {{ old('txtgestor_id') == $id ? 'selected':'' }} >{{$value}}</option>
+                          <option value="{{$id}}" {{ $id == $proyecto->asesor_id ? 'selected' : '' }} {{ old('txtgestor_id') == $id ? 'selected':'' }} >{{$value}}</option>
                         @empty
                           <option value="">No hay información disponible</option>
                         @endforelse

@@ -4469,8 +4469,8 @@ function detallesDeUnaIntervencion(id){
     })
   }
 $(document).ready(function() {
-    consultarProyectosDelGestorPorAnho();
-    consultarProyectosDelNodoPorAnho();
+    // consultarProyectosDelGestorPorAnho();
+    consultarProyectosUnNodoPorAnho();
 });
 
 function verHorasDeExpertosEnProyecto(id) {
@@ -4507,10 +4507,10 @@ function verHorasDeExpertosEnProyecto(id) {
   });
 }
 
-function consultarProyectosDeTalentos () {
+function consultarProyectosDeTalentos() {
 
-    $('#tblProyectoDelTalento').dataTable().fnDestroy();
-    $('#tblProyectoDelTalento').DataTable({
+    $('#tblProyectos_Master').dataTable().fnDestroy();
+    $('#tblProyectos_Master').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
@@ -4607,215 +4607,127 @@ function verTalentosDeUnProyecto(id){
 }
 
 // Ajax que muestra los proyectos de un experto por año
-function consultarProyectosDelGestorPorAnho() {
-    let anho = $('#anho_proyectoPorAnhoGestorNodo').val();
-    $('#tblproyectosGestorPorAnho').dataTable().fnDestroy();
-    $('#tblproyectosGestorPorAnho').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+// function consultarProyectosDelGestorPorAnho() {
+//     let anho = $('#anho_proyectoPorAnhoGestorNodo').val();
+//     $('#tblproyectosGestorPorAnho').dataTable().fnDestroy();
+//     $('#tblproyectosGestorPorAnho').DataTable({
+//         language: {
+//             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+//         },
+//         pageLength: 20,
+//         processing: true,
+//         serverSide: true,
+//         order: [ 0, 'desc' ],
+//         "lengthChange": false,
+//         ajax:{
+//             url: host_url + "/proyecto/datatableProyectosDelGestorPorAnho/"+0+"/"+anho,
+//             data: function (d) {
+//                 d.codigo_proyecto = $('.codigo_proyecto').val(),
+//                 d.nombre = $('.nombre').val(),
+//                 d.nombre_fase = $('.nombre_fase').val(),
+//                 d.search = $('input[type="search"]').val()
+//             }
+//         },
+//         columns: [
+//             {
+//                 width: '15%',
+//                 data: 'codigo_proyecto',
+//                 name: 'codigo_proyecto',
+//             },
+//             {
+//                 data: 'nombre',
+//                 name: 'nombre',
+//             },
+//             {
+//                 data: 'nombre_fase',
+//                 name: 'nombre_fase',
+//             },
+//             {
+//                 width: '8%',
+//                 data: 'info',
+//                 name: 'info',
+//                 orderable: false
+//             },
+//             {
+//                 width: '8%',
+//                 data: 'proceso',
+//                 name: 'proceso',
+//                 orderable: false
+//             },
+//         ],
+//     });
+// }
+// $(".codigo_proyecto").keyup(function(){
+//     $('#tblproyectosGestorPorAnho').DataTable().draw();
+// });
+
+// $(".nombre").keyup(function(){
+//     $('#tblproyectosGestorPorAnho').DataTable().draw();
+// });
+
+// $(".nombre_fase").keyup(function(){
+//     $('#tblproyectosGestorPorAnho').DataTable().draw();
+// });
+
+// $("#codigo_proyecto_tblProyectosDelNodoPorAnho").keyup(function(){
+//     $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+// });
+
+// $("#gestor_tblProyectosDelNodoPorAnho").keyup(function(){
+//     $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+// });
+
+// $("#nombre_tblProyectosDelNodoPorAnho").keyup(function(){
+//     $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+// });
+
+// $("#sublinea_nombre_tblProyectosDelNodoPorAnho").keyup(function(){
+//     $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+// });
+
+// $("#fase_nombre_tblProyectosDelNodoPorAnho").keyup(function(){
+//     $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+// });
+
+function preguntaReversar(e, id, fase){
+    e.preventDefault();
+    Swal.fire({
+    title: '¿Está seguro(a) de reversar este proyecto a la fase de '+fase+'?',
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Sí!'
+    }).then((result) => {
+        if (result.value) {
+            sendReversarProyecto(id, fase);
+        }
+    })
+}
+
+function sendReversarProyecto(id, fase) {
+    $.ajax({
+        type: 'get',
+        url: host_url + '/proyecto/reversar/'+id+'/'+fase,
+        dataType: 'json',
+        success: function (data) {
+            Swal.fire({
+                title: data.msg,
+                type: data.type_alert,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Ok!'
+            });
         },
-        pageLength: 20,
-        processing: true,
-        serverSide: true,
-        order: [ 0, 'desc' ],
-        "lengthChange": false,
-        ajax:{
-            url: host_url + "/proyecto/datatableProyectosDelGestorPorAnho/"+0+"/"+anho,
-            data: function (d) {
-                d.codigo_proyecto = $('.codigo_proyecto').val(),
-                d.nombre = $('.nombre').val(),
-                d.nombre_fase = $('.nombre_fase').val(),
-                d.search = $('input[type="search"]').val()
-            }
-        },
-        columns: [
-            {
-                width: '15%',
-                data: 'codigo_proyecto',
-                name: 'codigo_proyecto',
-            },
-            {
-                data: 'nombre',
-                name: 'nombre',
-            },
-            {
-                data: 'nombre_fase',
-                name: 'nombre_fase',
-            },
-            {
-                width: '8%',
-                data: 'info',
-                name: 'info',
-                orderable: false
-            },
-            {
-                width: '8%',
-                data: 'proceso',
-                name: 'proceso',
-                orderable: false
-            },
-        ],
+        error: function (xhr, textStatus, errorThrown) {
+            alert("Error: " + errorThrown);
+        }
     });
 }
-$(".codigo_proyecto").keyup(function(){
-    $('#tblproyectosGestorPorAnho').DataTable().draw();
-});
 
-$(".nombre").keyup(function(){
-    $('#tblproyectosGestorPorAnho').DataTable().draw();
-});
-
-$(".nombre_fase").keyup(function(){
-    $('#tblproyectosGestorPorAnho').DataTable().draw();
-});
-
-$("#codigo_proyecto_tblProyectosDelNodoPorAnho").keyup(function(){
-    $('#tblproyectosDelNodoPorAnho').DataTable().draw();
-});
-
-$("#gestor_tblProyectosDelNodoPorAnho").keyup(function(){
-    $('#tblproyectosDelNodoPorAnho').DataTable().draw();
-});
-
-$("#nombre_tblProyectosDelNodoPorAnho").keyup(function(){
-    $('#tblproyectosDelNodoPorAnho').DataTable().draw();
-});
-
-$("#sublinea_nombre_tblProyectosDelNodoPorAnho").keyup(function(){
-    $('#tblproyectosDelNodoPorAnho').DataTable().draw();
-});
-
-$("#fase_nombre_tblProyectosDelNodoPorAnho").keyup(function(){
-    $('#tblproyectosDelNodoPorAnho').DataTable().draw();
-});
-
-function preguntaReversar(e){
-    e.preventDefault();
-    Swal.fire({
-    title: '¿Está seguro(a) de reversar este proyecto a la fase de Inicio?',
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    cancelButtonText: 'Cancelar',
-    confirmButtonText: 'Sí!'
-    }).then((result) => {
-        if (result.value) {
-            document.frmReversarFase.submit();
-        }
-    })
-}
-
-function preguntaReversarPlaneacion(e){
-    e.preventDefault();
-    Swal.fire({
-    title: '¿Está seguro(a) de reversar este proyecto a la fase de Planeación?',
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    cancelButtonText: 'Cancelar',
-    confirmButtonText: 'Sí!'
-    }).then((result) => {
-        if (result.value) {
-            document.frmReversarFasePlaneacion.submit();
-        }
-    })
-}
-
-function preguntaReversarEjecucion(e){
-    e.preventDefault();
-    Swal.fire({
-    title: '¿Está seguro(a) de reversar este proyecto a la fase de Ejecución?',
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    cancelButtonText: 'Cancelar',
-    confirmButtonText: 'Sí!'
-    }).then((result) => {
-        if (result.value) {
-            document.frmReversarFaseEjecucion.submit();
-        }
-    })
-}
-
-/**
-* Consulta los proyectos del nodo por año
-*/
-function consultarProyectosDelNodoPorAnho() {
-  let anho_proyectos_nodo = $('#anho_proyectoPorNodoYAnho').val();
-  $('#tblproyectosDelNodoPorAnho').dataTable().fnDestroy();
-  $('#tblproyectosDelNodoPorAnho').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    order: [ 0, 'desc' ],
-    "lengthChange": false,
-    ajax:{
-      url: host_url + "/proyecto/datatableProyectosDelNodoPorAnho/"+0+"/"+anho_proyectos_nodo,
-      data: function (d) {
-        d.codigo_proyecto = $('#codigo_proyecto_tblProyectosDelNodoPorAnho').val(),
-        d.gestor = $('#gestor_tblProyectosDelNodoPorAnho').val(),
-        d.nombre = $('#nombre_tblProyectosDelNodoPorAnho').val(),
-        d.sublinea_nombre = $('#sublinea_nombre_tblProyectosDelNodoPorAnho').val(),
-        d.nombre_fase = $('#fase_nombre_tblProyectosDelNodoPorAnho').val(),
-        d.search = $('input[type="search"]').val()
-      }
-      // type: "get",
-    },
-    columns: [
-      {
-        width: '15%',
-        data: 'codigo_proyecto',
-        name: 'codigo_proyecto',
-      },
-      {
-        data: 'gestor',
-        name: 'gestor',
-      },
-      {
-        data: 'nombre',
-        name: 'nombre',
-      },
-      {
-        data: 'sublinea_nombre',
-        name: 'sublinea_nombre',
-      },
-      {
-        data: 'nombre_fase',
-        name: 'nombre_fase',
-      },
-      {
-        width: '6%',
-        data: 'info',
-        name: 'info',
-        orderable: false
-      },
-      {
-        width: '6%',
-        data: 'proceso',
-        name: 'proceso',
-        orderable: false
-      },
-      {
-        width: '6%',
-        data: 'download_trazabilidad',
-        name: 'download_trazabilidad',
-        orderable: false
-      },
-      {
-        width: '6%',
-        data: 'ver_horas',
-        name: 'ver_horas',
-        orderable: false
-      },
-
-    ],
-  });
-}
 
 function eliminarProyectoPorId_event(id, e) {
     Swal.fire({
@@ -5147,6 +5059,12 @@ $('#tblProyectos_Master').DataTable().draw();
 function consultarProyectosUnNodoPorAnho() {
 let anho_proyectos_nodo = $('#anho_proyectoPorNodoYAnho').val();
 let nodo = $('#nodo_proyectoPorNodoYAnho').val();
+// if (anho_proyectos_nodo == undefined) {
+//     anho_proyectos_nodo = -1;
+// }
+// if (nodo == undefined) {
+//     nodo = -1;
+// }
 $('#tblProyectos_Master').dataTable().fnDestroy();
 $('#tblProyectos_Master').DataTable({
     language: {
@@ -5166,7 +5084,6 @@ $('#tblProyectos_Master').DataTable({
         d.estado_nombre = $('#estado_nombre_tblProyectos_Master').val(),
         d.search = $('input[type="search"]').val()
     }
-    // type: "get",
     },
     columns: [
     {

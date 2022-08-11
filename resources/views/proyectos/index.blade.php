@@ -39,10 +39,14 @@
                                         @endcan
                                     </div>
                                     <div class="divider"></div>
-                                    @can('showPorNodoFilter', App\Models\Proyecto::class)
+                                    @can('showActivadorFilter', App\Models\Proyecto::class)
                                         @include('proyectos.filtros.administrador')
                                     @elsecan('showExpertoFilter', App\Models\Proyecto::class)
                                         @include('proyectos.filtros.experto')
+                                    @elsecan('showPersonalNodoFilter', App\Models\Proyecto::class)
+                                        @include('proyectos.filtros.personal_nodo')
+                                    @elsecan('showTalentoFilter', App\Models\Proyecto::class)
+                                        @include('proyectos.table')
                                     @endcan
                                 </div>
                             </div>

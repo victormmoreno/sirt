@@ -60,17 +60,6 @@ class ProyectoController extends Controller
         }
     }
 
-    /**
-     * Datatable para el rol de talento
-     * @return Datatables
-     * @author dum
-     */
-    public function datatableProyectoTalento(Request $request)
-    {
-        $proyectos = $this->getProyectoRepository()->proyectosDelTalento(auth()->user()->talento->id);
-        return $this->datatableProyectos($request, $proyectos);
-    }
-
     public function detalle(int $id)
     {
         $proyecto = Proyecto::findOrFail($id);
@@ -239,7 +228,7 @@ class ProyectoController extends Controller
      * @return Response
      * @author dum
      */
-    public function datatableProyectosDelNodoPorAnho(Request $request, $idnodo, $anho)
+    public function datatableProyectosDelNodoPorAnho(Request $request, $idnodo = null, $anho = null)
     {
         $id = "";
         if (Session::get('login_role') == User::IsDinamizador()) {
@@ -250,6 +239,9 @@ class ProyectoController extends Controller
             $id = $idnodo;
         }
         $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('nodos.id', $id)->get();
+        if (session()->get('login_role') == User::IsTalento()) {
+            $proyectos = $proyectos = $this->getProyectoRepository()->proyectosDelTalento(auth()->user()->talento->id);
+        }
         return $this->datatableProyectos($request, $proyectos);
     }
 
@@ -679,7 +671,6 @@ class ProyectoController extends Controller
         $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
         $ult_notificacion = $this->proyectoRepository->retornarUltimaNotificacionPendiente($proyecto);
         $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
-        // dd($ult_notificacion);
         return view('proyectos.fases.fase_inicio', [
             'proyecto' => $proyecto,
             'historico' => $historico,
@@ -695,7 +686,7 @@ class ProyectoController extends Controller
         $ult_notificacion = $this->proyectoRepository->retornarUltimaNotificacionPendiente($proyecto);
         $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
 
-        if ($proyecto->fase->nombre == 'Inicio') {
+        if ($proyecto->fase->nombre == $proyecto->IsInicio()) {
             Alert::error('Error!', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!')->showConfirmButton('Ok', '#3085d6');
             return back();
         } else {
@@ -1066,58 +1057,91 @@ class ProyectoController extends Controller
      * @return Response
      * @author dum
      **/
-    public function updateReversar(Request $request, int $id, string $fase)
+    public function updateReversar(int $id, string $fase)
     {
         $proyecto = Proyecto::findOrFail($id);
-
-        if (!$this->isPosibleReversar($proyecto, $fase)) {
-            Alert::error('Este proyecto no puede ser reversado!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
-            return back();
+        $check = $this->isPosibleReversar($proyecto, $fase);
+        if (!$check['return']) {
+            return response()->json([
+                'msg' => $check['msg'],
+                'type_alert' => 'error'
+            ]);
         }
 
         $update = $this->getProyectoRepository()->reversarProyecto($proyecto, $fase);
         if ($update) {
-            Alert::success('La fase del proyecto se ha reversado a '.$fase.'!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
-            return redirect()->route('proyecto.inicio', $proyecto->id);
+            return response()->json([
+                'msg' => 'La fase del proyecto se ha reversado a '.$fase.'!',
+                'type_alert' => 'success'
+            ]);
         } else {
-            Alert::error('El proyecto no se ha reversado!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
-            return back();
+            return response()->json([
+                'msg' => 'El proyecto no se ha reversado!',
+                'type_alert' => 'error'
+            ]);
         }
 
     }
-        /**
-         * Verificar que se puede reversa la fase de un proyecto
-         *
-         * @param App\Models\Proyecto $proyecto
-         * @param string $fase_a_reversar
-         * @return bool
-         * @auth dum
-         **/
-        private function isPosibleReversar($proyecto, $fase_a_reversar)
-        {
-            if ($proyecto->fase->nombre == $fase_a_reversar) {
-                return false;
+    /**
+     * Verificar que se puede reversa la fase de un proyecto
+     *
+     * @param App\Models\Proyecto $proyecto
+     * @param string $fase_a_reversar
+     * @return array
+     * @auth dum
+     **/
+    private function isPosibleReversar($proyecto, $fase_a_reversar)
+    {
+        if ($proyecto->fase->nombre == $proyecto->IsFinalizado()) {
+            return [
+                'return' => true, 
+                'msg' => 'ok'
+            ];
+        }
+        if ($proyecto->fase->nombre == $fase_a_reversar) {
+            return [
+                'return' => false,
+                'msg' => 'El proyecto ya se encuentra en la fase de ' . $fase_a_reversar
+            ];
+        } else {
+            if ($proyecto->fase->nombre == 'Suspendido') {
+                return [
+                    'return' => true, 
+                    'msg' => 'ok'
+                ];
             } else {
-                if ($proyecto->fase->nombre == 'Suspendido') {
-                    return true;
+                if (($proyecto->fase->nombre == 'Planeación' && $fase_a_reversar == 'Inicio')) {
+                    return [
+                        'return' => true, 
+                        'msg' => 'ok'
+                    ];
                 } else {
-                    if (($proyecto->fase->nombre == 'Planeación' && $fase_a_reversar == 'Inicio')) {
-                        return true;
+                    if (($proyecto->fase->nombre == 'Ejecución' && $fase_a_reversar == 'Planeación') || ($proyecto->fase->nombre == 'Ejecución' && $fase_a_reversar == 'Inicio')) {
+                        return [
+                            'return' => true, 
+                            'msg' => 'ok'
+                        ];
                     } else {
-                        if (($proyecto->fase->nombre == 'Ejecución' && $fase_a_reversar == 'Planeación') || ($proyecto->fase->nombre == 'Ejecución' && $fase_a_reversar == 'Inicio')) {
-                            return true;
+                        if (($proyecto->fase->nombre == 'Cierre' && $fase_a_reversar == 'Ejecución') || ($proyecto->fase->nombre == 'Cierre' && $fase_a_reversar == 'Planeación') || ($proyecto->fase->nombre == 'Cierre' && $fase_a_reversar == 'Inicio')) {
+                            return [
+                                'return' => true, 
+                                'msg' => 'ok'
+                            ];
                         } else {
-                            if (($proyecto->fase->nombre == 'Cierre' && $fase_a_reversar == 'Ejecución') || ($proyecto->fase->nombre == 'Cierre' && $fase_a_reversar == 'Planeación') || ($proyecto->fase->nombre == 'Cierre' && $fase_a_reversar == 'Inicio')) {
-                                return true;
-                            } else {
-                                return false;
-                            }
+                            return [
+                                'return' => false,
+                                'msg' => 'No se puede revesar el proyecto se ' . $proyecto->fase->nombre . ' a ' . $fase_a_reversar
+                            ];
                         }
                     }
                 }
             }
-            return true;
         }
+        return [
+            'return' => true, 
+            'msg' => 'ok'
+        ];
+    }
 
     /*===============================================
   =========================
