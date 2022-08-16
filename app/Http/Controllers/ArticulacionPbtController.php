@@ -17,6 +17,7 @@ use App\Exports\ArticulacionesPbt\ArticulacionesPbtExport;
 use App\Repositories\Repository\UserRepository\UserRepository;
 
 
+
 class ArticulacionPbtController extends Controller
 {
     private $articulacionPbtRepository;
