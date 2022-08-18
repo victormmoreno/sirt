@@ -192,7 +192,7 @@ class ProyectoPolicy
      */
     public function showOptionsForFuncionarios(User $user)
     {
-        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador() || session()->get('login_role') == $user->IsDinamizador() || session()->get('login_role') == $user->IsExperto()) {
+        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador() || session()->get('login_role') == $user->IsDinamizador() || session()->get('login_role') == $user->IsGestor()) {
             return true;
         }
         return false;

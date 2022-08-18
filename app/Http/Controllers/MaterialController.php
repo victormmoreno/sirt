@@ -203,7 +203,7 @@ class MaterialController extends Controller
         $this->authorize('store', Material::class);
 
         $materialStore = $this->getMaterialRepository()->store($request);
-        if ($materialStore === true) {
+        if ($materialStore) {
 
             alert()->success('Registro Exitoso.', 'El Material de Formación ha sido creado satisfactoriamente');
         } else {

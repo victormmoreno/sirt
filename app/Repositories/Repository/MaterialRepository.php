@@ -107,11 +107,11 @@ class MaterialRepository
     {
         $anho = Carbon::now()->isoFormat('YYYY');
 
-        $nodoAuth = session()->has('login_role') && session()->get('login_role') == User::Isgestor() ? auth()->user()->gestor->nodo->id : auth()->user()->dinamizador->nodo->id;
+        $nodoAuth = session()->has('login_role') && session()->get('login_role') == User::IsGestor() ? auth()->user()->gestor->nodo->id : auth()->user()->dinamizador->nodo->id;
 
         $nodo = Nodo::find($nodoAuth);
 
-        $lineaAuth = session()->has('login_role') && session()->get('login_role') == User::Isgestor() ? auth()->user()->gestor->lineatecnologica_id : $request->input('txtlineatecnologica');
+        $lineaAuth = session()->has('login_role') && session()->get('login_role') == User::IsGestor() ? auth()->user()->gestor->lineatecnologica_id : $request->input('txtlineatecnologica');
 
         $tecnoparque = sprintf("%02d", $nodo->id);
 
@@ -149,11 +149,11 @@ class MaterialRepository
     private function findLineaBySession($request)
     {
 
-        $nodoAuth = session()->has('login_role') && session()->get('login_role') == User::Isgestor() ? auth()->user()->gestor->nodo->id : auth()->user()->dinamizador->nodo->id;
+        $nodoAuth = session()->has('login_role') && session()->get('login_role') == User::IsGestor() ? auth()->user()->gestor->nodo->id : auth()->user()->dinamizador->nodo->id;
 
         $nodo = Nodo::find($nodoAuth);
 
-        $lineaAuth = session()->has('login_role') && session()->get('login_role') == User::Isgestor() ? auth()->user()->gestor->lineatecnologica_id : $request->input('txtlineatecnologica');
+        $lineaAuth = session()->has('login_role') && session()->get('login_role') == User::IsGestor() ? auth()->user()->gestor->lineatecnologica_id : $request->input('txtlineatecnologica');
 
         return $nodo->lineas->find($lineaAuth)->id;
 
