@@ -5,13 +5,13 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use App\Models\ArticulationType;
 
-class CreateArticulationsTypesTable extends Migration
+class CreateArticulationTypesTable extends Migration
 {
     /**
      * Schema table name to migrate
      * @var string
      */
-    protected $tableName = 'articulations_types';
+    protected $tableName = 'articulation_types';
     /**
      * Run the migrations.
      *

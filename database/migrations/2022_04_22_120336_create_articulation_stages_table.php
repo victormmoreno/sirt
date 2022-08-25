@@ -42,6 +42,6 @@ class CreateArticulationStagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('articulation-stage');
+        Schema::dropIfExists('articulation-stages');
     }
 }

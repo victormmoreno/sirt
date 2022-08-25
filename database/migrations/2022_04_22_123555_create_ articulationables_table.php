@@ -17,7 +17,7 @@ class CreateArticulationablesTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('articulationable_id');
             $table->string('articulationable_type');
-            $table->bigInteger('articulationable_id');
+            $table->bigInteger('articulation_stages_id');
         });
     }
 
@@ -28,6 +28,6 @@ class CreateArticulationablesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('accompanimentables');
+        Schema::dropIfExists('articulationables');
     }
 }
