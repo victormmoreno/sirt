@@ -6,7 +6,7 @@ use App\Models\ArticulacionPbt;
 use App\Models\Fase;
 use App\Models\Entidad;
 use App\Models\AlcanceArticulacion;
-use App\Models\TipoArticulacion;
+use App\Models\ArticulationType;
 use App\User;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\{Facades\Session, Facades\Validator};
@@ -59,7 +59,7 @@ class ArticulacionPbtController extends Controller
             $nodos = Entidad::has('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id');
             $fases = Fase::orderBy('id')->whereNotIn('id', [Fase::IsPlaneacion()])->pluck('nombre', 'id');
             $alcances = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
-            $typeArt = TipoArticulacion::orderBy('nombre')->pluck('nombre', 'id');
+            $typeArt = ArticulationType::orderBy('nombre')->pluck('nombre', 'id');
             return view('articulacionespbt.index', ['nodos' => $nodos, 'fases' => $fases, 'alcances' => $alcances, 'tipoarticulaciones' => $typeArt]);
     }
 
@@ -176,7 +176,7 @@ class ArticulacionPbtController extends Controller
     {
         $this->authorize('create', ArticulacionPbt::class);
         $alcances = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
-        $tipoarticulaciones = TipoArticulacion::where('estado',TipoArticulacion::mostrar() )
+        $tipoarticulaciones = ArticulationType::where('estado',ArticulationType::mostrar() )
         ->whereHas('nodos', function($query) {
             $query->where('nodos.id', \App\Helpers\NodoHelper::returnIdNodoUser());
         })
@@ -320,7 +320,7 @@ class ArticulacionPbtController extends Controller
         $ultimo_movimiento = $articulacion->historial->last();
 
         $alcances = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
-        $tipoarticulaciones = TipoArticulacion::where('estado',TipoArticulacion::mostrar() )
+        $tipoarticulaciones = ArticulationType::where('estado',ArticulationType::mostrar() )
             ->whereHas('nodos', function($query) {
                 $query->where('nodos.id', \App\Helpers\NodoHelper::returnIdNodoUser());
             })
@@ -351,7 +351,7 @@ class ArticulacionPbtController extends Controller
         $ultimo_movimiento = $articulacion->historial->last();
 
         $alcances = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
-        $tipoarticulaciones = TipoArticulacion::where('estado',TipoArticulacion::mostrar() )
+        $tipoarticulaciones = ArticulationType::where('estado',ArticulationType::mostrar() )
             ->whereHas('nodos', function($query) {
                 $query->where('nodos.id', \App\Helpers\NodoHelper::returnIdNodoUser());
             })
@@ -381,7 +381,7 @@ class ArticulacionPbtController extends Controller
         $ultimo_movimiento = $articulacion->historial->last();
 
         $alcances = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
-        $tipoarticulaciones = TipoArticulacion::where('estado',TipoArticulacion::mostrar() )
+        $tipoarticulaciones = ArticulationType::where('estado',ArticulationType::mostrar() )
             ->whereHas('nodos', function($query) {
                 $query->where('nodos.id', \App\Helpers\NodoHelper::returnIdNodoUser());
             })

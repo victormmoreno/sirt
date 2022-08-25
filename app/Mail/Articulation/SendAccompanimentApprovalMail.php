@@ -29,6 +29,6 @@ class SendAccompanimentApprovalMail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->from(config('mail.from.address'), config('mail.from.name'))->markdown('emails.articulation.send-accompaniment-approval-mail');
+        return $this->from(config('mail.from.address'), config('mail.from.name'))->markdown('emails.articulation.send-articulations-approval-mail');
     }
 }

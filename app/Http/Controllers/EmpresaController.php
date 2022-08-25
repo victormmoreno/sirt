@@ -113,7 +113,7 @@ class EmpresaController extends Controller
                 return $add_propietario;
             })
             ->addColumn('add_company_art', function ($data) {
-                $add_propietario = '<a onclick="accompaniment.addCompanyArticulacion('.$data->id.')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+                $add_propietario = '<a onclick="articulation-stage.addCompanyArticulacion('.$data->id.')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
                 return $add_propietario;
             })
             ->rawColumns(['details', 'edit', 'add_propietario', 'add_company_art'])->make(true);

@@ -5,7 +5,7 @@
                 <ul class="collection">
                     <li class="collection-item">
                         <span class="title black-text text-darken-3">
-                            {{__('Name Accompaniment')}}
+                            {{__('Name ArticulationStage')}}
                         </span>
                         <p>
                             {{$articulation->accompaniment->present()->accompanimentCode()}} - {{$articulation->accompaniment->present()->accompanimentName()}}

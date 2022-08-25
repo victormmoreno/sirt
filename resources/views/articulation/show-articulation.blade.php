@@ -1,19 +1,19 @@
 @extends('layouts.app')
-@section('meta-title', __('Accompaniments'))
+@section('meta-title', __('articulation-stage'))
 @section('content')
 <main class="mn-inner">
     <div class="content">
         <div class="row no-m-t no-m-b">
             <div class="left left-align">
                 <h5 class="left-align orange-text text-darken-3">
-                    <i class="material-icons left">autorenew</i>{{__('Accompaniments')}}
+                    <i class="material-icons left">autorenew</i>{{__('articulation-stage')}}
                 </h5>
             </div>
             <div class="right right-align show-on-large hide-on-med-and-down">
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
-                    <li ><a href="{{route('accompaniments')}}">{{__('Accompaniments')}}</a></li>
-                    <li ><a href="{{route('accompaniments.show',  $articulation->accompaniment)}}">{{ $articulation->accompaniment->present()->accompanimentCode() }}</a></li>
+                    <li ><a href="{{route('articulation-stage')}}">{{__('articulation-stage')}}</a></li>
+                    <li ><a href="{{route('articulation-stage.show',  $articulation->accompaniment)}}">{{ $articulation->accompaniment->present()->accompanimentCode() }}</a></li>
                     <li class="active">{{ __('Articulations') }}</li>
                 </ol>
             </div>
@@ -38,7 +38,7 @@
                                             <div class="left">
                                                 <span class="mailbox-title">{{$articulation->present()->articulationCode()}} - {{$articulation->present()->articulationName()}}
                                                 @can('update', $articulation)
-                                                    <a href="{{route('accompaniments.edit', $articulation)}}" class="orange-text text-darken-2 pointer tooltipped" data-position="right" data-tooltip="editar {{__('Accompaniments')}}"><i class="tiny material-icons">edit</i></a></span>
+                                                    <a href="{{route('accompaniments.edit', $articulation)}}" class="orange-text text-darken-2 pointer tooltipped" data-position="right" data-tooltip="editar {{__('articulation-stage')}}"><i class="tiny material-icons">edit</i></a></span>
                                                 @endcan
                                                 <span class="mailbox-title">{{__('Node')}} {{$articulation->accompaniment->present()->accompanimentNode()}}</span>
                                                 <span class="mailbox-author">{{$articulation->present()->articulationBy()}} (Articulador)

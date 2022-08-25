@@ -1,7 +1,14 @@
 <?php
 
 use Illuminate\Database\Eloquent\Builder;
+/*DB::listen(function ($query) {
+    echo "<pre>{$query->sql}</pre>";
+    echo "<pre>{$query->time}</pre>";
+});
 
+Route::get('email', function () {
+    return new App\Mail\Support\AutomaticMessageSent(App\Models\Support::first());
+});*/
 Route::get('/', function () {
     return view('spa');
 })->name('/');
@@ -21,7 +28,6 @@ Route::put('usuario/confirm/{documento}', 'Auth\RegisterController@confirmContra
 Route::get('registro', 'Auth\RegisterController@showRegistrationForm')->name('registro');
 Route::post('registro', 'Auth\RegisterController@register')->name('register.request');
 
-
 // Password Reset Routes...
 Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
 Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
@@ -35,22 +41,9 @@ Route::post('user/verify', 'Auth\UnregisteredUserVerificationController@verifica
 Route::get('email/reset', 'Auth\ChangeEmailController@showEmailChangeRequestForm')->name('email.request');
 Route::post('email/send', 'Auth\ChangeEmailController@sendEmailChange')->name('email.send');
 
-DB::listen(function ($query) {
-// echo "<pre>{$query->sql}</pre>";
-// echo "<pre>{$query->time}</pre>";
-});
-
-
-
-Route::get('email', function () {
-    return new App\Mail\Support\AutomaticMessageSent(App\Models\Support::first());
-
-});
-
 Route::post('cambiar-role', 'User\RolesPermissions@changeRoleSession')
     ->name('user.changerole')
     ->middleware('disablepreventback');
-
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('disablepreventback');
 
@@ -614,10 +607,8 @@ Route::group(
         Route::get('/excelEdtsFinalizadasPorFechaYNodo/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\EdtController@edtPorFechaCierreYNodo')->name('edt.excel.nodo.fecha')->middleware('role_session:Dinamizador|Administrador');
         Route::get('/excelEdtsFinalizadasPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\EdtController@edtPorFechaCierreYGestor')->name('edt.excel.gestor.fecha')->middleware('role_session:Experto|Dinamizador|Administrador');
         Route::get('/excelEdtsFinalizadasPorLineaNodoYFecha/{idnodo}/{idlinea}/{fecha_inicio}/{fecha_fin}', 'Excel\EdtController@edtPorFechaCierreLineaYNodo')->name('edt.excel.nodo.linea.fecha')->middleware('role_session:Dinamizador|Administrador');
-        // Ruta para la generación de excel del módulo de articulaciones
-        Route::get('/excelArticulacionDeUnGestor/{id}', 'Excel\ArticulacionController@articulacionesDeUnGestor')->name('articulacion.excel.gestor');
-        Route::get('/excelDeUnaArticulacion/{id}', 'Excel\ArticulacionController@articulacionPorId')->name('articulacion.excel.unica');
-        Route::get('/excelArticulacionDeUnNodo/{id}', 'Excel\ArticulacionController@articulacionesDeUnNodo')->name('articulacion.excel.nodo')->middleware('role_session:Dinamizador|Administrador');
+        // Ruta para la
+
         Route::get('/export/{idnodo}/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicadores2020')->name('indicador.export.excel');
         Route::get('/export/downloadMetas', 'Excel\IndicadorController@downloadMetas')->name('indicador.export.metas');
         Route::get('/export/downloadIdeas', 'Excel\IndicadorController@downloadIdeas')->name('indicador.export.ideas');
@@ -793,11 +784,6 @@ Route::delete('/notificaciones/{notification}', 'NotificationsController@destroy
     ->name('notifications.destroy')
     ->middleware('disablepreventback');;
 
-/*====================================================================
-=            rutas para las funcionalidades de las lineas            =
-====================================================================*/
-
-
 Route::group([
     'middleware' => 'disablepreventback',
 ], function () {
@@ -826,31 +812,31 @@ Route::get('usuarios/filtro-talento/{documento}', 'User\UserController@filterTal
 Route::get('empresas/filter-code/{value}', 'EmpresaController@filterByCode')->name('empresa.filterbycode');
 Route::get('empresas/sede/{id}', 'EmpresaController@filterSede')->name('empresa.sede.filter');
 
-Route::resource('articulaciones/tipoarticulaciones', 'TipoArticulacionController');
+Route::resource('articulaciones/tipoarticulaciones', 'Articulation\ArticulationTypeController');
 
 
 Route::group(
     [
-        'prefix' => 'acompanamientos',
-        'middleware' => ['auth', 'role_session:Administrador|Dinamizador|Talento|Articulador',]
+        'namespace' => 'Articulation',
+        'prefix' => 'articulaciones',
+        'middleware' => ['auth', 'role_session:Administrador|Activador|Dinamizador|Talento|Articulador',]
     ],
     function () {
-        Route::get('/', 'Accompaniment\AccompanimentListController@index')->name('accompaniments');
-        Route::get('/datatable_filtros', 'Accompaniment\AccompanimentListController@datatableFiltros')->name('accompaniments.datatable.filtros');
-        Route::get('/crear', 'Accompaniment\AccompanimentRegisterController@create')->name('accompaniments.create')->middleware('role_session:Articulador');
-        Route::post('/', 'Accompaniment\AccompanimentRegisterController@store')->name('accompaniments.store')->middleware('role_session:Articulador');
-        Route::get('/{id}', 'Accompaniment\AccompanimentListController@show')->name('accompaniments.show');
-        Route::delete('/file/{idFile}', 'Accompaniment\AccompanimentListController@destroyFile')->name('accompaniments.file.destroy')->middleware('role_session:Articulador');
-        Route::get('/{accompaniment}/editar', 'Accompaniment\AccompanimentRegisterController@edit')->name('accompaniments.edit');
-        Route::put('/{accompaniment}', 'Accompaniment\AccompanimentRegisterController@update')->name('accompaniments.update');
-        Route::get('/{accompaniment}/download', 'Accompaniment\AccompanimentRegisterController@downloadFile')->name('accompaniments.download');
-        Route::get('/{accompaniment}/cambiar-interlocutor', 'Accompaniment\AccompanimentListController@changeInterlocutor')->name('accompaniments.changeinterlocutor');
-        Route::put('/{accompaniment}/cambiar-interlocutor', 'Accompaniment\AccompanimentListController@updateInterlocutor')->name('accompaniments.updateinterlocutor');
-        Route::get('/{id}/articulaciones/crear', 'Accompaniment\ArticulationRegisterController@create')->name('articulations.create')->middleware('role_session:Articulador');
-        Route::post('/articulaciones/{id}', 'Accompaniment\ArticulationRegisterController@store')->name('articulations.store');
-        Route::get('/articulaciones/{id}', 'Accompaniment\ArticulationListController@show')->name('articulations.show');
-        Route::get('/export', 'Accompaniment\AccompanimentListController@export')->name('accompaniments.export')->middleware('role_session:Administrador|Articulador|Dinamizador|Talento');
-
-        Route::get('/solicitar-aprobacion/{accompaniment}', 'Accompaniment\AccompanimentRegisterController@requestApproval')->name('accompaniments.requestapproval')->middleware('role_session:Articulador');
+        Route::get('/', 'ArticulationStageListController@index')->name('articulation-stage');
+        Route::get('/datatable_filtros', 'ArticulationStageListController@datatableFiltros')->name('articulation-stage.datatable.filtros');
+        Route::get('/crear', 'ArticulationStageRegisterController@create')->name('articulation-stage.create')->middleware('role_session:Articulador');
+        Route::post('/', 'ArticulationStageRegisterController@store')->name('articulation-stage.store')->middleware('role_session:Articulador');
+        Route::get('/{id}', 'ArticulationStageListController@show')->name('articulation-stage.show');
+        Route::delete('/file/{idFile}', 'ArticulationStageListController@destroyFile')->name('articulation-stage.file.destroy')->middleware('role_session:Articulador');
+        Route::get('/{articulation}/editar', 'ArticulationStageRegisterController@edit')->name('articulation-stage.edit');
+        Route::put('/{articulation}', 'ArticulationStageRegisterController@update')->name('articulation-stage.update');
+        Route::get('/{articulation}/download', 'ArticulationStageRegisterController@downloadFile')->name('articulation-stage.download');
+        Route::get('/{articulation}/cambiar-interlocutor', 'ArticulationStageListController@changeInterlocutor')->name('articulation-stage.changeinterlocutor');
+        Route::put('/{articulation}/cambiar-interlocutor', 'ArticulationStageListController@updateInterlocutor')->name('articulation-stage.updateinterlocutor');
+        Route::get('/{id}/crear', 'ArticulationRegisterController@create')->name('articulations.create')->middleware('role_session:Articulador');
+        Route::post('/{id}/crear', 'ArticulationRegisterController@store')->name('articulations.store');
+        Route::get('/{id}/ver', 'ArticulationListController@show')->name('articulations.show');
+        Route::get('/export', 'ArticulationStageListController@export')->name('articulation-stage.export')->middleware('role_session:Administrador|Articulador|Dinamizador|Talento');
+        Route::get('/solicitar-aprobacion/{articulation}', 'ArticulationStageRegisterController@requestApproval')->name('articulation-stage.requestapproval')->middleware('role_session:Articulador');
     }
 );

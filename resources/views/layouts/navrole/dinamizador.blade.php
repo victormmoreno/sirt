@@ -34,8 +34,8 @@
     </a>
 </li>
 <li class="no-padding {{setActiveRoute('acompanamientos')}}">
-    <a href="{{route('accompaniments')}}" class="{{setActiveRouteActivePage('acompanamientos')}}" rel="canonical" title="{{__('Accompaniments')}}">
-        <i class="material-icons {{setActiveRouteActiveIcon('acompanamientos')}}">autorenew</i>{{__('Accompaniments')}}
+    <a href="{{route('articulation-stage')}}" class="{{setActiveRouteActivePage('acompanamientos')}}" rel="canonical" title="{{__('articulation-stage')}}">
+        <i class="material-icons {{setActiveRouteActiveIcon('acompanamientos')}}">autorenew</i>{{__('articulation-stage')}}
     </a>
 </li>
 <li class="no-padding {{setActiveRoute('nodo')}}">

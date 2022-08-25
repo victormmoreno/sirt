@@ -6,20 +6,20 @@ Señor(a)<br>
 Cordial Saludo.
 <br>
 Se ha enviado este correo para informar que el articulador {{$notification->remitente->nombres .' '. $notification->remitente->apellidos}} ha solicitado
-aprobar la {{__('Accompaniments')}} {{$notification->notificable->present()->accompanimentName()}}.
+aprobar la {{__('articulation-stage')}} {{$notification->notificable->present()->accompanimentName()}}.
 <br>
 
 
 @component('mail::promotion')
     <center>
-        <h3 class="subtittle">{{__('Accompaniments')}}</h3>
+        <h3 class="subtittle">{{__('articulation-stage')}}</h3>
         <h3 class="subtittle-value">{{$notification->notificable->present()->accompanimentCode()}} - {{$notification->notificable->present()->accompanimentName()}}</h3>
         <h3 class="subtittle">{{ __('Status') }}</h3>
         <h3 class="subtittle-value">{{$notification->notificable->present()->accompanimentStatus()}}</h3>
     </center>
 @endcomponent
 
-@component('mail::button', ['url' => route('accompaniments.show',  $notification->notificable)])
+@component('mail::button', ['url' => route(' articulation-stage.show',  $notification->notificable)])
 🔗 Ir a la página para aprobar
 @endcomponent
 
@@ -37,7 +37,7 @@ Gestión {{ config('app.name') }} 💯
     'into your web browser: [:actionURL](:actionURL)',
     [
         'actionText' => 'Ir a la página para aprobar el cambio de fase',
-        'actionURL' => route('accompaniments.show',  $notification->notificable),
+        'actionURL' => route(' articulation-stage.show',  $notification->notificable),
     ]
 )
 

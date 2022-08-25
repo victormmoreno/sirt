@@ -46,7 +46,7 @@ $('#download_accompaniment').click(function(){
         filter_year_accompaniment: filter_year_accompaniment,
         filter_status_accompaniment: filter_status_accompaniment
     }
-    const url = "/acompanamientos/export?" + $.param(query)
+    const url = "/articulaciones/export?" + $.param(query)
     window.location = url;
 });
 
@@ -61,7 +61,7 @@ const accompaniment ={
             serverSide: false,
             "order": [[ 5, "desc" ]],
             ajax:{
-                url: "/acompanamientos/datatable_filtros",
+                url: "/articulaciones/datatable_filtros",
                 type: "get",
                 data: {
                     filter_node_accompaniment: filter_node_accompaniment,

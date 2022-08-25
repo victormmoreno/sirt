@@ -8,9 +8,9 @@
         <i class="material-icons {{setActiveRouteActiveIcon('entrenamientos')}}">library_books</i>Taller de Fortalecimiento
     </a>
 </li>
-<li class="no-padding {{setActiveRoute('acompanamientos')}}">
-    <a href="{{route('accompaniments')}}" class="{{setActiveRouteActivePage('acompanamientos')}}" rel="canonical" title="{{__('Accompaniments')}}">
-        <i class="material-icons {{setActiveRouteActiveIcon('acompanamientos')}}">autorenew</i>{{__('Accompaniments')}}
+<li class="no-padding {{setActiveRoute('articulaciones')}}">
+    <a href="{{route('articulation-stage')}}" class="{{setActiveRouteActivePage('articulaciones')}}" rel="canonical" title="{{__('articulation-stage')}}">
+        <i class="material-icons {{setActiveRouteActiveIcon('articulaciones')}}">autorenew</i>{{__('articulation-stage')}}
     </a>
 </li>
 <li class="no-padding {{setActiveRoute('charla')}}">

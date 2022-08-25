@@ -21,7 +21,7 @@ use App\Policies\User\UserPolicy;
 use App\Policies\UsoInfraestrucutura\UsoInfraestructuraPolicy;
 use App\Policies\Material\MaterialPolicy;
 use App\Policies\Idea\IdeaPolicy;
-use App\Models\Accompaniment;
+use App\Models\ArticulationStage;
 use App\Policies\Articulation\AccompanimentPolicy;
 use App\User;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
@@ -45,7 +45,7 @@ class AuthServiceProvider extends ServiceProvider
         Material::class => MaterialPolicy::class,
         Idea::class => IdeaPolicy::class,
         Empresa::class => EmpresaPolicy::class,
-        Accompaniment::class => AccompanimentPolicy::class,
+        ArticulationStage::class => AccompanimentPolicy::class,
     ];
 
     /**

@@ -5,7 +5,7 @@ namespace App\Repositories\Repository\Accompaniment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
-use App\Models\Accompaniment;
+use App\Models\ArticulationStage;
 use App\Models\Proyecto;
 use App\Models\Fase;
 use App\Models\ArchivoModel;
@@ -48,7 +48,7 @@ class AccompanimentRepository
         }
     }
 
-    public function update(Request $request, Accompaniment $accompaniment)
+    public function update(Request $request, ArticulationStage $accompaniment)
     {
         try {
             $accompaniment = $this->updateAccompaniment($request, $accompaniment);
@@ -68,19 +68,19 @@ class AccompanimentRepository
         }
     }
     /**
-        * store accompaniment
+        * store articulations
         * @param Request $request
     */
     public function storeAccompaniment(Request $request){
-        $accompaniment = Accompaniment::create([
+        $accompaniment = ArticulationStage::create([
             'accompaniment_type' => Proyecto::class,
             'code' => $this->generateCode('EA'),
             'name' => $request->name,
             'description' => $request->description,
             'scope'  => $request->scope,
-            'status' => Accompaniment::STATUS_OPEN,
+            'status' => ArticulationStage::STATUS_OPEN,
             'start_date' => Carbon::now(),
-            'confidentiality_format' => Accompaniment::CONFIDENCIALITY_FORMAT_YES,
+            'confidentiality_format' => ArticulationStage::CONFIDENCIALITY_FORMAT_YES,
             'terms_verified_at' => Carbon::now(),
             'node_id' => auth()->user()->articulador->nodo->id,
             'interlocutor_talent_id' => $request->talent,
@@ -91,15 +91,15 @@ class AccompanimentRepository
     }
 
     /**
-        * store accompaniment
+        * store articulations
         * @param Request $request
     */
-    public function updateAccompaniment(Request $request, Accompaniment $accompaniment){
+    public function updateAccompaniment(Request $request, ArticulationStage $accompaniment){
         $accompaniment->update([
             'name' => $request->name,
             'description' => $request->description,
             'scope'  => $request->scope,
-            'confidentiality_format' => Accompaniment::CONFIDENCIALITY_FORMAT_YES,
+            'confidentiality_format' => ArticulationStage::CONFIDENCIALITY_FORMAT_YES,
             'terms_verified_at' => Carbon::now(),
             'interlocutor_talent_id' => $request->talent,
         ]);
@@ -107,10 +107,10 @@ class AccompanimentRepository
     }
 
     /**
-        * store accompaniment
+        * store articulations
         * @param Request $request
     */
-    public function validateAccompanimentType(Request $request, Accompaniment $accompaniment)
+    public function validateAccompanimentType(Request $request, ArticulationStage $accompaniment)
     {
         if($request->filled('projects')){
             $model = Proyecto::where('id', $request->projects)->first();
@@ -186,7 +186,7 @@ class AccompanimentRepository
             $node = sprintf("%02d", auth()->user()->articulador->id);
             $month = Carbon::now()->isoFormat('MM');
             $user = sprintf("%03d", auth()->user()->id);
-            $accompaniment = Accompaniment::selectRaw('MAX(id+1) AS max')->get()->last();
+            $accompaniment = ArticulationStage::selectRaw('MAX(id+1) AS max')->get()->last();
             $accompaniment->max == null ? $accompaniment->max = 1 : $accompaniment->max = $accompaniment->max;
             $accompaniment->max = sprintf("%04d", $accompaniment->max);
             return "{$initial}{$year}-{$node}{$month}{$user}-{$accompaniment->max}";
@@ -215,7 +215,7 @@ class AccompanimentRepository
      * Update file
      * @return \Illuminate\Http\Response
      */
-    public function downloadFile(\App\Models\Accompaniment $accompaniment)
+    public function downloadFile(\App\Models\ArticulationStage $accompaniment)
     {
         try {
             $path = $this->existFile($accompaniment->file->ruta);
@@ -240,7 +240,7 @@ class AccompanimentRepository
      * @return \Illuminate\Http\Response
      */
 
-    public function updateInterlocutor(Request $request, Accompaniment $accompaniment)
+    public function updateInterlocutor(Request $request, ArticulationStage $accompaniment)
     {
 
         try {
@@ -276,21 +276,21 @@ class AccompanimentRepository
             $notificacion_fase_actual = $model->notifications()->whereNull('fecha_aceptacion')->get()->last();
             // $msg = 'No se ha podido enviar la solicitud de aprobación, inténtalo nuevamente';
             $conf_envios = false;
-            if ($model->status == Accompaniment::STATUS_CLOSE) {
+            if ($model->status == ArticulationStage::STATUS_CLOSE) {
                 $conf_envios = $this->configurationNotificationDynamizer($model);
                 $msg = 'Se le ha enviado una notificación al dinamizador para que apruebe el cierre!';
                 $notificacion = $model->registerNotify($conf_envios['receptor'], $conf_envios['receptor_role'], null);
             } else {
                 if ($notificacion_fase_actual == null) {
                     $conf_envios = $this->configurationNotificationTalent($model);
-                    $msg = "Se le ha enviado una notificación al talento interlocutor para que apruebe la ". __('Accompaniments');
+                    $msg = "Se le ha enviado una notificación al talento interlocutor para que apruebe la ". __('articulation-stage');
                 } else {
                     if ($notificacion_fase_actual->rol_receptor->name == User::IsTalento()) {
                         $conf_envios = $this->configurationNotificationTalent($model);
-                        $msg = 'Se le ha enviado una notificación al talento interlocutor para que apruebe la '. __('Accompaniments');
+                        $msg = 'Se le ha enviado una notificación al talento interlocutor para que apruebe la '. __('articulation-stage');
                     } else {
                         $conf_envios = $this->configurationNotificationDynamizer($model);
-                        $msg = "Se le ha enviado una notificación al dinamizador para que apruebe la" . __('Accompaniments');
+                        $msg = "Se le ha enviado una notificación al dinamizador para que apruebe la" . __('articulation-stage');
                     }
                 }
                 // Registra el control de la notificación
@@ -298,7 +298,7 @@ class AccompanimentRepository
             }
 
             if ($conf_envios != false) {
-                $msg = "Enviar notificacion " . __('Accompaniments');
+                $msg = "Enviar notificacion " . __('articulation-stage');
 
                 Notification::send($notificacion->receptor, new AccompanyingApprovalNotification($notificacion));
                 // Enviar email

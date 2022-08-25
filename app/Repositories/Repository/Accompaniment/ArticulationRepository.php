@@ -4,7 +4,7 @@ namespace App\Repositories\Repository\Accompaniment;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use App\Models\Accompaniment;
+use App\Models\ArticulationStage;
 use App\User;
 use App\Models\Articulation;
 use App\Models\Fase;
@@ -18,7 +18,7 @@ class ArticulationRepository
         * @param Request $request
         * @return void
     */
-    public function store(Request $request, Accompaniment $accompaniment)
+    public function store(Request $request, ArticulationStage $accompaniment)
     {
         try {
             $accompaniment = $this->storeArticulation($request, $accompaniment);
@@ -40,7 +40,7 @@ class ArticulationRepository
         * store articulation
         * @param Request $request
     */
-    public function storeArticulation(Request $request, Accompaniment $accompaniment){
+    public function storeArticulation(Request $request, ArticulationStage $accompaniment){
         $articulation = $accompaniment->articulations()->create([
             'code' => $this->generateCode('A'),
             'name' => $request->name_articulation,

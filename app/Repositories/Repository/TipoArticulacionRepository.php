@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\TipoArticulacion;
+use App\Models\ArticulationType;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -18,7 +18,7 @@ class TipoArticulacionRepository
 
     public function filterSupports($request)
     {
-        $typeArts = TipoArticulacion::node($request->filter_nodo_type_art)
+        $typeArts = ArticulationType::node($request->filter_nodo_type_art)
                         ->state($request->filter_state_type_art)
                         ->orderBy('tipo_articulaciones.created_at', 'desc')
                         ->get();
@@ -45,10 +45,10 @@ class TipoArticulacionRepository
         })
 
         ->editColumn('estado', function ($data) {
-            if($data->estado == TipoArticulacion::mostrar()){
+            if($data->estado == ArticulationType::mostrar()){
                 return  '<div class="chip green white-text text-darken-2">'.$data->present()->estado().'</div>';
             }
-            if($data->estado == TipoArticulacion::ocultar()){
+            if($data->estado == ArticulationType::ocultar()){
                 return  '<div class="chip red white-text text-darken-2">'.$data->present()->estado().'</div>';
             }
 
@@ -65,11 +65,11 @@ class TipoArticulacionRepository
         DB::beginTransaction();
         try {
 
-            $typeArticulation = TipoArticulacion::create([
+            $typeArticulation = ArticulationType::create([
                 'nombre'          => $request->input('txtnombre'),
                 'descripcion'      => $request->input('txtdescripcion'),
                 'entidad'      => $request->input('txtentidad'),
-                'estado'         => $request->filled('checkestado') ? TipoArticulacion::mostrar() : TipoArticulacion::ocultar(),
+                'estado'         => $request->filled('checkestado') ? ArticulationType::mostrar() : ArticulationType::ocultar(),
             ]);
 
             $typeArticulation->nodos()->sync($request->input('checknode'));
@@ -91,7 +91,7 @@ class TipoArticulacionRepository
                 'nombre'          => $request->input('txtnombre'),
                 'descripcion'      => $request->input('txtdescripcion'),
                 'entidad'      => $request->input('txtentidad'),
-                'estado'         => $request->filled('checkestado') ? TipoArticulacion::mostrar() : TipoArticulacion::ocultar(),
+                'estado'         => $request->filled('checkestado') ? ArticulationType::mostrar() : ArticulationType::ocultar(),
             ]);
 
             $typeArticulation->nodos()->sync($request->input('checknode'));

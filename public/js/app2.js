@@ -844,7 +844,7 @@ $('#download_accompaniment').click(function(){
         filter_year_accompaniment: filter_year_accompaniment,
         filter_status_accompaniment: filter_status_accompaniment
     }
-    const url = "/acompanamientos/export?" + $.param(query)
+    const url = "/articulaciones/export?" + $.param(query)
     window.location = url;
 });
 
@@ -859,7 +859,7 @@ const accompaniment ={
             serverSide: false,
             "order": [[ 5, "desc" ]],
             ajax:{
-                url: "/acompanamientos/datatable_filtros",
+                url: "/articulaciones/datatable_filtros",
                 type: "get",
                 data: {
                     filter_node_accompaniment: filter_node_accompaniment,
@@ -1199,8 +1199,8 @@ $(document).on('submit', 'form#interlocutor-form', function (event) {
 
 
 $( document ).ready(function() {
-    const form = $("#accompaniment-form");
-    const validator = $("#accompaniment-form").validate({
+    const form = $("#articulations-form");
+    const validator = $("#articulations-form").validate({
         rules: {
             name:{
                 required:true,
@@ -1229,39 +1229,39 @@ $( document ).ready(function() {
             }
         },
         messages:
-        {
-            name:
             {
-                required:"El nombre es obligatorio",
-                minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-            },
-            description:
-            {
-                minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-            },
-            scope:
-            {
-                required:"El alcalce es obligatorio",
-                minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-            },
+                name:
+                    {
+                        required:"El nombre es obligatorio",
+                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                    },
+                description:
+                    {
+                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                    },
+                scope:
+                    {
+                        required:"El alcalce es obligatorio",
+                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                    },
 
-            projects:
-            {
-                required:"Por favor agrega el proyecto",
+                projects:
+                    {
+                        required:"Por favor agrega el proyecto",
+                    },
+                talent:
+                    {
+                        required:"Por favor agrega el talento interlocutor",
+                    },
+                confidency_format:
+                    {
+                        required: jQuery.validator.format("El campo formato confidencial es obligatorio"),
+                        accept: jQuery.validator.format("El formato permitido es PDF"),
+                    }
             },
-            talent:
-            {
-                required:"Por favor agrega el talento interlocutor",
-            },
-            confidency_format:
-            {
-                required: jQuery.validator.format("El campo formato confidencial es obligatorio"),
-                accept: jQuery.validator.format("El formato permitido es PDF"),
-            }
-        },
         errorPlacement: function(error, element)
         {
             if ( element.is(":radio") ){
@@ -1313,7 +1313,7 @@ $( document ).ready(function() {
         onFinished: function (event, currentIndex)
         {
             event.preventDefault();
-            const data = new FormData(document.getElementById("accompaniment-form"));
+            const data = new FormData(document.getElementById("articulations-form"));
             const url = form.attr("action");
             $.ajax({
                 type: form.attr('method'),
@@ -1420,9 +1420,6 @@ $( document ).ready(function() {
     });
 });
 
-
-
-
 $( document ).ready(function() {
     var form = $("#articulation-form");
     var validator = $("#articulation-form").validate({
@@ -1480,74 +1477,74 @@ $( document ).ready(function() {
 
         },
         messages:
-        {
-            accompaniment_type:
             {
-                required:"Por favor selecciona el tipo de acompañamiento",
+                accompaniment_type:
+                    {
+                        required:"Por favor selecciona el tipo de acompañamiento",
+                    },
+                start_date:{
+                    required:"Este campo es obligatorio",
+                    date: "Por favor introduzca una fecha válida"
+                },
+                name_accompaniment:
+                    {
+                        required:"Este campo es obligatorio",
+                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                    },
+                description_accompaniment:
+                    {
+                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                    },
+                scope_articulation:
+                    {
+                        required:"Por favor seleccione un alcance",
+                    },
+                name_articulation:
+                    {
+                        required:"Este campo es obligatorio",
+                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                    },
+                scope:
+                    {
+                        required:"Este campo es obligatorio",
+                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                    },
+                name_entity:
+                    {
+                        required:"Este campo es obligatorio",
+                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                    },
+                name_contact:
+                    {
+                        required:"Este campo es obligatorio",
+                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                    },
+                email:{
+                    required:"Este campo es obligatorio",
+                    email: "Por favor, introduce una dirección de correo electrónico válida."
+                },
+                call_name:
+                    {
+                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                    },
+                expected_date:{
+                    required:"Este campo es obligatorio",
+                    date: "Por favor introduzca una fecha válida"
+                },
+                objective:{
+                    required:"Este campo es obligatorio",
+                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                },
+                talents:
+                    {
+                        required:"Por favor agrega por lo menos un talento participante",
+                    }
             },
-            start_date:{
-                required:"Este campo es obligatorio",
-                date: "Por favor introduzca una fecha válida"
-            },
-            name_accompaniment:
-            {
-                required:"Este campo es obligatorio",
-                minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-            },
-            description_accompaniment:
-            {
-                minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-            },
-            scope_articulation:
-            {
-                required:"Por favor seleccione un alcance",
-            },
-            name_articulation:
-            {
-                required:"Este campo es obligatorio",
-                minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-            },
-            scope:
-            {
-                required:"Este campo es obligatorio",
-                minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-            },
-            name_entity:
-            {
-                required:"Este campo es obligatorio",
-                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-            },
-            name_contact:
-            {
-                required:"Este campo es obligatorio",
-                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-            },
-            email:{
-                required:"Este campo es obligatorio",
-                email: "Por favor, introduce una dirección de correo electrónico válida."
-            },
-            call_name:
-            {
-                minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-            },
-            expected_date:{
-                required:"Este campo es obligatorio",
-                date: "Por favor introduzca una fecha válida"
-            },
-            objective:{
-                required:"Este campo es obligatorio",
-                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-            },
-            talents:
-            {
-                required:"Por favor agrega por lo menos un talento participante",
-            }
-        },
         errorPlacement: function(error, element)
         {
             if ( element.is(":radio") )
@@ -1885,10 +1882,6 @@ const filter_articulations = {
             })
         }
     },
-
-
-
-
 }
 
 function consultarEntrenamientosPorNodo_Administrador(id) {

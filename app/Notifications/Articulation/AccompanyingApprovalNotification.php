@@ -42,7 +42,7 @@ class AccompanyingApprovalNotification extends Notification implements ShouldQue
     public function toArray($notifiable)
     {
         return [
-            'link'  => route('accompaniments.show',  $this->model->notificable),
+            'link'  => route(' articulation-stage.show',  $this->model->notificable),
             'icon'  => 'autorenew',
             'color' => 'orange',
             'autor' => "{$this->model->remitente->nombres} {$this->model->remitente->nombres}",

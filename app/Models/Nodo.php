@@ -155,7 +155,7 @@ class Nodo extends Model
      */
     public function accompaniments()
     {
-        return $this->hasMany(Accompaniment::class, 'node_id', 'id');
+        return $this->hasMany(ArticulationStage::class, 'node_id', 'id');
     }
 
 

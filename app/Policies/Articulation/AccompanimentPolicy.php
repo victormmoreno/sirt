@@ -4,7 +4,7 @@ namespace App\Policies\Articulation;
 
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use App\Models\Accompaniment;
+use App\Models\ArticulationStage;
 use Illuminate\Auth\Access\Response;
 
 class AccompanimentPolicy
@@ -22,10 +22,10 @@ class AccompanimentPolicy
     }
 
     /**
-     * Determine if the given accompaniment can be store by the user..
+     * Determine if the given articulations can be store by the user..
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Accompaniment  $accompaniment
+     * @param  \App\Models\ArticulationStage  $articulations
      * @return \Illuminate\Auth\Access\Response
      */
     public function store(User $user)
@@ -34,13 +34,13 @@ class AccompanimentPolicy
     }
 
     /**
-     * Determine if the given accompaniment can be updated by the user..
+     * Determine if the given articulations can be updated by the user..
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Accompaniment  $accompaniment
+     * @param  \App\Models\ArticulationStage  $accompaniment
      * @return \Illuminate\Auth\Access\Response
      */
-    public function update(User $user, Accompaniment $accompaniment)
+    public function update(User $user, ArticulationStage $accompaniment)
     {
         if($user->hasAnyRole([User::IsArticulador()]) &&  session()->get('login_role') == User::IsArticulador() &&  auth()->user()->articulador->nodo_id == $accompaniment->node_id)
         {

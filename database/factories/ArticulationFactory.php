@@ -4,7 +4,7 @@
 
 use App\Models\Articulation;
 use App\Models\Fase;
-use App\Models\TipoArticulacion;
+use App\Models\ArticulationType;
 use App\Models\AlcanceArticulacion;
 use Carbon\Carbon;
 use Faker\Generator as Faker;
@@ -30,6 +30,6 @@ $factory->define(Articulation::class, function (Faker $faker) {
             Articulation::FINISHED_PHASE,
             Articulation::SUSPENDED_PHASE
         ])->get()->random()->id,
-        'articulation_type_id' => TipoArticulacion::all()->random()->id
+        'articulation_type_id' => ArticulationType::all()->random()->id
     ];
 });

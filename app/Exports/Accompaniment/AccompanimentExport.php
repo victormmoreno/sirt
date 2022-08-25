@@ -23,8 +23,8 @@ class AccompanimentExport extends FatherExport
      */
     public function view(): View
     {
-        return view('exports.accompaniment.index', [
-            'accompaniments' => $this->getQuery()
+        return view('exports.articulations.index', [
+            'articulationStages' => $this->getQuery()
         ]);
     }
 

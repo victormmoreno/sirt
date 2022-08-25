@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\Accompaniment;
+use App\Models\ArticulationStage;
 use App\Models\Articulation;
 use App\Models\Proyecto;
 
@@ -14,7 +14,7 @@ class AccompanimentSeeder extends Seeder
      */
     public function run()
     {
-        factory(Accompaniment::class, 40)->create([
+        factory(ArticulationStage::class, 40)->create([
             'created_by' => 6176
         ])->each(function($accompaniment){
             factory(Articulation::class, 3)->create([

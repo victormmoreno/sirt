@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Models\TipoArticulacion;
+use App\Models\ArticulationType;
 
 class TipoArticulacionRequest extends FormRequest
 {
@@ -30,7 +30,7 @@ class TipoArticulacionRequest extends FormRequest
             'txtdescripcion' => 'nullable|min:1|max:5000',
             'txtentidad' => 'nullable|min:1|max:100',
             // 'checkestado' =>'required',
-            //'checkestado' => Rule::in([TipoArticulacion::mostrar(), TipoArticulacion::ocultar()]).'|required',
+            //'checkestado' => Rule::in([ArticulationType::mostrar(), ArticulationType::ocultar()]).'|required',
             'checknode' => 'required',
         ];
     }

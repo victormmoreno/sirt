@@ -273,7 +273,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function accompaniments()
     {
-        return $this->hasMany(\App\Models\Accompaniment::class, 'nodo_id', 'id')->where('role', User::IsArticulador());
+        return $this->hasMany(\App\Models\ArticulationStage::class, 'nodo_id', 'id')->where('role', User::IsArticulador());
     }
 
 

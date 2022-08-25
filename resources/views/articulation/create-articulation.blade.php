@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', __('Accompaniments'))
+@section('meta-title', __('articulation-stage'))
 @section('content')
 @php
   $year = Carbon\Carbon::now()->year;
@@ -12,13 +12,13 @@
                     <i class="material-icons left">
                         autorenew
                     </i>
-                    {{__('Accompaniments')}}
+                    {{__('articulation-stage')}}
                 </h5>
             </div>
             <div class="right right-align show-on-large hide-on-med-and-down">
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">{{__('Home')}}</a></li>
-                    <li class="active"><a href="{{route('accompaniments')}}">{{__('Accompaniments')}}</a></li>
+                    <li class="active"><a href="{{route('articulation-stage')}}">{{__('articulation-stage')}}</a></li>
                     <li class="active">{{__('New Articulation')}}</li>
                 </ol>
             </div>
