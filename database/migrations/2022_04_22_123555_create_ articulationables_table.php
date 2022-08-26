@@ -17,7 +17,7 @@ class CreateArticulationablesTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('articulationable_id');
             $table->string('articulationable_type');
-            $table->bigInteger('articulation_stages_id');
+            $table->bigInteger('articulation_stage_id');
         });
     }
 

@@ -59,10 +59,10 @@ class ArticulationStage extends Model
      */
     public function projects()
     {
-        return $this->morphedByMany(Proyecto::class, 'accompanimentable');
+        return $this->morphedByMany(Proyecto::class, 'articulationable');
     }
 
-    public function accompanimentable()
+    public function articulationable()
     {
         return $this->morphTo();
     }

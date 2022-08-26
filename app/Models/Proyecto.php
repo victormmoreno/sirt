@@ -193,9 +193,9 @@ class Proyecto extends Model
      *
      * @return void
      */
-    public function accompaniamentables()
+    public function articulationables()
     {
-        return $this->morphToMany(ArticulationStage::class, 'accompanimentable');
+        return $this->morphToMany(ArticulationStage::class, 'articulationable');
     }
 
 

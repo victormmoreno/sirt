@@ -10,7 +10,6 @@ class ArticulationType extends Model
     const IS_MOSTRAR = 'Mostrar';
     const IS_OCULTAR = 'Ocultar';
 
-    protected $table = 'articulations_types';
 
     /**
      * The attributes that are mass assignable.
@@ -20,7 +19,6 @@ class ArticulationType extends Model
     protected $fillable = [
         'nombre',
         'descripcion',
-        'entidad',
         'estado'
     ];
 
@@ -36,6 +34,10 @@ class ArticulationType extends Model
     {
         return $this->belongsToMany(Nodo::class, 'nodo_tipoarticulacion')
             ->withTimestamps();
+    }
+
+    public function articulationsubtypes(){
+        return $this->hasMany(ArticulationSubtype::class);
     }
 
     public function scopeNode($query, $node)

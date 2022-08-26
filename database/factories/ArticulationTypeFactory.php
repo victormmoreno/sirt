@@ -7,9 +7,8 @@ use Faker\Generator as Faker;
 
 $factory->define(ArticulationType::class, function (Faker $faker) {
     return [
-        'name' => $faker->unique()->text($maxNbChars = 15),
+        'name' => $faker->unique()->text($maxNbChars = 20),
         'description' =>  $faker->text($maxNbChars = 2000),
-        'entity' =>  $faker->company,
         'state' =>  $faker->randomElement([ArticulationType::mostrar(), ArticulationType::ocultar()])
     ];
 });

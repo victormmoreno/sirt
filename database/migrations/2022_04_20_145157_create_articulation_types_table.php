@@ -23,7 +23,6 @@ class CreateArticulationTypesTable extends Migration
             $table->bigIncrements('id');
             $table->string('name', 100)->unique();
             $table->string('description',5000)->nullable();
-            $table->string('entity', 100)->nullable();
             $table->enum('state', [ArticulationType::mostrar(),ArticulationType::ocultar()])->default(ArticulationType::mostrar());
             $table->timestamps();
 

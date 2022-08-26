@@ -4,8 +4,9 @@
 
 use App\Models\Articulation;
 use App\Models\Fase;
-use App\Models\ArticulationType;
+use App\Models\ArticulationSubType;
 use App\Models\AlcanceArticulacion;
+use App\User;
 use Carbon\Carbon;
 use Faker\Generator as Faker;
 
@@ -23,13 +24,16 @@ $factory->define(Articulation::class, function (Faker $faker) {
         'summon_name' => $faker->sentence(),
         'objective' => $faker->paragraph(),
         'scope_id' => AlcanceArticulacion::all()->random()->id,
-        'phase_id' => Fase::whereIn('nombre', [
-            Articulation::START_PHASE,
-            Articulation::EXECUTION_PHASE,
-            Articulation::CLOSING_PHASE,
-            Articulation::FINISHED_PHASE,
-            Articulation::SUSPENDED_PHASE
-        ])->get()->random()->id,
-        'articulation_type_id' => ArticulationType::all()->random()->id
+        'phase_id' =>
+            Fase::whereIn('nombre', [
+                Articulation::START_PHASE,
+                Articulation::EXECUTION_PHASE,
+                Articulation::CLOSING_PHASE,
+                Articulation::FINISHED_PHASE,
+                Articulation::SUSPENDED_PHASE
+            ])->get()->random()->id,
+        'articulation_subtype_id' => ArticulationSubtype::all()->random()->id,
+        'created_by' =>User::has('articulador')->get()->random()->id
+
     ];
 });
