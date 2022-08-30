@@ -19,11 +19,7 @@ $factory->define(ArticulationStage::class, function (Faker $faker) {
         'end_date' => Carbon::now()->subDays($faker->randomDigit()),
         'confidentiality_format' => $faker->randomElement([ArticulationStage::CONFIDENCIALITY_FORMAT_YES,ArticulationStage::CONFIDENCIALITY_FORMAT_NO]),
         'terms_verified_at' =>  Carbon::now()->subDays($faker->randomDigit()),
-        'node_id' => function(){
-            Nodo::has('entidad')->get()->random()->id;
-        },
-        'interlocutor_talent_id' => function(){
-            User::has('talento')->get()->random()->id;
-        }
+        'node_id' => Nodo::has('entidad')->get()->random()->id,
+        'interlocutor_talent_id' => User::has('talento')->get()->random()->id,
     ];
 });

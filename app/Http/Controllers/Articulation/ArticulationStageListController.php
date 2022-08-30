@@ -16,15 +16,16 @@ use Illuminate\Support\Facades\Validator;
 class ArticulationStageListController extends Controller
 {
 
-    private $accompanimentRepository;
+    private $articulationStageRepository;
 
-    public function __construct(AccompanimentRepository $accompanimentRepository)
+    public function __construct(AccompanimentRepository $articulationStageRepository)
     {
-        $this->accompanimentRepository = $accompanimentRepository;
+        $this->articulationStageRepository = $articulationStageRepository;
         $this->middleware(['auth']);
     }
+
     /**
-     * method to show the list of accompaniments (index) with filters
+     * method to show the list of articulationStages (index) with filters
      * @param Request $request
      * @return \Illuminate\Http\Response
      */
@@ -34,12 +35,15 @@ class ArticulationStageListController extends Controller
         return view('articulation.index-articulation-stage', ['nodos' => $nodos]);
     }
 
-    public function datatableFiltros(Request $request)
+    private function checkRoleAuth(Request $request)
     {
         $talent = null;
         $node = null;
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
+                $node = $request->filter_node_accompaniment;
+                break;
+            case User::IsActivador():
                 $node = $request->filter_node_accompaniment;
                 break;
             case User::IsDinamizador():
@@ -56,6 +60,13 @@ class ArticulationStageListController extends Controller
                 return abort('403');
                 break;
         }
+        return ['talent' => $talent, 'node' => $node];
+    }
+
+    public function datatableFiltros(Request $request)
+    {
+        $talent = $this->checkRoleAuth($request)['talent'];
+        $node = $this->checkRoleAuth($request)['node'];
 
         $accompaniments = [];
         if (isset($request->filter_status_accompaniment)) {
@@ -141,26 +152,9 @@ class ArticulationStageListController extends Controller
 
     public function export(Request $request, $extension = 'xlsx')
     {
-        $talent = null;
-        $node = null;
-        switch (\Session::get('login_role')) {
-            case User::IsAdministrador():
-                $node = $request->filter_node_accompaniment;
-                break;
-            case User::IsDinamizador():
-                $node = auth()->user()->dinamizador->nodo_id;
-                break;
-            case User::IsArticulador():
-                $node = auth()->user()->articulador->nodo_id;
-                break;
-            case User::IsTalento():
-                $node = null;
-                $talent = auth()->user()->id;
-                break;
-            default:
-                return abort('403');
-                break;
-        }
+        $talent = $this->checkRoleAuth($request)['talent'];
+        $node = $this->checkRoleAuth($request)['node'];
+
 
         $accompaniments = [];
         if (isset($request->filter_status_accompaniment)) {
@@ -177,7 +171,7 @@ class ArticulationStageListController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
         }
-        return (new AccompanimentExport($accompaniments))->download("Articulaciones PBT - " . config('app.name') . ".{$extension}");
+        return (new AccompanimentExport($accompaniments))->download("Etapa articulación" . config('app.name') . ".{$extension}");
     }
 
     /**
@@ -187,7 +181,7 @@ class ArticulationStageListController extends Controller
     */
     public function destroyFile($id)
     {
-        $response = $this->accompanimentRepository->destroyFile($id);
+        $response = $this->articulationStageRepository->destroyFile($id);
 
         if($response){
             toast('El Archivo se ha eliminado con éxito!','success')->autoClose(2000)->position('top-end');
@@ -223,7 +217,7 @@ class ArticulationStageListController extends Controller
                 'errors' => $validator->errors(),
             ]);
         } else {
-            $response = $this->accompanimentRepository->updateInterlocutor($request, $accompaniment);
+            $response = $this->articulationStageRepository->updateInterlocutor($request, $accompaniment);
             if($response["isCompleted"]){
                 return response()->json([
                     'data' => [

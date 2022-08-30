@@ -83,7 +83,7 @@ class ArticulationStagePresenter extends Presenter
     {
         if( $this->accompaniment->projects->count() > 0 &&
             $this->accompaniment->whereHasMorph(
-                'accompanimentable',
+                'articulationable',
                 [\App\Models\Proyecto::class]
             )
         ){
@@ -102,7 +102,7 @@ class ArticulationStagePresenter extends Presenter
     {
         if( $this->accompaniment->projects->count() > 0 &&
             $this->accompaniment->whereHasMorph(
-                'accompanimentable',
+                'articulationable',
                 [\App\Models\Proyecto::class]
             )
         ){
@@ -118,7 +118,7 @@ class ArticulationStagePresenter extends Presenter
     {
         if( $this->accompaniment->projects->count() > 0 &&
             $this->accompaniment->whereHasMorph(
-                'accompanimentable',
+                'articulationable',
                 [\App\Models\Proyecto::class]
             )
         ){
@@ -134,7 +134,7 @@ class ArticulationStagePresenter extends Presenter
     {
         if( $this->accompaniment->projects->count() > 0 &&
             $this->accompaniment->whereHasMorph(
-                'accompanimentable',
+                'articulationable',
                 [\App\Models\Proyecto::class]
             )
         ){
@@ -150,7 +150,7 @@ class ArticulationStagePresenter extends Presenter
     {
         if( $this->accompaniment->projects->count() > 0 &&
             $this->accompaniment->whereHasMorph(
-                'accompanimentable',
+                'articulationable',
                 [\App\Models\Proyecto::class]
             )
         ){
@@ -166,7 +166,7 @@ class ArticulationStagePresenter extends Presenter
     {
         if( $this->accompaniment->projects->count() > 0 &&
             $this->accompaniment->whereHasMorph(
-                'accompanimentable',
+                'articulationable',
                 [\App\Models\Proyecto::class]
             )
         ){
@@ -188,7 +188,7 @@ class ArticulationStagePresenter extends Presenter
 
     public function accompanimentNameConfidentialityFormat()
     {
-        // return $this->articulations->file;
+
         if(isset($this->accompaniment->file)){
             if(auth()->user()->can('update', $this->accompaniment)){
                 return '<li class="collection-item avatar">
