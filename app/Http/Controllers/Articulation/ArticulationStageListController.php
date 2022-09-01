@@ -31,7 +31,7 @@ class ArticulationStageListController extends Controller
      */
     public function index()
     {
-        $nodos = Entidad::with(['nodo'])->has('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id');
+        $nodos = Entidad::with('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id');
         return view('articulation.index-articulation-stage', ['nodos' => $nodos]);
     }
 
@@ -71,11 +71,8 @@ class ArticulationStageListController extends Controller
         $accompaniments = [];
         if (isset($request->filter_status_accompaniment)) {
 
-            $accompaniments =  ArticulationStage::with([
-                'node',
-                'node.entidad',
-                'createdBy'
-            ])
+            $accompaniments =  ArticulationStage::query()
+            ->with(['node.entidad', 'createdBy'])
             ->status($request->filter_status_accompaniment)
             ->year($request->filter_year_accompaniment)
             ->node($node)
@@ -90,7 +87,8 @@ class ArticulationStageListController extends Controller
     {
         return datatables()->of($accompaniments)
         ->editColumn('node', function ($data) {
-            return $data->present()->accompanimentNode();
+            // return $data->present()->accompanimentNode();
+            return $data->node->present()->NodeName();
         })
         ->editColumn('code', function ($data) {
             return $data->present()->accompanimentCode();

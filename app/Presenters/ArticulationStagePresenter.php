@@ -61,7 +61,7 @@ class ArticulationStagePresenter extends Presenter
 
     public function accompanimentNode()
     {
-        return $this->accompaniment->has('node.entidad') ? $this->accompaniment->node->entidad->nombre : 'No Registra';
+        return isset($this->accompaniment->node->entidad) ? $this->accompaniment->node->entidad->nombre : 'No Registra';
     }
 
     public function accompanimentInterlocutorTalent()

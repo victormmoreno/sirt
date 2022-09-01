@@ -21,5 +21,6 @@ $factory->define(ArticulationStage::class, function (Faker $faker) {
         'terms_verified_at' =>  Carbon::now()->subDays($faker->randomDigit()),
         'node_id' => Nodo::has('entidad')->get()->random()->id,
         'interlocutor_talent_id' => User::has('talento')->get()->random()->id,
+        'created_by' => User::has('articulador')->get()->random()->id
     ];
 });

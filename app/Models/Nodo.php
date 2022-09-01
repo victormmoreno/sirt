@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\User;
+use App\Presenters\NodoPresenter;
 
 class Nodo extends Model
 {
@@ -327,5 +328,15 @@ class Nodo extends Model
     public function scopeCountNodos($query)
     {
         return $query->count();
+    }
+
+    /**
+     * The presenter
+     *
+     * @return void
+     */
+    public function present()
+    {
+        return new NodoPresenter($this);
     }
 }
