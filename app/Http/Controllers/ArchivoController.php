@@ -65,8 +65,8 @@ class ArchivoController extends Controller
 
     /**
      * Sube un archivo de las charlas informativas al servidor, además de que lo registra en la base de datos
-    * @param Request
-    * @param int $id Id de la edt con el que se le subirá el archivo
+    * @param Request $request
+    * @param int $id Id de la charla con el que se le subirá el archivo
     * @return void
     */
     public function uploadFileCharlaInformartiva(Request $request, $id)
@@ -79,12 +79,8 @@ class ArchivoController extends Controller
                 'nombreArchivo.mimes' => 'El tipo de archivo no es permitido',
                 'nombreArchivo.max' => 'El tamaño del archivo no puede superar las 50MB'
             ]);
-            $nodo_id = null;
-            if (Session::get('login_role') == User::IsInfocenter()) {
-                $nodo_id = auth()->user()->infocenter->nodo_id;
-            } else {
-                $nodo_id = auth()->user()->articulador->nodo_id;
-            }
+            $charla = $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id);
+            $nodo_id = $charla->nodo_id;
             $file = request()->file('nombreArchivo');
             $route = "";
             // La ruta con la se guardan los archivos de una es la siguiente:
@@ -92,7 +88,6 @@ class ArchivoController extends Controller
             $idArchivoCharlaInformativa = RutaModel::selectRaw('MAX(id+1) AS max')->get()->last();
             $fileName = $idArchivoCharlaInformativa->max . '_' . $file->getClientOriginalName();
             // Creando la ruta
-            $charla = $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id);
             $nodo = sprintf("%02d", $nodo_id);
             $anho = Carbon::parse($charla->fecha)->isoFormat('YYYY');
             // $anho = $edt->fecha_inicio->isoFormat('YYYY');
