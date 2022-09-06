@@ -40,7 +40,13 @@
 
                                     @if (!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()))
                                         @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsSuspendido()))
-                                        @if ($ultimo_movimiento == null || $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsCambiar() || $ultimo_movimiento->movimiento->movimiento  == App\Models\Movimiento::IsNoAprobar() || $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsReversar())
+                                        @if ($ultimo_movimiento == null ||
+                                            $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsCambiar() ||
+                                            $ultimo_movimiento->movimiento->movimiento  == App\Models\Movimiento::IsNoAprobar() ||
+                                            $ultimo_movimiento->movimiento->movimiento  == App\Models\Movimiento::IsAprobar() ||
+                                            $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsReversar()||
+                                            $ultimo_movimiento->movimiento->movimiento == App\Models\Movimiento::IsSolicitarTalento()
+                                            )
                                             <a href="{{route('articulacion.notificar.suspension',$articulacion->id)}}" class="waves-effect waves-orange btn orange m-t-xs">
                                                 Solicitar al dinamizador que apruebe la suspensión de la articulación
                                             </a>

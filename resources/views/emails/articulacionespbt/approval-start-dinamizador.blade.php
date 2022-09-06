@@ -5,10 +5,10 @@ Cordial Saludo.
 
 <p align="justify">El <b> señor(a)  {{$talent->present()->userFullName()}}</b> ha aprobado la fase de {{$fase}} de la articulación {{$data->present()->articulacionCode()}} - {{$data->present()->articulacionName()}}</p>
 
-Sigue este link para aprobar la fase de {{$fase}}  de la articulación {{$data->present()->articulacionCode()}} - {{$data->present()->articulacionName()}}.
+Sigue este link para aprobar la fase de {{$fase}}  de la articulación.
 
-@component('mail::panel')
-    <h1 class="tittle">✔️ Aprobar la fase de {{$fase}}</h1>
+@component('mail::button', ['url' => route("articulacion.show.{$fase}",$data->id )])
+🔗 Aprobar la fase de {{$fase}}
 @endcomponent
 
 Gracias,<br>
