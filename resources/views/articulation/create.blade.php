@@ -31,6 +31,9 @@
                               accept-charset="UTF-8" enctype="multipart/form-data">
                             @csrf
                             <div>
+                                @can('listNodes', App\Models\ArticulationStage::class)
+                                    @include('articulation.form.step-node')
+                                @endcan
                                 @include('articulation.form.step-basic-information-articulation-stage')
                                 @include('articulation.form.step-articulation-stage')
                                 @include('articulation.form.step-terms')

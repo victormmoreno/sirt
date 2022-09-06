@@ -23,10 +23,39 @@
         <i class="material-icons {{ setActiveRouteActiveIcon('sublineas') }}">linear_scale</i>Sublineas
     </a>
 </li>
+
+
 <li class="no-padding {{setActiveRoute('proyecto')}}">
     <a href="{{ route('proyecto') }}" class="{{setActiveRouteActivePage('proyecto')}}" rel="canonical" title="Proyectos de Base Tecnológica">
         <i class="material-icons {{setActiveRouteActiveIcon('proyecto')}}">library_books</i>Proyectos
     </a>
+</li>
+<li class="no-padding">
+    <a class="collapsible-header waves-effect waves-grey {{setActiveRouteActivePage('articulaciones')}} {{ setActiveRouteActivePage('tipoarticulaciones') }} {{ setActiveRouteActivePage('entrenamientos') }} {{setActiveRouteActivePage('idea')}} {{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}  {!! setActiveRoutePadding('idea'),setActiveRoutePadding('tipoarticulaciones'), setActiveRoutePadding('articulaciones') !!}">
+        <i class="material-icons {{ setActiveRouteActiveIcon('articulaciones') }} {{ setActiveRouteActiveIcon('tipoarticulaciones') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">autorenew</i>Articulaciones
+        <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('articulaciones') }} {{ setActiveRouteActiveIcon('tipoarticulaciones') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">keyboard_arrow_right</i>
+    </a>
+    <div class="collapsible-body">
+        <ul>
+            @can('index', App\Models\ArticulationStage::class)
+            <li>
+                <a href="{{route('articulation-stage')}} " class="{{setActiveRouteActivePage('articulaciones')}}" rel="canonical" title="">
+                    <i class="material-icons {{setActiveRouteActiveIcon('articulaciones')}}">autorenew</i>{{__('articulation-stage')}}
+                </a>
+            </li>
+            @endcan
+            <li>
+                <a href="{{route('tipoarticulaciones.index')}}" class="{{setActiveRouteActivePage('tipoarticulaciones')}}" rel="canonical" title="Tipos articulaciones">
+                    <i class="material-icons {{setActiveRouteActiveIcon('tipoarticulaciones')}}">library_books</i>Tipos de articulaciones
+                </a>
+            </li>
+            <li class="no-padding">
+                <a href="{{route('csibt')}}" class="{{setActiveRouteActivePage('csibt')}} {{setActiveRouteActivePage('csibt/create')}}" rel="canonical" title="CSIBT's">
+                    <i class="material-icons {{setActiveRouteActiveIcon('csibt')}} {{setActiveRouteActiveIcon('csibt/create')}}">gavel</i>Tipo de subarticulaciones
+                </a>
+            </li>
+        </ul>
+    </div>
 </li>
 <li class="no-padding {{setActiveRoute('materiales')}}">
     <a href="{{route('material.index')}}" class="{{setActiveRouteActivePage('materiales')}}" rel="canonical" title="Materiales de Formación">

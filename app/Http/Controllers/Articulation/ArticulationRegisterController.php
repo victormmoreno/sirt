@@ -8,9 +8,9 @@ use App\Models\Articulation;
 use App\Models\ArticulationStage;
 use App\Models\AlcanceArticulacion;
 use Illuminate\Http\Response;
-use App\Http\Requests\Accompaniment\ArticulationRequest;
+use App\Http\Requests\Articulation\ArticulationRequest;
 use Illuminate\Support\Facades\Validator;
-use App\Repositories\Repository\Accompaniment\ArticulationRepository;
+use App\Repositories\Repository\Articulation\ArticulationRepository;
 
 class ArticulationRegisterController extends Controller
 {
@@ -29,8 +29,8 @@ class ArticulationRegisterController extends Controller
     public function create( $id )
     {
         $scopes = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
-        $accompaniment = ArticulationStage::findOrFail( $id );
-        return view('articulation.create-articulation', compact( 'scopes', 'accompaniment' ));
+        $articulationStage= ArticulationStage::findOrFail( $id );
+        return view('articulation.create-articulation', compact( 'scopes', 'articulationStage' ));
     }
 
     /**
@@ -42,7 +42,7 @@ class ArticulationRegisterController extends Controller
      */
     public function store(Request $request, int $id)
     {
-        $accompaniment = ArticulationStage::findOrFail($id);
+        $articulationStage = ArticulationStage::findOrFail($id);
         $req = new ArticulationRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
@@ -54,7 +54,7 @@ class ArticulationRegisterController extends Controller
             ]);
         } else {
 
-            $response = $this->articulationRespository->store($request, $accompaniment);
+            $response = $this->articulationRespository->store($request, $articulationStage);
             if($response["isCompleted"]){
                 return response()->json([
                     'data' => [

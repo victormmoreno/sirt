@@ -49,7 +49,7 @@ let typeArticulacion ={
             serverSide: false,
             "order": [[ 1, "desc" ]],
             ajax:{
-                url: host_url + "/articulaciones/tipoarticulaciones",
+                url: host_url + "/tipoarticulaciones",
                 type: "get",
 
                 data: {
@@ -101,7 +101,7 @@ let typeArticulacion ={
                 let token = $("meta[name='csrf-token']").attr("content");
                 $.ajax(
                 {
-                    url: host_url + "/articulaciones/tipoarticulaciones/"+id,
+                    url: host_url + "/tipoarticulaciones/"+id,
                     type: 'DELETE',
                     data: {
                         "id": id,

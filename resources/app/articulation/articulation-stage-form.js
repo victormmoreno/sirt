@@ -126,7 +126,7 @@ $( document ).ready(function() {
                 success: function (response) {
                     $('button[type="submit"]').removeAttr('disabled');
                     printErroresFormulario(response.data);
-                    accompaniment.messageAccompaniable(response.data,  'registrada', 'Registro exitoso');
+                    articulationStage.messageAccompaniable(response.data,  'registrada', 'Registro exitoso');
                 },
                 error: function (xhr, textStatus, errorThrown) {
                     alert("Error: " + errorThrown);
@@ -151,30 +151,30 @@ $( document ).ready(function() {
     $('#filter_code_project').click(function () {
         let filter_code_project = $('#filter_code').val();
         if((filter_code_project != '' || filter_code_project != null || filter_code_project.length  > 0)){
-            accompaniment.fill_code_project(filter_code_project);
+            articulationStage.fill_code_project(filter_code_project);
         }
     });
     $('#filter_project_modal').click(function () {
         let filter_year_pro = $('#filter_year_pro').val();
-        accompaniment.queryProyectosFaseInicioTable(filter_year_pro);
+        articulationStage.queryProyectosFaseInicioTable(filter_year_pro);
     });
     $('#filter_project_advanced').click(function () {
         let filter_year_pro = $('#filter_year_pro').val();
-        accompaniment.queryProyectosFaseInicioTable(filter_year_pro);
+        articulationStage.queryProyectosFaseInicioTable(filter_year_pro);
     });
 
     $('#search_talent').click(function () {
         let filter_user = $('#txtsearch_user').val();
         if(filter_user.length > 0 ){
-            accompaniment.searchUser(filter_user);
+            articulationStage.searchUser(filter_user);
         }else{
-            accompaniment.emptyResult('result-talents');
-            accompaniment.notFound('result-talents');
+            articulationStage.emptyResult('result-talents');
+            articulationStage.notFound('result-talents');
         }
     });
 
     $('#filter_talents_advanced').click(function () {
-        accompaniment.queryTalentos();
+        articulationStage.queryTalentos();
     });
 
     $('.datepicker_accompaniable_date').pickadate({

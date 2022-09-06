@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers\Articulation;
 
+use App\Models\Nodo;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Accompaniment\AccompanimentRequest;
+use App\Http\Requests\Articulation\ArticulationStageRequest;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
-use App\Repositories\Repository\Accompaniment\AccompanimentRepository;
+use App\Repositories\Repository\Articulation\ArticulationStageRepository;
 use Illuminate\Database\Eloquent\Model;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\ArticulationStage;
 
-
 class ArticulationStageRegisterController extends Controller
 {
-    private $accompanimentRepository;
+    private $articulationStageRepository;
 
-    public function __construct(AccompanimentRepository $accompanimentRepository)
+    public function __construct(ArticulationStageRepository $articulationStageRepository)
     {
-        $this->accompanimentRepository = $accompanimentRepository;
+        $this->articulationStageRepository = $articulationStageRepository;
         $this->middleware(['auth']);
     }
 
@@ -30,7 +30,17 @@ class ArticulationStageRegisterController extends Controller
      */
     public function create()
     {
-        return view('articulation.create');
+        if (request()->user()->can('create', ArticulationStage::class))
+        {
+            $nodos = null;
+            if(request()->user()->can('listNodes', ArticulationStage::class))
+            {
+                $nodos = Nodo::query()->with('entidad')->get();
+                $nodos = collect($nodos)->pluck('entidad.nombre', 'id');
+            }
+            return view('articulation.create', compact('nodos'));
+        }
+        return redirect()->route('home');
     }
 
     /**
@@ -41,41 +51,42 @@ class ArticulationStageRegisterController extends Controller
      */
     public function store(Request $request)
     {
-        $req = new AccompanimentRequest;
-        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-        if ($validator->fails()) {
-            return response()->json([
-                'data' => [
-                    'state'   => 'danger',
-                    'errors' => $validator->errors(),
-                ]
-            ]);
-        } else {
-
-            $response = $this->accompanimentRepository->store($request);
-            if($response["isCompleted"]){
+        if ($request->user()->can('store', ArticulationStage::class)) {
+            $req = new ArticulationStageRequest;
+            $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+            if ($validator->fails()) {
                 return response()->json([
                     'data' => [
-                        'state'   => 'success',
-                        'url' => route(' articulation-stage.show', $response['data']->id),
-                        'status_code' => Response::HTTP_CREATED,
-                        'errors' => [],
-                    ],
-                ], Response::HTTP_CREATED);
-            }else{
-                return response()->json([
-                    'data' => [
-                        'state'   => 'danger',
-                        'errors' => [],
-                    ],
+                        'state' => 'danger',
+                        'errors' => $validator->errors(),
+                    ]
                 ]);
+            } else {
+                $response = $this->articulationStageRepository->store($request);
+                if ($response["isCompleted"]) {
+                    return response()->json([
+                        'data' => [
+                            'state' => 'success',
+                            'url' => route(' articulation-stage.show', $response['data']->id),
+                            'status_code' => Response::HTTP_CREATED,
+                            'errors' => [],
+                        ],
+                    ], Response::HTTP_CREATED);
+                } else {
+                    return response()->json([
+                        'data' => [
+                            'state' => 'danger',
+                            'errors' => [],
+                        ],
+                    ]);
+                }
             }
         }
     }
 
-    public function edit(ArticulationStage $accompaniment)
+    public function edit(ArticulationStage $articulationStage)
     {
-        return view('articulation.edit', compact('accompaniment'));
+        return view('articulation.edit', compact('articulationStage'));
     }
 
     /**
@@ -85,9 +96,9 @@ class ArticulationStageRegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ArticulationStage $accompaniment)
+    public function update(Request $request, ArticulationStage $articulationStage)
     {
-        $req = new AccompanimentRequest;
+        $req = new ArticulationStageRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
             return response()->json([
@@ -98,7 +109,7 @@ class ArticulationStageRegisterController extends Controller
             ]);
         } else {
 
-            $response = $this->accompanimentRepository->update($request, $accompaniment);
+            $response = $this->articulationStageRepository->update($request, $articulationStage);
             if($response["isCompleted"]){
                 return response()->json([
                     'data' => [
@@ -123,9 +134,9 @@ class ArticulationStageRegisterController extends Controller
      * Update file
      * @return \Illuminate\Http\Response
      */
-    public function downloadFile(ArticulationStage $accompaniment)
+    public function downloadFile(ArticulationStage $articulationStage)
     {
-        return $this->accompanimentRepository->downloadFile($accompaniment);
+        return $this->articulationStageRepository->downloadFile($articulationStage);
     }
 
     /**
@@ -135,13 +146,13 @@ class ArticulationStageRegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function requestApproval(ArticulationStage $accompaniment)
+    public function requestApproval(ArticulationStage $articulationStage)
     {
-        if ($accompaniment->status == ArticulationStage::STATUS_CLOSE) {
+        if ($articulationStage->status == ArticulationStage::STATUS_CLOSE) {
             Alert::error('Acceso no permitido!', 'No puedes enviar solicitudes de aprobación!')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        $notification = $this->accompanimentRepository->notifyPhaseApproval($accompaniment);
+        $notification = $this->articulationStageRepository->notifyPhaseApproval($articulationStage);
         if ($notification['notificacion']) {
             Alert::success('Notificación Exitosa!', $notification['msg'])->showConfirmButton('Ok', '#3085d6');
         } else {

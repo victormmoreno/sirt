@@ -8,120 +8,49 @@ use App\Models\ArticulationStage;
 use App\Models\Entidad;
 use App\User;
 use Illuminate\Support\Str;
-use App\Exports\Accompaniment\AccompanimentExport;
-use App\Repositories\Repository\Accompaniment\AccompanimentRepository;
+use App\Exports\Articulation\articulationStageExport;
+use App\Repositories\Repository\Articulation\ArticulationStageRepository;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
 class ArticulationStageListController extends Controller
 {
-
     private $articulationStageRepository;
-
-    public function __construct(AccompanimentRepository $articulationStageRepository)
+    public function __construct(ArticulationStageRepository $articulationStageRepository)
     {
         $this->articulationStageRepository = $articulationStageRepository;
         $this->middleware(['auth']);
     }
-
     /**
      * method to show the list of articulationStages (index) with filters
-     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $nodos = Entidad::with('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id');
-        return view('articulation.index-articulation-stage', ['nodos' => $nodos]);
-    }
-
-    private function checkRoleAuth(Request $request)
-    {
-        $talent = null;
-        $node = null;
-        switch (\Session::get('login_role')) {
-            case User::IsAdministrador():
-                $node = $request->filter_node_accompaniment;
-                break;
-            case User::IsActivador():
-                $node = $request->filter_node_accompaniment;
-                break;
-            case User::IsDinamizador():
-                $node = auth()->user()->dinamizador->nodo_id;
-                break;
-            case User::IsArticulador():
-                $node = auth()->user()->articulador->nodo_id;
-                break;
-            case User::IsTalento():
-                $node = null;
-                $talent = auth()->user()->id;
-                break;
-            default:
-                return abort('403');
-                break;
+        if (request()->user()->can('index', ArticulationStage::class)) {
+            $nodos = Entidad::with('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id');
+            return view('articulation.index-articulation-stage', ['nodos' => $nodos]);
         }
-        return ['talent' => $talent, 'node' => $node];
+        return redirect()->route('home');
     }
 
     public function datatableFiltros(Request $request)
     {
         $talent = $this->checkRoleAuth($request)['talent'];
         $node = $this->checkRoleAuth($request)['node'];
+        $articulationStages = [];
+        if (isset($request->filter_status_articulationStage)) {
 
-        $accompaniments = [];
-        if (isset($request->filter_status_accompaniment)) {
-
-            $accompaniments =  ArticulationStage::query()
+            $articulationStages =  ArticulationStage::query()
             ->with(['node.entidad', 'createdBy'])
-            ->status($request->filter_status_accompaniment)
-            ->year($request->filter_year_accompaniment)
+            ->status($request->filter_status_articulationStage)
+            ->year($request->filter_year_articulationStage)
             ->node($node)
             ->interlocutorTalent($talent)
             ->orderBy('created_at', 'desc')
             ->get();
         }
-        return $this->datatableAccompaniments($accompaniments);
-    }
-
-    private function datatableAccompaniments($accompaniments)
-    {
-        return datatables()->of($accompaniments)
-        ->editColumn('node', function ($data) {
-            // return $data->present()->accompanimentNode();
-            return $data->node->present()->NodeName();
-        })
-        ->editColumn('code', function ($data) {
-            return $data->present()->accompanimentCode();
-        })
-        ->editColumn('name', function ($data) {
-            return Str::limit("{$data->present()->accompanimentName()}", 40, '...');
-        })
-        ->editColumn('count_articulations', function ($data) {
-            if (isset($data->articulations_count)) {
-                return "{$data->articulations_count}";
-            }
-            return 0;
-        })
-        ->editColumn('status', function ($data) {
-            if($data->status == ArticulationStage::STATUS_OPEN){
-                return  '<div class="chip green white-text text-darken-2">'.$data->present()->accompanimentStatus().'</div>';
-            }
-            if($data->status == ArticulationStage::STATUS_CLOSE){
-                return  '<div class="chip red white-text text-darken-2">'.$data->present()->accompanimentStatus().'</div>';
-            }
-
-        })
-        ->editColumn('accompanimentBy', function ($data) {
-            return $data->present()->accompanimentBy();
-        })
-        ->editColumn('starDate', function ($data) {
-            return $data->present()->accompanimentStartDate();
-        })->addColumn('show', function ($data) {
-            $info = '<a class="btn m-b-xs modal-trigger" href='.route('articulation-stage.show', $data->id).'>
-            <i class="material-icons">search</i>
-            </a>';
-                return $info;
-        })->rawColumns(['node','code','name','adviser','status','starDate','accompanimentBy','show'])->make(true);
+        return $this->datatablearticulationStages($articulationStages);
     }
 
     /**
@@ -132,7 +61,7 @@ class ArticulationStageListController extends Controller
      */
     public function show($id)
     {
-        $accompaniment = ArticulationStage::with([
+        $articulationStage = ArticulationStage::with([
                 'node',
                 'createdBy',
                 'articulations',
@@ -141,11 +70,11 @@ class ArticulationStageListController extends Controller
             ])
         ->findOrfail($id);
 
-        $ult_notificacion = $accompaniment->notifications()->whereNull('fecha_aceptacion')->get()->last();
+        $ult_notificacion = $articulationStage->notifications()->whereNull('fecha_aceptacion')->get()->last();
 
-        $articulations = $accompaniment->articulations()->latest('id')->paginate(2);
+        $articulations = $articulationStage->articulations()->latest('id')->paginate(2);
 
-        return view('articulation.show', compact('accompaniment', 'articulations', 'ult_notificacion'));
+        return view('articulation.show', compact('articulationStage', 'articulations', 'ult_notificacion'));
     }
 
     public function export(Request $request, $extension = 'xlsx')
@@ -154,22 +83,22 @@ class ArticulationStageListController extends Controller
         $node = $this->checkRoleAuth($request)['node'];
 
 
-        $accompaniments = [];
-        if (isset($request->filter_status_accompaniment)) {
+        $articulationStages = [];
+        if (isset($request->filter_status_articulationStage)) {
 
-            $accompaniments =  ArticulationStage::with([
+            $articulationStages =  ArticulationStage::with([
                 'node',
                 'node.entidad',
                 'createdBy'
             ])
-            ->status($request->filter_status_accompaniment)
-            ->year($request->filter_year_accompaniment)
+            ->status($request->filter_status_articulationStage)
+            ->year($request->filter_year_articulationStage)
             ->node($node)
             ->interlocutorTalent($talent)
             ->orderBy('created_at', 'desc')
             ->get();
         }
-        return (new AccompanimentExport($accompaniments))->download("Etapa articulación" . config('app.name') . ".{$extension}");
+        return (new articulationStageExport($articulationStages))->download("Etapa articulación" . config('app.name') . ".{$extension}");
     }
 
     /**
@@ -189,9 +118,9 @@ class ArticulationStageListController extends Controller
         return back();
     }
 
-    public function changeInterlocutor(ArticulationStage $accompaniment)
+    public function changeInterlocutor(ArticulationStage $articulationStage)
     {
-        return view('articulation.change-interlocutor', compact('accompaniment'));
+        return view('articulation.change-interlocutor', compact('articulationStage'));
     }
 
     /**
@@ -202,7 +131,7 @@ class ArticulationStageListController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function updateInterlocutor(Request $request, ArticulationStage $accompaniment)
+    public function updateInterlocutor(Request $request, ArticulationStage $articulationStage)
     {
         $validator = Validator::make($request->all(), [
             'talent' => 'required'
@@ -215,7 +144,7 @@ class ArticulationStageListController extends Controller
                 'errors' => $validator->errors(),
             ]);
         } else {
-            $response = $this->articulationStageRepository->updateInterlocutor($request, $accompaniment);
+            $response = $this->articulationStageRepository->updateInterlocutor($request, $articulationStage);
             if($response["isCompleted"]){
                 return response()->json([
                     'data' => [
@@ -235,6 +164,72 @@ class ArticulationStageListController extends Controller
             }
         }
 
+    }
+    private function datatableArticulationStages($articulationStages)
+    {
+        return datatables()->of($articulationStages)
+            ->editColumn('node', function ($data) {
+                return $data->node->present()->NodeName();
+            })
+            ->editColumn('code', function ($data) {
+                return $data->present()->articulationStageCode();
+            })
+            ->editColumn('name', function ($data) {
+                return Str::limit("{$data->present()->articulationStageName()}", 40, '...');
+            })
+            ->editColumn('count_articulations', function ($data) {
+                if (isset($data->articulations_count)) {
+                    return "{$data->articulations_count}";
+                }
+                return 0;
+            })
+            ->editColumn('status', function ($data) {
+                if($data->status == ArticulationStage::STATUS_OPEN){
+                    return  '<div class="chip green white-text text-darken-2">'.$data->present()->articulationStageStatus().'</div>';
+                }
+                if($data->status == ArticulationStage::STATUS_CLOSE){
+                    return  '<div class="chip red white-text text-darken-2">'.$data->present()->articulationStageStatus().'</div>';
+                }
+            })
+            ->editColumn('articulationStageBy', function ($data) {
+                return $data->present()->articulationStageBy();
+            })
+            ->editColumn('starDate', function ($data) {
+                return $data->present()->articulationStageStartDate();
+            })->addColumn('show', function ($data) {
+                return '<a class="btn m-b-xs modal-trigger" href='.route('articulation-stage.show', $data->id).'>
+                            <i class="material-icons">search</i>
+                        </a>';
+            })->rawColumns(['node','code','name','adviser','status','starDate','articulationStageBy','show'])->make(true);
+    }
+
+    private function checkRoleAuth(Request $request)
+    {
+        $talent = null;
+        $node = null;
+        switch (\Session::get('login_role')) {
+            case User::IsAdministrador():
+                $node = $request->filter_node_articulationStage;
+                break;
+            case User::IsActivador():
+                $node = $request->filter_node_articulationStage;
+                break;
+            case User::IsDinamizador():
+                $node = auth()->user()->dinamizador->nodo_id;
+                break;
+            case User::IsArticulador():
+                $node = auth()->user()->articulador->nodo_id;
+                break;
+            case User::IsTalento():
+                $node = null;
+                $talent = auth()->user()->id;
+                break;
+            default:
+                $talent = null;
+                $node = null;
+                break;
+        }
+        return ['talent' => $talent, 'node' => $node];
     }
 
 }

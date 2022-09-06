@@ -3,7 +3,7 @@
         <input type="hidden" type="text" name="motivosNoAprueba" id="motivosNoAprueba">
         <input type="hidden" type="text" name="control_notificacion_id" id="control_notificacion_id" value="{{$ult_notificacion->id}}">
         <input type="hidden" type="text" name="decision" id="decision">
-        @if ( url()->current() == route(' articulation-stage.show', $accompaniment))
+        @if ( url()->current() == route(' articulation-stage.show', $articulationStage))
         <button type="submit" onclick="preguntaAprobacion(event)" class="waves-effect waves-orange btn orange m-t-xs">
             <i class="material-icons right">done</i>
             Aprobar {{ __('articulation-stage') }}

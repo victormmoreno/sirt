@@ -28,7 +28,7 @@
                 <div class="card mailbox-content">
                     <div class="card-content">
                         <form method="POST" id="articulation-form"
-                              action="{{route('articulation-stage.update', $accompaniment)}}" accept-charset="UTF-8"
+                              action="{{route('articulation-stage.update', $articulationStage)}}" accept-charset="UTF-8"
                               enctype="multipart/form-data">
                             @csrf
                             {!! method_field('PUT')!!}

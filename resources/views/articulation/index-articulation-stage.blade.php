@@ -26,51 +26,33 @@
                         <div class="row">
                             <div class="col s12 m12 l12">
                                 <div class="row">
-                                    @if((session()->has('login_role') && session()->get('login_role') === App\User::IsAdministrador()))
-                                        <div class="col s12 m8 l8">
-                                            <div class="center-align orange-text text-darken-3">
-                                                <span class="card-title center-align">{{__('articulation-stage')}} -  {{config('app.name')}}</span>
-                                            </div>
-                                        </div>
-                                    @elseif((session()->has('login_role') && session()->get('login_role') === App\User::IsDinamizador()))
-                                        <div class="col s12 m12 l12">
-                                            <div class="center-align orange-text text-darken-3">
-                                                <span class="card-title center-align">{{__('articulation-stage')}} - nodo {{ \NodoHelper::returnNameNodoUsuario() }}</span>
-                                            </div>
-                                        </div>
-                                    @elseif((session()->has('login_role') && session()->get('login_role') === App\User::IsArticulador()))
                                         <div class="col s12 m8 l8">
                                         <div class="center-align orange-text text-darken-3">
-                                            <span class="card-title center-align">{{__('articulation-stage')}} - nodo {{ \NodoHelper::returnNameNodoUsuario() }} </span>
+                                            <span class="card-title center-align">{{__('articulation-stage')}} </span>
                                         </div>
                                         </div>
                                         <div class="col s12 m4 l4 ">
-                                        <a  href="{{route('articulation-stage.create')}}" class="waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">{{__('New ArticulationStage')}}</a>
+                                            @can('create', App\Models\ArticulationStage::class)
+                                                <a  href="{{route('articulation-stage.create')}}" class="m-r-lg waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">{{__('New ArticulationStage')}}</a>
+                                            @endcan
                                         </div>
-                                    @else
-                                        <div class="col s12 m12 l12">
-                                        <div class="center-align orange-text text-darken-3">
-                                            <span class="card-title center-align">{{__('articulation-stage')}} - {{ auth()->user()->nombres }} {{ auth()->user()->apellidos }} </span>
-                                        </div>
-                                        </div>
-                                    @endif
                                 </div>
                                 <div class="divider"></div>
                                     <div class="row search-tabs-row search-tabs-header">
-                                        @if((session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador()))
+                                        @can('viewNodes', App\Models\ArticulationStage::class)
                                         <div class="input-field col s12 m2 l2">
-                                            <label class="active" for="filter_node_accompaniment">Nodo <span class="red-text">*</span></label>
-                                            <select name="filter_node_accompaniment" id="filter_node_accompaniment">
+                                            <label class="active" for="filter_node_articulationStage">Nodo <span class="red-text">*</span></label>
+                                            <select name="filter_node_articulationStage" id="filter_node_articulationStage">
                                                 <option value="all" >todos</option>
                                                 @foreach($nodos as $id => $name)
                                                     <option value="{{$id}}">{{$name}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
-                                        @endif
+                                        @endcan
                                         <div class="input-field col s12 m2 l1">
-                                            <label class="active" for="filter_year_accompaniment">Año <span class="red-text">*</span></label>
-                                            <select name="filter_year_accompaniment" id="filter_year_accompaniment">
+                                            <label class="active" for="filter_year_articulationStage">Año <span class="red-text">*</span></label>
+                                            <select name="filter_year_articulationStage" id="filter_year_articulationStage">
                                                 @for ($i=$year; $i >= 2016; $i--)
                                                     <option value="{{$i}}" >{{$i}}</option>
                                                 @endfor
@@ -78,24 +60,26 @@
                                             </select>
                                         </div>
                                         <div class="input-field col s12 m2 l1">
-                                            <label class="active" for="filter_status_accompaniment">{{__('Status')}} <span class="red-text">*</span></label>
-                                            <select name="filter_status_accompaniment" id="filter_status_accompaniment">
+                                            <label class="active" for="filter_status_articulationStage">{{__('Status')}} <span class="red-text">*</span></label>
+                                            <select name="filter_status_articulationStage" id="filter_status_articulationStage">
                                                 <option value="1" >Abierto</option>
                                                 <option value="0" >Cerrado</option>
                                                 <option value="all" >todos</option>
                                             </select>
                                         </div>
                                         <div class="col s12 m6 l4 offset-m3 right">
-                                            <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_accompaniment"><i class="material-icons">cloud_download</i>{{__('Download')}}</button>
-                                            <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_accompaniment"><i class="material-icons">search</i>{{__('Filter')}}</button>
+                                            @can('downloadReports', App\Models\ArticulationStage::class)
+                                                <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_articulationStage"><i class="material-icons">cloud_download</i>{{__('Download')}}</button>
+                                            @endcan
+                                            <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_articulationStage"><i class="material-icons">search</i>{{__('Filter')}}</button>
                                         </div>
                                     </div>
-                                <table id="accompaniment_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
+                                <table id="articulationStage_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
                                     <thead>
                                         <tr>
                                             <th>{{__('Node')}}</th>
-                                            <th>{{__('Code ArticulationStage')}}</th>
-                                            <th>{{__('Name ArticulationStage')}}</th>
+                                            <th>{{__('Code articulation-stage')}}</th>
+                                            <th>{{__('Name articulation-stage')}}</th>
                                             <th>{{__('Count Articulations')}}</th>
                                             <th>{{__('Status')}}</th>
                                             <th>{{__('Created_at')}}</th>

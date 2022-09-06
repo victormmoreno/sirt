@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Repository\Accompaniment;
+namespace App\Repositories\Repository\Articulation;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -20,7 +20,7 @@ use App\Notifications\Articulation\AccompanyingApprovalNotification;
 use App\Events\Articulation\AccompanyingApprovalRequest;
 
 
-class AccompanimentRepository
+class ArticulationStageRepository
 {
 
     /**

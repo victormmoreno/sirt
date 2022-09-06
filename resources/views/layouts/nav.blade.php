@@ -36,7 +36,7 @@
                 <li>
                     <a class="dropdown-button dropdown-right" data-activates="dropdown-logout" href="javascript:void(0)">
                         @auth
-                        {{optional(auth()->user())->nombres}} {{ optional(auth()->user())->apellidos}}
+                            {{optional(auth()->user())->nombres}} {{ optional(auth()->user())->apellidos}}
                         @endauth
                     </a>
                 </li>
@@ -53,11 +53,11 @@
                                 Lista de opciones
                                 <br>
                                 @guest
-                                    @else
+                                @else
                                     <b>Último login:</b> {{ optional(auth()->user()->ultimo_login)->isoFormat('MMMM Do YYYY, h:mm:ss a') }}
                                     <br>
                                     @if(auth()->user()->fechanacimiento != null || isset(auth()->user()->fechanacimiento))
-                                    <b>Edad:</b>{{ optional(auth()->user()->fechanacimiento)->age }} años
+                                        <b>Edad:</b>{{ optional(auth()->user()->fechanacimiento)->age }} años
                                     @endif
                                 @endguest
                             </center>
@@ -90,28 +90,28 @@
                 <li class="notificatoins-dropdown-container">
                     <ul>
                         <li class="notification-drop-title center">
-                        <div class="center">
-                            Notificaciones
-                        </div>
+                            <div class="center">
+                                Notificaciones
+                            </div>
                         </li>
                         <li class="divider" tabindex="-1"></li>
                         @forelse (Auth::user()->unreadNotifications as $notification)
                             <li>
-                            <a href="{{route('notifications.index')}}">
-                                <div class="notification">
-                                <div class="notification-icon circle {{ $notification->data['color'] }}">
-                                    <i class="material-icons">{{ $notification->data["icon"] }}</i>
-                                </div>
-                                <div class="notification-text"><p> {{ $notification->data["text"] }}</p>
-                                    <span>{{optional($notification->created_at)->diffForHumans()}}</span>
-                                </div>
-                                </div>
-                            </a>
+                                <a href="{{route('notifications.index')}}">
+                                    <div class="notification">
+                                        <div class="notification-icon circle {{ $notification->data['color'] }}">
+                                            <i class="material-icons">{{ $notification->data["icon"] }}</i>
+                                        </div>
+                                        <div class="notification-text"><p> {{ $notification->data["text"] }}</p>
+                                            <span>{{optional($notification->created_at)->diffForHumans()}}</span>
+                                        </div>
+                                    </div>
+                                </a>
                             </li>
                         @empty
                             <li class="notification-drop-title">
                                 <div class="center">
-                                <i class="large material-icons  teal-text lighten-2 center ">
+                                    <i class="large material-icons  teal-text lighten-2 center ">
                                         notifications_off
                                     </i>
                                     <p class="center-align">No tienes notificationes</p>
@@ -122,12 +122,12 @@
                         <li class="notification-drop-title">
                             <a href="{{route('notifications.index')}}" rel="canonical">
                                 <div class="notification">
-                                <div class="notification-icon circle cyan">
-                                    <i class="material-icons">add_alert</i>
-                                </div>
-                                <div class="notification-text">
-                                    <p> Ver más notificationes</p>
-                                </div>
+                                    <div class="notification-icon circle cyan">
+                                        <i class="material-icons">add_alert</i>
+                                    </div>
+                                    <div class="notification-text">
+                                        <p> Ver más notificationes</p>
+                                    </div>
                                 </div>
                             </a>
                         </li>
@@ -138,28 +138,28 @@
                 <li class="notificatoins-dropdown-container">
                     <ul>
                         <li class="notification-drop-title center">
-                        <div class="center">
-                            Ayuda
-                        </div>
+                            <div class="center">
+                                Ayuda
+                            </div>
                         </li>
                         <li class="divider" tabindex="-1"></li>
                         <li>
                             <a href="{{route('help.handbook')}}">
                                 <div class="notification">
-                                <div class="notification-icon circle orange">
-                                    <i class="material-icons">book</i>
-                                </div>
-                                <div class="notification-text"><p> Descargar Manual</p></div>
+                                    <div class="notification-icon circle orange">
+                                        <i class="material-icons">book</i>
+                                    </div>
+                                    <div class="notification-text"><p> Descargar Manual</p></div>
                                 </div>
                             </a>
                         </li>
                         <li>
                             <a href="{{route('support.send')}}">
                                 <div class="notification">
-                                <div class="notification-icon circle orange">
-                                    <i class="material-icons">sms</i>
-                                </div>
-                                <div class="notification-text"><p>{{config('app.technical_support.title')}}</p></div>
+                                    <div class="notification-icon circle orange">
+                                        <i class="material-icons">sms</i>
+                                    </div>
+                                    <div class="notification-text"><p>{{config('app.technical_support.title')}}</p></div>
                                 </div>
                             </a>
                         </li>
@@ -179,18 +179,18 @@
                     <span>
                         @guest
                         @else
-                        @if( \Session::get('login_role') != App\User::IsTalento() && \Session::get('login_role') != App\User::IsAdministrador() && \Session::get('login_role') != App\User::IsDesarrollador() )
-                            {{ \NodoHelper::returnNodoUsuario() }}
-                        @else
-                            @if (\Session::get('login_role') == App\User::IsTalento())
-                                Talento de Tecnoparque
-                            @elseif (\Session::get('login_role') == App\User::IsAdministrador())
-                                Administrador de Tecnoparque
+                            @if( \Session::get('login_role') != App\User::IsTalento() && \Session::get('login_role') != App\User::IsActivador() && \Session::get('login_role') != App\User::IsDesarrollador() )
+                                {{ \NodoHelper::returnNodoUsuario() }}
                             @else
-                                Desarrollador de Tecnoparque
+                                @if (\Session::get('login_role') == App\User::IsTalento())
+                                    Talento de Tecnoparque
+                                @elseif (\Session::get('login_role') == App\User::IsActivador())
+                                    Activador de Tecnoparque
+                                @else
+                                    Desarrollador de Tecnoparque
+                                @endif
                             @endif
-                        @endif
-                        <i class="material-icons right">arrow_drop_down</i>
+                            <i class="material-icons right">arrow_drop_down</i>
                         @endguest
                     </span>
                 </a>
@@ -199,9 +199,9 @@
         <div class="sidebar-account-settings ">
             <ul>
                 <li class="no-padding">
-                <a class="waves-effect waves-grey " href="{{ route('perfil.index')}}" rel="canonical" title="Mi Perfil">
-                    <i class="material-icons">perm_contact_calendar</i>Mi Perfil
-                </a>
+                    <a class="waves-effect waves-grey " href="{{ route('perfil.index')}}" rel="canonical" title="Mi Perfil">
+                        <i class="material-icons">perm_contact_calendar</i>Mi Perfil
+                    </a>
                 </li>
                 <li class="divider"></li>
                 <li class="no-padding">
@@ -219,54 +219,58 @@
                 <div class="input-field col s12 m12 offset-m0">
                     <select name="change-role" id="change-role" onchange="roleUserSession.setRoleSession(this)">
                         @forelse(auth()->user()->getRoleNames() as  $name)
-                        <option value="{{$name}}" {{\Session::get('login_role') == $name ? 'selected':''}}>{{$name}}</option>
+                            <option value="{{$name}}" {{\Session::get('login_role') == $name ? 'selected':''}}>{{$name}}</option>
                         @empty
-                        <p>No tienes roles asignados</p>
+                            <p>No tienes roles asignados</p>
                         @endforelse
                     </select>
                 </div>
-                </div>
+            </div>
             <li class="no-padding {{setActiveRoute('home')}}">
                 <a href="{{route('home')}}" class="{{setActiveRouteActivePage('home')}}" rel="canonical" title="Inicio">
                     <i class="large material-icons {{setActiveRouteActiveIcon('home')}}">home</i>Inicio
                 </a>
             </li>
             @switch( \Session::get('login_role'))
-            @case(App\User::IsInfocenter())
-                @include('layouts.navrole.infocenter')
-            @break
-            @case(App\User::IsGestor())
-                @include('layouts.navrole.gestor')
-            @break
-            @case(App\User::IsTalento())
-                @include('layouts.navrole.talento')
-            @break
-            @case(App\User::IsIngreso())
-                @include('layouts.navrole.ingreso')
-            @break
-            @case(App\User::IsDinamizador())
-                @if(\Session::has('login_role') && \Session::get('login_role') == 'Dinamizador')
-                    @include('layouts.navrole.dinamizador')
-                @endif
-            @break
-            @case(App\User::IsAdministrador())
-                @if(\Session::has('login_role') && \Session::get('login_role') == App\User::IsAdministrador())
-                    @include('layouts.navrole.admin')
-                @endif
-            @break
+                @case(App\User::IsInfocenter())
+                    @include('layouts.navrole.infocenter')
+                    @break
+                @case(App\User::IsGestor())
+                    @include('layouts.navrole.gestor')
+                    @break
+                @case(App\User::IsTalento())
+                    @include('layouts.navrole.talento')
+                    @break
+                @case(App\User::IsIngreso())
+                    @include('layouts.navrole.ingreso')
+                    @break
+                @case(App\User::IsDinamizador())
+                    @if(\Session::has('login_role') && \Session::get('login_role') == 'Dinamizador')
+                        @include('layouts.navrole.dinamizador')
+                    @endif
+                    @break
+                @case(App\User::IsActivador())
+                    @if(\Session::has('login_role') && \Session::get('login_role') == App\User::IsActivador())
+                        @include('layouts.navrole.activador')
+                    @endif
+                    @break
+                @case(App\User::IsAdministrador())
+                    @if(\Session::has('login_role') && \Session::get('login_role') == App\User::IsAdministrador())
+                        @include('layouts.navrole.admin')
+                    @endif
+                    @break
+                @case(App\User::IsDesarrollador())
 
-            @case(App\User::IsDesarrollador())
+                    @include('layouts.navrole.desarrollador')
+                    @break
 
-            @include('layouts.navrole.desarrollador')
-            @break
-
-            @case(App\User::IsArticulador())
-                @include('layouts.navrole.articulador')
-            @break
-            @case(App\User::IsApoyoTecnico())
-                @include('layouts.navrole.apoyo-tecnico')
-            @break
-            @default
+                @case(App\User::IsArticulador())
+                    @include('layouts.navrole.articulador')
+                    @break
+                @case(App\User::IsApoyoTecnico())
+                    @include('layouts.navrole.apoyo-tecnico')
+                    @break
+                @default
             @endswitch
         </ul>
         <div class="footer">

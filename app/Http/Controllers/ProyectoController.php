@@ -1569,7 +1569,7 @@ class ProyectoController extends Controller
             ->addColumn('add_proyecto', function ($data) {
                     $checkbox = '';
                     if (isset($data->articulacion_proyecto->actividad)) {
-                        $checkbox = '<a class="btn blue" onclick="articulation-stage.addProjectToArticulacion(\'' .($data->articulacion_proyecto->actividad->codigo_actividad) . '\')">
+                        $checkbox = '<a class="btn blue" onclick="articulationStage.addProjectToArticulacion(\'' .($data->articulacion_proyecto->actividad->codigo_actividad) . '\')">
                                         <i class="material-icons">done</i>
                                     </a>';
                     }

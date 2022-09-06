@@ -25,15 +25,15 @@
                             <div class="col s12 m12 l12">
                                 <div class="mailbox-options">
                                     <ul>
-                                        <li class="text-mailbox ">La {{__('articulation-stage')}}  se encuentra actualmente {{$accompaniment->present()->accompanimentStatus()}}</li>
+                                        <li class="text-mailbox ">La {{__('articulation-stage')}}  se encuentra actualmente {{$articulationStage->present()->articulationStageStatus()}}</li>
                                         <div class="right">
-                                            <li class="text-mailbox">Fecha registro: {{$accompaniment->present()->accompanimentCreatedDate()}}</li>
+                                            <li class="text-mailbox">Fecha registro: {{$articulationStage->present()->articulationStageCreatedDate()}}</li>
                                         </div>
                                     </ul>
                                 </div>
                                 <div class="mailbox-view no-s">
                                     <div class="mailbox-view-header">
-                                        <form method="POST" id="interlocutor-form" action="{{route('articulation-stage.updateinterlocutor', $accompaniment)}}"  accept-charset="UTF-8" enctype="multipart/form-data">
+                                        <form method="POST" id="interlocutor-form" action="{{route('articulation-stage.updateinterlocutor', $articulationStage)}}"  accept-charset="UTF-8" enctype="multipart/form-data">
                                             @csrf
                                             {!! method_field('PUT')!!}
                                             <div class="wizard clearfix">
@@ -41,7 +41,7 @@
                                                 <div class="actions clearfix right-align">
                                                     <ul role="menu" aria-label="Paginación">
                                                         <li aria-hidden="false" aria-disabled="false">
-                                                            <a href="{{route('articulation-stage.show', $accompaniment)}}" role="menuitem" class="waves-effect waves-blue btn-flat orange-text">Volver atrás</a>
+                                                            <a href="{{route('articulation-stage.show', $articulationStage)}}" role="menuitem" class="waves-effect waves-blue btn-flat orange-text">Volver atrás</a>
                                                         </li>
                                                         <li class="disabled" aria-disabled="true">
                                                             <button type="submit" role="menuitem" class="btn waves-effect waves-blue btn-flat orange-text">Guardar</button>

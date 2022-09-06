@@ -9,7 +9,7 @@
                     <div class="card-content  black-text">
                         <div class="row ">
                             <div class="left left-align">
-                                <a class="footer-text " href="{{route('tipoarticulaciones.index')}}">
+                                <a class="footer-text " href="#">
                                     <i class="material-icons arrow-l mt-2">
                                         arrow_back
                                     </i>
@@ -19,7 +19,6 @@
                             <div class="right right-align">
                                 <ol class="breadcrumbs">
                                     <li><a href="{{route('home')}}">Inicio</a></li>
-                                    <li ><a href="{{route('articulaciones.index')}}">Articulaciones PBT</a></li>
                                     <li ><a href="{{route('tipoarticulaciones.index')}}">Tipos Articulaciones</a></li>
                                     <li class="active">Nuevo tipo Articulación</li>
                                 </ol>
@@ -46,7 +45,7 @@
                                             <p>Ingresa y selecciona la visibilidad del tipo de articulación</p>
                                         </address>
                                         <form  class="m-t-md" action="{{ route('tipoarticulaciones.store')}}" id="formTypeArticulation" method="POST">
-                                            @include('tipoarticulaciones.form', ['btnText' => 'Guardar'])
+                                            @include('articulation.articulation-type.form', ['btnText' => 'Guardar'])
                                         </form>
                                     </div>
                                 </div>

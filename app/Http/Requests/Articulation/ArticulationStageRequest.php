@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Accompaniment;
+namespace App\Http\Requests\Articulation;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\User;
 
-class AccompanimentRequest extends FormRequest
+class ArticulationStageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,6 +27,7 @@ class AccompanimentRequest extends FormRequest
     {
         return [
             'name' => 'required|min:1|max:100',
+            'node' => Rule::requiredIf(User::IsAdministrador() == request()->user()->IsAdministrador()) ,
             'description'  => 'max:3000',
             'scope'  => 'required|min:1|max:3000',
             'projects'  => 'required',

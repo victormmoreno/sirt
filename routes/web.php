@@ -812,31 +812,31 @@ Route::get('usuarios/filtro-talento/{documento}', 'User\UserController@filterTal
 Route::get('empresas/filter-code/{value}', 'EmpresaController@filterByCode')->name('empresa.filterbycode');
 Route::get('empresas/sede/{id}', 'EmpresaController@filterSede')->name('empresa.sede.filter');
 
-Route::resource('articulaciones/tipoarticulaciones', 'Articulation\ArticulationTypeController');
+Route::resource('tipoarticulaciones', 'Articulation\ArticulationTypeController');
 
 
 Route::group(
     [
         'namespace' => 'Articulation',
         'prefix' => 'articulaciones',
-        'middleware' => ['auth', 'role_session:Administrador|Activador|Dinamizador|Talento|Articulador',]
+        'middleware' => ['auth']
     ],
     function () {
         Route::get('/', 'ArticulationStageListController@index')->name('articulation-stage');
         Route::get('/datatable_filtros', 'ArticulationStageListController@datatableFiltros')->name('articulation-stage.datatable.filtros');
-        Route::get('/crear', 'ArticulationStageRegisterController@create')->name('articulation-stage.create')->middleware('role_session:Articulador');
-        Route::post('/', 'ArticulationStageRegisterController@store')->name('articulation-stage.store')->middleware('role_session:Articulador');
+        Route::get('/crear', 'ArticulationStageRegisterController@create')->name('articulation-stage.create');
+        Route::post('/', 'ArticulationStageRegisterController@store')->name('articulation-stage.store');
         Route::get('/{id}', 'ArticulationStageListController@show')->name('articulation-stage.show');
-        Route::delete('/file/{idFile}', 'ArticulationStageListController@destroyFile')->name('articulation-stage.file.destroy')->middleware('role_session:Articulador');
+        Route::delete('/file/{idFile}', 'ArticulationStageListController@destroyFile')->name('articulation-stage.file.destroy');
         Route::get('/{articulation}/editar', 'ArticulationStageRegisterController@edit')->name('articulation-stage.edit');
         Route::put('/{articulation}', 'ArticulationStageRegisterController@update')->name('articulation-stage.update');
         Route::get('/{articulation}/download', 'ArticulationStageRegisterController@downloadFile')->name('articulation-stage.download');
         Route::get('/{articulation}/cambiar-interlocutor', 'ArticulationStageListController@changeInterlocutor')->name('articulation-stage.changeinterlocutor');
         Route::put('/{articulation}/cambiar-interlocutor', 'ArticulationStageListController@updateInterlocutor')->name('articulation-stage.updateinterlocutor');
-        Route::get('/{id}/crear', 'ArticulationRegisterController@create')->name('articulations.create')->middleware('role_session:Articulador');
+        Route::get('/{id}/crear', 'ArticulationRegisterController@create')->name('articulations.create');
         Route::post('/{id}/crear', 'ArticulationRegisterController@store')->name('articulations.store');
         Route::get('/{id}/ver', 'ArticulationListController@show')->name('articulations.show');
-        Route::get('/export', 'ArticulationStageListController@export')->name('articulation-stage.export')->middleware('role_session:Administrador|Articulador|Dinamizador|Talento');
-        Route::get('/solicitar-aprobacion/{articulation}', 'ArticulationStageRegisterController@requestApproval')->name('articulation-stage.requestapproval')->middleware('role_session:Articulador');
+        Route::get('/export', 'ArticulationStageListController@export')->name('articulation-stage.export');
+        Route::get('/solicitar-aprobacion/{articulation}', 'ArticulationStageRegisterController@requestApproval')->name('articulation-stage.requestapproval');
     }
 );

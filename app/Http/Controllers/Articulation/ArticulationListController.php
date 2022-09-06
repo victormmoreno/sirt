@@ -9,7 +9,7 @@ use App\Models\Entidad;
 use App\Models\Articulation;
 use App\User;
 use Illuminate\Support\Str;
-use App\Exports\Accompaniment\AccompanimentExport;
+use App\Exports\Articulation\articulationStageExport;
 
 class ArticulationListController extends Controller
 {

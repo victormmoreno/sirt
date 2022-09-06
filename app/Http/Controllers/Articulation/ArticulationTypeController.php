@@ -6,18 +6,18 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Entidad;
 use App\Models\ArticulationType;
-use App\Repositories\Repository\TipoArticulacionRepository;
-use App\Http\Requests\TipoArticulacionRequest;
+use App\Repositories\Repository\ArticulationTypeRepository;
+use App\Http\Requests\ArticulationTypeRequest;
 use Illuminate\Support\Facades\Validator;
 
 class ArticulationTypeController extends Controller
 {
-    private $tipoArticulacionRepository;
+    private $articulationTypeRepository;
 
-    public function __construct(TipoArticulacionRepository $tipoArticulacionRepository)
+    public function __construct(ArticulationTypeRepository $articulationTypeRepository)
     {
-        $this->middleware(['auth', 'role_session:Administrador'])->except(['show']);
-        $this->tipoArticulacionRepository = $tipoArticulacionRepository;
+        $this->middleware(['auth']);
+        $this->articulationTypeRepository = $articulationTypeRepository;
     }
 
     /**
@@ -28,10 +28,10 @@ class ArticulationTypeController extends Controller
     public function index(Request $request)
     {
         if (request()->ajax()) {
-            return $this->tipoArticulacionRepository->filterSupports($request);;
+            return $this->articulationTypeRepository->filterSupports($request);
         }
         $nodos = Entidad::has('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id');
-        return view('tipoarticulaciones.index', ['nodos' =>$nodos]);
+        return view('articulation.articulation-type.index', ['nodos' =>$nodos]);
     }
 
 
@@ -44,7 +44,7 @@ class ArticulationTypeController extends Controller
     public function create()
     {
         $nodos = Entidad::has('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id');
-        return view('tipoarticulaciones.create', ['nodos' =>$nodos]);
+        return view('articulation.articulation-type.create', ['nodos' => $nodos]);
     }
 
     /**
@@ -55,8 +55,7 @@ class ArticulationTypeController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->input('checknode');
-        $req       = new TipoArticulacionRequest;
+        $req       = new ArticulationTypeRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
             return response()->json([
@@ -66,11 +65,11 @@ class ArticulationTypeController extends Controller
                 'redirect_url' => null,
             ]);
         }
-        $result = $this->tipoArticulacionRepository->storeTypeArticulation($request);
+        $result = $this->articulationTypeRepository->storeTypeArticulation($request);
         if (!$result) {
             return response()->json([
                 'fail'         => true,
-                'errors'       => $this->tipoArticulacionRepository->getError(),
+                'errors'       => $this->articulationTypeRepository->getError(),
                 'message' => null,
                 'redirect_url' => null,
             ]);
@@ -98,7 +97,7 @@ class ArticulationTypeController extends Controller
                 'data' => $typeArticulation
             ]);
         }
-        return view('tipoarticulaciones.show', ['typeArticulation' => $typeArticulation]);
+        return view('articulation.articulation-type.show', ['typeArticulation' => $typeArticulation]);
     }
 
     /**
@@ -111,7 +110,7 @@ class ArticulationTypeController extends Controller
     {
         $nodos = Entidad::has('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id');
         $typeArticulation = ArticulationType::findOrFail($typeArticulation);
-        return view('tipoarticulaciones.edit', ['typeArticulation' => $typeArticulation, 'nodos' => $nodos]);
+        return view('articulation.articulation-type.edit', ['typeArticulation' => $typeArticulation, 'nodos' => $nodos]);
     }
 
     /**
@@ -124,7 +123,7 @@ class ArticulationTypeController extends Controller
     public function update(Request $request, $typeArticulation)
     {
         $typeArticulation = ArticulationType::findOrFail($typeArticulation);
-        $req       = new TipoArticulacionRequest;
+        $req       = new ArticulationTypeRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
             return response()->json([
@@ -134,11 +133,11 @@ class ArticulationTypeController extends Controller
                 'redirect_url' => null,
             ]);
         }
-        $result = $this->tipoArticulacionRepository->updateTypeArticulation($request, $typeArticulation);
+        $result = $this->articulationTypeRepository->updateTypeArticulation($request, $typeArticulation);
         if (!$result) {
             return response()->json([
                 'fail'         => true,
-                'errors'       => $this->tipoArticulacionRepository->getError(),
+                'errors'       => $this->articulationTypeRepository->getError(),
                 'message' => null,
                 'redirect_url' => null,
             ]);

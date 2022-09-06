@@ -7,15 +7,15 @@
                 <div class="row">
                     <div class="input-field col m12 s12">
                         <label for="name">{{ __('Name ArticulationStage') }}<span class="red-text">*</span></label>
-                        <input id="name" name="name" type="text"value="{{ old('name', isset($accompaniment->name) ? $accompaniment->name: '') }}">
+                        <input id="name" name="name" type="text"value="{{ old('name', isset($articulationStage->name) ? $articulationStage->name: '') }}">
                     </div>
                     <div class="input-field col m12 s12">
                         <label for="description">{{ __('Description') }} (Opcional)</label>
-                        <textarea id="description" name="description" type="text" class="materialize-textarea">{{ old('description', isset($accompaniment->description) ? $accompaniment->description: '') }}</textarea>
+                        <textarea id="description" name="description" type="text" class="materialize-textarea">{{ old('description', isset($articulationStage->description) ? $articulationStage->description: '') }}</textarea>
                     </div>
                     <div class="input-field col m12 s12">
                         <label for="scope"> {{ __('Scope') }}<span class="red-text">*</span></label>
-                        <textarea id="scope" name="scope" type="text" class="materialize-textarea">{{ old('scope', isset($accompaniment->scope) ? $accompaniment->scope : '') }}</textarea>
+                        <textarea id="scope" name="scope" type="text" class="materialize-textarea">{{ old('scope', isset($articulationStage->scope) ? $articulationStage->scope : '') }}</textarea>
                     </div>
                 </div>
             </div>

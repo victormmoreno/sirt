@@ -26,7 +26,7 @@
         <div class="col s12 m12 l12">
             <div class="card mailbox-content">
                 <div class="card-content">
-                    <form id="articulation-form" action="{{route('articulations.store', $accompaniment->id)}}" method="POST">
+                    <form id="articulation-form" action="{{route('articulations.store', $articulationStage->id)}}" method="POST">
                         @csrf
                         <div>
                             @include('articulation.form.step-articulation-type')

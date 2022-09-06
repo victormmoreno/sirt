@@ -6,88 +6,88 @@ use App\Models\ArticulationStage;
 
 class ArticulationStagePresenter extends Presenter
 {
-    protected $accompaniment;
+    protected $articulationStage;
 
-    public function __construct(ArticulationStage $accompaniment)
+    public function __construct(ArticulationStage $articulationStage)
     {
-        $this->accompaniment = $accompaniment;
+        $this->articulationStage = $articulationStage;
     }
 
-    public function accompanimentCode()
+    public function articulationStageCode()
     {
-        return isset($this->accompaniment->code) ? $this->accompaniment->code : 'No registra';
+        return isset($this->articulationStage->code) ? $this->articulationStage->code : 'No registra';
     }
 
-    public function accompanimentName()
+    public function articulationStageName()
     {
-        return isset($this->accompaniment->name) ? $this->accompaniment->name : 'No registra';
+        return isset($this->articulationStage->name) ? $this->articulationStage->name : 'No registra';
     }
 
-    public function accompanimentDescription()
+    public function articulationStageDescription()
     {
-        return isset($this->accompaniment->description) ? $this->accompaniment->description : 'No registra';
+        return isset($this->articulationStage->description) ? $this->articulationStage->description : 'No registra';
     }
 
-    public function accompanimentScope()
+    public function articulationStageScope()
     {
-        return isset($this->accompaniment->scope) ? $this->accompaniment->scope : 'No registra';
+        return isset($this->articulationStage->scope) ? $this->articulationStage->scope : 'No registra';
     }
 
-    public function accompanimentBy()
+    public function articulationStageBy()
     {
-        return isset($this->accompaniment->createdBy) ? $this->accompaniment->createdBy->present()->userFullName() : 'No registra';
+        return isset($this->articulationStage->createdBy) ? $this->articulationStage->createdBy->present()->userFullName() : 'No registra';
     }
 
-    public function accompanimentStatus()
+    public function articulationStageStatus()
     {
-        return $this->accompaniment->status == ArticulationStage::STATUS_OPEN ? __('Open') : __('Close');
+        return $this->articulationStage->status == ArticulationStage::STATUS_OPEN ? __('Open') : __('Close');
     }
 
-    public function accompanimentCreatedDate()
+    public function articulationStageCreatedDate()
     {
-        return optional($this->accompaniment->created_at)->isoFormat('DD/MM/YYYY');
+        return optional($this->articulationStage->created_at)->isoFormat('DD/MM/YYYY');
     }
 
 
-    public function accompanimentStartDate()
+    public function articulationStageStartDate()
     {
-        return optional($this->accompaniment->start_date)->isoFormat('DD/MM/YYYY');
+        return optional($this->articulationStage->start_date)->isoFormat('DD/MM/YYYY');
     }
 
-    public function accompanimentEndDate()
+    public function articulationStageEndDate()
     {
-        return optional($this->accompaniment->end_date)->isoFormat('DD/MM/YYYY');
+        return optional($this->articulationStage->end_date)->isoFormat('DD/MM/YYYY');
     }
 
-    public function accompanimentNode()
+    public function articulationStageNode()
     {
-        return isset($this->accompaniment->node->entidad) ? $this->accompaniment->node->entidad->nombre : 'No Registra';
+        return isset($this->articulationStage->node->entidad) ? $this->articulationStage->node->entidad->nombre : 'No Registra';
     }
 
-    public function accompanimentInterlocutorTalent()
+    public function articulationStageInterlocutorTalent()
     {
-        return $this->accompaniment->has('interlocutor') ? $this->accompaniment->interlocutor->present()->userFullName() : 'No Registra';
+        return $this->articulationStage->has('interlocutor') ? $this->articulationStage->interlocutor->present()->userFullName() : 'No Registra';
     }
 
-    public function accompanimentConfidentialityFormat()
+    public function articulationStageConfidentialityFormat()
     {
-        return $this->accompaniment->confidentiality_format ? ($this->accompaniment->confidentiality_format == 1 ? 'Aceptado' : 'No aceptado') : 'No registra';
+        return $this->articulationStage->confidentiality_format ? ($this->articulationStage->confidentiality_format == 1 ? 'Aceptado' : 'No aceptado') : 'No registra';
     }
 
-    public function accompanimentTermsVerifiedAt()
+    public function articulationStageTermsVerifiedAt()
     {
-        return optional($this->accompaniment->terms_verified_at)->isoFormat('DD/MM/YYYY');
+        return optional($this->articulationStage->terms_verified_at)->isoFormat('DD/MM/YYYY');
     }
 
-    public function accompanimentables()
+    public function articulationStageables()
     {
-        if( $this->accompaniment->projects->count() > 0 &&
-            $this->accompaniment->whereHasMorph(
+        if( $this->articulationStage->projects->count() > 0 &&
+            $this->articulationStage->whereHasMorph(
                 'articulationable',
                 [\App\Models\Proyecto::class]
             )
         ){
-            return $this->accompaniment->projects->map(function ($item) {
+            return $this->articulationStage->projects->map(function ($item) {
                 if(isset($item)){
                     return $item->articulacion_proyecto->actividad->codigo_actividad . ' - '.  $item->articulacion_proyecto->actividad->nombre;
                 }
@@ -98,31 +98,31 @@ class ArticulationStagePresenter extends Presenter
 
 
 
-    public function accompanimentableLink()
+    public function articulationStageableLink()
     {
-        if( $this->accompaniment->projects->count() > 0 &&
-            $this->accompaniment->whereHasMorph(
+        if( $this->articulationStage->projects->count() > 0 &&
+            $this->articulationStage->whereHasMorph(
                 'articulationable',
                 [\App\Models\Proyecto::class]
             )
         ){
-            return $this->accompaniment->projects->map(function ($item) {
+            return $this->articulationStage->projects->map(function ($item) {
                 if(isset($item)){
-                    return '<a class="orange-text text-darken-1" target="_blank"  href="'.route('proyecto.detalle', $this->accompanimentableId()).'">'.$this->accompanimentables().'</a>';
+                    return '<a class="orange-text text-darken-1" target="_blank"  href="'.route('proyecto.detalle', $this->articulationStageableId()).'">'.$this->articulationStageables().'</a>';
                 }
             })->implode(',');
         }
     }
 
-    public function accompanimentableId()
+    public function articulationStageableId()
     {
-        if( $this->accompaniment->projects->count() > 0 &&
-            $this->accompaniment->whereHasMorph(
+        if( $this->articulationStage->projects->count() > 0 &&
+            $this->articulationStage->whereHasMorph(
                 'articulationable',
                 [\App\Models\Proyecto::class]
             )
         ){
-            return $this->accompaniment->projects->map(function ($item) {
+            return $this->articulationStage->projects->map(function ($item) {
                 if(isset($item)){
                     return $item->id;
                 }
@@ -130,15 +130,15 @@ class ArticulationStagePresenter extends Presenter
         }
     }
 
-    public function accompanimentableObjetive()
+    public function articulationStageableObjetive()
     {
-        if( $this->accompaniment->projects->count() > 0 &&
-            $this->accompaniment->whereHasMorph(
+        if( $this->articulationStage->projects->count() > 0 &&
+            $this->articulationStage->whereHasMorph(
                 'articulationable',
                 [\App\Models\Proyecto::class]
             )
         ){
-            return $this->accompaniment->projects->map(function ($item) {
+            return $this->articulationStage->projects->map(function ($item) {
                 if(isset($item)){
                     return $item->articulacion_proyecto->actividad->objetivo_general;
                 }
@@ -146,15 +146,15 @@ class ArticulationStagePresenter extends Presenter
         }
     }
 
-    public function accompanimentableEndDate()
+    public function articulationStageableEndDate()
     {
-        if( $this->accompaniment->projects->count() > 0 &&
-            $this->accompaniment->whereHasMorph(
+        if( $this->articulationStage->projects->count() > 0 &&
+            $this->articulationStage->whereHasMorph(
                 'articulationable',
                 [\App\Models\Proyecto::class]
             )
         ){
-            return $this->accompaniment->projects->map(function ($item) {
+            return $this->articulationStage->projects->map(function ($item) {
                 if(isset($item)){
                     return optional($item->articulacion_proyecto->actividad->fecha_cierre)->isoFormat('DD/MM/YYYY');
                 }
@@ -162,10 +162,10 @@ class ArticulationStagePresenter extends Presenter
         }
     }
 
-    public function accompanimentableType()
+    public function articulationStageableType()
     {
-        if( $this->accompaniment->projects->count() > 0 &&
-            $this->accompaniment->whereHasMorph(
+        if( $this->articulationStage->projects->count() > 0 &&
+            $this->articulationStage->whereHasMorph(
                 'articulationable',
                 [\App\Models\Proyecto::class]
             )
@@ -177,26 +177,26 @@ class ArticulationStagePresenter extends Presenter
         }
     }
 
-    public function accompanimentArticulation()
+    public function articulationStageArticulation()
     {
-        return $this->accompaniment->articulations->map(function ($item) {
+        return $this->articulationStage->articulations->map(function ($item) {
             if(isset($item)){
                 return "{$item->code}";
             }
         })->implode(', ');
     }
 
-    public function accompanimentNameConfidentialityFormat()
+    public function articulationStageNameConfidentialityFormat()
     {
 
-        if(isset($this->accompaniment->file)){
-            if(auth()->user()->can('update', $this->accompaniment)){
+        if(isset($this->articulationStage->file)){
+            if(auth()->user()->can('update', $this->articulationStage)){
                 return '<li class="collection-item avatar">
                     <i class="material-icons circle">insert_drive_file</i>
                     <span class="title">'.__('Confidentiality Format').'</span>
-                    <p>'.basename( url($this->accompaniment->file->ruta) ).'<br>
-                        <a class="orange-text" target="_blank" href='.route('articulation-stage.download', $this->accompaniment).'>Descargar</a>
-                    </p><form method="POST" action="'.route('articulation-stage.file.destroy', $this->accompaniment->file).'">
+                    <p>'.basename( url($this->articulationStage->file->ruta) ).'<br>
+                        <a class="orange-text" target="_blank" href='.route('articulation-stage.download', $this->articulationStage).'>Descargar</a>
+                    </p><form method="POST" action="'.route('articulation-stage.file.destroy', $this->articulationStage->file).'">
                         '.csrf_field().'
                         '.method_field('DELETE').'
                         <button class="secondary-content red-text">
@@ -208,14 +208,11 @@ class ArticulationStagePresenter extends Presenter
                 return '<li class="collection-item avatar">
                     <i class="material-icons circle">insert_drive_file</i>
                     <span class="title">'.__('Confidentiality Format').'</span>
-                    <p>'.basename( url($this->accompaniment->file->ruta) ).'<br>
-                        <a class="orange-text" target="_blank" href='.route('accompaniments.download', $this->accompaniment).'>Descargar</a>
+                    <p>'.basename( url($this->articulationStage->file->ruta) ).'<br>
+                        <a class="orange-text" target="_blank" href='.route('accompaniments.download', $this->articulationStage).'>Descargar</a>
                     </p>
                 </li>';
             }
-
         }
-
-        // return $this->articulations->file ? basename( url($this->articulations->file->ruta) ) : '';
     }
 }

@@ -11,7 +11,7 @@
                             <h3>P.I</h3>
                         </span>
                     </label>
-                    @if($accompaniment->present()->accompanimentableType() != "Sede")
+                    @if($articulationStage->present()->articulationStageableType() != "Sede")
                     <label class="custom-radio">
                         <input type="radio" name="articulation_type" value="ce"/>
                         <span class="radio-btn">

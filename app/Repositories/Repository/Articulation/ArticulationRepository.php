@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Repository\Accompaniment;
+namespace App\Repositories\Repository\Articulation;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;

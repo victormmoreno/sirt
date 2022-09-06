@@ -8,7 +8,7 @@
                             {{__('Name ArticulationStage')}}
                         </span>
                         <p>
-                            {{$articulation->accompaniment->present()->accompanimentCode()}} - {{$articulation->accompaniment->present()->accompanimentName()}}
+                            {{$articulation->articulationStage->present()->articulationStageCode()}} - {{$articulation->articulationStage->present()->articulationStageName()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -32,7 +32,7 @@
                             {{__('Project')}}
                         </span>
                         <p>
-                            {!! $articulation->accompaniment->present()->accompanimentableLink() !!}
+                            {!! $articulation->articulationStage->present()->articulationStageableLink() !!}
                         </p>
                     </li>
 
@@ -78,7 +78,7 @@
                             {{ __('Interlocutory talent') }}
                         </span>
                         <p>
-                            {{$articulation->accompaniment->present()->accompanimentInterlocutorTalent()}}
+                            {{$articulation->articulationStage->present()->articulationStageInterlocutorTalent()}}
                         </p>
                     </li>
                 </ul>

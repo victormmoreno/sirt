@@ -797,16 +797,16 @@ function consultarIdeasEnviadasAlNodo () {
     });
 }
 $(document).ready(function() {
-    let filter_node_accompaniment = $('#filter_node_accompaniment').val();
-    let filter_year_accompaniment = $('#filter_year_accompaniment').val();
-    let filter_status_accompaniment = $('#filter_status_accompaniment').val();
-    if((filter_node_accompaniment == '' || filter_node_accompaniment == null) && (filter_year_accompaniment =='' || filter_year_accompaniment == null) && (filter_status_accompaniment == '' || filter_status_accompaniment == null)){
-        accompaniment.filtersDatatableAccompanibles(filter_node_accompaniment = null,filter_year_accompaniment = null, filter_status_accompaniment = null);
-    }else if((filter_node_accompaniment != '' || filter_node_accompaniment != null) || filter_year_accompaniment !='' && filter_status_accompaniment != ''){
-        accompaniment.filtersDatatableAccompanibles(filter_node_accompaniment, filter_year_accompaniment, filter_status_accompaniment);
+    let filter_node_articulationStage = $('#filter_node_articulationStage').val();
+    let filter_year_articulationStage = $('#filter_year_articulationStage').val();
+    let filter_status_articulationStage = $('#filter_status_articulationStage').val();
+    if((filter_node_articulationStage == '' || filter_node_articulationStage == null) && (filter_year_articulationStage =='' || filter_year_articulationStage == null) && (filter_status_articulationStage == '' || filter_status_articulationStage == null)){
+        articulationStage.filtersDatatableAccompanibles(filter_node_articulationStage = null,filter_year_articulationStage = null, filter_status_articulationStage = null);
+    }else if((filter_node_articulationStage != '' || filter_node_articulationStage != null) || filter_year_articulationStage !='' && filter_status_articulationStage != ''){
+        articulationStage.filtersDatatableAccompanibles(filter_node_articulationStage, filter_year_articulationStage, filter_status_articulationStage);
     }else{
 
-        $('#accompaniment_data_table').DataTable({
+        $('#articulationStage_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
@@ -815,18 +815,18 @@ $(document).ready(function() {
     }
 });
 
-$('#filter_accompaniment').click(function () {
-    let filter_node_accompaniment = $('#filter_node_accompaniment').val();
-    let filter_year_accompaniment = $('#filter_year_accompaniment').val();
-    let filter_status_accompaniment = $('#filter_status_accompaniment').val();
+$('#filter_articulationStage').click(function () {
+    let filter_node_articulationStage = $('#filter_node_articulationStage').val();
+    let filter_year_articulationStage = $('#filter_year_articulationStage').val();
+    let filter_status_articulationStage = $('#filter_status_articulationStage').val();
 
-    $('#accompaniment_data_table').dataTable().fnDestroy();
-    if((filter_node_accompaniment == '' || filter_node_accompaniment == null) && filter_year_accompaniment !='' && filter_status_accompaniment != ''){
-        accompaniment.filtersDatatableAccompanibles(filter_node_accompaniment = null,filter_year_accompaniment, filter_status_accompaniment);
-    }else if((filter_node_accompaniment != '' || filter_node_accompaniment != null) && filter_year_accompaniment !='' && filter_status_accompaniment != ''){
-        accompaniment.filtersDatatableAccompanibles(filter_node_accompaniment, filter_year_accompaniment, filter_status_accompaniment);
+    $('#articulationStage_data_table').dataTable().fnDestroy();
+    if((filter_node_articulationStage == '' || filter_node_articulationStage == null) && filter_year_articulationStage !='' && filter_status_articulationStage != ''){
+        articulationStage.filtersDatatableAccompanibles(filter_node_articulationStage = null,filter_year_articulationStage, filter_status_articulationStage);
+    }else if((filter_node_articulationStage != '' || filter_node_articulationStage != null) && filter_year_articulationStage !='' && filter_status_articulationStage != ''){
+        articulationStage.filtersDatatableAccompanibles(filter_node_articulationStage, filter_year_articulationStage, filter_status_articulationStage);
     }else{
-        $('#accompaniment_data_table').DataTable({
+        $('#articulationStage_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
@@ -835,22 +835,22 @@ $('#filter_accompaniment').click(function () {
     }
 });
 
-$('#download_accompaniment').click(function(){
-    let filter_node_accompaniment = $('#filter_node_accompaniment').val();
-    let filter_year_accompaniment = $('#filter_year_accompaniment').val();
-    let filter_status_accompaniment = $('#filter_status_accompaniment').val();
+$('#download_articulationStage').click(function(){
+    let filter_node_articulationStage = $('#filter_node_articulationStage').val();
+    let filter_year_articulationStage = $('#filter_year_articulationStage').val();
+    let filter_status_articulationStage= $('#filter_status_articulationStage').val();
     const query = {
-        filter_node_accompaniment: filter_node_accompaniment,
-        filter_year_accompaniment: filter_year_accompaniment,
-        filter_status_accompaniment: filter_status_accompaniment
+        filter_node_articulationStage: filter_node_articulationStage,
+        filter_year_articulationStage: filter_year_articulationStage,
+        filter_status_articulationStage: filter_status_articulationStage
     }
     const url = "/articulaciones/export?" + $.param(query)
     window.location = url;
 });
 
-const accompaniment ={
-    filtersDatatableAccompanibles: function(filter_node_accompaniment,filter_year_accompaniment, filter_status_accompaniment){
-        $('#accompaniment_data_table').DataTable({
+const articulationStage ={
+    filtersDatatableAccompanibles: function(filter_node_articulationStage,filter_year_articulationStage, filter_status_articulationStage){
+        $('#articulationStage_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
@@ -862,9 +862,9 @@ const accompaniment ={
                 url: "/articulaciones/datatable_filtros",
                 type: "get",
                 data: {
-                    filter_node_accompaniment: filter_node_accompaniment,
-                    filter_year_accompaniment: filter_year_accompaniment,
-                    filter_status_accompaniment: filter_status_accompaniment,
+                    filter_node_articulationStage: filter_node_articulationStage,
+                    filter_year_articulationStage: filter_year_articulationStage,
+                    filter_status_articulationStage: filter_status_articulationStage,
                 }
             },
             columns: [
@@ -893,8 +893,8 @@ const accompaniment ={
                     name: 'starDate',
                 },
                 {
-                    data: 'accompanimentBy',
-                    name: 'accompanimentBy',
+                    data: 'articulationStageBy',
+                    name: 'articulationStageBy',
                 },
                 {
                     data: 'show',
@@ -905,7 +905,7 @@ const accompaniment ={
         });
     },
     fill_code_project:function(filter_code_project = null){
-        accompaniment.emptyResult('result-projects');
+        articulationStage.emptyResult('result-projects');
         if(filter_code_project.length > 0){
             $.ajax({
                 dataType: 'json',
@@ -913,14 +913,14 @@ const accompaniment ={
                 url: '/actividades/filter-code/' + filter_code_project
             }).done(function (response) {
                 if(response.data.status_code == 200){
-                    accompaniment.emptyResult('result-talents');
+                    articulationStage.emptyResult('result-talents');
                     let activity = response.data.proyecto.articulacion_proyecto.actividad;
                     let data = response.data;
                     $('.result-projects').append(`
                         <div class="card card-transparent p f-12 m-t-lg">
                             <div class="card-content">
                                 <span class="card-title p f-12">${activity.codigo_actividad} ${activity.nombre}</span>
-                                <div class="position-top-right p f-12 mail-date hide-on-med-and-down">${accompaniment.formatDate(activity.fecha_cierre)}</div>
+                                <div class="position-top-right p f-12 mail-date hide-on-med-and-down">${articulationStage.formatDate(activity.fecha_cierre)}</div>
                                 <p>${activity.objetivo_general}</p>
                                 <div class="input-field col m12 s12">
                                     <input type="hidden" name="projects" id="projects" style="display:none" value="${response.data.proyecto.id}"/>
@@ -942,7 +942,7 @@ const accompaniment ={
                                                 <input type="hidden" name="talent" id="talent" style="display:none" value="${talento.user.id}"/>
                                             </div>
                                             <div class="position-top-right p f-12 mail-date hide-on-med-and-down">  Acceso al sistema: ${userSearch.state(talento.user.estado)}</div>
-                                            <p class="hide-on-med-and-down"> Miembro desde ${accompaniment.formatDate(talento.user.created_at)}</p>
+                                            <p class="hide-on-med-and-down"> Miembro desde ${articulationStage.formatDate(talento.user.created_at)}</p>
                                         </div>
                                         <div class="card-action">
                                             <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs orange-text" href="/usuario/usuarios/${talento.user.documento}"><i class="material-icons left">link</i>Ver más</a>
@@ -953,15 +953,15 @@ const accompaniment ={
                         });
                     }
                 }else{
-                    accompaniment.notFound('result-projects', 'projects');
-                    accompaniment.notFound('result-talents', 'talent');
+                    articulationStage.notFound('result-projects', 'projects');
+                    articulationStage.notFound('result-talents', 'talent');
                 }
             });
         }else{
-            accompaniment.emptyResult('result-projects');
-            accompaniment.emptyResult('result-talents');
-            accompaniment.notFound('result-projects', 'projects');
-            accompaniment.notFound('result-talents', 'talent');
+            articulationStage.emptyResult('result-projects');
+            articulationStage.emptyResult('result-talents');
+            articulationStage.notFound('result-projects', 'projects');
+            articulationStage.notFound('result-talents', 'talent');
         }
     },
     queryProyectosFaseInicioTable:function(filter_year_pro=null) {
@@ -1000,8 +1000,8 @@ const accompaniment ={
     },
     addProjectToArticulacion:function(code) {
 
-        accompaniment.fill_code_project(code);
-        accompaniment.emptyResult('result-talents');
+        articulationStage.fill_code_project(code);
+        articulationStage.emptyResult('result-talents');
         $('#filter_project_advanced_modal').closeModal();
     },
     emptyResult: function(cl){
@@ -1033,7 +1033,7 @@ const accompaniment ={
     },
     searchUser:function(document){
         if(document != null){
-            accompaniment.emptyResult('result-talents');
+            articulationStage.emptyResult('result-talents');
             $.ajax({
                 dataType: 'json',
                 type: 'get',
@@ -1050,7 +1050,7 @@ const accompaniment ={
                                 </div>
                                 <p class="position-top-right p f-12 mail-date hide-on-med-and-down"> Acceso al sistema: `+ userSearch.state(user.estado) +`</p>
                                 <div class="mailbox-text p f-12 hide-on-med-and-down">
-                                    Miembro desde ${accompaniment.formatDate(user.created_at)}
+                                    Miembro desde ${articulationStage.formatDate(user.created_at)}
                                 </div>
                             </div>
                             <div class="card-action">
@@ -1059,13 +1059,13 @@ const accompaniment ={
                         </div>
                     `);
                 }else{
-                    accompaniment.emptyResult('result-talents');
-                    accompaniment.notFound('result-talents', 'talent');
+                    articulationStage.emptyResult('result-talents');
+                    articulationStage.notFound('result-talents', 'talent');
                 }
             });
         }else{
-            accompaniment.emptyResult('result-talents');
-            accompaniment.notFound('result-talents', 'talent')
+            articulationStage.emptyResult('result-talents');
+            articulationStage.notFound('result-talents', 'talent')
         }
     },
     queryTalentos: function(){
@@ -1097,11 +1097,11 @@ const accompaniment ={
         $('#filter_talents_advanced_modal').openModal();
     },
     addInterlocutorTalentArticulacion: function(talent){
-        if (accompaniment.noRepeat(talent) == false) {
-            accompaniment.talentAssociated();
+        if (articulationStage.noRepeat(talent) == false) {
+            articulationStage.talentAssociated();
         } else {
-            accompaniment.emptyResult('talent-empty');
-            accompaniment.printInterlocutorTalentoInTable(talent);
+            articulationStage.emptyResult('talent-empty');
+            articulationStage.printInterlocutorTalentoInTable(talent);
         }
         $('#filter_talents_advanced_modal').closeModal();
     },
@@ -1134,10 +1134,10 @@ const accompaniment ={
             url: '/usuario/talento/consultarTalentoPorId/' + id
         }).done(function (response) {
             if(response != null){
-                accompaniment.searchUser(response.talento.documento);
+                articulationStage.searchUser(response.talento.documento);
             }else{
-                accompaniment.emptyResult('result-talents');
-                accompaniment.notFound('result-talents', 'talent')
+                articulationStage.emptyResult('result-talents');
+                articulationStage.notFound('result-talents', 'talent')
             }
         });
     },
@@ -1178,7 +1178,7 @@ const accompaniment ={
                 $('button[type="submit"]').removeAttr('disabled');
                 $('.error').hide();
                 printErroresFormulario(response.data);
-                accompaniment.messageAccompaniable(response.data, 'actualizado', 'Modificación Exitosa');
+                articulationStage.messageAccompaniable(response.data, 'actualizado', 'Modificación Exitosa');
             },
             error: function (xhr, textStatus, errorThrown) {
                 alert("Error: " + errorThrown);
@@ -1194,7 +1194,7 @@ $(document).on('submit', 'form#interlocutor-form', function (event) {
     const form = $(this);
     const data = new FormData($(this)[0]);
     const url = form.attr("action");
-    accompaniment.updateInterlocutor(form, data, url);
+    articulationStage.updateInterlocutor(form, data, url);
 });
 
 
@@ -1326,7 +1326,7 @@ $( document ).ready(function() {
                 success: function (response) {
                     $('button[type="submit"]').removeAttr('disabled');
                     printErroresFormulario(response.data);
-                    accompaniment.messageAccompaniable(response.data,  'registrada', 'Registro exitoso');
+                    articulationStage.messageAccompaniable(response.data,  'registrada', 'Registro exitoso');
                 },
                 error: function (xhr, textStatus, errorThrown) {
                     alert("Error: " + errorThrown);
@@ -1351,30 +1351,30 @@ $( document ).ready(function() {
     $('#filter_code_project').click(function () {
         let filter_code_project = $('#filter_code').val();
         if((filter_code_project != '' || filter_code_project != null || filter_code_project.length  > 0)){
-            accompaniment.fill_code_project(filter_code_project);
+            articulationStage.fill_code_project(filter_code_project);
         }
     });
     $('#filter_project_modal').click(function () {
         let filter_year_pro = $('#filter_year_pro').val();
-        accompaniment.queryProyectosFaseInicioTable(filter_year_pro);
+        articulationStage.queryProyectosFaseInicioTable(filter_year_pro);
     });
     $('#filter_project_advanced').click(function () {
         let filter_year_pro = $('#filter_year_pro').val();
-        accompaniment.queryProyectosFaseInicioTable(filter_year_pro);
+        articulationStage.queryProyectosFaseInicioTable(filter_year_pro);
     });
 
     $('#search_talent').click(function () {
         let filter_user = $('#txtsearch_user').val();
         if(filter_user.length > 0 ){
-            accompaniment.searchUser(filter_user);
+            articulationStage.searchUser(filter_user);
         }else{
-            accompaniment.emptyResult('result-talents');
-            accompaniment.notFound('result-talents');
+            articulationStage.emptyResult('result-talents');
+            articulationStage.notFound('result-talents');
         }
     });
 
     $('#filter_talents_advanced').click(function () {
-        accompaniment.queryTalentos();
+        articulationStage.queryTalentos();
     });
 
     $('.datepicker_accompaniable_date').pickadate({
@@ -1478,7 +1478,7 @@ $( document ).ready(function() {
         },
         messages:
             {
-                accompaniment_type:
+                articulationStage_type:
                     {
                         required:"Por favor selecciona el tipo de acompañamiento",
                     },
@@ -1486,13 +1486,13 @@ $( document ).ready(function() {
                     required:"Este campo es obligatorio",
                     date: "Por favor introduzca una fecha válida"
                 },
-                name_accompaniment:
+                name_articulationStage:
                     {
                         required:"Este campo es obligatorio",
                         minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
                         maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
                     },
-                description_accompaniment:
+                description_articulationStage:
                     {
                         minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
                         maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
@@ -10295,7 +10295,7 @@ let typeArticulacion ={
             serverSide: false,
             "order": [[ 1, "desc" ]],
             ajax:{
-                url: host_url + "/articulaciones/tipoarticulaciones",
+                url: host_url + "/tipoarticulaciones",
                 type: "get",
 
                 data: {
@@ -10347,7 +10347,7 @@ let typeArticulacion ={
                 let token = $("meta[name='csrf-token']").attr("content");
                 $.ajax(
                 {
-                    url: host_url + "/articulaciones/tipoarticulaciones/"+id,
+                    url: host_url + "/tipoarticulaciones/"+id,
                     type: 'DELETE',
                     data: {
                         "id": id,

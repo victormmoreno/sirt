@@ -17,19 +17,19 @@
         </div>
     </div>
     <div class="row search-tabs-row search-tabs-container white lighten-4 result-talents container-error">
-    @if(isset($accompaniment->interlocutor))
+    @if(isset($articulationStage->interlocutor))
         <div class="col s12 m12 l12">
             <div class="card card-transparent p f-12 m-t-lg">
                 <div class="card-content">
-                    <span class="card-title p f-12">{{$accompaniment->present()->accompanimentInterlocutorTalent()}}</span>
+                    <span class="card-title p f-12">{{$articulationStage->present()->articulationStageInterlocutorTalent()}}</span>
                     <div class="input-field col m12 s12">
-                        <input type="hidden" name="talent" id="talent" value="{{$accompaniment->interlocutor->id}}"/>
+                        <input type="hidden" name="talent" id="talent" value="{{$articulationStage->interlocutor->id}}"/>
                     </div>
-                    <div class="position-top-right p f-12 mail-date hide-on-med-and-down">  Acceso al sistema: {{$accompaniment->interlocutor->present()->userAcceso()}}</div>
-                    <p class="hide-on-med-and-down"> Miembro desde {{$accompaniment->interlocutor->present()->userCreatedAtFormat()}}</p>
+                    <div class="position-top-right p f-12 mail-date hide-on-med-and-down">  Acceso al sistema: {{$articulationStage->interlocutor->present()->userAcceso()}}</div>
+                    <p class="hide-on-med-and-down"> Miembro desde {{$articulationStage->interlocutor->present()->userCreatedAtFormat()}}</p>
                 </div>
                 <div class="card-action">
-                    <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs orange-text" href="{{route('usuario.usuarios.show',$accompaniment->interlocutor->documento)}}"><i class="material-icons left">link</i>Ver más</a>
+                    <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs orange-text" href="{{route('usuario.usuarios.show',$articulationStage->interlocutor->documento)}}"><i class="material-icons left">link</i>Ver más</a>
                 </div>
             </div>
         </div>

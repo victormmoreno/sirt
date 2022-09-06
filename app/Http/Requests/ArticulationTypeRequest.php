@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Models\ArticulationType;
 
-class TipoArticulacionRequest extends FormRequest
+class ArticulationTypeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

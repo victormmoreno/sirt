@@ -26,10 +26,10 @@
                                     <div class="mailbox-options">
                                         <ul>
                                             <li class="text-mailbox ">La {{__('articulation-stage')}} se encuentra
-                                                actualmente {{$accompaniment->present()->accompanimentStatus()}}</li>
+                                                actualmente {{$articulationStage->present()->articulationStageStatus()}}</li>
                                             <div class="right">
                                                 <li class="text-mailbox">Fecha
-                                                    registro: {{$accompaniment->present()->accompanimentCreatedDate()}}</li>
+                                                    registro: {{$articulationStage->present()->articulationStageCreatedDate()}}</li>
                                             </div>
                                         </ul>
                                     </div>
@@ -49,7 +49,7 @@
                                                                     {{__('Code ArticulationStage')}}
                                                                 </span>
                                                                     <p>
-                                                                        {{$accompaniment->present()->accompanimentCode()}}
+                                                                        {{$articulationStage->present()->articulationStageCode()}}
                                                                     </p>
                                                                 </li>
                                                                 <li class="collection-item">
@@ -57,7 +57,7 @@
                                                                     {{__('Name ArticulationStage')}}
                                                                 </span>
                                                                     <p>
-                                                                        {{$accompaniment->present()->accompanimentName()}}
+                                                                        {{$articulationStage->present()->articulationStageName()}}
                                                                     </p>
                                                                 </li>
                                                                 <li class="collection-item">
@@ -65,7 +65,7 @@
                                                                     {{ __('Start Date') }}
                                                                 </span>
                                                                     <p>
-                                                                        {{$accompaniment->present()->accompanimentStartDate()}}
+                                                                        {{$articulationStage->present()->articulationStageStartDate()}}
                                                                     </p>
                                                                 </li>
                                                                 <li class="collection-item">
@@ -73,7 +73,7 @@
                                                                     {{ __('Status') }}
                                                                 </span>
                                                                     <p>
-                                                                        {{$accompaniment->present()->accompanimentStatus()}}
+                                                                        {{$articulationStage->present()->articulationStageStatus()}}
                                                                     </p>
                                                                 </li>
                                                                 <li class="collection-item">
@@ -81,7 +81,7 @@
                                                                     {{__('ArticulationStage Type')}}
                                                                 </span>
                                                                     <p>
-                                                                        {{$accompaniment->present()->accompanimentableType()}}
+                                                                        {{$articulationStage->present()->articulationStageableType()}}
                                                                     </p>
                                                                 </li>
                                                                 <li class="collection-item">
@@ -89,7 +89,7 @@
                                                                     {{__('Project')}}
                                                                 </span>
                                                                     <p>
-                                                                        {!! $accompaniment->present()->accompanimentableLink() !!}
+                                                                        {!! $articulationStage->present()->articulationStageableLink() !!}
                                                                     </p>
                                                                 </li>
                                                             </ul>
@@ -101,7 +101,7 @@
                                                                     {{ __('Descrition') }}
                                                                 </span>
                                                                     <p>
-                                                                        {{$accompaniment->present()->accompanimentDescription()}}
+                                                                        {{$articulationStage->present()->articulationStageDescription()}}
                                                                     </p>
                                                                 </li>
                                                                 <li class="collection-item">
@@ -109,7 +109,7 @@
                                                                     {{ __('Scope') }}
                                                                 </span>
                                                                     <p>
-                                                                        {{$accompaniment->present()->accompanimentScope()}}
+                                                                        {{$articulationStage->present()->articulationStageScope()}}
                                                                     </p>
                                                                 </li>
                                                                 <li class="collection-item">
@@ -117,7 +117,7 @@
                                                                     {{ __('Interlocutory talent') }}
                                                                 </span>
                                                                     <p>
-                                                                        {{$accompaniment->present()->accompanimentInterlocutorTalent()}}
+                                                                        {{$articulationStage->present()->articulationStageInterlocutorTalent()}}
                                                                     </p>
                                                                 </li>
                                                                 <li class="collection-item">
@@ -125,10 +125,10 @@
                                                                     {{ __('Created_by') }}
                                                                 </span>
                                                                     <p>
-                                                                        {{$accompaniment->present()->accompanimentBy()}}
+                                                                        {{$articulationStage->present()->articulationStageBy()}}
                                                                     </p>
                                                                 </li>
-                                                                {!! $accompaniment->present()->accompanimentNameConfidentialityFormat() !!}
+                                                                {!! $articulationStage->present()->articulationStageNameConfidentialityFormat() !!}
 
                                                             </ul>
                                                         </div>
@@ -136,7 +136,7 @@
                                                 </div>
                                             </div>
                                             <span
-                                                class="flow-text orange-text">Articulaciones  {{ 'con '.$accompaniment->present()->accompanimentables()}}</span>
+                                                class="flow-text orange-text">Articulaciones  {{ 'con '.$articulationStage->present()->articulationStageables()}}</span>
                                             <div class="row">
                                                 @forelse($articulations as $articulation)
                                                     <div class="col s12 m12 l4">
@@ -213,9 +213,9 @@
                                                         <p><span
                                                                 class=" flow-text">Aún no registras {{ __('Articulations') }}</span>
                                                         </p>
-                                                        @can('update', $accompaniment)
+                                                        @can('update', $articulationStage)
                                                             <p>
-                                                                <a href="{{route('articulations.create', $accompaniment->id )}}"
+                                                                <a href="{{route('articulations.create', $articulationStage->id )}}"
                                                                    class="waves-effect waves-orange btn orange m-t-xs">{{ __('New Articulation') }}</a>
                                                             </p>
                                                         @endcan

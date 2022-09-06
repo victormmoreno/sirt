@@ -56,7 +56,7 @@ $( document ).ready(function() {
         },
         messages:
             {
-                accompaniment_type:
+                articulationStage_type:
                     {
                         required:"Por favor selecciona el tipo de acompañamiento",
                     },
@@ -64,13 +64,13 @@ $( document ).ready(function() {
                     required:"Este campo es obligatorio",
                     date: "Por favor introduzca una fecha válida"
                 },
-                name_accompaniment:
+                name_articulationStage:
                     {
                         required:"Este campo es obligatorio",
                         minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
                         maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
                     },
-                description_accompaniment:
+                description_articulationStage:
                     {
                         minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
                         maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),

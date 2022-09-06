@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
-class TipoArticulacionRepository
+class ArticulationTypeRepository
 {
     private $strError = null;
 
@@ -18,20 +18,19 @@ class TipoArticulacionRepository
 
     public function filterSupports($request)
     {
-        $typeArts = ArticulationType::node($request->filter_nodo_type_art)
+        $articulationTypes = ArticulationType::node($request->filter_nodo_type_art)
                         ->state($request->filter_state_type_art)
-                        ->orderBy('tipo_articulaciones.created_at', 'desc')
+                        ->orderBy('created_at', 'desc')
                         ->get();
 
-        return $this->datatableTipoArticulacion($typeArts);
+        return $this->datatableArticulationTypes($articulationTypes);
     }
 
-    private function datatableTipoArticulacion($typeArts)
+    private function datatableArticulationTypes($articulationTypes)
     {
-        return datatables()->of($typeArts)
+        return datatables()->of($articulationTypes)
         ->editColumn('created_at', function ($data) {
             return $data->created_at
-            // ->settings(['formatFunction' => 'translatedFormat'])
             ->isoFormat('lll');
         })
         ->editColumn('nombre', function ($data) {

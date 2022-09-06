@@ -12,7 +12,6 @@
             <div class="col s4 m4 l3 rigth-align show-on-large hide-on-med-and-down">
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">Inicio</a></li>
-                    <li><a href="{{route('articulaciones.index')}}">Articulaciones PBT</a></li>
                     <li class="active">Tipo Articulaciones</li>
                 </ol>
             </div>

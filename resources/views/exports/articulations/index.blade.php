@@ -52,49 +52,49 @@
         @forelse($articulationStages as $articulationStage)
         <tr>
             <td>
-                {{$articulationStage->present()->accompanimentNode()}}
+                {{$articulationStage->present()->articulationStageNode()}}
             </td>
             <td>
-                {{$articulationStage->present()->accompanimentableType()}}
+                {{$articulationStage->present()->articulationStageableType()}}
             </td>
             <td>
-                {{$articulationStage->present()->accompanimentCode()}}
+                {{$articulationStage->present()->articulationStageCode()}}
             </td>
             <td>
-                {{$articulationStage->present()->accompanimentName()}}
+                {{$articulationStage->present()->articulationStageName()}}
             </td>
             <td>
-                {{$articulationStage->present()->accompanimentables()}}
+                {{$articulationStage->present()->articulationStageables()}}
             </td>
             <td>
-                {{$articulationStage->present()->accompanimentDescription()}}
+                {{$articulationStage->present()->articulationStageDescription()}}
             </td>
             <td>
-                {{$articulationStage->present()->accompanimentScope()}}
+                {{$articulationStage->present()->articulationStageScope()}}
             </td>
             <td>
-                {{$articulationStage->present()->accompanimentStatus()}}
+                {{$articulationStage->present()->articulationStageStatus()}}
             </td>
             <td>
-                {{$articulationStage->present()->accompanimentStartDate()}}
+                {{$articulationStage->present()->articulationStageStartDate()}}
             </td>
             <td>
-                {{$articulationStage->present()->accompanimentEndDate()}}
+                {{$articulationStage->present()->articulationStageEndDate()}}
             </td>
             <td>
-                {{$articulationStage->present()->accompanimentCreatedDate()}}
+                {{$articulationStage->present()->articulationStageCreatedDate()}}
             </td>
             <td>
-                {{$articulationStage->present()->accompanimentInterlocutorTalent()}}
+                {{$articulationStage->present()->articulationStageInterlocutorTalent()}}
             </td>
             <td>
-                {{$articulationStage->present()->accompanimentBy()}}
+                {{$articulationStage->present()->articulationStageBy()}}
             </td>
             <td>
                 {{$articulationStage->articulations_count}}
             </td>
             <td>
-                {{$articulationStage->present()->accompanimentArticulation()}}
+                {{$articulationStage->present()->articulationStageArticulation()}}
             </td>
         </tr>
         @empty
