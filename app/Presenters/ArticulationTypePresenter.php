@@ -14,29 +14,24 @@ class ArticulationTypePresenter extends Presenter
         $this->typeArticulation = $typeArticulation;
     }
 
-    public function nombre()
+    public function name()
     {
-        return  $this->typeArticulation->nombre ? : 'No Registra';
+        return  $this->typeArticulation->name ? : 'No Registra';
     }
 
-    public function descripcion()
+    public function description()
     {
-        return  $this->typeArticulation->descripcion ? : 'No Registra';
+        return  $this->typeArticulation->description ? : 'No Registra';
     }
 
-    public function descripcionLimit()
+    public function descriptionLimit()
     {
-        return  $this->typeArticulation->descripcion ? Str::limit($this->typeArticulation->descripcion, 40) : 'No Registra';
+        return  $this->typeArticulation->description ? Str::limit($this->typeArticulation->description, 40) : 'No Registra';
     }
 
-    public function entidad()
+    public function status()
     {
-        return  $this->typeArticulation->entidad ? : 'No Registra';
-    }
-
-    public function estado()
-    {
-        return  $this->typeArticulation->estado ? : 'No Registra';
+        return  $this->typeArticulation->state ? : 'No Registra';
     }
 
 

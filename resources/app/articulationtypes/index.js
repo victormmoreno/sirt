@@ -1,13 +1,11 @@
 $(document).ready(function() {
-    let filter_nodo_type_art = $('#filter_nodo_type_art').val();
     let filter_state_type_art = $('#filter_state_type_art').val();
 
-    if((filter_nodo_type_art == '' || filter_nodo_type_art == null)  &&  (filter_state_type_art == '' || filter_state_type_art == null)){
-        typeArticulacion.fillDatatatablesTypeArt(filter_nodo_type_art = null, filter_state_type_art = null);
-    }else if((filter_nodo_type_art != '' || filter_nodo_type_art != null)  && (filter_state_type_art != '' || filter_state_type_art != null)){
-        typeArticulacion.fillDatatatablesTypeArt(filter_nodo_type_art,  filter_state_type_art);
+    if(filter_state_type_art == '' || filter_state_type_art == null){
+        typeArticulacion.fillDatatatablesTypeArt(filter_state_type_art = null);
+    }else if(filter_state_type_art != '' || filter_state_type_art != null){
+        typeArticulacion.fillDatatatablesTypeArt(filter_state_type_art);
     }else{
-
         $('#type_art_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -18,14 +16,13 @@ $(document).ready(function() {
 });
 
 $('#filter_type_art').click(function () {
-    let filter_nodo_type_art = $('#filter_nodo_type_art').val();
     let filter_state_type_art = $('#filter_state_type_art').val();
 
     $('#type_art_data_table').dataTable().fnDestroy();
-    if((filter_nodo_type_art == '' || filter_nodo_type_art == null)  &&  (filter_state_type_art == '' || filter_state_type_art == null)){
-        typeArticulacion.fillDatatatablesTypeArt(filter_nodo_type_art = null, filter_state_type_art = null);
-    }else if((filter_nodo_type_art != '' || filter_nodo_type_art != null)  && (filter_state_type_art != '' || filter_state_type_art != null)){
-        typeArticulacion.fillDatatatablesTypeArt(filter_nodo_type_art,  filter_state_type_art);
+    if(filter_state_type_art == '' || filter_state_type_art == null){
+        typeArticulacion.fillDatatatablesTypeArt(filter_state_type_art = null);
+    }else if(filter_state_type_art != '' || filter_state_type_art != null){
+        typeArticulacion.fillDatatatablesTypeArt(filter_state_type_art);
     }else{
 
         $('#type_art_data_table').DataTable({
@@ -38,7 +35,7 @@ $('#filter_type_art').click(function () {
 });
 
 let typeArticulacion ={
-    fillDatatatablesTypeArt: function(filter_nodo_type_art = null,filter_state_type_art = null){
+    fillDatatatablesTypeArt: function(filter_state_type_art = null){
         $('#type_art_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -53,7 +50,6 @@ let typeArticulacion ={
                 type: "get",
 
                 data: {
-                    filter_nodo_type_art: filter_nodo_type_art,
                     filter_state_type_art: filter_state_type_art,
                 }
             },
@@ -63,20 +59,16 @@ let typeArticulacion ={
                     name: 'created_at',
                 },
                 {
-                    data: 'nombre',
-                    name: 'nombre',
+                    data: 'name',
+                    name: 'name',
                 },
                 {
-                    data: 'descripcion',
+                    data: 'description',
                     name: 'descripcion',
                 },
                 {
-                    data: 'entidad',
-                    name: 'entidad',
-                },
-                {
-                    data: 'estado',
-                    name: 'estado',
+                    data: 'state',
+                    name: 'state',
                 },
                 {
                     data: 'show',
@@ -115,6 +107,12 @@ let typeArticulacion ={
                                 'success'
                             );
                             location.href = data.redirect_url;
+                        }else{
+                            Swal.fire(
+                                'No se puede eliminar!',
+                                'El tipo de articulación tiene asociadas tipos de subarticulaciones.',
+                                'error'
+                            );
                         }
                     },
                     error: function (xhr, textStatus, errorThrown) {

@@ -10245,15 +10245,13 @@ function graficoCostos(data, name, title) {
 }
 
 $(document).ready(function() {
-    let filter_nodo_type_art = $('#filter_nodo_type_art').val();
     let filter_state_type_art = $('#filter_state_type_art').val();
 
-    if((filter_nodo_type_art == '' || filter_nodo_type_art == null)  &&  (filter_state_type_art == '' || filter_state_type_art == null)){
-        typeArticulacion.fillDatatatablesTypeArt(filter_nodo_type_art = null, filter_state_type_art = null);
-    }else if((filter_nodo_type_art != '' || filter_nodo_type_art != null)  && (filter_state_type_art != '' || filter_state_type_art != null)){
-        typeArticulacion.fillDatatatablesTypeArt(filter_nodo_type_art,  filter_state_type_art);
+    if(filter_state_type_art == '' || filter_state_type_art == null){
+        typeArticulacion.fillDatatatablesTypeArt(filter_state_type_art = null);
+    }else if(filter_state_type_art != '' || filter_state_type_art != null){
+        typeArticulacion.fillDatatatablesTypeArt(filter_state_type_art);
     }else{
-
         $('#type_art_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -10264,14 +10262,13 @@ $(document).ready(function() {
 });
 
 $('#filter_type_art').click(function () {
-    let filter_nodo_type_art = $('#filter_nodo_type_art').val();
     let filter_state_type_art = $('#filter_state_type_art').val();
 
     $('#type_art_data_table').dataTable().fnDestroy();
-    if((filter_nodo_type_art == '' || filter_nodo_type_art == null)  &&  (filter_state_type_art == '' || filter_state_type_art == null)){
-        typeArticulacion.fillDatatatablesTypeArt(filter_nodo_type_art = null, filter_state_type_art = null);
-    }else if((filter_nodo_type_art != '' || filter_nodo_type_art != null)  && (filter_state_type_art != '' || filter_state_type_art != null)){
-        typeArticulacion.fillDatatatablesTypeArt(filter_nodo_type_art,  filter_state_type_art);
+    if(filter_state_type_art == '' || filter_state_type_art == null){
+        typeArticulacion.fillDatatatablesTypeArt(filter_state_type_art = null);
+    }else if(filter_state_type_art != '' || filter_state_type_art != null){
+        typeArticulacion.fillDatatatablesTypeArt(filter_state_type_art);
     }else{
 
         $('#type_art_data_table').DataTable({
@@ -10284,7 +10281,7 @@ $('#filter_type_art').click(function () {
 });
 
 let typeArticulacion ={
-    fillDatatatablesTypeArt: function(filter_nodo_type_art = null,filter_state_type_art = null){
+    fillDatatatablesTypeArt: function(filter_state_type_art = null){
         $('#type_art_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -10299,7 +10296,6 @@ let typeArticulacion ={
                 type: "get",
 
                 data: {
-                    filter_nodo_type_art: filter_nodo_type_art,
                     filter_state_type_art: filter_state_type_art,
                 }
             },
@@ -10309,20 +10305,16 @@ let typeArticulacion ={
                     name: 'created_at',
                 },
                 {
-                    data: 'nombre',
-                    name: 'nombre',
+                    data: 'name',
+                    name: 'name',
                 },
                 {
-                    data: 'descripcion',
+                    data: 'description',
                     name: 'descripcion',
                 },
                 {
-                    data: 'entidad',
-                    name: 'entidad',
-                },
-                {
-                    data: 'estado',
-                    name: 'estado',
+                    data: 'state',
+                    name: 'state',
                 },
                 {
                     data: 'show',
@@ -10361,6 +10353,12 @@ let typeArticulacion ={
                                 'success'
                             );
                             location.href = data.redirect_url;
+                        }else{
+                            Swal.fire(
+                                'No se puede eliminar!',
+                                'El tipo de articulación tiene asociadas tipos de subarticulaciones.',
+                                'error'
+                            );
                         }
                     },
                     error: function (xhr, textStatus, errorThrown) {
@@ -10378,59 +10376,6 @@ let typeArticulacion ={
         })
     },
 }
-
-$('#check-all-nodes').click(function() {
-    if ($(this).prop('checked')) {
-        $('.filled-in-node').prop('checked', true);
-    } else {
-        $('.filled-in-node').prop('checked', false);
-    }
-});
-
-$("#formTypeArticulation").on('submit', function(e){
-    e.preventDefault();
-    let form = $(this);
-    let data = new FormData($(this)[0]);
-    let url = form.attr("action");
-    $.ajax({
-        type: form.attr('method'),
-        url: url,
-        data: data,
-        contentType: false,
-        cache: false,
-        processData:false,
-        beforeSend: function(){
-            $('.error').hide();
-        },
-        success: function(response){
-            $('.error').hide();
-            printErrorsForm(response);
-            if(!response.fail && response.errors == null){
-                Swal.fire({
-                    title: response.message,
-                    type: 'success',
-                    showCancelButton: false,
-                    confirmButtonColor: '#3085d6',
-                    confirmButtonText: 'Ok',
-                });
-                // $('#formSupport')[0].reset();
-                setTimeout(function () {
-                    window.location.href = response.redirect_url;
-                }, 1500);
-            }
-        },
-        error: function (ajaxContext) {
-            Swal.fire({
-                title: ' Registro erróneo, vuelve a intentarlo',
-                html: ajaxContext.status + ' - ' + ajaxContext.responseJSON.message,
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'Ok',
-            });
-        }
-    });
-});
 
 $('#check-all-nodes').click(function() {
     if ($(this).prop('checked')) {

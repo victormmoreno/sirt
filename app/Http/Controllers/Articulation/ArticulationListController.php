@@ -23,7 +23,6 @@ class ArticulationListController extends Controller
     public function show($id)
     {
         $articulation = Articulation::findOrfail($id);
-
         return view('articulation.show-articulation', compact('articulation'));
     }
 

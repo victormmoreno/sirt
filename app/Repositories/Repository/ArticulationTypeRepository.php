@@ -18,11 +18,10 @@ class ArticulationTypeRepository
 
     public function filterSupports($request)
     {
-        $articulationTypes = ArticulationType::node($request->filter_nodo_type_art)
+        $articulationTypes = ArticulationType::query()
                         ->state($request->filter_state_type_art)
                         ->orderBy('created_at', 'desc')
                         ->get();
-
         return $this->datatableArticulationTypes($articulationTypes);
     }
 
@@ -33,22 +32,19 @@ class ArticulationTypeRepository
             return $data->created_at
             ->isoFormat('lll');
         })
-        ->editColumn('nombre', function ($data) {
-            return Str::limit($data->present()->nombre(), 30);
+        ->editColumn('name', function ($data) {
+            return Str::limit($data->present()->name(), 30);
         })
-        ->editColumn('descripcion', function ($data) {
-            return $data->present()->descripcionLimit();
-        })
-        ->editColumn('entidad', function ($data) {
-            return $data->present()->entidad();
+        ->editColumn('description', function ($data) {
+            return $data->present()->descriptionLimit();
         })
 
-        ->editColumn('estado', function ($data) {
-            if($data->estado == ArticulationType::mostrar()){
-                return  '<div class="chip green white-text text-darken-2">'.$data->present()->estado().'</div>';
+        ->editColumn('state', function ($data) {
+            if($data->state == ArticulationType::mostrar()){
+                return  '<div class="chip green white-text text-darken-2">'.$data->present()->status().'</div>';
             }
-            if($data->estado == ArticulationType::ocultar()){
-                return  '<div class="chip red white-text text-darken-2">'.$data->present()->estado().'</div>';
+            if($data->state == ArticulationType::ocultar()){
+                return  '<div class="chip red white-text text-darken-2">'.$data->present()->status().'</div>';
             }
 
         })
@@ -57,22 +53,17 @@ class ArticulationTypeRepository
             <i class="material-icons">search</i>
             </a>';
         })
-        ->rawColumns(['created_at', 'estado',  'show'])->make(true);
+        ->rawColumns(['created_at', 'state',  'show'])->make(true);
     }
 
     public function storeTypeArticulation($request){
         DB::beginTransaction();
         try {
-
             $typeArticulation = ArticulationType::create([
-                'nombre'          => $request->input('txtnombre'),
-                'descripcion'      => $request->input('txtdescripcion'),
-                'entidad'      => $request->input('txtentidad'),
-                'estado'         => $request->filled('checkestado') ? ArticulationType::mostrar() : ArticulationType::ocultar(),
+                'name'          => $request->input('name'),
+                'description'      => $request->input('description'),
+                'state'         => $request->filled('checkestado') ? ArticulationType::mostrar() : ArticulationType::ocultar(),
             ]);
-
-            $typeArticulation->nodos()->sync($request->input('checknode'));
-
             DB::commit();
             return true;
         } catch (\Exception $e) {
@@ -87,14 +78,10 @@ class ArticulationTypeRepository
         try {
 
             $typeArticulation->update([
-                'nombre'          => $request->input('txtnombre'),
-                'descripcion'      => $request->input('txtdescripcion'),
-                'entidad'      => $request->input('txtentidad'),
-                'estado'         => $request->filled('checkestado') ? ArticulationType::mostrar() : ArticulationType::ocultar(),
+                'name'          => $request->input('name'),
+                'description'      => $request->input('description'),
+                'state'         => $request->filled('checkestado') ? ArticulationType::mostrar() : ArticulationType::ocultar(),
             ]);
-
-            $typeArticulation->nodos()->sync($request->input('checknode'));
-
             DB::commit();
             return true;
         } catch (\Exception $e) {

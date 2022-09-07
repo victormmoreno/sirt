@@ -27,14 +27,14 @@ class ArticulationTypeController extends Controller
      */
     public function index(Request $request)
     {
-        if (request()->ajax()) {
-            return $this->articulationTypeRepository->filterSupports($request);
+        if (request()->user()->can('index', ArticulationType::class)) {
+            if (request()->ajax()) {
+                return $this->articulationTypeRepository->filterSupports($request);
+            }
+            return view('articulation.articulation-type.index');
         }
-        $nodos = Entidad::has('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id');
-        return view('articulation.articulation-type.index', ['nodos' =>$nodos]);
+        return redirect()->route('home');
     }
-
-
 
     /**
      * Show the form for creating a new resource.
@@ -43,8 +43,10 @@ class ArticulationTypeController extends Controller
      */
     public function create()
     {
-        $nodos = Entidad::has('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id');
-        return view('articulation.articulation-type.create', ['nodos' => $nodos]);
+        if (request()->user()->can('create', ArticulationType::class)) {
+            return view('articulation.articulation-type.create');
+        }
+        return redirect()->route('home');
     }
 
     /**
@@ -55,31 +57,33 @@ class ArticulationTypeController extends Controller
      */
     public function store(Request $request)
     {
-        $req       = new ArticulationTypeRequest;
-        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-        if ($validator->fails()) {
+        if (request()->user()->can('create', ArticulationType::class)) {
+            $req = new ArticulationTypeRequest;
+            $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+            if ($validator->fails()) {
+                return response()->json([
+                    'fail' => true,
+                    'errors' => $validator->errors(),
+                    'message' => null,
+                    'redirect_url' => null,
+                ]);
+            }
+            $result = $this->articulationTypeRepository->storeTypeArticulation($request);
+            if (!$result) {
+                return response()->json([
+                    'fail' => true,
+                    'errors' => $this->articulationTypeRepository->getError(),
+                    'message' => null,
+                    'redirect_url' => null,
+                ]);
+            }
             return response()->json([
-                'fail'   => true,
-                'errors' => $validator->errors(),
-                'message' => null,
-                'redirect_url' => null,
+                'fail' => false,
+                'errors' => null,
+                'message' => "Registro extioso",
+                'redirect_url' => url(route('tipoarticulaciones.index')),
             ]);
-        }
-        $result = $this->articulationTypeRepository->storeTypeArticulation($request);
-        if (!$result) {
-            return response()->json([
-                'fail'         => true,
-                'errors'       => $this->articulationTypeRepository->getError(),
-                'message' => null,
-                'redirect_url' => null,
-            ]);
-        }
-        return response()->json([
-            'fail'         => false,
-            'errors'       => null,
-            'message' => "Registro extioso",
-            'redirect_url' => url(route('tipoarticulaciones.index')),
-        ]);
+        }return redirect()->route('home');
     }
 
     /**
@@ -160,13 +164,12 @@ class ArticulationTypeController extends Controller
     public function destroy($typeArticulation)
     {
         $typeArticulation = ArticulationType::findOrFail($typeArticulation);
-        if($typeArticulation->articulacionespbt->count() > 0 ){
+        if($typeArticulation->articulationsubtypes->count() > 0 ){
             return response()->json([
                 'fail'         => true,
                 'redirect_url' => route('tipoarticulaciones.show', $typeArticulation->id),
             ]);
         }
-        $typeArticulation->nodos()->detach();
         $typeArticulation->delete();
         return response()->json([
             'fail'         => false,

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\ArticulationType;
 use App\Models\CostoAdministrativo;
 use App\Models\Empresa;
 use App\Models\Equipo;
@@ -23,6 +24,7 @@ use App\Policies\Material\MaterialPolicy;
 use App\Policies\Idea\IdeaPolicy;
 use App\Models\ArticulationStage;
 use App\Policies\Articulation\ArticulationStagePolicy;
+use App\Policies\Articulation\ArticulationTypePolicy;
 use App\User;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -46,6 +48,7 @@ class AuthServiceProvider extends ServiceProvider
         Idea::class => IdeaPolicy::class,
         Empresa::class => EmpresaPolicy::class,
         ArticulationStage::class => ArticulationStagePolicy::class,
+        ArticulationType::class => ArticulationTypePolicy::class,
     ];
 
     /**

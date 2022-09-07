@@ -33,15 +33,6 @@
                         <div class="divider"></div>
                         <div class="row search-tabs-row search-tabs-header">
                             <div class="input-field col s12 m2 l2">
-                                <label class="active" for="filter_nodo_type_art">Nodo <span class="red-text">*</span></label>
-                                <select name="filter_nodo_type_art" id="filter_nodo_type_art">
-                                    <option value="all" >todos</option>
-                                    @foreach($nodos as $id => $name)
-                                        <option value="{{$id}}">{{$name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="input-field col s12 m2 l2">
                                 <label class="active" for="filter_state_type_art">Estado</label>
                                 <select  name="filter_state_type_art" id="filter_state_type_art">
                                     <option value="all">Todos</option>
@@ -59,7 +50,6 @@
                                     <th>Fecha registro</th>
                                     <th>Nombre</th>
                                     <th>Descripción</th>
-                                    <th>Entidad</th>
                                     <th>Estado</th>
                                     <th>Detalles</th>
                                 </tr>

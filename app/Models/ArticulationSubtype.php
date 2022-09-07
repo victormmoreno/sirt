@@ -25,4 +25,10 @@ class ArticulationSubtype extends Model
     public function articulationtype(){
         return $this->belongsTo(ArticulationType::class, 'articulation_type_id');
     }
+
+    public function nodos()
+    {
+        return $this->belongsToMany(Nodo::class, 'nodo_tipoarticulacion')
+            ->withTimestamps();
+    }
 }
