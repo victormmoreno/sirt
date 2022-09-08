@@ -130,6 +130,8 @@ mix.scripts([
     'resources/app/costos/index.js',
     'resources/app/articulationtypes/index.js',
     'resources/app/articulationtypes/form.js',
+    'resources/app/articulationsubtypes/index.js',
+    'resources/app/articulationsubtypes/form.js',
     'resources/app/indicadores/index.js',
     'resources/app/publicacion/form.js',
     'resources/app/support/form.js',

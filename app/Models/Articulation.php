@@ -48,6 +48,15 @@ class Articulation extends Model
         return $this->belongsTo(ArticulationStage::class);
     }
 
+    /**
+     * The inverse relation one to much
+     *
+     * @return void
+     */
+    public function articulationsubtype(){
+        return $this->belongsTo(ArticulationSubtype::class, 'articulation_subtype_id');
+    }
+
     public function users()
     {
         return $this->belongsToMany(\App\User::class, 'articulation_user', 'articulation_id', 'user_id');

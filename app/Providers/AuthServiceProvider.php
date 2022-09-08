@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\ArticulationSubtype;
 use App\Models\ArticulationType;
 use App\Models\CostoAdministrativo;
 use App\Models\Empresa;
@@ -12,6 +13,7 @@ use App\Models\LineaTecnologica;
 use App\Models\Nodo;
 use App\Models\Material;
 use App\Models\UsoInfraestructura;
+use App\Policies\Articulation\ArticulationSubtypePolicy;
 use App\Policies\CostoAdministrativo\CostoAdministrativoPolicy;
 use App\Policies\Empresa\EmpresaPolicy;
 use App\Policies\Equipo\EquipoPolicy;
@@ -49,6 +51,7 @@ class AuthServiceProvider extends ServiceProvider
         Empresa::class => EmpresaPolicy::class,
         ArticulationStage::class => ArticulationStagePolicy::class,
         ArticulationType::class => ArticulationTypePolicy::class,
+        ArticulationSubtype::class => ArticulationSubtypePolicy::class,
     ];
 
     /**

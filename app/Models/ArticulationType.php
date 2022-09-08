@@ -32,20 +32,10 @@ class ArticulationType extends Model
         return $this->hasMany(ArticulationSubtype::class);
     }
 
-    public function scopeNode($query, $node)
-    {
-        if (isset($node) && $node != null && $node != 'all') {
-            return $query->whereHas('nodos', function ($subQuery) use ($node) {
-                $subQuery->where('nodos.id', $node);
-            });
-        }
-        return $query;
-    }
-
     public function scopeState($query, $state)
     {
         if (isset($state) && $state != null && $state != 'all') {
-            $query->where('estado',  $state);
+            $query->where('state',  $state);
         }
         return $query;
     }

@@ -5,7 +5,7 @@ namespace App\Policies\Articulation;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class ArticulationTypePolicy
+class ArticulationSubtypePolicy
 {
     use HandlesAuthorization;
 
@@ -24,6 +24,7 @@ class ArticulationTypePolicy
             return true;
         }
     }
+
     /**
      * Determine whether the user can view the articulationStages.
      *
@@ -40,15 +41,24 @@ class ArticulationTypePolicy
                 session()->get('login_role') == User::IsActivador()
             );
     }
+
+    public function listNodes(User $user)
+    {
+        return (bool) $user->hasAnyRole([User::IsActivador()])
+            && session()->has('login_role')
+            && session()->get('login_role') == User::IsActivador();
+    }
+    /**
+     * Determine if the given articulations can be create by the user.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Auth\Access\Response
+     */
     public function create(User $user)
     {
-        return (bool) $user->hasAnyRole([
-                User::IsActivador()
-            ])
+        return (bool) $user->hasAnyRole([User::IsActivador()])
             && session()->has('login_role')
-            && (
-                session()->get('login_role') == User::IsActivador()
-            );
+            && session()->get('login_role') == User::IsActivador();
     }
 
     public function show(User $user)

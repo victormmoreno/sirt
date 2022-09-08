@@ -41,7 +41,7 @@
                                             <p>Ingresa y selecciona la visibilidad del tipo de articulación</p>
                                         </address>
                                         <form  class="m-t-md" action="{{ route('tipoarticulaciones.store')}}" id="formTypeArticulation" method="POST">
-                                            @include('articulation.articulation-type.form', ['btnText' => 'Guardar'])
+                                            @include('articulation-type.form', ['btnText' => 'Guardar'])
                                         </form>
                                     </div>
                                 </div>

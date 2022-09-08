@@ -154,15 +154,15 @@ class Nodo extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function accompaniments()
+    public function articulationstages()
     {
         return $this->hasMany(ArticulationStage::class, 'node_id', 'id');
     }
 
 
-    public function tiposarticulaciones()
+    public function articulationsubtypes()
     {
-        return $this->belongsToMany(User::class, 'nodo_tipoarticulacion')
+        return $this->belongsToMany(ArticulationSubtype::class, 'nodo_tipoarticulacion')
             ->withTimestamps();
     }
 

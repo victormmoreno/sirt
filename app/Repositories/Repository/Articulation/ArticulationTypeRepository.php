@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Repository;
+namespace App\Repositories\Repository\Articulation;
 
 use App\Models\ArticulationType;
 use Illuminate\Support\Facades\DB;

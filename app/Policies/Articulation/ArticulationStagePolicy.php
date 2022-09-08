@@ -64,9 +64,9 @@ class ArticulationStagePolicy
 
     public function listNodes(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador()])
+        return (bool) $user->hasAnyRole([User::IsActivador()])
             && session()->has('login_role')
-            && session()->get('login_role') == User::IsAdministrador();
+            && session()->get('login_role') == User::IsActivador();
     }
 
     /**

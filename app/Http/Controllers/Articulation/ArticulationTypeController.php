@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Entidad;
 use App\Models\ArticulationType;
-use App\Repositories\Repository\ArticulationTypeRepository;
+use App\Repositories\Repository\Articulation\ArticulationTypeRepository;
 use App\Http\Requests\ArticulationTypeRequest;
 use Illuminate\Support\Facades\Validator;
 
@@ -31,7 +31,7 @@ class ArticulationTypeController extends Controller
             if (request()->ajax()) {
                 return $this->articulationTypeRepository->filterSupports($request);
             }
-            return view('articulation.articulation-type.index');
+            return view('articulation-type.index');
         }
         return redirect()->route('home');
     }
@@ -44,7 +44,7 @@ class ArticulationTypeController extends Controller
     public function create()
     {
         if (request()->user()->can('create', ArticulationType::class)) {
-            return view('articulation.articulation-type.create');
+            return view('articulation-type.create');
         }
         return redirect()->route('home');
     }
@@ -94,14 +94,16 @@ class ArticulationTypeController extends Controller
      */
     public function show( $typeArticulation)
     {
-        $typeArticulation = ArticulationType::findOrFail($typeArticulation);
-
-        if (request()->ajax()) {
-            return response()->json([
-                'data' => $typeArticulation
-            ]);
+        if (request()->user()->can('show', ArticulationType::class)) {
+            $typeArticulation = ArticulationType::findOrFail($typeArticulation);
+            if (request()->ajax()) {
+                return response()->json([
+                    'data' => $typeArticulation
+                ]);
+            }
+            return view('articulation-type.show', ['typeArticulation' => $typeArticulation]);
         }
-        return view('articulation.articulation-type.show', ['typeArticulation' => $typeArticulation]);
+        return redirect()->route('home');
     }
 
     /**
@@ -114,7 +116,7 @@ class ArticulationTypeController extends Controller
     {
         $nodos = Entidad::has('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id');
         $typeArticulation = ArticulationType::findOrFail($typeArticulation);
-        return view('articulation.articulation-type.edit', ['typeArticulation' => $typeArticulation, 'nodos' => $nodos]);
+        return view('articulation-type.edit', ['typeArticulation' => $typeArticulation, 'nodos' => $nodos]);
     }
 
     /**
@@ -158,7 +160,7 @@ class ArticulationTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int  $typeArticulation
      * @return \Illuminate\Http\Response
      */
     public function destroy($typeArticulation)
@@ -176,5 +178,4 @@ class ArticulationTypeController extends Controller
             'redirect_url' => route('tipoarticulaciones.index'),
         ]);
     }
-
 }

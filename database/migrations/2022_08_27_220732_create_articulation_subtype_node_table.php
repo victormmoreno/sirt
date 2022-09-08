@@ -4,13 +4,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNodoTipoarticulacionTable extends Migration
+class CreateArticulationSubtypeNodeTable extends Migration
 {
-    /**
-     * Schema table name to migrate
-     * @var string
-     */
-    protected $tableName = 'nodo_tipoarticulacion';
     /**
      * Run the migrations.
      *
@@ -18,11 +13,10 @@ class CreateNodoTipoarticulacionTable extends Migration
      */
     public function up()
     {
-        Schema::create($this->tableName, function (Blueprint $table) {
-
+        Schema::create('articulation_subtype_node', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('nodo_id');
-            $table->bigInteger('tipo_articulacion_id')->unsigned();
+            $table->bigInteger('articulation_subtype_id')->unsigned();
             $table->timestamps();
 
             $table->foreign('nodo_id')
@@ -30,11 +24,10 @@ class CreateNodoTipoarticulacionTable extends Migration
                 ->onDelete('no action')
                 ->onUpdate('no action');
 
-            $table->foreign('tipo_articulacion_id')
-                ->references('id')->on('tipo_articulaciones')
+            $table->foreign('articulation_subtype_id')
+                ->references('id')->on('articulation_subtypes')
                 ->onDelete('no action')
                 ->onUpdate('no action');
-
         });
     }
 
@@ -45,6 +38,6 @@ class CreateNodoTipoarticulacionTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists($this->tableName);
+        Schema::dropIfExists('articulation_subtype_node');
     }
 }

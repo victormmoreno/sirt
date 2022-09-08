@@ -19,9 +19,12 @@ class ArticulationStageSeeder extends Seeder
     public function run()
     {
         factory(AlcanceArticulacion::class, 4)->create();
-        factory(ArticulationType::class, 10)->create()
+        factory(ArticulationType::class, 1)->create([
+            'name' => 'Propiedad Intelectual'
+        ])
             ->each(function($articulationType){
-                factory(ArticulationSubtype::class, 10)->create([
+                factory(ArticulationSubtype::class, 1)->create([
+                    'name' => 'Propiedad Industrial-Patentes de inveción',
                    'articulation_type_id' => $articulationType->id
                ]);
             });

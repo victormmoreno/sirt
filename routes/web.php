@@ -813,7 +813,7 @@ Route::get('empresas/filter-code/{value}', 'EmpresaController@filterByCode')->na
 Route::get('empresas/sede/{id}', 'EmpresaController@filterSede')->name('empresa.sede.filter');
 
 Route::resource('tipoarticulaciones', 'Articulation\ArticulationTypeController');
-
+Route::resource('tiposubarticulaciones', 'Articulation\ArticulationSubtypeController');
 
 Route::group(
     [
