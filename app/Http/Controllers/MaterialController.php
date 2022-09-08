@@ -97,7 +97,6 @@ class MaterialController extends Controller
     public function index(MaterialDatatable $materialDatatable)
     {
 
-        $this->authorize('index', Material::class);
         if (request()->ajax()) {
 
             if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
@@ -122,22 +121,10 @@ class MaterialController extends Controller
             return $materialDatatable->indexDatatable($materiales);
         }
 
-        switch (Session::get('login_role')) {
-            case User::IsActivador():
-                return view('materiales.index', [
-                    'nodos' => $this->getNodoRepository()->getSelectNodo(),
-                ]);
-                break;
-            case User::IsDinamizador():
-                return view('materiales.index');
-                break;
-            case User::IsGestor():
-                return view('materiales.index');
-                break;
-            default:
-                return abort(Response::HTTP_FORBIDDEN);
-                break;
-        }
+        return view('materiales.index', [
+            'nodos' => $this->getNodoRepository()->getSelectNodo(),
+        ]);
+
     }
 
     /**
@@ -150,21 +137,18 @@ class MaterialController extends Controller
     {
         $this->authorize('getMaterialesPorNodo', Material::class);
 
-        if (request()->ajax()) {
+        if (session()->has('login_role') && session()->get('login_role') == User::IsActivador() || session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()) {
 
-            if (session()->has('login_role') && session()->get('login_role') == User::IsActivador()) {
+            $materiales = $this->getMaterialRepository()->getInfoDataMateriales()
+                ->whereHas('nodo', function ($query) use ($nodo) {
+                    $query->where('id', $nodo);
+                })->orderBy('nombre')->get();
 
-                $materiales = $this->getMaterialRepository()->getInfoDataMateriales()
-                    ->whereHas('nodo', function ($query) use ($nodo) {
-                        $query->where('id', $nodo);
-                    })->orderBy('nombre')->get();
-
-                return $materialDatatable->getMaterialesPorNodoDatatable($materiales);
-            } else {
-                return response()->json(['data' => 'no response']);
-            }
+            return $materialDatatable->getMaterialesPorNodoDatatable($materiales);
+        } else {
+            return response()->json(['data' => 'no response']);
         }
-        abort(Response::HTTP_FORBIDDEN);
+
     }
 
     /**
@@ -174,12 +158,14 @@ class MaterialController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', Material::class);
-
-        if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
+        // $this->authorize('create', Material::class);
+        $nodos = $this->getNodoRepository()->getSelectNodo();
+        if (session()->get('login_role') == User::IsDinamizador()) {
             $nodo = auth()->user()->dinamizador->nodo->id;
-        } elseif (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
+        } elseif (session()->get('login_role') == User::IsGestor()) {
             $nodo = auth()->user()->gestor->nodo->id;
+        } else {
+            $nodo = $nodos->first()->id;
         }
 
         $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
@@ -189,6 +175,7 @@ class MaterialController extends Controller
             'categoriasMateriales' => CategoriaMaterial::selectAllCategoriasMateriales($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
             'medidas'              => Medida::selectAllMedidas($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
             'presentaciones'       => Presentacion::selectAllPresentaciones($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
+            'nodos' => $nodos
         ]);
     }
 
@@ -221,7 +208,6 @@ class MaterialController extends Controller
     public function show($id)
     {
         $material = $this->getMaterialRepository()->getInfoDataMateriales()->findOrFail($id);
-        $this->authorize('show', $material);
 
         return view('materiales.show', [
             'material' => $material,

@@ -38,12 +38,9 @@
                                     <i class="large material-icons prefix">
                                         block
                                     </i>
-
                                     <p>
                                         Para registrar un nuevo material, Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }} debe tener lineas asociadas, por favor solicita al administrador de la plataforma para que este agregue nuevas lineas tecnológicas al nodo.
                                     </p>
-
-
                                 </div>
                             @else
                     			<form  action="{{route('material.store')}}" method="POST" onsubmit="return checkSubmit()">

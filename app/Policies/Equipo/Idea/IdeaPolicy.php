@@ -60,16 +60,5 @@ class IdeaPolicy
             return (bool) ($user->hasAnyRole([User::IsTalento()]) && $user->talento->id == $idea->talento->id) || ($user->hasAnyRole([User::IsInfocenter()]) && $user->infocenter->nodo_id == $idea->nodo->id) || ($user->hasAnyRole([User::IsArticulador()]) && $user->articulador->nodo_id == $idea->nodo_id);
         }
     }
-
-    /**
-     * Determine whether the user can restore the idea.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Models\Idea  $idea
-     * @return mixed
-     */
-    public function restore(User $user, Idea $idea)
-    {
-        //
-    }
+    
 }

@@ -183,10 +183,9 @@ Route::resource('materiales', 'MaterialController', [
     'update'  => 'material.update',
     'edit'    => 'material.edit',
     'destroy' => 'material.destroy',
-])
-    ->parameters([
+])->parameters([
         'materiales' => 'id',
-    ]);
+]);
 
 //mantenimientos
 Route::get('/mantenimientos/getmantenimientosequipospornodo/{nodo}', 'MantenimientoController@getMantenimientosEquiposPorNodo')

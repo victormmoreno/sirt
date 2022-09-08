@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $('#materiales_administrador_table').DataTable({
+    $('#materiales_table').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
@@ -12,10 +12,10 @@ $(document).ready(function() {
 var selectMaterialesPorNodo = {
     selectMaterialesForNodo: function() {
         let nodo = $('#selectnodo').val();
-        $('#materiales_administrador_table').dataTable().fnDestroy();
+        $('#materiales_table').dataTable().fnDestroy();
         if (nodo != '') {
             
-            $('#materiales_administrador_table').DataTable({
+            $('#materiales_table').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
                 },
@@ -85,7 +85,7 @@ var selectMaterialesPorNodo = {
 
 
         }else{
-            $('#materiales_administrador_table').DataTable({
+            $('#materiales_table').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
                 },

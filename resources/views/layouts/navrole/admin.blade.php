@@ -28,18 +28,12 @@
         <i class="material-icons {{setActiveRouteActiveIcon('proyecto')}}">library_books</i>Proyectos
     </a>
 </li>
-{{-- <li class="no-padding {{setActiveRoute('articulacion')}}">
-    <a href="{{ route('articulaciones.index') }}" class="{{setActiveRouteActivePage('articulacion')}}" rel="canonical" title="Articulaciones">
-        <i class="material-icons {{setActiveRouteActiveIcon('articulacion')}}">autorenew</i>Articulación PBT
-    </a>
-</li>
-
 <li class="no-padding {{setActiveRoute('materiales')}}">
     <a href="{{route('material.index')}}" class="{{setActiveRouteActivePage('materiales')}}" rel="canonical" title="Materiales de Formación">
         <i class="material-icons {{setActiveRouteActiveIcon('materiales')}}">local_library</i>Materiales de Formación
     </a>
 </li>
-<li class="no-padding {{setActiveRoute('charla')}}">
+{{-- <li class="no-padding {{setActiveRoute('charla')}}">
     <a href="{{route('charla')}}" class="{{setActiveRouteActivePage('charla')}}" rel="canonical" title="Charlas Informativas">
         <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas
     </a>
@@ -103,7 +97,7 @@
         </li>
         </ul>
     </div>
-</li>
+</li> --}}
 <li class="no-padding {{setActiveRoute('grupo')}}">
     <a class="waves-effect waves-grey {{setActiveRouteActivePage('grupo')}}" href="{{route('grupo')}}" rel="canonical" title="Grupos de Investigación">
         <i class="material-icons {{setActiveRouteActiveIcon('grupo')}}">group_work</i>Grupos de Investigación
@@ -114,7 +108,7 @@
         <i class="material-icons {{setActiveRouteActiveIcon('empresa')}}">business_center</i>Empresas
     </a>
 </li>
-<li class="no-padding {{setActiveRoute('noticias')}}">
+{{-- <li class="no-padding {{setActiveRoute('noticias')}}">
     <a class="waves-effect waves-grey {{setActiveRouteActivePage('noticias')}}" href="{{url('noticias')}}" title="Noticias">
         <i class="material-icons {{setActiveRouteActiveIcon('noticias')}}">local_library</i>Noticias
     </a>
