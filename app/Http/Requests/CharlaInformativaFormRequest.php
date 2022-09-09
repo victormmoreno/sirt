@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use App\User;
 
 class CharlaInformativaFormRequest extends FormRequest
 {
@@ -25,6 +27,7 @@ class CharlaInformativaFormRequest extends FormRequest
     public function rules()
     {
         return [
+        'txtnodo_id' => Rule::requiredIf(session()->get('login_role') == User::IsAdministrador()),
         'txtfecha' => 'required|date_format:"Y-m-d"',
         'txtnro_asistentes' => 'required|numeric|min:1',
         'txtencargado' => 'required|string|max:75',
@@ -39,6 +42,8 @@ class CharlaInformativaFormRequest extends FormRequest
     public function messages()
     {
         return $messages = [
+        // Mensaje para el campo txtnodo_id
+        'txtnodo_id.required' => 'El nodo es obligatorio.',
         // Mensajes para el campo txtfecha
         'txtfecha.required' => 'La Fecha es obligatoria.',
         'txtfecha.date_format' => 'La Fecha no tiene un formato válido',

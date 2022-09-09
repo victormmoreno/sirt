@@ -29,21 +29,22 @@ class CharlaInformativaRepository
    */
   public function consultarInformacionDeUnaCharlaInformativaRepository($id)
   {
-    return CharlaInformativa::select('codigo_charla',
-    'encargado',
-    'charlasinformativas.id',
-    'entidades.nombre AS nodo',
-    'nro_asistentes',
-    'observacion',
-    'fecha')
-    ->selectRaw('IF(listado_asistentes = 1, "Si", "No") AS listado_asistentes')
-    ->selectRaw('IF(evidencia_fotografica = 1, "Si", "No") AS evidencia_fotografica')
-    ->selectRaw('IF(programacion = 1, "Si", "No") AS programacion')
-    ->join('nodos', 'nodos.id', '=', 'charlasinformativas.nodo_id')
-    ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-    ->where('charlasinformativas.id', $id)
-    ->get()
-    ->last();
+      return CharlaInformativa::select('codigo_charla',
+      'encargado',
+      'charlasinformativas.id',
+      'charlasinformativas.nodo_id',
+      'entidades.nombre AS nodo',
+      'nro_asistentes',
+      'observacion',
+      'fecha')
+      ->selectRaw('IF(listado_asistentes = 1, "Si", "No") AS listado_asistentes')
+      ->selectRaw('IF(evidencia_fotografica = 1, "Si", "No") AS evidencia_fotografica')
+      ->selectRaw('IF(programacion = 1, "Si", "No") AS programacion')
+      ->join('nodos', 'nodos.id', '=', 'charlasinformativas.nodo_id')
+      ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+      ->where('charlasinformativas.id', $id)
+      ->get()
+      ->last();
   }
 
   /**
@@ -68,7 +69,7 @@ class CharlaInformativaRepository
 
   /**
    * Registra una nueva charla informativa
-   * @param Request $request
+   * @param $request
    * @return boolean
    */
   public function storeCharlaInformativaRepository($request)
@@ -76,11 +77,7 @@ class CharlaInformativaRepository
     $nodo_id = null;
     $codigo_charla = "CI";
     $anho = Carbon::now()->isoFormat('YYYY');
-    if (Session::get('login_role') == User::IsInfocenter()) {
-      $nodo_id = auth()->user()->infocenter->nodo_id;
-    } else {
-      $nodo_id = auth()->user()->articulador->nodo_id;
-    }
+    $nodo_id = $this->getNodoCreate($request);
     $tecnoparque = sprintf("%02d", $nodo_id);
     $idcharla = CharlaInformativa::selectRaw('MAX(id+1) AS max')->get()->last();
     $idcharla->max == null ? $idcharla->max = 1 : $idcharla->max = $idcharla->max;
@@ -103,6 +100,27 @@ class CharlaInformativaRepository
   }
 
   /**
+   * Retorna el id del nodo donde se registrará la charla informativa.
+   * 
+   * @param Request $request
+   * @return int
+   * @author dum
+   */
+  private function getNodoCreate($request)
+  {
+    if (session()->get('login_role') == User::IsInfocenter()) {
+      return auth()->user()->infocenter->nodo_id;
+    } 
+    if (session()->get('login_role') == User::IsArticulador()) {
+      return auth()->user()->articulador->nodo_id;
+    }
+    if (session()->get('login_role') == User::IsAdministrador()) {
+      return $request->txtnodo_id;
+    }
+    return -1;
+  }
+
+  /**
    * Modifica una charla informativa
    * @param Request $request
    * @param int $id Id de la charla inforamtiva
@@ -112,6 +130,7 @@ class CharlaInformativaRepository
   {
     $charla = CharlaInformativa::findOrFail($id);
     $charla->update([
+      'nodo_id' => session()->get('login_role') == User::IsAdministrador() ? $request->txtnodo_id : $charla->nodo_id,
       'fecha' => $request->txtfecha,
       'nro_asistentes' => $request->txtnro_asistentes,
       'encargado' => $request->txtencargado,

@@ -33,19 +33,20 @@
         <i class="material-icons {{setActiveRouteActiveIcon('materiales')}}">local_library</i>Materiales de Formación
     </a>
 </li>
-{{-- <li class="no-padding {{setActiveRoute('charla')}}">
+<li class="no-padding {{setActiveRoute('charla')}}">
     <a href="{{route('charla')}}" class="{{setActiveRouteActivePage('charla')}}" rel="canonical" title="Charlas Informativas">
         <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas
-    </a>
-</li>
-<li class="no-padding {{setActiveRoute('seguimiento')}}">
-    <a href="{{route('seguimiento')}}" class="{{setActiveRouteActivePage('seguimiento')}}" rel="canonical" title="Seguimiento">
-        <i class="material-icons {{setActiveRouteActiveIcon('seguimiento')}}">search</i>Seguimiento
     </a>
 </li>
 <li class="no-padding {{setActiveRoute('indicadores')}}">
     <a href="{{route('indicadores')}}" class="{{setActiveRouteActivePage('indicadores')}}">
         <i class="material-icons {{setActiveRouteActiveIcon('indicadores')}}">info_outline</i>Indicadores
+    </a>
+</li>
+{{--
+<li class="no-padding {{setActiveRoute('seguimiento')}}">
+    <a href="{{route('seguimiento')}}" class="{{setActiveRouteActivePage('seguimiento')}}" rel="canonical" title="Seguimiento">
+        <i class="material-icons {{setActiveRouteActiveIcon('seguimiento')}}">search</i>Seguimiento
     </a>
 </li>
 <li class="no-padding">

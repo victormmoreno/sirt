@@ -76,9 +76,6 @@
       'X-CSRF-TOKEN': '{{ csrf_token() }}'
     },
     dictDefaultMessage: 'Arrastra los archivos aquí para subirlos.',
-    params: {
-      fase: 'Inicio'
-    },
     paramName: 'nombreArchivo'
   });
 

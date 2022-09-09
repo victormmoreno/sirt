@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{AreaConocimiento, Centro, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, Actividad, ControlNotificaciones, Fase};
-use App\Repositories\Repository\{EmpresaRepository, EntidadRepository, ProyectoRepository, UserRepository\GestorRepository, ConfiguracionRepository\ServidorVideoRepository};
-use Illuminate\Support\{Str, Facades\Session, Facades\Validator, Facades\DB};
+use App\Models\{AreaConocimiento, Centro, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, Actividad, Fase};
+use App\Repositories\Repository\{EmpresaRepository, ProyectoRepository, UserRepository\GestorRepository};
+use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use App\Http\Requests\{ProyectoFaseInicioFormRequest, ProyectoFaseCierreFormRequest};
 use Illuminate\Http\{Request, Response};
 use App\User;
@@ -17,17 +17,13 @@ class ProyectoController extends Controller
     private $empresaRepository;
     private $proyectoRepository;
     private $gestorRepository;
-    private $entidadRepository;
-    private $servidorVideoRepository;
     private $costoController;
 
-    public function __construct(CostoController $costoController, ServidorVideoRepository $servidorVideoRepository, EmpresaRepository $empresaRepository, ProyectoRepository $proyectoRepository, GestorRepository $gestorRepository, EntidadRepository $entidadRepository)
+    public function __construct(CostoController $costoController, EmpresaRepository $empresaRepository, ProyectoRepository $proyectoRepository, GestorRepository $gestorRepository)
     {
         $this->setEmpresaRepository($empresaRepository);
         $this->setProyectoRepository($proyectoRepository);
         $this->setGestorRepository($gestorRepository);
-        $this->setEntidadRepository($entidadRepository);
-        $this->setServidorVideoRepository($servidorVideoRepository);
         $this->costoController = $costoController;
         $this->middleware(['auth']);
     }
@@ -433,43 +429,39 @@ class ProyectoController extends Controller
     // Consulta los grupos de investigación (se filtra por grupo de investigación)
     public function datatableGruposInvestigacionTecnoparque($tipo)
     {
-        if (request()->ajax()) {
-            if ($tipo == GrupoInvestigacion::IsInterno()) {
-                $grupo = GrupoInvestigacion::ConsultarGruposDeInvestigaciónTecnoparqueSena()->get();
-            } else {
-                $grupo = GrupoInvestigacion::ConsultarGruposDeInvestigaciónTecnoparqueExterno()->get();
-            }
+        if ($tipo == GrupoInvestigacion::IsInterno()) {
+            $grupo = GrupoInvestigacion::ConsultarGruposDeInvestigaciónTecnoparqueSena()->get();
+        } else {
+            $grupo = GrupoInvestigacion::ConsultarGruposDeInvestigaciónTecnoparqueExterno()->get();
         }
         return datatables()->of($grupo)
-            ->addColumn('checkbox', function ($data) {
-                $nombre   = strval($data->nombre);
-                $checkbox = '
-                    <input type="radio" class="with-gap" name="txtentidad_grupo_id"
-                    onclick="asociarGrupoInvestigacionAProyecto(' . $data->id_entidad . ', \'' . $data->codigo_grupo . '\', \'' . $nombre . '\')" id="radioButton' . $data->id_entidad . '"
-                    value="' . $data->id_entidad . '"/>
-                    <label for ="radioButton' . $data->id_entidad . '"></label>
-                    ';
-                return $checkbox;
-            })->rawColumns(['checkbox'])->make(true);
+        ->addColumn('checkbox', function ($data) {
+            $nombre   = strval($data->nombre);
+            $checkbox = '
+                <input type="radio" class="with-gap" name="txtentidad_grupo_id"
+                onclick="asociarGrupoInvestigacionAProyecto(' . $data->id_entidad . ', \'' . $data->codigo_grupo . '\', \'' . $nombre . '\')" id="radioButton' . $data->id_entidad . '"
+                value="' . $data->id_entidad . '"/>
+                <label for ="radioButton' . $data->id_entidad . '"></label>
+                ';
+            return $checkbox;
+        })->rawColumns(['checkbox'])->make(true);
     }
 
     // Datatable de las empresas de tecnoparque
     public function datatableEmpresasTecnoparque()
     {
-        if (request()->ajax()) {
-            $empresas = $this->getEmpresaRepository()->consultarEmpresasDeRedTecnoparque();
-            return datatables()->of($empresas)
-                ->addColumn('checkbox', function ($data) {
-                    $nombre   = strval($data->nombre_empresa);
-                    $checkbox = '
-                        <input type="radio" class="with-gap" name="txtentidad_id"
-                        onclick="asociarEmpresaAProyecto(' . $data->id_entidad . ', ' . $data->nit . ', \'' . $nombre . '\')" id="radioButton' . $data->id_entidad . '"
-                        value="' . $data->id_entidad . '"/>
-                        <label for ="radioButton' . $data->id_entidad . '"></label>
-                        ';
-                    return $checkbox;
-                })->rawColumns(['checkbox'])->make(true);
-        }
+        $empresas = $this->getEmpresaRepository()->consultarEmpresasDeRedTecnoparque();
+        return datatables()->of($empresas)
+        ->addColumn('checkbox', function ($data) {
+            $nombre   = strval($data->nombre_empresa);
+            $checkbox = '
+                <input type="radio" class="with-gap" name="txtentidad_id"
+                onclick="asociarEmpresaAProyecto(' . $data->id_entidad . ', ' . $data->nit . ', \'' . $nombre . '\')" id="radioButton' . $data->id_entidad . '"
+                value="' . $data->id_entidad . '"/>
+                <label for ="radioButton' . $data->id_entidad . '"></label>
+                ';
+            return $checkbox;
+        })->rawColumns(['checkbox'])->make(true);
     }
 
 
@@ -1298,13 +1290,13 @@ class ProyectoController extends Controller
     {
         return datatables()->of($proyectos  )
             ->addColumn('add_proyecto', function ($data) {
-                    $checkbox = '';
-                    if (isset($data->articulacion_proyecto->actividad)) {
-                        $checkbox = '<a class="btn blue" onclick="filter_project.addProjectToArticulacion(\'' .($data->articulacion_proyecto->actividad->codigo_actividad) . '\')">
-                                        <i class="material-icons">done</i>
-                                    </a>';
-                    }
-                    return $checkbox;
+                $checkbox = '';
+                if (isset($data->articulacion_proyecto->actividad)) {
+                    $checkbox = '<a class="btn blue" onclick="filter_project.addProjectToArticulacion(\'' .($data->articulacion_proyecto->actividad->codigo_actividad) . '\')">
+                                    <i class="material-icons">done</i>
+                                </a>';
+                }
+                return $checkbox;
             })
             ->editColumn('codigo_proyecto', function ($data) {
                 if (isset($data->articulacion_proyecto->actividad)) {
@@ -1391,45 +1383,4 @@ class ProyectoController extends Controller
         return $this->gestorRepository;
     }
 
-    /**
-     * Asigna un valor a $entidadRepository
-     * @param object $entidadRepository
-     * @return void
-     * @author dum
-     */
-    private function setEntidadRepository($entidadRepository)
-    {
-        $this->entidadRepository = $entidadRepository;
-    }
-
-    /**
-     * Retorna el valor de $entidadRepository
-     * @return object
-     * @author dum
-     */
-    private function getEntidadRepository()
-    {
-        return $this->entidadRepository;
-    }
-
-    /**
-     * Asigna un valor a $servidorVideoRepository
-     * @param object $servidorVideoRepository
-     * @return void
-     * @author dum
-     */
-    private function setServidorVideoRepository($servidorVideoRepository)
-    {
-        $this->servidorVideoRepository = $servidorVideoRepository;
-    }
-
-    /**
-     * Retorna el valor de $servidorVideoRepository
-     * @return object
-     * @author dum
-     */
-    private function getServidorVideoRepository()
-    {
-        return $this->servidorVideoRepository;
-    }
 }

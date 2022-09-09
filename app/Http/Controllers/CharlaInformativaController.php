@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\CharlaInformativaFormRequest;
-use Illuminate\Support\Facades\{Session, Validator};
-use App\{User, Models\CharlaInformativa, Models\Nodo};
+use Illuminate\Support\Facades\{Session};
+use App\{User, Models\Nodo};
 use App\Repositories\Repository\{CharlaInformativaRepository};
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Helpers\{ArrayHelper};
@@ -66,24 +66,9 @@ class CharlaInformativaController extends Controller
      */
     public function evidencias($id)
     {
-        if ( Session::get('login_role') == User::IsInfocenter() ) {
-        return view('charlas.infocenter.evidencia', [
+        return view('charlas.evidencia', [
             'charla' => $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id)
         ]);
-        } else if ( Session::get('login_role') == User::IsArticulador() ) {
-        return view('charlas.articulador.evidencia', [
-            'charla' => $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id)
-        ]);
-        } else if ( Session::get('login_role') == User::IsDinamizador() ) {
-        return view('charlas.dinamizador.evidencia', [
-            'charla' => $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id)
-        ]);
-        } else {
-        return view('charlas.administrador.evidencia', [
-            'charla' => $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id)
-        ]);
-
-        }
     }
 
     /**
@@ -132,23 +117,36 @@ class CharlaInformativaController extends Controller
      */
     public function datatableCharlasInformativosDeUnNodo($id)
     {
-        $charlas = $this->charlaInformativaRepository->consultarCharlasInformativasDeUnNodoRepository($id);
+        $nodo_id = $this->getNodoForIndex($id);
+        $charlas = $this->charlaInformativaRepository->consultarCharlasInformativasDeUnNodoRepository($nodo_id);
         return $this->datatableCharlasInformativas($charlas);
+    }
+
+    public function getNodoForIndex($id)
+    {
+        if (session()->get('login_role') == User::IsInfocenter()) {
+            return auth()->user()->infocenter->nodo_id;
+          } 
+          if (session()->get('login_role') == User::IsArticulador()) {
+            return auth()->user()->articulador->nodo_id;
+          }
+          if (session()->get('login_role') == User::IsDinamizador()) {
+            return auth()->user()->dinamizador->nodo_id;
+          }
+          if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsArticulador()) {
+            if ($id == 0) {
+                return Nodo::SelectNodo()->get()->first()->id;
+            } else {
+                return $id;
+            }
+          }
     }
 
     public function index()
     {
-        if ( Session::get('login_role') == User::IsInfocenter() ) {
-        return view('charlas.infocenter.index');
-        } else if ( Session::get('login_role') == User::IsDinamizador() ) {
-        return view('charlas.dinamizador.index');
-        } else if ( Session::get('login_role') == User::IsArticulador() ) {
-        return view('charlas.articulador.index');
-        } else {
-        return view('charlas.administrador.index', [
+        return view('charlas.index', [
             'nodos' => Nodo::SelectNodo()->get()
         ]);
-        }
     }
     /**
      * Show the form for creating a new resource.
@@ -157,7 +155,9 @@ class CharlaInformativaController extends Controller
     */
     public function create()
     {
-        return view('charlas.infocenter.create');
+        return view('charlas.create', [
+            'nodos' => Nodo::SelectNodo()->get()
+        ]);
     }
 
     /**
@@ -186,8 +186,9 @@ class CharlaInformativaController extends Controller
     */
     public function edit($id)
     {
-        return view('charlas.infocenter.edit', [
-        'charla' => $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id)
+        return view('charlas.edit', [
+        'charla' => $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id),
+        'nodos' => Nodo::SelectNodo()->get()
         ]);
     }
 

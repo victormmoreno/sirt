@@ -31,32 +31,40 @@
                   <div class="row">
                     <div class="col s12 m10 l10">
                       <div class="center-align">
-                        <span class="card-title center-align">Charlas Informativas de Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}</span>
+                        <span class="card-title center-align">Charlas Informativas</span>
                       </div>
                     </div>
-                    <div class="col s12 m2 l2 show-on-large hide-on-med-and-down">
-                      <a href="{{ route('charla.create') }}">
-                        <div class="card green">
-                          <div class="card-content center">
-                            <i class="left material-icons white-text">add</i>
-                            <span class="white-text">Nueva Charla Informativa</span>
-                          </div>
-                        </div>
-                      </a>
-                    </div>
+                    @can('showCreateButton', App\Models\CharlaInformativa::class)
+                      @include('charlas.create_button')
+                    @endcan
                   </div>
                   <div class="divider"></div>
+                  @can('showNodosInput', App\Models\CharlaInformativa::class)
+                  <div class="row">
+                    <div class="input-fiel col s12 m12 l12">
+                      <label class="active" for="txtnodo">Nodo <span class="red-text">*</span></label>
+                      <select class="initialized" id="txtnodo" name="txtnodo" style="width: 100%" tabindex="-1" onchange="datatableCharlasInformativasPorNodo(this.value)">
+                        <option value="">Seleccione nodo</option>
+                        @foreach($nodos as $nodo)
+                          <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                  </div>
+                  @endcan
                   @include('charlas.table')
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-          <a href="{{route('charla.create')}}"  class="btn btn-floating btn-large tooltipped green" data-position="left" data-delay="50" data-tooltip="Nueva Charla Informativa">
-            <i class="material-icons">exposure_plus_1</i>
-          </a>
-        </div>
+        @can('showCreateButton', App\Models\CharlaInformativa::class)
+          <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
+            <a href="{{route('charla.create')}}"  class="btn btn-floating btn-large tooltipped green" data-position="left" data-delay="50" data-tooltip="Nueva Charla Informativa">
+              <i class="material-icons">exposure_plus_1</i>
+            </a>
+          </div>
+        @endcan
       </div>
     </div>
   </main>
@@ -65,7 +73,7 @@
 @push('script')
   <script>
   $(document).ready(function() {
-    datatableCharlasInformativasPorNodo({{auth()->user()->articulador->nodo_id}});
+    datatableCharlasInformativasPorNodo(0);
   });
   function datatableCharlasInformativasPorNodo(id) {
     $('#charlasInformativasNodo_table').dataTable().fnDestroy();
@@ -88,7 +96,6 @@
         { data: 'nro_asistentes', name: 'nro_asistentes' },
         { width: '8%', data: 'details', name: 'details', orderable: false },
         { width: '8%', data: 'edit', name: 'edit', orderable: false },
-        // { width: '8%', data: 'delete', name: 'delete', orderable: false },
         { width: '8%', data: 'evidencias', name: 'evidencias', orderable: false }
       ],
     });
