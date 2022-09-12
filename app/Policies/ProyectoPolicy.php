@@ -10,6 +10,22 @@ class ProyectoPolicy
 {
     use HandlesAuthorization;
 
+
+    /**
+     * Muestra los campos que requiere el administrador para generar indicadores
+     *
+     * @param App\User $user
+     * @return bool
+     * @author dum
+     **/
+    // public function showIndicadoresProyectoOptions(User $user)
+    // {
+    //     if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador()) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
+
     /** 
      * Determina quienes pueden ver y usar el botón de crear proyectos
      * 

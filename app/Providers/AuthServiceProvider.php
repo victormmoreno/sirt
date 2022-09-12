@@ -26,8 +26,10 @@ use App\Policies\Material\MaterialPolicy;
 use App\Policies\Idea\IdeaPolicy;
 use App\Policies\ProyectoPolicy;
 use App\Policies\CharlaInformativaPolicy;
+use App\Policies\IndicadorPolicy;
 use App\Policies\ArticulacionPbt\ArticulacionPbtPolicy;
 use App\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -52,6 +54,7 @@ class AuthServiceProvider extends ServiceProvider
         ArticulacionPbt::class => ArticulacionPbtPolicy::class,
         Proyecto::class => ProyectoPolicy::class,
         CharlaInformativa::class => CharlaInformativaPolicy::class,
+        Model::class => IndicadorPolicy::class,
     ];
 
     /**
