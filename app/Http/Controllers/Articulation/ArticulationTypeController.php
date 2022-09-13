@@ -64,7 +64,6 @@ class ArticulationTypeController extends Controller
                 return response()->json([
                     'fail' => true,
                     'errors' => $validator->errors(),
-                    'state' => 'error_form',
                     'message' => 'Estas ingresando mal los datos',
                     'redirect_url' => null,
                 ]);
@@ -96,7 +95,7 @@ class ArticulationTypeController extends Controller
     public function show( $typeArticulation)
     {
         if (request()->user()->can('show', ArticulationType::class)) {
-            $typeArticulation = ArticulationType::findOrFail($typeArticulation);
+            $typeArticulation = ArticulationType::query()->with('articulationsubtypes')->findOrFail($typeArticulation);
             return view('articulation-type.show', ['typeArticulation' => $typeArticulation]);
         }
         return redirect()->route('home');
@@ -131,7 +130,6 @@ class ArticulationTypeController extends Controller
             return response()->json([
                 'fail' => true,
                 'errors' => $validator->errors(),
-                'state' => 'error_form',
                 'message' => 'Estas ingresando mal los datos',
                 'redirect_url' => null,
             ]);
@@ -151,9 +149,7 @@ class ArticulationTypeController extends Controller
             'message' => "Actualización Exitosa",
             'redirect_url' => url(route('tipoarticulaciones.index')),
         ]);
-
     }
-
     /**
      * Remove the specified resource from storage.
      *

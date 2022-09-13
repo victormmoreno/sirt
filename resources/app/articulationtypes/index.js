@@ -126,15 +126,5 @@ let typeArticulacion ={
                 )
             }
         })
-    },
-    printErrors:function(data) {
-        if (data.state == 'error_form') {
-            let errores = "";
-            for (control in data.errors) {
-                errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
-                $('#' + control + '-error').html(data.errors[control]);
-                $('#' + control + '-error').show();
-            }
-        }
     }
 }

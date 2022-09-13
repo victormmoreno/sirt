@@ -10368,16 +10368,6 @@ let typeArticulacion ={
                 )
             }
         })
-    },
-    printErrors:function(data) {
-        if (data.state == 'error_form') {
-            let errores = "";
-            for (control in data.errors) {
-                errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
-                $('#' + control + '-error').html(data.errors[control]);
-                $('#' + control + '-error').show();
-            }
-        }
     }
 }
 
@@ -10406,7 +10396,7 @@ $("#formTypeArticulation").on('submit', function(e){
         },
         success: function(response){
             $('.error').hide();
-            typeArticulacion.printErrors(response);
+            printErrorsForm(response);
             if(!response.fail && response.errors == null){
                 Swal.fire({
                     title: response.message,

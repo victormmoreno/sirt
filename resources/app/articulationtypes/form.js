@@ -23,7 +23,7 @@ $("#formTypeArticulation").on('submit', function(e){
         },
         success: function(response){
             $('.error').hide();
-            typeArticulacion.printErrors(response);
+            printErrorsForm(response);
             if(!response.fail && response.errors == null){
                 Swal.fire({
                     title: response.message,

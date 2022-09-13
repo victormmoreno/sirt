@@ -63,12 +63,12 @@
                                                 </div>
                                             </div>
                                             <div class="divider mailbox-divider"></div>
-                                                <div class="row details-list" style="display: block;">
-                                                    <div class="right right-alignl">
-                                                        <span>Fecha actualización: </span>
-                                                        <span>{{optional($typeArticulation->updated_at)->isoFormat('lll')}} ({{optional($typeArticulation->updated_at)->diffForHumans()}})</span>
-                                                    </div>
+                                            <div class="row details-list" style="display: block;">
+                                                <div class="right right-alignl">
+                                                    <span>Fecha actualización: </span>
+                                                    <span>{{optional($typeArticulation->updated_at)->isoFormat('lll')}} ({{optional($typeArticulation->updated_at)->diffForHumans()}})</span>
                                                 </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -79,5 +79,5 @@
             </div>
         </div>
 
-</main>
+    </main>
 @endsection

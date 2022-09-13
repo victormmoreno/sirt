@@ -46,7 +46,7 @@ class ArticulationSubtypeRequest extends FormRequest
             'name.unique'      => 'El nombre ya ha sido registrado',
             'description.min'    => 'La descripción debe ser de al menos :min caracter.',
             'description.max'    => 'La descripción no debe ser mayor a :max caracter(es)',
-            'entity.required' => 'El campo entidades es obligatorio.',
+            'entity.required' =>    'El campo entidades es obligatorio.',
             'entity.min'         => 'El campo entidades debe ser de al menos :min caracter.',
             'checknode.required'         => 'El campo nodo es obligatorio',
             'articulationtype.required'         => 'El campo tipo articulación es obligatorio.',
