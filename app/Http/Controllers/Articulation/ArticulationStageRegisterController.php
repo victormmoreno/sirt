@@ -67,7 +67,7 @@ class ArticulationStageRegisterController extends Controller
                     return response()->json([
                         'data' => [
                             'state' => 'success',
-                            'url' => route(' articulation-stage.show', $response['data']->id),
+                            'url' => route('articulation-stage.show', $response['data']->id),
                             'status_code' => Response::HTTP_CREATED,
                             'errors' => [],
                         ],

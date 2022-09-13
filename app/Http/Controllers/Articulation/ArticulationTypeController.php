@@ -64,7 +64,8 @@ class ArticulationTypeController extends Controller
                 return response()->json([
                     'fail' => true,
                     'errors' => $validator->errors(),
-                    'message' => null,
+                    'state' => 'error_form',
+                    'message' => 'Estas ingresando mal los datos',
                     'redirect_url' => null,
                 ]);
             }
@@ -73,7 +74,7 @@ class ArticulationTypeController extends Controller
                 return response()->json([
                     'fail' => true,
                     'errors' => $this->articulationTypeRepository->getError(),
-                    'message' => null,
+                    'message' => 'Vuelve a intentarlo',
                     'redirect_url' => null,
                 ]);
             }
@@ -96,11 +97,6 @@ class ArticulationTypeController extends Controller
     {
         if (request()->user()->can('show', ArticulationType::class)) {
             $typeArticulation = ArticulationType::findOrFail($typeArticulation);
-            if (request()->ajax()) {
-                return response()->json([
-                    'data' => $typeArticulation
-                ]);
-            }
             return view('articulation-type.show', ['typeArticulation' => $typeArticulation]);
         }
         return redirect()->route('home');
@@ -133,9 +129,10 @@ class ArticulationTypeController extends Controller
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
             return response()->json([
-                'fail'   => true,
+                'fail' => true,
                 'errors' => $validator->errors(),
-                'message' => null,
+                'state' => 'error_form',
+                'message' => 'Estas ingresando mal los datos',
                 'redirect_url' => null,
             ]);
         }
@@ -144,7 +141,7 @@ class ArticulationTypeController extends Controller
             return response()->json([
                 'fail'         => true,
                 'errors'       => $this->articulationTypeRepository->getError(),
-                'message' => null,
+                'message' => 'Vuelve a intentarlo',
                 'redirect_url' => null,
             ]);
         }

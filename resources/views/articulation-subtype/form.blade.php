@@ -5,8 +5,6 @@
         <select name="articulationtype" id="articulationtype">
             <option>Seleccione tipo de articulación</option>
             @foreach($articulationTypes as $id => $name)
-
-                <option value="{{$id}}" >{{$name}}</option>
                 @if(isset($articulationSubtype->articulationtype->id))
                     <option value="{{$id}}" {{old('articulationtype',$articulationSubtype->articulationtype->id) ==$id ? 'selected':''}}>{{$name}}</option>
                 @else

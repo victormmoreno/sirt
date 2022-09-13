@@ -27,7 +27,7 @@ class ArticulationStageRequest extends FormRequest
     {
         return [
             'name' => 'required|min:1|max:100',
-            'node' => Rule::requiredIf(User::IsAdministrador() == request()->user()->IsAdministrador()) ,
+            //'node' => Rule::requiredIf(User::IsAdministrador() == request()->user()->IsAdministrador()) ,
             'description'  => 'max:3000',
             'scope'  => 'required|min:1|max:3000',
             'projects'  => 'required',

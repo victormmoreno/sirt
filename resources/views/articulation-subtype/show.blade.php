@@ -61,9 +61,11 @@
                                                 </div>
                                                 <div class="card-content mt-2">
                                                     <span class="card-title m-t-sm">Entidades promotoras</span>
-                                                    @foreach($articulationSubtype->entity as $value)
-                                                        <div class="chip m-t-sm">{{$value}}</div>
-                                                    @endforeach
+                                                    @if(is_array($articulationSubtype->entity))
+                                                        @foreach( $articulationSubtype->entity as $value)
+                                                            <div class="chip m-t-sm">{{$value}}</div>
+                                                        @endforeach
+                                                    @endif
                                                 </div>
                                                 <div class="card-content mt-2">
                                                     <span class="card-title m-t-sm">Nodos</span>

@@ -3096,9 +3096,6 @@ $(document).on('submit', 'form#formRegisterCompany', function (event) {
         }, 1000);
         }
     },
-    // error: function (xhr, textStatus, errorThrown) {
-    //   alert("Error: " + errorThrown);
-    // }
     });
 });
 
@@ -3314,6 +3311,7 @@ $(document).on('submit', 'form#formSearchEmpresas', function (event) {
         });
     }
 });
+
 $(document).ready(function() {
   $('#grupoDeInvestigacionTecnoparque_table').DataTable({
     language: {
@@ -7512,12 +7510,10 @@ var equipo = {
             cancelButtonText: 'No, cancelar',
           }).then((result) => {
             if (result.value) {
-
                 $.ajax(
                 {
                     url: host_url + `/equipos/cambiar-estado/${id}`,
                     type: 'GET',
-
                     success: function (response){
                         if(response.statusCode == 200){
                             Swal.fire(
@@ -10246,7 +10242,6 @@ function graficoCostos(data, name, title) {
 
 $(document).ready(function() {
     let filter_state_type_art = $('#filter_state_type_art').val();
-
     if(filter_state_type_art == '' || filter_state_type_art == null){
         typeArticulacion.fillDatatatablesTypeArt(filter_state_type_art = null);
     }else if(filter_state_type_art != '' || filter_state_type_art != null){
@@ -10259,18 +10254,17 @@ $(document).ready(function() {
             "lengthChange": false
         }).clear().draw();
     }
+
 });
 
 $('#filter_type_art').click(function () {
     let filter_state_type_art = $('#filter_state_type_art').val();
-
     $('#type_art_data_table').dataTable().fnDestroy();
     if(filter_state_type_art == '' || filter_state_type_art == null){
         typeArticulacion.fillDatatatablesTypeArt(filter_state_type_art = null);
     }else if(filter_state_type_art != '' || filter_state_type_art != null){
         typeArticulacion.fillDatatatablesTypeArt(filter_state_type_art);
     }else{
-
         $('#type_art_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -10375,6 +10369,16 @@ let typeArticulacion ={
             }
         })
     },
+    printErrors:function(data) {
+        if (data.state == 'error_form') {
+            let errores = "";
+            for (control in data.errors) {
+                errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
+                $('#' + control + '-error').html(data.errors[control]);
+                $('#' + control + '-error').show();
+            }
+        }
+    }
 }
 
 $('#check-all-nodes').click(function() {
@@ -10402,7 +10406,7 @@ $("#formTypeArticulation").on('submit', function(e){
         },
         success: function(response){
             $('.error').hide();
-            printErrorsForm(response);
+            typeArticulacion.printErrors(response);
             if(!response.fail && response.errors == null){
                 Swal.fire({
                     title: response.message,
@@ -10411,7 +10415,6 @@ $("#formTypeArticulation").on('submit', function(e){
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok',
                 });
-                // $('#formSupport')[0].reset();
                 setTimeout(function () {
                     window.location.href = response.redirect_url;
                 }, 1500);
@@ -10419,7 +10422,7 @@ $("#formTypeArticulation").on('submit', function(e){
         },
         error: function (ajaxContext) {
             Swal.fire({
-                title: ' Registro erróneo, vuelve a intentarlo',
+                title: 'Error, vuelve a intentarlo',
                 html: ajaxContext.status + ' - ' + ajaxContext.responseJSON.message,
                 type: 'error',
                 showCancelButton: false,

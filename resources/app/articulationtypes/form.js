@@ -23,7 +23,7 @@ $("#formTypeArticulation").on('submit', function(e){
         },
         success: function(response){
             $('.error').hide();
-            printErrorsForm(response);
+            typeArticulacion.printErrors(response);
             if(!response.fail && response.errors == null){
                 Swal.fire({
                     title: response.message,
@@ -32,7 +32,6 @@ $("#formTypeArticulation").on('submit', function(e){
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok',
                 });
-                // $('#formSupport')[0].reset();
                 setTimeout(function () {
                     window.location.href = response.redirect_url;
                 }, 1500);
@@ -40,7 +39,7 @@ $("#formTypeArticulation").on('submit', function(e){
         },
         error: function (ajaxContext) {
             Swal.fire({
-                title: ' Registro erróneo, vuelve a intentarlo',
+                title: 'Error, vuelve a intentarlo',
                 html: ajaxContext.status + ' - ' + ajaxContext.responseJSON.message,
                 type: 'error',
                 showCancelButton: false,

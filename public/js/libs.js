@@ -36064,11 +36064,9 @@ $('#download_excel').click(function(){
             filter_vieneConvocatoria: filter_vieneConvocatoria,
             filter_convocatoria: filter_convocatoria,
         }
-
         var url = host_url + "/idea/export?" + $.param(query)
-
         window.location = url;
-    });
+});
 
 
 

@@ -100,7 +100,6 @@ mix.scripts([
     'resources/app/user/edit-profile.js',
     'resources/app/user/role/roleuser.js',
     'resources/app/sublinea/administrador/index.js',
-
     'resources/app/intervenciones/gestor/index.js',
     'resources/app/intervenciones/index.js',
     'resources/app/proyecto/index.js',

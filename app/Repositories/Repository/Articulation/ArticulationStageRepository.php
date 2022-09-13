@@ -30,7 +30,7 @@ class ArticulationStageRepository
     */
     public function store(Request $request)
     {
-        try {
+        /*try {*/
             $accompaniment = $this->storeAccompaniment($request);
             $this->validateAccompanimentType($request, $accompaniment);
             $this->storageFile( $request, $accompaniment );
@@ -39,13 +39,13 @@ class ArticulationStageRepository
                 'message' => '',
                 'isCompleted' => true,
             ];
-        } catch (\Exception $ex) {
+        /*} catch (\Exception $ex) {
             return  [
                 'data' => "",
                 'message' => $ex->getMessage(),
                 'isCompleted' => false,
             ];
-        }
+        }*/
     }
 
     public function update(Request $request, ArticulationStage $accompaniment)
@@ -73,7 +73,6 @@ class ArticulationStageRepository
     */
     public function storeAccompaniment(Request $request){
         $accompaniment = ArticulationStage::create([
-            'accompaniment_type' => Proyecto::class,
             'code' => $this->generateCode('EA'),
             'name' => $request->name,
             'description' => $request->description,
@@ -110,11 +109,11 @@ class ArticulationStageRepository
         * store articulations
         * @param Request $request
     */
-    public function validateAccompanimentType(Request $request, ArticulationStage $accompaniment)
+    public function validateAccompanimentType(Request $request, ArticulationStage $articulationStage)
     {
         if($request->filled('projects')){
             $model = Proyecto::where('id', $request->projects)->first();
-            $model->accompaniamentables()->sync([$accompaniment->id]);
+            $model->articulationables()->sync([$articulationStage->id]);
         }
     }
 

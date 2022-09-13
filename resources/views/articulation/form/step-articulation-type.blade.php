@@ -5,26 +5,21 @@
             <div class="row">
                 <div class="radio-buttons">
                     <h5>Seleccione un tipo de articulación</h5>
+
+                    @forelse($articulationTypes  as $id => $name)
                     <label class="custom-radio">
-                        <input type="radio" name="articulation_type" value="pi" checked />
+                        @if (isset($articulacion))
+                            <input type="radio" name="articulation_type" value="{{$id}}" {{ old('articulation_type', $articulacion->articulationtype->id) == $id ? 'checked':'' }} />
+                        @else
+                            <input type="radio" name="articulation_type" value="{{$id}}" {{ old('articulation_type') == $id ? 'checked':'' }} />
+                        @endif
                         <span class="radio-btn">
-                            <h3>P.I</h3>
+                            <h3>{{$name}}</h3>
                         </span>
                     </label>
-                    @if($articulationStage->present()->articulationStageableType() != "Sede")
-                    <label class="custom-radio">
-                        <input type="radio" name="articulation_type" value="ce"/>
-                        <span class="radio-btn">
-                            <h3>Creación empresas</h3>
-                        </span>
-                    </label>
-                    @endif
-                    <label class="custom-radio">
-                        <input type="radio" name="articulation_type" value="con"/>
-                        <span class="radio-btn">
-                            <h3>convocatoria</h3>
-                        </span>
-                    </label>
+                    @empty
+                    @endforelse
+
                 </div>
             </div>
         </div>

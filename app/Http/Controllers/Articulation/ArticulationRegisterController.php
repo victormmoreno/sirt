@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Articulation;
 
+use App\Models\ArticulationType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Articulation;
@@ -28,9 +29,12 @@ class ArticulationRegisterController extends Controller
      */
     public function create( $id )
     {
-        $scopes = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
+        $scopes = AlcanceArticulacion::orderBy('name')->pluck('name', 'id');
         $articulationStage= ArticulationStage::findOrFail( $id );
-        return view('articulation.create-articulation', compact( 'scopes', 'articulationStage' ));
+        $articulationTypes= ArticulationType::query()
+            ->where('state', ArticulationType::mostrar())
+            ->orderBy('name')->pluck('name', 'id');
+        return view('articulation.create-articulation', compact( 'scopes', 'articulationStage', 'articulationTypes' ));
     }
 
     /**
