@@ -22,9 +22,6 @@ class NodoHelper
         }else if (\Session::get('login_role') == User::IsApoyoTecnico() && isset(auth()->user()->apoyotecnico->nodo_id)) {
             return User::IsApoyoTecnico(). ' del nodo ' . Nodo::userNodo(auth()->user()->apoyotecnico->nodo_id)->first()->nombre;
         }
-        else {
-            return 'No hay información disponible.';
-        }
     }
 
     // Retorna únicamente el nombre del nodo al que pertenece el usuario

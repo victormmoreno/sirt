@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Articulation;
 
+use App\Models\Nodo;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ArticulationStage;
-use App\Models\Entidad;
 use App\User;
 use Illuminate\Support\Str;
 use App\Exports\Articulation\articulationStageExport;
@@ -28,7 +28,11 @@ class ArticulationStageListController extends Controller
     public function index()
     {
         if (request()->user()->can('index', ArticulationStage::class)) {
-            $nodos = Entidad::with('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id');
+            $nodos = null;
+            if(request()->user()->can('listNodes', ArticulationStage::class)) {
+                $nodos = Nodo::query()->with('entidad')->get();
+                $nodos = collect($nodos)->sortBy('entidad.nombre')->pluck('entidad.nombre', 'id');
+            }
             return view('articulation.index-articulation-stage', ['nodos' => $nodos]);
         }
         return redirect()->route('home');
@@ -42,7 +46,11 @@ class ArticulationStageListController extends Controller
         if (isset($request->filter_status_articulationStage)) {
 
             $articulationStages =  ArticulationStage::query()
-            ->with(['node.entidad', 'createdBy'])
+            ->with([
+                'node.entidad',
+                'createdBy',
+                'projects.articulacion_proyecto.actividad',
+            ])
             ->status($request->filter_status_articulationStage)
             ->year($request->filter_year_articulationStage)
             ->node($node)
@@ -61,20 +69,20 @@ class ArticulationStageListController extends Controller
      */
     public function show($id)
     {
-        $articulationStage = ArticulationStage::with([
-                'node',
+        $articulationStage = ArticulationStage::query()
+            ->with([
+                'node.entidad',
                 'createdBy',
-                'articulations',
-                'articulations.phase'
-
+                'articulations.phase',
+                'projects.articulacion_proyecto.actividad',
+                'file',
+                'interlocutor'
             ])
         ->findOrfail($id);
 
-        $ult_notificacion = $articulationStage->notifications()->whereNull('fecha_aceptacion')->get()->last();
+        $articulations = $articulationStage->articulations()->latest('id')->paginate(3);
 
-        $articulations = $articulationStage->articulations()->latest('id')->paginate(2);
-
-        return view('articulation.show', compact('articulationStage', 'articulations', 'ult_notificacion'));
+        return view('articulation.show', compact('articulationStage', 'articulations'));
     }
 
     public function export(Request $request, $extension = 'xlsx')
@@ -82,12 +90,10 @@ class ArticulationStageListController extends Controller
         $talent = $this->checkRoleAuth($request)['talent'];
         $node = $this->checkRoleAuth($request)['node'];
 
-
         $articulationStages = [];
         if (isset($request->filter_status_articulationStage)) {
 
             $articulationStages =  ArticulationStage::with([
-                'node',
                 'node.entidad',
                 'createdBy'
             ])
@@ -117,6 +123,15 @@ class ArticulationStageListController extends Controller
         toast('El Archivo no se ha eliminado!','danger')->autoClose(2000)->position('top-end');
         return back();
     }
+    /**
+     * download file
+     * @return \Illuminate\Http\Response
+     */
+    public function downloadFile($articulationStage)
+    {
+        $articulationStage = ArticulationStage::query()->find($articulationStage);
+        return $this->articulationStageRepository->downloadFile($articulationStage);
+    }
 
     public function changeInterlocutor(ArticulationStage $articulationStage)
     {
@@ -130,7 +145,6 @@ class ArticulationStageListController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-
     public function updateInterlocutor(Request $request, ArticulationStage $articulationStage)
     {
         $validator = Validator::make($request->all(), [
@@ -165,17 +179,24 @@ class ArticulationStageListController extends Controller
         }
 
     }
+
     private function datatableArticulationStages($articulationStages)
     {
         return datatables()->of($articulationStages)
             ->editColumn('node', function ($data) {
                 return $data->node->present()->NodeName();
             })
-            ->editColumn('code', function ($data) {
-                return $data->present()->articulationStageCode();
-            })
             ->editColumn('name', function ($data) {
-                return Str::limit("{$data->present()->articulationStageName()}", 40, '...');
+                return "<p>
+                            <span class='orange-text'>{$data->present()->articulationStageCode()}</span><br>
+                            <b>".Str::limit("{$data->present()->articulationStageName()}", 40, '...')."</b><br>
+                        </p>";
+            })
+            ->editColumn('articulation_state_type', function ($data) {
+                return "<p>
+                            <span class='orange-text'>{$data->present()->articulationStageableType()}</span><br>
+                            <b>".Str::limit("{$data->present()->articulationStageables()}", 40, '...')."</b><br>
+                        </p>";
             })
             ->editColumn('count_articulations', function ($data) {
                 if (isset($data->articulations_count)) {
@@ -200,7 +221,7 @@ class ArticulationStageListController extends Controller
                 return '<a class="btn m-b-xs modal-trigger" href='.route('articulation-stage.show', $data->id).'>
                             <i class="material-icons">search</i>
                         </a>';
-            })->rawColumns(['node','code','name','adviser','status','starDate','articulationStageBy','show'])->make(true);
+            })->rawColumns(['node','code','name','adviser','status','starDate','articulationStageBy','articulation_state_type','show'])->make(true);
     }
 
     private function checkRoleAuth(Request $request)
@@ -231,5 +252,4 @@ class ArticulationStageListController extends Controller
         }
         return ['talent' => $talent, 'node' => $node];
     }
-
 }

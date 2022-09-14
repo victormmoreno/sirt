@@ -17,6 +17,7 @@
                     </ol>
                 </div>
             </div>
+
             <div class="row no-m-t no-m-b">
                 <div class="col s12 m12 l12 no-p-h">
                     <div class="card mailbox-content">

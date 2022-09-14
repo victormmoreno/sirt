@@ -20,7 +20,7 @@ class ArticulationStagePolicy
      */
     public function before(User $user, $ability)
     {
-        if ($user->hasAnyRole([User::IsArticulador()])
+        if ($user->hasAnyRole([User::IsAdministrador()])
             && session()->has('login_role')
             && session()->get('login_role') == User::IsAdministrador()) {
             return true;
@@ -124,15 +124,30 @@ class ArticulationStagePolicy
      * Determine if the given articulations can be updated by the user..
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ArticulationStage  $accompaniment
+     * @param  \App\Models\ArticulationStage  $articulationStage
      * @return \Illuminate\Auth\Access\Response
      */
-    public function update(User $user, ArticulationStage $accompaniment)
+    public function update(User $user, ArticulationStage $articulationStage)
     {
-        if($user->hasAnyRole([User::IsArticulador()]) &&  session()->get('login_role') == User::IsArticulador() &&  auth()->user()->articulador->nodo_id == $accompaniment->node_id)
-        {
-            return true;
-        }
-        return false;
+        return (bool) $user->hasAnyRole([User::IsArticulador()])
+            && ( (session()->has('login_role')
+            && session()->get('login_role') == User::IsArticulador()))
+            && auth()->user()->articulador->nodo->id == $articulationStage->node_id;
+    }
+
+    /**
+     * Determine if the given articulations can be deleted by the user..
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\ArticulationStage  $articulationStage
+     * @return bool
+     */
+    public function delete(User $user, ArticulationStage $articulationStage)
+    {
+        return (bool) $user->hasAnyRole([User::IsArticulador(), User::IsDinamizador()])
+            && (session()->has('login_role')
+                && (session()->get('login_role') == User::IsArticulador()))
+            && auth()->user()->articulador->nodo->id == $articulationStage->node_id
+            && $articulationStage->articulations->count() <= 0;
     }
 }

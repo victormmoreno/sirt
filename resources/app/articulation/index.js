@@ -75,12 +75,11 @@ const articulationStage ={
                     name: 'node',
                 },
                 {
-                    data: 'code',
-                    name: 'code',
-                },
-                {
                     data: 'name',
                     name: 'name',
+                },{
+                    data: 'articulation_state_type',
+                    name: 'articulation_state_type',
                 },
                 {
                     data: 'count_articulations',

@@ -159,7 +159,6 @@ $( document ).ready(function() {
         },
         onStepChanging: function (event, currentIndex, newIndex)
         {
-            console.log(currentIndex);
             if (currentIndex == 3) {
                 form.validate().settings.ignore = ":disabled,:hidden:not(input[type='hidden'])";
             }else{
@@ -189,7 +188,6 @@ $( document ).ready(function() {
                 processData: false,
                 success: function (response) {
                     $('button[type="submit"]').removeAttr('disabled');
-                    console.log(response);
                     printErroresFormulario(response.data);
                     filter_articulations.messageArticulation(response.data,  'registrada', 'Registro exitoso');
                 },

@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Entidad;
 use App\Models\ArticulationType;
 use App\Repositories\Repository\Articulation\ArticulationTypeRepository;
-use App\Http\Requests\ArticulationTypeRequest;
+use App\Http\Requests\Articulation\ArticulationTypeRequest;
 use Illuminate\Support\Facades\Validator;
 
 class ArticulationTypeController extends Controller

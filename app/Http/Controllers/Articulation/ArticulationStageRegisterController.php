@@ -36,9 +36,9 @@ class ArticulationStageRegisterController extends Controller
             if(request()->user()->can('listNodes', ArticulationStage::class))
             {
                 $nodos = Nodo::query()->with('entidad')->get();
-                $nodos = collect($nodos)->pluck('entidad.nombre', 'id');
+                $nodos = collect($nodos)->sortBy('entidad.nombre')->pluck('entidad.nombre', 'id');
             }
-            return view('articulation.create', compact('nodos'));
+            return view('articulation.create-articulation-stage', compact('nodos'));
         }
         return redirect()->route('home');
     }
@@ -47,7 +47,6 @@ class ArticulationStageRegisterController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
@@ -56,37 +55,45 @@ class ArticulationStageRegisterController extends Controller
             $validator = Validator::make($request->all(), $req->rules(), $req->messages());
             if ($validator->fails()) {
                 return response()->json([
-                    'data' => [
-                        'state' => 'danger',
-                        'errors' => $validator->errors(),
-                    ]
+                    'fail'   => true,
+                    'errors' => $validator->errors(),
+                    'message' => null,
+                    'redirect_url' => null,
                 ]);
             } else {
                 $response = $this->articulationStageRepository->store($request);
-                if ($response["isCompleted"]) {
+                if (!$response['state']) {
                     return response()->json([
-                        'data' => [
-                            'state' => 'success',
-                            'url' => route('articulation-stage.show', $response['data']->id),
-                            'status_code' => Response::HTTP_CREATED,
-                            'errors' => [],
-                        ],
-                    ], Response::HTTP_CREATED);
-                } else {
-                    return response()->json([
-                        'data' => [
-                            'state' => 'danger',
-                            'errors' => [],
-                        ],
+                        'fail'         => true,
+                        'errors'       => $this->articulationStageRepository->getError(),
+                        'message' => null,
+                        'redirect_url' => null,
                     ]);
                 }
+                return response()->json([
+                    'fail'         => false,
+                    'errors'       => null,
+                    'message' => "Registro extioso",
+                    'redirect_url' => url(route('articulation-stage.show', $response['data']->id)),
+                ]);
             }
         }
     }
 
-    public function edit(ArticulationStage $articulationStage)
+    public function edit($articulationStage)
     {
-        return view('articulation.edit', compact('articulationStage'));
+        $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
+        if (request()->user()->can('update', $articulationStage))
+        {
+            $nodos = null;
+            if(request()->user()->can('listNodes', ArticulationStage::class))
+            {
+                $nodos = Nodo::query()->with('entidad')->get();
+                $nodos = collect($nodos)->sortBy('entidad.nombre')->pluck('entidad.nombre', 'id');
+            }
+            return view('articulation.edit-articulation-stage', compact('nodos', 'articulationStage'));
+        }
+        return redirect()->route('home');
     }
 
     /**
@@ -94,7 +101,6 @@ class ArticulationStageRegisterController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      *
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, ArticulationStage $articulationStage)
     {
@@ -108,74 +114,23 @@ class ArticulationStageRegisterController extends Controller
                 ]
             ]);
         } else {
-
             $response = $this->articulationStageRepository->update($request, $articulationStage);
-            if($response["isCompleted"]){
+            if (!$response['state']) {
                 return response()->json([
-                    'data' => [
-                        'state'   => 'success',
-                        'url' => route(' articulation-stage.show', $response['data']->id),
-                        'status_code' => Response::HTTP_CREATED,
-                        'errors' => [],
-                    ],
-                ], Response::HTTP_CREATED);
-            }else{
-                return response()->json([
-                    'data' => [
-                        'state'   => 'danger',
-                        'errors' => [],
-                    ],
+                    'fail'         => true,
+                    'errors'       => $this->articulationStageRepository->getError(),
+                    'message' => null,
+                    'redirect_url' => null,
                 ]);
             }
+            return response()->json([
+                'fail'         => false,
+                'errors'       => null,
+                'message' => "Actualización extiosa",
+                'redirect_url' => url(route('articulation-stage.show', $response['data']->id)),
+            ]);
         }
     }
-
-    /**
-     * Update file
-     * @return \Illuminate\Http\Response
-     */
-    public function downloadFile(ArticulationStage $articulationStage)
-    {
-        return $this->articulationStageRepository->downloadFile($articulationStage);
-    }
-
-    /**
-     * request phase approval
-     *
-     * @param  \Illuminate\Http\Request  $request
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function requestApproval(ArticulationStage $articulationStage)
-    {
-        if ($articulationStage->status == ArticulationStage::STATUS_CLOSE) {
-            Alert::error('Acceso no permitido!', 'No puedes enviar solicitudes de aprobación!')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
-        $notification = $this->articulationStageRepository->notifyPhaseApproval($articulationStage);
-        if ($notification['notificacion']) {
-            Alert::success('Notificación Exitosa!', $notification['msg'])->showConfirmButton('Ok', '#3085d6');
-        } else {
-            Alert::error('Notificación Errónea!', $notification['msg'])->showConfirmButton('Ok', '#3085d6');
-        }
-        return back();
-    }
-
-    /**
-     * Método que valida que un experto no pueda hacer operaciones sobre un proyecto que no está asesorando
-     *
-     * @param Model $model
-     * @return bool
-     * @author dum
-     */
-    private function validateAsesor(Model $model) {
-        if ($model->asesor->user->id != auth()->user()->id) {
-            Alert::error('Acceso no permitido!', 'No puedes ver/gestionar  que no estás asesorando!')->showConfirmButton('Ok', '#3085d6');
-            return false;
-        }
-        return true;
-    }
-
 
 
 }

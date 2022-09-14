@@ -4,9 +4,9 @@ use Illuminate\Database\Eloquent\Builder;
 /*DB::listen(function ($query) {
     echo "<pre>{$query->sql}</pre>";
     echo "<pre>{$query->time}</pre>";
-});
+});*/
 
-Route::get('email', function () {
+/*Route::get('email', function () {
     return new App\Mail\Support\AutomaticMessageSent(App\Models\Support::first());
 });*/
 Route::get('/', function () {
@@ -830,13 +830,12 @@ Route::group(
         Route::delete('/file/{idFile}', 'ArticulationStageListController@destroyFile')->name('articulation-stage.file.destroy');
         Route::get('/{articulation}/editar', 'ArticulationStageRegisterController@edit')->name('articulation-stage.edit');
         Route::put('/{articulation}', 'ArticulationStageRegisterController@update')->name('articulation-stage.update');
-        Route::get('/{articulation}/download', 'ArticulationStageRegisterController@downloadFile')->name('articulation-stage.download');
+        Route::get('/{articulation}/download', 'ArticulationStageListController@downloadFile')->name('articulation-stage.download');
         Route::get('/{articulation}/cambiar-interlocutor', 'ArticulationStageListController@changeInterlocutor')->name('articulation-stage.changeinterlocutor');
         Route::put('/{articulation}/cambiar-interlocutor', 'ArticulationStageListController@updateInterlocutor')->name('articulation-stage.updateinterlocutor');
         Route::get('/{id}/crear', 'ArticulationRegisterController@create')->name('articulations.create');
         Route::post('/{id}/crear', 'ArticulationRegisterController@store')->name('articulations.store');
         Route::get('/{id}/ver', 'ArticulationListController@show')->name('articulations.show');
         Route::get('/export', 'ArticulationStageListController@export')->name('articulation-stage.export');
-        Route::get('/solicitar-aprobacion/{articulation}', 'ArticulationStageRegisterController@requestApproval')->name('articulation-stage.requestapproval');
     }
 );

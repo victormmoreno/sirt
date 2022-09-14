@@ -296,14 +296,6 @@ class User extends Authenticatable implements JWTSubject
 
     public function usoinfraestructuras()
     {
-        // return $this->belongsToMany(UsoInfraestructura::class, 'gestor_uso', 'usoinfraestructura_id', 'gestor_id')
-        //     ->withTimestamps()
-        //     ->withPivot([
-        //         'asesoria_directa',
-        //         'asesoria_indirecta',
-        //         'costo_asesoria',
-        //     ]);
-
             return $this->morphToMany(UsoInfraestructura::class, 'asesorable', 'gestor_uso', 'usoinfraestructura_id')->withTimestamps()
             ->withPivot([
                 'asesoria_directa',
@@ -316,7 +308,6 @@ class User extends Authenticatable implements JWTSubject
 
     public function scopeInfoUserRole($query, array $role = [], array $relations = [])
     {
-
         return $query->with($relations)
             ->role($role);
     }

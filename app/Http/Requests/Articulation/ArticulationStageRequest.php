@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Articulation;
 
+use App\Models\ArticulationStage;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\User;
@@ -25,15 +26,17 @@ class ArticulationStageRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => 'required|min:1|max:100',
-            //'node' => Rule::requiredIf(User::IsAdministrador() == request()->user()->IsAdministrador()) ,
-            'description'  => 'max:3000',
-            'scope'  => 'required|min:1|max:3000',
-            'projects'  => 'required',
-            'talent'  => 'required',
-            'confidency_format'  => 'required|file|max:50000|mimetypes:application/pdf|mimes:pdf',
-        ];
+            return [
+                'name' => 'required|min:1|max:100',
+                'node' => Rule::requiredIf(function (){
+                    return (bool) request()->user()->can('listNodes', ArticulationStage::class);
+                }) ,
+                'description'  => 'max:3000',
+                'scope'  => 'required|min:1|max:3000',
+                'projects'  => 'required',
+                'talent'  => 'required',
+                'confidency_format'  => 'required|file|max:50000|mimetypes:application/pdf|mimes:pdf',
+            ];
     }
 
     public function messages()
@@ -51,18 +54,6 @@ class ArticulationStageRequest extends FormRequest
             'confidency_format.required'     => 'El formato de confidencialidad es obligatorio.',
             'confidency_format.min'          => 'El formato de confidencialidad debe ser de un archivo',
             'confidency_format.max'          => 'El formato de confidencialidad no debe ser mayor a :max caracter(es)',
-        ];
-    }
-
-    /**
-     * Get custom attributes for validator errors.
-     *
-     * @return array
-     */
-    public function attributes()
-    {
-        return [
-            'confidency_format' => 'formato de confidencialidad',
         ];
     }
 }

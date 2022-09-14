@@ -38,7 +38,7 @@
                                         </div>
                                 </div>
                                 <div class="divider"></div>
-                                    <div class="row search-tabs-row search-tabs-header">
+                                <div class="row search-tabs-row search-tabs-header">
                                         @can('viewNodes', App\Models\ArticulationStage::class)
                                         <div class="input-field col s12 m2 l2">
                                             <label class="active" for="filter_node_articulationStage">Nodo <span class="red-text">*</span></label>
@@ -78,8 +78,8 @@
                                     <thead>
                                         <tr>
                                             <th>{{__('Node')}}</th>
-                                            <th>{{__('Code articulation-stage')}}</th>
                                             <th>{{__('Name articulation-stage')}}</th>
+                                            <th>Tipo etapa articulación</th>
                                             <th>{{__('Count Articulations')}}</th>
                                             <th>{{__('Status')}}</th>
                                             <th>{{__('Created_at')}}</th>

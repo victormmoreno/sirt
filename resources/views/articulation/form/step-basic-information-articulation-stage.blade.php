@@ -5,7 +5,23 @@
             <div class="col m12">
                 <h5><b>Ingresa la Información requerida</b></h5>
                 <div class="row">
-                    <div class="input-field col m12 s12">
+                    @can('listNodes', App\Models\ArticulationStage::class)
+                    <div class="input-field col s3">
+                        <select name="node"  style="width: 100%" tabindex="-1">
+                            <option value="">Seleccione el nodo</option>
+                            @foreach($nodos as $id => $name)
+                                @if(isset($articulationSubtype->nodos))
+                                    <option value="{{$id}}" {{collect(old('node',$typeArticulation->nodos->pluck('id')))->contains($id)  ? 'selected' : '' }}>{{$name}}</option>
+                                @else
+                                    <option value="{{$id}}" {{old('node') == $id ? 'selected':''}}>{{$name}}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                        <label for="articulationtype">Nodo <span class="red-text">*</span></label>
+                        <small id="node-error" class="error red-text"></small>
+                    </div>
+                    @endcan
+                    <div class="input-field col @can('listNodes', App\Models\ArticulationStage::class) s9  @else s12 @endcan">
                         <label for="name">{{ __('Name ArticulationStage') }}<span class="red-text">*</span></label>
                         <input id="name" name="name" type="text"value="{{ old('name', isset($articulationStage->name) ? $articulationStage->name: '') }}">
                     </div>

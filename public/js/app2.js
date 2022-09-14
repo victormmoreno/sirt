@@ -873,12 +873,11 @@ const articulationStage ={
                     name: 'node',
                 },
                 {
-                    data: 'code',
-                    name: 'code',
-                },
-                {
                     data: 'name',
                     name: 'name',
+                },{
+                    data: 'articulation_state_type',
+                    name: 'articulation_state_type',
                 },
                 {
                     data: 'count_articulations',
@@ -1324,12 +1323,32 @@ $( document ).ready(function() {
                 dataType: 'json',
                 processData: false,
                 success: function (response) {
+                    $('.error').hide();
                     $('button[type="submit"]').removeAttr('disabled');
-                    printErroresFormulario(response.data);
-                    articulationStage.messageAccompaniable(response.data,  'registrada', 'Registro exitoso');
+                    printErrorsForm(response);
+                    if(!response.fail && response.errors == null){
+                        Swal.fire({
+                            title: response.message,
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok',
+                        });
+                        setTimeout(function () {
+                            window.location.href = response.redirect_url;
+                        }, 1500);
+                    }
+
                 },
-                error: function (xhr, textStatus, errorThrown) {
-                    alert("Error: " + errorThrown);
+                error: function (ajaxContext) {
+                    Swal.fire({
+                        title: ' Registro erróneo, vuelve a intentarlo',
+                        html:  `${ajaxContext.status} ${ajaxContext.responseJSON.message}`,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok',
+                    });
                 }
             });
         }
@@ -1362,7 +1381,6 @@ $( document ).ready(function() {
         let filter_year_pro = $('#filter_year_pro').val();
         articulationStage.queryProyectosFaseInicioTable(filter_year_pro);
     });
-
     $('#search_talent').click(function () {
         let filter_user = $('#txtsearch_user').val();
         if(filter_user.length > 0 ){
@@ -1372,7 +1390,6 @@ $( document ).ready(function() {
             articulationStage.notFound('result-talents');
         }
     });
-
     $('#filter_talents_advanced').click(function () {
         articulationStage.queryTalentos();
     });
@@ -1581,7 +1598,6 @@ $( document ).ready(function() {
         },
         onStepChanging: function (event, currentIndex, newIndex)
         {
-            console.log(currentIndex);
             if (currentIndex == 3) {
                 form.validate().settings.ignore = ":disabled,:hidden:not(input[type='hidden'])";
             }else{
@@ -1611,7 +1627,6 @@ $( document ).ready(function() {
                 processData: false,
                 success: function (response) {
                     $('button[type="submit"]').removeAttr('disabled');
-                    console.log(response);
                     printErroresFormulario(response.data);
                     filter_articulations.messageArticulation(response.data,  'registrada', 'Registro exitoso');
                 },
@@ -10578,6 +10593,7 @@ $("#formArticualtionSubtype").on('submit', function(e){
         },
         success: function(response){
             $('.error').hide();
+            $('button[type="submit"]').removeAttr('disabled');
             printErrorsForm(response);
             if(!response.fail && response.errors == null){
                 Swal.fire({

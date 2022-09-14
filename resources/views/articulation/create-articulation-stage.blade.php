@@ -20,18 +20,16 @@
                         <li><a href="{{route('home')}}">{{__('Home')}}</a></li>
                         <li class="active"><a href="{{route('articulation-stage')}}">{{__('articulation-stage')}}</a>
                         </li>
-                        <li class="active">{{__('Edit ArticulationStage')}}</li>
+                        <li class="active">{{__('New ArticulationStage')}}</li>
                     </ol>
                 </div>
             </div>
             <div class="col s12 m12 l12">
                 <div class="card mailbox-content">
                     <div class="card-content">
-                        <form method="POST" id="articulation-form"
-                              action="{{route('articulation-stage.update', $articulationStage)}}" accept-charset="UTF-8"
-                              enctype="multipart/form-data">
+                        <form method="POST" id="articulations-form" action="{{route('articulation-stage.store')}}"
+                              accept-charset="UTF-8" enctype="multipart/form-data">
                             @csrf
-                            {!! method_field('PUT')!!}
                             <div>
                                 @include('articulation.form.step-basic-information-articulation-stage')
                                 @include('articulation.form.step-articulation-stage')
