@@ -61,57 +61,37 @@ class SeguimientoController extends Controller
    * @return array
    * @author dum
    **/
-  public function agruparProyectosAbiertos($Pabiertos)
+  public function agruparProyectos($Pabiertos, $Pfinalizados)
   {
-    $inicio = 0;
-    $planeacion = 0;
-    $ejecucion = 0;
-    $cierre = 0;
-    $total = 0;
-    foreach ($Pabiertos as $proyecto) {
-      switch ($proyecto->fase) {
-        case 'Inicio':
-          $inicio++;
-          break;
-          case 'Planeación':
-          $planeacion++;
-          break;
-        case 'Ejecución':
-          $ejecucion++;
-          break;
-        case 'Cierre':
-          $cierre++;
-          break;
-      }
-      $total++;
-    }
-    return array('inicio' => $inicio, 'planeacion' => $planeacion, 'ejecucion' => $ejecucion, 'cierre' => $cierre, 'total' => $total);
-  }
+    $datos = [];
+    $temporal = $Pabiertos->groupBy('nombre');
+    foreach ($temporal as $row) {
+      $cnt_inicio = $Pabiertos->where('nombre', $row->first()->nombre)->where('fase', 'Inicio')->first();
+      $cnt_planeacion = $Pabiertos->where('nombre', $row->first()->nombre)->where('fase', 'Planeación')->first();
+      $cnt_ejecucion = $Pabiertos->where('nombre', $row->first()->nombre)->where('fase', 'Ejecución')->first();
+      $cnt_cierre = $Pabiertos->where('nombre', $row->first()->nombre)->where('fase', 'Cierre')->first();
+      $cnt_fin = $Pfinalizados->where('nombre', $row->first()->nombre)->where('fase', 'Finalizado')->first();
+      $cnt_suspendido = $Pfinalizados->where('nombre', $row->first()->nombre)->where('fase', 'Suspendido')->first();
 
-  /**
-   * Agreupa por fases la cantidad de proyectos
-   *
-   * @param Builder $Pfinalizados Query de los proyectos por fases (Finalizado, Suspendido)
-   * @return type
-   * @throws conditon
-   **/
-  public function agruparProyectosCerrados($Pfinalizados)
-  {
-    $finalizado = 0;
-    $suspendido = 0;
-    $total = 0;
-    foreach ($Pfinalizados as $proyecto) {
-      switch ($proyecto->fase) {
-        case 'Finalizado':
-          $finalizado++;
-          break;
-        case 'Suspendido':
-          $suspendido++;
-          break;
-      }
-      $total++;
+      $cnt_inicio != null ? $cnt_inicio = $cnt_inicio->trl_esperado : $cnt_inicio = 0;
+      $cnt_planeacion != null ? $cnt_planeacion = $cnt_planeacion->trl_esperado : $cnt_planeacion = 0;
+      $cnt_ejecucion != null ? $cnt_ejecucion = $cnt_ejecucion->trl_esperado : $cnt_ejecucion = 0;
+      $cnt_cierre != null ? $cnt_cierre = $cnt_cierre->trl_esperado : $cnt_cierre = 0;
+      $cnt_fin != null ? $cnt_fin = $cnt_fin->cantidad : $cnt_fin = 0;
+      $cnt_suspendido != null ? $cnt_suspendido = $cnt_suspendido->cantidad : $cnt_suspendido = 0;
+
+      $datos[] = [
+        'nodo' => $row->first()->nombre,
+        'inicio' => $cnt_inicio,
+        'planeacion' => $cnt_planeacion,
+        'ejecucion' => $cnt_ejecucion,
+        'cierre' => $cnt_cierre,
+        'finalizado' => $cnt_fin,
+        'suspendido' => $cnt_suspendido
+      ];
     }
-    return array('finalizado' => $finalizado, 'suspendido' => $suspendido, 'total' => $total);
+
+    return $datos;
   }
 
   /**
@@ -179,7 +159,7 @@ class SeguimientoController extends Controller
     $datos['Cierre'] = $abiertos['cierre'];
     $datos['Finalizado'] = $cerrados['finalizado'];
     $datos['Suspendido'] = $cerrados['suspendido'];
-    $datos['Total'] = $abiertos['total'] + $cerrados['total'];
+    // $datos['Total'] = $abiertos['total'] + $cerrados['total'];
     return $datos;
   }
 
@@ -298,18 +278,14 @@ class SeguimientoController extends Controller
       $nodos_list = $request->nodos;
     }
 
-    $datos = array();
     $Pabiertos = 0;
     $Pfinalizados = 0;
-    // Proyectos
     $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->whereIn('nodos.id', $nodos_list)->get();
     $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos_list)->get();
-
-    $abiertosAgrupados = $this->agruparProyectosAbiertos($Pabiertos);
-    $cerradosAgrupados = $this->agruparProyectosCerrados($Pfinalizados);
-    $datos = $this->retornarValoresDelSeguimientoPorFases($abiertosAgrupados, $cerradosAgrupados);
+    
+    $agrupados = $this->agruparProyectos($Pabiertos, $Pfinalizados);
     return response()->json([
-      'datos' => $datos
+      'datos' => $agrupados
     ]);
   }
 

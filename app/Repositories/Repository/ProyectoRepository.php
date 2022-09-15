@@ -335,7 +335,8 @@ class ProyectoRepository
      **/
     public function proyectosSeguimientoCerrados($year)
     {
-        return Proyecto::select('fases.nombre AS fase', 'proyectos.id')
+        return Proyecto::select('fases.nombre AS fase', 'entidades.nombre')
+        ->selectRaw('count(proyectos.id) as cantidad')
         ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
         ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
         ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
@@ -343,7 +344,9 @@ class ProyectoRepository
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
         ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
+        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
         ->whereIn('fases.nombre', ['Finalizado', 'Suspendido'])
+        ->groupBy('entidades.nombre', 'fase')
         ->whereYear('fecha_cierre', $year);
     }
 
@@ -366,7 +369,24 @@ class ProyectoRepository
 
     public function proyectosSeguimientoAbiertos()
     {
-        return Proyecto::select('trl_esperado', 'fases.nombre AS fase')
+        return Proyecto::select('fases.nombre AS fase', 'entidades.nombre')
+        ->selectRaw('count(trl_esperado) as trl_esperado')
+        ->join('articulacion_proyecto AS ap', 'ap.id', '=', 'proyectos.articulacion_proyecto_id')
+        ->join('actividades AS a', 'a.id', '=', 'ap.actividad_id')
+        ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
+        ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
+        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+        ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
+        ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
+        ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
+        ->groupBy('entidades.nombre', 'fase')
+        ->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
+    }
+
+    public function proyectosSeguimientoPorTrl()
+    {
+        return Proyecto::select('fases.nombre AS fase', 'entidades.nombre')
+        ->selectRaw('count(trl_esperado) as trl_esperado')
         ->join('articulacion_proyecto AS ap', 'ap.id', '=', 'proyectos.articulacion_proyecto_id')
         ->join('actividades AS a', 'a.id', '=', 'ap.actividad_id')
         ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')

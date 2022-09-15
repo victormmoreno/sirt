@@ -309,65 +309,156 @@ function graficoSeguimientoPorMes(data, name) {
 }
 
 function graficoSeguimientoFases(data, name) {
+  let nodos = [];
+  let inicio = [];
+  let planeacion = [];
+  let ejecucion = [];
+  let cierre = [];
+  let finalizado = [];
+  let suspendido = [];
+  data.datos.forEach(element => {
+    nodos.push(element.nodo);
+    inicio.push(element.inicio);
+    planeacion.push(element.planeacion);
+    ejecucion.push(element.ejecucion);
+    cierre.push(element.cierre);
+    finalizado.push(element.finalizado);
+    suspendido.push(element.suspendido);
+  });
   Highcharts.chart(name, {
     chart: {
-      type: 'column'
+        type: 'column'
     },
     title: {
-      text: 'Proyectos actuales y finalizados en el año actual'
-    },
-    yAxis: {
-      title: {
-        text: 'Cantidad'
-      }
+        text: 'Proyectos actuales y finalizados en el año actual'
+        // align: 'left'
     },
     xAxis: {
-        type: 'category'
+        title: {
+          text: 'Nodos'
+        },
+        categories: nodos
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Cantidad de proyectos'
+        },
+        stackLabels: {
+            enabled: true,
+            style: {
+                fontWeight: 'bold',
+                color: ( // theme
+                    Highcharts.defaultOptions.title.style &&
+                    Highcharts.defaultOptions.title.style.color
+                ) || 'gray',
+                textOutline: 'none'
+            }
+        }
     },
     legend: {
-        enabled: false
+        align: 'left',
+        x: 70,
+        verticalAlign: 'top',
+        y: 20,
+        floating: true,
+        backgroundColor:
+            Highcharts.defaultOptions.legend.backgroundColor || 'white',
+        borderColor: '#CCC',
+        borderWidth: 1,
+        shadow: false
     },
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">Cantidad</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
+    // tooltip: {
+    //     headerFormat: '<b>{point.x}</b><br/>',
+    //     pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+    // },
+    plotOptions: {
+        column: {
+            stacking: 'normal',
+            dataLabels: {
+                enabled: true
+            }
+        }
     },
-    series: [
-      {
-        colorByPoint: true,
-        dataLabels: {
-          enabled: true
-        },
-        data: [
-          {
-            name: "Proyectos en inicio",
-            y: data.datos.Inicio,
-          },
-          {
-            name: "Proyectos en planeación",
-            y: data.datos.Planeacion,
-          },
-          {
-            name: "Proyectos en ejecución",
-            y: data.datos.Ejecucion,
-          },
-          {
-            name: "Proyectos en cierre",
-            y: data.datos.Cierre,
-          },
-          {
-            name: "Proyectos finalizados",
-            y: data.datos.Finalizado,
-          },
-          {
-            name: "Proyectos suspendidos",
-            y: data.datos.Suspendido,
-          },
-          {
-            name: "Total de proyecto en el año actual",
-            y: data.datos.Total,
-          },
-        ]
-      }
-    ],
-  });
+    series: [{
+        name: 'Inicio',
+        data: inicio
+    }, {
+        name: 'Planeación',
+        data: planeacion
+    }, {
+        name: 'Ejecución',
+        data: ejecucion
+    }, {
+      name: 'Cierre',
+      data: cierre
+    }, {
+      name: 'Finalizado',
+      data: finalizado
+    }, {
+      name: 'Suspendido',
+      data: suspendido
+    }]
+});
+  // Highcharts.chart(name, {
+  //   chart: {
+  //     type: 'column'
+  //   },
+  //   title: {
+  //     text: 'Proyectos actuales y finalizados en el año actual'
+  //   },
+  //   yAxis: {
+  //     title: {
+  //       text: 'Cantidad'
+  //     }
+  //   },
+  //   xAxis: {
+  //       type: 'category'
+  //   },
+  //   legend: {
+  //       enabled: false
+  //   },
+  //   tooltip: {
+  //     headerFormat: '<span style="font-size:11px">Cantidad</span><br>',
+  //     pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
+  //   },
+  //   series: [
+  //     {
+  //       colorByPoint: true,
+  //       dataLabels: {
+  //         enabled: true
+  //       },
+  //       data: [
+  //         {
+  //           name: "Proyectos en inicio",
+  //           y: data.datos.Inicio,
+  //         },
+  //         {
+  //           name: "Proyectos en planeación",
+  //           y: data.datos.Planeacion,
+  //         },
+  //         {
+  //           name: "Proyectos en ejecución",
+  //           y: data.datos.Ejecucion,
+  //         },
+  //         {
+  //           name: "Proyectos en cierre",
+  //           y: data.datos.Cierre,
+  //         },
+  //         {
+  //           name: "Proyectos finalizados",
+  //           y: data.datos.Finalizado,
+  //         },
+  //         {
+  //           name: "Proyectos suspendidos",
+  //           y: data.datos.Suspendido,
+  //         },
+  //         {
+  //           name: "Total de proyecto en el año actual",
+  //           y: data.datos.Total,
+  //         },
+  //       ]
+  //     }
+  //   ],
+  // });
 }
