@@ -22,7 +22,11 @@ class ArticulationListController extends Controller
      */
     public function show($id)
     {
-        $articulation = Articulation::findOrfail($id);
+        $articulation = Articulation::query()
+            ->with([
+                'articulationstage'
+            ])
+            ->findOrfail($id);
         return view('articulation.show-articulation', compact('articulation'));
     }
 

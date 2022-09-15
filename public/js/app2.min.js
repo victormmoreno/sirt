@@ -998,7 +998,6 @@ const articulationStage ={
         $('#filter_project_advanced_modal').openModal();
     },
     addProjectToArticulacion:function(code) {
-
         articulationStage.fill_code_project(code);
         articulationStage.emptyResult('result-talents');
         $('#filter_project_advanced_modal').closeModal();
@@ -1180,11 +1179,67 @@ const articulationStage ={
                 articulationStage.messageAccompaniable(response.data, 'actualizado', 'Modificación Exitosa');
             },
             error: function (xhr, textStatus, errorThrown) {
-                alert("Error: " + errorThrown);
+                Swal.fire({
+                    title: 'Error, vuelve a intentarlo',
+                    html: "Error: " + textStatus,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok',
+                });
             }
         });
-    }
-
+    },
+    destroyArticulationStage: function(id){
+        Swal.fire({
+            title: '¿Estas seguro de eliminar esta etapa de articulación?',
+            text: "Recuerde que si lo elimina no lo podrá recuperar.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'si, eliminar',
+            cancelButtonText: 'No, cancelar',
+        }).then((result) => {
+            if (result.value) {
+                let token = $("meta[name='csrf-token']").attr("content");
+                $.ajax({
+                    url: host_url + "/articulaciones/"+id,
+                    type: 'DELETE',
+                    data: {
+                        "id": id,
+                        "_token": token,
+                    },
+                    success: function (data){
+                        if(!data.fail){
+                            Swal.fire(
+                                'Eliminado!',
+                                'La etapa de articulación ha sido eliminado satisfactoriamente.',
+                                'success'
+                            );
+                            location.href = data.redirect_url;
+                        }else{
+                            Swal.fire(
+                                'Cuidado!',
+                                'La etapa de articulación no se ha eliminado, ya que continene articulaciones.',
+                                'warining'
+                            );
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        Swal.fire({
+                            title: 'Error, vuelve a intentarlo',
+                            html: "Error: " + textStatus,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok',
+                        });
+                    }
+                });
+            }
+        })
+    },
 }
 
 $(document).on('submit', 'form#interlocutor-form', function (event) {
@@ -1444,6 +1499,9 @@ $( document ).ready(function() {
             articulation_type: {
                 required:true,
             },
+            articulation_subtype: {
+                required:true,
+            },
             start_date: {
                 required:true,
                 date: true
@@ -1491,18 +1549,18 @@ $( document ).ready(function() {
                 required: true,
                 maxlength: 2500
             }
-
         },
-        messages:
-            {
-                articulationStage_type:
-                    {
-                        required:"Por favor selecciona el tipo de acompañamiento",
-                    },
-                start_date:{
-                    required:"Este campo es obligatorio",
-                    date: "Por favor introduzca una fecha válida"
-                },
+        messages:{
+            articulation_type:{
+                    required:"Por favor selecciona el tipo de subarticulación",
+            },
+            articulation_type:{
+                required:"Por favor selecciona el tipo de articulación",
+            },
+            start_date:{
+                required:"Este campo es obligatorio",
+                date: "Por favor introduzca una fecha válida"
+            },
                 name_articulationStage:
                     {
                         required:"Este campo es obligatorio",
@@ -1566,7 +1624,7 @@ $( document ).ready(function() {
         {
             if ( element.is(":radio") )
             {
-                error.appendTo( element.parents('.container-error') );
+                error.appendTo( element.parents('.container-error'));
             }
             else if ( element.is(":file") )
             {
@@ -1579,7 +1637,6 @@ $( document ).ready(function() {
             else
             {
                 element.after(error);
-
             }
         }
     });
@@ -1603,7 +1660,6 @@ $( document ).ready(function() {
             }else{
                 form.validate().settings.ignore = ":disabled,:hidden";
             }
-
             return form.valid();
         },
         onFinishing: function (event, currentIndex)
@@ -1700,6 +1756,7 @@ $( document ).ready(function() {
     $('#advanced_talent_filter').click(function () {
         filter_articulations.queryTalentos();
     });
+    filter_articulations.valueArticulationType();
 });
 
 const filter_articulations = {
@@ -1761,7 +1818,6 @@ const filter_articulations = {
             return moment(date).format('LL');
         }
     },
-
     addTalentToArticulation: function(user){
         filter_articulations.emptyResult('alert-empty-talents');
         if (filter_articulations.noRepeat(user) == false) {
@@ -1772,7 +1828,6 @@ const filter_articulations = {
         }
         $('#filter_talents_advanced_modal').closeModal();
     },
-
     noRepeat: function(id) {
         let user = id;
         let retorno = true;
@@ -1872,7 +1927,6 @@ const filter_articulations = {
         });
         $('#filter_talents_advanced_modal').openModal();
     },
-
     messageArticulation: function(data, action, title) {
         if (data.status_code == 201) {
             Swal.fire({
@@ -1897,6 +1951,29 @@ const filter_articulations = {
             })
         }
     },
+    valueArticulationType: function (){
+        $("#articulation_type").on('change', function () {
+                let articulaciontype = $(this).val();
+                if(articulaciontype !=null || articulaciontype != ''){
+                    $.ajax({
+                        dataType: 'json',
+                        type: 'get',
+                        url: `/tipoarticulaciones/${articulaciontype}/tiposubarticulaciones`
+                    }).done(function (response) {
+                        $("#articulation_subtype").empty();
+                        $('#articulation_subtype').append('<option value="">Seleccione el tipo de subarticulación</option>');
+                        $.each(response.data, function(i, element) {
+                                $('#articulation_subtype').append(`<option  value="${element.id}">${element.name}</option>`);
+                        });
+                        $('#articulation_subtype').material_select();
+
+                    });
+                }
+
+
+        });
+
+    }
 }
 
 function consultarEntrenamientosPorNodo_Administrador(id) {

@@ -8,7 +8,6 @@ class AlcanceArticulacion extends Model
 {
     protected $table = 'articulation_scopes';
 
-
     /**
      * The inverse relation one to much articulations
      *

@@ -21,14 +21,6 @@
                     </li>
                     <li class="collection-item">
                         <span class="title black-text text-darken-3">
-                            Idea
-                        </span>
-                        <p>
-                            {{-- <a class="orange-text text-darken-1" onclick="detallesIdeaPorId({{$articulation->present()->articulacionPbtIdIdeaProyecto()}})">{{$articulation->present()->articulacionPbtCodeIdeaProyecto()}} - {{$articulation->present()->articulacionPbtNameIdeaProyecto()}}</a> --}}
-                        </p>
-                    </li>
-                    <li class="collection-item">
-                        <span class="title black-text text-darken-3">
                             {{__('Project')}}
                         </span>
                         <p>
@@ -49,7 +41,7 @@
                             Fecha esperada de finalización de la Articulación
                         </span>
                         <p>
-                            {{$articulation->present()->articulationEndDate()}}
+                            {{$articulation->present()->articulationExpectedEndDate()}}
                         </p>
                     </li>
 
@@ -109,7 +101,14 @@
                             {{$articulation->present()->articulationEmailEntity()}}
                         </p>
                     </li>
-
+                    <li class="collection-item">
+                        <span class="title black-text text-darken-3">
+                            Tipo articulación / tipo subarticulación
+                        </span>
+                        <p>
+                            {{$articulation->present()->articulationSubtype()}}
+                        </p>
+                    </li>
                 </ul>
             </div>
         </div>

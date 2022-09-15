@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Articulation;
 
+use App\Models\ArticulationSubtype;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Entidad;
@@ -170,5 +172,22 @@ class ArticulationTypeController extends Controller
             'fail'         => false,
             'redirect_url' => route('tipoarticulaciones.index'),
         ]);
+    }
+
+    public function filterArticulationType($articulationType)
+    {
+        $articulationSubtypes = ArticulationSubtype::query()
+            /*->with(['nodos'=> function($query) use($node){
+                return $query->where('id', $node);
+            }])*/
+            ->where('state', ArticulationSubtype::mostrar())
+
+            ->where('articulation_type_id', $articulationType)->get();
+        if(request()->ajax()){
+            return response()->json([
+                'data' => $articulationSubtypes
+            ]);
+        }
+        return abort(403);
     }
 }

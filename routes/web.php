@@ -812,6 +812,7 @@ Route::get('usuarios/filtro-talento/{documento}', 'User\UserController@filterTal
 Route::get('empresas/filter-code/{value}', 'EmpresaController@filterByCode')->name('empresa.filterbycode');
 Route::get('empresas/sede/{id}', 'EmpresaController@filterSede')->name('empresa.sede.filter');
 
+Route::get('tipoarticulaciones/{id}/tiposubarticulaciones', 'Articulation\ArticulationTypeController@filterArticulationType');
 Route::resource('tipoarticulaciones', 'Articulation\ArticulationTypeController');
 Route::resource('tiposubarticulaciones', 'Articulation\ArticulationSubtypeController');
 
@@ -837,5 +838,6 @@ Route::group(
         Route::post('/{id}/crear', 'ArticulationRegisterController@store')->name('articulations.store');
         Route::get('/{id}/ver', 'ArticulationListController@show')->name('articulations.show');
         Route::get('/export', 'ArticulationStageListController@export')->name('articulation-stage.export');
+        Route::delete('/{id}', 'ArticulationStageListController@destroy')->name('articulation-stage.destroy');
     }
 );

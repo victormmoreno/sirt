@@ -29,8 +29,6 @@
                     <form id="articulation-form" action="{{route('articulations.store', $articulationStage->id)}}" method="POST">
                         @csrf
                         <div>
-                            @include('articulation.form.step-articulation-type')
-                            @include('articulation.form.step-articulation-subtype')
                             @include('articulation.form.step-articulation')
                             @include('articulation.form.step-articulation-contact')
                             @include('articulation.form.step-articulation-participants')

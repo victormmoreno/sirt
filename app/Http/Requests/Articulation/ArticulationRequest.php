@@ -25,7 +25,8 @@ class ArticulationRequest extends FormRequest
     public function rules()
     {
         return [
-            'articulation_type' => 'required|'. Rule::in(['pi', 'con', 'ce']),
+            'articulation_type' => 'required',
+            'articulation_subtype' => 'required',
             'name_articulation' => 'required|min:1|max:100',
             'description_articulation'  => 'max:3000',
             'scope'  => 'required|min:1|max:3000',

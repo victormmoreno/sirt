@@ -200,7 +200,6 @@ const articulationStage ={
         $('#filter_project_advanced_modal').openModal();
     },
     addProjectToArticulacion:function(code) {
-
         articulationStage.fill_code_project(code);
         articulationStage.emptyResult('result-talents');
         $('#filter_project_advanced_modal').closeModal();
@@ -382,11 +381,67 @@ const articulationStage ={
                 articulationStage.messageAccompaniable(response.data, 'actualizado', 'Modificación Exitosa');
             },
             error: function (xhr, textStatus, errorThrown) {
-                alert("Error: " + errorThrown);
+                Swal.fire({
+                    title: 'Error, vuelve a intentarlo',
+                    html: "Error: " + textStatus,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok',
+                });
             }
         });
-    }
-
+    },
+    destroyArticulationStage: function(id){
+        Swal.fire({
+            title: '¿Estas seguro de eliminar esta etapa de articulación?',
+            text: "Recuerde que si lo elimina no lo podrá recuperar.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'si, eliminar',
+            cancelButtonText: 'No, cancelar',
+        }).then((result) => {
+            if (result.value) {
+                let token = $("meta[name='csrf-token']").attr("content");
+                $.ajax({
+                    url: host_url + "/articulaciones/"+id,
+                    type: 'DELETE',
+                    data: {
+                        "id": id,
+                        "_token": token,
+                    },
+                    success: function (data){
+                        if(!data.fail){
+                            Swal.fire(
+                                'Eliminado!',
+                                'La etapa de articulación ha sido eliminado satisfactoriamente.',
+                                'success'
+                            );
+                            location.href = data.redirect_url;
+                        }else{
+                            Swal.fire(
+                                'Cuidado!',
+                                'La etapa de articulación no se ha eliminado, ya que continene articulaciones.',
+                                'warining'
+                            );
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        Swal.fire({
+                            title: 'Error, vuelve a intentarlo',
+                            html: "Error: " + textStatus,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok',
+                        });
+                    }
+                });
+            }
+        })
+    },
 }
 
 $(document).on('submit', 'form#interlocutor-form', function (event) {

@@ -214,12 +214,12 @@
                                                         <p><span
                                                                 class=" flow-text">Aún no registras {{ __('Articulations') }}</span>
                                                         </p>
-                                                        @can('update', $articulationStage)
+
                                                             <p>
                                                                 <a href="{{route('articulations.create', $articulationStage->id )}}"
                                                                    class="waves-effect waves-orange btn orange m-t-xs">{{ __('New Articulation') }}</a>
                                                             </p>
-                                                        @endcan
+
                                                     </div>
                                                 @endforelse
                                             </div>

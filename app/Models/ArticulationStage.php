@@ -82,7 +82,6 @@ class ArticulationStage extends Model
         return $this->morphMany(ControlNotificaciones::class, 'notificable');
     }
 
-
     /**
      * Define an inverse one to many relationship between accompanient and node
      *

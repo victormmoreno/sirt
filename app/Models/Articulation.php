@@ -45,7 +45,7 @@ class Articulation extends Model
      * @return void
      */
     public function articulationstage(){
-        return $this->belongsTo(ArticulationStage::class);
+        return $this->belongsTo(ArticulationStage::class, 'articulation_stage_id');
     }
 
     /**

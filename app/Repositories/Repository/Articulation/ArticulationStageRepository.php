@@ -258,7 +258,7 @@ class ArticulationStageRepository
      * @return \Illuminate\Http\Response
      */
 
-    public function updateInterlocutor(Request $request, ArticulationStage $articulationStage)
+    public function updateInterlocutor(Request $request, $articulationStage)
     {
         try {
             $articulationStage->update([
@@ -276,7 +276,6 @@ class ArticulationStageRepository
                 'isCompleted' => false,
             ];
         }
-
     }
 
     /**
@@ -375,5 +374,16 @@ class ArticulationStageRepository
             'destinatarios' => $recipients
         ];
     }
+
+    /**
+     * Retonar la última notificacion pendiente
+     *
+     * @param $articulationState
+     **/
+    public function retornarUltimaNotificacionPendiente($articulationState)
+    {
+        return $articulationState->notifications()->where('fase_id',  $articulationState->state)->where('estado', \App\Models\ControlNotificaciones::IsPendiente())->get()->last();
+    }
+
 
 }

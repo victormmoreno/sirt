@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Articulation;
 use App\Models\ArticulationType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Articulation;
 use App\Models\ArticulationStage;
 use App\Models\AlcanceArticulacion;
 use Illuminate\Http\Response;

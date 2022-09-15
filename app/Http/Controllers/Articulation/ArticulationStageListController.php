@@ -12,6 +12,7 @@ use App\Exports\Articulation\articulationStageExport;
 use App\Repositories\Repository\Articulation\ArticulationStageRepository;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class ArticulationStageListController extends Controller
 {
@@ -79,10 +80,12 @@ class ArticulationStageListController extends Controller
                 'interlocutor'
             ])
         ->findOrfail($id);
-
         $articulations = $articulationStage->articulations()->latest('id')->paginate(3);
+        $ult_notificacion = $this->articulationStageRepository->retornarUltimaNotificacionPendiente($articulationStage);
 
-        return view('articulation.show', compact('articulationStage', 'articulations'));
+        // $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
+
+        return view('articulation.show-articulation-stage', compact('articulationStage', 'articulations', 'ult_notificacion'));
     }
 
     public function export(Request $request, $extension = 'xlsx')
@@ -129,12 +132,13 @@ class ArticulationStageListController extends Controller
      */
     public function downloadFile($articulationStage)
     {
-        $articulationStage = ArticulationStage::query()->find($articulationStage);
+        $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
         return $this->articulationStageRepository->downloadFile($articulationStage);
     }
 
-    public function changeInterlocutor(ArticulationStage $articulationStage)
+    public function changeInterlocutor($articulationStage)
     {
+        $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
         return view('articulation.change-interlocutor', compact('articulationStage'));
     }
 
@@ -142,11 +146,11 @@ class ArticulationStageListController extends Controller
      * Update los miembros de una etapa.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  int  $articulationStage
      */
-    public function updateInterlocutor(Request $request, ArticulationStage $articulationStage)
+    public function updateInterlocutor(Request $request, $articulationStage)
     {
+        $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
         $validator = Validator::make($request->all(), [
             'talent' => 'required'
         ], [
@@ -163,7 +167,7 @@ class ArticulationStageListController extends Controller
                 return response()->json([
                     'data' => [
                         'state'   => 'success',
-                        'url' => route(' articulation-stage.show', $response['data']->id),
+                        'url' => route('articulation-stage.show', $response['data']->id),
                         'status_code' => Response::HTTP_CREATED,
                         'errors' => [],
                     ],
@@ -251,5 +255,38 @@ class ArticulationStageListController extends Controller
                 break;
         }
         return ['talent' => $talent, 'node' => $node];
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $articulationStage
+     */
+    public function destroy($articulationStage)
+    {
+        $articulationStage = ArticulationStage::findOrFail($articulationStage);
+        if(!$articulationStage->articulations->IsEmpty() ){
+            return response()->json([
+                'fail'         => true,
+                'redirect_url' => route('articulation-stage.show', $articulationStage->id),
+            ]);
+        }
+        if(isset($articulationStage->projects)){
+            $articulationStage->projects()->detach();
+        }
+        if(isset($articulationStage->articulations->users)){
+            $articulationStage->articulations()->delete();
+            $articulationStage->articulations->users()->detach();
+        }
+        if(isset($articulationStage->file)) {
+            $filePath = str_replace('storage', 'public', $articulationStage->file->ruta);
+            Storage::delete($filePath);
+            $articulationStage->file()->delete();
+        }
+        $articulationStage->delete();
+        return response()->json([
+            'fail'         => false,
+            'redirect_url' => route('articulation-stage'),
+        ]);
     }
 }

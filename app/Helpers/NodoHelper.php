@@ -21,6 +21,8 @@ class NodoHelper
             return User::IsArticulador().' nodo ' . Nodo::userNodo(auth()->user()->articulador->nodo_id)->first()->nombre;
         }else if (\Session::get('login_role') == User::IsApoyoTecnico() && isset(auth()->user()->apoyotecnico->nodo_id)) {
             return User::IsApoyoTecnico(). ' del nodo ' . Nodo::userNodo(auth()->user()->apoyotecnico->nodo_id)->first()->nombre;
+        }else{
+            return 'Usuario';
         }
     }
 
