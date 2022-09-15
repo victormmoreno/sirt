@@ -5,6 +5,46 @@ function isset(variable) {
   return false;
 }
 
+function sendListNodos(url) {
+  let nodosSend = [];
+  let nodosID = $('.nodos_list_select:checked').map(function(){
+    return $(this).val();
+  });
+  if (nodosID.length == 0) {
+    alertaNodoNoValido();
+  } else {
+    for (let i = 0; i < nodosID.length; i++) {
+      nodosSend.push(nodosID[i]);
+    }
+    return $.ajax({
+      dataType: 'json',
+      type: 'get',
+      data: {
+        nodos: nodosSend
+      },
+      url: url,
+      // success: function (data) { },
+      error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+      },
+    });
+  }
+};
+
+function consultarSeguimientoDeUnNodoFases(url) {
+  let ajax = sendListNodos(url);
+  ajax.success(function (data) {
+    graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
+  });
+};
+
+function consultarSeguimientoEsperadoDeUnNodo(url) {
+  let ajax = sendListNodos(url);
+  ajax.success(function (data) {
+    graficoSeguimientoEsperado(data, graficosSeguimiento.nodo_esperado);
+  });
+}
+
 function generarExcelConTodosLosIndicadores() {
   let idnodo = $('#txtnodo_id').val();
   let hoja = $('#txthoja_nombre').val();
@@ -95,35 +135,19 @@ function downloadMetas(e) {
   }
 }
 
-// function checkSelectMultipleOptions(source) {
-//   if (source.value == 'all') {
-//     // $('#txtnodo_id_inscritos > option').prop('selected', true);
-//     // $('#txtnodo_id_inscritos').attr('selected', 'selected');
-//     // source.options.length
-//     // $("$#"+source.id+" > option").each(function() {
-//       $('#txtnodo_id_inscritos > option').each(function(i, element) {
-//         console.log(element);
-//         // $('#txtnodo_id_inscritos').attr('selected', 'selected');
-//         // $(this).prop('selected', true);
-//         // $(this).attr('selected', true);
-//     });
-//   }
-//   // options = document.getElementsByClassName(source);
-//   // $('#txtnodo_id_inscritos').find("all").each(function() {
-//   //   $('#txtnodo_id_inscritos').attr('selected', 'selected');
-//   // });
-//   // for(var i=0, n=options.length;i<n;i++) {
-//   //   options[i].checked = source.checked;
-//   // }
-// }
-
 function verificarChecks(source, padre) {
   clase = source.classList[0];
   checkboxes = document.getElementsByClassName(clase);
   padre = document.getElementById(padre);
-  state = true;
-  for(var i=0, n=checkboxes.length;i<n;i++) {
-    if (checkboxes[i].checked == source.checked) {
+  state = false;
+  for(var i=0, n= checkboxes.length; i< n;i++) {
+    if (checkboxes[i].checked) {
+      state = true;
+      break;
+    }
+  }
+  for(var i=0, n= checkboxes.length; i< n;i++) {
+    if (!checkboxes[i].checked) {
       state = false;
       break;
     }

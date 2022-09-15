@@ -19,7 +19,7 @@ function alertaGestorNoValido() {
 };
 
 function alertaNodoNoValido() {
-  Swal.fire('Advertencia!', 'Seleccione un nodo', 'warning');
+  Swal.fire('Advertencia!', 'Seleccione por lo menos un nodo', 'warning');
 };
 // 0 para cuando el Dinamizador consultar
 // 1 para cuando el experto consulta
@@ -151,42 +151,42 @@ function consultarSeguimientoEsperadoDeTecnoparque() {
   })
 };
 
-function consultarSeguimientoEsperadoDeUnNodo(nodo_id) {
+// function consultarSeguimientoEsperadoDeUnNodo(nodo_id) {
 
-  if ( nodo_id === "" ) {
-    alertaNodoNoValido();
-  } else {
-    $.ajax({
-      dataType: 'json',
-      type: 'get',
-      url: host_url + '/seguimiento/seguimientoEsperadoDeUnNodo/'+nodo_id,
-      success: function (data) {
-        graficoSeguimientoEsperado(data, graficosSeguimiento.nodo_esperado);
-      },
-      error: function (xhr, textStatus, errorThrown) {
-        alert("Error: " + errorThrown);
-      },
-    })
-  }
-};
+//   if ( nodo_id === "" ) {
+//     alertaNodoNoValido();
+//   } else {
+//     $.ajax({
+//       dataType: 'json',
+//       type: 'get',
+//       url: host_url + '/seguimiento/seguimientoEsperadoDeUnNodo/'+nodo_id,
+//       success: function (data) {
+//         graficoSeguimientoEsperado(data, graficosSeguimiento.nodo_esperado);
+//       },
+//       error: function (xhr, textStatus, errorThrown) {
+//         alert("Error: " + errorThrown);
+//       },
+//     })
+//   }
+// };
 
-function consultarSeguimientoDeUnNodoFases(nodo_id) {
-  if ( nodo_id === "" ) {
-    alertaNodoNoValido();
-  } else {
-    $.ajax({
-      dataType: 'json',
-      type: 'get',
-      url: host_url + '/seguimiento/seguimientoDeUnNodoFases/'+nodo_id,
-      success: function (data) {
-        graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
-      },
-      error: function (xhr, textStatus, errorThrown) {
-        alert("Error: " + errorThrown);
-      },
-    })
-  }
-};
+// function consultarSeguimientoDeUnNodoFases(nodo_id) {
+//   if ( nodo_id === "" ) {
+//     alertaNodoNoValido();
+//   } else {
+//     $.ajax({
+//       dataType: 'json',
+//       type: 'get',
+//       url: host_url + '/seguimiento/seguimientoDeUnNodoFases/'+nodo_id,
+//       success: function (data) {
+//         graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
+//       },
+//       error: function (xhr, textStatus, errorThrown) {
+//         alert("Error: " + errorThrown);
+//       },
+//     })
+//   }
+// };
 
 function consultarSeguimientoDeTecnoparqueFases() {
   $.ajax({

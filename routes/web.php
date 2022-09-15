@@ -54,6 +54,7 @@ Route::post('cambiar-role', 'User\RolesPermissions@changeRoleSession')
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('disablepreventback');
 
+Route::get('/nodo/fetch_data', 'Nodo\NodoController@nodo_pagination');
 Route::resource('nodo', 'Nodo\NodoController')->middleware(['disablepreventback', 'role_session:Administrador|Activador|Dinamizador']);
 
 Route::get('usuario/{documento}/password/reset', 'User\UserController@generatePassword')->name('user.newpassword')->middleware('disablepreventback');
@@ -699,9 +700,9 @@ Route::group(
         Route::get('/seguimientoEsperadoDeUnGestor/{id}', 'SeguimientoController@seguimientoEsperadoDelGestor');
         Route::get('/seguimientoInscritosPorMesExperto/{id}', 'SeguimientoController@seguimientoProyectosInscritosPorMes');
         Route::get('/seguimientoEsperadoDeUnaLinea/{id}/{nodo}', 'SeguimientoController@seguimientoEsperadoDeLaLinea');
-        Route::get('/seguimientoEsperadoDeUnNodo/{id}', 'SeguimientoController@seguimientoEsperadoDelNodo')->middleware('role_session:Dinamizador|Activador');
+        Route::get('/seguimientoEsperadoDeUnNodo', 'SeguimientoController@seguimientoEsperadoDelNodo')->middleware('role_session:Dinamizador|Activador')->name('seguimiento.esperado');
         Route::get('/seguimientoEsperadoDeTecnoparque', 'SeguimientoController@seguimientoEsperadoDeTecnoparque')->middleware('role_session:Activador');
-        Route::get('/seguimientoDeUnNodoFases/{id}', 'SeguimientoController@seguimientoDelNodoFases')->middleware('role_session:Activador|Dinamizador');
+        Route::get('/seguimientoDeUnNodoFases', 'SeguimientoController@seguimientoDelNodoFases')->middleware('role_session:Activador|Dinamizador');
         Route::get('/seguimientoDeTecnoparqueFases', 'SeguimientoController@seguimientoDeTecnoparqueFases')->middleware('role_session:Dinamizador|Activador');
         Route::get('/seguimientoActualDeUnGestor/{id}', 'SeguimientoController@seguimientoActualDelGestor');
         Route::get('/seguimientoActualDeUnaLinea/{id}/{nodo}', 'SeguimientoController@seguimientoActualDeLaLinea');
@@ -718,6 +719,8 @@ Route::group(
     ],
     function () {
         Route::get('/', 'IndicadorController@index')->name('indicadores');
+        // Route::get('/nodo/fetch_data', 'IndicadorController@nodo_pagination')->name('indicadores.paginar');
+
     }
 );
 

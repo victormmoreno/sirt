@@ -30,7 +30,7 @@
               <div class="row">
                 <div class="col s12 m12 l12">
                     <form action="{{route('indicadores.import.metas')}}" method="POST" enctype="multipart/form-data">
-                        @include('indicadores.administrador.metas_form')
+                        @include('indicadores.metas_form')
                     </form>
                 </div>
               </div>

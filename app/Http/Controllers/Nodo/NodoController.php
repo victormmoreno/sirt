@@ -27,6 +27,12 @@ class NodoController extends Controller
         $this->setDepartamentoRepository($departamentoRepository);
     }
 
+    public function nodo_pagination(Request $request)
+    {
+        $nodos_g = Nodo::SelectNodo()->paginate(6);
+        return view('indicadores.componentes.nodo_pagination', compact('nodos_g'))->render();
+    }
+
     /**
      * setter: Asigna un valor a $nodoRepository
      * @param object $nodoRepository

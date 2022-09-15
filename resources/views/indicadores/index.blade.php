@@ -43,44 +43,20 @@
                       <a href="{{route('indicadores.form.metas')}}" class="waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Registrar metas</a>
                     </div>
                   </div>
-                  <ul class="collapsible">
-                    <li>
-                      <div class="collapsible-header"><i class="material-icons">edit</i>Generar indicadores de proyectos inscritos entre un rango de fechas</div>
-                      <div class="collapsible-body">
-                        @include('indicadores.componentes.proyectos.inscritos')
-                      </div>
-                    </li>
-                    <li>
-                      <div class="collapsible-header"><i class="material-icons">done</i>Generar indicadores de proyectos finalizados y suspendidos entre un rango de fechas</div>
-                      <div class="collapsible-body">
-                        @include('indicadores.componentes.proyectos.finalizados')
-                      </div>
-                    </li>
-                    <li>
-                      <div class="collapsible-header"><i class="material-icons">play_arrow</i>Generar indicadores de proyectos activos</div>
-                      <div class="collapsible-body">
-                        @include('indicadores.componentes.proyectos.activos')
-                      </div>
-                    </li>
-                    <li>
-                      <div class="collapsible-header"><i class="material-icons">done_all</i>Generar todos</div>
-                      <div class="collapsible-body">
-                        @include('indicadores.componentes.proyectos.todos')
-                      </div>
-                    </li>
-                    <li>
-                      <div class="collapsible-header"><i class="material-icons">assignment</i>Metas de tecnoparque</div>
-                      <div class="collapsible-body">
-                        @include('indicadores.componentes.metas.metas')
-                      </div>
-                    </li>
-                    <li>
-                      <div class="collapsible-header"><i class="material-icons">lightbulb</i>Ideas de tecnoparque</div>
-                      <div class="collapsible-body">
-                        @include('indicadores.componentes.ideas.download')
-                      </div>
-                    </li>
-                  </ul>
+                  <div class="row">
+                    <div class="col s12 m12 l12">
+                        <ul class="tabs">
+                            <li class="tab col s3"><a href="#files">Archivos planos</a></li>
+                            <li class="tab col s3"><a href="#graphs">Gráficos</a></li>
+                        </ul>
+                    </div>
+                  </div>
+                  <div id="files">
+                    @include('indicadores.indicadores')
+                  </div>
+                  <div id="graphs">
+                    @include('indicadores.graficas')
+                  </div>
                   <div class="divider"></div>
                 </div>
               </div>
@@ -91,3 +67,27 @@
     </div>
   </main>
 @endsection
+@push('script')
+    <script>
+      $(document).ready(function(){
+        $('#TableEsperado').pageMe({
+          pagerSelector:'#PagerEsperado',
+          activeColor: 'blue',
+          prevText:'Anterior',
+          nextText:'Siguiente',
+          showPrevNext:true,
+          hidePageNumbers:false,
+          perPage:5
+        });
+        $('#TableActual').pageMe({
+          pagerSelector:'#PagerActual',
+          activeColor: 'blue',
+          prevText:'Anterior',
+          nextText:'Siguiente',
+          showPrevNext:true,
+          hidePageNumbers:false,
+          perPage:5
+        });
+      });
+    </script>
+@endpush

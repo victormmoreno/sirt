@@ -103,47 +103,115 @@ $(document).ready(function() {
     });
 });
 
-// function eliminarNodoPorId(id, e) {
-//     Swal.fire({
-//         title: '¿Desea eliminar el nodo?',
-//         text: "Al hacer esto, todo lo relacionado con este proyecto será eliminado de la base de datos, eso incluye usos de infraestructura y los archivos subidos al servidor!",
-//         type: 'warning',
-//         showCancelButton: true,
-//         confirmButtonColor: '#d33',
-//         cancelButtonColor: '#3085d6',
-//         cancelButtonText: 'No',
-//         confirmButtonText: 'Sí, eliminar!'
-//     }).then((result) => {
-//         if (result.value) {
-//             eliminarNodoId_moment(id);
-//         }
-//     })
-// };
-
-// function eliminarNodoId_moment(id) {
+$.fn.pageMe = function(opts){
+    var $this = this,
+        defaults = {
+            activeColor: 'blue',
+            perPage: 10,
+            showPrevNext: false,
+            nextText: '',
+            prevText: '',
+            hidePageNumbers: false
+        },
+        settings = $.extend(defaults, opts);
     
-//     $.ajax({
-//         dataType: "JSON",
-//         type: 'POST',
-//         data: {
-//             '_token': $('meta[name=csrf-token]').attr("content"),
-//             '_method': 'DELETE',
-//             "id": id
-//         },
-//         success: function(data) {
-//             console.log(data);
-//             // if (data.retorno) {
-//             //     Swal.fire('Eliminación Exitosa!', 'El proyecto se ha eliminado completamente!', 'success');
-//             //     location.href = '/nodo';
-//             // } else {
-//             //     Swal.fire('Eliminación Errónea!', 'El proyecto no se ha eliminado!', 'error');
-//             // }
-//         },
-//         error: function(xhr, textStatus, errorThrown) {
-//             alert("Error: " + errorThrown);
-//         },
-//     });
-// }
+    //$this.addClass('initialized');
+
+    var listElement = $this.find("tbody");
+    var perPage = settings.perPage;
+    var children = listElement.children();
+    var pager = $('.pager');
+    
+    if (typeof settings.childSelector!="undefined") {
+        children = listElement.find(settings.childSelector);
+    }
+
+    if (typeof settings.pagerSelector!="undefined") {
+        pager = $(settings.pagerSelector);
+    }
+
+    var numItems = children.size();
+    var numPages = Math.ceil(numItems/perPage);
+    
+    // $("#total_reg").html(numItems+" Entradas en total");
+
+    pager.data("curr",0);
+
+    if (settings.showPrevNext){
+        $('<li><a href="#" class="prev_link" title="'+settings.prevText+'"><i class="material-icons">chevron_left</i></a></li>').appendTo(pager);
+    }
+
+    var curr = 0;
+    while(numPages > curr && (settings.hidePageNumbers==false)){
+        $('<li class="waves-effect"><a href="#" class="page_link">'+(curr+1)+'</a></li>').appendTo(pager);
+        curr++;
+    }
+
+    if (settings.showPrevNext){
+        $('<li><a href="#" class="next_link"  title="'+settings.nextText+'"><i class="material-icons">chevron_right</i></a></li>').appendTo(pager);
+    }
+
+    pager.find('.page_link:first').addClass('active');
+    pager.find('.prev_link').hide();
+    if (numPages<=1) {
+        pager.find('.next_link').hide();
+    }
+  	pager.children().eq(1).addClass("active "+settings.activeColor);
+
+    children.hide();
+    children.slice(0, perPage).show();
+
+    pager.find('li .page_link').click(function(){
+        var clickedPage = $(this).html().valueOf()-1;
+        goTo(clickedPage,perPage);
+        return false;
+    });
+    pager.find('li .prev_link').click(function(){
+        previous();
+        return false;
+    });
+    pager.find('li .next_link').click(function(){
+        next();
+        return false;
+    });
+
+    function previous(){
+        var goToPage = parseInt(pager.data("curr")) - 1;
+        goTo(goToPage);
+    }
+
+    function next(){
+        goToPage = parseInt(pager.data("curr")) + 1;
+        goTo(goToPage);
+    }
+
+    function goTo(page){
+        var startAt = page * perPage,
+            endOn = startAt + perPage;
+
+        children.css('display','none').slice(startAt, endOn).show();
+
+        if (page>=1) {
+            pager.find('.prev_link').show();
+        }
+        else {
+            pager.find('.prev_link').hide();
+        }
+
+        if (page<(numPages-1)) {
+            pager.find('.next_link').show();
+        }
+        else {
+            pager.find('.next_link').hide();
+        }
+
+        pager.data("curr",page);
+      	pager.children().removeClass("active "+settings.activeColor);
+        pager.children().eq(page+1).addClass("active "+settings.activeColor);
+
+    }
+};
+
 function detallesIdeasDelEntrenamiento(id){
   $.ajax({
      dataType:'json',
@@ -9884,7 +9952,7 @@ function alertaGestorNoValido() {
 };
 
 function alertaNodoNoValido() {
-  Swal.fire('Advertencia!', 'Seleccione un nodo', 'warning');
+  Swal.fire('Advertencia!', 'Seleccione por lo menos un nodo', 'warning');
 };
 // 0 para cuando el Dinamizador consultar
 // 1 para cuando el experto consulta
@@ -10016,42 +10084,42 @@ function consultarSeguimientoEsperadoDeTecnoparque() {
   })
 };
 
-function consultarSeguimientoEsperadoDeUnNodo(nodo_id) {
+// function consultarSeguimientoEsperadoDeUnNodo(nodo_id) {
 
-  if ( nodo_id === "" ) {
-    alertaNodoNoValido();
-  } else {
-    $.ajax({
-      dataType: 'json',
-      type: 'get',
-      url: host_url + '/seguimiento/seguimientoEsperadoDeUnNodo/'+nodo_id,
-      success: function (data) {
-        graficoSeguimientoEsperado(data, graficosSeguimiento.nodo_esperado);
-      },
-      error: function (xhr, textStatus, errorThrown) {
-        alert("Error: " + errorThrown);
-      },
-    })
-  }
-};
+//   if ( nodo_id === "" ) {
+//     alertaNodoNoValido();
+//   } else {
+//     $.ajax({
+//       dataType: 'json',
+//       type: 'get',
+//       url: host_url + '/seguimiento/seguimientoEsperadoDeUnNodo/'+nodo_id,
+//       success: function (data) {
+//         graficoSeguimientoEsperado(data, graficosSeguimiento.nodo_esperado);
+//       },
+//       error: function (xhr, textStatus, errorThrown) {
+//         alert("Error: " + errorThrown);
+//       },
+//     })
+//   }
+// };
 
-function consultarSeguimientoDeUnNodoFases(nodo_id) {
-  if ( nodo_id === "" ) {
-    alertaNodoNoValido();
-  } else {
-    $.ajax({
-      dataType: 'json',
-      type: 'get',
-      url: host_url + '/seguimiento/seguimientoDeUnNodoFases/'+nodo_id,
-      success: function (data) {
-        graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
-      },
-      error: function (xhr, textStatus, errorThrown) {
-        alert("Error: " + errorThrown);
-      },
-    })
-  }
-};
+// function consultarSeguimientoDeUnNodoFases(nodo_id) {
+//   if ( nodo_id === "" ) {
+//     alertaNodoNoValido();
+//   } else {
+//     $.ajax({
+//       dataType: 'json',
+//       type: 'get',
+//       url: host_url + '/seguimiento/seguimientoDeUnNodoFases/'+nodo_id,
+//       success: function (data) {
+//         graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
+//       },
+//       error: function (xhr, textStatus, errorThrown) {
+//         alert("Error: " + errorThrown);
+//       },
+//     })
+//   }
+// };
 
 function consultarSeguimientoDeTecnoparqueFases() {
   $.ajax({
@@ -10689,6 +10757,46 @@ function isset(variable) {
   return false;
 }
 
+function sendListNodos(url) {
+  let nodosSend = [];
+  let nodosID = $('.nodos_list_select:checked').map(function(){
+    return $(this).val();
+  });
+  if (nodosID.length == 0) {
+    alertaNodoNoValido();
+  } else {
+    for (let i = 0; i < nodosID.length; i++) {
+      nodosSend.push(nodosID[i]);
+    }
+    return $.ajax({
+      dataType: 'json',
+      type: 'get',
+      data: {
+        nodos: nodosSend
+      },
+      url: url,
+      // success: function (data) { },
+      error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+      },
+    });
+  }
+};
+
+function consultarSeguimientoDeUnNodoFases(url) {
+  let ajax = sendListNodos(url);
+  ajax.success(function (data) {
+    graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
+  });
+};
+
+function consultarSeguimientoEsperadoDeUnNodo(url) {
+  let ajax = sendListNodos(url);
+  ajax.success(function (data) {
+    graficoSeguimientoEsperado(data, graficosSeguimiento.nodo_esperado);
+  });
+}
+
 function generarExcelConTodosLosIndicadores() {
   let idnodo = $('#txtnodo_id').val();
   let hoja = $('#txthoja_nombre').val();
@@ -10779,35 +10887,19 @@ function downloadMetas(e) {
   }
 }
 
-// function checkSelectMultipleOptions(source) {
-//   if (source.value == 'all') {
-//     // $('#txtnodo_id_inscritos > option').prop('selected', true);
-//     // $('#txtnodo_id_inscritos').attr('selected', 'selected');
-//     // source.options.length
-//     // $("$#"+source.id+" > option").each(function() {
-//       $('#txtnodo_id_inscritos > option').each(function(i, element) {
-//         console.log(element);
-//         // $('#txtnodo_id_inscritos').attr('selected', 'selected');
-//         // $(this).prop('selected', true);
-//         // $(this).attr('selected', true);
-//     });
-//   }
-//   // options = document.getElementsByClassName(source);
-//   // $('#txtnodo_id_inscritos').find("all").each(function() {
-//   //   $('#txtnodo_id_inscritos').attr('selected', 'selected');
-//   // });
-//   // for(var i=0, n=options.length;i<n;i++) {
-//   //   options[i].checked = source.checked;
-//   // }
-// }
-
 function verificarChecks(source, padre) {
   clase = source.classList[0];
   checkboxes = document.getElementsByClassName(clase);
   padre = document.getElementById(padre);
-  state = true;
-  for(var i=0, n=checkboxes.length;i<n;i++) {
-    if (checkboxes[i].checked != source.checked) {
+  state = false;
+  for(var i=0, n= checkboxes.length; i< n;i++) {
+    if (checkboxes[i].checked) {
+      state = true;
+      break;
+    }
+  }
+  for(var i=0, n= checkboxes.length; i< n;i++) {
+    if (!checkboxes[i].checked) {
       state = false;
       break;
     }

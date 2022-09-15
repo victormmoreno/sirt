@@ -19,6 +19,12 @@ class IndicadorController extends Controller
       $this->proyectoRepository = $proyectoRepository;
   }
 
+  public function nodo_pagination(Request $request)
+  {
+      $nodos_g = Nodo::SelectNodo()->paginate(6);
+      return view('indicadores.componentes.nodo_pagination', compact('nodos_g'))->render();
+  }
+
   public function index()
   {
     $year_now = Carbon::now()->format('Y');
@@ -44,6 +50,7 @@ class IndicadorController extends Controller
 
     return view('indicadores.index', [
       'nodos' => Nodo::SelectNodo()->get(),
+      'nodos_g' => Nodo::SelectNodo()->paginate(6),
       'metas' => $metas
     ]);
   }

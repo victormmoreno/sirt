@@ -248,16 +248,18 @@ class SeguimientoController extends Controller
    * @return Response
    * @author dum
    */
-  public function seguimientoEsperadoDelNodo($id)
+  public function seguimientoEsperadoDelNodo(Request $request)
   {
-    $idnodo = $id;
+    // $idnodo = $id;
     if (Session::get('login_role') == User::IsDinamizador()) {
-      $idnodo = auth()->user()->dinamizador->nodo_id;
+      $nodos_list[] = auth()->user()->dinamizador->nodo_id;
+    } else {
+      $nodos_list = $request->nodos;
     }
-
+    // dd($nodos_list);
     $datos = array();
     $trlEsperados = 0;
-    $trlEsperados = $this->getProyectoRepository()->proyectosSeguimientoAbiertos('trl_esperado')->where('nodos.id', $idnodo)->get();
+    $trlEsperados = $this->getProyectoRepository()->proyectosSeguimientoAbiertos('trl_esperado')->whereIn('nodos.id', $nodos_list)->get();
     $trlEsperadosAgrupados = $this->agruparTrls($trlEsperados, 'esperados');
 
     $datos = $this->retornarValoresDelSeguimientoEsperados($trlEsperadosAgrupados);
@@ -288,19 +290,20 @@ class SeguimientoController extends Controller
    * @return Response
    * @author dum
    **/
-  public function seguimientoDelNodoFases(int $id)
+  public function seguimientoDelNodoFases(Request $request)
   {
-    $idnodo = $id;
     if (Session::get('login_role') == User::IsDinamizador()) {
-      $idnodo = auth()->user()->dinamizador->nodo_id;
+      $nodos_list[] = auth()->user()->dinamizador->nodo_id;
+    } else {
+      $nodos_list = $request->nodos;
     }
 
     $datos = array();
     $Pabiertos = 0;
     $Pfinalizados = 0;
     // Proyectos
-    $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->where('nodos.id', $idnodo)->get();
-    $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->where('nodos.id', $idnodo)->get();
+    $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->whereIn('nodos.id', $nodos_list)->get();
+    $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos_list)->get();
 
     $abiertosAgrupados = $this->agruparProyectosAbiertos($Pabiertos);
     $cerradosAgrupados = $this->agruparProyectosCerrados($Pfinalizados);
