@@ -139,7 +139,6 @@ $( document ).ready(function() {
                             window.location.href = response.redirect_url;
                         }, 1500);
                     }
-
                 },
                 error: function (ajaxContext) {
                     Swal.fire({

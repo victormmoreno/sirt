@@ -209,7 +209,7 @@ class ArticulationStagePresenter extends Presenter
                     <i class="material-icons circle">insert_drive_file</i>
                     <span class="title">'.__('Confidentiality Format').'</span>
                     <p>'.basename( url($this->articulationStage->file->ruta) ).'<br>
-                        <a class="orange-text" target="_blank" href='.route('accompaniments.download', $this->articulationStage).'>Descargar</a>
+                        <a class="orange-text" target="_blank" href='.route('articulation-stage.download', $this->articulationStage).'>Descargar</a>
                     </p>
                 </li>';
             }

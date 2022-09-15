@@ -15,16 +15,17 @@
     </div>
     <div class="right mailbox-buttons">
         @if((session()->has('login_role') && session()->get('login_role') === App\User::IsArticulador()) && $articulationStage->articulations->count() > 0)
-            <a href="" class="waves-effect waves-grey btn-flat m-t-xs">Descargar</a>
-            <a href="" class="waves-effect waves-orange btn-flat m-t-xs">Cerrar</a>
+            <a href="javascript:void(0)"  class="waves-effect waves-grey btn-flat m-t-xs">Descargar</a>
+            <a href="javascript:void(0)" class="waves-effect waves-orange btn-flat m-t-xs">Cerrar</a>
         @endif
         @include('articulation.options.approval-button')
-
+        @can('create', App\Models\Articulation::class)
                 <a href="{{route('articulations.create', $articulationStage->id )}}"
                    class="waves-effect waves-orange btn orange m-t-xs">{{ __('New Articulation') }}</a>
+            @endcan
 
-        @if(auth()->user()->can('delete', $articulationStage))
+        @can('delete', $articulationStage)
                 <a href="javascript:void(0)" class="waves-effect waves-red btn-flat m-t-xs" onclick="articulationStage.destroyArticulationStage('{{$articulationStage->id}}')">Eliminar</a>
-        @endif
+        @endcan
     </div>
 </div>

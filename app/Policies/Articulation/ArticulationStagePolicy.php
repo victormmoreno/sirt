@@ -144,11 +144,11 @@ class ArticulationStagePolicy
      */
     public function delete(User $user, ArticulationStage $articulationStage)
     {
-        return (bool) $user->hasAnyRole([User::IsArticulador(), User::IsDinamizador()])
-            && (session()->has('login_role')
-                && (session()->get('login_role') == User::IsArticulador() || session()->get('login_role') != User::IsAdministrador()))
-            && auth()->user()->articulador->nodo->id == $articulationStage->node_id
-            && $articulationStage->articulations->count() > 0;
+        return (bool) $user->hasAnyRole([User::IsArticulador()])
+                && (session()->has('login_role')
+                && session()->get('login_role') == User::IsArticulador())
+                && auth()->user()->articulador->nodo->id == $articulationStage->node_id
+                && $articulationStage->articulations->count() <= 0;
         //$articulationSubtype->articulations->IsEmpty()
     }
 }
