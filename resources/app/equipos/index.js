@@ -346,12 +346,10 @@ var equipo = {
             cancelButtonText: 'No, cancelar',
           }).then((result) => {
             if (result.value) {
-
                 $.ajax(
                 {
                     url: host_url + `/equipos/cambiar-estado/${id}`,
                     type: 'GET',
-
                     success: function (response){
                         if(response.statusCode == 200){
                             Swal.fire(

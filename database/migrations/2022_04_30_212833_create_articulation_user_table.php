@@ -17,8 +17,8 @@ class CreateArticulationUserTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('articulation_id');
             $table->unsignedInteger('user_id');
-            $table->foreign('articulation_id')->references('id')->on('articulations')->onDelete('no action');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('no action');
+            $table->foreign('articulation_id')->references('id')->on('articulations');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

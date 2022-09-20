@@ -12,7 +12,6 @@
             <i class="material-icons right">close</i>
             No aprobar {{ __('articulation-stage') }}
         </button>
-
         @else
             <button type="submit" class="waves-effect cyan darken-1 btn center-aling" disabled>
                 <i class="material-icons right">done</i>

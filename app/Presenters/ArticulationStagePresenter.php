@@ -66,7 +66,7 @@ class ArticulationStagePresenter extends Presenter
 
     public function articulationStageInterlocutorTalent()
     {
-        return $this->articulationStage->has('interlocutor') ? $this->articulationStage->interlocutor->present()->userFullName() : 'No Registra';
+        return $this->articulationStage->has('interlocutor') ? $this->articulationStage->interlocutor->present()->userDocumento() . ' - '. $this->articulationStage->interlocutor->present()->userFullName() : 'No Registra';
     }
 
     public function articulationStageConfidentialityFormat()
@@ -190,7 +190,7 @@ class ArticulationStagePresenter extends Presenter
     {
 
         if(isset($this->articulationStage->file)){
-            if(auth()->user()->can('update', $this->articulationStage)){
+            if(auth()->user()->can('destroyFile', $this->articulationStage)){
                 return '<li class="collection-item avatar">
                     <i class="material-icons circle">insert_drive_file</i>
                     <span class="title">'.__('Confidentiality Format').'</span>
@@ -204,12 +204,12 @@ class ArticulationStagePresenter extends Presenter
                         </button>
                     </form>
                 </li>';
-            }else{
+            }else if(auth()->user()->can('downloadFile', $this->articulationStage)){
                 return '<li class="collection-item avatar">
                     <i class="material-icons circle">insert_drive_file</i>
                     <span class="title">'.__('Confidentiality Format').'</span>
                     <p>'.basename( url($this->articulationStage->file->ruta) ).'<br>
-                        <a class="orange-text" target="_blank" href='.route('accompaniments.download', $this->articulationStage).'>Descargar</a>
+                        <a class="orange-text" target="_blank" href='.route('articulation-stage.download', $this->articulationStage).'>Descargar</a>
                     </p>
                 </li>';
             }

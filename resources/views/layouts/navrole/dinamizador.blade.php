@@ -33,11 +33,13 @@
         <i class="material-icons {{ setActiveRouteActiveIcon('proyecto') }}">library_books</i>Proyectos
     </a>
 </li>
-<li class="no-padding {{setActiveRoute('acompanamientos')}}">
-    <a href="{{route('articulation-stage')}}" class="{{setActiveRouteActivePage('acompanamientos')}}" rel="canonical" title="{{__('articulation-stage')}}">
-        <i class="material-icons {{setActiveRouteActiveIcon('acompanamientos')}}">autorenew</i>{{__('articulation-stage')}}
-    </a>
-</li>
+@can('index', App\Models\ArticulationStage::class)
+    <li class="no-padding {{setActiveRoute('articulaciones')}}">
+        <a href="{{route('articulation-stage')}}" class="{{setActiveRouteActivePage('articulaciones')}}" rel="canonical" title="{{__('articulation-stage')}}">
+            <i class="material-icons {{setActiveRouteActiveIcon('articulaciones')}}">autorenew</i>{{__('articulation-stage')}}
+        </a>
+    </li>
+@endcan
 <li class="no-padding {{setActiveRoute('nodo')}}">
     <a class="waves-effect waves-grey {{setActiveRouteActivePage('nodo')}}" href="{{route('nodo.index')}}" rel="canonical" title="Nodo">
         <i class="material-icons {{ setActiveRouteActiveIcon('nodo') }}">location_city</i>Nodo

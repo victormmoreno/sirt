@@ -25,8 +25,10 @@ use App\Policies\UsoInfraestrucutura\UsoInfraestructuraPolicy;
 use App\Policies\Material\MaterialPolicy;
 use App\Policies\Idea\IdeaPolicy;
 use App\Models\ArticulationStage;
+use App\Models\Articulation;
 use App\Policies\Articulation\ArticulationStagePolicy;
 use App\Policies\Articulation\ArticulationTypePolicy;
+use App\Policies\Articulation\ArticulationPolicy;
 use App\User;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -52,6 +54,7 @@ class AuthServiceProvider extends ServiceProvider
         ArticulationStage::class => ArticulationStagePolicy::class,
         ArticulationType::class => ArticulationTypePolicy::class,
         ArticulationSubtype::class => ArticulationSubtypePolicy::class,
+        Articulation::class => ArticulationPolicy::class,
     ];
 
     /**

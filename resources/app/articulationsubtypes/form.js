@@ -15,6 +15,7 @@ $("#formArticualtionSubtype").on('submit', function(e){
         },
         success: function(response){
             $('.error').hide();
+            $('button[type="submit"]').removeAttr('disabled');
             printErrorsForm(response);
             if(!response.fail && response.errors == null){
                 Swal.fire({

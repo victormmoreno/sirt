@@ -5,6 +5,9 @@ $( document ).ready(function() {
             articulation_type: {
                 required:true,
             },
+            articulation_subtype: {
+                required:true,
+            },
             start_date: {
                 required:true,
                 date: true
@@ -52,18 +55,18 @@ $( document ).ready(function() {
                 required: true,
                 maxlength: 2500
             }
-
         },
-        messages:
-            {
-                articulationStage_type:
-                    {
-                        required:"Por favor selecciona el tipo de acompañamiento",
-                    },
-                start_date:{
-                    required:"Este campo es obligatorio",
-                    date: "Por favor introduzca una fecha válida"
-                },
+        messages:{
+            articulation_type:{
+                    required:"Por favor selecciona el tipo de subarticulación",
+            },
+            articulation_type:{
+                required:"Por favor selecciona el tipo de articulación",
+            },
+            start_date:{
+                required:"Este campo es obligatorio",
+                date: "Por favor introduzca una fecha válida"
+            },
                 name_articulationStage:
                     {
                         required:"Este campo es obligatorio",
@@ -127,7 +130,7 @@ $( document ).ready(function() {
         {
             if ( element.is(":radio") )
             {
-                error.appendTo( element.parents('.container-error') );
+                error.appendTo( element.parents('.container-error'));
             }
             else if ( element.is(":file") )
             {
@@ -140,7 +143,6 @@ $( document ).ready(function() {
             else
             {
                 element.after(error);
-
             }
         }
     });
@@ -159,13 +161,11 @@ $( document ).ready(function() {
         },
         onStepChanging: function (event, currentIndex, newIndex)
         {
-            console.log(currentIndex);
             if (currentIndex == 3) {
                 form.validate().settings.ignore = ":disabled,:hidden:not(input[type='hidden'])";
             }else{
                 form.validate().settings.ignore = ":disabled,:hidden";
             }
-
             return form.valid();
         },
         onFinishing: function (event, currentIndex)
@@ -189,7 +189,6 @@ $( document ).ready(function() {
                 processData: false,
                 success: function (response) {
                     $('button[type="submit"]').removeAttr('disabled');
-                    console.log(response);
                     printErroresFormulario(response.data);
                     filter_articulations.messageArticulation(response.data,  'registrada', 'Registro exitoso');
                 },
@@ -263,6 +262,7 @@ $( document ).ready(function() {
     $('#advanced_talent_filter').click(function () {
         filter_articulations.queryTalentos();
     });
+    filter_articulations.valueArticulationType();
 });
 
 const filter_articulations = {
@@ -324,7 +324,6 @@ const filter_articulations = {
             return moment(date).format('LL');
         }
     },
-
     addTalentToArticulation: function(user){
         filter_articulations.emptyResult('alert-empty-talents');
         if (filter_articulations.noRepeat(user) == false) {
@@ -335,7 +334,6 @@ const filter_articulations = {
         }
         $('#filter_talents_advanced_modal').closeModal();
     },
-
     noRepeat: function(id) {
         let user = id;
         let retorno = true;
@@ -435,7 +433,6 @@ const filter_articulations = {
         });
         $('#filter_talents_advanced_modal').openModal();
     },
-
     messageArticulation: function(data, action, title) {
         if (data.status_code == 201) {
             Swal.fire({
@@ -460,4 +457,27 @@ const filter_articulations = {
             })
         }
     },
+    valueArticulationType: function (){
+        $("#articulation_type").on('change', function () {
+                let articulaciontype = $(this).val();
+                if(articulaciontype !=null || articulaciontype != ''){
+                    $.ajax({
+                        dataType: 'json',
+                        type: 'get',
+                        url: `/tipoarticulaciones/${articulaciontype}/tiposubarticulaciones`
+                    }).done(function (response) {
+                        $("#articulation_subtype").empty();
+                        $('#articulation_subtype').append('<option value="">Seleccione el tipo de subarticulación</option>');
+                        $.each(response.data, function(i, element) {
+                                $('#articulation_subtype').append(`<option  value="${element.id}">${element.name}</option>`);
+                        });
+                        $('#articulation_subtype').material_select();
+
+                    });
+                }
+
+
+        });
+
+    }
 }

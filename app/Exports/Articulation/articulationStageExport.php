@@ -50,7 +50,7 @@ class articulationStageExport extends FatherExport
      */
     public function title(): String
     {
-        return 'Acompañamientos';
+        return __('articulation-stage');
     }
 
 }

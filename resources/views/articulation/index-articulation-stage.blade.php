@@ -26,29 +26,29 @@
                         <div class="row">
                             <div class="col s12 m12 l12">
                                 <div class="row">
-                                        <div class="col s12 m8 l8">
-                                        <div class="center-align orange-text text-darken-3">
-                                            <span class="card-title center-align">{{__('articulation-stage')}} </span>
-                                        </div>
-                                        </div>
+                                    <div class="col s12 @can('create', App\Models\ArticulationStage::class)  m8 l8 @else m12 l12  @endcan">
+                                    <div class="center-align orange-text text-darken-3">
+                                        <span class="card-title center-align">{{__('articulation-stage')}} </span>
+                                    </div>
+                                    </div>
+                                    @can('create', App\Models\ArticulationStage::class)
                                         <div class="col s12 m4 l4 ">
-                                            @can('create', App\Models\ArticulationStage::class)
-                                                <a  href="{{route('articulation-stage.create')}}" class="m-r-lg waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">{{__('New ArticulationStage')}}</a>
-                                            @endcan
+                                            <a  href="{{route('articulation-stage.create')}}" class="m-r-lg waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">{{__('New ArticulationStage')}}</a>
                                         </div>
+                                    @endcan
                                 </div>
                                 <div class="divider"></div>
-                                    <div class="row search-tabs-row search-tabs-header">
+                                <div class="row search-tabs-row search-tabs-header">
                                         @can('viewNodes', App\Models\ArticulationStage::class)
-                                        <div class="input-field col s12 m2 l2">
-                                            <label class="active" for="filter_node_articulationStage">Nodo <span class="red-text">*</span></label>
-                                            <select name="filter_node_articulationStage" id="filter_node_articulationStage">
-                                                <option value="all" >todos</option>
-                                                @foreach($nodos as $id => $name)
-                                                    <option value="{{$id}}">{{$name}}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
+                                            <div class="input-field col s12 m2 l2">
+                                                <label class="active" for="filter_node_articulationStage">Nodo <span class="red-text">*</span></label>
+                                                <select name="filter_node_articulationStage" id="filter_node_articulationStage">
+                                                    <option value="all" >todos</option>
+                                                    @foreach($nodos as $id => $name)
+                                                        <option value="{{$id}}">{{$name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                         @endcan
                                         <div class="input-field col s12 m2 l1">
                                             <label class="active" for="filter_year_articulationStage">Año <span class="red-text">*</span></label>
@@ -62,9 +62,9 @@
                                         <div class="input-field col s12 m2 l1">
                                             <label class="active" for="filter_status_articulationStage">{{__('Status')}} <span class="red-text">*</span></label>
                                             <select name="filter_status_articulationStage" id="filter_status_articulationStage">
+                                                <option value="all" >todos</option>
                                                 <option value="1" >Abierto</option>
                                                 <option value="0" >Cerrado</option>
-                                                <option value="all" >todos</option>
                                             </select>
                                         </div>
                                         <div class="col s12 m6 l4 offset-m3 right">
@@ -78,8 +78,8 @@
                                     <thead>
                                         <tr>
                                             <th>{{__('Node')}}</th>
-                                            <th>{{__('Code articulation-stage')}}</th>
                                             <th>{{__('Name articulation-stage')}}</th>
+                                            <th>Tipo etapa articulación</th>
                                             <th>{{__('Count Articulations')}}</th>
                                             <th>{{__('Status')}}</th>
                                             <th>{{__('Created_at')}}</th>

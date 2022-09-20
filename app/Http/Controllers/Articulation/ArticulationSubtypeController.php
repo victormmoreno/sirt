@@ -108,7 +108,9 @@ class ArticulationSubtypeController extends Controller
      */
     public function show($articulationSubtype)
     {
-        $articulationSubtype = ArticulationSubtype::findOrFail($articulationSubtype);
+        $articulationSubtype = ArticulationSubtype::query()
+            ->with(['nodos.entidad', 'articulations'])
+            ->findOrFail($articulationSubtype);
 
         return view('articulation-subtype.show', ['articulationSubtype' => $articulationSubtype]);
     }
@@ -124,7 +126,9 @@ class ArticulationSubtypeController extends Controller
         if (request()->user()->can('create', ArticulationSubtype::class))
         {
             $nodos = null;
-            $articulationSubtype = ArticulationSubtype::findOrFail($articulationSubtype);
+            $articulationSubtype = ArticulationSubtype::query()
+                ->with('articulationtype')
+                ->findOrFail($articulationSubtype);
             if(request()->user()->can('listNodes', ArticulationSubtype::class))
             {
                 $nodos = Nodo::query()->with('entidad')->get();

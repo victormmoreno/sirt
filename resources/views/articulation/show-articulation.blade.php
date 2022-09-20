@@ -13,7 +13,7 @@
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
                     <li ><a href="{{route('articulation-stage')}}">{{__('articulation-stage')}}</a></li>
-                    <li ><a href="{{route('articulation-stage.show',  $articulation->articulationStage)}}">{{ $articulation->articulationStage->present()->articulationStageCode() }}</a></li>
+                    <li ><a href="{{route('articulation-stage.show',  $articulation->articulationstage)}}">{{ $articulation->articulationstage->present()->articulationStageCode() }}</a></li>
                     <li class="active">{{ __('Articulations') }}</li>
                 </ol>
             </div>
@@ -40,7 +40,7 @@
                                                 @can('update', $articulation)
                                                     <a href="{{route('accompaniments.edit', $articulation)}}" class="orange-text text-darken-2 pointer tooltipped" data-position="right" data-tooltip="editar {{__('articulation-stage')}}"><i class="tiny material-icons">edit</i></a></span>
                                                 @endcan
-                                                <span class="mailbox-title">{{__('Node')}} {{$articulation->articulationStage->present()->articulationStageNode()}}</span>
+                                                <span class="mailbox-title">{{__('Node')}} {{$articulation->articulationstage->present()->articulationStageNode()}}</span>
                                                 <span class="mailbox-author">{{$articulation->present()->articulationBy()}} (Articulador)
                                                     @can('update', $articulation)
                                                         {{-- <a href="{{ route('accompaniments.changeinterlocutor', $articulation) }}" class="orange-text text-darken-2 pointer tooltipped" data-position="right" data-tooltip="cambiar {{__('Interlocutory talent')}}"><i class="tiny material-icons">edit</i></a> --}}

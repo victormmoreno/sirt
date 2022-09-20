@@ -873,12 +873,11 @@ const articulationStage ={
                     name: 'node',
                 },
                 {
-                    data: 'code',
-                    name: 'code',
-                },
-                {
                     data: 'name',
                     name: 'name',
+                },{
+                    data: 'articulation_state_type',
+                    name: 'articulation_state_type',
                 },
                 {
                     data: 'count_articulations',
@@ -999,7 +998,6 @@ const articulationStage ={
         $('#filter_project_advanced_modal').openModal();
     },
     addProjectToArticulacion:function(code) {
-
         articulationStage.fill_code_project(code);
         articulationStage.emptyResult('result-talents');
         $('#filter_project_advanced_modal').closeModal();
@@ -1181,11 +1179,67 @@ const articulationStage ={
                 articulationStage.messageAccompaniable(response.data, 'actualizado', 'Modificación Exitosa');
             },
             error: function (xhr, textStatus, errorThrown) {
-                alert("Error: " + errorThrown);
+                Swal.fire({
+                    title: 'Error, vuelve a intentarlo',
+                    html: "Error: " + textStatus,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok',
+                });
             }
         });
-    }
-
+    },
+    destroyArticulationStage: function(id){
+        Swal.fire({
+            title: '¿Estas seguro de eliminar esta etapa de articulación?',
+            text: "Recuerde que si lo elimina no lo podrá recuperar.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'si, eliminar',
+            cancelButtonText: 'No, cancelar',
+        }).then((result) => {
+            if (result.value) {
+                let token = $("meta[name='csrf-token']").attr("content");
+                $.ajax({
+                    url: host_url + "/articulaciones/"+id,
+                    type: 'DELETE',
+                    data: {
+                        "id": id,
+                        "_token": token,
+                    },
+                    success: function (data){
+                        if(!data.fail){
+                            Swal.fire(
+                                'Eliminado!',
+                                'La etapa de articulación ha sido eliminado satisfactoriamente.',
+                                'success'
+                            );
+                            location.href = data.redirect_url;
+                        }else{
+                            Swal.fire(
+                                'Cuidado!',
+                                'La etapa de articulación no se ha eliminado, ya que continene articulaciones.',
+                                'warining'
+                            );
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        Swal.fire({
+                            title: 'Error, vuelve a intentarlo',
+                            html: "Error: " + textStatus,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok',
+                        });
+                    }
+                });
+            }
+        })
+    },
 }
 
 $(document).on('submit', 'form#interlocutor-form', function (event) {
@@ -1197,6 +1251,75 @@ $(document).on('submit', 'form#interlocutor-form', function (event) {
     articulationStage.updateInterlocutor(form, data, url);
 });
 
+
+$(document).ready(function() {
+    //var groupColumn = 0;
+    var table = $('#articulation_data_table').DataTable({
+        language: {
+            "decimal": "",
+            "emptyTable": "No hay información",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+            "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+            "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar Entradas _MENU_",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "Buscar:",
+            "zeroRecords": "Sin resultados encontrados",
+            "paginate": {
+                "first": "Primero",
+                "last": "Ultimo",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+        },
+        lengthMenu: [
+            [5, 10, -1],
+            [5, 10, 'Todos'],
+        ],
+        autoWidth: false,
+        columnDefs: [
+            {
+                targets: ['_all'],
+                className: 'mdc-data-table__cell',
+            },
+        ],
+        // columnDefs: [{ visible: false, targets: groupColumn }],
+        // order: [[groupColumn, 'asc']],
+        // displayLength: 25,
+        // drawCallback: function (settings) {
+        //     var api = this.api();
+        //     var rows = api.rows({ page: 'current' }).nodes();
+        //     var last = null;
+
+        //     api
+        //         .column(groupColumn, { page: 'current' })
+        //         .data()
+        //         .each(function (group, i) {
+        //             if (last !== group) {
+        //                 $(rows)
+        //                     .eq(i)
+        //                     .before('<tr class="group teal lighten-2"><td colspan="6">' + group + '</td><td><button class="waves-effect waves-light btn-large">Hola mundo</button></td></tr>');
+
+        //                 last = group;
+        //             }
+        //         });
+        // },
+
+    });
+
+    // Order by the grouping
+    // $('#articulation_data_table tbody').on('click', 'tr.group', function () {
+    //     var currentOrder = table.order()[0];
+    //     if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
+    //         table.order([groupColumn, 'desc']).draw();
+    //     } else {
+    //         table.order([groupColumn, 'asc']).draw();
+    //     }
+    // });
+});
 
 $( document ).ready(function() {
     const form = $("#articulations-form");
@@ -1324,12 +1447,33 @@ $( document ).ready(function() {
                 dataType: 'json',
                 processData: false,
                 success: function (response) {
+                    $('.error').hide();
                     $('button[type="submit"]').removeAttr('disabled');
-                    printErroresFormulario(response.data);
-                    articulationStage.messageAccompaniable(response.data,  'registrada', 'Registro exitoso');
+                    printErrorsForm(response);
+
+                    if(!response.fail && response.errors == null){
+                        Swal.fire({
+                            title: response.message,
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok',
+                        });
+                        setTimeout(function () {
+                            window.location.href = response.redirect_url;
+                        }, 1500);
+                    }
                 },
                 error: function (xhr, textStatus, errorThrown) {
-                    alert("Error: " + errorThrown);
+                    console.log("Error: " + errorThrown);
+                    Swal.fire({
+                        title: ' Registro erróneo, vuelve a intentarlo',
+                        html:  `${xhr.status} ${errorThrown}`,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok',
+                    });
                 }
             });
         }
@@ -1362,7 +1506,6 @@ $( document ).ready(function() {
         let filter_year_pro = $('#filter_year_pro').val();
         articulationStage.queryProyectosFaseInicioTable(filter_year_pro);
     });
-
     $('#search_talent').click(function () {
         let filter_user = $('#txtsearch_user').val();
         if(filter_user.length > 0 ){
@@ -1372,7 +1515,6 @@ $( document ).ready(function() {
             articulationStage.notFound('result-talents');
         }
     });
-
     $('#filter_talents_advanced').click(function () {
         articulationStage.queryTalentos();
     });
@@ -1427,6 +1569,9 @@ $( document ).ready(function() {
             articulation_type: {
                 required:true,
             },
+            articulation_subtype: {
+                required:true,
+            },
             start_date: {
                 required:true,
                 date: true
@@ -1474,18 +1619,18 @@ $( document ).ready(function() {
                 required: true,
                 maxlength: 2500
             }
-
         },
-        messages:
-            {
-                articulationStage_type:
-                    {
-                        required:"Por favor selecciona el tipo de acompañamiento",
-                    },
-                start_date:{
-                    required:"Este campo es obligatorio",
-                    date: "Por favor introduzca una fecha válida"
-                },
+        messages:{
+            articulation_type:{
+                    required:"Por favor selecciona el tipo de subarticulación",
+            },
+            articulation_type:{
+                required:"Por favor selecciona el tipo de articulación",
+            },
+            start_date:{
+                required:"Este campo es obligatorio",
+                date: "Por favor introduzca una fecha válida"
+            },
                 name_articulationStage:
                     {
                         required:"Este campo es obligatorio",
@@ -1549,7 +1694,7 @@ $( document ).ready(function() {
         {
             if ( element.is(":radio") )
             {
-                error.appendTo( element.parents('.container-error') );
+                error.appendTo( element.parents('.container-error'));
             }
             else if ( element.is(":file") )
             {
@@ -1562,7 +1707,6 @@ $( document ).ready(function() {
             else
             {
                 element.after(error);
-
             }
         }
     });
@@ -1581,13 +1725,11 @@ $( document ).ready(function() {
         },
         onStepChanging: function (event, currentIndex, newIndex)
         {
-            console.log(currentIndex);
             if (currentIndex == 3) {
                 form.validate().settings.ignore = ":disabled,:hidden:not(input[type='hidden'])";
             }else{
                 form.validate().settings.ignore = ":disabled,:hidden";
             }
-
             return form.valid();
         },
         onFinishing: function (event, currentIndex)
@@ -1611,7 +1753,6 @@ $( document ).ready(function() {
                 processData: false,
                 success: function (response) {
                     $('button[type="submit"]').removeAttr('disabled');
-                    console.log(response);
                     printErroresFormulario(response.data);
                     filter_articulations.messageArticulation(response.data,  'registrada', 'Registro exitoso');
                 },
@@ -1685,6 +1826,7 @@ $( document ).ready(function() {
     $('#advanced_talent_filter').click(function () {
         filter_articulations.queryTalentos();
     });
+    filter_articulations.valueArticulationType();
 });
 
 const filter_articulations = {
@@ -1746,7 +1888,6 @@ const filter_articulations = {
             return moment(date).format('LL');
         }
     },
-
     addTalentToArticulation: function(user){
         filter_articulations.emptyResult('alert-empty-talents');
         if (filter_articulations.noRepeat(user) == false) {
@@ -1757,7 +1898,6 @@ const filter_articulations = {
         }
         $('#filter_talents_advanced_modal').closeModal();
     },
-
     noRepeat: function(id) {
         let user = id;
         let retorno = true;
@@ -1857,7 +1997,6 @@ const filter_articulations = {
         });
         $('#filter_talents_advanced_modal').openModal();
     },
-
     messageArticulation: function(data, action, title) {
         if (data.status_code == 201) {
             Swal.fire({
@@ -1882,6 +2021,29 @@ const filter_articulations = {
             })
         }
     },
+    valueArticulationType: function (){
+        $("#articulation_type").on('change', function () {
+                let articulaciontype = $(this).val();
+                if(articulaciontype !=null || articulaciontype != ''){
+                    $.ajax({
+                        dataType: 'json',
+                        type: 'get',
+                        url: `/tipoarticulaciones/${articulaciontype}/tiposubarticulaciones`
+                    }).done(function (response) {
+                        $("#articulation_subtype").empty();
+                        $('#articulation_subtype').append('<option value="">Seleccione el tipo de subarticulación</option>');
+                        $.each(response.data, function(i, element) {
+                                $('#articulation_subtype').append(`<option  value="${element.id}">${element.name}</option>`);
+                        });
+                        $('#articulation_subtype').material_select();
+
+                    });
+                }
+
+
+        });
+
+    }
 }
 
 function consultarEntrenamientosPorNodo_Administrador(id) {
@@ -3096,9 +3258,6 @@ $(document).on('submit', 'form#formRegisterCompany', function (event) {
         }, 1000);
         }
     },
-    // error: function (xhr, textStatus, errorThrown) {
-    //   alert("Error: " + errorThrown);
-    // }
     });
 });
 
@@ -3314,6 +3473,7 @@ $(document).on('submit', 'form#formSearchEmpresas', function (event) {
         });
     }
 });
+
 $(document).ready(function() {
   $('#grupoDeInvestigacionTecnoparque_table').DataTable({
     language: {
@@ -7512,12 +7672,10 @@ var equipo = {
             cancelButtonText: 'No, cancelar',
           }).then((result) => {
             if (result.value) {
-
                 $.ajax(
                 {
                     url: host_url + `/equipos/cambiar-estado/${id}`,
                     type: 'GET',
-
                     success: function (response){
                         if(response.statusCode == 200){
                             Swal.fire(
@@ -10246,7 +10404,6 @@ function graficoCostos(data, name, title) {
 
 $(document).ready(function() {
     let filter_state_type_art = $('#filter_state_type_art').val();
-
     if(filter_state_type_art == '' || filter_state_type_art == null){
         typeArticulacion.fillDatatatablesTypeArt(filter_state_type_art = null);
     }else if(filter_state_type_art != '' || filter_state_type_art != null){
@@ -10259,18 +10416,17 @@ $(document).ready(function() {
             "lengthChange": false
         }).clear().draw();
     }
+
 });
 
 $('#filter_type_art').click(function () {
     let filter_state_type_art = $('#filter_state_type_art').val();
-
     $('#type_art_data_table').dataTable().fnDestroy();
     if(filter_state_type_art == '' || filter_state_type_art == null){
         typeArticulacion.fillDatatatablesTypeArt(filter_state_type_art = null);
     }else if(filter_state_type_art != '' || filter_state_type_art != null){
         typeArticulacion.fillDatatatablesTypeArt(filter_state_type_art);
     }else{
-
         $('#type_art_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -10374,7 +10530,7 @@ let typeArticulacion ={
                 )
             }
         })
-    },
+    }
 }
 
 $('#check-all-nodes').click(function() {
@@ -10411,7 +10567,6 @@ $("#formTypeArticulation").on('submit', function(e){
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok',
                 });
-                // $('#formSupport')[0].reset();
                 setTimeout(function () {
                     window.location.href = response.redirect_url;
                 }, 1500);
@@ -10419,7 +10574,7 @@ $("#formTypeArticulation").on('submit', function(e){
         },
         error: function (ajaxContext) {
             Swal.fire({
-                title: ' Registro erróneo, vuelve a intentarlo',
+                title: 'Error, vuelve a intentarlo',
                 html: ajaxContext.status + ' - ' + ajaxContext.responseJSON.message,
                 type: 'error',
                 showCancelButton: false,
@@ -10585,6 +10740,7 @@ $("#formArticualtionSubtype").on('submit', function(e){
         },
         success: function(response){
             $('.error').hide();
+            $('button[type="submit"]').removeAttr('disabled');
             printErrorsForm(response);
             if(!response.fail && response.errors == null){
                 Swal.fire({
@@ -10736,24 +10892,6 @@ $('#txtfecha_fin').bootstrapMaterialDatePicker({
         });
     });
 
-function printErrorsForm(data) {
-    if (data.fail) {
-        let errores = "";
-        for (control in data.errors) {
-            errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
-            $('#' + control + '-error').html(data.errors[control]);
-            $('#' + control + '-error').show();
-        }
-        Swal.fire({
-            title: 'Advertencia!',
-            html: 'Estas ingresando mal los datos.',
-            type: 'warning',
-            showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Ok'
-        });
-    }
-}
 
 $(document).ready(function() {
     let filter_year_support = $('#filter_year_support').val();

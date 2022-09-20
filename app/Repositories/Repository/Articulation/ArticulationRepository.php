@@ -53,6 +53,7 @@ class ArticulationRepository
             'summon_name' => $request->call_name,
             'objective' => $request->objective,
             'phase_id' => Fase::where('nombre', Articulation::START_PHASE)->first()->id,
+            'articulation_subtype_id' => $request->articulation_subtype,
             'scope_id' => $request->scope_articulation,
             'created_by' => auth()->user()->id,
         ]);

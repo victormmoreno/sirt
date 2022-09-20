@@ -30,12 +30,12 @@ class ArticulationPresenter extends Presenter
 
     public function articulationScope()
     {
-        return isset($this->articulation->scope) ? $this->articulation->scope->nombre : 'No registra';
+        return isset($this->articulation->scope) ? $this->articulation->scope->name : 'No registra';
     }
 
     public function articulationObjetive()
     {
-        return isset($this->articulation->objetive) ? $this->articulation->objetive : 'No registra';
+        return isset($this->articulation) ? $this->articulation->objective : 'No registra';
     }
 
 
@@ -57,6 +57,11 @@ class ArticulationPresenter extends Presenter
     public function articulationEntity()
     {
         return isset($this->articulation->entity) ? $this->articulation->entity : 'No registra';
+    }
+
+    public function articulationSubtype()
+    {
+        return isset($this->articulation->articulationsubtype) ? $this->articulation->articulationsubtype->articulationtype->name .' / '. $this->articulation->articulationsubtype->name : 'No registra';
     }
 
     public function articulationContactName()

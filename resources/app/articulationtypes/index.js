@@ -1,6 +1,5 @@
 $(document).ready(function() {
     let filter_state_type_art = $('#filter_state_type_art').val();
-
     if(filter_state_type_art == '' || filter_state_type_art == null){
         typeArticulacion.fillDatatatablesTypeArt(filter_state_type_art = null);
     }else if(filter_state_type_art != '' || filter_state_type_art != null){
@@ -13,18 +12,17 @@ $(document).ready(function() {
             "lengthChange": false
         }).clear().draw();
     }
+
 });
 
 $('#filter_type_art').click(function () {
     let filter_state_type_art = $('#filter_state_type_art').val();
-
     $('#type_art_data_table').dataTable().fnDestroy();
     if(filter_state_type_art == '' || filter_state_type_art == null){
         typeArticulacion.fillDatatatablesTypeArt(filter_state_type_art = null);
     }else if(filter_state_type_art != '' || filter_state_type_art != null){
         typeArticulacion.fillDatatatablesTypeArt(filter_state_type_art);
     }else{
-
         $('#type_art_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -128,5 +126,5 @@ let typeArticulacion ={
                 )
             }
         })
-    },
+    }
 }

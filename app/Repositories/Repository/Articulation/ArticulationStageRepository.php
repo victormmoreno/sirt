@@ -22,102 +22,68 @@ use App\Events\Articulation\AccompanyingApprovalRequest;
 
 class ArticulationStageRepository
 {
+    /**
+     * variable to store errors
+     * @var $strError
+     */
+    private $strError = null;
 
     /**
-        * store
-        * @param Request $request
-        * @return void
+     * method to store errors
+     * @return string
+     */
+    public function getError()
+    {
+        return $this->strError;
+    }
+
+    /**
+     * method for storing the articulation stage
+     * @param Request $request
+     * @return void
     */
     public function store(Request $request)
     {
+        DB::beginTransaction();
         try {
-            $accompaniment = $this->storeAccompaniment($request);
-            $this->validateAccompanimentType($request, $accompaniment);
-            $this->storageFile( $request, $accompaniment );
-            return  [
-                'data' => $accompaniment,
-                'message' => '',
-                'isCompleted' => true,
+            $articulationStage = $this->storeArticulationStage($request);
+            $this->validateArticulationStageType($request, $articulationStage);
+            $this->storageFile( $request, $articulationStage );
+            DB::commit();
+            return [
+                'state' => true,
+                'data' => $articulationStage
             ];
-        } catch (\Exception $ex) {
-            return  [
-                'data' => "",
-                'message' => $ex->getMessage(),
-                'isCompleted' => false,
+        } catch (\Exception $e) {
+            $this->strError = $e->getMessage();
+            DB::rollback();
+            return [
+                'state' => false,
+                'data' => null
             ];
         }
     }
 
-    public function update(Request $request, ArticulationStage $accompaniment)
-    {
-        try {
-            $accompaniment = $this->updateAccompaniment($request, $accompaniment);
-            $this->validateAccompanimentType($request, $accompaniment);
-            $this->updateFile( $request , $accompaniment );
-            return  [
-                'data' => $accompaniment,
-                'message' => '',
-                'isCompleted' => true,
-            ];
-        } catch (\Exception $ex) {
-            return  [
-                'data' => "",
-                'message' => $ex->getMessage(),
-                'isCompleted' => false,
-            ];
-        }
-    }
     /**
-        * store articulations
-        * @param Request $request
-    */
-    public function storeAccompaniment(Request $request){
-        $accompaniment = ArticulationStage::create([
-            'accompaniment_type' => Proyecto::class,
-            'code' => $this->generateCode('EA'),
-            'name' => $request->name,
-            'description' => $request->description,
-            'scope'  => $request->scope,
-            'status' => ArticulationStage::STATUS_OPEN,
-            'start_date' => Carbon::now(),
-            'confidentiality_format' => ArticulationStage::CONFIDENCIALITY_FORMAT_YES,
-            'terms_verified_at' => Carbon::now(),
-            'node_id' => auth()->user()->articulador->nodo->id,
-            'interlocutor_talent_id' => $request->talent,
-            'created_by' => auth()->user()->id
-        ]);
-
-        return $accompaniment;
-    }
-
-    /**
-        * store articulations
-        * @param Request $request
-    */
-    public function updateAccompaniment(Request $request, ArticulationStage $accompaniment){
-        $accompaniment->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'scope'  => $request->scope,
-            'confidentiality_format' => ArticulationStage::CONFIDENCIALITY_FORMAT_YES,
-            'terms_verified_at' => Carbon::now(),
-            'interlocutor_talent_id' => $request->talent,
-        ]);
-        return $accompaniment;
-    }
-
-    /**
-        * store articulations
-        * @param Request $request
-    */
-    public function validateAccompanimentType(Request $request, ArticulationStage $accompaniment)
+     * method to validate the type of articulation stage
+     * @param Request $request
+     * @param $articulationStage
+     */
+    private function validateArticulationStageType(Request $request, $articulationStage)
     {
         if($request->filled('projects')){
-            $model = Proyecto::where('id', $request->projects)->first();
-            $model->accompaniamentables()->sync([$accompaniment->id]);
+            $project = Proyecto::where('id', $request->projects)->first();
+            $articulationStage->projects()->sync([
+                'articulationable_id' => $project->id
+            ]);
         }
     }
 
+    /**
+     * method to store the confidentiality format
+     * @param Request $request
+     * @param $model
+     */
     private function storageFile(Request $request, \Illuminate\Database\Eloquent\Model $model = null)
     {
         if($request->hasFile('confidency_format')){
@@ -128,7 +94,7 @@ class ArticulationStageRepository
                 $module = class_basename($model);
                 $route = "public/{$node}/{$year}/{$module}/{$model->createdBy->documento}/{$model->code}/formato";
                 $fileUrl = $request->file('confidency_format')
-                            ->storeAs($route, $fileName);
+                    ->storeAs($route, $fileName);
                 $model->file()->create([
                     'ruta' => Storage::url($fileUrl),
                     'fase_id' => Fase::IS_INICIO
@@ -139,6 +105,67 @@ class ArticulationStageRepository
             }
         }
     }
+
+    /**
+        * store articulations
+        * @param Request $request
+    */
+    public function storeArticulationStage(Request $request){
+        return ArticulationStage::create([
+            'code' => $this->generateCode('EA'),
+            'name' => $request->name,
+            'description' => $request->description,
+            'scope'  => $request->scope,
+            'status' => ArticulationStage::STATUS_OPEN,
+            'start_date' => Carbon::now(),
+            'confidentiality_format' => ArticulationStage::CONFIDENCIALITY_FORMAT_YES,
+            'terms_verified_at' => Carbon::now(),
+            'node_id' => request()->user()->can('listNodes', ArticulationStage::class) ? $request->node : auth()->user()->articulador->nodo->id,
+            'interlocutor_talent_id' => $request->talent,
+            'created_by' => auth()->user()->id
+        ]);
+    }
+    /**
+     * update articulations
+     * @param Request $request
+     */
+    public function update($request, $articulationStage)
+    {
+        DB::beginTransaction();
+        try {
+            $articulationStage = $this->updateArticulationStage($request, $articulationStage);
+            $this->validateArticulationStageType($request, $articulationStage);
+            $this->updateFile( $request , $articulationStage );
+            DB::commit();
+            return [
+                'state' => true,
+                'data' => $articulationStage
+            ];
+        } catch (\Exception $e) {
+            $this->strError = $e->getMessage();
+            DB::rollback();
+            return [
+                'state' => false,
+                'data' => null
+            ];
+        }
+    }
+    /**
+        * update articulations state
+        * @param Request $request
+    */
+    public function updateArticulationStage(Request $request, ArticulationStage $articulationStage){
+         $articulationStage->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'scope'  => $request->scope,
+            'confidentiality_format' => ArticulationStage::CONFIDENCIALITY_FORMAT_YES,
+            'terms_verified_at' => Carbon::now(),
+            'interlocutor_talent_id' => $request->talent,
+        ]);
+         return $articulationStage;
+    }
+
 
     private function updateFile(Request $request, \Illuminate\Database\Eloquent\Model $model = null)
     {
@@ -186,15 +213,15 @@ class ArticulationStageRepository
             $node = sprintf("%02d", auth()->user()->articulador->id);
             $month = Carbon::now()->isoFormat('MM');
             $user = sprintf("%03d", auth()->user()->id);
-            $accompaniment = ArticulationStage::selectRaw('MAX(id+1) AS max')->get()->last();
-            $accompaniment->max == null ? $accompaniment->max = 1 : $accompaniment->max = $accompaniment->max;
-            $accompaniment->max = sprintf("%04d", $accompaniment->max);
-            return "{$initial}{$year}-{$node}{$month}{$user}-{$accompaniment->max}";
+            $articulationStage = ArticulationStage::selectRaw('MAX(id+1) AS max')->get()->last();
+            $articulationStage->max == null ? $articulationStage->max = 1 : $articulationStage->max = $articulationStage->max;
+            $articulationStage->max = sprintf("%04d", $articulationStage->max);
+            return "{$initial}{$year}-{$node}{$month}{$user}-{$articulationStage->max}";
     }
 
     /**
      * Método que elimina un archivo del servidor y su registro de la base de datos (RutaModel)
-    * @param int id Id del archivo del entrenamiento que se usará para eliminarlo del almacenamiento y de la base de datos
+    * @param int
     * @return Response
     */
     public function destroyFile($file)
@@ -215,10 +242,10 @@ class ArticulationStageRepository
      * Update file
      * @return \Illuminate\Http\Response
      */
-    public function downloadFile(\App\Models\ArticulationStage $accompaniment)
+    public function downloadFile($articulationStage)
     {
         try {
-            $path = $this->existFile($accompaniment->file->ruta);
+            $path = $this->existFile($articulationStage->file->ruta);
             return Storage::response($path);
         } catch (\Exception $e) {
             return abort(404, $e->getMessage());
@@ -240,15 +267,14 @@ class ArticulationStageRepository
      * @return \Illuminate\Http\Response
      */
 
-    public function updateInterlocutor(Request $request, ArticulationStage $accompaniment)
+    public function updateInterlocutor(Request $request, $articulationStage)
     {
-
         try {
-            $accompaniment->update([
+            $articulationStage->update([
                 'interlocutor_talent_id' => $request->talent,
             ]);
             return  [
-                'data' => $accompaniment,
+                'data' => $articulationStage,
                 'message' => '',
                 'isCompleted' => true,
             ];
@@ -259,7 +285,6 @@ class ArticulationStageRepository
                 'isCompleted' => false,
             ];
         }
-
     }
 
     /**
@@ -358,5 +383,16 @@ class ArticulationStageRepository
             'destinatarios' => $recipients
         ];
     }
+
+    /**
+     * Retonar la última notificacion pendiente
+     *
+     * @param $articulationState
+     **/
+    public function retornarUltimaNotificacionPendiente($articulationState)
+    {
+        return $articulationState->notifications()->where('fase_id',  $articulationState->state)->where('estado', \App\Models\ControlNotificaciones::IsPendiente())->get()->last();
+    }
+
 
 }

@@ -124,12 +124,33 @@ $( document ).ready(function() {
                 dataType: 'json',
                 processData: false,
                 success: function (response) {
+                    $('.error').hide();
                     $('button[type="submit"]').removeAttr('disabled');
-                    printErroresFormulario(response.data);
-                    articulationStage.messageAccompaniable(response.data,  'registrada', 'Registro exitoso');
+                    printErrorsForm(response);
+
+                    if(!response.fail && response.errors == null){
+                        Swal.fire({
+                            title: response.message,
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok',
+                        });
+                        setTimeout(function () {
+                            window.location.href = response.redirect_url;
+                        }, 1500);
+                    }
                 },
                 error: function (xhr, textStatus, errorThrown) {
-                    alert("Error: " + errorThrown);
+                    console.log("Error: " + errorThrown);
+                    Swal.fire({
+                        title: ' Registro erróneo, vuelve a intentarlo',
+                        html:  `${xhr.status} ${errorThrown}`,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok',
+                    });
                 }
             });
         }
@@ -162,7 +183,6 @@ $( document ).ready(function() {
         let filter_year_pro = $('#filter_year_pro').val();
         articulationStage.queryProyectosFaseInicioTable(filter_year_pro);
     });
-
     $('#search_talent').click(function () {
         let filter_user = $('#txtsearch_user').val();
         if(filter_user.length > 0 ){
@@ -172,7 +192,6 @@ $( document ).ready(function() {
             articulationStage.notFound('result-talents');
         }
     });
-
     $('#filter_talents_advanced').click(function () {
         articulationStage.queryTalentos();
     });

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Articulation;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -26,9 +26,8 @@ class ArticulationTypeRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:1|max:100|unique:tipo_articulaciones,nombre,' . request()->route('tipoarticulacione'),
+            'name' => 'required|min:1|max:100|unique:articulation_types,name,' . request()->route('tipoarticulacione'),
             'description' => 'nullable|min:1|max:5000',
-
         ];
     }
 

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Articulation;
 
+use App\Models\ArticulationSubtype;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Entidad;
 use App\Models\ArticulationType;
 use App\Repositories\Repository\Articulation\ArticulationTypeRepository;
-use App\Http\Requests\ArticulationTypeRequest;
+use App\Http\Requests\Articulation\ArticulationTypeRequest;
 use Illuminate\Support\Facades\Validator;
 
 class ArticulationTypeController extends Controller
@@ -64,7 +66,7 @@ class ArticulationTypeController extends Controller
                 return response()->json([
                     'fail' => true,
                     'errors' => $validator->errors(),
-                    'message' => null,
+                    'message' => 'Estas ingresando mal los datos',
                     'redirect_url' => null,
                 ]);
             }
@@ -73,7 +75,7 @@ class ArticulationTypeController extends Controller
                 return response()->json([
                     'fail' => true,
                     'errors' => $this->articulationTypeRepository->getError(),
-                    'message' => null,
+                    'message' => 'Vuelve a intentarlo',
                     'redirect_url' => null,
                 ]);
             }
@@ -95,12 +97,7 @@ class ArticulationTypeController extends Controller
     public function show( $typeArticulation)
     {
         if (request()->user()->can('show', ArticulationType::class)) {
-            $typeArticulation = ArticulationType::findOrFail($typeArticulation);
-            if (request()->ajax()) {
-                return response()->json([
-                    'data' => $typeArticulation
-                ]);
-            }
+            $typeArticulation = ArticulationType::query()->with('articulationsubtypes')->findOrFail($typeArticulation);
             return view('articulation-type.show', ['typeArticulation' => $typeArticulation]);
         }
         return redirect()->route('home');
@@ -133,9 +130,9 @@ class ArticulationTypeController extends Controller
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
             return response()->json([
-                'fail'   => true,
+                'fail' => true,
                 'errors' => $validator->errors(),
-                'message' => null,
+                'message' => 'Estas ingresando mal los datos',
                 'redirect_url' => null,
             ]);
         }
@@ -144,7 +141,7 @@ class ArticulationTypeController extends Controller
             return response()->json([
                 'fail'         => true,
                 'errors'       => $this->articulationTypeRepository->getError(),
-                'message' => null,
+                'message' => 'Vuelve a intentarlo',
                 'redirect_url' => null,
             ]);
         }
@@ -154,9 +151,7 @@ class ArticulationTypeController extends Controller
             'message' => "Actualización Exitosa",
             'redirect_url' => url(route('tipoarticulaciones.index')),
         ]);
-
     }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -177,5 +172,22 @@ class ArticulationTypeController extends Controller
             'fail'         => false,
             'redirect_url' => route('tipoarticulaciones.index'),
         ]);
+    }
+
+    public function filterArticulationType($articulationType)
+    {
+        $articulationSubtypes = ArticulationSubtype::query()
+            /*->with(['nodos'=> function($query) use($node){
+                return $query->where('id', $node);
+            }])*/
+            ->where('state', ArticulationSubtype::mostrar())
+
+            ->where('articulation_type_id', $articulationType)->get();
+        if(request()->ajax()){
+            return response()->json([
+                'data' => $articulationSubtypes
+            ]);
+        }
+        return abort(403);
     }
 }

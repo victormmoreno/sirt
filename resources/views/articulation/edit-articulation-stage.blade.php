@@ -20,20 +20,19 @@
                         <li><a href="{{route('home')}}">{{__('Home')}}</a></li>
                         <li class="active"><a href="{{route('articulation-stage')}}">{{__('articulation-stage')}}</a>
                         </li>
-                        <li class="active">{{__('New ArticulationStage')}}</li>
+                        <li class="active">{{__('Edit ArticulationStage')}}</li>
                     </ol>
                 </div>
             </div>
             <div class="col s12 m12 l12">
                 <div class="card mailbox-content">
                     <div class="card-content">
-                        <form method="POST" id="articulations-form" action="{{route('articulation-stage.store')}}"
-                              accept-charset="UTF-8" enctype="multipart/form-data">
+                        <form method="POST" id="articulations-form"
+                              action="{{route('articulation-stage.update', $articulationStage)}}"
+                              enctype="multipart/form-data">
                             @csrf
+                            {!! method_field('PUT')!!}
                             <div>
-                                @can('listNodes', App\Models\ArticulationStage::class)
-                                    @include('articulation.form.step-node')
-                                @endcan
                                 @include('articulation.form.step-basic-information-articulation-stage')
                                 @include('articulation.form.step-articulation-stage')
                                 @include('articulation.form.step-terms')
@@ -43,8 +42,8 @@
                 </div>
             </div>
         </div>
-        @include('articulation.shared.project-modal')
-        @include('articulation.shared.interlocutor-talents-modal')
-    </main>
+    @include('articulation.shared.project-modal')
+    @include('articulation.shared.interlocutor-talents-modal')
+</main>
 @endsection
 
