@@ -8,11 +8,13 @@
         <i class="material-icons {{setActiveRouteActiveIcon('entrenamientos')}}">library_books</i>Taller de Fortalecimiento
     </a>
 </li>
+@can('index', App\Models\ArticulationStage::class)
 <li class="no-padding {{setActiveRoute('articulaciones')}}">
     <a href="{{route('articulation-stage')}}" class="{{setActiveRouteActivePage('articulaciones')}}" rel="canonical" title="{{__('articulation-stage')}}">
         <i class="material-icons {{setActiveRouteActiveIcon('articulaciones')}}">autorenew</i>{{__('articulation-stage')}}
     </a>
 </li>
+@endcan
 <li class="no-padding {{setActiveRoute('charla')}}">
     <a href="{{route('charla')}}" class="{{setActiveRouteActivePage('charla')}}" rel="canonical" title="Charlas Informativas">
         <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas

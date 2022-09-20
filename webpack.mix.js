@@ -73,6 +73,7 @@ mix.scripts([
     'resources/app/ideas/talento/index.js',
     'resources/app/ideas/articulador/index.js',
     'resources/app/articulation/index.js',
+    'resources/app/articulation/show-articulation-stage.js',
     'resources/app/articulation/articulation-stage-form.js',
     'resources/app/articulation/articulation-create.js',
     'resources/app/entrenamientos/administrador/index.js',

@@ -22,15 +22,25 @@ use App\Events\Articulation\AccompanyingApprovalRequest;
 
 class ArticulationStageRepository
 {
+    /**
+     * variable to store errors
+     * @var $strError
+     */
     private $strError = null;
 
+    /**
+     * method to store errors
+     * @return string
+     */
     public function getError()
     {
         return $this->strError;
     }
+
     /**
-        * store
-        * @param Request $request
+     * method for storing the articulation stage
+     * @param Request $request
+     * @return void
     */
     public function store(Request $request)
     {
@@ -54,27 +64,48 @@ class ArticulationStageRepository
         }
     }
 
-    public function update(Request $request, ArticulationStage $articulationStage)
+    /**
+     * method to validate the type of articulation stage
+     * @param Request $request
+     * @param $articulationStage
+     */
+    private function validateArticulationStageType(Request $request, $articulationStage)
     {
-        DB::beginTransaction();
-        try {
-            $articulationStage = $this->updateArticulationStage($request, $articulationStage);
-            $this->validateArticulationStageTypeUpdate($request, $articulationStage);
-            $this->updateFile( $request , $articulationStage );
-            DB::commit();
-            return [
-                'state' => true,
-                'data' => $articulationStage
-            ];
-        } catch (\Exception $e) {
-            $this->strError = $e->getMessage();
-            DB::rollback();
-            return [
-                'state' => false,
-                'data' => null
-            ];
+        if($request->filled('projects')){
+            $project = Proyecto::where('id', $request->projects)->first();
+            $articulationStage->projects()->sync([
+                'articulationable_id' => $project->id
+            ]);
         }
     }
+
+    /**
+     * method to store the confidentiality format
+     * @param Request $request
+     * @param $model
+     */
+    private function storageFile(Request $request, \Illuminate\Database\Eloquent\Model $model = null)
+    {
+        if($request->hasFile('confidency_format')){
+            try {
+                $fileName =  $model->code.'_' .$request->file('confidency_format')->getClientOriginalName();
+                $node = sprintf('%02d',$model->node->id);
+                $year = Carbon::parse($model->start_date)->isoFormat('YYYY');
+                $module = class_basename($model);
+                $route = "public/{$node}/{$year}/{$module}/{$model->createdBy->documento}/{$model->code}/formato";
+                $fileUrl = $request->file('confidency_format')
+                    ->storeAs($route, $fileName);
+                $model->file()->create([
+                    'ruta' => Storage::url($fileUrl),
+                    'fase_id' => Fase::IS_INICIO
+                ]);
+                return $model;
+            } catch (\Exception $ex) {
+                return $ex->getMessage();
+            }
+        }
+    }
+
     /**
         * store articulations
         * @param Request $request
@@ -95,7 +126,32 @@ class ArticulationStageRepository
         ]);
     }
     /**
-        * store articulations
+     * update articulations
+     * @param Request $request
+     */
+    public function update($request, $articulationStage)
+    {
+        DB::beginTransaction();
+        try {
+            $articulationStage = $this->updateArticulationStage($request, $articulationStage);
+            $this->validateArticulationStageType($request, $articulationStage);
+            $this->updateFile( $request , $articulationStage );
+            DB::commit();
+            return [
+                'state' => true,
+                'data' => $articulationStage
+            ];
+        } catch (\Exception $e) {
+            $this->strError = $e->getMessage();
+            DB::rollback();
+            return [
+                'state' => false,
+                'data' => null
+            ];
+        }
+    }
+    /**
+        * update articulations state
         * @param Request $request
     */
     public function updateArticulationStage(Request $request, ArticulationStage $articulationStage){
@@ -109,54 +165,7 @@ class ArticulationStageRepository
         ]);
          return $articulationStage;
     }
-    /**
-     * store articulations
-     * @param Request $request
-     *@return void
-    */
-    public function validateArticulationStageType(Request $request, ArticulationStage $articulationStage): void
-    {
-        if($request->filled('projects')){
-            $model = Proyecto::where('id', $request->projects)->first();
-            $model->articulationables()->sync([$articulationStage->id]);
-        }
-    }
 
-    /**
-     * store articulations
-     * @param Request $request
-     *@return void
-     */
-    public function validateArticulationStageTypeUpdate(Request $request, $articulationStage): void
-    {
-        if($request->filled('projects')){
-            //$articulationStage->projects()->detach([$request->projects]);
-            $model = Proyecto::where('id', $request->projects)->first();
-            $model->articulationables()->sync([$articulationStage->id]);
-        }
-    }
-
-    private function storageFile(Request $request, \Illuminate\Database\Eloquent\Model $model = null)
-    {
-        if($request->hasFile('confidency_format')){
-            try {
-                $fileName =  $model->code.'_' .$request->file('confidency_format')->getClientOriginalName();
-                $node = sprintf('%02d',$model->node->id);
-                $year = Carbon::parse($model->start_date)->isoFormat('YYYY');
-                $module = class_basename($model);
-                $route = "public/{$node}/{$year}/{$module}/{$model->createdBy->documento}/{$model->code}/formato";
-                $fileUrl = $request->file('confidency_format')
-                            ->storeAs($route, $fileName);
-                $model->file()->create([
-                    'ruta' => Storage::url($fileUrl),
-                    'fase_id' => Fase::IS_INICIO
-                ]);
-                return $model;
-            } catch (\Exception $ex) {
-                return $ex->getMessage();
-            }
-        }
-    }
 
     private function updateFile(Request $request, \Illuminate\Database\Eloquent\Model $model = null)
     {
@@ -212,7 +221,7 @@ class ArticulationStageRepository
 
     /**
      * Método que elimina un archivo del servidor y su registro de la base de datos (RutaModel)
-    * @param int id Id del archivo del entrenamiento que se usará para eliminarlo del almacenamiento y de la base de datos
+    * @param int
     * @return Response
     */
     public function destroyFile($file)

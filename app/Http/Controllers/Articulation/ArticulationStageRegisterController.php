@@ -25,7 +25,6 @@ class ArticulationStageRegisterController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
      * @return \Illuminate\Http\Response
      */
     public function create()
@@ -47,10 +46,11 @@ class ArticulationStageRegisterController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @return mixed
      */
     public function store(Request $request)
     {
-        if ($request->user()->can('store', ArticulationStage::class)) {
+        if ($request->ajax() && $request->user()->can('create', ArticulationStage::class)) {
             $req = new ArticulationStageRequest;
             $validator = Validator::make($request->all(), $req->rules(), $req->messages());
             if ($validator->fails()) {
@@ -78,14 +78,25 @@ class ArticulationStageRegisterController extends Controller
                 ]);
             }
         }
+        return redirect()->route('home');
     }
 
+    /**
+     * Show the form for editing a resource.
+     * @param  $articulationStage
+     * @return \Illuminate\Http\Response
+     */
     public function edit($articulationStage)
     {
-        $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
         if (request()->user()->can('update', $articulationStage))
         {
             $nodos = null;
+            $articulationStage = ArticulationStage::query()
+                ->with([
+                    'createdBy',
+                    'projects.articulacion_proyecto.actividad',
+                    'interlocutor'
+                ])->findOrFail($articulationStage);
             if(request()->user()->can('listNodes', ArticulationStage::class))
             {
                 $nodos = Nodo::query()->with('entidad')->get();
@@ -97,40 +108,40 @@ class ArticulationStageRegisterController extends Controller
     }
 
     /**
-     * Update the given user.
-     *
+     * Update a resource.
      * @param  \Illuminate\Http\Request  $request
-     *
      */
-    public function update(Request $request, ArticulationStage $articulationStage)
+    public function update(Request $request, $articulationStage)
     {
-        $req = new ArticulationStageRequest;
-        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-        if ($validator->fails()) {
-            return response()->json([
-                'data' => [
-                    'state'   => 'danger',
-                    'errors' => $validator->errors(),
-                ]
-            ]);
-        } else {
-            $response = $this->articulationStageRepository->update($request, $articulationStage);
-            if (!$response['state']) {
+        if (request()->user()->can('update', $articulationStage)) {
+            $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
+            $req = new ArticulationStageRequest;
+            $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+            if ($validator->fails()) {
                 return response()->json([
-                    'fail'         => true,
-                    'errors'       => $this->articulationStageRepository->getError(),
-                    'message' => null,
-                    'redirect_url' => null,
+                    'data' => [
+                        'state' => 'danger',
+                        'errors' => $validator->errors(),
+                    ]
+                ]);
+            } else {
+                $response = $this->articulationStageRepository->update($request, $articulationStage);
+                if (!$response['state']) {
+                    return response()->json([
+                        'fail' => true,
+                        'errors' => $this->articulationStageRepository->getError(),
+                        'message' => null,
+                        'redirect_url' => null,
+                    ]);
+                }
+                return response()->json([
+                    'data' => $response['data'],
+                    'fail' => false,
+                    'errors' => null,
+                    'message' => "Actualización extiosa",
+                    'redirect_url' => url(route('articulation-stage.show', $response['data'])),
                 ]);
             }
-            return response()->json([
-                'fail'         => false,
-                'errors'       => null,
-                'message' => "Actualización extiosa",
-                'redirect_url' => url(route('articulation-stage.show', $response['data']->id)),
-            ]);
         }
     }
-
-
 }

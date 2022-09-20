@@ -1252,6 +1252,31 @@ $(document).on('submit', 'form#interlocutor-form', function (event) {
 });
 
 
+$(document).ready(function() {
+    $('#articulation_data_table').DataTable({
+        language: {
+            "decimal": "",
+            "emptyTable": "No hay información",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+            "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+            "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar Entradas _MENU_",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "Buscar:",
+            "zeroRecords": "Sin resultados encontrados",
+            "paginate": {
+                "first": "Primero",
+                "last": "Ultimo",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+        }
+    });
+});
+
 $( document ).ready(function() {
     const form = $("#articulations-form");
     const validator = $("#articulations-form").validate({
@@ -1381,6 +1406,7 @@ $( document ).ready(function() {
                     $('.error').hide();
                     $('button[type="submit"]').removeAttr('disabled');
                     printErrorsForm(response);
+
                     if(!response.fail && response.errors == null){
                         Swal.fire({
                             title: response.message,
@@ -1393,12 +1419,12 @@ $( document ).ready(function() {
                             window.location.href = response.redirect_url;
                         }, 1500);
                     }
-
                 },
-                error: function (ajaxContext) {
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log("Error: " + errorThrown);
                     Swal.fire({
                         title: ' Registro erróneo, vuelve a intentarlo',
-                        html:  `${ajaxContext.status} ${ajaxContext.responseJSON.message}`,
+                        html:  `${xhr.status} ${errorThrown}`,
                         type: 'error',
                         showCancelButton: false,
                         confirmButtonColor: '#3085d6',
@@ -10822,24 +10848,6 @@ $('#txtfecha_fin').bootstrapMaterialDatePicker({
         });
     });
 
-function printErrorsForm(data) {
-    if (data.fail) {
-        let errores = "";
-        for (control in data.errors) {
-            errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
-            $('#' + control + '-error').html(data.errors[control]);
-            $('#' + control + '-error').show();
-        }
-        Swal.fire({
-            title: 'Advertencia!',
-            html: 'Estas ingresando mal los datos.',
-            type: 'warning',
-            showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Ok'
-        });
-    }
-}
 
 $(document).ready(function() {
     let filter_year_support = $('#filter_year_support').val();

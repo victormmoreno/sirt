@@ -10,14 +10,14 @@
                         <select name="node"  style="width: 100%" tabindex="-1">
                             <option value="">Seleccione el nodo</option>
                             @foreach($nodos as $id => $name)
-                                @if(isset($articulationSubtype->nodos))
-                                    <option value="{{$id}}" {{collect(old('node',$typeArticulation->nodos->pluck('id')))->contains($id)  ? 'selected' : '' }}>{{$name}}</option>
+                                @if(isset($articulationStage))
+                                    <option value="{{$id}}" {{old('node',$articulationStage->node_id) == $id ? 'selected':''}}>{{$name}}</option>
                                 @else
                                     <option value="{{$id}}" {{old('node') == $id ? 'selected':''}}>{{$name}}</option>
                                 @endif
                             @endforeach
                         </select>
-                        <label for="articulationtype">Nodo <span class="red-text">*</span></label>
+                        <label for="node">Nodo <span class="red-text">*</span></label>
                         <small id="node-error" class="error red-text"></small>
                     </div>
                     @endcan

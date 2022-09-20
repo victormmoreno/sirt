@@ -39,111 +39,119 @@ class ArticulationStageListController extends Controller
         return redirect()->route('home');
     }
 
-    public function datatableFiltros(Request $request)
-    {
-        $talent = $this->checkRoleAuth($request)['talent'];
-        $node = $this->checkRoleAuth($request)['node'];
-        $articulationStages = [];
-        if (isset($request->filter_status_articulationStage)) {
-
-            $articulationStages =  ArticulationStage::query()
-            ->with([
-                'node.entidad',
-                'createdBy',
-                'projects.articulacion_proyecto.actividad',
-            ])
-            ->status($request->filter_status_articulationStage)
-            ->year($request->filter_year_articulationStage)
-            ->node($node)
-            ->interlocutorTalent($talent)
-            ->orderBy('created_at', 'desc')
-            ->get();
-        }
-        return $this->datatablearticulationStages($articulationStages);
-    }
-
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
+     * method to show return the datatables ArticulationStages
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function datatableFiltros(Request $request)
     {
-        $articulationStage = ArticulationStage::query()
-            ->with([
-                'node.entidad',
-                'createdBy',
-                'articulations.phase',
-                'projects.articulacion_proyecto.actividad',
-                'file',
-                'interlocutor'
-            ])
-        ->findOrfail($id);
-        $articulations = $articulationStage->articulations()->latest('id')->paginate(3);
-        $ult_notificacion = $this->articulationStageRepository->retornarUltimaNotificacionPendiente($articulationStage);
-
-        // $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
-
-        return view('articulation.show-articulation-stage', compact('articulationStage', 'articulations', 'ult_notificacion'));
+        if (request()->ajax() && request()->user()->can('index', ArticulationStage::class)) {
+            $talent = $this->checkRoleAuth($request)['talent'];
+            $node = $this->checkRoleAuth($request)['node'];
+            $articulationStages = [];
+            if (isset($request->filter_status_articulationStage)) {
+                $articulationStages = ArticulationStage::query()
+                    ->with([
+                        'node.entidad',
+                        'createdBy',
+                        'projects.articulacion_proyecto.actividad',
+                        'interlocutor'
+                    ])
+                    ->status($request->filter_status_articulationStage)
+                    ->year($request->filter_year_articulationStage)
+                    ->node($node)
+                    ->interlocutorTalent($talent)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            }
+            return $this->datatablearticulationStages($articulationStages);
+        }
+        return redirect()->route('home');
     }
 
+    /**
+     * method to download the list of articulation stages
+     * @return \Illuminate\Http\Response
+     */
     public function export(Request $request, $extension = 'xlsx')
     {
-        $talent = $this->checkRoleAuth($request)['talent'];
-        $node = $this->checkRoleAuth($request)['node'];
+        if (request()->user()->can('downloadReports', ArticulationStage::class)) {
+            $talent = $this->checkRoleAuth($request)['talent'];
+            $node = $this->checkRoleAuth($request)['node'];
 
-        $articulationStages = [];
-        if (isset($request->filter_status_articulationStage)) {
+            $articulationStages = [];
+            if (isset($request->filter_status_articulationStage)) {
 
-            $articulationStages =  ArticulationStage::with([
-                'node.entidad',
-                'createdBy'
-            ])
-            ->status($request->filter_status_articulationStage)
-            ->year($request->filter_year_articulationStage)
-            ->node($node)
-            ->interlocutorTalent($talent)
-            ->orderBy('created_at', 'desc')
-            ->get();
+                $articulationStages = ArticulationStage::with([
+                    'node.entidad',
+                    'createdBy',
+                    'articulations',
+                    'projects.articulacion_proyecto.actividad',
+                    'interlocutor'
+                ])
+                    ->status($request->filter_status_articulationStage)
+                    ->year($request->filter_year_articulationStage)
+                    ->node($node)
+                    ->interlocutorTalent($talent)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            }
+            return (new articulationStageExport($articulationStages))->download(__('articulation-stage') .' - '. config('app.name') . ".{$extension}");
         }
-        return (new articulationStageExport($articulationStages))->download("Etapa articulación" . config('app.name') . ".{$extension}");
+        return redirect()->route('home');
     }
 
     /**
-     * Método que elimina un archivo del servidor y su registro de la base de datos (RutaModel)
-    * @param int id Id del archivo del entrenamiento que se usará para eliminarlo del almacenamiento y de la base de datos
-    * @return Response
-    */
+     * method to delete system file
+     * @param int id
+     * @return Response
+     */
     public function destroyFile($id)
     {
-        $response = $this->articulationStageRepository->destroyFile($id);
-
-        if($response){
-            toast('El Archivo se ha eliminado con éxito!','success')->autoClose(2000)->position('top-end');
+        if (request()->user()->can('destroyFile', ArticulationStage::class)) {
+            $response = $this->articulationStageRepository->destroyFile($id);
+            if ($response) {
+                toast('El Archivo se ha eliminado con éxito!', 'success')->autoClose(2000)->position('top-end');
+                return back();
+            }
+            toast('El Archivo no se ha eliminado!', 'danger')->autoClose(2000)->position('top-end');
             return back();
         }
-        toast('El Archivo no se ha eliminado!','danger')->autoClose(2000)->position('top-end');
-        return back();
+        return redirect()->route('home');
     }
+
     /**
-     * download file
+     * method to download a file from the system
      * @return \Illuminate\Http\Response
      */
     public function downloadFile($articulationStage)
     {
-        $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
-        return $this->articulationStageRepository->downloadFile($articulationStage);
-    }
-
-    public function changeInterlocutor($articulationStage)
-    {
-        $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
-        return view('articulation.change-interlocutor', compact('articulationStage'));
+        if (request()->user()->can('downloadFile', ArticulationStage::class)) {
+            $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
+            return $this->articulationStageRepository->downloadFile($articulationStage);
+        }
+        return redirect()->route('home');
     }
 
     /**
-     * Update los miembros de una etapa.
+     * Display the specified resource for change the interlocutor talent of an articulation stage.
+     *
+     * @param  int  $articulationStage
+     * @return \Illuminate\Http\Response
+     */
+    public function changeInterlocutor($articulationStage)
+    {
+        $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
+        if (request()->user()->can('changeTalent', $articulationStage)) {
+
+            return view('articulation.change-interlocutor', compact('articulationStage'));
+        }
+        return redirect()->route('home');
+
+    }
+
+    /**
+     * method to change the interlocutor talent of an articulation stage
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $articulationStage
@@ -151,39 +159,46 @@ class ArticulationStageListController extends Controller
     public function updateInterlocutor(Request $request, $articulationStage)
     {
         $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
-        $validator = Validator::make($request->all(), [
-            'talent' => 'required'
-        ], [
-            'talent' => 'Debes seleccionar por lo menos un talento interlocutor'
-        ]);
-        if ($validator->fails()) {
-            return response()->json([
-                'state'   => 'error_form',
-                'errors' => $validator->errors(),
-            ]);
-        } else {
-            $response = $this->articulationStageRepository->updateInterlocutor($request, $articulationStage);
-            if($response["isCompleted"]){
-                return response()->json([
-                    'data' => [
-                        'state'   => 'success',
-                        'url' => route('articulation-stage.show', $response['data']->id),
-                        'status_code' => Response::HTTP_CREATED,
-                        'errors' => [],
-                    ],
-                ], Response::HTTP_CREATED);
-            }else{
-                return response()->json([
-                    'data' => [
-                        'state'   => 'danger',
-                        'errors' => [],
-                    ],
-                ]);
-            }
-        }
+        if (request()->user()->can('changeTalent', $articulationStage)) {
 
+            $validator = Validator::make($request->all(), [
+                'talent' => 'required'
+            ], [
+                'talent' => 'Debes seleccionar por lo menos un talento interlocutor'
+            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'state' => 'error_form',
+                    'errors' => $validator->errors(),
+                ]);
+            } else {
+                $response = $this->articulationStageRepository->updateInterlocutor($request, $articulationStage);
+                if ($response["isCompleted"]) {
+                    return response()->json([
+                        'data' => [
+                            'state' => 'success',
+                            'url' => route('articulation-stage.show', $response['data']->id),
+                            'status_code' => Response::HTTP_CREATED,
+                            'errors' => [],
+                        ],
+                    ], Response::HTTP_CREATED);
+                } else {
+                    return response()->json([
+                        'data' => [
+                            'state' => 'danger',
+                            'errors' => [],
+                        ],
+                    ]);
+                }
+            }
+            return redirect()->route('home');
+        }
     }
 
+    /**
+     * method to return the structure of the datatables ArticulationStages
+     * @return void
+     */
     private function datatableArticulationStages($articulationStages)
     {
         return datatables()->of($articulationStages)
@@ -194,6 +209,7 @@ class ArticulationStageListController extends Controller
                 return "<p>
                             <span class='orange-text'>{$data->present()->articulationStageCode()}</span><br>
                             <b>".Str::limit("{$data->present()->articulationStageName()}", 40, '...')."</b><br>
+                            <span class='orange-text'>Talento Interlocutor: </span> ".Str::limit("{$data->present()->articulationStageInterlocutorTalent()}", 30, '...')."
                         </p>";
             })
             ->editColumn('articulation_state_type', function ($data) {
@@ -228,6 +244,10 @@ class ArticulationStageListController extends Controller
             })->rawColumns(['node','code','name','adviser','status','starDate','articulationStageBy','articulation_state_type','show'])->make(true);
     }
 
+    /**
+     * method to validate the authenticated role
+     * @return void
+     */
     private function checkRoleAuth(Request $request)
     {
         $talent = null;
@@ -257,6 +277,43 @@ class ArticulationStageListController extends Controller
         return ['talent' => $talent, 'node' => $node];
     }
 
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $articulationStage = ArticulationStage::query()
+            ->with([
+                'node.entidad',
+                'createdBy',
+                'articulations.phase',
+                'projects.articulacion_proyecto.actividad',
+                'file',
+                'interlocutor'
+            ])
+        ->findOrfail($id);
+
+
+
+        if (request()->user()->can('show', $articulationStage)) {
+
+            $ult_notificacion = $this->articulationStageRepository->retornarUltimaNotificacionPendiente($articulationStage);
+
+            // $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
+
+            return view('articulation.show-articulation-stage', compact('articulationStage', 'ult_notificacion'));
+        }
+        return redirect()->route('home');
+
+    }
+
+
+
+
     /**
      * Remove the specified resource from storage.
      *
@@ -265,28 +322,30 @@ class ArticulationStageListController extends Controller
     public function destroy($articulationStage)
     {
         $articulationStage = ArticulationStage::findOrFail($articulationStage);
-        if(!$articulationStage->articulations->IsEmpty() ){
+        if (request()->user()->can('delete', $articulationStage)) {
+            if (!$articulationStage->articulations->IsEmpty()) {
+                return response()->json([
+                    'fail' => true,
+                    'redirect_url' => route('articulation-stage.show', $articulationStage->id),
+                ]);
+            }
+            if (isset($articulationStage->projects)) {
+                $articulationStage->projects()->detach();
+            }
+            if (isset($articulationStage->articulations->users)) {
+                $articulationStage->articulations()->delete();
+                $articulationStage->articulations->users()->detach();
+            }
+            if (isset($articulationStage->file)) {
+                $filePath = str_replace('storage', 'public', $articulationStage->file->ruta);
+                Storage::delete($filePath);
+                $articulationStage->file()->delete();
+            }
+            $articulationStage->delete();
             return response()->json([
-                'fail'         => true,
-                'redirect_url' => route('articulation-stage.show', $articulationStage->id),
+                'fail' => false,
+                'redirect_url' => route('articulation-stage'),
             ]);
         }
-        if(isset($articulationStage->projects)){
-            $articulationStage->projects()->detach();
-        }
-        if(isset($articulationStage->articulations->users)){
-            $articulationStage->articulations()->delete();
-            $articulationStage->articulations->users()->detach();
-        }
-        if(isset($articulationStage->file)) {
-            $filePath = str_replace('storage', 'public', $articulationStage->file->ruta);
-            Storage::delete($filePath);
-            $articulationStage->file()->delete();
-        }
-        $articulationStage->delete();
-        return response()->json([
-            'fail'         => false,
-            'redirect_url' => route('articulation-stage'),
-        ]);
     }
 }

@@ -7,9 +7,12 @@ use App\Presenters\ArticulationStagePresenter;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 
-
 class ArticulationStage extends Model
 {
+    /**
+     * The constants for handling static or boolean values.
+     * @const
+     */
     const CONFIDENCIALITY_FORMAT_YES = 1;
     const CONFIDENCIALITY_FORMAT_NO = 0;
     const  STATUS_OPEN = 1;
@@ -17,14 +20,12 @@ class ArticulationStage extends Model
 
     /**
      * The attributes that guarded.
-     *
      * @var array
      */
     protected $guarded = ['id', 'status'];
 
     /**
      * The attributes that should be cast to native types.
-     *
      * @var array
      */
     protected $casts = [
@@ -35,41 +36,39 @@ class ArticulationStage extends Model
 
     /**
      * The attributes that withCount.
-     *
      * @var array
      */
     protected $withCount = ['articulations'];
 
-
-
     /**
      * The relation one to much
-     *
-     *
+     * @return  \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function articulations(){
+    public function articulations(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
         return $this->hasMany(Articulation::class);
     }
 
-
     /**
-     * The inverse polymorfic relation much to much
-     *
-     *
+     * Define a polymorphic, inverse many-to-many relationship articulationstage and project
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
     public function projects()
     {
         return $this->morphedByMany(Proyecto::class, 'articulationable');
     }
 
+    /**
+     * Define a polymorphic, inverse one-to-one or many relationship.
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
     public function articulationable()
     {
         return $this->morphTo();
     }
 
     /**
-     * Define an inverse one to many relationship between accompanient and node
-     *
+     * Define an inverse one to many relationship between articulationstage and node
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function node()
@@ -77,6 +76,10 @@ class ArticulationStage extends Model
         return $this->belongsTo(Nodo::class, 'node_id', 'id');
     }
 
+    /**
+     * Define a polymorphic one-to-many relationship between articulationstage and ControlNotificaciones
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
     public function notifications()
     {
         return $this->morphMany(ControlNotificaciones::class, 'notificable');
@@ -112,8 +115,6 @@ class ArticulationStage extends Model
         return $this->morphMany(HistorialEntidad::class, 'model');
     }
 
-
-
     /**
      * The query scope status
      *
@@ -136,7 +137,6 @@ class ArticulationStage extends Model
     {
         if (!empty($node) && $node != null && $node != 'all') {
             return $query->where('node_id', $node);
-
         }
         return $query;
     }
@@ -151,7 +151,6 @@ class ArticulationStage extends Model
         if (!empty($year) && $year != null && $year != 'all') {
             return $query->whereYear('end_date', $year)
                     ->orWhereYear('start_date', $year);
-
         }
         return $query;
     }
@@ -164,20 +163,12 @@ class ArticulationStage extends Model
     public function scopeInterlocutorTalent($query, $talent)
     {
         if (!empty($talent) && $talent != null && $talent != 'all') {
-            return $query->where('interlocutor_talent_id', $talent);
-
+            return $query->where('interlocutor_talent_id', $talent)
+                ->orWhereHas('articulations.users', function ($query) use($talent) {
+                    return $query->where('users.id', $talent);
+                });
         }
         return $query;
-    }
-
-    /**
-     * The presenter
-     *
-     * @return void
-     */
-    public function present()
-    {
-        return new ArticulationStagePresenter($this);
     }
 
     /**
@@ -210,6 +201,14 @@ class ArticulationStage extends Model
             'descripcion' => $description
         ]);
     }
-
+    /**
+     * The presenter
+     *
+     * @return void
+     */
+    public function present()
+    {
+        return new ArticulationStagePresenter($this);
+    }
 
 }

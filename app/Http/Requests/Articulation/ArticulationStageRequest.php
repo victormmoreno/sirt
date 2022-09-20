@@ -50,6 +50,7 @@ class ArticulationStageRequest extends FormRequest
             'scope.min'          => 'El alcance debe ser de al menos :min caracter.',
             'scope.max'          => 'El alcance no debe ser mayor a :max caracter(es)',
             'projects.required'  => 'Selecciona por lo menos un proyecto',
+            'node.required'  => 'El campo nodo es obligatorio',
             'talent.required'  => 'Selecciona por lo menos un talento',
             'confidency_format.required'     => 'El formato de confidencialidad es obligatorio.',
             'confidency_format.min'          => 'El formato de confidencialidad debe ser de un archivo',

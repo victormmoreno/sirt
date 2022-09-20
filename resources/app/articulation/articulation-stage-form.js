@@ -127,6 +127,7 @@ $( document ).ready(function() {
                     $('.error').hide();
                     $('button[type="submit"]').removeAttr('disabled');
                     printErrorsForm(response);
+
                     if(!response.fail && response.errors == null){
                         Swal.fire({
                             title: response.message,
@@ -140,10 +141,11 @@ $( document ).ready(function() {
                         }, 1500);
                     }
                 },
-                error: function (ajaxContext) {
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log("Error: " + errorThrown);
                     Swal.fire({
                         title: ' Registro erróneo, vuelve a intentarlo',
-                        html:  `${ajaxContext.status} ${ajaxContext.responseJSON.message}`,
+                        html:  `${xhr.status} ${errorThrown}`,
                         type: 'error',
                         showCancelButton: false,
                         confirmButtonColor: '#3085d6',

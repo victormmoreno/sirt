@@ -35809,6 +35809,25 @@ function printErroresFormulario(data) {
   }
 }
 
+function printErrorsForm(data) {
+    if (data.fail) {
+        let errores = "";
+        for (control in data.errors) {
+            errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
+            $('#' + control + '-error').html(data.errors[control]);
+            $('#' + control + '-error').show();
+        }
+        Swal.fire({
+            title: 'Advertencia!',
+            html: 'Estas ingresando mal los datos. ' + errores,
+            type: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+        });
+    }
+}
+
 function formatMoney(amount, decimalCount = 2, decimal = ",", thousands = ".") {
   try {
     decimalCount = Math.abs(decimalCount);
