@@ -21,6 +21,69 @@ class EmpresaPolicy
     }
 
     /**
+     * Determina quienes pueden ver información mas delicada de las empresas
+     *
+     * @param App\User $user
+     * @return bool
+     * @author dum
+     **/
+    public function showInfoRestricted(User $user)
+    {
+        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsDinamizador() || session()->get('login_role') == $user->IsGestor() || session()->get('login_role') == $user->IsInfocenter()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Determina quienes pueden ver y realizar las diferente opciones sobre las empresas
+     *
+     * @param App\User $user
+     * @return bool
+     * @author dum
+     **/
+    public function showOptions(User $user, Empresa $empresa)
+    {
+        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador()) {
+            return true;
+        }
+        if (session()->get('login_role') == $user->IsTalento() && $empresa->user_id == $user->id) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Determina el título que se mostrará según el rol autenticado
+     *
+     * @param User $user
+     * @return bool
+     * @author dum
+     **/
+    public function showTituloForAdmins(User $user)
+    {
+        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Determina el título para los usuarios que no pueden registrar empresas
+     *
+     * @param App\User
+     * @return bool
+     * @author dum
+     **/
+    public function showTitulo(User $user)
+    {
+        if (session()->get('login_role') == $user->IsDinamizador() || session()->get('login_role') == $user->IsInfocenter() || session()->get('login_role') == $user->IsExperto() || session()->get('login_role') == $user->IsArticulador()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Determine si un usuario puede ver formulario para crear nuevos usuarios.
      * @author julian londono
      * @return boolean

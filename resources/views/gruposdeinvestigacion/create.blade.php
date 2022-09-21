@@ -74,8 +74,8 @@
                     <div class="input-field col s12 m6 l6">
                       <select id="txttipogrupo" name="txttipogrupo">
                         <option value="">Seleccione el Tipo de Grupo de Investigación</option>
-                        <option value="0" {{ old('txttipogrupo') == '1' ? 'selected':'' }}>Externo</option>
-                        <option value="1" {{ old('txttipogrupo') == '0' ? 'selected':'' }}>SENA</option>
+                        <option value="0" {{ old('txttipogrupo') == '0' ? 'selected':'' }}>Externo</option>
+                        <option value="1" {{ old('txttipogrupo') == '1' ? 'selected':'' }}>SENA</option>
                       </select>
                       <label for="txttipogrupo">Tipo de Grupo de Investigación <span class="red-text">*</span></label>
                       @error('txttipogrupo')
@@ -136,17 +136,6 @@
     @endif
   });
 
-  $('#txttipogrupo').change(function () {
-    let idtipo = $('#txttipogrupo').val();
-    if (idtipo == '' || idtipo == 1) {
-      $('#txtinstitucion').val('');
-      $('#labelins').removeClass('active')
-    } else if (idtipo == 0) {
-      $('#txtinstitucion').val('SENA');
-      $('#labelins').addClass('active', true)
-    }
-  });
-
   var GrupoInvestigacionCreate = {
     getCiudad:function(){
       let id;
@@ -159,7 +148,6 @@
         $('#txtciudad_id').empty();
         $('#txtciudad_id').append('<option value="">Seleccione la Ciudad</option>')
         $.each(response.ciudades, function(i, e) {
-          // console.log(e.id);
           $('#txtciudad_id').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
         })
         @if($errors->any())

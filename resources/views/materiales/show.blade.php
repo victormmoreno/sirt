@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'Mantenimientos | '. $material->nombre)
+@section('meta-title', 'Materiales | '. $material->nombre)
 
 @section('content')
 
@@ -126,7 +126,7 @@
                                                                                 Marca
                                                                             </span>
                                                                             <p>
-                                                                              ${{$material->marca}}
+                                                                              {{$material->marca}}
                                                                             </p>
                                                                         </li>
                                                                     </ul>
@@ -181,15 +181,12 @@
 
                                                     </div>
 
-                                                <div class="divider mailbox-divider">
-                                                </div>
-                                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsDinamizador() || session()->get('login_role') == App\User::IsGestor()))
-                                                
+                                                <div class="divider mailbox-divider"></div>
+                                                @can('showOptions', $material)
                                                     <div class="row">
                                                     <div class="col s6 ">
                                                         <div class="right">
                                                         <a href="{{route('material.edit',$material->id)}}" class="waves-effect waves-teal darken-2 btn-flat m-t-xs center-aling">
-                                        
                                                             Cambiar Información
                                                         </a>
                                                         </div>
@@ -205,8 +202,7 @@
                                                     </div>
                                                     </div>
                                                 </div>
-                                                
-                                                @endif
+                                                @endcan
                                         </div>
                                     </div>
                                 </div>

@@ -135,17 +135,6 @@
     GrupoInvestigacionCreate.getCiudad();
   });
 
-  $('#txttipogrupo').change(function () {
-    let idtipo = $('#txttipogrupo').val();
-    if (idtipo == '' || idtipo == 1) {
-      $('#txtinstitucion').val('SENA');
-      $('#labelins').addClass('active', true)
-    } else if (idtipo == 0) {
-      $('#txtinstitucion').val('');
-      $('#labelins').removeClass('active')
-    }
-  });
-
   var GrupoInvestigacionCreate = {
     getCiudad:function(){
       let id;
@@ -158,7 +147,6 @@
         $('#txtciudad_id').empty();
         $('#txtciudad_id').append('<option value="">Seleccione la Ciudad</option>')
         $.each(response.ciudades, function(i, e) {
-          // console.log(e.id);
           $('#txtciudad_id').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
         })
         @if($errors->any())

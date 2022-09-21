@@ -10,6 +10,21 @@ class MaterialPolicy
 {
     use HandlesAuthorization;
 
+    public function showOptions(User $user, Material $material)
+    {
+        if (session()->get('login_role') == $user->IsAdministrador()) {
+            return true;
+        }
+
+        if (session()->get('login_role') == $user->IsDinamizador() && $material->nodo_id == $user->dinamizador->nodo_id) {
+            return true;
+        }
+
+        if (session()->get('login_role') == $user->IsGestor() && $material->lineatecnologica_id == $user->gestor->lineatecnologica_id) {
+            return true;
+        }
+        return false;
+    }
     /**
      * 
      * @param App\User $user
@@ -39,7 +54,22 @@ class MaterialPolicy
     }
 
     /**
-     * undocumented function summary
+     * Valida que el usuario sea dinamizador para mostrar el input de la línea tecnológica
+     *
+     * @param \App\User $user
+     * @return bool
+     * @author dum
+     **/
+    public function showInputsForDinamizador(User $user)
+    {
+        if (session()->get('login_role') == $user->IsDinamizador()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Valida que el usuario sea administrador para mostrar el input del nodo y línea tecnológica
      *
      * @param \App\User $user
      * @return bool
@@ -74,7 +104,7 @@ class MaterialPolicy
      */
     public function getMaterialesPorNodo(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador()]);
+        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador(), User::IsDinamizador(), User::IsGestor()]);
     }
 
 
@@ -99,7 +129,7 @@ class MaterialPolicy
      */
     public function store(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsDinamizador(), User::IsGestor()]) && session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor();
+        return (bool) $user->hasAnyRole([User::IsDinamizador(), User::IsGestor()]) && session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsAdministrador();
     }
 
     /**
@@ -122,9 +152,11 @@ class MaterialPolicy
      * @param  \App\Models\Material  $material
      * @return bool
      */
-    public function edit(User $user, $material)
+    public function edit(User $user, Material $material)
     {
-        return (bool) $user->hasAnyRole([User::IsDinamizador(), User::IsGestor()]) && (session()->get('login_role') == User::IsDinamizador() && $material->nodo->id == $user->dinamizador->nodo->id) || (session()->get('login_role') == User::IsGestor() && $material->lineatecnologica->id == $user->gestor->lineatecnologica->id && $material->nodo->id == $user->gestor->nodo->id);
+        return (bool) (session()->get('login_role') == User::IsAdministrador()) ||
+        (session()->get('login_role') == User::IsDinamizador() && $material->nodo->id == $user->dinamizador->nodo->id) || 
+        (session()->get('login_role') == User::IsGestor() && $material->lineatecnologica->id == $user->gestor->lineatecnologica->id && $material->nodo->id == $user->gestor->nodo->id);
     }
 
     /**
@@ -148,6 +180,8 @@ class MaterialPolicy
      */
     public function destroy(User $user, $material)
     {
-        return (bool) $user->hasAnyRole([User::IsDinamizador(), User::IsGestor()]) && (session()->get('login_role') == User::IsDinamizador() && $material->nodo->id == $user->dinamizador->nodo->id) || (session()->get('login_role') == User::IsGestor() && $material->lineatecnologica->id == $user->gestor->lineatecnologica->id && $material->nodo->id == $user->gestor->nodo->id);
+        return (bool) (session()->get('login_role') == User::IsAdministrador()) ||
+        (session()->get('login_role') == User::IsDinamizador() && $material->nodo->id == $user->dinamizador->nodo->id) || 
+        (session()->get('login_role') == User::IsGestor() && $material->lineatecnologica->id == $user->gestor->lineatecnologica->id && $material->nodo->id == $user->gestor->nodo->id);
     }
 }

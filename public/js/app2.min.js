@@ -2294,6 +2294,17 @@ $(document).on('submit', 'form#formSearchEmpresas', function (event) {
         });
     }
 });
+$('#txttipogrupo').change(function () {
+  let idtipo = $('#txttipogrupo').val();
+  if (idtipo == 1) {
+    $('#txtinstitucion').val('SENA');
+    $('#labelins').addClass('active', true)
+  } else if (idtipo == 0) {
+    $('#txtinstitucion').val('');
+    $('#labelins').removeClass('active')
+  }
+});
+
 $(document).ready(function() {
   $('#grupoDeInvestigacionTecnoparque_table').DataTable({
     language: {
@@ -2337,11 +2348,6 @@ $(document).ready(function() {
         orderable: false
       },
       {
-        data: 'contacts',
-        name: 'contacts',
-        orderable: false
-      },
-      {
         data: 'edit',
         name: 'edit',
         orderable: false
@@ -2349,49 +2355,6 @@ $(document).ready(function() {
     ],
   });
 });
-
-  $('#grupoDeInvestigacionTecnoparque_tableNoGestor').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    ajax:{
-      url: host_url + "/grupo/datatableGruposInvestigacionDeTecnoparque",
-      type: "get",
-    },
-    columns: [
-      {
-        data: 'codigo_grupo',
-        name: 'codigo_grupo',
-      },
-      {
-        data: 'nombre',
-        name: 'nombre',
-      },
-      {
-        data: 'ciudad',
-        name: 'ciudad',
-      },
-      {
-        data: 'tipo_grupo',
-        name: 'tipo_grupo',
-      },
-      {
-        data: 'institucion',
-        name: 'institucion',
-      },
-      {
-        data: 'clasificacioncolciencias',
-        name: 'clasificacioncolciencias',
-      },
-      {
-        data: 'details',
-        name: 'details',
-        orderable: false
-      },
-    ],
-  });
 
 var grupoInvestigacionIndex = {
   consultarDetallesDeUnGrupoInvestigacion:function(id){
@@ -8150,217 +8113,20 @@ $(document).ready(function() {
         }, ],
     });
 });
-$(document).ready(function() {
-    $('#materiales_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "pagingType": "full_numbers",
-        "lengthChange": false,
+function consultarLineasNodo(nodo_id) {
+    $.ajax({
+        dataType:'json',
+        type:'get',
+        url: host_url + "/lineas/getlineasnodo/"+nodo_id
+      }).done(function(response){
+          $("#txtlineatecnologica").empty();
+          $('#txtlineatecnologica').append('<option value="">Seleccione la línea tecnológica donde se registrará el material de formación</option>');
+          $.each(response.lineasForNodo.lineas, function(i, e) {
+            $('#txtlineatecnologica').append('<option  value="'+e.id+'">'+e.abreviatura+' - '+e.nombre+'</option>');
+          })
+          $('#txtlineatecnologica').material_select();
     });
-
-});
-
-var selectMaterialesPorNodo = {
-    selectMaterialesForNodo: function() {
-        let nodo = $('#selectnodo').val();
-        $('#materiales_table').dataTable().fnDestroy();
-        if (nodo != '') {
-            
-            $('#materiales_table').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                processing: true,
-                serverSide: true,
-                retrieve: true,
-                "lengthChange": false,
-                 fixedHeader: {
-                    header: true,
-                    footer: true
-                },
-                "pagingType": "full_numbers",
-                ajax: {
-                    url: host_url + "/materiales/getmaterialespornodo/" + nodo,
-                    type: "get",
-                },
-                columns: [
-                {
-                    data: 'fecha',
-                    name: 'fecha',
-                    width: '20%'
-                },
-                {
-                    data: 'nombrelinea',
-                    name: 'nombrelinea',
-                    width: '30%'
-                },{
-                    data: 'codigo_material',
-                    name: 'codigo_material',
-                    width: '30%'
-                },
-                {
-                    data: 'nombre',
-                    name: 'nombre',
-                    width: '30%'
-                }, {
-                    data: 'presentacion',
-                    name: 'presentacion',
-                    width: '15%'
-                }, {
-                    data: 'medida',
-                    name: 'medida',
-                    width: '15%'
-                },
-                {
-                    data: 'cantidad',
-                    name: 'cantidad',
-                    width: '15%'
-                },
-                {
-                    data: 'valor_unitario',
-                    name: 'valor_unitario',
-                    width: '15%'
-                },
-                {
-                    data: 'valor_compra',
-                    name: 'valor_compra',
-                    width: '15%'
-                },
-
-                {
-                    data: 'detail',
-                    name: 'detail',
-                    width: '15%'
-                }, ],
-            });
-
-
-        }else{
-            $('#materiales_table').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                "lengthChange": false,
-                "pagingType": "full_numbers",
-            }).clear().draw();
-        }
-        
-    },
-    
 }
-$(document).ready(function() {
-    $('#materiales_dinamizador_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-        retrieve: true,
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: host_url + "/materiales",
-            type: "get",
-        },
-        columns: [{
-            data: 'fecha',
-            name: 'fecha',
-            width: '20%'
-        }, {
-            data: 'nombrelinea',
-            name: 'nombrelinea',
-            width: '30%'
-        }, {
-            data: 'codigo_material',
-            name: 'codigo_material',
-            width: '30%'
-        }, {
-            data: 'nombre',
-            name: 'nombre',
-            width: '30%'
-        }, {
-            data: 'presentacion',
-            name: 'presentacion',
-            width: '15%'
-        }, {
-            data: 'medida',
-            name: 'medida',
-            width: '15%'
-        }, {
-            data: 'cantidad',
-            name: 'cantidad',
-            width: '15%'
-        }, {
-            data: 'valor_unitario',
-            name: 'valor_unitario',
-            width: '15%'
-        }, {
-            data: 'valor_compra',
-            name: 'valor_compra',
-            width: '15%'
-        }, {
-            data: 'detail',
-            name: 'detail',
-            width: '15%'
-        },
-         ],
-    });
-});
-
-$(document).ready(function() {
-    $('#materiales_gestor_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-        retrieve: true,
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: host_url + "/materiales",
-            type: "get",
-        },
-        columns: [{
-            data: 'fecha',
-            name: 'fecha',
-            width: '20%'
-        },  {
-            data: 'codigo_material',
-            name: 'codigo_material',
-            width: '30%'
-        }, {
-            data: 'nombre',
-            name: 'nombre',
-            width: '30%'
-        }, {
-            data: 'presentacion',
-            name: 'presentacion',
-            width: '15%'
-        }, {
-            data: 'medida',
-            name: 'medida',
-            width: '15%'
-        }, {
-            data: 'cantidad',
-            name: 'cantidad',
-            width: '15%'
-        }, {
-            data: 'valor_unitario',
-            name: 'valor_unitario',
-            width: '15%'
-        }, {
-            data: 'valor_compra',
-            name: 'valor_compra',
-            width: '15%'
-        }, {
-            data: 'detail',
-            name: 'detail',
-            width: '15%'
-        },
-         ],
-    });
-});
-
 function getSelectMaterialMedida(){
     let medida = $('#txtmedida option:selected').text();
     let id_medida = $('#txtmedida').val();
@@ -8434,7 +8200,90 @@ var materialFormacion = {
         })
     }
 }
+var selectMaterialesPorNodo = {
+    selectMaterialesForNodo: function() {
+        let nodo = $('#selectnodo').val();
+        if (!isset(nodo)) {
+            nodo = 0;
+        }
+        $('#materiales_table').dataTable().fnDestroy();
+        if (isset(nodo)) {
+            
+            
+            $('#materiales_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                retrieve: true,
+                "lengthChange": false,
+                 fixedHeader: {
+                    header: true,
+                    footer: true
+                },
+                "pagingType": "full_numbers",
+                ajax: {
+                    url: host_url + "/materiales/getmaterialespornodo/" + nodo,
+                    type: "get",
+                },
+                columns: [
+                {
+                    data: 'fecha',
+                    name: 'fecha',
+                    width: '20%'
+                },
+                {
+                    data: 'nombrelinea',
+                    name: 'nombrelinea',
+                    width: '30%'
+                },{
+                    data: 'codigo_material',
+                    name: 'codigo_material',
+                    width: '30%'
+                },
+                {
+                    data: 'nombre',
+                    name: 'nombre',
+                    width: '30%'
+                }, {
+                    data: 'presentacion',
+                    name: 'presentacion',
+                    width: '15%'
+                }, {
+                    data: 'medida',
+                    name: 'medida',
+                    width: '15%'
+                },
+                {
+                    data: 'cantidad',
+                    name: 'cantidad',
+                    width: '15%'
+                },
+                {
+                    data: 'valor_unitario',
+                    name: 'valor_unitario',
+                    width: '15%'
+                },
+                {
+                    data: 'valor_compra',
+                    name: 'valor_compra',
+                    width: '15%'
+                },
 
+                {
+                    data: 'detail',
+                    name: 'detail',
+                    width: '15%'
+                }, ],
+            });
+
+
+        }
+        
+    },
+    
+}
 $(document).ready(function() {
 
     usoinfraestructuraIndex.queryActivitiesByAnio();

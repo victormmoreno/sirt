@@ -39,29 +39,29 @@ class EmpresaController extends Controller
     public function detalle(int $id)
     {
         $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
-        switch (Session::get('login_role')) {
-            case User::IsTalento():
-                return view('empresa.talento.show', ['empresa' => $empresa]);
-                break;
-            case User::IsActivador():
-                return view('empresa.administrador.show', ['empresa' => $empresa]);
-                break;
-            case User::IsDinamizador():
-                return view('empresa.show_no_option', ['empresa' => $empresa]);
-                break;
-            case User::IsGestor():
-                return view('empresa.show_no_option', ['empresa' => $empresa]);
-                break;
-            case User::IsArticulador():
-                return view('empresa.show_no_option', ['empresa' => $empresa]);
-                break;
-            case User::IsInfocenter():
-                return view('empresa.show_no_option', ['empresa' => $empresa]);
-                break;
-            default:
-                return abort('403');
-                break;
-        }
+        return view('empresa.show', ['empresa' => $empresa]);
+        // switch (Session::get('login_role')) {
+        //     case User::IsTalento():
+        //         break;
+        //     case User::IsActivador():
+        //         return view('empresa.administrador.show', ['empresa' => $empresa]);
+        //         break;
+        //     case User::IsDinamizador():
+        //         return view('empresa.show_no_option', ['empresa' => $empresa]);
+        //         break;
+        //     case User::IsGestor():
+        //         return view('empresa.show_no_option', ['empresa' => $empresa]);
+        //         break;
+        //     case User::IsArticulador():
+        //         return view('empresa.show_no_option', ['empresa' => $empresa]);
+        //         break;
+        //     case User::IsInfocenter():
+        //         return view('empresa.show_no_option', ['empresa' => $empresa]);
+        //         break;
+        //     default:
+        //         return abort('403');
+        //         break;
+        // }
     }
 
     public function search_empresa(Request $request)

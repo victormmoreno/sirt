@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'Materiales ')
+@section('meta-title', 'Materiales')
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
@@ -33,7 +33,6 @@
                 			<div class="divider"></div>
                 			<br/>
                             @if( $lineastecnologicas->count() == 0)
-
                                 <div class="center-align">
                                     <i class="large material-icons prefix">
                                         block
@@ -58,3 +57,12 @@
     </div>
 </main>
 @endsection
+@push('script')
+<script>
+    $(document).ready(function() {
+        @if($errors->any() && session()->get('login_role') == App\User::IsAdministrador())
+            consultarLineasNodo({{old('txtnodo_id')}});
+        @endif
+    });
+</script>
+@endpush

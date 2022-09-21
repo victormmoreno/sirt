@@ -112,20 +112,20 @@ class GrupoInvestigacionController extends Controller
   */
   public function index()
   {
-    switch (\Session::get('login_role')) {
-      case User::IsGestor():
-      return view('gruposdeinvestigacion.gestor.index');
-      break;
-      case User::IsDinamizador():
-      return view('gruposdeinvestigacion.dinamizador.index');
-      break;
-      case User::IsActivador():
-      return view('gruposdeinvestigacion.administrador.index');
-      break;
-      default:
+    return view('gruposdeinvestigacion.index');
+    // switch (\Session::get('login_role')) {
+    //   case User::IsGestor():
+    //   break;
+    //   case User::IsDinamizador():
+    //   return view('gruposdeinvestigacion.dinamizador.index');
+    //   break;
+    //   case User::IsActivador():
+    //   return view('gruposdeinvestigacion.administrador.index');
+    //   break;
+    //   default:
 
-      break;
-    }
+    //   break;
+    // }
   }
 
   // Ajax que muestra la información de un grupo de investigación
@@ -186,12 +186,10 @@ class GrupoInvestigacionController extends Controller
   */
   public function create()
   {
-    if (\Session::get('login_role') == User::IsGestor()) {
-      return view('gruposdeinvestigacion.gestor.create', [
-        'clasificaciones' => ClasificacionColciencias::all(),
-        'departamentos' => Departamento::AllDepartamentos()->get(),
-      ]);
-    }
+    return view('gruposdeinvestigacion.create', [
+      'clasificaciones' => ClasificacionColciencias::all(),
+      'departamentos' => Departamento::AllDepartamentos()->get(),
+    ]);
   }
 
   /**
@@ -214,17 +212,6 @@ class GrupoInvestigacionController extends Controller
   }
 
   /**
-  * Display the specified resource.
-  *
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function show($id)
-  {
-    //
-  }
-
-  /**
   * Show the form for editing the specified resource.
   *
   * @param  int  $id
@@ -232,13 +219,11 @@ class GrupoInvestigacionController extends Controller
   */
   public function edit($id)
   {
-    if (\Session::get('login_role') == User::IsGestor()) {
-      return view('gruposdeinvestigacion.gestor.edit', [
-        'clasificaciones' => ClasificacionColciencias::all(),
-        'departamentos' => Departamento::AllDepartamentos()->get(),
-        'grupo' => GrupoInvestigacion::findOrFail($id),
-      ]);
-    }
+    return view('gruposdeinvestigacion.edit', [
+      'clasificaciones' => ClasificacionColciencias::all(),
+      'departamentos' => Departamento::AllDepartamentos()->get(),
+      'grupo' => GrupoInvestigacion::findOrFail($id),
+    ]);
   }
 
   /**

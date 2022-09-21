@@ -52,7 +52,6 @@
 <script>
   $(document).ready(function() {
     @if($errors->any())
-    console.log('error');
     EmpresaCreate.getCiudad();
     @endif
   });

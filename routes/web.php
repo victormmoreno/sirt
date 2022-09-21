@@ -383,7 +383,9 @@ Route::group(
     }
 );
 
-//-------------------Route group para el módulo de Comité
+//-------------------Route group para el módulo de empresas
+Route::get('/empresas/filter-code/{value}', 'EmpresaController@filterByCode')->name('empresa.filterbycode');
+Route::get('/empresas/sede/{id}', 'EmpresaController@filterSede')->name('empresa.sede.filter');
 Route::group(
     [
         'prefix'     => 'empresa',
@@ -862,9 +864,6 @@ Route::group([
 
 //-----------------------Fin ruta sección noticias-----------------------------------
 Route::get('usuarios/filtro-talento/{documento}', 'ArticulacionPbtController@filterTalento')->name('articulacion.usuario.talento.search');
-
-Route::get('empresas/filter-code/{value}', 'EmpresaController@filterByCode')->name('empresa.filterbycode');
-Route::get('empresas/sede/{id}', 'EmpresaController@filterSede')->name('empresa.sede.filter');
 
 Route::get('articulaciones/export', 'ArticulacionPbtController@export')->name('articulacion.export')->middleware('role_session:Activador|Articulador|Dinamizador');
 Route::get('articulaciones/download/inicio/{id}', 'PDF\PdfArticulacionPbtController@downloadFormInicio')->name('pdf.articulacion.inicio')->middleware('role_session:Articulador');

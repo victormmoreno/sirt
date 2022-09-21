@@ -1,5 +1,4 @@
 <div class="col s12 m10 l10 offset-l1 offset-m1">
-
     {!! csrf_field() !!}
     @if ($errors->any())
     <div class="card red lighten-3">
@@ -23,8 +22,10 @@
     @endif
 
 	@can('showInputsForAdmin', App\Models\Material::class)
-		@include('materiales.form_components.nodo')
-	@endcan
+        @include('materiales.form_components.nodo')
+    @elsecan('showInputsForDinamizador', App\Models\Material::class)
+        @include('materiales.form_components.linea')
+    @endcan
 	@include('materiales.form_components.general')
 	<div class="divider"></div>
 	<center>

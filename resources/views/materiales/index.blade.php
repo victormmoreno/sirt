@@ -42,8 +42,6 @@
                         <div class="row">
                             @can('showFiltersForAdmins', App\Models\Material::class)
                                 @include('materiales.filtros.admins')
-                            @elsecan('showFiltersForPersonalNodo', App\Models\Material::class)
-                                @include('materiales.filtros.personal_nodo')
                             @endcan
                             <br>
                             <table class="display responsive-table" id="materiales_table"  style="width: 100%">
@@ -75,3 +73,10 @@
     </div>
 </main>
 @endsection
+@push('script')
+    <script>
+        @if(session()->get('login_role') != App\User::IsAdministrador() && session()->get('login_role') != App\User::IsActivador())
+            selectMaterialesPorNodo.selectMaterialesForNodo();
+        @endif
+    </script>
+@endpush

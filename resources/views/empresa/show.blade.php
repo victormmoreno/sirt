@@ -19,7 +19,10 @@
               </center>
               <div class="divider"></div>
               <div class="row">
-                <div class="col s12 m12 l12">
+                @can('showOptions', $empresa)
+                    @include('empresa.componentes.options')
+                @endcan
+                <div class="col s12 {{auth()->user()->can('showOptions', $empresa) ? 'm8 m8' : 'm12 l12'}}">
                   @include('empresa.detalle')
                   <center>
                     <a href="{{route('empresa')}}" class="waves-effect red lighten-2 btn center-aling">

@@ -14,6 +14,7 @@ use App\Models\UsoInfraestructura;
 use App\Models\ArticulacionPbt;
 use App\Models\CharlaInformativa;
 use App\Models\Proyecto;
+use App\Models\GrupoInvestigacion;
 use App\Policies\CostoAdministrativo\CostoAdministrativoPolicy;
 use App\Policies\Empresa\EmpresaPolicy;
 use App\Policies\Equipo\EquipoPolicy;
@@ -27,6 +28,7 @@ use App\Policies\Idea\IdeaPolicy;
 use App\Policies\ProyectoPolicy;
 use App\Policies\CharlaInformativaPolicy;
 use App\Policies\IndicadorPolicy;
+use App\Policies\GrupoPolicy;
 use App\Policies\ArticulacionPbt\ArticulacionPbtPolicy;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
@@ -55,6 +57,7 @@ class AuthServiceProvider extends ServiceProvider
         Proyecto::class => ProyectoPolicy::class,
         CharlaInformativa::class => CharlaInformativaPolicy::class,
         Model::class => IndicadorPolicy::class,
+        GrupoInvestigacion::class => GrupoPolicy::class,
     ];
 
     /**

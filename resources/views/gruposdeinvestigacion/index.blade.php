@@ -14,21 +14,16 @@
             <div class="row">
               <div class="col s12 m12 l12">
                 <div class="row">
-                  <div class="col s12 m10 l10">
+                  <div class="col s12 m8 l8">
                     <div class="center-align">
                       <span class="card-title center-align">Grupos de Investigación de Tecnoparque</span>
                     </div>
                   </div>
-                  <div class="col s12 m2 l2">
-                    <a href="{{ route('grupo.create') }}">
-                      <div class="card green">
-                        <div class="card-content center">
-                          <i class="left valign-wrap material-icons white-text">add</i>
-                          <span class="white-text">Nuevo Grupo de Investigación</span>
-                        </div>
-                      </div>
-                    </a>
-                  </div>
+                  @can('create', App\Models\GrupoInvestigacion::class)
+                    <div class="col s12 m4 l4 right">
+                        <a  href="{{route('grupo.create')}}" class="waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo grupo de investigación</a>
+                    </div>
+                  @endcan
                 </div>
                 <div class="divider"></div>
                 <table style="width: 100%" id="grupoDeInvestigacionTecnoparque_table" class="display responsive-table datatable-example dataTable">
@@ -41,7 +36,6 @@
                       <th>Institución</th>
                       <th>Clasificación de Colciencias</th>
                       <th>Detalles</th>
-                      <th>Contactos</th>
                       <th>Editar</th>
                     </tr>
                   </thead>
@@ -68,7 +62,7 @@
   </div>
 </div>
 @endsection
-@push('script')
+{{-- @push('script')
   <script>
   var cont = 1;
   $(document).on('submit', 'form#frmContactosEntidades', function (event) {
@@ -206,4 +200,4 @@
     $('#'+index).remove();
   }
 </script>
-@endpush
+@endpush --}}

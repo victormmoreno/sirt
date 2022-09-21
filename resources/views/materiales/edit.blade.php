@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'Materiales ')
+@section('meta-title', 'Materiales')
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
@@ -22,8 +22,6 @@
                     </div>
                 </div>
           		<div class="card">
-                
-                    
             		<div class="card-content">
               			<div class="row">
 			                <center>
@@ -42,8 +40,6 @@
                                     <p>
                                         Para editar un nuevo material, Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }} debe tener lineas asociadas, por favor solicita al administrador de la plataforma para que este agregue nuevas lineas tecnológicas al nodo.
                                     </p>
-                                    
-                                    
                                 </div>
                             @else
                     			<form  action="{{route('material.update', $material->id)}}" method="POST" onsubmit="return checkSubmit()">
@@ -55,7 +51,6 @@
                             @endif
               			</div>
             		</div>
-                    
           		</div>
         	</div>
       	</div>

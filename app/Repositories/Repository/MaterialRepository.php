@@ -41,6 +41,7 @@ class MaterialRepository
 
         DB::beginTransaction();
 
+        // dd($this->findLineaBySession($request));
         Material::create([
             'nodo_id'               => $this->findNodoBySession(),
             'lineatecnologica_id'   => $this->findLineaBySession($request),
@@ -97,8 +98,9 @@ class MaterialRepository
             ]);
             DB::commit();
             return true;
-        } catch (Exception $e) {
+        } catch (Exception $ex) {
             DB::rollback();
+            throw $ex;
             return false;
         }
     }
@@ -107,9 +109,7 @@ class MaterialRepository
     {
         $anho = Carbon::now()->isoFormat('YYYY');
 
-        $nodoAuth = session()->has('login_role') && session()->get('login_role') == User::IsGestor() ? auth()->user()->gestor->nodo->id : auth()->user()->dinamizador->nodo->id;
-
-        $nodo = Nodo::find($nodoAuth);
+        $nodo = Nodo::find($this->findNodoBySession());
 
         $lineaAuth = session()->has('login_role') && session()->get('login_role') == User::IsGestor() ? auth()->user()->gestor->lineatecnologica_id : $request->input('txtlineatecnologica');
 
@@ -134,7 +134,9 @@ class MaterialRepository
         if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
             return auth()->user()->dinamizador->nodo_id;
         }elseif(session()->has('login_role') && session()->get('login_role') == User::IsGestor()){
-            return auth()->user()->gestor->nodo_id ;
+            return auth()->user()->gestor->nodo_id;
+        } else {
+            return request()->txtnodo_id;
         }
         
 
@@ -149,9 +151,7 @@ class MaterialRepository
     private function findLineaBySession($request)
     {
 
-        $nodoAuth = session()->has('login_role') && session()->get('login_role') == User::IsGestor() ? auth()->user()->gestor->nodo->id : auth()->user()->dinamizador->nodo->id;
-
-        $nodo = Nodo::find($nodoAuth);
+        $nodo = Nodo::find($this->findNodoBySession());
 
         $lineaAuth = session()->has('login_role') && session()->get('login_role') == User::IsGestor() ? auth()->user()->gestor->lineatecnologica_id : $request->input('txtlineatecnologica');
 
