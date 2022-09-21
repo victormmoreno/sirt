@@ -23,7 +23,6 @@ function verHorasDeExpertosEnProyecto(id) {
       $("#horasAsesoriasExpertosPorProyeto_titulo").empty();
       $("#horasAsesoriasExpertosPorProyeto_titulo").append("<span class='cyan-text text-darken-3'>Horas de los experto en el proyecto</span>");
       $.each(respuesta.horas, function (i, item) {
-        // console.log(item.experto);
         $("#horasAsesoriasExpertosPorProyeto_table").append(
           '<tr>'
           +'<td>'+item.experto+'</td>'

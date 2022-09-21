@@ -74,16 +74,15 @@
                                             <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_articulationStage"><i class="material-icons">search</i>{{__('Filter')}}</button>
                                         </div>
                                     </div>
-                                <table id="articulationStage_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
-                                    <thead>
+                                <table id="articulationStage_data_table" class="highlight  responsive-table datatable-example dataTable" style="width: 100%">
+                                        <thead class="orange accent-2 border-bottom-0 border-dark">
                                         <tr>
                                             <th>{{__('Node')}}</th>
                                             <th>{{__('Name articulation-stage')}}</th>
-                                            <th>Tipo etapa articulación</th>
-                                            <th>{{__('Count Articulations')}}</th>
-                                            <th>{{__('Status')}}</th>
-                                            <th>{{__('Created_at')}}</th>
-                                            <th>{{__('Created_by')}}</th>
+                                            <th>{{__('Name articulation')}}</th>
+                                            <th>{{__('Description')}}</th>
+                                            <th>{{__('Status')}} / {{__('Phase')}}</th>
+                                            <th>{{__('Start Date')}}</th>
                                             <th>{{__('Process')}}</th>
                                         </tr>
                                     </thead>

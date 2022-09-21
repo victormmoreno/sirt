@@ -98,7 +98,7 @@ $(document).ready(function() {
             data: 'detail',
             name: 'detail',
             orderable: false
-        },  
+        },
         ],
     });
 });
@@ -121,7 +121,7 @@ $(document).ready(function() {
 // };
 
 // function eliminarNodoId_moment(id) {
-    
+
 //     $.ajax({
 //         dataType: "JSON",
 //         type: 'POST',
@@ -131,7 +131,6 @@ $(document).ready(function() {
 //             "id": id
 //         },
 //         success: function(data) {
-//             console.log(data);
 //             // if (data.retorno) {
 //             //     Swal.fire('Eliminación Exitosa!', 'El proyecto se ha eliminado completamente!', 'success');
 //             //     location.href = '/nodo';
@@ -144,6 +143,7 @@ $(document).ready(function() {
 //         },
 //     });
 // }
+
 function detallesIdeasDelEntrenamiento(id){
   $.ajax({
      dataType:'json',
@@ -797,6 +797,7 @@ function consultarIdeasEnviadasAlNodo () {
     });
 }
 $(document).ready(function() {
+
     let filter_node_articulationStage = $('#filter_node_articulationStage').val();
     let filter_year_articulationStage = $('#filter_year_articulationStage').val();
     let filter_status_articulationStage = $('#filter_status_articulationStage').val();
@@ -850,14 +851,36 @@ $('#download_articulationStage').click(function(){
 
 const articulationStage ={
     filtersDatatableAccompanibles: function(filter_node_articulationStage,filter_year_articulationStage, filter_status_articulationStage){
-        $('#articulationStage_data_table').DataTable({
+        let groupColumn = 1;
+        let table = $('#articulationStage_data_table').DataTable({
             language: {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                "decimal": "",
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar Entradas _MENU_",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
             },
-            "lengthChange": false,
+            lengthMenu: [
+                [5, 10, 25,50, 100, -1],
+                [5, 10,25, 50, 100, 'Todos'],
+            ],
             processing: false,
             serverSide: false,
             "order": [[ 5, "desc" ]],
+            "pageLength": 10,
             ajax:{
                 url: "/articulaciones/datatable_filtros",
                 type: "get",
@@ -873,27 +896,23 @@ const articulationStage ={
                     name: 'node',
                 },
                 {
-                    data: 'name',
-                    name: 'name',
+                    data: 'articulationstate_name',
+                    name: 'articulationstate_name',
+                },
+                {
+                    data: 'articulation_name',
+                    name: 'articulation_name',
                 },{
-                    data: 'articulation_state_type',
-                    name: 'articulation_state_type',
+                    data: 'description',
+                    name: 'description',
                 },
                 {
-                    data: 'count_articulations',
-                    name: 'count_articulations',
-                },
-                {
-                    data: 'status',
-                    name: 'status',
+                    data: 'phase',
+                    name: 'phase',
                 },
                 {
                     data: 'starDate',
                     name: 'starDate',
-                },
-                {
-                    data: 'articulationStageBy',
-                    name: 'articulationStageBy',
                 },
                 {
                     data: 'show',
@@ -901,7 +920,37 @@ const articulationStage ={
                     orderable: false
                 },
             ],
+            columnDefs: [{ visible: false, targets: groupColumn }],
+            order: [[groupColumn, 'asc']],
+            displayLength: 25,
+            drawCallback: function (settings) {
+                  var api = this.api();
+                 var rows = api.rows({ page: 'current' }).nodes();
+                 var last = null;
+                console.log(api.data());
+                 api
+                     .column(groupColumn, { page: 'current' })
+                     .data()
+                     .each(function (group, i) {
+                         if (last !== group) {
+                             $(rows)
+                                 .eq(i)
+                                 .before(`${group}`);
+
+                          last = group;
+                     }
+                     });
+            },
         });
+        // Order by the grouping
+        $('#articulationStage_data_table tbody').on('click', 'tr.group', function () {
+             var currentOrder = table.order()[0];
+             if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
+                 table.order([groupColumn, 'desc']).draw();
+             } else {
+                 table.order([groupColumn, 'asc']).draw();
+             }
+         });
     },
     fill_code_project:function(filter_code_project = null){
         articulationStage.emptyResult('result-projects');
@@ -1285,40 +1334,8 @@ $(document).ready(function() {
                 targets: ['_all'],
                 className: 'mdc-data-table__cell',
             },
-        ],
-        // columnDefs: [{ visible: false, targets: groupColumn }],
-        // order: [[groupColumn, 'asc']],
-        // displayLength: 25,
-        // drawCallback: function (settings) {
-        //     var api = this.api();
-        //     var rows = api.rows({ page: 'current' }).nodes();
-        //     var last = null;
-
-        //     api
-        //         .column(groupColumn, { page: 'current' })
-        //         .data()
-        //         .each(function (group, i) {
-        //             if (last !== group) {
-        //                 $(rows)
-        //                     .eq(i)
-        //                     .before('<tr class="group teal lighten-2"><td colspan="6">' + group + '</td><td><button class="waves-effect waves-light btn-large">Hola mundo</button></td></tr>');
-
-        //                 last = group;
-        //             }
-        //         });
-        // },
-
+        ]
     });
-
-    // Order by the grouping
-    // $('#articulation_data_table tbody').on('click', 'tr.group', function () {
-    //     var currentOrder = table.order()[0];
-    //     if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
-    //         table.order([groupColumn, 'desc']).draw();
-    //     } else {
-    //         table.order([groupColumn, 'asc']).draw();
-    //     }
-    // });
 });
 
 $( document ).ready(function() {
@@ -2208,7 +2225,6 @@ function cambiarEstadoDeIdeasDeProyectoDeEntrenamiento(idea, estado) {
     type:'get',
     url: host_url + "/entrenamientos/inhabilitarEntrenamiento/"+idea+"/"+estado,
     success: function (data) {
-      console.log(data);
       if (data.update == "true") {
         Swal.fire({
           title: 'El entrenamiento se ha inhabilitado!',
@@ -2220,7 +2236,6 @@ function cambiarEstadoDeIdeasDeProyectoDeEntrenamiento(idea, estado) {
         })
       }
       if (data.update == "1") {
-        // console.log('No se cambió');
         Swal.fire({
           title: 'No se puede inhabilitar el entrenamiento!',
           html: 'Al parecer, las siguientes ideas de proyecto se encuentran registradas en un comité: </br> <b> ' + data.ideas + '</b></br>' +
@@ -2629,7 +2644,6 @@ csibt = {
       type:'get',
       url: host_url + "/csibt/"+id,
     }).done(function(respuesta){
-      console.log(respuesta);
       $("#ideasProyectoDeUnComite").empty();
       if (respuesta != null ) {
         $("#fechaComiteModal").empty();
@@ -2736,7 +2750,7 @@ csibt = {
       }
     });
   }
-    
+
 }
 
 function addIdeaComite() {
@@ -5174,7 +5188,6 @@ function verHorasDeExpertosEnProyecto(id) {
       $("#horasAsesoriasExpertosPorProyeto_titulo").empty();
       $("#horasAsesoriasExpertosPorProyeto_titulo").append("<span class='cyan-text text-darken-3'>Horas de los experto en el proyecto</span>");
       $.each(respuesta.horas, function (i, item) {
-        // console.log(item.experto);
         $("#horasAsesoriasExpertosPorProyeto_table").append(
           '<tr>'
           +'<td>'+item.experto+'</td>'
@@ -6331,7 +6344,7 @@ function addValueToFields(nombre, codigo, value){
 // Asocia una idea de proyecto al registro de un proyecto
 function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
     $('#txtidea_id').val(id);
-    
+
     $.ajax({
         dataType: 'json',
         type: 'get',
@@ -6339,9 +6352,8 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
     }).done(function (response) {
         let value = response.data.idea;
         if(idea =! null){
-            console.log(response);
             dumpAggregateValuesIntoTables();
-            
+
             addValueToFields(nombre, codigo, value);
             ideaProyectoAsociadaConExito(codigo, nombre);
 
@@ -6355,11 +6367,11 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
             }
             $('#ideasDeProyectoConEmprendedores_modal').closeModal();
         }
-        
+
     }).fail(function( jqXHR, textStatus, errorThrown ) {
         errorAjax(jqXHR, textStatus, errorThrown);
     });
-    
+
 }
 
 // Consultas las ideas de proyecto que fueron aprobadas en el comité
@@ -6736,7 +6748,6 @@ $(document).ready(function() {
 
 // Ajax que muestra los proyectos de un gestor por año
 function consultarEdtsDeUnGestor(id) {
-  // console.log('event');
   let anho = $('#txtanho_edts_Gestor').val();
   // let gestor = $('#txtgestor_id').val();
   $('#edtPorGestor_table').dataTable().fnDestroy();
@@ -9360,7 +9371,6 @@ function consultarEdtsPorLineaYFecha_stacked(bandera) {
         type: 'get',
         url: host_url + '/grafico/consultarEdtsPorLineaYFecha/'+id+'/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
         success: function (data) {
-          // console.log(data);
           Highcharts.chart(graficosEdtId.grafico3, {
             chart: {
               type: 'column'
@@ -9418,7 +9428,6 @@ function consultarEdtsPorGestorYFecha_stacked(bandera) {
         type: 'get',
         url: host_url + '/grafico/consultarEdtsPorGestorYFecha/'+id+'/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
         success: function (data) {
-          // console.log(data);
           Highcharts.chart(graficosEdtId.grafico2, {
             chart: {
               type: 'column'
@@ -9615,16 +9624,13 @@ function articulacionesGrafico1Ajax(id, fecha_inicio, fecha_fin) {
     url: host_url + '/grafico/consultarArticulacionesPorNodo/'+id+'/'+fecha_inicio+'/'+fecha_fin,
     success: function (data) {
       var tamanho = data.consulta.length;
-      // console.log(tamanho);
       var datos = {
         gestores: [],
         gruposArray: [],
         empresasArray: [],
         emprendedoresArray: []
       };
-      // console.log(data.tipos);
       for (var i = 0; i < tamanho; i++) {
-        // console.log(data.consulta[i].gestor);
         if (data.consulta[i].gestor != null) {
           datos.gestores.push(data.consulta[i].gestor);
         }
@@ -9723,7 +9729,6 @@ function consultarArticulacionesDeUnGestorPorFecha_stacked() {
         type: 'get',
         url: host_url + '/grafico/consultarArticulacionesPorGestorYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
         success: function (data) {
-          // console.log(data);
           Highcharts.chart(graficosId.grafico2, {
             chart: {
               type: 'column'
@@ -9907,7 +9912,6 @@ function consultarProyectosInscritosPorMes(gestor_id) {
       type: 'get',
       url: host_url + '/seguimiento/seguimientoInscritosPorMesExperto/'+gestor_id,
       success: function (data) {
-        console.log(data.datos.meses);
         graficoSeguimientoPorMes(data, graficosSeguimiento.inscritos_mes);
       },
       error: function (xhr, textStatus, errorThrown) {
@@ -9963,7 +9967,7 @@ function consultarSeguimientoActualDeUnGestor(gestor_id) {
 };
 
 function consultarSeguimientoEsperadoDeTecnoparque() {
-  
+
   $.ajax({
     dataType: 'json',
     type: 'get',
@@ -10089,20 +10093,20 @@ function graficoSeguimientoPorMes(data, name) {
         text: 'Cantidad de proyectos'
       }
     },
-  
+
     xAxis: {
       categories: data.datos.meses,
       accessibility: {
         rangeDescription: 'Mes'
       }
     },
-  
+
     legend: {
       layout: 'vertical',
       align: 'right',
       verticalAlign: 'middle'
     },
-  
+
     // plotOptions: {
     //   series: {
     //     label: {
@@ -10111,12 +10115,12 @@ function graficoSeguimientoPorMes(data, name) {
     //     pointStart: 2010
     //   }
     // },
-  
+
     series: [{
       name: 'Proyectos inscritos',
       data: data.datos.cantidades
     }],
-  
+
     responsive: {
       rules: [{
         condition: {
@@ -10294,7 +10298,6 @@ function consultarCostoDeUnaActividad() {
         url: host_url + '/costos/proyecto/'+id,
         success: function (data) {
             let chart = '_actividad';
-            console.log(data);
             setValueInput(data, chart);
             $('#txtgestor' + chart).val(data.gestorActividad);
             $("label[for='txtgestor"+chart+"']").addClass("active", true);

@@ -78,7 +78,6 @@
     // form.attr("action");
     var data = new FormData($(this)[0]);
     var url = form.attr("action");
-    // console.log(data);
     ajaxEditContactosDeGrupo(form, url, data);
 
   });
@@ -195,9 +194,7 @@
         );
         cont++;
       });
-      // console.log(response.route);
       $('#frmContactosEntidades').attr('action', response.route);
-      // form.attr("action", response.ruta);
       $('#contactosDeUnaEntidad_modal').openModal();
     })
   }

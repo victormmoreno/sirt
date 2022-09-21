@@ -468,10 +468,8 @@ $(document).ready(function() {
     $(window).scroll(function() {
 
         var altoseccionnodos = $("#Nodos").offset().top;
-        console.log(altoseccionnodos);
 
         var posicionhtml = $(window).scrollTop();
-        console.log(posicionhtml);
 
         if (posicionhtml >= altoseccionnodos) {
             $(".TEX-NODOS").animate({
@@ -522,7 +520,6 @@ $(document).ready(function() {
 
         var paginationPosition = $(this).index() + 1; // Conseguir el numero en el que esta la img o elementos
         // al que se le ha dado click (".paginacion li" para este caso)
-        //console.log(paginationPosition)
 
         $(".slider-escritorio li").hide(); //Ocultar Imgs o Elementos
 
@@ -547,8 +544,6 @@ $(document).ready(function() {
             imgPos++;
         }
 
-        //console.log(imgPos)
-
         $(".slider-escritorio li").hide(); //Ocultar Imgs o Elementos
 
         $(".slider-escritorio li:nth-child(" + imgPos + ")").fadeIn("slow"); // Mostrar el elemento correspondiente
@@ -564,19 +559,12 @@ $(document).ready(function() {
     /* == Aparecer titulo ==*/
 
     $(window).scroll(function() {
-
         var altoseccionvideo = $("#video").offset().top;
-        console.log(altoseccionvideo);
-
-
         var posicionhtml = $(window).scrollTop();
-        console.log(posicionhtml);
-
         if (posicionhtml >= altoseccionvideo - 100) {
             $("#titulo-seccion-video").slideDown("slow")
         }
-
-    })
+    });
 
     /* == Slider-cel ==*/
 
@@ -616,7 +604,6 @@ $(document).ready(function() {
 
         var paginationPositioncel = $(this).index() + 1; // Conseguir el numero en el que esta la img o elementos
         // al que se le ha dado click (".paginacion li" para este caso)
-        //console.log(paginationPosition)
 
         $(".slider-cel li").hide(); //Ocultar Imgs o Elementos
 
@@ -640,8 +627,6 @@ $(document).ready(function() {
         } else {
             imgPoscel++;
         }
-
-        //console.log(imgPos)
 
         $(".slider-cel li").hide(); //Ocultar Imgs o Elementos
 
@@ -691,7 +676,6 @@ $(document).ready(function() {
 
         var paginationPositiontab = $(this).index() + 1; // Conseguir el numero en el que esta la img o elementos
         // al que se le ha dado click (".paginacion li" para este caso)
-        //console.log(paginationPosition)
 
         $(".slider-tab li").hide(); //Ocultar Imgs o Elementos
 
@@ -716,8 +700,6 @@ $(document).ready(function() {
             imgPostab++;
         }
 
-        //console.log(imgPos)
-
         $(".slider-tab li").hide(); //Ocultar Imgs o Elementos
 
         $(".slider-tab li:nth-child(" + imgPostab + ")").fadeIn("slow"); // Mostrar el elemento correspondiente
@@ -735,11 +717,8 @@ $(document).ready(function() {
     $(window).scroll(function() {
 
         var altoseccionvideo = $("#video").offset().top;
-        console.log(altoseccionvideo);
-
 
         var posicionhtml = $(window).scrollTop();
-        console.log(posicionhtml);
 
         if (posicionhtml >= altoseccionvideo - 100) {
             $("#titulo-seccion-video").slideDown("slow")
@@ -754,7 +733,6 @@ $(document).ready(function() {
     $(window).scroll(function() {
 
         var posicionhtml = $(window).scrollTop();
-        console.log(posicionhtml);
 
         if (posicionhtml >= 200) {
 
@@ -865,9 +843,6 @@ $(document).ready(function() {
     /* == Mostrar nodos de antioquia ==*/
 
     $("#titulo-regional-antioquia").click(function() {
-
-            //console.log(iantioquia)
-
             if (iantioquia == 1) {
                 $("#nodo-medellin").slideDown("slow");
                 $("#nodo-rionegro").slideDown("slow");
@@ -887,8 +862,6 @@ $(document).ready(function() {
 
     $("#titulo-regional-atlantico").click(function() {
 
-        //console.log(iatlantico)
-
         if (iatlantico == 1) {
             $("#nodo-proximamente").slideDown("slow");
             iatlantico++
@@ -902,8 +875,6 @@ $(document).ready(function() {
     /* == Mostrar nodos de caldas ==*/
 
     $("#titulo-regional-caldas").click(function() {
-
-        //console.log(icaldas)
 
         if (icaldas == 1) {
             $("#nodo-manizales").slideDown("slow");
@@ -920,9 +891,6 @@ $(document).ready(function() {
     /* == Mostrar nodos de cauca ==*/
 
     $("#titulo-regional-cauca").click(function() {
-
-        //console.log(icauca)
-
         if (icauca == 1) {
             $("#nodo-popayan").slideDown("slow");
             icauca++
@@ -938,9 +906,6 @@ $(document).ready(function() {
     /* == Mostrar nodos de cesar ==*/
 
     $("#titulo-regional-cesar").click(function() {
-
-        //console.log(icesar)
-
         if (icesar == 1) {
             $("#nodo-valledupar").slideDown("slow");
             icesar++
@@ -956,8 +921,6 @@ $(document).ready(function() {
     /* == Mostrar nodos de cundinamarca ==*/
 
     $("#titulo-regional-cundinamarca").click(function() {
-
-        //console.log(icundinamarca)
 
         if (icundinamarca == 1) {
             $("#nodo-bogota").slideDown("slow");
@@ -978,8 +941,6 @@ $(document).ready(function() {
     /* == Mostrar nodos de huila ==*/
 
     $("#titulo-regional-huila").click(function() {
-
-        //console.log(ihuila)
 
         if (ihuila == 1) {
             $("#nodo-angostura").slideDown("slow");
@@ -1005,8 +966,6 @@ $(document).ready(function() {
 
     $("#titulo-regional-norte-de-santander").click(function() {
 
-        //console.log(inortesantander)
-
         if (inortesantander == 1) {
             $("#nodo-cucuta").slideDown("slow");
             $("#nodo-ocaña").slideDown("slow");
@@ -1027,8 +986,6 @@ $(document).ready(function() {
 
     $("#titulo-regional-risaralda").click(function() {
 
-        //console.log(irisaralda)
-
         if (irisaralda == 1) {
             $("#nodo-pereira").slideDown("slow");
             irisaralda++
@@ -1044,9 +1001,6 @@ $(document).ready(function() {
     /* == Mostrar nodos de santander ==*/
 
     $("#titulo-regional-santander").click(function() {
-
-        //console.log(isantander)
-
         if (isantander == 1) {
             $("#nodo-bucaramanga").slideDown("slow");
             $("#nodo-socorro").slideDown("slow");
@@ -1067,8 +1021,6 @@ $(document).ready(function() {
 
     $("#titulo-regional-tolima").click(function() {
 
-        //console.log(itolima)
-
         if (itolima == 1) {
             $("#nodo-granja").slideDown("slow");
             itolima++
@@ -1084,8 +1036,6 @@ $(document).ready(function() {
     /* == Mostrar nodos de valle del cauca ==*/
 
     $("#titulo-regional-valle-del-cauca").click(function() {
-
-        //console.log(ivalledelcauca)
 
         if (ivalledelcauca == 1) {
             $("#nodo-cali").slideDown("slow");
@@ -1141,8 +1091,6 @@ $(document).ready(function() {
 
     $("#nodo-medellin").click(function() {
 
-        //console.log(inodomedellin)
-
         if (inodomedellin == 1) {
             $("#contenido-nodo-medellin").slideDown("slow");
             inodomedellin++
@@ -1156,8 +1104,6 @@ $(document).ready(function() {
     /* == Mostrar caracteristicas del nodo rionegro ==*/
 
     $("#nodo-rionegro").click(function() {
-
-        //console.log(inodorionegro)
 
         if (inodorionegro == 1) {
             $("#contenido-nodo-rionegro").slideDown("slow");
@@ -1173,8 +1119,6 @@ $(document).ready(function() {
 
     $("#nodo-manizales").click(function() {
 
-        //console.log(inodomanizales)
-
         if (inodomanizales == 1) {
             $("#contenido-nodo-manizales").slideDown("slow");
             inodomanizales++
@@ -1188,8 +1132,6 @@ $(document).ready(function() {
     /* == Mostrar caracteristicas del nodo popayan ==*/
 
     $("#nodo-popayan").click(function() {
-
-        //console.log(inodopopayan)
 
         if (inodopopayan == 1) {
             $("#contenido-nodo-popayan").slideDown("slow");
@@ -1205,8 +1147,6 @@ $(document).ready(function() {
 
     $("#nodo-valledupar").click(function() {
 
-        //console.log(inodovalledupar)
-
         if (inodovalledupar == 1) {
             $("#contenido-nodo-valledupar").slideDown("slow");
             inodovalledupar++
@@ -1220,8 +1160,6 @@ $(document).ready(function() {
     /* == Mostrar caracteristicas del nodo bogota ==*/
 
     $("#nodo-bogota").click(function() {
-
-        //console.log(inodobogota)
 
         if (inodobogota == 1) {
             $("#contenido-nodo-bogota").slideDown("slow");
@@ -1237,8 +1175,6 @@ $(document).ready(function() {
 
     $("#nodo-cazuca").click(function() {
 
-        //console.log(inodocazuca)
-
         if (inodocazuca == 1) {
             $("#contenido-nodo-cazuca").slideDown("slow");
             inodocazuca++
@@ -1252,8 +1188,6 @@ $(document).ready(function() {
     /* == Mostrar caracteristicas del nodo angostura ==*/
 
     $("#nodo-angostura").click(function() {
-
-        //console.log(inodoangostura)
 
         if (inodoangostura == 1) {
             $("#contenido-nodo-angostura").slideDown("slow");
@@ -1269,8 +1203,6 @@ $(document).ready(function() {
 
     $("#nodo-neiva").click(function() {
 
-        //console.log(inodoneiva)
-
         if (inodoneiva == 1) {
             $("#contenido-nodo-neiva").slideDown("slow");
             inodoneiva++
@@ -1284,8 +1216,6 @@ $(document).ready(function() {
     /* == Mostrar caracteristicas del nodo pitalito ==*/
 
     $("#nodo-pitalito").click(function() {
-
-        //console.log(inodopitalito)
 
         if (inodopitalito == 1) {
             $("#contenido-nodo-pitalito").slideDown("slow");
@@ -1301,8 +1231,6 @@ $(document).ready(function() {
 
     $("#nodo-cucuta").click(function() {
 
-        //console.log(inodocucuta)
-
         if (inodocucuta == 1) {
             $("#contenido-nodo-cucuta").slideDown("slow");
             inodocucuta++
@@ -1316,8 +1244,6 @@ $(document).ready(function() {
     /* == Mostrar caracteristicas del nodo ocaña ==*/
 
     $("#nodo-ocaña").click(function() {
-
-        //console.log(inodoocaña)
 
         if (inodoocaña == 1) {
             $("#contenido-nodo-ocaña").slideDown("slow");
@@ -1333,8 +1259,6 @@ $(document).ready(function() {
 
     $("#nodo-pereira").click(function() {
 
-        //console.log(inodopereira)
-
         if (inodopereira == 1) {
             $("#contenido-nodo-pereira").slideDown("slow");
             inodopereira++
@@ -1348,8 +1272,6 @@ $(document).ready(function() {
     /* == Mostrar caracteristicas del nodo bucaramanga ==*/
 
     $("#nodo-bucaramanga").click(function() {
-
-        //console.log(inodobucaramanga)
 
         if (inodobucaramanga == 1) {
             $("#contenido-nodo-bucaramanga").slideDown("slow");
@@ -1365,8 +1287,6 @@ $(document).ready(function() {
 
     $("#nodo-socorro").click(function() {
 
-        //console.log(inodosocorro)
-
         if (inodosocorro == 1) {
             $("#contenido-nodo-socorro").slideDown("slow");
             inodosocorro++
@@ -1380,9 +1300,6 @@ $(document).ready(function() {
     /* == Mostrar caracteristicas del nodo la granja ==*/
 
     $("#nodo-granja").click(function() {
-
-        //console.log(inodogranja)
-
         if (inodogranja == 1) {
             $("#contenido-nodo-granja").slideDown("slow");
             inodogranja++
@@ -1396,8 +1313,6 @@ $(document).ready(function() {
     /* == Mostrar caracteristicas del nodo cali ==*/
 
     $("#nodo-cali").click(function() {
-
-        //console.log(inodocali)
 
         if (inodocali == 1) {
             $("#contenido-nodo-cali").slideDown("slow");

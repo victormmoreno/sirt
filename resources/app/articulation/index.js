@@ -1,4 +1,5 @@
 $(document).ready(function() {
+
     let filter_node_articulationStage = $('#filter_node_articulationStage').val();
     let filter_year_articulationStage = $('#filter_year_articulationStage').val();
     let filter_status_articulationStage = $('#filter_status_articulationStage').val();
@@ -52,14 +53,36 @@ $('#download_articulationStage').click(function(){
 
 const articulationStage ={
     filtersDatatableAccompanibles: function(filter_node_articulationStage,filter_year_articulationStage, filter_status_articulationStage){
-        $('#articulationStage_data_table').DataTable({
+        let groupColumn = 1;
+        let table = $('#articulationStage_data_table').DataTable({
             language: {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                "decimal": "",
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar Entradas _MENU_",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
             },
-            "lengthChange": false,
+            lengthMenu: [
+                [5, 10, 25,50, 100, -1],
+                [5, 10,25, 50, 100, 'Todos'],
+            ],
             processing: false,
             serverSide: false,
             "order": [[ 5, "desc" ]],
+            "pageLength": 10,
             ajax:{
                 url: "/articulaciones/datatable_filtros",
                 type: "get",
@@ -75,27 +98,23 @@ const articulationStage ={
                     name: 'node',
                 },
                 {
-                    data: 'name',
-                    name: 'name',
+                    data: 'articulationstate_name',
+                    name: 'articulationstate_name',
+                },
+                {
+                    data: 'articulation_name',
+                    name: 'articulation_name',
                 },{
-                    data: 'articulation_state_type',
-                    name: 'articulation_state_type',
+                    data: 'description',
+                    name: 'description',
                 },
                 {
-                    data: 'count_articulations',
-                    name: 'count_articulations',
-                },
-                {
-                    data: 'status',
-                    name: 'status',
+                    data: 'phase',
+                    name: 'phase',
                 },
                 {
                     data: 'starDate',
                     name: 'starDate',
-                },
-                {
-                    data: 'articulationStageBy',
-                    name: 'articulationStageBy',
                 },
                 {
                     data: 'show',
@@ -103,7 +122,37 @@ const articulationStage ={
                     orderable: false
                 },
             ],
+            columnDefs: [{ visible: false, targets: groupColumn }],
+            order: [[groupColumn, 'asc']],
+            displayLength: 25,
+            drawCallback: function (settings) {
+                  var api = this.api();
+                 var rows = api.rows({ page: 'current' }).nodes();
+                 var last = null;
+                console.log(api.data());
+                 api
+                     .column(groupColumn, { page: 'current' })
+                     .data()
+                     .each(function (group, i) {
+                         if (last !== group) {
+                             $(rows)
+                                 .eq(i)
+                                 .before(`${group}`);
+
+                          last = group;
+                     }
+                     });
+            },
         });
+        // Order by the grouping
+        $('#articulationStage_data_table tbody').on('click', 'tr.group', function () {
+             var currentOrder = table.order()[0];
+             if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
+                 table.order([groupColumn, 'desc']).draw();
+             } else {
+                 table.order([groupColumn, 'asc']).draw();
+             }
+         });
     },
     fill_code_project:function(filter_code_project = null){
         articulationStage.emptyResult('result-projects');

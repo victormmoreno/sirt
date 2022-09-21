@@ -81,7 +81,6 @@ function consultarProyectosInscritosPorMes(gestor_id) {
       type: 'get',
       url: host_url + '/seguimiento/seguimientoInscritosPorMesExperto/'+gestor_id,
       success: function (data) {
-        console.log(data.datos.meses);
         graficoSeguimientoPorMes(data, graficosSeguimiento.inscritos_mes);
       },
       error: function (xhr, textStatus, errorThrown) {
@@ -137,7 +136,7 @@ function consultarSeguimientoActualDeUnGestor(gestor_id) {
 };
 
 function consultarSeguimientoEsperadoDeTecnoparque() {
-  
+
   $.ajax({
     dataType: 'json',
     type: 'get',
@@ -263,20 +262,20 @@ function graficoSeguimientoPorMes(data, name) {
         text: 'Cantidad de proyectos'
       }
     },
-  
+
     xAxis: {
       categories: data.datos.meses,
       accessibility: {
         rangeDescription: 'Mes'
       }
     },
-  
+
     legend: {
       layout: 'vertical',
       align: 'right',
       verticalAlign: 'middle'
     },
-  
+
     // plotOptions: {
     //   series: {
     //     label: {
@@ -285,12 +284,12 @@ function graficoSeguimientoPorMes(data, name) {
     //     pointStart: 2010
     //   }
     // },
-  
+
     series: [{
       name: 'Proyectos inscritos',
       data: data.datos.cantidades
     }],
-  
+
     responsive: {
       rules: [{
         condition: {

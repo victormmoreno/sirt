@@ -477,7 +477,7 @@ function addValueToFields(nombre, codigo, value){
 // Asocia una idea de proyecto al registro de un proyecto
 function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
     $('#txtidea_id').val(id);
-    
+
     $.ajax({
         dataType: 'json',
         type: 'get',
@@ -485,9 +485,8 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
     }).done(function (response) {
         let value = response.data.idea;
         if(idea =! null){
-            console.log(response);
             dumpAggregateValuesIntoTables();
-            
+
             addValueToFields(nombre, codigo, value);
             ideaProyectoAsociadaConExito(codigo, nombre);
 
@@ -501,11 +500,11 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
             }
             $('#ideasDeProyectoConEmprendedores_modal').closeModal();
         }
-        
+
     }).fail(function( jqXHR, textStatus, errorThrown ) {
         errorAjax(jqXHR, textStatus, errorThrown);
     });
-    
+
 }
 
 // Consultas las ideas de proyecto que fueron aprobadas en el comité

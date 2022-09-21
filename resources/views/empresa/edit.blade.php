@@ -53,11 +53,11 @@
                             <option>Seleccione el sector</option>
                             @foreach($sectores as $value)
                                 @if(isset($empresa->sector))
-                                    <option value="{{$value->id}}" {{old('txtsector_empresa',$empresa->sector->id) ==  $value->id ? 'selected':''}}>{{$value->nombre}}</option> 
+                                    <option value="{{$value->id}}" {{old('txtsector_empresa',$empresa->sector->id) ==  $value->id ? 'selected':''}}>{{$value->nombre}}</option>
                                 @else
-                                    <option value="{{$value->id}}" {{old('txtsector_empresa') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option> 
+                                    <option value="{{$value->id}}" {{old('txtsector_empresa') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option>
                                 @endif
-                            @endforeach                            
+                            @endforeach
                             </select>
                             <label for="txtsector_empresa">Sector de la Empresa <span class="red-text">*</span></label>
                             <small id="txtsector_empresa-error" class="error red-text"></small>
@@ -81,9 +81,9 @@
                             <option value="">Seleccione el departamento</option>
                             @foreach($departamentos as $value)
                                 @if(isset($empresa->entidad->ciudad->departamento))
-                                    <option value="{{$value->id}}" {{old('txtdepartamento_empresa',$empresa->entidad->ciudad->departamento->id) ==  $value->id ? 'selected':''}}>{{$value->nombre}}</option> 
+                                    <option value="{{$value->id}}" {{old('txtdepartamento_empresa',$empresa->entidad->ciudad->departamento->id) ==  $value->id ? 'selected':''}}>{{$value->nombre}}</option>
                                 @else
-                                    <option value="{{$value->id}}" {{old('txtdepartamento_empresa') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option> 
+                                    <option value="{{$value->id}}" {{old('txtdepartamento_empresa') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option>
                                 @endif
                             @endforeach
                         </select>
@@ -104,9 +104,9 @@
                             <option value="">Seleccione el tamaño de la empresa</option>
                             @foreach($tamanhos as $value)
                                 @if(isset($empresa->tamanhoempresa))
-                                    <option value="{{$value->id}}" {{old('txttamanhoempresa_id_empresa',$empresa->tamanhoempresa->id) ==  $value->id ? 'selected':''}}>{{$value->nombre}}</option> 
+                                    <option value="{{$value->id}}" {{old('txttamanhoempresa_id_empresa',$empresa->tamanhoempresa->id) ==  $value->id ? 'selected':''}}>{{$value->nombre}}</option>
                                 @else
-                                    <option value="{{$value->id}}" {{old('txttamanhoempresa_id_empresa') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option> 
+                                    <option value="{{$value->id}}" {{old('txttamanhoempresa_id_empresa') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option>
                                 @endif
                             @endforeach
                         </select>
@@ -118,9 +118,9 @@
                             <option value="">Seleccione el tipo de la empresa</option>
                             @foreach($tipos as $value)
                                 @if(isset($empresa->tipoempresa))
-                                    <option value="{{$value->id}}" {{old('txttipoempresa_id_empresa',$empresa->tipoempresa->id) ==  $value->id ? 'selected':''}}>{{$value->nombre}}</option> 
+                                    <option value="{{$value->id}}" {{old('txttipoempresa_id_empresa',$empresa->tipoempresa->id) ==  $value->id ? 'selected':''}}>{{$value->nombre}}</option>
                                 @else
-                                    <option value="{{$value->id}}" {{old('txttipoempresa_id_empresa') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option> 
+                                    <option value="{{$value->id}}" {{old('txttipoempresa_id_empresa') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option>
                                 @endif
                             @endforeach
                         </select>
@@ -164,8 +164,7 @@
             $('#txtciudad_id_empresa').empty();
             $('#txtciudad_id_empresa').append('<option value="">Seleccione la Ciudad</option>')
             $.each(response.ciudades, function(i, e) {
-            // console.log(e.id);
-            $('#txtciudad_id_empresa').append('<option  value="' + e.id + '">' + e.nombre + '</option>');
+                $('#txtciudad_id_empresa').append('<option  value="' + e.id + '">' + e.nombre + '</option>');
             })
             @if($errors->any())
             $('#txtciudad_id_empresa').val({{old('txtciudad_id_empresa')}});

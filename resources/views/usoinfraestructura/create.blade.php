@@ -668,7 +668,6 @@
                 type:'get',
                 url: host_url + '/usoinfraestructura/idea/'+id
             }).done(function(response){
-                console.log(response);
                 $('#txttalento').empty();
                 $('#txtequipo').empty();
                 $('#txtlinea').empty();

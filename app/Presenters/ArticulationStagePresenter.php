@@ -35,12 +35,16 @@ class ArticulationStagePresenter extends Presenter
 
     public function articulationStageBy()
     {
-        return isset($this->articulationStage->createdBy) ? $this->articulationStage->createdBy->present()->userFullName() : 'No registra';
+        return isset($this->articulationStage->createdBy) ? $this->articulationStage->createdBy->present()->userDocumento() . ' - '. $this->articulationStage->createdBy->present()->userFullName() : 'No registra';
     }
 
     public function articulationStageStatus()
     {
         return $this->articulationStage->status == ArticulationStage::STATUS_OPEN ? __('Open') : __('Close');
+    }
+    public function articulationStageStatusColor()
+    {
+        return $this->articulationStage->status == ArticulationStage::STATUS_OPEN ? 'green' : 'red';
     }
 
     public function articulationStageCreatedDate()
@@ -184,6 +188,14 @@ class ArticulationStagePresenter extends Presenter
                 return "{$item->code}";
             }
         })->implode(', ');
+    }
+
+    public function articulationStageCountArticulations()
+    {
+        if (isset($this->articulationStage)) {
+            return "{$this->articulationStage->articulations_count}";
+        }
+        return 0;
     }
 
     public function articulationStageNameConfidentialityFormat()

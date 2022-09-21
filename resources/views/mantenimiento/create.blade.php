@@ -38,7 +38,7 @@
                                     </i>
                                     <p>
                                         Para registrar un nuevo mantenimiento, Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }} debe tener lineas asociadas, por favor solicita al administrador de la plataforma para que este agregue nuevas lineas tecnológicas al nodo.
-                                    </p>                                    
+                                    </p>
                                 </div>
                             @else
                     			<form  action="{{route('mantenimiento.store')}}" method="POST" onsubmit="return checkSubmit()">
@@ -74,7 +74,6 @@
                     type:'get',
                     url: host_url + '/equipos/getequiposporlinea/'+nodo+'/'+lineatecnologica
                 }).done(function(response){
-                    console.log(response);
                     $('#txtequipo').empty();
                     if (response.equipos == '' && response.equipos.length == 0) {
                         $('#txtequipo').append('<option value="">No se encontraron resultados</option>');
@@ -97,6 +96,6 @@
                 });
             },
         }
-    
+
     </script>
 @endpush

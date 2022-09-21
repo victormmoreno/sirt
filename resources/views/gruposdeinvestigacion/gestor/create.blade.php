@@ -159,7 +159,6 @@
         $('#txtciudad_id').empty();
         $('#txtciudad_id').append('<option value="">Seleccione la Ciudad</option>')
         $.each(response.ciudades, function(i, e) {
-          // console.log(e.id);
           $('#txtciudad_id').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
         })
         @if($errors->any())

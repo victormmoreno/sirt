@@ -107,7 +107,6 @@ function cambiarEstadoDeIdeasDeProyectoDeEntrenamiento(idea, estado) {
     type:'get',
     url: host_url + "/entrenamientos/inhabilitarEntrenamiento/"+idea+"/"+estado,
     success: function (data) {
-      console.log(data);
       if (data.update == "true") {
         Swal.fire({
           title: 'El entrenamiento se ha inhabilitado!',
@@ -119,7 +118,6 @@ function cambiarEstadoDeIdeasDeProyectoDeEntrenamiento(idea, estado) {
         })
       }
       if (data.update == "1") {
-        // console.log('No se cambió');
         Swal.fire({
           title: 'No se puede inhabilitar el entrenamiento!',
           html: 'Al parecer, las siguientes ideas de proyecto se encuentran registradas en un comité: </br> <b> ' + data.ideas + '</b></br>' +

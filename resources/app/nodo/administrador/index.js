@@ -45,7 +45,7 @@ $(document).ready(function() {
             data: 'detail',
             name: 'detail',
             orderable: false
-        },  
+        },
         ],
     });
 });
@@ -68,7 +68,7 @@ $(document).ready(function() {
 // };
 
 // function eliminarNodoId_moment(id) {
-    
+
 //     $.ajax({
 //         dataType: "JSON",
 //         type: 'POST',
@@ -78,7 +78,6 @@ $(document).ready(function() {
 //             "id": id
 //         },
 //         success: function(data) {
-//             console.log(data);
 //             // if (data.retorno) {
 //             //     Swal.fire('Eliminación Exitosa!', 'El proyecto se ha eliminado completamente!', 'success');
 //             //     location.href = '/nodo';

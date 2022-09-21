@@ -42,7 +42,7 @@ class Articulation extends Model
     /**
      * The inverse relation one to much
      *
-     * @return void
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function articulationstage(){
         return $this->belongsTo(ArticulationStage::class, 'articulation_stage_id');
@@ -110,8 +110,86 @@ class Articulation extends Model
         return $progress;
     }
 
+    /**
+     * The query scope status
+     *
+     * @return void
+     */
+    public function scopeArticulationStageStatus($query, $status)
+    {
+        if (isset($status) && $status != 'all' && $status != null) {
+            return $query->whereHas('articulationstage', function ($subquery) use ($status) {
+                $subquery->where('status', $status);
+            });
+        }
+        return $query;
+    }
 
     /**
+     * The query scope node
+     *
+     * @return void
+     */
+    public function scopeArticulationStageYear($query, $year)
+    {
+        if (!empty($year) && $year != null && $year != 'all') {
+            return $query
+                ->WhereHas('articulationstage', function ($subquery) use ($year) {
+                $subquery->whereYear('articulation_stages.start_date', $year)
+                    ->orWhereYear('articulation_stages.end_date', $year);
+            });
+        }
+        return $query;
+    }
+
+    /**
+     * The query scope node
+     *
+     * @return void
+     */
+    public function scopeYear($query, $year)
+    {
+        if (!empty($year) && $year != null && $year != 'all') {
+            return $query->orWhereYear('articulations.start_date', $year)
+                    ->orWhereYear('articulations.end_date', $year);
+        }
+        return $query;
+    }
+
+    /**
+     * The query scope node
+     *
+     * @return void
+     */
+    public function scopeArticulationStageNode($query, $node)
+    {
+        if (!empty($node) && $node != null && $node != 'all') {
+            return $query->whereHas('articulationstage', function ($subquery) use ($node) {
+                $subquery->where('node_id', $node);
+            });
+        }
+        return $query;
+    }
+    /**
+     * The query scope node
+     *
+     * @return void
+     */
+    public function scopeArticulationStageInterlocutorTalent($query, $talent)
+    {
+        if (!empty($node) && $node != null && $node != 'all') {
+            return $query->whereHas('articulationstage', function ($query) use($talent) {
+                    return $query->where('interlocutor_talent_id', $talent);
+                })->orWhereHas('users', function ($query) use($talent) {
+                    return $query->where('users.id', $talent);
+                });
+        }
+        return $query;
+    }
+
+
+
+        /**
      * The presenter
      *
      * @return void

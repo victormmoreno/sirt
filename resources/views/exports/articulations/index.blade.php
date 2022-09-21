@@ -5,13 +5,13 @@
                 {{__('Node')}}
             </th>
             <th>
-                {{__('ArticulationStage Type')}}
+                {{__('articulation-stage Type')}}
             </th>
             <th>
-                {{__('Code ArticulationStage')}}
+                {{__('Code articulation-stage')}}
             </th>
             <th>
-                {{__('Name ArticulationStage')}}
+                {{__('Name articulation-stage')}}
             </th>
             <th>
                 {{ __('Project') }}
