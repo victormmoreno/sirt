@@ -348,18 +348,15 @@ class ArticulationStageListController extends Controller
             ])
         ->findOrfail($id);
 
+        if (request()->user()->can('show', $articulationStage))
+        {
+            $ult_notificacion = $articulationStage->notifications()->whereNull('fecha_aceptacion')->get()->last();
 
+            $rol_destinatario = $this->articulationStageRepository->verifyRecipientNotification($ult_notificacion);
 
-        if (request()->user()->can('show', $articulationStage)) {
-
-            $ult_notificacion = $this->articulationStageRepository->retornarUltimaNotificacionPendiente($articulationStage);
-
-            // $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
-
-            return view('articulation.show-articulation-stage', compact('articulationStage', 'ult_notificacion'));
+            return view('articulation.show-articulation-stage', compact('articulationStage', 'ult_notificacion', 'rol_destinatario'));
         }
         return redirect()->route('home');
-
     }
 
 

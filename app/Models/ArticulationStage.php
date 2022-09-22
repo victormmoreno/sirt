@@ -17,6 +17,9 @@ class ArticulationStage extends Model
     const CONFIDENCIALITY_FORMAT_NO = 0;
     const  STATUS_OPEN = 1;
     const  STATUS_CLOSE = 0;
+    const  ENDORSEMENT_YES = 1;
+    const  ENDORSEMENT_NO = 0;
+
 
     /**
      * The attributes that guarded.
@@ -83,6 +86,14 @@ class ArticulationStage extends Model
     public function notifications()
     {
         return $this->morphMany(ControlNotificaciones::class, 'notificable');
+    }
+
+    public static function IsAbierto() {
+        return self::STATUS_OPEN;
+    }
+
+    public static function IsCerrado() {
+        return self::STATUS_CLOSE;
     }
 
     /**
@@ -181,7 +192,7 @@ class ArticulationStage extends Model
     public function registerNotify($receptor, $rol_receptor, $fase = null)
     {
         return $this->notifications()->create([
-            'fase_id' => null,
+            'fase_id' => $fase,
             'remitente_id' => auth()->user()->id,
             'rol_remitente_id' => Role::where('name', Session::get('login_role'))->first()->id,
             'receptor_id' => $receptor,
@@ -191,16 +202,17 @@ class ArticulationStage extends Model
         ]);
     }
 
-    public function createTraceability($movement, $comment, $description)
+    public function createTraceability($movimiento, $role, $comentario, $descripcion = null)
     {
         return $this->traceability()->create([
-            'movimiento_id' => Movimiento::where('movimiento', $movement)->first()->id,
+            'movimiento_id' => Movimiento::where('movimiento', $movimiento)->first()->id,
             'user_id' => auth()->user()->id,
-            'role_id' =>  Role::where('name', Session::get('login_role'))->first()->id,
-            'comentarios' => $comment,
-            'descripcion' => $description
+            'role_id' => Role::where('name', $role)->first()->id,
+            'comentarios' => $comentario,
+            'descripcion' => $descripcion
         ]);
     }
+
     /**
      * The presenter
      *

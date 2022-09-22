@@ -177,7 +177,7 @@ class Articulation extends Model
      */
     public function scopeArticulationStageInterlocutorTalent($query, $talent)
     {
-        if (!empty($node) && $node != null && $node != 'all') {
+        if (!empty($talent) && $talent != null && $talent != 'all') {
             return $query->whereHas('articulationstage', function ($query) use($talent) {
                     return $query->where('interlocutor_talent_id', $talent);
                 })->orWhereHas('users', function ($query) use($talent) {

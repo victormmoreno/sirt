@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Session;
 use App\User;
 use App\Models\Movimiento;
 use App\Models\Role;
-use App\Notifications\Articulation\AccompanyingApprovalNotification;
+use App\Notifications\Articulation\EndorsementStageArticulation;
 use App\Events\Articulation\AccompanyingApprovalRequest;
 
 
@@ -116,7 +116,7 @@ class ArticulationStageRepository
             'name' => $request->name,
             'description' => $request->description,
             'scope'  => $request->scope,
-            'status' => ArticulationStage::STATUS_OPEN,
+            'status' => ArticulationStage::STATUS_CLOSE,
             'start_date' => Carbon::now(),
             'confidentiality_format' => ArticulationStage::CONFIDENCIALITY_FORMAT_YES,
             'terms_verified_at' => Carbon::now(),
@@ -394,5 +394,106 @@ class ArticulationStageRepository
         return $articulationState->notifications()->where('fase_id',  $articulationState->state)->where('estado', \App\Models\ControlNotificaciones::IsPendiente())->get()->last();
     }
 
+    public function verifyRecipientNotification($notificacion)
+    {
+        $rol = null;
+        if ($notificacion == null) {
+            $rol = User::IsTalento();
+        } else {
+            if ($notificacion->rol_receptor->name == User::IsTalento()) {
+                $rol = User::IsTalento();
+            } else {
+                $rol = User::IsDinamizador();
+            }
+        }
+        return $rol;
+    }
+
+    /**
+     * Notifica al dinamizador para que apruebe el proyecto en la fase de inicio
+     *
+     * @param Proyecto $proyecto Proyecto
+     * @return array
+     * @author dum
+     */
+    public function notifyApprovalEndorsement(ArticulationStage $articulationStage, string $fase = null)
+    {
+        DB::beginTransaction();
+        try {
+            $movimiento = null;
+            $comentario = "";
+            $notificacion_fase_actual = $articulationStage->notifications()->whereNull('fecha_aceptacion')->get()->last();
+            $msg = 'No se ha podido enviar la solicitud de aval, inténtalo nuevamente';
+            $conf_envios = false;
+            if ($notificacion_fase_actual == null) {
+                $conf_envios = $this->settingsNotificationTalent($articulationStage);
+                $movimiento = Movimiento::IsSolicitarTalento();
+                $msg = 'Se le ha enviado una notificación al talento interlocutor para que avale el ' . $articulationStage->present()->articulationStageEndorsementApproval();
+            } else {
+                if ($notificacion_fase_actual->rol_receptor->name == User::IsTalento()) {
+                    $conf_envios = $this->settingsNotificationTalent($articulationStage);
+                    $movimiento = Movimiento::IsSolicitarTalento();
+                    $msg = 'Se le ha enviado una notificación al talento interlocutor para que avale el ' . $articulationStage->present()->articulationStageEndorsementApproval();
+                } else {
+                    $conf_envios = $this->settingsNotificationDynamizer($articulationStage);
+                    $movimiento = Movimiento::IsSolicitarDinamizador();
+                    $msg = 'Se le ha enviado una notificación al dinamizador para que avale ' . $articulationStage->present()->articulationStageEndorsementApproval();
+                }
+            }
+            $notificacion = $articulationStage->registerNotify($conf_envios['receptor'], $conf_envios['receptor_role']);
+            if ($conf_envios != false) {
+                Notification::send($notificacion->receptor, new EndorsementStageArticulation($articulationStage, $notificacion));
+                $articulationStage->createTraceability($movimiento,Session::get('login_role'), $movimiento,$msg);
+            }
+            DB::commit();
+            return [
+                'notificacion' => true,
+                'msg' => $msg,
+                'notify' => $notificacion
+            ];
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return [
+                'notificacion' => false,
+                'msg' => 'Ha ocurrido un error ' . $th->getMessage()
+            ];
+        }
+    }
+
+    /**
+     * Genera la información el talento al que se le enviarán las notificaciones de solicitud de aprobación de fase
+     *
+     * @param ArticulationStage $articulationStage
+     * @return array
+     */
+    private function settingsNotificationTalent($articulationStage)
+    {
+
+        $destinatarios[] = $articulationStage->interlocutor->email;
+        if (Session::get('login_role') != User::IsTalento())
+            $destinatarios[] = auth()->user()->email;
+
+        return [
+            'receptor' => $articulationStage->interlocutor->id,
+            'receptor_role' => User::IsTalento(),
+            'tipo_movimiento' => Movimiento::IsSolicitarTalento(),
+            'destinatarios' => $destinatarios
+        ];
+    }
+
+    public function settingsNotificationDynamizer($articulationStage)
+    {
+        $dinamizadorRepository = new DinamizadorRepository;
+        if (Session::get('login_role') != User::IsTalento())
+            $destinatarios[] = auth()->user()->email;
+            $dinamizador = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulationStage->node_id)->get()->last();
+            $destinatarios[] = $dinamizador->email;
+        return [
+            'receptor' => $dinamizador->id,
+            'receptor_role' => User::IsDinamizador(),
+            'tipo_movimiento' => Movimiento::IsSolicitarDinamizador(),
+            'destinatarios' => $destinatarios
+        ];
+    }
 
 }

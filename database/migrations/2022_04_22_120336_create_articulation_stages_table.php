@@ -21,6 +21,7 @@ class CreateArticulationStagesTable extends Migration
             $table->text('description')->nullable(); //descripcion
             $table->text('scope'); //alcance
             $table->boolean('status')->default(ArticulationStage::STATUS_OPEN); //Estado
+            $table->boolean('endorsement')->default(0); //aval
             $table->timestamp('start_date'); //fecha inicio
             $table->timestamp('end_date')->nullable(); //fecha fin
             $table->boolean('confidentiality_format')->default(ArticulationStage::CONFIDENCIALITY_FORMAT_NO); //formato de confidencialidad

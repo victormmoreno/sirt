@@ -39,7 +39,7 @@
     $( document ).ready(function() {
         datatableArchivosDeUnProyecto_planeacion();
     });
-    
+
     function datatableArchivosDeUnProyecto_planeacion() {
         $('#archivosDeUnProyecto').DataTable({
             language: {

@@ -2,6 +2,7 @@
 
 namespace App\Policies\Articulation;
 
+use App\Models\Articulation;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\ArticulationStage;

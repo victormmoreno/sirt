@@ -22,7 +22,7 @@ class ArticulationStagePolicy
     {
         if ($user->hasAnyRole([User::IsAdministrador()])
             && session()->has('login_role')
-            && session()->get('login_role') == User::IsAdministrador()) {
+            && session()->get('login_role') == User::IsAdministrador() && $ability != 'requestApproval') {
             return true;
         }
     }
@@ -103,6 +103,19 @@ class ArticulationStagePolicy
      * @return bool
      */
     public function create(User $user): bool
+    {
+        return (bool) $user->hasAnyRole([User::IsArticulador()])
+            && session()->has('login_role')
+            && session()->get('login_role') == User::IsArticulador();
+    }
+
+    /**
+     * Determine if the given articulations can be create by the user.
+     *
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function requestApproval(User $user): bool
     {
         return (bool) $user->hasAnyRole([User::IsArticulador()])
             && session()->has('login_role')

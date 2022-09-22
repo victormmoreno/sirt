@@ -41,7 +41,52 @@
                                         <div class="divider mailbox-divider"></div>
                                         <div class="mailbox-text">
                                             <div class="row">
-                                                <div class="col s12 m12 l12">
+                                                <div class="collection with-header col s12 m4 l3">
+                                                    <h5 href="!#" class="collection-header">Opciones</h5>
+                                                    @if (Route::currentRouteName() == 'articulation-stage.show')
+                                                        @can('create', App\Models\Articulation::class)
+                                                            @if($articulationStage->articulations_count > 0)
+                                                                <a href="{{ route('articulations.create', $articulationStage) }}" class="collection-item">
+                                                                    <i class="material-icons left">autorenew</i>
+                                                                    {{ __('New Articulation') }}
+                                                                </a>
+                                                            @endif
+                                                        @endcan
+                                                        @can('requestApproval', $articulationStage)
+                                                            <a href="{{route('articulation-stage.request-approval', [$articulationStage->id, -1])}}" class="collection-item yellow lighten-3">
+                                                                <i class="material-icons left">notifications</i>
+                                                                @if ($rol_destinatario == 'Talento')
+                                                                    Enviar solicitud de aval al talento para {{$articulationStage->present()->articulationStageEndorsementApproval()}} esta {{__('articulation-stage')}}.
+                                                                @else
+                                                                    El talento interlocutor dió el aval, enviar solicitud de aval al dinamizador.
+                                                                @endif
+                                                            </a>
+                                                        @endcan
+                                                        @can('changeTalent', $articulationStage)
+                                                        <a href="{{ route('articulation-stage.changeinterlocutor', $articulationStage) }}" class="collection-item">
+                                                            <i class="material-icons left">group</i>
+                                                            Cambiar {{__('Interlocutory talent')}}
+                                                        </a>
+                                                        @endcan
+                                                        @can('update', $articulationStage)
+                                                            <a href="{{ route('articulation-stage.edit', $articulationStage) }}" class="collection-item">
+                                                                <i class="material-icons left">edit</i>
+                                                                Editar {{__('articulation-stage')}}
+                                                            </a>
+                                                        @endcan
+                                                            <a href=""  class="collection-item">
+                                                                <i class="material-icons left">cloud_download</i>
+                                                                Descargar acta
+                                                            </a>
+                                                        @can('delete', $articulationStage)
+                                                            <a href="javascript:void(0)"  class="collection-item" onclick="articulationStage.destroyArticulationStage('{{$articulationStage->id}}')">
+                                                                <i class="material-icons left">delete_forever</i>
+                                                                Eliminar {{__('articulation-stage')}}
+                                                            </a>
+                                                        @endcan
+                                                    @endif
+                                                </div>
+                                                <div class="col s12 m8 l9">
                                                     <div class="row">
                                                         <div class="col s12 m6 l6">
                                                             <ul class="collection">
@@ -170,7 +215,7 @@
                                                                         </div>
                                                                     </td>
                                                                     <td>{{$articulation->present()->articulationPhase()}}</td>
-                                                                    <td><a class="btn m-b-xs modal-trigger" href="{{route('articulation-stage.show', $articulation->id)}}">
+                                                                    <td><a class="btn m-b-xs modal-trigger" href="{{route('articulations.show', $articulation->id)}}">
                                                                         <i class="material-icons">search</i>
                                                                     </a></td>
                                                                 </tr>

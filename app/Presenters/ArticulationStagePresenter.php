@@ -42,6 +42,15 @@ class ArticulationStagePresenter extends Presenter
     {
         return $this->articulationStage->status == ArticulationStage::STATUS_OPEN ? __('Open') : __('Close');
     }
+
+    public function articulationStageEndorsement()
+    {
+        return $this->articulationStage->endorsement == ArticulationStage::ENDORSEMENT_YES ? 'abrir' : 'Cerrar';
+    }
+    public function articulationStageEndorsementApproval()
+    {
+        return $this->articulationStage->endorsement == ArticulationStage::ENDORSEMENT_YES ? 'cerrar' : 'abrir';
+    }
     public function articulationStageStatusColor()
     {
         return $this->articulationStage->status == ArticulationStage::STATUS_OPEN ? 'green' : 'red';
