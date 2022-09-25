@@ -38,12 +38,6 @@
                 {{__('Interlocutory talent')}}
             </th>
             <th>
-                {{__('Created_by')}}
-            </th>
-            <th>
-                {{ __('Count Articulations') }}
-            </th>
-            <th>
                 {{ __('Articulations') }}
             </th>
         </tr>
@@ -52,19 +46,19 @@
         @forelse($articulationStages as $articulationStage)
         <tr>
             <td>
-                {{$articulationStage->present()->articulationStageNode()}}
+                {{$articulationStage->nodo}}
             </td>
             <td>
-                {{$articulationStage->present()->articulationStageableType()}}
+                {{$articulationStage->articulation_type}}
             </td>
             <td>
-                {{$articulationStage->present()->articulationStageCode()}}
+                {{$articulationStage->code}}
             </td>
             <td>
-                {{$articulationStage->present()->articulationStageName()}}
+                {{$articulationStage->name}}
             </td>
             <td>
-                {{$articulationStage->present()->articulationStageables()}}
+                {{$articulationStage->codigo_proyecto}} - {{$articulationStage->nombre_proyecto}}
             </td>
             <td>
                 {{$articulationStage->present()->articulationStageDescription()}}
@@ -85,13 +79,7 @@
                 {{$articulationStage->present()->articulationStageCreatedDate()}}
             </td>
             <td>
-                {{$articulationStage->present()->articulationStageInterlocutorTalent()}}
-            </td>
-            <td>
-                {{$articulationStage->present()->articulationStageBy()}}
-            </td>
-            <td>
-                {{$articulationStage->articulations_count}}
+                {{$articulationStage->documento}} - {{$articulationStage->nombres}} {{$articulationStage->apellidos}}
             </td>
             <td>
                 {{$articulationStage->present()->articulationStageArticulation()}}

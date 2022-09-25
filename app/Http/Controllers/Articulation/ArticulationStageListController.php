@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Articulation;
 
 use App\Models\Articulation;
 use App\Models\Nodo;
+use App\Models\Proyecto;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ArticulationStage;
@@ -30,7 +32,29 @@ class ArticulationStageListController extends Controller
      */
     public function index()
     {
+        /*return $articulationStages = ArticulationStage::select(
+            'articulation_stages.*', 'articulations.code as articulation_code',
+            'articulations.id as articulation_id','articulations.name as articulation_name', 'fases.nombre as fase',
+            'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
+            'actividades.nombre as nombre_proyecto', 'interlocutor.documento', 'interlocutor.nombres',
+            'interlocutor.apellidos', 'interlocutor.email'
+        )
+            ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_type")
+            ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
+            ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+            ->leftJoin('articulations', 'articulations.articulation_stage_id', '=', 'articulation_stages.id')
+            ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')
+            ->leftJoin('articulationables', function($q) {
+                $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
+                $q->where('articulationables.articulationable_type', '=', 'App\Models\Proyecto');
 
+            })
+            ->leftJoin('proyectos', 'proyectos.id', '=', 'articulationables.articulationable_id')
+            ->leftJoin('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+            ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+            ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
+
+            ->get();*/
         if (request()->user()->can('index', ArticulationStage::class)) {
             $nodos = null;
             if(request()->user()->can('listNodes', ArticulationStage::class)) {
@@ -53,33 +77,31 @@ class ArticulationStageListController extends Controller
             $node = $this->checkRoleAuth($request)['node'];
             $articulationStages = [];
             if (isset($request->filter_status_articulationStage) || isset($request->filter_year_articulationStage)) {
-                $articulationStages = Articulation::query()
-                    ->with([
-                        'phase' ,
-                        'articulationstage',
-                        'articulationstage.node' => function($query){
-                            return $query->select(['id', 'entidad_id']);
-                        },
-                        'articulationstage.node.entidad' => function($query){
-                            return $query->select(['id', 'nombre']);
-                        },
-                        'articulationstage.projects' => function($query){
-                            return $query->select(['proyectos.id', 'proyectos.articulacion_proyecto_id']);
-                        },
-                        'articulationstage.projects.articulacion_proyecto' => function($query){
-                            return $query->select(['id', 'entidad_id', 'actividad_id']);
-                        },
-                        'articulationstage.projects.articulacion_proyecto.actividad' => function($query){
-                            return $query->select(['id', 'codigo_actividad', 'nombre']);
-                        },
-                        'articulationstage.interlocutor' => function($query){
-                            return $query->select(['id', 'documento', 'nombres', 'apellidos', 'email']);
-                        }
-                    ])
-                    ->articulationStageStatus($request->filter_status_articulationStage)
-                    ->articulationStageYear($request->filter_year_articulationStage)
-                    ->articulationStageNode($node)
-                    ->articulationStageInterlocutorTalent($talent)
+
+                $articulationStages = ArticulationStage::select(
+                    'articulation_stages.*', 'articulations.code as articulation_code',
+                    'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
+                    'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
+                    'actividades.nombre as nombre_proyecto', 'interlocutor.documento', 'interlocutor.nombres',
+                    'interlocutor.apellidos', 'interlocutor.email'
+                )
+                    ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_type")
+                    ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
+                    ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+                    ->leftJoin('articulations', 'articulations.articulation_stage_id', '=', 'articulation_stages.id')
+                    ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')
+                    ->leftJoin('articulationables', function($q) {
+                        $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
+                        $q->where('articulationables.articulationable_type', '=', 'App\Models\Proyecto');
+                    })
+                    ->leftJoin('proyectos', 'proyectos.id', '=', 'articulationables.articulationable_id')
+                    ->leftJoin('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+                    ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+                    ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
+                    ->status($request->filter_status_articulationStage)
+                    ->year($request->filter_year_articulationStage)
+                    ->node($node)
+                    ->interlocutorTalent($talent)
                     ->orderBy('created_at', 'desc')
                     ->get();
             }
@@ -97,38 +119,35 @@ class ArticulationStageListController extends Controller
         if (request()->user()->can('downloadReports', ArticulationStage::class)) {
             $talent = $this->checkRoleAuth($request)['talent'];
             $node = $this->checkRoleAuth($request)['node'];
-
             $articulationStages = [];
             if (isset($request->filter_status_articulationStage)) {
-
-                $articulationStages = ArticulationStage::with([
-                    'node' => function($query){
-                        return $query->select(['id', 'entidad_id']);
-                    },
-                    'node.entidad'=> function($query){
-                        return $query->select(['id', 'nombre']);
-                    },
-                    'createdBy' => function($query){
-                        return $query->select(['id', 'documento', 'nombres', 'apellidos', 'email']);
-                    },
-                    'articulations',
-                    'projects'=> function($query){
-                        return $query->select(['proyectos.id', 'proyectos.articulacion_proyecto_id']);
-                    },
-                    'projects.articulacion_proyecto' => function($query){
-                        return $query->select(['id', 'entidad_id', 'actividad_id']);
-                    },
-                    'projects.articulacion_proyecto.actividad' => function($query){
-                        return $query->select(['id', 'codigo_actividad', 'nombre']);
-                    },
-                    'interlocutor'  => function($query){
-                        return $query->select(['id', 'documento', 'nombres', 'apellidos', 'email']);
-                    }
-                ])
+                $articulationStages = ArticulationStage::query()
+                    ->with('articulations')
+                    ->select(
+                    'articulation_stages.*', 'articulations.code as articulation_code',
+                    'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
+                    'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
+                    'actividades.nombre as nombre_proyecto', 'interlocutor.documento', 'interlocutor.nombres',
+                    'interlocutor.apellidos', 'interlocutor.email'
+                )
+                    ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_type")
+                    ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
+                    ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+                    ->leftJoin('articulations', 'articulations.articulation_stage_id', '=', 'articulation_stages.id')
+                    ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')
+                    ->leftJoin('articulationables', function($q) {
+                        $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
+                        $q->where('articulationables.articulationable_type', '=', 'App\Models\Proyecto');
+                    })
+                    ->leftJoin('proyectos', 'proyectos.id', '=', 'articulationables.articulationable_id')
+                    ->leftJoin('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+                    ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+                    ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
                     ->status($request->filter_status_articulationStage)
                     ->year($request->filter_year_articulationStage)
                     ->node($node)
                     ->interlocutorTalent($talent)
+                    ->groupBy('articulation_stages.code')
                     ->orderBy('created_at', 'desc')
                     ->get();
             }
@@ -239,59 +258,69 @@ class ArticulationStageListController extends Controller
     {
         return datatables()->of($articulationStages)
             ->editColumn('node', function ($data) {
-                return "<blockquote class='orange-text text-darken-2'>{$data->articulationstage->node->present()->NodeName()}</blockquote>";
+                if($data->articulation_code){
+                    return "<blockquote class='orange-text text-darken-2'>{$data->nodo}</blockquote>";
+                }
             })
             ->editColumn('articulation_name', function ($data) {
-                return "<p>
-                    <span class='orange-text'>{$data->code}</span><br>
-                    <b>".Str::limit("{$data->name}", 40, '...')."</b>
-                 </p>";
+                if($data->articulation_code){
+                    return "<p>
+                            <span class='orange-text'>{$data->articulation_code}</span><br>
+                            <b>".Str::limit("{$data->articulation_name}", 40, '...')."</b>
+                         </p>";
+                }
+
             })
             ->editColumn('articulationstate_name', function ($data) {
                 return "
                 <tr class='group grey lighten-2'>
                     <th >
-                        {$data->articulationstage->node->present()->NodeName()}
+                        {$data->nodo}
                     </th>
                     <th>
                         <p>
-                        <span class='orange-text'>{$data->articulationstage->present()->articulationStageCode()} ({$data->articulationstage->present()->articulationStageCountArticulations()})</span><br>
-                        <b>".Str::limit("{$data->articulationstage->present()->articulationStageName()}", 40, '...')."</b><br>
-                        <span class='orange-text'>Talento Interlocutor: </span> ".Str::limit("{$data->articulationstage->present()->articulationStageInterlocutorTalent()}", 30, '...')."
+                        <span class='orange-text'>{$data->present()->articulationStageCode()}</span><br>
+                        <b>".Str::limit("{$data->present()->articulationStageName()}", 40, '...')."</b><br>
+                        <span class='orange-text'>Talento Interlocutor: </span> ".Str::limit("{$data->nombres} {$data->apellidos}", 30, '...')."
                      </p>
                     </th>
                     <th>
-                        <p>
-                            <span class='orange-text'>{$data->articulationstage->present()->articulationStageableType()}</span><br>
-                            <b>".Str::limit("{$data->articulationstage->present()->articulationStageables()}", 40, '...')."</b><br>
+                     <p>
+                            <span class='orange-text'>{$data->articulation_type}</span><br>
+                            <b>".Str::limit("{$data->codigo_proyecto} - {$data->nombre_proyecto}", 40, '...')."</b><br>
                         </p>
                     </th>
                     <th>
-                        <div class='chip red ". $data->articulationstage->present()->articulationStageStatusColor() ." white-text text-darken-2'>".$data->articulationstage->present()->articulationStageStatus()."</div>
+                         <div class='chip red ". $data->present()->articulationStageStatusColor() ." white-text text-darken-2'>".$data->present()->articulationStageStatus()."</div>
                     </th>
                     </th>
-                        <th>
-                            {$data->articulationstage->present()->articulationStageStartDate()}
-                        </th>
                     <th>
-                        <a class='btn m-b-xs modal-trigger' href='".route('articulation-stage.show', $data->articulationstage->id)."'>
+                        {$data->present()->articulationStageStartDate()}
+                    </th>
+                    <th>
+                        <a class='btn m-b-xs modal-trigger' href='".route('articulation-stage.show', $data->id)."'>
                             <i class='material-icons'>search</i>
                         </a>
                     </th>
                 </tr>";
+
             })
             ->editColumn('description', function ($data) {
-                return Str::limit("{$data->present()->articulationDescription()}", 40, '...');
+                return Str::limit("{$data->articulation_description}", 40, '...');
             })
             ->editColumn('phase', function ($data) {
-                return $data->present()->articulationPhase();
+                return "{$data->fase}";
             })
             ->editColumn('starDate', function ($data) {
-                return $data->present()->articulationStartDate();
+                if($data->articulation_start_date){
+                    return Carbon::parse($data->articulation_start_date)->isoFormat('DD/MM/YYYY');
+                }
             })->addColumn('show', function ($data) {
-                return '<a class="btn m-b-xs modal-trigger" href='.route('articulations.show', $data->id).'>
+                if(isset($data->articulation_id)){
+                    return '<a class="btn m-b-xs modal-trigger" href='.route('articulations.show', [$data->articulation_id]).'>
                             <i class="material-icons">search</i>
                         </a>';
+                }
             })->rawColumns(['node','articulationstate_name','articulation_name','phase','starDate','show'])->make(true);
     }
 

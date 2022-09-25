@@ -160,8 +160,13 @@ class ArticulationStage extends Model
     public function scopeYear($query, $year)
     {
         if (!empty($year) && $year != null && $year != 'all') {
-            return $query->whereYear('end_date', $year)
-                    ->orWhereYear('start_date', $year);
+            return $query->where(function ($subquery) use($year){
+                $subquery->whereYear('articulation_stages.end_date', $year)
+                    ->orWhereYear('articulation_stages.start_date', $year);
+            })->orWhere(function ($subquery) use($year){
+                $subquery->whereYear('articulations.end_date', $year)
+                    ->orWhereYear('articulations.start_date', $year);
+            });
         }
         return $query;
     }
