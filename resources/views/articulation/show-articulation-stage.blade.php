@@ -40,52 +40,88 @@
 
                                         <div class="divider mailbox-divider"></div>
                                         <div class="mailbox-text">
+                                            <div class="col s12">
+                                                @include('articulation.articulation-stage-history-change')
+                                            </div>
                                             <div class="row">
                                                 <div class="collection with-header col s12 m4 l3">
                                                     <h5 href="!#" class="collection-header">Opciones</h5>
                                                     @if (Route::currentRouteName() == 'articulation-stage.show')
+                                                        @can('showButtonAprobacion', $articulationStage)
+                                                            @include('articulation.form.endorsement-form')
+                                                        @endcan
                                                         @can('create', App\Models\Articulation::class)
-                                                            @if($articulationStage->articulations_count > 0)
-                                                                <a href="{{ route('articulations.create', $articulationStage) }}" class="collection-item">
+                                                            @if($articulationStage->status == \App\Models\ArticulationStage::STATUS_OPEN)
+                                                                <a href="{{ route('articulations.create', $articulationStage) }}"
+                                                                   class="collection-item">
                                                                     <i class="material-icons left">autorenew</i>
                                                                     {{ __('New Articulation') }}
                                                                 </a>
                                                             @endif
                                                         @endcan
                                                         @can('requestApproval', $articulationStage)
-                                                            <a href="{{route('articulation-stage.request-approval', [$articulationStage->id, -1])}}" class="collection-item yellow lighten-3">
-                                                                <i class="material-icons left">notifications</i>
-                                                                @if ($rol_destinatario == 'Talento')
-                                                                    Enviar solicitud de aval al talento para {{$articulationStage->present()->articulationStageEndorsementApproval()}} esta {{__('articulation-stage')}}.
+                                                            @if($articulationStage->status == \App\Models\ArticulationStage::STATUS_CLOSE)
+                                                                <a href="{{route('articulation-stage.request-approval', [$articulationStage->id , 'abrir' ])}}"
+                                                                   class="collection-item yellow lighten-3">
+                                                                    <i class="material-icons left">notifications</i>
+                                                                    @if ($articulationStage->status == \App\Models\ArticulationStage::STATUS_CLOSE)
+                                                                        @if($rol_destinatario == 'Talento')
+                                                                            Enviar solicitud de aval al talento
+                                                                            para {{$articulationStage->present()->articulationStageEndorsementApproval()}}
+                                                                            esta {{__('articulation-stage')}}.
+                                                                        @elseif($rol_destinatario == 'Dinamizador')
+                                                                            El talento interlocutor dió el aval, enviar
+                                                                            solicitud de aval al dinamizador.
+                                                                        @endif
+                                                                    @endif
+                                                                </a>
                                                                 @else
-                                                                    El talento interlocutor dió el aval, enviar solicitud de aval al dinamizador.
+                                                                    <a href="{{route('articulation-stage.request-approval', [$articulationStage->id , 'cerrar' ])}}"
+                                                                       class="collection-item yellow lighten-3">
+                                                                        <i class="material-icons left">notifications</i>
+                                                                        @if ($articulationStage->status == \App\Models\ArticulationStage::STATUS_OPEN)
+                                                                            @if($rol_destinatario == 'Talento')
+                                                                                Enviar solicitud de aval al talento
+                                                                                para {{$articulationStage->present()->articulationStageEndorsementApproval()}}
+                                                                                esta {{__('articulation-stage')}}.
+                                                                            @elseif($rol_destinatario == 'Dinamizador')
+                                                                                El talento interlocutor dió el aval, enviar
+                                                                                solicitud de aval al dinamizador.
+                                                                            @endif
+                                                                        @endif
+                                                                    </a>
                                                                 @endif
-                                                            </a>
                                                         @endcan
                                                         @can('changeTalent', $articulationStage)
-                                                        <a href="{{ route('articulation-stage.changeinterlocutor', $articulationStage) }}" class="collection-item">
-                                                            <i class="material-icons left">group</i>
-                                                            Cambiar {{__('Interlocutory talent')}}
-                                                        </a>
+                                                            <a href="{{ route('articulation-stage.changeinterlocutor', $articulationStage) }}"
+                                                               class="collection-item">
+                                                                <i class="material-icons left">group</i>
+                                                                Cambiar {{__('Interlocutory talent')}}
+                                                            </a>
                                                         @endcan
                                                         @can('update', $articulationStage)
-                                                            <a href="{{ route('articulation-stage.edit',$articulationStage) }}" class="collection-item">
+                                                            <a href="{{ route('articulation-stage.edit',$articulationStage) }}"
+                                                               class="collection-item">
                                                                 <i class="material-icons left">edit</i>
                                                                 Editar {{__('articulation-stage')}}
                                                             </a>
                                                         @endcan
                                                         @can('downloadCertificate', $articulationStage)
-                                                            <a href="{{ route('articulation-stage.download-certificate', ['inicio',$articulationStage]) }}"  class="collection-item">
+                                                            <a href="{{ route('articulation-stage.download-certificate', ['inicio',$articulationStage]) }}"
+                                                               class="collection-item">
                                                                 <i class="material-icons left">cloud_download</i>
                                                                 Descargar acta
                                                             </a>
-                                                            @endcan
+                                                        @endcan
                                                         @can('delete', $articulationStage)
-                                                            <a href="javascript:void(0)"  class="collection-item" onclick="articulationStage.destroyArticulationStage('{{$articulationStage->id}}')">
+                                                            <a href="javascript:void(0)" class="collection-item"
+                                                               onclick="articulationStage.destroyArticulationStage('{{$articulationStage->id}}')">
                                                                 <i class="material-icons left">delete_forever</i>
                                                                 Eliminar {{__('articulation-stage')}}
                                                             </a>
                                                         @endcan
+
+
                                                     @endif
                                                 </div>
                                                 <div class="col s12 m8 l9">
@@ -182,7 +218,9 @@
                                                     </div>
                                                 </div>
                                                 <div class="col s12 m12 l12">
-                                                    <table id="articulation_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
+                                                    <table id="articulation_data_table"
+                                                           class="display responsive-table datatable-example dataTable"
+                                                           style="width: 100%">
                                                         <thead>
                                                         <tr>
                                                             <th>Nombre articulación</th>
@@ -196,32 +234,34 @@
                                                         </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @foreach($articulationStage->articulations as $articulation)
-                                                                <tr>
-                                                                    <td>
-                                                                        <blockquote class="blue-text text-darken-2">
+                                                        @foreach($articulationStage->articulations as $articulation)
+                                                            <tr>
+                                                                <td>
+                                                                    <blockquote class="blue-text text-darken-2">
                                                                         <a href="{{route('articulations.show', $articulation)}}"
-                                                                           class="orange-text">{{$articulation->present()->articulationCode()}} - {{$articulation->present()->articulationName()}}</a>
-                                                                        </blockquote>
-                                                                    </td>
-                                                                    <td>{{Str::limit($articulation->present()->articulationDescription(),60)}}</td>
-                                                                    <th>{{$articulation->present()->articulationStartDate()}}</th>
-                                                                    <td>{{$articulation->present()->articulationEndDate()}}</td>
-                                                                    <td>{{$articulation->users_count}}</td>
-                                                                    <td>
-                                                                        {{$articulation->progress}}% <br>
-                                                                        <div class="progress stats-card-progress ">
-                                                                            <div
-                                                                                class="determinate {{$articulation->progress >= 0 && $articulation->progress <=25 ? 'red' : ($articulation->progress > 25 && $articulation->progress <= 50 ? 'yellow' : ($articulation->progress > 50 && $articulation->progress <= 75 ? 'orange' : 'green' ))}}"
-                                                                                style="width: {{$articulation->progress}}%"></div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>{{$articulation->present()->articulationPhase()}}</td>
-                                                                    <td><a class="btn m-b-xs modal-trigger" href="{{route('articulations.show', $articulation->id)}}">
+                                                                           class="orange-text">{{$articulation->present()->articulationCode()}}
+                                                                            - {{$articulation->present()->articulationName()}}</a>
+                                                                    </blockquote>
+                                                                </td>
+                                                                <td>{{Str::limit($articulation->present()->articulationDescription(),60)}}</td>
+                                                                <th>{{$articulation->present()->articulationStartDate()}}</th>
+                                                                <td>{{$articulation->present()->articulationEndDate()}}</td>
+                                                                <td>{{$articulation->users_count}}</td>
+                                                                <td>
+                                                                    {{$articulation->progress}}% <br>
+                                                                    <div class="progress stats-card-progress ">
+                                                                        <div
+                                                                            class="determinate {{$articulation->progress >= 0 && $articulation->progress <=25 ? 'red' : ($articulation->progress > 25 && $articulation->progress <= 50 ? 'yellow' : ($articulation->progress > 50 && $articulation->progress <= 75 ? 'orange' : 'green' ))}}"
+                                                                            style="width: {{$articulation->progress}}%"></div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>{{$articulation->present()->articulationPhase()}}</td>
+                                                                <td><a class="btn m-b-xs modal-trigger"
+                                                                       href="{{route('articulations.show', $articulation->id)}}">
                                                                         <i class="material-icons">search</i>
                                                                     </a></td>
-                                                                </tr>
-                                                            @endforeach
+                                                            </tr>
+                                                        @endforeach
                                                         </tbody>
                                                     </table>
                                                 </div>

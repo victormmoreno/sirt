@@ -18737,6 +18737,23 @@ h5.breadcrumbs-header {
     transition: ease-in 0.3s;
   }
 
+.collection button.collection-item {
+    color: #343434;
+}
+
+.collection button.collection-item.active {
+    background-color: #DDDDDD;
+    color: #343434;
+}
+
+.collection button.collection-item:not(.active):hover {
+    background-color: #f2f2f2;
+}
+
+.waves-color-demo .collection-item {
+    height: 57px;
+}
+
 
 
 

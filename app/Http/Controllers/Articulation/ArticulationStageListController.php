@@ -378,6 +378,7 @@ class ArticulationStageListController extends Controller
         if (request()->user()->can('show', $articulationStage))
         {
             $ult_notificacion = $articulationStage->notifications()->whereNull('fecha_aceptacion')->get()->last();
+            //$ult_notificacion = $articulationStage->notifications()->get()->last();
 
             $rol_destinatario = $this->articulationStageRepository->verifyRecipientNotification($ult_notificacion);
 

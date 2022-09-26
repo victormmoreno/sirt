@@ -81,7 +81,7 @@ const articulationStage ={
             ],
             processing: false,
             serverSide: false,
-            "order": [[ 5, "desc" ]],
+            order: [[4, 'desc']],
             "pageLength": 10,
             ajax:{
                 url: "/articulaciones/datatable_filtros",

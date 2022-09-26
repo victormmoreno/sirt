@@ -27,8 +27,8 @@ mix.styles([
 		'resources/assets/plugins/dropzone/dropzone.css',
 		'resources/assets/plugins/summernote/dist/summernote-lite.css',
 		'resources/assets/css/alpha.css',
-		'resources/assets/css/custom.css',
         'resources/assets/css/responsive.css',
+    '   resources/assets/css/custom.css',
 	],'public/css/libs.css');
 
 mix.minify('public/css/libs.css')

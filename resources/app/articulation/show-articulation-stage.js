@@ -34,3 +34,57 @@ $(document).ready(function() {
         ]
     });
 });
+
+function endorsementQuestionArticulationStage(e) {
+    e.preventDefault();
+    //$('button[type="submit"]').attr('disabled', true);
+    Swal.fire({
+        title: '¿Está seguro(a) de aprobar el aval?',
+        text: 'Al hacerlo estás aceptando y aprobando toda la información de esta etapa de articulación, los documento adjuntos y las asesorias recibidas.',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Sí!'
+    }).then((result) => {
+        $('button[type="submit"]').attr('disabled', false);
+        if (result.value) {
+            $('#decision').val('aceptado');
+            document.frmEndorsementArticulationStage.submit();
+        }
+    });
+}
+
+function questionRejectEndorsementArticulationStage(e) {
+    e.preventDefault();
+    //$('button[type="submit"]').attr('disabled', true);
+    Swal.fire({
+        title: '¿Está seguro(a) de no aprobar el aval?',
+        input: 'text',
+        type: 'warning',
+        inputValidator: (value) => {
+            if (!value) {
+                return 'Las observaciones deben ser obligatorias!'
+            } else {
+                $('#decision').val('rechazado');
+                $('#motivosNoAprueba').val(value);
+            }
+        },
+        inputAttributes: {
+            maxlength: 100,
+            placeHolder: '¿Por qué?'
+        },
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Enviar observaciones!'
+    }).then((result) => {
+        if (result.value) {
+            document.frmEndorsementArticulationStage.submit();
+        }
+    })
+}
+
+

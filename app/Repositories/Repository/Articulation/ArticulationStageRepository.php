@@ -15,9 +15,11 @@ use App\Repositories\Repository\UserRepository\DinamizadorRepository;
 use Illuminate\Support\Facades\Session;
 use App\User;
 use App\Models\Movimiento;
-use App\Models\Role;
+use App\Models\ControlNotificaciones;
 use App\Notifications\Articulation\EndorsementStageArticulation;
 use App\Events\Articulation\AccompanyingApprovalRequest;
+use App\Notifications\Articulation\ArticulationStageNoApproveEndorsement;
+
 
 
 class ArticulationStageRepository
@@ -410,11 +412,8 @@ class ArticulationStageRepository
     }
 
     /**
-     * Notifica al dinamizador para que apruebe el proyecto en la fase de inicio
-     *
-     * @param Proyecto $proyecto Proyecto
+     * @param ArticulationStage $articulationStage
      * @return array
-     * @author dum
      */
     public function notifyApprovalEndorsement(ArticulationStage $articulationStage, string $fase = null)
     {
@@ -443,7 +442,7 @@ class ArticulationStageRepository
             $notificacion = $articulationStage->registerNotify($conf_envios['receptor'], $conf_envios['receptor_role']);
             if ($conf_envios != false) {
                 Notification::send($notificacion->receptor, new EndorsementStageArticulation($articulationStage, $notificacion));
-                $articulationStage->createTraceability($movimiento,Session::get('login_role'), $movimiento,$msg);
+                $articulationStage->createTraceability($movimiento,Session::get('login_role'), $movimiento,$fase);
             }
             DB::commit();
             return [
@@ -496,4 +495,89 @@ class ArticulationStageRepository
         ];
     }
 
+    /**
+     * Aprueba la fase según el rol y fase que se está aprobando
+     *
+     * @param $request
+     * @param $id Id
+     */
+    public function manageEndorsement($request, $id, string $phase)
+    {
+        /*DB::beginTransaction();
+        try {*/
+            $comentario = null;
+            $movimiento = null;
+            $mensaje = null;
+            $title = null;
+
+            $articulationStage = ArticulationStage::findOrFail($id);
+            $dinamizadorRepository = new DinamizadorRepository;
+            $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulationStage->node_id)->get();
+
+            $asesores = User::InfoUserDatatable()
+                ->Join('user_nodo', 'user_nodo.user_id', '=', 'users.id')
+                ->role(User::IsArticulador())
+                ->where('users.deleted_at' ,'!=', null)
+                ->where('user_nodo.nodo_id', '=', $articulationStage->node_id)->get();
+            $talento_lider = $articulationStage->interlocutor;
+            $notificacion_act = ControlNotificaciones::find($request->control_notificacion_id);
+
+            if ($request->decision == 'rechazado') {
+                $title = 'Aprobación rechazada!';
+                $mensaje = 'Se le han notificado al asesor los motivos por los cuales no se aprueba el aval de la etapa de articulación';
+                $comentario = $request->motivosNoAprueba;
+                $movimiento = Movimiento::IsNoAprobar();
+
+                $articulationStage->createTraceability($movimiento,Session::get('login_role'), $movimiento,$comentario);
+
+                $regMovimiento = $articulationStage->traceability()->get()->last();
+
+                Notification::send($asesores, new ArticulationStageNoApproveEndorsement($articulationStage, $regMovimiento));
+                $notificacion_act->update(['estado' => $notificacion_act->IsRechazado()]);
+
+            } else {
+                $title = 'Aprobación Exitosa!';
+                $mensaje = 'Se ha aprobado el aval de esta etapa de articulación';
+                $movimiento = Movimiento::IsAprobar();
+                $articulationStage->createTraceability($movimiento,Session::get('login_role'), $movimiento,$comentario);
+                $regMovimiento = $articulationStage->traceability()->get()->last();
+
+                $notificacion_act->update(['fecha_aceptacion' => Carbon::now(), 'estado' => $notificacion_act->IsAceptado()]);
+
+                if (Session::get('login_role') == User::IsTalento()) {
+                    $notificacion = $articulationStage->registerNotify($dinamizadores->last()->id, User::IsDinamizador());
+                    Notification::send($dinamizadores, new EndorsementStageArticulation($articulationStage, $notificacion));
+                } else {
+
+                    if ($articulationStage->endorsement == ArticulationStage::ENDORSEMENT_NO) {
+                        $articulationStage->update([
+                            'endorsement' => ArticulationStage::ENDORSEMENT_YES,
+                            'status' => ArticulationStage::STATUS_OPEN
+                        ]);
+                    }
+                    else if ($articulationStage->endorsement == ArticulationStage::ENDORSEMENT_YES) {
+
+                        $articulationStage->update([
+                            'endorsement' => ArticulationStage::ENDORSEMENT_NO,
+                            'status' => ArticulationStage::STATUS_CLOSE
+                        ]);
+                    }
+                    $articulationStage->createTraceability($movimiento,Session::get('login_role'), $movimiento,$mensaje);
+                }
+            }
+            //DB::commit();
+            return [
+                'state' => true,
+                'mensaje' => $mensaje,
+                'title' => $title
+            ];
+        /*} catch (\Throwable $th) {
+            DB::rollBack();
+            return [
+                'state' => false,
+                'mensaje' => 'No se ha aprobado la fase de inicio del proyecto',
+                'title' => 'Aprobación errónea'
+            ];
+        }*/
+    }
 }

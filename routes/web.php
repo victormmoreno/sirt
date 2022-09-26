@@ -1,6 +1,12 @@
 <?php
 
+use App\Models\ControlNotificaciones;
+use App\Models\Movimiento;
+use App\Notifications\Articulation\ArticulationStageNoApproveEndorsement;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Session;
+
 /*DB::listen(function ($query) {
     echo "<pre>{$query->sql}</pre>";
     echo "<pre>{$query->time}</pre>";
@@ -842,5 +848,7 @@ Route::group(
         Route::delete('/{id}', 'ArticulationStageListController@destroy')->name('articulation-stage.destroy');
         Route::get('/download/{phase}/{id}', 'ArticulationStageListController@downloadCertificate')->name('articulation-stage.download-certificate');
         Route::get('/solicitar-aprobacion/{id}/{fase}', 'ArticulationStageApprovals@requestApproval')->name('articulation-stage.request-approval');
+        Route::put('/gestionar_aprobacion/{id}/{fase}', 'ArticulationStageApprovals@manageEndorsement')->name('articulation-stage.manage-endorsement');
     }
 );
+

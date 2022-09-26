@@ -18,11 +18,8 @@ class ArticulationStageApprovals extends Controller
         $this->middleware(['auth']);
     }
     /**
-     * Notifica al dinamizador para que apruebe el proyecto en la fase de inicio
-     *
-     * @param int $id Id del proyecto
-     * @return Response
-     * @author dum
+     * @param int $id
+     * @return \Illuminate\Http\Response
      */
     public function requestApproval(int $id, string $phase = null)
     {
@@ -35,5 +32,23 @@ class ArticulationStageApprovals extends Controller
         }
         return back();
     }
+
+    /**
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function manageEndorsement(Request $request, $id, string $phase = null)
+    {
+        $update = $this->articulationStageRepository->manageEndorsement($request, $id, $phase);
+        if ($update['state']) {
+            Alert::success($update['title'], $update['mensaje'])->showConfirmButton('Ok', '#3085d6');
+            return back();
+        } else {
+            Alert::error($update['title'], $update['mensaje'])->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+    }
+
 
 }

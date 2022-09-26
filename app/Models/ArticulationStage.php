@@ -25,7 +25,7 @@ class ArticulationStage extends Model
      * The attributes that guarded.
      * @var array
      */
-    protected $guarded = ['id', 'status'];
+    protected $guarded = ['id'];
 
     /**
      * The attributes that should be cast to native types.

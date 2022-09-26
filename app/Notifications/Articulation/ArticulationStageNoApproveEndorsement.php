@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
 
-class EndorsementStageArticulation extends Notification implements ShouldQueue
+class ArticulationStageNoApproveEndorsement extends Notification implements ShouldQueue
 {
     use Queueable;
     private $articulationStage;
@@ -33,7 +33,7 @@ class EndorsementStageArticulation extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail','database'];
+        return ['database'];
     }
 
     /**
@@ -45,7 +45,7 @@ class EndorsementStageArticulation extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject("Solicitud de aval para {$this->articulationStage->present()->articulationStageEndorsementApproval()} la ". __('articulation-stage') ." {$this->articulationStage->present()->articulationStageCode()} - {$this->articulationStage->present()->articulationStageName()}" )
+            ->subject("Solicitud de aval para {$this->articulationStage->present()->articulationStageCode()} - {$this->articulationStage->present()->articulationStageName()}" )
             ->markdown('emails.articulation.endorsement-stage-articulation', ['articulationStage' => $this->articulationStage, 'notification' => $this->notification]);
     }
 
@@ -62,7 +62,7 @@ class EndorsementStageArticulation extends Notification implements ShouldQueue
             'link'  => route('articulation-stage.show',  $this->articulationStage->id),
             'icon'  => 'library_books',
             'color' => 'green',
-            'autor' => "{$this->notification->remitente->nombres} {$this->notification->remitente->nombres}",
+            'autor' => "",
             'text'  => "El articulador ha solicitado el aval para {$this->articulationStage->present()->articulationStageEndorsementApproval()} la ". __('articulation-stage') ." {$this->articulationStage->code}",
         ];
     }

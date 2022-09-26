@@ -5,8 +5,8 @@ Señor(a)<br>
 <b>_{{$notification->receptor->nombres.' '.$notification->receptor->apellidos}}_</b><br>
 Cordial Saludo.
 <br>
-Se ha enviado este correo para informar que el articulador {{$notification->remitente->nombres .' '. $notification->remitente->apellidos}} ha solicitado
-aprobar la {{__('articulation-stage')}} {{$notification->notificable->present()->articulationStageName()}}.
+Se ha enviado este correo para informar que el señor(a) {{$notification->rol_remitente->name}} {{$notification->remitente->nombres .' '. $notification->remitente->apellidos}} ha solicitado
+aprobar el aval para {{$notification->notificable->present()->articulationStageEndorsementApproval()}} la {{__('articulation-stage')}} {{$notification->notificable->present()->articulationStageName()}}.
 <br>
 
 
