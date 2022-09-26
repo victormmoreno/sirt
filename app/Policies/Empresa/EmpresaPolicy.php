@@ -77,7 +77,7 @@ class EmpresaPolicy
      **/
     public function showTitulo(User $user)
     {
-        if (session()->get('login_role') == $user->IsDinamizador() || session()->get('login_role') == $user->IsInfocenter() || session()->get('login_role') == $user->IsExperto() || session()->get('login_role') == $user->IsArticulador()) {
+        if (session()->get('login_role') == $user->IsDinamizador() || session()->get('login_role') == $user->IsInfocenter() || session()->get('login_role') == $user->IsGestor() || session()->get('login_role') == $user->IsArticulador()) {
             return true;
         }
         return false;

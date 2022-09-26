@@ -32,9 +32,7 @@ class MantenimientoController extends Controller
         
         $this->authorize('index', EquipoMantenimiento::class);
         if (request()->ajax()) {
-
             if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor()) {
-
                 if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
                     $nodo           = auth()->user()->dinamizador->nodo->id;
                     $mantenimientos = $this->getMantenimientoRepository()->findInfoMantenimiento()
@@ -89,22 +87,9 @@ class MantenimientoController extends Controller
             }
 
         }
-        switch (session()->get('login_role')) {
-            case User::IsActivador():
-                return view('mantenimiento.index', [
-                    'nodos' => $this->getNodoRepository()->getSelectNodo(),
-                ]);
-                break;
-            case User::IsDinamizador():
-                return view('mantenimiento.index');
-                break;
-            case User::IsGestor():
-                return view('mantenimiento.index');
-                break;
-            default:
-                return abort('403');
-                break;
-        }
+        return view('mantenimiento.index', [
+            'nodos' => $this->getNodoRepository()->getSelectNodo(),
+        ]);
 
     }
 
@@ -118,7 +103,7 @@ class MantenimientoController extends Controller
     public function getMantenimientosEquiposPorNodo($nodo)
     {
         if (request()->ajax()) {
-            if (session()->has('login_role') && session()->get('login_role') == User::IsActivador()) {
+            if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
 
                 $mantenimientos = $this->getMantenimientoRepository()->findInfoMantenimiento()
                         ->whereHas('equipo.nodo', function($query) use($nodo){
@@ -173,18 +158,15 @@ class MantenimientoController extends Controller
     public function create()
     {
         $this->authorize('create', EquipoMantenimiento::class);
-        if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
-            $nodoDinamizador = auth()->user()->dinamizador->nodo->id;
-
-            $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodoDinamizador);
-            return view('mantenimiento.create', [
-                'lineastecnologicas' => $lineastecnologicas,
-                'year' =>  Carbon::now()->isoFormat('YYYY'),
-            ]);
-        } else {
-            abort('403');
-        }
-
+        $nodos = $this->getNodoRepository()->getSelectNodo();
+        $nodo = session()->get('login_role') == User::IsAdministrador() ? $nodos->first()->id : auth()->user()->dinamizador->nodo->id;
+        $lineastecnologicas = $this->getLineaTecnologicaRepository()->getAllLineaNodo($nodo);
+        return view('mantenimiento.create', [
+            'lineastecnologicas' => $lineastecnologicas,
+            'year' =>  Carbon::now()->isoFormat('YYYY'),
+            'nodos' => $nodos,
+            'nodo' => $nodo
+        ]);
     }
 
     /**

@@ -12,7 +12,7 @@
                             info_outline
                         </i>
                         @if(collect($errors->all())->count() > 1)
-                        Tienes {{collect($errors->all())->count()}} errores
+                        	Tienes {{collect($errors->all())}} errores
                         @else
                             Tienes {{collect($errors->all())->count()}} error
                         @endif
@@ -22,37 +22,84 @@
         </div>
     </div>
     @endif
-    
-    <div class="row">
-		<div class="input-field col s12 m6 l6">
-		    <label class="active" for="txtlineatecnologica">Linea Tecnológica <span class="red-text">*</span></label>
-		    <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtlineatecnologica" id="txtlineatecnologica" >
-	            <option value="">Seleccione Linea Tecnológica</option>
-	            @forelse($lineastecnologicas as $id => $linea)
-		            @if(isset($equipo->lineatecnologica->id))
-		            	<option value="{{$id}}" {{ old('txtlineatecnologica', $equipo->lineatecnologica->id) == $id ? 'selected':'' }}>{{$linea}}</option>
-		            @else
-		            	<option value="{{$id}}" {{ old('txtlineatecnologica') == $id ? 'selected':'' }}>{{$linea}}</option>
-		            @endif
-	            @empty
-	             	<option value="">No hay información disponible</option>
-	            @endforelse
-	        </select>
-	        @error('txtlineatecnologica')
-            <label class="error" for="txtlineatecnologica" id="txtlineatecnologica-error">
-                {{ $message }}
-            </label>
-            @enderror
+
+	@can('showInputsForAdmin', App\Models\Equipo::class)
+		<div class="row">
+			<div class="input-field col s12 m6 l6">
+				<select style="width: 100%" class="js-states" id="txtnodo_id" name="txtnodo_id" onchange="consultarLineasNodo(this.value);">
+				<option value="">Seleccione el nodo donde se registrará el equipo</option>
+				@if (isset($equipo->nodo->id))
+					@forelse ($nodos as $id => $nodo)
+					<option value="{{$nodo->id}}" {{ $equipo->nodo_id == $nodo->id ? 'selected' : '' }}>{{$nodo->nodos}}</option>
+					@empty
+					<option value=""> No hay información disponible</option>
+					@endforelse
+				@else
+					@forelse ($nodos as $id => $nodo)
+					<option value="{{$nodo->id}}" {{ old('txtnodo_id') == $nodo->id ? 'selected':'' }}>{{$nodo->nodos}}</option>
+					@empty
+					<option value=""> No hay información disponible</option>
+					@endforelse
+				@endif
+				</select>
+				@error('txtnodo_id')
+				<label class="error" for="txtnodo_id" id="txtnodo_id-error">
+					{{ $message }}
+				</label>
+				@enderror
+			</div>
+			<div class="input-field col s12 m6 l6">
+				<select style="width: 100%" class="js-states" id="txtlineatecnologica" name="txtlineatecnologica">
+					<option value="">Seleccione la línea tecnológica donde se registrará el equipo</option>
+					@if (isset($equipo->lineatecnologica->id))
+					@forelse ($lineastecnologicas as $id => $linea)
+						<option value="{{$linea->id}}" {{ $equipo->lineatecnologica_id == $linea->id ? 'selected':'' }}>{{$linea->nombre}}</option>
+						@empty
+						<option value=""> No hay información disponible</option>
+						@endforelse
+					@endif
+				</select>
+				@error('txtlineatecnologica')
+				<label class="error" for="txtlineatecnologica" id="txtlineatecnologica-error">
+					{{ $message }}
+				</label>
+				@enderror
+			</div>
 		</div>
-		 <div class="input-field col s12 m6 l6">
-	      	<input type="text" name="txtnombre" id="txtnombre" value="{{ isset($equipo) ? $equipo->nombre: old('txtnombre')}}"/>
-	      	<label class="active" for="txtnombre">Nombre de Equipo <span class="red-text">*</span></label>
-	      	@error('txtnombre')
-            <label class="error" for="txtnombre" id="txtnombre-error">
-                {{ $message }}
-            </label>
-            @enderror
-	    </div>
+	@elsecan('showInputsForDinamizador', App\Models\Equipo::class)
+		<div class="row">
+			<div class="input-field col s12 m12 l12">
+				<label class="active" for="txtlineatecnologica">Linea Tecnológica <span class="red-text">*</span></label>
+				<select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtlineatecnologica" id="txtlineatecnologica" >
+					<option value="">Seleccione Linea Tecnológica</option>
+					@forelse($lineastecnologicas as $id => $linea)
+						@if(isset($equipo->lineatecnologica->id))
+							<option value="{{$id}}" {{ old('txtlineatecnologica', $equipo->lineatecnologica->id) == $id ? 'selected':'' }}>{{$linea}}</option>
+						@else
+							<option value="{{$id}}" {{ old('txtlineatecnologica') == $id ? 'selected':'' }}>{{$linea}}</option>
+						@endif
+					@empty
+							<option value="">No hay información disponible</option>
+					@endforelse
+				</select>
+				@error('txtlineatecnologica')
+				<label class="error" for="txtlineatecnologica" id="txtlineatecnologica-error">
+					{{ $message }}
+				</label>
+				@enderror
+			</div>
+		</div>
+	@endcan
+	<div class="row">
+		<div class="input-field col s12 m12 l12">
+			<input type="text" name="txtnombre" id="txtnombre" value="{{ isset($equipo) ? $equipo->nombre: old('txtnombre')}}"/>
+			<label class="active" for="txtnombre">Nombre de Equipo <span class="red-text">*</span></label>
+			@error('txtnombre')
+		<label class="error" for="txtnombre" id="txtnombre-error">
+			{{ $message }}
+		</label>
+		@enderror
+		</div>
 	</div>
 	<div class="row">
 		<div class="input-field col s12 m6 l6">

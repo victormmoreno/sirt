@@ -26,19 +26,31 @@
                 </div>
                 <div class="card ">
                     <div class="card-content">
-                        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador() )
                         <div class="row">
-                            <div class="row">
-                                <div class="col s12 m12 l12">
-                                    <div class="center-align">
-                                        <span class="card-title center-align">
-                                            Mantenimientos {{ config('app.name')}}
-                                        </span>
-                                    </div>
+                            <div class="col s12 {{auth()->user()->can('create', App\Models\EquipoMantenimiento::class) ? 'm10 m10' : 'm12 l12'}}">
+                                <div class="center-align">
+                                    <span class="card-title center-align">
+                                        Mantenimientos {{ config('app.name')}}
+                                    </span>
                                 </div>
                             </div>
+                            @can('create', App\Models\EquipoMantenimiento::class)
+                            <div class="col s12 m2 l2 show-on-large hide-on-med-and-down">
+                                <a href="{{ route('mantenimiento.create') }}">
+                                  <div class="card green">
+                                    <div class="card-content center">
+                                      <i class="left material-icons white-text">add_circle_outline</i>
+                                      <span class="white-text">Nuevo Mantenimiento</span>
+                                    </div>
+                                  </div>
+                                </a>
+                              </div>
+                            @endcan
+                        </div>
+                        @can('showIndexForAdmin', App\Models\EquipoMantenimiento::class)
+                        <div class="row">
                             <div class="divider">
-                            </div> 
+                            </div>
                             <div class="row">
                                 <div class="col s12 m12 l12">
                                     <label class="active" for="selectnodo">Nodo <span class="red-text">*</span></label>
@@ -62,82 +74,64 @@
                                     </thead>
                     
                                 </table>
-                        </div>
-                        @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
+                        </div>  
+                        @elsecan('showIndexForDinamizador', App\Models\EquipoMantenimiento::class)
+                        <div class="row">
                             <div class="row">
-                                <div class="row">
-                                    <div class="col s12 m12 l10">
-                                        <div class="center-align">
-                                            <span class="card-title center-align">
-                                                Mantenimientos Tecnoparque Nodo {{\NodoHelper::returnNameNodoUsuario()}}
-                                            </span>
+                                <div class="col s12 m2 l2 show-on-large hide-on-med-and-down">
+                                    <a href="{{ route('mantenimiento.create') }}">
+                                      <div class="card green">
+                                        <div class="card-content center">
+                                          <i class="left material-icons white-text">add_circle_outline</i>
+                                          <span class="white-text">Nuevo Mantenimiento</span>
                                         </div>
-                                    </div>
-                                    <div class="col s12 m2 l2 show-on-large hide-on-med-and-down">
-                                        <a href="{{ route('mantenimiento.create') }}">
-                                          <div class="card green">
-                                            <div class="card-content center">
-                                              <i class="left material-icons white-text">add_circle_outline</i>
-                                              <span class="white-text">Nuevo Mantenimiento</span>
-                                            </div>
-                                          </div>
-                                        </a>
                                       </div>
-                                </div>
-                                <div class="divider">
-                                </div>  
-                                <br>
-                                    <table class="display responsive-table" id="mantenimientosequipos_dinamizador_table">
-                                        <thead>
-                                            <th width="15%">Linea Tecnológica</th>
-                                            <th width="15%">Equipo</th>
-                                            
-                                            <th width="15%">Año Mantenimiento</th>
-                                            <th width="15%">valor Mantenimiento</th>
-                                            <th width="15%">Detalle</th>
-                                            <th width="15%">Editar</th>
-                                        </thead>
-                        
-                                    </table>
+                                    </a>
+                                  </div>
                             </div>
-                        @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
-                            <div class="row">
-                                <div class="row">
-                                    <div class="col s12 m12 l12">
-                                        <div class="center-align">
-                                            <span class="card-title center-align">
-                                                Equipos {{auth()->user()->gestor->lineatecnologica->nombre}} |  Tecnoparque Nodo {{\NodoHelper::returnNameNodoUsuario()}}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="divider">
-                                </div>  
-                                <br>
-                                    <table class="display responsive-table" id="mantenimientosequipos_gestor_table">
-                                        <thead>
-                                            <th width="15%">Linea Tecnológica</th>
-                                            <th width="15%">Equipo</th>
-                                            <th width="15%">Año Mantenimiento</th>
-                                            <th width="15%">valor Mantenimiento</th>
-                                            <th width="15%">Detalle</th>
-                                            
-                                        </thead>
-                        
-                                    </table>
-                            </div>
-                        @endif
+                            <div class="divider">
+                            </div>  
+                            <br>
+                                <table class="display responsive-table" id="mantenimientosequipos_dinamizador_table">
+                                    <thead>
+                                        <th width="15%">Linea Tecnológica</th>
+                                        <th width="15%">Equipo</th>
+                                        
+                                        <th width="15%">Año Mantenimiento</th>
+                                        <th width="15%">valor Mantenimiento</th>
+                                        <th width="15%">Detalle</th>
+                                        <th width="15%">Editar</th>
+                                    </thead>
+                    
+                                </table>
+                        </div>
+                        @elsecan('showIndexForExperto', App\Models\EquipoMantenimiento::class)
+                        <div class="row">
+                            <div class="divider">
+                            </div>  
+                            <br>
+                                <table class="display responsive-table" id="mantenimientosequipos_gestor_table">
+                                    <thead>
+                                        <th width="15%">Linea Tecnológica</th>
+                                        <th width="15%">Equipo</th>
+                                        <th width="15%">Año Mantenimiento</th>
+                                        <th width="15%">valor Mantenimiento</th>
+                                        <th width="15%">Detalle</th>
+                                    </thead>
+                                </table>
+                        </div>
+                        @endcan
                     </div>
                 </div>
             </div>
         </div>
-        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
-            <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-                <a href="{{route('mantenimiento.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Mantenimiento">
-                     <i class="material-icons">add_circle_outline</i>
-                </a>
-            </div>
-        @endif
+        @can('create', App\Models\EquipoMantenimiento::class)
+        <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
+            <a href="{{route('mantenimiento.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Mantenimiento">
+                 <i class="material-icons">add_circle_outline</i>
+            </a>
+        </div>
+        @endcan
     </div>
 </main>
 @endsection

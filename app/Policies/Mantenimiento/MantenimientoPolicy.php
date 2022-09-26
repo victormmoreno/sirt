@@ -9,6 +9,31 @@ class MantenimientoPolicy
 {
     use HandlesAuthorization;
 
+
+    public function showIndexForAdmin(User $user)
+    {
+        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function showIndexForDinamizador(User $user)
+    {
+        if (session()->get('login_role') == $user->IsDinamizador()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function showIndexForExperto(User $user)
+    {
+        if (session()->get('login_role') == $user->IsGestor()) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Determine si un usuario puede ver el index de las equipo mantenimientos.
      * @author julian londono
@@ -16,7 +41,7 @@ class MantenimientoPolicy
      */
     public function index(User $user)
     {
-        return (bool) collect($user->getRoleNames())->contains(User::IsActivador()) && session()->get('login_role') == User::IsActivador() || collect($user->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador() || collect($user->getRoleNames())->contains(User::IsGestor()) && session()->get('login_role') == User::IsGestor();
+        return (bool) $user->hasAnyRole([$user->IsGestor(), $user->IsDinamizador(), $user->IsActivador(), $user->IsAdministrador()]); 
     }
 
     /**
@@ -27,7 +52,7 @@ class MantenimientoPolicy
      */
     public function create(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsDinamizador()]) && session()->has('login_role') && session()->get('login_role') == User::IsDinamizador();
+        return (bool) $user->hasAnyRole([$user->IsDinamizador(), $user->IsAdministrador()]) && (session()->get('login_role') == $user->IsDinamizador() || session()->get('login_role') == $user->IsAdministrador());
     }
 
     /**

@@ -58,3 +58,12 @@
     </div>
 </main>
 @endsection
+@push('script')
+<script>
+    $(document).ready(function() {
+        @if($errors->any() && session()->get('login_role') == App\User::IsAdministrador())
+            consultarLineasNodo({{old('txtnodo_id')}});
+        @endif
+    });
+</script>
+@endpush

@@ -63,7 +63,7 @@ class EquipoRepository
         try {
 
             $equipo->update([
-                'nodo_id' => $this->findLineaTecnologicaNodoByRequest(),
+                'nodo_id' => $this->findLineaTecnologicaNodoByRequest($request),
                 'lineatecnologica_id' => $request->input('txtlineatecnologica'),
                 'nombre'               => $request->input('txtnombre'),
                 'referencia'           => $request->input('txtreferencia'),
@@ -87,11 +87,49 @@ class EquipoRepository
      * @return array
      * @author devjul
      */
-    private function findLineaTecnologicaNodoByRequest()
+    private function findLineaTecnologicaNodoByRequest($request)
     {
         if (session()->get('login_role') == User::IsDinamizador()) {
             return auth()->user()->dinamizador->nodo_id;
+        } else {
+            return $request->txtnodo_id;
         }
 
+    }
+
+    /**
+     * Retorna el id del nodo
+     * 
+     * @param Request $request
+     * @author dum
+     */
+    public function getNodoRole($request)
+    {
+        $nodo = null;
+        if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
+            $nodo = $request->filter_nodo;
+        }
+        if (session()->get('login_role') == User::IsDinamizador()) {
+            $nodo = auth()->user()->dinamizador->nodo_id;
+        }
+        if (session()->get('login_role') == User::IsGestor()) {
+            $nodo = auth()->user()->gestor->nodo_id;
+        }
+
+        return $nodo;
+    }
+
+    /**
+     * Retorna el id de la linea tecnológica
+     * 
+     * @author dum
+     */
+    public function getLineaRole()
+    {
+        $linea = null;
+        if (session()->get('login_role') == User::IsGestor()) {
+            $linea = auth()->user()->gestor->lineatecnologica_id;
+        }
+        return $linea;
     }
 }

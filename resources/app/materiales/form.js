@@ -5,7 +5,7 @@ function consultarLineasNodo(nodo_id) {
         url: host_url + "/lineas/getlineasnodo/"+nodo_id
       }).done(function(response){
           $("#txtlineatecnologica").empty();
-          $('#txtlineatecnologica').append('<option value="">Seleccione la línea tecnológica donde se registrará el material de formación</option>');
+          $('#txtlineatecnologica').append('<option value="">Seleccione la línea tecnológica</option>');
           $.each(response.lineasForNodo.lineas, function(i, e) {
             $('#txtlineatecnologica').append('<option  value="'+e.id+'">'+e.abreviatura+' - '+e.nombre+'</option>');
           })

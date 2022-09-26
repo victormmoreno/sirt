@@ -40,7 +40,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
+                                @elseif(session()->get('login_role') == App\User::IsDinamizador())
                                     <div class="row">
                                         <div class="col s12 m8 l8">
                                             <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
@@ -49,7 +49,19 @@
                                                 </span>
                                             </div>
                                         </div>
-
+                                        <div class="col s12 m4 l4 show-on-large hide-on-med-and-down">
+                                            <a  href="{{route('equipo.create')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo Equipo </a>
+                                        </div>
+                                    </div>
+                                @elseif(session()->get('login_role') == App\User::IsAdministrador())
+                                    <div class="row">
+                                        <div class="col s12 m8 l8">
+                                            <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
+                                                <span class="card-title ">
+                                                    Equipos de Tecnoparque
+                                                </span>
+                                            </div>
+                                        </div>
                                         <div class="col s12 m4 l4 show-on-large hide-on-med-and-down">
                                             <a  href="{{route('equipo.create')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo Equipo </a>
                                         </div>
@@ -58,19 +70,19 @@
                             </div>
                             <div class="divider"></div>
                             <div class="row no-m-t no-m-b search-tabs-row search-tabs-header ">
-                                @if(session()->get('login_role') == App\User::IsActivador())
-                                <div class="input-field col s12 m2 l2">
-                                    <label class="active" for="filter_nodo">Nodo <span class="red-text">*</span></label>
-                                    <select class="js-states browser-default select2" name="filter_nodo" id="filter_nodo">
-                                        <option value="all" >todos</option>
-                                        @forelse($nodos as $id => $name)
-                                            <option value="{{$id}}">{{$name}}</option>
-                                        @empty
-                                            <option>No se encontraron Resultados</option>
-                                        @endforelse
-                                    </select>
-                                </div>
-                                @endif
+                                @can('showOptionsForAdmin', App\Models\Equipo::class)
+                                    <div class="input-field col s12 m2 l2">
+                                        <label class="active" for="filter_nodo">Nodo <span class="red-text">*</span></label>
+                                        <select class="js-states browser-default select2" name="filter_nodo" id="filter_nodo">
+                                            <option value="all" >todos</option>
+                                            @forelse($nodos as $id => $name)
+                                                <option value="{{$id}}">{{$name}}</option>
+                                            @empty
+                                                <option>No se encontraron Resultados</option>
+                                            @endforelse
+                                        </select>
+                                    </div>
+                                @endcan
                                 <div class="input-field col s12 m2 l2">
                                     <label class="active" for="filter_state">Estado <span class="red-text">*</span></label>
                                     <select name="filter_state" id="filter_state">
@@ -123,13 +135,13 @@
                 </div>
             </div>
         </div>
-        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
+        @can('showCreateButton', App\Models\Empresa::class)
             <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
                 <a href="{{route('equipo.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo equipo">
                     <i class="material-icons">add</i>
                 </a>
             </div>
-        @endif
+        @endcan
     </div>
 </main>
 <div  class="modal modal-equipo">

@@ -90,8 +90,6 @@
                                 <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_idea"><i class="material-icons">search</i>Buscar</button>
                             </div>
                         </div>
-
-
                     <table id="ideas_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
                         <thead>
                         <tr>

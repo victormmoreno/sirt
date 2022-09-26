@@ -154,17 +154,18 @@ class IdeaController extends Controller
             EstadoIdea::IsInhabilitado(),
             EstadoIdea::IsNoAplica()
         ])->pluck('nombre', 'id');
-        if (\Session::get('login_role') == User::IsInfocenter()) {
-            return view('ideas.infocenter.index', ['estadosIdeas' => $estadosIdeas]);
-        } else if (\Session::get('login_role') == User::IsTalento()) {
-            return view('ideas.talento.index');
-        } else if (\Session::get('login_role') == User::IsArticulador()) {
-            return view('ideas.articulador.index', ['estadosIdeas' => $estadosIdeas]);
-        } else {
-            $nodos = Entidad::has('nodo')->with('nodo')->get()->pluck('nombre', 'nodo.id');
-            $estadosIdeas = EstadoIdea::orderBy('id')->pluck('nombre', 'id');
-            return view('ideas.index', ['nodos' => $nodos, 'estadosIdeas' => $estadosIdeas]);
-        }
+
+        $nodos = Entidad::has('nodo')->with('nodo')->get()->pluck('nombre', 'nodo.id');
+        $estadosIdeas = EstadoIdea::orderBy('id')->pluck('nombre', 'id');
+        return view('ideas.index', ['nodos' => $nodos, 'estadosIdeas' => $estadosIdeas]);
+        // if (\Session::get('login_role') == User::IsInfocenter()) {
+        //     return view('ideas.infocenter.index', ['estadosIdeas' => $estadosIdeas]);
+        // } else if (\Session::get('login_role') == User::IsTalento()) {
+        //     return view('ideas.talento.index');
+        // } else if (\Session::get('login_role') == User::IsArticulador()) {
+        //     return view('ideas.articulador.index', ['estadosIdeas' => $estadosIdeas]);
+        // } else {
+        // }
 
     }
 
