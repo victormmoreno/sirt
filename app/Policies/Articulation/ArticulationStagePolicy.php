@@ -54,7 +54,7 @@ class ArticulationStagePolicy
      * Determine if the given user can be view nodes by the articulationstage.
      *
      * @param  \App\User  $user
-     * @return \Illuminate\Auth\Access\Response
+     * @return bool
      */
     public function viewNodes(User $user)
     {
@@ -79,7 +79,7 @@ class ArticulationStagePolicy
     /**
      * Determine if the given user can be downloadReports by the articulationstage.
      * @param  \App\User  $user
-     * @return \Illuminate\Auth\Access\Response
+     * @return bool
      */
     public function downloadReports(User $user)
     {
@@ -157,14 +157,14 @@ class ArticulationStagePolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\ArticulationStage  $articulationStage
-     * @return \Illuminate\Auth\Access\Response
+     * @return bool
      */
     public function update(User $user, ArticulationStage $articulationStage)
     {
         return (bool) $user->hasAnyRole([User::IsArticulador()])
             && ( (session()->has('login_role')
             && session()->get('login_role') == User::IsArticulador()))
-            && auth()->user()->articulador->nodo->id == $articulationStage->node_id;
+            && (auth()->user()->articulador->nodo->id == $articulationStage->node_id || session()->get('login_role') == User::IsAdministrador());
     }
 
     /**
@@ -243,5 +243,19 @@ class ArticulationStagePolicy
                     || session()->get('login_role') == User::IsArticulador()
                 )
             );
+    }
+    /**
+     * Determine if the given articulations can be updated by the user..
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\ArticulationStage  $articulationStage
+     * @return bool
+     */
+    public function downloadCertificate(User $user, ArticulationStage $articulationStage)
+    {
+        return (bool) $user->hasAnyRole([User::IsArticulador()])
+            && ( (session()->has('login_role')
+                && session()->get('login_role') == User::IsArticulador()))
+            && (auth()->user()->articulador->nodo->id == $articulationStage->node_id || session()->get('login_role') == User::IsAdministrador());
     }
 }

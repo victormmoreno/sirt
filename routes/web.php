@@ -840,7 +840,7 @@ Route::group(
         Route::get('/{id}/ver', 'ArticulationListController@show')->name('articulations.show');
         Route::get('/export', 'ArticulationStageListController@export')->name('articulation-stage.export');
         Route::delete('/{id}', 'ArticulationStageListController@destroy')->name('articulation-stage.destroy');
-
+        Route::get('/download/{phase}/{id}', 'ArticulationStageListController@downloadCertificate')->name('articulation-stage.download-certificate');
         Route::get('/solicitar-aprobacion/{id}/{fase}', 'ArticulationStageApprovals@requestApproval')->name('articulation-stage.request-approval');
     }
 );

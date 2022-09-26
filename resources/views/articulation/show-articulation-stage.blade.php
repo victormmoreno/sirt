@@ -69,15 +69,17 @@
                                                         </a>
                                                         @endcan
                                                         @can('update', $articulationStage)
-                                                            <a href="{{ route('articulation-stage.edit', $articulationStage) }}" class="collection-item">
+                                                            <a href="{{ route('articulation-stage.edit',$articulationStage) }}" class="collection-item">
                                                                 <i class="material-icons left">edit</i>
                                                                 Editar {{__('articulation-stage')}}
                                                             </a>
                                                         @endcan
-                                                            <a href=""  class="collection-item">
+                                                        @can('downloadCertificate', $articulationStage)
+                                                            <a href="{{ route('articulation-stage.download-certificate', ['inicio',$articulationStage]) }}"  class="collection-item">
                                                                 <i class="material-icons left">cloud_download</i>
                                                                 Descargar acta
                                                             </a>
+                                                            @endcan
                                                         @can('delete', $articulationStage)
                                                             <a href="javascript:void(0)"  class="collection-item" onclick="articulationStage.destroyArticulationStage('{{$articulationStage->id}}')">
                                                                 <i class="material-icons left">delete_forever</i>

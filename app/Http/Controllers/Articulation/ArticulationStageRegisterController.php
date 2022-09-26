@@ -88,15 +88,15 @@ class ArticulationStageRegisterController extends Controller
      */
     public function edit($articulationStage)
     {
+        $articulationStage = ArticulationStage::query()
+            ->with([
+                'createdBy',
+                'projects.articulacion_proyecto.actividad',
+                'interlocutor'
+            ])->findOrFail($articulationStage);
         if (request()->user()->can('update', $articulationStage))
         {
             $nodos = null;
-            $articulationStage = ArticulationStage::query()
-                ->with([
-                    'createdBy',
-                    'projects.articulacion_proyecto.actividad',
-                    'interlocutor'
-                ])->findOrFail($articulationStage);
             if(request()->user()->can('listNodes', ArticulationStage::class))
             {
                 $nodos = Nodo::query()->with('entidad')->get();
@@ -113,8 +113,8 @@ class ArticulationStageRegisterController extends Controller
      */
     public function update(Request $request, $articulationStage)
     {
+        $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
         if (request()->user()->can('update', $articulationStage)) {
-            $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
             $req = new ArticulationStageRequest;
             $validator = Validator::make($request->all(), $req->rules(), $req->messages());
             if ($validator->fails()) {
