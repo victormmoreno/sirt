@@ -44,7 +44,7 @@
                                         </p>                                    
                                     </div>
                                 @else
-                                    <form action="{{ route('mantenimiento.update', $mantenimiento->id)}}" method="POST" onsubmit="return checkSubmit()">
+                                    <form id="frmMantenimientoEquipoEdit" action="{{ route('mantenimiento.update', $mantenimiento->id)}}" method="POST">
                                     	{!! method_field('PUT')!!}
     	                                @include('mantenimiento.form', [
     								    	'btnText' => 'Modificar',
@@ -65,40 +65,12 @@
 @push('script')
     <script>
         $(document).ready(function() {
-            mantenimientoEdit.getEquipoPorLinea();
+            let nodo = {{$mantenimiento->equipo->nodo_id}};
+            let linea = {{$mantenimiento->equipo->lineatecnologica_id}};
+            let equipo = {{$mantenimiento->equipo->id}};
+            consultarLineasNodoMantenimiento(nodo, linea);
+            getEquipoPorLineaEdit(nodo, linea, equipo);
         });
-
-        var mantenimientoEdit = {
-            getEquipoPorLinea:function(){
-  
-                let lineatecnologica = $('#txtlineatecnologica').val();
-                let nodo = {{auth()->user()->dinamizador->nodo_id}};
-                $.ajax({
-                    dataType:'json',
-                    type:'get',
-                    url: host_url + '/equipos/getequiposporlinea/'+nodo+'/'+lineatecnologica
-                }).done(function(response){
-                    $('#txtequipo').empty();
-                                            
-                    if (response.equipos == '' && response.equipos.length == 0) {
-                        $('#txtequipo').append('<option value="">No se encontraron resultados</option>');
-                    }else{
-                        $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
-                        $.each(response.equipos, function(i, e) {
-
-                            $('#txtequipo').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
-                        });
-
-                        @if($errors->any())
-                        $('#txtequipo').val({{old('txtequipo')}});
-                        @else
-                        $('#txtequipo').val('{{$mantenimiento->equipo->id}}');
-                        @endif
-                    }
-                    $('#txtequipo').select2();
-                });
-            },
-        }
     </script>
 @endpush
 @endif

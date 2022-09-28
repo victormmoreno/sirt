@@ -8,10 +8,9 @@
         		<div class="row">
                     <div class="col s8 m8 l9">
                         <h5 class="left-align hand-of-Sean-fonts">
-                                <form  action="{{route('mantenimiento.store')}}" method="POST" onsubmit="return checkSubmit()">
                             <a class="footer-text left-align " href="{{route('equipo.index')}}">
 				              	<i class="left material-icons white-text">arrow_back</i>
-				            </a> Mantenimientos de Equipos | Tecnoparque Nodo  {{\NodoHelper::returnNameNodoUsuario()}}
+				            </a> Mantenimientos de Equipos
                         </h5>
                     </div>
                     <div class="col s4 m4 l3 rigth-align show-on-large hide-on-med-and-down">
@@ -26,28 +25,16 @@
             		<div class="card-content">
               			<div class="row">
 			                <center>
-				                <span class="card-title center-align">Nuevo Mantenimiento de Equipos | Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }}
-				                </span>
+				                <span class="card-title center-align">Nuevo Mantenimiento de Equipos</span>
 			                </center>
                 			<div class="divider"></div>
                 			<br/>
-                            @if( $lineastecnologicas->count() == 0)
-                                <div class="center-align">
-                                    <i class="large material-icons prefix">
-                                        block
-                                    </i>
-                                    <p>
-                                        Para registrar un nuevo mantenimiento, Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }} debe tener lineas asociadas, por favor solicita al administrador de la plataforma para que este agregue nuevas lineas tecnológicas al nodo.
-                                    </p>                                    
-                                </div>
-                            @else
-                    			<form  action="{{route('mantenimiento.store')}}" method="POST" onsubmit="return checkSubmit()">
-    			                  	@include('mantenimiento.form', [
-    			                  	'btnText' => 'Registrar'
-    			                  	])
-                    			</form>
-                            @endif
-              			</div>
+                        </div>
+                        <form id="frmMantenimientoEquipo" action="{{route('mantenimiento.store')}}" method="POST">
+                              @include('mantenimiento.form', [
+                              'btnText' => 'Registrar'
+                              ])
+                        </form>
             		</div>
           		</div>
         	</div>
@@ -56,7 +43,7 @@
 </main>
 @endsection
 
-@push('script')
+{{-- @push('script')
     <script>
 
         $(document).ready(function() {
@@ -99,4 +86,4 @@
         }
     
     </script>
-@endpush
+@endpush --}}

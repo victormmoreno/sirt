@@ -128,17 +128,49 @@ class EquipoController extends Controller
     {
         if (request()->ajax()) {
 
-            if (isset($nodo)) {
-                $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                    ->where('nodo_id', $nodo)
-                    ->where('lineatecnologica_id', $lineatecnologica)
-                    ->get();
-            } else {
-                $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-                    ->whereHas('lineatecnologica', function ($query) use ($lineatecnologica) {
-                        $query->where('id', $lineatecnologica);
-                    })->get();
+            if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
+                $nodo_id = $nodo;
             }
+            if (session()->get('login_role') == User::IsDinamizador()) {
+                $nodo_id = auth()->user()->dinamizador->nodo_id;
+            }
+            if (session()->get('login_role') == User::IsGestor()) {
+                $nodo_id = auth()->user()->gestor->nodo_id;
+            }
+
+            if (session()->get('login_role') == User::IsGestor()) {
+                $linea_id = auth()->user()->gestor->lineatecnologica_id;
+            } 
+            // if (session()->get('login_role') == User::IsDinamizador()) {
+            //     $linea_id = $lineatecnologica;
+            // } 
+            if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsDinamizador()) {
+                $linea_id = $lineatecnologica;
+            }
+
+            if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsDinamizador()) {
+                $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
+                ->where('nodo_id', $nodo_id)
+                ->where('lineatecnologica_id', $linea_id)
+                ->get();
+            }
+            if (session()->get('login_role') == User::IsGestor()) {
+                $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
+                ->where('nodo_id', $nodo_id)
+                ->where('lineatecnologica_id', $linea_id)
+                ->get();
+            }
+            // if (isset($nodo_id)) {
+            //     $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
+            //     ->where('nodo_id', $nodo_id)
+            //     ->where('lineatecnologica_id', $linea_id)
+            //     ->get();
+            // } else {
+            //     $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
+            //     ->whereHas('lineatecnologica', function ($query) use ($linea_id) {
+            //         $query->where('id', $linea_id);
+            //     })->get();
+            // }
 
             return response()->json([
                 'equipos' => $equipos,

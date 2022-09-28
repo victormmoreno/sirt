@@ -7966,153 +7966,233 @@ $('#download_equipos').click(function(){
     window.location = url;
 });
 
-$(document).ready(function() {
-    $('#mantenimientosequipos_administrador_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "pagingType": "full_numbers",
-        "lengthChange": false,
-    });
+$(document).on('submit', 'form#frmMantenimientoEquipo', function (event) {
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    ajaxSendFormMantenimiento(form, data, url);
+});
 
+$(document).on('submit', 'form#frmMantenimientoEquipoEdit', function (event) {
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    ajaxSendFormMantenimiento(form, data, url);
+});
+
+function ajaxSendFormMantenimiento(form, data, url) {
+    $.ajax({
+        type: form.attr('method'),
+        url: url,
+        data: data,
+        cache: false,
+        contentType: false,
+        dataType: 'json',
+        processData: false,
+        success: function (data) {
+            $('button[type="submit"]').removeAttr('disabled');
+            $('.error').hide();
+            printErroresFormulario(data);
+            if (data.state != 'error_form') {
+                mensajesFormMantenimiento(data);
+            }
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            alert("Error: " + errorThrown);
+        }
+    });
+};
+
+function mensajesFormMantenimiento(data) {
+    if (data.state) {
+        Swal.fire({
+            title: data.title,
+            text: data.msj,
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+        });
+        setTimeout(function () {
+            window.location.replace(data.url);
+        }, 1000);
+    } else {
+        Swal.fire({
+            title: data.title,
+            text: data.msj,
+            type: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+        })
+    }
+};
+
+var mantenimiento = {
+    getEquipoPorLinea:function(){
+        let lineatecnologica = $('#txtlineatecnologica').val();
+        let nodo = $('#txtnodo_id').val();
+        if (!isset(nodo)) {
+            nodo = 0;
+        }
+        if (!isset(lineatecnologica)) {
+            lineatecnologica = 0;
+        }
+        $.ajax({
+            dataType:'json',
+            type:'get',
+            url: host_url + '/equipos/getequiposporlinea/'+nodo+'/'+lineatecnologica
+        }).done(function(response){
+            $('#txtequipo').empty();
+            if (response.equipos == '' && response.equipos.length == 0) {
+                $('#txtequipo').append('<option value="">No se encontraron resultados</option>');
+            }else{
+                $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
+                $.each(response.equipos, function(i, e) {
+                    $('#txtequipo').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+                });
+            }
+            $('#txtequipo').select2();
+        });
+    },
+}
+
+function getEquipoPorLineaEdit(nodo, linea, equipo){
+    $.ajax({
+        dataType:'json',
+        type:'get',
+        url: host_url + '/equipos/getequiposporlinea/'+nodo+'/'+linea
+    }).done(function(response){
+        $('#txtequipo').empty();
+        if (response.equipos == '' && response.equipos.length == 0) {
+            $('#txtequipo').append('<option value="">No se encontraron resultados</option>');
+        }else{
+            $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
+            $.each(response.equipos, function(i, e) {
+                if (e.id == equipo) {
+                    $('#txtequipo').append('<option selected value="'+e.id+'">'+e.nombre+'</option>');
+                } else {
+                    $('#txtequipo').append('<option value="'+e.id+'">'+e.nombre+'</option>');
+                }
+            });
+        }
+        $('#txtequipo').select2();
+    });
+}
+
+function consultarLineasNodoMantenimiento(nodo_id, linea_id) {
+    $.ajax({
+        dataType:'json',
+        type:'get',
+        url: host_url + "/lineas/getlineasnodo/"+nodo_id
+    }).done(function(response){
+        $("#txtlineatecnologica").empty();
+        $('#txtlineatecnologica').append('<option value="">Seleccione la línea tecnológica</option>');
+        $.each(response.lineasForNodo.lineas, function(i, e) {
+            if (e.id == linea_id) {
+                $('#txtlineatecnologica').append('<option value="'+e.id+'" selected>'+e.abreviatura+' - '+e.nombre+'</option>');
+            } else {
+                $('#txtlineatecnologica').append('<option value="'+e.id+'">'+e.abreviatura+' - '+e.nombre+'</option>');
+            }
+        })
+        $('#txtlineatecnologica').select2();
+    });
+}
+
+
+$(document).ready(function() {
+    // $('#mantenimientosequipos_table').DataTable({
+    //     language: {
+    //         "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    //     },
+    //     "pagingType": "full_numbers",
+    //     "lengthChange": false,
+    // });
+    selectMantenimientosEquiposPorNodo.selectMantenimientosEquipoForNodo();
 });
 
 var selectMantenimientosEquiposPorNodo = {
     selectMantenimientosEquipoForNodo: function() {
         let nodo = $('#selectnodo').val();
-        $('#mantenimientosequipos_administrador_table').dataTable().fnDestroy();
-        if (nodo != '') {
-            
-            $('#mantenimientosequipos_administrador_table').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                processing: true,
-                serverSide: true,
-                retrieve: true,
-                "lengthChange": false,
-                 fixedHeader: {
-                    header: true,
-                    footer: true
-                },
-                "pagingType": "full_numbers",
-                ajax: {
-                    url: host_url + "/mantenimientos/getmantenimientosequipospornodo/" + nodo,
-                    type: "get",
-                },
-                columns: [{
+        $('#mantenimientosequipos_table').dataTable().fnDestroy();
+        if (!isset(nodo)) {
+            nodo = 0;
+        }
+        $('#mantenimientosequipos_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            processing: true,
+            serverSide: true,
+            retrieve: true,
+            "lengthChange": false,
+             fixedHeader: {
+                header: true,
+                footer: true
+            },
+            "pagingType": "full_numbers",
+            ajax: {
+                url: host_url + "/mantenimientos/getmantenimientosequipospornodo/" + nodo,
+                type: "get",
+            },
+            columns: [
+                {
+                    data: 'nodo',
+                    name: 'nodo',
+                    width: '30%'
+                }, 
+                {
                     data: 'lineatecnologica',
                     name: 'lineatecnologica',
                     width: '30%'
-                }, {
+                }, 
+                {
                     data: 'equipo',
                     name: 'equipo',
                     width: '30%'
-                }, {
+                }, 
+                {
                     data: 'ultimo_anio_mantenimiento',
                     name: 'ultimo_anio_mantenimiento',
                     width: '15%'
-                }, {
+                }, 
+                {
                     data: 'valor_mantenimiento',
                     name: 'valor_mantenimiento',
                     width: '15%'
-                }, {
+                }, 
+                {
                     data: 'detail',
                     name: 'detail',
                     width: '15%'
-                }, ],
-            });
+                }, 
+                {
+                    data: 'edit',
+                    name: 'edit',
+                    width: '15%'
+                }, 
+            ],
+        });
+        // if (nodo != '') {
+            
 
 
-        }else{
-            $('#mantenimientosequipos_administrador_table').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                "lengthChange": false,
-                "pagingType": "full_numbers",
-            }).clear().draw();
-        }
+        // }else{
+        //     $('#mantenimientosequipos_table').DataTable({
+        //         language: {
+        //             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        //         },
+        //         "lengthChange": false,
+        //         "pagingType": "full_numbers",
+        //     }).clear().draw();
+        // }
         
     },
 }
-$(document).ready(function() {
-    $('#mantenimientosequipos_dinamizador_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-        retrieve: true,
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: host_url + "/mantenimientos",
-            type: "get",
-        },
-        columns: [{
-            data: 'lineatecnologica',
-            name: 'lineatecnologica',
-            width: '30%'
-        }, {
-            data: 'equipo',
-            name: 'equipo',
-            width: '30%'
-        }, {
-            data: 'ultimo_anio_mantenimiento',
-            name: 'ultimo_anio_mantenimiento',
-            width: '15%'
-        }, {
-            data: 'valor_mantenimiento',
-            name: 'valor_mantenimiento',
-            width: '15%'
-        }, {
-            data: 'detail',
-            name: 'detail',
-            width: '15%'
-        }, {
-            data: 'edit',
-            name: 'edit',
-            orderable: false,
-            width: '8%'
-        }, ],
-    });
-});
-$(document).ready(function() {
-    $('#mantenimientosequipos_gestor_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-        retrieve: true,
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: host_url + "/mantenimientos",
-            type: "get",
-        },
-        columns: [{
-            data: 'lineatecnologica',
-            name: 'lineatecnologica',
-            width: '30%'
-        }, {
-            data: 'equipo',
-            name: 'equipo',
-            width: '30%'
-        }, {
-            data: 'ultimo_anio_mantenimiento',
-            name: 'ultimo_anio_mantenimiento',
-            width: '15%'
-        }, {
-            data: 'valor_mantenimiento',
-            name: 'valor_mantenimiento',
-            width: '15%'
-        }, {
-            data: 'detail',
-            name: 'detail',
-            width: '15%'
-        }, ],
-    });
-});
 function consultarLineasNodo(nodo_id) {
     $.ajax({
         dataType:'json',

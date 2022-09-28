@@ -55,7 +55,7 @@
                                 <div class="col s12 m12 l12">
                                     <label class="active" for="selectnodo">Nodo <span class="red-text">*</span></label>
                                     <select class="js-states browser-default select2 " onchange="selectMantenimientosEquiposPorNodo.selectMantenimientosEquipoForNodo()" tabindex="-1" style="width: 100%" id="selectnodo" >
-                                        <option value="">Seleccione nodo</option>
+                                        {{-- <option value="">Seleccione nodo</option> --}}
                                         @foreach($nodos as $nodo)
                                           <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
                                         @endforeach
@@ -64,63 +64,21 @@
                                 </div>
                             </div>
                             <br>
-                                <table class="display responsive-table" id="mantenimientosequipos_administrador_table">
-                                    <thead>
-                                        <th width="15%">Linea Tecnológica</th>
-                                            <th width="15%">Equipo</th>
-                                            <th width="15%">Año Mantenimiento</th>
-                                            <th width="15%">valor Mantenimiento</th>
-                                            <th width="15%">Detalle</th>
-                                    </thead>
-                    
-                                </table>
                         </div>  
-                        @elsecan('showIndexForDinamizador', App\Models\EquipoMantenimiento::class)
-                        <div class="row">
-                            <div class="row">
-                                <div class="col s12 m2 l2 show-on-large hide-on-med-and-down">
-                                    <a href="{{ route('mantenimiento.create') }}">
-                                      <div class="card green">
-                                        <div class="card-content center">
-                                          <i class="left material-icons white-text">add_circle_outline</i>
-                                          <span class="white-text">Nuevo Mantenimiento</span>
-                                        </div>
-                                      </div>
-                                    </a>
-                                  </div>
-                            </div>
-                            <div class="divider">
-                            </div>  
-                            <br>
-                                <table class="display responsive-table" id="mantenimientosequipos_dinamizador_table">
-                                    <thead>
-                                        <th width="15%">Linea Tecnológica</th>
-                                        <th width="15%">Equipo</th>
-                                        
-                                        <th width="15%">Año Mantenimiento</th>
-                                        <th width="15%">valor Mantenimiento</th>
-                                        <th width="15%">Detalle</th>
-                                        <th width="15%">Editar</th>
-                                    </thead>
-                    
-                                </table>
-                        </div>
-                        @elsecan('showIndexForExperto', App\Models\EquipoMantenimiento::class)
-                        <div class="row">
-                            <div class="divider">
-                            </div>  
-                            <br>
-                                <table class="display responsive-table" id="mantenimientosequipos_gestor_table">
-                                    <thead>
-                                        <th width="15%">Linea Tecnológica</th>
-                                        <th width="15%">Equipo</th>
-                                        <th width="15%">Año Mantenimiento</th>
-                                        <th width="15%">valor Mantenimiento</th>
-                                        <th width="15%">Detalle</th>
-                                    </thead>
-                                </table>
-                        </div>
                         @endcan
+                        <div class="row">
+                            <table class="display responsive-table" id="mantenimientosequipos_table">
+                                <thead>
+                                    <th width="15%">Nodo</th>
+                                    <th width="15%">Linea Tecnológica</th>
+                                    <th width="15%">Equipo</th>
+                                    <th width="15%">Año del mantenimiento</th>
+                                    <th width="15%">Valor del mantenimiento</th>
+                                    <th width="15%">Detalle</th>
+                                    <th width="15%">Editar</th>
+                                </thead>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
