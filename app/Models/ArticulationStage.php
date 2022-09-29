@@ -79,6 +79,12 @@ class ArticulationStage extends Model
         return $this->belongsTo(Nodo::class, 'node_id', 'id');
     }
 
+    public function archivomodel()
+    {
+        return $this->morphOne(ArchivoModel::class, 'model');
+    }
+
+
     /**
      * Define a polymorphic one-to-many relationship between articulationstage and ControlNotificaciones
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany

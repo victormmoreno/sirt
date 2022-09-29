@@ -818,9 +818,15 @@ Route::get('usuarios/filtro-talento/{documento}', 'User\UserController@filterTal
 Route::get('empresas/filter-code/{value}', 'EmpresaController@filterByCode')->name('empresa.filterbycode');
 Route::get('empresas/sede/{id}', 'EmpresaController@filterSede')->name('empresa.sede.filter');
 
+Route::get('articulaciones/downloadFile/{id}', 'ArchivoController@downloadFileArticulation')->name('articulation.files.download');
+Route::get('articulaciones/files/{id}/', 'ArchivoController@datatableArchiveArticulationStage')->name('articulation.files');
+Route::delete('articulaciones/{idFile}/files', 'ArchivoController@destroyFileArticulation')->name('articulation.files.destroy');
+Route::post('articulaciones/files/{id}', 'ArchivoController@uploadFileArticulacion')->name('articulation.files.upload');
+
 Route::get('tipoarticulaciones/{id}/tiposubarticulaciones', 'Articulation\ArticulationTypeController@filterArticulationType');
 Route::resource('tipoarticulaciones', 'Articulation\ArticulationTypeController');
 Route::resource('tiposubarticulaciones', 'Articulation\ArticulationSubtypeController');
+
 
 Route::group(
     [
@@ -849,6 +855,8 @@ Route::group(
         Route::get('/download/{phase}/{id}', 'ArticulationStageListController@downloadCertificate')->name('articulation-stage.download-certificate');
         Route::get('/solicitar-aprobacion/{id}/{fase}', 'ArticulationStageApprovals@requestApproval')->name('articulation-stage.request-approval');
         Route::put('/gestionar_aprobacion/{id}/{fase}', 'ArticulationStageApprovals@manageEndorsement')->name('articulation-stage.manage-endorsement');
+        Route::get('/evidencias/{id}', 'ArticulationStageListController@evidences')->name('articulation-stage.evidences');
+
     }
 );
 

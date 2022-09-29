@@ -258,6 +258,21 @@ class ArticulationStagePolicy
                 && session()->get('login_role') == User::IsArticulador()))
             && (auth()->user()->articulador->nodo->id == $articulationStage->node_id || session()->get('login_role') == User::IsAdministrador());
     }
+    /**
+     * Determine if the given articulations can be Upload Evidences by the user..
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\ArticulationStage  $articulationStage
+     * @return bool
+     */
+    public function uploadEvidences(User $user, ArticulationStage $articulationStage)
+    {
+        return (bool) $user->hasAnyRole([User::IsArticulador()])
+            && ( (session()->has('login_role')
+                && session()->get('login_role') == User::IsArticulador()))
+            && (auth()->user()->articulador->nodo->id == $articulationStage->node_id || session()->get('login_role') == User::IsAdministrador())
+            && $articulationStage->status == ArticulationStage::IsAbierto();
+    }
 
     /**
      * Determina quienes y cuando se pueden ver los botones de aprobación o rechazo de un cambio de fase

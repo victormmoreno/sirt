@@ -57,6 +57,12 @@ class Articulation extends Model
         return $this->belongsTo(ArticulationSubtype::class, 'articulation_subtype_id');
     }
 
+    public function archivomodel()
+    {
+        return $this->morphOne(ArchivoModel::class, 'model');
+    }
+
+
     public function users()
     {
         return $this->belongsToMany(\App\User::class, 'articulation_user', 'articulation_id', 'user_id');

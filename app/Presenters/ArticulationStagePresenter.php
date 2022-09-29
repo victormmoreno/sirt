@@ -43,6 +43,11 @@ class ArticulationStagePresenter extends Presenter
         return $this->articulationStage->status == ArticulationStage::STATUS_OPEN ? __('Open') : __('Close');
     }
 
+    public function articulationStageStatusStartEnd()
+    {
+        return $this->articulationStage->status == ArticulationStage::STATUS_OPEN ? 'inicio' : 'cierre';
+    }
+
     public function articulationStageEndorsement()
     {
         return $this->articulationStage->endorsement == ArticulationStage::ENDORSEMENT_YES ? 'abrir' : 'Cerrar';

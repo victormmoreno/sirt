@@ -454,9 +454,20 @@ class ArticulationStageListController extends Controller
                 $pdf = PDF::loadView('pdf.articulation.articulation-stage-start', compact('articulationStage'));
                 return $pdf->stream();
             }else if(strtoupper($phase) == 'CIERRE'){
-
+                $pdf = PDF::loadView('pdf.articulation.articulation-stage-end', compact('articulationStage'));
+                return $pdf->stream();
             }
         }
         return redirect()->route('home');
     }
+
+    public function evidences($articulationStage)
+    {
+        $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
+        if (request()->user()->can('uploadEvidences', $articulationStage)) {
+            return view('articulation.articulation-stages-evidences', ['articulationStage' =>$articulationStage]);
+        }
+        return redirect()->route('home');
+    }
+
 }
