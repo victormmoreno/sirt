@@ -73,6 +73,9 @@
         <script src="{{ asset('js/web.js') }}">
         </script>
         @include('sweetalert::alert')
+        <script>
+            const host_url = "{{config('app.url')}}";
+        </script>
         @stack('script')
     </body>
 </html>

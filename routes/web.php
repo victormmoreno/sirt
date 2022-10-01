@@ -671,12 +671,12 @@ Route::group(
         Route::get('/export_proyectos_actuales/{idnodo}/{hoja}', 'Excel\IndicadorController@exportIndicadoresProyectosActuales')->name('indicador.proyectos.actuales.export.excel');
         Route::get('/export_trazabilidad/{idproyecto}', 'Excel\ProyectoController@exportTrazabilidadProyecto')->name('excel.proyecto.trazabilidad');
         Route::get('/import_metas_form', 'IndicadorController@form_import_metas')->name('indicadores.form.metas')->middleware('role_session:Administrador');
-        
+
         //Rutas para la generación de excel del módulo de nodo
         Route::get('/excelnodo', 'Excel\NodoController@exportQueryAllNodo')
         ->middleware('role_session:Administrador')
         ->name('excel.excelnodo');
-        
+
         Route::get('/exportexcelfornodo/{nodo}', 'Excel\NodoController@exportQueryForNodo')
         ->middleware('role_session:Administrador|Dinamizador')
         ->name('excel.exportexcelfornodo');
@@ -839,24 +839,7 @@ Route::get('creditos', function () {
     return view('configuracion.creditos');
 })->name('creditos');
 
-//-----------------------Ruta para sección de noticias---------------------------------
 
-
-Route::group([
-    'prefix' => 'noticias',
-    'middleware' => ['auth']
-], function () {
-
-    Route::get('/', 'NoticiasController@index')->name('noticias.index')->middleware('role_session:Administrador');
-    Route::get('/create', 'NoticiasController@create')->name('noticias.create');
-    Route::post('/', 'NoticiasController@store')->name('noticias.store');
-    Route::get('/{id}/edit', 'NoticiasController@edit')->name('noticias.edit')->middleware('role_session:Administrador');
-    Route::patch('/{id}', 'NoticiasController@update')->name('noticias.update')->middleware('role_session:Administrador');
-    Route::delete('/{id}', 'NoticiasController@destroy')->name('noticias.destroy');
-
-});
-
-//-----------------------Fin ruta sección noticias-----------------------------------
 Route::get('usuarios/filtro-talento/{documento}', 'ArticulacionPbtController@filterTalento')->name('articulacion.usuario.talento.search');
 
 Route::get('empresas/filter-code/{value}', 'EmpresaController@filterByCode')->name('empresa.filterbycode');
