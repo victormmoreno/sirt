@@ -54,7 +54,7 @@ Route::post('cambiar-role', 'User\RolesPermissions@changeRoleSession')
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('disablepreventback');
 
-Route::resource('nodo', 'Nodo\NodoController')->middleware('disablepreventback');
+Route::resource('nodo', 'Nodo\NodoController')->except('destroy')->middleware('disablepreventback');
 
 Route::get('usuario/{documento}/password/reset', 'User\UserController@generatePassword')->name('user.newpassword')->middleware('disablepreventback');
 Route::get('usuario/getciudad/{departamento?}', 'User\UserController@getCiudad');
@@ -804,16 +804,11 @@ Route::delete('/notificaciones/{notification}', 'NotificationsController@destroy
     ->name('notifications.destroy')
     ->middleware('disablepreventback');;
 
-/*====================================================================
-=            rutas para las funcionalidades de las lineas            =
-====================================================================*/
-
-
 Route::group([
     'middleware' => 'disablepreventback',
 ], function () {
     Route::get('/lineas/getlineasnodo/{nodo?}', 'LineaController@getAllLineasForNodo')->name('lineas.getAllLineas');
-    Route::resource('lineas', 'LineaController', ['except' => ['destroy']])
+    Route::resource('/lineas', 'LineaController', ['except' => ['destroy']])
         ->names([
             'create'  => 'lineas.create',
             'update'  => 'lineas.update',
@@ -825,20 +820,12 @@ Route::group([
         ]);
 });
 
-/*=====  End of rutas para las funcionalidades de las lineas  ======*/
-
-/*====================================================================
-=            rutas para las funcionalidades de las sublineas            =
-====================================================================*/
 
 Route::resource('sublineas', 'SublineaController', ['except' => ['show']])->middleware('disablepreventback');
-
-/*=====  End of rutas para las funcionalidades de las sublineas  ======*/
 
 Route::get('creditos', function () {
     return view('configuracion.creditos');
 })->name('creditos');
-
 
 Route::get('usuarios/filtro-talento/{documento}', 'ArticulacionPbtController@filterTalento')->name('articulacion.usuario.talento.search');
 

@@ -13,7 +13,7 @@
                                 domain
                             </i>
                             Nodos
-        
+
                         </h5>
                     </div>
                     <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
@@ -27,20 +27,26 @@
                     <div class="card-content">
                         <div class="row">
                             <div class="row">
-                                <div class="col s12 m8 l8">
+                                <div class="col s12 @can('create', \App\Models\Nodo::class) m8 l8 @else m12 l12 @endcan">
                                     <div class="center-align">
                                         <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">
                                             Nodos {{ config('app.name')}}
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col s12 m4 l4 show-on-large hide-on-med-and-down">
-                                    <a  href="{{route('nodo.create')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo Nodo</a>
-                                </div>
+                                @can('create', \App\Models\Nodo::class)
+                                    <div class="col s12 m4 l4 show-on-large hide-on-med-and-down">
+                                        <a  href="{{route('nodo.create')}}" class="waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo Nodo</a>
+                                    </div>
+                                @endcan
                             </div>
                             <div class="divider">
                             </div>
-                            <br>
+                                @can('downloadAll', \App\Models\Nodo::class)
+                                    <div class="right-align">
+                                        <a href="{{route('excel.excelnodo')}}" class="waves-effect waves-light btn btn-flat"><i class="material-icons right">cloud_download</i>Descargar</a>
+                                    </div>
+                                @endcan
                                 <table class="display responsive-table" id="nodos_table">
                                     <thead>
                                         <th >Centro de Formación</th>
@@ -50,15 +56,6 @@
                                         <th >Detalle</th>
                                     </thead>
                                 </table>
-                                <div class="col s12 m2 l2">
-                                    <a  href="{{route('excel.excelnodo')}}">
-                                      <div class="card green">
-                                        <div class="card-content center">
-                                          <span class="white-text">Descargar tabla</span>
-                                        </div>
-                                      </div>
-                                    </a>
-                                </div>
                             </div>
                         </div>
                 </div>

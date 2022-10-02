@@ -7,7 +7,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: {
-            url: host_url + "lineas",
+            url: `${host_url}/lineas`,
         },
         columns: [{
             data: 'abreviatura',
@@ -15,7 +15,7 @@ $(document).ready(function() {
         }, {
             data: 'nombre',
             name: 'nombre',
-        }, 
+        },
         {
             data: 'show',
             name: 'show',
@@ -24,9 +24,10 @@ $(document).ready(function() {
             data: 'action',
             name: 'action',
             orderable: false
-        }, ],
+        }]
     });
 });
+
 $(document).ready(function() {
     $('#linea_dinamizador_table').DataTable({
         language: {
@@ -36,7 +37,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: {
-            url: host_url + "lineas",
+            url: `${host_url}/lineas`,
         },
         columns: [{
             data: 'abreviatura',
@@ -51,6 +52,7 @@ $(document).ready(function() {
         }, ],
     });
 });
+
 $(document).ready(function() {
     $('#nodos_table').DataTable({
         language: {

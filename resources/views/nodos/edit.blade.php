@@ -2,7 +2,6 @@
 @section('meta-title', 'Tecnoparque nodo '. $nodo->entidad->present()->entidadName())
 
 @section('content')
-
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
         <div class="row no-m-t no-m-b">
@@ -36,7 +35,6 @@
         </div>
     </div>
 </main>
-
 @endsection
 
 @push('script')
@@ -55,12 +53,12 @@ var Regional = {
         type:'get',
         url: host_url + '/help/getcentrosformacion/'+id
       }).done(function(response){
-      
+
 
         $('#txtcentro').empty();
         $('#txtcentro').append('<option value="">Seleccione el centro de formación</option>')
         $.each(response.centros, function(i, e) {
-  
+
           $('#txtcentro').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
         })
          @if($errors->any())
@@ -84,7 +82,7 @@ var DepartamentsEdit = {
       }).done(function(response){
         $('#txtciudad').empty();
         $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')
-    
+
         $.each(response.ciudades, function(i, e) {
           $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
 

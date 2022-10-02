@@ -52,22 +52,23 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() || session()->get('login_role') == App\User::IsAdministrador())
+
                                             <div class="right hide-on-med-and-down">
+                                                @can('downloadOne', $nodo)
                                                 <small class="green-text text-darken-2">
                                                     <a class="waves-effect waves-green btn-flat" href="{{route('excel.exportexcelfornodo',$nodo->entidad->slug)}}">
                                                         <i class="fas fa-file-excel fa-lg"></i>Exportar a Excel
                                                     </a>
                                                 </small>
-                                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
+                                                @endcan
+                                                @can('edit', $nodo)
                                                 <small class="green-text text-darken-2">
                                                 <a href="{{route('nodo.edit', $nodo->entidad->slug)}}" class="waves-effect waves-blue btn-flat">
                                                         Cambiar Infomación
                                                     </a>
                                                 </small>
-                                                @endif
+                                                    @endcan
                                             </div>
-                                            @endif
                                             <div class="divider mailbox-divider"></div>
                                             <div class="mailbox-text">
                                                 <div class="row">
