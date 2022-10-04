@@ -55,20 +55,32 @@ class ArticulacionPbtController extends Controller
      */
     public function index(Request $request)
     {
-            $this->authorize('index', ArticulacionPbt::class);
-            $nodos = Entidad::has('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id');
-            $fases = Fase::orderBy('id')->whereNotIn('id', [Fase::IsPlaneacion()])->pluck('nombre', 'id');
-            $alcances = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
-            $typeArt = TipoArticulacion::orderBy('nombre')->pluck('nombre', 'id');
-            return view('articulacionespbt.index', ['nodos' => $nodos, 'fases' => $fases, 'alcances' => $alcances, 'tipoarticulaciones' => $typeArt]);
+        if(request()->user()->cannot('index', ArticulacionPbt::class))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
+        $nodos = Entidad::has('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id');
+        $fases = Fase::orderBy('id')->whereNotIn('id', [Fase::IsPlaneacion()])->pluck('nombre', 'id');
+        $alcances = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
+        $typeArt = TipoArticulacion::orderBy('nombre')->pluck('nombre', 'id');
+        return view('articulacionespbt.index', ['nodos' => $nodos, 'fases' => $fases, 'alcances' => $alcances, 'tipoarticulaciones' => $typeArt]);
     }
 
     public function datatableFiltros(Request $request)
     {
-        $this->authorize('datatable', ArticulacionPbt::class);
+        if(request()->user()->cannot('datatable', ArticulacionPbt::class))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $talent = null;
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
+                $nodo = $request->filter_nodo_art;
+                $user = null;
+                break;
+            case User::IsActivador():
                 $nodo = $request->filter_nodo_art;
                 $user = null;
                 break;
@@ -86,7 +98,8 @@ class ArticulacionPbtController extends Controller
                 $talent = auth()->user()->talento->id;
                 break;
             default:
-                return abort('403');
+                alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+                return redirect()->route('home');
                 break;
         }
 
@@ -174,7 +187,11 @@ class ArticulacionPbtController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', ArticulacionPbt::class);
+        if(request()->user()->cannot('create', ArticulacionPbt::class))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $alcances = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
         $tipoarticulaciones = TipoArticulacion::where('estado',TipoArticulacion::mostrar() )
         ->whereHas('nodos', function($query) {

@@ -49,6 +49,13 @@ trait UsersTrait
         return self::IS_ADMINISTRADOR;
     }
 
+    public static function IsActivador()
+    {
+        return self::IS_ACTIVADOR;
+    }
+
+
+
     public static function IsDinamizador()
     {
         return self::IS_DINAMIZADOR;

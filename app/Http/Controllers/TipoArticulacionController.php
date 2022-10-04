@@ -15,7 +15,7 @@ class TipoArticulacionController extends Controller
 
     public function __construct(TipoArticulacionRepository $tipoArticulacionRepository)
     {
-        $this->middleware(['auth', 'role_session:Administrador'])->except(['show']);
+        $this->middleware(['auth', 'role_session:Administrador|Activador'])->except(['show']);
         $this->tipoArticulacionRepository = $tipoArticulacionRepository;
     }
 
