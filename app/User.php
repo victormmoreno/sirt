@@ -41,6 +41,7 @@ class User extends Authenticatable implements JWTSubject
     const IS_FEMENINO      = 0;
     const IS_ACTIVE        = true;
     const IS_INACTIVE      = false;
+    const IS_ACTIVADOR = "Activador";
     const IS_ADMINISTRADOR = "Administrador";
     const IS_DINAMIZADOR   = "Dinamizador";
     const IS_GESTOR        = "Experto";
@@ -513,6 +514,11 @@ class User extends Authenticatable implements JWTSubject
 
 
         return $query;
+    }
+
+    public function isUserActivador(): bool
+    {
+        return (bool) $this->hasRole(User::IsActivador());
     }
 
     public function isUserAdministrador(): bool
