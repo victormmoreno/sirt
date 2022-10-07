@@ -260,6 +260,12 @@ class ArticulacionPbtController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $articulacion = ArticulacionPbt::findOrFail($id);
+        if(request()->user()->cannot('show', $articulacion))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
 
         $req = new ArticulacionFaseInicioFormRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
@@ -270,7 +276,7 @@ class ArticulacionPbtController extends Controller
             ]);
         } else {
 
-            $response = $this->getArticulacionRepository()->updateInicio($request, $id);
+            $response = $this->getArticulacionRepository()->updateInicio($request, $articulacion);
             if ($response != null) {
                 return response()->json([
                     'data' => $response,
@@ -339,6 +345,11 @@ class ArticulacionPbtController extends Controller
 
     public function showFaseInicioArticulacion($id){
         $articulacion = ArticulacionPbt::where('id', $id)->firstOrFail();
+        if(request()->user()->cannot('show', $articulacion))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
 
         $ultimo_movimiento = $articulacion->historial->last();
 
@@ -371,6 +382,11 @@ class ArticulacionPbtController extends Controller
 
     public function showFaseEjecucionArticulacion($id){
         $articulacion = ArticulacionPbt::where('id', $id)->firstOrFail();
+        if(request()->user()->cannot('show', $articulacion))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $ultimo_movimiento = $articulacion->historial->last();
 
         $alcances = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
@@ -393,7 +409,8 @@ class ArticulacionPbtController extends Controller
                 return view('articulacionespbt.talento.fase_ejecucion', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => $tipoarticulaciones, 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
             default:
-                return abort(Response::HTTP_FORBIDDEN);
+                alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+                return redirect()->route('home');
                 break;
         }
     }
@@ -401,6 +418,11 @@ class ArticulacionPbtController extends Controller
     public function showFaseCierreArticulacion($id)
     {
         $articulacion = ArticulacionPbt::where('id', $id)->firstOrFail();
+        if(request()->user()->cannot('show', $articulacion))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $ultimo_movimiento = $articulacion->historial->last();
 
         $alcances = AlcanceArticulacion::orderBy('nombre')->pluck('nombre', 'id');
@@ -424,7 +446,8 @@ class ArticulacionPbtController extends Controller
                 break;
 
             default:
-                return abort(Response::HTTP_FORBIDDEN);
+                alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+                return redirect()->route('home');
                 break;
         }
     }
@@ -506,6 +529,11 @@ class ArticulacionPbtController extends Controller
     public function suspender(int $id)
     {
         $articulacion = ArticulacionPbt::where('id', $id)->firstOrFail();
+        if(request()->user()->cannot('suspender', $articulacion))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $ultimo_movimiento = $articulacion->historial->last();
         switch (Session::get('login_role')) {
             case User::IsArticulador():
@@ -678,16 +706,17 @@ class ArticulacionPbtController extends Controller
     public function miembros($id)
     {
         $articulacion = ArticulacionPbt::where('id', $id)->firstOrFail();
-
+        if(request()->user()->cannot('updateMiembros', $articulacion))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $historico =  $articulacion->historial;
 
         return view('articulacionespbt.miembros', [
             'articulacion' => $articulacion,
             'historico' => $historico
         ]);
-
-
-
     }
 
 
@@ -787,6 +816,12 @@ class ArticulacionPbtController extends Controller
     public function changeArticulador(UserRepository $userRepository, int $id)
     {
         $articulacion = ArticulacionPbt::where('id', $id)->firstOrFail();
+
+        if(request()->user()->cannot('changeAsesor', $articulacion))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
 
         $historico =  $articulacion->historial;
 

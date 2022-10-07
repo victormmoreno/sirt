@@ -151,5 +151,70 @@ class ArticulacionPbtPolicy
             ) && !$articulacionPbt->present()->articulacionPbtIssetFase(\App\Models\Fase::IsInicio()) && !$articulacionPbt->present()->articulacionPbtIssetFase(\App\Models\Fase::IsFinalizado());
     }
 
+    /**
+     * Determinar si un usuario puede reversar una fase de una articulacion
+     *
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function permissionsOptions(User $user, ArticulacionPbt $articulacionPbt): bool
+    {
+
+        return (bool)
+            session()->has('login_role')
+            && (
+                session()->get('login_role') != User::IsAdministrador() && session()->get('login_role') != User::IsActivador()
+            ) && !$articulacionPbt->present()->articulacionPbtIssetFase(\App\Models\Fase::IsFinalizado());
+    }
+
+    /**
+     * Determinar si un usuario puede reversar una fase de una articulacion
+     *
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function updateMiembros(User $user, ArticulacionPbt $articulacionPbt): bool
+    {
+
+        return (bool)
+            session()->has('login_role')
+            && (
+                session()->get('login_role') == User::IsArticulador() && $user->articulador->nodo_id == $articulacionPbt->nodo_id
+            ) && !$articulacionPbt->present()->articulacionPbtIssetFase(\App\Models\Fase::IsSuspendido());
+    }
+
+    /**
+     * Determinar si un usuario puede suspender una articulacion
+     *
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function suspender(User $user, ArticulacionPbt $articulacionPbt): bool
+    {
+
+        return (bool)
+            session()->has('login_role')
+            && (
+                session()->get('login_role') == User::IsArticulador() && $user->articulador->nodo_id == $articulacionPbt->nodo_id
+            ) && !$articulacionPbt->present()->articulacionPbtIssetFase(\App\Models\Fase::IsSuspendido());
+    }
+
+    /**
+     * Determinar si un usuario puede suspender una articulacion
+     *
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function changeAsesor(User $user, ArticulacionPbt $articulacionPbt): bool
+    {
+
+        return (bool)
+            session()->has('login_role')
+            && (
+                session()->get('login_role') == User::IsDinamizador() && $user->dinamizador->nodo_id == $articulacionPbt->nodo_id
+            ) && !$articulacionPbt->present()->articulacionPbtIssetFase(\App\Models\Fase::IsSuspendido());
+    }
+
+
 
 }

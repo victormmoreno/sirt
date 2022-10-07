@@ -48,7 +48,7 @@
                                             </div>
                                         </div>
                                         @endcan
-                                        @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()) && (session()->has('login_role') && session()->get('login_role') != App\User::IsAdministrador()))
+                                        @can('permissionsOptions', $articulacion)
                                             <div class="mailbox-view-header no-m-b no-m-t">
                                                 <div class="right mailbox-buttons no-s">
                                                     @if($articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio()))
@@ -58,19 +58,18 @@
                                                     @elseif($articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsCierre()))
                                                         <a href="{{route('articulacion.show.cierre',$articulacion->id)}}" class="waves-effect waves-orange btn orange m-t-xs">Ir a la Fase de {{$articulacion->present()->articulacionPbtNameFase()}}</a>
                                                     @endif
-                                                    @if((session()->has('login_role') && session()->get('login_role') === App\User::IsDinamizador()) && !$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsSuspendido()))
+                                                    @can('changeAsesor', $articulacion)
                                                         <a href="{{route('articulacion.cambiar',$articulacion->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar articulador</a>
-                                                    @endif
-                                                    @if((session()->has('login_role') && session()->get('login_role') === App\User::IsArticulador()))
-
-                                                        @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsSuspendido()))
-                                                            <a href="{{route('articulacion.miembros', $articulacion->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Miembros</a>
-                                                            <a href="{{route('articulacion.suspender', $articulacion->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Suspender Articulación</a>
-                                                        @endif
-                                                    @endif
+                                                    @endcan
+                                                    @can('updateMiembros', $articulacion)
+                                                    <a href="{{route('articulacion.miembros', $articulacion->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Miembros</a>
+                                                    @endcan
+                                                    @can('suspender', $articulacion)
+                                                    <a href="{{route('articulacion.suspender', $articulacion->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Suspender Articulación</a>
+                                                    @endcan
                                                 </div>
                                             </div>
-                                        @endif
+                                        @endcan
                                     <div class="mailbox-view-header">
                                         <div class="left">
                                             <span class="mailbox-title p-v-lg">{{$articulacion->present()->articulacionPbtCode()}} - {{$articulacion->present()->articulacionPbtName()}}</span>

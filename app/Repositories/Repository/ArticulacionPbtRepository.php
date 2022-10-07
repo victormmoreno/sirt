@@ -135,11 +135,10 @@ class ArticulacionPbtRepository
      * @return array
      * @author devjul
      */
-    public function updateInicio($request, $id)
+    public function updateInicio($request, $articulacion)
     {
-        // DB::beginTransaction();
-        // try {
-            $articulacion = ArticulacionPbt::find($id);
+        DB::beginTransaction();
+        try {
 
             $articulacion->update([
                 'asesor_id' => auth()->user()->id,
@@ -166,12 +165,12 @@ class ArticulacionPbtRepository
 
             User::enableTalentsArticulacion($articulacion);
 
-            // DB::commit();
+            DB::commit();
             return $articulacion;
-        // } catch (\Exception $e) {
-        //     DB::rollback();
-        //     return null;
-        // }
+        } catch (\Exception $e) {
+            DB::rollback();
+            return null;
+        }
     }
 
 
