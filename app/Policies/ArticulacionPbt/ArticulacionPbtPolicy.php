@@ -78,14 +78,19 @@ class ArticulacionPbtPolicy
      * @author julian londono
      * @return boolean
      */
-    public function show(User $user)
+    public function show(User $user, ArticulacionPbt $articulacionPbt)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsArticulador(), User::IsTalento()]) &&
+        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDinamizador(), User::IsArticulador(), User::IsTalento()]) &&
         session()->has('login_role')
-        && session()->get('login_role') == User::IsAdministrador()
-        || session()->get('login_role') == User::IsDinamizador()
-        || session()->get('login_role') == User::IsArticulador()
-        || session()->get('login_role') == User::IsTalento();
+        && (
+            (session()->get('login_role') == User::IsAdministrador() ||  session()->get('login_role') == User::IsActivador())
+            ||(session()->get('login_role') == User::IsDinamizador() && $user->dinamizador->nodo_id == $articulacionPbt->nodo_id)
+            || (session()->get('login_role') == User::IsArticulador() && $user->articulador->nodo_id == $articulacionPbt->nodo_id)
+            || (
+                session()->get('login_role') == User::IsTalento()  &&
+                $articulacionPbt->talentos()->wherePivot('talento_id', $user->talento->id)->first()
+                )
+            );
     }
 
     /**
@@ -106,13 +111,12 @@ class ArticulacionPbtPolicy
      */
     public function downloadAll(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsArticulador(), User::IsTalento()]) &&
+        return (bool) $user->hasAnyRole([User::IsAdministrador(),User::IsActivador(), User::IsDinamizador(), User::IsArticulador()]) &&
         session()->has('login_role')
         && (session()->get('login_role') == User::IsAdministrador()
         || session()->get('login_role') == User::IsActivador()
         || session()->get('login_role') == User::IsDinamizador()
-        || session()->get('login_role') == User::IsArticulador()
-        || session()->get('login_role') == User::IsTalento());
+        || session()->get('login_role') == User::IsArticulador());
     }
 
     /**
@@ -129,6 +133,22 @@ class ArticulacionPbtPolicy
                 session()->get('login_role') == User::IsAdministrador()
                 || session()->get('login_role') == User::IsActivador()
         );
+    }
+
+    /**
+     * Determinar si un usuario puede reversar una fase de una articulacion
+     *
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function reversePhase(User $user, ArticulacionPbt $articulacionPbt): bool
+    {
+        return (bool) $user->hasAnyRole([User::IsDinamizador()])
+            && session()->has('login_role')
+            && (
+                session()->get('login_role') == User::IsDinamizador() &&
+                auth()->user()->dinamizador->nodo_id == $articulacionPbt->nodo_id
+            ) && !$articulacionPbt->present()->articulacionPbtIssetFase(\App\Models\Fase::IsInicio()) && !$articulacionPbt->present()->articulacionPbtIssetFase(\App\Models\Fase::IsFinalizado());
     }
 
 

@@ -863,7 +863,7 @@ Route::get('articulaciones/ejecucion/{id}', 'ArticulacionPbtController@showFaseE
 Route::get('articulaciones/cierre/{id}', 'ArticulacionPbtController@showFaseCierreArticulacion')->name('articulacion.show.cierre')->middleware('role_session:Articulador|Dinamizador|Administrador|Activador|Talento');
 Route::get('articulaciones/datatable_filtros', 'ArticulacionPbtController@datatableFiltros')->name('articulacion.datatable.filtros')->middleware('role_session:Articulador|Dinamizador|Administrador|Activador|Talento');
 
-Route::resource('articulaciones/tipoarticulaciones', 'TipoArticulacionController');
+    Route::resource('articulaciones/tipoarticulaciones', 'TipoArticulacionController');
 Route::resource('articulaciones', 'ArticulacionPbtController', ['except' => ['edit', 'delete']]);
 
 

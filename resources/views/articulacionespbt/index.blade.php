@@ -33,9 +33,9 @@
                                             </div>
                                         </div>
                                         @can('index', \App\Models\TipoArticulacion::class)
-                                        <div class="col s12 m4 l4">
-                                            <a  href="{{route('tipoarticulaciones.index')}}" class="waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down"><i class="material-icons left">settings</i>Nuevo tipo de Articulación</a>
-                                        </div>
+                                            <div class="col s12 m4 l4">
+                                                <a  href="{{route('tipoarticulaciones.index')}}" class="waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down"><i class="material-icons left">settings</i>Nuevo tipo de Articulación</a>
+                                            </div>
                                         @endcan
                                     @elseif((session()->has('login_role') && session()->get('login_role') === App\User::IsTalento()))
                                         <div class="col s12 m8 l8">
@@ -81,25 +81,23 @@
                                     <div class="input-field col s12 m2 l1">
                                         <label class="active" for="filter_phase">Fases <span class="red-text">*</span></label>
                                         <select name="filter_phase" id="filter_phase">
-                                        <option value="all" >todos</option>
+                                            <option value="all" >todos</option>
                                             @forelse($fases  as $id => $name)
                                                 <option value="{{$id}}" >{{$name}}</option>
                                             @empty
                                                 <option>No se encontraron resultados</option>
                                             @endforelse
-
                                         </select>
                                     </div>
-
                                     <div class="input-field col s12 m3 l2">
                                         <label class="active" for="filter_tipo_articulacion">Tipo Articulación</label>
-                                    <select  name="filter_tipo_articulacion" id="filter_tipo_articulacion">
+                                        <select  name="filter_tipo_articulacion" id="filter_tipo_articulacion">
                                         <option value="all">Todos</option>
                                         @forelse($tipoarticulaciones  as $id => $name)
-                                                <option value="{{$id}}" >{{$name}}</option>
-                                            @empty
-                                                <option>No se encontraron resultados</option>
-                                            @endforelse
+                                            <option value="{{$id}}" >{{$name}}</option>
+                                        @empty
+                                            <option>No se encontraron resultados</option>
+                                        @endforelse
                                     </select>
                                     </div>
                                     <div class="input-field col s12 m3 l2">
@@ -118,7 +116,6 @@
                                             <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_archive_art"><i class="material-icons">cloud_download</i>Descargar</button>
                                         @endcan
                                         <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_articulacion"><i class="material-icons">search</i>Filtar</button>
-
                                     </div>
                                 </div>
                                 <table id="articulaciones_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">

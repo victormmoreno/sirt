@@ -240,8 +240,14 @@ class ArticulacionPbtController extends Controller
      */
     public function show($id)
     {
+
         $articulacion = ArticulacionPbt::where('id', $id)->firstOrFail();
-        $this->authorize('show', ArticulacionPbt::class);
+
+        if(request()->user()->cannot('show', $articulacion))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         return view('articulacionespbt.show', ['articulacion' =>$articulacion]);
     }
 
@@ -604,6 +610,11 @@ class ArticulacionPbtController extends Controller
     public function updateReversar(Request $request, int $id, string $fase)
     {
         $articulacion = ArticulacionPbt::findOrFail($id);
+        if(request()->user()->cannot('reversePhase', $articulacion))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         if ($articulacion->fase->nombre == $fase) {
             Alert::warning('El proyecto ya se encuentra en fase de '.$fase.'!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
             return back();

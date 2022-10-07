@@ -35,7 +35,7 @@
                                     </ul>
                                 </div>
                                 <div class="mailbox-view no-s">
-                                        @if (Session::get('login_role') == App\User::IsDinamizador() && !$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio()) && !$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()))
+                                        @can('reversePhase', $articulacion)
                                         <div class="mailbox-view-header no-m-b no-m-t">
                                             <div class="right mailbox-buttons no-s">
                                                 <form action="{{route('articulacion.reversar', [$articulacion->id, 'Inicio'])}}" method="POST" name="frmReversarFase">
@@ -47,7 +47,7 @@
                                                 </form>
                                             </div>
                                         </div>
-                                        @endif
+                                        @endcan
                                         @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsFinalizado()) && (session()->has('login_role') && session()->get('login_role') != App\User::IsAdministrador()))
                                             <div class="mailbox-view-header no-m-b no-m-t">
                                                 <div class="right mailbox-buttons no-s">
@@ -74,7 +74,6 @@
                                     <div class="mailbox-view-header">
                                         <div class="left">
                                             <span class="mailbox-title p-v-lg">{{$articulacion->present()->articulacionPbtCode()}} - {{$articulacion->present()->articulacionPbtName()}}</span>
-
                                             <div class="left">
                                                 <span class="mailbox-title">{{$articulacion->present()->articulacionPbtUserAsesor()}}</span>
                                                 <span class="mailbox-author">{{$articulacion->present()->articulacionPbtUserRolesAsesor()}} </span>

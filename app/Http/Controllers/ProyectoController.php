@@ -85,7 +85,7 @@ class ProyectoController extends Controller
 
     /**
      * Formulario que permite cambiar los talentos de un proyecto en cualquier fase
-     * 
+     *
      * @param int id del proyecto
      * @return Response
      * @author dum
@@ -104,7 +104,7 @@ class ProyectoController extends Controller
 
     /**
      * Cambia los talentos de un proyecto
-     * 
+     *
      * @param Request $request
      * @param int id del proyecto
      * @return Response
@@ -114,7 +114,7 @@ class ProyectoController extends Controller
         $proyecto = Proyecto::find($id);
         if ($this->validarAccesoAExpertoACambiarTalentos($proyecto))
             return back();
-        
+
         $req = new ProyectoFaseInicioFormRequest;
         $validator = Validator::make($request->all(), $req->rulesTalentos(), $req->messages());
         if ($validator->fails()) {
@@ -588,7 +588,7 @@ class ProyectoController extends Controller
 
     /**
      * Método que valida que un experto no pueda hacer operaciones sobre un proyecto que no está asesorando
-     * 
+     *
      * @param Proyecto $proyecto
      * @return bool
      * @author dum
@@ -614,7 +614,7 @@ class ProyectoController extends Controller
         $proyecto = Proyecto::findOrFail($id);
         if (!$this->validarExperto($proyecto))
             return back();
-        
+
         if ($proyecto->fase->nombre == Proyecto::IsInicio()) {
             return view('proyectos.gestor.form_inicio_view', [
                 'sublineas' => Sublinea::SubLineasDeUnaLinea(auth()->user()->gestor->lineatecnologica->id)->get()->pluck('nombre', 'id'),
@@ -639,7 +639,7 @@ class ProyectoController extends Controller
         $proyecto = Proyecto::findOrFail($id);
         if (!$this->validarExperto($proyecto))
             return back();
-        
+
         if ($proyecto->fase->nombre == Proyecto::IsPlaneacion()) {
             return view('proyectos.gestor.form_planeacion_view', [
                 'proyecto' => $proyecto
@@ -662,7 +662,7 @@ class ProyectoController extends Controller
         $proyecto = Proyecto::findOrFail($id);
         if (!$this->validarExperto($proyecto))
             return back();
-        
+
         if ($proyecto->fase->nombre == Proyecto::IsEjecucion()) {
             return view('proyectos.gestor.form_ejecucion_view', [
                 'proyecto' => $proyecto
@@ -685,7 +685,7 @@ class ProyectoController extends Controller
         $proyecto = Proyecto::findOrFail($id);
         if (!$this->validarExperto($proyecto))
             return back();
-        
+
         if ($proyecto->fase->nombre == Proyecto::IsCierre()) {
             return view('proyectos.gestor.form_cierre_view', [
                 'proyecto' => $proyecto,
@@ -742,14 +742,14 @@ class ProyectoController extends Controller
             case User::IsAdministrador():
                 return view('proyectos.administrador.fase_inicio', [
                     'proyecto' => $proyecto,
-                    'historico' => $historico 
+                    'historico' => $historico
                 ]);
                 break;
 
             case User::IsInfocenter():
                 return view('proyectos.infocenter.fase_inicio', [
                     'proyecto' => $proyecto,
-                    'historico' => $historico 
+                    'historico' => $historico
                 ]);
                 break;
 
@@ -1514,9 +1514,8 @@ class ProyectoController extends Controller
                     'proyecto' => $proyecto,
                     'status_code' => Response::HTTP_OK
                 ]
-            ],Response::HTTP_OK);
+            ]);
         }
-
         return response()->json([
             'data' => [
                 'proyecto' => null,
