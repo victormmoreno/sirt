@@ -212,11 +212,10 @@ class ArticulacionPbtRepository
     * @return boolean
     * @author devjul
     */
-    public function notificarAlTalento(int $id, string $fase)
+    public function notificarAlTalento($articulacion, string $fase)
     {
         DB::beginTransaction();
         try {
-            $articulacion = ArticulacionPbt::findOrFail($id);
             $talentLider = $articulacion->talentos()->wherePivot('talento_lider', 1)->first();
             $articulacion->registerHistoryArticulacion(Movimiento::IsSolicitarTalento(),Session::get('login_role'), null, "{$fase}");
             Notification::send($talentLider->user, new ArticulacionAprobarInicio($articulacion, strtolower($fase), $talentLider->user));
@@ -235,7 +234,7 @@ class ArticulacionPbtRepository
      * @param $id Id del proyecto
      * @param $fase Fase que se está aprobando
      */
-    public function aprobacionFase($request, $id, $fase)
+    public function aprobacionFase($request, $articulacion, $fase)
     {
         DB::beginTransaction();
         try {
@@ -244,7 +243,6 @@ class ArticulacionPbtRepository
             $mensaje = null;
             $title = null;
 
-            $articulacion = ArticulacionPbt::findOrFail($id);
             $dinamizadorRepository = new DinamizadorRepository;
             $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulacion->nodo_id)->get();
             $destinatarios = $dinamizadorRepository->getAllDinamizadorPorNodoArray($dinamizadores);

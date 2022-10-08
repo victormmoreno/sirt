@@ -240,9 +240,7 @@ class ArticulacionPbtController extends Controller
      */
     public function show($id)
     {
-
         $articulacion = ArticulacionPbt::where('id', $id)->firstOrFail();
-
         if(request()->user()->cannot('show', $articulacion))
         {
             alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
@@ -373,7 +371,8 @@ class ArticulacionPbtController extends Controller
                 return view('articulacionespbt.talento.fase_inicio', ['articulacion' =>$articulacion, 'alcances' => $alcances, 'tipoarticulaciones' => [], 'ultimo_movimiento' => $ultimo_movimiento]);
                 break;
             default:
-                return abort(Response::HTTP_FORBIDDEN);
+                alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+                return redirect()->route('home');
                 break;
         }
     }
@@ -454,6 +453,11 @@ class ArticulacionPbtController extends Controller
 
     public function entregablesInicio($id){
         $articulacion = ArticulacionPbt::where('id', $id)->firstOrFail();
+        if(request()->user()->cannot('entregablesInicio', $articulacion))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         return view('articulacionespbt.entregables.entregables-inicio', ['articulacion' =>$articulacion]);
     }
 
@@ -487,8 +491,13 @@ class ArticulacionPbtController extends Controller
      */
     public function solicitar_aprobacion(int $id, string $fase)
     {
-        $notificacion = $this->getArticulacionRepository()->notificarAlTalento($id, $fase);
-
+        $articulacion = ArticulacionPbt::findOrFail($id);
+        if(request()->user()->cannot('solicitarAprobacion', $articulacion))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
+        $notificacion = $this->getArticulacionRepository()->notificarAlTalento($articulacion, $fase);
         if ($notificacion) {
             Alert::success('Notificación Exitosa!', 'Se le ha enviado una notificación al talento para que apruebe la fase de ' . $fase . ' de la articulación!')->showConfirmButton('Ok', '#3085d6');
         } else {
@@ -507,8 +516,14 @@ class ArticulacionPbtController extends Controller
      */
     public function gestionarAprobacion(Request $request, $id, $fase)
     {
+        $articulacion = ArticulacionPbt::findOrFail($id);
+        if(request()->user()->cannot('gestionarAprobacion', $articulacion))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $fase = nameFase($fase);
-        $update = $this->getArticulacionRepository()->aprobacionFase($request, $id, $fase);
+        $update = $this->getArticulacionRepository()->aprobacionFase($request, $articulacion, $fase);
 
         if ($update['state']) {
             Alert::success($update['title'], $update['mensaje'])->showConfirmButton('Ok', '#3085d6');
