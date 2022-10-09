@@ -832,23 +832,22 @@ Route::get('usuarios/filtro-talento/{documento}', 'ArticulacionPbtController@fil
 Route::get('empresas/filter-code/{value}', 'EmpresaController@filterByCode')->name('empresa.filterbycode');
 Route::get('empresas/sede/{id}', 'EmpresaController@filterSede')->name('empresa.sede.filter');
 
-Route::get('articulaciones/export', 'ArticulacionPbtController@export')->name('articulacion.export')->middleware('role_session:Administrador|Articulador|Dinamizador');
-Route::get('articulaciones/download/inicio/{id}', 'PDF\PdfArticulacionPbtController@downloadFormInicio')->name('pdf.articulacion.inicio')->middleware('role_session:Articulador');
-Route::get('articulaciones/download/cierre/{id}', 'PDF\PdfArticulacionPbtController@downloadFormCierre')->name('pdf.articulacion.cierre')->middleware('role_session:Articulador|Administrador');
 
+
+Route::get('articulaciones/export', 'ArticulacionPbtController@export')->name('articulacion.export')->middleware('role_session:Administrador|Activador|Articulador|Dinamizador');
+Route::get('articulaciones/download/inicio/{id}', 'PDF\PdfArticulacionPbtController@downloadFormInicio')->name('pdf.articulacion.inicio')->middleware('role_session:Articulador');
+Route::get('articulaciones/download/cierre/{id}', 'PDF\PdfArticulacionPbtController@downloadFormCierre')->name('pdf.articulacion.cierre')->middleware('role_session:Articulador|Administrador|Activador');
 
 Route::delete('articulaciones/file/{idFile}', 'ArchivoController@destroyFileArticulacion')->name('articulacion.files.destroy')->middleware('role_session:Articulador');
 Route::get('articulaciones/downloadFile/{id}', 'ArchivoController@downloadFileArticulacion')->name('articulacion.files.download');
 Route::get('articulaciones/archivos-articulacion/{id}/{fase}', 'ArchivoController@datatableArchiveArticulacion')->name('articulacion.files');
 Route::post('articulaciones/store/{id}/files', 'ArchivoController@uploadFileArticulacionPbt')->name('articulacion.files.upload')->middleware('role_session:Articulador');
 
-
-
 Route::put('articulaciones/update-articulador/{id}', 'ArticulacionPbtController@updateArticulador')->name('articulacion.update.articulador')->middleware('role_session:Dinamizador');
 Route::get('articulaciones/cambiar-articulador/{id}', 'ArticulacionPbtController@changeArticulador')->name('articulacion.cambiar')->middleware('role_session:Dinamizador');
 Route::put('articulaciones/miembros/{id}', 'ArticulacionPbtController@updateMiembros')->name('articulacion.update.miembros')->middleware('role_session:Articulador');
 Route::get('articulaciones/miembros/{id}', 'ArticulacionPbtController@miembros')->name('articulacion.miembros')->middleware('role_session:Articulador');
-Route::put('articulaciones/reversar/{id}/{fase}', 'ArticulacionPbtController@updateReversar')->name('articulacion.reversar')->middleware('role_session:Dinamizador|Administrador|Activador|');
+Route::put('articulaciones/reversar/{id}/{fase}', 'ArticulacionPbtController@updateReversar')->name('articulacion.reversar')->middleware('role_session:Dinamizador|Administrador|Activador');
 Route::put('articulaciones/suspendido/{id}', 'ArticulacionPbtController@updateSuspendido')->name('articulacion.update.suspendido')->middleware('role_session:Dinamizador');
 Route::get('articulaciones/notificar_suspendido/{id}', 'ArticulacionPbtController@notificarSuspendido')->name('articulacion.notificar.suspension')->middleware('role_session:Articulador');
 Route::put('articulaciones/ejecucion/{id}', 'ArticulacionPbtController@updateEjecucion')->name('articulacion.update.ejecucion')->middleware('role_session:Articulador');

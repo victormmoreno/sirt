@@ -30,7 +30,6 @@ class ArticulacionPbtPolicy
             || session()->get('login_role') == User::IsTalento());
     }
 
-
     /**
      * Determine whether the user can create a articulacion.
      *
@@ -43,17 +42,6 @@ class ArticulacionPbtPolicy
             && session()->has('login_role')
             && session()->get('login_role') == User::IsArticulador();
     }
-
-    /**
-     * Determine si un usuario puede crear nuevas articulaciones.
-     * @author julian londono
-     * @return boolean
-     */
-    public function store(User $user)
-    {
-        return (bool) collect($user->getRoleNames())->contains(User::IsArticulador()) && session()->get('login_role') == User::IsArticulador();
-    }
-
 
     /**
      * Determine si un usuario puede ver el listado en datatables.
@@ -70,7 +58,6 @@ class ArticulacionPbtPolicy
         || session()->get('login_role') == User::IsArticulador()
         || session()->get('login_role') == User::IsTalento())) && request()->ajax();
     }
-
 
     /**
      * Determine si un usuario puede ver el detalle de las articulaciones.
@@ -97,9 +84,9 @@ class ArticulacionPbtPolicy
      * @author julian londono
      * @return boolean
      */
-    public function updateEntregable(User $user)
+    public function updateEntregable(User $user, ArticulacionPbt $articulacionPbt):bool
     {
-        return (bool) collect($user->getRoleNames())->contains(User::IsArticulador()) && session()->get('login_role') == User::IsArticulador();
+        return (bool) collect($user->getRoleNames())->contains(User::IsArticulador()) && session()->get('login_role') == User::IsArticulador() && $user->articulador->nodo_id == $articulacionPbt->nodo_id;
     }
 
     /**
@@ -195,7 +182,10 @@ class ArticulacionPbtPolicy
             session()->has('login_role')
             && (
                 session()->get('login_role') == User::IsArticulador() && $user->articulador->nodo_id == $articulacionPbt->nodo_id
-            ) && !$articulacionPbt->present()->articulacionPbtIssetFase(\App\Models\Fase::IsSuspendido());
+            ) || (
+                session()->get('login_role') == User::IsDinamizador() && $user->dinamizador->nodo_id == $articulacionPbt->nodo_id
+            )
+            && !$articulacionPbt->present()->articulacionPbtIssetFase(\App\Models\Fase::IsSuspendido());
     }
 
     /**
@@ -294,7 +284,7 @@ class ArticulacionPbtPolicy
                 session()->get('login_role') == User::IsArticulador() &&
                 $user->articulador->nodo_id == $articulacionPbt->nodo_id
             )  || (
-                session()->get('login_role') == User::IsTalento() &&
+                session()->get('login_role') == User::IsDinamizador() &&
                 $user->dinamizador->nodo_id == $articulacionPbt->nodo_id
             ) || (
                 session()->get('login_role') == User::IsTalento()  &&
@@ -322,6 +312,35 @@ class ArticulacionPbtPolicy
             && !$articulacionPbt->present()->articulacionPbtIssetFase(\App\Models\Fase::IsFinalizado());
     }
 
+    /**
+     * Determinar si un usuario puede suspender una articulacion
+     *
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function updateSuspendido(User $user, ArticulacionPbt $articulacionPbt): bool
+    {
 
+        return (bool)
+            session()->has('login_role')
+            && (
+                session()->get('login_role') == User::IsDinamizador() && $user->dinamizador->nodo_id == $articulacionPbt->nodo_id
+            );
+    }
 
+    /**
+     * Determinar si un usuario puede cambiar una articulacion a la fase de cierre desde ejecución
+     *
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function updateEjecucion(User $user, ArticulacionPbt $articulacionPbt): bool
+    {
+
+        return (bool)
+            session()->has('login_role')
+            && (
+                session()->get('login_role') == User::IsArticulador() && $user->articulador->nodo_id == $articulacionPbt->nodo_id
+            );
+    }
 }
