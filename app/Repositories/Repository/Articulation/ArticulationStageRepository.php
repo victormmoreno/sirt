@@ -40,6 +40,37 @@ class ArticulationStageRepository
     }
 
     /**
+     * method that returns the query with all the articulation stages and the articulations
+     * @param Request $request
+     */
+
+    public function getListArticulacionStagesWithArticulations()
+    {
+        return ArticulationStage::query()
+            ->select(
+                'articulation_stages.*', 'articulations.code as articulation_code',
+                'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
+                'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
+                'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id', 'interlocutor.documento', 'interlocutor.nombres',
+                'interlocutor.apellidos', 'interlocutor.email'
+            )
+            ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by")
+            ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
+            ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+            ->leftJoin('articulations', 'articulations.articulation_stage_id', '=', 'articulation_stages.id')
+            ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')
+            ->leftJoin('articulationables', function($q) {
+                $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
+                $q->where('articulationables.articulationable_type', '=', 'App\Models\Proyecto');
+            })
+            ->leftJoin('proyectos', 'proyectos.id', '=', 'articulationables.articulationable_id')
+            ->leftJoin('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+            ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+            ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
+            ->leftJoin('users as createdby', 'createdby.id', '=', 'articulation_stages.created_by');
+    }
+
+    /**
      * method for storing the articulation stage
      * @param Request $request
      * @return void
@@ -306,7 +337,7 @@ class ArticulationStageRepository
             if ($model->status == ArticulationStage::STATUS_CLOSE) {
                 $conf_envios = $this->configurationNotificationDynamizer($model);
                 $msg = 'Se le ha enviado una notificación al dinamizador para que apruebe el cierre!';
-                $notificacion = $model->registerNotify($conf_envios['receptor'], $conf_envios['receptor_role'], null);
+                $notificacion = $model->registerNotify($conf_envios['receptor'], $conf_envios['receptor_role'], null, 'cerrar' );
             } else {
                 if ($notificacion_fase_actual == null) {
                     $conf_envios = $this->configurationNotificationTalent($model);
@@ -321,7 +352,7 @@ class ArticulationStageRepository
                     }
                 }
                 // Registra el control de la notificación
-                $notificacion = $model->registerNotify($conf_envios['receptor'], $conf_envios['receptor_role']);
+                $notificacion = $model->registerNotify($conf_envios['receptor'], $conf_envios['receptor_role'], null, 'cerrar');
             }
 
             if ($conf_envios != false) {
@@ -393,7 +424,12 @@ class ArticulationStageRepository
      **/
     public function retornarUltimaNotificacionPendiente($articulationState)
     {
-        return $articulationState->notifications()->where('fase_id',  $articulationState->state)->where('estado', \App\Models\ControlNotificaciones::IsPendiente())->get()->last();
+        if($articulationState->endorsement == ArticulationStage::ENDORSEMENT_YES){
+            $status = "cerrar";
+        }else{
+            $status = "abrir";
+        }
+        return $articulationState->notifications()->where('descripcion',  $status)->where('estado', \App\Models\ControlNotificaciones::IsPendiente())->get()->last();
     }
 
     public function verifyRecipientNotification($notificacion)
@@ -421,7 +457,7 @@ class ArticulationStageRepository
         try {
             $movimiento = null;
             $comentario = "";
-            $notificacion_fase_actual = $articulationStage->notifications()->whereNull('fecha_aceptacion')->get()->last();
+            $notificacion_fase_actual = $this->retornarUltimaNotificacionPendiente($articulationStage);
             $msg = 'No se ha podido enviar la solicitud de aval, inténtalo nuevamente';
             $conf_envios = false;
             if ($notificacion_fase_actual == null) {
@@ -439,7 +475,7 @@ class ArticulationStageRepository
                     $msg = 'Se le ha enviado una notificación al dinamizador para que avale ' . $articulationStage->present()->articulationStageEndorsementApproval();
                 }
             }
-            $notificacion = $articulationStage->registerNotify($conf_envios['receptor'], $conf_envios['receptor_role']);
+            $notificacion = $articulationStage->registerNotify($conf_envios['receptor'], $conf_envios['receptor_role'], null, $fase);
             if ($conf_envios != false) {
                 Notification::send($notificacion->receptor, new EndorsementStageArticulation($articulationStage, $notificacion));
                 $articulationStage->createTraceability($movimiento,Session::get('login_role'), $movimiento,$fase);
@@ -503,17 +539,15 @@ class ArticulationStageRepository
      */
     public function manageEndorsement($request, $id, string $phase)
     {
-        /*DB::beginTransaction();
-        try {*/
+        DB::beginTransaction();
+        try {
             $comentario = null;
             $movimiento = null;
             $mensaje = null;
             $title = null;
-
             $articulationStage = ArticulationStage::findOrFail($id);
             $dinamizadorRepository = new DinamizadorRepository;
             $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulationStage->node_id)->get();
-
             $asesores = User::InfoUserDatatable()
                 ->Join('user_nodo', 'user_nodo.user_id', '=', 'users.id')
                 ->role(User::IsArticulador())
@@ -521,14 +555,18 @@ class ArticulationStageRepository
                 ->where('user_nodo.nodo_id', '=', $articulationStage->node_id)->get();
             $talento_lider = $articulationStage->interlocutor;
             $notificacion_act = ControlNotificaciones::find($request->control_notificacion_id);
-
+            if($articulationStage->status == ArticulationStage::STATUS_OPEN){
+                $phase = 'cerrar';
+            }else{
+                $phase = 'abrir';
+            }
             if ($request->decision == 'rechazado') {
                 $title = 'Aprobación rechazada!';
                 $mensaje = 'Se le han notificado al asesor los motivos por los cuales no se aprueba el aval de la etapa de articulación';
                 $comentario = $request->motivosNoAprueba;
                 $movimiento = Movimiento::IsNoAprobar();
 
-                $articulationStage->createTraceability($movimiento,Session::get('login_role'), $movimiento,$comentario);
+                $articulationStage->createTraceability($movimiento,Session::get('login_role'),$comentario, $phase);
 
                 $regMovimiento = $articulationStage->traceability()->get()->last();
 
@@ -539,16 +577,13 @@ class ArticulationStageRepository
                 $title = 'Aprobación Exitosa!';
                 $mensaje = 'Se ha aprobado el aval de esta etapa de articulación';
                 $movimiento = Movimiento::IsAprobar();
-                $articulationStage->createTraceability($movimiento,Session::get('login_role'), $movimiento,$comentario);
                 $regMovimiento = $articulationStage->traceability()->get()->last();
-
                 $notificacion_act->update(['fecha_aceptacion' => Carbon::now(), 'estado' => $notificacion_act->IsAceptado()]);
-
+                $articulationStage->createTraceability($movimiento,Session::get('login_role'), $comentario, $phase);
                 if (Session::get('login_role') == User::IsTalento()) {
-                    $notificacion = $articulationStage->registerNotify($dinamizadores->last()->id, User::IsDinamizador());
+                    $notificacion = $articulationStage->registerNotify($dinamizadores->last()->id, User::IsDinamizador(), null, $phase);
                     Notification::send($dinamizadores, new EndorsementStageArticulation($articulationStage, $notificacion));
                 } else {
-
                     if ($articulationStage->endorsement == ArticulationStage::ENDORSEMENT_NO) {
                         $articulationStage->update([
                             'endorsement' => ArticulationStage::ENDORSEMENT_YES,
@@ -556,28 +591,26 @@ class ArticulationStageRepository
                         ]);
                     }
                     else if ($articulationStage->endorsement == ArticulationStage::ENDORSEMENT_YES) {
-
                         $articulationStage->update([
                             'endorsement' => ArticulationStage::ENDORSEMENT_NO,
                             'status' => ArticulationStage::STATUS_CLOSE
                         ]);
                     }
-                    $articulationStage->createTraceability($movimiento,Session::get('login_role'), $movimiento,$mensaje);
                 }
             }
-            //DB::commit();
+            DB::commit();
             return [
                 'state' => true,
                 'mensaje' => $mensaje,
                 'title' => $title
             ];
-        /*} catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             DB::rollBack();
             return [
                 'state' => false,
                 'mensaje' => 'No se ha aprobado la fase de inicio del proyecto',
                 'title' => 'Aprobación errónea'
             ];
-        }*/
+        }
     }
 }

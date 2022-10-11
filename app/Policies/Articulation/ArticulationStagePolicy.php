@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\ArticulationStage;
 use App\Models\ControlNotificaciones;
+use function foo\func;
 
 class ArticulationStagePolicy
 {
@@ -143,10 +144,14 @@ class ArticulationStagePolicy
                 (session()->get('login_role') == User::IsDinamizador() && auth()->user()->dinamizador->nodo->id == $articulationStage->node_id) ||
                 (session()->get('login_role') == User::IsArticulador() && auth()->user()->articulador->nodo->id == $articulationStage->node_id) ||
                 (
-                    session()->get('login_role') == User::IsTalento() && $articulationStage->where('interlocutor_talent_id', $user->id)
-                        ->orWhereHas('articulations.users', function ($query) use($user) {
-                            return $query->where('users.id', $user->id);
+                    session()->get('login_role') == User::IsTalento()
+                    && (
+                        $articulationStage->interlocutor()->where('id', $user->id)->first()
+                        || $articulationStage->articulations->map(function($articulation) use($user){
+                            $articulation->users()->where('id', $user->id)->first();
                         })
+                    )
+
                 )
             );
     }
@@ -216,9 +221,13 @@ class ArticulationStagePolicy
             && (session()->has('login_role')
                 && (
                     session()->get('login_role') == User::IsActivador()
-                    || session()->get('login_role') == User::IsDinamizador()
-                    || session()->get('login_role') == User::IsArticulador()
-                    || session()->get('login_role') == User::IsTalento()
+                    || (session()->get('login_role') == User::IsDinamizador() && $user->dinamizador->nodo_id = $articulationStage->node_id)
+                    || (session()->get('login_role') == User::IsArticulador() && $user->articulador->nodo_id = $articulationStage->node_id)
+                    || (session()->get('login_role') == User::IsTalento()  &&
+                        (
+                            $articulationStage->interlocutor()->where('id', $user->id)->first()
+                        )
+                    )
                 )
             );
     }
@@ -256,7 +265,7 @@ class ArticulationStagePolicy
         return (bool) $user->hasAnyRole([User::IsArticulador()])
             && ( (session()->has('login_role')
                 && session()->get('login_role') == User::IsArticulador()))
-            && (auth()->user()->articulador->nodo->id == $articulationStage->node_id || session()->get('login_role') == User::IsAdministrador());
+            && (auth()->user()->articulador->nodo_id == $articulationStage->node_id);
     }
     /**
      * Determine if the given articulations can be Upload Evidences by the user..

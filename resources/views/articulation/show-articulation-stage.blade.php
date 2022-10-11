@@ -81,22 +81,27 @@
                                                                         {{$articulationStage->present()->articulationStageStatus()}}
                                                                     </p>
                                                                 </li>
+                                                                @if(isset($articulationStage->articulation_type))
                                                                 <li class="collection-item">
-                                                                <span class="title black-text text-darken-3">
-                                                                    {{__('ArticulationStage Type')}}
-                                                                </span>
+                                                                    <span class="title black-text text-darken-3">
+                                                                        {{__('ArticulationStage Type')}}
+                                                                    </span>
                                                                     <p>
-                                                                        {{$articulationStage->present()->articulationStageableType()}}
+
+                                                                        {{$articulationStage->articulation_type}}
                                                                     </p>
                                                                 </li>
+                                                                @endif
+                                                                @if(isset($articulationStage->codigo_proyecto))
                                                                 <li class="collection-item">
-                                                                <span class="title black-text text-darken-3">
-                                                                    {{__('Project')}}
-                                                                </span>
-                                                                    <p>
-                                                                        {!! $articulationStage->present()->articulationStageableLink() !!}
-                                                                    </p>
-                                                                </li>
+                                                                    <span class="title black-text text-darken-3">
+                                                                        {{__('Project')}}
+                                                                    </span>
+                                                                        <p>
+                                                                                <a class="orange-text text-darken-1" target="_blank"  href="{{route('proyecto.detalle', [$articulationStage->proyecto_id])}}">{{ $articulationStage->codigo_proyecto . ' - '. $articulationStage->nombre_proyecto}}</a>
+                                                                        </p>
+                                                                    </li>
+                                                                @endif
                                                             </ul>
                                                         </div>
                                                         <div class="col s12 m6 l6">
@@ -122,7 +127,7 @@
                                                                     {{ __('Interlocutory talent') }}
                                                                 </span>
                                                                     <p>
-                                                                        {{$articulationStage->present()->articulationStageInterlocutorTalent()}}
+                                                                        {{$articulationStage->talent_interlocutor}}
                                                                     </p>
                                                                 </li>
                                                                 <li class="collection-item">
@@ -130,7 +135,7 @@
                                                                     {{ __('Created_by') }}
                                                                 </span>
                                                                     <p>
-                                                                        {{$articulationStage->present()->articulationStageBy()}}
+                                                                        {{$articulationStage->created_by}}
                                                                     </p>
                                                                 </li>
                                                                 {!! $articulationStage->present()->articulationStageNameConfidentialityFormat() !!}

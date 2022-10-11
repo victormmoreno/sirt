@@ -27,6 +27,7 @@ class CreateControlNotificacionesTable extends Migration
             $table->datetime('fecha_envio');
             $table->datetime('fecha_aceptacion')->nullable();
             $table->tinyInteger('estado');
+            $table->string('descripcion')->nullable();
             $table->timestamps();
 
             $table->index(["notificable_type", "notificable_id"], 'control_nofiticaciones_notificable_id_index');

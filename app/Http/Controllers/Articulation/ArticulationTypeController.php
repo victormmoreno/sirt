@@ -35,6 +35,7 @@ class ArticulationTypeController extends Controller
             }
             return view('articulation-type.index');
         }
+        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
         return redirect()->route('home');
     }
 
@@ -48,6 +49,7 @@ class ArticulationTypeController extends Controller
         if (request()->user()->can('create', ArticulationType::class)) {
             return view('articulation-type.create');
         }
+        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
         return redirect()->route('home');
     }
 
@@ -85,7 +87,9 @@ class ArticulationTypeController extends Controller
                 'message' => "Registro extioso",
                 'redirect_url' => url(route('tipoarticulaciones.index')),
             ]);
-        }return redirect()->route('home');
+        }
+        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+        return redirect()->route('home');
     }
 
     /**
@@ -100,6 +104,7 @@ class ArticulationTypeController extends Controller
             $typeArticulation = ArticulationType::query()->with('articulationsubtypes')->findOrFail($typeArticulation);
             return view('articulation-type.show', ['typeArticulation' => $typeArticulation]);
         }
+        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
         return redirect()->route('home');
     }
 
@@ -111,8 +116,12 @@ class ArticulationTypeController extends Controller
      */
     public function edit($typeArticulation)
     {
-        $nodos = Entidad::has('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id');
+        if (request()->user()->cannot('edit', ArticulationType::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $typeArticulation = ArticulationType::findOrFail($typeArticulation);
+        $nodos = Entidad::has('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id');
         return view('articulation-type.edit', ['typeArticulation' => $typeArticulation, 'nodos' => $nodos]);
     }
 
@@ -125,6 +134,10 @@ class ArticulationTypeController extends Controller
      */
     public function update(Request $request, $typeArticulation)
     {
+        if (request()->user()->cannot('edit', ArticulationType::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $typeArticulation = ArticulationType::findOrFail($typeArticulation);
         $req       = new ArticulationTypeRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
@@ -160,6 +173,10 @@ class ArticulationTypeController extends Controller
      */
     public function destroy($typeArticulation)
     {
+        if (request()->user()->cannot('destroy', ArticulationType::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $typeArticulation = ArticulationType::findOrFail($typeArticulation);
         if($typeArticulation->articulationsubtypes->count() > 0 ){
             return response()->json([
@@ -177,17 +194,14 @@ class ArticulationTypeController extends Controller
     public function filterArticulationType($articulationType)
     {
         $articulationSubtypes = ArticulationSubtype::query()
-            /*->with(['nodos'=> function($query) use($node){
-                return $query->where('id', $node);
-            }])*/
             ->where('state', ArticulationSubtype::mostrar())
-
             ->where('articulation_type_id', $articulationType)->get();
         if(request()->ajax()){
             return response()->json([
                 'data' => $articulationSubtypes
             ]);
         }
-        return abort(403);
+        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+        return redirect()->route('home');
     }
 }

@@ -200,7 +200,7 @@ class ArticulationStage extends Model
      * @param string $rol_receptor Nombre del rol que espera la notificación
      * @return ControlNotificacion
      */
-    public function registerNotify($receptor, $rol_receptor, $fase = null)
+    public function registerNotify($receptor, $rol_receptor, $fase = null, $descripcion = null)
     {
         return $this->notifications()->create([
             'fase_id' => $fase,
@@ -209,9 +209,23 @@ class ArticulationStage extends Model
             'receptor_id' => $receptor,
             'rol_receptor_id' => Role::where('name', $rol_receptor)->first()->id,
             'fecha_envio' => Carbon::now(),
-            'fecha_aceptacion' => null
+            'fecha_aceptacion' => null,
+            'descripcion' => $descripcion
         ]);
     }
+
+    public function consultarNotificaciones()
+    {
+        return $this->with([
+            'notificaciones',
+            'notificaciones.fase',
+            'notificaciones.remitente',
+            'notificaciones.receptor',
+            'notificaciones.rol_receptor',
+            'notificaciones.rol_remitente'
+        ]);
+    }
+
 
     public function createTraceability($movimiento, $role, $comentario, $descripcion = null)
     {

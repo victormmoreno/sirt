@@ -7,8 +7,8 @@
                     <a href="{{route('articulation-stage.edit', $articulationStage)}}" class="orange-text text-darken-2 pointer tooltipped" data-position="right" data-tooltip="editar {{__('articulation-stage')}}"><i class="tiny material-icons">edit</i></a></span>
                 @endcan
             @endif
-            <span class="mailbox-title">{{__('Node')}} {{$articulationStage->present()->articulationStageNode()}}</span>
-            <span class="mailbox-author">{{$articulationStage->present()->articulationStageInterlocutorTalent()}} ({{__('Interlocutory talent')}})
+            <span class="mailbox-title">{{__('Node')}} {{$articulationStage->nodo}}</span>
+            <span class="mailbox-author">{{$articulationStage->talent_interlocutor}} ({{__('Interlocutory talent')}})
                 @if (Route::currentRouteName() == 'articulation-stage.show')
                     @can('changeTalent', $articulationStage)
                         <a href="{{ route('articulation-stage.changeinterlocutor', $articulationStage) }}" class="orange-text text-darken-2 pointer tooltipped" data-position="right" data-tooltip="cambiar {{__('Interlocutory talent')}}"><i class="tiny material-icons">edit</i></a>

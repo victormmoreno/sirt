@@ -30,29 +30,6 @@ class ArticulationStageListController extends Controller
      */
     public function index()
     {
-        /*return $articulationStages = ArticulationStage::select(
-            'articulation_stages.*', 'articulations.code as articulation_code',
-            'articulations.id as articulation_id','articulations.name as articulation_name', 'fases.nombre as fase',
-            'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
-            'actividades.nombre as nombre_proyecto', 'interlocutor.documento', 'interlocutor.nombres',
-            'interlocutor.apellidos', 'interlocutor.email'
-        )
-            ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_type")
-            ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
-            ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-            ->leftJoin('articulations', 'articulations.articulation_stage_id', '=', 'articulation_stages.id')
-            ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')
-            ->leftJoin('articulationables', function($q) {
-                $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
-                $q->where('articulationables.articulationable_type', '=', 'App\Models\Proyecto');
-
-            })
-            ->leftJoin('proyectos', 'proyectos.id', '=', 'articulationables.articulationable_id')
-            ->leftJoin('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-            ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-            ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
-
-            ->get();*/
         if (request()->user()->can('index', ArticulationStage::class)) {
             $nodos = null;
             if(request()->user()->can('listNodes', ArticulationStage::class)) {
@@ -61,6 +38,7 @@ class ArticulationStageListController extends Controller
             }
             return view('articulation.index-articulation-stage', ['nodos' => $nodos]);
         }
+        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
         return redirect()->route('home');
     }
 
@@ -75,27 +53,7 @@ class ArticulationStageListController extends Controller
             $node = $this->checkRoleAuth($request)['node'];
             $articulationStages = [];
             if (isset($request->filter_status_articulationStage) || isset($request->filter_year_articulationStage)) {
-
-                $articulationStages = ArticulationStage::select(
-                    'articulation_stages.*', 'articulations.code as articulation_code',
-                    'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
-                    'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
-                    'actividades.nombre as nombre_proyecto', 'interlocutor.documento', 'interlocutor.nombres',
-                    'interlocutor.apellidos', 'interlocutor.email'
-                )
-                    ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_type")
-                    ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
-                    ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-                    ->leftJoin('articulations', 'articulations.articulation_stage_id', '=', 'articulation_stages.id')
-                    ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')
-                    ->leftJoin('articulationables', function($q) {
-                        $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
-                        $q->where('articulationables.articulationable_type', '=', 'App\Models\Proyecto');
-                    })
-                    ->leftJoin('proyectos', 'proyectos.id', '=', 'articulationables.articulationable_id')
-                    ->leftJoin('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-                    ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-                    ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
+                $articulationStages = $this->articulationStageRepository->getListArticulacionStagesWithArticulations()
                     ->status($request->filter_status_articulationStage)
                     ->year($request->filter_year_articulationStage)
                     ->node($node)
@@ -105,6 +63,7 @@ class ArticulationStageListController extends Controller
             }
             return $this->datatablearticulationStages($articulationStages);
         }
+        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
         return redirect()->route('home');
     }
 
@@ -119,28 +78,7 @@ class ArticulationStageListController extends Controller
             $node = $this->checkRoleAuth($request)['node'];
             $articulationStages = [];
             if (isset($request->filter_status_articulationStage)) {
-                $articulationStages = ArticulationStage::query()
-                    ->with('articulations')
-                    ->select(
-                    'articulation_stages.*', 'articulations.code as articulation_code',
-                    'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
-                    'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
-                    'actividades.nombre as nombre_proyecto', 'interlocutor.documento', 'interlocutor.nombres',
-                    'interlocutor.apellidos', 'interlocutor.email'
-                )
-                    ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_type")
-                    ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
-                    ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-                    ->leftJoin('articulations', 'articulations.articulation_stage_id', '=', 'articulation_stages.id')
-                    ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')
-                    ->leftJoin('articulationables', function($q) {
-                        $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
-                        $q->where('articulationables.articulationable_type', '=', 'App\Models\Proyecto');
-                    })
-                    ->leftJoin('proyectos', 'proyectos.id', '=', 'articulationables.articulationable_id')
-                    ->leftJoin('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-                    ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-                    ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
+                $articulationStages = $this->articulationStageRepository->getListArticulacionStagesWithArticulations()
                     ->status($request->filter_status_articulationStage)
                     ->year($request->filter_year_articulationStage)
                     ->node($node)
@@ -170,6 +108,7 @@ class ArticulationStageListController extends Controller
             toast('El Archivo no se ha eliminado!', 'danger')->autoClose(2000)->position('top-end');
             return back();
         }
+        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
         return redirect()->route('home');
     }
 
@@ -179,10 +118,11 @@ class ArticulationStageListController extends Controller
      */
     public function downloadFile($articulationStage)
     {
-        if (request()->user()->can('downloadFile', ArticulationStage::class)) {
-            $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
+        $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
+        if (request()->user()->can('downloadFile', $articulationStage)) {
             return $this->articulationStageRepository->downloadFile($articulationStage);
         }
+        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
         return redirect()->route('home');
     }
 
@@ -196,11 +136,10 @@ class ArticulationStageListController extends Controller
     {
         $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
         if (request()->user()->can('changeTalent', $articulationStage)) {
-
             return view('articulation.change-interlocutor', compact('articulationStage'));
         }
+        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
         return redirect()->route('home');
-
     }
 
     /**
@@ -244,6 +183,7 @@ class ArticulationStageListController extends Controller
                     ]);
                 }
             }
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
         }
     }
@@ -354,8 +294,6 @@ class ArticulationStageListController extends Controller
         }
         return ['talent' => $talent, 'node' => $node];
     }
-
-
     /**
      * Display the specified resource.
      *
@@ -364,31 +302,18 @@ class ArticulationStageListController extends Controller
      */
     public function show($id)
     {
-        $articulationStage = ArticulationStage::query()
-            ->with([
-                'node.entidad',
-                'createdBy',
-                'articulations.phase',
-                'projects.articulacion_proyecto.actividad',
-                'file',
-                'interlocutor'
-            ])
-        ->findOrfail($id);
-
-        if (request()->user()->can('show', $articulationStage))
+        $articulationStage = $this->articulationStageRepository->getListArticulacionStagesWithArticulations()
+            ->with(['traceability', 'articulations.phase'])
+            ->findOrfail($id);
+        if (request()->user()->cannot('show', $articulationStage))
         {
-            $ult_notificacion = $articulationStage->notifications()->whereNull('fecha_aceptacion')->get()->last();
-            //$ult_notificacion = $articulationStage->notifications()->get()->last();
-
-            $rol_destinatario = $this->articulationStageRepository->verifyRecipientNotification($ult_notificacion);
-
-            return view('articulation.show-articulation-stage', compact('articulationStage', 'ult_notificacion', 'rol_destinatario'));
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
         }
-        return redirect()->route('home');
+        $ult_notificacion = $this->articulationStageRepository->retornarUltimaNotificacionPendiente($articulationStage);
+        $rol_destinatario = $this->articulationStageRepository->verifyRecipientNotification($ult_notificacion);
+        return view('articulation.show-articulation-stage', compact('articulationStage', 'ult_notificacion', 'rol_destinatario'));
     }
-
-
-
 
     /**
      * Remove the specified resource from storage.
@@ -467,6 +392,7 @@ class ArticulationStageListController extends Controller
         if (request()->user()->can('uploadEvidences', $articulationStage)) {
             return view('articulation.articulation-stages-evidences', ['articulationStage' =>$articulationStage]);
         }
+        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
         return redirect()->route('home');
     }
 

@@ -18,7 +18,7 @@ class ArticulationSubtypePolicy
      */
     public function before(User $user, $ability)
     {
-        if ($user->hasAnyRole([User::IsArticulador()])
+        if ($user->hasAnyRole([User::IsAdministrador()])
             && session()->has('login_role')
             && session()->get('login_role') == User::IsAdministrador()) {
             return true;
@@ -31,7 +31,7 @@ class ArticulationSubtypePolicy
      * @param  \App\User  $user
      * @return bool
      */
-    public function index(User $user)
+    public function index(User $user): bool
     {
         return (bool) $user->hasAnyRole([
                 User::IsActivador()
@@ -42,7 +42,7 @@ class ArticulationSubtypePolicy
             );
     }
 
-    public function listNodes(User $user)
+    public function listNodes(User $user): bool
     {
         return (bool) $user->hasAnyRole([User::IsActivador()])
             && session()->has('login_role')
@@ -52,16 +52,30 @@ class ArticulationSubtypePolicy
      * Determine if the given articulations can be create by the user.
      *
      * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response
+     * @return bool
      */
-    public function create(User $user)
+    public function create(User $user): bool
     {
         return (bool) $user->hasAnyRole([User::IsActivador()])
             && session()->has('login_role')
             && session()->get('login_role') == User::IsActivador();
     }
 
-    public function show(User $user)
+    public function show(User $user): bool
+    {
+        return (bool) $user->hasAnyRole([User::IsActivador()])
+            && session()->has('login_role')
+            && session()->get('login_role') == User::IsActivador();
+    }
+
+    public function edit(User $user): bool
+    {
+        return (bool) $user->hasAnyRole([User::IsActivador()])
+            && session()->has('login_role')
+            && session()->get('login_role') == User::IsActivador();
+    }
+
+    public function destroy(User $user): bool
     {
         return (bool) $user->hasAnyRole([User::IsActivador()])
             && session()->has('login_role')

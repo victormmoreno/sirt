@@ -18,31 +18,26 @@
                 <a href="{{route('articulation-stage.request-approval', [$articulationStage->id , 'abrir' ])}}"
                    class="collection-item yellow lighten-3">
                     <i class="material-icons left">notifications</i>
-                    @if ($articulationStage->status == \App\Models\ArticulationStage::STATUS_CLOSE)
-                        @if($rol_destinatario == 'Talento')
-                            Enviar solicitud de aval al talento
+                        @if($rol_destinatario == \App\User::IsTalento())
+                            Enviar solicitud de aval al {{\App\User::IsTalento()}}
                             para {{$articulationStage->present()->articulationStageEndorsementApproval()}}
-                            esta {{__('articulation-stage')}}.
-                        @elseif($rol_destinatario == 'Dinamizador')
+                        @else
                             El talento interlocutor dió el aval, enviar
-                            solicitud de aval al dinamizador.
+                            solicitud de aval al dinamizador para {{$articulationStage->present()->articulationStageEndorsementApproval()}}.
                         @endif
-                    @endif
                 </a>
             @else
                 <a href="{{route('articulation-stage.request-approval', [$articulationStage->id , 'cerrar' ])}}"
                    class="collection-item yellow lighten-3">
                     <i class="material-icons left">notifications</i>
-                    @if ($articulationStage->status == \App\Models\ArticulationStage::STATUS_OPEN)
-                        @if($rol_destinatario == 'Talento')
+                        @if($rol_destinatario == \App\User::IsTalento())
                             Enviar solicitud de aval al talento
                             para {{$articulationStage->present()->articulationStageEndorsementApproval()}}
                             esta {{__('articulation-stage')}}.
                         @elseif($rol_destinatario == 'Dinamizador')
                             El talento interlocutor dió el aval, enviar
-                            solicitud de aval al dinamizador.
+                            solicitud de aval al dinamizador para {{$articulationStage->present()->articulationStageEndorsementApproval()}}
                         @endif
-                    @endif
                 </a>
             @endif
         @endcan

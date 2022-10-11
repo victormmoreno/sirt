@@ -18,7 +18,7 @@ class ArticulationTypePolicy
      */
     public function before(User $user, $ability)
     {
-        if ($user->hasAnyRole([User::IsArticulador()])
+        if ($user->hasAnyRole([User::IsAdministrador()])
             && session()->has('login_role')
             && session()->get('login_role') == User::IsAdministrador()) {
             return true;
@@ -52,6 +52,20 @@ class ArticulationTypePolicy
     }
 
     public function show(User $user)
+    {
+        return (bool) $user->hasAnyRole([User::IsActivador()])
+            && session()->has('login_role')
+            && session()->get('login_role') == User::IsActivador();
+    }
+
+    public function edit(User $user)
+    {
+        return (bool) $user->hasAnyRole([User::IsActivador()])
+            && session()->has('login_role')
+            && session()->get('login_role') == User::IsActivador();
+    }
+
+    public function destroy(User $user)
     {
         return (bool) $user->hasAnyRole([User::IsActivador()])
             && session()->has('login_role')

@@ -12,20 +12,20 @@
                         @foreach ($articulationStage->traceability as $value)
                             <li class="collection-item">
                                 @if ( isset($value->user) && $value->movimiento->movimiento == App\Models\Movimiento::IsSolicitarTalento())
-                                    El {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}} avalar la {{__('articulation-stage')}}
-                                    {{$value->descripcion}} en la fecha {{$value->created_at->isoFormat('MMMM Do YYYY, h:mm:ss a')}}
+                                    El {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}} avalar el '{{$value->descripcion}}' de la {{__('articulation-stage')}}
+                                     en la fecha {{$value->created_at->isoFormat('MMMM Do YYYY, h:mm:ss a')}}
                                 @endif
                                 @if ( isset($value->user) && $value->movimiento->movimiento == App\Models\Movimiento::IsSolicitarDinamizador())
                                     El {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}}
-                                    {{$value->descripcion}} la articulación en la fecha {{$value->created_at->isoFormat('MMMM Do YYYY, h:mm:ss a')}}
+                                        el aval para '{{$value->descripcion}}' la {{__('articulation-stage')}} en la fecha {{$value->created_at->isoFormat('MMMM Do YYYY, h:mm:ss a')}}
                                 @endif
                                 @if ( isset($value->user) && $value->movimiento->movimiento == App\Models\Movimiento::IsAprobar())
                                     El {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}}
-                                    la fase {{$value->descripcion}} en la fecha {{$value->created_at->isoFormat('MMMM Do YYYY, h:mm:ss a')}}
+                                        el aval para '{{$value->descripcion}}' la {{__('articulation-stage')}} en la fecha {{$value->created_at->isoFormat('MMMM Do YYYY, h:mm:ss a')}}
                                 @endif
                                 @if ( isset($value->user) && $value->movimiento->movimiento == App\Models\Movimiento::IsNoAprobar())
                                     El {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}}
-                                    la fase {{$value->descripcion}} en la fecha {{$value->created_at->isoFormat('MMMM Do YYYY, h:mm:ss a')}} por los siguientes motivos:  {{$value->comentarios}}
+                                    el aval para '{{$value->descripcion}}' la {{__('articulation-stage')}}  en la fecha {{$value->created_at->isoFormat('MMMM Do YYYY, h:mm:ss a')}} por los siguientes motivos:  {{$value->comentarios}}
                                 @endif
                                 @if ( isset($value->user) && $value->movimiento->movimiento == App\Models\Movimiento::IsPostular() || $value->movimiento->movimiento == App\Models\Movimiento::IsDuplicar())
                                     El {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}}

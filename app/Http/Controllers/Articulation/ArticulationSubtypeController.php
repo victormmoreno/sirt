@@ -41,6 +41,7 @@ class ArticulationSubtypeController extends Controller
             $articulationTypes = ArticulationType::all()->pluck('name', 'id');
             return view('articulation-subtype.index', compact('nodos', 'articulationTypes'));
         }
+        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
         return redirect()->route('home');
     }
 
@@ -59,9 +60,10 @@ class ArticulationSubtypeController extends Controller
                 $nodos = Nodo::query()->with('entidad')->get();
                 $nodos = collect($nodos)->pluck('entidad.nombre', 'id');
             }
-            $articulationTypes = ArticulationType::all()->pluck('name', 'id');
+            $articulationTypes = ArticulationType::query()->where('state', ArticulationType::mostrar())->get()->pluck('name', 'id');
             return view('articulation-subtype.create', compact('nodos', 'articulationTypes'));
         }
+        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
         return redirect()->route('home');
     }
 
@@ -73,6 +75,11 @@ class ArticulationSubtypeController extends Controller
      */
     public function store(Request $request)
     {
+        if (request()->user()->cannot('create', ArticulationSubtype::class))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $req       = new ArticulationSubtypeRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
@@ -108,6 +115,11 @@ class ArticulationSubtypeController extends Controller
      */
     public function show($articulationSubtype)
     {
+        if (request()->user()->cannot('show', ArticulationSubtype::class))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $articulationSubtype = ArticulationSubtype::query()
             ->with(['nodos.entidad', 'articulations'])
             ->findOrFail($articulationSubtype);
@@ -123,21 +135,22 @@ class ArticulationSubtypeController extends Controller
      */
     public function edit($articulationSubtype)
     {
-        if (request()->user()->can('create', ArticulationSubtype::class))
+        if (request()->user()->cannot('edit', ArticulationSubtype::class))
         {
-            $nodos = null;
-            $articulationSubtype = ArticulationSubtype::query()
-                ->with('articulationtype')
-                ->findOrFail($articulationSubtype);
-            if(request()->user()->can('listNodes', ArticulationSubtype::class))
-            {
-                $nodos = Nodo::query()->with('entidad')->get();
-                $nodos = collect($nodos)->pluck('entidad.nombre', 'id');
-            }
-            $articulationTypes = ArticulationType::all()->pluck('name', 'id');
-            return view('articulation-subtype.edit', compact('nodos', 'articulationSubtype', 'articulationTypes'));
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
         }
-        return redirect()->route('home');
+        $nodos = null;
+        $articulationSubtype = ArticulationSubtype::query()
+            ->with('articulationtype')
+            ->findOrFail($articulationSubtype);
+        if(request()->user()->can('listNodes', ArticulationSubtype::class))
+        {
+            $nodos = Nodo::query()->with('entidad')->get();
+            $nodos = collect($nodos)->pluck('entidad.nombre', 'id');
+        }
+        $articulationTypes = ArticulationType::all()->pluck('name', 'id');
+        return view('articulation-subtype.edit', compact('nodos', 'articulationSubtype', 'articulationTypes'));
     }
 
     /**
@@ -149,6 +162,11 @@ class ArticulationSubtypeController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if (request()->user()->cannot('edit', ArticulationSubtype::class))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $articulationSubtype = ArticulationSubtype::findOrFail($id);
         $req       = new ArticulationSubtypeRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
@@ -185,6 +203,11 @@ class ArticulationSubtypeController extends Controller
      */
     public function destroy($articulationSubtype)
     {
+        if (request()->user()->cannot('destroy', ArticulationSubtype::class))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $articulationSubtype = ArticulationSubtype::findOrFail($articulationSubtype);
         if(!$articulationSubtype->articulations->IsEmpty() ){
             return response()->json([
