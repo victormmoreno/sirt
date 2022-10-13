@@ -302,17 +302,40 @@ class ArticulationStageListController extends Controller
      */
     public function show($id)
     {
-        $articulationStage = $this->articulationStageRepository->getListArticulacionStagesWithArticulations()
-            ->with(['traceability', 'articulations.phase'])
+        $articulationStage = ArticulationStage::query()
+            ->select(
+                'articulation_stages.*', 'articulations.code as articulation_code',
+                'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
+                'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
+                'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id', 'interlocutor.documento', 'interlocutor.nombres',
+                'interlocutor.apellidos', 'interlocutor.email'
+            )
+            ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by")
+            ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
+            ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+            ->leftJoin('articulations', 'articulations.articulation_stage_id', '=', 'articulation_stages.id')
+            ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')
+            ->leftJoin('articulationables', function($q) {
+                $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
+                $q->where('articulationables.articulationable_type', '=', 'App\Models\Proyecto');
+            })
+            ->leftJoin('proyectos', 'proyectos.id', '=', 'articulationables.articulationable_id')
+            ->leftJoin('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+            ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+            ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
+            ->leftJoin('users as createdby', 'createdby.id', '=', 'articulation_stages.created_by')
+
             ->findOrfail($id);
+
         if (request()->user()->cannot('show', $articulationStage))
         {
             alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
         }
+        $traceability = ArticulationStage::getTraceability($articulationStage)->get();
         $ult_notificacion = $this->articulationStageRepository->retornarUltimaNotificacionPendiente($articulationStage);
         $rol_destinatario = $this->articulationStageRepository->verifyRecipientNotification($ult_notificacion);
-        return view('articulation.show-articulation-stage', compact('articulationStage', 'ult_notificacion', 'rol_destinatario'));
+        return view('articulation.show-articulation-stage', compact('articulationStage', 'ult_notificacion', 'rol_destinatario', 'traceability'));
     }
 
     /**

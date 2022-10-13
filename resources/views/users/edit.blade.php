@@ -469,7 +469,6 @@ var user = {
             $('#txtciudadexpedicion').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
             @if(isset($user->ciudadexpedicion->id))
                 $('#txtciudadexpedicion').select2('val','{{$user->ciudadexpedicion->id}}');
-
             @endif
           });
           $('#txtciudadexpedicion').material_select();
@@ -491,10 +490,8 @@ var user = {
             $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
             @if(isset($user->ciudad->id))
                 $('#txtciudad').select2('val','{{$user->ciudad->id}}');
-
             @endif
           })
-
           $('#txtciudad').material_select();
         });
     },

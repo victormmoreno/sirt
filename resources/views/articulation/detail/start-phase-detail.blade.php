@@ -1,5 +1,6 @@
 <div class="row">
-    <div class="col s12 m12 l12">
+    @include('articulation.options.articulation-options-menu-left')
+    <div class="col s12 m8 l9">
         <div class="row">
             <div class="col s12 m4 l4">
                 <ul class="collection">
@@ -157,11 +158,4 @@
         </div>
     </div>
 </div>
-<div class="center">
-    <span class="mailbox-title orange-text">
-        <i class="material-icons">attach_file</i>
-        Evidencias de la fase de inicio.
-    </span>
-</div>
-<div class="divider mailbox-divider"></div>
 

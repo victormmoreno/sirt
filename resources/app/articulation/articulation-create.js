@@ -282,7 +282,7 @@ const filter_articulations = {
                                 <div class="card-content">
                                     <span class="card-title p f-12 ">${user.documento} - ${user.nombres} ${user.apellidos}</span>
                                     <p class="position-top-right p f-12 mail-date hide-on-med-and-down"> Acceso al sistema: ${userSearch.state(user.estado)}</p>
-                                    <div class="mailbox-text p f-12 hide-on-med-and-down">Miembro desde ${filter_project.formatDate(user.created_at)}</div>
+                                    <div class="mailbox-text p f-12 hide-on-med-and-down">Miembro desde ${filter_articulations.formatDate(user.created_at)}</div>
                                 </div>
                                 <div class="card-action">
                                 <a class="waves-effect waves-red btn-flat m-b-xs orange-text" onclick="filter_articulations.addTalentToArticulation(${user.talento.id});" class="orange-text">Agregar</a>
@@ -291,7 +291,7 @@ const filter_articulations = {
                         </div>
                     </div>`);
                 }else{
-                    filter_project.notFound('result-talents');
+                    filter_articulations.notFound('result-talents');
                 }
 
             });
@@ -327,7 +327,7 @@ const filter_articulations = {
     addTalentToArticulation: function(user){
         filter_articulations.emptyResult('alert-empty-talents');
         if (filter_articulations.noRepeat(user) == false) {
-            filter_project.talentAssociated();
+            filter_articulations.talentAssociated();
         } else {
             filter_articulations.emptyResult('talent-empty');
             filter_articulations.printTalentoInTable(user);
@@ -475,9 +475,6 @@ const filter_articulations = {
 
                     });
                 }
-
-
         });
-
     }
 }

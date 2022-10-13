@@ -87,7 +87,6 @@
                                                                         {{__('ArticulationStage Type')}}
                                                                     </span>
                                                                     <p>
-
                                                                         {{$articulationStage->articulation_type}}
                                                                     </p>
                                                                 </li>

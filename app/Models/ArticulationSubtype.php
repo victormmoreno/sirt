@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ArticulationSubtypePresenter;
 
@@ -63,6 +64,16 @@ class ArticulationSubtype extends Model
     public function scopeNode($query, $node)
     {
         if (isset($node) && $node != null && $node != 'all') {
+            return $query->whereHas('nodos', function ($subQuery) use ($node) {
+                $subQuery->where('nodos.id', $node);
+            });
+        }
+        return $query;
+    }
+
+    public function scopeNodeForRole($query, $node, $role)
+    {
+        if (isset($node) && $node != null && $node != 'all' && ($role != User::IsAdministrador() || $role != User::IsActivador() ) ) {
             return $query->whereHas('nodos', function ($subQuery) use ($node) {
                 $subQuery->where('nodos.id', $node);
             });

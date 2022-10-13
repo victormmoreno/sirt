@@ -8,6 +8,7 @@ use App\Models\ArticulationStage;
 use App\User;
 use App\Models\Articulation;
 use App\Models\Fase;
+use Illuminate\Support\Facades\DB;
 
 
 class ArticulationRepository
@@ -34,7 +35,6 @@ class ArticulationRepository
                 'isCompleted' => false,
             ];
         }
-
     }
     /**
         * store articulation
@@ -83,4 +83,74 @@ class ArticulationRepository
             return "{$initial}{$year}-{$node}{$month}{$user}-{$model->max}";
     }
 
+    /**
+     * store
+     * @param Request $request
+     * @return void
+     */
+    public function update(Request $request, Articulation $articulation)
+    {
+        try {
+            $articulation->update([
+                'name' => $request->name_articulation,
+                'description' => $request->description_articulation,
+                'start_date' => $request->start_date,
+                'expected_end_date' => $request->expected_date,
+                'entity' => $request->name_entity,
+                'contact_name' => $request->name_contact,
+                'email_entity' => $request->email,
+                'summon_name' => $request->call_name,
+                'objective' => $request->objective,
+                'articulation_subtype_id' => $request->articulation_subtype,
+                'scope_id' => $request->scope_articulation
+            ]);
+            if($request->filled('talents')){
+                $articulation->users()->sync($request->talents);
+            }
+            return  [
+                'data' => $articulation,
+                'message' => '',
+                'isCompleted' => true,
+            ];
+        } catch (\Exception $ex) {
+            return  [
+                'data' => "",
+                'message' => $ex->getMessage(),
+                'isCompleted' => false,
+            ];
+        }
+    }
+
+    /**
+     * Modifica los entregables de una articulacion en la fase de ejecución
+     *
+     * @param Request $request
+     * @param int $id id de la articulacion
+     * @return array
+     * @author devjul
+     */
+    public function updateEntregablesEjecucionRepository($request, $articulation)
+    {
+        DB::beginTransaction();
+        try {
+            $tracing = 0;
+            $announcement_document = 0;
+            if (isset($request->tracing)) {
+                $tracing = 1;
+            }
+            if (isset($request->announcement_document)) {
+                $announcement_document = 1;
+            }
+
+            $articulation->update([
+                'announcement_document' => $announcement_document,
+                'tracing' => $tracing,
+            ]);
+            DB::commit();
+            return $articulation;
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return null;
+        }
+    }
 }

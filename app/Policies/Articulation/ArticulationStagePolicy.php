@@ -23,7 +23,7 @@ class ArticulationStagePolicy
     {
         if ($user->hasAnyRole([User::IsAdministrador()])
             && session()->has('login_role')
-            && session()->get('login_role') == User::IsAdministrador() && ($ability != 'showButtonAprobacion')) {
+            && session()->get('login_role') == User::IsAdministrador() && ($ability != 'showButtonAprobacion' || $ability != 'requestApproval')) {
             return true;
         }
     }

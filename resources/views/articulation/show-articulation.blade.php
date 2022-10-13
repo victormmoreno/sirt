@@ -26,7 +26,7 @@
                             <div class="col s12 m12 l12">
                                 <div class="mailbox-options">
                                     <ul>
-                                        <li class="text-mailbox ">La articulación se encuentra actualmente en la fase de inicio</li>
+                                        <li class="text-mailbox ">La articulación se encuentra actualmente en la fase de {{$articulation->present()->articulationPhase()}}</li>
                                         <div class="right">
                                             <li class="text-mailbox">Fecha Inicio: {{$articulation->present()->articulationStartDate()}}</li>
                                         </div>
@@ -34,26 +34,13 @@
                                 </div>
                                 <div class="mailbox-view no-s">
                                     <div class="mailbox-view-header">
-                                        <div class="left">
-                                            <div class="left">
-                                                <span class="mailbox-title">{{$articulation->present()->articulationCode()}} - {{$articulation->present()->articulationName()}}
-                                                @can('update', $articulation)
-                                                    <a href="{{route('accompaniments.edit', $articulation)}}" class="orange-text text-darken-2 pointer tooltipped" data-position="right" data-tooltip="editar {{__('articulation-stage')}}"><i class="tiny material-icons">edit</i></a></span>
-                                                @endcan
-                                                <span class="mailbox-title">{{__('Node')}} {{$articulation->articulationstage->present()->articulationStageNode()}}</span>
-                                                <span class="mailbox-author">{{$articulation->present()->articulationBy()}} (Articulador)
-                                                    @can('update', $articulation)
-                                                        {{-- <a href="{{ route('accompaniments.changeinterlocutor', $articulation) }}" class="orange-text text-darken-2 pointer tooltipped" data-position="right" data-tooltip="cambiar {{__('Interlocutory talent')}}"><i class="tiny material-icons">edit</i></a> --}}
-                                                    @endcan
-                                                </span>
-                                            </div>
-                                        </div>
+                                        @include('articulation.options.articulation-options-header')
                                     </div>
                                     <div class="divider mailbox-divider"></div>
                                     <div class="mailbox-text">
                                         <div class="row">
                                             <div class="col s12">
-                                                {{-- @include('articulacionespbt.history-change') --}}
+                                                @include('articulation.articulation-history-change')
                                             </div>
                                             <div class="col s12">
                                                 <ul class="tabs tab-demo z-depth-1" style="width: 100%;">

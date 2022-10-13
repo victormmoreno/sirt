@@ -15,7 +15,7 @@ $(document).ready(function() {
         }, {
             data: 'nombre',
             name: 'nombre',
-        },
+        }, 
         {
             data: 'show',
             name: 'show',
@@ -389,13 +389,13 @@ function asociarSedeAIdeaProyecto(sede_id) {
     Swal.clickConfirm();
     enviarIdeaRegistro(event, 'update');
   });
-
+  
   $(document).on('click', '.btnModalIdeaPostular', function(event) {
     $('#txtopcionRegistro').val('postular');
     Swal.clickConfirm();
     enviarIdeaRegistro(event, 'create');
   });
-
+  
   $(document).on('click', '.btnModalIdeaPostularModificar', function(event) {
     $('#txtopcionRegistro').val('postular');
     Swal.clickConfirm();
@@ -1389,6 +1389,24 @@ function questionRejectEndorsementArticulationStage(e) {
         }
     })
 }
+function changePhaseArticulation(e) {
+    e.preventDefault();
+    $('button[type="submit"]').attr('disabled', true);
+    Swal.fire({
+        title: '¿Está seguro(a)?',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Sí!'
+    }).then((result) => {
+        $('button[type="submit"]').attr('disabled', false);
+        if (result.value) {
+            document.frmChangeArticulationPhase.submit();
+        }
+    });
+}
 
 
 
@@ -1917,7 +1935,7 @@ const filter_articulations = {
                                 <div class="card-content">
                                     <span class="card-title p f-12 ">${user.documento} - ${user.nombres} ${user.apellidos}</span>
                                     <p class="position-top-right p f-12 mail-date hide-on-med-and-down"> Acceso al sistema: ${userSearch.state(user.estado)}</p>
-                                    <div class="mailbox-text p f-12 hide-on-med-and-down">Miembro desde ${filter_project.formatDate(user.created_at)}</div>
+                                    <div class="mailbox-text p f-12 hide-on-med-and-down">Miembro desde ${filter_articulations.formatDate(user.created_at)}</div>
                                 </div>
                                 <div class="card-action">
                                 <a class="waves-effect waves-red btn-flat m-b-xs orange-text" onclick="filter_articulations.addTalentToArticulation(${user.talento.id});" class="orange-text">Agregar</a>
@@ -1926,7 +1944,7 @@ const filter_articulations = {
                         </div>
                     </div>`);
                 }else{
-                    filter_project.notFound('result-talents');
+                    filter_articulations.notFound('result-talents');
                 }
 
             });
@@ -1962,7 +1980,7 @@ const filter_articulations = {
     addTalentToArticulation: function(user){
         filter_articulations.emptyResult('alert-empty-talents');
         if (filter_articulations.noRepeat(user) == false) {
-            filter_project.talentAssociated();
+            filter_articulations.talentAssociated();
         } else {
             filter_articulations.emptyResult('talent-empty');
             filter_articulations.printTalentoInTable(user);
@@ -2110,10 +2128,7 @@ const filter_articulations = {
 
                     });
                 }
-
-
         });
-
     }
 }
 
@@ -2476,11 +2491,11 @@ function reiniciarCamposTaller() {
 
 function prepararFilaEnLaTablaDeIdeasTaller(ajax, confirmacion, asistencia) {
   let idIdea = ajax.detalles.id;
-  let fila = '<tr class="selected" id=ideaAsociadaTaller' + idIdea + '>' +
+  let fila = '<tr class="selected" id=ideaAsociadaTaller' + idIdea + '>' + 
       '<td><input type="hidden" name="ideas_taller[]" value="' + idIdea + '">' + ajax.detalles.codigo_idea + ' - ' + ajax.detalles.nombre_proyecto + '</td>' +
       '<td><input type="hidden" name="confirmaciones[]" value="' + confirmacion + '">' + getYesOrNot(confirmacion) + '</td>' +
       '<td><input type="hidden" name="asistencias[]" value="' + asistencia + '">' + getYesOrNot(asistencia) + '</td>' +
-      '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarIdeaDelTaller(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' +
+      '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarIdeaDelTaller(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' + 
       '</tr>';
   return fila;
 }
@@ -2510,7 +2525,7 @@ function enviarNotificacionResultadosCSIBT(idea, comite) {
             } else {
                 notificacionFallidaDelResultado();
             }
-
+            
         },
         error: function (xhr, textStatus, errorThrown) {
             alert("Error: " + errorThrown);
@@ -2846,8 +2861,8 @@ $('#txthoraidea').bootstrapMaterialDatePicker({
     weekStart : 1, cancelText : 'Cancelar',
     okText: 'Guardar'
 });
-
-$('input[name*="horas_fin"]').bootstrapMaterialDatePicker({
+  
+$('input[name*="horas_fin"]').bootstrapMaterialDatePicker({ 
     time:true,
     date:false,
     shortTime:true,
@@ -2856,8 +2871,8 @@ $('input[name*="horas_fin"]').bootstrapMaterialDatePicker({
     weekStart : 1, cancelText : 'Cancelar',
     okText: 'Guardar'
 });
-
-$('input[name*="horas_inicio"]').bootstrapMaterialDatePicker({
+ 
+$('input[name*="horas_inicio"]').bootstrapMaterialDatePicker({ 
     time:true,
     date:false,
     shortTime: true,
@@ -2866,8 +2881,8 @@ $('input[name*="horas_inicio"]').bootstrapMaterialDatePicker({
     weekStart : 1, cancelText : 'Cancelar',
     okText: 'Guardar'
  });
-
-$('#txthorafingestor').bootstrapMaterialDatePicker({
+ 
+$('#txthorafingestor').bootstrapMaterialDatePicker({ 
     time:true,
     date:false,
     shortTime: true,
@@ -3023,11 +3038,11 @@ function pintarIdeaEnLaTabla(id, hora, direccion) {
 
 function prepararFilaEnLaTablaDeIdeas(ajax, hora, direccion) {
 let idIdea = ajax.detalles.id;
-let fila = '<tr class="selected" id=ideaAsociadaAgendamiento' + idIdea + '>' +
+let fila = '<tr class="selected" id=ideaAsociadaAgendamiento' + idIdea + '>' + 
     '<td><input type="hidden" name="ideas[]" value="' + idIdea + '">' + ajax.detalles.nombre_proyecto + '</td>' +
     '<td><input type="hidden" name="horas[]" value="' + hora + '">' + hora + '</td>' +
     '<td><input type="hidden" name="direcciones[]" value="' + direccion + '">' + direccion + '</td>' +
-    '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarIdeaDelAgendamiento(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' +
+    '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarIdeaDelAgendamiento(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' + 
     '</tr>';
 return fila;
 }
@@ -3810,7 +3825,7 @@ $(document).on('submit', 'form#formSearchUser', function (event) {
                             </div>
                         `);
                     }
-
+                    
                 }else if(data.status == 200){
                     $('#response-alert').append(`
                     <div class="mailbox-list">
@@ -3880,11 +3895,11 @@ var user = {
       getOtraEsp:function (ideps) {
         let id = $(ideps).val();
         let nombre = $("#txteps option:selected").text();
-
+      
         if (id == 42) {
             // $('.otraeps').css("display:block");
             $('.otraeps').removeAttr("style");
-
+             
         }else{
             $('.otraeps').attr("style","display:none");
         }
@@ -3902,7 +3917,7 @@ var user = {
           $.each(response.ciudades, function(i, e) {
             $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
           })
-
+          
           $('#txtciudad').material_select();
         });
     },
@@ -3910,7 +3925,7 @@ var user = {
         let grado = $(gradodiscapacidad).val();
         if (grado == 1) {
             $('.gradodiscapacidad').removeAttr("style");
-
+             
         }else{
             $('.gradodiscapacidad').attr("style","display:none");
         }
@@ -3950,7 +3965,7 @@ var tipoTalento = {
     getSelectTipoTalento:function (tipotal) {
         let valor = $(tipotal).val();
         let nombreTipoTalento = $("#txttipotalento option:selected").text();
-
+        
         if(valor == 1 || valor == 2){
 
             tipoTalento.showAprendizSena();
@@ -4228,7 +4243,7 @@ $(document).on('submit', 'form#formRegisterUser', function (event) {
         $('button[type="submit"]').prop("disabled", false);
         $('.error').hide();
         if (data.fail) {
-
+            
           for (control in data.errors) {
             $('#' + control + '-error').html(data.errors[control]);
             $('#' + control + '-error').show();
@@ -4285,7 +4300,7 @@ var createUser = {
             });
         }
     }
-}
+}  
 
 $(document).on('submit', 'form#formEditUser', function (event) {
     $('button[type="submit"]').attr('disabled', 'disabled');
@@ -4303,17 +4318,17 @@ $(document).on('submit', 'form#formEditUser', function (event) {
         dataType: 'json',
         processData: false,
         success: function (data) {
-
+    
           $('button[type="submit"]').removeAttr('disabled');
           $('button[type="submit"]').prop("disabled", false);
           $('.error').hide();
           if (data.fail) {
-
+  
             for (control in data.errors) {
               $('#' + control + '-error').html(data.errors[control]);
               $('#' + control + '-error').show();
             }
-
+  
             EditUser.printErroresFormulario(data);
           }
           if (data.state == 'error') {
@@ -4342,7 +4357,7 @@ $(document).on('submit', 'form#formEditUser', function (event) {
             }, 1000);
           }
         },
-
+        
       });
 });
 
@@ -4568,7 +4583,7 @@ var UserIndex = {
             $("#divyear").hide();
             $('#filter_year>option[value="all"]').attr('selected', 'selected');
         }
-
+        
     },
     fillDatatatablesUsers(filter_nodo ,filter_role, filter_state, filter_year){
         var datatable = $('#users_data_table').DataTable({
@@ -4618,7 +4633,7 @@ var UserIndex = {
                     data: 'detail',
                     name: 'detail',
                     orderable: false,
-                },
+                }, 
             ],
         });
     },
@@ -4670,7 +4685,7 @@ var UserIndex = {
                     data: 'detail',
                     name: 'detail',
                     orderable: false,
-                },
+                }, 
             ],
         });
     }
@@ -4699,9 +4714,9 @@ $('#filter_user').click(function(){
             },
             "lengthChange": false
         }).clear().draw();
-
+        
     }
-
+    
 });
 
 $('#filter_talentos').click(function(){
@@ -4717,7 +4732,7 @@ $('#filter_talentos').click(function(){
 
     if((filter_nodo != '' || filter_nodo != null) && filter_role !='' && filter_state != '' && filter_year !=''){
         UserIndex.fillDatatatablesTalentos(filter_nodo , filter_role, filter_state, filter_year);
-
+        
     }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && filter_role !='' && filter_state != '' && filter_year !=''){
         UserIndex.fillDatatatablesTalentos(filter_nodo = null , filter_role, filter_state, filter_year);
     }else{
@@ -4727,9 +4742,9 @@ $('#filter_talentos').click(function(){
             },
             "lengthChange": false
         }).clear().draw();
-
+        
     }
-
+    
 });
 
 $('#download_users').click(function(){
@@ -4769,17 +4784,17 @@ $(document).on('submit', 'form#formEditProfile', function (event) {
         dataType: 'json',
         processData: false,
         success: function (data) {
-
+    
           $('button[type="submit"]').removeAttr('disabled');
           $('button[type="submit"]').prop("disabled", false);
           $('.error').hide();
           if (data.fail) {
-
+  
             for (control in data.errors) {
               $('#' + control + '-error').html(data.errors[control]);
               $('#' + control + '-error').show();
             }
-
+  
             EditProfileUser.printErroresFormulario(data);
           }
           if (data.state == 'error') {
@@ -4808,7 +4823,7 @@ $(document).on('submit', 'form#formEditProfile', function (event) {
             }, 1000);
           }
         },
-
+        
       });
 });
 
@@ -4853,7 +4868,7 @@ var roleUserSession = {
         	}else{
         		Swal.fire('Error!', 'Por favor, cierre sesión y vuelve a ingresar al sistema!', 'error');
         	}
-      });
+      }); 
    }
 };
 
@@ -4862,7 +4877,7 @@ $(document).ready(function() {
 
 	$('#sublineas_table').DataTable({
         language: {
-
+           
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
         processing: true,
@@ -4979,7 +4994,7 @@ function detallesDeUnaIntervencion(id){
           +'</div>'
           +'</div>'
           +'<div class="divider"></div>'
-
+  
           +'<div class="row">'
           +'<div class="col s12 m6 l6">'
           +'<span class="teal-text text-darken-3">Experto a cargo: </span>'
@@ -4989,7 +5004,7 @@ function detallesDeUnaIntervencion(id){
           +'</div>'
           +'</div>'
           +'<div class="divider"></div>'
-
+  
           +'<div class="row">'
           +'<div class="col s12 m6 l6">'
           +'<span class="teal-text text-darken-3">Fecha de Inicio: </span>'
@@ -4999,7 +5014,7 @@ function detallesDeUnaIntervencion(id){
           +'</div>'
           +'</div>'
           +'<div class="divider"></div>'
-
+  
           +'<div class="row">'
           +'<div class="col s12 m6 l6">'
           +'<span class="teal-text text-darken-3">Estado de la Articulación: </span>'
@@ -5009,7 +5024,7 @@ function detallesDeUnaIntervencion(id){
           +'</div>'
           +'</div>'
           +'<div class="divider"></div>'
-
+  
           +'<div class="row">'
           +'<div class="col s12 m6 l6">'
           +'<span class="teal-text text-darken-3">Tipo de Articulación: </span>'
@@ -5019,7 +5034,7 @@ function detallesDeUnaIntervencion(id){
           +'</div>'
           +'</div>'
           +'<div class="divider"></div>'
-
+  
           +'<div class="row">'
           +'<div class="col s12 m6 l6">'
           +'<span class="teal-text text-darken-3">Entregables: </span>'
@@ -5198,7 +5213,7 @@ function detallesDeUnaIntervencion(id){
       }
     })
   }
-
+  
   function eliminarIntervencionEmpresaPorId_moment(id) {
     $.ajax({
       dataType: 'json',
@@ -7843,7 +7858,7 @@ var selectMantenimientosEquiposPorNodo = {
         let nodo = $('#selectnodo').val();
         $('#mantenimientosequipos_administrador_table').dataTable().fnDestroy();
         if (nodo != '') {
-
+            
             $('#mantenimientosequipos_administrador_table').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -7894,7 +7909,7 @@ var selectMantenimientosEquiposPorNodo = {
                 "pagingType": "full_numbers",
             }).clear().draw();
         }
-
+        
     },
 }
 $(document).ready(function() {
@@ -7990,7 +8005,7 @@ var selectMaterialesPorNodo = {
         let nodo = $('#selectnodo').val();
         $('#materiales_administrador_table').dataTable().fnDestroy();
         if (nodo != '') {
-
+            
             $('#materiales_administrador_table').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -8069,9 +8084,9 @@ var selectMaterialesPorNodo = {
                 "pagingType": "full_numbers",
             }).clear().draw();
         }
-
+        
     },
-
+    
 }
 $(document).ready(function() {
     $('#materiales_dinamizador_table').DataTable({

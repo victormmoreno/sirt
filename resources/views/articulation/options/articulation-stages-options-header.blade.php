@@ -3,10 +3,11 @@
         <div class="left">
             <span class="mailbox-title">{{$articulationStage->code}} - {{$articulationStage->name}}
                 @if (Route::currentRouteName() == 'articulation-stage.show')
-                @can('update', $articulationStage)
-                    <a href="{{route('articulation-stage.edit', $articulationStage)}}" class="orange-text text-darken-2 pointer tooltipped" data-position="right" data-tooltip="editar {{__('articulation-stage')}}"><i class="tiny material-icons">edit</i></a></span>
-                @endcan
-            @endif
+                    @can('update', $articulationStage)
+                        <a href="{{route('articulation-stage.edit', $articulationStage)}}" class="orange-text text-darken-2 pointer tooltipped" data-position="right" data-tooltip="editar {{__('articulation-stage')}}"><i class="tiny material-icons">edit</i></a>
+                    @endcan
+                @endif
+            </span>
             <span class="mailbox-title">{{__('Node')}} {{$articulationStage->nodo}}</span>
             <span class="mailbox-author">{{$articulationStage->talent_interlocutor}} ({{__('Interlocutory talent')}})
                 @if (Route::currentRouteName() == 'articulation-stage.show')

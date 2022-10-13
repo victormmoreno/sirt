@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Articulation;
 
+use App\Models\Articulation;
 use App\Models\ArticulationType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -72,6 +73,44 @@ class ArticulationRegisterController extends Controller
                     'data' => [
                         'state'   => 'danger',
                         'errors' => [],
+                    ],
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Update a resource.
+     * @param  \Illuminate\Http\Request  $request
+     */
+    public function update(Request $request, $articulation)
+    {
+        $articulation = Articulation::query()->findOrFail($articulation);
+        $req = new ArticulationRequest;
+        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+        if ($validator->fails()) {
+            return response()->json([
+                'data' => [
+                    'state' => 'danger',
+                    'errors' => $validator->errors(),
+                ]
+            ]);
+        } else {
+            $response = $this->articulationRespository->update($request, $articulation);
+            if($response["isCompleted"]){
+                return response()->json([
+                    'data' => [
+                        'state'   => 'success',
+                        'url' => route('articulations.show', $response['data']->id),
+                        'status_code' => Response::HTTP_CREATED,
+                        'errors' => [],
+                    ],
+                ], Response::HTTP_CREATED);
+            }else{
+                return response()->json([
+                    'data' => [
+                        'state'   => 'danger',
+                        'errors' => $this->articulationStageRepository->getError(),
                     ],
                 ]);
             }

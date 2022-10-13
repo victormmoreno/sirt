@@ -29,8 +29,7 @@ class ArticulationRequest extends FormRequest
             'articulation_subtype' => 'required',
             'name_articulation' => 'required|min:1|max:100',
             'description_articulation'  => 'max:3000',
-            'scope'  => 'required|min:1|max:3000',
-            'talents'  => 'required',
+            'talents'  => 'required'
         ];
     }
 

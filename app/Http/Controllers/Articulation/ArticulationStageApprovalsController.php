@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class ArticulationStageApprovals extends Controller
+class ArticulationStageApprovalsController extends Controller
 {
     private $articulationStageRepository;
     public function __construct(ArticulationStageRepository $articulationStageRepository)

@@ -7,7 +7,7 @@
                     <ul class="collection">
                         <li class="collection-item">
                             La Articulación fue creada el día
-                            {{$articulationStage->present()->articulationStageCreatedDate()}}.
+                            {{$articulation->created_at}}.
                         </li>
                             @for ($i = 0; $i < $traceability->count(); $i++)
                             <li class="collection-item">
@@ -37,7 +37,7 @@
                                 @endif
                                 @if ( isset($traceability[$i]->usuario) && $traceability[$i]->movimiento == App\Models\Movimiento::IsCambiar())
                                     El día {{$traceability[$i]->created_at}} el {{$traceability[$i]->rol}} {{$traceability[$i]->usuario}} {{$traceability[$i]->movimiento}}
-                                    el articulador de la {{__('articulation-stage')}} {{$traceability[$i]->descripcion}}.
+                                    la {{__('articulation')}} a la fase de {{$traceability[$i]->descripcion}}.
                                 @endif
                                 @if ( isset($traceability[$i]->usuario) && $traceability[$i]->movimiento == App\Models\Movimiento::IsReversar())
                                     El {{$traceability[$i]->rol}} {{$traceability[$i]->usuario}} {{$traceability[$i]->movimiento}} la articulación a

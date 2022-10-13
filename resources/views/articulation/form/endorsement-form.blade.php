@@ -1,4 +1,3 @@
-
 <form action="{{route('articulation-stage.manage-endorsement', [$articulationStage->id, $articulationStage->endorsement == \App\Models\ArticulationStage::ENDORSEMENT_NO ? 'abrir' : 'cerrar'])}}" method="POST" style="width: 100%" name="frmEndorsementArticulationStage">
     {!! method_field('PUT')!!}
     @csrf
@@ -7,7 +6,6 @@
         <input type="hidden" type="text" name="control_notificacion_id" id="control_notificacion_id" value="{{$ult_notificacion->id}}">
         <input type="hidden" type="text" name="decision" id="decision">
         @if ($articulationStage->endorsement == \App\Models\ArticulationStage::ENDORSEMENT_NO )
-
             <button type="submit" onclick="endorsementQuestionArticulationStage(event, 'abrir')" class="center-align center waves-effect waves-light btn orange btn-large modal-trigger" style="margin-bottom: 10px; margin-right: 10px; margin-top: 10px; width: 100%;">
                 <i class="material-icons right">done</i>
                 Aprobar aval {{$articulationStage->present()->articulationStageEndorsementApproval()}}

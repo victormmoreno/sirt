@@ -214,16 +214,21 @@ class ArticulationStage extends Model
         ]);
     }
 
-    public function consultarNotificaciones()
-    {
-        return $this->with([
-            'notificaciones',
-            'notificaciones.fase',
-            'notificaciones.remitente',
-            'notificaciones.receptor',
-            'notificaciones.rol_receptor',
-            'notificaciones.rol_remitente'
-        ]);
+    /**
+     * Consulta la trazabilidad de la etapa de articulacion
+     * @param $model
+     * @return Builder|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder
+     */
+    public static function getTraceability($model) {
+        return HistorialEntidad::query()
+            ->select('historial_entidad.id','historial_entidad.comentarios', 'historial_entidad.descripcion', 'roles.name AS rol', 'historial_entidad.created_at', 'movimientos.movimiento as movimiento')
+            ->selectRaw('concat(users.nombres, " ", users.apellidos) AS usuario')
+            ->join('movimientos', 'movimientos.id', '=','historial_entidad.movimiento_id')
+            ->join('users', 'users.id', '=', 'historial_entidad.user_id')
+            ->join('roles', 'roles.id', '=', 'historial_entidad.role_id')
+            ->orderBy('historial_entidad.created_at')
+            ->where('historial_entidad.model_type', '=', ArticulationStage::class)
+            ->where('historial_entidad.model_id', $model->id);
     }
 
 

@@ -849,14 +849,17 @@ Route::group(
         Route::put('/{articulation}/cambiar-interlocutor', 'ArticulationStageListController@updateInterlocutor')->name('articulation-stage.updateinterlocutor');
         Route::get('/{id}/crear', 'ArticulationRegisterController@create')->name('articulations.create');
         Route::post('/{id}/crear', 'ArticulationRegisterController@store')->name('articulations.store');
+        Route::put('/{id}/editar', 'ArticulationRegisterController@update')->name('articulation.update');
         Route::get('/{id}/ver', 'ArticulationListController@show')->name('articulations.show');
+        Route::get('/{id}/{fase}', 'ArticulationListController@showPhase')->name('articulations.show.phase');
         Route::get('/export', 'ArticulationStageListController@export')->name('articulation-stage.export');
         Route::delete('/{id}', 'ArticulationStageListController@destroy')->name('articulation-stage.destroy');
         Route::get('/download/{phase}/{id}', 'ArticulationStageListController@downloadCertificate')->name('articulation-stage.download-certificate');
-        Route::get('/solicitar-aprobacion/{id}/{fase}', 'ArticulationStageApprovals@requestApproval')->name('articulation-stage.request-approval');
-        Route::put('/gestionar_aprobacion/{id}/{fase}', 'ArticulationStageApprovals@manageEndorsement')->name('articulation-stage.manage-endorsement');
+        Route::get('/solicitar-aprobacion/{id}/{fase}', 'ArticulationStageApprovalsController@requestApproval')->name('articulation-stage.request-approval');
+        Route::put('/gestionar_aprobacion/{id}/{fase}', 'ArticulationStageApprovalsController@manageEndorsement')->name('articulation-stage.manage-endorsement');
         Route::get('/evidencias/{id}', 'ArticulationStageListController@evidences')->name('articulation-stage.evidences');
-
+        Route::put('/{id}/{fase}/cambiar-fase', 'ArticulationListController@changePhase')->name('articulation.manage-change-phase');
+        Route::put('/{id}/ejecutar', 'ArticulationListController@updatePhaseExecute')->name('articulation.update.execution');
     }
 );
 

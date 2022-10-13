@@ -123,7 +123,6 @@ class ArticulationSubtypeController extends Controller
         $articulationSubtype = ArticulationSubtype::query()
             ->with(['nodos.entidad', 'articulations'])
             ->findOrFail($articulationSubtype);
-
         return view('articulation-subtype.show', ['articulationSubtype' => $articulationSubtype]);
     }
 

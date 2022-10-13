@@ -18271,6 +18271,132 @@ select {
         }
 
 
+
+.chapter-title.mobile{
+  display: none;
+}
+
+.cyan-text.text-darken-3 {
+  color: #ff8f00 !important;
+}
+
+@media(max-width:768px){
+
+#charlasInformativasNodo_table > thead, #charlasInformativasNodo_table > tbody {
+    width: 100% !important;
+  }
+  
+  .waves-effect .waves-light .btn-large{
+    letter-spacing: -3.5px;
+  }
+
+  .mailbox-content .row{
+    margin-left: -10px !important;
+    margin-right: -10px !important;
+  }
+
+  .collection{
+    margin: 0px -21px 0 -22px;
+  }
+
+  .col.s12.m6.l4.right{
+    display: grid !important;
+  }
+
+  .row .col.s4{
+    width: auto !important;
+  }
+
+  table{
+    display: block !important;
+  }
+
+  table > thead, table > tbody{
+    width: 100% !important;
+  }
+
+  table > thead > tr > th{
+    text-align: center !important;
+  }
+
+  .mn-inner .inner-active-sidebar .hidden-fixed-sidebar{
+    display: contents !important;
+  }
+
+  .page-footer .footer-grid .footer-grid-r .footer-text{
+    padding-right: 10%;
+  }
+
+  /* Header*/
+
+  html, body, .mn-content{
+    font-size: 12px !important;
+  }
+
+  .chapter-title {
+    width: 200% !important;
+    padding-top: 10px !important;
+  }
+
+  /* Numeracion */
+
+  .dataTables_paginate .paging_simple_numbers{
+    display: grid !important;
+  }
+
+  /*Loading*/
+
+  #loadingModal{
+    width: 40% !important;
+    height: 20% !important;
+  }
+
+  .modal .modal-content{
+    padding-top: 30px !important;
+  }
+
+  /*Numeracion*/
+
+  .dataTables_wrapper .dataTables_paginate .paginate_button, .dataTables_wrapper .dataTables_paginate .paginate_button:hover, .dataTables_wrapper .dataTables_paginate .paginate_button:focus, .dataTables_wrapper .dataTables_paginate .paginate_button:active{
+    display: inherit !important;
+  }
+
+  /*Logo header mobile*/
+  .chapter-title.mobile{
+    display: block;
+  }
+
+  .chapter-title.desktop{
+    display: none;
+  }
+
+  .cyan-text.text-darken-3 {
+    color:#ff8f00 !important;
+  }
+
+  .mn-inner.inner-active-sidebar.hidden-fixed-sidebar{
+    padding: 0 !important;
+  }
+
+  /*Arreglo de botones*/
+  .Nombre-usuario{
+    display: none;
+  }
+
+  .material-icons.right{
+    margin: 0;
+  }
+
+    /*centrado de titulos*/
+
+  .sorting_desc{
+    width: auto !important;
+  }
+  .sorting_disabled{
+    width: auto !important;
+  }
+}
+
 /* Write your custom CSS here */
 
 .jvectormap-legend-title {
@@ -18755,129 +18881,3 @@ h5.breadcrumbs-header {
 }
 
 
-
-
-.chapter-title.mobile{
-  display: none;
-}
-
-.cyan-text.text-darken-3 {
-  color: #ff8f00 !important;
-}
-
-@media(max-width:768px){
-
-#charlasInformativasNodo_table > thead, #charlasInformativasNodo_table > tbody {
-    width: 100% !important;
-  }
-  
-  .waves-effect .waves-light .btn-large{
-    letter-spacing: -3.5px;
-  }
-
-  .mailbox-content .row{
-    margin-left: -10px !important;
-    margin-right: -10px !important;
-  }
-
-  .collection{
-    margin: 0px -21px 0 -22px;
-  }
-
-  .col.s12.m6.l4.right{
-    display: grid !important;
-  }
-
-  .row .col.s4{
-    width: auto !important;
-  }
-
-  table{
-    display: block !important;
-  }
-
-  table > thead, table > tbody{
-    width: 100% !important;
-  }
-
-  table > thead > tr > th{
-    text-align: center !important;
-  }
-
-  .mn-inner .inner-active-sidebar .hidden-fixed-sidebar{
-    display: contents !important;
-  }
-
-  .page-footer .footer-grid .footer-grid-r .footer-text{
-    padding-right: 10%;
-  }
-
-  /* Header*/
-
-  html, body, .mn-content{
-    font-size: 12px !important;
-  }
-
-  .chapter-title {
-    width: 200% !important;
-    padding-top: 10px !important;
-  }
-
-  /* Numeracion */
-
-  .dataTables_paginate .paging_simple_numbers{
-    display: grid !important;
-  }
-
-  /*Loading*/
-
-  #loadingModal{
-    width: 40% !important;
-    height: 20% !important;
-  }
-
-  .modal .modal-content{
-    padding-top: 30px !important;
-  }
-
-  /*Numeracion*/
-
-  .dataTables_wrapper .dataTables_paginate .paginate_button, .dataTables_wrapper .dataTables_paginate .paginate_button:hover, .dataTables_wrapper .dataTables_paginate .paginate_button:focus, .dataTables_wrapper .dataTables_paginate .paginate_button:active{
-    display: inherit !important;
-  }
-
-  /*Logo header mobile*/
-  .chapter-title.mobile{
-    display: block;
-  }
-
-  .chapter-title.desktop{
-    display: none;
-  }
-
-  .cyan-text.text-darken-3 {
-    color:#ff8f00 !important;
-  }
-
-  .mn-inner.inner-active-sidebar.hidden-fixed-sidebar{
-    padding: 0 !important;
-  }
-
-  /*Arreglo de botones*/
-  .Nombre-usuario{
-    display: none;
-  }
-
-  .material-icons.right{
-    margin: 0;
-  }
-
-    /*centrado de titulos*/
-
-  .sorting_desc{
-    width: auto !important;
-  }
-  .sorting_disabled{
-    width: auto !important;
-  }
-}

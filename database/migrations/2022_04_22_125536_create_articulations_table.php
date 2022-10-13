@@ -26,7 +26,20 @@ class CreateArticulationsTable extends Migration
             $table->string('email_entity')->nullable(); //email_entidad
             $table->string('summon_name')->nullable(); //nombre_convocatoria
             $table->text('objective')->nullable(); //objetivo
-
+            $table->tinyInteger('tracing')->default('0'); //seguimiento
+            $table->tinyInteger('postulation')->default('0'); //postulacion
+            $table->tinyInteger('approval')->default('0'); //aprobacion
+            $table->text('justification')->nullable(); //justificacion
+            $table->tinyInteger('justified_report')->default('0'); //aprobacion
+            $table->tinyInteger('justified_report')->default('0'); //informe_justificado
+            $table->text('report')->nullable(); //informe
+            $table->string('receive')->nullable(); //recibira
+            $table->timestamp('received_date')->nullable(); //cuando
+            $table->tinyInteger('approval_document')->default('0'); //pdf_aprobacion
+            $table->tinyInteger('non_approval_document')->default('0'); //pdf_no_aprobacion
+            $table->tinyInteger('postulation_document')->default('0'); //documento_postulacion
+            $table->tinyInteger('announcement_document')->default('0'); //documento_convocatoria
+            $table->text('learned_lessons')->nullable(); //lecciones aprendidas
             $table->unsignedBigInteger('articulation_stage_id')->nullable();
             $table->unsignedBigInteger('scope_id')->nullable(); //alcance
             $table->unsignedInteger('phase_id')->nullable(); //fase

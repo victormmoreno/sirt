@@ -86,5 +86,23 @@ function questionRejectEndorsementArticulationStage(e) {
         }
     })
 }
+function changePhaseArticulation(e) {
+    e.preventDefault();
+    $('button[type="submit"]').attr('disabled', true);
+    Swal.fire({
+        title: '¿Está seguro(a)?',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Sí!'
+    }).then((result) => {
+        $('button[type="submit"]').attr('disabled', false);
+        if (result.value) {
+            document.frmChangeArticulationPhase.submit();
+        }
+    });
+}
 
 

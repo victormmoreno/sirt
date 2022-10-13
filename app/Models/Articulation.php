@@ -77,6 +77,27 @@ class Articulation extends Model
         return $this->belongsTo(AlcanceArticulacion::class, 'scope_id');
     }
 
+    public static function IsInicio() {
+        return self::START_PHASE;
+    }
+
+    public static function IsEjecucion() {
+        return self::EXECUTION_PHASE;
+    }
+
+    public static function IsCierre() {
+        return self::CLOSING_PHASE;
+    }
+
+    public static function IsFinalizado() {
+        return self::FINISHED_PHASE;
+    }
+
+    public static function IsSuspendido() {
+        return self::SUSPENDED_PHASE;
+    }
+
+
     /**
      * The relation one to much phase
      *
@@ -94,6 +115,11 @@ class Articulation extends Model
     public function createdBy()
     {
         return $this->belongsTo(\App\User::class, 'created_by', 'id');
+    }
+
+    public function traceability()
+    {
+        return $this->morphMany(HistorialEntidad::class, 'model');
     }
 
 
@@ -193,9 +219,36 @@ class Articulation extends Model
         return $query;
     }
 
+    public function createTraceability($movimiento, $role, $comentario, $descripcion = null)
+    {
+        return $this->traceability()->create([
+            'movimiento_id' => Movimiento::where('movimiento', $movimiento)->first()->id,
+            'user_id' => auth()->user()->id,
+            'role_id' => Role::where('name', $role)->first()->id,
+            'comentarios' => $comentario,
+            'descripcion' => $descripcion
+        ]);
+    }
+
+    /**
+     * Consulta la trazabilidad de la etapa de articulacion
+     * @param $model
+     * @return Builder|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder
+     */
+    public static function getTraceability($model) {
+        return HistorialEntidad::query()
+            ->select('historial_entidad.id','historial_entidad.comentarios', 'historial_entidad.descripcion', 'roles.name AS rol', 'historial_entidad.created_at', 'movimientos.movimiento as movimiento')
+            ->selectRaw('concat(users.nombres, " ", users.apellidos) AS usuario')
+            ->join('movimientos', 'movimientos.id', '=','historial_entidad.movimiento_id')
+            ->join('users', 'users.id', '=', 'historial_entidad.user_id')
+            ->join('roles', 'roles.id', '=', 'historial_entidad.role_id')
+            ->orderBy('historial_entidad.created_at')
+            ->where('historial_entidad.model_type', '=', Articulation::class)
+            ->where('historial_entidad.model_id', $model->id);
+    }
 
 
-        /**
+    /**
      * The presenter
      *
      * @return void

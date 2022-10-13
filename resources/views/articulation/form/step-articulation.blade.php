@@ -8,8 +8,8 @@
                         <select id="articulation_type" name="articulation_type"  style="width: 100%" tabindex="-1">
                             <option value="">Seleccione tipo de articulación</option>
                             @foreach($articulationTypes as $id => $name)
-                                @if(isset($articulation->articulationtype))
-                                    <option value="{{$id}}" {{old('articulation_type',$articulationSubtype->articulationtype->id) == $id ? 'selected':''}}>{{$name}}</option>
+                                @if(isset($articulation))
+                                    <option value="{{$id}}" {{old('articulation_type',$articulation->articulationsubtype->articulationtype->id) == $id ? 'selected':''}}>{{$name}}</option>
                                 @else
                                     <option value="{{$id}}" {{old('articulation_type') == $id ? 'selected':''}}>{{$name}}</option>
                                 @endif
@@ -28,8 +28,8 @@
                 </div>
                 <div class="row">
                     <div class="input-field col s12 m12 l12">
-                        @if(isset($articulacion))
-                            <input @if(!$articulacion->present()->articulacionPbtIssetFase(App\Models\Fase::IsInicio())) disabled @endif  id="start_date" name="start_date" type="text" class="datepicker_articulation_max_date" value="{{$articulacion->present()->articulacionPbtFechaFinalizacion()}}">
+                        @if(isset($articulation))
+                            <input  id="start_date" name="start_date" type="text" class="datepicker_articulation_max_date" value="{{$articulation->start_date->format('Y-m-d')}}">
                         @else
                             <input id="start_date" name="start_date" type="text" class="datepicker_articulation_max_date">
                         @endif
@@ -38,15 +38,11 @@
                     </div>
                     <div class="input-field col m12 s12">
                         <label for="name_articulation">Nombre Articulación <span class="red-text">*</span></label>
-                        <input id="name_articulation" name="name_articulation" type="text">
+                        <input id="name_articulation" name="name_articulation" value="{{isset($articulation) ? $articulation->name : old('name_articulation')}}" type="text">
                     </div>
                     <div class="input-field col m12 s12">
                         <label for="description_articulation">Descripción Articulación (Opcional)</label>
-                        <textarea id="description_articulation" name="description_articulation" type="text" class="materialize-textarea validate"></textarea>
-                    </div>
-                    <div class="input-field col m12 s12">
-                        <label for="scope">Alcance<span class="red-text">*</span></label>
-                        <textarea id="scope" name="scope" type="text" class="materialize-textarea"></textarea>
+                        <textarea id="description_articulation" name="description_articulation"  type="text" class="materialize-textarea validate">{{isset($articulation) ? $articulation->description : old('description_articulation')}}</textarea>
                     </div>
                 </div>
 

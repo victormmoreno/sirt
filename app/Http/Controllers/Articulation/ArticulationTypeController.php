@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Articulation;
 
 use App\Models\ArticulationSubtype;
+use App\User;
 use http\Env\Response;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -193,8 +194,10 @@ class ArticulationTypeController extends Controller
 
     public function filterArticulationType($articulationType)
     {
+        $node = $this->checkRoleAuth()['node'];
         $articulationSubtypes = ArticulationSubtype::query()
             ->where('state', ArticulationSubtype::mostrar())
+            ->nodeForRole($node, User::IsArticulador())
             ->where('articulation_type_id', $articulationType)->get();
         if(request()->ajax()){
             return response()->json([
@@ -203,5 +206,33 @@ class ArticulationTypeController extends Controller
         }
         alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
         return redirect()->route('home');
+    }
+
+    /**
+     * method to validate the authenticated role
+     * @return void
+     */
+    private function checkRoleAuth()
+    {
+        $talent = null;
+        $node = null;
+        switch (\Session::get('login_role')) {
+            case User::IsAdministrador():
+                $node = null;
+                break;
+            case User::IsActivador():
+                $node = null;
+                break;
+            case User::IsDinamizador():
+                $node = auth()->user()->dinamizador->nodo_id;
+                break;
+            case User::IsArticulador():
+                $node = auth()->user()->articulador->nodo_id;
+                break;
+            default:
+                $node = null;
+                break;
+        }
+        return ['node' => $node];
     }
 }
