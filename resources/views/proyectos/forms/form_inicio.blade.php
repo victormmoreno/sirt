@@ -18,7 +18,7 @@
             <option value="">Seleccione el nodo del experto</option>
             @if ($existe)
                 @forelse ($nodos as $id => $nodo)
-                <option value="{{$id}}" {{ $proyecto->asesor->nodo_id == $id ? 'selected' : '' }}>{{$nodo->nodos}}</option>
+                <option value={{$id}} {{ $proyecto->asesor->nodo_id == $id ? 'selected' : '' }}>{{$nodo->nodos}}</option>
                 @empty
                 <option value=""> No hay información disponible</option>
                 @endforelse
@@ -658,6 +658,11 @@
             {{isset($btnText) ? $btnText : 'error'}}
         </button>
         @endcan
+    @else
+        <button type="submit" class="waves-effect cyan darken-1 btn center-aling">
+            <i class="material-icons right">{{ isset($btnText) ? $btnText == 'Guardar' ? 'done' : 'done_all' : '' }}</i>
+            {{isset($btnText) ? $btnText : 'error'}}
+        </button>
     @endif
     <a href="{{ $existe ? route('proyecto.inicio', $proyecto->id) : route('proyecto') }}" class="waves-effect red lighten-2 btn center-aling">
         <i class="material-icons right">backspace</i>Cancelar
