@@ -27,11 +27,11 @@
     <div class="row">
         <div class="input-field col s12 m3 l3">
             <input type="text" id="txtfecha_inicio_cerrados" name="txtfecha_inicio_cerrados" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
-            <label for="txtfecha_inicio_cerrados">Fecha Inicio</label>
+            <label for="txtfecha_inicio_cerrados">Finalizados desde</label>
         </div>
         <div class="input-field col s12 m3 l3">
             <input type="text" id="txtfecha_fin_cerrados" name="txtfecha_fin_cerrados" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
-            <label for="txtfecha_fin_cerrados">Fecha Fin</label>
+            <label for="txtfecha_fin_cerrados">Finalizados hasta</label>
         </div>
         <div class="center input-field col s12 m6 l6">
             <a onclick="generarExcelConTodosLosIndicadoresFinalizados();" class="btn"><i class="material-icons left">file_download</i>Descargar</a>

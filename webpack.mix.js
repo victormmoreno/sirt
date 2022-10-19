@@ -54,9 +54,7 @@ mix.scripts([
     	'resources/assets/plugins/summernote/dist/summernote-lite.js',
     	'resources/assets/plugins/summernote/dist/lang/summernote-es-ES.js',
 		'resources/assets/js/alpha.js',
-        'resources/assets/js/custom.js',
-        'resources/app/ideas/index.js',
-        'resources/app/ideas/create.js',
+        'resources/assets/js/custom.js'
 	],'public/js/libs.js');
 
 mix.minify('public/js/libs.js')
@@ -67,14 +65,10 @@ mix.scripts([
     'resources/app/linea/administrador/index.js',
     'resources/app/linea/dinamizador/index.js',
     'resources/app/nodo/administrador/index.js',
-    'resources/app/entrenamientos/index.js',
-    'resources/app/ideas/talento/form.js',
-    'resources/app/ideas/talento/index.js',
-    'resources/app/ideas/articulador/index.js',
-    'resources/app/entrenamientos/administrador/index.js',
-    'resources/app/entrenamientos/infocenter/index.js',
-    'resources/app/entrenamientos/infocenter/create.js',
-    'resources/app/entrenamientos/infocenter/edit.js',
+    'resources/app/taller/index.js',
+    'resources/app/ideas/index.js',
+    'resources/app/ideas/create.js',
+    'resources/app/ideas/show.js',
     'resources/app/comite/todos.js',
     'resources/app/comite/dinamizador/asignar.js',
     'resources/app/comite/infocenter/index.js',

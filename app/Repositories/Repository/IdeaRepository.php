@@ -418,22 +418,6 @@ class IdeaRepository
     {
         DB::beginTransaction();
         try {
-            if ($idea->estadoIdea->nombre != 'En registro' && $idea->estadoIdea->nombre != 'Postulado' && $idea->estadoIdea->nombre != 'Admitido') {
-                return [
-                    'state' => false,
-                    'msg' => 'La idea no se ha inhabilitado, solo se pueden inhabilitar ideas en estado "En registro", "Admitido" o "Postulado"!',
-                    'title' => 'Inhabilitación errónea!',
-                    'type' => 'error'
-                ];
-            }
-            if (Session::get('login_role') == User::IsDinamizador() && $idea->nodo_id != auth()->user()->dinamizador->nodo_id) {
-                return [
-                    'state' => false,
-                    'msg' => 'La idea no se ha inhabilitado, solo se puedes inhabilitar ideas de tu nodo!',
-                    'title' => 'Inhabilitación errónea!',
-                    'type' => 'error'
-                ];
-            }
             $idea->registrarHistorialIdea(Movimiento::IsInhabilitar(), Session::get('login_role'), null, 'mientras estaba en estado "' . $idea->estadoIdea->nombre . '"');
             $idea->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsInhabilitado())->first()->id]);
             DB::commit();
@@ -543,7 +527,11 @@ class IdeaRepository
         try {
             $duplicado = $idea->replicate();
             $duplicado->codigo_idea = $this->generarCodigoIdeaDuplicado($idea);
-            $duplicado->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsRegistro())->first()->id;
+            if ($duplicado->estadoIdea->nombre == $duplicado->estadoIdea->IsAdmitido()) {
+                $duplicado->gestor_id = null;
+            } else {
+                $duplicado->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsRegistro())->first()->id;
+            }
 
             $duplicado->push();
             // $duplicado->push();

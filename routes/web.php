@@ -309,7 +309,7 @@ Route::group(
         Route::put('/aceptar_postulacion/{idea}', 'IdeaController@aceptarPostulacionIdea')->name('idea.aceptar.postulacion')->middleware('role_session:Articulador');
         Route::put('/rechazar_postulacion/{idea}', 'IdeaController@rechazarPostulacionIdea')->name('idea.rechazar.postulacion')->middleware('role_session:Articulador');
         Route::put('/enviar_nodo/{id}', 'IdeaController@enviarIdeaAlNodo')->name('idea.enviar')->middleware('role_session:Talento');
-        Route::put('/duplicar_idea/{id}', 'IdeaController@duplicarIdeaRechazada')->name('idea.duplicar')->middleware('role_session:Talento');
+        Route::put('/duplicar_idea/{id}', 'IdeaController@duplicarIdea')->name('idea.duplicar');
         // Route::put('/duplicar_idea/{id}', 'IdeaController@deviarIdea')->name('idea.derivar')->middleware('role_session:Dinamizador');
         Route::put('/inhabilitar_idea/{id}', 'IdeaController@inhabilitarIdea')->name('idea.inhabilitar')->middleware('role_session:Talento|Activador|Dinamizador');
         Route::put('/{idea}', 'IdeaController@update')->name('idea.update')->middleware(['auth', 'role_session:Talento']);
@@ -320,31 +320,31 @@ Route::group(
 //-------------------Route group para el módulo de Entrenamientos
 Route::group(
     [
-        'prefix'     => 'entrenamientos',
+        'prefix'     => 'taller',
         'middleware' => ['auth', 'role_session:Infocenter|Activador|Dinamizador|Experto|Articulador'],
     ],
     function () {
-        Route::get('/', 'EntrenamientoController@index')->name('entrenamientos');
-        Route::get('/consultarEntrenamientosPorNodo', 'EntrenamientoController@datatableEntrenamientosPorNodo');
-        Route::get('/create', 'EntrenamientoController@create')->name('entrenamientos.create')->middleware('role_session:Articulador');
-        Route::get('/{id}/edit', 'EntrenamientoController@edit')->name('entrenamientos.edit')->middleware('role_session:Infocenter');
-        Route::get('/{id}', 'EntrenamientoController@details')->name('entrenamientos.details');
-        Route::get('/inhabilitarEntrenamiento/{id}/{estado}', 'EntrenamientoController@inhabilitarEntrenamiento')->name('entrenamientos.inhabilitar')->middleware('role_session:Infocenter');
-        Route::get('/{id}/evidencias', 'EntrenamientoController@evidencias')->name('entrenamientos.evidencias');
-        Route::get('/getideasEntrenamiento', 'EntrenamientoController@get_ideasEntrenamiento')->middleware('role_session:Infocenter');
-        Route::get('/getConfirm/{id}/{estado}', 'EntrenamientoController@getConfirm')->middleware('role_session:Infocenter');
-        Route::get('/getCanvas/{id}/{estado}', 'EntrenamientoController@getCanvas')->middleware('role_session:Infocenter');
-        Route::get('/getAssistF/{id}/{estado}', 'EntrenamientoController@getAssistF')->middleware('role_session:Infocenter');
-        Route::get('/getAssistS/{id}/{estado}', 'EntrenamientoController@getAssistS')->middleware('role_session:Infocenter');
-        Route::get('/getConvocado/{id}/{estado}', 'EntrenamientoController@getConvocado')->middleware('role_session:Infocenter');
-        Route::get('/eliminar/{id}', 'EntrenamientoController@eliminar_idea')->middleware('role_session:Infocenter');
-        Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileEntrenamiento')->name('entrenamientos.files.download');
+        Route::get('/', 'TallerController@index')->name('talleres');
+        Route::get('/consultarEntrenamientosPorNodo', 'TallerController@datatableEntrenamientosPorNodo');
+        Route::get('/create', 'TallerController@create')->name('talleres.create')->middleware('role_session:Articulador');
+        Route::get('/{id}/edit', 'TallerController@edit')->name('talleres.edit')->middleware('role_session:Infocenter');
+        Route::get('/{id}', 'TallerController@details')->name('talleres.details');
+        Route::get('/inhabilitarEntrenamiento/{id}/{estado}', 'TallerController@inhabilitarEntrenamiento')->name('talleres.inhabilitar')->middleware('role_session:Infocenter');
+        Route::get('/{id}/evidencias', 'TallerController@evidencias')->name('talleres.evidencias');
+        Route::get('/getideasEntrenamiento', 'TallerController@get_ideasEntrenamiento')->middleware('role_session:Infocenter');
+        Route::get('/getConfirm/{id}/{estado}', 'TallerController@getConfirm')->middleware('role_session:Infocenter');
+        Route::get('/getCanvas/{id}/{estado}', 'TallerController@getCanvas')->middleware('role_session:Infocenter');
+        Route::get('/getAssistF/{id}/{estado}', 'TallerController@getAssistF')->middleware('role_session:Infocenter');
+        Route::get('/getAssistS/{id}/{estado}', 'TallerController@getAssistS')->middleware('role_session:Infocenter');
+        Route::get('/getConvocado/{id}/{estado}', 'TallerController@getConvocado')->middleware('role_session:Infocenter');
+        Route::get('/eliminar/{id}', 'TallerController@eliminar_idea')->middleware('role_session:Infocenter');
+        Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileEntrenamiento')->name('talleres.files.download');
         Route::get('/datatableArchivosDeUnEntrenamiento/{id}', 'ArchivoController@datatableArchivosDeUnEntrenamiento');
-        Route::put('/updateEvidencias/{id}', 'EntrenamientoController@updateEvidencias')->name('entrenamientos.update.evidencias')->middleware('role_session:Articulador');
-        Route::post('/', 'EntrenamientoController@store')->name('entrenamientos.store')->middleware('role_session:Articulador');
-        Route::post('/addidea', 'EntrenamientoController@add_idea')->middleware('role_session:Infocenter');
-        Route::post('/store/{id}/files', 'ArchivoController@uploadFileEntrenamiento')->name('entrenamientos.files.store')->middleware('role_session:Articulador');
-        Route::delete('/file/{idFile}', 'ArchivoController@destroyFileEntrenamiento')->name('entrenamientos.files.destroy')->middleware('role_session:Articulador');
+        Route::put('/updateEvidencias/{id}', 'TallerController@updateEvidencias')->name('talleres.update.evidencias')->middleware('role_session:Articulador');
+        Route::post('/', 'TallerController@store')->name('talleres.store')->middleware('role_session:Articulador');
+        Route::post('/addidea', 'TallerController@add_idea')->middleware('role_session:Infocenter');
+        Route::post('/store/{id}/files', 'ArchivoController@uploadFileEntrenamiento')->name('talleres.files.store')->middleware('role_session:Articulador');
+        Route::delete('/file/{idFile}', 'ArchivoController@destroyFileEntrenamiento')->name('talleres.files.destroy')->middleware('role_session:Articulador');
     }
 );
 

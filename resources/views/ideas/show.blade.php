@@ -20,22 +20,13 @@
               <div class="divider"></div>
               <div class="row">
                 <div class="col s12 m3 l3">
-                  <ul class="collection with-header">
-                    <li class="collection-header"><h5>Opciones</h5></li>
+                  <div class="collection with-header">
+                    <h5 class="collection-header">Opciones</h5>
                     @include('ideas.opciones', ['idea' => $idea])
-                    {{-- @if ($idea->estadoIdea->nombre == 'En registro' || $idea->estadoIdea->nombre == 'Postulado')
-                    <li class="collection-item">
-                      <a href="{{route('idea.reasignar.nodo', $idea->id)}}">
-                        <div class="card-panel green lighten-2 black-text center">
-                          Cambiar idea de nodo<button data-target="modal1" class="btn-floating btn-flat modal-trigger"><i class="material-icons right black-text">help</i></button>
-                        </div>
-                      </a>
-                    </li>
-                    @endif --}}
-                    <li class="collection-item">
+                    {{-- <li class="collection-item"> --}}
                       @include('ideas.historial_cambios')
-                    </li>
-                  </ul>
+                    {{-- </li> --}}
+                  </div>
                 </div>
                 <div class="col s12 m9 l9">
                   @include('ideas.detalle')

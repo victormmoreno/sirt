@@ -339,7 +339,7 @@ class Idea extends Model
     public function scopeNodo($query, $nodo)
     {
         if (!empty($nodo) && $nodo != null && $nodo != 'all') {
-            return $query->where('nodo_id', $nodo);
+            return $query->whereIn('nodo_id', $nodo);
         }
         return $query;
     }

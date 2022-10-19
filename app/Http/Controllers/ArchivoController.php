@@ -276,13 +276,13 @@ class ArchivoController extends Controller
         return datatables()->of($files)
         ->addColumn('download', function ($data) {
             $download = '
-            <a target="_blank" href="' . route('entrenamientos.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
+            <a target="_blank" href="' . route('talleres.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
             <i class="material-icons">file_download</i>
             </a>
             ';
             return $download;
         })->addColumn('delete', function ($data) {
-            $delete = '<form method="POST" action="' . route('entrenamientos.files.destroy', $data) . '">
+            $delete = '<form method="POST" action="' . route('talleres.files.destroy', $data) . '">
             ' . method_field('DELETE') . '' .  csrf_field() . '
             <button class="btn red darken-4 m-b-xs">
             <i class="material-icons">delete_forever</i>
@@ -394,6 +394,7 @@ class ArchivoController extends Controller
     {
         try {
             $ruta = $this->archivoRepository->consultarRutaDeArchivoDeUnaArticulacionProyectoPorId($idFile);
+            dd($ruta->articulacion_proyecto->proyecto->asesor_id);
             if (!$this->verificarAccesoADescarga($ruta)) {
                 toast('No haces parte de este proyecto, por lo que no lo puedes descargar!','warning')->autoClose(2000)->position('top-end');
                 return back();
@@ -401,43 +402,42 @@ class ArchivoController extends Controller
             $path = str_replace('storage', 'public', $ruta->ruta);
             return Storage::response($path);
         } catch (\Exception $e) {
-            return abort(404, $e->getMessage());
+            return $e->getMessage();
         }
-
     }
 
     public function verificarAccesoADescarga($file)
     {
         if (session()->get('login_role') == User::IsDinamizador()) {
-            if ($file->articulacion_proyecto->proyecto->nodo_id != auth()->user()->dinamizador->nodo_id) {
-                return false;
+            if ($file->articulacion_proyecto->proyecto->nodo_id == auth()->user()->dinamizador->nodo_id) {
+                return true;
             }
         }
         if (session()->get('login_role') == User::IsInfocenter()) {
-            if ($file->articulacion_proyecto->proyecto->nodo_id != auth()->user()->infocenter->nodo_id) {
-                return false;
+            if ($file->articulacion_proyecto->proyecto->nodo_id == auth()->user()->infocenter->nodo_id) {
+                return true;
             }
         }
         if (session()->get('login_role') == User::IsGestor()) {
-            if ($file->articulacion_proyecto->proyecto->asesor_id != auth()->user()->gestor->nodo_id) {
-                return false;
+            if ($file->articulacion_proyecto->proyecto->asesor_id == auth()->user()->gestor->id) {
+                return true;
             }
         }
         if (session()->get('login_role') == User::IsArticulador()) {
-            if ($file->articulacion_proyecto->proyecto->nodo_id != auth()->user()->articulador->nodo_id) {
-                return false;
+            if ($file->articulacion_proyecto->proyecto->nodo_id == auth()->user()->articulador->nodo_id) {
+                return true;
             }
         }
         if (session()->get('login_role') == User::IsTalento()) {
             $talento = $file->articulacion_proyecto->proyecto->articulacion_proyecto->talentos()->wherePivot('talento_id', auth()->user()->talento->id)->first();
-            if ($talento == null) {
-                return false;
+            if ($talento != null) {
+                return true;
             }
         }
         if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsArticulador())
             return true;
         
-        return true;
+        return false;
     }
 
 

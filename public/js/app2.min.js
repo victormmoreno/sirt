@@ -216,7 +216,7 @@ function detallesIdeasDelEntrenamiento(id){
   $.ajax({
      dataType:'json',
      type:'get',
-     url: host_url + "entrenamientos/"+id,
+     url: host_url + "/taller/"+id,
      data: {
        identrenamiento: id,
      }
@@ -234,52 +234,19 @@ function detallesIdeasDelEntrenamiento(id){
   });
 }
 
-$(document).ready(function() {
-  $('#entrenamientosPorNodo_tableDinamizador').DataTable({
+function consultarEntrenamientosPorNodo() {
+  $('#entrenamientosPorNodo_table').dataTable().fnDestroy();
+  $('#entrenamientosPorNodo_table').DataTable({
     language: {
       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
     },
     processing: true,
     serverSide: true,
     ajax:{
-      url: host_url + "/entrenamientos/consultarEntrenamientosPorNodo",
-      type: "get",
-    },
-    columns: [
-      {
-        title: 'Código del Entrenamiento',
-        data: 'codigo_entrenamiento',
-        name: 'codigo_entrenamiento',
-      },
-      {
-        data: 'fecha_sesion1',
-        name: 'fecha_sesion1',
-      },
-      {
-        width: '8%',
-        data: 'details',
-        name: 'details',
-        orderable: false
-      },
-      {
-        width: '8%',
-        data: 'evidencias',
-        name: 'evidencias',
-        orderable: false
-      },
-    ],
-  });
-  $('#entrenamientos_nodo_table_articulador').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    ajax:{
-      url: host_url + "/entrenamientos/consultarEntrenamientosPorNodo",
+      url: host_url + "/taller/consultarEntrenamientosPorNodo/",
       type: "get",
       data: {
-        nodo: null,
+        filter_nodo: $('#filter_nodo').val(),
       }
     },
     columns: [
@@ -300,19 +267,498 @@ $(document).ready(function() {
       },
       {
         width: '8%',
-        data: 'edit',
-        name: 'edit',
-        orderable: false
-      },
-      {
-        width: '8%',
         data: 'evidencias',
         name: 'evidencias',
         orderable: false
       },
     ],
   });
+}
+
+// $(document).ready(function() {
+//   $('#entrenamientosPorNodo_tableDinamizador').DataTable({
+//     language: {
+//       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+//     },
+//     processing: true,
+//     serverSide: true,
+//     ajax:{
+//       url: host_url + "/talleres/consultarEntrenamientosPorNodo",
+//       type: "get",
+//     },
+//     columns: [
+//       {
+//         title: 'Código del Entrenamiento',
+//         data: 'codigo_entrenamiento',
+//         name: 'codigo_entrenamiento',
+//       },
+//       {
+//         data: 'fecha_sesion1',
+//         name: 'fecha_sesion1',
+//       },
+//       {
+//         width: '8%',
+//         data: 'details',
+//         name: 'details',
+//         orderable: false
+//       },
+//       {
+//         width: '8%',
+//         data: 'evidencias',
+//         name: 'evidencias',
+//         orderable: false
+//       },
+//     ],
+//   });
+//   $('#entrenamientos_nodo_table_articulador').DataTable({
+//     language: {
+//       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+//     },
+//     processing: true,
+//     serverSide: true,
+//     ajax:{
+//       url: host_url + "/talleres/consultarEntrenamientosPorNodo",
+//       type: "get",
+//       data: {
+//         nodo: null,
+//       }
+//     },
+//     columns: [
+//       {
+//         title: 'Código del Entrenamiento',
+//         data: 'codigo_entrenamiento',
+//         name: 'codigo_entrenamiento',
+//       },
+//       {
+//         data: 'fecha_sesion1',
+//         name: 'fecha_sesion1',
+//       },
+//       {
+//         width: '8%',
+//         data: 'details',
+//         name: 'details',
+//         orderable: false
+//       },
+//       {
+//         width: '8%',
+//         data: 'edit',
+//         name: 'edit',
+//         orderable: false
+//       },
+//       {
+//         width: '8%',
+//         data: 'evidencias',
+//         name: 'evidencias',
+//         orderable: false
+//       },
+//     ],
+//   });
+// });
+
+$(document).ready(function() {
+
+    let filter_nodo = $('#filter_nodo').val();
+    let filter_year = $('#filter_year_ideas').val();
+    let filter_state = $('#filter_state').val();
+    let filter_vieneconvocatoria = $('#filter_vieneconvocatoria').val();
+    let filter_convocatoria = $('#filter_convocatoria').val();
+
+    if((filter_nodo == '' || filter_nodo == null) && filter_year !='' && filter_state != '' && filter_vieneconvocatoria != '' && (filter_convocatoria == '' || filter_convocatoria == null)){
+        idea.fill_datatatables_actions_ideas(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
+        idea.fill_datatatables_actions_ideas_articulador(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
+        idea.fill_datatatables_ideas(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
+    }else if((filter_nodo != '' || filter_nodo != null) && filter_year !='' && filter_state != '' && filter_vieneconvocatoria != '' && (filter_convocatoria != '' || filter_convocatoria != null)){
+        idea.fill_datatatables_actions_ideas(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
+        idea.fill_datatatables_actions_ideas_articulador(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
+        idea.fill_datatatables_ideas(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
+    }else{
+        $('#ideas_data_action_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            pageLength: 20,
+            "lengthChange": false,
+        }).clear().draw();
+        $('#ideas_data_action_table_articulador').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            pageLength: 20,
+            "lengthChange": false
+        }).clear().draw();
+        $('#ideas_data_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false
+        }).clear().draw();
+    }
+
+
 });
+
+$('#filter_idea').click(function () {
+    let filter_nodo = $('#filter_nodo').val();
+    let filter_year = $('#filter_year_ideas').val();
+    let filter_state = $('#filter_state').val();
+    let filter_vieneconvocatoria = $('#filter_vieneconvocatoria').val();
+    let filter_convocatoria = $('#filter_convocatoria').val();
+    // $('#ideas_data_action_table').dataTable().fnDestroy();
+    // $('#ideas_data_action_table_articulador').dataTable().fnDestroy();
+    $('#ideas_data_table').dataTable().fnDestroy();
+    if((filter_nodo == '' || filter_nodo == null) && filter_year !='' && filter_state != '' && filter_vieneconvocatoria != '' && (filter_convocatoria == '' || filter_convocatoria == null)){
+        // idea.fill_datatatables_actions_ideas(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
+        // idea.fill_datatatables_actions_ideas_articulador(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
+        idea.fill_datatatables_ideas(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
+    }else if((filter_nodo != '' || filter_nodo != null) && filter_year !='' && filter_state != '' && filter_vieneconvocatoria != '' && (filter_convocatoria != '' || filter_convocatoria != null)){
+        // idea.fill_datatatables_actions_ideas(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
+        // idea.fill_datatatables_actions_ideas_articulador(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
+        idea.fill_datatatables_ideas(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
+    }else{
+        $('#ideas_data_action_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            pageLength: 20,
+            "lengthChange": false
+        }).clear().draw();
+        // $('#ideas_data_action_table_articulador').DataTable({
+        //     language: {
+        //         "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        //     },
+        //     pageLength: 20,
+        //     "lengthChange": false
+        // }).clear().draw();
+        $('#ideas_data_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false
+        }).clear().draw();
+    }
+});
+
+$('#download_excel').click(function(){
+        let filter_nodo = $('#filter_nodo').val();
+        let filter_year = $('#filter_year_ideas').val();
+        let filter_state = $('#filter_state').val();
+        let filter_vieneConvocatoria = $('#filter_vieneconvocatoria').val();
+        let filter_convocatoria = $('#filter_convocatoria').val();
+        var query = {
+            filter_nodo: filter_nodo,
+            filter_year: filter_year,
+            filter_state: filter_state,
+            filter_vieneConvocatoria: filter_vieneConvocatoria,
+            filter_convocatoria: filter_convocatoria,
+        }
+
+        var url = host_url + "/idea/export?" + $.param(query)
+
+        window.location = url;
+    });
+
+
+
+var idea ={
+    fill_datatatables_actions_ideas: function(filter_nodo = null,filter_year='', filter_state='',filter_vieneConvocatoria='', filter_convocatoria = null){
+        var datatable = $('#ideas_data_action_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            pageLength: 20,
+            "lengthChange": false,
+            processing: true,
+            serverSide: true,
+            "order": [[ 1, "desc" ]],
+            ajax:{
+                url: host_url + "/idea/datatable_filtros",
+                type: "get",
+                data: {
+                    filter_nodo: filter_nodo,
+                    filter_year: filter_year,
+                    filter_state: filter_state,
+                    filter_vieneConvocatoria: filter_vieneConvocatoria,
+                    filter_convocatoria: filter_convocatoria,
+                }
+            },
+            columns: [
+                {
+                    data: 'codigo_idea',
+                    name: 'codigo_idea',
+                },
+                {
+                    data: 'created_at',
+                    name: 'created_at',
+                },
+                {
+                    data: 'persona',
+                    name: 'persona',
+                },
+                {
+                    data: 'correo_contacto',
+                    name: 'correo_contacto',
+                },
+                {
+                    data: 'telefono_contacto',
+                    name: 'telefono_contacto',
+                },
+                {
+                    data: 'nombre_proyecto',
+                    name: 'nombre_proyecto',
+                },
+                {
+                    data: 'estado',
+                    name: 'estado',
+                },
+                {
+                    data: 'details',
+                    name: 'details',
+                    orderable: false
+                },
+                {
+                    data: 'info',
+                    name: 'info',
+                    orderable: false
+                },
+
+            ],
+        });
+    },
+    fill_datatatables_actions_ideas_articulador: function(filter_nodo = null,filter_year='', filter_state='',filter_vieneConvocatoria='', filter_convocatoria = null){
+        var datatable = $('#ideas_data_action_table_articulador').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false,
+            processing: true,
+            serverSide: true,
+            pageLength: 20,
+            "order": [[ 1, "desc" ]],
+            ajax:{
+                url: host_url + "/idea/datatable_filtros",
+                type: "get",
+                data: {
+                    filter_nodo: filter_nodo,
+                    filter_year: filter_year,
+                    filter_state: filter_state,
+                    filter_vieneConvocatoria: filter_vieneConvocatoria,
+                    filter_convocatoria: filter_convocatoria,
+                }
+            },
+            columns: [
+                {
+                    data: 'codigo_idea',
+                    name: 'codigo_idea',
+                },
+                {
+                    data: 'created_at',
+                    name: 'created_at',
+                },
+                {
+                    data: 'persona',
+                    name: 'persona',
+                },
+                {
+                    data: 'correo_contacto',
+                    name: 'correo_contacto',
+                },
+                {
+                    data: 'telefono_contacto',
+                    name: 'telefono_contacto',
+                },
+                {
+                    data: 'nombre_proyecto',
+                    name: 'nombre_proyecto',
+                },
+                {
+                    data: 'estado',
+                    name: 'estado',
+                },
+                {
+                    data: 'details',
+                    name: 'details',
+                    orderable: false
+                },
+                {
+                    data: 'info',
+                    name: 'info',
+                    orderable: false
+                },
+
+            ],
+        });
+    },
+    fill_datatatables_ideas: function(filter_nodo = null,filter_year='', filter_state='',filter_vieneConvocatoria='', filter_convocatoria = null){
+        var datatable = $('#ideas_data_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false,
+            processing: true,
+            serverSide: true,
+            pageLength: 20,
+            "order": [[ 1, "desc" ]],
+            ajax:{
+                url: host_url + "/idea/datatable_filtros",
+                type: "get",
+                data: {
+                    filter_nodo: filter_nodo,
+                    filter_year: filter_year,
+                    filter_state: filter_state,
+                    filter_vieneConvocatoria: filter_vieneConvocatoria,
+                    filter_convocatoria: filter_convocatoria,
+                }
+            },
+            columns: [
+                {
+                    data: 'nodo',
+                    name: 'nodo',
+                },
+                {
+                    data: 'codigo_idea',
+                    name: 'codigo_idea',
+                },
+                {
+                    data: 'created_at',
+                    name: 'created_at',
+                },
+                {
+                    data: 'persona',
+                    name: 'persona',
+                },
+                {
+                    data: 'correo_contacto',
+                    name: 'correo_contacto',
+                },
+                {
+                    data: 'telefono_contacto',
+                    name: 'telefono_contacto',
+                },
+                {
+                    data: 'nombre_proyecto',
+                    name: 'nombre_proyecto',
+                },
+                {
+                    data: 'estado',
+                    name: 'estado',
+                },
+                {
+                    data: 'info',
+                    name: 'info',
+                    orderable: false
+                },
+
+            ],
+        });
+    },
+    getSelectConvocatoria: function (){
+        let convocatoria = $('#txtconvocatoria').val();
+        $('#txtnombreconvocatoria').attr("disabled", "disabled");
+        if(convocatoria == 1){
+            $('#txtnombreconvocatoria').removeAttr("disabled").focus().val('');
+        }else if(convocatoria == 0){
+            $('#txtnombreconvocatoria').val('');
+            $('#txtnombreconvocatoria').attr("disabled", "disabled");
+        }else{
+            $('#txtnombreconvocatoria').val('');
+            $('#txtnombreconvocatoria').attr("disabled", "disabled");
+        }
+    },
+
+    getSelectAvalEmpresa: function (){
+        let avalaEmpresa = $('#txtavalempresa').val();
+        $('#txtempresa').attr("disabled", "disabled");
+        if(avalaEmpresa == 1){
+            $('#txtempresa').removeAttr("disabled").focus().val('');
+        }else if(avalaEmpresa == 0){
+            $('#txtempresa').val('');
+            $('#txtempresa').attr("disabled", "disabled");
+        }else{
+            $('#txtempresa').val('');
+            $('#txtempresa').attr("disabled", "disabled");
+        }
+    },
+    vieneConvocatoria: function(value){
+        if(value == 1){
+            return "Si";
+        }else{
+            return "No";
+        }
+    },
+     nombreConvocatoria: function(value, convocatoria){
+        if(value == 1){
+            return convocatoria;
+        }else{
+            return "No Aplica";
+        }
+    },
+    avalEmpresa: function(value){
+        if(value == 1){
+            return "Si";
+        }else{
+            return "No";
+        }
+    },
+    nombreEmpresa: function(value, empresa){
+        if(value == 1){
+            return empresa;
+        }else{
+            return "No Aplica";
+        }
+    }
+}
+
+
+function cambiarEstadoIdeaDeProyecto(id, estado) {
+Swal.fire({
+    title: '¿Desea cambiar el estado de la idea de proyecto a '+estado+'?',
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Sí'
+}).then((result) => {
+    if (result.value) {
+    $.ajax({
+        dataType:'json',
+        type:'get',
+        url: host_url + '/idea/updateEstadoIdea/'+id+'/'+estado,
+        success: function (data) {
+        Swal.fire({
+            title: 'El estado de la idea se ha cambiado exitosamente!',
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Sí'
+        }).then((result) => {
+            window.location.replace(data.route);
+        })
+        },
+        error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+        }
+    })
+    }
+})
+
+}
+
+function detallesIdeaPorId(id){
+    $.ajax({
+        dataType:'json',
+        type:'get',
+        url: host_url + "/idea/modalIdeas/"+id
+    }).done(function(respuesta){
+        $("#detalle_idea").empty();
+        if (respuesta == null) {
+        swal('Ups!!!', 'Ha ocurrido un error', 'warning');
+        } else {
+        $("#detalle_idea").append(respuesta.view);
+        $('#modalInformacionIdea').openModal();
+        }
+    })
+}
 
 $(document).ready(function () {
     // Contenedores
@@ -350,6 +796,13 @@ $(document).ready(function () {
     showInput_AvalEmpresa();
     showInput_BuscarEmpresa();
 });
+
+divRegistrarEmpresa = $('#divRegistrarEmpresa');
+divIngresarEmpresaIdea = $('#divIngresarEmpresaIdea');
+divEmpresaRegistrada = $('#divEmpresaRegistrada');
+divIngresarEmpresaIdea.hide();
+divRegistrarEmpresa.hide();
+divEmpresaRegistrada.hide();
 
 function consultarEmpresaTecnoparque() {
     let nit = $('#txtnit').val();
@@ -657,445 +1110,27 @@ function showInput_AvalEmpresa() {
     }
 }
 
-function consultarProyectosDeTalentos () {
-
-  $('#tblProyectoDelTalento').dataTable().fnDestroy();
-  $('#tblProyectoDelTalento').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    order: [ 0, 'desc' ],
-    "lengthChange": false,
-    ajax:{
-      url: host_url + "/proyecto/datatableProyectosDelTalento/",
-      // type: "get",
-      data: function (d) {
-        d.codigo_proyecto = $('.codigo_proyecto').val(),
-        d.nombre = $('.nombre').val(),
-        d.nombre_fase = $('.nombre_fase').val(),
-        d.search = $('input[type="search"]').val()
-      }
-    },
-    columns: [
-      {
-        width: '15%',
-        data: 'codigo_proyecto',
-        name: 'codigo_proyecto',
-      },
-      {
-        data: 'nombre_gestor',
-        name: 'nombre_gestor',
-      },
-      {
-        data: 'nombre',
-        name: 'nombre',
-      },
-      {
-        data: 'nombre_fase',
-        name: 'nombre_fase',
-      },
-      {
-        width: '8%',
-        data: 'info',
-        name: 'info',
-        orderable: false
-      },
-      {
-        width: '8%',
-        data: 'proceso',
-        name: 'proceso',
-        orderable: false
-      },
-    ],
-  });
-}
-function consultarIdeasDelTalento () {
-    $('#tbl_IdeasDelTalento').dataTable().fnDestroy();
-    $('#tbl_IdeasDelTalento').DataTable({
-      language: {
-        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-      },
-      processing: true,
-      serverSide: true,
-      order: [ 0, 'desc' ],
-      "lengthChange": false,
-      ajax:{
-        url: host_url + "/idea/datatableIdeasDeTalentos/",
-      },
-      columns: [
-        {
-          width: '15%',
-          data: 'codigo_idea',
-          name: 'codigo_idea',
-        },
-        {
-          width: '8%',
-          data: 'nodo',
-          name: 'nodo',
-        },
-        {
-          data: 'nombre_proyecto',
-          name: 'nombre_proyecto',
-        },
-        {
-          data: 'estado',
-          name: 'estado',
-        },
-        {
-          width: '8%',
-          data: 'info',
-          name: 'info',
-          orderable: false
-        },
-        {
-          width: '8%',
-          data: 'postular',
-          name: 'postular',
-          orderable: false
-        },
-        {
-          width: '8%',
-          data: 'edit',
-          name: 'edit',
-          orderable: false
-        },
-      ],
-    });
+function banderaEmpresaIdea() {
+  if ($('#bandera_empresa').is(':checked')) {
+    divIngresarEmpresaIdea.show();
+  } else {
+    divIngresarEmpresaIdea.hide();
+    divRegistrarEmpresa.hide();
+    divEmpresaRegistrada.hide();
+  }
 }
 
-function confirmacionPostulacion(e){
-  e.preventDefault();
-  Swal.fire({
-  title: '¿Está seguro(a) de postular esta idea de proyecto?',
-  text: "Una vez que se postule la idea de proyecto, ya no se podrá cambiar los datos de esta.",
-  type: 'warning',
-  showCancelButton: true,
-  confirmButtonColor: '#3085d6',
-  cancelButtonColor: '#d33',
-  cancelButtonText: 'Cancelar',
-  confirmButtonText: 'Sí!'
-  }).then((result) => {
-    if (result.value) {
-      document.frmEnviarIdeaTalento.submit();
-    }
-  })
-}
-
-function confirmacionDuplicacion(e){
-  e.preventDefault();
-  Swal.fire({
-  title: '¿Está seguro(a) de duplicar esta idea de proyecto?',
-  text: "Esto se recomienda hacer en caso de que se quiera continuar con el proceso en tecnoparque.",
-  type: 'warning',
-  showCancelButton: true,
-  confirmButtonColor: '#3085d6',
-  cancelButtonColor: '#d33',
-  cancelButtonText: 'Cancelar',
-  confirmButtonText: 'Sí!'
-  }).then((result) => {
-    if (result.value) {
-      document.frmDuplicarIdea.submit();
-    }
-  })
-}
-
-function confirmacionInhabilitar(e){
-  e.preventDefault();
-  Swal.fire({
-  title: '¿Está seguro(a) de inhabilitar esta idea de proyecto?',
-  text: "Esto quiere decir que esta idea de proyecto no se le podrá realizar un proceso en tecnoparque.",
-  type: 'warning',
-  showCancelButton: true,
-  confirmButtonColor: '#3085d6',
-  cancelButtonColor: '#d33',
-  cancelButtonText: 'Cancelar',
-  confirmButtonText: 'Sí!'
-  }).then((result) => {
-    if (result.value) {
-      document.frmInhabilitarIdea.submit();
-    }
-  })
-}
-function consultarIdeasEnviadasAlNodo () {
-    $('#tbl_IdeasEnviadasDelNodo').dataTable().fnDestroy();
-    $('#tbl_IdeasEnviadasDelNodo').DataTable({
-      language: {
-        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-      },
-      processing: true,
-      serverSide: true,
-      order: [ 0, 'desc' ],
-      "lengthChange": false,
-      ajax:{
-        url: host_url + "/idea/datatableIdeasDeTalentos/",
-      },
-      columns: [
-        {
-            width: '15%',
-            data: 'codigo_idea',
-            name: 'codigo_idea',
-        },
-        {
-            data: 'nombre_proyecto',
-            name: 'nombre_proyecto',
-        },
-        {
-            data: 'nombre_talento',
-            name: 'nombre_talento',
-        },
-        {
-            data: 'estado',
-            name: 'estado',
-        },
-        {
-            width: '8%',
-            data: 'info',
-            name: 'info',
-            orderable: false
-        },
-        // {
-        //     width: '8%',
-        //     data: 'edit',
-        //     name: 'edit',
-        //     orderable: false
-        // },
-      ],
-    });
-}
-function consultarEntrenamientosPorNodo_Administrador(id) {
-  $('#entrenamientosPorNodo_tableAdministrador').dataTable().fnDestroy();
-  $('#entrenamientosPorNodo_tableAdministrador').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    ajax:{
-      url: host_url + "/entrenamientos/consultarEntrenamientosPorNodo/",
-      type: "get",
-      data: {
-        filter_nodo: id.value,
-      }
-    },
-    columns: [
-      {
-        title: 'Código del Entrenamiento',
-        data: 'codigo_entrenamiento',
-        name: 'codigo_entrenamiento',
-      },
-      {
-        data: 'fecha_sesion1',
-        name: 'fecha_sesion1',
-      },
-      {
-        width: '8%',
-        data: 'details',
-        name: 'details',
-        orderable: false
-      },
-      {
-        width: '8%',
-        data: 'evidencias',
-        name: 'evidencias',
-        orderable: false
-      },
-    ],
-  });
-}
-
-function noSeEncontraronResultados() {
-  Swal.fire({
-    title: '¿Desea inhabilitar elentrenamiento?',
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    cancelButtonText: 'Cancelar',
-    confirmButtonText: 'Sí, inhabilitar'
-  })
-}
-
-$(document).ready(function() {
-  $('#entrenamientos_nodo_table').dataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    paging: true,
-    ajax:{
-      url: host_url + "/entrenamientos",
-      type: "get",
-    },
-
-    columns: [
-      {
-        title: 'Código del Entrenamiento',
-        data: 'codigo_entrenamiento',
-        name: 'codigo_entrenamiento',
-      },
-      {
-        data: 'fecha_sesion1',
-        name: 'fecha_sesion1',
-      },
-      {
-        data: 'fecha_sesion2',
-        name: 'fecha_sesion2',
-      },
-      {
-        data: 'correos',
-        name: 'correos',
-      },
-      {
-        data: 'fotos',
-        name: 'fotos',
-      },
-      {
-        data: 'listado_asistencia',
-        name: 'listado_asistencia',
-      },
-      {
-        width: '8%',
-        data: 'details',
-        name: 'details',
-        orderable: false
-      },
-      {
-        width: '8%',
-        data: 'edit',
-        name: 'edit',
-        orderable: false
-      },
-      {
-        width: '8%',
-        data: 'update_state',
-        name: 'update_state',
-        orderable: false
-      },
-      {
-        width: '8%',
-        data: 'evidencias',
-        name: 'evidencias',
-        orderable: false
-      },
-    ],
-  });
-  $('a.toggle-vis').on( 'click', function (e) {
-    e.preventDefault();
-
-    // Get the column API object
-    var column = table.column( $(this).attr('data-column') );
-
-    // Toggle the visibility
-    column.visible( ! column.visible() );
-  } );
-});
-
-function inhabilitarEntrenamientoPorId(id, e) {
-  Swal.fire({
-    title: '¿Desea inhabilitar el entrenamiento?',
-    // text: "You won't be able to revert this!",
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    cancelButtonText: 'Cancelar',
-    confirmButtonText: 'Sí, inhabilitar'
-  }).then((result) => {
-    if (result.value) {
-      Swal.fire({
-        title: '¿Qué desea hacer?',
-        text: "Seleccione lo que ocurrirá con las ideas de proyecto que están asociasdas al entrenamiento",
-        type: 'warning',
-        footer: '<a onclick="Swal.close()" href="#">Cancelar</a>',
-        confirmButtonText: '<a class="white-text" onclick="cambiarEstadoDeIdeasDeProyectoDeEntrenamiento('+id+', \'Inhabilitado\'); Swal.close()" href="#">Inhabilitar las ideas de proyecto</a>',
-        cancelButtonColor: '#d33',
-        showCancelButton: true,
-        cancelButtonText: '<a class="white-text" onclick="cambiarEstadoDeIdeasDeProyectoDeEntrenamiento('+id+', \'Inicio\'); Swal.close()" href="#">Regresar las ideas de proyecto al estado de Inicio</a>',
-        focusConfirm: false,
-      })
-    }
-  })
-}
-
-function cambiarEstadoDeIdeasDeProyectoDeEntrenamiento(idea, estado) {
-  $.ajax({
-    dataType:'json',
-    type:'get',
-    url: host_url + "/entrenamientos/inhabilitarEntrenamiento/"+idea+"/"+estado,
-    success: function (data) {
-      console.log(data);
-      if (data.update == "true") {
-        Swal.fire({
-          title: 'El entrenamiento se ha inhabilitado!',
-          html: 'Las ideas de proyecto del entrenamiento han cambiado su estado a: ' + data.estado ,
-          type: 'success',
-          showCancelButton: false,
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok!'
-        })
-      }
-      if (data.update == "1") {
-        // console.log('No se cambió');
-        Swal.fire({
-          title: 'No se puede inhabilitar el entrenamiento!',
-          html: 'Al parecer, las siguientes ideas de proyecto se encuentran registradas en un comité: </br> <b> ' + data.ideas + '</b></br>' +
-          'Si deseas hacer esto, las ideas de proyecto asociadas al entrenamiento no pueden estar en proyecto ó CSIBT' ,
-          type: 'warning',
-          showCancelButton: false,
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Entiendo!'
-        })
-      }
-    },
-    error: function (xhr, textStatus, errorThrown) {
-      alert("Error: " + errorThrown);
-    }
-  })
-}
-
-$(document).ready(function() {
-  $('#txtfecha_sesion1').bootstrapMaterialDatePicker({
-    time:false,
-    date:true,
-    shortTime:true,
-    format: 'YYYY-MM-DD',
-    // minDate : new Date(),
-    language: 'es',
-    weekStart : 1, cancelText : 'Cancelar',
-    okText: 'Guardar'
-  }).on('change', function(e, date)
-  {
-    $('#txtsegundasesion').bootstrapMaterialDatePicker('setMinDate', date);
-  });
-});
-
-$(document).on('submit', 'form#formEntrenamientosCreate', function (event) { // $('button[type="submit"]').prop("disabled", true);
+// Enviar formulario para registrar proyecto
+$(document).on('submit', 'form#frmIdeas_Inicio', function (event) {
+    $('button[type="submit"]').attr('disabled', 'disabled');
     event.preventDefault();
-    Swal.fire({
-        title: '¿Está seguro(a) de guardar esta información?',
-        // text: "You won't be able to revert this!",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        cancelButtonText: 'Cancelar',
-        confirmButtonText: 'Sí, guardar'
-    }).then((result) => {
-        if (result.value) {
-            $('button[type="submit"]').attr('disabled', 'disabled');
-            event.preventDefault();
-            var form = $(this);
-            var data = new FormData($(this)[0]);
-            var url = form.attr("action");
-            ajaxSendFormEntrenamiento(form, data, url, 'create');
-        }
-    });
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    ajaxSendFormIdea(form, data, url, 'create');
 });
 
-function ajaxSendFormEntrenamiento(form, data, url, fase) {
+function ajaxSendFormIdea(form, data, url, fase) {
   $.ajax({
       type: form.attr('method'),
       url: url,
@@ -1108,7 +1143,11 @@ function ajaxSendFormEntrenamiento(form, data, url, fase) {
           $('button[type="submit"]').removeAttr('disabled');
           $('.error').hide();
           printErroresFormulario(data);
-          mensajesEntrenamientoCreate(data);
+          if (fase == 'create') {
+              mensajesIdeaCreate(data);
+          } else {
+              mensajesIdeaUpdate(data);
+          }
       },
       error: function (xhr, textStatus, errorThrown) {
           alert("Error: " + errorThrown);
@@ -1116,137 +1155,113 @@ function ajaxSendFormEntrenamiento(form, data, url, fase) {
   });
 };
 
-function mensajesEntrenamientoCreate(data) {
-  if (data.state != 'error_form') {
-    Swal.fire({
-      title: data.title,
-      html: data.msg,
-      type: data.type,
-      showCancelButton: false,
-      confirmButtonColor: '#3085d6',
-      confirmButtonText: 'Ok'
-    });
-  }
+function mensajesIdeaCreate(data) {
   if (data.state == 'registro') {
-    setTimeout(function () {
-        window.location.href = data.url;
-    }, 1500);
-  }
-
-  if (data.state == 'update') {
-    setTimeout(function () {
-        window.location.href = data.url;
-    }, 1500);
-  }
-};
-
-function noRepeatIdeasTaller(id) {
-  let idIdea = id;
-  let retorno = true;
-  let a = document.getElementsByName("ideas_taller[]");
-  for (x = 0; x < a.length; x ++) {
-      if (a[x].value == idIdea) {
-          retorno = false;
-          break;
-      }
-  }
-  return retorno;
-};
-
-function getValorConfirmacion() {
-  if ($('#txtconfirmacion').is(':checked')) {
-    return 1;
-  } else {
-    return 0;
-  }
-}
-
-function getValorAsistencia() {
-  if ($('#txtasistencia').is(':checked')) {
-    return 1;
-  } else {
-    return 0;
-  }
-}
-
-function addIdeaToEntrenamiento() {
-  let id = $('#txtidea_taller').val();
-  let confirmacion = getValorConfirmacion();
-  let asistencia = getValorAsistencia();
-  if (id == 0) {
-    Swal.fire({
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3000,
-      type: 'error',
-      title: 'Estás ingresando mal los datos'
-  })
-  } else {
-      if (noRepeatIdeasTaller(id) == false) {
-        Swal.fire({
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 1500,
-          type: 'warning',
-          title: 'La idea de proyecto ya se encuentra asociada al taller!'
-      });
-      } else {
-          pintarIdeaEnLaTablaTaller(id, confirmacion, asistencia);
-      }
-  }
-};
-
-function pintarIdeaEnLaTablaTaller(id, confirmacion, asistencia) {
-  $.ajax({
-      dataType: 'json',
-      type: 'get',
-      url: host_url + '/idea/detallesIdea/' + id
-  }).done(function (ajax) {
-      let fila = prepararFilaEnLaTablaDeIdeasTaller(ajax, confirmacion, asistencia);
-      $('#tblIdeasEntrenamientoForm').append(fila);
       Swal.fire({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        type: 'success',
-        title: 'La idea de proyecto se asoció con éxito al taller'
+          title: 'Registro Exitoso',
+          text: "La idea de proyecto ha sido registrada satisfactoriamente",
+          type: 'success',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
       });
-      reiniciarCamposTaller();
-  });
-}
+      setTimeout(function () {
+          window.location.replace("/idea");
+      }, 1000);
+  }
+  if (data.state == 'no_registro') {
+      Swal.fire({
+          title: 'La idea de proyecto no se ha registrado, por favor inténtalo de nuevo',
+          type: 'warning',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+      })
+  }
+};
 
-function reiniciarCamposTaller() {
-  $("#txtidea_taller").val('0');
-  $("#txtidea_taller").select2();
+function mensajesIdeaUpdate(data) {
+  if (data.state == 'update') {
+      Swal.fire({
+          title: 'Modificación Exitosa',
+          text: "La idea de proyecto ha sido modificada satisfactoriamente",
+          type: 'success',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+      });
+      setTimeout(function () {
+          window.location.replace("/idea");
+      }, 1000);
+  }
+  if (data.state == 'no_update') {
+      Swal.fire({
+          title: 'La idea de proyecto no se ha modificado, por favor inténtalo de nuevo',
+          type: 'warning',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+      })
+  }
+};
+function confirmacionAceptacionPostulacion(e){
+    e.preventDefault();
+    Swal.fire({
+    title: '¿Está seguro(a) de aceptar la postulación de esta idea de proyecto?',
+    input: 'textarea',
+    inputPlaceholder: 'Puedes dejar algunas observaciones para el talento',
+    type: 'warning',
+    inputValidator: (value) => {
+      if (!value) {
+        return 'Se necesitan unas observaciones!'
+      } else {
+        $('#txtobservacionesAceptacion').val(value);
+      }
+    },
+    inputAttributes: {
+      maxlength: 2100
+    },
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Sí!'
+    }).then((result) => {
+      if (result.value) {
+        document.frmAceptarPostulacionIdea.submit();
+        // window.location.href = "{{ route('idea.aceptar.postulacion', $idea->id) }}";
+      }
+    })
   }
 
-function prepararFilaEnLaTablaDeIdeasTaller(ajax, confirmacion, asistencia) {
-  let idIdea = ajax.detalles.id;
-  let fila = '<tr class="selected" id=ideaAsociadaTaller' + idIdea + '>' + 
-      '<td><input type="hidden" name="ideas_taller[]" value="' + idIdea + '">' + ajax.detalles.codigo_idea + ' - ' + ajax.detalles.nombre_proyecto + '</td>' +
-      '<td><input type="hidden" name="confirmaciones[]" value="' + confirmacion + '">' + getYesOrNot(confirmacion) + '</td>' +
-      '<td><input type="hidden" name="asistencias[]" value="' + asistencia + '">' + getYesOrNot(asistencia) + '</td>' +
-      '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarIdeaDelTaller(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' + 
-      '</tr>';
-  return fila;
-}
-
-function eliminarIdeaDelTaller(index) {
-  $('#ideaAsociadaTaller' + index).remove();
-}
-
-function getYesOrNot(value) {
-  if (value == 0) {
-    return 'No';
-  } else {
-    return 'Si';
+  function confirmacionRechazoPostulacion(e){
+    e.preventDefault();
+    Swal.fire({
+    title: '¿Está seguro(a) de devolver la postulación de esta idea de proyecto?',
+    input: 'textarea',
+    inputPlaceholder: 'Por favor, escriba los motivos por los cuales se está devolviendo la postulación de la idea de proyecto',
+    type: 'warning',
+    inputValidator: (value) => {
+      if (!value) {
+        return 'Los motivos por los cuales se devuelve la idea deben ser obligatorios!'
+      } else {
+        $('#txtmotivosRechazo').val(value);
+      }
+    },
+    inputAttributes: {
+      maxlength: 2100
+    },
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Enviar observaciones!'
+    }).then((result) => {
+      if (result.value) {
+        document.frmRechazarPostulacionIdea.submit();
+      }
+    })
   }
-}
-
-
 function enviarNotificacionResultadosCSIBT(idea, comite) {
     $.ajax({
         type: 'get',

@@ -64,9 +64,9 @@
     </a>
 </li>
 <li class="no-padding">
-    <a class="collapsible-header waves-effect waves-grey {{setActiveRouteActivePage('csibt')}} {{ setActiveRouteActivePage('idea') }} {{ setActiveRouteActivePage('entrenamientos') }} {{setActiveRouteActivePage('idea')}} {{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}  {!! setActiveRoutePadding('idea'),setActiveRoutePadding('entrenamientos'), setActiveRoutePadding('csibt') !!}">
-        <i class="material-icons {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">lightbulb_outline</i>Ideas de Proyecto
-        <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('entrenamientos/create') }}">keyboard_arrow_right</i>
+    <a class="collapsible-header waves-effect waves-grey {{setActiveRouteActivePage('csibt')}} {{ setActiveRouteActivePage('idea') }} {{ setActiveRouteActivePage('talleres') }} {{setActiveRouteActivePage('idea')}} {{setActiveRouteActivePage('talleres')}} {{setActiveRouteActivePage('talleres/create')}}  {!! setActiveRoutePadding('idea'),setActiveRoutePadding('talleres'), setActiveRoutePadding('csibt') !!}">
+        <i class="material-icons {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('talleres') }} {{ setActiveRouteActiveIcon('talleres/create') }}">lightbulb_outline</i>Ideas de Proyecto
+        <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('talleres') }} {{ setActiveRouteActiveIcon('talleres/create') }}">keyboard_arrow_right</i>
     </a>
     <div class="collapsible-body">
         <ul>
@@ -75,16 +75,16 @@
             <i class="material-icons {{setActiveRouteActiveIcon('idea')}}">lightbulb</i>Ideas
             </a>
         </li>
-        {{-- <li>
-            <a href="{{route('entrenamientos')}}" class="{{setActiveRouteActivePage('entrenamientos')}} {{setActiveRouteActivePage('entrenamientos/create')}}" rel="canonical" title="Entrenamientos">
-            <i class="material-icons {{setActiveRouteActiveIcon('entrenamientos')}} {{setActiveRouteActiveIcon('entrenamientos/create')}}">library_books</i>Taller de fortalecimiento
+        <li>
+            <a href="{{route('talleres')}}" class="{{setActiveRouteActivePage('talleres')}} {{setActiveRouteActivePage('talleres/create')}}" rel="canonical" title="talleres">
+            <i class="material-icons {{setActiveRouteActiveIcon('talleres')}} {{setActiveRouteActiveIcon('talleres/create')}}">library_books</i>Taller de fortalecimiento
             </a>
         </li>
         <li class="no-padding">
             <a href="{{route('csibt')}}" class="{{setActiveRouteActivePage('csibt')}} {{setActiveRouteActivePage('csibt/create')}}" rel="canonical" title="CSIBT's">
             <i class="material-icons {{setActiveRouteActiveIcon('csibt')}} {{setActiveRouteActiveIcon('csibt/create')}}">gavel</i>CSIBT's
             </a>
-        </li> --}}
+        </li>
         </ul>
     </div>
 </li>

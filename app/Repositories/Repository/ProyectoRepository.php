@@ -1068,69 +1068,77 @@ class ProyectoRepository
             $talento_lider = $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first();
             $talento_lider = $talento_lider->user;
             $notificacion_act = ControlNotificaciones::find($request->control_notificacion_id);
-    
-            if ($request->decision == 'rechazado') {
-                $title = 'Aprobación rechazada!';
-                $mensaje = 'Se le han notificado al experto los motivos por los cuales no se aprueba el cambio de fase del proyecto';
-                $comentario = $request->motivosNoAprueba;
-                $movimiento = Movimiento::IsNoAprobar();
-    
-                $this->crearMovimiento($proyecto, $proyecto->fase->nombre, $movimiento, $comentario);
-                // Recuperar el útlimo registro de movimientos ya que el método attach no retorna nada
-                $regMovimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
-                // Envio de un correo informando porque no se aprobó el cambio de fase
-                event(new ProyectoWasntApproved($proyecto, $regMovimiento));
-    
-                Notification::send($proyecto->asesor->user, new ProyectoNoAprobarFase($proyecto, $regMovimiento));
-                $notificacion_act->update(['estado' => $notificacion_act->IsRechazado()]);
-    
+            if ($notificacion_act->estado != $notificacion_act->IsPendiente()) {
+                return [
+                    'state' => false,
+                    'mensaje' => 'Esta aprobación ya ha sido gestionada.',
+                    'title' => 'Aprobación errónea'
+                ];
             } else {
-                $title = 'Aprobación Exitosa!';
-                $mensaje = 'Se ha aprobado la fase de ' . $proyecto->fase->nombre . ' de este proyecto';
-                $movimiento = Movimiento::IsAprobar();
-    
-                $this->crearMovimiento($proyecto, $proyecto->fase->nombre, $movimiento, $comentario);
-                $regMovimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
-                $notificacion_act->update(['fecha_aceptacion' => Carbon::now(), 'estado' => $notificacion_act->IsAceptado()]);
-    
-                event(new ProyectoWasApproved($proyecto, $regMovimiento, $destinatarios));
-                if (Session::get('login_role') == User::IsTalento()) {
-                    $notificacion = $proyecto->registerNotifyProject($dinamizadores->last()->id, User::IsDinamizador());
-                    // event(new ProyectoApproveWasRequested($notificacion, $destinatarios));
-                    Notification::send($dinamizadores, new ProyectoAprobarFase($notificacion));
+                if ($request->decision == 'rechazado') {
+                    $title = 'Aprobación rechazada!';
+                    $mensaje = 'Se le han notificado al experto los motivos por los cuales no se aprueba el cambio de fase del proyecto';
+                    $comentario = $request->motivosNoAprueba;
+                    $movimiento = Movimiento::IsNoAprobar();
+        
+                    $this->crearMovimiento($proyecto, $proyecto->fase->nombre, $movimiento, $comentario);
+                    // Recuperar el útlimo registro de movimientos ya que el método attach no retorna nada
+                    $regMovimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
+                    // Envio de un correo informando porque no se aprobó el cambio de fase
+                    event(new ProyectoWasntApproved($proyecto, $regMovimiento));
+        
+                    Notification::send($proyecto->asesor->user, new ProyectoNoAprobarFase($proyecto, $regMovimiento));
+                    $notificacion_act->update(['estado' => $notificacion_act->IsRechazado()]);
+        
                 } else {
-                    if ($proyecto->fase->nombre == "Inicio") {
-                    // Cambiar el proyecto de fase
-                    $proyecto->update([
-                        'fase_id' => Fase::where('nombre', 'Planeación')->first()->id
-                    ]);
-                    }
-                    if ($proyecto->fase->nombre == "Planeación") {
-                    // Cambiar el proyecto de fase
-                    $proyecto->update([
-                        'fase_id' => Fase::where('nombre', 'Ejecución')->first()->id
-                    ]);
-                    }
-                    if ($proyecto->fase->nombre == "Ejecución") {
-                    // Cambiar el proyecto de fase
-                    $proyecto->update([
-                        'fase_id' => Fase::where('nombre', 'Cierre')->first()->id
-                    ]);
-                    }
-                    if ($proyecto->fase->nombre == "Cierre") {
-                    // Cambiar el proyecto de fase
-                    $proyecto->update([
-                        'fase_id' => Fase::where('nombre', 'Finalizado')->first()->id
-                    ]);
-                    // Asignar la fecha de cierre el día actuyal
-                    $proyecto->articulacion_proyecto->actividad()->update([
-                        'fecha_cierre' => Carbon::now()
-                    ]);
-                    // Crear el movimiento con el cierre del proyecto
-                    $this->crearMovimiento($proyecto, 'Finalizado', 'Cerró', null);
+                    $title = 'Aprobación Exitosa!';
+                    $mensaje = 'Se ha aprobado la fase de ' . $proyecto->fase->nombre . ' de este proyecto';
+                    $movimiento = Movimiento::IsAprobar();
+        
+                    $this->crearMovimiento($proyecto, $proyecto->fase->nombre, $movimiento, $comentario);
+                    $regMovimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
+                    $notificacion_act->update(['fecha_aceptacion' => Carbon::now(), 'estado' => $notificacion_act->IsAceptado()]);
+        
+                    event(new ProyectoWasApproved($proyecto, $regMovimiento, $destinatarios));
+                    if (Session::get('login_role') == User::IsTalento()) {
+                        $notificacion = $proyecto->registerNotifyProject($dinamizadores->last()->id, User::IsDinamizador());
+                        // event(new ProyectoApproveWasRequested($notificacion, $destinatarios));
+                        Notification::send($dinamizadores, new ProyectoAprobarFase($notificacion));
+                    } else {
+                        if ($proyecto->fase->nombre == "Inicio") {
+                        // Cambiar el proyecto de fase
+                        $proyecto->update([
+                            'fase_id' => Fase::where('nombre', 'Planeación')->first()->id
+                        ]);
+                        }
+                        if ($proyecto->fase->nombre == "Planeación") {
+                        // Cambiar el proyecto de fase
+                        $proyecto->update([
+                            'fase_id' => Fase::where('nombre', 'Ejecución')->first()->id
+                        ]);
+                        }
+                        if ($proyecto->fase->nombre == "Ejecución") {
+                        // Cambiar el proyecto de fase
+                        $proyecto->update([
+                            'fase_id' => Fase::where('nombre', 'Cierre')->first()->id
+                        ]);
+                        }
+                        if ($proyecto->fase->nombre == "Cierre") {
+                        // Cambiar el proyecto de fase
+                        $proyecto->update([
+                            'fase_id' => Fase::where('nombre', 'Finalizado')->first()->id
+                        ]);
+                        // Asignar la fecha de cierre el día actuyal
+                        $proyecto->articulacion_proyecto->actividad()->update([
+                            'fecha_cierre' => Carbon::now()
+                        ]);
+                        // Crear el movimiento con el cierre del proyecto
+                        $this->crearMovimiento($proyecto, 'Finalizado', 'Cerró', null);
+                        }
                     }
                 }
             }
+    
             DB::commit();
             return [
                 'state' => true,

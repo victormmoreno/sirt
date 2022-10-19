@@ -29,16 +29,16 @@
                 <div class="row">
                 <div class="col s12 m12 l12">
                     <div class="row">
-                    <div class="col s12 m12 l12">
-                        <div class="center-align">
-                        <span class="card-title center-align">Talleres de fortalecimiento de tecnoparque</span>
-                        <div class="divider"></div>
+                        <div class="col s12 m12 l12">
+                            <div class="center-align">
+                                <span class="card-title center-align">Talleres de fortalecimiento de tecnoparque</span>
+                                <div class="divider"></div>
+                            </div>
                         </div>
                     </div>
-                    </div>
                     <div class="input-fiel col s12 m12 l12">
-                    <label class="active" for="txtnodo">Nodo <span class="red-text">*</span></label>
-                    <select class="initialized" id="txtnodo" name="txtnodo" style="width: 100%" tabindex="-1" onchange="consultarEntrenamientosPorNodo_Administrador(this)">
+                    <label class="active" for="filter_nodo">Nodo <span class="red-text">*</span></label>
+                    <select class="initialized" id="filter_nodo" name="filter_nodo" style="width: 100%" tabindex="-1" onchange="consultarEntrenamientosPorNodo()">
                         <option value="">Seleccione nodo</option>
                         @foreach($nodos as $nodo)
                         <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
@@ -46,7 +46,7 @@
                     </select>
                     </div>
                     <div class="divider"></div>
-                    <table id="entrenamientosPorNodo_tableAdministrador" style="width: 100%" class="display responsive-table datatable-example dataTable">
+                    <table id="entrenamientosPorNodo_table" style="width: 100%" class="display responsive-table datatable-example dataTable">
                     <thead>
                         <tr>
                             <th>Código</th>
@@ -66,5 +66,5 @@
         </div>
     </div>
 </main>
-@include('entrenamientos.modals')
+@include('talleres.modals')
 @endsection

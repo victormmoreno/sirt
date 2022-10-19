@@ -27,11 +27,11 @@
     <div class="row">
         <div class="input-field col s12 m3 l3">
             <input type="text" id="txtfecha_inicio_inscritos" name="txtfecha_inicio_inscritos" class="datepicker picker__input" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
-            <label for="txtfecha_inicio_inscritos">Fecha Inicio</label>
+            <label for="txtfecha_inicio_inscritos">Inscritos desde</label>
         </div>
         <div class="input-field col s12 m3 l3">
             <input type="text" id="txtfecha_fin_inscritos" name="txtfecha_fin_inscritos" class="datepicker picker__input" value="{{Carbon\Carbon::now()->toDateString()}}">
-            <label for="txtfecha_fin_inscritos">Fecha Fin</label>
+            <label for="txtfecha_fin_inscritos">Inscritos hasta</label>
         </div>
         <div class="center input-field col s12 m6 l6">
             <a onclick="generarExcelConTodosLosIndicadoresInscritos();" class="btn"><i class="material-icons left">file_download</i>Descargar</a>

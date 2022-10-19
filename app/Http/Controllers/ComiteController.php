@@ -273,7 +273,7 @@ class ComiteController extends Controller
    * @return Response
    * @author dum
    **/
-  public function updateGestor(Request $request, Idea $idea, Comite $comite)
+  public function updateGestor(Request $request, Idea $idea, Comite $comite = null)
   {
     $messages = [
       'txtgestor_id.required' => 'El experto es obligatorio.',
@@ -291,7 +291,7 @@ class ComiteController extends Controller
     $update = $this->getComiteRepository()->updateGestorIdea($request, $idea);
     if ($update) {
       alert()->success('Se ha cambiado el experto de la idea de proyecto!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
-      return redirect(route('csibt.detalle', $comite->id));
+      return redirect(route('idea.detalle', $idea->id));
     } else {
       alert()->error('No se ha cambiado el experto de la idea de proyecto!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
       return back();

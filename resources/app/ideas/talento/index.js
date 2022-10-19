@@ -65,7 +65,7 @@ function confirmacionPostulacion(e){
   confirmButtonText: 'Sí!'
   }).then((result) => {
     if (result.value) {
-      document.frmEnviarIdeaTalento.submit();
+      document.frmPostularIdea.submit();
     }
   })
 }

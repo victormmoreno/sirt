@@ -24,7 +24,7 @@ use App\Policies\Nodo\NodoPolicy;
 use App\Policies\User\UserPolicy;
 use App\Policies\UsoInfraestrucutura\UsoInfraestructuraPolicy;
 use App\Policies\Material\MaterialPolicy;
-use App\Policies\Idea\IdeaPolicy;
+use App\Policies\IdeaPolicy;
 use App\Policies\ProyectoPolicy;
 use App\Policies\CharlaInformativaPolicy;
 use App\Policies\IndicadorPolicy;
