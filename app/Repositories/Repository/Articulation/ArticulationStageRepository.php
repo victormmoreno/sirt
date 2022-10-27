@@ -429,7 +429,14 @@ class ArticulationStageRepository
         }else{
             $status = "abrir";
         }
-        return $articulationState->notifications()->where('descripcion',  $status)->where('estado', \App\Models\ControlNotificaciones::IsPendiente())->get()->last();
+        if($articulationState->status == ArticulationStage::STATUS_OPEN){
+            return $articulationState->notifications()->where('estado', \App\Models\ControlNotificaciones::IsPendiente())->get()->last();
+        }else{
+            return $articulationState->notifications()->whereNull('fecha_aceptacion')->get()->last();
+        }
+        //return $articulationState->notifications()->where('descripcion',  $status)->whereNull('fecha_aceptacion')->where('estado', \App\Models\ControlNotificaciones::IsPendiente())->get()->last();
+        //return $articulationState->notifications()->where('estado', \App\Models\ControlNotificaciones::IsPendiente())->get()->last();
+
     }
 
     public function verifyRecipientNotification($notificacion)
@@ -439,6 +446,21 @@ class ArticulationStageRepository
             $rol = User::IsTalento();
         } else {
             if ($notificacion->rol_receptor->name == User::IsTalento()) {
+                $rol = User::IsTalento();
+            } else {
+                $rol = User::IsDinamizador();
+            }
+        }
+        return $rol;
+    }
+
+    public function verifyRemitenteNotification($notificacion)
+    {
+        $rol = null;
+        if ($notificacion == null) {
+            $rol = User::IsTalento();
+        } else {
+            if ($notificacion->rol_remitente->name == User::IsTalento()) {
                 $rol = User::IsTalento();
             } else {
                 $rol = User::IsDinamizador();
@@ -458,21 +480,31 @@ class ArticulationStageRepository
             $movimiento = null;
             $comentario = "";
             $notificacion_fase_actual = $this->retornarUltimaNotificacionPendiente($articulationStage);
+            $ult_traceability = ArticulationStage::getTraceability($articulationStage)->get()->last();
             $msg = 'No se ha podido enviar la solicitud de aval, inténtalo nuevamente';
             $conf_envios = false;
             if ($notificacion_fase_actual == null) {
                 $conf_envios = $this->settingsNotificationTalent($articulationStage);
                 $movimiento = Movimiento::IsSolicitarTalento();
                 $msg = 'Se le ha enviado una notificación al talento interlocutor para que avale el ' . $articulationStage->present()->articulationStageEndorsementApproval();
-            } else {
+            }
+            else {
                 if ($notificacion_fase_actual->rol_receptor->name == User::IsTalento()) {
                     $conf_envios = $this->settingsNotificationTalent($articulationStage);
                     $movimiento = Movimiento::IsSolicitarTalento();
                     $msg = 'Se le ha enviado una notificación al talento interlocutor para que avale el ' . $articulationStage->present()->articulationStageEndorsementApproval();
-                } else {
-                    $conf_envios = $this->settingsNotificationDynamizer($articulationStage);
-                    $movimiento = Movimiento::IsSolicitarDinamizador();
-                    $msg = 'Se le ha enviado una notificación al dinamizador para que avale ' . $articulationStage->present()->articulationStageEndorsementApproval();
+                }
+                else {
+                    if(isset($ult_traceability) && $ult_traceability->movimiento == Movimiento::IsAprobar() && $ult_traceability->rol == \App\User::IsDinamizador()){
+                        $conf_envios = $this->settingsNotificationTalent($articulationStage);
+                        $movimiento = Movimiento::IsSolicitarTalento();
+                        $msg = 'Se le ha enviado una notificación al talento interlocutor para que avale el ' . $articulationStage->present()->articulationStageEndorsementApproval();
+                    }else{
+                        $conf_envios = $this->settingsNotificationDynamizer($articulationStage);
+                        $movimiento = Movimiento::IsSolicitarDinamizador();
+                        $msg = 'Se le ha enviado una notificación al dinamizador para que avale ' . $articulationStage->present()->articulationStageEndorsementApproval();
+                    }
+
                 }
             }
             $notificacion = $articulationStage->registerNotify($conf_envios['receptor'], $conf_envios['receptor_role'], null, $fase);

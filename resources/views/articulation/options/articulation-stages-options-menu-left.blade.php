@@ -2,7 +2,7 @@
     <h5 href="!#" class="collection-header">Opciones</h5>
     @if (Route::currentRouteName() == 'articulation-stage.show')
         @can('showButtonAprobacion', $articulationStage)
-            @include('articulation.form.endorsement-form.blade.php')
+            @include('articulation.form.endorsement-form')
         @endcan
         @can('create', App\Models\Articulation::class)
             @if($articulationStage->status == \App\Models\ArticulationStage::STATUS_OPEN)
@@ -22,12 +22,17 @@
                         Enviar solicitud de aval al {{\App\User::IsTalento()}}
                         para {{$articulationStage->present()->articulationStageEndorsementApproval()}}
                     @else
-                        El talento interlocutor dió el aval, enviar
-                        solicitud de aval al dinamizador
-                        para {{$articulationStage->present()->articulationStageEndorsementApproval()}}.
+                        @if(isset($ult_traceability->movimiento) && $ult_traceability->movimiento == \App\Models\Movimiento::IsAprobar() && $ult_traceability->rol == \App\User::IsDinamizador())
+                            Enviar solicitud de aval al {{\App\User::IsTalento()}}
+                            para {{$articulationStage->present()->articulationStageEndorsementApproval()}}
+                        @else
+                            El talento interlocutor dió el aval, enviar
+                            solicitud de aval al dinamizador
+                            para {{$articulationStage->present()->articulationStageEndorsementApproval()}}.
+                        @endif
                     @endif
                 </a>
-            @else
+            @elseif($articulationStage->status == \App\Models\ArticulationStage::STATUS_OPEN)
                 <a href="{{route('articulation-stage.request-approval', [$articulationStage->id , 'cerrar' ])}}"
                    class="collection-item yellow lighten-3">
                     <i class="material-icons left">notifications</i>
@@ -35,10 +40,15 @@
                         Enviar solicitud de aval al talento
                         para {{$articulationStage->present()->articulationStageEndorsementApproval()}}
                         esta {{__('articulation-stage')}}.
-                    @elseif($rol_destinatario == 'Dinamizador')
-                        El talento interlocutor dió el aval, enviar
-                        solicitud de aval al dinamizador
-                        para {{$articulationStage->present()->articulationStageEndorsementApproval()}}
+                    @else
+                        @if(isset($ult_traceability->movimiento) && $ult_traceability->movimiento == \App\Models\Movimiento::IsAprobar() && $ult_traceability->rol == \App\User::IsDinamizador())
+                            Enviar solicitud de aval al {{\App\User::IsTalento()}}
+                            para {{$articulationStage->present()->articulationStageEndorsementApproval()}}
+                        @else
+                            El talento interlocutor dió el aval, enviar
+                            solicitud de aval al dinamizador
+                            para {{$articulationStage->present()->articulationStageEndorsementApproval()}}.
+                        @endif
                     @endif
                 </a>
             @endif

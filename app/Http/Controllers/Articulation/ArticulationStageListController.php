@@ -333,9 +333,13 @@ class ArticulationStageListController extends Controller
             return redirect()->route('home');
         }
         $traceability = ArticulationStage::getTraceability($articulationStage)->get();
+        $ult_traceability = ArticulationStage::getTraceability($articulationStage)->get()->last();
         $ult_notificacion = $this->articulationStageRepository->retornarUltimaNotificacionPendiente($articulationStage);
+
         $rol_destinatario = $this->articulationStageRepository->verifyRecipientNotification($ult_notificacion);
-        return view('articulation.show-articulation-stage', compact('articulationStage', 'ult_notificacion', 'rol_destinatario', 'traceability'));
+        $rol_emisor = $this->articulationStageRepository->verifyRemitenteNotification($ult_notificacion);
+        //return $rol_emisor;
+        return view('articulation.show-articulation-stage', compact('articulationStage', 'ult_notificacion', 'rol_destinatario','rol_emisor',  'traceability', 'ult_traceability'));
     }
 
     /**
