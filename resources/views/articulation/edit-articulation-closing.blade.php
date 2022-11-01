@@ -17,7 +17,8 @@
                     <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
                     <li ><a href="{{route('articulation-stage')}}">{{__('articulation-stage')}}</a></li>
                     <li ><a href="{{route('articulation-stage.show',  $articulation->articulationstage)}}">{{ $articulation->articulationstage->present()->articulationStageCode() }}</a></li>
-                    <li class="active">{{ __('Articulations') }}</li>
+                    <li ><a href="{{route('articulations.show',  $articulation)}}">{{ $articulation->present()->articulationCode() }}</a></li>
+                    <li class="active">Cierre</li>
                 </ol>
             </div>
         </div>
@@ -27,51 +28,94 @@
                     <form id="articulation-form-closing" action="{{route('articulation.update', $articulation)}}" method="POST">
                         {!! method_field('PUT')!!}
                         @include('articulation.form.closing-form', ['btnText' => 'Modificar'])
-                        <div class="row">
-                            @include('articulation.table-archive-phase', ['fase' => 'Cierre'])
-                        </div>
-                        <center>
-                            <button type="submit" class="waves-effect cyan darken-1 btn center-aling">
-                                <i class="material-icons right">done</i>
-                                Guardar
-                            </button>
-                            <a href="{{route('articulations.show', $articulation->id)}}" class="waves-effect red lighten-2 btn center-aling">
-                                <i class="material-icons right">backspace</i>Cancelar
-                            </a>
-                        </center>
+
                     </form>
+                    <div class="row">
+                        <!--@include('articulation.table-archive-phase', ['fase' => 'Cierre'])-->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    @include('articulation.shared.project-modal')
-    @include('articulation.shared.interlocutor-talents-modal')
 </main>
 @endsection
 @push('script')
     <script>
-        $( document ).ready(function() {
-            getSubarticulation();
+        $(document).ready(function() {
+            articulationClosing.checkedTypePostulacion();
+            articulationClosing.checkedApproval();
         });
-        function getSubarticulation(){
-            let articulaciontype = $('#articulation_type').val();
-            if(articulaciontype !=null || articulaciontype != ''){
-                $.ajax({
-                    dataType: 'json',
-                    type: 'get',
-                    url: `/tipoarticulaciones/${articulaciontype}/tiposubarticulaciones`
-                }).done(function (response) {
-                    $("#articulation_subtype").empty();
-                    $('#articulation_subtype').append('<option value="">Seleccione el tipo de subarticulación</option>');
-                    $.each(response.data, function(i, element) {
-                        $('#articulation_subtype').append(`<option  value="${element.id}">${element.name}</option>`);
-                        @if(isset($articulation->articulationsubtype))
-                        $('#articulation_subtype').val('{{$articulation->articulationsubtype->id}}');
-                        @endif
-                    });
-                    $('#articulation_subtype').material_select();
-                });
-            }
+
+        let articulationClosing = {
+            checkedTypePostulacion: function(){
+                let postulation = $('input:radio[name=postulation]:checked').val();
+                console.log(postulation);
+                if (postulation == "yes") {
+                    $(".r-si").show();
+                    $(".r-no").hide();
+                }else if(postulation == "no"){
+                    $(".r-no").show();
+                    $(".r-si").hide();
+                }else{
+                    $(".r-si").show();
+                    $(".r-no").hide();
+                }
+            },
+            checkedApproval: function(){
+                let  approval = $('input:radio[name=approval]:checked').val();
+
+                if (approval == "aprobado") {
+                    $(".r-aprobado").show();
+                    $(".r-no-aprobado").hide();
+                }else if(approval == "noaprobado"){
+                    $(".r-no-aprobado").show();
+                    $(".r-aprobado").hide();
+                }else{
+                    $(".r-aprobado").show();
+                    $(".r-no-aprobado").hide();
+                }
+            },
         }
+
+        var Dropzone = new Dropzone('#articulation-closing-phase', {
+            url: '{{ route('articulation.files.upload', [$articulation->id]) }}',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            dictDefaultMessage: 'Arrastra los archivos aquí para subirlos.',
+            params: {
+                type: "{{ basename(\App\Models\Articulation::class)}}",
+                phase: 'Cierre'
+            },
+            paramName: 'nombreArchivo'
+        });
+
+        Dropzone.on('success', function (res) {
+            //$('#archivosArticulacion').dataTable().fnDestroy();
+            //datatableArchiveArticulacion_cierre();
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                type: 'success',
+                title: 'El archivo se ha subido con éxito!'
+            });
+        });
+
+        Dropzone.on('error', function (file, res) {
+            let msg = res.errors.nombreArchivo[0];
+            $('.dz-error-message:last > span').text(msg);
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                type: 'error',
+                title: 'El archivo no se ha podido subir!'
+            });
+        });
+        Dropzone.autoDiscover = false;
     </script>
 @endpush
+

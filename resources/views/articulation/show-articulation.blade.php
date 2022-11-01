@@ -14,6 +14,7 @@
                     <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
                     <li ><a href="{{route('articulation-stage')}}">{{__('articulation-stage')}}</a></li>
                     <li ><a href="{{route('articulation-stage.show',  $articulation->articulationstage)}}">{{ $articulation->articulationstage->present()->articulationStageCode() }}</a></li>
+                    <li ><a href="{{route('articulations.show',  $articulation)}}">{{ $articulation->present()->articulationCode() }}</a></li>
                     <li class="active">{{ __('Articulations') }}</li>
                 </ol>
             </div>
@@ -45,17 +46,17 @@
                                             <div class="col s12">
                                                 <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
                                                     <li class="tab col s3"><a href="#startphase" class="active">Inicio</a></li>
-                                                    <li class="tab col s3"><a class="" href="#faseejecucion">Ejecución</a></li>
+                                                    <li class="tab col s3"><a class="" href="#executionphase">Ejecución</a></li>
                                                     <li class="tab col s3"><a href="#fasecierre" class="">Cierre</a></li>
                                                 </ul>
                                             </div>
                                             <div id="startphase" class="col s12" style="display: block;">
                                                 @include('articulation.detail.start-phase-detail')
                                             </div>
-                                            {{-- <div id="faseejecucion" class="col s12" style="display: none;">
-                                                @include('articulacionespbt.detail.detail-fase-ejecucion')
+                                            <div id="executionphase" class="col s12" style="display: none;">
+                                                @include('articulation.detail.execution-phase-detail')
                                             </div>
-                                            <div id="fasecierre" class="col s12" style="display: none;">
+                                            {{-- <div id="fasecierre" class="col s12" style="display: none;">
                                                 @include('articulacionespbt.detail.detail-fase-cierre')
                                             </div> --}}
                                         </div>

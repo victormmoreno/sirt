@@ -42,9 +42,4 @@
                 Cargar evidencias
             </a>
         @endcan
-            <a href="javascript:void(0)" class="collection-item"
-               onclick="articulationStage.destroyArticulationStage('{{$articulation->id}}')">
-                <i class="material-icons left">delete_forever</i>
-                Eliminar {{__('articulation')}}
-            </a>
 </div>

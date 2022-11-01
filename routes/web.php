@@ -851,6 +851,7 @@ Route::group(
         Route::post('/{id}/crear', 'ArticulationRegisterController@store')->name('articulations.store');
         Route::put('/{id}/editar', 'ArticulationRegisterController@update')->name('articulation.update');
         Route::get('/{id}/ver', 'ArticulationListController@show')->name('articulations.show');
+
         Route::get('/{id}/{fase}', 'ArticulationListController@showPhase')->name('articulations.show.phase');
         Route::get('/export', 'ArticulationStageListController@export')->name('articulation-stage.export');
         Route::delete('/{id}', 'ArticulationStageListController@destroy')->name('articulation-stage.destroy');
@@ -858,7 +859,8 @@ Route::group(
         Route::get('/solicitar-aprobacion/{id}/{fase}', 'ArticulationStageApprovalsController@requestApproval')->name('articulation-stage.request-approval');
         Route::put('/gestionar_aprobacion/{id}/{fase}', 'ArticulationStageApprovalsController@manageEndorsement')->name('articulation-stage.manage-endorsement');
         Route::get('/evidencias/{id}', 'ArticulationStageListController@evidences')->name('articulation-stage.evidences');
-        Route::put('/{id}/{fase}/cambiar-fase', 'ArticulationListController@changePhase')->name('articulation.manage-change-phase');
+        Route::put('/{id}/{fase}/siguiente-fase', 'ArticulationListController@changeNextPhase')->name('articulation.change-next-phase');
+        Route::put('/{id}/{fase}/anterior-fase', 'ArticulationListController@changePreviusPhase')->name('articulation.change-previus-phase');
         Route::put('/{id}/ejecutar', 'ArticulationListController@updatePhaseExecute')->name('articulation.update.execution');
     }
 );

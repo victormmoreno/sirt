@@ -13,6 +13,7 @@
                     <ol class="breadcrumbs">
                         <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
                         <li><a href="{{route('articulation-stage')}}">{{__('articulation-stage')}}</a></li>
+                        <li ><a href="{{route('articulation-stage.show',  $articulationStage)}}">{{ $articulationStage->present()->articulationStageCode() }}</a></li>
                         <li class="active">{{ __('Details') }}</li>
                     </ol>
                 </div>
@@ -149,9 +150,13 @@
                 processing: true,
                 serverSide: true,
                 order: false,
-                ajax: {
-                    url: "{{route('articulation.files', [$articulationStage->id])}}",
-                    type: "get",
+
+                "ajax": {
+                    "url": "{{route('articulation.files', [$articulationStage->id])}}",
+                    "type": "get",
+                    "data":{
+                        type: "{{ basename(\App\Models\ArticulationStage::class)}}"
+                    },
                 },
                 columns: [
                     {

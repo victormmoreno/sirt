@@ -82,7 +82,7 @@ class ArticulationListController extends Controller
      * Display the specified resource.
 
      */
-    public function changePhase($id, $phase)
+    public function changeNextPhase($id, $phase)
     {
         $articulation = Articulation::query()
             ->with([
@@ -116,6 +116,43 @@ class ArticulationListController extends Controller
                 break;
         }
     }
+
+    public function changePreviusPhase($id, $phase)
+    {
+        $articulation = Articulation::query()
+            ->with([
+                'articulationstage'
+            ])
+            ->findOrfail($id);
+        switch (strtoupper($phase)){
+            case 'INICIO':
+                $articulation->update([
+                    'phase_id' => Fase::where('nombre', Articulation::IsInicio())->first()->id
+                ]);
+                $comentario = 'desde ejecución';
+                $movimiento = \App\Models\Movimiento::IsCambiar();
+                $articulation->createTraceability($movimiento,Session::get('login_role'), $comentario,strtolower($phase));
+                return redirect()->route('articulations.show', $articulation->id);
+                break;
+            case 'EJECUCION':
+                $articulation->update([
+                    'phase_id' => Fase::where('nombre', Articulation::IsEjecucion())->first()->id
+                ]);
+                $comentario = 'desde cierre';
+                $movimiento = \App\Models\Movimiento::IsCambiar();
+                $articulation->createTraceability($movimiento,Session::get('login_role'), $comentario,strtolower($phase));
+                return redirect()->route('articulations.show', $articulation->id);
+                break;
+            case 'CIERRE':
+                return redirect()->route('articulations.show.phase', [$articulation, 'ejecucion']);
+                breaK;
+            default:
+                return redirect()->route('articulations.show', $articulation->id);
+                break;
+        }
+    }
+
+
     public function updatePhaseExecute(Request $request,$id)
     {
         $articulation = Articulation::query()

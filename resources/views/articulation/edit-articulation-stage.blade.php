@@ -20,6 +20,7 @@
                         <li><a href="{{route('home')}}">{{__('Home')}}</a></li>
                         <li class="active"><a href="{{route('articulation-stage')}}">{{__('articulation-stage')}}</a>
                         </li>
+                        <li ><a href="{{route('articulation-stage.show',  $articulationStage)}}">{{ $articulationStage->present()->articulationStageCode() }}</a></li>
                         <li class="active">{{__('Edit ArticulationStage')}}</li>
                     </ol>
                 </div>

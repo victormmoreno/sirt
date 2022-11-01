@@ -543,23 +543,39 @@ class ArchivoController extends Controller
             $archivo = ArchivoModel::selectRaw('MAX(id+1) AS max')->get()->last();
             $fileName = $archivo->max . '_' . $file->getClientOriginalName();
             $route = "";
-            // Creando la ruta
-            if($request->type == basename(\App\Models\ArticulationStage::class)){
-                $articulation = ArticulationStage::query()->findOrFail($id);
-                $node = sprintf("%02d", $articulation->node_id);
-                $year = Carbon::parse($articulation->start_date)->isoFormat('YYYY');
-                $route = "public/{$node}/{$year}/".Str::slug(__('articulation-stage'))."/{$articulation->present()->articulationStageCode()}";
-            }else if($request->type == basename(Articulation::class)){
-                $articulation = Articulation::query()->findOrFail($id);
-                $node = sprintf("%02d", $articulation->articulationstage->node_id);
-                $year = Carbon::parse($articulation->articulationstage->present()->articulationStageStartDate())->isoFormat('YYYY');
-                $route = "public/{$node}/{$year}/". Str::slug(__('articulation-stage'))."/{$articulation->articulationstage->present()->articulationStageCode()}/{$articulation->code}";
+            switch ($request->type){
+                case basename(\App\Models\ArticulationStage::class):
+                    $articulation = ArticulationStage::query()->findOrFail($id);
+                    $node = sprintf("%02d", $articulation->node_id);
+                    $year = Carbon::parse($articulation->start_date)->isoFormat('YYYY');
+                    $route = "public/{$node}/{$year}/".Str::slug(__('articulation-stage'))."/{$articulation->present()->articulationStageCode()}";
+                    break;
+                case basename(Articulation::class):
+                    $articulation = Articulation::query()->findOrFail($id);
+                    $node = sprintf("%02d", $articulation->articulationstage->node_id);
+                    $year = Carbon::parse($articulation->articulationstage->start_date)->isoFormat('YYYY');
+                    if(isset($request->phase)){
+                        $phase = strtolower($request->phase);
+                        $route = "public/{$node}/{$year}/". Str::slug(__('articulation-stage'))."/{$articulation->articulationstage->present()->articulationStageCode()}/{$articulation->code}/{$phase}";
+                    }else{
+                        $route = "public/{$node}/{$year}/". Str::slug(__('articulation-stage'))."/{$articulation->articulationstage->present()->articulationStageCode()}/{$articulation->code}";
+                    }
+                    break;
+                default:
+                    break;
             }
-
             $fileUrl = $file->storeAs($route, $fileName);
-            $articulation->archivomodel()->create([
-                'ruta' => Storage::url($fileUrl)
-            ]);
+            if(isset($request->phase)){
+                $phase = Fase::where('nombre',$request->phase)->first();
+                $articulation->archivomodel()->create([
+                    'ruta' => Storage::url($fileUrl),
+                    'fase_id' => isset($phase)? $phase->id : null
+                ]);
+            }else{
+                $articulation->archivomodel()->create([
+                    'ruta' => Storage::url($fileUrl)
+                ]);
+            }
         }
     }
 
@@ -570,12 +586,31 @@ class ArchivoController extends Controller
      * @return Datatable
      * @author devjul
      */
-    public function datatableArchiveArticulationStage($id)
+    public function datatableArchiveArticulationStage(Request $request,$id)
     {
         if (request()->ajax()) {
-            $articulation = ArticulationStage::findOrFail($id);
-            $archive =  $articulation->archivomodel()->get();
-            return $this->datatableFilesArticulationStage($archive);
+            switch ($request->type){
+                case basename(\App\Models\ArticulationStage::class):
+                    $articulation = ArticulationStage::findOrFail($id);
+                    $archive =  $articulation->archivomodel()->get();
+                    return $this->datatableFilesArticulation($archive);
+                    break;
+                case basename(\App\Models\Articulation::class):
+                    $articulation = Articulation::findOrFail($id);
+                    if(isset($request->phase)){
+                        $archive =  $articulation->archivomodel()->whereHas('fase', function($query) use($request){
+                            $query->where('nombre', $request->phase);
+                        })->get();
+                    }else{
+                        $archive =  $articulation->archivomodel()->get();
+                    }
+                    return $this->datatableFilesArticulation($archive);
+                    break;
+                default:
+                    return $this->datatableFilesArticulation([]);
+                    break;
+            }
+
         }
     }
 
@@ -585,7 +620,7 @@ class ArchivoController extends Controller
      * @return Reponse
      * @author devjul
      */
-    private function datatableFilesArticulationStage($query)
+    private function datatableFilesArticulation($query)
     {
         return datatables()->of($query)
             ->addColumn('download', function ($data) {

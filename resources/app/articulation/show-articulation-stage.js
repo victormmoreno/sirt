@@ -86,11 +86,11 @@ function questionRejectEndorsementArticulationStage(e) {
         }
     })
 }
-function changePhaseArticulation(e) {
+function changeNextPhaseArticulation(e) {
     e.preventDefault();
     $('button[type="submit"]').attr('disabled', true);
     Swal.fire({
-        title: '¿Está seguro(a)?',
+        title: '¿Está seguro(a) de continuar a la siguiente fase?',
         type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -100,7 +100,26 @@ function changePhaseArticulation(e) {
     }).then((result) => {
         $('button[type="submit"]').attr('disabled', false);
         if (result.value) {
-            document.frmChangeArticulationPhase.submit();
+            document.frmChangeNextPhase.submit();
+        }
+    });
+}
+
+function changePreviusPhaseArticulation(e) {
+    e.preventDefault();
+    $('button[type="submit"]').attr('disabled', true);
+    Swal.fire({
+        title: '¿Está seguro(a) de volver a la anterior fase?',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Sí!'
+    }).then((result) => {
+        $('button[type="submit"]').attr('disabled', false);
+        if (result.value) {
+            document.frmChangePreviusPhase.submit();
         }
     });
 }

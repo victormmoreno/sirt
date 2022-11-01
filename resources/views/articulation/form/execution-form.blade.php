@@ -1,9 +1,9 @@
-{!! method_field('PUT')!!}
-{!! csrf_field() !!}
+
 <div class="row">
     <h5 class="center">Entregables de la fase de ejecución</h5>
 </div>
 <div class="divider"></div>
+
 <div class="row">
     <div class="col s6 m6 l6">
         <p class="p-v-xs">
@@ -30,5 +30,5 @@
     </div>
 </div>
 <div class="row">
-        <div class="dropzone" id="fase_ejecucion_articulacion"></div>
+        <div class="dropzone" id="articulation-execution-phase"></div>
 </div>
