@@ -845,7 +845,7 @@ $('#download_articulationStage').click(function(){
         filter_year_articulationStage: filter_year_articulationStage,
         filter_status_articulationStage: filter_status_articulationStage
     }
-    const url = "/articulaciones/export?" + $.param(query)
+    const url = "/etapa-articulaciones/export?" + $.param(query)
     window.location = url;
 });
 
@@ -882,7 +882,7 @@ const articulationStage ={
             order: [[4, 'desc']],
             "pageLength": 10,
             ajax:{
-                url: "/articulaciones/datatable_filtros",
+                url: "/etapa-articulaciones/datatable_filtros",
                 type: "get",
                 data: {
                     filter_node_articulationStage: filter_node_articulationStage,
@@ -927,7 +927,6 @@ const articulationStage ={
                   var api = this.api();
                  var rows = api.rows({ page: 'current' }).nodes();
                  var last = null;
-                console.log(api.data());
                  api
                      .column(groupColumn, { page: 'current' })
                      .data()
@@ -1253,7 +1252,7 @@ const articulationStage ={
             if (result.value) {
                 let token = $("meta[name='csrf-token']").attr("content");
                 $.ajax({
-                    url: host_url + "/articulaciones/"+id,
+                    url: host_url + "/etapa-articulaciones/"+id,
                     type: 'DELETE',
                     data: {
                         "id": id,

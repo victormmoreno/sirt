@@ -24,13 +24,13 @@ class ArticulationRegisterController extends Controller
     }
     /**
      * Show the form for creating a new resource.
-     * @param int $id
+     * @param string $code
      * @return \Illuminate\Http\Response
      */
-    public function create( $id )
+    public function create($code)
     {
         $scopes = AlcanceArticulacion::orderBy('name')->pluck('name', 'id');
-        $articulationStage= ArticulationStage::findOrFail( $id );
+        $articulationStage= ArticulationStage::where('code', $code)->firstOrFail();
         $articulationTypes= ArticulationType::query()
             ->where('state', ArticulationType::mostrar())
             ->orderBy('name')->pluck('name', 'id');

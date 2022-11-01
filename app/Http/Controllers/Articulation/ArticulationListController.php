@@ -30,16 +30,16 @@ class ArticulationListController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  string  $code
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($code)
     {
         $articulation = Articulation::query()
             ->with([
                 'articulationstage'
             ])
-            ->findOrfail($id);
+            ->where('code',$code)->firstOrFail();
         $traceability = Articulation::getTraceability($articulation)->get();
         return view('articulation.show-articulation', compact('articulation', 'traceability'));
     }

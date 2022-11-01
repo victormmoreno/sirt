@@ -22,7 +22,7 @@
         @if (Route::currentRouteName() == 'articulation-stage.show')
             @can('create', App\Models\Articulation::class)
                 @if($articulationStage->status == \App\Models\ArticulationStage::STATUS_OPEN)
-                <a href="{{route('articulations.create', $articulationStage->id )}}"
+                <a href="{{route('articulations.create', $articulationStage)}}"
                    class="waves-effect waves-orange btn orange m-t-xs">{{ __('New Articulation') }}</a>
                 @endif
             @endcan

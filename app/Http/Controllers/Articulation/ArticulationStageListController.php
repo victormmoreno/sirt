@@ -44,7 +44,7 @@ class ArticulationStageListController extends Controller
 
     /**
      * method to show return the datatables ArticulationStages
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function datatableFiltros(Request $request)
     {
@@ -64,7 +64,7 @@ class ArticulationStageListController extends Controller
             return $this->datatablearticulationStages($articulationStages);
         }
         alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
-        return redirect()->route('home');
+        return $this->datatablearticulationStages([]);
     }
 
     /**
@@ -89,12 +89,13 @@ class ArticulationStageListController extends Controller
             }
             return (new articulationStageExport($articulationStages))->download(__('articulation-stage') .' - '. config('app.name') . ".{$extension}");
         }
+        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
         return redirect()->route('home');
     }
 
     /**
      * method to delete system file
-     * @param int id
+     * @param id
      * @return Response
      */
     public function destroyFile($id)
@@ -116,9 +117,9 @@ class ArticulationStageListController extends Controller
      * method to download a file from the system
      * @return \Illuminate\Http\Response
      */
-    public function downloadFile($articulationStage)
+    public function downloadFile($code)
     {
-        $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
+        $articulationStage = ArticulationStage::query()->where('code',$code)->firstOrFail();
         if (request()->user()->can('downloadFile', $articulationStage)) {
             return $this->articulationStageRepository->downloadFile($articulationStage);
         }
@@ -129,12 +130,12 @@ class ArticulationStageListController extends Controller
     /**
      * Display the specified resource for change the interlocutor talent of an articulation stage.
      *
-     * @param  int  $articulationStage
+     * @param  string  $code
      * @return \Illuminate\Http\Response
      */
-    public function changeInterlocutor($articulationStage)
+    public function changeInterlocutor($code)
     {
-        $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
+        $articulationStage = ArticulationStage::query()->where('code',$code)->firstOrFail();
         if (request()->user()->can('changeTalent', $articulationStage)) {
             return view('articulation.change-interlocutor', compact('articulationStage'));
         }
@@ -146,11 +147,11 @@ class ArticulationStageListController extends Controller
      * method to change the interlocutor talent of an articulation stage
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $articulationStage
+     * @param  string  $code
      */
-    public function updateInterlocutor(Request $request, $articulationStage)
+    public function updateInterlocutor(Request $request, $code)
     {
-        $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
+        $articulationStage = ArticulationStage::query()->where('code',$code)->firstOrFail();
         if (request()->user()->can('changeTalent', $articulationStage)) {
 
             $validator = Validator::make($request->all(), [
@@ -169,7 +170,7 @@ class ArticulationStageListController extends Controller
                     return response()->json([
                         'data' => [
                             'state' => 'success',
-                            'url' => route('articulation-stage.show', $response['data']->id),
+                            'url' => route('articulation-stage.show', $response['data']),
                             'status_code' => Response::HTTP_CREATED,
                             'errors' => [],
                         ],
@@ -236,7 +237,7 @@ class ArticulationStageListController extends Controller
                         {$data->present()->articulationStageStartDate()}
                     </th>
                     <th>
-                        <a class='btn m-b-xs modal-trigger' href='".route('articulation-stage.show', $data->id)."'>
+                        <a class='btn m-b-xs modal-trigger' href='".route('articulation-stage.show', $data)."'>
                             <i class='material-icons'>search</i>
                         </a>
                     </th>
@@ -255,7 +256,7 @@ class ArticulationStageListController extends Controller
                 }
             })->addColumn('show', function ($data) {
                 if(isset($data->articulation_id)){
-                    return '<a class="btn m-b-xs modal-trigger" href='.route('articulations.show', [$data->articulation_id]).'>
+                    return '<a class="btn m-b-xs modal-trigger" href='.route('articulations.show', [$data->articulation_code]).'>
                             <i class="material-icons">search</i>
                         </a>';
                 }
@@ -297,10 +298,10 @@ class ArticulationStageListController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  string  $code
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($code)
     {
         $articulationStage = ArticulationStage::query()
             ->select(
@@ -324,9 +325,7 @@ class ArticulationStageListController extends Controller
             ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
             ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
             ->leftJoin('users as createdby', 'createdby.id', '=', 'articulation_stages.created_by')
-
-            ->findOrfail($id);
-
+            ->where('articulation_stages.code', $code)->firstOrFail();
         if (request()->user()->cannot('show', $articulationStage))
         {
             alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
@@ -338,7 +337,6 @@ class ArticulationStageListController extends Controller
 
         $rol_destinatario = $this->articulationStageRepository->verifyRecipientNotification($ult_notificacion);
         $rol_emisor = $this->articulationStageRepository->verifyRemitenteNotification($ult_notificacion);
-        //return $rol_emisor;
         return view('articulation.show-articulation-stage', compact('articulationStage', 'ult_notificacion', 'rol_destinatario','rol_emisor',  'traceability', 'ult_traceability'));
     }
 
@@ -378,7 +376,7 @@ class ArticulationStageListController extends Controller
         return redirect()->route('home');
     }
 
-    public function downloadCertificate(string $phase, $articulationStage){
+    public function downloadCertificate(string $phase, $code){
         $articulationStage = ArticulationStage::query()
             ->select(
                 'articulation_stages.*', 'articulations.code as articulation_code',
@@ -400,7 +398,7 @@ class ArticulationStageListController extends Controller
             ->leftJoin('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
             ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
             ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
-            ->findOrFail($articulationStage);
+            ->where('articulation_stages.code',$code)->firstOrFail();
         if (request()->user()->can('downloadCertificate', $articulationStage)) {
             if(strtoupper($phase) == 'INICIO'){
                 $pdf = PDF::loadView('pdf.articulation.articulation-stage-start', compact('articulationStage'));
@@ -413,9 +411,9 @@ class ArticulationStageListController extends Controller
         return redirect()->route('home');
     }
 
-    public function evidences($articulationStage)
+    public function evidences($code)
     {
-        $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
+        $articulationStage = ArticulationStage::query()->where('code',$code)->firstOrFail();
         if (request()->user()->can('uploadEvidences', $articulationStage)) {
             return view('articulation.articulation-stages-evidences', ['articulationStage' =>$articulationStage]);
         }

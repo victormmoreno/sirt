@@ -74,7 +74,7 @@ class ArticulationStageRegisterController extends Controller
                     'fail'         => false,
                     'errors'       => null,
                     'message' => "Registro extioso",
-                    'redirect_url' => url(route('articulation-stage.show', $response['data']->id)),
+                    'redirect_url' => url(route('articulation-stage.show', $response['data'])),
                 ]);
             }
         }
@@ -83,17 +83,17 @@ class ArticulationStageRegisterController extends Controller
 
     /**
      * Show the form for editing a resource.
-     * @param  $articulationStage
+     * @param  string $code
      * @return \Illuminate\Http\Response
      */
-    public function edit($articulationStage)
+    public function edit($code)
     {
         $articulationStage = ArticulationStage::query()
             ->with([
                 'createdBy',
                 'projects.articulacion_proyecto.actividad',
                 'interlocutor'
-            ])->findOrFail($articulationStage);
+            ])->where('code',$code)->firstOrFail();
         if (request()->user()->can('update', $articulationStage))
         {
             $nodos = null;
@@ -111,9 +111,9 @@ class ArticulationStageRegisterController extends Controller
      * Update a resource.
      * @param  \Illuminate\Http\Request  $request
      */
-    public function update(Request $request, $articulationStage)
+    public function update(Request $request, $code)
     {
-        $articulationStage = ArticulationStage::query()->findOrFail($articulationStage);
+        $articulationStage = ArticulationStage::query()->where('code',$code)->firstOrFail();
         if (request()->user()->can('update', $articulationStage)) {
             $req = new ArticulationStageRequest;
             $validator = Validator::make($request->all(), $req->rules(), $req->messages());

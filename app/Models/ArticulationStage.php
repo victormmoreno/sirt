@@ -242,7 +242,15 @@ class ArticulationStage extends Model
             'descripcion' => $descripcion
         ]);
     }
-
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'code';
+    }
     /**
      * The presenter
      *
