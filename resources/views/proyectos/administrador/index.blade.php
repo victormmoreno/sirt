@@ -64,7 +64,7 @@
                         <div class="row center">
                         <div class="col s12 m4 l4 offset-l4">
                             <a onclick="consultarProyectosDelNodoPorAnho_Administrador();" href="javascript:void(0)">
-                            <div class="card blue">
+                            <div class="card bg-secondary">
                                 <div class="card-content center flow-text">
                                 <i class="left material-icons white-text small">search</i>
                                 <span class="white-text">Consultar Proyectos</span>
@@ -73,7 +73,6 @@
                             </a>
                         </div>
                         </div>
-                        <div class="divider"></div>
                         <div class="row">
                         @include('proyectos.table')
                         </div>

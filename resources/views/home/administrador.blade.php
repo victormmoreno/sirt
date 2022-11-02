@@ -10,7 +10,7 @@
             <div class="card-content">
                 <div class="card-options">
                 <ul class="hide-on-med-only">
-                    <li class="red-text "><span class="badge cyan lighten-1">Colombia</span></li>
+                    <li class="red-text "><span class="badge bg-secondary">Colombia</span></li>
                 </ul>
                 </div>
                 <span class="card-title">Nodos</span>
@@ -22,7 +22,7 @@
             <div class="card stats-card">
             <div class="card-options">
                 <ul class="hide-on-med-only">
-                    <li class="red-text"><span class="badge cyan lighten-1">{{$countDinamizadoresActivos}} Dinamizadores Activos</span></li>
+                    <li class="red-text"><span class="badge bg-secondary">{{$countDinamizadoresActivos}} Dinamizadores Activos</span></li>
                 </ul>
             </div>
             <div class="card-content">
@@ -35,7 +35,7 @@
             <div class="card stats-card">
             <div class="card-options">
                 <ul class="hide-on-med-only">
-                    <li class="red-text"><span class="badge cyan lighten-1">{{$countGestoresActivos}} Expertos Activos</span></li>
+                    <li class="red-text"><span class="badge bg-secondary">{{$countGestoresActivos}} Expertos Activos</span></li>
                 </ul>
             </div>
             <div class="card-content">
@@ -48,7 +48,7 @@
             <div class="card stats-card">
                 <div class="card-options">
                     <ul class="hide-on-med-only">
-                        <li class="red-text"><span class="badge cyan lighten-1">{{$countGestoresActivos}} Expertos activos</span></li>
+                        <li class="red-text"><span class="badge bg-secondary">{{$countGestoresActivos}} Expertos activos</span></li>
                     </ul>
                 </div>
                 <div class="card-content">

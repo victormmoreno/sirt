@@ -10,7 +10,7 @@
             <div class="col s12 m12 l12">
                 <div class="row no-m-t no-m-b">
                     <div class="col s8 m8 l10">
-                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
+                        <h5 class="left-align primary-text text-darken-3">
                             <i class="material-icons left">
                                 supervised_user_circle
                             </i>
@@ -30,7 +30,7 @@
                             <div class="col s12 m12 l12">
                                 <div class="row no-m-t no-m-b">
                                     <div class="col s12 m8 l8">
-                                        <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
+                                        <div class="center-align primary-text">
                                             @if((session()->has('login_role') && session()->get('login_role') === App\User::IsAdministrador() ))
                                                 <span class="card-title center-align">Usuarios de {{config('app.name')}}</span>
                                             @else
@@ -39,7 +39,7 @@
                                         </div>
                                     </div>
                                     <div class="col s12 m4 l4 show-on-large hide-on-med-and-down">
-                                        <a  href="{{route('usuario.search')}}" class="waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Buscar Usuario</a>
+                                        <a  href="{{route('usuario.search')}}" class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Buscar Usuario</a>
                                     </div>
                                 </div>
                             </div>
@@ -94,7 +94,7 @@
                             </div>
                         </div>
                         <table id="users_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
-                            <thead>
+                            <thead class="bg-primary white-text bordered">
                                 <tr>
                                     <th>Tipo Documento</th>
                                     <th>Documento</th>

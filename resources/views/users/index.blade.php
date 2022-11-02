@@ -10,7 +10,7 @@
             <div class="col s12 m12 l12">
                 <div class="row no-m-t no-m-b">
                     <div class="col s8 m8 l10">
-                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
+                        <h5 class="left-align primary-text text-darken-3">
                             <i class="material-icons left">
                                 supervised_user_circle
                             </i>
