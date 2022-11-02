@@ -73,6 +73,7 @@
                 <div class="col s12 m12 l10 offset-l1">
                     <img class="materialboxed responsive-img" src="{{ asset('img/logonacional_Negro.png') }}" alt="sena | Tecnoparque">
                 </div>
+
                 </div>
             </div>
             </div>

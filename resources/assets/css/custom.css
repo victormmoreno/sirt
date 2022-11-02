@@ -67,7 +67,28 @@ html {
 .secondary-text {
     color: var(--secondary) !important;
 }
-
+.h-12{
+    height: 3rem;
+}
+.w-12{
+    width: 3rem;
+}
+.uppercase{
+    text-transform: uppercase;
+}
+.text-3x{
+    font-size: 1.875rem; /* 30px */
+    line-height: 2.25rem; /* 36px */
+}
+.items-center{
+    align-items: center;
+}
+.gap-x-2{
+    column-gap: 0.5rem;
+}
+.font-bold{
+    font-weight: 700;
+}
 .jvectormap-legend-title {
     font-size: 12px;
 }
