@@ -6,7 +6,9 @@
             <div class="row no-m-t no-m-b">
                 <div class="left left-align">
                     <h5 class="left-align orange-text text-darken-3">
-                        <i class="material-icons left">autorenew</i>{{__('articulation-stage')}}
+                        <a href="{{route('articulation-stage.show',  $articulationStage)}}" class="footer-text left-align">
+                            <i class="material-icons left">autorenew</i>{{__('articulation-stage')}}
+                        </a>
                     </h5>
                 </div>
                 <div class="right right-align show-on-large hide-on-med-and-down">
@@ -14,7 +16,7 @@
                         <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
                         <li><a href="{{route('articulation-stage')}}">{{__('articulation-stage')}}</a></li>
                         <li ><a href="{{route('articulation-stage.show',  $articulationStage)}}">{{ $articulationStage->present()->articulationStageCode() }}</a></li>
-                        <li class="active">{{ __('Details') }}</li>
+                        <li class="active">Evidencias</li>
                     </ol>
                 </div>
             </div>
@@ -48,6 +50,11 @@
 
                                                                 <div class="stats-info">
                                                                     <ul>
+                                                                        <li>Formato confidencial
+                                                                            <div class="percent-info orange-text left">
+                                                                                <i class="material-icons">check</i>
+                                                                            </div>
+                                                                        </li>
                                                                         <li> Acta de inicio
                                                                             <div class="percent-info orange-text left">
                                                                                 <i class="material-icons">check</i>

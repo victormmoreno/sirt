@@ -45,6 +45,7 @@
                                             </div>
                                             <div class="row">
                                                 @include('articulation.options.articulation-stages-options-menu-left')
+
                                                 <div class="col s12 m8 l9">
                                                     <div class="row">
                                                         <div class="col s12 m6 l6">
@@ -137,10 +138,28 @@
                                                                         {{$articulationStage->created_by}}
                                                                     </p>
                                                                 </li>
-                                                                {!! $articulationStage->present()->articulationStageNameConfidentialityFormat() !!}
+
                                                             </ul>
                                                         </div>
                                                     </div>
+
+                                                    <div class="divider"></div>
+                                                    <table
+                                                        class="display responsive-table datatable-example dataTable"
+                                                        style="width: 100%"
+                                                        id="archivosArticulacion">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>Archivo</th>
+                                                            <th style="width: 10%">Descargar</th>
+                                                        </tr>
+                                                        </thead>
+                                                    </table>
+                                                </div>
+
+
+                                                <div class="col s12 m12 l12">
+                                                    <span class="mailbox-title orange-text text-center">Articulaciones</span>
                                                 </div>
                                                 <div class="col s12 m12 l12">
                                                     <table id="articulation_data_table"
@@ -182,7 +201,7 @@
                                                                 </td>
                                                                 <td>{{$articulation->present()->articulationPhase()}}</td>
                                                                 <td><a class="btn m-b-xs modal-trigger"
-                                                                       href="{{route('articulations.show', $articulation->id)}}">
+                                                                       href="{{route('articulations.show', $articulation)}}">
                                                                         <i class="material-icons">search</i>
                                                                     </a></td>
                                                             </tr>
@@ -202,4 +221,41 @@
         </div>
     </main>
 @endsection
+@push('script')
+    <script>
+        datatableArchiveArticulationStage();
+
+        function datatableArchiveArticulationStage() {
+            $('#archivosArticulacion').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                order: false,
+
+                "ajax": {
+                    "url": "{{route('articulation.files', [$articulationStage->id])}}",
+                    "type": "get",
+                    "data":{
+                        type: "{{ basename(\App\Models\ArticulationStage::class)}}"
+                    },
+                },
+                columns: [
+                    {
+                        data: 'file',
+                        name: 'file',
+                        orderable: false,
+                    },
+                    {
+                        data: 'download',
+                        name: 'download',
+                        orderable: false,
+                    },
+                ],
+            });
+        }
+
+    </script>
+@endpush
 

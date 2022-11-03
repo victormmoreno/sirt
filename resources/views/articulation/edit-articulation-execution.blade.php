@@ -38,7 +38,7 @@
                                 </div>
                                 <center>
                                     <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Guardar</button>
-                                    <a href="{{ route('articulations.show', $articulation->id) }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
+                                    <a href="{{ route('articulations.show', $articulation) }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
                                 </center>
                             </form>
                         </div>

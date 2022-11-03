@@ -59,7 +59,7 @@ class ArticulationStageNoApproveEndorsement extends Notification implements Shou
     public function toArray($notifiable)
     {
         return [
-            'link'  => route('articulation-stage.show',  $this->articulationStage->id),
+            'link'  => route('articulation-stage.show',  $this->articulationStage),
             'icon'  => 'library_books',
             'color' => 'green',
             'autor' => "",

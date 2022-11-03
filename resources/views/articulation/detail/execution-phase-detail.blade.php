@@ -115,5 +115,8 @@
         </div>
     </div>
 </div>
+<div class="row">
+    @include('articulation.table-archive-phase', ['fase' => 'ejecucion'])
+</div>
 
 

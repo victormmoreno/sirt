@@ -3,7 +3,9 @@
     <tr>
         <th>Archivo</th>
         <th style="width: 10%">Descargar</th>
-        <th style="width: 10%">Eliminar</th>
+        @if(Route::currentRouteName() == 'articulations.show.phase')
+            <th style="width: 10%">Eliminar</th>
+        @endif
     </tr>
     </thead>
 </table>

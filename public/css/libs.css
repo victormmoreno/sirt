@@ -1676,7 +1676,7 @@
 }
 
 .orange-text.text-lighten-3 {
-  color: #ffcc80 !important;
+  color: #ffb74d !important;
 }
 
 .orange.lighten-2 {
@@ -8471,6 +8471,7 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 .cyan-text.text-darken-3 {
   color:#ff8f00 !important;
 }
+
 /* fallback */
 @font-face {
   font-family: 'Material Icons';

@@ -1,76 +1,139 @@
 @extends('layouts.app')
 @section('meta-title', __('articulation-stage'))
 @section('content')
-@php
-  $year = Carbon\Carbon::now()->year;
-@endphp
-<main class="mn-inner">
-    <div class="row content">
-        <div class="row no-m-t no-m-b">
-            <div class="left left-align">
-                <h5 class="left-align orange-text text-darken-3">
-                    <i class="material-icons left">autorenew</i>{{__('articulation-stage')}}
-                </h5>
+    @php
+        $year = Carbon\Carbon::now()->year;
+    @endphp
+    <main class="mn-inner">
+        <div class="row content">
+            <div class="row no-m-t no-m-b">
+                <div class="left left-align">
+                    <h5 class="left-align orange-text text-darken-3">
+                        <i class="material-icons left">autorenew</i>{{__('articulation-stage')}}
+                    </h5>
+                </div>
+                <div class="right right-align show-on-large hide-on-med-and-down">
+                    <ol class="breadcrumbs">
+                        <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
+                        <li><a href="{{route('articulation-stage')}}">{{__('articulation-stage')}}</a></li>
+                        <li>
+                            <a href="{{route('articulation-stage.show',  $articulation->articulationstage)}}">{{ $articulation->articulationstage->present()->articulationStageCode() }}</a>
+                        </li>
+                        <li>
+                            <a href="{{route('articulations.show',  $articulation)}}">{{ $articulation->present()->articulationCode() }}</a>
+                        </li>
+                        <li class="active">Cierre</li>
+                    </ol>
+                </div>
             </div>
-            <div class="right right-align show-on-large hide-on-med-and-down">
-                <ol class="breadcrumbs">
-                    <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
-                    <li ><a href="{{route('articulation-stage')}}">{{__('articulation-stage')}}</a></li>
-                    <li ><a href="{{route('articulation-stage.show',  $articulation->articulationstage)}}">{{ $articulation->articulationstage->present()->articulationStageCode() }}</a></li>
-                    <li ><a href="{{route('articulations.show',  $articulation)}}">{{ $articulation->present()->articulationCode() }}</a></li>
-                    <li class="active">Cierre</li>
-                </ol>
-            </div>
-        </div>
-        <div class="col s12 m12 l12">
-            <div class="card mailbox-content">
-                <div class="card-content">
-                    <form id="articulation-form-closing" action="{{route('articulation.update', $articulation)}}" method="POST">
-                        {!! method_field('PUT')!!}
-                        @include('articulation.form.closing-form', ['btnText' => 'Modificar'])
+            <div class="row no-m-t no-m-b">
+                <div class="col s12 m12 l12 no-p-h">
+                    <div class="card mailbox-content">
+                        <div class="card-content">
+                            <div class="row no-m-t no-m-b">
+                                <div class="col s12 m12 l12">
+                                    <div class="mailbox-options">
+                                        <ul>
+                                            <li class="text-mailbox ">La articulación se encuentra actualmente en la
+                                                fase de {{$articulation->present()->articulationPhase()}}</li>
+                                            <div class="right">
+                                                <li class="text-mailbox">Fecha
+                                                    Inicio: {{$articulation->present()->articulationStartDate()}}</li>
+                                            </div>
+                                        </ul>
+                                    </div>
+                                    <div class="mailbox-view no-s">
+                                        <div class="mailbox-view-header">
+                                            <div class="mailbox-view-header">
+                                                <div class="left">
+                                                    <div class="left">
+                                                        <span class="mailbox-title">{{$articulation->present()->articulationCode()}} - {{$articulation->present()->articulationName()}}
+                                                            @can('update', $articulation)
+                                                                <a href="{{route('accompaniments.edit', $articulation)}}"
+                                                                   class="orange-text text-darken-2 pointer tooltipped"
+                                                                   data-position="right"
+                                                                   data-tooltip="editar {{__('articulation-stage')}}"><i
+                                                                        class="tiny material-icons">edit</i></a>
+                                                            @endcan
+                                                        </span>
+                                                        <span
+                                                            class="mailbox-title">{{__('Node')}} {{$articulation->articulationstage->present()->articulationStageNode()}}</span>
+                                                        <span class="mailbox-author">{{$articulation->present()->articulationBy()}} (Articulador)</span>
+                                                        @if (Route::currentRouteName() == 'articulation-stage.show')
+                                                            @can('changeTalent', $articulation)
+                                                                <a href="{{ route('articulation-stage.changeinterlocutor', $articulation) }}"
+                                                                   class="orange-text text-darken-2 pointer tooltipped"
+                                                                   data-position="right"
+                                                                   data-tooltip="cambiar {{__('Interlocutory talent')}}"><i
+                                                                        class="tiny material-icons">edit</i></a>
+                                                            @endcan
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="divider mailbox-divider"></div>
+                                        <form id="articulation-form-closing"
+                                              action="{{route('articulation.update', $articulation)}}" method="POST">
+                                            {!! method_field('PUT')!!}
+                                            @include('articulation.form.closing-form', ['btnText' => 'Modificar'])
 
-                    </form>
-                    <div class="row">
-                        <!--@include('articulation.table-archive-phase', ['fase' => 'Cierre'])-->
+                                            <center>
+                                                <button type="submit"
+                                                        class="waves-effect cyan darken-1 btn center-aling">
+                                                    <i class="material-icons right">done</i>
+                                                    Guardar
+                                                </button>
+                                                <a href="{{route('articulations.show', $articulation)}}"
+                                                   class="waves-effect red lighten-2 btn center-aling">
+                                                    <i class="material-icons right">backspace</i>Cancelar
+                                                </a>
+                                            </center>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 @endsection
 @push('script')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
+            datatableArchiveArticulation();
             articulationClosing.checkedTypePostulacion();
             articulationClosing.checkedApproval();
         });
 
         let articulationClosing = {
-            checkedTypePostulacion: function(){
+            checkedTypePostulacion: function () {
                 let postulation = $('input:radio[name=postulation]:checked').val();
                 console.log(postulation);
                 if (postulation == "yes") {
                     $(".r-si").show();
                     $(".r-no").hide();
-                }else if(postulation == "no"){
+                } else if (postulation == "no") {
                     $(".r-no").show();
                     $(".r-si").hide();
-                }else{
+                } else {
                     $(".r-si").show();
                     $(".r-no").hide();
                 }
             },
-            checkedApproval: function(){
-                let  approval = $('input:radio[name=approval]:checked').val();
+            checkedApproval: function () {
+                let approval = $('input:radio[name=approval]:checked').val();
 
                 if (approval == "aprobado") {
                     $(".r-aprobado").show();
                     $(".r-no-aprobado").hide();
-                }else if(approval == "noaprobado"){
+                } else if (approval == "noaprobado") {
                     $(".r-no-aprobado").show();
                     $(".r-aprobado").hide();
-                }else{
+                } else {
                     $(".r-aprobado").show();
                     $(".r-no-aprobado").hide();
                 }
@@ -91,8 +154,8 @@
         });
 
         Dropzone.on('success', function (res) {
-            //$('#archivosArticulacion').dataTable().fnDestroy();
-            //datatableArchiveArticulacion_cierre();
+            $('#archivesArticulations').dataTable().fnDestroy();
+            datatableArchiveArticulation();
             Swal.fire({
                 toast: true,
                 position: 'top-end',
@@ -116,6 +179,41 @@
             });
         });
         Dropzone.autoDiscover = false;
+        function datatableArchiveArticulation() {
+            $('#archivesArticulations').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                order: false,
+                "ajax": {
+                    "url": "{{route('articulation.files', [$articulation->id])}}",
+                    "type": "get",
+                    "data":{
+                        type: "{{ basename(\App\Models\Articulation::class)}}",
+                        phase: "Cierre"
+                    },
+                },
+                columns: [
+                    {
+                        data: 'file',
+                        name: 'file',
+                        orderable: false,
+                    },
+                    {
+                        data: 'download',
+                        name: 'download',
+                        orderable: false,
+                    },
+                    {
+                        data: 'delete',
+                        name: 'delete',
+                        orderable: false,
+                    },
+                ],
+            });
+        }
     </script>
 @endpush
 

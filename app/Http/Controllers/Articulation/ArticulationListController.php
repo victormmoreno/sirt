@@ -46,17 +46,17 @@ class ArticulationListController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  string  $code
      * @param  string  $phase
      * @return \Illuminate\Http\Response
      */
-    public function showPhase($id, $phase)
+    public function showPhase($code, $phase)
     {
         $articulation = Articulation::query()
             ->with([
                 'articulationstage'
             ])
-            ->findOrfail($id);
+            ->where('code',$code)->firstOrFail();
         switch (strtoupper($phase)){
             case 'INICIO':
                 $scopes = AlcanceArticulacion::orderBy('name')->pluck('name', 'id');
@@ -82,16 +82,16 @@ class ArticulationListController extends Controller
      * Display the specified resource.
 
      */
-    public function changeNextPhase($id, $phase)
+    public function changeNextPhase($code, $phase)
     {
         $articulation = Articulation::query()
             ->with([
                 'articulationstage'
             ])
-            ->findOrfail($id);
+            ->where('code',$code)->firstOrFail();
         switch (strtoupper($phase)){
             case 'INICIO':
-                return redirect()->route('articulations.show', $articulation->id);
+                return redirect()->route('articulations.show', $articulation);
                 break;
             case 'EJECUCION':
                 $articulation->update([
@@ -112,18 +112,18 @@ class ArticulationListController extends Controller
                 return redirect()->route('articulations.show.phase', [$articulation, 'cierre']);
                 breaK;
             default:
-                return redirect()->route('articulations.show', $articulation->id);
+                return redirect()->route('articulations.show', $articulation);
                 break;
         }
     }
 
-    public function changePreviusPhase($id, $phase)
+    public function changePreviusPhase($code, $phase)
     {
         $articulation = Articulation::query()
             ->with([
                 'articulationstage'
             ])
-            ->findOrfail($id);
+            ->where('code',$code)->firstOrFail();
         switch (strtoupper($phase)){
             case 'INICIO':
                 $articulation->update([
@@ -132,7 +132,7 @@ class ArticulationListController extends Controller
                 $comentario = 'desde ejecución';
                 $movimiento = \App\Models\Movimiento::IsCambiar();
                 $articulation->createTraceability($movimiento,Session::get('login_role'), $comentario,strtolower($phase));
-                return redirect()->route('articulations.show', $articulation->id);
+                return redirect()->route('articulations.show', $articulation);
                 break;
             case 'EJECUCION':
                 $articulation->update([
@@ -141,36 +141,29 @@ class ArticulationListController extends Controller
                 $comentario = 'desde cierre';
                 $movimiento = \App\Models\Movimiento::IsCambiar();
                 $articulation->createTraceability($movimiento,Session::get('login_role'), $comentario,strtolower($phase));
-                return redirect()->route('articulations.show', $articulation->id);
+                return redirect()->route('articulations.show', $articulation);
                 break;
             case 'CIERRE':
                 return redirect()->route('articulations.show.phase', [$articulation, 'ejecucion']);
                 breaK;
             default:
-                return redirect()->route('articulations.show', $articulation->id);
+                return redirect()->route('articulations.show', $articulation);
                 break;
         }
     }
 
 
-    public function updatePhaseExecute(Request $request,$id)
+    public function updatePhaseExecute(Request $request,$code)
     {
         $articulation = Articulation::query()
-            ->findOrfail($id);
+            ->where('code',$code)->firstOrFail();
         $response = $this->articulationRespository->updateEntregablesEjecucionRepository($request, $articulation);
         if ($response != null) {
             Alert::success('Modificación Exitosa!', 'Los entregables de la articulación en la fase de ejecución se han modificado!')->showConfirmButton('Ok', '#3085d6');
-            return redirect()->route('articulations.show', $response->id);
+            return redirect()->route('articulations.show', $response);
         } else {
             Alert::error('Modificación Errónea!', 'Los entregables de la articulación en la fase de ejecución no se han modificado!')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-
-        /*$articulation->update([
-            'tracing' => $request->tracing,
-            'announcement_document' => $request->announcement_document,
-        ]);*/
-
     }
-
 }

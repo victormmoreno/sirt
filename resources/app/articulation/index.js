@@ -81,7 +81,6 @@ const articulationStage ={
             ],
             processing: false,
             serverSide: false,
-            order: [[4, 'desc']],
             "pageLength": 10,
             ajax:{
                 url: "/etapa-articulaciones/datatable_filtros",
@@ -123,7 +122,6 @@ const articulationStage ={
                 },
             ],
             columnDefs: [{ visible: false, targets: groupColumn }],
-            order: [[groupColumn, 'asc']],
             displayLength: 25,
             drawCallback: function (settings) {
                   var api = this.api();

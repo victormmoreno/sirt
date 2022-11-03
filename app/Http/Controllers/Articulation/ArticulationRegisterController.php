@@ -41,12 +41,12 @@ class ArticulationRegisterController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  $id
+     * @param  $code
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, int $id)
+    public function store(Request $request, string $code)
     {
-        $articulationStage = ArticulationStage::findOrFail($id);
+        $articulationStage = ArticulationStage::where('code', $code)->firstOrFail();
         $req = new ArticulationRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
@@ -63,7 +63,7 @@ class ArticulationRegisterController extends Controller
                 return response()->json([
                     'data' => [
                         'state'   => 'success',
-                        'url' => route('articulations.show', $response['data']->id),
+                        'url' => route('articulations.show', $response['data']),
                         'status_code' => Response::HTTP_CREATED,
                         'errors' => [],
                     ],
@@ -83,9 +83,9 @@ class ArticulationRegisterController extends Controller
      * Update a resource.
      * @param  \Illuminate\Http\Request  $request
      */
-    public function update(Request $request, $articulation)
+    public function update(Request $request, $code)
     {
-        $articulation = Articulation::query()->findOrFail($articulation);
+        $articulation = Articulation::query()->where('code', $code)->firstOrFail();
         $req = new ArticulationRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
@@ -101,7 +101,7 @@ class ArticulationRegisterController extends Controller
                 return response()->json([
                     'data' => [
                         'state'   => 'success',
-                        'url' => route('articulations.show', $response['data']->id),
+                        'url' => route('articulations.show', $response['data']),
                         'status_code' => Response::HTTP_CREATED,
                         'errors' => [],
                     ],

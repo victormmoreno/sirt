@@ -19,7 +19,7 @@ use App\Models\ControlNotificaciones;
 use App\Notifications\Articulation\EndorsementStageArticulation;
 use App\Events\Articulation\AccompanyingApprovalRequest;
 use App\Notifications\Articulation\ArticulationStageNoApproveEndorsement;
-
+use Illuminate\Support\Str;
 
 
 class ArticulationStageRepository
@@ -121,16 +121,16 @@ class ArticulationStageRepository
     {
         if($request->hasFile('confidency_format')){
             try {
+
                 $fileName =  $model->code.'_' .$request->file('confidency_format')->getClientOriginalName();
                 $node = sprintf('%02d',$model->node->id);
                 $year = Carbon::parse($model->start_date)->isoFormat('YYYY');
                 $module = class_basename($model);
-                $route = "public/{$node}/{$year}/{$module}/{$model->createdBy->documento}/{$model->code}/formato";
+                $route = "public/{$node}/{$year}/".Str::slug(__('articulation-stage'))."/{$model->code}";
                 $fileUrl = $request->file('confidency_format')
                     ->storeAs($route, $fileName);
-                $model->file()->create([
-                    'ruta' => Storage::url($fileUrl),
-                    'fase_id' => Fase::IS_INICIO
+                $model->archivomodel()->create([
+                    'ruta' => Storage::url($fileUrl)
                 ]);
                 return $model;
             } catch (\Exception $ex) {
@@ -209,18 +209,17 @@ class ArticulationStageRepository
                     $node = sprintf('%02d',$model->node->id);
                     $year = Carbon::parse($model->start_date)->isoFormat('YYYY');
                     $module = class_basename($model);
-                    $route = "public/{$node}/{$year}/{$module}/{$model->createdBy->documento}/{$model->code}/formato";
+                    $route = "public/{$node}/{$year}/".Str::slug(__('articulation-stage'))."/{$model->code}";
                     $fileUrl = $request->file('confidency_format') ->storeAs($route, $fileName);
-                    if(isset($model->file)){
-                        $filePath = str_replace('storage', 'public', $model->file->ruta);
+                    if(isset($model->archivomodel)){
+                        $filePath = str_replace('storage', 'public', $model->archivomodel->ruta);
                         Storage::delete($filePath);
-                        $model->file()->update([
+                        $model->archivomodel()->update([
                             'ruta' => Storage::url($fileUrl)
                         ]);
                     }else{
-                        $model->file()->create([
-                            'ruta' => Storage::url($fileUrl),
-                            'fase_id' => Fase::IS_INICIO
+                        $model->archivomodel()->create([
+                            'ruta' => Storage::url($fileUrl)
                         ]);
                     }
 
@@ -278,7 +277,7 @@ class ArticulationStageRepository
     public function downloadFile($articulationStage)
     {
         try {
-            $path = $this->existFile($articulationStage->file->ruta);
+            $path = $this->existFile($articulationStage->archivomodel->ruta);
             return Storage::response($path);
         } catch (\Exception $e) {
             return abort(404, $e->getMessage());

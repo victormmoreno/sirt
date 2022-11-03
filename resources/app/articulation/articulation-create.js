@@ -337,7 +337,7 @@ const filter_articulations = {
     noRepeat: function(id) {
         let user = id;
         let retorno = true;
-        let a = document.getElementsByName("talentos[]");
+        let a = document.getElementsByName("talents[]");
         for (x = 0; x < a.length; x ++) {
             if (a[x].value == user) {
                 retorno = false;

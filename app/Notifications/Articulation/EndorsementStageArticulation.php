@@ -59,7 +59,7 @@ class EndorsementStageArticulation extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'link'  => route('articulation-stage.show',  $this->articulationStage->id),
+            'link'  => route('articulation-stage.show',  $this->articulationStage),
             'icon'  => 'library_books',
             'color' => 'green',
             'autor' => "{$this->notification->remitente->nombres} {$this->notification->remitente->nombres}",

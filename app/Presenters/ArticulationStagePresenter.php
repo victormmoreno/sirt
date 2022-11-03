@@ -48,6 +48,11 @@ class ArticulationStagePresenter extends Presenter
         return $this->articulationStage->status == ArticulationStage::STATUS_OPEN ? 'inicio' : 'cierre';
     }
 
+    public function articulationStageStatusStartEndInverse()
+    {
+        return $this->articulationStage->status == ArticulationStage::STATUS_OPEN ? 'cierre' : 'inicio';
+    }
+
     public function articulationStageEndorsement()
     {
         return $this->articulationStage->endorsement == ArticulationStage::ENDORSEMENT_YES ? 'abrir' : 'Cerrar';
@@ -210,35 +215,5 @@ class ArticulationStagePresenter extends Presenter
             return "{$this->articulationStage->articulations_count}";
         }
         return 0;
-    }
-
-    public function articulationStageNameConfidentialityFormat()
-    {
-
-        if(isset($this->articulationStage->file)){
-            if(auth()->user()->can('destroyFile', $this->articulationStage)){
-                return '<li class="collection-item avatar">
-                    <i class="material-icons circle">insert_drive_file</i>
-                    <span class="title">'.__('Confidentiality Format').'</span>
-                    <p>'.basename( url($this->articulationStage->file->ruta) ).'<br>
-                        <a class="orange-text" target="_blank" href='.route('articulation-stage.download', $this->articulationStage).'>Descargar</a>
-                    </p><form method="POST" action="'.route('articulation-stage.file.destroy', $this->articulationStage->file).'">
-                        '.csrf_field().'
-                        '.method_field('DELETE').'
-                        <button class="secondary-content red-text">
-                            <i class="material-icons">delete_forever</i>
-                        </button>
-                    </form>
-                </li>';
-            }else if(auth()->user()->can('downloadFile', $this->articulationStage)){
-                return '<li class="collection-item avatar">
-                    <i class="material-icons circle">insert_drive_file</i>
-                    <span class="title">'.__('Confidentiality Format').'</span>
-                    <p>'.basename( url($this->articulationStage->file->ruta) ).'<br>
-                        <a class="orange-text" target="_blank" href='.route('articulation-stage.download', $this->articulationStage).'>Descargar</a>
-                    </p>
-                </li>';
-            }
-        }
     }
 }

@@ -189,49 +189,6 @@ class ArticulationStagePolicy
     }
 
     /**
-     * determine if the given archives can be destroy by the user.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\ArticulationStage  $articulationStage
-     * @return bool
-     */
-    public function destroyFile(User $user, ArticulationStage $articulationStage): bool
-    {
-        return (bool) $user->hasAnyRole([User::IsArticulador()])
-            && (session()->has('login_role')
-                && session()->get('login_role') == User::IsArticulador())
-            && auth()->user()->articulador->nodo->id == $articulationStage->node_id
-            && $articulationStage->articulations->count() <= 0;
-    }
-
-    /**
-     * Determine if the given archives can be download by the user.
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\ArticulationStage  $articulationStage
-     * @return bool
-     */
-    public function downloadFile(User $user, ArticulationStage $articulationStage): bool
-    {
-        return (bool) $user->hasAnyRole([
-                User::IsActivador(),
-                User::IsDinamizador(),
-                User::IsArticulador(),
-                User::IsTalento()
-            ])
-            && (session()->has('login_role')
-                && (
-                    session()->get('login_role') == User::IsActivador()
-                    || (session()->get('login_role') == User::IsDinamizador() && $user->dinamizador->nodo_id = $articulationStage->node_id)
-                    || (session()->get('login_role') == User::IsArticulador() && $user->articulador->nodo_id = $articulationStage->node_id)
-                    || (session()->get('login_role') == User::IsTalento()  &&
-                        (
-                            $articulationStage->interlocutor()->where('id', $user->id)->first()
-                        )
-                    )
-                )
-            );
-    }
-    /**
      * Determine if the given articulations can be change talent by the user.
      *
      * @param  \App\Models\User  $user
@@ -260,7 +217,23 @@ class ArticulationStagePolicy
      * @param  \App\Models\ArticulationStage  $articulationStage
      * @return bool
      */
-    public function downloadCertificate(User $user, ArticulationStage $articulationStage)
+    public function downloadCertificateEnd(User $user, ArticulationStage $articulationStage)
+    {
+        return (bool) $user->hasAnyRole([User::IsArticulador()])
+            && ( (session()->has('login_role')
+                && session()->get('login_role') == User::IsArticulador()))
+            && (auth()->user()->articulador->nodo_id == $articulationStage->node_id)
+            && $articulationStage->articulations()->count() > 0;
+    }
+
+    /**
+     * Determine if the given articulations can be updated by the user..
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\ArticulationStage  $articulationStage
+     * @return bool
+     */
+    public function downloadCertificateStart(User $user, ArticulationStage $articulationStage)
     {
         return (bool) $user->hasAnyRole([User::IsArticulador()])
             && ( (session()->has('login_role')
@@ -280,7 +253,7 @@ class ArticulationStagePolicy
             && ( (session()->has('login_role')
                 && session()->get('login_role') == User::IsArticulador()))
             && (auth()->user()->articulador->nodo->id == $articulationStage->node_id || session()->get('login_role') == User::IsAdministrador())
-            && $articulationStage->status == ArticulationStage::IsAbierto();
+            && ($articulationStage->articulations()->count() == 0 || $articulationStage->status == ArticulationStage::IsAbierto());
     }
 
     /**

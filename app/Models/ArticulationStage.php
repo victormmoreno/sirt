@@ -81,7 +81,7 @@ class ArticulationStage extends Model
 
     public function archivomodel()
     {
-        return $this->morphOne(ArchivoModel::class, 'model');
+        return $this->morphMany(ArchivoModel::class, 'model');
     }
 
 
@@ -122,10 +122,6 @@ class ArticulationStage extends Model
         return $this->belongsTo(\App\User::class, 'created_by', 'id')->withTrashed();
     }
 
-    public function file()
-    {
-        return $this->morphOne(ArchivoModel::class, 'model');
-    }
 
     public function traceability()
     {

@@ -70,6 +70,41 @@
         </div>
     </div>
 </main>
-
 @endsection
+@push('script')
+    <script>
+        datatableArchiveArticulation();
+
+        function datatableArchiveArticulation() {
+            $('#archivesArticulations').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                order: false,
+                "ajax": {
+                    "url": "{{route('articulation.files', [$articulation->id])}}",
+                    "type": "get",
+                    "data":{
+                        type: "{{ basename(\App\Models\Articulation::class)}}",
+                        phase: "Ejecución"
+                    },
+                },
+                columns: [
+                    {
+                        data: 'file',
+                        name: 'file',
+                        orderable: false,
+                    },
+                    {
+                        data: 'download',
+                        name: 'download',
+                        orderable: false,
+                    }
+                ],
+            });
+        }
+    </script>
+@endpush
 

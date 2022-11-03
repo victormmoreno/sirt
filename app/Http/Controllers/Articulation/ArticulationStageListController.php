@@ -58,7 +58,7 @@ class ArticulationStageListController extends Controller
                     ->year($request->filter_year_articulationStage)
                     ->node($node)
                     ->interlocutorTalent($talent)
-                    ->orderBy('created_at', 'desc')
+                    ->orderBy('articulation_stages.updated_at', 'desc')
                     ->get();
             }
             return $this->datatablearticulationStages($articulationStages);
@@ -84,7 +84,7 @@ class ArticulationStageListController extends Controller
                     ->node($node)
                     ->interlocutorTalent($talent)
                     ->groupBy('articulation_stages.code')
-                    ->orderBy('created_at', 'desc')
+                    ->orderBy('articulation_stages.created_at', 'desc')
                     ->get();
             }
             return (new articulationStageExport($articulationStages))->download(__('articulation-stage') .' - '. config('app.name') . ".{$extension}");
@@ -93,39 +93,6 @@ class ArticulationStageListController extends Controller
         return redirect()->route('home');
     }
 
-    /**
-     * method to delete system file
-     * @param id
-     * @return Response
-     */
-    public function destroyFile($id)
-    {
-        if (request()->user()->can('destroyFile', ArticulationStage::class)) {
-            $response = $this->articulationStageRepository->destroyFile($id);
-            if ($response) {
-                toast('El Archivo se ha eliminado con éxito!', 'success')->autoClose(2000)->position('top-end');
-                return back();
-            }
-            toast('El Archivo no se ha eliminado!', 'danger')->autoClose(2000)->position('top-end');
-            return back();
-        }
-        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
-        return redirect()->route('home');
-    }
-
-    /**
-     * method to download a file from the system
-     * @return \Illuminate\Http\Response
-     */
-    public function downloadFile($code)
-    {
-        $articulationStage = ArticulationStage::query()->where('code',$code)->firstOrFail();
-        if (request()->user()->can('downloadFile', $articulationStage)) {
-            return $this->articulationStageRepository->downloadFile($articulationStage);
-        }
-        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
-        return redirect()->route('home');
-    }
 
     /**
      * Display the specified resource for change the interlocutor talent of an articulation stage.
@@ -343,11 +310,12 @@ class ArticulationStageListController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $articulationStage
+     * @param  int  $articulationState
      */
-    public function destroy($articulationStage)
+    public function destroy($articulationState)
     {
-        $articulationStage = ArticulationStage::findOrFail($articulationStage);
+        $articulationStage = ArticulationStage::findOrFail($articulationState);
+
         if (request()->user()->can('delete', $articulationStage)) {
             if (!$articulationStage->articulations->IsEmpty()) {
                 return response()->json([
@@ -362,10 +330,19 @@ class ArticulationStageListController extends Controller
                 $articulationStage->articulations()->delete();
                 $articulationStage->articulations->users()->detach();
             }
-            if (isset($articulationStage->file)) {
-                $filePath = str_replace('storage', 'public', $articulationStage->file->ruta);
-                Storage::delete($filePath);
-                $articulationStage->file()->delete();
+            if (isset($articulationStage->archivomodel)) {
+                foreach ($articulationStage->archivomodel as $archive){
+                    $filePath = str_replace('storage', 'public', $archive->ruta);
+                    Storage::delete($filePath);
+                    $archive->delete();
+                }
+            }
+
+            if (isset($articulationStage->notifications)) {
+                $articulationStage->notifications()->delete();
+            }
+            if (isset($articulationStage->traceability)) {
+                $articulationStage->traceability()->delete();
             }
             $articulationStage->delete();
             return response()->json([
@@ -399,15 +376,14 @@ class ArticulationStageListController extends Controller
             ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
             ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
             ->where('articulation_stages.code',$code)->firstOrFail();
-        if (request()->user()->can('downloadCertificate', $articulationStage)) {
-            if(strtoupper($phase) == 'INICIO'){
-                $pdf = PDF::loadView('pdf.articulation.articulation-stage-start', compact('articulationStage'));
-                return $pdf->stream();
-            }else if(strtoupper($phase) == 'CIERRE'){
-                $pdf = PDF::loadView('pdf.articulation.articulation-stage-end', compact('articulationStage'));
-                return $pdf->stream();
-            }
+        if (request()->user()->can('downloadCertificateStart', $articulationStage) && strtoupper($phase) == 'INICIO') {
+            $pdf = PDF::loadView('pdf.articulation.articulation-stage-start', compact('articulationStage'));
+            return $pdf->stream();
+        }else if(request()->user()->can('downloadCertificateEnd', $articulationStage) && strtoupper($phase) == 'CIERRE'){
+            $pdf = PDF::loadView('pdf.articulation.articulation-stage-end', compact('articulationStage'));
+            return $pdf->stream();
         }
+        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
         return redirect()->route('home');
     }
 

@@ -67,12 +67,20 @@
                 Editar {{__('articulation-stage')}}
             </a>
         @endcan
-        @can('downloadCertificate', $articulationStage)
+        @can('downloadCertificateEnd', $articulationStage)
             <a target="_blank"
-               href="{{ route('articulation-stage.download-certificate', [$articulationStage->present()->articulationStageStatusStartEnd(),$articulationStage]) }}"
+               href="{{ route('articulation-stage.download-certificate', [ 'cierre',$articulationStage]) }}"
                class="collection-item">
                 <i class="material-icons left">cloud_download</i>
-                Descargar acta {{$articulationStage->present()->articulationStageStatusStartEnd()}}
+                Descargar acta cierre
+            </a>
+        @endcan
+        @can('downloadCertificateStart', $articulationStage)
+            <a target="_blank"
+               href="{{ route('articulation-stage.download-certificate', ['inicio',$articulationStage]) }}"
+               class="collection-item">
+                <i class="material-icons left">cloud_download</i>
+                Descargar acta inicio
             </a>
         @endcan
         @can('uploadEvidences', $articulationStage)
@@ -91,3 +99,4 @@
         @endcan
     @endif
 </div>
+
