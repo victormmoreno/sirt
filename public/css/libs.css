@@ -14005,7 +14005,7 @@ a:focus {
 }
 
 .waves-effect.waves-light .waves-ripple {
-    background-color: #fc7323;
+    background-color: var(--primary-lighten);
 }
 
 .waves-effect.waves-grey .waves-ripple {
@@ -17497,9 +17497,11 @@ body.search-app .search-input input:-ms-input-placeholder {
 .signin-page {
     height: 100%;
     width: 100%;
-    background-image: url('/img/Tecnoparque_Fondo.jpg'); /* The image used */
-    background-color: #var(--primary); /* Used if the image is unavailable */
-    background-position: center; /* Center the image */
+    background-image: url('/img/banner.jpg'); /* The image used */
+    /*background-color: var(--primary);*/ /* Used if the image is unavailable */
+    /*background: rgb(0,50,77);
+    background: linear-gradient(90deg, rgba(0,50,77,1) 0%, rgba(57,169,0,1) 50%, rgba(255,255,255,1) 100%);}*/
+    background-position: bottom; /* Center the image */
     background-repeat: no-repeat; /* Do not repeat the image */
     background-size: cover; /* Resize the background image to cover the entire container */
 }
@@ -18321,6 +18323,10 @@ html {
     background-color: var(--primary) !important;
 }
 
+.bg-primary-lighten {
+    background-color: var(--primary-lighten) !important;
+}
+
 .bg-secondary {
     background-color: var(--secondary) !important;
 }
@@ -18333,8 +18339,28 @@ html {
     background-color: var(--info) !important;
 }
 
+.bg-danger {
+    background-color: var(--danger) !important;
+}
+
+.bg-success {
+    background-color: var(--success) !important;
+}
+.bg-warning {
+    background-color: var(--warning) !important;
+}
+
+.btn-flat.waves-red {
+    color: var(--danger);
+}
+
 .primary-text {
     color: var(--primary) !important;
+}
+
+.justify-text{
+    text-align: justify;
+    text-justify: inter-word;
 }
 
 .secondary-text {
@@ -18349,9 +18375,22 @@ html {
 .uppercase{
     text-transform: uppercase;
 }
+.text-2xl{
+    font-size: 1.5rem; /* 24px */
+    line-height: 2rem; /* 32px */
+}
+
+.card-title h1{
+    font-weight: bold;
+    color: var(--primary);
+}
 .text-3x{
     font-size: 1.875rem; /* 30px */
     line-height: 2.25rem; /* 36px */
+}
+
+.font-bold{
+    font-weight: 700;
 }
 .items-center{
     align-items: center;

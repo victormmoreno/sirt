@@ -48,6 +48,10 @@ html {
     background-color: var(--primary) !important;
 }
 
+.bg-primary-lighten {
+    background-color: var(--primary-lighten) !important;
+}
+
 .bg-secondary {
     background-color: var(--secondary) !important;
 }
@@ -60,8 +64,28 @@ html {
     background-color: var(--info) !important;
 }
 
+.bg-danger {
+    background-color: var(--danger) !important;
+}
+
+.bg-success {
+    background-color: var(--success) !important;
+}
+.bg-warning {
+    background-color: var(--warning) !important;
+}
+
+.btn-flat.waves-red {
+    color: var(--danger);
+}
+
 .primary-text {
     color: var(--primary) !important;
+}
+
+.justify-text{
+    text-align: justify;
+    text-justify: inter-word;
 }
 
 .secondary-text {
@@ -76,9 +100,22 @@ html {
 .uppercase{
     text-transform: uppercase;
 }
+.text-2xl{
+    font-size: 1.5rem; /* 24px */
+    line-height: 2rem; /* 32px */
+}
+
+.card-title h1{
+    font-weight: bold;
+    color: var(--primary);
+}
 .text-3x{
     font-size: 1.875rem; /* 30px */
     line-height: 2.25rem; /* 36px */
+}
+
+.font-bold{
+    font-weight: 700;
 }
 .items-center{
     align-items: center;

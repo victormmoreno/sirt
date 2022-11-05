@@ -8,7 +8,7 @@
             </section>
             <div class="col s2 m2 l3 ">
                 <a href="{{route('/')}}" rel="canonical" class="hide-on-med-and-down">
-                    <img class="hide-on-med-and-down"  width="200px" height="50px" src="{{ asset('img/logonacional_Blanco.png') }}" alt="{{config('app.name')}}" title="{{config('app.name')}}"></img>
+                    <img width="150px" class="chapter-title" src="{{ asset('img/logo-sirt-blanco.svg') }}" alt="{{config('app.name')}}">
                 </a>
             </div>
             <ul class=" col s8 m8 l6 push-m3 push-l1 ">
@@ -16,7 +16,6 @@
                     <a href="{{route('/')}}" rel="canonical" title="Haz clic aquí para ir a la página principal">INICIO</a>
                 </li>
                 <li class="hide-on-med-and-down"><a href="#slideshow" title="Haz clic aquí para ver que es tecnnoparque">¿QUÉ ES TECNOPARQUE? </a></li>
-                <li class="hide-on-med-and-down"><a href="#noticia" title="Haz clic aquí para ver las noticias">NOTICIAS</a></li>
                 <li class="hide-on-med-and-down"><a href="{{route('creditos')}}" rel="canonical" title="Haz clic aquí para ver los créditos"> CRÉDITOS</a></li>
             </ul>
             @if (Route::is('/'))
@@ -47,7 +46,6 @@
         <ul class="sidebar-menu collapsible collapsible-accordion " data-collapsible="accordion">
             <li class="hide-on-large-only"><a class="waves-effect waves-grey" href="{{route('/')}}" rel="canonical"><i class="material-icons">info_outline</i>INICIO</a></li>
             <li class="hide-on-large-only"><a class="waves-effect waves-grey" href="#slideshow"><i class="material-icons">info_outline</i>¿QUÉ ES TECNOPARQUE?</a></li>
-            <li class="hide-on-large-only"><a class="waves-effect waves-grey" href="#noticia"><i class="material-icons">info_outline</i>NOTICIAS</a></li>
             <li class="hide-on-large-only"><a href="{{route('creditos')}}" class="waves-effect waves-grey" ><i class="material-icons">help</i> CRÉDITOS</a></li>
             @if (Route::is('/'))
             <li class="hide-on-large-only"><a href="{{ route('login') }}" rel="canonical"  class="waves-effect waves-light btn"><i class="material-icons left">fingerprint</i>{{ __('Login') }}</a></li>
