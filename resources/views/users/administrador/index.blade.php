@@ -6,24 +6,21 @@
 @endphp
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
+        <div class="row no-m-t no-m-b m-r-lg m-l-lg">
+            <div class="left left-align">
+                <h5 class="left-align primary-text">
+                    <i class="material-icons left">supervised_user_circle</i>Usuarios
+                </h5>
+            </div>
+            <div class="right right-align show-on-large hide-on-med-and-down">
+                <ol class="breadcrumbs">
+                    <li><a href="{{route('home')}}">Inicio</a></li>
+                    <li class="active">Usuarios</li>
+                </ol>
+            </div>
+        </div>
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
-                <div class="row no-m-t no-m-b">
-                    <div class="col s8 m8 l10">
-                        <h5 class="left-align primary-text text-darken-3">
-                            <i class="material-icons left">
-                                supervised_user_circle
-                            </i>
-                            Usuarios
-                        </h5>
-                    </div>
-                    <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
-                        <ol class="breadcrumbs">
-                            <li><a href="{{route('home')}}">Inicio</a></li>
-                            <li class="active">Usuarios</li>
-                        </ol>
-                    </div>
-                </div>
                 <div class="card">
                     <div class="card-content">
                         <div class="row no-m-t no-m-b">

@@ -6,34 +6,25 @@
 
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
+        <div class="row no-m-t no-m-b m-r-lg m-l-lg">
+            <div class="left left-align">
+                <h5 class="left-align primary-text">
+                    <a class="footer-text left-align"
+                       href="{{route('usuario.usuarios.show', $user->present()->userDocumento())}}">
+                        <i class="material-icons left">arrow_back</i>
+                    </a>Usuarios
+                </h5>
+            </div>
+            <div class="right right-align show-on-large hide-on-med-and-down">
+                <ol class="breadcrumbs">
+                    <li><a href="{{route('home')}}">Inicio</a></li>
+                    <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
+                    <li class="active">Permisos</li>
+                </ol>
+            </div>
+        </div>
         <div class="row no-m-t no-m-b">
-            <div class="col s12 m12 l12">
-                <div class="row no-m-t no-m-b">
-                    <div class="col s8 m8 l9">
-                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
-                            <a class="footer-text left-align" href="{{route('usuario.usuarios.show', $user->present()->userDocumento())}}">
-                                <i class="material-icons arrow-l">arrow_back</i>
-                            </a>Usuarios
-                        </h5>
-                    </div>
-                    <div class="col s4 m4 l3 rigth-align show-on-large hide-on-med-and-down">
-                        <ol class="breadcrumbs">
-                            <li>
-                                <a href="{{route('home')}}">
-                                    Inicio
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{route('usuario.index')}}">
-                                    Usuarios
-                                </a>
-                            </li>
-                            <li class="active">
-                                Permisos
-                            </li>
-                        </ol>
-                    </div>
-                </div>
+            <div class="col s12 m12 l12
                 <div class="card mailbox-content">
                     <div class="card-content">
                         <div class="row no-m-t no-m-b">
@@ -58,7 +49,6 @@
                                             {!! csrf_field() !!}
                                             {!! method_field('PUT')!!}
                                             <div class="row">
-
                                                 <div class="col s12 m3 l3">
                                                     <div class="col s12 m12 l12">
                                                         @forelse($roles as  $name)

@@ -3,7 +3,7 @@
         {!!$user->present()->userProfileUserImage()!!}
     </div>
     <div class="left">
-        <span class="mailbox-title">
+        <span class="mailbox-title secondary-text">
             {{auth()->check() ? auth()->user()->nombres.' '.auth()->user()->apellidos : ''}}
         </span>
         <span class="mailbox-author">
@@ -14,7 +14,6 @@
             @if(isset($user->fechanacimiento))
             {{$user->fechanacimiento->age}} años
             @endif
-
         </span>
     </div>
 </div>

@@ -1825,7 +1825,7 @@ code:after {
 /* Blockquote */
 
 blockquote {
-    border-left: 5px solid #607d8b;
+    border-left: 5px solid var(--secondary);
 }
 
 

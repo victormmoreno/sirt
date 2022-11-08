@@ -64,7 +64,7 @@
                         <li>
                             <a href="{{ route('perfil.index')}}" rel="canonical" title="Mi perfil">
                                 <div class="notification">
-                                    <div class="notification-icon circle teal lighten-4"><i class="material-icons">perm_contact_calendar</i></div>
+                                    <div class="notification-icon circle bg-secondary"><i class="material-icons">perm_contact_calendar</i></div>
                                     <div class="notification-text"><b>Mi perfil</b></div>
                                 </div>
                             </a>
@@ -72,7 +72,7 @@
                         <li>
                             <a href="{{ route('logout') }}" rel="canonical" onclick="event.preventDefault(); document.getElementById('logout-form-nav').submit();">
                                 <div class="notification">
-                                    <div class="notification-icon circle teal lighten-2">
+                                    <div class="notification-icon circle bg-danger">
                                         <i class="material-icons">power_settings_new</i>
                                     </div>
                                     <div class="notification-text">
@@ -110,7 +110,7 @@
                         @empty
                             <li class="notification-drop-title">
                                 <div class="center">
-                                <i class="large material-icons  teal-text lighten-2 center ">
+                                <i class="large material-icons primary-text center ">
                                         notifications_off
                                     </i>
                                     <p class="center-align">No tienes notificationes</p>
@@ -121,7 +121,7 @@
                         <li class="notification-drop-title">
                             <a href="{{route('notifications.index')}}" rel="canonical">
                                 <div class="notification">
-                                <div class="notification-icon circle cyan">
+                                <div class="notification-icon circle bg-secondary">
                                     <i class="material-icons">add_alert</i>
                                 </div>
                                 <div class="notification-text">
@@ -145,7 +145,7 @@
                         <li>
                             <a href="{{route('help.handbook')}}">
                                 <div class="notification">
-                                <div class="notification-icon circle orange">
+                                <div class="notification-icon circle bg-primary">
                                     <i class="material-icons">book</i>
                                 </div>
                                 <div class="notification-text"><p> Descargar Manual</p></div>
@@ -155,7 +155,7 @@
                         <li>
                             <a href="{{route('support.send')}}">
                                 <div class="notification">
-                                <div class="notification-icon circle orange">
+                                <div class="notification-icon circle bg-primary">
                                     <i class="material-icons">sms</i>
                                 </div>
                                 <div class="notification-text"><p>{{config('app.technical_support.title')}}</p></div>
