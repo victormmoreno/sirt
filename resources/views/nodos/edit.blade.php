@@ -4,27 +4,25 @@
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
+        <div class="row no-m-t no-m-b m-r-lg m-l-lg">
+            <div class="left left-align">
+                <h5 class="left-align primary-text">
+                    <a class="footer-text left-align" href="{{route('nodo.index')}}">
+                        <i class="material-icons left">arrow_back</i>
+                    </a>
+                    Nodos | Editar Nodo
+                </h5>
+            </div>
+            <div class="right right-align show-on-large hide-on-med-and-down">
+                <ol class="breadcrumbs">
+                    <li><a href="{{route('home')}}">Inicio</a></li>
+                    <li><a href="{{route('nodo.index')}}">Nodos</a></li>
+                    <li class="active">Editar Nodo</li>
+                </ol>
+            </div>
+        </div>
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
-                <div class="row">
-                    <div class="col s8 m8 l9">
-                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
-                            <a class="footer-text left-align" href="{{route('nodo.index')}}">
-                                <i class="material-icons arrow-l">
-                                    arrow_back
-                                </i>
-                            </a>
-                            Nodos | Editar Nodo
-                        </h5>
-                    </div>
-                    <div class="col s4 m4 l3 rigth-align  show-on-large hide-on-med-and-down">
-                        <ol class="breadcrumbs">
-                            <li><a href="{{route('home')}}">Inicio</a></li>
-                            <li><a href="{{route('nodo.index')}}">Nodos</a></li>
-                            <li class="active">Editar Nodo</li>
-                        </ol>
-                    </div>
-                </div>
                 <form action="{{ route('nodo.update', $nodo->entidad->id)}}" method="POST" onsubmit="return checkSubmit()">
                 {!! method_field('PUT')!!}
                     @include('nodos.form', [

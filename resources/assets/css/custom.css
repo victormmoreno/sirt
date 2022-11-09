@@ -91,6 +91,38 @@ html {
 .secondary-text {
     color: var(--secondary) !important;
 }
+
+.success-text {
+    color: var(--success) !important;
+}
+
+.info-text {
+    color: var(--info) !important;
+}
+
+.warning-text {
+    color: var(--warning) !important;
+}
+
+.danger-text {
+    color: var(--danger) !important;
+}
+
+.btn-flat.waves-primary {
+    color: var(--primary) !important;
+}
+.btn-flat.waves-success {
+    color: var(--success) !important;
+}
+.btn-flat.waves-danger {
+    color: var(--danger) !important;
+}
+.btn-flat.waves-warning {
+    color: var(--warning) !important;
+}
+.btn-flat.waves-info {
+    color: var(--info) !important;
+}
 .h-12{
     height: 3rem;
 }
