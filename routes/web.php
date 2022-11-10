@@ -821,7 +821,7 @@ Route::group([
 });
 
 
-Route::resource('sublineas', 'SublineaController', ['except' => ['show']])->middleware('disablepreventback');
+Route::resource('sublineas', 'SublineaController', ['except' => ['show', 'destroy']])->middleware('disablepreventback');
 
 Route::get('creditos', function () {
     return view('configuracion.creditos');

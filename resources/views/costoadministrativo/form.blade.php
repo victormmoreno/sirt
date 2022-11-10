@@ -1,13 +1,13 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 
-<div class="col s12 m8 l8 offset-l2 m2">
+<div class="col s12 m8 l8 offset-l2 offset-m2">
     <div class="divider mailbox-divider"></div>
     {!! csrf_field() !!}
 
     @if ($errors->any())
-    <div class="card red lighten-3">
+    <div class="card bg-danger">
         <div class="row">
-            <div class="col s12 m12">
+            <div class="col s12 m12 l12">
                 <div class="card-content white-text">
                     <p>
                         <i class="material-icons left">
@@ -34,7 +34,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="input-field col s12 m6 l6 offset-l3 m3 s3">
+        <div class="input-field col s12 m6 l6 offset-l3 offset-m3">
             <i class="material-icons prefix">
                 settings_input_svideo
             </i>
@@ -46,7 +46,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="input-field col s12 m6 l6 offset-l3 m3 s3">
+        <div class="input-field col s12 m6 l6 offset-l3 offset-m3">
             <i class="material-icons prefix">
                 money
             </i>
@@ -60,15 +60,21 @@
             </input>
         </div>
     </div>
-    <center>
-       
-        <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>{{isset($btnText) ? $btnText : 'Guardar'}}</button> 
-        <a class="btn waves-effect red lighten-2 center-aling" href="{{route('lineas.index')}}">
-            <i class="material-icons right">
-                backspace
-            </i>
-            Cancelar
-        </a>
-    </center>
+    <div class="row">
+        <div class="col s12 m12 l12">
+            <div class="col s12 center-align m-t-sm">
+                <button type="submit"
+                        class="waves-effect waves-light btn bg-secondary center-align">
+                    <i class="material-icons left">send</i>
+                    {{isset($btnText) ? $btnText : 'Guardar'}}
+                </button>
+                <a href="{{route('costoadministrativo.index')}}"
+                   class="modal-action modal-open waves-effect bg-danger btn center-align">
+                    <i class="material-icons right">backspace</i>
+                    Regresar
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 

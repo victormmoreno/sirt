@@ -1,9 +1,6 @@
 @extends('layouts.app')
-
 @section('meta-title', 'Usuario | ' . $user->present()->userFullName())
-
 @section('content')
-
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
         <div class="row no-m-t no-m-b m-r-lg m-l-lg">
@@ -39,7 +36,7 @@
                                             @foreach($user->getRoleNames() as $value)
                                             <div class="chip m-t-sm blue-grey white-text"> {{$value}}</div>
                                             @endforeach
-                                            <div class="position-top-right p f-12 mail-date">Miembro desde {{$user->present()->userCreatedAtFormat()}}</div>
+                                            <div class="position-top-right p f-12 mail-date show-on-large hide-on-med-and-down">Miembro desde {{$user->present()->userCreatedAtFormat()}}</div>
                                         </div>
                                         <div class="right mailbox-buttons">
                                             @if($user->documento != auth()->user()->documento)
@@ -48,7 +45,7 @@
                                                     <a href="{{route('user.newpassword', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Generar nueva contraseña</a>
 
                                                     <a class='dropdown-button btn waves-effect secondary-text btn-flat m-t-xs' href='#' data-activates='dropdown-actions'>Cambiar información</a>
-                                                    <!-- Dropdown Structure -->
+
                                                     <ul id='dropdown-actions' class='dropdown-content'>
                                                         <li><a href="{{route('usuario.usuarios.edit', $user->present()->userDocumento())}}">Cambiar Información personal</a></li>
                                                         <li class="divider"></li>
@@ -97,7 +94,7 @@
                                             <span class="card-title primary-text center">Información básica</span>
                                             <span class="badge green lighten-1 white-text">{{$user->present()->userAcceso()}}</span>
                                             <div class="server-load row">
-                                                <div class="server-stat col s6 m4 l3">
+                                                <div class="server-stat col s12 m4 l3">
                                                     <p>{{$user->present()->userTipoDocuento() }}</p>
                                                     <span>Tipo Documento</span>
                                                 </div>

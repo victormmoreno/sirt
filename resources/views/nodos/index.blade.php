@@ -43,8 +43,8 @@
                                         <a href="{{route('excel.excelnodo')}}" class="waves-effect waves-light btn btn-flat"><i class="material-icons right">cloud_download</i>Descargar</a>
                                     </div>
                                 @endcan
-                                <table class="display responsive-table" id="nodos_table">
-                                    <thead>
+                                <table class="display responsive-table datatable-example dataTable" id="nodos_table" style="width: 100%">
+                                    <thead class="bg-primary white-text">
                                         <th >Centro de Formación</th>
                                         <th >Nombre</th>
                                         <th >Dirección</th>
@@ -56,7 +56,7 @@
                         </div>
                 </div>
                 <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-                    <a href="{{route('nodo.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="Nuevo Nodo">
+                    <a href="{{route('nodo.create')}}"  class="btn tooltipped btn-floating btn-large bg-secondary" data-position="left" data-delay="50" data-tooltip="Nuevo Nodo">
                          <i class="material-icons">add_circle</i>
                     </a>
                 </div>

@@ -31,14 +31,11 @@
                         <div class="row">
                             <div class="row">
                                 <div class="col s12 m12 l12">
-                                    <center>
-                                        <span class="card-title center-align">
+                                    <div class="center-align">
+                                        <span class="card-title center-align primary-text">
                                             Nueva Linea
                                         </span>
-                                        <i class="Small material-icons prefix">
-                                            dns
-                                        </i>
-                                    </center>
+                                    </div>
                                     <div class="divider"></div>
                                     <form action="{{ route('lineas.store')}}" method="POST" onsubmit="return checkSubmit()">
                                         @include('lineas.form', [
@@ -46,7 +43,6 @@
                                         ])
                                     </form>
                                 </div>
-                                
                             </div>
                         </div>
                     </div>

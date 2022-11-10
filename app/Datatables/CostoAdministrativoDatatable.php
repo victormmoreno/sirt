@@ -15,7 +15,7 @@ class CostoAdministrativoDatatable
     {
         return datatables()->of($costos)
             ->addColumn('edit', function ($data) {
-                $button = '<a href="' . route("costoadministrativo.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                $button = '<a href="' . route("costoadministrativo.edit", $data->id) . '" class=" btn tooltipped bg-warning m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
 
                 return $button;
             })

@@ -98,7 +98,7 @@
                     </div>
                 </div>
                 <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-                    <a href="{{route('usuario.search')}}"  class="btn tooltipped btn-floating btn-large grey darken-1" data-position="left" data-delay="50" data-tooltip="Buscar Usuario">
+                    <a href="{{route('usuario.search')}}"  class="btn tooltipped btn-floating bg-secondary btn-large " data-position="left" data-delay="50" data-tooltip="Buscar Usuario">
                         <i class="material-icons">search</i>
                     </a>
                 </div>

@@ -1,7 +1,5 @@
 @extends('layouts.app')
-
 @section('meta-title', 'Nuevo Nodo')
-
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="content">

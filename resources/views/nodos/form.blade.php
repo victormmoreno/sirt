@@ -228,7 +228,6 @@
                 Regresar
             </a>
         </div>
-
     </div>
 </div>
 
