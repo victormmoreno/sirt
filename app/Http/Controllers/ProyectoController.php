@@ -153,13 +153,13 @@ class ProyectoController extends Controller
     {
         return datatables()->of($proyectos)
             ->addColumn('info', function ($data) {
-                $button = "<a class=\"btn light-blue m-b-xs modal-trigger\" href=\"#!\" onclick=\"infoActividad.infoDetailActivityModal('$data->codigo_proyecto')\">
+                $button = "<a class=\"btn bg-info m-b-xs modal-trigger\" href=\"#!\" onclick=\"infoActividad.infoDetailActivityModal('$data->codigo_proyecto')\">
                 <i class=\" material-icons\">info</i>
                 </a>";
                     return $button;
                 })->addColumn('details', function ($data) {
                             $details = '
-                <a class="btn light-blue m-b-xs" onclick="detallesDeUnProyecto(' . $data->id . ')">
+                <a class="btn bg-info m-b-xs" onclick="detallesDeUnProyecto(' . $data->id . ')">
                     <i class="material-icons">info</i>
                 </a>';
                 return $details;
@@ -174,15 +174,15 @@ class ProyectoController extends Controller
                 return $seguimiento;
             })->addColumn('proceso', function ($data) {
                 if ($data->nombre_fase == 'Finalizado' || $data->nombre_fase == 'Suspendido') {
-                    $edit = '<a class="btn m-b-xs" href=' . route('proyecto.detalle', $data->id) . '><i class="material-icons">search</i></a>';
+                    $edit = '<a class="btn bg-secondary m-b-xs" href=' . route('proyecto.detalle', $data->id) . '><i class="material-icons">search</i></a>';
                 } else if ($data->nombre_fase == 'Inicio') {
-                    $edit = '<a class="btn m-b-xs" href=' . route('proyecto.inicio', $data->id) . '><i class="material-icons">search</i></a>';
+                    $edit = '<a class="btn bg-secondary m-b-xs" href=' . route('proyecto.inicio', $data->id) . '><i class="material-icons">search</i></a>';
                 } else if ($data->nombre_fase == 'Planeación') {
-                    $edit = '<a class="btn m-b-xs" href=' . route('proyecto.planeacion', $data->id) . '><i class="material-icons">search</i></a>';
+                    $edit = '<a class="btn bg-secondary m-b-xs" href=' . route('proyecto.planeacion', $data->id) . '><i class="material-icons">search</i></a>';
                 } else if ($data->nombre_fase == 'Ejecución') {
-                    $edit = '<a class="btn m-b-xs" href=' . route('proyecto.ejecucion', $data->id) . '><i class="material-icons">search</i></a>';
+                    $edit = '<a class="btn bg-secondary m-b-xs" href=' . route('proyecto.ejecucion', $data->id) . '><i class="material-icons">search</i></a>';
                 } else {
-                    $edit = '<a class="btn m-b-xs" href=' . route('proyecto.cierre', $data->id) . '><i class="material-icons">search</i></a>';
+                    $edit = '<a class="btn bg-secondary m-b-xs" href=' . route('proyecto.cierre', $data->id) . '><i class="material-icons">search</i></a>';
                 }
                 return $edit;
             })->filter(function ($instance) use ($request) {
@@ -1568,7 +1568,7 @@ class ProyectoController extends Controller
             ->addColumn('add_proyecto', function ($data) {
                     $checkbox = '';
                     if (isset($data->articulacion_proyecto->actividad)) {
-                        $checkbox = '<a class="btn blue" onclick="filter_project.addProjectToArticulacion(\'' .($data->articulacion_proyecto->actividad->codigo_actividad) . '\')">
+                        $checkbox = '<a class="btn bg-secundary" onclick="filter_project.addProjectToArticulacion(\'' .($data->articulacion_proyecto->actividad->codigo_actividad) . '\')">
                                         <i class="material-icons">done</i>
                                     </a>';
                     }

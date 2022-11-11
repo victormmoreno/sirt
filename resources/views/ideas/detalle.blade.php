@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col s12 m12 l12">
-        <div class="card mailbox-content">
+        <div class="card-transparent">
             <div class="card-content">
                 <div class="row no-m-t no-m-b">
                     <div class="col s12 m12 l12">
@@ -52,7 +52,7 @@
                                                                     @if ($idea->producto_parecido == 1)
                                                                         Si.
                                                                         <br>
-                                                                        {{$idea->si_producto_parecido}}                                                                
+                                                                        {{$idea->si_producto_parecido}}
                                                                     @else
                                                                         No.
                                                                     @endif
@@ -66,7 +66,7 @@
                                                                     @if ($idea->reemplaza == 1)
                                                                         Si.
                                                                         <br>
-                                                                        {{$idea->si_reemplaza}}                                                                
+                                                                        {{$idea->si_reemplaza}}
                                                                     @else
                                                                         No.
                                                                     @endif
@@ -78,7 +78,7 @@
                                                 </li>
                                             </ul>
                                             <ul class="collection with-header">
-                                                <li class="collection-header"><h5>Usuario que registra la idea</h5></li>
+                                                <li class="collection-header"><h5 class="primary-text">Usuario que registra la idea</h5></li>
                                                 <li class="collection-item">
                                                     <div class="col s12 m6 l6">
                                                         <ul class="collection">
@@ -118,7 +118,7 @@
                                                                     @if (isset($idea->talento->user->celular))
                                                                         {{$idea->talento->user->celular}}
                                                                     @else
-                                                                        {{$idea->telefono_contacto}}                                                                    
+                                                                        {{$idea->telefono_contacto}}
                                                                     @endif
                                                                 </p>
                                                             </li>
@@ -263,7 +263,7 @@
                                                             </li>
                                                             <li class="collection-item">
                                                                 <span class="title cyan-text text-darken-3">
-                                                                    ¿Vas a entregar directamente el producto y/o a través de intermediarios? ¿Por qué canales, on-line, punto de venta? 
+                                                                    ¿Vas a entregar directamente el producto y/o a través de intermediarios? ¿Por qué canales, on-line, punto de venta?
                                                                 </span>
                                                                 <p>
                                                                     @if ($idea->quien_entrega == null)
@@ -285,10 +285,10 @@
                                                                     @if ($idea->packing == 1)
                                                                         Si.
                                                                         <br>
-                                                                        {{$idea->tipo_packing}}                                                                
+                                                                        {{$idea->tipo_packing}}
                                                                     @else
                                                                         No.
-                                                                    @endif                                                          
+                                                                    @endif
                                                                 </p>
                                                             </li>
                                                         </ul>
@@ -325,7 +325,7 @@
                                                                         No hay información disponible
                                                                     @else
                                                                         {{$idea->valor_clientes}}
-                                                                    @endif                                                       
+                                                                    @endif
                                                                 </p>
                                                             </li>
                                                         </ul>
@@ -354,7 +354,7 @@
                                                                         No hay información disponible
                                                                     @else
                                                                         {{$idea->forma_juridica}}
-                                                                    @endif    
+                                                                    @endif
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item">
@@ -366,7 +366,7 @@
                                                                         No hay información disponible
                                                                     @else
                                                                         {{$idea->rutamodel->ruta}}
-                                                                    @endif    
+                                                                    @endif
                                                                 </p>
                                                             </li>
                                                         </ul>
@@ -381,10 +381,10 @@
                                                                     @if ($idea->requisitos_legales == 1)
                                                                         Si.
                                                                         <br>
-                                                                        {{$idea->si_requisitos_legales}}                                                                
+                                                                        {{$idea->si_requisitos_legales}}
                                                                     @else
                                                                         No.
-                                                                    @endif                                                   
+                                                                    @endif
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item">
@@ -395,10 +395,10 @@
                                                                     @if ($idea->requiere_certificaciones == 1)
                                                                         Si.
                                                                         <br>
-                                                                        {{$idea->si_requiere_certificaciones}}                                                                
+                                                                        {{$idea->si_requiere_certificaciones}}
                                                                     @else
                                                                         No.
-                                                                    @endif                                                   
+                                                                    @endif
                                                                 </p>
                                                             </li>
                                                         </ul>
@@ -430,10 +430,10 @@
                                                                     @if ($idea->recursos_necesarios == 1)
                                                                         Si.
                                                                         <br>
-                                                                        {{$idea->si_recursos_necesarios}}                                                                
+                                                                        {{$idea->si_recursos_necesarios}}
                                                                     @else
                                                                         No.
-                                                                    @endif 
+                                                                    @endif
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item">
@@ -479,7 +479,7 @@
                                                                         {{$idea->convocatoria}}
                                                                     @else
                                                                         No.
-                                                                    @endif                                          
+                                                                    @endif
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item">
@@ -493,7 +493,7 @@
                                                                         {{$idea->empresa}}
                                                                     @else
                                                                         No.
-                                                                    @endif                                          
+                                                                    @endif
                                                                 </p>
                                                             </li>
                                                         </ul>
