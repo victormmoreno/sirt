@@ -2,7 +2,6 @@
     <span class="card-title center-align primary-text"><b>Proyecto -
             {{ $proyecto->present()->proyectoCode() }}</b></span>
 </div>
-
 <div class="divider"></div>
 <div class="card bg-info">
     <div class="row no-m-t no-m-b">

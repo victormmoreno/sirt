@@ -1159,11 +1159,11 @@ function reiniciarCamposTaller() {
 
 function prepararFilaEnLaTablaDeIdeasTaller(ajax, confirmacion, asistencia) {
   let idIdea = ajax.detalles.id;
-  let fila = '<tr class="selected" id=ideaAsociadaTaller' + idIdea + '>' + 
+  let fila = '<tr class="selected" id=ideaAsociadaTaller' + idIdea + '>' +
       '<td><input type="hidden" name="ideas_taller[]" value="' + idIdea + '">' + ajax.detalles.codigo_idea + ' - ' + ajax.detalles.nombre_proyecto + '</td>' +
       '<td><input type="hidden" name="confirmaciones[]" value="' + confirmacion + '">' + getYesOrNot(confirmacion) + '</td>' +
       '<td><input type="hidden" name="asistencias[]" value="' + asistencia + '">' + getYesOrNot(asistencia) + '</td>' +
-      '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarIdeaDelTaller(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' + 
+      '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarIdeaDelTaller(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' +
       '</tr>';
   return fila;
 }
@@ -1530,8 +1530,8 @@ $('#txthoraidea').bootstrapMaterialDatePicker({
     weekStart : 1, cancelText : 'Cancelar',
     okText: 'Guardar'
 });
-  
-$('input[name*="horas_fin"]').bootstrapMaterialDatePicker({ 
+
+$('input[name*="horas_fin"]').bootstrapMaterialDatePicker({
     time:true,
     date:false,
     shortTime:true,
@@ -1540,8 +1540,8 @@ $('input[name*="horas_fin"]').bootstrapMaterialDatePicker({
     weekStart : 1, cancelText : 'Cancelar',
     okText: 'Guardar'
 });
- 
-$('input[name*="horas_inicio"]').bootstrapMaterialDatePicker({ 
+
+$('input[name*="horas_inicio"]').bootstrapMaterialDatePicker({
     time:true,
     date:false,
     shortTime: true,
@@ -1550,8 +1550,8 @@ $('input[name*="horas_inicio"]').bootstrapMaterialDatePicker({
     weekStart : 1, cancelText : 'Cancelar',
     okText: 'Guardar'
  });
- 
-$('#txthorafingestor').bootstrapMaterialDatePicker({ 
+
+$('#txthorafingestor').bootstrapMaterialDatePicker({
     time:true,
     date:false,
     shortTime: true,
@@ -1707,11 +1707,11 @@ function pintarIdeaEnLaTabla(id, hora, direccion) {
 
 function prepararFilaEnLaTablaDeIdeas(ajax, hora, direccion) {
 let idIdea = ajax.detalles.id;
-let fila = '<tr class="selected" id=ideaAsociadaAgendamiento' + idIdea + '>' + 
+let fila = '<tr class="selected" id=ideaAsociadaAgendamiento' + idIdea + '>' +
     '<td><input type="hidden" name="ideas[]" value="' + idIdea + '">' + ajax.detalles.nombre_proyecto + '</td>' +
     '<td><input type="hidden" name="horas[]" value="' + hora + '">' + hora + '</td>' +
     '<td><input type="hidden" name="direcciones[]" value="' + direccion + '">' + direccion + '</td>' +
-    '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarIdeaDelAgendamiento(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' + 
+    '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarIdeaDelAgendamiento(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' +
     '</tr>';
 return fila;
 }
@@ -1772,6 +1772,7 @@ $('#txtdireccion').val('');
 $("label[for='txtdireccion']").removeClass('active');
 $("label[for='txthoraidea']").removeClass('active');
 }
+
 $(document).on('submit', 'form#formComiteRealizadoCreate', function (event) {
     event.preventDefault();
     Swal.fire({
@@ -3844,7 +3845,7 @@ function talentoSeAsocioALaArticulacion() {
 
 function prepararFilaEnLaTablaDeTalentos_Articulacion(ajax) { // El ajax.talento.id es el id del TALENTO, no del usuario
     let idTalento = ajax.talento.id;
-    let fila = '<tr class="selected" id=talentoAsociadoALaArticulacion' + idTalento + '>' + '<td><input type="radio" class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.talento.documento + ' - ' + ajax.talento.talento + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarTalentoDeArticulacion_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let fila = '<tr class="selected" id=talentoAsociadoALaArticulacion' + idTalento + '>' + '<td><input type="radio" class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.talento.documento + ' - ' + ajax.talento.talento + '</td>' + '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarTalentoDeArticulacion_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
@@ -5384,14 +5385,14 @@ function prepararFilaEnLaTablaDeTalentos(ajax, isInterlocutor) {
         talentInterlocutor = "checked";
     }// El ajax.talento.id es el id del TALENTO, no del usuario
     let idTalento = ajax.talento.id;
-    let fila = '<tr class="selected" id=talentoAsociadoAProyecto' + idTalento + '>' + '<td><input type="radio" '+ talentInterlocutor +' class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.talento.documento + ' - ' + ajax.talento.talento + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarTalentoDeProyecto_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let fila = '<tr class="selected" id=talentoAsociadoAProyecto' + idTalento + '>' + '<td><input type="radio" '+ talentInterlocutor +' class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.talento.documento + ' - ' + ajax.talento.talento + '</td>' + '<td><a class="waves-effect bg-danger btn" onclick="eliminarTalentoDeProyecto_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
 // Prepara un string con la fila que se va a pintar en la tabla de los propietarios (users/persona) que son dueños de la propiedad intelectual
 function prepararFilaEnLaTablaDePropietarios_Users(ajax) { // El ajax.user.id es el id del USER
     let idUser = ajax.user.id;
-    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Persona' + idUser + '>' + '<td><input type="hidden" name="propietarios_user[]" value="' + idUser + '">' + ajax.user.documento + ' - ' + ajax.user.nombres + ' ' + ajax.user.apellidos + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Persona(' + idUser + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Persona' + idUser + '>' + '<td><input type="hidden" name="propietarios_user[]" value="' + idUser + '">' + ajax.user.documento + ' - ' + ajax.user.nombres + ' ' + ajax.user.apellidos + '</td>' + '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Persona(' + idUser + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
@@ -5402,7 +5403,7 @@ function prepararFilaEnLaTablaDePropietarios_Empresa(ajax) {
     let codigo = ajax.sede.empresa.nit;
     let nombre = ajax.sede.empresa.nombre;
     let nombre_sede = ajax.sede.nombre_sede;
-    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Empresa' + idSede + '>' + '<td><input type="hidden" name="propietarios_sedes[]" value="' + idSede + '">' + codigo + ' - ' + nombre + ' ('+ nombre_sede +')</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Empresa(' + idSede + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Empresa' + idSede + '>' + '<td><input type="hidden" name="propietarios_sedes[]" value="' + idSede + '">' + codigo + ' - ' + nombre + ' ('+ nombre_sede +')</td>' + '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Empresa(' + idSede + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
@@ -5411,7 +5412,7 @@ function prepararFilaEnLaTablaDePropietarios_Grupos(ajax) { // El ajax.user.id e
     let idGrupo = ajax.detalles.id;
     let codigo = ajax.detalles.codigo_grupo;
     let nombre = ajax.detalles.entidad.nombre;
-    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Grupo' + idGrupo + '>' + '<td><input type="hidden" name="propietarios_grupos[]" value="' + idGrupo + '">' + codigo + ' - ' + nombre + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Grupo(' + idGrupo + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Grupo' + idGrupo + '>' + '<td><input type="hidden" name="propietarios_grupos[]" value="' + idGrupo + '">' + codigo + ' - ' + nombre + '</td>' + '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Grupo(' + idGrupo + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
@@ -5651,7 +5652,7 @@ function addValueToFields(nombre, codigo, value){
 // Asocia una idea de proyecto al registro de un proyecto
 function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
     $('#txtidea_id').val(id);
-    
+
     $.ajax({
         dataType: 'json',
         type: 'get',
@@ -5661,7 +5662,7 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
         if(idea =! null){
             console.log(response);
             dumpAggregateValuesIntoTables();
-            
+
             addValueToFields(nombre, codigo, value);
             ideaProyectoAsociadaConExito(codigo, nombre);
 
@@ -5675,11 +5676,11 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
             }
             $('#ideasDeProyectoConEmprendedores_modal').closeModal();
         }
-        
+
     }).fail(function( jqXHR, textStatus, errorThrown ) {
         errorAjax(jqXHR, textStatus, errorThrown);
     });
-    
+
 }
 
 // Consultas las ideas de proyecto que fueron aprobadas en el comité
@@ -6022,7 +6023,7 @@ function addEmpresaAEdt(id) {
       let fila = '<tr class="selected" id=entidadAsociadaAEdt'+idEntidad+'>'
       +'<td><input type="hidden" name="entidades[]" value="'+idEntidad+'">'+ajax.detalles.nit+'</td>'
       +'<td>'+ajax.detalles.nombre+'</td>'
-      +'<td><a class="waves-effect red lighten-3 btn" onclick="eliminarEntidadAsociadaAEdt('+idEntidad+');"><i class="material-icons">delete_sweep</i></a></td>'
+      +'<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarEntidadAsociadaAEdt('+idEntidad+');"><i class="material-icons">delete_sweep</i></a></td>'
       +'</tr>';
       $('#detalleEntidadesAsociadasAEdt').append(fila);
       Swal.fire({

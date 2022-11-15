@@ -75,7 +75,7 @@
                         <label class="error" for="txttiempouso" id="txttiempouso-error"></label>
                 </div>
                 <div class="input-field col s12 m12 l2 offset-s3 offset-m4">
-                    <a class="waves-effect waves-light btn blue m-b-xs btnAgregarEquipo"  onclick="agregarEquipoAusoInfraestructura()">Agregar Equipo</a>
+                    <a class="waves-effect waves-light btn bg-secondary white-text m-b-xs btnAgregarEquipo"  onclick="agregarEquipoAusoInfraestructura()">Agregar Equipo</a>
                 </div>
                 <table class="striped centered responsive-table" id="tbldetallelineas">
                     <thead>
@@ -97,7 +97,7 @@
                                             {{$equipo->pivot->tiempo}}
                                         </td>
                                         <td>
-                                            <a class="waves-effect red lighten-3 btn" onclick="eliminarEquipo({{$equipo->id}});">
+                                            <a class="waves-effect bg-danger white-text btn" onclick="eliminarEquipo({{$equipo->id}});">
                                                 <i class="material-icons">delete_sweep</i>
                                             </a>
                                         </td>

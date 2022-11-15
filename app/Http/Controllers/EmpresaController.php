@@ -103,17 +103,17 @@ class EmpresaController extends Controller
         return datatables()->of($empresas)
             ->addColumn('details', function ($data) {
             $button = '
-            <a class="btn m-b-xs" href="'.route('empresa.detalle', $data->id).'">
+            <a class="btn bg-info m-b-xs" href="'.route('empresa.detalle', $data->id).'">
                 <i class="material-icons">search</i>
             </a>
             ';
             return $button;
             })->addColumn('add_propietario', function ($data) {
-                $add_propietario = '<a onclick="addEntidadEmpresa('.$data->id.')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+                $add_propietario = '<a onclick="addEntidadEmpresa('.$data->id.')" class="btn bg-secondary m-b-xs"><i class="material-icons">done</i></a>';
                 return $add_propietario;
             })
             ->addColumn('add_company_art', function ($data) {
-                $add_propietario = '<a onclick="addCompanyArticulacion('.$data->id.')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+                $add_propietario = '<a onclick="addCompanyArticulacion('.$data->id.')" class="btn bg-secondary m-b-xs"><i class="material-icons">done</i></a>';
                 return $add_propietario;
             })
             ->rawColumns(['details', 'edit', 'add_propietario', 'add_company_art'])->make(true);

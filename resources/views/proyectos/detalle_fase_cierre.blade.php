@@ -87,7 +87,7 @@
                             {{$proyecto->present()->proyectoConclusiones()}}
                         </p>
                     </li>
-        
+
                 </ul>
             </div>
             <div class="col s12 m4 l4">
@@ -220,7 +220,7 @@
     </div>
 </div>
 <div class="center">
-    <span class="mailbox-title orange-text">
+    <span class="mailbox-title primary-text">
         <i class="material-icons">attach_file</i>
         Evidencias de la fase de cierre.
     </span>

@@ -1,6 +1,6 @@
 <div class="divider mailbox-divider"></div>
 <div class="center">
-    <span class="mailbox-title orange-text">
+    <span class="mailbox-title primary-text">
         <i class="material-icons">attach_file</i>
         Evidencias de la fase de ejecución.
     </span>

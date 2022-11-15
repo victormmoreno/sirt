@@ -128,7 +128,7 @@ csibt_create = {
         +'<td>'+asistencia+'</td>'
         +'<td>'+elemento.Observaciones+'</td>'
         +'<td>'+admitido+'</td>'
-        +'<td><a class="waves-effect red lighten-3 btn" onclick="csibt_create.getEliminarIdeaEnLaSesionDelComite('+elemento.id+');"><i class="material-icons">delete_sweep</i></a></td>'
+        +'<td><a class="waves-effect bg-danger white-text btn" onclick="csibt_create.getEliminarIdeaEnLaSesionDelComite('+elemento.id+');"><i class="material-icons">delete_sweep</i></a></td>'
         +'</tr>');
       })
     })

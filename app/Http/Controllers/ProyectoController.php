@@ -167,10 +167,10 @@ class ProyectoController extends Controller
                 $seguimiento = '<a class="btn green lighten-1 m-b-xs" href=' . route('pdf.actividad.usos', [$data->id, 'proyecto']) . ' target="_blank"><i class="far fa-file-pdf"></i></a>';
                 return $seguimiento;
             })->addColumn('download_trazabilidad', function ($data) {
-                $seguimiento = '<a class="btn green lighten-1 m-b-xs" href=' . route('excel.proyecto.trazabilidad', $data->actividad_id) . '  target="_blank"><i class="far fa-file-excel"></i></a>';
+                $seguimiento = '<a class="btn bg-success white-text m-b-xs" href=' . route('excel.proyecto.trazabilidad', $data->actividad_id) . '  target="_blank"><i class="far fa-file-excel"></i></a>';
                 return $seguimiento;
             })->addColumn('ver_horas', function ($data) {
-                $seguimiento = '<a class="btn brown lighten-1 m-b-xs" onclick="verHorasDeExpertosEnProyecto('.$data->id.')"><i class="material-icons">access_time</i></a>';
+                $seguimiento = '<a class="btn bg-warning white-text m-b-xs" onclick="verHorasDeExpertosEnProyecto('.$data->id.')"><i class="material-icons">access_time</i></a>';
                 return $seguimiento;
             })->addColumn('proceso', function ($data) {
                 if ($data->nombre_fase == 'Finalizado' || $data->nombre_fase == 'Suspendido') {
