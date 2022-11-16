@@ -435,7 +435,6 @@ class ArticulationStageRepository
         }
         //return $articulationState->notifications()->where('descripcion',  $status)->whereNull('fecha_aceptacion')->where('estado', \App\Models\ControlNotificaciones::IsPendiente())->get()->last();
         //return $articulationState->notifications()->where('estado', \App\Models\ControlNotificaciones::IsPendiente())->get()->last();
-
     }
 
     public function verifyRecipientNotification($notificacion)

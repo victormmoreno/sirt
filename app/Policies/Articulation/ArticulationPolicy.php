@@ -3,6 +3,8 @@
 namespace App\Policies\Articulation;
 
 use App\Models\Articulation;
+use App\Models\ControlNotificaciones;
+use App\Models\Fase;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\ArticulationStage;
@@ -107,6 +109,92 @@ class ArticulationPolicy
     }
 
     /**
+     * Determine if the given articulations can be change talent by the user.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Articulation  $articulation
+     * @return bool
+     */
+    public function changeTalents(User $user, Articulation $articulation):bool
+    {
+        return (bool) $user->hasAnyRole([
+                User::IsActivador(),
+                User::IsArticulador()
+            ])
+            && (session()->has('login_role')
+                && (
+                    session()->get('login_role') == User::IsActivador()
+                    || session()->get('login_role') == User::IsArticulador()
+                )
+            ) && $articulation->phase_id != Fase::IsFinalizado();
+    }
+
+    /**
+     * Determine if the given articulations can be change talent by the user.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\$articulation  $articulation
+     * @return bool
+     */
+    public function updatePhaseClosing(User $user, Articulation $articulation):bool
+    {
+        return (bool) $user->hasAnyRole([
+                User::IsActivador(),
+                User::IsArticulador()
+            ])
+            && (session()->has('login_role')
+                && (
+                    session()->get('login_role') == User::IsActivador()
+                    || session()->get('login_role') == User::IsArticulador()
+                )
+            ) && $articulation->phase_id == Fase::IsCierre();
+    }
+
+    /**
+     * Determine if the given articulations can be change talent by the user.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Articulation  $articulation
+     * @return bool
+     */
+    public function showClosing(User $user, Articulation $articulation):bool
+    {
+        return (bool) $user->hasAnyRole([
+                User::IsArticulador()
+            ])
+            && (session()->has('login_role')
+                && session()->get('login_role') == User::IsArticulador()
+            ) && $articulation->phase_id == Fase::IsCierre();
+    }
+
+    /**
+     * Determine if the given articulations can be change talent by the user.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Articulation  $articulation
+     * @return bool
+     */
+    public function showExecution(User $user, Articulation $articulation):bool
+    {
+        return $articulation->phase_id == Fase::IsEjecucion();
+    }
+    /**
+     * Determine if the given articulations can be change talent by the user.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Articulation $articulation
+     * @return bool
+     */
+    public function showStart(User $user, Articulation $articulation):bool
+    {
+        if($articulation->phase_id == Fase::IsInicio()){
+            return true;
+        }
+        return false;
+
+    }
+
+    /**
      * Determine if the given articulations can be deleted by the user..
      *
      * @param  \App\Models\User  $user
@@ -121,5 +209,52 @@ class ArticulationPolicy
             && auth()->user()->articulador->nodo->id == $articulationStage->node_id
             && $articulationStage->articulations->count() > 0;
         //$articulationSubtype->articulations->IsEmpty()
+    }
+    /**
+     * Determine if the given articulations can be change talent by the user.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\$articulation  $articulation
+     * @return bool
+     */
+    public function requestApproval(User $user, Articulation $articulation):bool
+    {
+        return (bool) $user->hasAnyRole([
+                User::IsActivador(),
+                User::IsArticulador()
+            ])
+            && (session()->has('login_role')
+                && (
+                    session()->get('login_role') == User::IsActivador()
+                    || session()->get('login_role') == User::IsArticulador()
+                )
+            ) && $articulation->phase_id == Fase::IsCierre();
+    }
+
+    /**
+     * Determina quienes y cuando se pueden ver los botones de aprobación o rechazo de un cambio de fase
+     *
+     * @param \App\User $user
+     * @param \App\Models\Proyecto $ult_notificacion
+     * @return bool
+     * @author dum
+     **/
+    public function showButtonAprobacion(User $user, Articulation $articulation)
+    {
+        //$ult_notificacion = $articulationStage->notifications()->where('estado', ControlNotificaciones::IsPendiente())->get()->last();
+        $ult_notificacion = $articulation->notifications()->get()->last();
+        if ($ult_notificacion != null) {
+            if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsDinamizador()) {
+                if ($ult_notificacion->estado == $ult_notificacion->IsPendiente()) {
+                    if (session()->get('login_role') == $user->IsAdministrador() && $ult_notificacion->estado == ControlNotificaciones::IsPendiente()) {
+                        return true;
+                    } else {
+                        if ($ult_notificacion->receptor->id == auth()->user()->id && $ult_notificacion->rol_receptor->name == session()->get('login_role') && $ult_notificacion->estado == ControlNotificaciones::IsPendiente()) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

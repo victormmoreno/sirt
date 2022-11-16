@@ -51,7 +51,7 @@ $('#download_articulationStage').click(function(){
     window.location = url;
 });
 
-const articulationStage ={
+const articulationStage = {
     filtersDatatableAccompanibles: function(filter_node_articulationStage,filter_year_articulationStage, filter_status_articulationStage){
         let groupColumn = 1;
         let table = $('#articulationStage_data_table').DataTable({
@@ -498,4 +498,7 @@ $(document).on('submit', 'form#interlocutor-form', function (event) {
     const url = form.attr("action");
     articulationStage.updateInterlocutor(form, data, url);
 });
+
+
+
 

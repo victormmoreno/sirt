@@ -40,6 +40,7 @@
                 </div>
             </div>
         </div>
+        @include('articulation.shared.articulation-stage-modal')
         @include('articulation.shared.project-modal')
         @include('articulation.shared.interlocutor-talents-modal')
     </main>

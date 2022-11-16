@@ -1,53 +1,67 @@
 @extends('layouts.app')
 @section('meta-title', __('articulation-stage'))
 @section('content')
-@php
-  $year = Carbon\Carbon::now()->year;
-@endphp
-<main class="mn-inner">
-    <div class="row content">
-        <div class="row no-m-t no-m-b">
-            <div class="left left-align">
-                <h5 class="left-align orange-text text-darken-3">
-                    <i class="material-icons left">autorenew</i>{{__('articulation-stage')}}
-                </h5>
+    @php
+        $year = Carbon\Carbon::now()->year;
+    @endphp
+    <main class="mn-inner">
+        <div class="row content">
+            <div class="row no-m-t no-m-b">
+                <div class="left left-align">
+                    <h5 class="left-align orange-text text-darken-3">
+                        <i class="material-icons left">autorenew</i>{{__('articulation-stage')}}
+                    </h5>
+                </div>
+                <div class="right right-align show-on-large hide-on-med-and-down">
+                    <ol class="breadcrumbs">
+                        <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
+                        <li><a href="{{route('articulation-stage')}}">{{__('articulation-stage')}}</a></li>
+                        <li>
+                            <a href="{{route('articulation-stage.show',  $articulation->articulationstage)}}">{{ $articulation->articulationstage->present()->articulationStageCode() }}</a>
+                        </li>
+                        <li>
+                            <a href="{{route('articulations.show',  $articulation)}}">{{ $articulation->present()->articulationCode() }}</a>
+                        </li>
+                        <li class="active">Ejecución</li>
+                    </ol>
+                </div>
             </div>
-            <div class="right right-align show-on-large hide-on-med-and-down">
-                <ol class="breadcrumbs">
-                    <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
-                    <li ><a href="{{route('articulation-stage')}}">{{__('articulation-stage')}}</a></li>
-                    <li ><a href="{{route('articulation-stage.show',  $articulation->articulationstage)}}">{{ $articulation->articulationstage->present()->articulationStageCode() }}</a></li>
-                    <li ><a href="{{route('articulations.show',  $articulation)}}">{{ $articulation->present()->articulationCode() }}</a></li>
-                    <li class="active">Ejecución</li>
-                </ol>
-            </div>
-        </div>
-        <div class="col s12 m12 l12">
-            <div class="card mailbox-content">
-                <div class="card-content">
-                    <div class="row">
-                        <div class="col s12 m12 l12">
-                            <form id="articulation-execution-phase-form" action="{{route('articulation.update.execution', $articulation)}}" method="POST" onsubmit="return checkSubmit()">
-                                @csrf
-                                {!! method_field('PUT')!!}
-                                <div>
-                                    @include('articulation.form.execution-form', ['btnText' => 'Modificar'])
-                                </div>
-                                <div class="row">
-                                    @include('articulation.table-archive-phase', ['fase' => 'ejecucion'])
-                                </div>
-                                <center>
-                                    <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Guardar</button>
-                                    <a href="{{ route('articulations.show', $articulation) }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
-                                </center>
-                            </form>
+            <div class="col s12 m12 l12">
+                <div class="card mailbox-content">
+                    <div class="card-content">
+                        <div class="row">
+                            <div class="col s12 m12 l12">
+                                <form id="articulation-execution-phase-form"
+                                      action="{{route('articulation.update.execution', $articulation)}}" method="POST"
+                                      onsubmit="return checkSubmit()">
+                                    <div class="wizard clearfix">
+                                        @csrf
+                                        {!! method_field('PUT')!!}
+                                        <div>
+                                            @include('articulation.form.execution-form', ['btnText' => 'Modificar'])
+                                        </div>
+                                        <div class="row">
+                                            @include('articulation.table-archive-phase', ['fase' => 'Execution'])
+                                        </div>
+                                        <div class="    actions clearfix right-align">
+                                            <ul role="menu" aria-label="Paginación">
+                                                <li aria-hidden="false" aria-disabled="false">
+                                                    <a href="{{route('articulations.show', $articulation)}}" role="menuitem" class="waves-effect waves-blue btn-flat orange-text">Volver atrás</a>
+                                                </li>
+                                                <li class="disabled" aria-disabled="true">
+                                                    <button type="submit" role="menuitem" class="btn waves-effect waves-blue btn-flat orange-text">Guardar</button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 @endsection
 @push('script')
     <script>
@@ -68,7 +82,7 @@
         });
 
         Dropzone.on('success', function (res) {
-            $('#archivesArticulations').dataTable().fnDestroy();
+            $('#archivesArticulationsExecution').dataTable().fnDestroy();
             datatableArchiveArticulation();
             Swal.fire({
                 toast: true,
@@ -96,7 +110,7 @@
         Dropzone.autoDiscover = false;
 
         function datatableArchiveArticulation() {
-            $('#archivesArticulations').DataTable({
+            $('#archivesArticulationsExecution').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
                 },
@@ -106,7 +120,7 @@
                 "ajax": {
                     "url": "{{route('articulation.files', [$articulation->id])}}",
                     "type": "get",
-                    "data":{
+                    "data": {
                         type: "{{ basename(\App\Models\Articulation::class)}}",
                         phase: "Ejecución"
                     },

@@ -189,7 +189,7 @@ $( document ).ready(function() {
                 processData: false,
                 success: function (response) {
                     $('button[type="submit"]').removeAttr('disabled');
-                    printErroresFormulario(response.data);
+                    printErrorsForm(response.data);
                     filter_articulations.messageArticulation(response.data,  'registrada', 'Registro exitoso');
                 },
                 error: function (xhr, textStatus, errorThrown) {
@@ -261,6 +261,9 @@ $( document ).ready(function() {
     });
     $('#advanced_talent_filter').click(function () {
         filter_articulations.queryTalentos();
+    });
+    $('#show_type_articulations').click(function () {
+        $('#type_articulations_modal').openModal();
     });
     filter_articulations.valueArticulationType();
 });
@@ -476,5 +479,78 @@ const filter_articulations = {
                     });
                 }
         });
-    }
+    },
+    updateTalentsParticipants: function(form, data, url) {
+        $.ajax({
+            type: form.attr('method'),
+            url: url,
+            data: data,
+            cache: false,
+            contentType: false,
+            dataType: 'json',
+            processData: false,
+            success: function (response) {
+                $('button[type="submit"]').removeAttr('disabled');
+                $('.error').hide();
+                printErrorsForm(response.data);
+                filter_articulations.messageArticulation(response.data, 'actualizado', 'Modificación Exitosa');
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                Swal.fire({
+                    title: 'Error, vuelve a intentarlo',
+                    html: "Error: " + textStatus,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok',
+                });
+            }
+        });
+    },
+    ajaxSendFormArticulationClosing: function(form, data, url) {
+        $.ajax({
+            type: form.attr('method'),
+            url: url,
+            data: data,
+            cache: false,
+            contentType: false,
+            dataType: 'json',
+            processData: false,
+            success: function (response) {
+                console.log(response.data);
+                $('button[type="submit"]').removeAttr('disabled');
+                $('.error').hide();
+                printErrorsForm(response.data);
+                filter_articulations.messageArticulation(response.data, 'registro guardado', 'registro guardado');
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                Swal.fire({
+                    title: 'Error, vuelve a intentarlo',
+                    html: "Error: " + textStatus,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok',
+                });
+            }
+        });
+    },
 }
+
+$(document).on('submit', 'form#talents-form', function (event) {
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    const form = $(this);
+    const data = new FormData($(this)[0]);
+    const url = form.attr("action");
+    filter_articulations.updateTalentsParticipants(form, data, url);
+});
+
+$(document).on('submit', 'form#articulation-form-closing', function (event) {
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    filter_articulations.ajaxSendFormArticulationClosing(form, data, url);
+});

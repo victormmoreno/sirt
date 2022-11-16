@@ -47,7 +47,7 @@
                                                 <ul class="tabs tab-demo z-depth-1" style="width: 100%;">
                                                     <li class="tab col s3"><a href="#startphase" class="active">Inicio</a></li>
                                                     <li class="tab col s3"><a class="" href="#executionphase">Ejecución</a></li>
-                                                    <li class="tab col s3"><a href="#fasecierre" class="">Cierre</a></li>
+                                                    <li class="tab col s3"><a href="#closingphase" class="">Cierre</a></li>
                                                 </ul>
                                             </div>
                                             <div id="startphase" class="col s12" style="display: block;">
@@ -56,9 +56,9 @@
                                             <div id="executionphase" class="col s12" style="display: none;">
                                                 @include('articulation.detail.execution-phase-detail')
                                             </div>
-                                            {{-- <div id="fasecierre" class="col s12" style="display: none;">
-                                                @include('articulacionespbt.detail.detail-fase-cierre')
-                                            </div> --}}
+                                            <div id="closingphase" class="col s12" style="display: none;">
+                                                @include('articulation.detail.closing-phase-detail')
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -73,10 +73,11 @@
 @endsection
 @push('script')
     <script>
-        datatableArchiveArticulation();
+        datatableArchiveArticulationExecution();
+        datatableArchiveArticulationClosing();
 
-        function datatableArchiveArticulation() {
-            $('#archivesArticulations').DataTable({
+        function datatableArchiveArticulationExecution() {
+            $('#archivesArticulationsExecution').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
                 },
@@ -89,6 +90,36 @@
                     "data":{
                         type: "{{ basename(\App\Models\Articulation::class)}}",
                         phase: "Ejecución"
+                    },
+                },
+                columns: [
+                    {
+                        data: 'file',
+                        name: 'file',
+                        orderable: false,
+                    },
+                    {
+                        data: 'download',
+                        name: 'download',
+                        orderable: false,
+                    }
+                ],
+            });
+        }
+        function datatableArchiveArticulationClosing() {
+            $('#archivesArticulationsClosing').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                order: false,
+                "ajax": {
+                    "url": "{{route('articulation.files', [$articulation->id])}}",
+                    "type": "get",
+                    "data":{
+                        type: "{{ basename(\App\Models\Articulation::class)}}",
+                        phase: "Cierre"
                     },
                 },
                 columns: [

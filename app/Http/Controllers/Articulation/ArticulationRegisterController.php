@@ -52,7 +52,7 @@ class ArticulationRegisterController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'data' => [
-                    'state'   => 'danger',
+                    'fail'   => true,
                     'errors' => $validator->errors(),
                 ]
             ]);
@@ -62,7 +62,7 @@ class ArticulationRegisterController extends Controller
             if($response["isCompleted"]){
                 return response()->json([
                     'data' => [
-                        'state'   => 'success',
+                        'fail'   => false,
                         'url' => route('articulations.show', $response['data']),
                         'status_code' => Response::HTTP_CREATED,
                         'errors' => [],
@@ -71,8 +71,8 @@ class ArticulationRegisterController extends Controller
             }else{
                 return response()->json([
                     'data' => [
-                        'state'   => 'danger',
-                        'errors' => [],
+                        'fail'   => true,
+                        'errors' => $this->articulationRespository->getError(),
                     ],
                 ]);
             }
@@ -91,7 +91,7 @@ class ArticulationRegisterController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'data' => [
-                    'state' => 'danger',
+                    'fail' => true,
                     'errors' => $validator->errors(),
                 ]
             ]);
@@ -100,7 +100,7 @@ class ArticulationRegisterController extends Controller
             if($response["isCompleted"]){
                 return response()->json([
                     'data' => [
-                        'state'   => 'success',
+                        'fail'   => false,
                         'url' => route('articulations.show', $response['data']),
                         'status_code' => Response::HTTP_CREATED,
                         'errors' => [],
@@ -109,8 +109,8 @@ class ArticulationRegisterController extends Controller
             }else{
                 return response()->json([
                     'data' => [
-                        'state'   => 'danger',
-                        'errors' => $this->articulationStageRepository->getError(),
+                        'fail'   => true,
+                        'errors' => $this->articulationRespository->getError(),
                     ],
                 ]);
             }

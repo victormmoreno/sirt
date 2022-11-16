@@ -45,7 +45,6 @@
                         <textarea id="description_articulation" name="description_articulation"  type="text" class="materialize-textarea validate">{{isset($articulation) ? $articulation->description : old('description_articulation')}}</textarea>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

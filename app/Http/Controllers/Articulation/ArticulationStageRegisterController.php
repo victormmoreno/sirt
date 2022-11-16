@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Articulation;
 
+use App\Models\ArticulationType;
 use App\Models\Nodo;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -37,7 +38,11 @@ class ArticulationStageRegisterController extends Controller
                 $nodos = Nodo::query()->with('entidad')->get();
                 $nodos = collect($nodos)->sortBy('entidad.nombre')->pluck('entidad.nombre', 'id');
             }
-            return view('articulation.create-articulation-stage', compact('nodos'));
+            $articulationTypes= ArticulationType::query()
+                ->with('articulationsubtypes')
+                ->where('articulation_types.state', ArticulationType::mostrar())
+                ->orderBy('name')->get();
+            return view('articulation.create-articulation-stage', compact('nodos', 'articulationTypes'));
         }
         return redirect()->route('home');
     }
@@ -102,7 +107,11 @@ class ArticulationStageRegisterController extends Controller
                 $nodos = Nodo::query()->with('entidad')->get();
                 $nodos = collect($nodos)->sortBy('entidad.nombre')->pluck('entidad.nombre', 'id');
             }
-            return view('articulation.edit-articulation-stage', compact('nodos', 'articulationStage'));
+            $articulationTypes= ArticulationType::query()
+                ->with('articulationsubtypes')
+                ->where('articulation_types.state', ArticulationType::mostrar())
+                ->orderBy('name')->get();
+            return view('articulation.edit-articulation-stage', compact('nodos', 'articulationStage', 'articulationTypes'));
         }
         return redirect()->route('home');
     }

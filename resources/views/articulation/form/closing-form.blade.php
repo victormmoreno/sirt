@@ -22,8 +22,6 @@
         </div>
     </div>
 </div>
-
-
 <div class="col m12">
     <div class="row r-no">
         <div class="input-field col s12 m12 l12">
@@ -39,8 +37,7 @@
             </div>
         </div>
         <div class="input-field col s12 m12 l12">
-            <textarea name="justification" class="materialize-textarea" length="3500" maxlength="3500" id="justification">{{isset($articulacion) ? $articulacion->justification: '' }}</textarea>
-
+            <textarea name="justification" class="materialize-textarea" length="3500" maxlength="3500" id="justification">{{isset($articulation) ? $articulation->justification: '' }}</textarea>
             <label for="justification">Justificación<span class="red-text">*</span></label>
             <small id="justification-error" class="error red-text"></small>
         </div>
@@ -69,7 +66,7 @@
                     <small id="receive-error" class="error red-text"></small>
                 </div>
                 <div class="input-field col s12 m12 l6">
-                    <input id="received_date" name="received_date" type="text" class="datepicker picker__input" value="{{isset($articulation) ? optional($articulation->received_date)->format('Y-m-d') : ''}}">
+                    <input id="received_date" name="received_date" type="text" class="datepicker_articulation_date" value="{{isset($articulation) ? optional($articulation->received_date)->format('Y-m-d') : ''}}">
                     <label for="received_date">Cuando <span class="red-text">*</span></label>
                     <small id="received_date-error" class="error red-text"></small>
                 </div>
@@ -88,35 +85,35 @@
                 <div class="input-field col s12 m12 l6">
                     <p class="p-v-xs">
                         <input type="checkbox"  {{ isset($articulation) && $articulation->non_approval_document == 1 ? 'checked' : '' }}
-                        id="txtpdfnoaprobacion" name="txtpdfnoaprobacion" value="0">
-                        <label for="txtpdfnoaprobacion">
+                        id="non_approval_document" name="non_approval_document" value="0">
+                        <label for="no_approval_document">
                             PDF de no aprobación
                         </label>
                         <br>
-                        <small id="txtpdfnoaprobacion-error"  class="error red-text"></small>
+                        <small id="non_approval_document-error"  class="error red-text"></small>
                     </p>
                 </div>
                 <div class="input-field col s12 m12 l6">
                     <p class="p-v-xs">
                         <input type="checkbox" {{ isset($articulation) && $articulation->postulation_document == 1 ? 'checked' : '' }}
-                        id="txtdoc_postulacion" name="txtdoc_postulacion" value="1"/>
-                        <label for="txtdoc_postulacion">
+                        id="postulation_document" name="postulation_document" value="1"/>
+                        <label for="postulation_document">
                             PDF de documentos de postulación
                         </label>
-                        <small id="txtdoc_postulacion-error"  class="error red-text"></small>
+                        <small id="postulation_document-error"  class="error red-text"></small>
                     </p>
                 </div>
                 <div class="input-field col s12 m12 l12">
-                    <textarea name="txtinforme" class="materialize-textarea" length="3500" maxlength="3500" id="txtinforme">{{isset($articulation) ? $articulation->report: '' }}</textarea>
-                    <label for="txtinforme">Informe <span class="red-text">*</span></label>
-                    <small id="txtinforme-error" class="error red-text"></small>
+                    <textarea name="report" class="materialize-textarea" length="3500" maxlength="3500" id="report">{{isset($articulation) ? $articulation->report: '' }}</textarea>
+                    <label for="report">Informe <span class="red-text">*</span></label>
+                    <small id="report-error" class="error red-text"></small>
                 </div>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="input-field col s12 m12 l12">
-            <textarea name="learned_lessons" class="materialize-textarea" length="3500" maxlength="3500" id="learned_lessons">{{isset($articulacion) ? $articulacion->learned_lessons: '' }}</textarea>
+            <textarea name="learned_lessons" class="materialize-textarea" length="3500" maxlength="3500" id="learned_lessons">{{isset($articulation) ? $articulation->learned_lessons : '' }}</textarea>
             <label for="learned_lessons">Lecciones aprendidas<span class="red-text">*</span></label>
             <small id="learned_lessons-error" class="error red-text"></small>
         </div>
@@ -128,7 +125,7 @@
         </div>
     </div>
     <div class="row">
-        @include('articulation.table-archive-phase', ['fase' => 'Cierre'])
+        @include('articulation.table-archive-phase', ['fase' => 'Closing'])
     </div>
 </div>
 

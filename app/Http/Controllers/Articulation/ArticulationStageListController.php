@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Articulation;
 
+use App\Models\Articulation;
 use App\Models\Nodo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -30,6 +31,7 @@ class ArticulationStageListController extends Controller
      */
     public function index()
     {
+
         if (request()->user()->can('index', ArticulationStage::class)) {
             $nodos = null;
             if(request()->user()->can('listNodes', ArticulationStage::class)) {
@@ -54,11 +56,12 @@ class ArticulationStageListController extends Controller
             $articulationStages = [];
             if (isset($request->filter_status_articulationStage) || isset($request->filter_year_articulationStage)) {
                 $articulationStages = $this->articulationStageRepository->getListArticulacionStagesWithArticulations()
+                    ->node($node)
                     ->status($request->filter_status_articulationStage)
                     ->year($request->filter_year_articulationStage)
-                    ->node($node)
                     ->interlocutorTalent($talent)
                     ->orderBy('articulation_stages.updated_at', 'desc')
+
                     ->get();
             }
             return $this->datatablearticulationStages($articulationStages);
@@ -79,9 +82,9 @@ class ArticulationStageListController extends Controller
             $articulationStages = [];
             if (isset($request->filter_status_articulationStage)) {
                 $articulationStages = $this->articulationStageRepository->getListArticulacionStagesWithArticulations()
+                    ->node($node)
                     ->status($request->filter_status_articulationStage)
                     ->year($request->filter_year_articulationStage)
-                    ->node($node)
                     ->interlocutorTalent($talent)
                     ->groupBy('articulation_stages.code')
                     ->orderBy('articulation_stages.created_at', 'desc')

@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ArticulationPresenter;
+use Illuminate\Support\Facades\Session;
 
 class Articulation extends Model
 {
@@ -30,6 +32,7 @@ class Articulation extends Model
         'start_date'    => 'datetime',
         'end_date'    => 'datetime',
         'expected_end_date'    => 'datetime',
+        'received_date'    => 'datetime',
     ];
 
     /**
@@ -120,6 +123,15 @@ class Articulation extends Model
     public function traceability()
     {
         return $this->morphMany(HistorialEntidad::class, 'model');
+    }
+
+    /**
+     * Define a polymorphic one-to-many relationship between articulationstage and ControlNotificaciones
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function notifications()
+    {
+        return $this->morphMany(ControlNotificaciones::class, 'notificable');
     }
 
 
@@ -245,6 +257,27 @@ class Articulation extends Model
             ->orderBy('historial_entidad.created_at')
             ->where('historial_entidad.model_type', '=', Articulation::class)
             ->where('historial_entidad.model_id', $model->id);
+    }
+
+    /**
+     * Registra el control de una notificación
+     *
+     * @param int $receptor id del receptor de la notificacion
+     * @param string $rol_receptor Nombre del rol que espera la notificación
+
+     */
+    public function registerNotify($receptor, $rol_receptor, $fase = null, $descripcion = null)
+    {
+        return $this->notifications()->create([
+            'fase_id' => $fase,
+            'remitente_id' => auth()->user()->id,
+            'rol_remitente_id' => Role::where('name', Session::get('login_role'))->first()->id,
+            'receptor_id' => $receptor,
+            'rol_receptor_id' => Role::where('name', $rol_receptor)->first()->id,
+            'fecha_envio' => Carbon::now(),
+            'fecha_aceptacion' => null,
+            'descripcion' => $descripcion
+        ]);
     }
 
     /**

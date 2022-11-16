@@ -34,6 +34,12 @@
                         <textarea id="scope" name="scope" type="text" class="materialize-textarea">{{ old('scope', isset($articulationStage->scope) ? $articulationStage->scope : '') }}</textarea>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="right-align">
+                        <a class="waves-effect waves-blue btn-flat m-b-xs" id="show_type_articulations">Ver tipos articulaciones</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

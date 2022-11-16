@@ -1,45 +1,59 @@
 <div class="collection with-header col s12 m4 l3">
     <h5 href="!#" class="collection-header">Opciones</h5>
-        @if($articulation->phase->nombre == \App\Models\Articulation::IsInicio())
-            <a href="{{route('articulations.show.phase', [$articulation, 'inicio'])}}"
-               class="collection-item">
-                <i class="material-icons left">edit</i>
-                Editar fase de inicio
+    @can('showButtonAprobacion', $articulation)
+        @include('articulation.form.approval-articulation-form')
+    @endcan
+    @if($articulation->phase_id == 4)
+    @can('requestApproval', $articulation)
+            <a href="{{route('articulation.request-approval', $articulation)}}"
+               class="collection-item yellow lighten-3">
+                <i class="material-icons left">notifications</i>
+                @if($rol_destinatario == \App\User::IsDinamizador())
+                    Enviar solicitud de aval al {{\App\User::IsDinamizador()}}
+                    para finalizar
+                @else
+                    @if(isset($ult_traceability->movimiento)  && $ult_traceability->rol == \App\User::IsDinamizador())
+                        Enviar solicitud de aval al {{\App\User::IsDinamizador()}}
+                        para finalizar
+                    @else
+                        El dinamizador ya dio el aval
+                    @endif
+                @endif
             </a>
-        @endif
-        @if($articulation->phase->nombre == \App\Models\Articulation::IsEjecucion())
+    @endcan
+    @endif
+    @if($articulation->phase_id == 1)
+    @can('showStart', $articulation)
+        <a href="{{route('articulations.show.phase', [$articulation, 'inicio'])}}"
+           class="collection-item">
+            <i class="material-icons left">edit</i>
+            Editar fase de inicio
+        </a>
+    @endcan
+    @endif
+    @if($articulation->phase_id == 3)
+    @can('showExecution', $articulation)
         <a href="{{route('articulations.show.phase', [$articulation, 'ejecucion'])}}"
            class="collection-item">
             <i class="material-icons left">edit</i>
             Editar fase de ejecución
         </a>
-        @endif
-        @if($articulation->phase->nombre == \App\Models\Articulation::IsCierre())
+    @endcan
+    @endif
+    @if($articulation->phase_id == 4)
+    @can('showClosing', $articulation)
         <a href="{{route('articulations.show.phase', [$articulation, 'cierre'])}}"
            class="collection-item">
             <i class="material-icons left">edit</i>
             Editar fase de cierre
         </a>
-        @endif
-        @can('changeTalent', $articulation)
-            <a href="{{ route('articulation-stage.changeinterlocutor', $articulation) }}"
-               class="collection-item">
-                <i class="material-icons left">group</i>
-                Cambiar {{__('Interlocutory talent')}}
-            </a>
-        @endcan
-        @can('update', $articulation)
-            <a href="{{ route('articulation-stage.edit',$articulation) }}"
-               class="collection-item">
-                <i class="material-icons left">edit</i>
-                Editar {{__('articulation-stage')}}
-            </a>
-        @endcan
-        @can('uploadEvidences', $articulation)
-            <a href="{{ route('articulation-stage.evidences', [$articulation]) }}"
-               class="collection-item">
-                <i class="material-icons left">cloud_upload</i>
-                Cargar evidencias
-            </a>
-        @endcan
+    @endcan
+    @endif
+    @can('changeTalents', $articulation)
+        <a href="{{ route('articulations.changetalents', $articulation) }}"
+           class="collection-item">
+            <i class="material-icons left">group</i>
+            Cambiar participantes
+        </a>
+    @endcan
 </div>

@@ -74,23 +74,28 @@
                                         </div>
                                         <div class="divider mailbox-divider"></div>
                                         <form id="articulation-form-closing"
-                                              action="{{route('articulation.update', $articulation)}}" method="POST">
+                                              action="{{route('articulation.update.closing', $articulation)}}" method="POST">
                                             {!! method_field('PUT')!!}
-                                            @include('articulation.form.closing-form', ['btnText' => 'Modificar'])
-
-                                            <center>
-                                                <button type="submit"
-                                                        class="waves-effect cyan darken-1 btn center-aling">
-                                                    <i class="material-icons right">done</i>
-                                                    Guardar
-                                                </button>
-                                                <a href="{{route('articulations.show', $articulation)}}"
-                                                   class="waves-effect red lighten-2 btn center-aling">
-                                                    <i class="material-icons right">backspace</i>Cancelar
-                                                </a>
-                                            </center>
+                                            <div class="wizard clearfix">
+                                                @include('articulation.form.closing-form', ['btnText' => 'Modificar'])
+                                                <div class="actions clearfix right-align">
+                                                    <ul role="menu" aria-label="Paginación">
+                                                        <li aria-hidden="false" aria-disabled="false">
+                                                            <a href="{{route('articulations.show', $articulation)}}"
+                                                               role="menuitem"
+                                                               class="waves-effect waves-blue btn-flat orange-text">Volver
+                                                                atrás</a>
+                                                        </li>
+                                                        <li class="disabled" aria-disabled="true">
+                                                            <button type="submit" role="menuitem"
+                                                                    class="btn waves-effect waves-blue btn-flat orange-text">
+                                                                Guardar
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
                                         </form>
-
                                     </div>
                                 </div>
                             </div>
@@ -154,7 +159,7 @@
         });
 
         Dropzone.on('success', function (res) {
-            $('#archivesArticulations').dataTable().fnDestroy();
+            $('#archivesArticulationsClosing').dataTable().fnDestroy();
             datatableArchiveArticulation();
             Swal.fire({
                 toast: true,
@@ -179,8 +184,9 @@
             });
         });
         Dropzone.autoDiscover = false;
+
         function datatableArchiveArticulation() {
-            $('#archivesArticulations').DataTable({
+            $('#archivesArticulationsClosing').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
                 },
@@ -190,7 +196,7 @@
                 "ajax": {
                     "url": "{{route('articulation.files', [$articulation->id])}}",
                     "type": "get",
-                    "data":{
+                    "data": {
                         type: "{{ basename(\App\Models\Articulation::class)}}",
                         phase: "Cierre"
                     },

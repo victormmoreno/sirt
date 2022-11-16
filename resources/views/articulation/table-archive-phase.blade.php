@@ -1,4 +1,4 @@
-<table class="display responsive-table datatable-example dataTable {{$fase}}" style="width: 100%" id="archivesArticulations">
+<table class="display responsive-table datatable-example dataTable {{$fase}}" style="width: 100%" id="archivesArticulations{{$fase}}">
     <thead>
     <tr>
         <th>Archivo</th>
