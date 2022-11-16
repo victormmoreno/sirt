@@ -18,6 +18,24 @@ class IdeaPolicy
      * @return bool
      * @author dum
      **/
+    public function asignar(User $user, Idea $idea)
+    {
+        if (session()->get('login_role') == $user->IsAdministrador() || (session()->get('login_role') == $user->IsDinamizador() && $user->dinamizador->nodo_id == $idea->nodo_id)) {
+            if ($idea->estadoIdea->nombre == $idea->estadoIdea->IsAdmitido() && $idea->gestor_id == null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Determina quienes y en qué momento se puede aceptar o rechazar una idea de proyecto
+     *
+     * @param User $user
+     * @param Idea $idea
+     * @return bool
+     * @author dum
+     **/
     public function aprobar(User $user, Idea $idea)
     {
         if ($idea->estadoIdea->nombre == $idea->estadoIdea->IsPostulado()) {

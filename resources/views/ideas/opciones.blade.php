@@ -46,6 +46,12 @@
       </form>
     </a>
 @endcan
+@can('asignar', $idea)
+  <a href="{{route('idea.asignar', $idea->id)}}" class="collection-item">
+    <i class="material-icons left">edit</i>
+    Asignar experto a la idea.
+  </a>
+@endcan
 @can('inhabilitar', $idea)
   <a class="collection-item" href="!#" onclick="confirmacionInhabilitar(event)">
     <form action="{{route('idea.inhabilitar', $idea->id)}}" method="POST" id="frmInhabilitarIdea" name="frmInhabilitarIdea">

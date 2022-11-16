@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Repository;
 
-use App\Models\{EstadoIdea, Idea, Nodo, Movimiento, Comite, Sede};
+use App\Models\{EstadoIdea, Idea, Nodo, Movimiento, Comite, Sede, Gestor};
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
@@ -34,6 +34,36 @@ class IdeaRepository
     public function getSelectNodoPrueba()
     {
         return Nodo::selectNodo()->where('entidades.nombre', '!=', Nodo::NODO_PRUEBA)->get();
+    }
+
+    public function asginarIdeaExperto($request, $idea)
+    {
+        DB::beginTransaction();
+        try {
+            $gestor = Gestor::find($request->txtgestor_id);
+            $idea->registrarHistorialIdea(Movimiento::IsCambiar(), Session::get('login_role'), null, $gestor->user->nombres . ' ' . $gestor->user->apellidos);
+            $idea->update([
+                'gestor_id' => $request->txtgestor_id
+            ]);
+            DB::commit();
+            return [
+                'state' => true,
+                'msg' => 'La idea de proyecto ha sido asignada al experto(a) ' . $gestor->user->nombres . ' ' . $gestor->user->apellidos,
+                'title' => 'Actualización exitosa!',
+                'type' => 'success',
+                // 'idea' => $idea
+            ];
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return [
+                'state' => false,
+                'msg' => $th->getMessage(),
+                // 'msg' => 'La idea no se ha asignado al experto',
+                'title' => 'Actualización errónea!',
+                'type' => 'error',
+                // 'idea' => $idea
+            ];
+        }
     }
 
     /**
@@ -527,8 +557,9 @@ class IdeaRepository
         try {
             $duplicado = $idea->replicate();
             $duplicado->codigo_idea = $this->generarCodigoIdeaDuplicado($idea);
-            if ($duplicado->estadoIdea->nombre == $duplicado->estadoIdea->IsAdmitido()) {
+            if ($duplicado->estadoIdea->nombre == $duplicado->estadoIdea->IsAdmitido() || $duplicado->estadoIdea->nombre == $duplicado->estadoIdea->IsPBT()) {
                 $duplicado->gestor_id = null;
+                $duplicado->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsAdmitido())->first()->id;
             } else {
                 $duplicado->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsRegistro())->first()->id;
             }
@@ -544,6 +575,7 @@ class IdeaRepository
             DB::commit();
             return [
                 'state' => true,
+                'id' => $duplicado->id,
                 'msg' => 'La idea se ha duplicado exitosamente!',
                 'title' => 'Duplicación exitosa!',
                 'type' => 'success'

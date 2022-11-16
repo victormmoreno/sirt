@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\{EmpresaFormRequest, IdeaFormRequest};
 use App\Models\{Departamento, EstadoIdea, Idea, Entidad, Sector, TamanhoEmpresa, TipoEmpresa, Nodo};
-use App\Repositories\Repository\{IdeaRepository, EmpresaRepository};
+use App\Repositories\Repository\{IdeaRepository, EmpresaRepository, UserRepository\GestorRepository, ComiteRepository};
 use App\User;
 use Illuminate\Support\Facades\{Session, Validator};
 use Illuminate\Http\Request;
@@ -15,10 +15,11 @@ class IdeaController extends Controller
 {
     public $ideaRepository;
 
-    public function __construct(IdeaRepository $ideaRepository, EmpresaRepository $empresaRepository)
+    public function __construct(IdeaRepository $ideaRepository, EmpresaRepository $empresaRepository, GestorRepository $gestorRepository)
     {
         $this->ideaRepository = $ideaRepository;
         $this->empresaRepository = $empresaRepository;
+        $this->gestorRepository = $gestorRepository;
         $this->middleware('auth');
     }
 
@@ -112,6 +113,63 @@ class IdeaController extends Controller
                 'tamanhos' => TamanhoEmpresa::all(),
                 'tipos' => TipoEmpresa::all()
             ]);
+        }
+    }
+
+    /**
+     * Formulario para asginar la idea de proyecto a un experto
+     *
+     * @param int $id Id de la idea de proyecto
+     * @return Response
+     * @author dum
+     **/
+    public function asignar_experto(int $id)
+    {
+        $idea = Idea::find($id);
+        // dd($idea->nodo_id);
+        if(!request()->user()->can('asignar', $idea)) {
+            alert('No autorizado', 'No tienes permisos para asignar esta idea de proyecto a un experto', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+        return view('ideas.asignar', [
+            'idea' => $idea,
+            'gestores' => $this->gestorRepository->getAllGestoresPorNodo($idea->nodo_id)->selectRaw('gestores.id as gestor_id, CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) AS nombres_gestor')->get()
+        ]);
+    }
+
+    /**
+     * Formulario para asginar la idea de proyecto a un experto
+     *
+     * @param int $id Id de la idea de proyecto
+     * @return Response
+     * @author dum
+     **/
+    public function asignar(Request $request)
+    {
+        $idea = Idea::find($request->idea);
+
+        if(!request()->user()->can('asignar', $idea)) {
+            alert('No autorizado', 'No tienes permisos para asignar esta idea de proyecto a un experto', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+
+        $validator = Validator::make($request->all(), [
+            'txtgestor_id' => 'required',
+        ], [
+            'txtgestor_id.required' => 'El experto es obligatorio.'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('idea.asignar', $request->idea)
+            ->withErrors($validator)
+            ->withInput();
+        }
+        $asignacion = $this->ideaRepository->asginarIdeaExperto($request, $idea);
+        alert($asignacion['title'], $asignacion['msg'], $asignacion['type'])->showConfirmButton('Ok', '#3085d6');
+        if ($asignacion['state']) {
+            return redirect()->route('idea.detalle', $request->idea);
+        } else {
+          return back()->withInput();
         }
     }
 
@@ -368,13 +426,13 @@ class IdeaController extends Controller
     {
         $idea = $this->ideaRepository->findByid($id);
         if(!request()->user()->can('duplicar', $idea)) {
-            alert('No autorizado', 'No tienes permisos para inhabilitar idea de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
+            alert('No autorizado', 'No tienes permisos para duplicar idea de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
         $resultado = $this->ideaRepository->duplicarIdea($idea);
         alert($resultado['title'], $resultado['msg'], $resultado['type'])->showConfirmButton('Ok', '#3085d6');;
         if ($resultado['state']) {
-            return redirect('idea');
+            return redirect()->route('idea.detalle', ['id' => $resultado['id']]);
         } else {
             return back();
         }
