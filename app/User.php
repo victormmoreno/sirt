@@ -339,6 +339,14 @@ class User extends Authenticatable implements JWTSubject
         return $query;
     }
 
+    public function scopeRoleQuery($query, $role)
+    {
+        if (!empty($role) && $role != null && $role != 'all') {
+            return $query->role($role);
+        }
+        return $query;
+    }
+
     public function scopeNodoUser($query, $role, $nodo)
     {
         if ((!empty($role) && $role != null && $role != 'all' && ($role != User::IsTalento() || $role != User::IsActivador())) && !empty($nodo) && $nodo != null && $nodo != 'all') {

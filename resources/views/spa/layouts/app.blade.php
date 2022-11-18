@@ -65,7 +65,9 @@
             </div>
 
         </div>
-
+        <script>
+            const host_url = "{{config('app.url')}}";
+        </script>
         <script src="{{ asset('js/app.js') }}">
         </script>
         <script src="{{ asset('js/libs.js') }}">

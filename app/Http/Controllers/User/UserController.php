@@ -15,6 +15,7 @@ use App\Exports\User\UserExport;
 use App\Http\Requests\UsersRequests\ConfirmUserRequest;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\User\NodeChanged;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -43,6 +44,25 @@ class UserController extends Controller
     {
         $this->authorize('index', User::class);
 
+
+        // $users = User::query()
+        // ->select('users.id', 'tiposdocumentos.nombre as tipodocumento', 'users.documento', 'users.email', 'users.celular', 'users.ultimo_login')
+        // ->selectRaw('concat(users.nombres, " ",users.apellidos) as usuario, GROUP_CONCAT(distinct roles.name SEPARATOR ", ") as roles')
+
+        // ->leftJoin('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
+        //             ->join('model_has_roles', function ($join) {
+        //                 $join->on('users.id', '=', 'model_has_roles.model_id')
+        //                     ->where('model_has_roles.model_type', User::class);
+        // })
+        // ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+        // ->groupBy('users.documento')
+        // ->roleQuery($request->filter_role)
+        // ->orderBy('users.created_at', 'desc')
+
+        // ->get();
+
+        // dd($users);
+
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
                 $nodo = $request->filter_nodo;
@@ -68,13 +88,35 @@ class UserController extends Controller
             $users = [];
             if (($request->filled('filter_nodo') || $request->filter_nodo == null) && ($request->filled('filter_role') ||  $request->filter_role == null) && $request->filled('filter_state') && ($request->filled('filter_year') || $request->filter_year == null)) {
 
-                $users = User::with(['tipodocumento'])
-                    ->role($request->filter_role)
-                    ->nodoUser($request->filter_role, $nodo)
-                    ->stateDeletedAt($request->filter_state)
-                    ->yearActividad($request->filter_role, $request->filter_year, $nodo)
+                // $users = User::with(['roles','tipodocumento'])
+                //     ->role($request->filter_role)
+                //     ->nodoUser($request->filter_role, $nodo)
+                //     ->stateDeletedAt($request->filter_state)
+                //     ->yearActividad($request->filter_role, $request->filter_year, $nodo)
+                //     ->orderBy('users.created_at', 'desc')
+                //     ->get();
+
+                    $users = User::query()
+                    ->select('users.id', 'tiposdocumentos.nombre as tipodocumento', 'users.documento', 'users.email', 'users.celular', 'users.ultimo_login')
+                    ->selectRaw('concat(users.nombres, " ",users.apellidos) as usuario, GROUP_CONCAT(roles.name SEPARATOR ", ") as roles')
+
+                    ->leftJoin('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
+                                ->join('model_has_roles', function ($join) {
+                                    $join->on('users.id', '=', 'model_has_roles.model_id')
+                                        ->where('model_has_roles.model_type', User::class);
+                    })
+                    ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+
+                    ->roleQuery($request->filter_role)
+                    ->groupBy('users.id')
+                    //->where('roles.name', $request->filter_role)
+                    // ->nodoUser($request->filter_role, $nodo)
+                    // ->stateDeletedAt($request->filter_state)
+                    // ->yearActividad($request->filter_role, $request->filter_year, $nodo)
                     ->orderBy('users.created_at', 'desc')
+
                     ->get();
+
             }
             return $usersDatatables->datatableUsers($users);
         }

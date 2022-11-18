@@ -13,22 +13,23 @@ class UserDatatable
                 return $button;
             })
             ->editColumn('tipodocumento', function ($data) {
-                return $data->present()->userTipoDocuento();
+                return $data->tipodocumento;
             })
             ->editColumn('nombrecompleto', function ($data) {
-                return $data->present()->userFullName();
+                return $data->usuario;
             })
             ->editColumn('celular', function ($data) {
                 return !empty($data->celular) ? $data->celular : 'No Registra';
             })
             ->editColumn('roles', function ($data) {
-                return $data->present()->userRolesNames();
+                return $data->roles;
             })
             ->editColumn('login', function ($data) {
                 return isset($data->ultimo_login) ? $data->ultimo_login->isoFormat('DD/MM/YYYY') : 'No Registra';
             })
             ->editColumn('state', function ($data) {
-                return $data->present()->userAcceso();
+                //return $data;
+                return "";
             })
             ->rawColumns(['tipodocumento', 'nombrecompleto', 'detail', 'celular', 'roles', 'login', 'state'])
             ->make(true);
