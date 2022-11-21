@@ -29,6 +29,7 @@ class MaterialImport implements ToCollection, WithHeadingRow
     */
     public function collection(Collection $rows)
     {
+        DB::beginTransaction();
         $validacion = null;
         try {
             foreach ($rows as $key => $row) {
@@ -40,14 +41,14 @@ class MaterialImport implements ToCollection, WithHeadingRow
                 $row['medida'] = ltrim(rtrim( $row['medida']));
                 $row['nombre'] = ltrim(rtrim($row['nombre']));
                 $row['cantidad'] = ltrim(rtrim($row['cantidad']));
-                $row['valor_compra'] = ltrim(rtrim($row['valor_compra']));
+                $row['valor_compra'] = ltrim(rtrim(str_slug($row['valor_compra'], '_')));
                 $row['proveedor'] = ltrim(rtrim($row['proveedor']));
                 $row['marca'] = ltrim(rtrim($row['marca']));
                 // Mayúsculas
 
                 $row['nombre'] = strtoupper($row['nombre']);
                 $row['cantidad'] = strtoupper($row['cantidad']);
-                $row['valor_compra'] = strtoupper($row['valor_compra']);
+                $row['valor_compra'] = strtoupper(str_slug($row['valor_compra'], '_'));
                 $row['proveedor'] = strtoupper($row['proveedor']);
                 $row['marca'] = strtoupper($row['marca']);
 
@@ -59,32 +60,35 @@ class MaterialImport implements ToCollection, WithHeadingRow
                     return $validacion;
                 }
 
-
                 // Validar tipo_material
                 $tipoMaterial = \App\Models\TipoMaterial::where('nombre', $row['tipo_material'])->first();
-                $validacion = $this->validaciones->validarQuery($tipoMaterial, $row['tipo_material'], $key, 'tipo material', $this->hoja);
-                if (!$validacion) {
-                    return $validacion;
+                if ($tipoMaterial == null) {
+                    $tipoMaterial = \App\Models\TipoMaterial::create([
+                        'nombre' => ltrim(rtrim($row['tipo_material']))
+                    ]);
                 }
 
                 // Validar categoria_material
                 $categoria = \App\Models\CategoriaMaterial::where('nombre', $row['categoria_material'])->first();
-                $validacion = $this->validaciones->validarQuery($categoria, $row['categoria_material'], $key, 'categoria material', $this->hoja);
-                if (!$validacion) {
-                    return $validacion;
+                if ($categoria == null) {
+                    $categoria = \App\Models\CategoriaMaterial::create([
+                        'nombre' => ltrim(rtrim($row['categoria_material']))
+                    ]);
                 }
-
                 // Validar presentacion
                 $presentacion = \App\Models\Presentacion::where('nombre', $row['presentacion'])->first();
-                $validacion = $this->validaciones->validarQuery($presentacion, $row['presentacion'], $key, 'presentacion', $this->hoja);
-                if (!$validacion) {
-                    return $validacion;
+                if ($presentacion == null) {
+                    $presentacion = \App\Models\Presentacion::create([
+                        'nombre' => ltrim(rtrim($row['presentacion']))
+                    ]);
                 }
+
                 // Validar Medida
                 $medida = \App\Models\Medida::where('nombre', $row['medida'])->first();
-                $validacion = $this->validaciones->validarQuery($medida, $row['medida'], $key, 'medida', $this->hoja);
-                if (!$validacion) {
-                    return $validacion;
+                if ($medida == null) {
+                    $medida = \App\Models\Medida::create([
+                        'nombre' => ltrim(rtrim($row['medida']))
+                    ]);
                 }
                 $validacion = $this->validaciones->validarCelda($row['fecha'], $key, 'Fecha', $this->hoja);
                 if (!$validacion) {
@@ -102,20 +106,10 @@ class MaterialImport implements ToCollection, WithHeadingRow
                 }
 
                 // Validar valor_compra
-                $validacion = $this->validaciones->validarCelda($row['valor_compra'], $key, 'valor compra', $this->hoja);
+                $validacion = $this->validaciones->validarCelda(str_slug($row['valor_compra'], '_'), $key, 'valor compra', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
-
-                // $validacion = $this->validaciones->validarCelda($row['proveedor'], $key, 'proveedor', $this->hoja);
-                // if (!$validacion) {
-                //     return $validacion;
-                // }
-
-                // $validacion = $this->validaciones->validarCelda($row['marca'], $key, 'marca', $this->hoja);
-                // if (!$validacion) {
-                //     return $validacion;
-                // }
 
                 $validacion = $this->validaciones->validarTamanhoCelda($row['nombre'], $key, 'nombre', 1000, $this->hoja);
                 if (!$validacion) {
@@ -130,10 +124,12 @@ class MaterialImport implements ToCollection, WithHeadingRow
                 if (!$validacion) {
                     return $validacion;
                 }
-                
-                $material = Material::where('codigo_material', $row['codigo_material'])->first();
+
+                $material = Material::where('codigo_material', $row['codigo_material'])
+                ->where('nodo_id', $this->nodo)
+                ->first();
                 if (!isset($material) && $material == null) {
-                    
+
                     $codeMaterial = $this->generateCodigoMaterial($linea->id);
                     $material = $this->registerMaterial(
                         $codeMaterial,
@@ -178,7 +174,7 @@ class MaterialImport implements ToCollection, WithHeadingRow
 
     private function generateCodigoMaterial( $line)
     {
-        
+
             $anho = Carbon::now()->isoFormat('YYYY');
             $tecnoparque = sprintf("%02d", $this->nodo);
             $material = Material::selectRaw('MAX(id+1) AS max')->get()->last();

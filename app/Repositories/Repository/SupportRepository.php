@@ -104,19 +104,19 @@ class SupportRepository
 
         ->editColumn('status', function ($data) {
             if($data->status == Support::IsPendiente()){
-                return  '<div class="chip red white-text text-darken-2">'.$data->status.'</div>';
+                return  '<div class="chip bg-danger white-text">'.$data->status.'</div>';
             }
             if($data->status == Support::IsEspera()){
-                return  '<div class="chip orange white-text text-darken-2">'.$data->status.'</div>';
+                return  '<div class="chip bg-warning white-text">'.$data->status.'</div>';
             }
             if($data->status == Support::IsSolucionado()){
-                return  '<div class="chip green white-text text-darken-2">'.$data->status.'</div>';
+                return  '<div class="chip bg-success white-text">'.$data->status.'</div>';
             }
 
         })
         ->addColumn('show', function ($data) {
-            return '<a class="btn m-b-xs modal-trigger" href='.route('support.show', $data->ticket).'>
-            <i class="material-icons">search</i>
+            return '<a class="btn m-b-xs bg-info modal-trigger" href='.route('support.show', $data->ticket).'>
+                <i class="material-icons">search</i>
             </a>';
         })
         ->rawColumns(['created_at', 'status',  'show'])->make(true);

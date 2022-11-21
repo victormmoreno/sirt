@@ -11,7 +11,7 @@
 
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet"/>
         <link href="{{ asset('sweetalert2/sweetalert2.css') }}" rel="stylesheet"/>
-        <link href="{{ asset('img/web.png') }}" rel="shortcut icon" type="image/x-icon"/>
+        <link href="{{ asset('img/web.svg') }}" rel="shortcut icon" type="image/x-icon"/>
         @stack('style')
         <meta name="title" content="@yield('meta-title',   config('app.name') )" />
         <meta name="abstract" content="@yield('meta-title',   config('app.name') )" />
@@ -73,6 +73,9 @@
         <script src="{{ asset('js/web.js') }}">
         </script>
         @include('sweetalert::alert')
+        <script>
+            const host_url = "{{config('app.url')}}";
+        </script>
         @stack('script')
     </body>
 </html>

@@ -1,6 +1,6 @@
 {!! csrf_field() !!}
 <div class="row">
-    <div class="input-field col s12 m6 l6 offset-l3 m3 s3">
+    <div class="input-field col s12 m8 l6 offset-l3 offset-m2">
         <i class="material-icons prefix">
             speaker_notes
         </i>
@@ -8,9 +8,9 @@
             <option value="">Seleccione linea</option>
             @foreach($lineas as $id => $nombre)
                 @if(isset($sublinea))
-                <option value="{{$id}}" {{old('txtlinea',$id) ==  $sublinea->lineatecnologica_id ? 'selected':''}}>{{$nombre}}</option> 
+                <option value="{{$id}}" {{old('txtlinea',$id) ==  $sublinea->lineatecnologica_id ? 'selected':''}}>{{$nombre}}</option>
                 @else
-                    <option value="{{$id}}" {{old('txtlinea') == $id  ? 'selected':''}}>{{$nombre}}</option> 
+                    <option value="{{$id}}" {{old('txtlinea') == $id  ? 'selected':''}}>{{$nombre}}</option>
                 @endif
             @endforeach
         </select>
@@ -23,7 +23,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="input-field col s12 m6 l6 offset-l3 m3 s3">
+    <div class="input-field col s12 m8 l6 offset-l3 offset-m2">
         <i class="material-icons prefix">
             dns
         </i>
@@ -37,14 +37,19 @@
         </input>
     </div>
 </div>
-
-<center>
-   
-    <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>{{isset($btnText) ? $btnText : 'Guardar'}}</button> 
-    <a class="btn waves-effect red lighten-2 center-aling" href="{{route('sublineas.index')}}">
-        <i class="material-icons right">
-            backspace
-        </i>
-        Cancelar
-    </a>
-</center>
+<div class="row">
+    <div class="col s12 m12 l12">
+        <div class="col s12 center-align m-t-sm">
+            <button type="submit"
+                    class="waves-effect waves-light btn bg-secondary center-align">
+                <i class="material-icons left">send</i>
+                {{isset($btnText) ? $btnText : 'Guardar'}}
+            </button>
+            <a href="{{route('sublineas.index')}}"
+               class="modal-action modal-open waves-effect bg-danger btn center-align">
+                <i class="material-icons right">backspace</i>
+                Regresar
+            </a>
+        </div>
+    </div>
+</div>

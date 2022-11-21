@@ -5,6 +5,25 @@
 @section('meta-title', 'Linea Tecnologica '. $linea->nombre)
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
+        <div class="row no-m-t no-m-b m-r-lg m-l-lg">
+            <div class="left left-align">
+                <h5 class="left-align primary-text">
+                    <a class="footer-text left-align" href="{{route('lineas.index')}}">
+                        <i class="material-icons arrow-l">
+                            arrow_back
+                        </i>
+                    </a>
+                    Linea Tecnologica | {{$linea->nombre}}
+                </h5>
+            </div>
+            <div class="right right-align show-on-large hide-on-med-and-down">
+                <ol class="breadcrumbs">
+                    <li><a href="{{route('home')}}">Inicio</a></li>
+                    <li><a href="{{route('lineas.index')}}">Lineas</a></li>
+                    <li class="active">{{$linea->nombre}}</li>
+                </ol>
+            </div>
+        </div>
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
                 <div class="row">
@@ -31,28 +50,22 @@
                         <div class="card mailbox-content">
                             <div class="card-content">
                                 <div class="row no-m-t no-m-b">
-                                    
                                     <div class="col s12 m12 l12">
-                                        
                                         <div class="mailbox-view">
                                             <div class="mailbox-view-header">
 												    <div class="left">
-												        <span class="mailbox-title">
+												        <span class="mailbox-title primary-text">
 												        	<i class="material-icons left">
 								                                linear_scale
 								                            </i>
-								                            {{$linea->abreviatura}} - 
-												            {{$linea->nombre}}
+								                            {{$linea->abreviatura}} - {{$linea->nombre}}
 												        </span>
-												        <span class="mailbox-author">
+												        <span class="mailbox-author secondary-text">
 												            Linea registrada el {{$linea->created_at->isoFormat('LL')}}
-												            
 												        </span>
 												    </div>
                                             </div>
-                                            
-                                            <div class="divider mailbox-divider">
-                                            </div>
+                                            <div class="divider mailbox-divider"></div>
                                             <div class="mailbox-text">
                                                 <div class="row">
                                                     <div class="col s12 m6 l6">
@@ -72,7 +85,7 @@
                                                             <ul class="collection">
                                                                 
                                                                 <li class="collection-item avatar">
-                                                                    <i class="material-icons circle orange darken-1">
+                                                                    <i class="material-icons circle bg-primary">
                                                                         dns
                                                                     </i>
                                                                     <span class="title">
@@ -83,7 +96,7 @@
                                                                     </p>
                                                                 </li>
                                                                 <li class="collection-item avatar">
-                                                                    <i class="material-icons circle orange darken-1">
+                                                                    <i class="material-icons circle bg-primary">
                                                                         dns
                                                                     </i>
                                                                     <span class="title">
@@ -94,7 +107,7 @@
                                                                     </p>
                                                                 </li>
                                                                 <li class="collection-item avatar">
-                                                                    <i class="material-icons circle orange darken-1">
+                                                                    <i class="material-icons circle bg-primary">
                                                                         speaker_notes
                                                                     </i>
                                                                     <span class="title">
@@ -121,7 +134,7 @@
                                                             <ul class="collection">
                                                                 @forelse($linea->sublineas as $sublinea)
                                                                 <li class="collection-item avatar">
-                                                                    <i class="material-icons circle orange darken-1">
+                                                                    <i class="material-icons circle bg-primary">
                                                                         linear_scale
                                                                     </i>
                                                                     <span class="title">
@@ -138,27 +151,27 @@
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    <div class="col s12 m6 l6">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col s12 m12 l6">
 														<div class="center-align">
-															<span class="mailbox-title center">
+															<span class="mailbox-title center primary-text">
 													        	<i class="material-icons left">
 									                                info
 									                            </i>
 									                            Nodos con la linea de {{$linea->nombre}}
 													        </span>
 														</div>
-												        
 												        <div class="divider mailbox-divider">
                                             			</div>
-												    
                                                         <ul class="collection">
                                                             @forelse($linea->nodos as $nodo)
                                                             <li class="collection-item avatar">
-                                                                <i class="material-icons circle orange darken-1">
+                                                                <i class="material-icons circle bg-primary">
                                                                     domain
                                                                 </i>
-                                                                <span class="title">
-                                                                    Tecnoparque Nodo {{$nodo->entidad->nombre}} 
+                                                                <span class="title secondary-text">
+                                                                    Tecnoparque Nodo {{$nodo->entidad->nombre}}
                                                                 </span>
                                                                 <p>
                                                                    <b>Correo electónico: </b>{{!empty($nodo->entidad->email_entidad) ? $nodo->entidad->email_entidad : 'No registra' }}
@@ -175,16 +188,16 @@
                                                             </li>
                                                             @empty
 															<li class="collection-item avatar">
-                                                                <i class="material-icons circle orange darken-1">
+                                                                <i class="material-icons circle bg-primary">
                                                                     info
                                                                 </i>
                                                                 <span class="title">
                                                                     No hay nodos asociados a la linea de {{$linea->nombre}}
                                                                 </span>
-                                                                
+
                                                             </li>
                                                             @endforelse
-                                                            
+
                                                         </ul>
                                                     </div>
                                             </div>

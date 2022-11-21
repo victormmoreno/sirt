@@ -138,7 +138,7 @@
                     <small class="center-align red-text text-ligth-3">solo se permite ingresar hasta 99 horas</small>
                 </div>
                 <div class="input-field col s12 m3 l3 offset-s3">
-                    <a class="waves-effect waves-light btn blue m-b-xs btnAgregarGestorAsesor"  onclick="addGestoresAUso()">Agregar Experto</a>
+                    <a class="waves-effect waves-light btn bg-secondary white-text m-b-xs btnAgregarGestorAsesor"  onclick="addGestoresAUso()">Agregar Experto</a>
                 </div>
                 <div class="row">
                     <div class="col s12 m8 l8 offset-l2 m2">
@@ -170,7 +170,7 @@
                                                     <td><input type="number" name="asesoriadirecta[]" value="{{$user->pivot->asesoria_directa}}"></td>
                                                     <td><input type="number" name="asesoriaindirecta[]" value="{{$user->pivot->asesoria_indirecta}}"></td>
                                                     <td>
-                                                        <a class="waves-effect red lighten-3 btn" onclick="eliminarGestorAsesor({{$user->id}});">
+                                                        <a class="waves-effect bg-danger white-text btn" onclick="eliminarGestorAsesor({{$user->id}});">
                                                             <i class="material-icons">delete_sweep</i>
                                                         </a>
                                                     </td>

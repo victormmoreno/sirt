@@ -9,16 +9,11 @@ use App\User;
 
 class SublineaController extends Controller
 {
-
     public $sublineaRepository;
     public function __construct(SublineaRepository $sublineaRepository)
     {
         $this->sublineaRepository = $sublineaRepository;
-       
-        $this->middleware([
-            'auth',
-        ]);
-
+        $this->middleware(['auth']);
     }
     /**
      * Display a listing of the resource.
@@ -27,29 +22,22 @@ class SublineaController extends Controller
      */
     public function index()
     {
-
-        // dd($this->sublineaRepository->getAllSublineas());
-
         if (request()->ajax()) {
-                return datatables()->of($this->sublineaRepository->getAllSublineas())
-                    
-                    ->addColumn('edit', function ($data) {
-                        
-                            $button = '<a href="' . route("sublineas.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-                        
-                        return $button;
-                    })
-                    ->rawColumns([ 'edit'])
-                    ->make(true);
-            }
-        
-        return view('sublineas.administrador.index');
+            return datatables()->of($this->sublineaRepository->getAllSublineas())
+                ->addColumn('edit', function ($data) {
+                    $button = '<a href="' . route("sublineas.edit", $data->id) . '" class=" btn tooltipped bg-warning m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                    return $button;
+                })
+                ->rawColumns([ 'edit'])
+                ->make(true);
+        }
+        return view('sublineas.index');
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function create()
     {
@@ -78,8 +66,7 @@ class SublineaController extends Controller
         }else{
             alert()->error('Registro Erróneo.','La linea no se ha creado.');
         }
-
-        return redirect()->route('sublineas.index'); 
+        return redirect()->route('sublineas.index');
     }
 
     /**

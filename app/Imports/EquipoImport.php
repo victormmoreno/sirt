@@ -27,6 +27,7 @@ class EquipoImport implements ToCollection, WithHeadingRow
     */
     public function collection(Collection $rows)
     {
+        DB::beginTransaction();
         $validacion = null;
         try {
             foreach ($rows as $key => $row) {
@@ -118,7 +119,9 @@ class EquipoImport implements ToCollection, WithHeadingRow
                 }
                 $equipo = Equipo::where('nombre', $row['nombre_equipo'])
                 ->where('nodo_id', $this->nodo)
-                                ->first();
+                ->where('referencia', $row['referencia'])
+                ->where('marca', $row['marca'])
+                ->first();
                 if (!isset($equipo) && $equipo == null) {
                     $equipo = $this->registerEquipo(
                         $params = [
@@ -159,7 +162,7 @@ class EquipoImport implements ToCollection, WithHeadingRow
             'marca'                 => $row['marca'],
             'costo_adquisicion'     => $row['costo_adquisicion'],
             'vida_util'             => $row['vida_util'],
-            'anio_compra'           => Carbon::parse($row['anio_compra'])->format('Y'),
+            'anio_compra'           => $row['anio_compra'],
             'horas_uso_anio'        => $row['promedio_horas_uso'],
         ]);
     }
@@ -174,7 +177,7 @@ class EquipoImport implements ToCollection, WithHeadingRow
             'marca'                 => $row['marca'],
             'costo_adquisicion'     => $row['costo_adquisicion'],
             'vida_util'             => $row['vida_util'],
-            'anio_compra'           => Carbon::parse($row['anio_compra'])->format('Y'),
+            'anio_compra'           => $row['anio_compra'],
             'horas_uso_anio'        => $row['promedio_horas_uso'],
         ]);
     }

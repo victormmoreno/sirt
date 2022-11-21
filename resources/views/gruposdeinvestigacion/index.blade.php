@@ -101,10 +101,9 @@
       +'</td>'
       +'<td>'
       +'<input disabled value="{{ \NodoHelper::returnNameNodoUsuario() }}" />'
-      // +'<label for="nodo">Nodo con contacto</label>'
       +'</td>'
       +'<td>'
-      +'<a class="waves-effect red lighten-3 btn" onclick="eliminar('+cont+');"><i class="material-icons">delete_sweep</i></a>'
+      +'<a class="waves-effect bg-danger white-text btn" onclick="eliminar('+cont+');"><i class="material-icons">delete_sweep</i></a>'
       +'</td>'
       +'</tr>'
     );
@@ -183,7 +182,7 @@
           // +'<label for="nodo">Nodo con contacto</label>'
           +'</td>'
           +'<td>'
-          +'<a class="waves-effect red lighten-3 btn" onclick="eliminar('+cont+');"><i class="material-icons">delete_sweep</i></a>'
+          +'<a class="waves-effect bg-danger white-text btn" onclick="eliminar('+cont+');"><i class="material-icons">delete_sweep</i></a>'
           +'</td>'
           +'</tr>'
         );

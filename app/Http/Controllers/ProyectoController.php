@@ -70,7 +70,7 @@ class ProyectoController extends Controller
 
     /**
      * Formulario que permite cambiar los talentos de un proyecto en cualquier fase
-     * 
+     *
      * @param int id del proyecto
      * @return Response
      * @author dum
@@ -89,7 +89,7 @@ class ProyectoController extends Controller
 
     /**
      * Cambia los talentos de un proyecto
-     * 
+     *
      * @param Request $request
      * @param int id del proyecto
      * @return Response
@@ -99,7 +99,7 @@ class ProyectoController extends Controller
         $proyecto = Proyecto::find($id);
         if ($this->validarAccesoAExpertoACambiarTalentos($proyecto))
             return back();
-        
+
         $req = new ProyectoFaseInicioFormRequest;
         $validator = Validator::make($request->all(), $req->rulesTalentos(), $req->messages());
         if ($validator->fails()) {
@@ -138,7 +138,7 @@ class ProyectoController extends Controller
     {
         return datatables()->of($proyectos)
             ->addColumn('info', function ($data) {
-                $button = "<a class=\"btn light-blue m-b-xs modal-trigger\" href=\"#!\" onclick=\"infoActividad.infoDetailActivityModal('$data->codigo_proyecto')\">
+                $button = "<a class=\"btn bg-info m-b-xs modal-trigger\" href=\"#!\" onclick=\"infoActividad.infoDetailActivityModal('$data->codigo_proyecto')\">
                 <i class=\" material-icons\">info</i>
                 </a>";
                 return $button;
@@ -146,22 +146,22 @@ class ProyectoController extends Controller
                 $seguimiento = '<a class="btn green lighten-1 m-b-xs" href=' . route('pdf.actividad.usos', [$data->id, 'proyecto']) . ' target="_blank"><i class="far fa-file-pdf"></i></a>';
                 return $seguimiento;
             })->addColumn('download_trazabilidad', function ($data) {
-                $seguimiento = '<a class="btn green lighten-1 m-b-xs" href=' . route('excel.proyecto.trazabilidad', $data->actividad_id) . '  target="_blank"><i class="far fa-file-excel"></i></a>';
+                $seguimiento = '<a class="btn bg-success white-text m-b-xs" href=' . route('excel.proyecto.trazabilidad', $data->actividad_id) . '  target="_blank"><i class="far fa-file-excel"></i></a>';
                 return $seguimiento;
             })->addColumn('ver_horas', function ($data) {
-                $seguimiento = '<a class="btn brown lighten-1 m-b-xs" onclick="verHorasDeExpertosEnProyecto('.$data->id.')"><i class="material-icons">access_time</i></a>';
+                $seguimiento = '<a class="btn bg-warning white-text m-b-xs" onclick="verHorasDeExpertosEnProyecto('.$data->id.')"><i class="material-icons">access_time</i></a>';
                 return $seguimiento;
             })->addColumn('proceso', function ($data) {
                 if ($data->nombre_fase == 'Finalizado' || $data->nombre_fase == 'Suspendido') {
-                    $edit = '<a class="btn m-b-xs" href=' . route('proyecto.detalle', $data->id) . '><i class="material-icons">search</i></a>';
+                    $edit = '<a class="btn bg-secondary m-b-xs" href=' . route('proyecto.detalle', $data->id) . '><i class="material-icons">search</i></a>';
                 } else if ($data->nombre_fase == 'Inicio') {
-                    $edit = '<a class="btn m-b-xs" href=' . route('proyecto.inicio', $data->id) . '><i class="material-icons">search</i></a>';
+                    $edit = '<a class="btn bg-secondary m-b-xs" href=' . route('proyecto.inicio', $data->id) . '><i class="material-icons">search</i></a>';
                 } else if ($data->nombre_fase == 'Planeación') {
-                    $edit = '<a class="btn m-b-xs" href=' . route('proyecto.planeacion', $data->id) . '><i class="material-icons">search</i></a>';
+                    $edit = '<a class="btn bg-secondary m-b-xs" href=' . route('proyecto.planeacion', $data->id) . '><i class="material-icons">search</i></a>';
                 } else if ($data->nombre_fase == 'Ejecución') {
-                    $edit = '<a class="btn m-b-xs" href=' . route('proyecto.ejecucion', $data->id) . '><i class="material-icons">search</i></a>';
+                    $edit = '<a class="btn bg-secondary m-b-xs" href=' . route('proyecto.ejecucion', $data->id) . '><i class="material-icons">search</i></a>';
                 } else {
-                    $edit = '<a class="btn m-b-xs" href=' . route('proyecto.cierre', $data->id) . '><i class="material-icons">search</i></a>';
+                    $edit = '<a class="btn bg-secondary m-b-xs" href=' . route('proyecto.cierre', $data->id) . '><i class="material-icons">search</i></a>';
                 }
                 return $edit;
             })->filter(function ($instance) use ($request) {
@@ -543,7 +543,7 @@ class ProyectoController extends Controller
 
     /**
      * Método que valida que un experto no pueda hacer operaciones sobre un proyecto que no está asesorando
-     * 
+     *
      * @param Proyecto $proyecto
      * @return bool
      * @author dum
@@ -1237,9 +1237,8 @@ class ProyectoController extends Controller
                     'proyecto' => $proyecto,
                     'status_code' => Response::HTTP_OK
                 ]
-            ],Response::HTTP_OK);
+            ]);
         }
-
         return response()->json([
             'data' => [
                 'proyecto' => null,

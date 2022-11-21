@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col s12 m12 l12">
         <div class="row">
-            <div class="col s12 m4 l4">
+            <div class="col s12 m12 l4">
                 <ul class="collection">
                     <li class="collection-item">
                         <span class="title black-text text-darken-3">
@@ -45,7 +45,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col s12 m4 l4">
+            <div class="col s12 m12 l4">
                 <ul class="collection">
                     <li class="collection-item">
                         <span class="title black-text text-darken-3">
@@ -97,7 +97,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col s12 m4 l4">
+            <div class="col s12 m12 l4">
                 <ul class="collection">
                     <li class="collection-item">
                         <span class="title black-text text-darken-3">
@@ -153,18 +153,18 @@
     </div>
 </div>
 <div class="center">
-    <span class="mailbox-title orange-text">
+    <span class="mailbox-title primary-text">
         <i class="material-icons">group</i>
         Talentos que participan en el proyecto y dueño(s) de la propiedad intelectual.
     </span>
 </div>
 <div class="divider mailbox-divider"></div>
 <div class="row">
-    <div class="col s12 m3 l3">
-        <div class="card-panel blue lighten-5">
-            <h5 class="center">Talentos que participan en el proyecto</h5>
+    <div class="col s12 m8 l3 offset-m2 ">
+        <div class="card-transparent">
+            <h5 class="center secondary-text">Talentos que participan en el proyecto</h5>
             <table>
-                <thead>
+                <thead class="bg-primary white-text">
                     <tr>
                         <th style="width: 10%">Talento Interlocutor</th>
                         <th style="width: 90%">Talento</th>
@@ -185,12 +185,12 @@
             </table>
         </div>
     </div>
-    <div class="card-panel green lighten-5 col s12 m9 l9">
-        <h5 class="center">Dueño(s) de la propiedad intelectual</h5>
-        <div class="col s12 m4 l4">
-            <div class="card-panel">
+    <div class="card-transparent col s12 m12 l9">
+        <h5 class="center secondary-text">Dueño(s) de la propiedad intelectual</h5>
+        <div class="col s12 m12 l4">
+            <div class="card-transparent m-2">
                 <ul class="collection with-header">
-                    <li class="collection-header"><h5>Empresas</h5></li>
+                    <li class="collection-header"><h5 class="secondary-text">Empresas</h5></li>
                     @if ($proyecto->sedes->count() > 0)
                     @foreach ($proyecto->sedes as $key => $value)
                     <li class="collection-item">
@@ -205,10 +205,10 @@
                 </ul>
             </div>
         </div>
-        <div class="col s12 m4 l4">
-            <div class="card-panel">
+        <div class="col s12 m12 l4">
+            <div class="card-transparent">
                 <ul class="collection with-header">
-                    <li class="collection-header"><h5>Personas (Talentos)</h5></li>
+                    <li class="collection-header"><h5 class="secondary-text">Personas (Talentos)</h5></li>
                     @if ($proyecto->users_propietarios->count() > 0)
                     @foreach ($proyecto->users_propietarios as $key => $value)
                     <li class="collection-item">
@@ -223,10 +223,10 @@
                 </ul>
             </div>
         </div>
-        <div class="col s12 m4 l4">
-            <div class="card-panel">
+        <div class="col s12 m12 l4">
+            <div class="card-transparent">
                 <ul class="collection with-header">
-                    <li class="collection-header"><h5>Grupos de Investigación</h5></li>
+                    <li class="collection-header"><h5 class="secondary-text">Grupos de Investigación</h5></li>
                     @if ($proyecto->gruposinvestigacion->count() > 0)
                     @foreach ($proyecto->gruposinvestigacion as $key => $value)
                     <li class="collection-item">
@@ -244,14 +244,14 @@
     </div>
 </div>
 <div class="center">
-    <span class="mailbox-title orange-text">
+    <span class="mailbox-title primary-text">
         <i class="material-icons">attach_file</i>
         Evidencias de la fase de inicio.
     </span>
 </div>
 <div class="divider mailbox-divider"></div>
 <div class="row">
-    <div class="col s6 m3 l3">
+    <div class="col s12 m6 l3">
         <p class="p-v-xs">
             <input type="checkbox" disabled {{ $proyecto->acc == 1 ? 'checked' : '' }} id="txtacc" name="txtacc" value="1">
             <label for="txtacc">Formato de confidencialidad y compromiso firmado.</label>

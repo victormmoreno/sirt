@@ -44,21 +44,8 @@
                       <input disabled type="text" id="txtlineatecnologica_id" name="txtlineatecnologica_id" value="{{ $proyecto->sublinea->linea->nombre }}">
                       <label for="txtlineatecnologica_id">Línea Tecnológica</label>
                     </div>
-                  </div>
-                  <div class="divider"></div>
-                <center>
-                  <button type="submit" value="send" class="waves-effect cyan darken-1 btn center-aling">
-                    <i class="material-icons right">done</i>
-                    Cambiar experto.
-                  </button>
-                  <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-                    <i class="material-icons right">backspace</i>Cancelar
-                  </a>
-                </center>
-              </form>
+                </div>
             </div>
         </div>
-        </div>
-    </div>
-</main>
+    </main>
 @endsection

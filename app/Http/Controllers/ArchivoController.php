@@ -451,10 +451,8 @@ class ArchivoController extends Controller
         } catch (\Exception $e) {
             return abort(404, $e->getMessage());
         }
-
     }
-
-    /**
+      /**
      * Tabla para mostrar los archivos de una articulacion_proyecto
     * @param int $id Id de la articulacion_proyecto
     * @return Reponse

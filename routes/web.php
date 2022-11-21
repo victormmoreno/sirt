@@ -300,7 +300,7 @@ Route::group(
         Route::get('/{id}/editar', 'IdeaController@edit')->name('idea.edit')->middleware(['auth', 'role_session:Talento']);
         Route::get('/detallesIdea/{id}', 'IdeaController@detallesIdeas')->name('idea.det');
         Route::get('/modalIdeas/{id}', 'IdeaController@abrirModalIdeas')->name('idea.modal');
-        Route::get('/{id}/detalle', 'IdeaController@detalle')->name('idea.detalle');
+        Route::get('/{id}', 'IdeaController@detalle')->name('idea.detalle');
         Route::get('/updateEstadoIdea/{id}/{estado}', 'IdeaController@updateEstadoIdea')->name('idea.update.estado')->middleware(['auth', 'role_session:Infocenter']);
         Route::get('/derivar_idea/{id}/{comite}', 'IdeaController@deviarIdea')->name('idea.derivar')->middleware('role_session:Dinamizador');
         Route::get('/show/{idea}', 'IdeaController@show')->name('idea.show');
@@ -682,7 +682,7 @@ Route::group(
         Route::get('/excelnodo', 'Excel\NodoController@exportQueryAllNodo')
         ->middleware('role_session:Activador')
         ->name('excel.excelnodo');
-        
+
         Route::get('/exportexcelfornodo/{nodo}', 'Excel\NodoController@exportQueryForNodo')
         ->middleware('role_session:Activador|Dinamizador')
         ->name('excel.exportexcelfornodo');
@@ -812,16 +812,11 @@ Route::delete('/notificaciones/{notification}', 'NotificationsController@destroy
     ->name('notifications.destroy')
     ->middleware('disablepreventback');;
 
-/*====================================================================
-=            rutas para las funcionalidades de las lineas            =
-====================================================================*/
-
-
 Route::group([
     'middleware' => 'disablepreventback',
 ], function () {
     Route::get('/lineas/getlineasnodo/{nodo?}', 'LineaController@getAllLineasForNodo')->name('lineas.getAllLineas');
-    Route::resource('lineas', 'LineaController', ['except' => ['destroy']])
+    Route::resource('/lineas', 'LineaController', ['except' => ['destroy']])
         ->names([
             'create'  => 'lineas.create',
             'update'  => 'lineas.update',
@@ -833,15 +828,8 @@ Route::group([
         ]);
 });
 
-/*=====  End of rutas para las funcionalidades de las lineas  ======*/
 
-/*====================================================================
-=            rutas para las funcionalidades de las sublineas            =
-====================================================================*/
-
-Route::resource('sublineas', 'SublineaController', ['except' => ['show']])->middleware('disablepreventback');
-
-/*=====  End of rutas para las funcionalidades de las sublineas  ======*/
+Route::resource('sublineas', 'SublineaController', ['except' => ['show', 'destroy']])->middleware('disablepreventback');
 
 Route::get('creditos', function () {
     return view('configuracion.creditos');
@@ -872,12 +860,14 @@ Route::get('articulaciones/download/inicio/{id}', 'PDF\PdfArticulacionPbtControl
 Route::get('articulaciones/download/cierre/{id}', 'PDF\PdfArticulacionPbtController@downloadFormCierre')->name('pdf.articulacion.cierre')->middleware('role_session:Articulador|Activador');
 
 
+Route::get('articulaciones/export', 'ArticulacionPbtController@export')->name('articulacion.export')->middleware('role_session:Administrador|Activador|Articulador|Dinamizador');
+Route::get('articulaciones/download/inicio/{id}', 'PDF\PdfArticulacionPbtController@downloadFormInicio')->name('pdf.articulacion.inicio')->middleware('role_session:Articulador');
+Route::get('articulaciones/download/cierre/{id}', 'PDF\PdfArticulacionPbtController@downloadFormCierre')->name('pdf.articulacion.cierre')->middleware('role_session:Articulador|Administrador|Activador');
+
 Route::delete('articulaciones/file/{idFile}', 'ArchivoController@destroyFileArticulacion')->name('articulacion.files.destroy')->middleware('role_session:Articulador');
 Route::get('articulaciones/downloadFile/{id}', 'ArchivoController@downloadFileArticulacion')->name('articulacion.files.download');
 Route::get('articulaciones/archivos-articulacion/{id}/{fase}', 'ArchivoController@datatableArchiveArticulacion')->name('articulacion.files');
 Route::post('articulaciones/store/{id}/files', 'ArchivoController@uploadFileArticulacionPbt')->name('articulacion.files.upload')->middleware('role_session:Articulador');
-
-
 
 Route::put('articulaciones/update-articulador/{id}', 'ArticulacionPbtController@updateArticulador')->name('articulacion.update.articulador')->middleware('role_session:Dinamizador');
 Route::get('articulaciones/cambiar-articulador/{id}', 'ArticulacionPbtController@changeArticulador')->name('articulacion.cambiar')->middleware('role_session:Dinamizador');
@@ -898,7 +888,7 @@ Route::get('articulaciones/ejecucion/{id}', 'ArticulacionPbtController@showFaseE
 Route::get('articulaciones/cierre/{id}', 'ArticulacionPbtController@showFaseCierreArticulacion')->name('articulacion.show.cierre')->middleware('role_session:Articulador|Dinamizador|Activador|Talento');
 Route::get('articulaciones/datatable_filtros', 'ArticulacionPbtController@datatableFiltros')->name('articulacion.datatable.filtros')->middleware('role_session:Articulador|Dinamizador|Activador|Talento');
 
-Route::resource('articulaciones/tipoarticulaciones', 'TipoArticulacionController');
+    Route::resource('articulaciones/tipoarticulaciones', 'TipoArticulacionController');
 Route::resource('articulaciones', 'ArticulacionPbtController', ['except' => ['edit', 'delete']]);
 
 

@@ -1,11 +1,23 @@
 @extends('layouts.app')
-@section('meta-title', 'Costo Administrativo ')
-@section('meta-content', 'Costo Administrativo')
-@section('meta-keywords', 'Costo Administrativo')
+@section('meta-title', 'Costos Administrativos')
+@section('meta-content', 'Costos Administrativos')
+@section('meta-keywords', 'Costos Administrativos')
 @section('content')
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
+        <div class="row no-m-t no-m-b m-r-lg m-l-lg">
+            <div class="left left-align">
+                <h5 class="left-align primary-text">
+                    <i class="material-icons left">settings_input_svideo</i>Costos Administrativos
+                </h5>
+            </div>
+            <div class="right right-align show-on-large hide-on-med-and-down">
+                <ol class="breadcrumbs">
+                    <li><a href="{{route('home')}}">Inicio</a></li>
+                    <li class="active">Costos Administrativos</li>
+                </ol>
+            </div>
+        </div>
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
                 <div class="row">
@@ -33,12 +45,9 @@
                             <div class="row">
                                 <div class="col s12 m12 l12">
                                     <div class="center">
-                                        <span class="card-title center-align">
+                                        <span class="card-title center-align primary-text">
                                             Costos Administrativos Fijos Mensuales {{config('app.name')}} {{Carbon\Carbon::now()->year}}
                                         </span>
-                                        <i class="material-icons">
-                                            settings_input_svideo
-                                        </i>
                                     </div>
                                 </div>
                             </div>
@@ -58,8 +67,8 @@
                                 </div>
                                 @endif
                                 <br>
-                                <table class="display responsive-table centered cell-border display compact" id="costoadministrativo_administrador_table"  style="width:100%">
-                                    <thead>
+                                <table class="display responsive-table datatable-example dataTable" id="costoadministrativo_administrador_table"  style="width:100%">
+                                    <thead class="bg-primary white-text">
                                         <tr>
                                             <th rowspan="2">Nodo</th>
                                             <th rowspan="2">Nombre</th>
@@ -78,31 +87,24 @@
                                         <th></th>
                                         <th></th>
                                         <th></th>
-
                                     </tr>
                                 </tfoot>
-                                </table>
+                            </table>
                         </div>
                     {{-- @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
                         <div class="row">
                             <div class="row">
                                 <div class="col s12 m12 l12">
                                     <div class="center-align">
-                                        <span class="card-title center-align">
+                                        <span class="card-title center-align primary-text">
                                             Costos Administrativos Fijos Mensuales Tecnopaque Nodo {{\NodoHelper::returnNameNodoUsuario()}} {{Carbon\Carbon::now()->year}}
                                         </span>
-                                        <i class="material-icons">
-                                            settings_input_svideo
-                                        </i>
                                     </div>
                                 </div>
-
                             </div>
-                            <div class="divider">
-                            </div>
-                            <br>
-                            <table class="display responsive-table centered cell-border display compact" id="costoadministrativo_dinamizador_table1" style="width:100%">
-                                <thead>
+                            <div class="divider"></div>
+                            <table class="display responsive-table datatable-example dataTable" id="costoadministrativo_dinamizador_table1" style="width:100%">
+                                <thead class="bg-primary white-text">
                                     <tr>
                                         <th rowspan="2">Nodo</th>
                                         <th rowspan="2">Nombre</th>
@@ -113,7 +115,6 @@
                                         <th>Costos Administrativos por mes</th>
                                         <th>Costos Administrativos por día</th>
                                         <th>Costos Administrativos por hora</th>
-
                                     </tr>
                                 </thead>
                                 <tfoot>
@@ -133,16 +134,6 @@
         </div>
     </div>
 </main>
-<div  class="modal detalleUsers">
-  <div class="modal-content">
-    <center><h4 class="center-aling"></h4></center>
-    <div class="divider"></div>
-    <div class="titulo_users"></div>
-  </div>
-  <div class="modal-footer">
-    <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
-  </div>
-</div>
 @endsection
 @push('script')
     <script>

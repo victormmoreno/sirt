@@ -305,7 +305,7 @@ var infoActividad = {
             }).done(function (response) {
                 $("#actividad_titulo").empty();
                 $("#detalleActividad").empty();
-                $("#actividad_titulo").append("<span class='cyan-text text-darken-3'>"+response.data.actividad.codigo_actividad +' - '+ response.data.actividad.nombre+" </span><br>");
+                $("#actividad_titulo").append("<span class='primary-text'>"+response.data.actividad.codigo_actividad +' - '+ response.data.actividad.nombre+" </span><br>");
                 if(response.data.actividad.articulacion_proyecto.proyecto !== null){
                     infoActividad.openIsProyect(response);
                 }else if(response.data.actividad.articulacion_proyecto.articulacion !== null){
@@ -319,27 +319,27 @@ var infoActividad = {
         $("#detalleActividad").append(`
             <table class="striped centered">
                 <TR>
-                    <TH width="25%">Código Proyecto</TH>
+                    <TH class="secondary-text" width="25%">Código Proyecto</TH>
                     <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.codigo_actividad)}</TD>
-                    <TH width="25%" >Nombre Proyecto</TH>
+                    <TH class="secondary-text" width="25%" >Nombre Proyecto</TH>
                     <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.nombre)}</TD>
                 </TR>
                 <TR>
-                    <TH width="25%">Experto</TH>
+                    <TH class="secondary-text" width="25%">Experto</TH>
                     <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.proyecto.asesor.user.documento)} - ${response.data.actividad.articulacion_proyecto.proyecto.asesor.user.nombres} ${response.data.actividad.articulacion_proyecto.proyecto.asesor.user.apellidos}</TD>
-                    <TH width="25%">Correo Electrónico</TH>
+                    <TH class="secondary-text" width="25%">Correo Electrónico</TH>
                     <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.proyecto.asesor.user.email)}</TD>
                 </TR>
             </table>
             <div class="right">
                 <small>
-                    <b>Cantidad de usos de infraestructura:  </b>
+                    <b class="secondary-text">Cantidad de usos de infraestructura:  </b>
                     ${infoActividad.showInfoNull(response.data.total_usos)}
                 </small>
             </div>
             <div class="divider mailbox-divider"></div>
             <div class="center">
-                <span class="mailbox-title">
+                <span class="mailbox-title primary-text">
                     <i class="material-icons">group</i>
                     Talentos que participan en el proyecto y dueño(s) de la propiedad intelectual.
                 </span>
@@ -347,10 +347,10 @@ var infoActividad = {
             <div class="divider mailbox-divider"></div>
                 <div class="row">
                 <div class="col s12 m12 l12">
-                        <div class="card-panel blue lighten-5">
-                            <h5 class="center">Talentos que participan en el proyecto</h5>
+                        <div class="card-transparent">
+                            <h5 class="center primary-text">Talentos que participan en el proyecto</h5>
                             <table>
-                                <thead>
+                                <thead class="bg-primary white-text">
                                     <tr>
                                         <th style="width: 10%">Talento Interlocutor</th>
                                         <th style="width: 40%">Talento</th>
@@ -366,31 +366,30 @@ var infoActividad = {
                     </div>
                 </div>
                 <div class="row">
-                    <div class="card-panel green lighten-5 col s12 m12 l12">
-                        <h5 class="center">Dueño(s) de la propiedad intelectual</h5>
+                    <div class="card-transparent col s12 m12 l12">
+                        <h5 class="center primary-text">Dueño(s) de la propiedad intelectual</h5>
                         <div class="row">
                             <div class="col s12 m4 l4">
-                                <div class="card-panel">
+                                <div class="card-transparent">
                                     <ul class="collection with-header">
-                                        <li class="collection-header"><h5>Empresas</h5></li>
+                                        <li class="collection-header"><h5 class="secondary-text">Empresas</h5></li>
                                         <div id="detalleEmpresas"></div>
                                     </ul>
                                 </div>
                             </div>
                             <div class="col s12 m4 l4">
-                                <div class="card-panel">
+                                <div class="card-transparent">
                                     <ul class="collection with-header">
-                                        <li class="collection-header"><h5>Personas (Talentos)</h5></li>
+                                        <li class="collection-header"><h5 class="secondary-text">Personas (Talentos)</h5></li>
                                         <div id="detallePropiedadTalentos"></div>
                                     </ul>
                                 </div>
                             </div>
                             <div class="col s12 m4 l4">
-                                <div class="card-panel">
+                                <div class="card-transparent">
                                     <ul class="collection with-header">
-                                        <li class="collection-header"><h5>Grupos de Investigación</h5></li>
+                                        <li class="collection-header"><h5 class="secondary-text">Grupos de Investigación</h5></li>
                                         <div id="detallePropiedadGrupo"></div>
-
                                     </ul>
                                 </div>
                             </div>

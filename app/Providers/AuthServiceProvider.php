@@ -30,6 +30,7 @@ use App\Policies\CharlaInformativaPolicy;
 use App\Policies\IndicadorPolicy;
 use App\Policies\GrupoPolicy;
 use App\Policies\ArticulacionPbt\ArticulacionPbtPolicy;
+use App\Policies\ArticulacionPbt\TipoArticulacionPolicy;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;

@@ -1,5 +1,36 @@
 /* Base */
-
+:root {
+    --blue: #007bff;
+    --indigo: #6610f2;
+    --purple: #6f42c1;
+    --pink: #e83e8c;
+    --red: #dc3545;
+    --orange: #fd7e14;
+    --yellow: #ffc107;
+    --green: #28a745;
+    --teal: #20c997;
+    --cyan: #17a2b8;
+    --white: #fff;
+    --gray: #6c757d;
+    --gray-dark: #343a40;
+    --primary-lighten: #c8e6c9;
+    --primary: #39A900;
+    --primary-darken: #1b5e20;
+    --secondary: #00324D;
+    --tertiary: #82DEF0;
+    --success: #28a745;
+    --info: #17a2b8;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --light: #f8f9fa;
+    --dark: #343a40;
+    --breakpoint-xs: 0;
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+    --font-family-work-sans: "Work Sans", -apple-system,Roboto, BlinkMacSystemFont, "Segoe UI",  "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
 body,
 body *:not(html):not(style):not(br):not(tr):not(code) {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
@@ -8,7 +39,7 @@ body *:not(html):not(style):not(br):not(tr):not(code) {
 }
 
 body {
-    background-color: #f1e6cd;
+    background-color: var(--primary-lighten);
     color: #4e5053;
     height: 100%;
     hyphens: auto;
@@ -33,7 +64,7 @@ blockquote {
 }
 
 a {
-    color: #e65100 ;
+    color: var(--primary) ;
     text-decoration:none;
     font-weight: 600;
 }
@@ -88,7 +119,7 @@ img {
 /* Layout */
 
 .wrapper {
-    background-color: #ffb74d ;
+    background-color: var(--primary) ;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -115,7 +146,7 @@ img {
 }
 
 .header a {
-    color: #ffb74d;
+    color: var(--primary);
     font-size: 19px;
     font-weight: bold;
     text-decoration: none;
@@ -126,9 +157,9 @@ img {
 
 
 .body {
-    background-color: #f1e6cd;
-    border-bottom: 1px solid #f2f0ed;
-    border-top: 1px solid #edeff2;
+    background-color: var(--primary-lighten);
+    border-bottom: 1px solid var(--primary-lighten);
+    border-top: 1px solid var(--primary-lighten);
     margin: 0;
     padding: 0;
     width: 100%;
@@ -141,7 +172,7 @@ img {
 .inner-body {
     background-color: rgba(178, 223, 219, 0.2);
     /*opacity:0.6;*/
-    border: 4px solid #ffb74d ;
+    border: 4px solid var(--primary) ;
     margin: 0 auto;
     padding: 0;
     width: 570px;
@@ -153,7 +184,7 @@ img {
 /* Subcopy */
 
 .subcopy {
-    border-top: 1px solid #ffb74d;
+    border-top: 1px solid var(--primary);
     margin-top: 25px;
     padding-top: 25px;
 }
@@ -165,6 +196,7 @@ img {
 /* Footer */
 
 .footer {
+    color: white;
     margin: 0 auto;
     padding: 0;
     text-align: center;
@@ -180,6 +212,8 @@ img {
     text-align: center;
 }
 
+
+
 /* Tables */
 
 .table table {
@@ -191,7 +225,7 @@ img {
 }
 
 .table th {
-    border-bottom: 1px solid #ffb74d ;
+    border-bottom: 1px solid var(--primary) ;
     padding-bottom: 8px;
     margin: 0;
 }
@@ -208,13 +242,9 @@ img {
 .content-cell {
     padding: 35px;
     text-align: center;
-
 }
 
-
-
 /* Buttons */
-
 .action {
     margin: 30px auto;
     padding: 0;
@@ -236,11 +266,11 @@ img {
 
 .button-blue,
 .button-primary {
-    background-color: #ffb74d;
-    border-top: 10px solid #ffb74d;
-    border-right: 18px solid #ffb74d;
-    border-bottom: 10px solid #ffb74d;
-    border-left: 18px solid #ffb74d;
+    background-color: var(--primary);
+    border-top: 10px solid var(--primary);
+    border-right: 18px solid var(--primary);
+    border-bottom: 10px solid var(--primary);
+    border-left: 18px solid var(--primary);
 }
 
 .button-green,
@@ -268,7 +298,7 @@ img {
 }
 
 .panel-content {
-    background-color: #f1f5f8;
+    background-color: var(--primary-lighten);
     padding: 16px;
 }
 
@@ -282,7 +312,7 @@ img {
 }
 .tittle {
     text-align: center;
-    color: #ffb74d;
+    color: var(--primary);
 
 }
 
@@ -290,8 +320,8 @@ img {
 /* Promotions */
 
 .promotion {
-    background-color: #ffffff;
-    border: 2px dashed #9ba2ab;
+    background-color: var(--primary-lighten);
+    border: 2px dashed var(--primary-lighten);
     margin: 0;
     margin-bottom: 25px;
     margin-top: 25px;
@@ -319,13 +349,13 @@ img {
     padding: 3px;
     border-width: 1px;
     border-style: solid;
-    border-color: #f79646 #ccc;
+    border-color: var(--primary) var(--primary-lighten);
     width: 100%;
     border-collapse: collapse;
 
 }
 .subtittle{
-    color:#ffb74d;
+    color:var(--primary);
     text-align: center;
 }
 .subtittle-value{

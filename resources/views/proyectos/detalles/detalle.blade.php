@@ -1,51 +1,42 @@
 @extends('layouts.app')
 @section('meta-title', 'Proyectos de Base Tecnológica')
 @section('content')
-<main class="mn-inner inner-active-sidebar">
-    <div class="content">
-        <div class="row no-m-t no-m-b">
-        <div class="col s12 m12 l12">
-            <div class="row no-m-t no-m-b">
-                <div class="col s8 m8 l9">
-                    <h5 class="left-align orange-text text-darken-3">
+    <main class="mn-inner inner-active-sidebar">
+        <div class="content">
+            <div class="row no-m-t no-m-b m-r-lg m-l-lg">
+                <div class="left left-align">
+                    <h5 class="left-align primary-text">
                         <a class="footer-text left-align" href="{{route('proyecto')}}">
                             <i class="material-icons arrow-l">arrow_back</i>
                         </a>Proyectos de Base Tecnológica
                     </h5>
                 </div>
-                <div class="col s4 m4 l3 rigth-align show-on-large hide-on-med-and-down">
+                <div class="right right-align show-on-large hide-on-med-and-down">
                     <ol class="breadcrumbs">
-                        <li>
-                            <a href="{{route('home')}}">
-                                Inicio
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{route('proyecto')}}">
-                                PBT
-                            </a>
-                        </li>
-                        <li class="active">
-                            Detalle
-                        </li>
+                        <li><a href="{{ route('home') }}">Inicio</a></li>
+                        <li><a href="{{route('proyecto')}}">Proyectos</a></li>
+                        <li class="active">Detalle</li>
                     </ol>
                 </div>
             </div>
-            <div class="card mailbox-content">
-                <div class="card-content container-fluid">
-                    <div class="row no-m-t no-m-b">
-                        <div class="col s12 m12 l12">
-                            <div class="mailbox-view">
-                                <div class="mailbox-view-header">
-                                    <div class="left">
-                                        <span class=" mailbox-title title orange-text text-darken-3">{{$proyecto->present()->proyectoNode()}}</span>
-                                    </div>
-                                    <div class="right mailbox-buttons">
-                                        <span class="mailbox-title">
+            <div class="row no-m-t no-m-b">
+                <div class="col s12 m12 l12">
+                    <div class="card mailbox-content">
+                        <div class="card-content container-fluid">
+                            <div class="row no-m-t no-m-b">
+                                <div class="col s12 m12 l12">
+                                    <div class="mailbox-view">
+                                        <div class="mailbox-view-header">
+                                            <div class="left">
+                                                <span
+                                                    class=" mailbox-title title primary-text">{{$proyecto->present()->proyectoNode()}}</span>
+                                            </div>
+                                            <div class="right mailbox-buttons">
+                                            <span class="mailbox-title">
                                             <p class="rigth">
                                                 {{$proyecto->articulacion_proyecto->actividad->present()->actividadCode()}} -  {{$proyecto->articulacion_proyecto->actividad->present()->actividadName()}}
                                             </p>
-                                            <br />
+                                            <br/>
                                             <p class="right">Linea Tecnológica:
                                                 {{$proyecto->present()->proyectoAbreviaturaLinea()}} - {{$proyecto->present()->proyectoLinea()}}
                                             </p>
@@ -54,7 +45,20 @@
                                                 {{$proyecto->articulacion_proyecto->actividad->present()->actividadcreatedAt()}}
                                             </small>
                                         </span>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <a class="waves-effect waves-teal btn-flat"
+                                       href="{{route('proyecto.certificacion', $proyecto->id)}}">Generar carta de
+                                        certificación</a>
+                                    <div class="divider"></div>
+                                    <ul class="tabs">
+                                        <li class="tab col s3"><a class="active" href="#inicio">Inicio</a></li>
+                                        <li class="tab col s3"><a href="#planeacion">Planeación</a></li>
+                                        <li class="tab col s3"><a href="#ejecucion">Ejecución</a></li>
+                                        <li class="tab col s3"><a href="#cierre">Cierre</a></li>
+                                    </ul>
+                                    @include('proyectos.historial_cambios')
                                 </div>
                             </div>
                             <div class="divider"></div>
@@ -85,129 +89,126 @@
                                 @include('proyectos.detalles.detalle_fase_cierre')
                             </div>
                         </div>
-                        <center>
-                            <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center">
-                                <i class="material-icons right">backspace</i>Volver
-                            </a>
-                        </center>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
-@include('ideas.modals')
+    </main>
+    @include('ideas.modals')
 @endsection
 @push('script')
-<script>
-    datatableArchivosDeUnProyecto_inicio();
-    datatableArchivosDeUnProyecto_planeacion();
-    datatableArchivosDeUnProyecto_ejecucion();
-    datatableArchivosDeUnProyecto_cierre();
-    function datatableArchivosDeUnProyecto_inicio() {
-        $('.inicio').DataTable({
-            language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            processing: true,
-            serverSide: true,
-            order: false,
-            ajax:{
-            url: "{{route('proyecto.files', [$proyecto->id, 'Inicio'])}}",
-            type: "get",
-            },
-            columns: [
-            {
-                data: 'file',
-                name: 'file',
-                orderable: false,
-            },
-            {
-                data: 'download',
-                name: 'download',
-                orderable: false,
-            },
-            ],
-        });
-    }
-    function datatableArchivosDeUnProyecto_planeacion() {
-        $('.planeacion').DataTable({
-            language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            processing: true,
-            serverSide: true,
-            order: false,
-            ajax:{
-            url: "{{route('proyecto.files', [$proyecto->id, 'Planeación'])}}",
-            type: "get",
-            },
-            columns: [
-            {
-                data: 'file',
-                name: 'file',
-                orderable: false,
-            },
-            {
-                data: 'download',
-                name: 'download',
-                orderable: false,
-            },
-            ],
-        });
-    }
-    function datatableArchivosDeUnProyecto_ejecucion() {
-        $('.ejecucion').DataTable({
-            language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            processing: true,
-            serverSide: true,
-            order: false,
-            ajax:{
-            url: "{{route('proyecto.files', [$proyecto->id, 'Ejecución'])}}",
-            type: "get",
-            },
-            columns: [
-            {
-                data: 'file',
-                name: 'file',
-                orderable: false,
-            },
-            {
-                data: 'download',
-                name: 'download',
-                orderable: false,
-            },
-            ],
-        });
-    }
-    function datatableArchivosDeUnProyecto_cierre() {
-        $('.cierre').DataTable({
-            language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            processing: true,
-            serverSide: true,
-            order: false,
-            ajax:{
-            url: "{{route('proyecto.files', [$proyecto->id, 'Cierre'])}}",
-            type: "get",
-            },
-            columns: [
-            {
-                data: 'file',
-                name: 'file',
-                orderable: false,
-            },
-            {
-                data: 'download',
-                name: 'download',
-                orderable: false,
-            },
-            ],
-        });
-    }
-</script>
+    <script>
+        datatableArchivosDeUnProyecto_inicio();
+        datatableArchivosDeUnProyecto_planeacion();
+        datatableArchivosDeUnProyecto_ejecucion();
+        datatableArchivosDeUnProyecto_cierre();
+
+        function datatableArchivosDeUnProyecto_inicio() {
+            $('.inicio').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                order: false,
+                ajax: {
+                    url: "{{route('proyecto.files', [$proyecto->id, 'Inicio'])}}",
+                    type: "get",
+                },
+                columns: [
+                    {
+                        data: 'file',
+                        name: 'file',
+                        orderable: false,
+                    },
+                    {
+                        data: 'download',
+                        name: 'download',
+                        orderable: false,
+                    },
+                ],
+            });
+        }
+
+        function datatableArchivosDeUnProyecto_planeacion() {
+            $('.planeacion').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                order: false,
+                ajax: {
+                    url: "{{route('proyecto.files', [$proyecto->id, 'Planeación'])}}",
+                    type: "get",
+                },
+                columns: [
+                    {
+                        data: 'file',
+                        name: 'file',
+                        orderable: false,
+                    },
+                    {
+                        data: 'download',
+                        name: 'download',
+                        orderable: false,
+                    },
+                ],
+            });
+        }
+
+        function datatableArchivosDeUnProyecto_ejecucion() {
+            $('.ejecucion').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                order: false,
+                ajax: {
+                    url: "{{route('proyecto.files', [$proyecto->id, 'Ejecución'])}}",
+                    type: "get",
+                },
+                columns: [
+                    {
+                        data: 'file',
+                        name: 'file',
+                        orderable: false,
+                    },
+                    {
+                        data: 'download',
+                        name: 'download',
+                        orderable: false,
+                    },
+                ],
+            });
+        }
+
+        function datatableArchivosDeUnProyecto_cierre() {
+            $('.cierre').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                order: false,
+                ajax: {
+                    url: "{{route('proyecto.files', [$proyecto->id, 'Cierre'])}}",
+                    type: "get",
+                },
+                columns: [
+                    {
+                        data: 'file',
+                        name: 'file',
+                        orderable: false,
+                    },
+                    {
+                        data: 'download',
+                        name: 'download',
+                        orderable: false,
+                    },
+                ],
+            });
+        }
+    </script>
 @endpush

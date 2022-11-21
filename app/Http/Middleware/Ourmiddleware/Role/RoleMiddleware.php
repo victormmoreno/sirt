@@ -3,7 +3,7 @@
 namespace App\Http\Middleware\Ourmiddleware\Role;
 
 use Closure;
-use Illuminate\Support\{Arr, Facades\Auth};
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 
 class RoleMiddleware
@@ -25,7 +25,9 @@ class RoleMiddleware
         }
         $roles = is_array($role) ? $role : explode('|', $role);
         if ( !collect($roles)->contains( session()->get('login_role') ) ) {
-          throw UnauthorizedException::forRoles($roles);
+            //throw UnauthorizedException::forRoles($roles);
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
         }
         return $next($request);
     }

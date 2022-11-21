@@ -27,6 +27,11 @@ class UsoInfraestructuraController extends Controller
 
         } else if($tipoActividad == 'articulacion'){
             $data = ArticulacionPbt::findOrFail($id);
+            if(request()->user()->cannot('downloadFile', $data))
+            {
+                alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+                return redirect()->route('home');
+            }
             $pdf = PDF::loadView('pdf.usos.seguimiento', ['data' => $data, 'tipo_actividad' => $tipoActividad]);
             $pdf->setPaper(strtolower('LETTER'), $orientacion = 'landscape');
             return $pdf->stream('Seguimiento_' . $data->present()->articulacionCode(). '.pdf');

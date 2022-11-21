@@ -4,7 +4,7 @@
 }
 
 .cyan-text.text-darken-3 {
-  color: #ff8f00 !important;
+  color: var(--primary) !important;
 }
 
 @media(max-width:768px){
@@ -12,7 +12,7 @@
 #charlasInformativasNodo_table > thead, #charlasInformativasNodo_table > tbody {
     width: 100% !important;
   }
-  
+
   .waves-effect .waves-light .btn-large{
     letter-spacing: -3.5px;
   }
@@ -98,7 +98,7 @@
   }
 
   .cyan-text.text-darken-3 {
-    color:#ff8f00 !important;
+    color: var(--primary) !important;
   }
 
   .mn-inner.inner-active-sidebar.hidden-fixed-sidebar{

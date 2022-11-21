@@ -1,7 +1,6 @@
 <div class="col s12 m12 l12">
     <ul class="collection with-header">
         <li class="collection-header center"><h6><b>Roles</b></h6></li>
-
         @forelse($roles as  $name)
             <li class="collection-item">
                 <p class="p-v-xs">

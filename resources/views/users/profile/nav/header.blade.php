@@ -3,8 +3,8 @@
         {!!$user->present()->userProfileUserImage()!!}
     </div>
     <div class="left">
-        <span class="mailbox-title">
-            {{isset($user) ? $user->nombres . ' ' . $user->apellidos : auth()->user()->nombres.' '.auth()->user()->apellidos}}
+        <span class="mailbox-title secondary-text">
+            {{auth()->check() ? auth()->user()->nombres.' '.auth()->user()->apellidos : ''}}
         </span>
         <span class="mailbox-author">
             {{$user->getRoleNames()->implode(', ')}}
