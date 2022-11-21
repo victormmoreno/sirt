@@ -509,10 +509,13 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
 
 // Consultas las ideas de proyecto que fueron aprobadas en el comité
 function consultarIdeasDeProyectoEmprendedores_Proyecto_FaseInicio() {
-    let nodo = null;
-    let id_experto = null;
-    nodo = $('#txtnodo_id').val();
-    id_experto = $('#txtexperto_id_proyecto').val();
+    let nodo = 1;
+    let id_experto = 1;
+    if (isset($('#txtnodo_id').val()))
+        nodo = $('#txtnodo_id').val();
+    if (isset($('#txtexperto_id_proyecto').val()))
+        id_experto = $('#txtexperto_id_proyecto').val();
+    //id_experto = $('#txtexperto_id_proyecto').val();
     $('#ideasDeProyectoConEmprendedores_proyecto_table').dataTable().fnDestroy();
     $('#ideasDeProyectoConEmprendedores_proyecto_table').DataTable({
         language: {

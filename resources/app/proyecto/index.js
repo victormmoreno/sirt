@@ -567,19 +567,19 @@ $("#codigo_proyecto_tblProyectos_Master").keyup(function(){
 });
 
 $("#gestor_tblProyectos_Master").keyup(function(){
-$('#tblProyectos_Master').DataTable().draw();
+    $('#tblProyectos_Master').DataTable().draw();
 });
 
 $("#nombre_tblProyectos_Master").keyup(function(){
-$('#tblProyectos_Master').DataTable().draw();
+    $('#tblProyectos_Master').DataTable().draw();
 });
 
 $("#sublinea_nombre_tblProyectos_Master").keyup(function(){
-$('#tblProyectos_Master').DataTable().draw();
+    $('#tblProyectos_Master').DataTable().draw();
 });
 
 $("#estado_nombre_tblProyectos_Master").keyup(function(){
-$('#tblProyectos_Master').DataTable().draw();
+    $('#tblProyectos_Master').DataTable().draw();
 });
 
 /**
@@ -588,12 +588,7 @@ $('#tblProyectos_Master').DataTable().draw();
 function consultarProyectosUnNodoPorAnho() {
 let anho_proyectos_nodo = $('#anho_proyectoPorNodoYAnho').val();
 let nodo = $('#nodo_proyectoPorNodoYAnho').val();
-// if (anho_proyectos_nodo == undefined) {
-//     anho_proyectos_nodo = -1;
-// }
-// if (nodo == undefined) {
-//     nodo = -1;
-// }
+
 $('#tblProyectos_Master').dataTable().fnDestroy();
 $('#tblProyectos_Master').DataTable({
     language: {
@@ -604,13 +599,13 @@ $('#tblProyectos_Master').DataTable({
     order: [ 0, 'desc' ],
     "lengthChange": false,
     ajax:{
-    url: host_url + "/proyecto/datatableProyectosDelNodoPorAnho/"+nodo+"/"+anho_proyectos_nodo,
+    url: host_url + "/proyecto/datatableProyectosAnho/"+nodo+"/"+anho_proyectos_nodo,
     data: function (d) {
         d.codigo_proyecto = $('#codigo_proyecto_tblProyectos_Master').val(),
         d.gestor = $('#gestor_tblProyectos_Master').val(),
         d.nombre = $('#nombre_tblProyectos_Master').val(),
         d.sublinea_nombre = $('#sublinea_nombre_tblProyectos_Master').val(),
-        d.estado_nombre = $('#estado_nombre_tblProyectos_Master').val(),
+        d.nombre_fase = $('#estado_nombre_tblProyectos_Master').val(),
         d.search = $('input[type="search"]').val()
     }
     },

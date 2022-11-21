@@ -394,7 +394,7 @@ class ArchivoController extends Controller
     {
         try {
             $ruta = $this->archivoRepository->consultarRutaDeArchivoDeUnaArticulacionProyectoPorId($idFile);
-            dd($ruta->articulacion_proyecto->proyecto->asesor_id);
+            // dd($ruta->articulacion_proyecto->proyecto->asesor_id);
             if (!$this->verificarAccesoADescarga($ruta)) {
                 toast('No haces parte de este proyecto, por lo que no lo puedes descargar!','warning')->autoClose(2000)->position('top-end');
                 return back();

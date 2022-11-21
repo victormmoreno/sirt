@@ -1539,7 +1539,8 @@ class ProyectoRepository
             'economia_naranja',
             'fases.nombre AS nombre_fase',
             'proyectos.id',
-            'actividades.id AS actividad_id'
+            'actividades.id AS actividad_id',
+            'proyectos.asesor_id'
         )
         ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
         ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) as nombre_idea')

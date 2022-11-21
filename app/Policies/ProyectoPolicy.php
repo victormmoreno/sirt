@@ -10,21 +10,55 @@ class ProyectoPolicy
 {
     use HandlesAuthorization;
 
-
-    /**
-     * Muestra los campos que requiere el administrador para generar indicadores
-     *
+    /** 
+     * Determina quienes pueden ver el detalle de un proyecto
+     * 
      * @param App\User $user
+     * @param App\Models\Proyecto $proyecto
      * @return bool
      * @author dum
-     **/
-    // public function showIndicadoresProyectoOptions(User $user)
-    // {
-    //     if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador()) {
-    //         return true;
-    //     }
-    //     return false;
-    // }
+    */
+    public function detalle(User $user, Proyecto $proyecto)
+    {
+        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsArticulador())
+            return true;
+        if (session()->get('login_role') == $user->IsGestor() && $proyecto->asesor->user->id == auth()->user()->id)
+            return true;
+        if (session()->get('login_role') == $user->IsDinamizador() && $proyecto->nodo_id == auth()->user()->dinamizador->nodo_id)
+            return true;
+        if (session()->get('login_role') == $user->IsInfocenter() && $proyecto->nodo_id == auth()->user()->infocenter->nodo_id)
+            return true;
+        if (session()->get('login_role') == $user->IsArticulador() && $proyecto->nodo_id == auth()->user()->articulador->nodo_id)
+            return true;
+        if (session()->get('login_role') == $user->IsTalento()) {
+            $talento = $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_id', auth()->user()->talento->id)->first();
+            if ($talento != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    
+
+    /** 
+     * Determina quienes pueden cambiar talentos de un proyecto
+     * 
+     * @param App\User $user
+     * @param App\Models\Proyecto $proyecto
+     * @return bool
+     * @author dum
+    */
+    public function cambiar_talentos(User $user, Proyecto $proyecto)
+    {
+        if (session()->get('login_role') == $user->IsAdministrador()) {
+            return true;
+        }
+        if (session()->get('login_role') == $user->IsGestor() && $proyecto->asesor_id == auth()->user()->gestor->id) {
+            return true;
+        }
+        return false;
+    }
 
     /** 
      * Determina quienes pueden ver y usar el botón de crear proyectos

@@ -25,7 +25,7 @@
         <input type="text" name="sublinea_nombre" id="sublinea_nombre_tblProyectos_Master" placeholder="Buscar por sublinea">
       </th>
       <th>
-        <input type="text" name="nombre_fase" id="sublinea_nombre_tblProyectos_Master" placeholder="Buscar por fase">
+        <input type="text" name="nombre_fase" id="estado_nombre_tblProyectos_Master" placeholder="Buscar por fase">
       </th>
       <th></th>
       <th></th>
