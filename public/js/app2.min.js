@@ -4733,7 +4733,7 @@ var UserIndex = {
             $("#divyear").hide();
             $('#filter_year>option[value="all"]').attr('selected', 'selected');
         }
-        
+
     },
     fillDatatatablesUsers(filter_nodo ,filter_role, filter_state, filter_year){
         var datatable = $('#users_data_table').DataTable({
@@ -4743,6 +4743,7 @@ var UserIndex = {
             "lengthChange": false,
             processing: true,
             serverSide: true,
+            responsive: true,
             "order": [[ 1, "desc" ]],
             ajax:{
                 url: host_url + "/usuario",
@@ -4782,8 +4783,9 @@ var UserIndex = {
                 }, {
                     data: 'detail',
                     name: 'detail',
+                    searchable: false,
                     orderable: false,
-                }, 
+                },
             ],
         });
     },
@@ -4835,7 +4837,7 @@ var UserIndex = {
                     data: 'detail',
                     name: 'detail',
                     orderable: false,
-                }, 
+                },
             ],
         });
     }
@@ -4864,9 +4866,9 @@ $('#filter_user').click(function(){
             },
             "lengthChange": false
         }).clear().draw();
-        
+
     }
-    
+
 });
 
 $('#filter_talentos').click(function(){
@@ -4882,7 +4884,7 @@ $('#filter_talentos').click(function(){
 
     if((filter_nodo != '' || filter_nodo != null) && filter_role !='' && filter_state != '' && filter_year !=''){
         UserIndex.fillDatatatablesTalentos(filter_nodo , filter_role, filter_state, filter_year);
-        
+
     }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && filter_role !='' && filter_state != '' && filter_year !=''){
         UserIndex.fillDatatatablesTalentos(filter_nodo = null , filter_role, filter_state, filter_year);
     }else{
@@ -4892,9 +4894,9 @@ $('#filter_talentos').click(function(){
             },
             "lengthChange": false
         }).clear().draw();
-        
+
     }
-    
+
 });
 
 $('#download_users').click(function(){
