@@ -7,7 +7,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: {
-            url: host_url + "lineas",
+            url: `${host_url}/lineas`,
         },
         columns: [{
             data: 'abreviatura',

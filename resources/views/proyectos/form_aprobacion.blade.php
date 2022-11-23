@@ -2,10 +2,10 @@
     {!! method_field('PUT')!!}
     @csrf
     <div class="divider"></div>
-    <center>
+    <div class="center-align">
         @include('proyectos.botones_aprobacion_component')
-        <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
+        <a href="{{route('proyecto')}}" class="waves-effect bg-danger btn center-aling">
             <i class="material-icons right">backspace</i>Cancelar
         </a>
-    </center>
+    </div>
 </form>

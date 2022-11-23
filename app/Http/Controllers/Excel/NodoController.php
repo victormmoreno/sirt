@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Excel;
 
 use App\Exports\Nodo\NodoExport;
+use App\Models\Nodo;
 use App\Exports\Nodo\{NodoInfoExport};
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
@@ -72,9 +73,14 @@ class NodoController extends Controller
      */
     public function exportQueryAllNodo()
     {
-        $query = $this->getNodoRepository()->getTeamTecnoparque()->get();
-        $this->setQuery($query);
-        return Excel::download(new NodoExport($this->getQuery()), 'Nodos ' . config('app.name') . '.xlsx');
+        if(request()->user()->can('downloadAll', Nodo::class))
+        {
+            $query = $this->getNodoRepository()->getTeamTecnoparque()->get();
+            $this->setQuery($query);
+            return Excel::download(new NodoExport($this->getQuery()), 'Nodos ' . config('app.name') . '.xlsx');
+        }
+        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+        return redirect()->back();
     }
 
     /**
@@ -87,14 +93,18 @@ class NodoController extends Controller
     public function exportQueryForNodo($nodo)
     {
         $query = $this->getNodoRepository()->findNodoForShow($nodo);
+        if(request()->user()->can('downloadOne', $query)) {
+            $queryLineas = $query->lineas;
+            $queryDinamizadores = $query->dinamizador->where('user.estado', 1)->where('user.deleted_at', null)->values()->all();
+            $queryInfocenters = $query->infocenter->where('user.estado', 1)->where('user.deleted_at', null)->values()->all();
+            $queryIngresos = $query->ingresos->where('user.estado', 1)->where('user.deleted_at', null)->values()->all();
+            $queryGestores = $query->gestores->where('user.estado', 1)->where('user.deleted_at', null)
+                ->values()
+                ->all();
+            return Excel::download(new NodoInfoExport($query, $queryDinamizadores, $queryGestores, $queryInfocenters, $queryIngresos, $queryLineas), 'Tecnoparque Nodo ' . $query->entidad->nombre . '.xlsx');
+        }
+        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+        return redirect()->back();
 
-        $queryLineas = $query->lineas;
-        $queryDinamizadores = $query->dinamizador->where('user.estado', 1)->where('user.deleted_at', null)->values()->all();
-        $queryInfocenters = $query->infocenter->where('user.estado', 1)->where('user.deleted_at', null)->values()->all();
-        $queryIngresos = $query->ingresos->where('user.estado', 1)->where('user.deleted_at', null)->values()->all();
-        $queryGestores =  $query->gestores->where('user.estado', 1)->where('user.deleted_at', null)
-            ->values()
-            ->all();
-        return Excel::download(new NodoInfoExport($query, $queryDinamizadores, $queryGestores, $queryInfocenters, $queryIngresos, $queryLineas), 'Tecnoparque Nodo ' . $query->entidad->nombre . '.xlsx');
     }
 }

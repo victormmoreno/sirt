@@ -3,28 +3,38 @@
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
+        <div class="row no-m-t no-m-b m-r-lg m-l-lg">
+            <div class="left left-align primary-text">
+                <h5>
+                    <a class="footer-text left-align" href="{{route('proyecto')}}">
+                        <i class="material-icons arrow-l left">arrow_back</i>
+                    </a> Proyectos de Base Tecnológica
+                </h5>
+            </div>
+            <div class="right right-align show-on-large hide-on-med-and-down">
+                <ol class="breadcrumbs">
+                    <li><a href="{{ route('home') }}">Inicio</a></li>
+                    <li><a href="{{ route('proyecto') }}">Proyectos</a></li>
+                    <li class="active">Detalle</li>
+                </ol>
+            </div>
+        </div>
         <div class="row no-m-t no-m-b">
-        <div class="col s12 m12 l12">
-            <h5>
-            <a class="footer-text left-align" href="{{route('proyecto')}}">
-                <i class="material-icons arrow-l left">arrow_back</i>
-            </a> Proyectos de Base Tecnológica
-            </h5>
-            <div class="card">
-                <div class="card-content">
-                    <div class="row">
-                        @include('proyectos.titulo')
-                        @include('proyectos.navegacion')
-                        @include('proyectos.historial_cambios')
-                        @include('proyectos.options_always')
-                        @include('proyectos.detalle_general')
-                        @include('proyectos.detalle_fase_inicio')
-                        @include('proyectos.form_aprobacion')
+            <div class="col s12 m12 l12">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="row">
+                            @include('proyectos.titulo')
+                            @include('proyectos.navegacion')
+                            @include('proyectos.historial_cambios')
+                            @include('proyectos.options_always')
+                            @include('proyectos.detalle_general')
+                            @include('proyectos.detalle_fase_inicio')
+                            @include('proyectos.form_aprobacion')
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
         </div>
     </div>
 </main>
@@ -34,7 +44,6 @@
     $( document ).ready(function() {
         datatableArchivosDeUnProyecto_inicio();
     });
-
     function datatableArchivosDeUnProyecto_inicio() {
         $('#archivosDeUnProyecto').DataTable({
             language: {

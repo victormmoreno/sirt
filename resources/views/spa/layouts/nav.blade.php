@@ -8,7 +8,7 @@
             </section>
             <div class="col s2 m2 l3 ">
                 <a href="{{route('/')}}" rel="canonical" class="hide-on-med-and-down">
-                    <img class="hide-on-med-and-down"  width="200px" height="50px" src="{{ asset('img/logonacional_Blanco.png') }}" alt="{{config('app.name')}}" title="{{config('app.name')}}"></img>
+                    <img width="150px" class="chapter-title" src="{{ asset('img/logo-sirt-blanco.svg') }}" alt="{{config('app.name')}}">
                 </a>
             </div>
             <ul class=" col s8 m8 l6 push-m3 push-l1 ">

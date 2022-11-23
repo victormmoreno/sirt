@@ -53,7 +53,7 @@ Route::post('cambiar-role', 'User\RolesPermissions@changeRoleSession')
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('disablepreventback');
 
-Route::resource('nodo', 'Nodo\NodoController')->middleware('disablepreventback');
+Route::resource('nodo', 'Nodo\NodoController')->except('destroy')->middleware('disablepreventback');
 
 Route::get('usuario/{documento}/password/reset', 'User\UserController@generatePassword')->name('user.newpassword')->middleware('disablepreventback');
 Route::get('usuario/getciudad/{departamento?}', 'User\UserController@getCiudad');
@@ -296,7 +296,7 @@ Route::group(
         Route::get('/{id}/editar', 'IdeaController@edit')->name('idea.edit')->middleware(['auth', 'role_session:Talento']);
         Route::get('/detallesIdea/{id}', 'IdeaController@detallesIdeas')->name('idea.det');
         Route::get('/modalIdeas/{id}', 'IdeaController@abrirModalIdeas')->name('idea.modal');
-        Route::get('/{id}/detalle', 'IdeaController@detalle')->name('idea.detalle');
+        Route::get('/{id}', 'IdeaController@detalle')->name('idea.detalle');
         Route::get('/updateEstadoIdea/{id}/{estado}', 'IdeaController@updateEstadoIdea')->name('idea.update.estado')->middleware(['auth', 'role_session:Infocenter']);
         Route::get('/derivar_idea/{id}/{comite}', 'IdeaController@deviarIdea')->name('idea.derivar')->middleware('role_session:Dinamizador');
         Route::get('/show/{idea}', 'IdeaController@show')->name('idea.show');
@@ -794,7 +794,7 @@ Route::group([
     'middleware' => 'disablepreventback',
 ], function () {
     Route::get('/lineas/getlineasnodo/{nodo?}', 'LineaController@getAllLineasForNodo')->name('lineas.getAllLineas');
-    Route::resource('lineas', 'LineaController', ['except' => ['destroy']])
+    Route::resource('/lineas', 'LineaController', ['except' => ['destroy']])
         ->names([
             'create'  => 'lineas.create',
             'update'  => 'lineas.update',
@@ -807,7 +807,7 @@ Route::group([
 });
 
 
-Route::resource('sublineas', 'SublineaController', ['except' => ['show']])->middleware('disablepreventback');
+Route::resource('sublineas', 'SublineaController', ['except' => ['show', 'destroy']])->middleware('disablepreventback');
 
 Route::get('creditos', function () {
     return view('configuracion.creditos');

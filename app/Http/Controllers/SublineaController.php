@@ -8,16 +8,11 @@ use App\Http\Requests\SublineaFormRequest;
 
 class SublineaController extends Controller
 {
-
     public $sublineaRepository;
     public function __construct(SublineaRepository $sublineaRepository)
     {
         $this->sublineaRepository = $sublineaRepository;
-       
-        $this->middleware([
-            'auth',
-        ]);
-
+        $this->middleware(['auth']);
     }
     /**
      * Display a listing of the resource.
@@ -26,34 +21,26 @@ class SublineaController extends Controller
      */
     public function index()
     {
-
-        // dd($this->sublineaRepository->getAllSublineas());
-
         if (request()->ajax()) {
-                return datatables()->of($this->sublineaRepository->getAllSublineas())
-                    
-                    ->addColumn('edit', function ($data) {
-                        
-                            $button = '<a href="' . route("sublineas.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
-                        
-                        return $button;
-                    })
-                    ->rawColumns([ 'edit'])
-                    ->make(true);
-            }
-        
-        return view('sublineas.administrador.index');
+            return datatables()->of($this->sublineaRepository->getAllSublineas())
+                ->addColumn('edit', function ($data) {
+                    $button = '<a href="' . route("sublineas.edit", $data->id) . '" class=" btn tooltipped bg-warning m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                    return $button;
+                })
+                ->rawColumns([ 'edit'])
+                ->make(true);
+        }
+        return view('sublineas.index');
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function create()
     {
-         
-        return view('sublineas.administrador.create',[
+        return view('sublineas.create',[
             'lineas' => $this->sublineaRepository->getAllLineas(),
         ]);
     }
@@ -72,8 +59,7 @@ class SublineaController extends Controller
         }else{
             alert()->error('Registro Erróneo.','La linea no se ha creado.');
         }
-
-        return redirect()->route('sublineas.index'); 
+        return redirect()->route('sublineas.index');
     }
 
     /**
@@ -84,7 +70,7 @@ class SublineaController extends Controller
      */
     public function edit($id)
     {
-        return view('sublineas.administrador.edit',[
+        return view('sublineas.edit',[
             'sublinea' => $this->sublineaRepository->findById($id),
             'lineas' => $this->sublineaRepository->getAllLineas(),
         ]);
@@ -106,19 +92,6 @@ class SublineaController extends Controller
         }else{
             alert()->error('Modificación Errónea',"La sublinea {$sublinea->nombre} no se ha modificado.", "error");
         }
-
-        return redirect()->route('sublineas.index'); 
-
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return redirect()->route('sublineas.index');
     }
 }

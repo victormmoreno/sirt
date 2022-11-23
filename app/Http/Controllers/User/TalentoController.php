@@ -42,7 +42,7 @@ class TalentoController extends Controller
                     $add = '<a onclick="addTalentoProyecto(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
                     return $add;
                 })->addColumn('add_propiedad', function ($data) {
-                    $propiedad = '<a onclick="addPersonaPropiedad(' . $data->user_id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+                    $propiedad = '<a onclick="addPersonaPropiedad(' . $data->user_id . ')" class="btn bg-secondary m-b-xs"><i class="material-icons">done</i></a>';
                     return $propiedad;
                 })
                 ->addColumn('add_intertocutor_talent_articulation', function ($data) {

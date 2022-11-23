@@ -141,4 +141,3 @@
         <i class="material-icons {{setActiveRouteActiveIcon('empresa')}}">business_center</i>Empresas
     </a>
 </li>
-

@@ -39,7 +39,7 @@
 
                                                         <div class="left">
                                                             <span class="mailbox-title green-complement-text">
-                                                                <i class="material-icons fas fa-building"></i> 
+                                                                <i class="material-icons fas fa-building"></i>
                                                                 Tecnoparque nodo {{$material->nodo->entidad->nombre}}
                                                             </span>
                                                             <span class="mailbox-author show-on-large hide-on-med-and-down ">
@@ -51,7 +51,7 @@
                                                             </span>
                                                         </div>
 
-                                                   
+
                                                     <div class="right mailbox-buttons">
                                                         <span class="mailbox-title">
                                                             <p class="center">Información Materiales de Formación {{$material->nombre}} </p><br/>
@@ -184,19 +184,19 @@
                                                 <div class="divider mailbox-divider">
                                                 </div>
                                                 @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsDinamizador() || session()->get('login_role') == App\User::IsGestor()))
-                                                
+
                                                     <div class="row">
                                                     <div class="col s6 ">
                                                         <div class="right">
                                                         <a href="{{route('material.edit',$material->id)}}" class="waves-effect waves-teal darken-2 btn-flat m-t-xs center-aling">
-                                        
+
                                                             Cambiar Información
                                                         </a>
                                                         </div>
                                                     </div>
                                                     <div class="col s6 ">
                                                         <div class="left">
-                                                        <a href="javascript:void(0)"  class="waves-effect red lighten-3 btn 2 btn-flat m-t-xs center-aling" onclick="materialFormacion.destroyMaterial({{$material->id}})">
+                                                        <a href="javascript:void(0)"  class="waves-effect bg-danger white-text btn 2 btn-flat m-t-xs center-aling" onclick="materialFormacion.destroyMaterial({{$material->id}})">
                                                             <i class="material-icons right">
                                                                 delete_sweep
                                                             </i>
@@ -205,7 +205,7 @@
                                                     </div>
                                                     </div>
                                                 </div>
-                                                
+
                                                 @endif
                                         </div>
                                     </div>

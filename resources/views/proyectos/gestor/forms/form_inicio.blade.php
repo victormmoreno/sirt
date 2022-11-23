@@ -2,15 +2,14 @@
 @php
     $existe = isset($proyecto) ? true : false;
 @endphp
-<div class="col s12 m12 l12">
-    <div class="card-content red lighten-3 white-text">
+<div class="col s12 m12 l12 m-b-lg">
+    <div class="card-content bg-info white-text">
     <p>
         <i class="material-icons left">info_outline</i>
         Los elementos con (*) son obligatorios
     </p>
     </div>
 </div>
-<br>
 <div class="row">
     <div class="input-field col s12 m6 l6">
         <input disabled id="txtgestor" name="txtgestor"
@@ -24,42 +23,42 @@
     </div>
 </div>
 <div class="row">
-    <h5 class="center orange-text"><i class="material-icons">lightbulb</i>Idea de Proyecto.</h5>
+    <h5 class="center primary-text"><i class="material-icons">lightbulb</i>Idea de Proyecto.</h5>
 </div>
 <div class="divider"></div>
 <div class="row">
     <div class="col s12 m6 l6 offset-l3 m3">
-        <center>
+        <div class="center-align">
             <div class="card-panel grey lighten-3">
                 <div class="row">
                     <div class="input-field col s12 m12 l12">
                         @if ($existe)
-                        <input type="text" id="txtnombreIdeaProyecto_Proyecto" name="txtnombreIdeaProyecto_Proyecto" value="{{ $proyecto->idea->codigo_idea . ' - ' . $proyecto->idea->nombre_proyecto }}" readonly>
+                            <input type="text" id="txtnombreIdeaProyecto_Proyecto" name="txtnombreIdeaProyecto_Proyecto" value="{{ $proyecto->idea->codigo_idea . ' - ' . $proyecto->idea->nombre_proyecto }}" readonly>
                         @else
-                        <input type="text" id="txtnombreIdeaProyecto_Proyecto" name="txtnombreIdeaProyecto_Proyecto" readonly>
+                            <input type="text" id="txtnombreIdeaProyecto_Proyecto" name="txtnombreIdeaProyecto_Proyecto" readonly>
                         @endif
                         <label for="txtnombreIdeaProyecto_Proyecto">Idea de Proyecto</label>
                         <small id="txtidea_id-error" class="error red-text"></small>
                     </div>
                     @if (!$existe)
-                    <a class="btn-floating blue" onclick="consultarIdeasDeProyectoEmprendedores_Proyecto_FaseInicio();">
-                        <i class="material-icons left">search</i>Buscar
-                    </a>
+                        <a class="btn-flat bg-secondary white-text" onclick="consultarIdeasDeProyectoEmprendedores_Proyecto_FaseInicio();">
+                            <i class="material-icons left">search</i>Buscar
+                        </a>
                     @endif
                 </div>
                 <div class="row">
                     <div class="input-field col s12 m12 l12">
                         @if ($existe)
-                        <input type="text" id="txtnombre" name="txtnombre" value="{{ $proyecto->articulacion_proyecto->actividad->nombre }}">
+                            <input type="text" id="txtnombre" name="txtnombre" value="{{ $proyecto->articulacion_proyecto->actividad->nombre }}">
                         @else
-                        <input type="text" id="txtnombre" name="txtnombre" value="">
+                            <input type="text" id="txtnombre" name="txtnombre" value="">
                         @endif
                         <label for="txtnombre">Nombre de Proyecto <span class="red-text">*</span></label>
                         <small id="txtnombre-error" class="error red-text"></small>
                     </div>
                 </div>
             </div>
-        </center>
+        </div>
         @if ($existe)
         <input type="hidden" name="txtidea_id" id="txtidea_id" value="{{ $proyecto->idea->id }}">
         @else
@@ -69,7 +68,7 @@
 </div>
 
 <div class="row">
-    <h5 class="center orange-text">Datos del proyecto.</h5>
+    <h5 class="center primary-text">Datos del proyecto.</h5>
 </div>
 <div class="divider"></div>
 <div class="row">
@@ -266,9 +265,8 @@
         </div>
     </div>
 </div>
-
 <div class="row">
-    <h5 class="center orange-text"><i class="material-icons">supervised_user_circle</i>Talentos que participarán en el proyecto</h5>
+    <h5 class="center primary-text"><i class="material-icons">supervised_user_circle</i>Talentos que participarán en el proyecto</h5>
 </div>
 <div class="divider"></div>
 <div class="row">
@@ -276,7 +274,7 @@
         <div class="card-content">
             <ul class="collapsible collapsible-accordion" data-collapsible="accordion">
                 <li>
-                    <div class="collapsible-header active blue-grey lighten-1"><i class="material-icons">people</i>
+                    <div class="collapsible-header active primary-text"><i class="material-icons">people</i>
                         Pulse aquí para ver la información de los talentos.
                     </div>
                     <div class="collapsible-body">
@@ -285,21 +283,18 @@
                                 @if ($proyecto->present()->proyectoFase() == 'Inicio')
                                 <ul class="collapsible collapsible-accordion" data-collapsible="accordion">
                                     <li>
-                                        <div class="collapsible-header cyan lighten-1"><i class="material-icons">group_add</i>
+                                        <div class="collapsible-header bg-info white-text"><i class="material-icons">group_add</i>
                                             Pulse aquí para ver los talentos y asociarlos al proyecto.</div>
                                         <div class="collapsible-body">
-                                            {{-- Collapsible 1 --}}
                                             <div class="card-content">
                                                 <div class="row">
                                                     <table id="talentosDeTecnoparque_Proyecto_FaseInicio_table" style="width: 100%">
-                                                        <thead>
+                                                        <thead class="bg-primary white-text">
                                                             <th>Documento de Identidad</th>
                                                             <th>Nombres del Talento</th>
                                                             <th>Asociar al Proyecto</th>
                                                         </thead>
-                                                        <tbody>
-
-                                                        </tbody>
+                                                        <tbody></tbody>
                                                     </table>
                                                 </div>
                                             </div>
@@ -310,20 +305,19 @@
                             @else
                             <ul class="collapsible collapsible-accordion" data-collapsible="accordion">
                                 <li>
-                                    <div class="collapsible-header cyan lighten-1"><i class="material-icons">group_add</i>
-                                        Pulse aquí para ver los talentos y asociarlos al proyecto.</div>
+                                    <div class="collapsible-header bg-info white-text"><i class="material-icons">group_add</i>
+                                        Pulse aquí para ver los talentos y asociarlos al proyecto.
+                                    </div>
                                     <div class="collapsible-body">
-                                        {{-- Collapsible 1 --}}
                                         <div class="card-content">
                                             <div class="row">
                                                 <table id="talentosDeTecnoparque_Proyecto_FaseInicio_table" style="width: 100%">
-                                                    <thead>
+                                                    <thead class="bg-primary white-text">
                                                         <th>Documento de Identidad</th>
                                                         <th>Nombres del Talento</th>
                                                         <th>Asociar al Proyecto</th>
                                                     </thead>
                                                     <tbody>
-
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -334,11 +328,10 @@
                             @endif
                             <ul class="collapsible collapsible-accordion" data-collapsible="accordion">
                                 <li>
-                                    <div class="collapsible-header active green lighten-1"><i class="material-icons">how_to_reg</i>
+                                    <div class="collapsible-header active bg-success white-text"><i class="material-icons">how_to_reg</i>
                                         Pulse aquí para la información de los talentos asociados al proyecto.
                                     </div>
                                     <div class="collapsible-body">
-                                        {{-- Collapsible 2 --}}
                                         <div class="card-content">
                                             <div class="row">
                                                 <table id="detalleTalentosDeUnProyecto_Create" class="striped">
@@ -362,7 +355,7 @@
                                                                 <td><input type="radio" class="with-gap" {{$value->pivot->talento_lider == 1 ? 'checked' : ''}} name="radioTalentoLider" id="radioButton'{{$value->id}}'" value="{{$value->id}}"/><label for ="radioButton'{{$value->id}}'"></label></td>
                                                                 <td><input type="hidden" name="talentos[]" value="{{$value->id}}">{{$value->user()->withTrashed()->first()->documento}} - {{$value->user()->withTrashed()->first()->nombres}} {{$value->user()->withTrashed()->first()->apellidos}}</td>
                                                                 @if ($proyecto->present()->proyectoFase() == 'Inicio')
-                                                                <td><a class="waves-effect red lighten-3 btn" onclick="eliminarTalentoDeProyecto_FaseInicio({{$value->id}});"><i class="material-icons">delete_sweep</i></a></td>
+                                                                <td><a class="waves-effect bg-danger white-text btn" onclick="eliminarTalentoDeProyecto_FaseInicio({{$value->id}});"><i class="material-icons">delete_sweep</i></a></td>
                                                                 @endif
                                                                 </tr>
                                                             @endforeach
@@ -487,7 +480,7 @@
                             <tr id="propietarioAsociadoAlProyecto_Persona{{$value->id}}">
                             <td><input type="hidden" name="propietarios_user[]" value="{{$value->id}}">{{$value->documento}} - {{$value->nombres}} {{$value->apellidos}}</td>
                             @if ($proyecto->present()->proyectoFase() == 'Inicio')
-                            <td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Persona({{$value->id}});"><i class="material-icons">delete_sweep</i></a></td>
+                            <td><a class="waves-effect bg-danger white-text btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Persona({{$value->id}});"><i class="material-icons">delete_sweep</i></a></td>
                             @endif
                             </tr>
                         @endforeach
@@ -535,7 +528,7 @@
                             <tr id="propietarioAsociadoAlProyecto_Empresa{{$value->id}}">
                             <td><input type="hidden" name="propietarios_sedes[]" value="{{$value->id}}">{{$value->empresa->nit}} - {{ $value->empresa->nombre }} ({{$value->nombre_sede}})</td>
                             @if ($proyecto->present()->proyectoFase() == 'Inicio')
-                            <td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Empresa({{$value->id}});"><i class="material-icons">delete_sweep</i></a></td>
+                            <td><a class="waves-effect bg-danger white-text btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Empresa({{$value->id}});"><i class="material-icons">delete_sweep</i></a></td>
                             @endif
                             </tr>
                         @endforeach
@@ -584,7 +577,7 @@
                             <tr id="propietarioAsociadoAlProyecto_Grupo{{$value->id}}">
                             <td><input type="hidden" name="propietarios_grupos[]" value="{{$value->id}}">{{$value->codigo_grupo}} - {{ $value->entidad->nombre }}</td>
                             @if ($proyecto->present()->proyectoFase() == 'Inicio')
-                            <td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Grupo({{$value->id}});"><i class="material-icons">delete_sweep</i></a></td>
+                            <td><a class="waves-effect bg-danger white-text btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Grupo({{$value->id}});"><i class="material-icons">delete_sweep</i></a></td>
                             @endif
                             </tr>
                         @endforeach

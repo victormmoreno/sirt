@@ -1,5 +1,5 @@
 <header class="mn-header navbar-fixed">
-    <nav class="grey darken-1">
+    <nav class="bg-primary">
         <div class="nav-wrapper row">
             <section class="material-design-hamburger navigation-toggle">
                 <a class="button-collapse show-on-large material-design-hamburger__icon" data-activates="slide-out" href="#">
@@ -9,8 +9,7 @@
             </section>
             <div class="header-title col s2 m2 l2">
                 <a href="{{route('home')}}">
-                    <img class="chapter-title desktop" src="{{ asset('img/logonacional_Blanco.png') }}" alt="{{config('app.name')}}" width="200px">
-                    <img class="chapter-title mobile" src="{{ asset('img/logonacional_Blanco_Mobile.png') }}" alt="{{config('app.name')}}">
+                    <img width="150px" class="chapter-title" src="{{ asset('img/logo-sirt-blanco.svg') }}" alt="{{config('app.name')}}">
                 </a>
             </div>
             <ul class="right col s10 m10 l10 nav-right-menu">
@@ -36,7 +35,7 @@
                 <li>
                     <a class="dropdown-button dropdown-right" data-activates="dropdown-logout" href="javascript:void(0)">
                         @auth
-                            {{optional(auth()->user())->nombres}} {{ optional(auth()->user())->apellidos}}
+                        {{optional(auth()->user())->nombres}} {{ optional(auth()->user())->apellidos}}
                         @endauth
                     </a>
                 </li>
@@ -53,11 +52,11 @@
                                 Lista de opciones
                                 <br>
                                 @guest
-                                @else
+                                    @else
                                     <b>Último login:</b> {{ optional(auth()->user()->ultimo_login)->isoFormat('MMMM Do YYYY, h:mm:ss a') }}
                                     <br>
                                     @if(auth()->user()->fechanacimiento != null || isset(auth()->user()->fechanacimiento))
-                                        <b>Edad:</b>{{ optional(auth()->user()->fechanacimiento)->age }} años
+                                    <b>Edad:</b>{{ optional(auth()->user()->fechanacimiento)->age }} años
                                     @endif
                                 @endguest
                             </center>
@@ -65,7 +64,7 @@
                         <li>
                             <a href="{{ route('perfil.index')}}" rel="canonical" title="Mi perfil">
                                 <div class="notification">
-                                    <div class="notification-icon circle teal lighten-4"><i class="material-icons">perm_contact_calendar</i></div>
+                                    <div class="notification-icon circle bg-secondary"><i class="material-icons">perm_contact_calendar</i></div>
                                     <div class="notification-text"><b>Mi perfil</b></div>
                                 </div>
                             </a>
@@ -73,7 +72,7 @@
                         <li>
                             <a href="{{ route('logout') }}" rel="canonical" onclick="event.preventDefault(); document.getElementById('logout-form-nav').submit();">
                                 <div class="notification">
-                                    <div class="notification-icon circle teal lighten-2">
+                                    <div class="notification-icon circle bg-danger">
                                         <i class="material-icons">power_settings_new</i>
                                     </div>
                                     <div class="notification-text">
@@ -90,28 +89,28 @@
                 <li class="notificatoins-dropdown-container">
                     <ul>
                         <li class="notification-drop-title center">
-                            <div class="center">
-                                Notificaciones
-                            </div>
+                        <div class="center">
+                            Notificaciones
+                        </div>
                         </li>
                         <li class="divider" tabindex="-1"></li>
                         @forelse (Auth::user()->unreadNotifications as $notification)
                             <li>
-                                <a href="{{route('notifications.index')}}">
-                                    <div class="notification">
-                                        <div class="notification-icon circle {{ $notification->data['color'] }}">
-                                            <i class="material-icons">{{ $notification->data["icon"] }}</i>
-                                        </div>
-                                        <div class="notification-text"><p> {{ $notification->data["text"] }}</p>
-                                            <span>{{optional($notification->created_at)->diffForHumans()}}</span>
-                                        </div>
-                                    </div>
-                                </a>
+                            <a href="{{route('notifications.index')}}">
+                                <div class="notification">
+                                <div class="notification-icon circle {{ $notification->data['color'] }}">
+                                    <i class="material-icons">{{ $notification->data["icon"] }}</i>
+                                </div>
+                                <div class="notification-text"><p> {{ $notification->data["text"] }}</p>
+                                    <span>{{optional($notification->created_at)->diffForHumans()}}</span>
+                                </div>
+                                </div>
+                            </a>
                             </li>
                         @empty
                             <li class="notification-drop-title">
                                 <div class="center">
-                                    <i class="large material-icons  teal-text lighten-2 center ">
+                                <i class="large material-icons primary-text center ">
                                         notifications_off
                                     </i>
                                     <p class="center-align">No tienes notificationes</p>
@@ -122,12 +121,12 @@
                         <li class="notification-drop-title">
                             <a href="{{route('notifications.index')}}" rel="canonical">
                                 <div class="notification">
-                                    <div class="notification-icon circle cyan">
-                                        <i class="material-icons">add_alert</i>
-                                    </div>
-                                    <div class="notification-text">
-                                        <p> Ver más notificationes</p>
-                                    </div>
+                                <div class="notification-icon circle bg-secondary">
+                                    <i class="material-icons">add_alert</i>
+                                </div>
+                                <div class="notification-text">
+                                    <p> Ver más notificationes</p>
+                                </div>
                                 </div>
                             </a>
                         </li>
@@ -138,28 +137,28 @@
                 <li class="notificatoins-dropdown-container">
                     <ul>
                         <li class="notification-drop-title center">
-                            <div class="center">
-                                Ayuda
-                            </div>
+                        <div class="center">
+                            Ayuda
+                        </div>
                         </li>
                         <li class="divider" tabindex="-1"></li>
                         <li>
                             <a href="{{route('help.handbook')}}">
                                 <div class="notification">
-                                    <div class="notification-icon circle orange">
-                                        <i class="material-icons">book</i>
-                                    </div>
-                                    <div class="notification-text"><p> Descargar Manual</p></div>
+                                <div class="notification-icon circle bg-primary">
+                                    <i class="material-icons">book</i>
+                                </div>
+                                <div class="notification-text"><p> Descargar Manual</p></div>
                                 </div>
                             </a>
                         </li>
                         <li>
                             <a href="{{route('support.send')}}">
                                 <div class="notification">
-                                    <div class="notification-icon circle orange">
-                                        <i class="material-icons">sms</i>
-                                    </div>
-                                    <div class="notification-text"><p>{{config('app.technical_support.title')}}</p></div>
+                                <div class="notification-icon circle bg-primary">
+                                    <i class="material-icons">sms</i>
+                                </div>
+                                <div class="notification-text"><p>{{config('app.technical_support.title')}}</p></div>
                                 </div>
                             </a>
                         </li>
@@ -179,18 +178,18 @@
                     <span>
                         @guest
                         @else
-                            @if( \Session::get('login_role') != App\User::IsTalento() && \Session::get('login_role') != App\User::IsActivador() && \Session::get('login_role') != App\User::IsDesarrollador() )
-                                {{ \NodoHelper::returnNodoUsuario() }}
+                        @if( \Session::get('login_role') != App\User::IsTalento() && \Session::get('login_role') != App\User::IsActivador() && \Session::get('login_role') != App\User::IsDesarrollador() )
+                            {{ \NodoHelper::returnNodoUsuario() }}
+                        @else
+                            @if (\Session::get('login_role') == App\User::IsTalento())
+                                Talento de Tecnoparque
+                            @elseif (\Session::get('login_role') == App\User::IsActivador())
+                                Activador de Tecnoparque
                             @else
-                                @if (\Session::get('login_role') == App\User::IsTalento())
-                                    Talento de Tecnoparque
-                                @elseif (\Session::get('login_role') == App\User::IsActivador())
-                                    Activador de Tecnoparque
-                                @else
-                                    Desarrollador de Tecnoparque
-                                @endif
+                                Desarrollador de Tecnoparque
                             @endif
-                            <i class="material-icons right">arrow_drop_down</i>
+                        @endif
+                        <i class="material-icons right">arrow_drop_down</i>
                         @endguest
                     </span>
                 </a>
@@ -199,9 +198,9 @@
         <div class="sidebar-account-settings ">
             <ul>
                 <li class="no-padding">
-                    <a class="waves-effect waves-grey " href="{{ route('perfil.index')}}" rel="canonical" title="Mi Perfil">
-                        <i class="material-icons">perm_contact_calendar</i>Mi Perfil
-                    </a>
+                <a class="waves-effect waves-grey " href="{{ route('perfil.index')}}" rel="canonical" title="Mi Perfil">
+                    <i class="material-icons">perm_contact_calendar</i>Mi Perfil
+                </a>
                 </li>
                 <li class="divider"></li>
                 <li class="no-padding">
@@ -219,13 +218,13 @@
                 <div class="input-field col s12 m12 offset-m0">
                     <select name="change-role" id="change-role" onchange="roleUserSession.setRoleSession(this)">
                         @forelse(auth()->user()->getRoleNames() as  $name)
-                            <option value="{{$name}}" {{\Session::get('login_role') == $name ? 'selected':''}}>{{$name}}</option>
+                        <option value="{{$name}}" {{\Session::get('login_role') == $name ? 'selected':''}}>{{$name}}</option>
                         @empty
-                            <p>No tienes roles asignados</p>
+                        <p>No tienes roles asignados</p>
                         @endforelse
                     </select>
                 </div>
-            </div>
+                </div>
             <li class="no-padding {{setActiveRoute('home')}}">
                 <a href="{{route('home')}}" class="{{setActiveRouteActivePage('home')}}" rel="canonical" title="Inicio">
                     <i class="large material-icons {{setActiveRouteActiveIcon('home')}}">home</i>Inicio

@@ -103,8 +103,6 @@ class ProfileController extends Controller
 
         $req       = new ProfileFormRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-
-
         if ($validator->fails()) {
             return response()->json([
                 'state'   => 'error_form',
@@ -148,30 +146,15 @@ class ProfileController extends Controller
         return redirect()->back()->with('error', 'error al actualizar tu contraseña, intentalo de nuevo');
     }
 
-    /*================================================================================
-    =            metodo para descargar certificado registro en plataforma            =
-    ================================================================================*/
-
     public function downloadCertificatedPlataform($extennsion = '.pdf', $orientacion = 'portrait')
     {
         $user = User::withTrashed()->where('documento', auth()->user()->documento)->firstOrFail();
         $this->authorize('downloadCertificatedPlataform', User::class);
-
-
         $pdf = PDF::loadView('pdf.certificado-plataforma.certificado', compact('user'));
-
-        $pdf->setPaper(strtolower('LETTER'), $orientacion = 'landscape');
-
+        $pdf->setPaper(strtolower('LETTER'),  $orientacion = 'landscape');
         $pdf->setEncryption($user->documento);
-
         return $pdf->download("certificado  " . config('app.name') . $extennsion);
     }
-
-    /*=====  End of metodo para descargar certificado registro en plataforma  ======*/
-
-    /*================================================================================
-    =            metodo para mostrar las actividades realizadas por un usuario          =
-    ================================================================================*/
 
     public function activities()
     {
@@ -194,6 +177,4 @@ class ProfileController extends Controller
         }
         return view('users.profile.actividad', ['user' => $user, 'actividades' => $actividades]);
     }
-
-    /*=====  End of metodo para mostrar las actividades realizadas por un usuario  ======*/
 }

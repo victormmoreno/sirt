@@ -7,7 +7,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: {
-            url: host_url + "lineas",
+            url: `${host_url}/lineas`,
         },
         columns: [{
             data: 'abreviatura',
@@ -15,7 +15,7 @@ $(document).ready(function() {
         }, {
             data: 'nombre',
             name: 'nombre',
-        }, 
+        },
         {
             data: 'show',
             name: 'show',
@@ -24,9 +24,10 @@ $(document).ready(function() {
             data: 'action',
             name: 'action',
             orderable: false
-        }, ],
+        }]
     });
 });
+
 $(document).ready(function() {
     $('#linea_dinamizador_table').DataTable({
         language: {
@@ -36,7 +37,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: {
-            url: host_url + "lineas",
+            url: `${host_url}/lineas`,
         },
         columns: [{
             data: 'abreviatura',
@@ -51,6 +52,7 @@ $(document).ready(function() {
         }, ],
     });
 });
+
 $(document).ready(function() {
     $('#nodos_table').DataTable({
         language: {
@@ -2638,11 +2640,11 @@ function reiniciarCamposTaller() {
 
 function prepararFilaEnLaTablaDeIdeasTaller(ajax, confirmacion, asistencia) {
   let idIdea = ajax.detalles.id;
-  let fila = '<tr class="selected" id=ideaAsociadaTaller' + idIdea + '>' + 
+  let fila = '<tr class="selected" id=ideaAsociadaTaller' + idIdea + '>' +
       '<td><input type="hidden" name="ideas_taller[]" value="' + idIdea + '">' + ajax.detalles.codigo_idea + ' - ' + ajax.detalles.nombre_proyecto + '</td>' +
       '<td><input type="hidden" name="confirmaciones[]" value="' + confirmacion + '">' + getYesOrNot(confirmacion) + '</td>' +
       '<td><input type="hidden" name="asistencias[]" value="' + asistencia + '">' + getYesOrNot(asistencia) + '</td>' +
-      '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarIdeaDelTaller(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' + 
+      '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarIdeaDelTaller(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' +
       '</tr>';
   return fila;
 }
@@ -3008,8 +3010,8 @@ $('#txthoraidea').bootstrapMaterialDatePicker({
     weekStart : 1, cancelText : 'Cancelar',
     okText: 'Guardar'
 });
-  
-$('input[name*="horas_fin"]').bootstrapMaterialDatePicker({ 
+
+$('input[name*="horas_fin"]').bootstrapMaterialDatePicker({
     time:true,
     date:false,
     shortTime:true,
@@ -3018,8 +3020,8 @@ $('input[name*="horas_fin"]').bootstrapMaterialDatePicker({
     weekStart : 1, cancelText : 'Cancelar',
     okText: 'Guardar'
 });
- 
-$('input[name*="horas_inicio"]').bootstrapMaterialDatePicker({ 
+
+$('input[name*="horas_inicio"]').bootstrapMaterialDatePicker({
     time:true,
     date:false,
     shortTime: true,
@@ -3028,8 +3030,8 @@ $('input[name*="horas_inicio"]').bootstrapMaterialDatePicker({
     weekStart : 1, cancelText : 'Cancelar',
     okText: 'Guardar'
  });
- 
-$('#txthorafingestor').bootstrapMaterialDatePicker({ 
+
+$('#txthorafingestor').bootstrapMaterialDatePicker({
     time:true,
     date:false,
     shortTime: true,
@@ -3185,11 +3187,11 @@ function pintarIdeaEnLaTabla(id, hora, direccion) {
 
 function prepararFilaEnLaTablaDeIdeas(ajax, hora, direccion) {
 let idIdea = ajax.detalles.id;
-let fila = '<tr class="selected" id=ideaAsociadaAgendamiento' + idIdea + '>' + 
+let fila = '<tr class="selected" id=ideaAsociadaAgendamiento' + idIdea + '>' +
     '<td><input type="hidden" name="ideas[]" value="' + idIdea + '">' + ajax.detalles.nombre_proyecto + '</td>' +
     '<td><input type="hidden" name="horas[]" value="' + hora + '">' + hora + '</td>' +
     '<td><input type="hidden" name="direcciones[]" value="' + direccion + '">' + direccion + '</td>' +
-    '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarIdeaDelAgendamiento(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' + 
+    '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarIdeaDelAgendamiento(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' +
     '</tr>';
 return fila;
 }
@@ -3250,6 +3252,7 @@ $('#txtdireccion').val('');
 $("label[for='txtdireccion']").removeClass('active');
 $("label[for='txthoraidea']").removeClass('active');
 }
+
 $(document).on('submit', 'form#formComiteRealizadoCreate', function (event) {
     event.preventDefault();
     Swal.fire({
@@ -5773,7 +5776,7 @@ var infoActividad = {
             }).done(function (response) {
                 $("#actividad_titulo").empty();
                 $("#detalleActividad").empty();
-                $("#actividad_titulo").append("<span class='cyan-text text-darken-3'>"+response.data.actividad.codigo_actividad +' - '+ response.data.actividad.nombre+" </span><br>");
+                $("#actividad_titulo").append("<span class='primary-text'>"+response.data.actividad.codigo_actividad +' - '+ response.data.actividad.nombre+" </span><br>");
                 if(response.data.actividad.articulacion_proyecto.proyecto !== null){
                     infoActividad.openIsProyect(response);
                 }else if(response.data.actividad.articulacion_proyecto.articulacion !== null){
@@ -5787,27 +5790,27 @@ var infoActividad = {
         $("#detalleActividad").append(`
             <table class="striped centered">
                 <TR>
-                    <TH width="25%">Código Proyecto</TH>
+                    <TH class="secondary-text" width="25%">Código Proyecto</TH>
                     <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.codigo_actividad)}</TD>
-                    <TH width="25%" >Nombre Proyecto</TH>
+                    <TH class="secondary-text" width="25%" >Nombre Proyecto</TH>
                     <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.nombre)}</TD>
                 </TR>
                 <TR>
-                    <TH width="25%">Experto</TH>
+                    <TH class="secondary-text" width="25%">Experto</TH>
                     <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.proyecto.asesor.user.documento)} - ${response.data.actividad.articulacion_proyecto.proyecto.asesor.user.nombres} ${response.data.actividad.articulacion_proyecto.proyecto.asesor.user.apellidos}</TD>
-                    <TH width="25%">Correo Electrónico</TH>
+                    <TH class="secondary-text" width="25%">Correo Electrónico</TH>
                     <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.proyecto.asesor.user.email)}</TD>
                 </TR>
             </table>
             <div class="right">
                 <small>
-                    <b>Cantidad de usos de infraestructura:  </b>
+                    <b class="secondary-text">Cantidad de usos de infraestructura:  </b>
                     ${infoActividad.showInfoNull(response.data.total_usos)}
                 </small>
             </div>
             <div class="divider mailbox-divider"></div>
             <div class="center">
-                <span class="mailbox-title">
+                <span class="mailbox-title primary-text">
                     <i class="material-icons">group</i>
                     Talentos que participan en el proyecto y dueño(s) de la propiedad intelectual.
                 </span>
@@ -5815,10 +5818,10 @@ var infoActividad = {
             <div class="divider mailbox-divider"></div>
                 <div class="row">
                 <div class="col s12 m12 l12">
-                        <div class="card-panel blue lighten-5">
-                            <h5 class="center">Talentos que participan en el proyecto</h5>
+                        <div class="card-transparent">
+                            <h5 class="center primary-text">Talentos que participan en el proyecto</h5>
                             <table>
-                                <thead>
+                                <thead class="bg-primary white-text">
                                     <tr>
                                         <th style="width: 10%">Talento Interlocutor</th>
                                         <th style="width: 40%">Talento</th>
@@ -5834,31 +5837,30 @@ var infoActividad = {
                     </div>
                 </div>
                 <div class="row">
-                    <div class="card-panel green lighten-5 col s12 m12 l12">
-                        <h5 class="center">Dueño(s) de la propiedad intelectual</h5>
+                    <div class="card-transparent col s12 m12 l12">
+                        <h5 class="center primary-text">Dueño(s) de la propiedad intelectual</h5>
                         <div class="row">
                             <div class="col s12 m4 l4">
-                                <div class="card-panel">
+                                <div class="card-transparent">
                                     <ul class="collection with-header">
-                                        <li class="collection-header"><h5>Empresas</h5></li>
+                                        <li class="collection-header"><h5 class="secondary-text">Empresas</h5></li>
                                         <div id="detalleEmpresas"></div>
                                     </ul>
                                 </div>
                             </div>
                             <div class="col s12 m4 l4">
-                                <div class="card-panel">
+                                <div class="card-transparent">
                                     <ul class="collection with-header">
-                                        <li class="collection-header"><h5>Personas (Talentos)</h5></li>
+                                        <li class="collection-header"><h5 class="secondary-text">Personas (Talentos)</h5></li>
                                         <div id="detallePropiedadTalentos"></div>
                                     </ul>
                                 </div>
                             </div>
                             <div class="col s12 m4 l4">
-                                <div class="card-panel">
+                                <div class="card-transparent">
                                     <ul class="collection with-header">
-                                        <li class="collection-header"><h5>Grupos de Investigación</h5></li>
+                                        <li class="collection-header"><h5 class="secondary-text">Grupos de Investigación</h5></li>
                                         <div id="detallePropiedadGrupo"></div>
-
                                     </ul>
                                 </div>
                             </div>
@@ -6293,14 +6295,14 @@ function prepararFilaEnLaTablaDeTalentos(ajax, isInterlocutor) {
         talentInterlocutor = "checked";
     }// El ajax.talento.id es el id del TALENTO, no del usuario
     let idTalento = ajax.talento.id;
-    let fila = '<tr class="selected" id=talentoAsociadoAProyecto' + idTalento + '>' + '<td><input type="radio" '+ talentInterlocutor +' class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.talento.documento + ' - ' + ajax.talento.talento + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarTalentoDeProyecto_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let fila = '<tr class="selected" id=talentoAsociadoAProyecto' + idTalento + '>' + '<td><input type="radio" '+ talentInterlocutor +' class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.talento.documento + ' - ' + ajax.talento.talento + '</td>' + '<td><a class="waves-effect bg-danger btn" onclick="eliminarTalentoDeProyecto_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
 // Prepara un string con la fila que se va a pintar en la tabla de los propietarios (users/persona) que son dueños de la propiedad intelectual
 function prepararFilaEnLaTablaDePropietarios_Users(ajax) { // El ajax.user.id es el id del USER
     let idUser = ajax.user.id;
-    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Persona' + idUser + '>' + '<td><input type="hidden" name="propietarios_user[]" value="' + idUser + '">' + ajax.user.documento + ' - ' + ajax.user.nombres + ' ' + ajax.user.apellidos + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Persona(' + idUser + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Persona' + idUser + '>' + '<td><input type="hidden" name="propietarios_user[]" value="' + idUser + '">' + ajax.user.documento + ' - ' + ajax.user.nombres + ' ' + ajax.user.apellidos + '</td>' + '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Persona(' + idUser + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
@@ -6311,7 +6313,7 @@ function prepararFilaEnLaTablaDePropietarios_Empresa(ajax) {
     let codigo = ajax.sede.empresa.nit;
     let nombre = ajax.sede.empresa.nombre;
     let nombre_sede = ajax.sede.nombre_sede;
-    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Empresa' + idSede + '>' + '<td><input type="hidden" name="propietarios_sedes[]" value="' + idSede + '">' + codigo + ' - ' + nombre + ' ('+ nombre_sede +')</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Empresa(' + idSede + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Empresa' + idSede + '>' + '<td><input type="hidden" name="propietarios_sedes[]" value="' + idSede + '">' + codigo + ' - ' + nombre + ' ('+ nombre_sede +')</td>' + '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Empresa(' + idSede + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
@@ -6320,7 +6322,7 @@ function prepararFilaEnLaTablaDePropietarios_Grupos(ajax) { // El ajax.user.id e
     let idGrupo = ajax.detalles.id;
     let codigo = ajax.detalles.codigo_grupo;
     let nombre = ajax.detalles.entidad.nombre;
-    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Grupo' + idGrupo + '>' + '<td><input type="hidden" name="propietarios_grupos[]" value="' + idGrupo + '">' + codigo + ' - ' + nombre + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Grupo(' + idGrupo + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Grupo' + idGrupo + '>' + '<td><input type="hidden" name="propietarios_grupos[]" value="' + idGrupo + '">' + codigo + ' - ' + nombre + '</td>' + '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Grupo(' + idGrupo + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
@@ -6930,7 +6932,7 @@ function addEmpresaAEdt(id) {
       let fila = '<tr class="selected" id=entidadAsociadaAEdt'+idEntidad+'>'
       +'<td><input type="hidden" name="entidades[]" value="'+idEntidad+'">'+ajax.detalles.nit+'</td>'
       +'<td>'+ajax.detalles.nombre+'</td>'
-      +'<td><a class="waves-effect red lighten-3 btn" onclick="eliminarEntidadAsociadaAEdt('+idEntidad+');"><i class="material-icons">delete_sweep</i></a></td>'
+      +'<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarEntidadAsociadaAEdt('+idEntidad+');"><i class="material-icons">delete_sweep</i></a></td>'
       +'</tr>';
       $('#detalleEntidadesAsociadasAEdt').append(fila);
       Swal.fire({

@@ -1,6 +1,6 @@
 @if(\Session::get('login_role') == App\User::IsGestor())
 <table id="tblproyectosGestorPorAnho" class="display responsive-table datatable-example dataTable" style="width: 100%">
-    <thead>
+    <thead class="bg-primary white-text">
         <tr>
         <th>Código de Proyecto</th>
         <th>Nombre</th>
@@ -29,7 +29,7 @@
 @endif
 @if(\Session::get('login_role') == App\User::IsDinamizador() || \Session::get('login_role') == App\User::IsInfocenter())
 <table id="tblproyectosDelNodoPorAnho" class="display responsive-table datatable-example dataTable" style="width: 100%">
-  <thead>
+  <thead class="bg-primary white-text">
     <tr>
       <th>Código de Proyecto</th>
       <th>Experto</th>
@@ -72,7 +72,7 @@
 @endif
 @if(\Session::get('login_role') == App\User::IsAdministrador())
 <table id="tblproyectosDelNodoPorAnho_Administrador" class="display responsive-table datatable-example dataTable" style="width: 100%">
-  <thead>
+  <thead class="bg-primary white-text">
     <tr>
       <th>Código de Proyecto</th>
       <th>Experto</th>
@@ -112,7 +112,7 @@
 
 @if (\Session::get('login_role') == App\User::IsTalento())
 <table id="tblProyectoDelTalento" class="display responsive-table datatable-example dataTable" style="width: 100%">
-  <thead>
+  <thead class="bg-primary white-text">
     <tr>
       <th>Código de Proyecto</th>
       <th>Experto</th>

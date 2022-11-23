@@ -3,39 +3,39 @@
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
-        <div class="row no-m-t no-m-b">
-        <div class="row">
-            <div class="col s8 m8 l10">
-                <h5 class="left-align">
-                    <a class="footer-text left-align" href="{{ route('proyecto') }}">
+        <div class="row no-m-t no-m-b m-r-lg m-l-lg">
+            <div class="left left-align">
+                <h5 class="left-align primary-text">
+                    <a class="footer-text left-align" href="{{route('proyecto')}}">
                         <i class="material-icons arrow-l">arrow_back</i>
-                    </a> Proyectos de Base Tecnológica
+                    </a>Proyectos de Base Tecnológica
                 </h5>
             </div>
-            <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
+            <div class="right right-align show-on-large hide-on-med-and-down">
                 <ol class="breadcrumbs">
-                    <li><a href="{{route('home')}}">Inicio</a></li>
+                    <li><a href="{{ route('home') }}">Inicio</a></li>
                     <li><a href="{{route('proyecto')}}">Proyectos</a></li>
                     <li class="active">Entregables</li>
                 </ol>
             </div>
-            </div>
-        <div class="card">
-            <div class="card-content">
-            <div class="row">
-                <div class="col s12 m12 l12">
-                <form action="{{route('proyecto.update.entregables', $proyecto->id)}}" method="POST" onsubmit="return checkSubmit()">
-                    @include('proyectos.form_entregables')
-                    <center>
-                    <button class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
-                    <a href="{{ route('proyecto') }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
-                    </center>
-                </form>
-                @include('proyectos.archivos_table')
+        </div>
+        <div class="row no-m-t no-m-b">
+            <div class="card">
+                <div class="card-content">
+                <div class="row">
+                    <div class="col s12 m12 l12">
+                    <form action="{{route('proyecto.update.entregables', $proyecto->id)}}" method="POST" onsubmit="return checkSubmit()">
+                        @include('proyectos.form_entregables')
+                        <center>
+                        <button class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
+                        <a href="{{ route('proyecto') }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
+                        </center>
+                    </form>
+                    @include('proyectos.archivos_table')
+                    </div>
+                </div>
                 </div>
             </div>
-            </div>
-        </div>
         </div>
     </div>
 </main>
