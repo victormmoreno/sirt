@@ -28,21 +28,21 @@ class ArticulationSubtypeController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->user()->can('index', ArticulationSubtype::class)) {
-            $nodos = null;
-            if($request->user()->can('listNodes', ArticulationSubtype::class))
-            {
-                $nodos = Nodo::query()->with('entidad')->get();
-                $nodos = collect($nodos)->pluck('entidad.nombre', 'id');
-            }
-            if ($request->ajax()) {
-                return $this->articulationSubtypeRepository->filterArtuculationSubtypes($request);
-            }
-            $articulationTypes = ArticulationType::all()->pluck('name', 'id');
-            return view('articulation-subtype.index', compact('nodos', 'articulationTypes'));
+        if ($request->user()->cannot('index', ArticulationSubtype::class))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
         }
-        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
-        return redirect()->route('home');
+        $nodos = null;
+        if($request->user()->can('listNodes', ArticulationSubtype::class))
+        {
+            $nodos = Nodo::SelectNodo()->get();
+        }
+        if ($request->ajax()) {
+            return $this->articulationSubtypeRepository->filterArtuculationSubtypes($request);
+        }
+        $articulationTypes = ArticulationType::all()->pluck('name', 'id');
+        return view('articulation-subtype.index', compact('nodos', 'articulationTypes'));
     }
 
     /**
@@ -52,19 +52,18 @@ class ArticulationSubtypeController extends Controller
      */
     public function create()
     {
-        if (request()->user()->can('create', ArticulationSubtype::class))
+        if (request()->user()->cannot('create', ArticulationSubtype::class))
         {
-            $nodos = null;
-            if(request()->user()->can('listNodes', ArticulationSubtype::class))
-            {
-                $nodos = Nodo::query()->with('entidad')->get();
-                $nodos = collect($nodos)->pluck('entidad.nombre', 'id');
-            }
-            $articulationTypes = ArticulationType::query()->where('state', ArticulationType::mostrar())->get()->pluck('name', 'id');
-            return view('articulation-subtype.create', compact('nodos', 'articulationTypes'));
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
         }
-        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
-        return redirect()->route('home');
+        $nodos = null;
+        if(request()->user()->can('listNodes', ArticulationSubtype::class))
+        {
+            $nodos = Nodo::SelectNodo()->get();
+        }
+        $articulationTypes = ArticulationType::query()->where('state', ArticulationType::mostrar())->get()->pluck('name', 'id');
+        return view('articulation-subtype.create', compact('nodos', 'articulationTypes'));
     }
 
     /**
@@ -145,8 +144,7 @@ class ArticulationSubtypeController extends Controller
             ->findOrFail($articulationSubtype);
         if(request()->user()->can('listNodes', ArticulationSubtype::class))
         {
-            $nodos = Nodo::query()->with('entidad')->get();
-            $nodos = collect($nodos)->pluck('entidad.nombre', 'id');
+            $nodos = Nodo::SelectNodo()->get();
         }
         $articulationTypes = ArticulationType::all()->pluck('name', 'id');
         return view('articulation-subtype.edit', compact('nodos', 'articulationSubtype', 'articulationTypes'));

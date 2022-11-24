@@ -41,17 +41,15 @@ class ArticulationTypeRepository
 
         ->editColumn('state', function ($data) {
             if($data->state == ArticulationType::mostrar()){
-                return  '<div class="chip green white-text text-darken-2">'.$data->present()->status().'</div>';
+                return  '<div class="chip bg-success white-text">'.$data->present()->status().'</div>';
+            }else{
+                return  '<div class="chip bg-danger white-text">'.$data->present()->status().'</div>';
             }
-            if($data->state == ArticulationType::ocultar()){
-                return  '<div class="chip red white-text text-darken-2">'.$data->present()->status().'</div>';
-            }
-
         })
         ->addColumn('show', function ($data) {
-            return '<a class="btn m-b-xs modal-trigger" href='.route('tipoarticulaciones.show', $data->id).'>
-            <i class="material-icons">search</i>
-            </a>';
+            return '<a class="btn bg-secondary m-b-xs modal-trigger" href='.route('tipoarticulaciones.show', $data).'>
+                        <i class="material-icons">search</i>
+                    </a>';
         })
         ->rawColumns(['created_at', 'state',  'show'])->make(true);
     }

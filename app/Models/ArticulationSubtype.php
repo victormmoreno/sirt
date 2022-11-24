@@ -56,7 +56,7 @@ class ArticulationSubtype extends Model
     public function scopeState($query, $state)
     {
         if (isset($state) && $state != null && $state != 'all') {
-            $query->where('state',  $state);
+            $query->where('articulation_subtypes.state',  $state);
         }
         return $query;
     }
@@ -64,9 +64,7 @@ class ArticulationSubtype extends Model
     public function scopeNode($query, $node)
     {
         if (isset($node) && $node != null && $node != 'all') {
-            return $query->whereHas('nodos', function ($subQuery) use ($node) {
-                $subQuery->where('nodos.id', $node);
-            });
+            return $query->where('nodos.id', $node);
         }
         return $query;
     }

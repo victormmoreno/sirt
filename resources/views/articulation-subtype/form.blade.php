@@ -56,23 +56,27 @@
     </p>
 </div>
 <div class="row p-v-xs">
-    @foreach($nodos as $id => $name)
+    @forelse ($nodos as $nodo)
         <div class="col s12 m4 l3">
             <p class="p-h-xs p-v-xs">
                 @if(isset($articulationSubtype))
-                    <input type="checkbox" value="{{$id}}" {{collect(old('checknode',$articulationSubtype->nodos->pluck('id')))->contains($id) ? 'checked' : ''  }} name="checknode[]" class="filled-in filled-in-node" id="filled-in-{{$id}}">
+                    <input type="checkbox" value="{{ $nodo->id }}" {{collect(old('checknode',$articulationSubtype->nodos->pluck('id')))->contains($nodo->id) ? 'checked' : ''  }} name="checknode[]" class="filled-in filled-in-node" id="filled-in-{{$nodo->id}}">
                 @else
-                    <input type="checkbox" value="{{$id}}" name="checknode[]" class="filled-in filled-in-node" id="filled-in-{{$id}}" >
+                    <input type="checkbox" value="{{ $nodo->id }}" name="checknode[]" class="filled-in filled-in-node" id="filled-in-{{$nodo->id}}" >
                 @endif
-                <label for="filled-in-{{$id}}">{{$name}}</label>
+                <label for="filled-in-{{$nodo->id}}">{{$nodo->nodos}}</label>
             </p>
         </div>
-    @endforeach
+    @empty
+        <div class="col s12 m4 l3">
+            <p class="p-h-xs p-v-xs">{{__('No results found')}}</p>
+        </div>
+    @endforelse
 </div>
 <div class="row">
     <small id="checknode-error" class="error red-text"></small>
 </div>
 <div class="row">
-    <button type="submit" class="waves-effect waves-light btn orange m-b-xs right">{{isset($btnText) ? $btnText : 'Guardar'}}</button>
+    <button type="submit" class="waves-effect waves-teal bg-secondary white-text btn-flat m-t-xs right">{{isset($btnText) ? $btnText : 'Guardar'}}</button>
 </div>
 

@@ -10863,33 +10863,33 @@ let articulationSubtype ={
                 type: "get",
                 data: {
                     filter_node_artuculation_subtype: filter_node_artuculation_subtype,
-                    filter_state_artuculation_subtype: filter_state_artuculation_subtype,
+                    filter_state_artuculation_subtype: filter_state_artuculation_subtype
                 }
             },
             columns: [
                 {
-                    data: 'created_at',
-                    name: 'created_at',
+                    data: 'articulation_subtype_created_at',
+                    name: 'articulation_subtype_created_at'
                 },
                 {
-                    data: 'articulationtype',
-                    name: 'articulationtype',
+                    data: 'articulation_type_name',
+                    name: 'articulation_type_name'
                 },
                 {
-                    data: 'name',
-                    name: 'name',
+                    data: 'articulation_subtype_name',
+                    name: 'articulation_subtype_name'
                 },
                 {
-                    data: 'description',
-                    name: 'description',
+                    data: 'articulation_subtype_description',
+                    name: 'articulation_subtype_description'
                 },
                 {
-                    data: 'entity',
-                    name: 'entity',
+                    data: 'articulation_subtype_entity',
+                    name: 'articulation_subtype_entity'
                 },
                 {
-                    data: 'state',
-                    name: 'state',
+                    data: 'articulation_subtype_state',
+                    name: 'articulation_subtype_state'
                 },
                 {
                     data: 'show',

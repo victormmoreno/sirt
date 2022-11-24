@@ -16,26 +16,26 @@ class ArticulationSubtypePresenter extends Presenter
 
     public function name()
     {
-        return  $this->articulationSubtype->name ? : 'No Registra';
+        return  $this->articulationSubtype->name ? : __('No register');
     }
 
     public function description()
     {
-        return  $this->articulationSubtype->description ? : 'No Registra';
+        return  $this->articulationSubtype->description ? : __('No register');
     }
 
     public function descriptionLimit()
     {
-        return  $this->articulationSubtype->description ? Str::limit($this->articulationSubtype->description, 40) : 'No Registra';
+        return  $this->articulationSubtype->description ? Str::limit($this->articulationSubtype->description, 40) : __('No register');
     }
 
     public function entities()
     {
-        return  $this->articulationSubtype->entity ? collect($this->articulationSubtype->entity)->implode(', ') : 'No Registra';
+        return  $this->articulationSubtype->entity ? collect($this->articulationSubtype->entity)->implode(', ') : __('No register');
     }
 
     public function status()
     {
-        return  $this->articulationSubtype->state ? : 'No Registra';
+        return  $this->articulationSubtype->state ? : __('No register');
     }
 }

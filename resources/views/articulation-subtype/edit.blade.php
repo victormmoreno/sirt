@@ -3,16 +3,20 @@
 @section('content')
     <main class="mn-inner inner-active-sidebar">
         <div class="content">
-            <div class="row no-m-t no-m-b">
+            <div class="row no-m-t no-m-b m-r-lg m-l-lg">
                 <div class="left left-align">
-                    <h5 class="left-align orange-text text-darken-3">
-                        <i class="material-icons left">autorenew</i>{{__('articulation-subtype')}}
+                    <h5 class="left-align primary-text">
+                        <a href="{{route('tiposubarticulaciones.show', $articulationSubtype)}}" class="footer-text left-align">
+                            <i class="material-icons arrow-l left">arrow_back</i>
+                        </a>
+                        {{__('articulation-subtype')}}
                     </h5>
                 </div>
                 <div class="right right-align show-on-large hide-on-med-and-down">
                     <ol class="breadcrumbs">
                         <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
-                        <li><a href="{{route('articulation-stage')}}">{{__('articulation-subtype')}}</a></li>
+                        <li><a href="{{route('tiposubarticulaciones.index')}}">{{__('articulation-subtype')}}</a></li>
+                        <li><a href="{{route('tiposubarticulaciones.show', $articulationSubtype)}}">{{isset($articulationSubtype->name) ? $articulationSubtype->name : __('articulation-subtype')}}</a></li>
                         <li class="active">Editar</li>
                     </ol>
                 </div>
