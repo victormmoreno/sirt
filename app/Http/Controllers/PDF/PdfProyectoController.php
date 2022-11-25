@@ -19,6 +19,10 @@ class PdfProyectoController extends Controller
     public function printFormularioCierre($id)
     {
         $proyecto = Proyecto::findOrFail($id);
+        if(!request()->user()->can('generar_docs', $proyecto)) {
+            alert('No autorizado', 'No puedes generar documentos de este proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
         $costo = $this->costoController->costoProject($proyecto->id);
         $pdf = PDF::loadView('pdf.proyecto.form_cierre', ['proyecto' => $proyecto, 'costo' => $costo]);
         return $pdf->stream();

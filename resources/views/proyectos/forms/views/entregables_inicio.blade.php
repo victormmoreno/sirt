@@ -20,12 +20,12 @@
                     @include('proyectos.forms.entregables.inicio')
                     @include('proyectos.archivos_table_fase', ['fase' => 'inicio'])
                     <div class="divider"></div>
-                    <center>
-                    @if ($proyecto->present()->proyectoFase() == 'Inicio')
-                    <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
-                    @endif
-                    <a href="{{ route('proyecto.inicio', $proyecto->id) }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
-                    </center>
+                    <div class="center">
+                        @if ($proyecto->present()->proyectoFase() == 'Inicio')
+                        <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
+                        @endif
+                        <a href="{{ route('proyecto.inicio', $proyecto->id) }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
+                    </div>
                 </form>
                 </div>
             </div>
@@ -100,13 +100,13 @@
                 name: 'download',
                 orderable: false,
             },
-            @if (($proyecto->fase->nombre == 'Inicio' || $proyecto->fase->nombre == 'Finalizado') || session()->get('login_role') == App\User::IsAdministrador())
+            @can('delete_files', [$proyecto, $proyecto->IsInicio()])
             {
                 data: 'delete',
                 name: 'delete',
                 orderable: false,
             },
-            @endif
+            @endcan
             ],
         });
     }

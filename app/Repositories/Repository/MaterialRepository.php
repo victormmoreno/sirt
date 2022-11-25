@@ -152,8 +152,8 @@ class MaterialRepository
     {
 
         $nodo = Nodo::find($this->findNodoBySession());
-
         $lineaAuth = session()->has('login_role') && session()->get('login_role') == User::IsExperto() ? auth()->user()->gestor->lineatecnologica_id : $request->input('txtlineatecnologica');
+        // dd($nodo->lineas);
 
         return $nodo->lineas->find($lineaAuth)->id;
 

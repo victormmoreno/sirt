@@ -2,23 +2,20 @@
 @section('meta-title', 'Materiales | '. $material->nombre)
 
 @section('content')
-
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
                 <div class="row">
-                    <div class="col s12 m8 l8">
-                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
-                            <a class="footer-text left-align" href="{{route('material.index')}}">
-                                <i class="material-icons arrow-l">
-                                    arrow_back
-                                </i>
-                            </a>
-                            Material {{$material->nombre}}
-                        </h5>
-                    </div>
-                    <div class="col s12 m4 l4 rigth-align  show-on-large hide-on-med-and-down ">
+                    <h5 class="left left-align primary-text">
+                        <a class="footer-text left-align" href="{{route('material.index')}}">
+                            <i class="material-icons arrow-l left primary-text">
+                                arrow_back
+                            </i>
+                        </a>
+                        Material {{$material->nombre}}
+                    </h5>
+                    <div class="right right-align show-on-large hide-on-med-and-down ">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li><a href="{{route('material.index')}}">Materiales</a></li>
@@ -72,7 +69,7 @@
 
                                                     <div class="col s12 m8 l8 offset-l2 offset-m2">
                                                         <div class="center">
-                                                            <span class="mailbox-title hand-of-Sean-fonts orange-text text-darken-3">
+                                                            <span class="mailbox-title primary-text">
                                                                 Información Material de Formación {{$material->nombre}}
                                                             </span>
                                                         </div>

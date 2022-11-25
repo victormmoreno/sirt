@@ -136,14 +136,14 @@
     </div>
 </div>
 <div class="divider"></div>
-<center>
+<div class="center">
     @can('showUpdateButton', [$proyecto, 'Cierre'])
-        <button type="submit" class="waves-effect cyan darken-1 btn center-aling">
-            <i class="material-icons right">done</i>
+        <button type="submit" class="waves-effect bg-secondary btn center-aling">
+            <i class="material-icons left">send</i>
             Guardar
         </button>
     @endcan
-    <a href="{{route('proyecto.ejecucion', $proyecto->id)}}" class="waves-effect red lighten-2 btn center-aling">
+    <a href="{{route('proyecto.ejecucion', $proyecto->id)}}" class="waves-effect bg-danger btn center-aling">
         <i class="material-icons right">backspace</i>Cancelar
     </a>
-</center>
+</div>

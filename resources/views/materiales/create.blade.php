@@ -6,14 +6,12 @@
       	<div class="row no-m-t no-m-b">
         	<div class="col s12 m12 l12">
         		<div class="row">
-                    <div class="col s12 m7 l9">
-                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
-                            <a class="footer-text  " href="{{route('equipo.index')}}">
-				              	<i class="material-icons    orange-text text-darken-3">local_library</i>
-				            </a> Materiales de Formación Tecnoparque Nodo  {{\NodoHelper::returnNameNodoUsuario()}}
-                        </h5>
-                    </div>
-                    <div class="col s12 m5 l3 rigth-align rigth-align show-on-large hide-on-med-and-down">
+                    <h5 class="left left-align primary-text">
+                        <a class="footer-text " href="{{route('equipo.index')}}">
+                              <i class="material-icons primary-text">local_library</i>
+                        </a> Materiales de Formación Tecnoparque Nodo  {{\NodoHelper::returnNameNodoUsuario()}}
+                    </h5>
+                    <div class="right right-align rigth-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li><a href="{{route('equipo.index')}}">Materiales</a></li>
@@ -25,7 +23,7 @@
             		<div class="card-content">
               			<div class="row">
 			                <center>
-				                <span class="card-title center-align hand-of-Sean-fonts orange-text text-darken-3">Nuevo Material Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }}
+				                <span class="card-title center-align primary-text">Nuevo Material Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }}
 				                </span>
 			                </center>
                 			<div class="divider"></div>

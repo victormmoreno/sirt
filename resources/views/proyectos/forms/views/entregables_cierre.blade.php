@@ -21,12 +21,10 @@
                     <div class="row">
                     @include('proyectos.archivos_table_fase', ['fase' => 'cierre'])
                     </div>
-                    <center>
-                    @if ($proyecto->articulacion_proyecto->actividad->present()->actividadAprobacionDinamizador() == 0)
-                    <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
-                    @endif
-                    <a href="{{ route('proyecto.cierre', $proyecto->id) }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
-                    </center>
+                    <div class="center">
+                        <button type="submit" class="waves-effect bg-secondary btn center-aling"><i class="material-icons left">send</i>Modificar</button>
+                        <a href="{{ route('proyecto.cierre', $proyecto->id) }}" class="waves-effect bg-danger btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
+                    </div>
                 </form>
                 </div>
             </div>
@@ -101,13 +99,13 @@
                 name: 'download',
                 orderable: false,
             },
-            @if ($proyecto->fase->nombre == "Cierre" || $proyecto->fase->nombre == 'Finalizado')
+            @can('delete_files', [$proyecto, $proyecto->IsCierre()])
             {
                 data: 'delete',
                 name: 'delete',
                 orderable: false,
             },
-            @endif
+            @endcan
             ],
         });
     }

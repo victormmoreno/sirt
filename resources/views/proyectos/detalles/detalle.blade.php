@@ -7,7 +7,7 @@
                 <div class="left left-align">
                     <h5 class="left-align primary-text">
                         <a class="footer-text left-align" href="{{route('proyecto')}}">
-                            <i class="material-icons arrow-l left">arrow_back</i>
+                            <i class="material-icons arrow-l left primary-text">arrow_back</i>
                         </a>Proyectos de Base Tecnológica
                     </h5>
                 </div>

@@ -34,7 +34,7 @@ class ProyectoPolicy
     }
 
     /** 
-     * Determina quienes pueden ver el detalle de un proyecto
+     * Determina quienes pueden ver el detalle de un proyecto en ejecución
      * 
      * @param App\User $user
      * @param App\Models\Proyecto $proyecto
@@ -45,7 +45,7 @@ class ProyectoPolicy
     {
         if ($proyecto->present()->proyectoFase() == $proyecto->IsFinalizado() || $proyecto->present()->proyectoFase() == $proyecto->IsSuspendido())
             return false;
-        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsArticulador())
+        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador())
             return true;
         if (session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->user->id == auth()->user()->id)
             return true;
@@ -65,6 +65,59 @@ class ProyectoPolicy
     }
 
     /** 
+     * Determina quienes pueden ver el detalle de un proyecto finalizado
+     * 
+     * @param App\User $user
+     * @param App\Models\Proyecto $proyecto
+     * @return bool
+     * @author dum
+    */
+    public function detalle_end(User $user, Proyecto $proyecto)
+    {
+        if ($proyecto->present()->proyectoFase() == $proyecto->IsFinalizado() || $proyecto->present()->proyectoFase() == $proyecto->IsSuspendido()) {
+            if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador())
+                return true;
+            if (session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->user->id == auth()->user()->id)
+                return true;
+            if (session()->get('login_role') == $user->IsDinamizador() && $proyecto->nodo_id == auth()->user()->dinamizador->nodo_id)
+                return true;
+            if (session()->get('login_role') == $user->IsInfocenter() && $proyecto->nodo_id == auth()->user()->infocenter->nodo_id)
+                return true;
+            if (session()->get('login_role') == $user->IsArticulador() && $proyecto->nodo_id == auth()->user()->articulador->nodo_id)
+                return true;
+            if (session()->get('login_role') == $user->IsTalento()) {
+                $talento = $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_id', auth()->user()->talento->id)->first();
+                if ($talento != null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Determina quienes y cuando puede eliminar archivos de un proyecto
+     *
+     * @param App\User $user
+     * @param App\Models\Proyecto $proyecto
+     * @param string $fase Fase de donde se eliminarán los proyectos
+     * @author dum
+     **/
+    public function delete_files(User $user, Proyecto $proyecto, string $fase)
+    {
+        if ((session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->user->id == request()->user()->id)) {
+            if ($proyecto->fase->nombre == $fase || $proyecto->fase->nombre == $proyecto->IsFinalizado()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        if (session()->get('login_role') == $user->IsAdministrador())
+            return true;
+        return false;
+    }
+
+    /** 
      * Determina quienes pueden generar documentos de un proyecto
      * 
      * @param App\User $user
@@ -78,8 +131,6 @@ class ProyectoPolicy
             return true;
         if (session()->get('login_role') == $user->IsExperto() && $proyecto->asesor_id == auth()->user()->gestor->id)
             return true;
-        // if (session()->get('login_role') == $user->IsDinamizador() && $proyecto->nodo_id == auth()->user()->dinamizador->nodo_id)
-        //     return true;
         return false;
     }
 

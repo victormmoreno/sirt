@@ -140,7 +140,7 @@
     <div class="card-content">
         <table class="bordered">
             <tr>
-                <td colspan="1" rowspan="2"><img class="center-image" src="{{asset('img/web.svg')}}"></td>
+                <td colspan="1" rowspan="2"><img class="center-image" src="{{asset('img/web.png')}}"></td>
                 <td colspan="5" class="centered"><b>Acta de Inicio<b></td>
             </tr>
             <tr>

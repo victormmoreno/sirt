@@ -18311,6 +18311,10 @@ html {
     font-family: var(--font-family-work-sans);
 }
 
+p {
+    margin: 0px;
+}
+
 .side-nav.fixed ul li.active > a.collapsible-header, .side-nav.fixed ul li.active > a {
     font-weight: 500;
 }

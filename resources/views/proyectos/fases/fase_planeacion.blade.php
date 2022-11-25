@@ -5,9 +5,9 @@
     <div class="content">
         <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12">
-            <h5>
+            <h5 class="primary-text">
             <a class="footer-text left-align" href="{{route('proyecto')}}">
-                <i class="material-icons arrow-l left">arrow_back</i>
+                <i class="material-icons arrow-l left primary-text">arrow_back</i>
             </a> Proyectos de Base Tecnológica
             </h5>
             <div class="card">
@@ -60,13 +60,13 @@
                 name: 'download',
                 orderable: false,
             },
-            @if (($proyecto->fase->nombre == 'Planeación' || $proyecto->fase->nombre == 'Finalizado') || session()->get('login_role') == App\User::IsAdministrador())
+            @can('delete_files', [$proyecto, $proyecto->IsPlaneacion()])
             {
                 data: 'delete',
                 name: 'delete',
                 orderable: false,
             }
-            @endif
+            @endcan
             ],
         });
     }

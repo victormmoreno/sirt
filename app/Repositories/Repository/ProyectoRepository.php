@@ -216,51 +216,43 @@ class ProyectoRepository
     }
 
     /**
-     * Elimina los datos de un proyectos
-     * @param int $id id del proyecto que se va a eliminar
-     * @return boolean
-     * @author dum
-     */
-    public function eliminarProyecto_Repository($id)
+     * Consulta la información de un proyecto
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function selectProyecto()
     {
-        DB::beginTransaction();
-        try {
-            $proyecto = Proyecto::find($id);
-            $padre = $proyecto->articulacion_proyecto->actividad;
-            // Se usa el método sync sin nada para eliminar los datos de las relaciones muchos a muchos
-            // Elimina los datos de la tabla articulacion_proyecto_talento relacionados con el proyecto
-            $proyecto->articulacion_proyecto->talentos()->sync([]);
-            // Elimina el registro de la tabla de proyecto
-            $padre->articulacion_proyecto->proyecto()->delete();
-            // Directorio del proyecto
-            $directory = $this->returnDirectoryProyectoFiles($padre->articulacion_proyecto->id);
-            if ($directory != false) {
-                // Elimina los archivos del servidor
-                Storage::deleteDirectory($directory);
-                // Elimina los registros de la tabla de archivos_articulacion_proyecto
-                ArchivoArticulacionProyecto::where('articulacion_proyecto_id', $padre->articulacion_proyecto->id)->delete();
-            }
-            // Elimina el registro de la tabla la tabla de articulacion_proyecto
-            $padre->articulacion_proyecto()->delete();
-            // Elimina los registros de la tabla material_uso
-            UsoInfraestructura::deleteUsoMateriales($padre);
-            // $this->deleteUsoMateriales($padre);
-            // Elimina los registros de la tabla uso_talentos
-            UsoInfraestructura::deleteUsoTalentos($padre);
-            // Elimina los registros de la tabla gestor_uso
-            UsoInfraestructura::deleteUsoGestores($padre);
-            // Elimina los registros de la tabla equipo_uso
-            UsoInfraestructura::deleteUsoEquipos($padre);
-            // Elimina los registros de la tabla usoinfraestructuras
-            $padre->usoinfraestructuras()->delete();
-            // Elimina la tabla de actividades
-            $padre->delete();
-            DB::commit();
-            return true;
-        } catch (\Exception $e) {
-            DB::rollback();
-            return false;
-        }
+        return Proyecto::select(
+            'actividades.codigo_actividad AS codigo_proyecto',
+            'actividades.nombre',
+            'areasconocimiento.nombre AS nombre_areaconocimiento',
+            'sublineas.nombre AS sublinea_nombre',
+            'articulacion_proyecto.id AS articulacion_proyecto_id',
+            'actividades.fecha_cierre AS fecha_fin',
+            'lineastecnologicas.abreviatura AS abreviatura_linea',
+            'lineastecnologicas.nombre AS nombre_linea',
+            'fecha_inicio',
+            'fecha_cierre',
+            'economia_naranja',
+            'fases.nombre AS nombre_fase',
+            'proyectos.id',
+            'actividades.id AS actividad_id',
+            'proyectos.asesor_id'
+        )
+        ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
+        ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) as nombre_idea')
+        ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
+        ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+        ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+        ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
+        ->join('users', 'users.id', '=', 'gestores.user_id')
+        ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
+        ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
+        ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
+        ->leftJoin('fases', 'fases.id', '=', 'proyectos.fase_id')
+        ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id');
     }
 
     /**
@@ -521,71 +513,71 @@ class ProyectoRepository
         ->orderBy('meses');
     }
 
-    /**
-     * Consulta los proyectos
-     * @param string $fecha_inicio
-     * @param string $fecha_cierre
-     * @return Builder
-     * @author dum
-     */
-    public function consultarProyectos_Repository(string $fecha_inicio = '', string $fecha_cierre = '')
-    {
-        return Proyecto::select(
-        'entidades.nombre AS nodo',
-        'actividades.codigo_actividad',
-        'actividades.nombre',
-        'lineastecnologicas.nombre AS nombre_linea',
-        'sublineas.nombre AS nombre_sublinea',
-        'areasconocimiento.nombre AS nombre_areaconocimiento',
-        'fecha_inicio',
-        'fases.nombre AS nombre_fase'
-        )
-        ->selectRaw('GROUP_CONCAT(propietarios.propietario_type SEPARATOR ",") AS propietarios')
-        ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
-        ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
-        ->selectRaw('IF(trl_esperado = '.Proyecto::IsTrl6Esperado().', "TRL 6", "TRL 7 - TRL 8") AS trl_esperado')
-        ->selectRaw('IF(fases.nombre = "Finalizado", IF(trl_obtenido = 0, "TRL 6", IF(trl_obtenido = 1, "TRL 7", "TRL 8")), "El proyecto no se ha cerrado") AS trl_obtenido')
-        ->selectRaw('IF(fases.nombre = "Finalizado" || fases.nombre = "Suspendido", fecha_cierre, "El proyecto no se ha cerrado") AS fecha_cierre')
-        ->selectRaw('IF(areasconocimiento.nombre = "Otro", otro_areaconocimiento, "No aplica") AS otro_areaconocimiento')
-        ->selectRaw('IF(fabrica_productividad = 0, "No", "Si") AS fabrica_productividad')
-        ->selectRaw('IF(reci_ar_emp = 0, "No", "Si") AS reci_ar_emp')
-        ->selectRaw('IF(economia_naranja = 0, "No", "Si") AS economia_naranja')
-        ->selectRaw('IF(economia_naranja = 0, "No aplica", tipo_economianaranja) AS tipo_economianaranja')
-        ->selectRaw('IF(dirigido_discapacitados = 0, "No", "Si") AS dirigido_discapacitados')
-        ->selectRaw('IF(dirigido_discapacitados = 0, "No aplica", tipo_discapacitados) AS tipo_discapacitados')
-        ->selectRaw('IF(art_cti = 0, "No", "Si") AS art_cti')
-        ->selectRaw('IF(art_cti = 0, "No aplica", nom_act_cti) AS nom_act_cti')
-        ->selectRaw('IF(fases.nombre = "Cierre", IF(diri_ar_emp = 0, "No", "Si"), "El proyecto no se ha cerrado") AS diri_ar_emp')
-        ->selectRaw('DATE_FORMAT(fecha_cierre, "%Y") AS anho')
-        ->selectRaw('DATE_FORMAT(fecha_cierre, "%m") AS mes')
-        ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-        ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-        ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
-        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-        ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
-        ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
-        ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
-        ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
-        ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
-        ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
-        ->join('users', 'users.id', '=', 'gestores.user_id')
-        ->leftJoin('propietarios', 'propietarios.proyecto_id', '=', 'proyectos.id')
-        ->where(function($q) use ($fecha_inicio, $fecha_cierre) {
-            $q->where(function($query) use ($fecha_inicio, $fecha_cierre) {
-            $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre]);
-            })
-            ->orWhere(function($query) use ($fecha_inicio, $fecha_cierre) {
-            $query->where(function($query) use ($fecha_inicio, $fecha_cierre) {
-            $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
-            $query->orWhere(function ($query) {
-                $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
-            });
-            });
-            });
-        })
-        ->groupBy('codigo_actividad', 'actividades.nombre')
-        ->orderBy('entidades.nombre');
-    }
+    // /**
+    //  * Consulta los proyectos
+    //  * @param string $fecha_inicio
+    //  * @param string $fecha_cierre
+    //  * @return Builder
+    //  * @author dum
+    //  */
+    // public function consultarProyectos_Repository(string $fecha_inicio = '', string $fecha_cierre = '')
+    // {
+    //     return Proyecto::select(
+    //     'entidades.nombre AS nodo',
+    //     'actividades.codigo_actividad',
+    //     'actividades.nombre',
+    //     'lineastecnologicas.nombre AS nombre_linea',
+    //     'sublineas.nombre AS nombre_sublinea',
+    //     'areasconocimiento.nombre AS nombre_areaconocimiento',
+    //     'fecha_inicio',
+    //     'fases.nombre AS nombre_fase'
+    //     )
+    //     ->selectRaw('GROUP_CONCAT(propietarios.propietario_type SEPARATOR ",") AS propietarios')
+    //     ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
+    //     ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
+    //     ->selectRaw('IF(trl_esperado = '.Proyecto::IsTrl6Esperado().', "TRL 6", "TRL 7 - TRL 8") AS trl_esperado')
+    //     ->selectRaw('IF(fases.nombre = "Finalizado", IF(trl_obtenido = 0, "TRL 6", IF(trl_obtenido = 1, "TRL 7", "TRL 8")), "El proyecto no se ha cerrado") AS trl_obtenido')
+    //     ->selectRaw('IF(fases.nombre = "Finalizado" || fases.nombre = "Suspendido", fecha_cierre, "El proyecto no se ha cerrado") AS fecha_cierre')
+    //     ->selectRaw('IF(areasconocimiento.nombre = "Otro", otro_areaconocimiento, "No aplica") AS otro_areaconocimiento')
+    //     ->selectRaw('IF(fabrica_productividad = 0, "No", "Si") AS fabrica_productividad')
+    //     ->selectRaw('IF(reci_ar_emp = 0, "No", "Si") AS reci_ar_emp')
+    //     ->selectRaw('IF(economia_naranja = 0, "No", "Si") AS economia_naranja')
+    //     ->selectRaw('IF(economia_naranja = 0, "No aplica", tipo_economianaranja) AS tipo_economianaranja')
+    //     ->selectRaw('IF(dirigido_discapacitados = 0, "No", "Si") AS dirigido_discapacitados')
+    //     ->selectRaw('IF(dirigido_discapacitados = 0, "No aplica", tipo_discapacitados) AS tipo_discapacitados')
+    //     ->selectRaw('IF(art_cti = 0, "No", "Si") AS art_cti')
+    //     ->selectRaw('IF(art_cti = 0, "No aplica", nom_act_cti) AS nom_act_cti')
+    //     ->selectRaw('IF(fases.nombre = "Cierre", IF(diri_ar_emp = 0, "No", "Si"), "El proyecto no se ha cerrado") AS diri_ar_emp')
+    //     ->selectRaw('DATE_FORMAT(fecha_cierre, "%Y") AS anho')
+    //     ->selectRaw('DATE_FORMAT(fecha_cierre, "%m") AS mes')
+    //     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+    //     ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+    //     ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
+    //     ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+    //     ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
+    //     ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
+    //     ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
+    //     ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
+    //     ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
+    //     ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
+    //     ->join('users', 'users.id', '=', 'gestores.user_id')
+    //     ->leftJoin('propietarios', 'propietarios.proyecto_id', '=', 'proyectos.id')
+    //     ->where(function($q) use ($fecha_inicio, $fecha_cierre) {
+    //         $q->where(function($query) use ($fecha_inicio, $fecha_cierre) {
+    //         $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre]);
+    //         })
+    //         ->orWhere(function($query) use ($fecha_inicio, $fecha_cierre) {
+    //         $query->where(function($query) use ($fecha_inicio, $fecha_cierre) {
+    //         $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
+    //         $query->orWhere(function ($query) {
+    //             $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
+    //         });
+    //         });
+    //         });
+    //     })
+    //     ->groupBy('codigo_actividad', 'actividades.nombre')
+    //     ->orderBy('entidades.nombre');
+    // }
 
     /**
      * Consulta el talento líder de un proyecto
@@ -1028,6 +1020,7 @@ class ProyectoRepository
             $movimiento = null;
             $mensaje = null;
             $title = null;
+            $ruta = null;
     
             $proyecto = Proyecto::findOrFail($id);
             $dinamizadorRepository = new DinamizadorRepository;
@@ -1103,12 +1096,7 @@ class ProyectoRepository
                         ]);
                         // Crear el movimiento con el cierre del proyecto
                         $this->crearMovimiento($proyecto, 'Finalizado', 'Cerró', null);
-                        return [
-                            'state' => true,
-                            'mensaje' => $mensaje,
-                            'title' => $title,
-                            'route' => route('proyecto.detalle', $id)
-                        ];
+                        $ruta = route('proyecto.detalle', $id);
                         }
                     }
                 }
@@ -1118,13 +1106,14 @@ class ProyectoRepository
             return [
                 'state' => true,
                 'mensaje' => $mensaje,
-                'title' => $title
+                'title' => $title,
+                'route' => $ruta
             ];
         } catch (\Throwable $th) {
             DB::rollBack();
             return [
                 'state' => false,
-                'mensaje' => 'No se ha aprobado la fase de inicio del proyecto',
+                'mensaje' => $th->getMessage(),
                 'title' => 'Aprobación errónea'
             ];
         }

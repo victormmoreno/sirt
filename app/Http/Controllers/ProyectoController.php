@@ -28,37 +28,13 @@ class ProyectoController extends Controller
         $this->middleware(['auth']);
     }
 
-    public function validarAccesoAExpertoACambiarTalentos($proyecto)
-    {
-        if ( (Session::get('login_role') == User::IsExperto()) && ($proyecto->asesor_id != auth()->user()->gestor->id) ) {
-            Alert::error('Acceso no permitido!', 'No puedes cambiar los talentos de un proyecto que no estás asesorando!')->showConfirmButton('Ok', '#3085d6');
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Elimina un proyecto de la base de datos
-     * @param int $id Id del proyecto a eliminar
-     * @return Response
-     * @author dum
-     */
-    public function eliminarProyecto_Controller($id)
-    {
-
-        if (Session::get('login_role') == User::IsDinamizador()) {
-            $delete = $this->getProyectoRepository()->eliminarProyecto_Repository($id);
-            return response()->json([
-                'retorno' => $delete
-            ]);
-        } else {
-            abort('403');
-        }
-    }
-
     public function detalle(int $id)
     {
         $proyecto = Proyecto::findOrFail($id);
+        if(!request()->user()->can('detalle_end', $proyecto)) {
+            alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte y/o que aún no han finalizado', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
         $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
         $costo = $this->costoController->costoProject($proyecto->id);
         return view('proyectos.detalles.detalle', [
@@ -910,7 +886,7 @@ class ProyectoController extends Controller
         $update = $this->getProyectoRepository()->aprobacionFaseInicio($request, $id);
         if ($update['state']) {
             Alert::success($update['title'], $update['mensaje'])->showConfirmButton('Ok', '#3085d6');
-            if (isset($update['route'])) {
+            if ($update['route'] != null) {
                 return redirect($update['route']);
             } else {
                 return back();

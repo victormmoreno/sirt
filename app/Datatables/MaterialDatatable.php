@@ -14,7 +14,7 @@ class MaterialDatatable
         return datatables()->of($materiales)
 
             ->addColumn('detail', function ($data) {
-                $button = '<a href="' . route("material.show", $data->id) . '" class="btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle"><i class="material-icons">info_outline</i></a>';
+                $button = '<a href="' . route("material.show", $data->id) . '" class="btn tooltipped bg-info"><i class="material-icons">info_outline</i></a>';
 
                 return $button;
             })
@@ -50,7 +50,7 @@ class MaterialDatatable
     {
         return datatables()->of($materiales)
             ->addColumn('detail', function ($data) {
-                $button = '<a href="' . route("material.show", $data->id) . '" class="btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle"><i class="material-icons">info_outline</i></a>';
+                $button = '<a href="' . route("material.show", $data->id) . '" class="btn tooltipped bg-info"><i class="material-icons">info_outline</i></a>';
 
                 return $button;
             })

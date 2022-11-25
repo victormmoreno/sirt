@@ -28,8 +28,8 @@
     @endcan
 	@include('materiales.form_components.general')
 	<div class="divider"></div>
-	<center>
-	  	<button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">{{ isset($btnText) ? $btnText == 'Modificar' ? 'done' : 'done_all' : '' }}</i>{{isset($btnText) ? $btnText : 'error'}}</button>
-	  	<a href="{{route('material.index')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
-	</center>
+	<div class="center">
+	  	<button type="submit" class="waves-effect bg-secondary btn center-aling"><i class="material-icons right">{{ isset($btnText) ? $btnText == 'Modificar' ? 'done' : 'send' : '' }}</i>{{isset($btnText) ? $btnText : 'error'}}</button>
+	  	<a href="{{route('material.index')}}" class="waves-effect bg-danger btn center-aling"><i class="material-icons left">backspace</i>Cancelar</a>
+	</div>
 </div>
