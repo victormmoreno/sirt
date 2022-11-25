@@ -33,7 +33,7 @@ class MantenimientoController extends Controller
         
         $this->authorize('index', EquipoMantenimiento::class);
         if (request()->ajax()) {
-            if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor()) {
+            if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsExperto()) {
                 if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
                     $nodo           = auth()->user()->dinamizador->nodo->id;
                     $mantenimientos = $this->getMantenimientoRepository()->findInfoMantenimiento()
@@ -41,7 +41,7 @@ class MantenimientoController extends Controller
                             $query->where('id',$nodo);
                         })
                         ->get();
-                } elseif (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
+                } elseif (session()->has('login_role') && session()->get('login_role') == User::IsExperto()) {
                     $linea          = auth()->user()->gestor->lineatecnologica->id;
                     $nodo           = auth()->user()->gestor->nodo->id;
                     $mantenimientos = $this->getMantenimientoRepository()->findInfoMantenimiento()
@@ -111,7 +111,7 @@ class MantenimientoController extends Controller
             if (session()->get('login_role') == User::IsDinamizador()) {
                 $nodo_id = auth()->user()->dinamizador->nodo_id;
             }
-            if (session()->get('login_role') == User::IsGestor()) {
+            if (session()->get('login_role') == User::IsExperto()) {
                 $nodo_id = auth()->user()->gestor->nodo_id;
             }
             

@@ -87,7 +87,7 @@ class GrupoInvestigacionController extends Controller
   {
     if (request()->ajax()) {
       $idnodo_user = "";
-      if (\Session::get('login_role') == User::IsGestor()) {
+      if (\Session::get('login_role') == User::IsExperto()) {
         $idnodo_user = auth()->user()->gestor->nodo_id;
       } else {
         $idnodo_user = auth()->user()->dinamizador->nodo_id;
@@ -114,7 +114,7 @@ class GrupoInvestigacionController extends Controller
   {
     return view('gruposdeinvestigacion.index');
     // switch (\Session::get('login_role')) {
-    //   case User::IsGestor():
+    //   case User::IsExperto():
     //   break;
     //   case User::IsDinamizador():
     //   return view('gruposdeinvestigacion.dinamizador.index');

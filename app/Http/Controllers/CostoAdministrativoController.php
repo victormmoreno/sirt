@@ -143,12 +143,15 @@ class CostoAdministrativoController extends Controller
      */
     public function edit($id, $nodo)
     {
+        if(request()->user()->getNodoUser() != null) {
+            if (request()->user()->getNodoUser() != $nodo) {
+                return back();
+            }
+        }
         $costoAdministrativo = $this->getCostoAdministrativoRepository()->getInfoCostoAdministrativo()
             ->where('nodo_costoadministrativo.anho', Carbon::now()->year)
             ->where('nodos.id', $nodo)
             ->findOrFail($id);
-
-        //$this->authorize('edit', $costoAdministrativo);
 
         return view('costoadministrativo.edit', [
             'costoadministrativo' => $costoAdministrativo,
@@ -167,7 +170,7 @@ class CostoAdministrativoController extends Controller
             ->where('nodos.id', $nodo)
             ->findOrFail($id);
 
-        $this->authorize('update', $costoAdministrativo);
+        // $this->authorize('update', $costoAdministrativo);
 
         $this->validateCostoAdministrativo($request);
 

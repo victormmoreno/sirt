@@ -28,39 +28,41 @@
                                         <div class="mailbox-view-header">
                                             <div class="left">
                                                 <div class="left">
-                                                    <div class="left">
-                                                        <span class="mailbox-title primary-text">
-                                                        Tecnoparque nodo {{$nodo->entidad->present()->entidadName()}} -
-                                                        {{$nodo->entidad->present()->entidadLugar()}}
-                                                    </span>
-                                                    <span class="mailbox-author">
-                                                        <b class="black-text text-darken-3">Dirección: </b> {{$nodo->direccion}}<br/>
-                                                        <b class="black-text text-darken-3">Correo Electrónco: </b>
-                                                        {{$nodo->entidad->present()->entidadEmail()}}<br/>
-                                                        <b class="black-text text-darken-3">Teléfono: </b>
-                                                        {{isset($nodo->telefono) ? $nodo->telefono : 'No registra'}}<br/>
-                                                        <b class="black-text text-darken-3">Extensión: </b>
-                                                        {{isset($nodo->extension) ? $nodo->extension : 'No registra'}}<br/>
-                                                    </span>
-                                                    </div>
-                                                </div>
-                                                <div class="right mailbox-buttons hide-on-med-and-down">
-                                                    <span class="mailbox-title">
-                                                        <p class="center">Información Tecnoparque Nodo {{$nodo->entidad->present()->entidadName()}}</p><br/>
-                                                        <p class="center">{{isset($nodo->centro->entidad->nombre) ? $nodo->centro->entidad->nombre : ''}} - {{isset($nodo->entidad->ciudad->nombre) ? $nodo->entidad->ciudad->nombre : ''}} ({{ isset($nodo->entidad->ciudad->departamento->nombre) ? $nodo->entidad->ciudad->departamento->nombre : ''}})</p>
-                                                    </span>
+                                                <span class="mailbox-title primary-text">
+                                                Tecnoparque nodo {{$nodo->entidad->present()->entidadName()}} -
+                                                {{$nodo->entidad->present()->entidadLugar()}}
+                                            </span>
+                                                        <span class="mailbox-author">
+                                                            <b class="secondary-text">Dirección: </b> {{$nodo->direccion}}<br/>
+                                                            <b class="secondary-text">Correo Electrónco: </b>
+                                                            {{$nodo->entidad->present()->entidadEmail()}}<br/>
+                                                            <b class="secondary-text">Teléfono: </b>
+                                                            {{isset($nodo->telefono) ? $nodo->telefono : 'No registra'}}<br/>
+                                                            <b class="secondary-text">Extensión: </b>
+                                                            {{isset($nodo->extension) ? $nodo->extension : 'No registra'}}<br/>
+                                                        </span>
                                                 </div>
                                             </div>
-                                            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsDinamizador() || session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsAdministrador()))
-                                            <div class="right hide-on-med-and-down">
-                                                <small class="green-text text-darken-2">
-                                                    <a class="waves-effect waves-green btn-flat" href="{{route('excel.exportexcelfornodo',$nodo->entidad->slug)}}">
+                                            <div class="right mailbox-buttons hide-on-med-and-down">
+                                            <span class="mailbox-title">
+                                                <p class="center">Información Tecnoparque Nodo {{$nodo->entidad->present()->entidadName()}}</p><br/>
+                                                <p class="center">{{isset($nodo->centro->entidad->nombre) ? $nodo->centro->entidad->nombre : ''}} - {{isset($nodo->centro->entidad->ciudad->nombre) ? $nodo->centro->entidad->ciudad->nombre : ''}} ({{ isset($nodo->centro->entidad->ciudad->departamento->nombre) ? $nodo->centro->entidad->ciudad->departamento->nombre : ''}})</p>
+                                            </span>
+                                            </div>
+                                        </div>
+                                        <div class="right hide-on-med-and-down">
+                                            @can('downloadOne', $nodo)
+                                                <small class="success-text">
+                                                    <a class="waves-effect waves-success btn-flat"
+                                                       href="{{route('excel.exportexcelfornodo',$nodo->entidad->slug)}}">
                                                         <i class="fas fa-file-excel fa-lg"></i>Exportar a Excel
                                                     </a>
                                                 </small>
-                                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsAdministrador()))
-                                                <small class="green-text text-darken-2">
-                                                <a href="{{route('nodo.edit', $nodo->entidad->slug)}}" class="waves-effect waves-blue btn-flat">
+                                            @endcan
+                                            @can('edit', $nodo)
+                                                <small class="info-text">
+                                                    <a href="{{route('nodo.edit', $nodo->entidad->slug)}}"
+                                                       class="waves-effect waves-info btn-flat">
                                                         Cambiar Infomación
                                                     </a>
                                                 </small>
@@ -79,21 +81,12 @@
                                                                 <span class="title">
                                                                     {{$value->abreviatura}} - {{$value->nombre}}
                                                                 </span>
+                                                                <a href="{{route("lineas.show", $value->slug)}}" target="_blank" class="info tooltipped" data-position="bottom" data-tooltip="Ver más información">
+                                                                    <i class="material-icons right">info</i>
+                                                                </a>
+
                                                             </li>
-<<<<<<< HEAD
-                                                            @forelse($lineatecnologicas as $value)
-                                                                <li class="collection-item">
-                                                                    <span class="title">
-                                                                        {{$value->abreviatura}} - {{$value->nombre}}
-                                                                    </span>
-                                                                    <a href="{{route("lineas.show", $value->slug)}}" target="_blank" class="orange-text text-darken-1 tooltipped" data-position="bottom" data-tooltip="Ver más información">
-                                                                        <i class="material-icons right">info</i>
-                                                                    </a>
-                                                                </li>
-                                                            @empty
-=======
                                                         @empty
->>>>>>> cca7967e795730433138dc6e892bc2cc6f99b9c1
                                                             <div class="center">
                                                                 <i class="large material-icons center">
                                                                     block
@@ -163,12 +156,6 @@
                                                                         {{$dinamizador->user->present()->userFullName()}}
                                                                     </span>
                                                                             <p>
-<<<<<<< HEAD
-                                                                                <b class="black-text text-darken-3">Número documento:</b> {{$dinamizador->user->present()->userDocumento()}}<br/>
-                                                                                <b class="black-text text-darken-3">Correo Electrónco:</b> {{$dinamizador->user->present()->userEmail()}}<br/>
-                                                                                <b class="black-text text-darken-3">Teléfono:</b> {{$dinamizador->user->present()->userTelefono()}}<br/>
-                                                                                <b class="black-text text-darken-3">Celular: </b> {{$dinamizador->user->present()->userCelular()}} <br>
-=======
                                                                                 <b class="secondary-text">Número
                                                                                     documento:</b> {{$dinamizador->user->present()->userDocumento()}}
                                                                                 <br/>
@@ -180,48 +167,12 @@
                                                                                 <b class="secondary-text">Celular: </b>
                                                                                 {{$dinamizador->user->present()->userCelular()}}
                                                                                 <br/>
->>>>>>> cca7967e795730433138dc6e892bc2cc6f99b9c1
                                                                             </p>
-                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $dinamizador->user->documento)}}" class="orange-text text-darken-1">
+                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $dinamizador->user->documento)}}" class="info">
                                                                                 Ver mas información del usuario. 
                                                                             </a>
+
                                                                         </li>
-<<<<<<< HEAD
-                                                                        @endif
-                                                                    @empty
-                                                                        <div class="center">
-                                                                            <i class="large material-icons center">
-                                                                                block
-                                                                            </i>
-                                                                            <p class="center-align">Tecnoparque Nodo {{$nodo->entidad->present()->entidadName()}} no cuenta con un {{App\User::IsDinamizador()}} aún</p>
-                                                                        </div>
-                                                                    @endforelse
-                                                                </ul>
-                                                            </div>
-                                                            <div class="col s12 m12 l6">
-                                                                <div class="center">
-                                                                    <span class="zurich-bt-fonts orange-text text-darken-2"><b>{{App\User::IsInfocenter()}}</b></span>
-                                                                </div>
-                                                                <ul class="collection">
-                                                                    @forelse($nodo->infocenter as $infocenter)
-                                                                    @if(isset($infocenter->user) && $infocenter->user->hasRole(App\User::IsInfocenter()) && $infocenter->user->estado == App\User::IsActive() &&  $infocenter->user->deleted_at == null)
-                                                                    <li class="collection-item">
-                                                                        <span class="title">
-                                                                            {{$infocenter->user->present()->userFullName()}}
-                                                                        </span>
-                                                                        <p>
-                                                                            <b class="black-text text-darken-3">Número documento:</b> {{$infocenter->user->present()->userDocumento()}}<br/>
-                                                                            <b class="black-text text-darken-3">Correo Electrónco:</b> {{$infocenter->user->present()->userEmail()}}<br/>
-                                                                            <b class="black-text text-darken-3">Teléfono:</b> {{$infocenter->user->present()->userTelefono()}}<br/>
-                                                                            <b class="black-text text-darken-3">Celular: </b>
-                                                                            {{$infocenter->user->present()->userCelular()}}<br/>
-                                                                        </p>
-                                                                        <a target="_blank" href="{{route("usuario.usuarios.show", $infocenter->user->documento)}}" class="orange-text text-darken-1">
-                                                                            Ver mas información del usuario. 
-                                                                        </a>
-                                                                    </li>
-=======
->>>>>>> cca7967e795730433138dc6e892bc2cc6f99b9c1
                                                                     @endif
                                                                 @empty
                                                                     <div class="center">
@@ -262,7 +213,7 @@
                                                                                 {{$infocenter->user->present()->userCelular()}}
                                                                                 <br/>
                                                                             </p>
-                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $gestor->user->documento)}}" class="orange-text text-darken-1">
+                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $infocenter->user->documento)}}" class="info">
                                                                                 Ver mas información del usuario. 
                                                                             </a>
                                                                         </li>
@@ -289,8 +240,8 @@
                                                         </div>
                                                         <div class="divider mailbox-divider"></div>
                                                         @forelse($nodo->gestores as $gestor)
-                                                            <div class="col s12 m12 l6">
-                                                                @if(isset($gestor->user) && $gestor->user->hasRole(App\User::IsGestor()) && $gestor->user->estado == App\User::IsActive() &&  $gestor->user->deleted_at == null)
+                                                            @if(isset($gestor->user) && $gestor->user->hasRole(App\User::IsExperto()) && $gestor->user->estado == App\User::IsActive() &&  $gestor->user->deleted_at == null)
+                                                                <div class="col s12 m12 l6">
                                                                     <ul class="collection">
                                                                         <li class="collection-item">
                                                                     <span class="title">
@@ -312,10 +263,13 @@
                                                                                 {{$gestor->user->present()->userRolesNames()}}
                                                                                 <br/>
                                                                             </p>
+                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $gestor->user->documento)}}" class="info">
+                                                                                Ver mas información del usuario. 
+                                                                            </a>
                                                                         </li>
                                                                     </ul>
-                                                                @endif
-                                                            </div>
+                                                                </div>
+                                                            @endif
                                                         @empty
                                                             <div class="col s12 m12 l6">
                                                                 <ul class="collection">
@@ -326,7 +280,7 @@
                                                                         <p class="center-align">Tecnoparque
                                                                             Nodo {{$nodo->entidad->present()->entidadName()}}
                                                                             no cuenta con
-                                                                            un {{App\User::IsGestor()}} aún</p>
+                                                                            un {{App\User::IsExperto()}} aún</p>
                                                                     </div>
                                                                 </ul>
                                                             </div>
@@ -340,8 +294,8 @@
                                                         <div class="divider mailbox-divider">
                                                         </div>
                                                         @forelse($nodo->articuladores as $articulador)
-                                                            <div class="col s12 m12 l6">
-                                                                @if(isset($articulador->user) && $articulador->user->hasRole(App\User::IsArticulador()) && $articulador->user->estado == App\User::IsActive() &&  $articulador->user->deleted_at == null)
+                                                            @if(isset($articulador->user) && $articulador->user->hasRole(App\User::IsArticulador()) && $articulador->user->estado == App\User::IsActive() &&  $articulador->user->deleted_at == null)
+                                                                <div class="col s12 m12 l6">
                                                                     <ul class="collection">
                                                                         <li class="collection-item">
                                                                             <span class="title">
@@ -363,14 +317,13 @@
                                                                                 {{$articulador->user->present()->userRolesNames()}}
                                                                                 <br/>
                                                                             </p>
-                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $articulador->user->documento)}}" class="orange-text text-darken-1">
+                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $articulador->user->documento)}}" class="info">
                                                                                 Ver mas información del usuario. 
                                                                             </a>
                                                                         </li>
                                                                     </ul>
-                                                                @endif
-
-                                                            </div>
+                                                                </div>
+                                                            @endif
                                                         @empty
                                                             <div class="col s12 m12 l6">
                                                                 <ul class="collection">
@@ -419,7 +372,7 @@
                                                                                 {{$apoyotecnico->user->present()->userRolesNames()}}
                                                                                 <br/>
                                                                             </p>
-                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $apoyotecnico->user->documento)}}" class="orange-text text-darken-1">
+                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $apoyotecnico->user->documento)}}" class="info">
                                                                                 Ver mas información del usuario. 
                                                                             </a>
                                                                         </li>
@@ -443,7 +396,7 @@
                                                             </div>
                                                         @endforelse
                                                     </div>
-                                                    <div class="row">
+                                                    {{-- <div class="row">
                                                         <div class="col s12 m12 l12">
                                                             <div class="center">
                                                                 <span
@@ -493,53 +446,7 @@
                                                                 </div>
                                                             @endforelse
                                                         </div>
-<<<<<<< HEAD
-                                                        <div class="row">
-                                                            <div class="col s12 m12 l12">
-                                                                <div class="center">
-                                                                    <span class="zurich-bt-fonts orange-text text-darken-2"><b>Ingreso</b></span>
-                                                                </div>
-                                                                <div class="divider mailbox-divider">
-                                                                </div>
-                                                                @forelse($nodo->ingresos as $ingreso)
-                                                                    <div class="col s12 m12 l6">
-                                                                        @if(isset($ingreso->user) && $ingreso->user->hasRole(App\User::IsIngreso()) && $ingreso->user->estado == App\User::IsActive() &&  $ingreso->user->deleted_at == null)
-                                                                        <ul class="collection">
-                                                                            <li class="collection-item">
-                                                                                <span class="title">
-                                                                                    {{$ingreso->user->present()->userFullName()}}
-                                                                                </span>
-                                                                                <p>
-                                                                                    <b class="black-text text-darken-3">Número documento:</b> {{$ingreso->user->present()->userDocumento()}}<br/>
-                                                                                    <b class="black-text text-darken-3">Correo Electrónco:</b> {{$ingreso->user->present()->userEmail()}}<br/>
-                                                                                    <b class="black-text text-darken-3">Teléfono:</b> {{$ingreso->user->present()->userTelefono()}}<br/>
-                                                                                    <b class="black-text text-darken-3">Celular: </b>
-                                                                                    {{$ingreso->user->present()->userCelular()}}<br/>
-                                                                                </p>
-                                                                                <a target="_blank" href="{{route("usuario.usuarios.show", $ingreso->user->documento)}}" class="orange-text text-darken-1">
-                                                                                    Ver mas información del usuario. 
-                                                                                </a>
-                                                                            </li>
-                                                                        </ul>
-                                                                        @endif
-                                                                    </div>
-                                                                @empty
-                                                                    <div class="col s12 m12 l6">
-                                                                        <ul class="collection">
-                                                                            <div class="center">
-                                                                            <i class="large material-icons center">
-                                                                                    block
-                                                                                </i>
-                                                                                <p class="center-align">Tecnoparque Nodo {{$nodo->entidad->present()->entidadName()}} no cuenta con un usuario {{App\User::IsIngreso()}} aún</p>
-                                                                            </div>
-                                                                        </ul>
-                                                                    </div>
-                                                                @endforelse
-                                                            </div>
-                                                        </div>
-=======
->>>>>>> cca7967e795730433138dc6e892bc2cc6f99b9c1
-                                                    </div>
+                                                    </div> --}}
                                                 </div>
                                             </div>
                                         </div>

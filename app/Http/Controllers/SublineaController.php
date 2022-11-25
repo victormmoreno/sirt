@@ -22,6 +22,9 @@ class SublineaController extends Controller
      */
     public function index()
     {
+        if (!$this->validarPermisosUserForSublineas()) {
+            return $this->retornarMsgUserForSublineas();
+        }
         if (request()->ajax()) {
             return datatables()->of($this->sublineaRepository->getAllSublineas())
                 ->addColumn('edit', function ($data) {
@@ -44,7 +47,7 @@ class SublineaController extends Controller
         if (!$this->validarPermisosUserForSublineas()) {
             return $this->retornarMsgUserForSublineas();
         }
-        return view('sublineas.administrador.create',[
+        return view('sublineas.create',[
             'lineas' => $this->sublineaRepository->getAllLineas(),
         ]);
     }
@@ -80,7 +83,7 @@ class SublineaController extends Controller
         if (!$this->validarPermisosUserForSublineas()) {
             return $this->retornarMsgUserForSublineas();
         }
-        return view('sublineas.administrador.edit',[
+        return view('sublineas.edit',[
             'sublinea' => $this->sublineaRepository->findById($id),
             'lineas' => $this->sublineaRepository->getAllLineas(),
         ]);

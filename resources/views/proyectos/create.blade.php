@@ -21,11 +21,6 @@
         </div>
         <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12">
-            <h5>
-            <a class="footer-text left-align" href="{{route('proyecto')}}">
-                <i class="material-icons arrow-l left">arrow_back</i>
-            </a> Proyectos de Base Tecnológica
-            </h5>
             <div class="card">
             <div class="card-content">
                 <div class="row">

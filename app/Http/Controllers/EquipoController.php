@@ -134,11 +134,11 @@ class EquipoController extends Controller
             if (session()->get('login_role') == User::IsDinamizador()) {
                 $nodo_id = auth()->user()->dinamizador->nodo_id;
             }
-            if (session()->get('login_role') == User::IsGestor()) {
+            if (session()->get('login_role') == User::IsExperto()) {
                 $nodo_id = auth()->user()->gestor->nodo_id;
             }
 
-            if (session()->get('login_role') == User::IsGestor()) {
+            if (session()->get('login_role') == User::IsExperto()) {
                 $linea_id = auth()->user()->gestor->lineatecnologica_id;
             } 
             // if (session()->get('login_role') == User::IsDinamizador()) {
@@ -154,7 +154,7 @@ class EquipoController extends Controller
                 ->where('lineatecnologica_id', $linea_id)
                 ->get();
             }
-            if (session()->get('login_role') == User::IsGestor()) {
+            if (session()->get('login_role') == User::IsExperto()) {
                 $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
                 ->where('nodo_id', $nodo_id)
                 ->where('lineatecnologica_id', $linea_id)
@@ -380,7 +380,7 @@ class EquipoController extends Controller
                 $nodo = auth()->user()->dinamizador->nodo_id;
                 $linea = null;
                 break;
-            case User::IsGestor():
+            case User::IsExperto():
                 $nodo = auth()->user()->gestor->nodo_id;
                 $linea = auth()->user()->gestor->lineatecnologica_id;
                 break;

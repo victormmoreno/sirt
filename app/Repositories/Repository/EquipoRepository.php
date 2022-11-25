@@ -112,7 +112,7 @@ class EquipoRepository
         if (session()->get('login_role') == User::IsDinamizador()) {
             $nodo = auth()->user()->dinamizador->nodo_id;
         }
-        if (session()->get('login_role') == User::IsGestor()) {
+        if (session()->get('login_role') == User::IsExperto()) {
             $nodo = auth()->user()->gestor->nodo_id;
         }
 
@@ -127,7 +127,7 @@ class EquipoRepository
     public function getLineaRole()
     {
         $linea = null;
-        if (session()->get('login_role') == User::IsGestor()) {
+        if (session()->get('login_role') == User::IsExperto()) {
             $linea = auth()->user()->gestor->lineatecnologica_id;
         }
         return $linea;

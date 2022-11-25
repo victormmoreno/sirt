@@ -4,7 +4,7 @@
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
         <div class="row no-m-t no-m-b">
-        <h5>
+        <h5 class="primary-text">
             <a class="footer-text left-align" href="{{ route('proyecto.cierre', $proyecto->id) }}">
             <i class="left material-icons">arrow_back</i>
             </a> Proyectos de Desarrollo Tecnológico

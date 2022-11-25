@@ -11,7 +11,7 @@
                     <div class="col s8 m8 l10">
                         <h5 class="left-align">
                             <a class="footer-text left-align" href="{{route('lineas.index')}}">
-                                  <i class="material-icons arrow-l">
+                                  <i class="material-icons arrow-l left">
                                       arrow_back
                                   </i>
                               </a>

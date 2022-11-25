@@ -80,7 +80,7 @@ class HelpController extends Controller
             case User::IsDinamizador():
                 return "Manual_Usuario_Dinamizador.pdf";
                 break;
-            case User::IsGestor():
+            case User::IsExperto():
                 return "Manual_Usuario_Experto.pdf";
                 break;
             case User::IsInfocenter():

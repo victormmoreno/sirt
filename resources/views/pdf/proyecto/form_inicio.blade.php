@@ -127,9 +127,9 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet"/>
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    {{-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> --}}
 
     <title>Acta de Inicio</title>
 </head>
@@ -140,7 +140,7 @@
     <div class="card-content">
         <table class="bordered">
             <tr>
-                <td colspan="1" rowspan="2"><img class="center-image" src="{{asset('img/web.png')}}"></td>
+                <td colspan="1" rowspan="2"><img class="center-image" src="{{asset('img/web.svg')}}"></td>
                 <td colspan="5" class="centered"><b>Acta de Inicio<b></td>
             </tr>
             <tr>

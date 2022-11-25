@@ -25,11 +25,11 @@
                 @include('proyectos.detalles.componente_talentos_proyecto', ['proyecto' => $proyecto])
                 <div class="divider"></div>
                 <center>
-                  <button type="submit" class="waves-effect cyan darken-1 btn center-aling">
-                    <i class="material-icons right">done</i>
+                  <button type="submit" class="waves-effect waves-light btn bg-secondary center-align">
+                    <i class="material-icons left">send</i>
                     Guardar
                   </button>
-                  <a href="{{ route('proyecto.inicio', $proyecto->id) }}" class="waves-effect red lighten-2 btn center-aling">
+                  <a href="{{ route('proyecto.inicio', $proyecto->id) }}" class="waves-effect waves-light btn bg-danger center-align">
                     <i class="material-icons right">backspace</i>Cancelar
                   </a>
                 </center>

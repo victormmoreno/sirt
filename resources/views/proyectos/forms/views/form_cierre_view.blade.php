@@ -5,7 +5,7 @@
     <div class="content">
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
-                <h5>
+                <h5 class="primary-text">
                 <a class="footer-text left-align" href="{{route('proyecto')}}">
                     <i class="material-icons arrow-l">arrow_back</i>
                 </a> Proyectos de Base Tecnológica

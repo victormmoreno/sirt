@@ -35,8 +35,5 @@
                 @include('proyectos.options.options_end')
             @endif
         @endcan
-        {{-- @cannot(['showOptionsForExperto', 'showOptionsForDinamizador'], App\Models\Proyecto::class)
-            @include('proyectos.botones_aprobacion_component')
-        @endcannot --}}
     </div>
 @endcan

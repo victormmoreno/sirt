@@ -105,7 +105,7 @@ class MaterialController extends Controller
                     ->whereHas('nodo', function ($query) use ($nodo) {
                         $query->where('id', $nodo);
                     })->get();
-            } elseif (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
+            } elseif (session()->has('login_role') && session()->get('login_role') == User::IsExperto()) {
 
                 $linea      = auth()->user()->gestor->lineatecnologica->id;
                 $nodo       = auth()->user()->gestor->nodo->id;
@@ -138,7 +138,7 @@ class MaterialController extends Controller
         $this->authorize('getMaterialesPorNodo', Material::class);
         if (session()->get('login_role') == User::IsDinamizador()) {
             $nodo = auth()->user()->dinamizador->nodo->id;
-        } elseif (session()->get('login_role') == User::IsGestor()) {
+        } elseif (session()->get('login_role') == User::IsExperto()) {
             $nodo = auth()->user()->gestor->nodo->id;
         } else {
             $nodo = $nodo;
@@ -163,7 +163,7 @@ class MaterialController extends Controller
         $nodos = $this->getNodoRepository()->getSelectNodo();
         if (session()->get('login_role') == User::IsDinamizador()) {
             $nodo = auth()->user()->dinamizador->nodo->id;
-        } elseif (session()->get('login_role') == User::IsGestor()) {
+        } elseif (session()->get('login_role') == User::IsExperto()) {
             $nodo = auth()->user()->gestor->nodo->id;
         } else {
             $nodo = $nodos->first()->id;

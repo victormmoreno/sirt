@@ -4,7 +4,7 @@
         <tr>
             <th>Archivo</th>
             <th style="width: 10%">Descargar</th>
-            @if ( \Session::get('login_role') == App\User::IsGestor() )
+            @if ( \Session::get('login_role') == App\User::IsExperto() )
             @if ($articulacion->fase->nombre == 'Inicio')
             <th style="width: 10%">Eliminar</th>
             @elseif ($articulacion->fase->nombre == 'Planeación')

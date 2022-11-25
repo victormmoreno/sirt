@@ -5,9 +5,9 @@
     <div class="content">
         <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12">
-            <h5>
+            <h5 class="primary-text">
             <a class="footer-text left-align" href="{{route('proyecto')}}">
-                <i class="material-icons arrow-l">arrow_back</i>
+                <i class="material-icons arrow-l left">arrow_back</i>
             </a> Proyectos de Base Tecnológica
             </h5>
             <div class="card">
@@ -20,11 +20,19 @@
                         @include('proyectos.detalles.detalle_general')
                         @include('proyectos.forms.form_suspendido')
                         @include('proyectos.detalles.detalle_fase_suspendido')
-                        <center>
-                            <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-                                <i class="material-icons right">backspace</i>Cancelar
-                            </a>
-                        </center>
+                        @can('aprobar_suspendido', $proyecto)
+                            <form action="{{route('proyecto.update.suspendido', [$proyecto->id])}}" method="POST" name="frmAprobacionProyecto">
+                                {!! method_field('PUT')!!}
+                                @csrf
+                                <div class="divider"></div>
+                                <div class="center-align">
+                                    @include('proyectos.botones_aprobacion_component')
+                                    <a href="{{route('proyecto')}}" class="waves-effect bg-danger btn center-aling">
+                                        <i class="material-icons right">backspace</i>Cancelar
+                                    </a>
+                                </div>
+                            </form>
+                        @endcan
                     </div>
                 </div>
             </div>

@@ -19,7 +19,7 @@
                             @include('proyectos.options.options')
                             @include('proyectos.detalles.detalle_general')
                             @include('proyectos.detalles.detalle_fase_cierre')
-                            @can('showButtonAprobacion', $proyecto)
+                            @can('aprobar', $proyecto)
                                 @include('proyectos.forms.form_aprobacion')
                             @endcan
                         </div>
@@ -59,11 +59,13 @@
                 name: 'download',
                 orderable: false,
             },
+            @if (($proyecto->fase->nombre == 'Cierre' || $proyecto->fase->nombre == 'Finalizado') || session()->get('login_role') == App\User::IsAdministrador())
             {
                 data: 'delete',
                 name: 'delete',
                 orderable: false,
             }
+            @endif
             ],
         });
     }

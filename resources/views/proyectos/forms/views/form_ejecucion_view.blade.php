@@ -5,7 +5,7 @@
     <div class="content">
         <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12">
-            <h5>
+            <h5 class="primary-text">
             <a class="footer-text left-align" href="{{route('proyecto.ejecucion', $proyecto->id)}}">
                 <i class="material-icons arrow-l left">arrow_back</i>
             </a> Proyectos de Base Tecnológica
@@ -17,10 +17,10 @@
                         <form method="POST" action="{{route('proyecto.update.ejecucion', $proyecto->id)}}">
                             @include('proyectos.forms.form_ejecucion')
                             @include('proyectos.archivos_table_fase', ['fase' => 'ejecucion'])
-                            <center>
-                            <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
-                            <a href="{{ route('proyecto.ejecucion', $proyecto->id) }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
-                            </center>
+                            <div class="center">
+                            <button type="submit" class="waves-effect bg-secondary btn center-aling"><i class="material-icons left">send</i>Modificar</button>
+                            <a href="{{ route('proyecto.ejecucion', $proyecto->id) }}" class="waves-effect bg-danger btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
+                            </div>
                         </form>
                     </div>
                 </div>

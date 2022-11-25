@@ -309,16 +309,15 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Grupo(id) {
 
 // Valida que el talento no se encuentre asociado al proyecto
 function noRepeat(id) {
-    let idTalento = id;
-    let retorno = true;
+    // console.log('fff');
+    // let retorno = true;
     let a = document.getElementsByName("talentos[]");
     for (x = 0; x < a.length; x ++) {
-        if (a[x].value == idTalento) {
-            retorno = false;
-            break;
+        if (a[x].value == id) {
+            return false;
         }
     }
-    return retorno;
+    return true;
 }
 
 // Valida que el talento no se encuentre asociado al proyecto
@@ -386,7 +385,14 @@ function eliminarPropietarioDeUnProyecto_FaseInicio_Grupo(index) {
 // Método para agregar talentos a un proyecto
 // El parametro recibido es el id de la tabla talentos
 function addTalentoProyecto(id, isInterloculor) {
-    if (noRepeat(id) == false) {
+    let unique = true;
+    let a = document.getElementsByName("talentos[]");
+    for (x = 0; x < a.length; x ++) {
+        if (a[x].value == id) {
+            unique = false;
+        }
+    }
+    if (!unique) {
         talentoYaSeEncuentraAsociado();
     } else {
         pintarTalentoEnTabla_Fase_Inicio(id, isInterloculor);

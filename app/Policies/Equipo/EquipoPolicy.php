@@ -18,7 +18,7 @@ class EquipoPolicy
      */
     public function view(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsDinamizador(), User::IsGestor()]);
+        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsDinamizador(), User::IsExperto()]);
     }
 
     /**

@@ -1,7 +1,7 @@
 {!! csrf_field() !!}
 <div class="row">
     <div class="input-field col s12 m8 l6 offset-l3 offset-m2">
-        <i class="material-icons prefix">
+        <i class="material-icons prefix green-complement-text">
             speaker_notes
         </i>
         <select class="" id="txtlinea" name="txtlinea" style="width: 100%" tabindex="-1">
@@ -24,7 +24,7 @@
 </div>
 <div class="row">
     <div class="input-field col s12 m8 l6 offset-l3 offset-m2">
-        <i class="material-icons prefix">
+        <i class="material-icons prefix green-complement-text">
             dns
         </i>
         <input id="txtnombre" name="txtnombre" type="text" value="{{ isset($sublinea->nombre) ? $sublinea->nombre : old('txtnombre')}}">

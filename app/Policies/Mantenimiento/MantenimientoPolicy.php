@@ -49,7 +49,7 @@ class MantenimientoPolicy
      */
     public function showIndexForExperto(User $user)
     {
-        if (session()->get('login_role') == $user->IsGestor()) {
+        if (session()->get('login_role') == $user->IsExperto()) {
             return true;
         }
         return false;
@@ -62,7 +62,7 @@ class MantenimientoPolicy
      */
     public function index(User $user)
     {
-        return (bool) $user->hasAnyRole([$user->IsGestor(), $user->IsDinamizador(), $user->IsActivador(), $user->IsAdministrador()]); 
+        return (bool) $user->hasAnyRole([$user->IsExperto(), $user->IsDinamizador(), $user->IsActivador(), $user->IsAdministrador()]); 
     }
 
     /**
@@ -102,7 +102,7 @@ class MantenimientoPolicy
         if (session()->get('login_role') == $user->IsDinamizador() && $mantenimiento->equipo->nodo_id == $user->dinamizador->nodo_id) {
             return true;
         }
-        if (session()->get('login_role') == $user->IsGestor() && $mantenimiento->equipo->nodo_id == $user->gestor->nodo_id) {
+        if (session()->get('login_role') == $user->IsExperto() && $mantenimiento->equipo->nodo_id == $user->gestor->nodo_id) {
             return true;
         }
         return false;
@@ -123,7 +123,7 @@ class MantenimientoPolicy
         if (session()->get('login_role') == $user->IsDinamizador() && $mantenimiento->equipo->nodo_id == $user->dinamizador->nodo_id) {
             return true;
         }
-        // if (session()->get('login_role') == $user->IsGestor() && $mantenimiento->equipo->lineatecnologica_id == $user->gestor->lineatecnologica_id) {
+        // if (session()->get('login_role') == $user->IsExperto() && $mantenimiento->equipo->lineatecnologica_id == $user->gestor->lineatecnologica_id) {
         //     return true;
         // }
         return false;

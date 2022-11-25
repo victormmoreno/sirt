@@ -86,67 +86,21 @@ class NodoController extends Controller
             alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
             return redirect()->back();
         }
-        switch (session()->get('login_role')) {
-            case User::IsActivador():
-                IsActivador: {
-                    if (request()->ajax()) {
-                        return $nodoDatatable->indexDatatable($this->getNodoRepository()->getAlltNodo());
-                    }
-                    return view('nodos.index');
-                    break;
-                }
-            case User::IsAdministrador():
-                goto IsActivador;
-                break;
-            case User::IsDinamizador():
-                if (isset(auth()->user()->dinamizador)) {
-
-                    $nodoAuth = auth()->user()->dinamizador->nodo->id;
-                    $nodo     = $this->getNodoRepository()->getTeamTecnoparque()
-                        ->where('nodos.id', $nodoAuth)
-                        ->first();
-                    return view('nodos.show', [
-                        'nodo'              => $nodo,
-                        'equipos'           => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),
-                        'lineatecnologicas' => $nodo->lineas()->paginate(4),
-                    ]);
-                }
-                abort('403');
-                break;
-            case User::IsGestor():
-
-                if (isset(auth()->user()->gestor)) {
-                    $nodoAuth = auth()->user()->gestor->nodo->id;
-                    $nodo     = $this->getNodoRepository()->getTeamTecnoparque()
-                        ->where('id', $nodoAuth)
-                        ->first();
-
-                    return view('nodos.show', [
-                        'nodo'              => $nodo,
-                        'equipos'           => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),
-                        'lineatecnologicas' => $nodo->lineas()->paginate(4),
-                    ]);
-                }
-                abort('403');
-                break;
-            case User::IsInfocenter():
-                if (isset(auth()->user()->infocenter)) {
-                    $nodoAuth = auth()->user()->infocenter->nodo_id;
-                    $nodo     = $this->getNodoRepository()->getTeamTecnoparque()
-                        ->where('id', $nodoAuth)
-                        ->first();
-
-                    return view('nodos.show', [
-                        'nodo'              => $nodo,
-                        'equipos'           => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),
-                        'lineatecnologicas' => $nodo->lineas()->paginate(4),
-                    ]);
-                }
-                break;
-            default:
-                alert()->warning("Lo sentimos, no estás autorizado para acceder a la página ". request()->path())->toToast();
-                return redirect()->back();
-                break;
+        if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
+            if (request()->ajax()) {
+                return $nodoDatatable->indexDatatable($this->getNodoRepository()->getAlltNodo());
+            }
+            return view('nodos.index');
+        } else {
+            $nodoAuth = request()->user()->getNodoUser();
+            $nodo     = $this->getNodoRepository()->getTeamTecnoparque()
+                ->where('nodos.id', $nodoAuth)
+                ->first();
+            return view('nodos.show', [
+                'nodo'              => $nodo,
+                'equipos'           => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),
+                'lineatecnologicas' => $nodo->lineas()->paginate(4),
+            ]);
         }
     }
 

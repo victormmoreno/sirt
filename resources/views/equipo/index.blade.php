@@ -28,13 +28,13 @@
 
                         <div class="row">
                             <div class="row">
-                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsGestor()))
+                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsExperto()))
                                 <div class="col s12 m12 l12">
                                     <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
                                         <span class="card-title center-align">
                                             @if(session()->get('login_role') == App\User::IsActivador())
                                                 Equipos {{ config('app.name')}}
-                                            @elseif(session()->get('login_role') == App\User::IsGestor())
+                                            @elseif(session()->get('login_role') == App\User::IsExperto())
                                                 Equipos {{auth()->user()->gestor->lineatecnologica->nombre}} |  Tecnoparque Nodo {{\NodoHelper::returnNameNodoUsuario()}}
                                             @endif
                                         </span>
@@ -97,7 +97,7 @@
                                 </div>
                             </div>
                             <br>
-                            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsGestor()))
+                            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsExperto()))
                             <table class="display responsive-table" id="equipo_data_table">
                                 <thead>
                                     <th width="15%">Linea Tecnológica</th>

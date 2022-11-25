@@ -364,11 +364,12 @@ class UserPresenter extends Presenter
         return $this->user->hasAnyRole([
             User::IsDinamizador(),
             User::IsActivador(),
+            User::IsAdministrador(),
             User::IsInfocenter(),
             User::IsArticulador(),
             User::IsIngreso(),
             User::IsDesarrollador(),
-            User::IsGestor(),
+            User::IsExperto(),
             User::IsApoyoTecnico()
         ]) ? true : false;
     }

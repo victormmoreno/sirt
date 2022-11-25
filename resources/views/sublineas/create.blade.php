@@ -7,7 +7,7 @@
             <div class="left left-align">
                 <h5 class="left-align primary-text">
                     <a class="footer-text left-align" href="{{route('sublineas.index')}}">
-                        <i class="material-icons arrow-l">
+                        <i class="material-icons arrow-l left">
                             arrow_back
                         </i>
                     </a>

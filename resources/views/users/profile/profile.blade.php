@@ -219,7 +219,7 @@
                                                         @if($user->isUserExperto() || $user->isUserArticulador())
                                                             @if($user->isUserExperto())
                                                                 <span
-                                                                    class="secondary-text">Información {{App\User::IsGestor()}}</span>
+                                                                    class="secondary-text">Información {{App\User::IsExperto()}}</span>
                                                             @else
                                                                 <span
                                                                     class="secondary-text">Información {{App\User::IsArticulador()}}</span>

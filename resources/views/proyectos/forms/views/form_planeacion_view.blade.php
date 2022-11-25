@@ -5,7 +5,7 @@
     <div class="content">
         <div class="row no-m-t no-m-b">
         <div class="col s12 m12 l12">
-            <h5>
+            <h5 class="primary-text">
             <a class="footer-text left-align" href="{{route('proyecto')}}">
                 <i class="material-icons arrow-l left">arrow_back</i>
             </a> Proyectos de Base Tecnológica
@@ -18,17 +18,17 @@
                         {!! method_field('PUT')!!}
                         @include('proyectos.forms.form_planeacion')
                         @include('proyectos.archivos_table_fase', ['fase' => 'planeacion'])
-                        <center>
+                        <div class="center">
                             @if ($proyecto->present()->proyectoFase() == 'Planeación')
-                            <button type="submit" class="waves-effect cyan darken-1 btn center-aling">
-                                <i class="material-icons right">done</i>
+                            <button type="submit" class="waves-effect bg-secondary btn center-aling">
+                                <i class="material-icons left">send</i>
                                 Modificar
                             </button>
                             @endif
-                            <a href="{{route('proyecto.planeacion', $proyecto->id)}}" class="waves-effect red lighten-2 btn center-aling">
+                            <a href="{{route('proyecto.planeacion', $proyecto->id)}}" class="waves-effect bg-danger btn center-aling">
                                 <i class="material-icons right">backspace</i>Cancelar
                             </a>
-                        </center>
+                        </div>
                     </form>
                     </div>
                 </div>
@@ -105,7 +105,7 @@
                 name: 'download',
                 orderable: false,
             },
-            @if ($proyecto->fase->nombre == 'Planeación' || $proyecto->fase->nombre == 'Finalizado')
+            @if (($proyecto->fase->nombre == 'Planeación' || $proyecto->fase->nombre == 'Finalizado') || session()->get('login_role') == App\User::IsAdministrador())
             {
                 data: 'delete',
                 name: 'delete',

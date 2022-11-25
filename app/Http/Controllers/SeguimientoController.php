@@ -43,7 +43,7 @@ class SeguimientoController extends Controller
         'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
         'lineas' => $this->getLineaRepository()->getAllLineaNodo(auth()->user()->dinamizador->nodo_id)->lineas->pluck('nombre', 'id')
       ]);
-    } else if (Session::get('login_role') == User::IsGestor()) {
+    } else if (Session::get('login_role') == User::IsExperto()) {
       return view('seguimiento.gestor.index');
     } else if (Session::get('login_role') == User::IsActivador()) {
       return view('seguimiento.administrador.index', [
@@ -177,7 +177,7 @@ class SeguimientoController extends Controller
     if (Session::get('login_role') == User::IsDinamizador()) {
       $idnodo = auth()->user()->dinamizador->nodo_id;
     }
-    if (Session::get('login_role') == User::IsGestor()) {
+    if (Session::get('login_role') == User::IsExperto()) {
       $idnodo = auth()->user()->gestor->nodo_id;
     }
 
@@ -352,12 +352,9 @@ class SeguimientoController extends Controller
     $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->where('g.id', $idgestor)->where('nodos.id', $idnodo)->get();
     $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->where('g.id', $idgestor)->where('nodos.id', $idnodo)->get();
 
-    $abiertosAgrupados = $this->agruparProyectosAbiertos($Pabiertos);
-    $cerradosAgrupados = $this->agruparProyectosCerrados($Pfinalizados);
-
-    $datos = $this->retornarValoresDelSeguimientoPorFases($abiertosAgrupados, $cerradosAgrupados);
+    $agrupados = $this->agruparProyectos($Pabiertos, $Pfinalizados);
     return response()->json([
-      'datos' => $datos
+      'datos' => $agrupados
     ]);
   }
 
@@ -373,7 +370,7 @@ class SeguimientoController extends Controller
     if (Session::get('login_role') == User::IsDinamizador()) {
       $idnodo = auth()->user()->dinamizador->nodo_id;
     }
-    if (Session::get('login_role') == User::IsGestor()) {
+    if (Session::get('login_role') == User::IsExperto()) {
       $idnodo = auth()->user()->gestor->nodo_id;
     }
 

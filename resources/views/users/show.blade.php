@@ -63,7 +63,7 @@
                                                         <li><a  href="{{route('usuario.usuarios.changenode', $user->present()->userDocumento())}}">Cambiar Roles y Nodos</a></li>
                                                     </ul>
                                                 @endif
-                                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsArticulador()) && !$user->present()->userChangeAccess())
+                                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto() || session()->get('login_role') == App\User::IsArticulador()) && !$user->present()->userChangeAccess())
                                                     <a href="{{route('usuario.usuarios.acceso', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar Acceso</a>
                                                     <a href="{{route('user.newpassword', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Generar nueva contraseña</a>
                                                     <a href="{{route('usuario.usuarios.edit', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar información</a>
@@ -227,7 +227,7 @@
                                             @endif
 
                                             @if($user->isUserExperto())
-                                                <span class="secondary-text">Información {{App\User::IsGestor()}}</span>
+                                                <span class="secondary-text">Información {{App\User::IsExperto()}}</span>
 
                                                 <div class="server-load row">
                                                     <div class="server-stat col s12 m4 l4">

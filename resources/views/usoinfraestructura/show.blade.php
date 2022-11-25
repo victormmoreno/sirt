@@ -35,13 +35,13 @@
                                                         </span>
                                                         <span class="mailbox-author">
                                                             <b>Nodo: </b> Tecnoparque nodo {{$usoinfraestructura->present()->nodoUso()}}<br/>
-                                                            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor()))
+                                                            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto()))
                                                             <b>Linea Tecnológica: </b> {{isset($usoinfraestructura->asesorable->asesor->lineatecnologica->nombre) ? $usoinfraestructura->asesorable->asesor->lineatecnologica->nombre : 'No registra'}} <br/>
                                                             @endif
                                                             <b>Asesor: </b>{{$usoinfraestructura->present()->expertoEncargado()}}<br/>
                                                         </span>
                                                     </div>
-                                                    @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsTalento()))
+                                                    @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto() || session()->get('login_role') == App\User::IsTalento()))
                                                     <div class="right mailbox-buttons">
                                                         <span class="mailbox-title">
                                                             <p class="center">Información Asesoría y uso</p>
@@ -316,7 +316,7 @@
                                                                     </ul>
                                                                 </div>
                                                             </div>
-                                                            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsArticulador() || session()->get('login_role') == App\User::IsApoyoTecnico() || session()->get('login_role') == App\User::IsTalento()))
+                                                            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto() || session()->get('login_role') == App\User::IsArticulador() || session()->get('login_role') == App\User::IsApoyoTecnico() || session()->get('login_role') == App\User::IsTalento()))
                                                             <div class="right">
                                                                 <a href="{{route('usoinfraestructura.edit',$usoinfraestructura->id)}}" class="waves-effect waves-teal darken-2 btn-flat m-t-xs center-aling">
                                                                     Cambiar Información

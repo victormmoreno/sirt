@@ -16,7 +16,7 @@ class ContactoEntidadRepository
     DB::beginTransaction();
     try {
 
-      if ( Session::get('login_role') == User::IsGestor() ) {
+      if ( Session::get('login_role') == User::IsExperto() ) {
         $idnodo = auth()->user()->gestor->nodo_id;
       }
 

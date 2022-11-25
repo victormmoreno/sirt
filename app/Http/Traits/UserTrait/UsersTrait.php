@@ -59,9 +59,9 @@ trait UsersTrait
         return self::IS_DINAMIZADOR;
     }
 
-    public static function IsGestor()
+    public static function IsExperto()
     {
-        return self::IS_GESTOR;
+        return self::IS_EXPERTO;
     }
 
     public static function IsInfocenter()

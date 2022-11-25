@@ -20,6 +20,10 @@ class UsoInfraestructuraController extends Controller
     {
         if ($tipoActividad == 'proyecto') {
             $data = Proyecto::findOrFail($id);
+            if(!request()->user()->can('generar_docs', $data)) {
+                alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+                return redirect()->route('home');
+            }
             $pdf = PDF::loadView('pdf.usos.seguimiento', ['data' => $data, 'tipo_actividad' => $tipoActividad]);
 
             $pdf->setPaper(strtolower('LETTER'), $orientacion = 'landscape');

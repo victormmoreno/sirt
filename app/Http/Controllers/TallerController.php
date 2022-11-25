@@ -129,7 +129,7 @@ class TallerController extends Controller
         if (session()->get('login_role') == User::IsDinamizador()) {
             $nodo = auth()->user()->dinamizador->nodo_id;
         }
-        if (session()->get('login_role') == User::IsGestor()) {
+        if (session()->get('login_role') == User::IsExperto()) {
             $nodo = auth()->user()->gestor->nodo_id;
         }
         if (session()->get('login_role') == User::IsInfocenter()) {

@@ -427,7 +427,7 @@
         </div>
     </div>
 </div>
-<h5 class="center orange-text">Objetivos y alcance del proyecto.</h5>
+<h5 class="center primary-text">Objetivos y alcance del proyecto.</h5>
 <div class="divider"></div>
 <div class="row">
     <div class="col s12 m6 l6">
@@ -493,7 +493,7 @@
         </div>
     </div>
 </div>
-<h5 class="center orange-text">Datos de la propiedad intelectual.</h5>
+<h5 class="center primary-text">Datos de la propiedad intelectual.</h5>
 <div class="divider"></div>
 <div class="row">
     <div class="col s12 m4 l4">
@@ -647,18 +647,18 @@
 <center>
     @if ($existe)
         @can('showUpdateButton', [$proyecto, 'Inicio'])
-        <button type="submit" class="waves-effect cyan darken-1 btn center-aling">
-            <i class="material-icons right">{{ isset($btnText) ? $btnText == 'Guardar' ? 'done' : 'done_all' : '' }}</i>
+        <button type="submit" class="waves-effect waves-light btn bg-secondary center-align">
+            <i class="material-icons left">{{ isset($btnText) ? $btnText == 'Guardar' ? 'send' : 'send' : '' }}</i>
             {{isset($btnText) ? $btnText : 'error'}}
         </button>
         @endcan
     @else
-        <button type="submit" class="waves-effect cyan darken-1 btn center-aling">
-            <i class="material-icons right">{{ isset($btnText) ? $btnText == 'Guardar' ? 'done' : 'done_all' : '' }}</i>
+        <button type="submit" class="waves-effect waves-light btn bg-secondary center-align">
+            <i class="material-icons left">{{ isset($btnText) ? $btnText == 'Guardar' ? 'send' : 'send' : '' }}</i>
             {{isset($btnText) ? $btnText : 'error'}}
         </button>
     @endif
-    <a href="{{ $existe ? route('proyecto.inicio', $proyecto->id) : route('proyecto') }}" class="waves-effect red lighten-2 btn center-aling">
+    <a href="{{ $existe ? route('proyecto.inicio', $proyecto->id) : route('proyecto') }}" class="waves-effect bg-danger btn center-align">
         <i class="material-icons right">backspace</i>Cancelar
     </a>
 </center>

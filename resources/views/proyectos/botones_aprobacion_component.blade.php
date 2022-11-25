@@ -8,11 +8,11 @@
     </button>
 @else
     @if ( url()->current() == $proyecto->present()->proyectoRutaActual() )
-        <button type="submit" onclick="preguntaRechazarAprobacionProyecto(event)" class="waves-effect deep-orange darken-1 btn center-aling">
+        <button type="submit" onclick="preguntaRechazarAprobacionProyecto(event)" class="waves-effect orange btn center-aling">
             <i class="material-icons right">close</i>
             No aprobar la fase de {{$proyecto->fase->nombre}}
         </button>
-        <button type="submit" onclick="preguntaAprobacion(event)" class="waves-effect cyan darken-1 btn center-aling">
+        <button type="submit" onclick="preguntaAprobacion(event)" class="waves-effect bg-secondary btn center-aling">
             <i class="material-icons right">done</i>
             Aprobar fase de {{$proyecto->fase->nombre}}
         </button>

@@ -11,7 +11,7 @@
                 <div class="col s12 m12 l12">
                     <div class="row">
                         <div class="col s8 m8 l10">
-                            <h5 class="left-align">
+                            <h5 class="left-align primary-text">
                                 <i class="left material-icons">library_books</i>Proyectos de Base Tecnológica
                             </h5>
                         </div>
@@ -29,12 +29,12 @@
                                     <div class="row">
                                         <div class="col s12 m8 l8">
                                             <div class="center-align">
-                                                <span class="card-title center-align orange-text text-darken-3">Proyectos de {{ session()->get('login_role') == App\User::IsGestor() ? auth()->user()->nombres .' '. auth()->user()->apellidos : 'Tecnoparque' }} </span>
+                                                <span class="card-title center-align primary-text">Proyectos de {{ session()->get('login_role') == App\User::IsExperto() ? auth()->user()->nombres .' '. auth()->user()->apellidos : 'Tecnoparque' }} </span>
                                             </div>
                                         </div>
-                                        @can('showCreateButton', App\Models\Proyecto::class)
+                                        @can('create', App\Models\Proyecto::class)
                                             <div class="col s12 m4 l4 ">
-                                                <a  href="{{route('proyecto.create')}}" class="waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo Proyecto</a>
+                                                <a  href="{{route('proyecto.create')}}" class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo Proyecto</a>
                                             </div>
                                         @endcan
                                     </div>

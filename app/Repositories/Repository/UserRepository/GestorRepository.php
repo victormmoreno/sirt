@@ -14,7 +14,7 @@ class GestorRepository
         return User::select('gestores.id', 'users.id AS user_id')
             ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) as nombre')
             ->join('gestores', 'gestores.user_id', 'users.id')
-            ->role(User::IsGestor())
+            ->role(User::IsExperto())
             ->where('gestores.nodo_id', $idnodo)
             ->where('gestores.lineatecnologica_id', $id)
             ->get();
@@ -25,7 +25,7 @@ class GestorRepository
         return User::InfoUserDatatable()
             ->Join('gestores', 'gestores.user_id', '=', 'users.id')
             ->Join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
-            ->role(User::IsGestor())
+            ->role(User::IsExperto())
             ->where('nodos.id', '=', $nodo);
     }
 

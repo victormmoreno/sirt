@@ -3,12 +3,35 @@
 namespace App\Policies;
 
 use App\User;
-use App\Models\{Proyecto, ControlNotificaciones};
+use App\Models\{Proyecto, ControlNotificaciones, Fase};
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ProyectoPolicy
 {
     use HandlesAuthorization;
+
+    /**
+     * Determina quienes y cuando pueden subir entregables de una fase de proyecto
+     *
+     * @param App\User $user
+     * @param App\Models\Proyecto $proyecto
+     * @param string $fase Fase a la que se subirán los documentos
+     * @return bool
+     * @author dum
+     **/
+    public function adjuntar_entregables(User $user, Proyecto $proyecto, string $fase)
+    {
+        if (session()->get('login_role') == $user->IsAdministrador()) {
+            return true;
+        }
+        if (session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->user->id == request()->user()->id) {
+            if ($proyecto->fase->nombre != $fase) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
 
     /** 
      * Determina quienes pueden ver el detalle de un proyecto
@@ -20,9 +43,11 @@ class ProyectoPolicy
     */
     public function detalle(User $user, Proyecto $proyecto)
     {
+        if ($proyecto->present()->proyectoFase() == $proyecto->IsFinalizado() || $proyecto->present()->proyectoFase() == $proyecto->IsSuspendido())
+            return false;
         if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsArticulador())
             return true;
-        if (session()->get('login_role') == $user->IsGestor() && $proyecto->asesor->user->id == auth()->user()->id)
+        if (session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->user->id == auth()->user()->id)
             return true;
         if (session()->get('login_role') == $user->IsDinamizador() && $proyecto->nodo_id == auth()->user()->dinamizador->nodo_id)
             return true;
@@ -39,7 +64,24 @@ class ProyectoPolicy
         return false;
     }
 
-    
+    /** 
+     * Determina quienes pueden generar documentos de un proyecto
+     * 
+     * @param App\User $user
+     * @param App\Models\Proyecto $proyecto
+     * @return bool
+     * @author dum
+    */
+    public function generar_docs(User $user, Proyecto $proyecto)
+    {
+        if (session()->get('login_role') == $user->IsAdministrador())
+            return true;
+        if (session()->get('login_role') == $user->IsExperto() && $proyecto->asesor_id == auth()->user()->gestor->id)
+            return true;
+        // if (session()->get('login_role') == $user->IsDinamizador() && $proyecto->nodo_id == auth()->user()->dinamizador->nodo_id)
+        //     return true;
+        return false;
+    }
 
     /** 
      * Determina quienes pueden cambiar talentos de un proyecto
@@ -51,12 +93,31 @@ class ProyectoPolicy
     */
     public function cambiar_talentos(User $user, Proyecto $proyecto)
     {
-        if (session()->get('login_role') == $user->IsAdministrador()) {
+        if ($proyecto->present()->proyectoFase() == $proyecto->IsFinalizado() || $proyecto->present()->proyectoFase() == $proyecto->IsSuspendido())
+            return false;
+        if (session()->get('login_role') == $user->IsAdministrador())
             return true;
-        }
-        if (session()->get('login_role') == $user->IsGestor() && $proyecto->asesor_id == auth()->user()->gestor->id) {
+        if (session()->get('login_role') == $user->IsExperto() && $proyecto->asesor_id == auth()->user()->gestor->id)
             return true;
-        }
+        return false;
+    }
+
+    /** 
+     * Determina quienes pueden cambiar talentos de un proyecto
+     * 
+     * @param App\User $user
+     * @param App\Models\Proyecto $proyecto
+     * @return bool
+     * @author dum
+    */
+    public function cambiar_gestor(User $user, Proyecto $proyecto)
+    {
+        if ($proyecto->present()->proyectoFase() == $proyecto->IsFinalizado() || $proyecto->present()->proyectoFase() == $proyecto->IsSuspendido())
+            return false;
+        if (session()->get('login_role') == $user->IsAdministrador())
+            return true;
+        if (session()->get('login_role') == $user->IsDinamizador() && $proyecto->nodo_id == auth()->user()->dinamizador->nodo_id)
+            return true;
         return false;
     }
 
@@ -67,9 +128,9 @@ class ProyectoPolicy
      * @return bool
      * @author dum
     */
-    public function showCreateButton(User $user)
+    public function create(User $user)
     {
-        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsGestor()) {
+        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsExperto()) {
             return true;
         }
         return false;
@@ -105,12 +166,13 @@ class ProyectoPolicy
      * @return bool
      * @author dum
      **/
-    public function showNotificationButton(User $user, Proyecto $proyecto)
+    public function notificar_aprobacion(User $user, Proyecto $proyecto)
     {
-        if ($proyecto->present()->proyectoFase() == $proyecto->IsFinalizado() || $proyecto->present()->proyectoFase() == $proyecto->IsSuspendido()) {
+        if ($proyecto->present()->proyectoFase() == $proyecto->IsFinalizado() || $proyecto->present()->proyectoFase() == $proyecto->IsSuspendido())
             return false;
-        }
-        return true;
+        if ((session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->user->id == auth()->user()->id) || session()->get('login_role') == $user->IsAdministrador())
+            return true;
+        return false;
     }
 
     /**
@@ -152,7 +214,7 @@ class ProyectoPolicy
      **/
     public function showExpertoFilter(User $user)
     {
-        if (session()->get('login_role') == $user->IsGestor()) {
+        if (session()->get('login_role') == $user->IsExperto()) {
             return true;
         }
         return false;
@@ -182,7 +244,7 @@ class ProyectoPolicy
      */
     public function showOptionsForExperto(User $user)
     {
-        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsGestor()) {
+        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsExperto()) {
             return true;
         }
         return false;
@@ -242,7 +304,7 @@ class ProyectoPolicy
      */
     public function showOptionsForFuncionarios(User $user)
     {
-        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador() || session()->get('login_role') == $user->IsDinamizador() || session()->get('login_role') == $user->IsGestor()) {
+        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador() || session()->get('login_role') == $user->IsDinamizador() || session()->get('login_role') == $user->IsExperto()) {
             return true;
         }
         return false;
@@ -257,7 +319,7 @@ class ProyectoPolicy
      * @return bool
      * @author dum
      **/
-    public function showButtonAprobacion(User $user, Proyecto $proyecto)
+    public function aprobar(User $user, Proyecto $proyecto)
     {
         $ult_notificacion = $proyecto->notificaciones()->where('fase_id',  $proyecto->fase_id)->where('estado', ControlNotificaciones::IsPendiente())->get()->last();
         if ($ult_notificacion != null) {
@@ -268,6 +330,41 @@ class ProyectoPolicy
                     } else {
                         if ($ult_notificacion->receptor->id == auth()->user()->id && $ult_notificacion->rol_receptor->name == session()->get('login_role')) {
                             return true;
+                        }
+                    }
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Determina quienes y cuando se pueden ver los botones de aprobación o rechazo de la suspensión del proyecto
+     *
+     * @param \App\User $user
+     * @param \App\Models\Proyecto $ult_notificacion
+     * @return bool
+     * @author dum
+     **/
+    public function aprobar_suspendido(User $user, Proyecto $proyecto)
+    {
+        $ult_notificacion = $proyecto->notificaciones()->where('fase_id',  Fase::where('nombre', 'Suspendido')->first()->id)->where('estado', ControlNotificaciones::IsPendiente())->get()->last();
+        if ($ult_notificacion != null) {
+            if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsDinamizador()) {
+                if ($ult_notificacion->estado == $ult_notificacion->IsPendiente()) {
+                    if (session()->get('login_role') == $user->IsAdministrador()) {
+                        return true;
+                    } else {
+                        if (session()->get('login_role') == $user->IsDinamizador() && $proyecto->nodo_id == auth()->user()->dinamizador->nodo_id) {
+                            if ($ult_notificacion->receptor->id == auth()->user()->id && $ult_notificacion->rol_receptor->name == session()->get('login_role')) {
+                                return true;
+                            }
+                        } else {
+                            return false;
                         }
                     }
                 } else {

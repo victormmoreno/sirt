@@ -2,7 +2,7 @@
     <i class="material-icons left">group</i>
     Cambiar talentos que desarrollan el proyecto.
 </a>
-@can('showNotificationButton', $proyecto)
+@can('notificar_aprobacion', $proyecto)
     <a href="{{route('proyecto.solicitar.aprobacion', [$proyecto->id, -1])}}" class="collection-item yellow lighten-3">
         <i class="material-icons left">notifications</i>
         @if ($rol_destinatario == 'Talento')

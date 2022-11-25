@@ -81,7 +81,7 @@ class IdeaController extends Controller
         if (session()->get('login_role') == User::IsDinamizador()) {
             $nodo = [auth()->user()->dinamizador->nodo_id];
         }
-        if (session()->get('login_role') == User::IsGestor()) {
+        if (session()->get('login_role') == User::IsExperto()) {
             $nodo = [auth()->user()->gestor->nodo_id];
         }
         if (session()->get('login_role') == User::IsInfocenter()) {
@@ -371,7 +371,7 @@ class IdeaController extends Controller
         //     case User::IsDinamizador():
         //         $nodo = auth()->user()->dinamizador->nodo_id;
         //         break;
-        //     case User::IsGestor():
+        //     case User::IsExperto():
         //         $nodo = auth()->user()->gestor->nodo_id;
         //         break;
         //     case User::IsInfocenter():
@@ -684,7 +684,7 @@ class IdeaController extends Controller
         //     case User::IsInfocenter():
         //         return view('ideas.administrador.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
         //         break;
-        //     case User::IsGestor():
+        //     case User::IsExperto():
         //         return view('ideas.administrador.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
         //         break;
         //     default:

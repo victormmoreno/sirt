@@ -34,7 +34,7 @@ class NodoPolicy
     public function index(User $user)
     {
 
-        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDinamizador(), User::IsGestor(), User::IsInfocenter()]);
+        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDinamizador(), User::IsExperto(), User::IsInfocenter()]);
     }
 
     /**

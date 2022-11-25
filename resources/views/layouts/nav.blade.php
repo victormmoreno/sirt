@@ -7,7 +7,7 @@
                 </span>
                 </a>
             </section>
-            <div class="header-title col s2 m2 l2">
+            <div class="header-title col s1 m1 l1">
                 <a href="{{route('home')}}">
                     <img width="150px" class="chapter-title" src="{{ asset('img/logo-sirt-blanco.svg') }}" alt="{{config('app.name')}}">
                 </a>
@@ -234,7 +234,7 @@
             @case(App\User::IsInfocenter())
                 @include('layouts.navrole.infocenter')
             @break
-            @case(App\User::IsGestor())
+            @case(App\User::IsExperto())
                 @include('layouts.navrole.gestor')
             @break
             @case(App\User::IsTalento())

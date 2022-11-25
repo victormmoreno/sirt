@@ -71,7 +71,7 @@
                                                                         </p>
                                                                     </div>
                                                                 </div>
-                                                            @elseif(\Session::get('login_role') == App\User::IsGestor() && isset($actividad))
+                                                            @elseif(\Session::get('login_role') == App\User::IsExperto() && isset($actividad))
                                                                 <div class="col s12">
                                                                     <div class="black-text">
                                                                         @if(isset($actividad->articulacion_proyecto->proyecto) && $actividad->articulacion_proyecto->proyecto != null)

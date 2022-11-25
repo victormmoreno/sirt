@@ -7,7 +7,7 @@
                 <div class="left left-align">
                     <h5 class="left-align primary-text">
                         <a class="footer-text left-align" href="{{route('proyecto')}}">
-                            <i class="material-icons arrow-l">arrow_back</i>
+                            <i class="material-icons arrow-l left">arrow_back</i>
                         </a>Proyectos de Base Tecnológica
                     </h5>
                 </div>
@@ -48,17 +48,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <a class="waves-effect waves-teal btn-flat"
-                                       href="{{route('proyecto.certificacion', $proyecto->id)}}">Generar carta de
-                                        certificación</a>
-                                    <div class="divider"></div>
-                                    <ul class="tabs">
-                                        <li class="tab col s3"><a class="active" href="#inicio">Inicio</a></li>
-                                        <li class="tab col s3"><a href="#planeacion">Planeación</a></li>
-                                        <li class="tab col s3"><a href="#ejecucion">Ejecución</a></li>
-                                        <li class="tab col s3"><a href="#cierre">Cierre</a></li>
-                                    </ul>
-                                    @include('proyectos.historial_cambios')
                                 </div>
                             </div>
                             <div class="divider"></div>

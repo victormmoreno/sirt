@@ -762,37 +762,6 @@ class ProyectoRepository
     }
 
     /**
-     * Suspende un proyecto
-     * @param Request $request
-     * @param int $id Id del proyecto
-     * @return boolean
-     * @author dum
-     **/
-    public function suspenderProyecto($request, $proyecto)
-    {
-        DB::beginTransaction();
-        try {
-            $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'suspendió')->first(), [
-                'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
-                'user_id' => auth()->user()->id,
-                'fase_id' => Fase::where('nombre', $proyecto->fase->nombre)->first()->id,
-                'role_id' => Role::where('name', Session::get('login_role'))->first()->id
-            ]);
-            $proyecto->update([
-                'fase_id' => Fase::where('nombre', 'Suspendido')->first()->id
-            ]);
-            $proyecto->articulacion_proyecto->actividad()->update([
-                'fecha_cierre' => $request->txtfecha_cierre
-            ]);
-            DB::commit();
-            return true;
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            return false;
-        }
-    }
-
-    /**
      * Modifica los datos de cierre de un proyecto
      *
      * @param Request $request
@@ -1134,6 +1103,12 @@ class ProyectoRepository
                         ]);
                         // Crear el movimiento con el cierre del proyecto
                         $this->crearMovimiento($proyecto, 'Finalizado', 'Cerró', null);
+                        return [
+                            'state' => true,
+                            'mensaje' => $mensaje,
+                            'title' => $title,
+                            'route' => route('proyecto.detalle', $id)
+                        ];
                         }
                     }
                 }
@@ -1152,44 +1127,6 @@ class ProyectoRepository
                 'mensaje' => 'No se ha aprobado la fase de inicio del proyecto',
                 'title' => 'Aprobación errónea'
             ];
-        }
-    }
-
-
-    /**
-     * Cambia un proyecto de fase
-     *
-     * @param int $id Id del proyecto
-     * @param string $fase nombre de la fase a la que se va a cambiar el proyecto
-     * @return boolean
-     * @author dum
-     */
-    public function updateFaseProyecto($id, $fase)
-    {
-        DB::beginTransaction();
-        try {
-            $proyecto = Proyecto::findOrFail($id);
-            $fase_aprobada = -1;
-            if ($fase == 'Planeación') {
-                $fase_aprobada = Fase::where('nombre', 'Inicio')->first()->id;
-            } else {
-                $fase_aprobada = Fase::where('nombre', 'Planeación')->first()->id;
-            }
-
-            $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Aprobó')->first(), [
-                'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
-                'user_id' => auth()->user()->id,
-                'fase_id' => $fase_aprobada,
-                'role_id' => Role::where('name', Session::get('login_role'))->first()->id
-            ]);
-            $proyecto->update([
-                'fase_id' => Fase::where('nombre', $fase)->first()->id
-            ]);
-            DB::commit();
-            return true;
-        } catch (\Exception $e) {
-            DB::rollback();
-            return false;
         }
     }
 
@@ -1473,9 +1410,9 @@ class ProyectoRepository
             $proyecto = Proyecto::findOrFail($id);
             $notificacion_act = ControlNotificaciones::find($request->control_notificacion_id);
             $notificacion_act->update(['fecha_aceptacion' => Carbon::now(), 'estado' => $notificacion_act->IsAceptado()]);
-            $this->crearMovimiento($proyecto, 'Suspendido', 'Aprobó', null);
+            $this->crearMovimiento($proyecto, $proyecto->IsSuspendido(), Movimiento::IsAprobar(), null);
             $proyecto->update([
-                'fase_id' => Fase::where('nombre', 'Suspendido')->first()->id
+                'fase_id' => Fase::where('nombre', $proyecto->IsSuspendido())->first()->id
             ]);
             $proyecto->articulacion_proyecto->actividad()->update([
                 'fecha_cierre' => Carbon::now()

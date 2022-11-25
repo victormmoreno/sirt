@@ -5,7 +5,7 @@
   <div class="content">
     <div class="row no-m-t no-m-b">
       <div class="col s12 m12 l12">
-        <h5>
+        <h5 class="primary-text">
           <a class="footer-text left-align" href="{{route('proyecto')}}">
             <i class="material-icons arrow-l left">arrow_back</i>
           </a> Proyectos de Base Tecnológica
@@ -44,6 +44,15 @@
                       <input disabled type="text" id="txtlineatecnologica_id" name="txtlineatecnologica_id" value="{{ $proyecto->sublinea->linea->nombre }}">
                       <label for="txtlineatecnologica_id">Línea Tecnológica</label>
                     </div>
+                </div>
+                <div class="center">
+                  <button type="submit" class="waves-effect waves-light btn bg-secondary center-align">
+                    <i class="material-icons left">send</i>
+                    Guardar
+                  </button>
+                  <a href="{{ route('proyecto.inicio', $proyecto->id) }}" class="waves-effect waves-light btn bg-danger center-align">
+                    <i class="material-icons right">backspace</i>Cancelar
+                  </a>
                 </div>
             </div>
         </div>
