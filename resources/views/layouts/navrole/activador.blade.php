@@ -1,3 +1,8 @@
+<li class="no-padding {{setActiveRoute('usuario')}}">
+    <a class="waves-effect waves-grey {{setActiveRouteActivePage('usuario')}}" href="{{route('usuario.index')}}" rel="canonical" title="Usuarios">
+        <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>Usuarios
+    </a>
+</li>
 <li class="no-padding">
     <a class="collapsible-header waves-effect waves-grey  {{setActiveRouteActivePage('etapa-articulaciones')}} {{ setActiveRouteActivePage('tipoarticulaciones') }} {{ setActiveRouteActivePage('tiposubarticulaciones') }} {!! setActiveRoutePadding('etapa-articulaciones'),setActiveRoutePadding('tipoarticulaciones'), setActiveRoutePadding('tiposubarticulaciones') !!}">
         <i class="material-icons {{ setActiveRouteActiveIcon('etapa-articulaciones') }} {{ setActiveRouteActiveIcon('tipoarticulaciones') }} {{ setActiveRouteActiveIcon('tiposubarticulaciones') }}">autorenew</i>Articulaciones

@@ -46,7 +46,7 @@
                                         </div>
                                         <div class="mailbox-text">
                                             <form action="{{ route('usuario.usuarios.updateaccount',$user->id)}}"
-                                                id="formEditUser" method="POST" onsubmit="return checkSubmit()">
+                                                  id="formEditUser" method="POST" onsubmit="return checkSubmit()">
                                                 {!! csrf_field() !!}
                                                 {!! method_field('PUT')!!}
                                                 <div class="row">
@@ -57,8 +57,7 @@
                                                                     <div class="input-field col m6 s12">
                                                                         <select name="txttipo_documento"
                                                                                 style="width: 100%" tabindex="-1">
-                                                                            <option value="">Seleccione tipo documento
-                                                                            </option>
+                                                                            <option value="">Seleccione tipo documento</option>
                                                                             @foreach($tiposdocumentos as $value)
                                                                                 @if(isset($user->tipoDocumento->id))
                                                                                     <option
@@ -78,16 +77,14 @@
                                                                         @if($view == 'create')
                                                                             <input id="txtdocumento" name="txtdocumento"
                                                                                    type="text" value="{{$documento}}"
-                                                                                   readonly>
+                                                                                   readonly/>
                                                                         @elseif(isset($user->documento))
                                                                             <input id="txtdocumento" name="txtdocumento"
                                                                                    type="text"
-                                                                                   value="{{$user->documento}}">
+                                                                                   value="{{$user->documento}}"/>
                                                                         @endif
-                                                                        <label for="txtdocumento">Documento <span
-                                                                                class="red-text">*</span></label>
-                                                                        <small id="txtdocumento-error"
-                                                                               class="error red-text"></small>
+                                                                        <label for="txtdocumento">Documento <span class="red-text">*</span></label>
+                                                                        <small id="txtdocumento-error"class="error red-text"></small>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
@@ -110,12 +107,8 @@
                                                                                 @endif
                                                                             @endforeach
                                                                         </select>
-                                                                        <label class="active"
-                                                                               for="txtdepartamentoexpedicion">Departamento
-                                                                            de Expedición <span
-                                                                                class="red-text">*</span></label>
-                                                                        <small id="txtdepartamentoexpedicion-error"
-                                                                               class="error red-text"></small>
+                                                                        <label class="active" for="txtdepartamentoexpedicion">Departamentode Expedición <span class="red-text">*</span></label>
+                                                                        <small id="txtdepartamentoexpedicion-error" class="error red-text"></small>
                                                                     </div>
                                                                     <div class="input-field col m6 s12">
                                                                         <select
@@ -123,9 +116,7 @@
                                                                             id="txtciudadexpedicion"
                                                                             name="txtciudadexpedicion"
                                                                             style="width: 100%" tabindex="-1">
-                                                                            <option value="">Seleccione Primero el
-                                                                                Departamento
-                                                                            </option>
+                                                                            <option value="">Seleccione Primero el Departamento</option>
                                                                         </select>
                                                                         <label class="active" for="txtciudadexpedicion">Ciudad
                                                                             de Expedición <span
@@ -573,93 +564,28 @@
         </div>
     </main>
 @endsection
-
 @push('script')
-<script>
-$(document).ready(function() {
+    <script>
+        $(document).ready(function() {
 
-    $('.selectMultipe').select2({
-      language: "es",
-    });
-    user.getCiudadExpedicion();
-    user.getCiudad();
-    ocupacion.getOtraOcupacion();
-    @if(isset($user->eps->id))
-        user.getOtraEsp('{{$user->eps->id}}');
-    @endif
-
-    @if(isset($user->grado_discapacidad))
-        user.getGradoDiscapacidad();
-    @endif
-
-});
-
-var ocupacion = {
-    getOtraOcupacion:function (idocupacion) {
-        $('#otraocupacion').hide();
-        let id = $(idocupacion).val();
-        let nombre = $("#txtocupaciones option:selected").text();
-        let resultado = nombre.match(/[A-Z][a-z]+/g);
-        @if($errors->any())
-            $('#otraocupacion').hide();
-
-              if (resultado != null  && resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
-                  $('#otraocupacion').show();
-              }
-
-        @endif
-          if (resultado != null ) {
-              if (resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
-                  $('#otraocupacion').show();
-              }
-          }
-    }
-};
-
-
-var user = {
-    getCiudadExpedicion:function(){
-        let id;
-        id = $('#txtdepartamentoexpedicion').val();
-        $.ajax({
-          dataType:'json',
-          type:'get',
-          url: host_url + '/usuario/getciudad/'+id
-        }).done(function(response){
-          $('#txtciudadexpedicion').empty();
-          $('#txtciudadexpedicion').append('<option value="">Seleccione la Ciudad</option>')
-          $.each(response.ciudades, function(i, e) {
-            $('#txtciudadexpedicion').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
-            @if(isset($user->ciudadexpedicion->id))
-                $('#txtciudadexpedicion').select2('val','{{$user->ciudadexpedicion->id}}');
+            $('.selectMultipe').select2({
+                language: "es",
+            });
+            user.getCiudadExpedicion();
+            user.getCiudad();
+            ocupacion.getOtraOcupacion();
+            @if(isset($user->eps->id))
+            user.getOtraEsp('{{$user->eps->id}}');
             @endif
-          });
-          $('#txtciudadexpedicion').material_select();
-        });
-      },
 
-
-    getCiudad:function(){
-        let id;
-        id = $('#txtdepartamento').val();
-        $.ajax({
-          dataType:'json',
-          type:'get',
-          url: host_url + '/usuario/getciudad/'+id
-        }).done(function(response){
-          $('#txtciudad').empty();
-          $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')
-          $.each(response.ciudades, function(i, e) {
-            $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
-            @if(isset($user->ciudad->id))
-                $('#txtciudad').select2('val','{{$user->ciudad->id}}');
+            @if(isset($user->grado_discapacidad))
+            user.getGradoDiscapacidad();
             @endif
-          })
-          $('#txtciudad').material_select();
+
         });
 
         var ocupacion = {
-            getOtraOcupacion: function (idocupacion) {
+            getOtraOcupacion:function (idocupacion) {
                 $('#otraocupacion').hide();
                 let id = $(idocupacion).val();
                 let nombre = $("#txtocupaciones option:selected").text();
@@ -667,12 +593,12 @@ var user = {
                 @if($errors->any())
                 $('#otraocupacion').hide();
 
-                if (resultado != null && resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
+                if (resultado != null  && resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
                     $('#otraocupacion').show();
                 }
 
                 @endif
-                if (resultado != null) {
+                if (resultado != null ) {
                     if (resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
                         $('#otraocupacion').show();
                     }
@@ -682,20 +608,20 @@ var user = {
 
 
         var user = {
-            getCiudadExpedicion: function () {
+            getCiudadExpedicion:function(){
                 let id;
                 id = $('#txtdepartamentoexpedicion').val();
                 $.ajax({
-                    dataType: 'json',
-                    type: 'get',
-                    url: host_url + '/usuario/getciudad/' + id
-                }).done(function (response) {
+                    dataType:'json',
+                    type:'get',
+                    url: host_url + '/usuario/getciudad/'+id
+                }).done(function(response){
                     $('#txtciudadexpedicion').empty();
                     $('#txtciudadexpedicion').append('<option value="">Seleccione la Ciudad</option>')
-                    $.each(response.ciudades, function (i, e) {
-                        $('#txtciudadexpedicion').append('<option  value="' + e.id + '">' + e.nombre + '</option>');
+                    $.each(response.ciudades, function(i, e) {
+                        $('#txtciudadexpedicion').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
                         @if(isset($user->ciudadexpedicion->id))
-                        $('#txtciudadexpedicion').select2('val', '{{$user->ciudadexpedicion->id}}');
+                        $('#txtciudadexpedicion').select2('val','{{$user->ciudadexpedicion->id}}');
 
                         @endif
                     });
@@ -704,20 +630,20 @@ var user = {
             },
 
 
-            getCiudad: function () {
+            getCiudad:function(){
                 let id;
                 id = $('#txtdepartamento').val();
                 $.ajax({
-                    dataType: 'json',
-                    type: 'get',
-                    url: host_url + '/usuario/getciudad/' + id
-                }).done(function (response) {
+                    dataType:'json',
+                    type:'get',
+                    url: host_url + '/usuario/getciudad/'+id
+                }).done(function(response){
                     $('#txtciudad').empty();
                     $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')
-                    $.each(response.ciudades, function (i, e) {
-                        $('#txtciudad').append('<option  value="' + e.id + '">' + e.nombre + '</option>');
+                    $.each(response.ciudades, function(i, e) {
+                        $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
                         @if(isset($user->ciudad->id))
-                        $('#txtciudad').select2('val', '{{$user->ciudad->id}}');
+                        $('#txtciudad').select2('val','{{$user->ciudad->id}}');
 
                         @endif
                     })
@@ -726,7 +652,7 @@ var user = {
                 });
             },
 
-            getOtraEsp: function (ideps) {
+            getOtraEsp:function (ideps) {
                 let id = $(ideps).val();
                 let nombre = $("#txteps option:selected").text();
 
@@ -735,23 +661,23 @@ var user = {
                     $(".otraeps").css("display", "none");
 
 
-                } else {
+
+                }else{
 
                     $(".otraeps").css("display", "block");
                 }
             },
 
-            getGradoDiscapacidad() {
+            getGradoDiscapacidad(){
                 let discapacidad = $('#txtgrado_discapacidad').val();
                 if (discapacidad == 1) {
                     $('.gradodiscapacidad').css("display", "block");
 
-                } else {
+                }else{
                     $(".gradodiscapacidad").css("display", "none");
                 }
             }
-
         }
-
     </script>
 @endpush
+

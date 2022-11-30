@@ -10,240 +10,184 @@ class UserPolicy
 {
     use HandlesAuthorization;
 
-    public $authUser;
-    public $user;
-
-    public function __construct(User $authUser, User $user)
-    {
-        $this->authUser = $authUser;
-        $this->user     = $user;
-    }
-
     /**
-     * Determine whether the user can view the perfil.
-     * @author julian londono
+     * Determine whether the user can view the profile.
      * @return boolean
      */
-    public function viewProfile()
+    public function viewProfile(User $authUser, User $user)
     {
-
-        return (bool) $this->authUser->id == $this->user->id;
+        return (bool) $authUser->id == $user->id;
     }
 
-    /**
-     * Determine whether the user can view the rol.
-     * @author julian londono
-     * @return boolean
-     */
-    public function viewProfileRole()
-    {
-        return (bool) $this->authUser->id == $this->user->id;
-    }
-
-    /**
-     * Determine whether the user can view the rol.
-     * @author julian londono
-     * @return boolean
-     */
-    public function viewProfileAccountPassword()
-    {
-        return (bool) $this->authUser->id == $this->user->id;
-    }
-
-    /**
-     * @author julian londono
-     * Determine si el usuario puede ver editar cuenta.
-     * @return boolean
-     */
-    public function editAccount()
-    {
-        return (bool) $this->authUser->id == $this->user->id;
-    }
-
-
-    public function show()
-    {
-        if (auth()->user()->id == $this->user->id) {
-            return false;
-        }else if(session()->get('login_role') == User::IsTalento() || session()->get('login_role') == User::IsApoyoTecnico() || session()->get('login_role') == User::IsIngreso()){
-            return false;
-        }
-        return true;
-    }
 
     /**
      * Determine whether the user can update the model.
      * @author julian londono
      * @return boolean
      */
-    public function updateProfile()
+    public function updateProfile(User $authUser, User $user)
     {
-        return (bool) $this->authUser->id == $this->user->id;
+        return (bool) $authUser->id == $user->id;
     }
 
     /**
-     * Determine si un usuario puede cambiar la password.
+     * Determine whether the user can to update password
      * @author julian londono
      * @return boolean
      */
-    public function updatePassword()
+    public function updatePassword(User $authUser, User $user)
     {
-        return (bool) $this->authUser->id == $this->user->id;
+        return (bool) $authUser->id == $user->id;
     }
 
     /**
-     * Determine si un usuario puede descargar certificado registro plataforma.
+     * Determine whether the user can to download a  register certificate .
      * @author julian londono
      * @return boolean
      */
     public function downloadCertificatedPlataform(User $user)
     {
-        return (bool) collect($user->getRoleNames())->contains(User::IsTalento());
+        return (bool) $user->hasAnyRole([User::IsTalento()]) &&
+            session()->has('login_role')
+            && (session()->get('login_role') == User::IsTalento());
     }
 
     /**
-     * Determine si un usuario puede solicitar nueva contraseña.
+     * Determine whether the user can to request a new password
      * @author julian londono
      * @return boolean
      */
-    public function passwordReset()
+    public function passwordReset(User $authUser, User $user)
     {
-        return (bool) $this->authUser->id == $this->user->id;
+        return (bool) $authUser->id == $user->id;
     }
 
-    /*=============================================
-    =            seccion para validar el modulo de usuarios         =
-    =============================================*/
-
     /**
-     * Determine si un usuario puede ver ek index de los usuarios.
-     * @author julian londono
+     * Determine whether the user can view list user
      * @return boolean
      */
     public function index(User $user)
     {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador())
-            && session()->get('login_role') == User::IsAdministrador()
-            || collect($user->getRoleNames())->contains(User::IsDinamizador())
-            && session()->get('login_role') == User::IsDinamizador()
-            || collect($user->getRoleNames())->contains(User::IsGestor())
-            && session()->get('login_role') == User::IsGestor()
-            || collect($user->getRoleNames())->contains(User::IsInfocenter())
-            && session()->get('login_role') == User::IsInfocenter()
-            || collect($user->getRoleNames())->contains(User::IsArticulador())
-            && session()->get('login_role') == User::IsArticulador();
+        return (bool) session()->has('login_role')
+            && (
+                session()->get('login_role') != User::IsApoyoTecnico() ||
+                session()->get('login_role') != User::IsIngreso() ||
+                session()->get('login_role') != User::IsTalento()
+            );
     }
 
     /**
-     * Determine si un usuario puede ver formulario para crear nuevos usuarios.
+     * Determine whether the user can to show user
+     * @return boolean
+     */
+    public function show(User $authUser, User $user)
+    {
+        return (bool) session()->has('login_role')
+            && (
+                session()->get('login_role') != User::IsApoyoTecnico() ||
+                session()->get('login_role') != User::IsIngreso() ||
+                session()->get('login_role') != User::IsTalento()
+            );
+    }
+
+    /**
+     * Determine if the given user can  view the users search
+     * @return boolean
+     */
+    public function search(User $user)
+    {
+        return (bool) session()->has('login_role')
+            && (
+                session()->get('login_role') != User::IsApoyoTecnico() ||
+                session()->get('login_role') != User::IsIngreso() ||
+                session()->get('login_role') != User::IsTalento()
+            );
+    }
+
+    /**
+     * Determine if the given user can  view nodes list
+     * @return bool
+     */
+    public function viewNodes(User $user)
+    {
+        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador()])
+            && session()->has('login_role')
+            && (
+                session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()
+            );
+    }
+
+    /**
+     * Determine if the given user can  view talents list
+     * @return bool
+     */
+    public function talentsList(User $user)
+    {
+        return (bool) $user->hasAnyRole([User::IsGestor()])
+            && session()->has('login_role')
+            && (
+                session()->get('login_role') == User::IsGestor()
+            );
+    }
+
+
+
+    /**
+     * Determine whether the user can create new user
      * @author julian londono
      * @return boolean
      */
     public function create(User $user)
     {
-
         return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador() || collect($user->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador() || collect($user->getRoleNames())->contains(User::IsGestor()) && session()->get('login_role') == User::IsGestor();
     }
 
     /**
-     * Determine si un usuario puede crear nuevos usuarios.
-     * @author julian londono
+     * Determine whether the user can update to one user
      * @return boolean
      */
-    public function store(User $user)
+    public function update(User $authUser, User $user)
     {
-
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador() || collect($user->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador() || collect($user->getRoleNames())->contains(User::IsGestor()) && session()->get('login_role') == User::IsGestor();
+        return (bool)
+            ($authUser->documento != $user->documento) &&
+            session()->has('login_role') &&
+            (
+                session()->get('login_role') == User::IsAdministrador() ||
+                (session()->get('login_role') == User::IsActivador() && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDesarrollador()])) ||
+                (session()->get('login_role') == User::IsDinamizador() && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDesarrollador(), User::IsDinamizador()])) ||
+                (
+                    (session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsInfocenter())
+                    && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(),User::IsDesarrollador(), User::IsDinamizador(),User::IsGestor(), User::IsArticulador(), User::IsApoyoTecnico(), User::IsInfocenter(), User::IsIngreso()])
+                )
+            );
     }
 
-    public function edit(User $authuser, User $user)
+    /**
+     * Determine whether the user can update state user
+     * @return boolean
+     */
+    public function access(User $authUser, User $user): bool
     {
-        if (
-            session()->get('login_role') == User::IsAdministrador() && $user->hasAnyRole(Role::all()) && $authuser->documento != $user->documento ||
-            $user->roles->isEmpty()
-        ) {
-            return true;
-        } elseif (session()->get('login_role') == User::IsDinamizador() && $authuser->documento != $user->documento || $user->roles->isEmpty()) {
-            if (isset($authuser->dinamizador->nodo->id) && isset($user->gestor->nodo->id) && $authuser->dinamizador->nodo->id == $user->gestor->nodo->id && ($user->hasAnyRole(Role::findByName(User::IsGestor()))) || $user->hasAnyRole(Role::findByName(User::IsArticulador()))) {
-                return true;
-            } else if (isset($authuser->dinamizador->nodo->id) && isset($user->infocenter->nodo->id) && $authuser->dinamizador->nodo->id == $user->infocenter->nodo->id && $user->hasAnyRole(Role::findByName(User::IsInfocenter()))) {
-                return true;
-            } elseif (isset($authuser->dinamizador->nodo->id) && isset($user->ingreso->nodo->id) && $authuser->dinamizador->nodo->id == $user->ingreso->nodo->id && $user->hasAnyRole(Role::findByName(User::IsIngreso()))) {
-                return true;
-            } elseif ($user->hasAnyRole(Role::findByName(User::IsTalento()))) {
-                return true;
-            }
-        } elseif (session()->get('login_role') == User::IsGestor() && $authuser->documento != $user->documento || $user->roles->isEmpty()) {
-
-            if ($user->hasAnyRole(Role::all()) ||  $user->roles->isEmpty()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public function update(User $authuser, User $user)
-    {
-        if (
-            session()->get('login_role') == User::IsAdministrador() && $user->hasAnyRole(Role::all()) && $authuser->id != $user->id ||
-            $user->roles->isEmpty()
-        ) {
-            return true;
-        } elseif (session()->get('login_role') == User::IsDinamizador() && $authuser->id != $user->id || $user->roles->isEmpty()) {
-            if (isset($authuser->dinamizador->nodo->id) && isset($user->gestor->nodo->id) && $authuser->dinamizador->nodo->id == $user->gestor->nodo->id && ($user->hasAnyRole(Role::findByName(User::IsGestor())) || $user->hasAnyRole(Role::findByName(User::IsArticulador())))) {
-                return true;
-            } else if (isset($authuser->dinamizador->nodo->id) && isset($user->infocenter->nodo->id) && $authuser->dinamizador->nodo->id == $user->infocenter->nodo->id && $user->hasAnyRole(Role::findByName(User::IsInfocenter()))) {
-                return true;
-            } elseif (isset($authuser->dinamizador->nodo->id) && isset($user->ingreso->nodo->id) && $authuser->dinamizador->nodo->id == $user->ingreso->nodo->id && $user->hasAnyRole(Role::findByName(User::IsIngreso()))) {
-                return true;
-            } elseif ($user->hasAnyRole(Role::findByName(User::IsTalento()))) {
-                return true;
-            }
-        } elseif (session()->get('login_role') == User::IsGestor() && $authuser->id != $user->id || $user->roles->isEmpty()) {
-
-            if ($user->hasAnyRole(Role::all()) ||  $user->roles->isEmpty()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public function acceso(User $authuser, User $user)
-    {
-        if ($authuser->id == $user->id && (session()->get('login_role') == User::IsInfocenter() ||  $authuser->hasAnyRole([User::IsInfocenter(), User::IsTalento(), User::IsIngreso(), User::IsArticulador()]))) {
-            return false;
-        }
-        return true;
+        return (bool)
+            ($authUser->documento != $user->documento) &&
+            session()->has('login_role') &&
+            (
+                session()->get('login_role') == User::IsAdministrador() ||
+                (session()->get('login_role') == User::IsActivador() && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDesarrollador()])) ||
+                (session()->get('login_role') == User::IsDinamizador() && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDesarrollador(), User::IsDinamizador()])) ||
+                (
+                    (session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsInfocenter())
+                    && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(),User::IsDesarrollador(), User::IsDinamizador(),User::IsGestor(), User::IsArticulador(), User::IsApoyoTecnico(), User::IsInfocenter(), User::IsIngreso()])
+                )
+            );
     }
 
 
     /**
-     * Determine whether the user can view the activities
-     * @author julian londono
+     * Determine whether the user can export list users
      * @return boolean
      */
-    public function viewActivities()
-    {
-
-        return (bool) $this->authUser->id == $this->user->id && (session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsTalento());
-    }
-
-    /**
-     * Determine whether the user can view the your talentos
-     * @author julian londono
-     * @return boolean
-     */
-    public function myTalentos()
-    {
-        return (bool) session()->get('login_role') == User::IsGestor();
-    }
-
-    /**
-     * Determine whether the user can export the your talentos
-     * @author julian londono
-     * @return boolean
-     */
-    public function export(User $user)
+    public function export(User $user): bool
     {
         return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador())
             && session()->get('login_role') == User::IsAdministrador()
@@ -258,33 +202,70 @@ class UserPolicy
         return (bool) session()->get('login_role') == User::IsGestor();
     }
 
-
     /**
-     * Determine whether the user can view the rol.
-     * @author julian londono
+     * Determine whether the user can update node and role
      * @return boolean
      */
-    public function confirmContratorInformation(User $authUser, User $user)
+    public function updateNodeAndRole(User $authUser, User $user): bool
     {
-        return (bool) ((collect($authUser->getRoleNames())->contains(User::IsAdministrador())
-            && session()->get('login_role') == User::IsAdministrador())
-            || (collect($authUser->getRoleNames())->contains(User::IsDinamizador())
-            && session()->get('login_role') == User::IsDinamizador())) && ( isset($user->contratista) && $user->estado == User::IsInactive());
+        return (bool)
+        ($authUser->documento != $user->documento) &&
+            session()->has('login_role') &&
+            (
+                session()->get('login_role') == User::IsAdministrador() ||
+                (session()->get('login_role') == User::IsActivador() && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDesarrollador()])) ||
+                (session()->get('login_role') == User::IsDinamizador() && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDesarrollador(), User::IsDinamizador()])) ||
+                (
+                    (session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsInfocenter())
+                    && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(),User::IsDesarrollador(), User::IsDinamizador(),User::IsGestor(), User::IsArticulador(), User::IsApoyoTecnico(), User::IsInfocenter(), User::IsIngreso()])
+                )
+            );
     }
 
-    public function generatePassword(User $authuser, User $user): bool
+    /**
+     * Determine whether the user can generate new password.
+     * @return boolean
+     */
+    public function generatePassword(User $authUser, User $user): bool
     {
-        if(($authuser->documento == $user->documento)){
-            return false;
-        }elseif(session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()){
-            return true;
+        return (bool)
+            ($authUser->documento != $user->documento) &&
+            session()->has('login_role') &&
+            (
+                session()->get('login_role') == User::IsAdministrador() ||
+                (session()->get('login_role') == User::IsActivador() && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDesarrollador()])) ||
+                (session()->get('login_role') == User::IsDinamizador() && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDesarrollador(), User::IsDinamizador()])) ||
+                (
+                    (session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsInfocenter())
+                    && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(),User::IsDesarrollador(), User::IsDinamizador(),User::IsGestor(), User::IsArticulador(), User::IsApoyoTecnico(), User::IsInfocenter(), User::IsIngreso(), User::IsTalento()])
+                )
+            );
+    }
 
-        }else if(session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() && !$user->hasAnyRole([User::IsDinamizador(), User::IsAdministrador()])){
-            return true;
-        }else if(session()->has('login_role') && (session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsArticulador()) && !$user->present()->userChangeAccess()){
-            return true;
-        }
-        return false;
+    public function confirmContratorInformation(User $authUser, User $user)
+    {
+        return (bool)
+            ($authUser->documento != $user->documento) &&
+            session()->has('login_role') &&
+            (
+                session()->get('login_role') == User::IsAdministrador() ||
+                (session()->get('login_role') == User::IsActivador()) ||
+                (
+                    session()->get('login_role') == User::IsDinamizador() &&
+                    (
+                        isset($user->contratista) && $user->estado == User::IsInactive() &&
+                        (isset($authUser->dinamizador) && $authUser->dinamizador->nodo_id == $user->contratista->nodo_id)
+                    )
+                )
+            );
+    }
+    /**
+     * Determine whether the user can view the activities
+     * @return boolean
+     */
+    public function viewActivities(User $authUser, User $user)
+    {
+        return (bool) $authUser->id == $user->id && (session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsTalento());
     }
 
 }

@@ -23,14 +23,11 @@
         <meta name="robots" content="index"/>
         <meta name="Keywords" content="@yield('meta-keywords', 'Tecnoparque, SENA, Innovacion, Tecnologia, desarrollo, emprendimiento' )"/>
         <meta content="{{ csrf_token()}}" name="csrf-token"/>
-
         <meta property="og:locale" content="es_ES" />
         <meta property="og:title" content="{{config('app.name')}}" />
         <meta property="og:description" content="@yield('meta-content', 'Tecnoparque Red Colombia')" />
         <meta property="og:url" content="{{config('app.url')}}" />
         <meta property="og:site_name" content="{{config('app.name')}}" />
-
-
     </head>
     <body class="white">
         <div id="app">
@@ -75,9 +72,6 @@
         <script src="{{ asset('js/web.js') }}">
         </script>
         @include('sweetalert::alert')
-        <script>
-            const host_url = "{{config('app.url')}}";
-        </script>
         @stack('script')
     </body>
 </html>

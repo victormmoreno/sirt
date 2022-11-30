@@ -18,24 +18,14 @@ use App\Repositories\Repository\UserRepository\DinamizadorRepository;
 use App\Notifications\User\{NewContractor, RoleAssignedOfficer};
 class RegisterController extends Controller
 {
-
     use RegistersUsers;
-
     /**
      * Where to redirect users after registration.
      *
      * @var string
      */
     protected $redirectTo = '/';
-
     public $userRepository;
-
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
 
     public function __construct(UserRepository $userRepository)
     {
@@ -43,10 +33,8 @@ class RegisterController extends Controller
         $this->userRepository = $userRepository;
     }
 
-
     /**
      * Show the application registration form.
-     *
      * @return \Illuminate\Http\Response
      */
     public function showRegistrationForm()
@@ -69,15 +57,12 @@ class RegisterController extends Controller
 
     /**
      * Handle a registration request for the application.
-     *
-     *
      * @return \Illuminate\Http\Response
      */
     public function register(Request $request)
     {
         $req = new UserFormRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-
         if ($validator->fails()) {
             return response()->json([
                 'state'   => 'error_form',
@@ -149,7 +134,6 @@ class RegisterController extends Controller
 
     private function createUser($request, $password)
     {
-
         return User::create([
             "tipodocumento_id"     => $request->input('txttipo_documento'),
             "gradoescolaridad_id"  => $request->input('txtgrado_escolaridad'),
@@ -186,7 +170,6 @@ class RegisterController extends Controller
     protected function storeTalento($request, $user)
     {
         $entidad = null;
-
         if (
             $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)->first()->id ||
             $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_CON_APOYO)->first()->id
@@ -211,26 +194,20 @@ class RegisterController extends Controller
             "user_id"               => $user->id,
             "tipo_talento_id"       => $request->input('txttipotalento'),
             "entidad_id"            => $entidad,
-
             "programa_formacion"    => $this->programaFormacion($request),
 
             "tipo_formacion_id"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_EGRESADO_SENA) ?
                 $request->input('txttipoformacion') : null,
-
             "tipo_estudio_id"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
                 $request->input('txttipoestudio') : null,
             "dependencia"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_SENA) ?
                 $request->input('txtdependencia') : null,
-
             "universidad"           => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
                 $request->input('txtuniversidad') : null,
-
             "carrera_universitaria" => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
                 $request->input('txtcarrera') : null,
-
             "empresa"               => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_EMPRESA) ?
                 $request->input('txtempresa') : null,
-
         ]);
     }
 
@@ -277,14 +254,16 @@ class RegisterController extends Controller
         }
     }
 
-    public function showConfirmContratorInformationForm(int $documento){
-
+    public function showConfirmContratorInformationForm(int $documento)
+    {
         $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
-
-        $this->authorize('confirmContratorInformation', $user);
+        if (request()->user()->cannot('confirmContratorInformation', $user)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         return view('auth.confirm-contractor-information', [
             'user' => $user,
-            'roles' => $this->userRepository->getRoleWhereNotInRole([User::IsDesarrollador() ]),
+            'roles' => $this->userRepository->getRoleWhereNotInRole([User::IsDesarrollador()]),
             'nodos'             => $this->userRepository->getAllNodo(),
             'tipotalentos' => TipoTalento::pluck('nombre', 'id'),
             'regionales'        => $this->userRepository->getAllRegionales(),
@@ -294,12 +273,14 @@ class RegisterController extends Controller
         ]);
     }
 
-    public function confirmContratorInformation(Request $request, int $documento){
-
+    public function confirmContratorInformation(Request $request, int $documento)
+    {
         $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
 
-        // $this->authorize('confirmContratorInformation', $user);
-
+        if (request()->user()->cannot('confirmContratorInformation', $user)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $req = new ConfirmUserRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
@@ -311,9 +292,8 @@ class RegisterController extends Controller
         } else {
             if ($user != null) {
                 $userUpdate = $this->userRepository->UpdateUserConfirm($request, $user);
-
                 if($userUpdate != null){
-                    Notification::send($userUpdate, new RoleAssignedOfficer($userUpdate));
+                   //    Notification::send($userUpdate, new RoleAssignedOfficer($userUpdate));
                 }
                 return response()->json([
                     'state'   => 'success',

@@ -4,6 +4,9 @@ namespace App\Exports\User;
 
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Maatwebsite\Excel\Concerns\Exportable;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\SerializesModels;
 use App\User;
 use App\Exports\User\UserSheetExport;
 use App\Exports\User\DinamizadorSheetExport;
@@ -12,14 +15,12 @@ use App\Exports\User\InfocenterSheetExport;
 use App\Exports\User\TalentoSheetExport;
 use App\Exports\User\IngresoSheetExport;
 
-
 class UserExport implements WithMultipleSheets
 {
-    use Exportable;
+    use Exportable, SerializesModels;
 
     private $request;
     private $query;
-
 
     public function __construct($request, $query)
     {
@@ -33,7 +34,6 @@ class UserExport implements WithMultipleSheets
     public function sheets(): array
     {
         $sheets = [];
-
         if ($this->request->filled('filter_role') && $this->request->filter_role == User::IsDinamizador()) {
             $sheets[] = new DinamizadorSheetExport($this->request, $this->query);
         } else if ($this->request->filled('filter_role') && $this->request->filter_role == User::IsGestor()) {
@@ -48,5 +48,10 @@ class UserExport implements WithMultipleSheets
             $sheets[] = new UserSheetExport($this->request, $this->query);
         }
         return $sheets;
+    }
+
+    public function failed(Throwable $exception): void
+    {
+        alert()->error($exception->message())->toToast()->autoClose(10000);
     }
 }

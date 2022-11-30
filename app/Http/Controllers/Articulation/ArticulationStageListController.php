@@ -31,17 +31,16 @@ class ArticulationStageListController extends Controller
      */
     public function index()
     {
-
-        if (request()->user()->can('index', ArticulationStage::class)) {
-            $nodos = null;
-            if(request()->user()->can('listNodes', ArticulationStage::class)) {
-                $nodos = Nodo::query()->with('entidad')->get();
-                $nodos = collect($nodos)->sortBy('entidad.nombre')->pluck('entidad.nombre', 'id');
-            }
-            return view('articulation.index-articulation-stage', ['nodos' => $nodos]);
+        if (request()->user()->cannot('index', ArticulationStage::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
         }
-        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
-        return redirect()->route('home');
+        $nodos = null;
+        if(request()->user()->can('listNodes', ArticulationStage::class)) {
+            $nodos = Nodo::query()->with('entidad')->get();
+            $nodos = collect($nodos)->sortBy('entidad.nombre')->pluck('entidad.nombre', 'id');
+        }
+        return view('articulation.index-articulation-stage', ['nodos' => $nodos]);
     }
 
     /**

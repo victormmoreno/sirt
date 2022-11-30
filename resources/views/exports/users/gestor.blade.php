@@ -1,8 +1,6 @@
 <table>
     <thead>
     <tr>
-        <th>Nodo</th>
-        <th>Linea Tecnologica</th>
         <th>Tipo Documento</th>
         <th>Ciudad de Expedición Documento</th>
         <th>Número de Documento</th>
@@ -25,95 +23,88 @@
         <th>Título obtenido</th>
         <th>Fecha de terminación</th>
         <th>Ocupaciones</th>
-        <th>Honorarios mensuales</th>
         <th>Roles</th>
         <th>Acceso sistema</th>
     </tr>
     </thead>
     <tbody>
-        @forelse($users as $user)
+    @forelse($users as $user)
         <tr>
             <td>
-                {{isset($user->gestor->nodo->entidad) ? $user->gestor->nodo->entidad->nombre : 'No registra'}}
-            </td>
-            <td>{{ isset($user->gestor->lineatecnologica) ? $user->gestor->lineatecnologica->abreviatura : ''}} - {{ isset($user->gestor->lineatecnologica) ? $user->gestor->lineatecnologica->nombre : 'No registra'}}</td>
-            <td>
-                {{$user->present()->userTipoDocuento()}}
+                {{isset($user->tipodocumento) ? $user->tipodocumento : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userLugarExpedicionDocumento()}}
+                {{isset($user->expedicion) ? $user->expedicion : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userDocumento()}}
+                {{isset($user->documento) ? $user->documento : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userFullName()}}
+                {{isset($user->usuario) ? $user->usuario : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userFechaNacimiento()}}
+                {{isset($user->fechanacimiento) ? $user->fechanacimiento : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userEmail()}}
+                {{isset($user->email) ? $user->email : __('No register')}}
             </td>
             <td>
                 {{isset($user->celular) ? $user->celular : (isset($user->telefono) ? $user->telefono : 'No registra')}}
             </td>
             <td>
-                {{$user->present()->userGenero()}}
+                {{isset($user->genero) ? $user->genero : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userGrupoSanguineo()}}
+                {{isset($user->grupo_sanguineo) ? $user->grupo_sanguineo : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userEstrato()}}
+                {{isset($user->estrato) ? $user->estrato : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userDireccion()}}
+                {{isset($user->direccion) ? $user->direccion : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userLugarResidencia()}}
+                {{isset($user->residencia) ? $user->residencia : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userEtnia()}}
+                {{isset($user->etnia) ? $user->etnia : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userGradoDiscapacidad()}}
+                {{isset($user->grado_discapacidad) ? $user->grado_discapacidad : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userDescripcionGradoDiscapacidad()}}
+                {{isset($user->descripcion_grado_discapacidad) ? $user->descripcion_grado_discapacidad : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userEps()}}
+                {{isset($user->eps) ? $user->eps : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userEps()}}
+                {{isset($user->eps) ? $user->eps : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userOtraEps()}}
+                {{isset($user->otra_eps) ? $user->otra_eps : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userInstitucion()}}
+                {{isset($user->institucion) ? $user->institucion : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userTituloObtenido()}}
+                {{isset($user->titulo_obtenido) ? $user->titulo_obtenido : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userFechaTerminacion()}}
+                {{isset($user->fecha_terminacion) ? $user->fecha_terminacion : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userOcupacionesNames()}}
-            </td>
-            
-            <td>$ {{isset($user->gestor->honorarios) ? number_format($user->gestor->honorarios) : 0}}</td>
-            <td>
-                {{ $user->present()->userRolesNames()}}
+                {{isset($user->ocupaciones) ? $user->ocupaciones : __('No register')}}
             </td>
             <td>
-                {{ $user->present()->userAcceso()}}
+                {{isset($user->roles) ? $user->roles : __('No register')}}
+            </td>
+            <td>
+                {{$user->estado == \App\User::IsActive() && $user->deleted_at == null ? 'Habilitado' : 'Inhabilitado desde:'. $user->deleted_at}}
             </td>
         </tr>
-        @empty
-            No se encontraron resultados
-        @endforelse
+    @empty
+        No se encontraron resultados
+    @endforelse
     </tbody>
 </table>

@@ -67,7 +67,10 @@ Route::group(
     ],
     function () {
 
-
+        Route::get('/mistalentos', [
+            'uses' => 'UserController@talentsList',
+            'as'   => 'usuario.mytalentos',
+        ]);
         Route::get('/talento/getTalentosDeTecnoparque', [
             'uses' => 'TalentoController@datatableTalentosDeTecnoparque',
             'as'   => 'talento.tecnoparque',
@@ -79,15 +82,12 @@ Route::group(
         ]);
 
         Route::get('consultarUserPorId/{id}', 'UserController@findUserById');
-        Route::get('/mistalentos', [
-            'uses' => 'UserController@myTalentos',
-            'as'   => 'usuario.mytalentos',
-        ]);
+
         Route::get('/', [
             'uses' => 'UserController@index',
             'as'   => 'usuario.index',
         ]);
-        Route::put('/updateacceso/{documento}', 'UserController@updateAcceso')->name('usuario.usuarios.updateacceso')->middleware('disablepreventback');
+        Route::put('/updateacceso/{documento}', 'UserController@updateAccess')->name('usuario.usuarios.updateacceso')->middleware('disablepreventback');
         Route::get('/talento/getEdadTalento/{id}', 'TalentoController@getEdad');
 
 
@@ -105,9 +105,9 @@ Route::group(
 
 
         Route::get('/usuarios', 'UserController@userSearch')->name('usuario.search');
-        Route::get('/{documento}/permisos', 'UserController@changeNodeUser')->name('usuario.usuarios.changenode')->where('documento', '[0-9]+');
-        Route::put('/{documento}/updatenodo', 'UserController@updateNode')->name('usuario.usuarios.updatenodo')->middleware('disablepreventback');
-        Route::get('/usuarios/acceso/{documento}', 'UserController@acceso')->name('usuario.usuarios.acceso')->where('documento', '[0-9]+');
+        Route::get('/{documento}/permisos', 'UserController@changeNodeAndRole')->name('usuario.usuarios.changenode')->where('documento', '[0-9]+');
+        Route::put('/{documento}/permisos', 'UserController@updateNodeAndRole')->name('usuario.usuarios.updatenodo')->middleware('disablepreventback');
+        Route::get('/usuarios/acceso/{documento}', 'UserController@access')->name('usuario.usuarios.acceso')->where('documento', '[0-9]+');
         Route::put('/{id}/update-account', 'UserController@updateAccountUser')->name('usuario.usuarios.updateaccount')->middleware('disablepreventback');
         Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'only' => ['show', 'edit']])->names([
             'update'  => 'usuario.usuarios.update',

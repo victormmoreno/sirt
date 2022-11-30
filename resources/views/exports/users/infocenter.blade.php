@@ -1,116 +1,111 @@
 <table>
     <thead>
-        <tr>
-            <th>Nodo</th>
-            <th>Tipo Documento</th>
-            <th>Ciudad de Expedición Documento</th>
-            <th>Número de Documento</th>
-            <th>Nombre Completo</th>
-            <th>Fecha de Nacimiento</th>
-            <th>Correo Electrónico</th>
-            <th>Celular</th>
-            <th>Género</th>
-            <th>Grupo sanguineo</th>
-            <th>Estrato Social</th>
-            <th>Dirección</th>
-            <th>Lugar de residencia</th>
-            <th>Etnia a la que pertenece</th>
-            <th>¿Tiene algún grado de discapacidad?</th>
-            <th>¿Cuál es el grado de discapacidad?</th>
-            <th>Eps</th>
-            <th>Otra eps</th>
-            <th>Grado de escolaridad</th>
-            <th>Institución</th>
-            <th>Título obtenido</th>
-            <th>Fecha de terminación</th>
-            <th>Ocupaciones</th>
-            <th>Extensión</th>
-            <th>Roles</th>
-            <th>Acceso sistema</th>>
-        </tr>
+    <tr>
+        <th>Tipo Documento</th>
+        <th>Ciudad de Expedición Documento</th>
+        <th>Número de Documento</th>
+        <th>Nombre Completo</th>
+        <th>Fecha de Nacimiento</th>
+        <th>Correo Electrónico</th>
+        <th>Celular</th>
+        <th>Género</th>
+        <th>Grupo sanguineo</th>
+        <th>Estrato Social</th>
+        <th>Dirección</th>
+        <th>Lugar de residencia</th>
+        <th>Etnia a la que pertenece</th>
+        <th>¿Tiene algún grado de discapacidad?</th>
+        <th>¿Cuál es el grado de discapacidad?</th>
+        <th>Eps</th>
+        <th>Otra eps</th>
+        <th>Grado de escolaridad</th>
+        <th>Institución</th>
+        <th>Título obtenido</th>
+        <th>Fecha de terminación</th>
+        <th>Ocupaciones</th>
+        <th>Roles</th>
+        <th>Acceso sistema</th>
+    </tr>
     </thead>
     <tbody>
-        @forelse($users as $user)
+    @forelse($users as $user)
         <tr>
             <td>
-                {{isset($user->infocenter->nodo->entidad)? $user->infocenter->nodo->entidad->nombre : 'No registra'}}
+                {{isset($user->tipodocumento) ? $user->tipodocumento : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userTipoDocuento()}}
+                {{isset($user->expedicion) ? $user->expedicion : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userLugarExpedicionDocumento()}}
+                {{isset($user->documento) ? $user->documento : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userDocumento()}}
+                {{isset($user->usuario) ? $user->usuario : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userFullName()}}
+                {{isset($user->fechanacimiento) ? $user->fechanacimiento : __('No register')}}
+
             </td>
             <td>
-                {{$user->present()->userFechaNacimiento()}}
-            </td>
-            <td>
-                {{$user->present()->userEmail()}}
+                {{isset($user->email) ? $user->email : __('No register')}}
             </td>
             <td>
                 {{isset($user->celular) ? $user->celular : (isset($user->telefono) ? $user->telefono : 'No registra')}}
             </td>
             <td>
-                {{$user->present()->userGenero()}}
+                {{isset($user->genero) ? $user->genero : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userGrupoSanguineo()}}
+                {{isset($user->grupo_sanguineo) ? $user->grupo_sanguineo : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userEstrato()}}
+                {{isset($user->estrato) ? $user->estrato : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userDireccion()}}
+                {{isset($user->direccion) ? $user->direccion : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userLugarResidencia()}}
+                {{isset($user->residencia) ? $user->residencia : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userEtnia()}}
+                {{isset($user->etnia) ? $user->etnia : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userGradoDiscapacidad()}}
+                {{isset($user->grado_discapacidad) ? $user->grado_discapacidad : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userDescripcionGradoDiscapacidad()}}
+                {{isset($user->descripcion_grado_discapacidad) ? $user->descripcion_grado_discapacidad : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userEps()}}
+                {{isset($user->eps) ? $user->eps : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userEps()}}
+                {{isset($user->eps) ? $user->eps : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userOtraEps()}}
+                {{isset($user->otra_eps) ? $user->otra_eps : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userInstitucion()}}
+                {{isset($user->institucion) ? $user->institucion : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userTituloObtenido()}}
+                {{isset($user->titulo_obtenido) ? $user->titulo_obtenido : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userFechaTerminacion()}}
+                {{isset($user->fecha_terminacion) ? $user->fecha_terminacion : __('No register')}}
             </td>
             <td>
-                {{$user->present()->userOcupacionesNames()}}
-            </td>
-            <td>{{isset($user->infocenter)? $user->extension : 'No registra'}}</td>
-            <td>
-                {{ $user->present()->userRolesNames()}}
+                {{isset($user->ocupaciones) ? $user->ocupaciones : __('No register')}}
             </td>
             <td>
-                {{ $user->present()->userAcceso()}}
+                {{isset($user->roles) ? $user->roles : __('No register')}}
+            </td>
+            <td>
+                {{$user->estado == \App\User::IsActive() && $user->deleted_at == null ? 'Habilitado' : 'Inhabilitado desde:'. optional($user->deleted_at)->isoFormat('DD/MM/YYYY')}}
             </td>
         </tr>
-        @empty
-            No se encontraron resultados
-        @endforelse
+    @empty
+        No se encontraron resultados
+    @endforelse
     </tbody>
 </table>

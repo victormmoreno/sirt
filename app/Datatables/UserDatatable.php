@@ -2,9 +2,10 @@
 
 namespace App\Datatables;
 
+use App\User;
+
 class UserDatatable
 {
-
     public function datatableUsers($users)
     {
         return datatables()->of($users)
@@ -16,24 +17,21 @@ class UserDatatable
                 return $data->tipodocumento;
             })
             ->editColumn('nombrecompleto', function ($data) {
-                return $data->usuario;
+                return !empty($data->usuario) ? $data->usuario : __('No register');
             })
             ->editColumn('celular', function ($data) {
-                return !empty($data->celular) ? $data->celular : 'No Registra';
+                return !empty($data->celular) ? $data->celular : __('No register');
             })
             ->editColumn('roles', function ($data) {
-                return $data->roles;
+                return !empty($data->roles) ? $data->roles : __('No register');
             })
             ->editColumn('login', function ($data) {
-                return isset($data->ultimo_login) ? $data->ultimo_login->isoFormat('DD/MM/YYYY') : 'No Registra';
+                return isset($data->ultimo_login) ? $data->ultimo_login->isoFormat('DD/MM/YYYY') : __('No register');
             })
             ->editColumn('state', function ($data) {
-                //return $data;
-                return "";
+                return $data->estado == User::IsActive() && $data->deleted_at == null ? '<div class="chip bg-success  white-text">Habilitado</div>' : '<div class="chip bg-danger  white-text">Inhabilitado desde:'.  optional($data->deleted_at)->isoFormat('DD/MM/YYYY').'</div>';
             })
             ->rawColumns(['tipodocumento', 'nombrecompleto', 'detail', 'celular', 'roles', 'login', 'state'])
             ->make(true);
     }
-
-    /*=====  End of metodo para mostrar todos los usuarios en datatables  ======*/
 }
