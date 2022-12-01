@@ -92,7 +92,7 @@ class MaterialPolicy
      */
     public function index(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsDinamizador(), User::IsExperto()]) && session()->has('login_role') && session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsExperto();
+        return (bool) $user->hasAnyRole([$user->IsActivador(), $user->IsDinamizador(), $user->IsExperto(), $user->IsAdministrador()]);
     }
 
     /**
@@ -118,6 +118,30 @@ class MaterialPolicy
     public function create(User $user)
     {
         return (bool) $user->hasAnyRole([User::IsDinamizador(), User::IsExperto(), User::IsAdministrador()]);
+    }
+
+    /**
+     * Determina si el usuario puede importar información de materiales
+     *
+     * @param  \App\User  $user
+     * @return mixed
+     * @author dum
+     */
+    public function import(User $user)
+    {
+        return (bool) $user->hasAnyRole([$user->IsDinamizador(), $user->IsExperto(), $user->IsAdministrador()]);
+    }
+
+    /**
+     * Determina si el usuario puede descargar información de materiales
+     *
+     * @param  \App\User  $user
+     * @return mixed
+     * @author dum
+     */
+    public function download(User $user)
+    {
+        return (bool) $user->hasAnyRole([$user->IsDinamizador(), $user->IsExperto(), $user->IsAdministrador()]);
     }
 
     /**

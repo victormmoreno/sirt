@@ -23,7 +23,7 @@
             <div class="card">
                 <div class="card-content">
                     <div class="row">
-                        <div class="col s12 m8 l8">
+                        <div class="col s12 m4 l4">
                             <div class="center-align">
                                 <span class="card-title center-align primary-text">
                                     Materiales de Formación {{ config('app.name')}}
@@ -31,8 +31,18 @@
                             </div>
                         </div>
                         @can('create', App\Models\Material::class)
-                            <div class="col s12 m4 l4 right">
+                            <div class="right">
                                 <a  href="{{route('material.create')}}" class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo Material</a>
+                            </div>
+                        @endcan
+                        @can('import', App\Models\Material::class)
+                            <div class="right">
+                                <a  href="" class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Importar materiales</a>
+                            </div>
+                        @endcan
+                        @can('download', App\Models\Material::class)
+                            <div class="right">
+                                <a  href="" class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Descargar materiales</a>
                             </div>
                         @endcan
                     </div>

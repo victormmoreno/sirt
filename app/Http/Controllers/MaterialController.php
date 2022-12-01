@@ -96,9 +96,8 @@ class MaterialController extends Controller
      */
     public function index(MaterialDatatable $materialDatatable)
     {
-
+        $this->authorize('index', Material::class);
         if (request()->ajax()) {
-
             if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
                 $nodo       = auth()->user()->dinamizador->nodo->id;
                 $materiales = $this->getMaterialRepository()->getInfoDataMateriales()
@@ -117,10 +116,8 @@ class MaterialController extends Controller
                         $query->where('id', $linea);
                     })->orderBy('nombre')->get();
             }
-
             return $materialDatatable->indexDatatable($materiales);
         }
-
         return view('materiales.index', [
             'nodos' => $this->getNodoRepository()->getSelectNodo(),
         ]);
