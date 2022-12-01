@@ -4,7 +4,18 @@ namespace App\Http\Controllers\UsoInfraestructura;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsoInfraestructura\UsoInfraestructuraFormRequest;
-use App\Models\{ UsoInfraestructura, Actividad, Talento, Proyecto, Nodo, Fase, Equipo, Gestor, LineaTecnologica, Material, Entidad};
+use App\Models\{Articulation,
+    UsoInfraestructura,
+    Actividad,
+    Talento,
+    Proyecto,
+    Nodo,
+    Fase,
+    Equipo,
+    Gestor,
+    LineaTecnologica,
+    Material,
+    Entidad};
 use App\Datatables\UsoInfraestructuraDatatable;
 use App\Repositories\Repository\UserRepository\GestorRepository;
 use App\Repositories\Repository\{LineaRepository, ProyectoRepository,  UsoInfraestructuraRepository};
@@ -599,25 +610,22 @@ class UsoInfraestructuraController extends Controller
     public function articulacionesForUser()
     {
         $artulaciones = $this->getDataArticulaciones();
-
         if (request()->ajax()) {
-
             return datatables()->of($artulaciones)
                 ->addColumn('checkbox', function ($data) {
                     $checkbox = '
-                    <a class="btn cyan m-b-xs" onclick="asociarArticulacionAUsoInfraestructura(' . $data->id . ', \'' . $data->present()->articulacionCode() . '\', \'' . $this->reemplezarComillas($data->present()->articulacionName()) . '\')">
+                    <a class="btn cyan m-b-xs" onclick="asociarArticulacionAUsoInfraestructura(' . $data->id . ', \'' . $data->present()->articulationCode() . '\', \'' . $this->reemplezarComillas($data->present()->articulationName()) . '\')">
                         <i class="material-icons">done_all</i>
                     </a>';
-
                     return $checkbox;
                 })->editColumn('codigo_actividad', function ($data) {
-                    return $data->present()->articulacionCode();
+                    return $data->present()->articulationCode();
                 })
                 ->editColumn('nombre', function ($data) {
-                    return $data->present()->articulacionName();
+                    return $data->present()->articulationName();
                 })
                 ->editColumn('fase', function ($data) {
-                    return $data->fase->nombre;
+                    return $data->present()->articulationPhase();
                 })
                 ->rawColumns(['checkbox', 'codigo_actividad', 'nombre', 'fase'])->make(true);
         } else {
@@ -636,7 +644,7 @@ class UsoInfraestructuraController extends Controller
         ];
 
         $relations = [
-            'fase'                => function ($query) {
+            'phase'                => function ($query) {
                 $query->select('id', 'nombre');
             },
         ];
@@ -644,11 +652,20 @@ class UsoInfraestructuraController extends Controller
         if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
             return [];
         }elseif(Session::has('login_role') && Session::get('login_role') == User::IsArticulador()) {
-
-            return[];
+            return   Articulation::query()->with($relations)
+                        ->whereHas('articulationstage', function ($query) {
+                            $query->where('node_id', auth()->user()->articulador->nodo_id);
+                        })
+                        ->whereIn('phase_id', $fase)
+                        ->get();
         }
         elseif (Session::has('login_role') && Session::get('login_role') == User::IsTalento()) {
-            return [];
+            return Articulation::query()->with($relations)
+                ->whereHas('users', function ($query) use ($user) {
+                    $query->where('documento', $user);
+                })
+                ->whereIn('fase_id', $fase)
+                ->get();
         } else {
             response()->json([
                 'error' => 'no tienes permisos'
@@ -810,8 +827,45 @@ class UsoInfraestructuraController extends Controller
     public function talentosPorArticulacion(int $id)
     {
         if (request()->ajax()) {
+            $articulacionNodo = Articulation::findOrFail($id)->articulationstage->node->id;
+            $fase = [
+                Fase::IsInicio(),
+                Fase::IsEjecucion(),
+                Fase::IsCierre(),
+            ];
 
-            return ;
+            $articulacion = Articulation::with([
+                'articulationstage.createdBy'=> function($query){
+                    $query->select('id', 'documento', 'nombres', 'apellidos');
+                }])
+                ->whereIn('phase_id', $fase)
+                ->findOrFail($id);
+
+            $lineastecnologicas = LineaTecnologica::join('lineastecnologicas_nodos', 'lineastecnologicas_nodos.linea_tecnologica_id', '=', 'lineastecnologicas.id')
+                ->where('lineastecnologicas_nodos.nodo_id', $articulacionNodo)
+                ->get();
+
+            $equipos = Equipo::where('nodo_id', $articulacionNodo)->get();
+
+            $materiales = Material::select('materiales.id as material_id', 'materiales.codigo_material', 'materiales.nombre as material_nombre', 'materiales.marca as material_marca', 'presentaciones.nombre as presentacion_nombre', 'medidas.nombre as medida_nombre')
+                ->join('presentaciones', 'presentaciones.id', 'materiales.presentacion_id')
+                ->join('medidas', 'medidas.id', 'materiales.medida_id')
+                ->where('materiales.nodo_id', $articulacionNodo)
+                ->get();
+
+            $talentos = $articulacion->users()->with([
+                'talento'=> function($query){
+                    $query->select('id', 'user_id');
+                }
+            ])->get();
+
+            return response()->json([
+                'articulacion'       => $articulacion,
+                'lineastecnologicas' => $lineastecnologicas,
+                'equipos'            => $equipos,
+                'materiales'         => $materiales,
+                'talentos' => $talentos
+            ]);
         } else {
             abort('403');
         }

@@ -37,12 +37,10 @@ class UsoInfraestructuraRepository
         } else if (Session::get('login_role') == User::IsArticulador() || Session::get('login_role') == User::IsTalento()) {
             if($request->filled('txttipousoinfraestructura') && $request->txttipousoinfraestructura == UsoInfraestructura::IsIdea()){
                 $asesorable = \App\Models\Idea::where('codigo_idea', explode(" - ", $request->txtactividad)[0])
-            ->first();
-            }
-            // else if($request->filled('txttipousoinfraestructura') && $request->txttipousoinfraestructura == UsoInfraestructura::IsArticulacion()){
-
-            // }
-
+                    ->first();
+            }else if($request->filled('txttipousoinfraestructura') && $request->txttipousoinfraestructura == UsoInfraestructura::IsArticulacion())
+                $asesorable = \App\Models\Articulation::where('code', explode(" - ", $request->txtactividad)[0])
+                    ->first();
             $model = $asesorable;
         }
         //llamado de metodo para guardar un uso de infraestructura
@@ -134,10 +132,11 @@ class UsoInfraestructuraRepository
             $asesor = null;
             if($usoInfraestructura->asesorable_type == Proyecto::class){
                 $asesor = User::where('id', $value)->first();
+            }else if($usoInfraestructura->asesorable_type == \App\Models\Articulation::class){
+                $asesor = User::where('id', $value)->first();
             }else if($usoInfraestructura->asesorable_type == \App\Models\Idea::class){
                 $asesor = User::where('id', $value)->first();
             }
-
             if(isset($asesor->gestor) && \Session::get('login_role') == User::IsGestor()){
                 $honorarioAsesor = $asesor->gestor->honorarios;
             }else if(isset($asesor->articulador) && \Session::get('login_role') == User::IsArticulador()){
