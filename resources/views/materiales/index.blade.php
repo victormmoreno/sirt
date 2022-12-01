@@ -37,12 +37,12 @@
                         @endcan
                         @can('import', App\Models\Material::class)
                             <div class="right">
-                                <a  href="" class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Importar materiales</a>
+                                <a  href="{{route('materiales.import')}}" class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Importar materiales</a>
                             </div>
                         @endcan
                         @can('download', App\Models\Material::class)
                             <div class="right">
-                                <a  href="" class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Descargar materiales</a>
+                                <a  href="{{route('download.materiales')}}" class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Descargar materiales</a>
                             </div>
                         @endcan
                     </div>

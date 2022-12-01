@@ -4,10 +4,9 @@ var selectMaterialesPorNodo = {
         if (!isset(nodo)) {
             nodo = 0;
         }
+        
         $('#materiales_table').dataTable().fnDestroy();
         if (isset(nodo)) {
-            
-            
             $('#materiales_table').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"

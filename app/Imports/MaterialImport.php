@@ -24,6 +24,37 @@ class MaterialImport implements ToCollection, WithHeadingRow
         $this->nodo = $nodo;
         $this->validaciones = new ValidacionesImport;
     }
+
+    /**
+     * Validar encabezado
+     *
+     * @param Collection $row
+     * @return bool
+     * @author dum
+     **/
+    public function validar_encabezado(Collection $row)
+    {
+        $encabezado = [
+            'codigo_de_material',
+            'linea',
+            'nodo',
+            'nombre',
+            'fecha_de_adquisicion',
+            'tipo_de_material',
+            'categoria',
+            'presentacion',
+            'medida',
+            'cantidad',
+            'valor_de_compra',
+            'proveedor',
+            'marca'
+        ];
+        // foreach
+        // if () {
+
+        // }
+    }
+
     /**
     * @param Collection $collection
     */
@@ -32,8 +63,22 @@ class MaterialImport implements ToCollection, WithHeadingRow
         DB::beginTransaction();
         $validacion = null;
         try {
+            $this->validar_encabezado($rows->first());
             foreach ($rows as $key => $row) {
                 // quitar espacios a los campos que no los necesita
+                // codigo_de_material
+                // linea
+                // nodo
+                // nombre
+                // fecha_de_adquisicion
+                // tipo_de_material
+                // categoria
+                // presentacion
+                // medida
+                // cantidad
+                // valor_de_compra
+                // proveedor
+                // marca
                 $row['linea'] = ltrim(rtrim($row['linea']));
                 $row['tipo_material'] = ltrim(rtrim($row['tipo_material']));
                 $row['categoria_material'] = ltrim(rtrim($row['categoria_material']));

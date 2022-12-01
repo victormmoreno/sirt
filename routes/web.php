@@ -174,6 +174,7 @@ Route::get('/materiales/getmaterialespornodo/{nodo}', 'MaterialController@getMat
 Route::get('/materiales/getmaterial/{id}', 'MaterialController@getMaterial')
     ->name('material.getmaterial');
 
+Route::get('materiales/importar', 'MaterialController@importar')->name('materiales.import');
 Route::resource('materiales', 'MaterialController', [
     'as' => 'materiales',
 ])->names([
@@ -676,16 +677,18 @@ Route::group(
         Route::get('/export_proyectos_actuales/{idnodo}/{hoja}', 'Excel\IndicadorController@exportIndicadoresProyectosActuales')->name('indicador.proyectos.actuales.export.excel');
         Route::get('/export_trazabilidad/{idproyecto}', 'Excel\ProyectoController@exportTrazabilidadProyecto')->name('excel.proyecto.trazabilidad');
         Route::get('/import_metas_form', 'IndicadorController@form_import_metas')->name('indicadores.form.metas')->middleware('role_session:Activador');
+        Route::get('/export_materiales', 'Excel\MaterialController@download')->name('download.materiales');
         
         //Rutas para la generación de excel del módulo de nodo
         Route::get('/excelnodo', 'Excel\NodoController@exportQueryAllNodo')
         ->middleware('role_session:Activador')
         ->name('excel.excelnodo');
-
+        
         Route::get('/exportexcelfornodo/{nodo}', 'Excel\NodoController@exportQueryForNodo')
         ->middleware('role_session:Activador|Dinamizador')
         ->name('excel.exportexcelfornodo');
-
+        
+        Route::post('/import_materiales', 'Excel\MaterialController@import')->name('import.materiales');
         Route::post('/import_metas', 'Excel\IndicadorController@importIndicadoresAll')->name('indicadores.import.metas')->middleware('role_session:Activador');
     }
 );

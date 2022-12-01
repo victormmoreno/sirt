@@ -150,6 +150,21 @@ class MaterialController extends Controller
     }
 
     /**
+     * Muestra el formulario para importar materiales de formación
+     * 
+     * @return Response
+     * @author dum
+     */
+    public function importar()
+    {
+        if(!request()->user()->can('import', Material::class)) {
+            alert('No autorizado', 'No puedes importar materiales de este nodo', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+        return view('materiales.import');
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response

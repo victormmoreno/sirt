@@ -36,6 +36,37 @@ class MaterialRepository
         ]);
     }
 
+    /**
+     * Consulta información de los materiales de formación
+     * 
+     * @return Builder
+     * @author dum
+     */
+    public function consultar()
+    {
+        return Material::select(
+            'codigo_material',
+            'e.nombre as nodo',
+            'materiales.nombre as material',
+            'fecha',
+            'tm.nombre as tipo_material',
+            'cm.nombre as categoria_material',
+            'm.nombre as medida',
+            'cantidad',
+            'valor_compra',
+            'proveedor',
+            'marca',
+            'lt.nombre as linea'
+        )
+        ->join('nodos as n', 'n.id', '=', 'materiales.nodo_id')
+        ->join('entidades as e', 'e.id', '=', 'n.entidad_id')
+        ->join('tiposmateriales as tm', 'tm.id', '=', 'materiales.tipomaterial_id')
+        ->join('categoria_material as cm', 'cm.id', '=', 'materiales.categoria_material_id')
+        ->join('presentaciones as p', 'p.id', '=', 'materiales.presentacion_id')
+        ->join('lineastecnologicas as lt', 'lt.id', '=', 'materiales.lineatecnologica_id')
+        ->join('medidas as m', 'm.id', '=', 'materiales.medida_id');
+    }
+
     public function store($request)
     {
 
