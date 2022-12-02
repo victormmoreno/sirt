@@ -20,7 +20,25 @@ class UsoInfraestructuraPolicy
      */
     public function index(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsArticulador(), User::IsTalento(), User::IsApoyoTecnico()]) && session()->get('login_role') != User::IsIngreso() || session()->get('login_role') != User::IsInfocenter();
+        return (bool) session()->has('login_role')
+            && (
+                session()->get('login_role') != User::IsInfocenter() ||
+                session()->get('login_role') != User::IsIngreso() ||
+                session()->get('login_role') != User::IsDesarrollador()
+            );
+    }
+
+    /**
+     * Determine if the given articulations can be view listNodes by the user.
+     *
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function listNodes(User $user): bool
+    {
+        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador()])
+            && session()->has('login_role')
+            && (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador());
     }
 
     /**

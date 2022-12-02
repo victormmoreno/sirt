@@ -161,63 +161,34 @@ class UsoInfraestructuraController extends Controller
      */
     public function index(Request $request, UsoInfraestructuraDatatable $usoDatatable)
     {
-        $this->authorize('index', UsoInfraestructura::class);
-        switch (\Session::get('login_role')) {
-            case User::IsAdministrador():
-                $nodo = $request->filter_nodo;
-                $asesor = $request->filter_gestor;
-                $user = null;
-                $actividad = null;
-                break;
-            case User::IsDinamizador():
-                $nodo = auth()->user()->dinamizador->nodo_id;
-                $asesor = $request->filter_gestor;
-                $user = null;
-                $actividad = null;
-                break;
-            case User::IsGestor():
-                $nodo = auth()->user()->gestor->nodo_id;
-                $user = auth()->user()->id;
-                $asesor = auth()->user()->id;
-                $actividad = $request->filter_actividad;
-                break;
-            case User::IsArticulador():
-                $nodo = auth()->user()->articulador->nodo_id;
-                $user = auth()->user()->id;
-                $asesor = auth()->user()->id;
-                $actividad = $request->filter_actividad;
-                break;
-            case User::IsApoyoTecnico():
-                $nodo = auth()->user()->apoyotecnico->nodo_id;
-                $user = auth()->user()->id;
-                $asesor = auth()->user()->id;
-                $actividad = $request->filter_actividad;
-                break;
-            case User::IsTalento():
-                $nodo = null;
-                $user = auth()->user()->id;
-                $asesor = null;
-                $actividad = $request->filter_actividad;
-                break;
-            default:
-                return abort('403');
-                break;
+
+        if (request()->user()->cannot('index', UsoInfraestructura::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
         }
+        $talentUser = $this->checkRoleAuth($request)['talent'];
+        $nodeUser = $this->checkRoleAuth($request)['node'];
         if ($request->ajax()) {
             $usos = [];
-            if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null) && ($request->filled('filter_gestor') || $request->filter_gestor == null)  && ($request->filled('filter_actividad') || $request->filter_actividad == null)) {
-                $usos = UsoInfraestructura::nodoAsesoria($nodo)
-                    ->yearAsesoria($request->filter_year)
-                    ->asesoria($actividad, $user)
-                    ->asesor($asesor)
-                    ->orderBy('usoinfraestructuras.created_at', 'desc')
-                    ->get();
-            }
+            // if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null) && ($request->filled('filter_gestor') || $request->filter_gestor == null)  && ($request->filled('filter_actividad') || $request->filter_actividad == null)) {
+            //     $usos = UsoInfraestructura::nodoAsesoria($nodo)
+            //         ->yearAsesoria($request->filter_year)
+            //         ->asesoria($actividad, $user)
+            //         ->asesor($asesor)
+            //         ->orderBy('usoinfraestructuras.created_at', 'desc')
+            //         ->get();
+            // }
             return $usoDatatable->indexDatatable($usos);
         }
-        switch (Session::get('login_role')) {
+
+        $nodes = null;
+        if(request()->user()->can('listNodes', UsoInfraestructura::class)) {
+            $nodes = Nodo::SelectNodo()->get();
+        }
+        return view('usoinfraestructura.index', ['nodos' => $nodes]);
+        /*switch (Session::get('login_role')) {
             case User::IsAdministrador():
-                return view('usoinfraestructura.administrador.index', [
+                return view('usoinfraestructura.index', [
                     'nodos' =>  Entidad::has('nodo')->with('nodo')->get()->pluck('nombre', 'nodo.id'),
                 ]);
                 break;
@@ -242,12 +213,7 @@ class UsoInfraestructuraController extends Controller
                 break;
             case User::IsTalento():
                 $user = auth()->user()->id;
-                $proyectos = $this->getUsoInfraestructuraRepository()->getProyectosForUser($user)
-                    ->where('user_talento.id', $user)
-                    ->pluck('nombre', 'proyectos.id');
-                return view('usoinfraestructura.index', [
-                    'proyectos' => $proyectos,
-                ]);
+
                 break;
             default:
                 return abort('403');
@@ -257,7 +223,46 @@ class UsoInfraestructuraController extends Controller
 
         return view('usoinfraestructura.index', [
             'nodos' => Nodo::selectNodo()->pluck('nodos', 'id'),
-        ]);
+        ]);*/
+    }
+
+    /**
+     * method to validate the authenticated role
+     * @return void
+     */
+    private function checkRoleAuth(Request $request)
+    {
+        $talent = null;
+        $node = null;
+        switch (\Session::get('login_role')) {
+            case User::IsAdministrador():
+                $node = $request->filter_nodo;
+                break;
+            case User::IsActivador():
+                $node = $request->filter_nodo;
+                break;
+            case User::IsDinamizador():
+                $node = auth()->user()->dinamizador->nodo_id;
+                break;
+            case User::IsArticulador():
+                $node = auth()->user()->articulador->nodo_id;
+                break;
+            case User::IsGestor():
+                $node = auth()->user()->gestor->nodo_id;
+                break;
+            case User::IsApoyoTecnico():
+                $node = auth()->user()->apoyotecnico->nodo_id;
+                break;
+            case User::IsTalento():
+                $node = null;
+                $talent = auth()->user()->id;
+                break;
+            default:
+                $talent = null;
+                $node = null;
+                break;
+        }
+        return ['talent' => $talent, 'node' => $node];
     }
 
     private function getUsosDeProyectos($proyectos)
