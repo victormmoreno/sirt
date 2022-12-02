@@ -97,27 +97,6 @@ class MaterialController extends Controller
     public function index(MaterialDatatable $materialDatatable)
     {
         $this->authorize('index', Material::class);
-        if (request()->ajax()) {
-            if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
-                $nodo       = auth()->user()->dinamizador->nodo->id;
-                $materiales = $this->getMaterialRepository()->getInfoDataMateriales()
-                    ->whereHas('nodo', function ($query) use ($nodo) {
-                        $query->where('id', $nodo);
-                    })->get();
-            } elseif (session()->has('login_role') && session()->get('login_role') == User::IsExperto()) {
-
-                $linea      = auth()->user()->gestor->lineatecnologica->id;
-                $nodo       = auth()->user()->gestor->nodo->id;
-                $materiales = $this->getMaterialRepository()->getInfoDataMateriales()
-                    ->whereHas('nodo', function ($query) use ($nodo) {
-                        $query->where('id', $nodo);
-                    })
-                    ->whereHas('lineatecnologica', function ($query) use ($linea) {
-                        $query->where('id', $linea);
-                    })->orderBy('nombre')->get();
-            }
-            return $materialDatatable->indexDatatable($materiales);
-        }
         return view('materiales.index', [
             'nodos' => $this->getNodoRepository()->getSelectNodo(),
         ]);
@@ -133,19 +112,17 @@ class MaterialController extends Controller
     public function getMaterialesPorNodo(MaterialDatatable $materialDatatable, $nodo)
     {
         $this->authorize('getMaterialesPorNodo', Material::class);
-        if (session()->get('login_role') == User::IsDinamizador()) {
-            $nodo = auth()->user()->dinamizador->nodo->id;
-        } elseif (session()->get('login_role') == User::IsExperto()) {
-            $nodo = auth()->user()->gestor->nodo->id;
-        } else {
-            $nodo = $nodo;
+        if ($nodo == 0) {
+            $nodo = request()->user()->getNodoUser();
         }
-        $materiales = $this->getMaterialRepository()->getInfoDataMateriales()
-            ->whereHas('nodo', function ($query) use ($nodo) {
-                $query->where('id', $nodo);
-            })->orderBy('nombre')->get();
+        if (session()->get('login_role') == User::IsExperto()) {
+            $linea = auth()->user()->gestor->lineatecnologica_id;
+        }
+        $materiales = $this->getMaterialRepository()->consultar()->where('n.id', $nodo);
 
-        return $materialDatatable->getMaterialesPorNodoDatatable($materiales);
+        isset($linea) ? $materiales = $materiales->where('lt.id', $linea) : $materiales;
+
+        return $materialDatatable->getMaterialesPorNodoDatatable($materiales->get());
 
     }
 
@@ -220,7 +197,10 @@ class MaterialController extends Controller
     public function show($id)
     {
         $material = $this->getMaterialRepository()->getInfoDataMateriales()->findOrFail($id);
-
+        if(!request()->user()->can('show', $material)) {
+            alert('No autorizado', 'No puedes ver la información de este material de formación.', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
         return view('materiales.show', [
             'material' => $material,
         ]);

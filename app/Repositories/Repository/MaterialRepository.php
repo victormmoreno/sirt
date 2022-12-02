@@ -49,6 +49,8 @@ class MaterialRepository
             'e.nombre as nodo',
             'materiales.nombre as material',
             'fecha',
+            'materiales.id',
+            'p.nombre as presentacion',
             'tm.nombre as tipo_material',
             'cm.nombre as categoria_material',
             'm.nombre as medida',
@@ -64,7 +66,9 @@ class MaterialRepository
         ->join('categoria_material as cm', 'cm.id', '=', 'materiales.categoria_material_id')
         ->join('presentaciones as p', 'p.id', '=', 'materiales.presentacion_id')
         ->join('lineastecnologicas as lt', 'lt.id', '=', 'materiales.lineatecnologica_id')
-        ->join('medidas as m', 'm.id', '=', 'materiales.medida_id');
+        ->join('medidas as m', 'm.id', '=', 'materiales.medida_id')
+        ->orderBy('nodo')
+        ->orderBy('material');
     }
 
     public function store($request)

@@ -5,10 +5,12 @@ namespace App\Exports\Materiales;
 use Illuminate\Contracts\View\View;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use App\Exports\FatherExport;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Events\{AfterSheet};
 
-class MaterialesExport extends FatherExport implements WithColumnWidths
+class MaterialesExport extends FatherExport implements WithColumnWidths, WithColumnFormatting
 {
     public function __construct($query) {
         $this->setQuery($query);
@@ -20,6 +22,13 @@ class MaterialesExport extends FatherExport implements WithColumnWidths
         return view('exports.materiales.index', [
             'materiales' => $this->getQuery()
         ]);
+    }
+
+    public function columnFormats(): array
+    {
+        return [
+            'E' => NumberFormat::FORMAT_DATE_YYYYMMDD,
+        ];
     }
 
     /**

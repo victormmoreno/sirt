@@ -8288,10 +8288,9 @@ var selectMaterialesPorNodo = {
         if (!isset(nodo)) {
             nodo = 0;
         }
+        
         $('#materiales_table').dataTable().fnDestroy();
         if (isset(nodo)) {
-            
-            
             $('#materiales_table').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -8325,8 +8324,8 @@ var selectMaterialesPorNodo = {
                     width: '30%'
                 },
                 {
-                    data: 'nombre',
-                    name: 'nombre',
+                    data: 'material',
+                    name: 'material',
                     width: '30%'
                 }, {
                     data: 'presentacion',
@@ -8352,15 +8351,12 @@ var selectMaterialesPorNodo = {
                     name: 'valor_compra',
                     width: '15%'
                 },
-
                 {
                     data: 'detail',
                     name: 'detail',
                     width: '15%'
                 }, ],
             });
-
-
         }
         
     },

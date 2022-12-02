@@ -1,3 +1,7 @@
+@php
+    $dates = new Carbon\Carbon();
+    // Carbon::parse($row['fecha_de_adquisicion'])->format('Y-m-d');
+@endphp
 <table>
     <thead>
     <tr>
@@ -6,7 +10,7 @@
         <th>Linea</th>
         <th>Nombre</th>
         <th>Fecha de adquisición</th>
-        <th>Tipo de material</th>
+        {{-- <th>Tipo de material</th> --}}
         <th>Categoria</th>
         <th>Presentación</th>
         <th>Medida</th>
@@ -23,8 +27,8 @@
             <td>{{ $material->nodo }}</td>
             <td>{{ $material->linea }}</td>
             <td>{{ $material->material }}</td>
-            <td>{{ $material->fecha }}</td>
-            <td>{{ $material->tipo_material }}</td>
+            <td>{{ $dates::parse($material->fecha)->format('Y-m-d') }}</td>
+            {{-- <td>{{ $material->tipo_material }}</td> --}}
             <td>{{ $material->categoria_material }}</td>
             <td>{{ $material->presentacion }}</td>
             <td>{{ $material->medida }}</td>

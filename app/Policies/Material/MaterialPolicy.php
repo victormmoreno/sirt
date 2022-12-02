@@ -4,6 +4,7 @@ namespace App\Policies\Material;
 
 use App\User;
 use App\Models\Material;
+use Illuminate\Support\Str;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MaterialPolicy
@@ -117,7 +118,8 @@ class MaterialPolicy
      */
     public function create(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsDinamizador(), User::IsExperto(), User::IsAdministrador()]);
+
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsExperto(), $user->IsAdministrador()]);
     }
 
     /**
@@ -129,7 +131,7 @@ class MaterialPolicy
      */
     public function import(User $user)
     {
-        return (bool) $user->hasAnyRole([$user->IsDinamizador(), $user->IsExperto(), $user->IsAdministrador()]);
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsExperto(), $user->IsAdministrador()]);
     }
 
     /**
@@ -163,9 +165,18 @@ class MaterialPolicy
      * @param  \App\Models\Material  $material
      * @return bool
      */
-    public function show(User $user, $material)
+    public function show(User $user, Material $material)
     {
-        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsDinamizador(), User::IsExperto()]) && (session()->get('login_role') == User::IsDinamizador() && $material->nodo->id == $user->dinamizador->nodo->id) || (session()->get('login_role') == User::IsExperto() && $material->lineatecnologica->id == $user->gestor->lineatecnologica->id && $material->nodo->id == $user->gestor->nodo->id) || session()->get('login_role') == User::IsActivador();
+        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador()) {
+            return true;
+        }
+        if (session()->get('login_role') == $user->IsDinamizador() && $material->nodo_id == $user->dinamizador->nodo_id) {
+            return true;
+        }
+        if (session()->get('login_role') == $user->IsExperto() && $material->lineatecnologica_id == $user->gestor->lineatecnologica_id && $material->nodo_id == $user->gestor->nodo_id) {
+            return true;
+        }
+        return false;
     }
 
 

@@ -4,27 +4,25 @@
   <main class="mn-inner inner-active-sidebar">
     <div class="content">
       <div class="row no-m-t no-m-b">
-        <div class="row">
-              <div class="col s8 m8 l10">
-                  <h5 class="left-align">
-                      <i class="material-icons left">
-                        attach_file
-                      </i>
-                      Metas
-                  </h5>
-              </div>
-              <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
-                  <ol class="breadcrumbs">
-                      <li><a href="{{route('material.index')}}">Inicio</a></li>
-                      <li class="active">Importar</li>
-                  </ol>
-              </div>
+        <div class="row no-m-t no-m-b m-r-lg m-l-lg">
+          <h5 class="left left-align primary-text">
+              <i class="material-icons left">
+                local_library
+              </i>
+              Materiales
+          </h5>
+          <div class="right rigth-align show-on-large hide-on-med-and-down">
+              <ol class="breadcrumbs">
+                  <li><a href="{{route('material.index')}}">Inicio</a></li>
+                  <li class="active">Importar</li>
+              </ol>
           </div>
+        </div>
         <div class="card">
           <div class="card-content">
             <div class="row">
               <div class="center-align">
-                <span class="card-title center-align">Registrar metas</span>
+                <span class="card-title center-align">Importar materiales</span>
               </div>
               <div class="divider"></div>
               <div class="row">

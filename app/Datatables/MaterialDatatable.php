@@ -64,13 +64,13 @@ class MaterialDatatable
                 return '$ ' . number_format($data->valor_compra);
             })
             ->editColumn('nombrelinea', function ($data) {
-                return $data->lineatecnologica->abreviatura . ' - ' . $data->lineatecnologica->nombre;
+                return $data->linea;
             })
             ->editColumn('presentacion', function ($data) {
-                return $data->presentacion->nombre;
+                return $data->presentacion;
             })
             ->editColumn('medida', function ($data) {
-                return $data->medida->nombre;
+                return $data->medida;
             })
             ->rawColumns(['detail', 'nombrelinea', 'valor_unitario', 'valor_compra', 'presentacion', 'medida'])
             ->make(true);

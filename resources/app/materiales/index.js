@@ -40,8 +40,8 @@ var selectMaterialesPorNodo = {
                     width: '30%'
                 },
                 {
-                    data: 'nombre',
-                    name: 'nombre',
+                    data: 'material',
+                    name: 'material',
                     width: '30%'
                 }, {
                     data: 'presentacion',
@@ -67,15 +67,12 @@ var selectMaterialesPorNodo = {
                     name: 'valor_compra',
                     width: '15%'
                 },
-
                 {
                     data: 'detail',
                     name: 'detail',
                     width: '15%'
                 }, ],
             });
-
-
         }
         
     },

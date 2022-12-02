@@ -31,19 +31,13 @@
                             </div>
                         </div>
                         @can('create', App\Models\Material::class)
-                            <div class="right">
-                                <a  href="{{route('material.create')}}" class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo Material</a>
-                            </div>
+                            <a href="{{route('material.create')}}" class="waves-effect waves-grey bg-secondary white-text btn-flat right show-on-large hide-on-med-and-down m-l-xs">Nuevo Material</a>
                         @endcan
                         @can('import', App\Models\Material::class)
-                            <div class="right">
-                                <a  href="{{route('materiales.import')}}" class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Importar materiales</a>
-                            </div>
+                            <a href="{{route('materiales.import')}}" class="waves-effect waves-grey bg-secondary-darken white-text btn-flat right show-on-large hide-on-med-and-down m-l-xs">Importar materiales</a>
                         @endcan
                         @can('download', App\Models\Material::class)
-                            <div class="right">
-                                <a  href="{{route('download.materiales')}}" class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Descargar materiales</a>
-                            </div>
+                            <a href="{{route('download.materiales')}}" class="waves-effect waves-grey bg-secondary-lighten white-text btn-flat right show-on-large hide-on-med-and-down ml-x">Descargar materiales</a>
                         @endcan
                     </div>
                     <div class="row">

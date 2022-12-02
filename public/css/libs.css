@@ -18293,6 +18293,8 @@ select {
     --primary: #39A900;
     --primary-darken: #1b5e20;
     --secondary: #00324D;
+    --secondary-darken: #042e7c;
+    --secondary-lighten: #4dafe4;
     --tertiary: #82DEF0;
     --success: #28a745;
     --info: #17a2b8;
@@ -18333,6 +18335,14 @@ p {
 
 .bg-secondary {
     background-color: var(--secondary) !important;
+}
+
+.bg-secondary-lighten {
+    background-color: var(--secondary-lighten) !important;
+}
+
+.bg-secondary-darken {
+    background-color: var(--secondary-darken) !important;
 }
 
 .bg-tertiary {

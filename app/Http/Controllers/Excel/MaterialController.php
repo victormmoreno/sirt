@@ -35,10 +35,10 @@ class MaterialController extends Controller
         alert('No autorizado', 'No puedes descargar la información de los materiales de este nodo', 'error')->showConfirmButton('Ok', '#3085d6');
         return back();
     }
-    if (session()->get('login_role') == User::IsAdministrador()) {
+    if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsActivador()) {
         $materiales = $this->materialRepository->consultar()->get();
     } else {
-        $materiales = $this->materialRepository->consultar('nodos.id', request()->user()->getNodoUser());
+        $materiales = $this->materialRepository->consultar()->where('n.id', request()->user()->getNodoUser())->get();
     }
     return Excel::download(new MaterialesExport($materiales), 'Materiales de formación.xlsx');
   }
