@@ -213,6 +213,27 @@ class UsoInfraestructura extends Model
         return $query;
     }
 
+    public function scopeNodoAsesoriaQuery($query, $nodo)
+    {
+        if (isset($nodo) && $nodo != null && $nodo != 'all') {
+            $this->scopeNodoAsesoriaProjets($query, $nodo);
+        }
+        return $query;
+    }
+
+    public function scopeNodoAsesoriaProjets($query, $nodo)
+    {
+        if (isset($nodo) && $nodo != null && $nodo != 'all') {
+            $query->select('proyectos.id')
+                ->join('proyectos', function ($join) use ($nodo) {
+                    $join->on('proyectos.id', '=', 'usoinfraestructuras.asesorable_id')
+                    ->where('proyectos.nodo_id', $nodo)
+                    ->where('usoinfraestructuras.asesorable_type', Proyecto::class);
+                });
+        }
+        return $query;
+    }
+
     public function scopeAsesoria($query, $actividad, $user)
     {   if ((session()->has('login_role') && session()->get('login_role') == User::IsArticulador()) && (!empty($user) && $user != null && $user != 'all')) {
             if ((!empty($actividad) && $actividad != null && $actividad != 'all')) {

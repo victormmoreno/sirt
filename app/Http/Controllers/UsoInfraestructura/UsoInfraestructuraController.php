@@ -170,14 +170,19 @@ class UsoInfraestructuraController extends Controller
         $nodeUser = $this->checkRoleAuth($request)['node'];
         if ($request->ajax()) {
             $usos = [];
-            // if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null) && ($request->filled('filter_gestor') || $request->filter_gestor == null)  && ($request->filled('filter_actividad') || $request->filter_actividad == null)) {
-            //     $usos = UsoInfraestructura::nodoAsesoria($nodo)
-            //         ->yearAsesoria($request->filter_year)
-            //         ->asesoria($actividad, $user)
-            //         ->asesor($asesor)
-            //         ->orderBy('usoinfraestructuras.created_at', 'desc')
-            //         ->get();
-            // }
+            if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null)) {
+            $usos = UsoInfraestructura::query()
+
+                    ->nodoAsesoriaQuery($nodeUser)
+                    ->select('usoinfraestructuras.id', 'usoinfraestructuras.created_at')
+
+                    //->nodoAsesoria($nodeUser)
+                    //->yearAsesoria($request->filter_year)
+                    //->asesoria($actividad, $user)
+                    //->asesor($asesor)
+                    ->orderBy('usoinfraestructuras.created_at', 'desc')
+                    ->get();
+            }
             return $usoDatatable->indexDatatable($usos);
         }
 
@@ -186,44 +191,6 @@ class UsoInfraestructuraController extends Controller
             $nodes = Nodo::SelectNodo()->get();
         }
         return view('usoinfraestructura.index', ['nodos' => $nodes]);
-        /*switch (Session::get('login_role')) {
-            case User::IsAdministrador():
-                return view('usoinfraestructura.index', [
-                    'nodos' =>  Entidad::has('nodo')->with('nodo')->get()->pluck('nombre', 'nodo.id'),
-                ]);
-                break;
-            case User::IsDinamizador():
-                $gestores = User::select('gestores.id as idgestor', 'users.id')
-                    ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) as user')
-                    ->join('gestores', 'gestores.user_id', 'users.id')
-                    ->where('gestores.nodo_id', $nodo)
-                    ->role(User::IsGestor())
-                    ->withTrashed()
-                    ->pluck('user', 'idgestor');
-                return view('usoinfraestructura.index', ['gestores' => $gestores]);
-                break;
-            case User::IsGestor():
-                return view('usoinfraestructura.index');
-                break;
-            case User::IsArticulador():
-                return view('usoinfraestructura.index');
-                break;
-            case User::IsApoyoTecnico():
-                return view('usoinfraestructura.index');
-                break;
-            case User::IsTalento():
-                $user = auth()->user()->id;
-
-                break;
-            default:
-                return abort('403');
-                break;
-        }
-
-
-        return view('usoinfraestructura.index', [
-            'nodos' => Nodo::selectNodo()->pluck('nodos', 'id'),
-        ]);*/
     }
 
     /**
@@ -234,35 +201,44 @@ class UsoInfraestructuraController extends Controller
     {
         $talent = null;
         $node = null;
+        $model = null;
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
-                $node = $request->filter_nodo;
+                $node = $request->filter_node;
+                $model = $request->filter_model;
                 break;
             case User::IsActivador():
-                $node = $request->filter_nodo;
+                $node = $request->filter_node;
+                $model = $request->filter_model;
                 break;
             case User::IsDinamizador():
                 $node = auth()->user()->dinamizador->nodo_id;
+                $model = $request->filter_model;
                 break;
             case User::IsArticulador():
                 $node = auth()->user()->articulador->nodo_id;
+                $model = Articulation::class;
                 break;
             case User::IsGestor():
                 $node = auth()->user()->gestor->nodo_id;
+                $model = Proyecto::class;
                 break;
             case User::IsApoyoTecnico():
                 $node = auth()->user()->apoyotecnico->nodo_id;
+                $model = Proyecto::class;
                 break;
             case User::IsTalento():
                 $node = null;
                 $talent = auth()->user()->id;
+                $model = $request->filter_model;
                 break;
             default:
                 $talent = null;
                 $node = null;
+                $model = null;
                 break;
         }
-        return ['talent' => $talent, 'node' => $node];
+        return ['talent' => $talent, 'node' => $node, 'model' => $model];
     }
 
     private function getUsosDeProyectos($proyectos)

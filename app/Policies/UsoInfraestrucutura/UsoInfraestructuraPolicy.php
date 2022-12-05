@@ -5,8 +5,7 @@ namespace App\Policies\UsoInfraestrucutura;
 use App\Models\UsoInfraestructura;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Database\Eloquent\Builder;
-use App\Models\Fase;
+
 
 class UsoInfraestructuraPolicy
 {
@@ -49,19 +48,16 @@ class UsoInfraestructuraPolicy
      */
     public function create(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsArticulador(), User::IsGestor(), User::IsTalento(), User::IsApoyoTecnico()]) && session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsApoyoTecnico() || session()->get('login_role') == User::IsTalento();
+        return (bool) session()->has('login_role')
+        && (
+            session()->get('login_role') == User::IsGestor()
+            || session()->get('login_role') == User::IsArticulador()
+            || session()->get('login_role') == User::IsTalento()
+            || session()->get('login_role') == User::IsApoyoTecnico()
+        );
     }
 
-    /**
-     * Determine whether the user can store usos de infraestructura.
-     *
-     * @param  \App\User  $user
-     * @return bool
-     */
-    public function store(User $user)
-    {
-        return (bool) $user->hasAnyRole([User::IsArticulador(), User::IsGestor(), User::IsTalento(), User::IsApoyoTecnico()]) && session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsApoyoTecnico() || session()->get('login_role') == User::IsTalento();
-    }
+
 
     /**
      * Determine whether the user can get uso ingraestrucutra usos de infraestructura.

@@ -27,38 +27,33 @@
                     <div class="card-content">
                         <div class="row no-m-t no-m-b">
                             <div class="col s12 m12 l12">
-
                                 <div class="mailbox-view">
-                                    <div class="mailbox-view-header center-align ">
-
+                                    <div class="mailbox-view-header center-align">
                                         <div class="row no-m-t no-m-b">
                                             <div class="col s12 m8 l8">
                                                 <span class="card-title center-align absolute-center primary-text">
-                                                    @can('listNodes', \App\Usoinfraestructura::class)
+                                                     @can('listNodes', App\Models\UsoInfraestructura::class)
                                                         Asesorias y usos de Infraestructura
                                                     @else
                                                         Asesorias y usos de Tecnoparque Nodo  {{ \NodoHelper::returnNameNodoUsuario() }}
                                                     @endcan
                                                 </span>
                                             </div>
+                                            @can('create', App\Models\UsoInfraestructura::class)
                                             <div class="col s12 m4 l4 show-on-large hide-on-med-and-down">
-                                                @if(session()->has('login_role') == App\User::IsGestor() || session()->has('login_role') == App\User::IsArticulador())
-                                                    <a  href="{{route('usoinfraestructura.create')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nueva Asesoria</a>
-                                                @else
-                                                    <a  href="{{route('usoinfraestructura.create')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo uso de Infraestructura</a>
-                                                @endif
+                                                <a  href="{{route('usoinfraestructura.create')}}" class="waves-effect bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nueva Asesoria</a>
                                             </div>
+                                            @endcan
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                         <div class="divider">
                         </div>
                         <div class=" mailbox-view mailbox-text">
                             <div class="row no-m-t no-m-b search-tabs-row search-tabs-header">
-                                @can('listNodes', \App\Models\Usoinfraestructura::class)
+                                @can('listNodes', \App\Models\UsoInfraestructura::class)
                                     <div class="input-field col s12 m2 l2">
                                         <label class="active" for="filter_node">Nodo <span class="red-text">*</span></label>
                                         <select name="filter_node" id="filter_node">
@@ -70,7 +65,7 @@
                                             <option value="all" >todos</option>
                                         </select>
                                     </div>
-                                    @endcan
+                                @endcan
                                 <div class="input-field col s12 m2 l2">
                                     <label class="active" for="filter_year">Año <span class="red-text">*</span></label>
                                     <select name="filter_year" id="filter_year">
@@ -80,24 +75,13 @@
                                         <option value="all" >todos</option>
                                     </select>
                                 </div>
-
-                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsTalento()))
-
-                                <div class="input-field col s12 m4 l4">
-                                    <label class="active" for="filter_actividad">Actividad <span class="red-text">*</span></label>
-                                    <select name="filter_actividad" id="filter_actividad">
-                                        <option value="all" >Todas</option>
-                                    </select>
-                                </div>
-                                @endif
-
                                 <div class="col s12 m6 l4 offset-m3 right">
                                     <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_usoinfraestructura"><i class="material-icons">cloud_download</i>Descargar</button>
                                     <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_usoinfraestructura"><i class="material-icons">search</i>Filtrar</button>
                                 </div>
                             </div>
                             <table class="display responsive-table datatable-example dataTable" id="usoinfraestructa_data_table" width="100%">
-                                <thead>
+                                <thead class="bg-primary white-text">
                                     <th width="10%">Fecha</th>
                                     <th width="20%">Asesor</th>
                                     <th width="10%">Tipo Asesoria</th>
@@ -107,18 +91,17 @@
                                     <th width="5%">Asesoría Indirecta</th>
                                     <th width="5%">Detalles</th>
                                 </thead>
-
                             </table>
                         </div>
                     </div>
                 </div>
-                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor()|| session()->get('login_role') == App\User::IsTalento() || session()->get('login_role') == App\User::IsArticulador() ))
+                @can('create', \App\Models\UsoInfraestructura::class)
                 <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
                 <a href="{{route('usoinfraestructura.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="{{session()->has('login_role') == App\User::IsGestor() ? 'Nueva Asesoria' : 'Nuevo uso de Infraestructura'}}">
                         <i class="material-icons">add</i>
                     </a>
                 </div>
-                @endif
+                @endcan
             </div>
         </div>
     </div>

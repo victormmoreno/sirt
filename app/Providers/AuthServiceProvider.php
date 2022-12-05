@@ -44,7 +44,6 @@ class AuthServiceProvider extends ServiceProvider
         User::class                => UserPolicy::class,
         LineaTecnologica::class    => LineaTecnologicaPolicy::class,
         Nodo::class                => NodoPolicy::class,
-        UsoInfraestructura::class  => UsoInfraestructuraPolicy::class,
         CostoAdministrativo::class => CostoAdministrativoPolicy::class,
         Equipo::class              => EquipoPolicy::class,
         EquipoMantenimiento::class => MantenimientoPolicy::class,
@@ -55,6 +54,7 @@ class AuthServiceProvider extends ServiceProvider
         ArticulationType::class => ArticulationTypePolicy::class,
         ArticulationSubtype::class => ArticulationSubtypePolicy::class,
         Articulation::class => ArticulationPolicy::class,
+        UsoInfraestructura::class  => UsoInfraestructuraPolicy::class,
     ];
 
     /**

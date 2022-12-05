@@ -8534,19 +8534,19 @@ var selectCostoAdministrativoNodo = {
 
 $(document).ready(function() {
 
-    usoinfraestructuraIndex.queryActivitiesByAnio();
+    //usoinfraestructuraIndex.queryActivitiesByAnio();
 
 
-    let filter_nodo = $('#filter_nodo').val();
+    let filter_nodo = $('#filter_node').val();
     let filter_year = $('#filter_year').val();
-    let filter_gestor = $('#filter_gestor').val();
-    let filter_actividad = $('#filter_actividad').val();
+
+    console.log(filter_nodo);
 
     $('#usoinfraestructa_data_table').dataTable().fnDestroy();
-    if((filter_nodo != '' || filter_nodo != null)  && (filter_year != '' || filter_year != null)  && (filter_gestor != '' || filter_gestor != null) && (filter_actividad != '' || filter_actividad != null)){
-        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo ,  filter_year, filter_gestor, filter_actividad);
-    }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && (filter_year == '' || filter_year == null || filter_year == undefined)  && (filter_gestor == '' || filter_gestor == null || filter_gestor == undefined) && (filter_actividad == '' || filter_actividad == null || filter_actividad == undefined)){
-        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo = null , filter_year = null, filter_gestor = null, filter_actividad = null);
+    if((filter_nodo != '' || filter_nodo != null)  && (filter_year != '' || filter_year != null)){
+        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo ,  filter_year);
+    }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && (filter_year == '' || filter_year == null || filter_year == undefined)  ){
+        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo = null , filter_year = null);
     }else{
         $('#usoinfraestructa_data_table').DataTable({
             language: {
@@ -8559,7 +8559,8 @@ $(document).ready(function() {
 });
 
 var usoinfraestructuraIndex = {
-    fillDatatatablesUsosInfraestructura: function(filter_nodo , filter_year, filter_gestor, filter_actividad){
+    fillDatatatablesUsosInfraestructura: function(filter_nodo , filter_year){
+        //console.log(filter_nodo , filter_year);
         var datatable = $('#usoinfraestructa_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -8573,9 +8574,7 @@ var usoinfraestructuraIndex = {
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
-                    filter_year: filter_year,
-                    filter_gestor: filter_gestor,
-                    filter_actividad: filter_actividad,
+                    filter_year: filter_year
                 }
             },
             columns: [

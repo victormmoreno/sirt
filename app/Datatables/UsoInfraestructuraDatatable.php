@@ -13,33 +13,38 @@ class UsoInfraestructuraDatatable
     {
         return datatables()->of($usoinfraestructura)
             ->editColumn('fecha', function ($data) {
-                return $data->present()->fechaUsoInfraestructura();
+                //return $data->present()->fechaUsoInfraestructura();
+                return $data;
             })
             ->editColumn('actividad', function ($data) {
-                return $data->present()->actividadUsoInfraestructura();
+                //return $data->present()->actividadUsoInfraestructura();}
+                return $data;
             })
             ->editColumn('tipo_asesoria', function ($data) {
-                return $data->present()->tipoUsoInfraestructura();
+                //return $data->present()->tipoUsoInfraestructura();
+                return $data;
             })
             ->editColumn('fase', function ($data) {
-                return $data->present()->faseActividad();
+                //return $data->present()->faseActividad();
+                return $data;
             })
             ->editColumn('asesoria_directa', function ($data) {
-
-                return $data->present()->asesoriaDirecta();
+                //return $data->present()->asesoriaDirecta();
+                return $data;
             })
             ->editColumn('asesoria_indirecta', function ($data) {
-                return $data->present()->asesoriaIndirecta();
+                //return $data->present()->asesoriaIndirecta();
+                return $data;
             })
             ->addColumn('gestorEncargado', function ($data) {
-
-                return $data->present()->asesor();
+                //return $data->present()->asesor();
+                return $data;
             })
             ->addColumn('detail', function ($data) {
 
-                $button = '<a class="btn tooltipped green-complement  m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="' . route("usoinfraestructura.show", $data->id) . '" ><i class="material-icons">visibility</i></a>';
-
-                return $button;
+                //$button = '<a class="btn tooltipped green-complement  m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="' . route("usoinfraestructura.show", $data->id) . '" ><i class="material-icons">visibility</i></a>';
+                //return $button;
+                return $data;
             })
             ->rawColumns(['fecha','tipo_asesoria', 'actividad', 'gestorEncargado', 'fase', 'asesoria_directa', 'asesoria_indirecta', 'detail'])
             ->make(true);
