@@ -54,6 +54,7 @@ Route::post('cambiar-role', 'User\RolesPermissions@changeRoleSession')
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('disablepreventback');
 
+// Route::get('/nodo/inhabilitar_funcionarios/{nodo}', 'Nodo\NodoController@inhabilitar_funcionarios')->name('nodo.inhabilitar');
 Route::get('/nodo/fetch_data', 'Nodo\NodoController@nodo_pagination');
 Route::resource('nodo', 'Nodo\NodoController')->middleware(['disablepreventback', 'role_session:Administrador|Activador|Dinamizador|Infocenter|Experto']);
 
@@ -840,19 +841,19 @@ Route::get('creditos', function () {
 //-----------------------Ruta para sección de noticias---------------------------------
 
 
-Route::group([
-    'prefix' => 'noticias',
-    'middleware' => ['auth']
-], function () {
+// Route::group([
+//     'prefix' => 'noticias',
+//     'middleware' => ['auth']
+// ], function () {
 
-    Route::get('/', 'NoticiasController@index')->name('noticias.index')->middleware('role_session:Activador');
-    Route::get('/create', 'NoticiasController@create')->name('noticias.create');
-    Route::post('/', 'NoticiasController@store')->name('noticias.store');
-    Route::get('/{id}/edit', 'NoticiasController@edit')->name('noticias.edit')->middleware('role_session:Activador');
-    Route::patch('/{id}', 'NoticiasController@update')->name('noticias.update')->middleware('role_session:Activador');
-    Route::delete('/{id}', 'NoticiasController@destroy')->name('noticias.destroy');
+//     Route::get('/', 'NoticiasController@index')->name('noticias.index')->middleware('role_session:Activador');
+//     Route::get('/create', 'NoticiasController@create')->name('noticias.create');
+//     Route::post('/', 'NoticiasController@store')->name('noticias.store');
+//     Route::get('/{id}/edit', 'NoticiasController@edit')->name('noticias.edit')->middleware('role_session:Activador');
+//     Route::patch('/{id}', 'NoticiasController@update')->name('noticias.update')->middleware('role_session:Activador');
+//     Route::delete('/{id}', 'NoticiasController@destroy')->name('noticias.destroy');
 
-});
+// });
 
 //-----------------------Fin ruta sección noticias-----------------------------------
 Route::get('usuarios/filtro-talento/{documento}', 'ArticulacionPbtController@filterTalento')->name('articulacion.usuario.talento.search');

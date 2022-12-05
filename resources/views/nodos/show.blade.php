@@ -51,6 +51,13 @@
                                             </div>
                                         </div>
                                         <div class="right hide-on-med-and-down">
+                                            {{-- @can('inhabilitar', $nodo)
+                                                <small class="danger-text">
+                                                    <a class="waves-effect waves-danger btn-flat" onclick="inhabilitarFuncionarios(event, '{{route('nodo.inhabilitar', $nodo)}}')">
+                                                        <i class="fas fa-user-lock fa-lg"></i>Inhabilitar funcionarios
+                                                    </a>
+                                                </small>
+                                            @endcan --}}
                                             @can('downloadOne', $nodo)
                                                 <small class="success-text">
                                                     <a class="waves-effect waves-success btn-flat"
@@ -191,7 +198,8 @@
                                                         <div class="col s12 m12 l6">
                                                             <div class="center">
                                                                 <span
-                                                                    class="secondary-text"><b>{{App\User::IsInfocenter()}}</b></span>
+                                                                    class="secondary-text"><b>{{App\User::IsInfocenter()}}</b>
+                                                                </span>
                                                             </div>
                                                             <ul class="collection">
                                                                 @forelse($nodo->infocenter as $infocenter)
@@ -349,8 +357,8 @@
                                                         <div class="divider mailbox-divider">
                                                         </div>
                                                         @forelse($nodo->apoyostecnicos as $apoyotecnico)
-                                                            <div class="col s12 m12 l6">
-                                                                @if(isset($apoyotecnico->user) && $apoyotecnico->user->hasRole(App\User::IsApoyoTecnico()) && $apoyotecnico->user->estado == App\User::IsActive() &&  $apoyotecnico->user->deleted_at == null)
+                                                            @if(isset($apoyotecnico->user) && $apoyotecnico->user->hasRole(App\User::IsApoyoTecnico()) && $apoyotecnico->user->estado == App\User::IsActive() &&  $apoyotecnico->user->deleted_at == null)
+                                                                <div class="col s12 m12 l6">
                                                                     <ul class="collection">
                                                                         <li class="collection-item">
                                                                             <span class="title">
@@ -377,8 +385,8 @@
                                                                             </a>
                                                                         </li>
                                                                     </ul>
-                                                                @endif
-                                                            </div>
+                                                                </div>
+                                                            @endif
                                                         @empty
                                                             <div class="col s12 m12 l6">
                                                                 <ul class="collection">

@@ -214,6 +214,25 @@ $.fn.pageMe = function(opts){
     }
 };
 
+function inhabilitarFuncionarios(e, rt) {
+    e.preventDefault();
+    Swal.fire({
+        title: '¿Está seguro(a) de inhabilitar los funcionarios de este nodo?',
+        text: 'Al hacerlo estás bloqueando el acceso al sistema de todos los funcionarios de este nodo, luego los deberás volver a inhabilitar desde el menú de usuarios.',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Sí, inhabilitar funcionarios!'
+    }).then((result) => {
+        if (result.value) {
+            // console.log(nodo);
+            location.href = rt;
+        }
+    })
+}
+
 function detallesIdeasDelEntrenamiento(id){
   $.ajax({
      dataType:'json',

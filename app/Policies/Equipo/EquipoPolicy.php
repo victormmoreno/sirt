@@ -2,6 +2,7 @@
 
 namespace App\Policies\Equipo;
 
+use Illuminate\Support\Str;
 use App\Models\Equipo;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -29,7 +30,7 @@ class EquipoPolicy
      */
     public function create(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsDinamizador(), $user->IsAdministrador()]) && (session()->get('login_role') == User::IsDinamizador() ||  session()->get('login_role') == $user->IsAdministrador());
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsExperto(), $user->IsAdministrador()]);
     }
 
     /**

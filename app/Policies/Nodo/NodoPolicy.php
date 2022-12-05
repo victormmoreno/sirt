@@ -4,6 +4,7 @@ namespace App\Policies\Nodo;
 
 use App\Models\Nodo;
 use App\User;
+use Illuminate\Support\Str;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class NodoPolicy
@@ -91,5 +92,17 @@ class NodoPolicy
     public function downloadOne(User $user, Nodo $nodo)
     {
         return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador()]) && session()->has('login_role') && (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador());
+    }
+
+    /**
+     * Determina si el usuario puede inhabilitar a los funcionarios de un nodo
+     *
+     * @param  \App\User  $user
+     * @return mixed
+     * @author dum
+     */
+    public function inhabilitar(User $user)
+    {
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsActivador(), $user->IsAdministrador()]);
     }
 }

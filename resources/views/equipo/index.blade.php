@@ -9,14 +9,12 @@
     <div class="content">
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
-                <div class="row">
-                    <div class="col s8 m8 l10">
-                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
-                            <i class="material-icons">account_balance_wallet</i>
-                            Equipos
-                        </h5>
-                    </div>
-                    <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
+                <div class="row no-m-t no-m-b m-r-lg m-l-lg">
+                    <h5 class="left left-align primary-text">
+                        <i class="material-icons left primary-text">account_balance_wallet</i>
+                        Equipos
+                    </h5>
+                    <div class="right rigth-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li class="active">Equipos</li>
@@ -25,48 +23,16 @@
                 </div>
                 <div class="card ">
                     <div class="card-content">
-
                         <div class="row">
                             <div class="row">
-                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsExperto()))
-                                <div class="col s12 m12 l12">
-                                    <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
-                                        <span class="card-title center-align">
-                                            @if(session()->get('login_role') == App\User::IsActivador())
-                                                Equipos {{ config('app.name')}}
-                                            @elseif(session()->get('login_role') == App\User::IsExperto())
-                                                Equipos {{auth()->user()->gestor->lineatecnologica->nombre}} |  Tecnoparque Nodo {{\NodoHelper::returnNameNodoUsuario()}}
-                                            @endif
-                                        </span>
-                                    </div>
+                                <div class="left center primary-text">
+                                    <span class="card-title">
+                                        Equipos de Tecnoparque
+                                    </span>
                                 </div>
-                                @elseif(session()->get('login_role') == App\User::IsDinamizador())
-                                    <div class="row">
-                                        <div class="col s12 m8 l8">
-                                            <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
-                                                <span class="card-title ">
-                                                    Equipos Tecnoparque Nodo {{\NodoHelper::returnNameNodoUsuario()}}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="col s12 m4 l4 show-on-large hide-on-med-and-down">
-                                            <a  href="{{route('equipo.create')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo Equipo </a>
-                                        </div>
-                                    </div>
-                                @elseif(session()->get('login_role') == App\User::IsAdministrador())
-                                    <div class="row">
-                                        <div class="col s12 m8 l8">
-                                            <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
-                                                <span class="card-title ">
-                                                    Equipos de Tecnoparque
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="col s12 m4 l4 show-on-large hide-on-med-and-down">
-                                            <a  href="{{route('equipo.create')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo Equipo </a>
-                                        </div>
-                                    </div>
-                                @endif
+                                <div class="right show-on-large hide-on-med-and-down">
+                                    <a href="{{route('equipo.create')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo Equipo </a>
+                                </div>
                             </div>
                             <div class="divider"></div>
                             <div class="row no-m-t no-m-b search-tabs-row search-tabs-header ">
