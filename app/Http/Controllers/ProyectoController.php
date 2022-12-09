@@ -10,6 +10,7 @@ use Illuminate\Http\{Request, Response};
 use App\User;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Controllers\CostoController;
+use App\Policies\IndicadorPolicy;
 
 class ProyectoController extends Controller
 {

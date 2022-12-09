@@ -9,6 +9,7 @@ use App\{User, Models\Nodo};
 use App\Repositories\Repository\{CharlaInformativaRepository};
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Helpers\{ArrayHelper};
+use App\Models\CharlaInformativa;
 
 class CharlaInformativaController extends Controller
 {
@@ -81,21 +82,21 @@ class CharlaInformativaController extends Controller
         return datatables()->of($datos)
         ->addColumn('details', function ($data) {
         $details = '
-        <a class="btn light-blue m-b-xs" onclick="consultarDetallesDeUnaCharlaInformativa(' . $data->id . ')">
+        <a class="btn bg-info m-b-xs" onclick="consultarDetallesDeUnaCharlaInformativa(' . $data->id . ')">
             <i class="material-icons">info</i>
         </a>
         ';
         return $details;
         })->addColumn('edit', function ($data) {
         if ( $data->estado == 'Inactiva') {
-            $edit = '<a class="btn m-b-xs" disabled><i class="material-icons">edit</i></a>';
+            $edit = '<a class="btn bg-warning m-b-xs" disabled><i class="material-icons">edit</i></a>';
         } else {
-            $edit = '<a class="btn m-b-xs" href='.route('charla.edit', $data->id).'><i class="material-icons">edit</i></a>';
+            $edit = '<a class="btn bg-warning m-b-xs" href='.route('charla.edit', $data->id).'><i class="material-icons">edit</i></a>';
         }
         return $edit;
         })->addColumn('evidencias', function ($data) {
         $evidencias = '
-        <a class="btn blue-grey m-b-xs" href='. route('charla.evidencias', $data->id) .'>
+        <a class="btn bg-tertiary m-b-xs" href='. route('charla.evidencias', $data->id) .'>
             <i class="material-icons">library_books</i>
         </a>
         ';
@@ -144,6 +145,10 @@ class CharlaInformativaController extends Controller
 
     public function index()
     {
+        if(!request()->user()->can('index', CharlaInformativa::class)) {
+            alert('No autorizado', 'No puedes ver charlas informativas', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
         return view('charlas.index', [
             'nodos' => Nodo::SelectNodo()->get()
         ]);
@@ -155,6 +160,10 @@ class CharlaInformativaController extends Controller
     */
     public function create()
     {
+        if(!request()->user()->can('create', CharlaInformativa::class)) {
+            alert('No autorizado', 'No puedes registrar charlas informativas', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
         return view('charlas.create', [
             'nodos' => Nodo::SelectNodo()->get()
         ]);
@@ -186,8 +195,13 @@ class CharlaInformativaController extends Controller
     */
     public function edit($id)
     {
+        $charla = $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id);
+        if(!request()->user()->can('edit', $charla)) {
+            alert('No autorizado', 'No puedes cambiar la información de esta charla informativa', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
         return view('charlas.edit', [
-        'charla' => $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id),
+        'charla' => $charla,
         'nodos' => Nodo::SelectNodo()->get()
         ]);
     }

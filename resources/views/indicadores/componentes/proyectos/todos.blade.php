@@ -1,6 +1,6 @@
 <div class="row card-panel teal lighten-5">
     <h6>Para consultar TODOS los indicadores, debes seleccionar un nodo, un rango de fechas y luego presionar el botón de descarga.</h6>
-    @can('showIndicadoresProyectoOptions', App\Models\Proyecto::class)
+    @can('showIndicadoresProyectoOptions', Illuminate\Database\Eloquent\Model::class)
         <div class="row">
             <div class="input-field col s12 m6 l6">
                 <select class="js-states select2 browser-default" name="txtnodo_id" id="txtnodo_id" style="width: 100%">

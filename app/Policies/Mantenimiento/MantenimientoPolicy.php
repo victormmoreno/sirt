@@ -3,6 +3,7 @@
 namespace App\Policies\Mantenimiento;
 
 use App\User;
+use Illuminate\Support\Str;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MantenimientoPolicy
@@ -62,7 +63,8 @@ class MantenimientoPolicy
      */
     public function index(User $user)
     {
-        return (bool) $user->hasAnyRole([$user->IsExperto(), $user->IsDinamizador(), $user->IsActivador(), $user->IsAdministrador()]); 
+
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador(), $user->IsExperto(), $user->IsActivador()]);
     }
 
     /**
@@ -73,7 +75,7 @@ class MantenimientoPolicy
      */
     public function create(User $user)
     {
-        return (bool) $user->hasAnyRole([$user->IsDinamizador(), $user->IsAdministrador()]) && (session()->get('login_role') == $user->IsDinamizador() || session()->get('login_role') == $user->IsAdministrador());
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador()]);
     }
 
     /**

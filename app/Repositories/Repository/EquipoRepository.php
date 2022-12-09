@@ -43,7 +43,7 @@ class EquipoRepository
 
             DB::commit();
             return true;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return false;
         }
@@ -59,9 +59,7 @@ class EquipoRepository
     {
 
         DB::beginTransaction();
-
         try {
-
             $equipo->update([
                 'nodo_id' => $this->findLineaTecnologicaNodoByRequest($request),
                 'lineatecnologica_id' => $request->input('txtlineatecnologica'),
@@ -89,12 +87,11 @@ class EquipoRepository
      */
     private function findLineaTecnologicaNodoByRequest($request)
     {
-        if (session()->get('login_role') == User::IsDinamizador()) {
-            return auth()->user()->dinamizador->nodo_id;
+        if (!isset($request->txtnodo_id)) {
+            return request()->user()->getNodoUser();
         } else {
             return $request->txtnodo_id;
         }
-
     }
 
     /**

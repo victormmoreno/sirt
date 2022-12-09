@@ -74,9 +74,9 @@
 					<option value="">Seleccione Linea Tecnológica</option>
 					@forelse($lineastecnologicas as $id => $linea)
 						@if(isset($equipo->lineatecnologica->id))
-							<option value="{{$id}}" {{ old('txtlineatecnologica', $equipo->lineatecnologica->id) == $id ? 'selected':'' }}>{{$linea}}</option>
+							<option value="{{$linea->id}}" {{ old('txtlineatecnologica', $equipo->lineatecnologica_id) == $linea->id ? 'selected':'' }}>{{$linea->nombre}}</option>
 						@else
-							<option value="{{$id}}" {{ old('txtlineatecnologica') == $id ? 'selected':'' }}>{{$linea}}</option>
+							<option value="{{$linea->id}}" {{ old('txtlineatecnologica') == $id ? 'selected':'' }}>{{$linea}}</option>
 						@endif
 					@empty
 							<option value="">No hay información disponible</option>
@@ -146,11 +146,9 @@
 		<div class="input-field col s12 m6 l6">
 		 	<select class="js-states browser-default select2"   tabindex="-1" style="width: 100%" id="txtaniocompra" name="txtaniocompra">
 		 		<option>Seleccione el año de compra</option>
-        
-            	@for ($i=2016; $i <= $year; $i++)
-              		
+            	@for ($i=2010; $i <= $year; $i++)
+				
               		@if(isset($equipo->anio_compra))
-		            	
 		            	<option value="{{$i}}" {{ old('txtaniocompra', $equipo->anio_compra) ==  $i  ? 'selected' : '' }}>{{$i}}</option>
 		            @else
 		            	<option value="{{$i}}" {{ $i  == old('txtaniocompra')  ? 'selected' :  ''}}>{{$i}}</option>
@@ -178,10 +176,10 @@
 	</div>
 
 	<div class="divider"></div>
-	<center>
-	  	<button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">{{ isset($btnText) ? $btnText == 'Modificar' ? 'done' : 'done_all' : '' }}</i>{{isset($btnText) ? $btnText : 'error'}}</button>
-	  	<a href="{{route('equipo.index')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
-	</center>
+	<div class="center">
+	  	<button type="submit" class="waves-effect btn bg-secondary center-aling"><i class="material-icons right">send</i>{{isset($btnText) ? $btnText : 'error'}}</button>
+	  	<a href="{{route('equipo.index')}}" class="waves-effect btn bg-danger center-aling"><i class="material-icons left">backspace</i>Cancelar</a>
+	</div>
 </div>
 
   	

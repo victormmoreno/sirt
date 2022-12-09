@@ -1,7 +1,7 @@
 <div class="row card card-panel teal lighten-5">
     <h6>Para consultar los indicadores ÚNICAMENTE DE PROYECTOS FINALIZADOS Y SUSPENDIDOS, debes seleccionar un rango de fechas y luego presionar el botón de descarga.</h6>
     <h6>Recordar que se está mostrando la fase ACTUAL del proyecto.</h6>
-    @can('showIndicadoresProyectoOptions', App\Models\Proyecto::class)
+    @can('showIndicadoresProyectoOptions', Illuminate\Database\Eloquent\Model::class)
         <div class="row">
             <div class="input-field col s12 m6 l6">
                 <select class="js-states select2 browser-default" name="txtnodo_id_finalizados" id="txtnodo_id_finalizados" style="width: 100%">

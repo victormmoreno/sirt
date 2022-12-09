@@ -162,7 +162,7 @@ Route::resource('equipos', 'EquipoController', [
     'show'    => 'equipo.show',
     'edit'    => 'equipo.edit',
     'update'  => 'equipo.update',
-    'destroy' => 'equipo.destroy',
+    // 'destroy' => 'equipo.destroy',
 ])
     ->parameters([
         'equipos' => 'id',

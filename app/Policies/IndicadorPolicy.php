@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use Illuminate\Support\Str;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -10,13 +11,27 @@ class IndicadorPolicy
     use HandlesAuthorization;
 
     /**
-     * Create a new policy instance.
+     * Determina si el usuario puede hacer registro de metas
      *
-     * @return void
-     */
-    public function __construct()
+     * @param App\User $user
+     * @return bool
+     * @author dum
+     **/
+    public function insert_metas(User $user)
     {
-        //
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsActivador(), $user->IsAdministrador()]);
+    }
+
+    /**
+     * Determina si el usuario puede hacer registro de metas
+     *
+     * @param App\User $user
+     * @return bool
+     * @author dum
+     **/
+    public function index_indicadores(User $user)
+    {
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsActivador(), $user->IsAdministrador(), $user->IsDinamizador(), $user->IsInfocenter(), $user->IsExperto()]);
     }
 
     public function showIndicadoresProyectoOptions(User $user)

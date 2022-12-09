@@ -1,10 +1,3 @@
-    <div class="col s12 m2 l2 show-on-large hide-on-med-and-down">
-        <a href="{{ route('charla.create') }}">
-        <div class="card green">
-            <div class="card-content center">
-            <i class="left material-icons white-text">add</i>
-            <span class="white-text">Nueva Charla Informativa</span>
-            </div>
-        </div>
-        </a>
-    </div>
+<div class="col s12 m2 l2">
+    <a href="{{route('charla.create')}}" class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nueva Charla Informativa</a>
+</div>

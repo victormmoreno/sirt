@@ -71,10 +71,10 @@
         </div>
     </div>
     <div class="divider"></div>
-<center>
-    <button type="submit" class="waves-effect cyan darken-1 btn center-aling">
-        <i class="material-icons right">{{ isset($btnText) ? $btnText == 'Guardar' ? 'done' : 'done_all' : '' }}</i>
+<div class="center">
+    <button type="submit" class="waves-effect btn bg-secondary center-aling">
+        <i class="material-icons right">send</i>
         {{isset($btnText) ? $btnText : 'error'}}
     </button>
-    <a href="{{route('mantenimiento.index')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
-</center>
+    <a href="{{route('mantenimiento.index')}}" class="waves-effect btn bg-danger center-aling"><i class="material-icons left">backspace</i>Cancelar</a>
+</div>

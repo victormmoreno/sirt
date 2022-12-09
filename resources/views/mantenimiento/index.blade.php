@@ -4,58 +4,45 @@
 @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
     @section('meta-title', 'Mantenimientos' . 'Tecnoparque Nodo ' . \NodoHelper::returnNameNodoUsuario())
 @endif
-
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
                 <div class="row">
-                    <div class="col s8 m8 l10">
-                        <h5 class="left-align">
-                           <i class="material-icons">settings_applications</i>
-                            Mantenimientos
-                        </h5>
-                    </div>
-                    <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
+                    <h5 class="left left-align primary-text">
+                       <i class="material-icons left primary-text">settings_applications</i>
+                        Mantenimientos
+                    </h5>
+                    <div class="right rigth-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li class="active">Mantenimientos</li>
                         </ol>
                     </div>
                 </div>
-                <div class="card ">
+                <div class="card">
                     <div class="card-content">
                         <div class="row">
                             <div class="col s12 {{auth()->user()->can('create', App\Models\EquipoMantenimiento::class) ? 'm10 m10' : 'm12 l12'}}">
                                 <div class="center-align">
-                                    <span class="card-title center-align">
-                                        Mantenimientos {{ config('app.name')}}
+                                    <span class="card-title center-align primary-text">
+                                        Mantenimientos de tecnoparque
                                     </span>
                                 </div>
                             </div>
                             @can('create', App\Models\EquipoMantenimiento::class)
-                            <div class="col s12 m2 l2 show-on-large hide-on-med-and-down">
-                                <a href="{{ route('mantenimiento.create') }}">
-                                  <div class="card green">
-                                    <div class="card-content center">
-                                      <i class="left material-icons white-text">add_circle_outline</i>
-                                      <span class="white-text">Nuevo Mantenimiento</span>
-                                    </div>
-                                  </div>
-                                </a>
-                              </div>
+                                <div class="col s12 m2 l2">
+                                    <a href="{{route('mantenimiento.create')}}" class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo Mantenimiento</a>
+                                </div>
                             @endcan
                         </div>
                         @can('showIndexForAdmin', App\Models\EquipoMantenimiento::class)
                         <div class="row">
-                            <div class="divider">
-                            </div>
                             <div class="row">
                                 <div class="col s12 m12 l12">
                                     <label class="active" for="selectnodo">Nodo <span class="red-text">*</span></label>
                                     <select class="js-states browser-default select2 " onchange="selectMantenimientosEquiposPorNodo.selectMantenimientosEquipoForNodo()" tabindex="-1" style="width: 100%" id="selectnodo" >
-                                        {{-- <option value="">Seleccione nodo</option> --}}
                                         @foreach($nodos as $nodo)
                                           <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
                                         @endforeach
@@ -67,6 +54,7 @@
                         </div>  
                         @endcan
                         <div class="row">
+                            <div class="divider"></div>
                             <table class="display responsive-table" id="mantenimientosequipos_table">
                                 <thead>
                                     <th width="15%">Nodo</th>

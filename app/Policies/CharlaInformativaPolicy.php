@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\User;
+use Illuminate\Support\Str;
 use App\Models\{CharlaInformativa};
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -17,9 +18,46 @@ class CharlaInformativaPolicy
      * @return bool
      * @author dum
     */
-    public function showCreateButton(User $user)
+    public function create(User $user)
     {
         if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsInfocenter() || session()->get('login_role') == $user->IsArticulador()) {
+            return true;
+        }
+        return false;
+    }
+
+    /** 
+     * Determina si el usuario puede ver charlas informativas
+     * 
+     * @param App\User $user
+     * @return bool
+     * @author dum
+    */
+    public function index(User $user)
+    {
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsArticulador(), $user->IsAdministrador(), $user->IsActivador()]);
+    }
+
+    /**
+     * Determina si el usuario puede cambiar la información de una charla informativa
+     *
+     * @param App\User $user
+     * @param App\Models\CharlaInformativa $user
+     * @return bool
+     * @author dum
+     **/
+    public function edit(User $user, CharlaInformativa $charla)
+    {
+        if (session()->get('login_role') == $user->IsAdministrador()) {
+            return true;
+        }
+        // if (session()->get('login_role') == $user->IsArticulador() && $charla->nodo_id == request()->user()->articulador->nodo_id) {
+        //     return true;
+        // }
+        // if (session()->get('login_role') == $user->IsInfocenter() && $charla->nodo_id == request()->user()->infocenter->nodo_id) {
+        //     return true;
+        // }
+        if ( Str::contains(session()->get('login_role'), [$user->IsInfocenter(), $user->IsArticulador()]) && $charla->nodo_id == request()->user()->getNodoUser() ) {
             return true;
         }
         return false;

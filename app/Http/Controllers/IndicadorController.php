@@ -29,6 +29,10 @@ class IndicadorController extends Controller
   {
     $year_now = Carbon::now()->format('Y');
 
+    if(!request()->user()->can('index_indicadores', Illuminate\Database\Eloquent\Model::class)) {
+      alert('No autorizado', 'No puedes acceder a los indicadores', 'error')->showConfirmButton('Ok', '#3085d6');
+      return back();
+    }
     if (session()->get('login_role') == User::IsDinamizador()) {
       $nodos = [auth()->user()->dinamizador->nodo_id];
     } elseif (session()->get('login_role') == User::IsInfocenter()) {

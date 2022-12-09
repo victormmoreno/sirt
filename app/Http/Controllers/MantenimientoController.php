@@ -19,8 +19,8 @@ class MantenimientoController extends Controller
     public function __construct(MantenimientoRepository $mantenimientoRepository, LineaRepository $lineaRepository, NodoRepository $nodoRepository)
     {
         $this->mantenimientoRepository = $mantenimientoRepository;
-        $this->lineaRepository         = $lineaRepository;
-        $this->nodoRepository          = $nodoRepository;
+        $this->lineaRepository = $lineaRepository;
+        $this->nodoRepository = $nodoRepository;
         $this->middleware('auth');
     }
     /**
@@ -31,7 +31,10 @@ class MantenimientoController extends Controller
     public function index()
     {
         
-        $this->authorize('index', EquipoMantenimiento::class);
+        if(!request()->user()->can('index', EquipoMantenimiento::class)) {
+            alert('No autorizado', 'No puedes ver la información de los equipos', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
         if (request()->ajax()) {
             if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsExperto()) {
                 if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
@@ -53,15 +56,15 @@ class MantenimientoController extends Controller
                         })
                         ->get();
                 }
-                dd($mantenimientos);
+                // dd($mantenimientos);
                 return datatables()->of($mantenimientos)
                     ->addColumn('edit', function ($data) {
-                        $button = '<a href="' . route("mantenimiento.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                        $button = '<a href="' . route("mantenimiento.edit", $data->id) . '" class="btn bg-warning tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
 
                         return $button;
                     })
                     ->addColumn('detail', function ($data) {
-                        $button = '<a href="' . route("mantenimiento.show", $data->id) . '" class="btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle"><i class="material-icons">info_outline</i></a>';
+                        $button = '<a href="' . route("mantenimiento.show", $data->id) . '" class="btn bg-info tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle"><i class="material-icons">info_outline</i></a>';
 
                         return $button;
                     })
@@ -122,7 +125,7 @@ class MantenimientoController extends Controller
             return datatables()->of($mantenimientos)
             ->addColumn('edit', function ($data) {
                 if (auth()->user()->can('edit', $data)) {
-                    $button = '<a href="' . route("mantenimiento.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar">
+                    $button = '<a href="' . route("mantenimiento.edit", $data->id) . '" class="btn bg-warning tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar">
                     <i class="material-icons">edit</i>
                     </a>';
                 } else {
@@ -133,18 +136,17 @@ class MantenimientoController extends Controller
                 return $button;
             })
             ->addColumn('detail', function ($data) {
-                $button = '<a href="' . route("mantenimiento.show", $data->id) . '" class="btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle"><i class="material-icons">info_outline</i></a>';
+                $button = '<a href="' . route("mantenimiento.show", $data->id) . '" class="btn bg-info tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle"><i class="material-icons">info_outline</i></a>';
 
                 return $button;
             })
-
             ->addColumn('valor_mantenimiento', function ($data) {
                 return '$ ' . number_format(round($data->valor_mantenimiento, 2));
             })
             ->editColumn('costo_adquisicion', function ($data) {
                 return '$ ' . number_format($data->equipo->each(function ($item) {
-                                $item->costo_adquisicion;
-                        }));
+                    $item->costo_adquisicion;
+                }));
             })
             ->editColumn('lineatecnologica', function ($data) {
                 return $data->equipo->lineatecnologica->abreviatura.' - '.$data->equipo->lineatecnologica->nombre;

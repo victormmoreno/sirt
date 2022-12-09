@@ -576,6 +576,9 @@ class User extends Authenticatable implements JWTSubject
         if (session()->get('login_role') == $this->IsExperto()) {
             return $this->gestor->nodo_id;
         }
+        if (session()->get('login_role') == $this->IsArticulador()) {
+            return $this->articulador->nodo_id;
+        }
         if (session()->get('login_role') == $this->IsApoyoTecnico()) {
             return $this->apoyotecnico->nodo_id;
         }

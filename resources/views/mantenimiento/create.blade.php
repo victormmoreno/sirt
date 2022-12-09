@@ -5,15 +5,13 @@
     <div class="content">
       	<div class="row no-m-t no-m-b">
         	<div class="col s12 m12 l12">
-        		<div class="row">
-                    <div class="col s8 m8 l9">
-                        <h5 class="left-align hand-of-Sean-fonts">
-                            <a class="footer-text left-align " href="{{route('equipo.index')}}">
-				              	<i class="left material-icons white-text">arrow_back</i>
-				            </a> Mantenimientos de Equipos
-                        </h5>
-                    </div>
-                    <div class="col s4 m4 l3 rigth-align show-on-large hide-on-med-and-down">
+                <div class="row">
+                    <h5 class="left left-align primary-text">
+                        <a class="footer-text left-align " href="{{route('equipo.index')}}">
+                              <i class="left material-icons primary-text">arrow_back</i>
+                        </a> Mantenimientos de Equipos
+                    </h5>
+                    <div class="right right-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li><a href="{{route('mantenimiento.index')}}">Mantenimientos</a></li>
@@ -24,9 +22,9 @@
           		<div class="card">
             		<div class="card-content">
               			<div class="row">
-			                <center>
-				                <span class="card-title center-align">Nuevo Mantenimiento de Equipos</span>
-			                </center>
+                            <div class="center-align primary-text">
+                                <span class="card-title center-align">Nuevo equipo tecnoparque</span>
+                            </div>
                 			<div class="divider"></div>
                 			<br/>
                         </div>
