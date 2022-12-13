@@ -341,6 +341,50 @@ class UsoInfraestructura extends Model
         return $query;
     }
 
+    public function scopeYearAsesoriaQuery($query, $year)
+    {
+        // if (!empty($year) && $year != null && $year == 'all') {
+        //     return $query->whereHasMorph(
+        //         'asesorable',
+        //         [ \App\Models\Proyecto::class, \App\Models\Articulation::class, \App\Models\Idea::class]
+        //     );
+        // }
+
+        return $query
+            //->select('proyectos.id')
+
+            ->join('proyectos', function ($join) {
+                $join->on('proyectos.id', '=', 'usoinfraestructuras.asesorable_id')
+                ->where('usoinfraestructuras.asesorable_type', Proyecto::class);
+            })->join('articulacion_proyecto', function ($join) {
+                $join->on('articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id');
+            })->join('actividades', function ($join) use ($year) {
+                $join->on('actividades.id', '=', 'articulacion_proyecto.actividad_id');
+                // ->whereYear('fecha_inicio', $year)
+                // ->orWhereYear('fecha_cierre', $year);
+            })
+            ->whereYear('usoinfraestructuras.fecha', $year)
+            ->orWhereYear('actividades.fecha_inicio', $year)
+            ->orWhereYear('actividades.fecha_cierre', $year);
+
+        // if ((!empty($year) && $year != null && $year != 'all')) {
+        //     $query->whereHasMorph(
+        //         'asesorable',
+        //         [ \App\Models\Proyecto::class,  \App\Models\Idea::class],
+        //         function (Builder $subquery) use($year) {
+        //             return $subquery->whereYear('fecha', $year)->orWhereYear('created_at', $year);
+        //         }
+        //     )->orWhereHasMorph(
+        //         'asesorable',
+        //         [ \App\Models\Articulation::class],
+        //         function (Builder $subquery) use($year) {
+        //             return $subquery->whereYear('start_date', $year)->orWhereYear('created_at', $year);
+        //         }
+        //     );
+        // }
+        // return $query;
+    }
+
     public function scopeYearAsesoria($query, $year)
     {
         if (!empty($year) && $year != null && $year == 'all') {

@@ -173,11 +173,11 @@ class UsoInfraestructuraController extends Controller
             if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null)) {
             $usos = UsoInfraestructura::query()
 
-                    ->nodoAsesoriaQuery($nodeUser)
+                    //->nodoAsesoriaQuery($nodeUser)
                     ->select('usoinfraestructuras.id', 'usoinfraestructuras.created_at')
 
                     //->nodoAsesoria($nodeUser)
-                    //->yearAsesoria($request->filter_year)
+                    ->yearAsesoriaQuery($request->filter_year)
                     //->asesoria($actividad, $user)
                     //->asesor($asesor)
                     ->orderBy('usoinfraestructuras.created_at', 'desc')
