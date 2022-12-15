@@ -163,7 +163,7 @@ class ProyectoPresenter extends Presenter
         if ($this->proyecto->areaconocimiento->nombre == 'Otro') {
             return $this->proyecto->otro_areaconocimiento;
         } else {
-            return 'No aplica';
+            return '';
         }
     }
 

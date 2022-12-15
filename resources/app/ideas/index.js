@@ -65,13 +65,6 @@ $('#filter_idea').click(function () {
             pageLength: 20,
             "lengthChange": false
         }).clear().draw();
-        // $('#ideas_data_action_table_articulador').DataTable({
-        //     language: {
-        //         "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        //     },
-        //     pageLength: 20,
-        //     "lengthChange": false
-        // }).clear().draw();
         $('#ideas_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"

@@ -558,11 +558,12 @@ class IdeaRepository
             $duplicado = $idea->replicate();
             $duplicado->codigo_idea = $this->generarCodigoIdeaDuplicado($idea);
             if ($duplicado->estadoIdea->nombre == $duplicado->estadoIdea->IsAdmitido() || $duplicado->estadoIdea->nombre == $duplicado->estadoIdea->IsPBT()) {
-                $duplicado->gestor_id = null;
+                // $duplicado->gestor_id = null;
                 $duplicado->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsAdmitido())->first()->id;
             } else {
                 $duplicado->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsRegistro())->first()->id;
             }
+            $duplicado->gestor_id = null;
 
             $duplicado->push();
             // $duplicado->push();

@@ -56,18 +56,6 @@ class EquipoPolicy
         return false;
     }
 
-    // /**
-    //  * Determine whether the user can edit usos de infraestructura.
-    //  *
-    //  * @param  \App\User  $user
-    //  * @param  \App\Models\Equipo  $uso
-    //  * @return bool
-    //  */
-    // public function edit(User $user, $equipo)
-    // {
-    //     return (bool) $user->hasAnyRole([$user->IsDinamizador(), $user->IsAdministrador()]) && ((session()->get('login_role') == $user->IsDinamizador() && $equipo->nodo->id == $user->dinamizador->nodo->id) || session()->get('login_role') == $user->IsAdministrador());
-    // }
-
     /**
      * Determine whether the user can edit usos de infraestructura.
      *

@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\User;
 use App\Models\{Idea, EstadoIdea};
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Str;
 
 class IdeaPolicy
 {
@@ -146,9 +147,21 @@ class IdeaPolicy
      * @param  \App\Models\Idea  $idea
      * @return mixed
      */
-    public function view(User $user)
+    public function index(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsDinamizador(), User::IsExperto(), User::IsInfocenter(), User::IsArticulador()]);
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador(), $user->IsActivador(), $user->IsExperto(), $user->IsArticulador()]);
+    }
+
+    /**
+     * Determine whether the user can export ideas.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Models\Idea  $idea
+     * @return mixed
+     */
+    public function export(User $user)
+    {
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador(), $user->IsActivador(), $user->IsExperto(), $user->IsArticulador()]);
     }
 
     /**
@@ -160,14 +173,13 @@ class IdeaPolicy
      */
     public function update(User $user, Idea $idea)
     {
-        if (session()->get('login_role') == $user->IsTalento() && $user->talento->id == $idea->talento_id) {
+        if ($idea->estadoIdea->nombre == EstadoIdea::IsRegistro() && session()->get('login_role') == $user->IsTalento() && $user->talento->id == $idea->talento_id) {
             return true;
         }
         if (session()->get('login_role') == $user->IsAdministrador()) {
             return true;
         }
         return false;
-        // return (bool) $user->hasAnyRole([User::IsTalento()]) && $user->talento->id == $idea->talento->id && $idea->estadoIdea->nombre == EstadoIdea::IsRegistro();
     }
 
     /**
@@ -179,20 +191,16 @@ class IdeaPolicy
      */
     public function show(User $user, Idea $idea)
     {
+        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador()) {
+            return true;
+        }
         if (session()->get('login_role') == $user->IsTalento() && $idea->talento_id == $user->talento->id) {
             return true;
         }
-        if (session()->get('login_role') == $user->IsDinamizador() && $idea->nodo_id == $user->dinamizador->nodo_id) {
-            return true;
-        }
-        if (session()->get('login_role') == $user->IsInfocenter() && $idea->nodo_id == $user->infocenter->nodo_id) {
-            return true;
-        }
-        if (session()->get('login_role') == $user->IsArticulador() && $idea->nodo_id == $user->articulador->nodo_id) {
-            return true;
-        }
-        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador()) {
-            return true;
+        if (Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsArticulador(), $user->IsExperto()])) {
+            if ($idea->nodo_id == $user->getNodoUser()) {
+                return true;
+            }
         }
         return false;
 

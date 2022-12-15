@@ -6,7 +6,7 @@ use Illuminate\Support\Str;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class IndicadorPolicy
+class ModelPolicy
 {
     use HandlesAuthorization;
 

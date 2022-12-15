@@ -16,12 +16,11 @@
                 <i class="material-icons prefix">
                     domain
                 </i>
-                <select id="txtnodo" name="txtnodo" style="width: 100%" tabindex="-1">
+                <select id="txtnodo" name="txtnodo" style="width: 100%" tabindex="-1" readonly>
                     <option value disabled>Seleccione Nodo</option>
                         @foreach($nodos as $nodo)
                             @if($existe)
                                 @if ($idea->nodo_id == $nodo->id)
-
                                     @if($nodo->id == 20)
                                         <option value="{{$nodo->id}}" selected>Hub Innovación Medellín</option>
                                     @else

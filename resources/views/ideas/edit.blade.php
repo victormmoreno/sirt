@@ -5,18 +5,27 @@
   <div class="content">
     <div class="row no-m-t no-m-b">
       <div class="col s12 m12 l12">
-        <h5>
-          <a class="footer-text left-align" href="{{route('idea.index')}}">
-            <i class="material-icons arrow-l">arrow_back</i>
-          </a> Ideas de Proyecto
-        </h5>
+        <div class="row">
+          <h5 class="left left-align primary-text">
+            <a class="footer-text left-align" href="{{route('idea.index')}}">
+              <i class="material-icons arrow-l left primary-text">arrow_back</i>
+            </a> Ideas de Proyecto
+          </h5>
+          <div class="right right-align show-on-large hide-on-med-and-down">
+            <ol class="breadcrumbs">
+                <li><a href="{{route('home')}}">Inicio</a></li>
+                <li><a href="{{route('idea.detalle', $idea->id)}}">Ideas de proyecto</a></li>
+                <li class="active">Editando - {{$idea->codigo_idea}}</li>
+            </ol>
+          </div>
+        </div>
         <div class="card">
           <div class="card-content">
             <div class="row">
               <br>
-              <center>
+              <div class="center">
                 <span class="card-title center-align"><b>Modificar idea de proyecto - {{ $idea->codigo_idea }}</b></span>
-              </center>
+              </div>
               <div class="divider"></div>
               <div class="card-panel red lighten-3">
                 <div class="card-content white-text">
@@ -27,10 +36,10 @@
               <br/>
               <form id="frmIdea_Update" name="frmIdea_Update" action="{{ route('idea.update', $idea) }}" method="POST">
                 {!! method_field('PUT')!!}
-              @include('ideas.talento.form_inicio', [
+              @include('ideas.form_inicio', [
               'btnText' => 'Modificar'])
               <div class="divider"></div>
-                <center>
+                <div class="center">
                   <button type="submit" class="waves-effect cyan darken-1 btn center-aling" onclick="modalOpcionesFormularioModificar(event)">
                     <i class="material-icons right">done_all</i>
                       Modificar
@@ -38,7 +47,7 @@
                   <a href="{{route('idea.index')}}" class="waves-effect red lighten-2 btn center-aling">
                     <i class="material-icons right">backspace</i>Cancelar
                   </a>
-                </center>
+                </div>
               </form>
             </div>
           </div>

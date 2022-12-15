@@ -27,7 +27,7 @@ use App\Policies\Material\MaterialPolicy;
 use App\Policies\IdeaPolicy;
 use App\Policies\ProyectoPolicy;
 use App\Policies\CharlaInformativaPolicy;
-use App\Policies\IndicadorPolicy;
+use App\Policies\ModelPolicy;
 use App\Policies\GrupoPolicy;
 use App\Policies\ArticulacionPbt\ArticulacionPbtPolicy;
 use App\Policies\ArticulacionPbt\TipoArticulacionPolicy;
@@ -35,6 +35,7 @@ use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -57,7 +58,7 @@ class AuthServiceProvider extends ServiceProvider
         ArticulacionPbt::class => ArticulacionPbtPolicy::class,
         Proyecto::class => ProyectoPolicy::class,
         CharlaInformativa::class => CharlaInformativaPolicy::class,
-        Model::class => IndicadorPolicy::class,
+        Model::class => ModelPolicy::class,
         GrupoInvestigacion::class => GrupoPolicy::class,
     ];
 
@@ -69,5 +70,9 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(GateContract $gate)
     {
         $this->registerPolicies($gate);
+        Gate::guessPolicyNamesUsing(function ($modelClass) {
+            $policyName = class_basename($modelClass) . 'Policy';
+            return "App\\Policies\\{$policyName}";
+        });
     }
 }
