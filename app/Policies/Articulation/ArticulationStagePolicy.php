@@ -6,7 +6,6 @@ use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\ArticulationStage;
 use App\Models\ControlNotificaciones;
-use function foo\func;
 
 class ArticulationStagePolicy
 {

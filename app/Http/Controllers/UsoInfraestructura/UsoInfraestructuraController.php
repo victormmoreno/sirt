@@ -42,7 +42,6 @@ class UsoInfraestructuraController extends Controller
         LineaRepository $lineaRepository,
         ProyectoRepository $proyectoRepository
     ) {
-        $this->middleware(['auth', 'role_session:Administrador|Dinamizador|Articulador|'.User::IsGestor().'|Talento|'.User::IsApoyoTecnico()]);
         $this->setUsoIngraestructuraProyectoRepository($UsoInfraestructuraProyectoRepository);
         $this->setUsoInfraestructuraRepository($UsoInfraestructuraRepository);
         $this->setGestorRepository($gestorRepository);
@@ -163,30 +162,30 @@ class UsoInfraestructuraController extends Controller
     public function index(Request $request, UsoInfraestructuraDatatable $usoDatatable)
     {
 
-        if (request()->user()->cannot('index', UsoInfraestructura::class)) {
+        if (request()->user()->cannot('index',UsoInfraestructura::class)) {
             alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
         }
-        $talentUser = $this->checkRoleAuth($request)['talent'];
+        $asesorUser = $this->checkRoleAuth($request)['user'];
         $nodeUser = $this->checkRoleAuth($request)['node'];
         $model = $this->checkRoleAuth($request)['model'];
+
         if ($request->ajax()) {
             $usos = [];
             if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null)) {
-            $usos = UsoInfraestructura::query()
 
-                    //->nodoAsesoriaQuery($nodeUser)
+                $usos = UsoInfraestructura::query()
+
+
                     ->selectAsesoria($model)
-
-                    //->nodoAsesoria($nodeUser)
+                    ->joins($model)
                     ->nodoAsesoriaQuery($model, $nodeUser)
                     ->yearAsesoriaQuery($model, $request->filter_year)
-                    ->joins($model)
+                    ->asesorQuery($model, $asesorUser)
 
-                    //->asesoria($actividad, $user)
-                    //->asesor($asesor)
+
                     ->groupBy('usoinfraestructuras.id')
-                    ->latest('usoinfraestructuras.created_at')
+                    ->latest('usoinfraestructuras.updated_at')
                     ->get();
             }
             return $usoDatatable->indexDatatable($usos);
@@ -227,18 +226,18 @@ class UsoInfraestructuraController extends Controller
      * method to validate the authenticated role
      * @return void
      */
-    private function checkRoleAuth(Request $request)
+    private function checkRoleAuth($request)
     {
-        $talent = null;
+        $user = null;
         $node = null;
         $model = null;
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
-                $node = $request->filter_node;
+                $node = $request->filter_nodo;
                 $model = $request->filter_module;
                 break;
             case User::IsActivador():
-                $node = $request->filter_node;
+                $node = $request->filter_nodo;
                 $model = $request->filter_module;
                 break;
             case User::IsDinamizador():
@@ -251,24 +250,26 @@ class UsoInfraestructuraController extends Controller
                 break;
             case User::IsGestor():
                 $node = auth()->user()->gestor->nodo_id;
+                $user = auth()->user()->id;
                 $model = class_basename(Proyecto::class);
                 break;
             case User::IsApoyoTecnico():
                 $node = auth()->user()->apoyotecnico->nodo_id;
+                $user = auth()->user()->id;
                 $model = class_basename(Proyecto::class);
                 break;
             case User::IsTalento():
                 $node = null;
-                $talent = auth()->user()->id;
+                $user = auth()->user()->id;
                 $model = $request->filter_module;
                 break;
             default:
-                $talent = null;
+                $user = null;
                 $node = null;
                 $model = null;
                 break;
         }
-        return ['talent' => $talent, 'node' => $node, 'model' => $model];
+        return ['user' => $user, 'node' => $node, 'model' => $model];
     }
 
     private function getUsosDeProyectos($proyectos)

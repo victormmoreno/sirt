@@ -13,19 +13,16 @@ class UsoInfraestructuraDatatable
     {
         return datatables()->of($usoinfraestructura)
             ->editColumn('fecha', function ($data) {
-                //return $data->present()->fechaUsoInfraestructura();
-                return $data->fecha;
+                return optional($data->fecha)->isoFormat('d/M/Y');
             })
             ->editColumn('actividad', function ($data) {
-                //return $data->present()->actividadUsoInfraestructura();}
                 return $data->nombre;
             })
             ->editColumn('tipo_asesoria', function ($data) {
                 return $data->tipo_asesoria;
             })
             ->editColumn('fase', function ($data) {
-                //return $data->present()->faseActividad();
-                return $data;
+                return $data->fase;
             })
             ->editColumn('asesoria_directa', function ($data) {
                 return $data->aseseria_directa;

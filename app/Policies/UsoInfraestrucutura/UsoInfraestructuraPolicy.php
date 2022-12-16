@@ -5,6 +5,7 @@ namespace App\Policies\UsoInfraestrucutura;
 use App\Models\UsoInfraestructura;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Str;
 
 
 class UsoInfraestructuraPolicy
@@ -19,12 +20,7 @@ class UsoInfraestructuraPolicy
      */
     public function index(User $user)
     {
-        return (bool) session()->has('login_role')
-            && (
-                session()->get('login_role') != User::IsInfocenter() ||
-                session()->get('login_role') != User::IsIngreso() ||
-                session()->get('login_role') != User::IsDesarrollador()
-            );
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsAdministrador(), $user->IsActivador(), $user->IsDinamizador(), $user->IsGestor(), $user->IsArticulador(), $user->IsTalento(), $user->IsApoyoTecnico()]);
     }
 
     /**
@@ -281,3 +277,4 @@ class UsoInfraestructuraPolicy
         }
     }
 }
+
