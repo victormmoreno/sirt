@@ -383,29 +383,12 @@ $(document).ready(function() {
     let filter_vieneconvocatoria = $('#filter_vieneconvocatoria').val();
     let filter_convocatoria = $('#filter_convocatoria').val();
 
+    consultarIdeasDelTalento();
     if((filter_nodo == '' || filter_nodo == null) && filter_year !='' && filter_state != '' && filter_vieneconvocatoria != '' && (filter_convocatoria == '' || filter_convocatoria == null)){
-        idea.fill_datatatables_actions_ideas(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
-        idea.fill_datatatables_actions_ideas_articulador(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
         idea.fill_datatatables_ideas(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
     }else if((filter_nodo != '' || filter_nodo != null) && filter_year !='' && filter_state != '' && filter_vieneconvocatoria != '' && (filter_convocatoria != '' || filter_convocatoria != null)){
-        idea.fill_datatatables_actions_ideas(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
-        idea.fill_datatatables_actions_ideas_articulador(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
         idea.fill_datatatables_ideas(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
     }else{
-        $('#ideas_data_action_table').DataTable({
-            language: {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            pageLength: 20,
-            "lengthChange": false,
-        }).clear().draw();
-        $('#ideas_data_action_table_articulador').DataTable({
-            language: {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            pageLength: 20,
-            "lengthChange": false
-        }).clear().draw();
         $('#ideas_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -419,20 +402,15 @@ $(document).ready(function() {
 
 $('#filter_idea').click(function () {
     let filter_nodo = $('#filter_nodo').val();
+    // console.log(filter_nodo);
     let filter_year = $('#filter_year_ideas').val();
     let filter_state = $('#filter_state').val();
     let filter_vieneconvocatoria = $('#filter_vieneconvocatoria').val();
     let filter_convocatoria = $('#filter_convocatoria').val();
-    // $('#ideas_data_action_table').dataTable().fnDestroy();
-    // $('#ideas_data_action_table_articulador').dataTable().fnDestroy();
     $('#ideas_data_table').dataTable().fnDestroy();
     if((filter_nodo == '' || filter_nodo == null) && filter_year !='' && filter_state != '' && filter_vieneconvocatoria != '' && (filter_convocatoria == '' || filter_convocatoria == null)){
-        // idea.fill_datatatables_actions_ideas(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
-        // idea.fill_datatatables_actions_ideas_articulador(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
         idea.fill_datatatables_ideas(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
     }else if((filter_nodo != '' || filter_nodo != null) && filter_year !='' && filter_state != '' && filter_vieneconvocatoria != '' && (filter_convocatoria != '' || filter_convocatoria != null)){
-        // idea.fill_datatatables_actions_ideas(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
-        // idea.fill_datatatables_actions_ideas_articulador(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
         idea.fill_datatatables_ideas(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
     }else{
         $('#ideas_data_action_table').DataTable({
@@ -473,134 +451,6 @@ $('#download_excel').click(function(){
 
 
 var idea ={
-    fill_datatatables_actions_ideas: function(filter_nodo = null,filter_year='', filter_state='',filter_vieneConvocatoria='', filter_convocatoria = null){
-        var datatable = $('#ideas_data_action_table').DataTable({
-            language: {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            pageLength: 20,
-            "lengthChange": false,
-            processing: true,
-            serverSide: true,
-            "order": [[ 1, "desc" ]],
-            ajax:{
-                url: host_url + "/idea/datatable_filtros",
-                type: "get",
-                data: {
-                    filter_nodo: filter_nodo,
-                    filter_year: filter_year,
-                    filter_state: filter_state,
-                    filter_vieneConvocatoria: filter_vieneConvocatoria,
-                    filter_convocatoria: filter_convocatoria,
-                }
-            },
-            columns: [
-                {
-                    data: 'codigo_idea',
-                    name: 'codigo_idea',
-                },
-                {
-                    data: 'created_at',
-                    name: 'created_at',
-                },
-                {
-                    data: 'persona',
-                    name: 'persona',
-                },
-                {
-                    data: 'correo_contacto',
-                    name: 'correo_contacto',
-                },
-                {
-                    data: 'telefono_contacto',
-                    name: 'telefono_contacto',
-                },
-                {
-                    data: 'nombre_proyecto',
-                    name: 'nombre_proyecto',
-                },
-                {
-                    data: 'estado',
-                    name: 'estado',
-                },
-                {
-                    data: 'details',
-                    name: 'details',
-                    orderable: false
-                },
-                {
-                    data: 'info',
-                    name: 'info',
-                    orderable: false
-                },
-
-            ],
-        });
-    },
-    fill_datatatables_actions_ideas_articulador: function(filter_nodo = null,filter_year='', filter_state='',filter_vieneConvocatoria='', filter_convocatoria = null){
-        var datatable = $('#ideas_data_action_table_articulador').DataTable({
-            language: {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            "lengthChange": false,
-            processing: true,
-            serverSide: true,
-            pageLength: 20,
-            "order": [[ 1, "desc" ]],
-            ajax:{
-                url: host_url + "/idea/datatable_filtros",
-                type: "get",
-                data: {
-                    filter_nodo: filter_nodo,
-                    filter_year: filter_year,
-                    filter_state: filter_state,
-                    filter_vieneConvocatoria: filter_vieneConvocatoria,
-                    filter_convocatoria: filter_convocatoria,
-                }
-            },
-            columns: [
-                {
-                    data: 'codigo_idea',
-                    name: 'codigo_idea',
-                },
-                {
-                    data: 'created_at',
-                    name: 'created_at',
-                },
-                {
-                    data: 'persona',
-                    name: 'persona',
-                },
-                {
-                    data: 'correo_contacto',
-                    name: 'correo_contacto',
-                },
-                {
-                    data: 'telefono_contacto',
-                    name: 'telefono_contacto',
-                },
-                {
-                    data: 'nombre_proyecto',
-                    name: 'nombre_proyecto',
-                },
-                {
-                    data: 'estado',
-                    name: 'estado',
-                },
-                {
-                    data: 'details',
-                    name: 'details',
-                    orderable: false
-                },
-                {
-                    data: 'info',
-                    name: 'info',
-                    orderable: false
-                },
-
-            ],
-        });
-    },
     fill_datatatables_ideas: function(filter_nodo = null,filter_year='', filter_state='',filter_vieneConvocatoria='', filter_convocatoria = null){
         var datatable = $('#ideas_data_table').DataTable({
             language: {
@@ -660,7 +510,6 @@ var idea ={
                     name: 'info',
                     orderable: false
                 },
-
             ],
         });
     },
@@ -771,6 +620,106 @@ function detallesIdeaPorId(id){
         $('#modalInformacionIdea').openModal();
         }
     })
+}
+
+function consultarIdeasDelTalento() {
+    // $('#ideas_talento').dataTable().fnDestroy();
+    $('#ideas_talento').DataTable({
+      language: {
+        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+      },
+      "lengthChange": false,
+      processing: true,
+      serverSide: true,
+      pageLength: 20,
+      order: [ 0, 'desc' ],
+      "lengthChange": false,
+      ajax:{
+        url: host_url + "/idea/datatable_filtros",
+        type: "get",
+        data: {
+            filter_nodo: null,
+            filter_year: null,
+            filter_state: null,
+            filter_vieneConvocatoria: null,
+            filter_convocatoria: null,
+        }
+      },
+      columns: [
+        {
+          width: '15%',
+          data: 'codigo_idea',
+          name: 'codigo_idea',
+        },
+        {
+          width: '8%',
+          data: 'nodo',
+          name: 'nodo',
+        },
+        {
+          data: 'nombre_proyecto',
+          name: 'nombre_proyecto',
+        },
+        {
+          data: 'estado',
+          name: 'estado',
+        },
+        {
+          width: '8%',
+          data: 'info',
+          name: 'info',
+          orderable: false
+        },
+        {
+          width: '8%',
+          data: 'postular',
+          name: 'postular',
+          orderable: false
+        },
+        {
+          width: '8%',
+          data: 'edit',
+          name: 'edit',
+          orderable: false
+        },
+      ],
+    });
+}
+
+function confirmacionPostulacion(e){
+  e.preventDefault();
+  Swal.fire({
+  title: '¿Está seguro(a) de postular esta idea de proyecto?',
+  text: "Una vez que se postule la idea de proyecto, ya no se podrá cambiar los datos de esta.",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  cancelButtonText: 'Cancelar',
+  confirmButtonText: 'Sí!'
+  }).then((result) => {
+    if (result.value) {
+      document.frmPostularIdea.submit();
+    }
+  })
+}
+
+function confirmacionInhabilitar(e){
+  e.preventDefault();
+  Swal.fire({
+  title: '¿Está seguro(a) de inhabilitar esta idea de proyecto?',
+  text: "Esto quiere decir que esta idea de proyecto no se le podrá realizar un proceso en tecnoparque.",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  cancelButtonText: 'Cancelar',
+  confirmButtonText: 'Sí!'
+  }).then((result) => {
+    if (result.value) {
+      document.frmInhabilitarIdea.submit();
+    }
+  })
 }
 
 $(document).ready(function () {
@@ -971,6 +920,7 @@ function enviarIdeaRegistro(event, tipo) {
     event.preventDefault();
     var form = null;
     var data = null;
+    
     if (tipo == 'create') {
         form = $('#frmIdea_Inicio');
         data = new FormData($('#frmIdea_Inicio')[0]);
@@ -1033,10 +983,11 @@ function mensajesIdeaForm(data) {
     title = data.title;
     text = data.msg;
     type = data.type;
+    
     if (data.state != 'error_form') {
         pintarMensajeIdeaForm(title, text, type);
     }
-
+    
     if (data.state == 'registro') {
         setTimeout(function () {
             window.location.href = data.url;
@@ -1132,41 +1083,6 @@ function banderaEmpresaIdea() {
     divEmpresaRegistrada.hide();
   }
 }
-
-// Enviar formulario para registrar proyecto
-$(document).on('submit', 'form#frmIdeas_Inicio', function (event) {
-    $('button[type="submit"]').attr('disabled', 'disabled');
-    event.preventDefault();
-    var form = $(this);
-    var data = new FormData($(this)[0]);
-    var url = form.attr("action");
-    ajaxSendFormIdea(form, data, url, 'create');
-});
-
-function ajaxSendFormIdea(form, data, url, fase) {
-  $.ajax({
-      type: form.attr('method'),
-      url: url,
-      data: data,
-      cache: false,
-      contentType: false,
-      dataType: 'json',
-      processData: false,
-      success: function (data) {
-          $('button[type="submit"]').removeAttr('disabled');
-          $('.error').hide();
-          printErroresFormulario(data);
-          if (fase == 'create') {
-              mensajesIdeaCreate(data);
-          } else {
-              mensajesIdeaUpdate(data);
-          }
-      },
-      error: function (xhr, textStatus, errorThrown) {
-          alert("Error: " + errorThrown);
-      }
-  });
-};
 
 function mensajesIdeaCreate(data) {
   if (data.state == 'registro') {

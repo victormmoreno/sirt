@@ -92,10 +92,13 @@ class IdeaController extends Controller
      */
     public function create()
     {
+        if(!request()->user()->can('create', Idea::class)) {
+            alert('No autorizado', 'No tienes permisos para registrar ideas de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
         $nodos = $this->ideaRepository->getSelectNodo();
-        // $nodos = $this->ideaRepository->getSelectNodoPrueba();
         if (Session::get('login_role') == User::IsTalento()) {
-            return view('ideas.talento.create', [
+            return view('ideas.create', [
                 'nodos' => $nodos,
                 'departamentos' => Departamento::all(),
                 'sectores' => Sector::all(),
@@ -266,6 +269,10 @@ class IdeaController extends Controller
     //metodo index para mostrar el listado de ideas
     public function index()
     {
+        if(!request()->user()->can('index', Idea::class)) {
+            alert('No autorizado', 'No tienes permisos para ver ideas de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
         $estadosIdeas = EstadoIdea::orderBy('id')->whereNotIn('nombre', [
             EstadoIdea::IsNoConvocado(),
             EstadoIdea::IsInhabilitado(),
@@ -341,17 +348,25 @@ class IdeaController extends Controller
 
     public function datatableFiltros(Request $request)
     {
-        $nodos = $this->getIdNodoForIdeas($request);
-        $ideas = [];
-        if (!empty($request->filter_year) && !empty($request->filter_state) && !empty($request->filter_vieneConvocatoria)) {
-
-            $ideas = Idea::with(['estadoIdea'])->createdAt($request->filter_year)
+        if (session()->get('login_role') == request()->user()->IsTalento()) {
+            $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('talento_id', auth()->user()->talento->id)
+            ->whereHas('estadoIdea',
+            function ($query){
+                $query->whereNotIn('nombre', [EstadoIdea::IsRechazadoArticulador()]);
+            })->get();
+        } else {
+            $nodos = $this->getIdNodoForIdeas($request);
+            $ideas = [];
+            if (!empty($request->filter_year) && !empty($request->filter_state) && !empty($request->filter_vieneConvocatoria)) {
+                $ideas = Idea::with(['estadoIdea'])->createdAt($request->filter_year)
                 ->vieneConvocatoria($request->filter_vieneConvocatoria)
                 ->state($request->filter_state)
                 ->convocatoria($request->filter_convocatoria)
                 ->nodo($nodos)
                 ->orderBy('created_at', 'desc')
                 ->get();
+            }
+
         }
         return $this->datatableIdeas($ideas);
     }
@@ -471,10 +486,11 @@ class IdeaController extends Controller
             </a>';
                 return $info;
         })->addColumn('edit', function ($data) {
-            $edit = '<a class="btn m-b-xs modal-trigger" href='.route('idea.edit', $data->id).'>
+            $editable = !request()->user()->can('update', $data) ? 'disabled' : '';
+            $edit = '<a class="btn m-b-xs bg-warning" '.$editable.' href='.route('idea.edit', $data->id).'>
             <i class="material-icons">edit</i>
             </a>';
-                return $edit;
+            return $edit;
         })->addColumn('details', function ($data) {
             $button = '
             <a class="btn m-b-xs modal-trigger bg-secondary" href="#modal1" onclick="detallesIdeaPorId(' . $data->id . ')">
@@ -625,28 +641,6 @@ class IdeaController extends Controller
             'idea' => $idea,
             'estadosIdea' => $estadosIdea
         ]);
-        // switch (Session::get('login_role')) {
-        //     case User::IsTalento():
-        //         return view('ideas.talento.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
-        //         break;
-        //     case User::IsArticulador():
-        //         return view('ideas.articulador.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
-        //         break;
-        //     case User::IsActivador():
-        //         break;
-        //     case User::IsDinamizador():
-        //         return view('ideas.administrador.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
-        //         break;
-        //     case User::IsInfocenter():
-        //         return view('ideas.administrador.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
-        //         break;
-        //     case User::IsExperto():
-        //         return view('ideas.administrador.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
-        //         break;
-        //     default:
-        //         return abort('403');
-        //         break;
-        // }
     }
 
     public function export(Request $request, $extension = 'xlsx')

@@ -25,19 +25,25 @@
                 <div class="row">
                 <div class="col s12 m12 l12">
                     <div class="row">
-                        <div class="col s12 m12 l12">
+                        <div class="col s12 m8 l8">
                             <div class="center-align primary-text">
                                 <span class="card-title center-align">Ideas de Tecnoparque</span>
                             </div>
                         </div>
+                        @can('create', App\Models\Idea::class)
+                            <div class="col s12 m4 l4">
+                                <a href="{{ route('idea.create') }}" class="bg-secondary btn withe-text right"><i class="material-icons left">add</i> Nueva Idea de Proyecto</a>
+                            </div>
+                        @endcan
                     </div>
                     <div class="divider"></div>
+                    @can('showFilters', App\Models\Idea::class)
                         <div class="row search-tabs-row search-tabs-header">
                             @can('showNodosInput', App\Models\Idea::class)
                             <div class="input-field col s12 m2 l2">
                                 <label class="active" for="filter_nodo">Nodo <span class="red-text">*</span></label>
-                                <select name="filter_nodo" id="filter_nodo" multiple>
-                                    <option value="all" >Todos</option>
+                                <select name="filter_nodo[]" id="filter_nodo" multiple required>
+                                    <option value="all" selected>Todos</option>
                                     @foreach($nodos as $id => $name)
                                         <option value="{{$id}}">{{$name}}</option>
                                     @endforeach
@@ -83,24 +89,8 @@
                             </div>
                             @endcan
                         </div>
-                    <table id="ideas_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
-                        <thead>
-                        <tr>
-                            <th>Nodo de registro</th>
-                            <th>Código de la Idea</th>
-                            <th>Fecha de Registro</th>
-                            <th>Persona</th>
-                            <th>Correo</th>
-                            <th>Contacto</th>
-                            <th>Nombre de la Idea</th>
-                            <th>Estado</th>
-                            <th>Detalles</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        </tbody>
-                    </table>
+                    @endcan
+                    @include('ideas.table')
                 </div>
                 </div>
             </div>

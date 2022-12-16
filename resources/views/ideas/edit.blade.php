@@ -24,7 +24,7 @@
             <div class="row">
               <br>
               <div class="center">
-                <span class="card-title center-align"><b>Modificar idea de proyecto - {{ $idea->codigo_idea }}</b></span>
+                <span class="card-title center-align primary-text"><b>Modificar idea de proyecto - {{ $idea->codigo_idea }}</b></span>
               </div>
               <div class="divider"></div>
               <div class="card-panel red lighten-3">
@@ -40,12 +40,12 @@
               'btnText' => 'Modificar'])
               <div class="divider"></div>
                 <div class="center">
-                  <button type="submit" class="waves-effect cyan darken-1 btn center-aling" onclick="modalOpcionesFormularioModificar(event)">
-                    <i class="material-icons right">done_all</i>
+                  <button type="submit" class="waves-effect bg-secondary btn center-aling" onclick="modalOpcionesFormularioModificar(event)">
+                    <i class="material-icons right">send</i>
                       Modificar
                   </button>
-                  <a href="{{route('idea.index')}}" class="waves-effect red lighten-2 btn center-aling">
-                    <i class="material-icons right">backspace</i>Cancelar
+                  <a href="{{route('idea.index')}}" class="waves-effect bg-danger btn center-aling">
+                    <i class="material-icons left">backspace</i>Cancelar
                   </a>
                 </div>
               </form>

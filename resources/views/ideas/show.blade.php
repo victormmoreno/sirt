@@ -37,11 +37,11 @@
                 </div>
                 <div class="col s12 m9 l9">
                   @include('ideas.detalle')
-                  <center>
-                    <a href="{{route('idea.index')}}" class="waves-effect red lighten-2 btn center-aling">
-                      <i class="material-icons right">backspace</i>Cancelar
+                  <div class="center">
+                    <a href="{{route('idea.index')}}" class="waves-effect bg-danger btn center-aling">
+                      <i class="material-icons left">backspace</i>Cancelar
                     </a>
-                  </center>
+                  </div>
                 </div>
               </div>
             </div>

@@ -196,6 +196,7 @@ function enviarIdeaRegistro(event, tipo) {
     event.preventDefault();
     var form = null;
     var data = null;
+    
     if (tipo == 'create') {
         form = $('#frmIdea_Inicio');
         data = new FormData($('#frmIdea_Inicio')[0]);
@@ -258,10 +259,11 @@ function mensajesIdeaForm(data) {
     title = data.title;
     text = data.msg;
     type = data.type;
+    
     if (data.state != 'error_form') {
         pintarMensajeIdeaForm(title, text, type);
     }
-
+    
     if (data.state == 'registro') {
         setTimeout(function () {
             window.location.href = data.url;
@@ -357,41 +359,6 @@ function banderaEmpresaIdea() {
     divEmpresaRegistrada.hide();
   }
 }
-
-// Enviar formulario para registrar proyecto
-$(document).on('submit', 'form#frmIdeas_Inicio', function (event) {
-    $('button[type="submit"]').attr('disabled', 'disabled');
-    event.preventDefault();
-    var form = $(this);
-    var data = new FormData($(this)[0]);
-    var url = form.attr("action");
-    ajaxSendFormIdea(form, data, url, 'create');
-});
-
-function ajaxSendFormIdea(form, data, url, fase) {
-  $.ajax({
-      type: form.attr('method'),
-      url: url,
-      data: data,
-      cache: false,
-      contentType: false,
-      dataType: 'json',
-      processData: false,
-      success: function (data) {
-          $('button[type="submit"]').removeAttr('disabled');
-          $('.error').hide();
-          printErroresFormulario(data);
-          if (fase == 'create') {
-              mensajesIdeaCreate(data);
-          } else {
-              mensajesIdeaUpdate(data);
-          }
-      },
-      error: function (xhr, textStatus, errorThrown) {
-          alert("Error: " + errorThrown);
-      }
-  });
-};
 
 function mensajesIdeaCreate(data) {
   if (data.state == 'registro') {

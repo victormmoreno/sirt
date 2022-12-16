@@ -12,6 +12,33 @@ class IdeaPolicy
     use HandlesAuthorization;
 
     /**
+     * Determina si el usuario puede registrar ideas
+     *
+     * @param User $user
+     * @return bool
+     * @author dum
+     **/
+    public function create(User $user)
+    {
+        if (session()->get('login_role') == $user->IsTalento()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Determina si el usuario puede usar filtros para consultar ideas
+     *
+     * @param App\User $user
+     * @return bool
+     * @author dum
+     **/
+    public function showFilters(User $user)
+    {
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador(), $user->IsActivador(), $user->IsExperto(), $user->IsArticulador()]);
+    }
+
+    /**
      * Determina quienes y en qué momento se puede aceptar o rechazar una idea de proyecto
      *
      * @param User $user
@@ -82,6 +109,9 @@ class IdeaPolicy
      **/
     public function inhabilitar(User $user, Idea $idea)
     {
+        if ($idea->estadoIdea->nombre == $idea->estadoIdea->IsInhabilitado()) {
+            return false;
+        }
         if (session()->get('login_role') == $user->IsTalento() && $user->talento->id == $idea->talento_id) {
             return true;
         }
@@ -129,16 +159,6 @@ class IdeaPolicy
         }
         return false;
     }
-    /**
-     * Determine whether the user can view any ideas.
-     *
-     * @param  \App\User  $user
-     * @return mixed
-     */
-    public function viewAny(User $user)
-    {
-        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsDinamizador(), User::IsExperto(), User::IsInfocenter(), User::IsArticulador()]);
-    }
 
     /**
      * Determine whether the user can view the idea.
@@ -149,7 +169,7 @@ class IdeaPolicy
      */
     public function index(User $user)
     {
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador(), $user->IsActivador(), $user->IsExperto(), $user->IsArticulador()]);
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsTalento(), $user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador(), $user->IsActivador(), $user->IsExperto(), $user->IsArticulador()]);
     }
 
     /**

@@ -14,9 +14,9 @@
           <div class="card-content">
             <div class="row">
               <br>
-              <center>
+              <div class="center">
                 <span class="card-title center-align"><b>Nueva Idea de Proyecto - {{ auth()->user()->nombres }} {{ auth()->user()->apellidos }}</b></span>
-              </center>
+              </div>
               <div class="divider"></div>
               <div class="card-panel red lighten-3">
                 <div class="card-content white-text">
@@ -26,18 +26,18 @@
               </div>
               <br/>
               <form id="frmIdea_Inicio" name="frmIdea_Inicio" action="{{ route('idea.store') }}" method="POST">
-              @include('ideas.talento.form_inicio', [
+              @include('ideas.form_inicio', [
               'btnText' => 'Guardar'])
               <div class="divider"></div>
-              <center>
-                <button type="submit" class="waves-effect cyan darken-1 btn center-aling" onclick="modalOpcionesFormulario(event)">
-                    <i class="material-icons right">done_all</i>
+              <div class="center">
+                <a class="waves-effect bg-secondary btn center-aling" onclick="modalOpcionesFormulario(event)">
+                    <i class="material-icons right">send</i>
                     Guardar
-                </button>
-                <a href="{{route('idea.index')}}" class="waves-effect red lighten-2 btn center-aling">
-                    <i class="material-icons right">backspace</i>Cancelar
                 </a>
-              </center>
+                <a href="{{route('idea.index')}}" class="bg-danger btn center-aling">
+                    <i class="material-icons left">backspace</i>Cancelar
+                </a>
+              </div>
               </form>
             </div>
           </div>
