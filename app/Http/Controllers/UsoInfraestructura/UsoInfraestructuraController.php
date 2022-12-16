@@ -5,6 +5,7 @@ namespace App\Http\Controllers\UsoInfraestructura;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsoInfraestructura\UsoInfraestructuraFormRequest;
 use App\Models\{Articulation,
+    Idea,
     UsoInfraestructura,
     Actividad,
     Talento,
@@ -168,29 +169,58 @@ class UsoInfraestructuraController extends Controller
         }
         $talentUser = $this->checkRoleAuth($request)['talent'];
         $nodeUser = $this->checkRoleAuth($request)['node'];
+        $model = $this->checkRoleAuth($request)['model'];
         if ($request->ajax()) {
             $usos = [];
             if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null)) {
             $usos = UsoInfraestructura::query()
 
                     //->nodoAsesoriaQuery($nodeUser)
-                    ->select('usoinfraestructuras.id', 'usoinfraestructuras.created_at')
+                    ->selectAsesoria($model)
 
                     //->nodoAsesoria($nodeUser)
-                    ->yearAsesoriaQuery($request->filter_year)
+                    ->nodoAsesoriaQuery($model, $nodeUser)
+                    ->yearAsesoriaQuery($model, $request->filter_year)
+                    ->joins($model)
+
                     //->asesoria($actividad, $user)
                     //->asesor($asesor)
-                    ->orderBy('usoinfraestructuras.created_at', 'desc')
+                    ->groupBy('usoinfraestructuras.id')
+                    ->latest('usoinfraestructuras.created_at')
                     ->get();
             }
             return $usoDatatable->indexDatatable($usos);
         }
 
         $nodes = null;
+        $modules = null;
         if(request()->user()->can('listNodes', UsoInfraestructura::class)) {
             $nodes = Nodo::SelectNodo()->get();
         }
-        return view('usoinfraestructura.index', ['nodos' => $nodes]);
+        if(request()->user()->can('moduleType', UsoInfraestructura::class)) {
+            if(session()->get('login_role') == User::IsTalento()){
+                $modules = [
+                    class_basename(Proyecto::class) => __('Projects'),
+                    class_basename(Articulation::class) => __('Articulations')
+                ];
+            }else if(session()->get('login_role') == User::IsArticulador()){
+                $modules = [
+                    class_basename(Articulation::class) => __('Articulations'),
+                    class_basename(Idea::class) => __('Ideas')
+                ];
+            }
+            else{
+                $modules = [
+                    class_basename(Proyecto::class) => __('Projects'),
+                    class_basename(Articulation::class) => __('Articulations'),
+                    class_basename(Idea::class) => __('Ideas')
+                ];
+            }
+        }
+        return view('usoinfraestructura.index', [
+            'nodos' => $nodes,
+            'modules' => $modules
+        ]);
     }
 
     /**
@@ -205,32 +235,32 @@ class UsoInfraestructuraController extends Controller
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
                 $node = $request->filter_node;
-                $model = $request->filter_model;
+                $model = $request->filter_module;
                 break;
             case User::IsActivador():
                 $node = $request->filter_node;
-                $model = $request->filter_model;
+                $model = $request->filter_module;
                 break;
             case User::IsDinamizador():
                 $node = auth()->user()->dinamizador->nodo_id;
-                $model = $request->filter_model;
+                $model = $request->filter_module;
                 break;
             case User::IsArticulador():
                 $node = auth()->user()->articulador->nodo_id;
-                $model = Articulation::class;
+                $model = $request->filter_module;
                 break;
             case User::IsGestor():
                 $node = auth()->user()->gestor->nodo_id;
-                $model = Proyecto::class;
+                $model = class_basename(Proyecto::class);
                 break;
             case User::IsApoyoTecnico():
                 $node = auth()->user()->apoyotecnico->nodo_id;
-                $model = Proyecto::class;
+                $model = class_basename(Proyecto::class);
                 break;
             case User::IsTalento():
                 $node = null;
                 $talent = auth()->user()->id;
-                $model = $request->filter_model;
+                $model = $request->filter_module;
                 break;
             default:
                 $talent = null;

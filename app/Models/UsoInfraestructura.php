@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
+use App\Models\Proyecto;
+use App\Models\Articulation;
+use App\Models\Idea;
 use App\Presenters\UsoInfraestructuraPresenter;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -212,27 +215,53 @@ class UsoInfraestructura extends Model
         }
         return $query;
     }
-
-    public function scopeNodoAsesoriaQuery($query, $nodo)
+    public function scopeSelectAsesoria($query, $module){
+        if ((!empty($module) && $module != null && $module != 'all')) {
+            switch ($module){
+                case class_basename(Proyecto::class):
+                    return $query->select('usoinfraestructuras.id', 'usoinfraestructuras.fecha')
+                                    ->selectRaw("concat(actividades.codigo_actividad, ' - ', actividades.nombre) as nombre, if(usoinfraestructuras.asesorable_type='App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as tipo_asesoria, sum(gestor_uso.asesoria_directa) as aseseria_directa, sum(gestor_uso.asesoria_indirecta) as asesoria_indirecta, GROUP_CONCAT(DISTINCT CONCAT(asesores.documento, ' - ', asesores.nombres, ' ', asesores.apellidos) SEPARATOR ';') as asesores");
+                    break;
+                case class_basename(Articulation::class):
+                    return $query->select('usoinfraestructuras.id', 'usoinfraestructuras.fecha')
+                        ->selectRaw("concat(articulations.code, ' - ',articulations.name) as nombre, if(usoinfraestructuras.asesorable_type='App\\\Models\\\Articulation', 'Articulación', 'No registra') as tipo_asesoria, sum(gestor_uso.asesoria_directa) as aseseria_directa, sum(gestor_uso.asesoria_indirecta) as asesoria_indirecta, GROUP_CONCAT(DISTINCT CONCAT(asesores.documento, ' - ', asesores.nombres, ' ', asesores.apellidos) SEPARATOR ';') as asesores");
+                    break;
+                case class_basename(Idea::class):
+                    return $query->select('usoinfraestructuras.id', 'usoinfraestructuras.fecha')
+                        ->selectRaw("concat(ideas.codigo_idea, ' - ',ideas.nombre_proyecto) as nombre, if(usoinfraestructuras.asesorable_type='App\\\Models\\\Idea', 'Idea', 'No registra') as tipo_asesoria, sum(gestor_uso.asesoria_directa) as aseseria_directa, sum(gestor_uso.asesoria_indirecta) as asesoria_indirecta, GROUP_CONCAT(DISTINCT CONCAT(asesores.documento, ' - ', asesores.nombres, ' ', asesores.apellidos)  SEPARATOR ';') as asesores");
+                    break;
+                default:
+                    return "No registra";
+                    break;
+            }
+        }
+        return "No registra";
+    }
+    public function scopeNodoAsesoriaQuery($query, $module, $nodo)
     {
-        if (isset($nodo) && $nodo != null && $nodo != 'all') {
-            $this->scopeNodoAsesoriaProjets($query, $nodo);
+        if ((!empty($module) && $module != null && $module != 'all')) {
+            if (isset($nodo) && $nodo != null && $nodo != 'all') {
+                switch ($module){
+                    case class_basename(Proyecto::class):
+                        return $query->where('proyectos.nodo_id', $nodo);
+                        break;
+                    case class_basename(Articulation::class):
+                        return $query->where('articulation_stages.node_id', $nodo);
+                        break;
+                    case class_basename(Idea::class):
+                        return $query->where('ideas.nodo_id', $nodo);
+                        break;
+                    default:
+                        return $query;
+                        break;
+                }
+            }
+            return $query;
         }
         return $query;
     }
 
-    public function scopeNodoAsesoriaProjets($query, $nodo)
-    {
-        if (isset($nodo) && $nodo != null && $nodo != 'all') {
-            $query->select('proyectos.id')
-                ->join('proyectos', function ($join) use ($nodo) {
-                    $join->on('proyectos.id', '=', 'usoinfraestructuras.asesorable_id')
-                    ->where('proyectos.nodo_id', $nodo)
-                    ->where('usoinfraestructuras.asesorable_type', Proyecto::class);
-                });
-        }
-        return $query;
-    }
+
 
     public function scopeAsesoria($query, $actividad, $user)
     {   if ((session()->has('login_role') && session()->get('login_role') == User::IsArticulador()) && (!empty($user) && $user != null && $user != 'all')) {
@@ -341,48 +370,132 @@ class UsoInfraestructura extends Model
         return $query;
     }
 
-    public function scopeYearAsesoriaQuery($query, $year)
-    {
-        // if (!empty($year) && $year != null && $year == 'all') {
-        //     return $query->whereHasMorph(
-        //         'asesorable',
-        //         [ \App\Models\Proyecto::class, \App\Models\Articulation::class, \App\Models\Idea::class]
-        //     );
-        // }
-
+    private function getLeftJoinWithModules($query){
         return $query
-            //->select('proyectos.id')
+            ->leftJoin('proyectos', function ($join) {
+                $join->on('proyectos.id', '=', 'usoinfraestructuras.asesorable_id')
+                    ->where('usoinfraestructuras.asesorable_type', Proyecto::class);
+            })->leftJoin('articulacion_proyecto', function ($join) {
+                $join->on('articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id');
+            })->leftJoin('actividades', function ($join)  {
+                $join->on('actividades.id', '=', 'articulacion_proyecto.actividad_id');
+            })->leftJoin('articulations', function ($join) {
+                $join->on('articulations.id', '=', 'usoinfraestructuras.asesorable_id')
+                    ->where('usoinfraestructuras.asesorable_type', Articulation::class);
+            })->leftJoin('articulation_stages', function ($join) {
+                $join->on('articulation_stages.id', '=', 'articulations.articulation_stage_id');
+            })->leftJoin('ideas', function ($join) {
+                    $join->on('ideas.id', '=', 'usoinfraestructuras.asesorable_id')
+                        ->where('usoinfraestructuras.asesorable_type', Idea::class);
+            })
+            ->join('gestor_uso', function ($join) {
+                $join->on('gestor_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id')
+                    ->where('gestor_uso.asesorable_type', User::class);
+            })
+            ->join('users as asesores', function ($join) {
+                $join->on('asesores.id', '=', 'gestor_uso.asesorable_id');
+            });
+    }
 
+    private function getJoinWithProjects($query){
+        return $query
             ->join('proyectos', function ($join) {
                 $join->on('proyectos.id', '=', 'usoinfraestructuras.asesorable_id')
-                ->where('usoinfraestructuras.asesorable_type', Proyecto::class);
+                    ->where('usoinfraestructuras.asesorable_type', Proyecto::class);
             })->join('articulacion_proyecto', function ($join) {
                 $join->on('articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id');
-            })->join('actividades', function ($join) use ($year) {
+            })->join('actividades', function ($join)  {
                 $join->on('actividades.id', '=', 'articulacion_proyecto.actividad_id');
-                // ->whereYear('fecha_inicio', $year)
-                // ->orWhereYear('fecha_cierre', $year);
+            })->join('gestor_uso', function ($join) {
+                $join->on('gestor_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id')
+                    ->where('gestor_uso.asesorable_type', User::class);
             })
-            ->whereYear('usoinfraestructuras.fecha', $year)
-            ->orWhereYear('actividades.fecha_inicio', $year)
-            ->orWhereYear('actividades.fecha_cierre', $year);
+            ->join('users as asesores', function ($join) {
+                $join->on('asesores.id', '=', 'gestor_uso.asesorable_id');
+            });
+    }
 
-        // if ((!empty($year) && $year != null && $year != 'all')) {
-        //     $query->whereHasMorph(
-        //         'asesorable',
-        //         [ \App\Models\Proyecto::class,  \App\Models\Idea::class],
-        //         function (Builder $subquery) use($year) {
-        //             return $subquery->whereYear('fecha', $year)->orWhereYear('created_at', $year);
-        //         }
-        //     )->orWhereHasMorph(
-        //         'asesorable',
-        //         [ \App\Models\Articulation::class],
-        //         function (Builder $subquery) use($year) {
-        //             return $subquery->whereYear('start_date', $year)->orWhereYear('created_at', $year);
-        //         }
-        //     );
-        // }
-        // return $query;
+    private function getJoinWithArticulations($query){
+        return $query
+            ->join('articulations', function ($join) {
+                $join->on('articulations.id', '=', 'usoinfraestructuras.asesorable_id')
+                    ->where('usoinfraestructuras.asesorable_type', Articulation::class);
+            })
+            ->join('articulation_stages', function ($join) {
+                $join->on('articulation_stages.id', '=', 'articulations.articulation_stage_id');
+            })->join('gestor_uso', function ($join) {
+                $join->on('gestor_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id')
+                    ->where('gestor_uso.asesorable_type', User::class);
+            })
+            ->join('users as asesores', function ($join) {
+                $join->on('asesores.id', '=', 'gestor_uso.asesorable_id');
+            });
+    }
+    private function getJoinWithIdeas($query){
+        return $query
+            ->join('ideas', function ($join) {
+                $join->on('ideas.id', '=', 'usoinfraestructuras.asesorable_id')
+                    ->where('usoinfraestructuras.asesorable_type', \App\Models\Idea::class);
+            })->join('gestor_uso', function ($join) {
+                $join->on('gestor_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id')
+                    ->where('gestor_uso.asesorable_type', User::class);
+            })
+            ->join('users as asesores', function ($join) {
+                $join->on('asesores.id', '=', 'gestor_uso.asesorable_id');
+            });
+    }
+
+    public function scopeYearAsesoriaQuery($query, $module, $year)
+    {
+        if ((!empty($module) && $module != null && $module != 'all')) {
+            if((!empty($year) && $year != null && $year != 'all')){
+                switch ($module){
+                    case class_basename(Proyecto::class):
+                        return $query
+                            ->whereYear('usoinfraestructuras.fecha', $year);
+                            //->orWhereYear('actividades.fecha_inicio', $year)
+                            //->orWhereYear('actividades.fecha_cierre', $year);
+                        break;
+                    case class_basename(Articulation::class):
+                        return $query
+                            ->whereYear('usoinfraestructuras.fecha', $year)
+                            ->orWhereYear('articulations.start_date', $year)
+                            ->orWhereYear('articulations.end_date', $year);
+                        break;
+                    case class_basename(Idea::class):
+                        return $query
+                            ->whereYear('usoinfraestructuras.fecha', $year);
+                        break;
+                    default:
+                        return $query;
+                        break;
+                }
+            }
+            return $query;
+        }
+        return  $query;
+    }
+
+    public function scopeJoins($query, $module)
+    {
+        if ((!empty($module) && $module != null && $module != 'all')) {
+            switch ($module){
+                case class_basename(Proyecto::class):
+                    return $this->getJoinWithProjects($query);
+                    break;
+                case class_basename(Articulation::class):
+                    return $this->getJoinWithArticulations($query);
+                    break;
+                case class_basename(Idea::class):
+                    return $this->getJoinWithIdeas($query);
+                    break;
+                default:
+                    return $query;
+                    break;
+            }
+        }
+        return  $this->getLeftJoinWithModules($query);
+
     }
 
     public function scopeYearAsesoria($query, $year)

@@ -41,6 +41,19 @@ class UsoInfraestructuraPolicy
     }
 
     /**
+     * Determine if the given articulations can be view modules by the user.
+     *
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function moduleType(User $user): bool
+    {
+        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador(),User::IsDinamizador(), User::IsTalento(), User::IsArticulador()])
+            && session()->has('login_role')
+            && (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsTalento());
+    }
+
+    /**
      * Determine whether the user can create usos de infraestructura.
      *
      * @param  \App\User  $user

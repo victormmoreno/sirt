@@ -66,6 +66,18 @@
                                         </select>
                                     </div>
                                 @endcan
+                                @can('moduleType', \App\Models\UsoInfraestructura::class)
+                                    <div class="input-field col s12 m2 l2">
+                                        <label class="active" for="filter_module">Tipo Asesoria <span class="red-text">*</span></label>
+                                        <select name="filter_module" id="filter_module">
+                                            @forelse($modules as $id => $name)
+                                                <option value="{{$id}}">{{$name}}</option>
+                                            @empty
+                                                <option>No se encontraron Resultados</option>
+                                            @endforelse
+                                        </select>
+                                    </div>
+                                @endcan
                                 <div class="input-field col s12 m2 l2">
                                     <label class="active" for="filter_year">Año <span class="red-text">*</span></label>
                                     <select name="filter_year" id="filter_year">

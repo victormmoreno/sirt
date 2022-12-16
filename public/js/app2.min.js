@@ -8534,19 +8534,16 @@ var selectCostoAdministrativoNodo = {
 
 $(document).ready(function() {
 
-    //usoinfraestructuraIndex.queryActivitiesByAnio();
-
-
     let filter_nodo = $('#filter_node').val();
     let filter_year = $('#filter_year').val();
+    let filter_module = $('#filter_module').val();
 
-    console.log(filter_nodo);
 
     $('#usoinfraestructa_data_table').dataTable().fnDestroy();
-    if((filter_nodo != '' || filter_nodo != null)  && (filter_year != '' || filter_year != null)){
-        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo ,  filter_year);
-    }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && (filter_year == '' || filter_year == null || filter_year == undefined)  ){
-        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo = null , filter_year = null);
+    if((filter_nodo != '' || filter_nodo != null)  && (filter_year != '' || filter_year != null) && (filter_module != '' || filter_module != null)){
+        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo, filter_module,  filter_year);
+    }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && (filter_year == '' || filter_year == null || filter_year == undefined) && (filter_module == '' || filter_module == null || filter_module == undefined)  ){
+        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo = null , filter_module = null, filter_year = null);
     }else{
         $('#usoinfraestructa_data_table').DataTable({
             language: {
@@ -8559,7 +8556,7 @@ $(document).ready(function() {
 });
 
 var usoinfraestructuraIndex = {
-    fillDatatatablesUsosInfraestructura: function(filter_nodo , filter_year){
+    fillDatatatablesUsosInfraestructura: function(filter_nodo, filter_module, filter_year){
         //console.log(filter_nodo , filter_year);
         var datatable = $('#usoinfraestructa_data_table').DataTable({
             language: {
@@ -8574,6 +8571,7 @@ var usoinfraestructuraIndex = {
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
+                    filter_module: filter_module,
                     filter_year: filter_year
                 }
             },
@@ -8581,39 +8579,39 @@ var usoinfraestructuraIndex = {
                 {
                     data: 'fecha',
                     name: 'fecha',
-                    width: '10%',
-                    orderable: false,
+                    width: '10%'
                 }, {
                     data: 'gestorEncargado',
                     name: 'gestorEncargado',
                     width: '20%',
+                    orderable: false
                 },
                 {
                     data: 'tipo_asesoria',
                     name: 'tipo_asesoria',
-                    width: '10%',
+                    width: '10%'
                 },
                 {
                     data: 'actividad',
                     name: 'actividad',
-                    width: '35%',
+                    width: '35%'
                 }, {
                     data: 'fase',
                     name: 'fase',
-                    width: '10%',
+                    width: '10%'
                 },  {
                     data: 'asesoria_directa',
                     name: 'asesoria_directa',
-                    width: '5%',
+                    width: '5%'
                 },  {
                     data: 'asesoria_indirecta',
                     name: 'asesoria_indirecta',
-                    width: '5%',
+                    width: '5%'
                 },  {
                     data: 'detail',
                     name: 'detail',
                     width: '5%',
-                    orderable: false,
+                    orderable: false
                 },
             ],
         });
@@ -8726,16 +8724,15 @@ var usoinfraestructuraIndex = {
 }
 
 $('#filter_usoinfraestructura').click(function(){
-    let filter_nodo = $('#filter_nodo').val();
+    let filter_nodo = $('#filter_node').val();
     let filter_year = $('#filter_year').val();
-    let filter_gestor = $('#filter_gestor').val();
-    let filter_actividad = $('#filter_actividad').val();
+    let filter_module = $('#filter_module').val();
 
     $('#usoinfraestructa_data_table').dataTable().fnDestroy();
-    if((filter_nodo != '' || filter_nodo != null)  && (filter_year != '' || filter_year != null)  && (filter_gestor != '' || filter_gestor != null) && (filter_actividad != '' || filter_actividad != null)){
-        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo ,  filter_year, filter_gestor, filter_actividad);
-    }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && (filter_year == '' || filter_year == null || filter_year == undefined)  && (filter_gestor == '' || filter_gestor == null || filter_gestor == undefined) && (filter_actividad == '' || filter_actividad == null || filter_actividad == undefined)){
-        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo = null , filter_year = null, filter_gestor = null, filter_actividad = null);
+    if((filter_nodo != '' || filter_nodo != null)  && (filter_year != '' || filter_year != null) && (filter_module != '' || filter_module != null)){
+        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo, filter_module,  filter_year);
+    }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && (filter_year == '' || filter_year == null || filter_year == undefined) && (filter_module == '' || filter_module == null || filter_module == undefined)  ){
+        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo = null , filter_module = null, filter_year = null);
     }else{
         $('#usoinfraestructa_data_table').DataTable({
             language: {
