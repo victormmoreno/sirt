@@ -15,6 +15,7 @@
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">Inicio</a></li>
                     <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
+                    <li><a href="{{route('usuario.usuarios.show', $user->documento)}}">{{$user->documento}}</a></li>
                     <li class="active">Acceso</li>
                 </ol>
             </div>
@@ -65,7 +66,7 @@
                                                             </div>
                                                             @if(session()->has('success') || session()->has('error'))
                                                                 <div class="center">
-                                                                    <div class="card  {{session('success') ? 'green': ''}} {{session('error') ? 'red': ''}}  darken-1">
+                                                                    <div class="card  {{session('success') ? 'bg-success': ''}} {{session('error') ? 'bg-danger': ''}}">
                                                                         <div class="row">
                                                                             <div class="col s12 m10">
                                                                                 <div class="card-content white-text">

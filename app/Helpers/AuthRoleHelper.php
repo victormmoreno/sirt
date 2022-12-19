@@ -3,7 +3,6 @@
 namespace App\Helpers;
 
 use App\User;
-use Illuminate\Http\Request;
 
 class AuthRoleHelper
 {
@@ -28,6 +27,9 @@ class AuthRoleHelper
                 break;
             case User::IsDinamizador():
                 $node = auth()->user()->dinamizador->nodo_id;
+                break;
+            case User::IsInfocenter():
+                $node = auth()->user()->infocenter->nodo_id;
                 break;
             case User::IsArticulador():
                 $node = auth()->user()->articulador->nodo_id;

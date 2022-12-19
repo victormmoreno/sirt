@@ -368,47 +368,14 @@ class UserController extends Controller
                 ]);
 
             }
-            if (($user->isUserArticulador()) && ($user->articulador->nodo_id != $request->input('txtnodoarticulador'))) {
-                $articulaciones = $user->asesorarticulacionpbt()->articulacionesArticulador();
-                $removeRole = array_diff(collect($user->getRoleNames())->toArray(), $request->input('role'));
-
-                if ($articulaciones->count() > 0 || ($removeRole != null && collect($removeRole)->contains(User::IsArticulador()))) {
-                    return response()->json([
-                        'state' => 'error',
-                        'message' => "No se puede cambiar de nodo, actualmente el experto tiene {$articulaciones->count()} atividades sin finalizar, para ello debe asignarlas a otro Articulador del nodo",
-                        'url' => false,
-                        'activities' => $articulaciones,
-                        'count' => $articulaciones->count()
-                    ]);
-                }
-
-                if ($request->input('txtnodoarticulador') != $user->articulador->nodo_id) {
-                    $userUpdate = $this->userRepository->UpdateUserConfirm($request, $user);
-                    Notification::send($userUpdate, new NodeChanged($userUpdate));
-                    return response()->json([
-                        'state' => 'success',
-                        'message' => 'El Usuario ha sido modificado satisfactoriamente',
-                        'url' => route('usuario.usuarios.show', $userUpdate->documento),
-                        'user' => $userUpdate,
-                    ]);
-                }
-            }
-            /*if (($user->isUserDinamizador() && ($user->dinamizador->nodo_id != $request->input('txtnododinamizador')))
-                || ($user->isUserInfocenter() && ($user->infocenter->nodo_id != $request->input('txtnodoinfocenter')))
-                || ($user->isUserIngreso() && ($user->ingreso->nodo_id != $request->input('txtnodoingreso')))
-                || ($user->isUserApoyoTecnico() && ($user->apoyotecnico->nodo_id != $request->input('txtnodouser')))
-            ) {
-                $userUpdate = $this->userRepository->UpdateUserConfirm($request, $user);
-                Notification::send($userUpdate, new NodeChanged($userUpdate));
-                return response()->json([
-                    'state' => 'success',
-                    'message' => 'El Usuario ha sido modificado satisfactoriamente',
-                    'url' => route('usuario.usuarios.show', $userUpdate->documento),
-                    'user' => $userUpdate,
-                ]);
-            }*/
-
             $userUpdate = $this->userRepository->UpdateUserConfirm($request, $user);
+            if (($user->isUserDinamizador() && isset($user->dinamizador) && ($user->dinamizador->nodo_id != $request->input('txtnododinamizador')))
+                || ($user->isUserInfocenter() && isset($user->infocenter) && ($user->infocenter->nodo_id != $request->input('txtnodoinfocenter')))
+                || ($user->isUserIngreso() && isset($user->ingreso) && ($user->ingreso->nodo_id != $request->input('txtnodoingreso')))
+                || ($user->isUserApoyoTecnico() && isset($user->apoyotecnico) && ($user->apoyotecnico->nodo_id != $request->input('txtnodouser')))
+            ) {
+                Notification::send($userUpdate, new NodeChanged($userUpdate));
+            }
             return response()->json([
                 'state' => 'success',
                 'message' => 'El Usuario ha sido modificado satisfactoriamente',

@@ -80,7 +80,7 @@
                                         @endif
                                         <div class="card-content">
                                             <span class="card-title primary-text center">Información básica</span>
-                                            <span class="badge green lighten-1 white-text">{{$user->present()->userAcceso()}}</span>
+                                            {!!$user->present()->userAcceso()!!}
                                             <div class="server-load row">
                                                 <div class="server-stat col s12 m4 l3">
                                                     <p>{{$user->present()->userTipoDocuento() }}</p>
@@ -270,11 +270,24 @@
                                                     </div>
                                                 </div>
                                             @endif
+                                            @if($user->isUserArticulador())
+                                            <span class="secondary-text">Información {{App\User::IsArticulador()}}</span>
+                                                <div class="server-load row">
+                                                    <div class="server-stat col s12 m4 l4">
+                                                        <p>{{$user->present()->userArticuladorNodoName()}}</p>
+                                                        <span>Nodo</span>
+                                                    </div>
+                                                    <div class="server-stat col s12 m4 l4">
+                                                        <p>{{$user->present()->userArticuladorHonorarios()}}</p>
+                                                        <span>Honorario</span>
+                                                    </div>
+                                                </div>
+                                            @endif
                                             @if($user->isUserApoyoTecnico())
                                             <span class="secondary-text">Información {{App\User::IsApoyoTecnico()}}</span>
                                                 <div class="server-load row">
                                                     <div class="server-stat col s12 m4 l4">
-                                                        <p>{{$user->present()->userApoyoTecnicoNodoName()}}</p>
+                                                        <p>{{$user->present()->userArticuladorNodoName()}}</p>
                                                         <span>Nodo</span>
                                                     </div>
                                                     <div class="server-stat col s12 m4 l4">

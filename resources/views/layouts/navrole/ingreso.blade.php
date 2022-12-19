@@ -18,8 +18,3 @@
     </ul>
   </div>
 </li>
-{{-- <li class="no-padding">
-  <a href="" class="waves-effect waves-grey">
-    <i class="material-icons">description</i>Reportes
-  </a>
-</li> --}}

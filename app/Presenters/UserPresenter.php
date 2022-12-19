@@ -98,7 +98,7 @@ class UserPresenter extends Presenter
 
     public function userAcceso()
     {
-        return $this->user->estado == User::IsActive() && $this->user->deleted_at == null ? 'Habilitado' : "Inhabilitado desde: " .  optional($this->user->deleted_at)->isoFormat('DD/MM/YYYY');
+        return $this->user->estado == User::IsActive() && $this->user->deleted_at == null ? '<span class="badge bg-success  white-text">Habilitado</span>' : '<span class="badge bg-danger  white-text">Inhabilitado desde:'.  optional($this->user->deleted_at)->isoFormat('DD/MM/YYYY').'</span>';
     }
 
     public function userDireccion()
@@ -184,10 +184,16 @@ class UserPresenter extends Presenter
         return $this->user->has('gestor.nodo.entidad') ? "Tecnoparque Nodo {$this->user->gestor->nodo->entidad->nombre}" : $this->message('No Registra');
     }
 
-    public function userArticuladorName()
+    public function userArticuladorNodoName()
     {
         return $this->user->has('articulador.nodo.entidad') ? "Tecnoparque Nodo {$this->user->articulador->nodo->entidad->nombre}" : $this->message('No Registra');
     }
+
+    public function userArticuladorHonorarios()
+    {
+        return $this->user->has('articulador') ? "{$this->user->articulador->honorarios}" : $this->message('No Registra');
+    }
+
     public function userApoyoTecnicoNodoName()
     {
         return $this->user->has('apoyotecnico.nodo.entidad') ? "Tecnoparque Nodo {$this->user->apoyotecnico->nodo->entidad->nombre}" : $this->message('No Registra');
@@ -220,7 +226,7 @@ class UserPresenter extends Presenter
 
     public function userIngresoNombreNodo()
     {
-        return $this->user->has('ingreso.nodo.entidad') ? "Tecnoparque Nodo {$this->user->ingreso->nodo->entidad->nombre}" : $this->message('No Registra');
+        return isset($this->user->ingreso) && $this->user->has('ingreso.nodo.entidad') ? "Tecnoparque Nodo {$this->user->ingreso->nodo->entidad->nombre}" : $this->message('No Registra');
     }
 
     public function userProfileUserImage()
@@ -380,7 +386,7 @@ class UserPresenter extends Presenter
         }
 
         if($this->user->has('articulador') && isset($this->user->articulador->nodo)){
-            return $this->user->present()->userArticuladorName();
+            return $this->user->present()->userArticuladorNodoName();
         }
 
         if($this->user->has('infocenter') && isset($this->user->infocenter->nodo)){

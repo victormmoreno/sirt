@@ -209,43 +209,7 @@ class UserRepository
         try {
             $user = $this->storeUser($request, $password);
             $user->ocupaciones()->sync($request->get('txtocupaciones'));
-            if ($this->existRoleInArray($request, User::IsAdministrador())) {
-                $this->assignRoleUser($user, config('laravelpermission.roles.roleAdministrador'));
-            }
-            if ($this->existRoleInArray($request, User::IsDinamizador())) {
-                $this->exitOneDinamizadorForNodo($user, $request);
-            }
-            if ($this->existRoleInArray($request, User::IsGestor())) {
-                $gestor = Gestor::create([
-                    "user_id"             => $user->id,
-                    "nodo_id"             => $request->input('txtnodogestor'),
-                    "lineatecnologica_id" => $request->input('txtlinea'),
-                    "honorarios"          => $request->input('txthonorario'),
-                ]);
-                $this->assignRoleUser($user, config('laravelpermission.roles.roleGestor'));
-            }
-            if ($this->existRoleInArray($request, User::IsInfocenter())) {
-                Infocenter::create([
-                    "user_id"   => $user->id,
-                    "nodo_id"   => $request->input('txtnodoinfocenter'),
-                    "extension" => $request->input('txtextension'),
-                ]);
-                $this->assignRoleUser($user, config('laravelpermission.roles.roleInfocenter'));
-            }
-            if ($this->existRoleInArray($request, User::IsTalento())) {
-                $this->updateOrCreateTalento($request, $user);
-                $this->assignRoleUser($user, config('laravelpermission.roles.roleTalento'));
-            }
-            if ($this->existRoleInArray($request, User::IsIngreso())) {
-                Ingreso::create([
-                    "nodo_id" => $request->input('txtnodoingreso'),
-                    "user_id" => $user->id,
-                ]);
-                $this->assignRoleUser($user, config('laravelpermission.roles.roleIngreso'));
-            }
-            if ($this->existRoleInArray($request, User::IsProveedor())) {
-                $this->assignRoleUser($user, config('laravelpermission.roles.roleProveedor'));
-            }
+            $this->SyncInfoRolesUser($request, $user);
             DB::commit();
             return $user;
         } catch (\Exception $e) {
@@ -295,7 +259,6 @@ class UserRepository
     protected function updateOrCreateTalento($request, $user)
     {
         $entidad = null;
-
         if (
             $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)->first()->id ||
             $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_CON_APOYO)->first()->id
@@ -369,15 +332,6 @@ class UserRepository
         }
     }
 
-    private function existRoleInArray($request, $role)
-    {
-        if ($request->filled('role')) {
-            if (collect($request->input('role'))->contains($role)) {
-                return true;
-            }
-            return false;
-        }
-    }
 
     /**
      * metodo para comprobar comprobar que el no exista en array
@@ -392,10 +346,6 @@ class UserRepository
         }
     }
 
-    private function roleIsAssigned($newRole, $role)
-    {
-        return collect($newRole)->contains($role);
-    }
 
     private function updateUser($request, $user)
     {
@@ -514,33 +464,6 @@ class UserRepository
         }])
         ->orderby('users.created_at', 'desc')
         ->get();
-    }
-
-    private function exitOneDinamizadorForNodo($user, $request, $method = 'store')
-    {
-        $userdinamizador = User::with('dinamizador.nodo')->whereHas('dinamizador.nodo', function ($query) use ($request) {
-            $query->where('id', $request->txtnododinamizador);
-        })->get();
-
-        if ($userdinamizador->count() >= Dinamizador::cantidadDinamizadoresPermitidosPornodo()) {
-            $userdinamizador->each(function ($item) {
-                if ($item->hasRole(User::IsDinamizador()) && $item->roles->count() == 1) {
-
-                    $item->update([
-                        'estado' => User::IsInactive(),
-                    ]);
-                }
-                $item->dinamizador->delete();
-                $item->removeRole(config('laravelpermission.roles.roleDinamizador'));
-            });
-        }
-        if ($method == 'store') {
-            Dinamizador::create([
-                "user_id" => $user->id,
-                "nodo_id" => $request->input('txtnododinamizador'),
-            ]);
-            $this->assignRoleUser($user, config('laravelpermission.roles.roleDinamizador'));
-        }
     }
 
     public function userInfoWithRelations(array $role = [], array $relations = [])
@@ -714,25 +637,25 @@ class UserRepository
 
     public function UpdateUserConfirm($request, $user)
     {
-        //DB::beginTransaction();
-        //try {
+        // DB::beginTransaction();
+        // try {
             $userUpdate = $this->SyncInfoRolesUser($request, $user);
             $userUpdate->update([
                 'estado' => User::IsActive(),
             ]);
-            //DB::commit();
+            DB::commit();
             return $userUpdate;
-        /*} catch (\Exception $e) {
-            DB::rollback();
-            return false;
-        }*/
+        // } catch (\Exception $e) {
+        //     DB::rollback();
+        //     return false;
+        // }
     }
 
     private function SyncInfoRolesUser($request, $userUpdated)
     {
         $newRole = array_diff($request->input('role'), collect($userUpdated->getRoleNames())->toArray());
 
-       $this->UpdateOrCreateRoleApoyoTecnico($request, $userUpdated, $newRole);
+        $this->UpdateOrCreateRoleApoyoTecnico($request, $userUpdated, $newRole);
 
         $this->UpdateOrCreateRoleArticulador($request, $userUpdated, $newRole);
 
@@ -761,7 +684,6 @@ class UserRepository
     }
 
     /**
-     * @author devjul
      * assign information to new dinamizador
      * @return void
      */
@@ -770,8 +692,6 @@ class UserRepository
         $userdinamizador = $this->queryDinamizadoresByNodo($request);
 
         if ($newRole != null
-            //&& $this->roleIsAssigned($newRole, $role)
-            //&& $this->notExistRoleInArray($request, $userUpdated, $role)
             && collect($request->role)->contains(User::IsDinamizador())
         ) {
             if ($userdinamizador !== null && $userdinamizador->count() >= Dinamizador::cantidadDinamizadoresPermitidosPornodo()) {
@@ -782,7 +702,10 @@ class UserRepository
                         ]);
                     }
                     $item->dinamizador->delete();
-                    $item->removeRole(config('laravelpermission.roles.roleDinamizador'));
+                    $item->talento()->updateOrCreate([
+                        'tipo_talento_id' => $this->getIdTipoTalentoForNombre(TipoTalento::IS_EMPRENDEDOR)
+                    ]);
+                    $item->syncRoles(config('laravelpermission.roles.roleTalento'));
                 });
                 Dinamizador::updateOrCreate(
                     ['user_id' => $userUpdated->id],
@@ -890,28 +813,24 @@ class UserRepository
     }
 
     /**
-     * @author devjul
      * assign information to new talent
      * @return
      */
     private function UpdateOrCreateRoleTalent($request, User $userUpdated, array $role)
     {
-        if ($role != null
-            //$this->notExistRoleInArray($request, $userUpdated, User::IsTalento())
-            && collect($request->role)->contains(User::IsTalento())
+        if ($role != null && collect($request->role)->contains(User::IsTalento())
         ) {
             $this->updateOrCreateTalento($request, $userUpdated);
         }
     }
 
     /**
-     * @author devjul
      * assign information to new ingreso
      * @return
      */
     private function UpdateOrCreateRoleIngreso($request, User $userUpdated, array $role)
     {
-        if ($request->filled('txtnodoinfocenter') && collect($request->role)->contains(User::IsIngreso())) {
+        if ($request->filled('txtnodoingreso') && collect($request->role)->contains(User::IsIngreso())) {
             Ingreso::updateOrCreate(
                 ['user_id' => $userUpdated->id],
                 ["nodo_id" => $request->input('txtnodoingreso')]
@@ -1031,7 +950,7 @@ class UserRepository
      */
     private function generateFomatizedPassword($user)
     {
-        return config('auth.format_password'). substr($user->documento ,6).'*';
+        return config('auth.format_password'). sprintf("%04d",substr($user->documento ,-4)).'*';
     }
 
     public function updateAccessAUser($request, $user)

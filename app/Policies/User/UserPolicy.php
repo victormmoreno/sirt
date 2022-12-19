@@ -4,7 +4,7 @@ namespace App\Policies\User;
 
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Spatie\Permission\Models\Role;
+use Illuminate\Support\Str;
 
 class UserPolicy
 {
@@ -68,26 +68,16 @@ class UserPolicy
      */
     public function index(User $user)
     {
-        return (bool) session()->has('login_role')
-            && (
-                session()->get('login_role') != User::IsApoyoTecnico() ||
-                session()->get('login_role') != User::IsIngreso() ||
-                session()->get('login_role') != User::IsTalento()
-            );
+        return (bool)! Str::contains(session()->get('login_role'), [$user->IsApoyoTecnico(), $user->IsIngreso(), $user->IsTalento()]);
     }
 
     /**
      * Determine whether the user can to show user
      * @return boolean
      */
-    public function show(User $authUser, User $user)
+    public function show(User $authUser, $user)
     {
-        return (bool) session()->has('login_role')
-            && (
-                session()->get('login_role') != User::IsApoyoTecnico() ||
-                session()->get('login_role') != User::IsIngreso() ||
-                session()->get('login_role') != User::IsTalento()
-            );
+        return (bool)! Str::contains(session()->get('login_role'), [$user->IsApoyoTecnico(), $user->IsIngreso(), $user->IsTalento()]);
     }
 
     /**
@@ -96,12 +86,7 @@ class UserPolicy
      */
     public function search(User $user)
     {
-        return (bool) session()->has('login_role')
-            && (
-                session()->get('login_role') != User::IsApoyoTecnico() ||
-                session()->get('login_role') != User::IsIngreso() ||
-                session()->get('login_role') != User::IsTalento()
-            );
+        return (bool)! Str::contains(session()->get('login_role'), [$user->IsApoyoTecnico(), $user->IsIngreso(), $user->IsTalento()]);
     }
 
     /**
@@ -237,7 +222,7 @@ class UserPolicy
                 (session()->get('login_role') == User::IsDinamizador() && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDesarrollador(), User::IsDinamizador()])) ||
                 (
                     (session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsInfocenter())
-                    && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(),User::IsDesarrollador(), User::IsDinamizador(),User::IsGestor(), User::IsArticulador(), User::IsApoyoTecnico(), User::IsInfocenter(), User::IsIngreso(), User::IsTalento()])
+                    && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(),User::IsDesarrollador(), User::IsDinamizador(),User::IsGestor(), User::IsArticulador(), User::IsApoyoTecnico(), User::IsInfocenter(), User::IsIngreso()])
                 )
             );
     }
@@ -250,13 +235,14 @@ class UserPolicy
             (
                 session()->get('login_role') == User::IsAdministrador() ||
                 (session()->get('login_role') == User::IsActivador()) ||
+
                 (
                     session()->get('login_role') == User::IsDinamizador() &&
                     (
-                        isset($user->contratista) && $user->estado == User::IsInactive() &&
                         (isset($authUser->dinamizador) && $authUser->dinamizador->nodo_id == $user->contratista->nodo_id)
                     )
                 )
+                && count($user->roles) <= 0 and $user->estado == User::IsInactive()
             );
     }
     /**

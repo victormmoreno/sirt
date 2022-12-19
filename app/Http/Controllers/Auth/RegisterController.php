@@ -29,7 +29,7 @@ class RegisterController extends Controller
 
     public function __construct(UserRepository $userRepository)
     {
-        $this->middleware('guest')->except(['confirmContratorInformation', 'showConfirmContratorInformationForm']);
+        $this->middleware('auth')->only(['confirmContratorInformation', 'showConfirmContratorInformationForm']);
         $this->userRepository = $userRepository;
     }
 
@@ -263,7 +263,7 @@ class RegisterController extends Controller
         }
         return view('auth.confirm-contractor-information', [
             'user' => $user,
-            'roles' => $this->userRepository->getRoleWhereNotInRole([User::IsDesarrollador()]),
+            'roles' => $this->userRepository->getAllRoles(),
             'nodos'             => $this->userRepository->getAllNodo(),
             'tipotalentos' => TipoTalento::pluck('nombre', 'id'),
             'regionales'        => $this->userRepository->getAllRegionales(),
@@ -293,7 +293,7 @@ class RegisterController extends Controller
             if ($user != null) {
                 $userUpdate = $this->userRepository->UpdateUserConfirm($request, $user);
                 if($userUpdate != null){
-                   //    Notification::send($userUpdate, new RoleAssignedOfficer($userUpdate));
+                    Notification::send($userUpdate, new RoleAssignedOfficer($userUpdate));
                 }
                 return response()->json([
                     'state'   => 'success',

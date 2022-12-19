@@ -3,11 +3,13 @@
         <i class="material-icons {{ setActiveRouteActiveIcon('nodo') }}">location_city</i>Nodo
     </a>
 </li>
+@can('index', App\User::class)
 <li class="no-padding {{setActiveRoute('usuario')}}">
-    <a class="waves-effect waves-grey {{setActiveRouteActivePage('usuario')}}" href="{{route('usuario.index')}}" rel="canonical" title="Talentos">
-        <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>Talentos
+    <a class="waves-effect waves-grey {{setActiveRouteActivePage('usuario')}}" href="{{route('usuario.index')}}" rel="canonical" title="Usuarios">
+        <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>Usuarios
     </a>
 </li>
+@endcan
 <li class="no-padding {{setActiveRoute('proyecto')}}">
     <a href="{{route('proyecto')}}" class="waves-effect waves-grey {{setActiveRouteActivePage('proyecto')}}" rel="canonical" title="Proyectos de Base Tecnológica">
         <i class="material-icons {{ setActiveRouteActiveIcon('proyecto') }}">library_books</i>Proyectos
