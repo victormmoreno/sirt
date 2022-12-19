@@ -339,10 +339,20 @@ class User extends Authenticatable implements JWTSubject
         return $query;
     }
 
-    public function scopeRoleQuery($query, $role)
+    public function scopeRoleIn($query, $role)
     {
         if (!empty($role) && $role != null && $role != 'all') {
-            return $query->role($role);
+            return $query->whereHas('roles', function ($subQuery) use ($role) {
+                $subQuery->whereIn('name', $role);
+            });
+        }
+        return $query;
+    }
+
+    public function scopeRoleQuery($query, $roles)
+    {
+        if (isset($roles) && (!collect($roles)->contains('all'))) {
+            return $query->roleIn($roles);
         }
         return $query;
     }
@@ -442,57 +452,57 @@ class User extends Authenticatable implements JWTSubject
         return $query;
     }
 
-    public function scopeNodoUserQuery($query, $role, $nodo)
+    public function scopeNodoUserQuery($query, $roles, $nodos)
     {
-        if ((!empty($role) && $role != null && $role != 'all' && ($role != User::IsTalento())) && !empty($nodo) && $nodo != null && $nodo != 'all') {
-            if ($role == User::IsDinamizador()) {
+        if ((!empty($roles) && !collect($roles)->contains('all') && (!collect($roles)->contains(User::IsTalento())) && !empty($nodos) &&  !collect($nodos)->contains('all'))) {
+            if (collect($roles)->contains(User::IsDinamizador())) {
                 return $query->join('dinamizador', function ($join) {
                     $join->on('users.id', '=', 'dinamizador.user_id');
-                })->join('nodos', function ($join) use ($nodo) {
+                })->join('nodos', function ($join) use ($nodos) {
                     $join->on('nodos.id', '=', 'dinamizador.nodo_id')
-                        ->where('nodos.id', $nodo);
+                        ->whereIn('nodos.id', $nodos);
                 });
             }
-            if ($role == User::IsGestor()) {
+            if (collect($roles)->contains(User::IsGestor())) {
                 return $query->join('gestores', function ($join) {
                     $join->on('users.id', '=', 'gestores.user_id');
-                })->join('nodos', function ($join) use ($nodo) {
+                })->join('nodos', function ($join) use ($nodos) {
                     $join->on('nodos.id', '=', 'gestores.nodo_id')
-                        ->where('nodos.id', $nodo);
+                        ->whereIn('nodos.id', $nodos);
                 });
             }
-            if ($role == User::IsArticulador()) {
+            if (collect($roles)->contains(User::IsArticulador())) {
                 return $query->join('user_nodo', function ($join) {
                     $join->on('users.id', '=', 'user_nodo.user_id')
                         ->where('user_nodo.role', User::IsArticulador());
-                })->join('nodos', function ($join) use ($nodo) {
+                })->join('nodos', function ($join) use ($nodos) {
                     $join->on('nodos.id', '=', 'user_nodo.nodo_id')
-                        ->where('nodos.id', $nodo);
+                        ->whereIn('nodos.id', $nodos);
                 });
             }
-            if ($role == User::IsApoyoTecnico()) {
+            if (collect($roles)->contains(User::IsApoyoTecnico())) {
                 return $query->join('user_nodo', function ($join) {
                     $join->on('users.id', '=', 'user_nodo.user_id')
                         ->where('user_nodo.role', User::IsApoyoTecnico());
-                })->join('nodos', function ($join) use ($nodo) {
+                })->join('nodos', function ($join) use ($nodos) {
                     $join->on('nodos.id', '=', 'user_nodo.nodo_id')
-                        ->where('nodos.id', $nodo);
+                        ->whereIn('nodos.id', $nodos);
                 });
             }
-            if ($role == User::IsInfocenter()) {
+            if (collect($roles)->contains(User::IsInfocenter())) {
                 return $query->join('infocenter', function ($join) {
                     $join->on('users.id', '=', 'infocenter.user_id');
-                })->join('nodos', function ($join) use ($nodo) {
+                })->join('nodos', function ($join) use ($nodos) {
                     $join->on('nodos.id', '=', 'infocenter.nodo_id')
-                        ->where('nodos.id', $nodo);
+                        ->whereIn('nodos.id', $nodos);
                 });
             }
-            if ($role == User::IsIngreso()) {
+            if (collect($roles)->contains(User::IsIngreso())) {
                 return $query->join('ingresos', function ($join) {
                     $join->on('users.id', '=', 'ingresos.user_id');
-                })->join('nodos', function ($join) use ($nodo) {
+                })->join('nodos', function ($join) use ($nodos) {
                     $join->on('nodos.id', '=', 'ingresos.nodo_id')
-                        ->where('nodos.id', $nodo);
+                        ->whereIn('nodos.id', $nodos);
                 });
             }
             return $query;

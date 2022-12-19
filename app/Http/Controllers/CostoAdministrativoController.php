@@ -18,7 +18,6 @@ class CostoAdministrativoController extends Controller
 
     public function __construct(CostoAdministrativoRepository $costoAdministrativoRepository, NodoRepository $nodoRepository)
     {
-        $this->middleware(['auth', 'role_session:Administrador|Dinamizador']);
         $this->setCostoAdministrativoRepository($costoAdministrativoRepository);
         $this->setNodoRepository($nodoRepository);
     }
@@ -92,6 +91,11 @@ class CostoAdministrativoController extends Controller
 
         switch (Session::get('login_role')) {
             case User::IsAdministrador():
+                return view('costoadministrativo.index', [
+                    'nodos' => $this->getNodoRepository()->getSelectNodo(),
+                ]);
+                break;
+            case User::IsActivador():
                 return view('costoadministrativo.index', [
                     'nodos' => $this->getNodoRepository()->getSelectNodo(),
                 ]);

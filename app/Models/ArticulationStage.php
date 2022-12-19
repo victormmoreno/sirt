@@ -146,10 +146,10 @@ class ArticulationStage extends Model
      *
      * @return void
      */
-    public function scopeNode($query, $node)
+    public function scopeNode($query, $nodes)
     {
-        if (!empty($node) && $node != null && $node != 'all') {
-            return $query->where('node_id', $node);
+        if (isset($nodes) && (!collect($nodes)->contains('all'))) {
+            return $query->whereIn('node_id', $nodes);
         }
         return $query;
     }

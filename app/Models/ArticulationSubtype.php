@@ -61,10 +61,10 @@ class ArticulationSubtype extends Model
         return $query;
     }
 
-    public function scopeNode($query, $node)
+    public function scopeNode($query, $nodes)
     {
-        if (isset($node) && $node != null && $node != 'all') {
-            return $query->where('nodos.id', $node);
+        if (isset($nodes) && (!collect($nodes)->contains('all'))) {
+            return $query->whereIn('nodos.id', $nodes);
         }
         return $query;
     }

@@ -9,7 +9,7 @@
             <div class="row no-m-t no-m-b m-r-lg m-l-lg">
                 <div class="left left-align">
                     <h5 class="left-align primary-text">
-                        <i class="material-icons left">autorenew</i>{{__('articulation-subtype')}}
+                        <i class="material-icons left">settings</i>{{__('articulation-subtype')}}
                     </h5>
                 </div>
                 <div class="right right-align show-on-large hide-on-med-and-down">
@@ -42,8 +42,8 @@
                                         @can('viewNodes', App\Models\ArticulationStage::class)
                                             <div class="input-field col s12 m12 l3">
                                                 <label class="active" for="filter_node_artuculation_subtype">Nodo <span class="red-text">*</span></label>
-                                                <select name="filter_node_artuculation_subtype" id="filter_node_artuculation_subtype">
-                                                    <option value="all" >todos</option>
+                                                <select multiple tabindex="-1" style="width: 100%" name="filter_node_artuculation_subtype" id="filter_node_artuculation_subtype" required>
+                                                    <option value="all">todos</option>
                                                     @forelse ($nodos as $nodo)
                                                         <option value="{{ $nodo->id }}">{{ $nodo->nodos }}</option>
                                                     @empty

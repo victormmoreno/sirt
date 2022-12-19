@@ -47,14 +47,14 @@
             @can('index', App\Models\ArticulationType::class)
                 <li>
                     <a href="{{route('tipoarticulaciones.index')}}" class="{{setActiveRouteActivePage('tipoarticulaciones')}}" rel="canonical" title="Tipos articulaciones">
-                        <i class="material-icons {{setActiveRouteActiveIcon('tipoarticulaciones')}}">library_books</i>{{__('articulation-type')}}
+                        <i class="material-icons {{setActiveRouteActiveIcon('tipoarticulaciones')}}">settings</i>{{__('articulation-type')}}
                     </a>
                 </li>
             @endcan
             @can('index', App\Models\ArticulationSubtype::class)
                 <li class="no-padding">
                     <a href="{{route('tiposubarticulaciones.index')}}" class="{{setActiveRouteActivePage('tiposubarticulaciones')}}" rel="canonical" title="Tipos subarticulaciones">
-                        <i class="material-icons {{setActiveRouteActiveIcon('tiposubarticulaciones')}}">gavel</i>{{__('articulation-subtype')}}
+                        <i class="material-icons {{setActiveRouteActiveIcon('tiposubarticulaciones')}}">settings</i>{{__('articulation-subtype')}}
                     </a>
                 </li>
             @endcan

@@ -2,23 +2,25 @@
 @section('meta-title', config('app.technical_support.title'))
 @section('content')
     <main class="mn-inner inner-active-sidebar">
-        <div class="content">
-            <div class="row no-m-t no-m-b">
+        <div class="content ">
+            <div class="row no-m-t no-m-b m-r-lg m-l-lg">
                 <div class="left left-align">
-                    <h5 class="left-align orange-text text-darken-3">
-                        <i class="material-icons left">autorenew</i>Tipo de articulación
+                    <h5 class="left-align primary-text">
+                        <a href="{{route('tipoarticulaciones.index')}}" class="footer-text left-align">
+                            <i class="material-icons arrow-l left">arrow_back</i>
+                        </a>
+                        {{__('articulation-type')}}
                     </h5>
                 </div>
                 <div class="right right-align show-on-large hide-on-med-and-down">
                     <ol class="breadcrumbs">
                         <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
-                        <li><a href="{{route('articulation-stage')}}">Tipo de articulación</a></li>
+                        <li><a href="{{route('tipoarticulaciones.index')}}">{{__('articulation-type')}}</a></li>
+                        <li><a href="{{route('tipoarticulaciones.show', $typeArticulation)}}">{{isset($typeArticulation->name) ? $typeArticulation->name : __('articulation-type')}}</a></li>
                         <li class="active">Editar</li>
                     </ol>
                 </div>
             </div>
-        </div>
-        <div class="content ">
             <div class="row">
                 <div class="col s12 m12 l12">
                     <div class="card ">
@@ -41,8 +43,8 @@
                                                 <p>Ingresa y selecciona la visibilidad del tipo de articulación</p>
                                             </address>
                                             <form class="m-t-md"
-                                                  action="{{ route('tipoarticulaciones.update', $typeArticulation->id)}}"
-                                                  id="formTypeArticulation" method="POST">
+                                                action="{{ route('tipoarticulaciones.update', $typeArticulation->id)}}"
+                                                id="formTypeArticulation" method="POST">
                                                 {!! method_field('PUT')!!}
                                                 @include('articulation-type.form', ['btnText' => 'Guardar Cambios'])
                                             </form>

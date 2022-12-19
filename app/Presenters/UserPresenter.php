@@ -186,7 +186,7 @@ class UserPresenter extends Presenter
 
     public function userArticuladorNodoName()
     {
-        return $this->user->has('articulador.nodo.entidad') ? "Tecnoparque Nodo {$this->user->articulador->nodo->entidad->nombre}" : $this->message('No Registra');
+        return isset($this->user->articulador->nodo) && $this->user->has('articulador.nodo.entidad') ? "Tecnoparque Nodo {$this->user->articulador->nodo->entidad->nombre}" : $this->message('No Registra');
     }
 
     public function userArticuladorHonorarios()

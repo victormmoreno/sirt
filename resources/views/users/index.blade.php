@@ -66,9 +66,9 @@
                             <div class="row no-m-t no-m-b search-tabs-row search-tabs-header ">
                                 <div class="input-field col s12 m12 l2">
                                     <label class="active" for="filter_rol">Rol <span class="red-text">*</span></label>
-                                    <select  name="filter_rol" id="filter_rol">
+                                    <select  multiple tabindex="-1" style="width: 100%"  name="filter_rol" id="filter_rol">
                                         @forelse($roles as $id => $name)
-                                            <option value="{{$name}}">{{$name}}</option>
+                                            <option @if($loop->first) selected @endcan  value="{{$name}}">{{$name}}</option>
                                         @empty
                                             <option>No se encontraron Resultados</option>
                                         @endforelse
@@ -78,9 +78,9 @@
                                 @can('viewNodes', \App\User::class)
                                 <div class="input-field col s12 m12 l3">
                                     <label class="active" for="filter_nodo">Nodo <span class="red-text">*</span></label>
-                                    <select class="js-states browser-default select2" name="filter_nodo" id="filter_nodo" style="width: 100%;">
+                                    <select  multiple tabindex="-1" style="width: 100%" name="filter_nodo" id="filter_nodo" style="width: 100%;">
                                         @forelse ($nodos as $nodo)
-                                            <option value="{{ $nodo->id }}">{{ $nodo->nodos }}</option>
+                                            <option @if($loop->first) selected @endcan value="{{ $nodo->id }}">{{ $nodo->nodos }}</option>
                                         @empty
                                             <option>{{__('No results found')}}</option>
                                         @endforelse

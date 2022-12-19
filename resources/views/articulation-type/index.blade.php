@@ -3,32 +3,32 @@
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
-        <div class="row no-m-t no-m-b">
+        <div class="row no-m-t no-m-b m-r-lg m-l-lg">
             <div class="left left-align">
-                <h5 class="left-align orange-text text-darken-3">
-                    <i class="material-icons left">autorenew</i>Tipo Articulaciones
+                <h5 class="left-align primary-text">
+                    <i class="material-icons left">settings</i>{{__('articulation-type')}}
                 </h5>
             </div>
             <div class="right right-align show-on-large hide-on-med-and-down">
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
-                    <li class="active">Tipo Articulaciones</li>
+                    <li class="active">{{__('articulation-type')}}</li>
                 </ol>
             </div>
         </div>
-        <div class="card">
-            <div class="card-content">
-                <div class="row">
-                    <div class="col s12 m12 l12">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="card">
+                    <div class="card-content">
                         <div class="row">
                             <div class="col s12 m8 l8">
-                                <div class="center-align  orange-text text-darken-3">
-                                    <span class="card-title center-align">Configuración Articulaciones - Tipo Articulaciones</span>
+                                <div class="center-align primary-text">
+                                    <span class="card-title center-align">Configuración Articulaciones - {{__('articulation-type')}}</span>
                                 </div>
                             </div>
                             <div class="col s12 m4 l4 ">
                                 @can('create', App\Models\ArticulationType::class)
-                                <a  href="{{route('tipoarticulaciones.create')}}" class="waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo tipo Articulación</a>
+                                <a  href="{{route('tipoarticulaciones.create')}}" class="m-r-lg waves-effect bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nueva {{__('articulation-type')}}</a>
                                 @endcan
                             </div>
                         </div>
@@ -47,7 +47,7 @@
                             </div>
                         </div>
                         <table id="type_art_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
-                            <thead>
+                            <thead class="bg-primary white-text">
                                 <tr>
                                     <th>Fecha registro</th>
                                     <th>Nombre</th>

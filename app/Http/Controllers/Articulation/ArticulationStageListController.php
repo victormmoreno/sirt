@@ -167,15 +167,15 @@ class ArticulationStageListController extends Controller
         return datatables()->of($articulationStages)
             ->editColumn('node', function ($data) {
                 if($data->articulation_code){
-                    return "<blockquote class='orange-text text-darken-2'>{$data->nodo}</blockquote>";
+                    return "<blockquote class='primary-text'>{$data->nodo}</blockquote>";
                 }
             })
             ->editColumn('articulation_name', function ($data) {
                 if($data->articulation_code){
                     return "<p>
-                            <span class='orange-text'>{$data->articulation_code}</span><br>
+                            <span class='primary-text'>{$data->articulation_code}</span><br>
                             <b>".Str::limit("{$data->articulation_name}", 40, '...')."</b>
-                         </p>";
+                        </p>";
                 }
 
             })
@@ -187,26 +187,26 @@ class ArticulationStageListController extends Controller
                     </th>
                     <th>
                         <p>
-                        <span class='orange-text'>{$data->present()->articulationStageCode()}</span><br>
-                        <b>".Str::limit("{$data->present()->articulationStageName()}", 40, '...')."</b><br>
-                        <span class='orange-text'>Talento Interlocutor: </span> ".Str::limit("{$data->nombres} {$data->apellidos}", 30, '...')."
-                     </p>
+                            <span class='primary-text'>{$data->present()->articulationStageCode()}</span><br>
+                            <b>".Str::limit("{$data->present()->articulationStageName()}", 40, '...')."</b><br>
+                            <span class='primary-text'>Talento Interlocutor: </span> ".Str::limit("{$data->nombres} {$data->apellidos}", 30, '...')."
+                        </p>
                     </th>
                     <th>
-                     <p>
-                            <span class='orange-text'>{$data->articulation_type}</span><br>
+                        <p>
+                            <span class='primary-text'>{$data->articulation_type}</span><br>
                             <b>".Str::limit("{$data->codigo_proyecto} - {$data->nombre_proyecto}", 40, '...')."</b><br>
                         </p>
                     </th>
                     <th>
-                         <div class='chip red ". $data->present()->articulationStageStatusColor() ." white-text text-darken-2'>".$data->present()->articulationStageStatus()."</div>
+                        <div class='chip ". $data->present()->articulationStageStatusColor() ." white-text text-darken-2'>".$data->present()->articulationStageStatus()."</div>
                     </th>
                     </th>
                     <th>
                         {$data->present()->articulationStageStartDate()}
                     </th>
                     <th>
-                        <a class='btn m-b-xs modal-trigger' href='".route('articulation-stage.show', $data)."'>
+                        <a class='btn bg-secondary m-b-xs modal-trigger' href='".route('articulation-stage.show', $data)."'>
                             <i class='material-icons'>search</i>
                         </a>
                     </th>
@@ -225,7 +225,7 @@ class ArticulationStageListController extends Controller
                 }
             })->addColumn('show', function ($data) {
                 if(isset($data->articulation_id)){
-                    return '<a class="btn m-b-xs modal-trigger" href='.route('articulations.show', [$data->articulation_code]).'>
+                    return '<a class="btn bg-secondary m-b-xs modal-trigger" href='.route('articulations.show', [$data->articulation_code]).'>
                             <i class="material-icons">search</i>
                         </a>';
                 }

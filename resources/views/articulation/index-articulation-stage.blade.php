@@ -6,9 +6,9 @@
 @endphp
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
-        <div class="row no-m-t no-m-b">
+        <div class="row no-m-t no-m-b m-r-lg m-l-lg">
             <div class="left left-align">
-                <h5 class="left-align orange-text text-darken-3">
+                <h5 class="left-align primary-text">
                     <i class="material-icons left">autorenew</i>{{__('articulation-stage')}}
                 </h5>
             </div>
@@ -27,13 +27,13 @@
                             <div class="col s12 m12 l12">
                                 <div class="row">
                                     <div class="col s12 @can('create', App\Models\ArticulationStage::class)  m8 l8 @else m12 l12  @endcan">
-                                    <div class="center-align orange-text text-darken-3">
+                                    <div class="center-align primary-text">
                                         <span class="card-title center-align">{{__('articulation-stage')}} </span>
                                     </div>
                                     </div>
                                     @can('create', App\Models\ArticulationStage::class)
                                         <div class="col s12 m4 l4 ">
-                                            <a  href="{{route('articulation-stage.create')}}" class="m-r-lg waves-effect waves-grey grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">{{__('New ArticulationStage')}}</a>
+                                            <a  href="{{route('articulation-stage.create')}}" class="m-r-lg waves-effect bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">{{__('New ArticulationStage')}}</a>
                                         </div>
                                     @endcan
                                 </div>
@@ -42,7 +42,7 @@
                                         @can('viewNodes', App\Models\ArticulationStage::class)
                                             <div class="input-field col s12 m2 l2">
                                                 <label class="active" for="filter_node_articulationStage">Nodo <span class="red-text">*</span></label>
-                                                <select name="filter_node_articulationStage" id="filter_node_articulationStage">
+                                                <select multiple tabindex="-1" style="width: 100%" name="filter_node_articulationStage[]" id="filter_node_articulationStage">
                                                     <option value="all" >todos</option>
                                                     @foreach($nodos as $id => $name)
                                                         <option value="{{$id}}">{{$name}}</option>
@@ -75,7 +75,7 @@
                                         </div>
                                     </div>
                                 <table id="articulationStage_data_table" class="highlight  responsive-table datatable-example dataTable" style="width: 100%">
-                                        <thead class="orange accent-2 border-bottom-0 border-dark">
+                                        <thead class="bg-primary white-text border-bottom-0 border-dark">
                                         <tr>
                                             <th>{{__('Node')}}</th>
                                             <th>{{__('Name articulation-stage')}}</th>

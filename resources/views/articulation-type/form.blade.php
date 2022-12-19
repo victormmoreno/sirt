@@ -33,5 +33,5 @@
 <small id="checkestado-error" class="error red-text"></small>
 <div class="row">
     <button type="submit"
-            class="waves-effect waves-light btn orange m-b-xs right">{{isset($btnText) ? $btnText : 'Guardar'}}</button>
+            class="waves-effect waves-teal bg-secondary white-text btn-flat m-t-xs right">{{isset($btnText) ? $btnText : 'Guardar'}}</button>
 </div>

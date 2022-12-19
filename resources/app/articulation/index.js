@@ -13,7 +13,8 @@ $(document).ready(function() {
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
-            "lengthChange": false
+            "pageLength": 10,
+            "lengthChange": false,
         }).clear().draw();
     }
 });
@@ -22,7 +23,6 @@ $('#filter_articulationStage').click(function () {
     let filter_node_articulationStage = $('#filter_node_articulationStage').val();
     let filter_year_articulationStage = $('#filter_year_articulationStage').val();
     let filter_status_articulationStage = $('#filter_status_articulationStage').val();
-
     $('#articulationStage_data_table').dataTable().fnDestroy();
     if((filter_node_articulationStage == '' || filter_node_articulationStage == null) && filter_year_articulationStage !='' && filter_status_articulationStage != ''){
         articulationStage.filtersDatatableAccompanibles(filter_node_articulationStage = null,filter_year_articulationStage, filter_status_articulationStage);
@@ -33,7 +33,8 @@ $('#filter_articulationStage').click(function () {
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
-            "lengthChange": false
+            "pageLength": 10,
+            "lengthChange": false,
         }).clear().draw();
     }
 });
@@ -79,9 +80,11 @@ const articulationStage = {
                 [5, 10, 25,50, 100, -1],
                 [5, 10,25, 50, 100, 'Todos'],
             ],
+            "pageLength": 10,
+            "lengthChange": false,
             processing: false,
             serverSide: false,
-            "pageLength": 10,
+
             ajax:{
                 url: "/etapa-articulaciones/datatable_filtros",
                 type: "get",
@@ -121,6 +124,7 @@ const articulationStage = {
                     orderable: false
                 },
             ],
+
             columnDefs: [{ visible: false, targets: groupColumn }],
             displayLength: 25,
             drawCallback: function (settings) {
@@ -143,13 +147,13 @@ const articulationStage = {
         });
         // Order by the grouping
         $('#articulationStage_data_table tbody').on('click', 'tr.group', function () {
-             var currentOrder = table.order()[0];
-             if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
-                 table.order([groupColumn, 'desc']).draw();
-             } else {
-                 table.order([groupColumn, 'asc']).draw();
-             }
-         });
+            var currentOrder = table.order()[0];
+            if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
+                table.order([groupColumn, 'desc']).draw();
+            } else {
+                table.order([groupColumn, 'asc']).draw();
+            }
+        });
     },
     fill_code_project:function(filter_code_project = null){
         articulationStage.emptyResult('result-projects');

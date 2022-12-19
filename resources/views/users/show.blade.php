@@ -287,7 +287,7 @@
                                             <span class="secondary-text">Información {{App\User::IsApoyoTecnico()}}</span>
                                                 <div class="server-load row">
                                                     <div class="server-stat col s12 m4 l4">
-                                                        <p>{{$user->present()->userArticuladorNodoName()}}</p>
+                                                        <p>{{$user->present()->userApoyoTecnicoNodoName()}}</p>
                                                         <span>Nodo</span>
                                                     </div>
                                                     <div class="server-stat col s12 m4 l4">

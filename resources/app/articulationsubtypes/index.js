@@ -17,6 +17,8 @@ $(document).ready(function() {
     }
 });
 
+
+
 $('#filter_articulation_subtype').click(function () {
     let filter_node_artuculation_subtype = $('#filter_node_artuculation_subtype').val();
     let filter_state_artuculation_subtype = $('#filter_state_artuculation_subtype').val();
