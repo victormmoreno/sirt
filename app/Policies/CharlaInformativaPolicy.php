@@ -51,12 +51,25 @@ class CharlaInformativaPolicy
         if (session()->get('login_role') == $user->IsAdministrador()) {
             return true;
         }
-        // if (session()->get('login_role') == $user->IsArticulador() && $charla->nodo_id == request()->user()->articulador->nodo_id) {
-        //     return true;
-        // }
-        // if (session()->get('login_role') == $user->IsInfocenter() && $charla->nodo_id == request()->user()->infocenter->nodo_id) {
-        //     return true;
-        // }
+        if ( Str::contains(session()->get('login_role'), [$user->IsInfocenter(), $user->IsArticulador()]) && $charla->nodo_id == request()->user()->getNodoUser() ) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Determina si el usuario puede ver la información de una charla informativa
+     *
+     * @param App\User $user
+     * @param App\Models\CharlaInformativa $user
+     * @return bool
+     * @author dum
+     **/
+    public function show(User $user, CharlaInformativa $charla)
+    {
+        if (session()->get('login_role') == $user->IsAdministrador()) {
+            return true;
+        }
         if ( Str::contains(session()->get('login_role'), [$user->IsInfocenter(), $user->IsArticulador()]) && $charla->nodo_id == request()->user()->getNodoUser() ) {
             return true;
         }
@@ -87,7 +100,7 @@ class CharlaInformativaPolicy
      **/
     public function showDropzone(User $user)
     {
-        if (session()->get('login_role') == $user->IsDinamizador()) {
+        if (Str::contains(session()->get('login_role'), [$user->IsInfocenter(), $user->IsArticulador(), $user->IsAdministrador()])) {
             return false;
         }
         return true;

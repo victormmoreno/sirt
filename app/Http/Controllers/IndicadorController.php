@@ -33,15 +33,13 @@ class IndicadorController extends Controller
       alert('No autorizado', 'No puedes acceder a los indicadores', 'error')->showConfirmButton('Ok', '#3085d6');
       return back();
     }
-    if (session()->get('login_role') == User::IsDinamizador()) {
-      $nodos = [auth()->user()->dinamizador->nodo_id];
-    } elseif (session()->get('login_role') == User::IsInfocenter()) {
-      $nodos = [auth()->user()->infocenter->nodo_id];
-    } else {
+    if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsActivador()) {
       $nodos_temp = Nodo::SelectNodo()->get()->toArray();
       foreach($nodos_temp as $nodo) {
         $nodos[] = $nodo['id'];
       }
+    } else {
+      $nodos = [request()->user()->getNodoUser()];
     }
 
     $metas = $this->nodoRepository->consultarMetasDeTecnoparque()->whereIn('nodo_id', $nodos);
@@ -51,10 +49,10 @@ class IndicadorController extends Controller
       $query->whereIn('nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
     })->whereIn('nodo_id', $nodos)->groupBy('nodo_id')->get();
     $metas = $this->retornarTodasLasMetasArray($metas, $pbts_trl6, $pbts_trl7_8, $activos);
-
+    $nodos = Nodo::SelectNodo()->whereIn('nodos.id', $nodos)->get();
     return view('indicadores.index', [
-      'nodos' => Nodo::SelectNodo()->get(),
-      'nodos_g' => Nodo::SelectNodo()->paginate(6),
+      'nodos' => $nodos,
+      'nodos_g' => $nodos,
       'metas' => $metas
     ]);
   }

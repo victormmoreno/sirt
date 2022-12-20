@@ -105,7 +105,7 @@ class MaterialPolicy
      */
     public function getMaterialesPorNodo(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador(), User::IsDinamizador(), User::IsExperto()]);
+        return (bool) $user->hasAnyRole([$user->IsActivador(), $user->IsAdministrador(), $user->IsDinamizador(), $user->IsExperto()]);
     }
 
 
@@ -155,7 +155,7 @@ class MaterialPolicy
      */
     public function store(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsDinamizador(), User::IsExperto()]) && session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsExperto() || session()->get('login_role') == User::IsAdministrador();
+        return (bool) session()->has('login_role') && session()->get('login_role') == $user->IsDinamizador() || session()->get('login_role') == $user->IsExperto() || session()->get('login_role') == $user->IsAdministrador();
     }
 
     /**
@@ -189,9 +189,9 @@ class MaterialPolicy
      */
     public function edit(User $user, Material $material)
     {
-        return (bool) (session()->get('login_role') == User::IsAdministrador()) ||
-        (session()->get('login_role') == User::IsDinamizador() && $material->nodo->id == $user->dinamizador->nodo->id) || 
-        (session()->get('login_role') == User::IsExperto() && $material->lineatecnologica->id == $user->gestor->lineatecnologica->id && $material->nodo->id == $user->gestor->nodo->id);
+        return (bool) (session()->get('login_role') == $user->IsAdministrador()) ||
+        (session()->get('login_role') == $user->IsDinamizador() && $material->nodo->id == $user->dinamizador->nodo->id) || 
+        (session()->get('login_role') == $user->IsExperto() && $material->lineatecnologica->id == $user->gestor->lineatecnologica->id && $material->nodo->id == $user->gestor->nodo->id);
     }
 
     /**
@@ -203,7 +203,7 @@ class MaterialPolicy
      */
     public function update(User $user, $material)
     {
-        return (bool) $user->hasAnyRole([User::IsDinamizador(), User::IsExperto()]) && (session()->get('login_role') == User::IsDinamizador() && $material->nodo->id == $user->dinamizador->nodo->id) || (session()->get('login_role') == User::IsExperto() && $material->lineatecnologica->id == $user->gestor->lineatecnologica->id && $material->nodo->id == $user->gestor->nodo->id);
+        return (bool) $user->hasAnyRole([$user->IsDinamizador(), $user->IsExperto()]) && (session()->get('login_role') == $user->IsDinamizador() && $material->nodo->id == $user->dinamizador->nodo->id) || (session()->get('login_role') == $user->IsExperto() && $material->lineatecnologica->id == $user->gestor->lineatecnologica->id && $material->nodo->id == $user->gestor->nodo->id);
     }
 
     /**
@@ -215,8 +215,8 @@ class MaterialPolicy
      */
     public function destroy(User $user, $material)
     {
-        return (bool) (session()->get('login_role') == User::IsAdministrador()) ||
-        (session()->get('login_role') == User::IsDinamizador() && $material->nodo->id == $user->dinamizador->nodo->id) || 
-        (session()->get('login_role') == User::IsExperto() && $material->lineatecnologica->id == $user->gestor->lineatecnologica->id && $material->nodo->id == $user->gestor->nodo->id);
+        return (bool) (session()->get('login_role') == $user->IsAdministrador()) ||
+        (session()->get('login_role') == $user->IsDinamizador() && $material->nodo->id == $user->dinamizador->nodo->id) || 
+        (session()->get('login_role') == $user->IsExperto() && $material->lineatecnologica->id == $user->gestor->lineatecnologica->id && $material->nodo->id == $user->gestor->nodo->id);
     }
 }

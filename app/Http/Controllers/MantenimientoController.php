@@ -193,7 +193,7 @@ class MantenimientoController extends Controller
     public function store(Request $request)
     {
 
-        // $this->authorize('store', EquipoMantenimiento::class);
+        $this->authorize('create', EquipoMantenimiento::class);
         $req = new MantenimientoFormRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {

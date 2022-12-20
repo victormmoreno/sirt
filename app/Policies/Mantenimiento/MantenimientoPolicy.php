@@ -79,17 +79,6 @@ class MantenimientoPolicy
     }
 
     /**
-     * Determine whether the user can store equipo mantenimientos.
-     *
-     * @param  \App\User  $user
-     * @return mixed
-     */
-    public function store(User $user)
-    {
-        return (bool) $user->hasAnyRole([User::IsDinamizador()]) && session()->has('login_role') && session()->get('login_role') == User::IsDinamizador();
-    }
-
-    /**
      * Determine whether the user can show equipo mantenimientos.
      *
      * @param  \App\User  $user
@@ -131,18 +120,5 @@ class MantenimientoPolicy
         return false;
 
     }
-
-    // /**
-    //  * Determine whether the user can update equipo mantenimientos.
-    //  *
-    //  * @param  \App\User  $user
-    //  * @param  \App\Models\EquipoMantenimiento  $mantenimiento
-    //  * @return bool
-    //  */
-    // public function update(User $user, $mantenimiento)
-    // {
-    //     return (bool) $user->hasAnyRole([User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador() && $mantenimiento->equipo->nodo->id == $user->dinamizador->nodo->id;
-
-    // }
 
 }

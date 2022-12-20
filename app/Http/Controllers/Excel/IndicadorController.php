@@ -12,11 +12,12 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Imports\MigracionMetasImport;
 use Illuminate\Http\Request;
-use App\Models\Proyecto;
+use App\Models\{Proyecto, Nodo};
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class IndicadorController extends Controller
 {
@@ -219,15 +220,43 @@ class IndicadorController extends Controller
 
     public function downloadIdeas(Request $request)
     {
+        if ($request->txtnodo_ideas_download[0] != 'all') {
+            if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
+                $nodos = $request->txtnodo_ideas_download;
+            } else {
+                $nodos = [request()->user()->getNodoUser()];
+            }
+        } else {
+            $nodos_temp = Nodo::SelectNodo()->get();
+            foreach ($nodos_temp as $nodo) {
+                $nodos[] = $nodo->id;
+            }
+        }
         $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->whereHas('estadoIdea', function ($query) use ($request) {
             $query->where('nombre', $request->txtestado_idea_download);
-        })->whereIn('nodo_id', $request->txtnodo_ideas_download)
-        ->orderBy('nodo_id')->get();
+        })->whereIn('nodo_id', $nodos)
+        ->orderBy('nodo_id');
+        if (session()->get('login_role') == User::IsExperto()) {
+            $ideas = $ideas->where('ideas.gestor_id', request()->user()->gestor->id);
+        }
+        $ideas = $ideas->get();
         return Excel::download(new IdeasIndicadorExport($ideas), 'Ideas.xlsx');
     }
 
     public function downloadMetas(Request $request)
-    {        
+    {   
+        if ($request->txtnodo_metas_id[0] != 'all') {
+            if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
+                $nodos = $request->txtnodo_metas_id;
+            } else {
+                $nodos = [request()->user()->getNodoUser()];
+            }
+        } else {
+            $nodos_temp = Nodo::SelectNodo()->get();
+            foreach ($nodos_temp as $nodo) {
+                $nodos[] = $nodo->id;
+            }
+        }
         $metas = $this->nodoRepository->consultarMetasDeTecnoparque($request->txtnodo_metas_id)->get();
         $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $this->year_now, [Proyecto::IsTrl6Obtenido()])
         ->whereIn('nodos.id', $request->txtnodo_metas_id)

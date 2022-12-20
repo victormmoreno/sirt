@@ -50,13 +50,17 @@ class CharlaInformativaController extends Controller
      * @author Victor Manuel Moreno Vega
      */
     public function detallesDeUnaCharlaInformativa($id)
-    {
+    {  
         if (request()->ajax()) {
-        $charla = $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id)->toArray();
-        $charla = ArrayHelper::validarDatoNullDeUnArray($charla);
-        return response()->json([
-            'charla' => $charla
-        ]);
+            $charla = $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id)->toArray();
+            if(!request()->user()->can('show', $charla)) {
+                alert('No autorizado', 'No puedes ver charlas informativas', 'error')->showConfirmButton('Ok', '#3085d6');
+                return back();
+            }
+            $charla = ArrayHelper::validarDatoNullDeUnArray($charla);
+            return response()->json([
+                'charla' => $charla
+            ]);
         }
     }
 

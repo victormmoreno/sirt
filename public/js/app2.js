@@ -10817,12 +10817,22 @@ function selectAll(source, elementaName) {
 
 function downloadMetas(e) {
   e.preventDefault();
-  if (!validarChecks("metas_down")) {
+  input = $("#txtnodo_metas_id").val();
+  if (!validarSelect(input)) {
       Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
       return false;
   } else {
+      // location.href = route + '/' + input;
       document.frmDescargarMetas.submit();
   }
+}
+
+function validarSelect(input) {
+  // input = $(input).val();
+  if (input == null) {
+    return false;
+  }
+  return true;
 }
 
 function verificarChecks(source, padre) {
@@ -10857,7 +10867,8 @@ function validarChecks(elementaName) {
 
 function downloadIdeasIndicadores(e) {
   e.preventDefault();
-  if (!validarChecks("ideas_download")) {
+  input = $("#txtnodo_ideas_download").val();
+  if (!validarSelect(input)) {
       Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
       return false;
   } else {

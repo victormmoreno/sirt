@@ -78,30 +78,6 @@ class EquipoPolicy
     }
 
     /**
-     * Determine whether the user can destroy any equipo.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Models\Equipo  $equipo
-     * @return bool
-     */
-    // public function destroy(User $user, $equipo)
-    // {
-    //     return (bool) $user->hasAnyRole([User::IsDinamizador()]) && (session()->get('login_role') == User::IsDinamizador() && $equipo->nodo->id == $user->dinamizador->nodo->id);
-    // }
-
-    // /**
-    //  * Determine whether the user can change state any equipo.
-    //  *
-    //  * @param  \App\User  $user
-    //  * @param  \App\Models\Equipo  $equipo
-    //  * @return bool
-    //  */
-    // public function changeState(User $user, $equipo)
-    // {
-    //     return (bool) $user->hasAnyRole([User::IsDinamizador()]) && (session()->get('login_role') == User::IsDinamizador() && $equipo->nodo->id == $user->dinamizador->nodo->id);
-    // }
-
-    /**
      * True para las opciones que pueden realizar los administrador
      *
      * @param User $user
