@@ -39,41 +39,41 @@
                                 </div>
                                 <div class="divider"></div>
                                 <div class="row search-tabs-row search-tabs-header">
-                                        @can('viewNodes', App\Models\ArticulationStage::class)
-                                            <div class="input-field col s12 m2 l2">
-                                                <label class="active" for="filter_node_articulationStage">Nodo <span class="red-text">*</span></label>
-                                                <select multiple tabindex="-1" style="width: 100%" name="filter_node_articulationStage[]" id="filter_node_articulationStage">
-                                                    <option value="all" >todos</option>
-                                                    @foreach($nodos as $id => $name)
-                                                        <option value="{{$id}}">{{$name}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        @endcan
-                                        <div class="input-field col s12 m2 l1">
-                                            <label class="active" for="filter_year_articulationStage">Año <span class="red-text">*</span></label>
-                                            <select name="filter_year_articulationStage" id="filter_year_articulationStage">
-                                                @for ($i=$year; $i >= 2016; $i--)
-                                                    <option value="{{$i}}" >{{$i}}</option>
-                                                @endfor
+                                    @can('viewNodes', App\Models\ArticulationStage::class)
+                                        <div class="input-field col s12 m2 l2">
+                                            <label class="active" for="filter_node_articulationStage">Nodo <span class="red-text">*</span></label>
+                                            <select multiple tabindex="-1" style="width: 100%" name="filter_node_articulationStage[]" id="filter_node_articulationStage">
                                                 <option value="all" >todos</option>
+                                                @foreach($nodos as $id => $name)
+                                                    <option value="{{$id}}">{{$name}}</option>
+                                                @endforeach
                                             </select>
                                         </div>
-                                        <div class="input-field col s12 m2 l1">
-                                            <label class="active" for="filter_status_articulationStage">{{__('Status')}} <span class="red-text">*</span></label>
-                                            <select name="filter_status_articulationStage" id="filter_status_articulationStage">
-                                                <option value="all" >todos</option>
-                                                <option value="1" >Abierto</option>
-                                                <option value="0" >Cerrado</option>
-                                            </select>
-                                        </div>
-                                        <div class="col s12 m6 l4 offset-m3 right">
-                                            @can('downloadReports', App\Models\ArticulationStage::class)
-                                                <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_articulationStage"><i class="material-icons">cloud_download</i>{{__('Download')}}</button>
-                                            @endcan
-                                            <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_articulationStage"><i class="material-icons">search</i>{{__('Filter')}}</button>
-                                        </div>
+                                    @endcan
+                                    <div class="input-field col s12 m3 l2">
+                                        <label class="active" for="filter_year_articulationStage">Año <span class="red-text">*</span></label>
+                                        <select multiple tabindex="-1" style="width: 100%"  name="filter_year_articulationStage" id="filter_year_articulationStage">
+                                            @for ($i=$year; $i >= 2016; $i--)
+                                                <option @if($i==$year) selected @endif value="{{$i}}" >{{$i}}</option>
+                                            @endfor
+                                            <option value="all" >todos</option>
+                                        </select>
                                     </div>
+                                    <div class="input-field col s12 m2 l1">
+                                        <label class="active" for="filter_status_articulationStage">{{__('Status')}} <span class="red-text">*</span></label>
+                                        <select name="filter_status_articulationStage" id="filter_status_articulationStage">
+                                            <option value="all" >todos</option>
+                                            <option value="1" >Abierto</option>
+                                            <option value="0" >Cerrado</option>
+                                        </select>
+                                    </div>
+                                    <div class="col s12 m6 l4 offset-m3 right">
+                                        @can('downloadReports', App\Models\ArticulationStage::class)
+                                            <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_articulationStage"><i class="material-icons">cloud_download</i>{{__('Download')}}</button>
+                                        @endcan
+                                        <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_articulationStage"><i class="material-icons">search</i>{{__('Filter')}}</button>
+                                    </div>
+                                </div>
                                 <table id="articulationStage_data_table" class="highlight  responsive-table datatable-example dataTable" style="width: 100%">
                                         <thead class="bg-primary white-text border-bottom-0 border-dark">
                                         <tr>

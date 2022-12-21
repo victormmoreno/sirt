@@ -47,18 +47,16 @@ class ArticulationStageRepository
     public function getListArticulacionStagesWithArticulations()
     {
         return ArticulationStage::query()
-            ->select(
-                'articulation_stages.*', 'articulations.code as articulation_code',
-                'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
-                'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
-                'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id', 'interlocutor.documento', 'interlocutor.nombres',
-                'interlocutor.apellidos', 'interlocutor.email'
-            )
-            ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by")
             ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
             ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+
             ->leftJoin('articulations', 'articulations.articulation_stage_id', '=', 'articulation_stages.id')
             ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')
+            ->leftJoin('articulation_subtypes', 'articulation_subtypes.id', '=', 'articulations.articulation_subtype_id')
+            ->leftJoin('articulation_types', 'articulation_types.id', '=', 'articulation_subtypes.articulation_type_id')
+            ->leftJoin('articulation_scopes', 'articulation_scopes.id', '=', 'articulations.scope_id')
+            ->leftJoin('articulation_user', 'articulation_user.articulation_id', '=', 'articulations.id')
+            ->leftJoin('users as participants', 'participants.id', '=', 'articulation_user.user_id')
             ->leftJoin('articulationables', function($q) {
                 $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
                 $q->where('articulationables.articulationable_type', '=', 'App\Models\Proyecto');

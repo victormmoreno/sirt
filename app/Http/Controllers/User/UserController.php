@@ -38,6 +38,8 @@ class UserController extends Controller
             return redirect()->route('home');
         }
         $node = AuthRoleHelper::checkRoleAuth(['node' => $request->filter_nodo])['node'];
+
+
         if (request()->ajax()) {
             $users = [];
             if (($request->filled('filter_nodo') || $request->filter_nodo == null) && ($request->filled('filter_role') || $request->filter_role == null) && $request->filled('filter_state') && ($request->filled('filter_year') || $request->filter_year == null)) {
@@ -56,6 +58,7 @@ class UserController extends Controller
                     ->groupBy('users.id')
                     ->orderBy('users.created_at', 'desc')
                     ->get();
+
             }
             return $usersDatatables->datatableUsers($users);
         }

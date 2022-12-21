@@ -55,12 +55,19 @@ class ArticulationStageListController extends Controller
             $articulationStages = [];
             if (isset($request->filter_status_articulationStage) || isset($request->filter_year_articulationStage)) {
                 $articulationStages = $this->articulationStageRepository->getListArticulacionStagesWithArticulations()
+                ->select(
+                    'articulation_stages.*', 'articulations.code as articulation_code',
+                    'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
+                    'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
+                    'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id', 'interlocutor.documento', 'interlocutor.nombres',
+                    'interlocutor.apellidos', 'interlocutor.email', 'articulation_subtypes.name as articulation_subtype', 'articulation_types.name as articulation_type', 'articulation_scopes.name as scope'
+                )
+                ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by")
                     ->node($node)
                     ->status($request->filter_status_articulationStage)
                     ->year($request->filter_year_articulationStage)
                     ->interlocutorTalent($talent)
                     ->orderBy('articulation_stages.updated_at', 'desc')
-
                     ->get();
             }
             return $this->datatablearticulationStages($articulationStages);
@@ -81,13 +88,23 @@ class ArticulationStageListController extends Controller
             $articulationStages = [];
             if (isset($request->filter_status_articulationStage)) {
                 $articulationStages = $this->articulationStageRepository->getListArticulacionStagesWithArticulations()
-                    ->node($node)
-                    ->status($request->filter_status_articulationStage)
-                    ->year($request->filter_year_articulationStage)
-                    ->interlocutorTalent($talent)
-                    ->groupBy('articulation_stages.code')
-                    ->orderBy('articulation_stages.created_at', 'desc')
-                    ->get();
+                ->select(
+                    'articulation_stages.*', 'articulations.code as articulation_code',
+                    'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
+                    'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
+                    'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id', 'interlocutor.documento', 'interlocutor.nombres',
+                    'interlocutor.apellidos', 'interlocutor.email', 'articulation_subtypes.name as articulation_subtype', 'articulation_types.name as articulation_type', 'articulation_scopes.name as scope'
+                )
+                ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by, GROUP_CONCAT(DISTINCT CONCAT(participants.documento, ' - ', participants.nombres, ' ', participants.apellidos)  SEPARATOR ';') as participants")
+                ->node($node)
+                ->status($request->filter_status_articulationStage)
+                ->year($request->filter_year_articulationStage)
+                ->interlocutorTalent($talent)
+                ->groupBy('articulation_code')
+                ->orderBy('articulation_stages.updated_at', 'desc')
+                ->get();
+
+                // return $articulationStages;
             }
             return (new articulationStageExport($articulationStages))->download(__('articulation-stage') .' - '. config('app.name') . ".{$extension}");
         }

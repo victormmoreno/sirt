@@ -5,11 +5,12 @@
                 {{__('Node')}}
             </th>
             <th>
-                {{__('articulation-stage Type')}}
+                {{__('Code articulation')}}
             </th>
             <th>
-                {{__('Code articulation-stage')}}
+                {{__('Name articulation')}}
             </th>
+
             <th>
                 {{__('Name articulation-stage')}}
             </th>
@@ -18,6 +19,12 @@
             </th>
             <th>
                 {{__('Description')}}
+            </th>
+            <th>
+                {{__('Code articulation-stage')}}
+            </th>
+            <th>
+                {{__('Name articulation-stage')}}
             </th>
             <th>
                 {{__('Scope')}}
@@ -49,26 +56,39 @@
                 {{$articulationStage->nodo}}
             </td>
             <td>
+                {{$articulationStage->articulation_code}}
+            </td>
+            <td>
+                {{$articulationStage->articulation_name}}
+            </td>
+            <td>
+                {{$articulationStage->fase}}
+            </td>
+            <td>
+                {{$articulationStage->code}} - {{$articulationStage->name}}
+            </td>
+            <td>
+                {{$articulationStage->present()->articulationStageStatus()}}
+            </td>
+            <td>
                 {{$articulationStage->articulation_type}}
-            </td>
-            <td>
-                {{$articulationStage->code}}
-            </td>
-            <td>
-                {{$articulationStage->name}}
             </td>
             <td>
                 {{$articulationStage->codigo_proyecto}} - {{$articulationStage->nombre_proyecto}}
             </td>
             <td>
-                {{$articulationStage->present()->articulationStageDescription()}}
+                {{$articulationStage->articulation_description}}
             </td>
             <td>
-                {{$articulationStage->present()->articulationStageScope()}}
+                {{$articulationStage->articulation_subtype}}
             </td>
             <td>
-                {{$articulationStage->present()->articulationStageStatus()}}
+                {{$articulationStage->articulation_type}}
             </td>
+            <td>
+                {{$articulationStage->scope}}
+            </td>
+
             <td>
                 {{$articulationStage->present()->articulationStageStartDate()}}
             </td>
@@ -82,15 +102,17 @@
                 {{$articulationStage->documento}} - {{$articulationStage->nombres}} {{$articulationStage->apellidos}}
             </td>
             <td>
-                {{$articulationStage->present()->articulationStageArticulation()}}
+                {{$articulationStage->participants}}
             </td>
+
         </tr>
+
         @empty
-        <tr>
-            <td>
-                No hay información disponible
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    No hay información disponible
+                </td>
+            </tr>
         @endforelse
     </tbody>
 </table>

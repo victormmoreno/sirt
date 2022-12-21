@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ArticulationStagePresenter;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class ArticulationStage extends Model
 {
@@ -159,15 +160,15 @@ class ArticulationStage extends Model
      *
      * @return void
      */
-        public function scopeYear($query, $year)
+    public function scopeYear($query, $years)
     {
-        if (!empty($year) && $year != null && $year != 'all') {
-            return $query->where(function ($q) use($year){
-                $q->where(function ($subquery) use ($year) {
-                    $subquery->orWhereYear('articulation_stages.end_date', $year)
-                        ->orWhereYear('articulation_stages.start_date', $year)
-                        ->orWhereYear('articulations.end_date', $year)
-                        ->orWhereYear('articulations.start_date', $year)
+        if (isset($years) && (!collect($years)->contains('all'))) {
+            return $query->where(function ($q) use($years){
+                $q->where(function ($subquery) use ($years) {
+                    $subquery->orWhereIn(DB::raw('YEAR(articulation_stages.end_date)'),$years)
+                        ->orWhereIn(DB::raw('YEAR(articulation_stages.start_date)'), $years)
+                        ->orWhereIn(DB::raw('YEAR(articulations.end_date)'), $years)
+                        ->orWhereIn(DB::raw('YEAR(articulations.start_date)'), $years)
                         ->orWhereIn('fases.nombre',  ['Finalizado', 'Suspendido']);
                 })->orWhere(function ($query) {
                     $query->whereIn('fases.nombre', ['Inicio', 'Ejecución', 'Cierre']);
