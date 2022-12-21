@@ -20,7 +20,7 @@ function detallesIdeasDelEntrenamiento(id){
   });
 }
 
-function consultarEntrenamientosPorNodo() {
+function consultarEntrenamientosPorNodo(nodo) {
   $('#entrenamientosPorNodo_table').dataTable().fnDestroy();
   $('#entrenamientosPorNodo_table').DataTable({
     language: {
@@ -29,7 +29,7 @@ function consultarEntrenamientosPorNodo() {
     processing: true,
     serverSide: true,
     ajax:{
-      url: host_url + "/taller/consultarEntrenamientosPorNodo/",
+      url: host_url + "/taller/consultarEntrenamientosPorNodo/" + nodo,
       type: "get",
       data: {
         filter_nodo: $('#filter_nodo').val(),
@@ -60,83 +60,3 @@ function consultarEntrenamientosPorNodo() {
     ],
   });
 }
-
-// $(document).ready(function() {
-//   $('#entrenamientosPorNodo_tableDinamizador').DataTable({
-//     language: {
-//       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-//     },
-//     processing: true,
-//     serverSide: true,
-//     ajax:{
-//       url: host_url + "/talleres/consultarEntrenamientosPorNodo",
-//       type: "get",
-//     },
-//     columns: [
-//       {
-//         title: 'Código del Entrenamiento',
-//         data: 'codigo_entrenamiento',
-//         name: 'codigo_entrenamiento',
-//       },
-//       {
-//         data: 'fecha_sesion1',
-//         name: 'fecha_sesion1',
-//       },
-//       {
-//         width: '8%',
-//         data: 'details',
-//         name: 'details',
-//         orderable: false
-//       },
-//       {
-//         width: '8%',
-//         data: 'evidencias',
-//         name: 'evidencias',
-//         orderable: false
-//       },
-//     ],
-//   });
-//   $('#entrenamientos_nodo_table_articulador').DataTable({
-//     language: {
-//       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-//     },
-//     processing: true,
-//     serverSide: true,
-//     ajax:{
-//       url: host_url + "/talleres/consultarEntrenamientosPorNodo",
-//       type: "get",
-//       data: {
-//         nodo: null,
-//       }
-//     },
-//     columns: [
-//       {
-//         title: 'Código del Entrenamiento',
-//         data: 'codigo_entrenamiento',
-//         name: 'codigo_entrenamiento',
-//       },
-//       {
-//         data: 'fecha_sesion1',
-//         name: 'fecha_sesion1',
-//       },
-//       {
-//         width: '8%',
-//         data: 'details',
-//         name: 'details',
-//         orderable: false
-//       },
-//       {
-//         width: '8%',
-//         data: 'edit',
-//         name: 'edit',
-//         orderable: false
-//       },
-//       {
-//         width: '8%',
-//         data: 'evidencias',
-//         name: 'evidencias',
-//         orderable: false
-//       },
-//     ],
-//   });
-// });

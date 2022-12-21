@@ -54,9 +54,9 @@
     </a>
 </li>
 <li class="no-padding">
-    <a class="collapsible-header waves-effect waves-grey {{setActiveRouteActivePage('csibt')}} {{ setActiveRouteActivePage('idea') }} {{ setActiveRouteActivePage('talleres') }} {{setActiveRouteActivePage('idea')}} {{setActiveRouteActivePage('talleres')}} {{setActiveRouteActivePage('talleres/create')}}  {!! setActiveRoutePadding('idea'),setActiveRoutePadding('talleres'), setActiveRoutePadding('csibt') !!}">
-        <i class="material-icons {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('talleres') }} {{ setActiveRouteActiveIcon('talleres/create') }}">lightbulb_outline</i>Ideas de Proyecto
-        <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('talleres') }} {{ setActiveRouteActiveIcon('talleres/create') }}">keyboard_arrow_right</i>
+    <a class="collapsible-header waves-effect waves-grey {{setActiveRouteActivePage('csibt')}} {{ setActiveRouteActivePage('idea') }} {{ setActiveRouteActivePage('taller') }} {{setActiveRouteActivePage('idea')}} {{setActiveRouteActivePage('taller')}} {{setActiveRouteActivePage('taller/create')}}  {!! setActiveRoutePadding('idea'),setActiveRoutePadding('taller'), setActiveRoutePadding('csibt') !!}">
+        <i class="material-icons {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('taller') }} {{ setActiveRouteActiveIcon('taller/create') }}">lightbulb_outline</i>Ideas de Proyecto
+        <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('csibt') }} {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('taller') }} {{ setActiveRouteActiveIcon('taller/create') }}">keyboard_arrow_right</i>
     </a>
     <div class="collapsible-body">
         <ul>
@@ -66,8 +66,8 @@
             </a>
         </li>
         <li>
-            <a href="{{route('talleres')}}" class="{{setActiveRouteActivePage('talleres')}} {{setActiveRouteActivePage('talleres/create')}}" rel="canonical" title="talleres">
-            <i class="material-icons {{setActiveRouteActiveIcon('talleres')}} {{setActiveRouteActiveIcon('talleres/create')}}">library_books</i>Taller de fortalecimiento
+            <a href="{{route('taller')}}" class="{{setActiveRouteActivePage('taller')}} {{setActiveRouteActivePage('taller/create')}}" rel="canonical" title="taller">
+            <i class="material-icons {{setActiveRouteActiveIcon('taller')}} {{setActiveRouteActiveIcon('taller/create')}}">library_books</i>Taller de fortalecimiento
             </a>
         </li>
         <li class="no-padding">

@@ -3,23 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\{GrupoInvestigacionFormRequest, ContactoEntidadFormRequest};
+use App\Http\Requests\{GrupoInvestigacionFormRequest};
 use App\Models\{GrupoInvestigacion, ClasificacionColciencias, Departamento};
-use App\Repositories\Repository\{GrupoInvestigacionRepository, ContactoEntidadRepository};
-use App\Helpers\ArrayHelper;
-use Illuminate\Support\Facades\Validator;
+use App\Repositories\Repository\{GrupoInvestigacionRepository};
 Use App\User;
 
 class GrupoInvestigacionController extends Controller
 {
 
   private $grupoInvestigacionRepository;
-  private $contactoEntidadRepository;
 
-  public function __construct(GrupoInvestigacionRepository $grupoInvestigacionRepository, ContactoEntidadRepository $contactoEntidadRepository)
+  public function __construct(GrupoInvestigacionRepository $grupoInvestigacionRepository)
   {
     $this->grupoInvestigacionRepository = $grupoInvestigacionRepository;
-    $this->contactoEntidadRepository = $contactoEntidadRepository;
     $this->middleware([
         'auth',
     ]);
@@ -61,50 +57,6 @@ class GrupoInvestigacionController extends Controller
 
   /*=====  End of metodo Api para mostrar los grupos de investigacion por ciudad en datatables  ======*/
 
-
-
-  // Modificar los contactos de un grupo de investigación
-  public function updateContactosGrupo(Request $request, $id)
-  {
-    $req = new ContactoEntidadFormRequest;
-    $validator = Validator::make($request->all(), $req->rules(), $req->messages(), $req->attributes());
-    if ($validator->fails())
-    return response()->json([
-      'fail' => true,
-      'errors' => $validator->errors(),
-      // 'aditional' => $validator->parseData($validator->attributes()),
-    ]);
-    $result = $this->contactoEntidadRepository->update($request, $id);
-    if ($result == false) {
-      return response()->json([
-          'fail' => false
-      ]);
-    }
-  }
-
-  // Consulta los contactos que tiene un empresa, según el id de la ENTIDAD y el nodo
-  public function contactosDelGrupoPorNodo($id)
-  {
-    if (request()->ajax()) {
-      $idnodo_user = "";
-      if (\Session::get('login_role') == User::IsExperto()) {
-        $idnodo_user = auth()->user()->gestor->nodo_id;
-      } else {
-        $idnodo_user = auth()->user()->dinamizador->nodo_id;
-      }
-
-      $contactos = $this->grupoInvestigacionRepository->consultarContactosPorNodoDeUnGrupo($id, $idnodo_user)->toArray();
-
-      $contactos = ArrayHelper::validarDatoNullDeUnArray($contactos);
-      // dd($contactos);
-      return response()->json([
-        'contactos' => $contactos,
-        'route' => url('/grupo/updateContactoDeUnGrupo') . '/' . $id,
-      ]);
-    }
-  }
-
-
   /**
   * Display a listing of the resource.
   *
@@ -112,20 +64,11 @@ class GrupoInvestigacionController extends Controller
   */
   public function index()
   {
+    if (!request()->user()->can('index', GrupoInvestigacion::class)) {
+      alert('No autorizado', 'No puedes ver la información de los grupos de investigación', 'error')->showConfirmButton('Ok', '#3085d6');
+      return back();
+    }
     return view('gruposdeinvestigacion.index');
-    // switch (\Session::get('login_role')) {
-    //   case User::IsExperto():
-    //   break;
-    //   case User::IsDinamizador():
-    //   return view('gruposdeinvestigacion.dinamizador.index');
-    //   break;
-    //   case User::IsActivador():
-    //   return view('gruposdeinvestigacion.administrador.index');
-    //   break;
-    //   default:
-
-    //   break;
-    // }
   }
 
   // Ajax que muestra la información de un grupo de investigación
@@ -238,18 +181,8 @@ class GrupoInvestigacionController extends Controller
     // dd($request->input('txtemail_contacto'));
     $grupo = GrupoInvestigacion::findorFail($id);
     $update = $this->grupoInvestigacionRepository->update($request, $grupo);
-    alert()->success("La empresa ha sido modificada.",'Modificación Exitosa',"success")->showConfirmButton('Ok', '#3085d6');;
+    alert()->success("El grupo de investigación ha sido modificada.",'Modificación Exitosa',"success")->showConfirmButton('Ok', '#3085d6');;
     return redirect()->route('grupo');
   }
 
-  /**
-  * Remove the specified resource from storage.
-  *
-  * @param  int  $id
-  * @return \Illuminate\Http\Response
-  */
-  public function destroy($id)
-  {
-    //
-  }
 }

@@ -117,11 +117,6 @@ class MaterialImport implements ToCollection, WithHeadingRow
 
                 // Validar tipo_de_material
                 $tipoMaterial = TipoMaterial::where('nombre', 'Material Directo')->first();
-                // if ($tipoMaterial == null) {
-                //     $tipoMaterial = TipoMaterial::create([
-                //         'nombre' => ltrim(rtrim($row['tipo_de_material']))
-                //     ]);
-                // }
 
                 // Validar categoria
                 $categoria = CategoriaMaterial::where('nombre', $row['categoria'])->first();

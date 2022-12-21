@@ -66,6 +66,7 @@ mix.scripts([
     'resources/app/linea/dinamizador/index.js',
     'resources/app/nodo/administrador/index.js',
     'resources/app/taller/index.js',
+    'resources/app/taller/create.js',
     'resources/app/ideas/index.js',
     'resources/app/ideas/create.js',
     'resources/app/ideas/show.js',

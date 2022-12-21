@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Fase, Proyecto, ArchivoArticulacionProyecto, Articulacion, RutaModel, ArticulacionPbt, ArchivoModel};
+use App\Models\{Fase, Proyecto, ArchivoArticulacionProyecto, Articulacion, RutaModel, ArticulacionPbt, ArchivoModel, Entrenamiento, Entrenamienton};
 use App\Repositories\Repository\{ArticulacionRepository, ArchivoRepository, ProyectoRepository, EntrenamientoRepository, EdtRepository, CharlaInformativaRepository};
 use Illuminate\Support\Facades\{Storage, Session};
 use App\User;
@@ -276,18 +276,24 @@ class ArchivoController extends Controller
         return datatables()->of($files)
         ->addColumn('download', function ($data) {
             $download = '
-            <a target="_blank" href="' . route('talleres.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
+            <a target="_blank" href="' . route('taller.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
             <i class="material-icons">file_download</i>
             </a>
             ';
             return $download;
         })->addColumn('delete', function ($data) {
-            $delete = '<form method="POST" action="' . route('talleres.files.destroy', $data) . '">
-            ' . method_field('DELETE') . '' .  csrf_field() . '
-            <button class="btn red darken-4 m-b-xs">
-            <i class="material-icons">delete_forever</i>
-            </button>
-            </form>';
+            if (request()->user()->can('delete', Entrenamiento::class)) {
+                $delete = '<form method="POST" action="' . route('taller.files.destroy', $data) . '">
+                ' . method_field('DELETE') . '' .  csrf_field() . '
+                <button class="btn red darken-4 m-b-xs">
+                <i class="material-icons">delete_forever</i>
+                </button>
+                </form>';
+            } else {
+                $delete = '<button class="btn disabled darken-4 m-b-xs">
+                <i class="material-icons">delete_forever</i>
+                </button>';
+            }
             return $delete;
         })->addColumn('file', function ($data) {
             $file = '

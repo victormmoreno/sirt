@@ -1,13 +1,18 @@
 <li class="no-padding">
-    <a class="collapsible-header waves-effect waves-grey {!! setActiveRouteActivePage('idea'), setActiveRouteActivePage('talleres'), setActiveRouteActivePage('csibt') !!} {!! setActiveRoutePadding('idea'), setActiveRoutePadding('talleres'), setActiveRoutePadding('csibt') !!}">
-        <i class="material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('talleres') }} {{ setActiveRouteActiveIcon('csibt') }}">lightbulb_outline</i>Ideas de Proyecto
-        <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('talleres') }} {{setActiveRouteActiveIcon('csibt')}}">keyboard_arrow_right</i>
+    <a class="collapsible-header waves-effect waves-grey {!! setActiveRouteActivePage('idea'), setActiveRouteActivePage('taller'), setActiveRouteActivePage('csibt') !!} {!! setActiveRoutePadding('idea'), setActiveRoutePadding('taller'), setActiveRoutePadding('csibt') !!}">
+        <i class="material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('taller') }} {{ setActiveRouteActiveIcon('csibt') }}">lightbulb_outline</i>Ideas de Proyecto
+        <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('taller') }} {{setActiveRouteActiveIcon('csibt')}}">keyboard_arrow_right</i>
     </a>
     <div class="collapsible-body">
         <ul>
         <li>
             <a href="{{route('idea.index')}} " class="{{setActiveRouteActivePage('idea')}}" rel="canonical" title="Ideas">
             <i class="material-icons {{setActiveRouteActiveIcon('idea')}}">lightbulb</i>Ideas
+            </a>
+        </li>
+        <li>
+            <a href="{{route('taller')}}" class="{{setActiveRouteActivePage('taller')}}" rel="canonical" title="Taller de fortalecimiento">
+            <i class="material-icons {{setActiveRouteActiveIcon('taller')}}">library_books</i>Taller de fortalecimiento
             </a>
         </li>
         <li>

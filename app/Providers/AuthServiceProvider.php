@@ -15,6 +15,7 @@ use App\Models\ArticulacionPbt;
 use App\Models\CharlaInformativa;
 use App\Models\Proyecto;
 use App\Models\GrupoInvestigacion;
+use App\Models\Entrenamiento;
 use App\Policies\CostoAdministrativo\CostoAdministrativoPolicy;
 use App\Policies\Empresa\EmpresaPolicy;
 use App\Policies\Equipo\EquipoPolicy;
@@ -29,6 +30,7 @@ use App\Policies\ProyectoPolicy;
 use App\Policies\CharlaInformativaPolicy;
 use App\Policies\ModelPolicy;
 use App\Policies\GrupoPolicy;
+use App\Policies\TallerPolicy;
 use App\Policies\ArticulacionPbt\ArticulacionPbtPolicy;
 use App\Policies\ArticulacionPbt\TipoArticulacionPolicy;
 use App\User;
@@ -60,6 +62,7 @@ class AuthServiceProvider extends ServiceProvider
         CharlaInformativa::class => CharlaInformativaPolicy::class,
         Model::class => ModelPolicy::class,
         GrupoInvestigacion::class => GrupoPolicy::class,
+        Entrenamiento::class => TallerPolicy::class,
     ];
 
     /**

@@ -4,10 +4,12 @@
         {!! csrf_field() !!}
         <div class="input-field col s12 m6 l6">
             <select multiple name="txtnodo_metas_id[]" id="txtnodo_metas_id" style="width: 100%">
-            <option value="all" selected>Todos</option>
-            @foreach($nodos as $nodo)
-                <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
-            @endforeach
+                @if (session()->get('login_role') == auth()->user()->IsActivador() || session()->get('login_role') == auth()->user()->IsAdministrador())
+                    <option value="all" selected>Todos</option>
+                @endif
+                    @foreach($nodos as $nodo)
+                        <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
+                    @endforeach
             </select>
             <label for="txtnodo_metas_id">Seleccione el nodo</label>
         </div>

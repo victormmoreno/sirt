@@ -3,9 +3,9 @@
         <i class="material-icons {{setActiveRouteActiveIcon('idea')}}">lightbulb</i>Ideas
     </a>
 </li>
-<li class="no-padding {{setActiveRoute('talleres')}}">
-    <a href="{{route('talleres')}}" class="{{setActiveRouteActivePage('talleres')}}" rel="canonical" title="Taller de Fortalecimiento">
-        <i class="material-icons {{setActiveRouteActiveIcon('talleres')}}">library_books</i>Taller de Fortalecimiento
+<li class="no-padding {{setActiveRoute('taller')}}">
+    <a href="{{route('taller')}}" class="{{setActiveRouteActivePage('taller')}}" rel="canonical" title="Taller de Fortalecimiento">
+        <i class="material-icons {{setActiveRouteActiveIcon('taller')}}">library_books</i>Taller de Fortalecimiento
     </a>
 </li>
 <li class="no-padding {{setActiveRoute('charla')}}">

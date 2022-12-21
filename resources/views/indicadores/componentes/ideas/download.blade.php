@@ -11,7 +11,9 @@
             </div>
             <div class="input-field col s12 m6 l6">
                 <select multiple name="txtnodo_ideas_download[]" id="txtnodo_ideas_download" style="width: 100%">
-                <option value="all" selected>Todos</option>
+                @if (session()->get('login_role') == auth()->user()->IsActivador() || session()->get('login_role') == auth()->user()->IsAdministrador())
+                    <option value="all" selected>Todos</option>
+                @endif
                 @foreach($nodos as $nodo)
                     <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
                 @endforeach

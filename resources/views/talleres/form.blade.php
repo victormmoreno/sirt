@@ -44,9 +44,9 @@
     </div>
   </div>
   <div class="row">
-    <center>
-      <a onclick="addIdeaToEntrenamiento()" class="indigo lighten-2 btn-large" data-position="bottom" data-delay="50" data-tooltip="Agregar la idea de proyecto seleccionada al taller de fortalecimiento"><i class="material-icons left">add</i>Agregar</a>
-    </center>
+    <div class="center">
+      <a onclick="addIdeaToEntrenamiento()" class="bg-primary btn-large" data-position="bottom" data-delay="50" data-tooltip="Agregar la idea de proyecto seleccionada al taller de fortalecimiento"><i class="material-icons left">add</i>Agregar</a>
+    </div>
   </div>
 </div>
 <div class="row">

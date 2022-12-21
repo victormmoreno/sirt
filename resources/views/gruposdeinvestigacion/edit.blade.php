@@ -6,19 +6,32 @@
   <div class="content">
     <div class="row no-m-t no-m-b">
       <div class="col s12 m12 l12">
-        <h5>
-          <a class="footer-text left-align" href="{{route('grupo')}}">
-            <i class="left material-icons">arrow_back</i>
-          </a> Grupos de Investigación
-        </h5>
+        <div class="row">
+          <h5 class="left left-align primary-text">
+            <a href="{{route('grupo')}}" class="primary-text">
+              <i class="material-icons left">
+                arrow_back
+              </i>
+              
+            </a>
+            Grupos de investigación
+          </h5>
+          <div class="right-align show-on-large hide-on-med-and-down">
+              <ol class="breadcrumbs">
+                  <li><a href="{{route('home')}}">Inicio</a></li>
+                  <li><a href="{{route('grupo')}}">Grupos de investigación</a></li>
+                  <li class="active">Cambiar información {{$grupo->codigo_grupo}}</li>
+              </ol>
+          </div>
+      </div>
         <div class="card">
           <div class="card-content">
             <div class="row">
               <div class="col s12 m12 l12">
                 <br>
-                <center>
-                  <span class="card-title center-align">Nuevo Grupos de Investigación - Red Tecnoparque</span>
-                </center>
+                <div class="center primary-text">
+                  <span class="card-title center-align">Cambiar información - {{$grupo->codigo_grupo}}</span>
+                </div>
                 <div class="divider"></div>
                 <form action="{{route('grupo.update', $grupo->id)}}" method="POST" onsubmit="return checkSubmit()">
                   {!! method_field('PUT')!!}
@@ -115,10 +128,10 @@
                     </div>
                   </div>
                   <div class="divider"></div>
-                  <center>
-                    <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
-                    <a href="{{route('grupo')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
-                  </center>
+                  <div class="center">
+                    <button type="submit" class="bg-secondary btn center-aling"><i class="material-icons right">send</i>Modificar</button>
+                    <a href="{{route('grupo')}}" class="bg-danger btn center-aling"><i class="material-icons left">backspace</i>Cancelar</a>
+                  </div>
                 </form>
               </div>
             </div>

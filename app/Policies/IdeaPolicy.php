@@ -217,10 +217,8 @@ class IdeaPolicy
         if (session()->get('login_role') == $user->IsTalento() && $idea->talento_id == $user->talento->id) {
             return true;
         }
-        if (Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsArticulador(), $user->IsExperto()])) {
-            if ($idea->nodo_id == $user->getNodoUser()) {
-                return true;
-            }
+        if ((Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsArticulador(), $user->IsExperto()])) && $idea->nodo_id == $user->getNodoUser()) {
+            return true;
         }
         return false;
 

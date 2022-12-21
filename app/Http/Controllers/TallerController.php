@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\EntrenamientoFormRequest;
-use App\Models\{Idea, Nodo, EstadoIdea};
+use App\Models\{Entrenamiento, Idea, Nodo, EstadoIdea};
 use App\Repositories\Repository\{EntrenamientoRepository, IdeaRepository};
 use Illuminate\Support\Facades\{DB, Session, Validator};
 use App\User;
@@ -37,7 +37,7 @@ class TallerController extends Controller
         $update = $this->entrenamientoRepository->updateEvidencias($request, $id);
         if ($update) {
             Alert::success('Modificación Exitosa!', 'Los entregables del taller de fortalecimiento se han modificado!')->showConfirmButton('Ok', '#3085d6');
-            return redirect('entrenamientos');
+            return redirect('taller');
         } else {
             Alert::error('Modificación Errónea!', 'Los entregables del taller de fortalecimiento no se han modificado!')->showConfirmButton('Ok', '#3085d6');
             return back();
@@ -52,23 +52,14 @@ class TallerController extends Controller
      */
     public function evidencias($id)
     {
-        $entrenamiento = $this->entrenamientoRepository->getById($id);
+        $taller = $this->entrenamientoRepository->getById($id);
+        if (!request()->user()->can('show', $taller)) {
+            alert('No autorizado', 'No puedes acceder a este taller de fortalecimiento', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
         return view('talleres.form_evidencias', [
-            'entrenamiento' => $entrenamiento,
+            'entrenamiento' => $taller,
         ]);
-        // if (\Session::get('login_role') == User::IsArticulador()) {
-        //     return view('entrenamientos.articulador.evidencias', [
-        //         'entrenamiento' => $entrenamiento,
-        //     ]);
-        // }
-        // if (\Session::get('login_role') == User::IsDinamizador()) {
-        //     return view('entrenamientos.dinamizador.evidencias', [
-        //         'entrenamiento' => $entrenamiento,
-        //     ]);
-        // }
-        // if (\Session::get('login_role') == User::IsActivador()) {
-        // }
-        // abort('403');
     }
 
 
@@ -80,6 +71,10 @@ class TallerController extends Controller
      */
     public function index()
     {
+        if (!request()->user()->can('index', Entrenamiento::class)) {
+            alert('No autorizado', 'No puedes acceder a los talleres de fortalecimiento', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
         if (request()->ajax()) {
             $entrenamientos = $this->entrenamientoRepository->consultarEntrenamientosPorNodo(auth()->user()->infocenter->nodo_id);
             return datatables()->of($entrenamientos)
@@ -102,64 +97,27 @@ class TallerController extends Controller
                     return $edit;
                 })->rawColumns(['details', 'edit', 'update_state', 'evidencias'])->make(true);
         }
-        // $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
         return view('talleres.index', [
-            'nodos' => Nodo::SelectNodo()->get()
+            'nodos' => Nodo::SelectNodo()->orderBy('entidades.nombre')->get()
         ]);
-
-        // if (\Session::get('login_role') == User::IsInfocenter()) {
-        // } else if (\Session::get('login_role') == User::IsActivador()) {
-        //     $nodos = Nodo::SelectNodo()->get();
-        //     return view('entrenamientos.administrador.index', compact('nodos'));
-        // } else if (\Session::get('login_role') == User::IsDinamizador()) {
-        //     return view('entrenamientos.dinamizador.index');
-        // } else if ( Session::get('login_role') == User::IsArticulador() ) {
-        //     return view('entrenamientos.articulador.index');
-        // } else {
-        //     abort('403');
-        // }
-    }
-
-    public function getIdNodoForTaller($request)
-    {
-        $nodo = null;
-        if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
-            $nodo = $request->filter_nodo;
-        }
-        if (session()->get('login_role') == User::IsDinamizador()) {
-            $nodo = auth()->user()->dinamizador->nodo_id;
-        }
-        if (session()->get('login_role') == User::IsExperto()) {
-            $nodo = auth()->user()->gestor->nodo_id;
-        }
-        if (session()->get('login_role') == User::IsInfocenter()) {
-            $nodo = auth()->user()->infocenter->nodo_id;
-        }
-        if (session()->get('login_role') == User::IsArticulador()) {
-            $nodo = auth()->user()->articulador->nodo_id;
-        }
-        return $nodo;
     }
 
     // Datatable para los entrenamientos por nodo, (Por parte del administrador)
-    public function datatableEntrenamientosPorNodo(Request $request)
+    public function datatableEntrenamientosPorNodo(int $nodo)
     {
-        $nodo_id = $this->getIdNodoForTaller($request);
+        $nodo_id = request()->user()->getNodoUser() == null ? $nodo : request()->user()->getNodoUser();
         $entrenamientos = $this->entrenamientoRepository->consultarEntrenamientosPorNodo($nodo_id);
         return datatables()->of($entrenamientos)
         ->addColumn('details', function ($data) {
             $button = '
-            <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="detallesIdeasDelEntrenamiento(' . $data->id . ')">
+            <a class="btn bg-info m-b-xs modal-trigger" href="#modal1" onclick="detallesIdeasDelEntrenamiento(' . $data->id . ')">
             <i class="material-icons">info</i>
             </a>
             ';
             return $button;
-        })->addColumn('edit', function ($data) {
-            $edit = '<a class="btn m-b-xs" disabled><i class="material-icons">edit</i></a>';
-            return $edit;
         })->addColumn('evidencias', function ($data) {
             $evidencias = '
-            <a class="btn blue-grey m-b-xs" href=' . route('talleres.evidencias', $data->id) . '>
+            <a class="btn bg-secondary m-b-xs" href=' . route('taller.evidencias', $data->id) . '>
             <i class="material-icons">library_books</i>
             </a>
             ';
@@ -181,13 +139,13 @@ class TallerController extends Controller
      */
     public function create()
     {
+        if (!request()->user()->can('create', Entrenamiento::class)) {
+            alert('No autorizado', 'No puedes registrar talleres de fortalecimiento', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
         $now = Carbon::now()->isoFormat('YYYY');
         $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('nodo_id', auth()->user()->articulador->nodo_id)->whereYear('created_at', $now)->get();
-        if (Session::get('login_role') == User::IsArticulador()) {
-            return view('entrenamientos.articulador.create', ['ideas' => $ideas]);
-        } else {
-            abort('403');
-        }
+        return view('talleres.create', ['ideas' => $ideas]);
     }
 
     /**
@@ -273,7 +231,7 @@ class TallerController extends Controller
                     'title' => $result['title'],
                     'msg' => $result['msg'],
                     'type' => $result['type'],
-                    'url' => route('entrenamientos'),
+                    'url' => route('taller'),
                 ]);
             } else {
                 return response()->json([
@@ -286,20 +244,4 @@ class TallerController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     * @author Victor Manuel Moreno Vega
-     */
-    public function edit($id)
-    {
-        $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
-        $ideas = Idea::ConsultarIdeasEnInicio(auth()->user()->infocenter->nodo_id)->get();
-        $entrenamiento = $this->entrenamientoRepository->consultarEntrenamientoPorId($id);
-        if (\Session::get('login_role') == User::IsInfocenter()) {
-            return view('entrenamientos.infocenter.edit', compact('nodo', 'ideas', 'entrenamiento'));
-        }
-    }
 }

@@ -6,17 +6,15 @@
     <div class="content">
       <div class="row no-m-t no-m-b">
         <div class="row">
-              <div class="col s8 m8 l9">
-                  <h5>
-                    <a class="footer-text left-align" href="{{route('talleres')}}">
-                      <i class="left material-icons">arrow_back</i>
-                    </a> Entrenamientos
-                  </h5>
-              </div>
-              <div class="col s4 m4 l3 rigth-align show-on-large hide-on-med-and-down">
+              <h5 class="left primary-text primary-text">
+                <a href="{{route('taller')}}">
+                  <i class="left material-icons primary-text">arrow_back</i>
+                </a> Talleres de fortalecimiento
+              </h5>
+              <div class="right right-align show-on-large hide-on-med-and-down">
                   <ol class="breadcrumbs">
                       <li><a href="{{route('home')}}">Inicio</a></li>
-                      <li><a href="{{route('talleres')}}">Entrenamientos</a></li>
+                      <li><a href="{{route('taller')}}">Taller de fortalecimiento</a></li>
                       <li class="active">Evidencias</li>
                   </ol>
               </div>
@@ -25,23 +23,17 @@
           <div class="card-content">
             <div class="row">
               <div class="col s12 m12 l12">
-                <form onsubmit="return checkSubmit()" method="post" action="{{ route('talleres.update.evidencias', $entrenamiento->id) }}">
+                <form onsubmit="return checkSubmit()" method="post" action="{{ route('taller.update.evidencias', $entrenamiento->id) }}">
                   {!! method_field('PUT')!!}
                   {!! csrf_field() !!}
                   <div class="row">
-                    <div class="input-field col s12 m12 l12">
+                    <div class="input-field col s12 m6 l6">
                       <input id="txtcodigo_entrenamiento" required disabled value="{{$entrenamiento->codigo_entrenamiento}}">
-                      <label for="txtcodigo_entrenamiento" class="active">Código del Entrenamiento</label>
+                      <label for="txtcodigo_entrenamiento" class="active">Código del taller</label>
                     </div>
-                  </div>
-                  <div class="row">
                     <div class="input-field col s12 m6 l6">
                       <input id="txtfecha_sesion1" disabled value="{{$entrenamiento->fecha_sesion1->toDateString()}}">
-                      <label for="txtfecha_sesion1" class="active">Fecha de la Primera Sesión</label>
-                    </div>
-                    <div class="input-field col s12 m6 l6">
-                      <input id="txtfecha_sesion2" value="{{$entrenamiento->fecha_sesion2->toDateString()}}" disabled>
-                      <label for="txtfecha_sesion2" class="active">Fecha de la Segunda Sesión</label>
+                      <label for="txtfecha_sesion1" class="active">Fecha del taller</label>
                     </div>
                   </div>
                   <div class="divider"></div>
@@ -65,26 +57,28 @@
                       </p>
                     </div>
                   </div>
-                  <div class="row">
-                    <ul class="collapsible" data-collapsible="accordion">
-                      <li>
-                        <div class="collapsible-header teal lighten-4"><i class="material-icons">filter_drama</i>Pulse aquí para subir los entregables del Entrenamiento</div>
-                        <div class="collapsible-body">
-                          <div class="row">
-                            <div class="center col s12 m12 l12">
-                              <h6>Pulse aquí para subir los entregables del Entrenamiento.</h6>
-                              <div class="dropzone" id="evidencias_entrenamiento"></div>
+                  @can('upload', $entrenamiento)
+                    <div class="row">
+                      <ul class="collapsible" data-collapsible="accordion">
+                        <li>
+                          <div class="collapsible-header teal lighten-4"><i class="material-icons">filter_drama</i>Pulse aquí para subir los entregables del Entrenamiento</div>
+                          <div class="collapsible-body">
+                            <div class="row">
+                              <div class="center col s12 m12 l12">
+                                <h6>Pulse aquí para subir los entregables del Entrenamiento.</h6>
+                                <div class="dropzone" id="evidencias_entrenamiento"></div>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
+                        </li>
+                      </ul>
+                    </div>
+                  @endcan
                   <div class="divider"></div>
-                  <center>
-                    <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
-                    <a href="{{route('talleres')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
-                  </center>
+                  <div class="center">
+                    <button type="submit" class="bg-secondary btn center-aling"><i class="material-icons right">send</i>Modificar</button>
+                    <a href="{{route('taller')}}" class="bg-danger btn center-aling"><i class="material-icons left">backspace</i>Cancelar</a>
+                  </div>
                 </form>
                 <div class="row">
                   <div class="col s12 m12 l12">
@@ -167,7 +161,7 @@
   }
 
   var DropzoneEntrenamiento = new Dropzone('#evidencias_entrenamiento', {
-    url: host_url + '/entrenamientos/store/' + {{$entrenamiento->id}} + '/files',
+    url: host_url + '/taller/store/' + {{$entrenamiento->id}} + '/files',
     headers: {
       'X-CSRF-TOKEN': '{{ csrf_token() }}'
     },

@@ -321,20 +321,20 @@ Route::group(
     }
 );
 
-//-------------------Route group para el módulo de Entrenamientos
+//-------------------Route group para el módulo de taller de fortalecimiento
 Route::group(
     [
         'prefix'     => 'taller',
         'middleware' => ['auth', 'role_session:Infocenter|Activador|Dinamizador|Experto|Articulador'],
     ],
     function () {
-        Route::get('/', 'TallerController@index')->name('talleres');
-        Route::get('/consultarEntrenamientosPorNodo', 'TallerController@datatableEntrenamientosPorNodo');
-        Route::get('/create', 'TallerController@create')->name('talleres.create')->middleware('role_session:Articulador');
-        Route::get('/{id}/edit', 'TallerController@edit')->name('talleres.edit')->middleware('role_session:Infocenter');
-        Route::get('/{id}', 'TallerController@details')->name('talleres.details');
-        Route::get('/inhabilitarEntrenamiento/{id}/{estado}', 'TallerController@inhabilitarEntrenamiento')->name('talleres.inhabilitar')->middleware('role_session:Infocenter');
-        Route::get('/{id}/evidencias', 'TallerController@evidencias')->name('talleres.evidencias');
+        Route::get('/', 'TallerController@index')->name('taller');
+        Route::get('/consultarEntrenamientosPorNodo/{id}', 'TallerController@datatableEntrenamientosPorNodo');
+        Route::get('/create', 'TallerController@create')->name('taller.create')->middleware('role_session:Articulador');
+        // Route::get('/{id}/edit', 'TallerController@edit')->name('taller.edit')->middleware('role_session:Infocenter');
+        Route::get('/{id}', 'TallerController@details')->name('taller.details');
+        Route::get('/inhabilitarEntrenamiento/{id}/{estado}', 'TallerController@inhabilitarEntrenamiento')->name('taller.inhabilitar')->middleware('role_session:Infocenter');
+        Route::get('/{id}/evidencias', 'TallerController@evidencias')->name('taller.evidencias');
         Route::get('/getideasEntrenamiento', 'TallerController@get_ideasEntrenamiento')->middleware('role_session:Infocenter');
         Route::get('/getConfirm/{id}/{estado}', 'TallerController@getConfirm')->middleware('role_session:Infocenter');
         Route::get('/getCanvas/{id}/{estado}', 'TallerController@getCanvas')->middleware('role_session:Infocenter');
@@ -342,13 +342,13 @@ Route::group(
         Route::get('/getAssistS/{id}/{estado}', 'TallerController@getAssistS')->middleware('role_session:Infocenter');
         Route::get('/getConvocado/{id}/{estado}', 'TallerController@getConvocado')->middleware('role_session:Infocenter');
         Route::get('/eliminar/{id}', 'TallerController@eliminar_idea')->middleware('role_session:Infocenter');
-        Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileEntrenamiento')->name('talleres.files.download');
+        Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileEntrenamiento')->name('taller.files.download');
         Route::get('/datatableArchivosDeUnEntrenamiento/{id}', 'ArchivoController@datatableArchivosDeUnEntrenamiento');
-        Route::put('/updateEvidencias/{id}', 'TallerController@updateEvidencias')->name('talleres.update.evidencias')->middleware('role_session:Articulador');
-        Route::post('/', 'TallerController@store')->name('talleres.store')->middleware('role_session:Articulador');
+        Route::put('/updateEvidencias/{id}', 'TallerController@updateEvidencias')->name('taller.update.evidencias')->middleware('role_session:Articulador');
+        Route::post('/', 'TallerController@store')->name('taller.store')->middleware('role_session:Articulador');
         Route::post('/addidea', 'TallerController@add_idea')->middleware('role_session:Infocenter');
-        Route::post('/store/{id}/files', 'ArchivoController@uploadFileEntrenamiento')->name('talleres.files.store')->middleware('role_session:Articulador');
-        Route::delete('/file/{idFile}', 'ArchivoController@destroyFileEntrenamiento')->name('talleres.files.destroy')->middleware('role_session:Articulador');
+        Route::post('/store/{id}/files', 'ArchivoController@uploadFileEntrenamiento')->name('taller.files.store')->middleware('role_session:Articulador');
+        Route::delete('/file/{idFile}', 'ArchivoController@destroyFileEntrenamiento')->name('taller.files.destroy')->middleware('role_session:Articulador');
     }
 );
 
@@ -430,8 +430,6 @@ Route::group(
         Route::get('/datatableGruposInvestigacionDeTecnoparque', 'GrupoInvestigacionController@datatableGruposInvestigacionDeTecnoparque')->name('grupo.datatable');
         Route::get('/{id}/edit', 'GrupoInvestigacionController@edit')->name('grupo.edit')->middleware('role_session:Dinamizador|Experto');
         Route::get('/ajaxDetallesDeUnGrupoInvestigacion/{id}', 'GrupoInvestigacionController@detallesDeUnGrupoInvestigacion')->name('grupo.detalle');
-        Route::get('/ajaxContactosDeUnaEntidad/{identidad}', 'GrupoInvestigacionController@contactosDelGrupoPorNodo')->name('grupo.contactos.nodo');
-        Route::put('/updateContactoDeUnGrupo/{id}', 'GrupoInvestigacionController@updateContactosGrupo')->name('grupo.update.contactos');
         Route::put('/{id}', 'GrupoInvestigacionController@update')->name('grupo.update')->middleware('role_session:Dinamizador|Experto');
         Route::post('/', 'GrupoInvestigacionController@store')->name('grupo.store')->middleware('role_session:Dinamizador|Experto');
     }
