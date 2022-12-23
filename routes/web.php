@@ -705,9 +705,10 @@ Route::group(
         Route::get('/seguimientoEsperadoDeUnGestor/{id}', 'SeguimientoController@seguimientoEsperadoDelGestor');
         Route::get('/seguimientoInscritosPorMesExperto/{id}', 'SeguimientoController@seguimientoProyectosInscritosPorMes');
         Route::get('/seguimientoEsperadoDeUnaLinea/{id}/{nodo}', 'SeguimientoController@seguimientoEsperadoDeLaLinea');
-        Route::get('/seguimientoEsperado', 'SeguimientoController@seguimientoseguimientoEsperadoDelNodoEsperado')->middleware('role_session:Activador|Dinamizador|Experto')->name('seguimiento.esperado');
+        Route::get('/seguimientoEsperado', 'SeguimientoController@seguimientoEsperado')->middleware('role_session:Activador|Dinamizador|Experto')->name('seguimiento.esperado');
         Route::get('/seguimientoEsperadoDeTecnoparque', 'SeguimientoController@seguimientoEsperadoDeTecnoparque')->middleware('role_session:Activador');
         Route::get('/seguimientoDeUnNodoFases', 'SeguimientoController@seguimientoDelNodoFases')->middleware('role_session:Activador|Dinamizador');
+        // Route::get('/seguimientoEsperadoDeUnNodo', 'SeguimientoController@seguimientoEsperado')->middleware('role_session:Activador|Dinamizador');
         Route::get('/seguimientoDeTecnoparqueFases', 'SeguimientoController@seguimientoDeTecnoparqueFases')->middleware('role_session:Dinamizador|Activador');
         Route::get('/seguimientoActualDeUnGestor/{id}', 'SeguimientoController@seguimientoActualDelGestor');
         Route::get('/seguimientoActualDeUnaLinea/{id}/{nodo}', 'SeguimientoController@seguimientoActualDeLaLinea');

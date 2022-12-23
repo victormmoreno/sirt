@@ -5,44 +5,48 @@ function isset(variable) {
   return false;
 }
 
-function sendListNodos(url) {
-  let nodosSend = [];
-  let nodosID = $('.nodos_list_select:checked').map(function(){
-    return $(this).val();
+function sendListNodos(url, input) {
+  let nodosSend = input;
+  return $.ajax({
+    dataType: 'json',
+    type: 'get',
+    data: {
+      nodos: nodosSend
+    },
+    url: url,
+    // success: function (data) { },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
   });
-  if (nodosID.length == 0) {
-    alertaNodoNoValido();
+};
+
+function consultarSeguimientoDeUnNodoFases(e, url) {
+  e.preventDefault();
+  input = $("#txtnodo_select_actual").val();
+  if (!validarSelect(input)) {
+      Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
+      return false;
   } else {
-    for (let i = 0; i < nodosID.length; i++) {
-      nodosSend.push(nodosID[i]);
-    }
-    return $.ajax({
-      dataType: 'json',
-      type: 'get',
-      data: {
-        nodos: nodosSend
-      },
-      url: url,
-      // success: function (data) { },
-      error: function (xhr, textStatus, errorThrown) {
-        alert("Error: " + errorThrown);
-      },
-    });
+    let ajax = sendListNodos(url, input);
+      ajax.success(function (data) {
+        graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
+      });
   }
 };
 
-function consultarSeguimientoDeUnNodoFases(url) {
-  let ajax = sendListNodos(url);
-  ajax.success(function (data) {
-    graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
-  });
-};
-
-function consultarSeguimientoEsperadoDeUnNodo(url) {
-  let ajax = sendListNodos(url);
-  ajax.success(function (data) {
-    graficoSeguimientoEsperado(data, graficosSeguimiento.nodo_esperado);
-  });
+function consultarSeguimientoEsperado(e, url) {
+  e.preventDefault();
+  input = $("#txtnodo_select_list").val();
+  if (!validarSelect(input)) {
+      Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
+      return false;
+  } else {
+    let ajax = sendListNodos(url, input);
+      ajax.success(function (data) {
+        graficoSeguimientoEsperado(data, graficosSeguimiento.nodo_esperado);
+      });
+  }
 }
 
 function generarExcelConTodosLosIndicadores() {

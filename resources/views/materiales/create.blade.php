@@ -9,7 +9,7 @@
                     <h5 class="left left-align primary-text">
                         <a class="footer-text " href="{{route('equipo.index')}}">
                               <i class="material-icons primary-text">local_library</i>
-                        </a> Materiales de Formación Tecnoparque Nodo  {{\NodoHelper::returnNameNodoUsuario()}}
+                        </a> Materiales de Formación Tecnoparque
                     </h5>
                     <div class="right right-align rigth-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">

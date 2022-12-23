@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\Repository\{ProyectoRepository, LineaRepository};
 use Illuminate\Support\Facades\{Session};
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\{Gestor, Nodo};
 use App\User;
@@ -228,18 +229,24 @@ class SeguimientoController extends Controller
    * @return Response
    * @author dum
    */
-  public function seguimientoEsperadoDelNodo(Request $request)
+  public function seguimientoEsperado(Request $request)
   {
-    // $idnodo = $id;
-    if (Session::get('login_role') == User::IsDinamizador()) {
-      $nodos_list[] = auth()->user()->dinamizador->nodo_id;
-    } else {
-      $nodos_list = $request->nodos;
-    }
+    if ($request->nodos[0] != 'all') {
+      if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
+          $nodos = $request->nodos;
+      } else {
+          $nodos = [request()->user()->getNodoUser()];
+      }
+  } else {
+      $nodos_temp = Nodo::SelectNodo()->get();
+      foreach ($nodos_temp as $nodo) {
+          $nodos[] = $nodo->id;
+      }
+  }
     // dd($nodos_list);
     $datos = array();
     $trlEsperados = 0;
-    $trlEsperados = $this->getProyectoRepository()->proyectosSeguimientoAbiertos('trl_esperado')->whereIn('nodos.id', $nodos_list)->get();
+    $trlEsperados = $this->getProyectoRepository()->proyectosSeguimientoAbiertos('trl_esperado')->whereIn('nodos.id', $nodos)->get();
     $trlEsperadosAgrupados = $this->agruparTrls($trlEsperados, 'esperados');
 
     $datos = $this->retornarValoresDelSeguimientoEsperados($trlEsperadosAgrupados);
@@ -272,16 +279,23 @@ class SeguimientoController extends Controller
    **/
   public function seguimientoDelNodoFases(Request $request)
   {
-    if (Session::get('login_role') == User::IsDinamizador()) {
-      $nodos_list[] = auth()->user()->dinamizador->nodo_id;
+    // dd($request->nodos);
+    if ($request->nodos[0] != 'all') {
+        if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
+            $nodos = $request->nodos;
+        } else {
+            $nodos = [request()->user()->getNodoUser()];
+        }
     } else {
-      $nodos_list = $request->nodos;
+        $nodos_temp = Nodo::SelectNodo()->get();
+        foreach ($nodos_temp as $nodo) {
+            $nodos[] = $nodo->id;
+        }
     }
-
     $Pabiertos = 0;
     $Pfinalizados = 0;
-    $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->whereIn('nodos.id', $nodos_list)->get();
-    $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos_list)->get();
+    $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->whereIn('nodos.id', $nodos)->get();
+    $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->get();
     
     $agrupados = $this->agruparProyectos($Pabiertos, $Pfinalizados);
     return response()->json([

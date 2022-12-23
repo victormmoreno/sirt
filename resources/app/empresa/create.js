@@ -206,55 +206,43 @@ $(document).on('submit', 'form#formSearchEmpresas', function (event) {
     $('button[type="submit"]').attr('disabled', 'disabled');
     event.preventDefault();
     $('#empresas_encontradas').empty();
-    let nit = $('#txtnit_search').val();
-    let patronNit=new RegExp('^[0-9]{9,13}$');
-    if (!patronNit.test(nit)) {
-        Swal.fire(
-            'Estás ingresando mal los datos!',
-            'Por favor ingrese un nit válido entre 6 y 13 dígitos (no se permiten puntos ni código de verificación)',
-            'error'
-        );
-        $('button[type="submit"]').removeAttr('disabled');
-        $('button[type="submit"]').prop("disabled", false);
-    } else {
-        var form = $(this);
-        var data = new FormData($(this)[0]);
-        var url = form.attr("action");
-        $.ajax({
-            type: form.attr('method'),
-            url: url,
-            data: data,
-            cache: false,
-            contentType: false,
-            dataType: 'json',
-            processData: false,
-            success: function (data) {
-                if (data.empresas.length == 0) {
-                    $('#empresas_encontradas').append(`
-                        <div class="row">
-                            <ul class="collection with-header">
-                                <li class="collection-header"><h5>No se encontraron empresas</h5></li>
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    $.ajax({
+        type: form.attr('method'),
+        url: url,
+        data: data,
+        cache: false,
+        contentType: false,
+        dataType: 'json',
+        processData: false,
+        success: function (data) {
+            if (data.empresas.length == 0) {
+                $('#empresas_encontradas').append(`
+                    <div class="row">
+                        <ul class="collection with-header">
+                            <li class="collection-header"><h5>No se encontraron empresas</h5></li>
+                        </ul>
+                    </div>
+                `);
+            } else {
+                if (data.state == 'search') {
+                    $('#empresas_encontradas').append(`<div class="row">`);
+                        $.each( data.empresas, function( key, empresa ) {
+                        let route = data.urls[key];
+                        $('#empresas_encontradas').append(`
+                            <ul class="collection">
+                                <li class="collection-item"><h5>`+empresa.nit+` - `+empresa.nombre+`</h5></li>
+                                <li class="collection-item"><a href=`+route+`>Ver detalles</a></li>
                             </ul>
-                        </div>
-                    `);
-                } else {
-                    if (data.state == 'search') {
-                        $('#empresas_encontradas').append(`<div class="row">`);
-                            $.each( data.empresas, function( key, empresa ) {
-                            let route = data.urls[key];
-                            $('#empresas_encontradas').append(`
-                                <ul class="collection">
-                                    <li class="collection-item"><h5>`+empresa.nit+` - `+empresa.nombre+`</h5></li>
-                                    <li class="collection-item"><a href=`+route+`>Ver detalles</a></li>
-                                </ul>
-                            `);
-                        });
-                        $('#empresas_encontradas').append(`</div>`);
-                    }
+                        `);
+                    });
+                    $('#empresas_encontradas').append(`</div>`);
                 }
-                $('button[type="submit"]').removeAttr('disabled');
-                $('button[type="submit"]').prop("disabled", false);
-            },
-        });
-    }
+            }
+            $('button[type="submit"]').removeAttr('disabled');
+            $('button[type="submit"]').prop("disabled", false);
+        },
+    });
 });

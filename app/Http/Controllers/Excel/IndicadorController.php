@@ -257,13 +257,13 @@ class IndicadorController extends Controller
                 $nodos[] = $nodo->id;
             }
         }
-        $metas = $this->nodoRepository->consultarMetasDeTecnoparque($request->txtnodo_metas_id)->get();
+        $metas = $this->nodoRepository->consultarMetasDeTecnoparque($nodos)->get();
         $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $this->year_now, [Proyecto::IsTrl6Obtenido()])
-        ->whereIn('nodos.id', $request->txtnodo_metas_id)
+        ->whereIn('nodos.id', $nodos)
         ->groupBy('mes')
         ->get();
         $pbts_trl7_8 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $this->year_now, [Proyecto::IsTrl7Obtenido(), Proyecto::IsTrl8Obtenido()])
-        ->whereIn('nodos.id', $request->txtnodo_metas_id)
+        ->whereIn('nodos.id', $nodos)
         ->groupBy('mes')
         ->get();
         $activos = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->select('nodo_id')->selectRaw('count(id) as cantidad')->whereHas('fase', function ($query) {

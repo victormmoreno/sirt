@@ -2315,57 +2315,45 @@ $(document).on('submit', 'form#formSearchEmpresas', function (event) {
     $('button[type="submit"]').attr('disabled', 'disabled');
     event.preventDefault();
     $('#empresas_encontradas').empty();
-    let nit = $('#txtnit_search').val();
-    let patronNit=new RegExp('^[0-9]{9,13}$');
-    if (!patronNit.test(nit)) {
-        Swal.fire(
-            'Estás ingresando mal los datos!',
-            'Por favor ingrese un nit válido entre 6 y 13 dígitos (no se permiten puntos ni código de verificación)',
-            'error'
-        );
-        $('button[type="submit"]').removeAttr('disabled');
-        $('button[type="submit"]').prop("disabled", false);
-    } else {
-        var form = $(this);
-        var data = new FormData($(this)[0]);
-        var url = form.attr("action");
-        $.ajax({
-            type: form.attr('method'),
-            url: url,
-            data: data,
-            cache: false,
-            contentType: false,
-            dataType: 'json',
-            processData: false,
-            success: function (data) {
-                if (data.empresas.length == 0) {
-                    $('#empresas_encontradas').append(`
-                        <div class="row">
-                            <ul class="collection with-header">
-                                <li class="collection-header"><h5>No se encontraron empresas</h5></li>
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    $.ajax({
+        type: form.attr('method'),
+        url: url,
+        data: data,
+        cache: false,
+        contentType: false,
+        dataType: 'json',
+        processData: false,
+        success: function (data) {
+            if (data.empresas.length == 0) {
+                $('#empresas_encontradas').append(`
+                    <div class="row">
+                        <ul class="collection with-header">
+                            <li class="collection-header"><h5>No se encontraron empresas</h5></li>
+                        </ul>
+                    </div>
+                `);
+            } else {
+                if (data.state == 'search') {
+                    $('#empresas_encontradas').append(`<div class="row">`);
+                        $.each( data.empresas, function( key, empresa ) {
+                        let route = data.urls[key];
+                        $('#empresas_encontradas').append(`
+                            <ul class="collection">
+                                <li class="collection-item"><h5>`+empresa.nit+` - `+empresa.nombre+`</h5></li>
+                                <li class="collection-item"><a href=`+route+`>Ver detalles</a></li>
                             </ul>
-                        </div>
-                    `);
-                } else {
-                    if (data.state == 'search') {
-                        $('#empresas_encontradas').append(`<div class="row">`);
-                            $.each( data.empresas, function( key, empresa ) {
-                            let route = data.urls[key];
-                            $('#empresas_encontradas').append(`
-                                <ul class="collection">
-                                    <li class="collection-item"><h5>`+empresa.nit+` - `+empresa.nombre+`</h5></li>
-                                    <li class="collection-item"><a href=`+route+`>Ver detalles</a></li>
-                                </ul>
-                            `);
-                        });
-                        $('#empresas_encontradas').append(`</div>`);
-                    }
+                        `);
+                    });
+                    $('#empresas_encontradas').append(`</div>`);
                 }
-                $('button[type="submit"]').removeAttr('disabled');
-                $('button[type="submit"]').prop("disabled", false);
-            },
-        });
-    }
+            }
+            $('button[type="submit"]').removeAttr('disabled');
+            $('button[type="submit"]').prop("disabled", false);
+        },
+    });
 });
 $('#txttipogrupo').change(function () {
   let idtipo = $('#txttipogrupo').val();
@@ -10041,43 +10029,6 @@ function consultarSeguimientoEsperadoDeTecnoparque() {
   })
 };
 
-// function consultarSeguimientoEsperadoDeUnNodo(nodo_id) {
-
-//   if ( nodo_id === "" ) {
-//     alertaNodoNoValido();
-//   } else {
-//     $.ajax({
-//       dataType: 'json',
-//       type: 'get',
-//       url: host_url + '/seguimiento/seguimientoEsperadoDeUnNodo/'+nodo_id,
-//       success: function (data) {
-//         graficoSeguimientoEsperado(data, graficosSeguimiento.nodo_esperado);
-//       },
-//       error: function (xhr, textStatus, errorThrown) {
-//         alert("Error: " + errorThrown);
-//       },
-//     })
-//   }
-// };
-
-// function consultarSeguimientoDeUnNodoFases(nodo_id) {
-//   if ( nodo_id === "" ) {
-//     alertaNodoNoValido();
-//   } else {
-//     $.ajax({
-//       dataType: 'json',
-//       type: 'get',
-//       url: host_url + '/seguimiento/seguimientoDeUnNodoFases/'+nodo_id,
-//       success: function (data) {
-//         graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
-//       },
-//       error: function (xhr, textStatus, errorThrown) {
-//         alert("Error: " + errorThrown);
-//       },
-//     })
-//   }
-// };
-
 function consultarSeguimientoDeTecnoparqueFases() {
   $.ajax({
     dataType: 'json',
@@ -10805,44 +10756,48 @@ function isset(variable) {
   return false;
 }
 
-function sendListNodos(url) {
-  let nodosSend = [];
-  let nodosID = $('.nodos_list_select:checked').map(function(){
-    return $(this).val();
+function sendListNodos(url, input) {
+  let nodosSend = input;
+  return $.ajax({
+    dataType: 'json',
+    type: 'get',
+    data: {
+      nodos: nodosSend
+    },
+    url: url,
+    // success: function (data) { },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
   });
-  if (nodosID.length == 0) {
-    alertaNodoNoValido();
+};
+
+function consultarSeguimientoDeUnNodoFases(e, url) {
+  e.preventDefault();
+  input = $("#txtnodo_select_actual").val();
+  if (!validarSelect(input)) {
+      Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
+      return false;
   } else {
-    for (let i = 0; i < nodosID.length; i++) {
-      nodosSend.push(nodosID[i]);
-    }
-    return $.ajax({
-      dataType: 'json',
-      type: 'get',
-      data: {
-        nodos: nodosSend
-      },
-      url: url,
-      // success: function (data) { },
-      error: function (xhr, textStatus, errorThrown) {
-        alert("Error: " + errorThrown);
-      },
-    });
+    let ajax = sendListNodos(url, input);
+      ajax.success(function (data) {
+        graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
+      });
   }
 };
 
-function consultarSeguimientoDeUnNodoFases(url) {
-  let ajax = sendListNodos(url);
-  ajax.success(function (data) {
-    graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
-  });
-};
-
-function consultarSeguimientoEsperadoDeUnNodo(url) {
-  let ajax = sendListNodos(url);
-  ajax.success(function (data) {
-    graficoSeguimientoEsperado(data, graficosSeguimiento.nodo_esperado);
-  });
+function consultarSeguimientoEsperado(e, url) {
+  e.preventDefault();
+  input = $("#txtnodo_select_list").val();
+  if (!validarSelect(input)) {
+      Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
+      return false;
+  } else {
+    let ajax = sendListNodos(url, input);
+      ajax.success(function (data) {
+        graficoSeguimientoEsperado(data, graficosSeguimiento.nodo_esperado);
+      });
+  }
 }
 
 function generarExcelConTodosLosIndicadores() {

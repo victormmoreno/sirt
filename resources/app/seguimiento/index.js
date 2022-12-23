@@ -151,43 +151,6 @@ function consultarSeguimientoEsperadoDeTecnoparque() {
   })
 };
 
-// function consultarSeguimientoEsperadoDeUnNodo(nodo_id) {
-
-//   if ( nodo_id === "" ) {
-//     alertaNodoNoValido();
-//   } else {
-//     $.ajax({
-//       dataType: 'json',
-//       type: 'get',
-//       url: host_url + '/seguimiento/seguimientoEsperadoDeUnNodo/'+nodo_id,
-//       success: function (data) {
-//         graficoSeguimientoEsperado(data, graficosSeguimiento.nodo_esperado);
-//       },
-//       error: function (xhr, textStatus, errorThrown) {
-//         alert("Error: " + errorThrown);
-//       },
-//     })
-//   }
-// };
-
-// function consultarSeguimientoDeUnNodoFases(nodo_id) {
-//   if ( nodo_id === "" ) {
-//     alertaNodoNoValido();
-//   } else {
-//     $.ajax({
-//       dataType: 'json',
-//       type: 'get',
-//       url: host_url + '/seguimiento/seguimientoDeUnNodoFases/'+nodo_id,
-//       success: function (data) {
-//         graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
-//       },
-//       error: function (xhr, textStatus, errorThrown) {
-//         alert("Error: " + errorThrown);
-//       },
-//     })
-//   }
-// };
-
 function consultarSeguimientoDeTecnoparqueFases() {
   $.ajax({
     dataType: 'json',
