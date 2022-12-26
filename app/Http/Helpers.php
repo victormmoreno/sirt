@@ -13,7 +13,7 @@ function setActiveRouteActivePage($name){
 }
 
 function setActiveRouteActiveIcon($name){
-    return request()->is($name.'*') ? 'orange-text lighten-2':'';
+    return request()->is($name.'*') ? 'primary-text':'';
 }
 
 function arrayRecursiveDiff($aArray1, $aArray2) {

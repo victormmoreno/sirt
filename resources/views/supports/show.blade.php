@@ -4,7 +4,7 @@
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="row no-m-t no-m-b">
-        <div class="orange darken-1 z-depth-2">
+        <div class="bg-primary z-depth-2">
             <div class="container ">
                 <div class="row">
                     <div class="col s12 m12 l12">
@@ -53,7 +53,6 @@
                                     <div class="mailbox-view">
                                         <div class="mailbox-view-header">
                                             <div class="left">
-
                                                 <div class="left">
                                                     <span class="mailbox-title">[{{$support->present()->ticket()}}] {{$support->present()->subject()}}</span>
                                                     <span class="mailbox-author">{{$support->present()->fullname()}}</span>
@@ -67,11 +66,11 @@
                                         <div class="divider mailbox-divider"></div>
                                         <div class="mailbox-text">
                                             @if($support->status == App\Models\Support::IsEspera())
-                                                <div class="chip orange white-text text-darken-2">{{$support->status}}</div>
+                                                <div class="chip bg-warning white-text">{{$support->status}}</div>
                                             @elseif($support->status == App\Models\Support::IsPendiente())
-                                                <div class="chip red white-text text-darken-2">{{$support->status}}</div>
+                                                <div class="chip bg-danger white-text ">{{$support->status}}</div>
                                             @else
-                                                <div class="chip green white-text text-darken-2">{{$support->status}}</div>
+                                                <div class="chip bg-success white-text">{{$support->status}}</div>
                                             @endif
                                             <div class="chip">{{$support->present()->difficulty()}}</div>
                                             <div class="mailbox-details">

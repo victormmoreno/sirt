@@ -48,7 +48,7 @@ class HomeController extends Controller
         // dd($user);
 
       switch ( Session::get('login_role') ) {
-        case User::IsAdministrador() :
+        case User::IsActivador() :
 
             $dinamizadoresActivos = Dinamizador::with('user')
             ->whereHas('user', function($query){
@@ -70,14 +70,14 @@ class HomeController extends Controller
               'totalGestores' =>  Gestor::with('user')->get()->count(),
               'countTalentosActivos' =>  $talentosActivos,
               'totalTalentos' => Talento::with('user')->get()->count(),
-              'administradores' => User::role(User::IsAdministrador())->select('documento','nombres','apellidos')->get(),
+              'administradores' => User::role(User::IsActivador())->select('documento','nombres','apellidos')->get(),
             ]);
         case User::IsDinamizador():
         // $datos = array('actualizacion' => 114215, 'spot' => 123);
           return view('home.home');
           break;
 
-        case User::IsGestor():
+        case User::IsExperto():
           return view('home.gestor');
           break;
 
@@ -110,7 +110,7 @@ class HomeController extends Controller
 
         // $user  = auth()->user()->infocenter->nodo_id;
 
-       //  $filtered = collect(auth()->user()->roles)->firstWhere('name', 'Administrador')->name;
+       //  $filtered = collect(auth()->user()->roles)->firstWhere('name', 'Activador')->name;
        // // $filtered->all();
        //  dd($filtered);
        //      // dd($administradores);

@@ -13,7 +13,6 @@ use Repositories\Repository\NodoRepository;
 
 class NodoController extends Controller
 {
-
     private $nodoRepository;
     private $departamentoRepository;
 
@@ -22,11 +21,40 @@ class NodoController extends Controller
         $this->middleware('auth');
         $this->middleware([
             'auth',
-            'role_session:Administrador|Dinamizador|Experto|Infocenter|Talento',
         ]);
         $this->setNodoRepository($nodoRepository);
         $this->setDepartamentoRepository($departamentoRepository);
     }
+
+    public function nodo_pagination(Request $request)
+    {
+        $nodos_g = Nodo::SelectNodo()->paginate(6);
+        return view('indicadores.componentes.nodo_pagination', compact('nodos_g'))->render();
+    }
+
+    // /**
+    //  * Inhabilita los funcionarios de un nodo
+    //  * 
+    //  * @param int $id Id del nodo
+    //  * @return Response
+    //  * @author dum
+    //  */
+    // public function inhabilitar_funcionarios($id)
+    // {
+    //     $nodo = Nodo::findOrFail($id);
+    //     if(!request()->user()->can('inhabilitar', Nodo::class)) {
+    //         alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+    //         return redirect()->back();
+    //     }
+    //     $inhabilitar = $this->getNodoRepository()->inhabilitarFuncionarios($nodo);
+    //     if ($inhabilitar) {
+    //         alert('Inhabilitación exitósa', 'Los funcionarios del nodo ' . $nodo->entidad->nombre . ' se han inhabilitado', 'success')->showConfirmButton('Ok', '#3085d6');
+    //     } else {
+    //         alert('Inhabilitación errónea', 'Los funcionarios del nodo ' . $nodo->entidad->nombre . ' no se han inhabilitado, inténtalo nuevamente', 'error')->showConfirmButton('Ok', '#3085d6');
+    //     }
+    //     dd($nodo->entidad->slug);
+    //     // return redirect()->route('nodo.show', $nodo->slug);
+    // }
 
     /**
      * setter: Asigna un valor a $nodoRepository
@@ -77,67 +105,26 @@ class NodoController extends Controller
      */
     public function index(NodoDatatable $nodoDatatable)
     {
-
-        $this->authorize('index', Nodo::class);
-
-        switch (session()->get('login_role')) {
-            case User::IsAdministrador():
-                if (request()->ajax()) {
-                    return $nodoDatatable->indexDatatable($this->getNodoRepository()->getAlltNodo());
-                }
-                return view('nodos.index');
-
-                break;
-            case User::IsDinamizador():
-                if (isset(auth()->user()->dinamizador)) {
-                    $nodoAuth = auth()->user()->dinamizador->nodo->id;
-                    $nodo     = $this->getNodoRepository()->getTeamTecnoparque()
-                        ->where('nodos.id', $nodoAuth)
-                        ->first();
-
-
-                    return view('nodos.show', [
-                        'nodo'              => $nodo,
-                        'equipos'           => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),
-                        'lineatecnologicas' => $nodo->lineas()->paginate(4),
-                    ]);
-                }
-                abort('403');
-                break;
-            case User::IsGestor():
-
-                if (isset(auth()->user()->gestor)) {
-                    $nodoAuth = auth()->user()->gestor->nodo->id;
-                    $nodo     = $this->getNodoRepository()->getTeamTecnoparque()
-                        ->where('id', $nodoAuth)
-                        ->first();
-
-                    return view('nodos.show', [
-                        'nodo'              => $nodo,
-                        'equipos'           => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),
-                        'lineatecnologicas' => $nodo->lineas()->paginate(4),
-                    ]);
-                }
-                abort('403');
-                break;
-            case User::IsInfocenter():
-                if (isset(auth()->user()->infocenter)) {
-                    $nodoAuth = auth()->user()->infocenter->nodo_id;
-                    $nodo     = $this->getNodoRepository()->getTeamTecnoparque()
-                        ->where('id', $nodoAuth)
-                        ->first();
-
-                    return view('nodos.show', [
-                        'nodo'              => $nodo,
-                        'equipos'           => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),
-                        'lineatecnologicas' => $nodo->lineas()->paginate(4),
-                    ]);
-                }
-                abort('403');
-                break;
-            default:
-                abort('403');
-                break;
+        if(request()->user()->cannot('index', Nodo::class))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
+        }
+        if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
+            if (request()->ajax()) {
+                return $nodoDatatable->indexDatatable($this->getNodoRepository()->getAlltNodo());
+            }
+            return view('nodos.index');
+        } else {
+            $nodoAuth = request()->user()->getNodoUser();
+            $nodo     = $this->getNodoRepository()->getTeamTecnoparque()
+                ->where('nodos.id', $nodoAuth)
+                ->first();
+            return view('nodos.show', [
+                'nodo'              => $nodo,
+                'equipos'           => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),
+                'lineatecnologicas' => $nodo->lineas()->paginate(4),
+            ]);
         }
     }
 
@@ -148,7 +135,11 @@ class NodoController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', Nodo::class);
+        if(request()->user()->cannot('create', Nodo::class))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
+        }
         return view('nodos.create', [
             'lineas'        => $this->getNodoRepository()->getAllLineas(),
             'regionales'    => $this->getNodoRepository()->getAllRegionales(),
@@ -164,7 +155,11 @@ class NodoController extends Controller
      */
     public function store(NodoFormRequest $request)
     {
-        $this->authorize('store', Nodo::class);
+        if(request()->user()->cannot('create', Nodo::class))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
+        }
         $nodoCreate = $this->getNodoRepository()->storeNodo($request);
 
         if ($nodoCreate === true) {
@@ -184,14 +179,16 @@ class NodoController extends Controller
     public function show($nodo)
     {
         $nodo = $this->getNodoRepository()->findNodoForShow($nodo);
-
-        $this->authorize('show', $nodo);
-
-        return view('nodos.show', [
-            'nodo'              => $nodo,
-            'equipos'           => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),
-            'lineatecnologicas' => $nodo->lineas()->paginate(4),
-        ]);
+        if(request()->user()->can('create', $nodo))
+        {
+            return view('nodos.show', [
+                'nodo'              => $nodo,
+                'equipos'           => $nodo->equipos()->with(['lineatecnologica'])->paginate(5),
+                'lineatecnologicas' => $nodo->lineas()->paginate(4),
+            ]);
+        }
+        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+        return redirect()->back();
     }
 
     /**
@@ -202,14 +199,17 @@ class NodoController extends Controller
      */
     public function edit($nodo)
     {
-        $this->authorize('edit', Nodo::class);
         $nodo = $this->getNodoRepository()->findNodoForShow($nodo);
-        return view('nodos.edit', [
-            'nodo'          => $nodo,
-            'lineas'        => $this->getNodoRepository()->getAllLineas(),
-            'regionales'    => $this->getNodoRepository()->getAllRegionales(),
-            'departamentos' => $this->getDepartamentoRepository()->getAllDepartamentos(),
-        ]);
+        if(request()->user()->can('create', $nodo)) {
+            return view('nodos.edit', [
+                'nodo' => $nodo,
+                'lineas' => $this->getNodoRepository()->getAllLineas(),
+                'regionales' => $this->getNodoRepository()->getAllRegionales(),
+                'departamentos' => $this->getDepartamentoRepository()->getAllDepartamentos(),
+            ]);
+        }
+        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+        return redirect()->back();
     }
 
     /**
@@ -221,34 +221,14 @@ class NodoController extends Controller
      */
     public function update(NodoFormRequest $request, $id)
     {
-
-        $this->authorize('update', Nodo::class);
-
-
+        $this->authorize('edit', Nodo::class);
         $nodo = $this->getNodoRepository()->findById($id);
-
         $nodoUpdate = $this->getNodoRepository()->Update($request, $nodo);
-
-        // return $nodoUpdate;
-
         if ($nodoUpdate == true) {
-
             alert()->success('Modificación Exitoso.', 'El nodo ha sido modificado satisfactoriamente');
         } else {
             alert()->error('Modificación Erróneo.', 'El nodo no se ha modificado.');
         }
         return redirect()->route('nodo.index');
     }
-
-    /**
-     * destroy the specified resource in storage.
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $request, $id)
-    {
-        $nodo = Nodo::find($id)->delete();
-        return $nodo;
-    }
-
 }

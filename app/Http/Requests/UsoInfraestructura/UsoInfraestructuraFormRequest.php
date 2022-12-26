@@ -25,7 +25,7 @@ class UsoInfraestructuraFormRequest extends FormRequest
      */
     public function rules()
     {
-        if (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
+        if (session()->has('login_role') && session()->get('login_role') == User::IsExperto()) {
 
             return [
                 'txtfecha'                  => 'required|date_format:"Y-m-d"',

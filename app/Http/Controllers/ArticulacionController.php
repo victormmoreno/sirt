@@ -43,7 +43,7 @@ class ArticulacionController extends Controller
      **/
     public function updateInicio(Request $request, int $id)
     {
-        if (Session::get('login_role') == User::IsGestor()) {
+        if (Session::get('login_role') == User::IsExperto()) {
             $req = new ArticulacionFaseInicioFormRequest;
             $validator = Validator::make($request->all(), $req->rules(), $req->messages());
             if ($validator->fails()) {
@@ -73,7 +73,7 @@ class ArticulacionController extends Controller
 
     public function consultarArticulaciones_costos(string $anho)
     {
-        if (Session::get('login_role') == User::IsGestor()) {
+        if (Session::get('login_role') == User::IsExperto()) {
             $id = auth()->user()->gestor->id;
             $articulaciones = $this->articulacionRepository->consultarArticulacionesDeUnGestor($anho)->where('actividades.gestor_id', $id)->get();
         } else {
@@ -95,7 +95,7 @@ class ArticulacionController extends Controller
      */
     public function updatePlaneacion(Request $request, $id)
     {
-        if (Session::get('login_role') == User::IsGestor()) {
+        if (Session::get('login_role') == User::IsExperto()) {
             $update = $this->articulacionRepository->updateEntregablesPlaneacionArticulacionRepository($request, $id);
             if ($update) {
                 Alert::success('Modificación Exitosa!', 'Los entregables de la articulación en la fase de planeación se han modificado!')->showConfirmButton('Ok', '#3085d6');
@@ -125,7 +125,7 @@ class ArticulacionController extends Controller
      **/
     public function updateEjecucion(Request $request, $id)
     {
-        if (Session::get('login_role') == User::IsGestor()) {
+        if (Session::get('login_role') == User::IsExperto()) {
             $update = $this->articulacionRepository->updateEntregablesEjecucionArticulacionRepository($request, $id);
             if ($update) {
                 Alert::success('Modificación Exitosa!', 'Los entregables de la articulación en la fase de ejecución se han modificado!')->showConfirmButton('Ok', '#3085d6');
@@ -155,7 +155,7 @@ class ArticulacionController extends Controller
      */
     public function updateCierre(Request $request, int $id)
     {
-        if (Session::get('login_role') == User::IsGestor()) {
+        if (Session::get('login_role') == User::IsExperto()) {
             $articulacion = Articulacion::findOrFail($id);
             if ($articulacion->articulacion_proyecto->actividad->aprobacion_dinamizador == 1) {
 
@@ -377,7 +377,7 @@ class ArticulacionController extends Controller
     public function entregables_inicio($id)
     {
         $articulacion = Articulacion::findOrFail($id);
-        if (Session::get('login_role') == User::IsGestor()) {
+        if (Session::get('login_role') == User::IsExperto()) {
             return view('articulaciones.gestor.entregables_inicio', [
                 'articulacion' => $articulacion
             ]);
@@ -394,7 +394,7 @@ class ArticulacionController extends Controller
     public function entregables_cierre(int $id)
     {
         $articulacion = Articulacion::findOrFail($id);
-        if (Session::get('login_role') == User::IsGestor()) {
+        if (Session::get('login_role') == User::IsExperto()) {
             return view('articulaciones.gestor.entregables_cierre', [
                 'articulacion' => $articulacion
             ]);
@@ -420,7 +420,7 @@ class ArticulacionController extends Controller
         $productos = $this->productosElegidos($productos, $articulacion->productos);
 
         switch (Session::get('login_role')) {
-            case User::IsGestor():
+            case User::IsExperto():
                 return view('articulaciones.gestor.fase_inicio', [
                     'productos' => $productos,
                     'articulacion' => $articulacion,
@@ -444,7 +444,7 @@ class ArticulacionController extends Controller
                 ]);
                 break;
 
-            case User::IsAdministrador():
+            case User::IsActivador():
                 return view('articulaciones.administrador.fase_inicio', [
                     'productos' => $productos,
                     'articulacion' => $articulacion,
@@ -473,7 +473,7 @@ class ArticulacionController extends Controller
             Alert::error('Error!', 'La articulación se encuentra en la fase de ' . $articulacion->fase->nombre . '!')->showConfirmButton('Ok', '#3085d6');
             return back();
         } else {
-            if (Session::get('login_role') == User::IsGestor()) {
+            if (Session::get('login_role') == User::IsExperto()) {
                 return view('articulaciones.gestor.fase_planeacion', [
                     'articulacion' => $articulacion,
                     'historico' => $historico
@@ -488,7 +488,7 @@ class ArticulacionController extends Controller
                     'articulacion' => $articulacion,
                     'historico' => $historico
                 ]);
-            } else if (Session::get('login_role') == User::IsAdministrador()) {
+            } else if (Session::get('login_role') == User::IsActivador()) {
                 return view('articulaciones.administrador.fase_planeacion', [
                     'articulacion' => $articulacion,
                     'historico' => $historico
@@ -514,7 +514,7 @@ class ArticulacionController extends Controller
             return back();
         } else {
             switch (Session::get('login_role')) {
-                case User::IsGestor():
+                case User::IsExperto():
                     return view('articulaciones.gestor.fase_ejecucion', [
                         'articulacion' => $articulacion,
                         'historico' => $historico
@@ -534,7 +534,7 @@ class ArticulacionController extends Controller
                     ]);
                     break;
 
-                case User::IsAdministrador():
+                case User::IsActivador():
                     return view('articulaciones.administrador.fase_ejecucion', [
                         'articulacion' => $articulacion,
                         'historico' => $historico
@@ -561,7 +561,7 @@ class ArticulacionController extends Controller
         if ($articulacion->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 1) {
             $costo = $this->costoController->costosDeUnaActividad($articulacion->articulacion_proyecto->actividad->id);
             switch (Session::get('login_role')) {
-                case User::IsGestor():
+                case User::IsExperto():
                     return view('articulaciones.gestor.fase_cierre', [
                         'articulacion' => $articulacion,
                         'costo' => $costo,
@@ -585,7 +585,7 @@ class ArticulacionController extends Controller
                     ]);
                     break;
 
-                case User::IsAdministrador():
+                case User::IsActivador():
                     return view('articulaciones.administrador.fase_cierre', [
                         'articulacion' => $articulacion,
                         'costo' => $costo,
@@ -792,7 +792,7 @@ class ArticulacionController extends Controller
         $articulacion = Articulacion::findOrFail($id);
         $historico = Actividad::consultarHistoricoActividad($articulacion->articulacion_proyecto->actividad->id)->get();
         switch (Session::get('login_role')) {
-            case User::IsGestor():
+            case User::IsExperto():
                 return view('articulaciones.gestor.fase_suspendido', [
                     'articulacion' => $articulacion,
                     'historico' => $historico
@@ -821,7 +821,7 @@ class ArticulacionController extends Controller
      */
     public function updateEntregables(Request $request, $id)
     {
-        if (Session::get('login_role') == User::IsGestor()) {
+        if (Session::get('login_role') == User::IsExperto()) {
             $update = $this->articulacionRepository->updateEntregablesInicioArticulacionRepository($request, $id);
             if ($update) {
                 Alert::success('Modificación Exitosa!', 'Los entregables de la articulación se han modificado!')->showConfirmButton('Ok', '#3085d6');
@@ -838,7 +838,7 @@ class ArticulacionController extends Controller
     {
         $articulacion = Articulacion::findOrFail($id);
         if ($articulacion->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 1) {
-            if (Session::get('login_role') == User::IsGestor()) {
+            if (Session::get('login_role') == User::IsExperto()) {
                 $update = $this->articulacionRepository->updateEntregableCierreArticulacionRepository($request, $id);
                 if ($update) {
                     Alert::success('Modificación Exitosa!', 'Los entregables de la articulación en la fase de cierre se han modificado!')->showConfirmButton('Ok', '#3085d6');
@@ -881,7 +881,7 @@ class ArticulacionController extends Controller
     public function datatableArticulacionesPorGestor(Request $request, $id, $anho)
     {
         if (request()->ajax()) {
-            if (Session::get('login_role') == User::IsGestor()) {
+            if (Session::get('login_role') == User::IsExperto()) {
                 $idgestor = auth()->user()->gestor->id;
             } else {
                 $idgestor = $id;
@@ -899,7 +899,7 @@ class ArticulacionController extends Controller
     public function index()
     {
         switch (\Session::get('login_role')) {
-            case User::IsAdministrador():
+            case User::IsActivador():
                 return view('articulaciones.administrador.index', [
                     'nodos' => Nodo::SelectNodo()->get(),
                 ]);
@@ -914,7 +914,7 @@ class ArticulacionController extends Controller
                     'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->infocenter->nodo_id)->pluck('nombres_gestor', 'id'),
                 ]);
                 break;
-            case User::IsGestor():
+            case User::IsExperto():
                 return view('articulaciones.gestor.index');
                 break;
 
@@ -946,7 +946,7 @@ class ArticulacionController extends Controller
      */
     public function create()
     {
-        if (\Session::get('login_role') == User::IsGestor()) {
+        if (\Session::get('login_role') == User::IsExperto()) {
             return view('articulaciones.gestor.create', [
                 'productos' => Producto::orderBy('nombre')->get()
             ]);
@@ -1000,7 +1000,7 @@ class ArticulacionController extends Controller
                 $pivot = $articulacion->emprendedores;
             }
             // dd($pivot);
-            if (\Session::get('login_role') == User::IsGestor()) {
+            if (\Session::get('login_role') == User::IsExperto()) {
                 return view('articulaciones.gestor.edit', [
                     'articulacion' => $articulacion,
                     'pivot' => $pivot,
@@ -1025,7 +1025,7 @@ class ArticulacionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (Session::get('login_role') == User::IsGestor()) {
+        if (Session::get('login_role') == User::IsExperto()) {
             $req = new ArticulacionFaseInicioFormRequest;
             $validator = \Validator::make($request->all(), $req->rules(), $req->messages());
             if ($validator->fails()) {

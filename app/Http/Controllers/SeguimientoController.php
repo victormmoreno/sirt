@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Repositories\Repository\{ProyectoRepository, LineaRepository};
 use Illuminate\Support\Facades\{Session};
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Models\{Gestor, Nodo};
+use App\Models\{Gestor, Nodo, Proyecto};
 use App\User;
 use Carbon\Carbon;
 
@@ -43,9 +44,9 @@ class SeguimientoController extends Controller
         'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
         'lineas' => $this->getLineaRepository()->getAllLineaNodo(auth()->user()->dinamizador->nodo_id)->lineas->pluck('nombre', 'id')
       ]);
-    } else if (Session::get('login_role') == User::IsGestor()) {
+    } else if (Session::get('login_role') == User::IsExperto()) {
       return view('seguimiento.gestor.index');
-    } else if (Session::get('login_role') == User::IsAdministrador()) {
+    } else if (Session::get('login_role') == User::IsActivador()) {
       return view('seguimiento.administrador.index', [
         'nodos' => Nodo::SelectNodo()->get(),
       ]);
@@ -61,57 +62,67 @@ class SeguimientoController extends Controller
    * @return array
    * @author dum
    **/
-  public function agruparProyectosAbiertos($Pabiertos)
+  public function agruparProyectos($Pabiertos, $Pfinalizados)
   {
-    $inicio = 0;
-    $planeacion = 0;
-    $ejecucion = 0;
-    $cierre = 0;
-    $total = 0;
-    foreach ($Pabiertos as $proyecto) {
-      switch ($proyecto->fase) {
-        case 'Inicio':
-          $inicio++;
-          break;
-          case 'Planeación':
-          $planeacion++;
-          break;
-        case 'Ejecución':
-          $ejecucion++;
-          break;
-        case 'Cierre':
-          $cierre++;
-          break;
-      }
-      $total++;
+    $datos = [];
+    $temporal = $Pabiertos->groupBy('nombre');
+    foreach ($temporal as $row) {
+      $cnt_inicio = $Pabiertos->where('nombre', $row->first()->nombre)->where('fase', 'Inicio')->first();
+      $cnt_planeacion = $Pabiertos->where('nombre', $row->first()->nombre)->where('fase', 'Planeación')->first();
+      $cnt_ejecucion = $Pabiertos->where('nombre', $row->first()->nombre)->where('fase', 'Ejecución')->first();
+      $cnt_cierre = $Pabiertos->where('nombre', $row->first()->nombre)->where('fase', 'Cierre')->first();
+      $cnt_fin = $Pfinalizados->where('nombre', $row->first()->nombre)->where('fase', 'Finalizado')->first();
+      $cnt_suspendido = $Pfinalizados->where('nombre', $row->first()->nombre)->where('fase', 'Suspendido')->first();
+
+      $cnt_inicio != null ? $cnt_inicio = $cnt_inicio->trl_esperado : $cnt_inicio = 0;
+      $cnt_planeacion != null ? $cnt_planeacion = $cnt_planeacion->trl_esperado : $cnt_planeacion = 0;
+      $cnt_ejecucion != null ? $cnt_ejecucion = $cnt_ejecucion->trl_esperado : $cnt_ejecucion = 0;
+      $cnt_cierre != null ? $cnt_cierre = $cnt_cierre->trl_esperado : $cnt_cierre = 0;
+      $cnt_fin != null ? $cnt_fin = $cnt_fin->cantidad : $cnt_fin = 0;
+      $cnt_suspendido != null ? $cnt_suspendido = $cnt_suspendido->cantidad : $cnt_suspendido = 0;
+
+      $datos[] = [
+        'nodo' => $row->first()->nombre,
+        'inicio' => $cnt_inicio,
+        'planeacion' => $cnt_planeacion,
+        'ejecucion' => $cnt_ejecucion,
+        'cierre' => $cnt_cierre,
+        'finalizado' => $cnt_fin,
+        'suspendido' => $cnt_suspendido
+      ];
     }
-    return array('inicio' => $inicio, 'planeacion' => $planeacion, 'ejecucion' => $ejecucion, 'cierre' => $cierre, 'total' => $total);
+
+    return $datos;
   }
 
   /**
-   * Agreupa por fases la cantidad de proyectos
+   * Agrupar la información de los proyectos esptados por trl
    *
-   * @param Builder $Pfinalizados Query de los proyectos por fases (Finalizado, Suspendido)
-   * @return type
-   * @throws conditon
+   * @param $trl6
+   * @param $trl7_8
+   * @return array
+   * @author dum
    **/
-  public function agruparProyectosCerrados($Pfinalizados)
+  public function agruparProyectosEsperados($trl6, $trl7_8)
   {
-    $finalizado = 0;
-    $suspendido = 0;
-    $total = 0;
-    foreach ($Pfinalizados as $proyecto) {
-      switch ($proyecto->fase) {
-        case 'Finalizado':
-          $finalizado++;
-          break;
-        case 'Suspendido':
-          $suspendido++;
-          break;
-      }
-      $total++;
+    $datos = [];
+    $nodos = Nodo::SelectNodo()->select('entidades.nombre')->get();
+    foreach ($nodos as $nodo) {
+      $nodo_str = $nodo->nombre;
+      $cnt_trl6 = $trl6->where('nombre', $nodo_str)->first();
+      $cnt_trl7_8 = $trl7_8->where('nombre', $nodo_str)->first();
+      
+      $cnt_trl6 != null ? $cnt_trl6 = $cnt_trl6->trl_esperado : $cnt_trl6 = 0;
+      $cnt_trl7_8 != null ? $cnt_trl7_8 = $cnt_trl7_8->trl_esperado : $cnt_trl7_8 = 0;
+      
+      $datos[] = [
+        'nodo' => $nodo_str,
+        'trl6' => $cnt_trl6,
+        'trl7_8' => $cnt_trl7_8
+      ];
     }
-    return array('finalizado' => $finalizado, 'suspendido' => $suspendido, 'total' => $total);
+    // dd($datos);
+    return $datos;
   }
 
   /**
@@ -179,7 +190,7 @@ class SeguimientoController extends Controller
     $datos['Cierre'] = $abiertos['cierre'];
     $datos['Finalizado'] = $cerrados['finalizado'];
     $datos['Suspendido'] = $cerrados['suspendido'];
-    $datos['Total'] = $abiertos['total'] + $cerrados['total'];
+    // $datos['Total'] = $abiertos['total'] + $cerrados['total'];
     return $datos;
   }
 
@@ -197,7 +208,7 @@ class SeguimientoController extends Controller
     if (Session::get('login_role') == User::IsDinamizador()) {
       $idnodo = auth()->user()->dinamizador->nodo_id;
     }
-    if (Session::get('login_role') == User::IsGestor()) {
+    if (Session::get('login_role') == User::IsExperto()) {
       $idnodo = auth()->user()->gestor->nodo_id;
     }
 
@@ -248,20 +259,25 @@ class SeguimientoController extends Controller
    * @return Response
    * @author dum
    */
-  public function seguimientoEsperadoDelNodo($id)
+  public function seguimientoEsperado(Request $request)
   {
-    $idnodo = $id;
-    if (Session::get('login_role') == User::IsDinamizador()) {
-      $idnodo = auth()->user()->dinamizador->nodo_id;
-    }
-
+    if ($request->nodos[0] != 'all') {
+      if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
+          $nodos = $request->nodos;
+      } else {
+          $nodos = [request()->user()->getNodoUser()];
+      }
+  } else {
+      $nodos_temp = Nodo::SelectNodo()->get();
+      foreach ($nodos_temp as $nodo) {
+          $nodos[] = $nodo->id;
+      }
+  }
+    // dd($nodos_list);
     $datos = array();
-    $trlEsperados = 0;
-    $trlEsperados = $this->getProyectoRepository()->proyectosSeguimientoAbiertos('trl_esperado')->where('nodos.id', $idnodo)->get();
-    $trlEsperadosAgrupados = $this->agruparTrls($trlEsperados, 'esperados');
-
-    $datos = $this->retornarValoresDelSeguimientoEsperados($trlEsperadosAgrupados);
-
+    $trlEsperados_6 = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->select('entidades.nombre')->selectRaw('count(trl_esperado) as trl_esperado')->where('trl_esperado', Proyecto::IsTrl6Esperado())->whereIn('nodos.id', $nodos)->groupBy('entidades.nombre')->get();
+    $trlEsperados_7_8 = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->select('entidades.nombre')->selectRaw('count(trl_esperado) as trl_esperado')->where('trl_esperado', Proyecto::IsTrl78Esperado())->whereIn('nodos.id', $nodos)->groupBy('entidades.nombre')->get();
+    $datos = $this->agruparProyectosEsperados($trlEsperados_6, $trlEsperados_7_8);
     return response()->json([
       'datos' => $datos
     ]);
@@ -288,25 +304,29 @@ class SeguimientoController extends Controller
    * @return Response
    * @author dum
    **/
-  public function seguimientoDelNodoFases(int $id)
+  public function seguimientoDelNodoFases(Request $request)
   {
-    $idnodo = $id;
-    if (Session::get('login_role') == User::IsDinamizador()) {
-      $idnodo = auth()->user()->dinamizador->nodo_id;
+    // dd($request->nodos);
+    if ($request->nodos[0] != 'all') {
+        if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
+            $nodos = $request->nodos;
+        } else {
+            $nodos = [request()->user()->getNodoUser()];
+        }
+    } else {
+        $nodos_temp = Nodo::SelectNodo()->get();
+        foreach ($nodos_temp as $nodo) {
+            $nodos[] = $nodo->id;
+        }
     }
-
-    $datos = array();
     $Pabiertos = 0;
     $Pfinalizados = 0;
-    // Proyectos
-    $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->where('nodos.id', $idnodo)->get();
-    $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->where('nodos.id', $idnodo)->get();
-
-    $abiertosAgrupados = $this->agruparProyectosAbiertos($Pabiertos);
-    $cerradosAgrupados = $this->agruparProyectosCerrados($Pfinalizados);
-    $datos = $this->retornarValoresDelSeguimientoPorFases($abiertosAgrupados, $cerradosAgrupados);
+    $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->select('entidades.nombre', 'fases.nombre as fase')->selectRaw('count(trl_esperado) as trl_esperado')->groupBy('entidades.nombre', 'fase')->whereIn('nodos.id', $nodos)->get();
+    $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->get();
+    $agrupados = $this->agruparProyectos($Pabiertos, $Pfinalizados);
+    // dd($agrupados);
     return response()->json([
-      'datos' => $datos
+      'datos' => $agrupados
     ]);
   }
 
@@ -373,12 +393,9 @@ class SeguimientoController extends Controller
     $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->where('g.id', $idgestor)->where('nodos.id', $idnodo)->get();
     $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->where('g.id', $idgestor)->where('nodos.id', $idnodo)->get();
 
-    $abiertosAgrupados = $this->agruparProyectosAbiertos($Pabiertos);
-    $cerradosAgrupados = $this->agruparProyectosCerrados($Pfinalizados);
-
-    $datos = $this->retornarValoresDelSeguimientoPorFases($abiertosAgrupados, $cerradosAgrupados);
+    $agrupados = $this->agruparProyectos($Pabiertos, $Pfinalizados);
     return response()->json([
-      'datos' => $datos
+      'datos' => $agrupados
     ]);
   }
 
@@ -394,7 +411,7 @@ class SeguimientoController extends Controller
     if (Session::get('login_role') == User::IsDinamizador()) {
       $idnodo = auth()->user()->dinamizador->nodo_id;
     }
-    if (Session::get('login_role') == User::IsGestor()) {
+    if (Session::get('login_role') == User::IsExperto()) {
       $idnodo = auth()->user()->gestor->nodo_id;
     }
 

@@ -210,14 +210,14 @@ function prepararFilaEnLaTablaDeTalentos(ajax, isInterlocutor) {
         talentInterlocutor = "checked";
     }// El ajax.talento.id es el id del TALENTO, no del usuario
     let idTalento = ajax.talento.id;
-    let fila = '<tr class="selected" id=talentoAsociadoAProyecto' + idTalento + '>' + '<td><input type="radio" '+ talentInterlocutor +' class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.talento.documento + ' - ' + ajax.talento.talento + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarTalentoDeProyecto_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let fila = '<tr class="selected" id=talentoAsociadoAProyecto' + idTalento + '>' + '<td><input type="radio" '+ talentInterlocutor +' class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.talento.documento + ' - ' + ajax.talento.talento + '</td>' + '<td><a class="waves-effect bg-danger btn" onclick="eliminarTalentoDeProyecto_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
 // Prepara un string con la fila que se va a pintar en la tabla de los propietarios (users/persona) que son dueños de la propiedad intelectual
 function prepararFilaEnLaTablaDePropietarios_Users(ajax) { // El ajax.user.id es el id del USER
     let idUser = ajax.user.id;
-    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Persona' + idUser + '>' + '<td><input type="hidden" name="propietarios_user[]" value="' + idUser + '">' + ajax.user.documento + ' - ' + ajax.user.nombres + ' ' + ajax.user.apellidos + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Persona(' + idUser + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Persona' + idUser + '>' + '<td><input type="hidden" name="propietarios_user[]" value="' + idUser + '">' + ajax.user.documento + ' - ' + ajax.user.nombres + ' ' + ajax.user.apellidos + '</td>' + '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Persona(' + idUser + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
@@ -228,7 +228,7 @@ function prepararFilaEnLaTablaDePropietarios_Empresa(ajax) {
     let codigo = ajax.sede.empresa.nit;
     let nombre = ajax.sede.empresa.nombre;
     let nombre_sede = ajax.sede.nombre_sede;
-    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Empresa' + idSede + '>' + '<td><input type="hidden" name="propietarios_sedes[]" value="' + idSede + '">' + codigo + ' - ' + nombre + ' ('+ nombre_sede +')</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Empresa(' + idSede + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Empresa' + idSede + '>' + '<td><input type="hidden" name="propietarios_sedes[]" value="' + idSede + '">' + codigo + ' - ' + nombre + ' ('+ nombre_sede +')</td>' + '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Empresa(' + idSede + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
@@ -237,7 +237,7 @@ function prepararFilaEnLaTablaDePropietarios_Grupos(ajax) { // El ajax.user.id e
     let idGrupo = ajax.detalles.id;
     let codigo = ajax.detalles.codigo_grupo;
     let nombre = ajax.detalles.entidad.nombre;
-    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Grupo' + idGrupo + '>' + '<td><input type="hidden" name="propietarios_grupos[]" value="' + idGrupo + '">' + codigo + ' - ' + nombre + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Grupo(' + idGrupo + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Grupo' + idGrupo + '>' + '<td><input type="hidden" name="propietarios_grupos[]" value="' + idGrupo + '">' + codigo + ' - ' + nombre + '</td>' + '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Grupo(' + idGrupo + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
@@ -309,16 +309,15 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Grupo(id) {
 
 // Valida que el talento no se encuentre asociado al proyecto
 function noRepeat(id) {
-    let idTalento = id;
-    let retorno = true;
+    // console.log('fff');
+    // let retorno = true;
     let a = document.getElementsByName("talentos[]");
     for (x = 0; x < a.length; x ++) {
-        if (a[x].value == idTalento) {
-            retorno = false;
-            break;
+        if (a[x].value == id) {
+            return false;
         }
     }
-    return retorno;
+    return true;
 }
 
 // Valida que el talento no se encuentre asociado al proyecto
@@ -386,7 +385,14 @@ function eliminarPropietarioDeUnProyecto_FaseInicio_Grupo(index) {
 // Método para agregar talentos a un proyecto
 // El parametro recibido es el id de la tabla talentos
 function addTalentoProyecto(id, isInterloculor) {
-    if (noRepeat(id) == false) {
+    let unique = true;
+    let a = document.getElementsByName("talentos[]");
+    for (x = 0; x < a.length; x ++) {
+        if (a[x].value == id) {
+            unique = false;
+        }
+    }
+    if (!unique) {
         talentoYaSeEncuentraAsociado();
     } else {
         pintarTalentoEnTabla_Fase_Inicio(id, isInterloculor);
@@ -477,7 +483,7 @@ function addValueToFields(nombre, codigo, value){
 // Asocia una idea de proyecto al registro de un proyecto
 function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
     $('#txtidea_id').val(id);
-    
+
     $.ajax({
         dataType: 'json',
         type: 'get',
@@ -485,9 +491,8 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
     }).done(function (response) {
         let value = response.data.idea;
         if(idea =! null){
-            console.log(response);
             dumpAggregateValuesIntoTables();
-            
+
             addValueToFields(nombre, codigo, value);
             ideaProyectoAsociadaConExito(codigo, nombre);
 
@@ -501,15 +506,22 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
             }
             $('#ideasDeProyectoConEmprendedores_modal').closeModal();
         }
-        
+
     }).fail(function( jqXHR, textStatus, errorThrown ) {
         errorAjax(jqXHR, textStatus, errorThrown);
     });
-    
+
 }
 
 // Consultas las ideas de proyecto que fueron aprobadas en el comité
 function consultarIdeasDeProyectoEmprendedores_Proyecto_FaseInicio() {
+    let nodo = 1;
+    let id_experto = 1;
+    if (isset($('#txtnodo_id').val()))
+        nodo = $('#txtnodo_id').val();
+    if (isset($('#txtexperto_id_proyecto').val()))
+        id_experto = $('#txtexperto_id_proyecto').val();
+    //id_experto = $('#txtexperto_id_proyecto').val();
     $('#ideasDeProyectoConEmprendedores_proyecto_table').dataTable().fnDestroy();
     $('#ideasDeProyectoConEmprendedores_proyecto_table').DataTable({
         language: {
@@ -521,7 +533,7 @@ function consultarIdeasDeProyectoEmprendedores_Proyecto_FaseInicio() {
             0, 'desc'
         ],
         ajax: {
-            url: host_url + "/proyecto/datatableIdeasConEmprendedores",
+            url: host_url + "/proyecto/ideasAsociadasAExperto/"+nodo+"/"+id_experto,
             type: "get"
         },
         select: true,
@@ -705,4 +717,54 @@ function errorAjax(jqXHR, textStatus, errorThrown){
         alert('Uncaught Error: ' + jqXHR.responseText);
 
       }
+}
+
+function consultarExpertosDeUnNodo(nodo_id) {
+    $.ajax({
+        dataType:'json',
+        type:'get',
+        url: host_url + "/usuario/usuarios/gestores/nodo/"+nodo_id
+      }).done(function(response){
+          $("#txtexperto_id_proyecto").empty();
+          $('#txtexperto_id_proyecto').append('<option value="">Seleccione el experto</option>');
+          $.each(response.gestores, function(i, e) {
+            $('#txtexperto_id_proyecto').append('<option  value="'+e.user_id+'">'+e.nombre+'</option>');
+          })
+          $('#txtexperto_id_proyecto').material_select();
+    });
+}
+
+function consultarInformacionExperto(user) {
+    $.ajax({
+        dataType:'json',
+        type:'get',
+        url: host_url + "/usuario/consultarUserPorId/"+user
+      }).done(function(response){
+          printLinea(response);
+          consultarSublineas(response.user.gestor.lineatecnologica.id);
+    });
+}
+
+function consultarSublineas(linea) {
+    $.ajax({
+        dataType:'json',
+        type:'get',
+        url: host_url + "/proyecto/sublineas_of/"+linea
+    }).done(function (response) {
+          console.log(response);
+        printSublineas(response);
+    });
+}
+
+function printSublineas(response) {
+    $("#txtsublinea_id").empty();
+    $('#txtsublinea_id').append('<option value="">Seleccione la sublinea</option>');
+    $.each(response.sublineas, function(i, e) {
+      $('#txtsublinea_id').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+    })
+    $('#txtsublinea_id').material_select();
+}
+
+function printLinea(response) {
+    $('#txtlinea').val(response.user.gestor.lineatecnologica.nombre);
 }
