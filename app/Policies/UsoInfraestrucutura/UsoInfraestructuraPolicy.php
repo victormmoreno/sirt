@@ -20,7 +20,7 @@ class UsoInfraestructuraPolicy
      */
     public function index(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsDinamizador(), User::IsExperto(), User::IsArticulador(), User::IsTalento(), User::IsApoyoTecnico()]) && session()->get('login_role') != User::IsIngreso() || session()->get('login_role') != User::IsInfocenter();
+        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsArticulador(), User::IsTalento(), User::IsApoyoTecnico()]) && session()->get('login_role') != User::IsIngreso() || session()->get('login_role') != User::IsInfocenter();
     }
 
     /**
@@ -31,7 +31,7 @@ class UsoInfraestructuraPolicy
      */
     public function create(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsArticulador(), User::IsExperto(), User::IsTalento(), User::IsApoyoTecnico()]) && session()->get('login_role') == User::IsExperto() || session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsApoyoTecnico() || session()->get('login_role') == User::IsTalento();
+        return (bool) $user->hasAnyRole([User::IsArticulador(), User::IsGestor(), User::IsTalento(), User::IsApoyoTecnico()]) && session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsApoyoTecnico() || session()->get('login_role') == User::IsTalento();
     }
 
     /**
@@ -42,7 +42,7 @@ class UsoInfraestructuraPolicy
      */
     public function store(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsArticulador(), User::IsExperto(), User::IsTalento(), User::IsApoyoTecnico()]) && session()->get('login_role') == User::IsExperto() || session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsApoyoTecnico() || session()->get('login_role') == User::IsTalento();
+        return (bool) $user->hasAnyRole([User::IsArticulador(), User::IsGestor(), User::IsTalento(), User::IsApoyoTecnico()]) && session()->get('login_role') == User::IsGestor() || session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsApoyoTecnico() || session()->get('login_role') == User::IsTalento();
     }
 
     /**
@@ -53,7 +53,7 @@ class UsoInfraestructuraPolicy
      */
     public function getUsoInfraestructuraForNodo(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsActivador()]) && session()->get('login_role') == User::IsActivador();
+        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->get('login_role') == User::IsAdministrador();
     }
 
     /**
@@ -65,11 +65,11 @@ class UsoInfraestructuraPolicy
      */
     public function show(User $user, UsoInfraestructura $uso)
     {
-        if ($user->hasAnyRole([User::IsActivador()]) && session()->get('login_role') == User::IsActivador()) {
+        if ($user->hasAnyRole([User::IsAdministrador()]) && session()->get('login_role') == User::IsAdministrador()) {
             return true;
         } else if ($user->hasAnyRole([ User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador() && $uso->asesorable->nodo->id == $user->dinamizador->nodo->id) {
             return true;
-        } else if ($user->hasAnyRole([ User::IsExperto()]) && session()->get('login_role') == User::IsExperto() && $uso->whereHas(
+        } else if ($user->hasAnyRole([ User::IsGestor()]) && session()->get('login_role') == User::IsGestor() && $uso->whereHas(
             'usogestores',
             function ($query) use($user) {
                 return $query->where('users.id', $user->id);
@@ -117,7 +117,7 @@ class UsoInfraestructuraPolicy
     public function edit(User $user, UsoInfraestructura $uso)
     {
 
-        if ($user->hasAnyRole([ User::IsExperto()]) && session()->get('login_role') == User::IsExperto() && $uso->whereHas(
+        if ($user->hasAnyRole([ User::IsGestor()]) && session()->get('login_role') == User::IsGestor() && $uso->whereHas(
             'usogestores',
             function ($query) use($user) {
                 return $query->where('users.id', $user->id);
@@ -173,7 +173,7 @@ class UsoInfraestructuraPolicy
     public function update(User $user, UsoInfraestructura $uso)
     {
 
-        if ($user->hasAnyRole([ User::IsExperto()]) && session()->get('login_role') == User::IsExperto() && $uso->whereHas(
+        if ($user->hasAnyRole([ User::IsGestor()]) && session()->get('login_role') == User::IsGestor() && $uso->whereHas(
             'usogestores',
             function ($query) use($user) {
                 return $query->where('users.id', $user->id);
@@ -218,7 +218,7 @@ class UsoInfraestructuraPolicy
      */
     public function destroy(User $user, UsoInfraestructura $uso)
     {
-        if ($user->hasAnyRole([ User::IsExperto()]) && session()->get('login_role') == User::IsExperto() && $uso->whereHas(
+        if ($user->hasAnyRole([ User::IsGestor()]) && session()->get('login_role') == User::IsGestor() && $uso->whereHas(
             'usogestores',
             function ($query) use($user) {
                 return $query->where('users.id', $user->id);

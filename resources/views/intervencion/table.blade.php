@@ -9,7 +9,7 @@
       <th>Revisado Final</th>
       <th>Detalles</th>
       <th>Entregables</th>
-      @if ( \Session::get('login_role') != App\User::IsActivador() )
+      @if ( \Session::get('login_role') != App\User::IsAdministrador() )
         <th>Editar</th>
       @endif
       @if ( \Session::get('login_role') == App\User::IsDinamizador() )
@@ -26,7 +26,7 @@
       <th></th>
       <th></th>
       <th></th>
-      @if ( \Session::get('login_role') != App\User::IsActivador() )
+      @if ( \Session::get('login_role') != App\User::IsAdministrador() )
         <th></th>
       @endif
       @if ( \Session::get('login_role') == App\User::IsDinamizador() )

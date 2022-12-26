@@ -41,10 +41,9 @@ class User extends Authenticatable implements JWTSubject
     const IS_FEMENINO      = 0;
     const IS_ACTIVE        = true;
     const IS_INACTIVE      = false;
-    const IS_ACTIVADOR = "Activador";
     const IS_ADMINISTRADOR = "Administrador";
     const IS_DINAMIZADOR   = "Dinamizador";
-    const IS_EXPERTO        = "Experto";
+    const IS_GESTOR        = "Experto";
     const IS_INFOCENTER    = "Infocenter";
     const IS_TALENTO       = "Talento";
     const IS_INGRESO       = "Ingreso";
@@ -350,13 +349,13 @@ class User extends Authenticatable implements JWTSubject
 
     public function scopeNodoUser($query, $role, $nodo)
     {
-        if ((!empty($role) && $role != null && $role != 'all' && ($role != User::IsTalento() || $role != User::IsActivador())) && !empty($nodo) && $nodo != null && $nodo != 'all') {
+        if ((!empty($role) && $role != null && $role != 'all' && ($role != User::IsTalento() || $role != User::IsAdministrador())) && !empty($nodo) && $nodo != null && $nodo != 'all') {
             if ($role == User::IsDinamizador()) {
                 return $query->whereHas('dinamizador.nodo', function ($subQuery) use ($nodo) {
                     $subQuery->where('id', $nodo);
                 });
             }
-            if ($role == User::IsExperto()) {
+            if ($role == User::IsGestor()) {
                 return $query->whereHas('gestor.nodo', function ($subQuery) use ($nodo) {
                     $subQuery->where('id', $nodo);
                 });
@@ -387,7 +386,7 @@ class User extends Authenticatable implements JWTSubject
             }
         }
 
-        if (session()->get('login_role') == User::IsExperto()) {
+        if (session()->get('login_role') == User::IsGestor()) {
             if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && !empty($nodo) && $nodo != null && $nodo != 'all') {
 
                 return $query->has('talento');
@@ -460,7 +459,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function scopeYearActividad($query, $role, $year, $nodo)
     {
-        if (session()->get('login_role') != User::IsExperto()) {
+        if (session()->get('login_role') != User::IsGestor()) {
             if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && !empty($year) && $year != null && $year == 'all'  && (!empty($nodo) && $nodo != null && $nodo == 'all')) {
                 return $query->has('talento.articulacionproyecto.actividad');
             }
@@ -516,11 +515,6 @@ class User extends Authenticatable implements JWTSubject
         return $query;
     }
 
-    public function isUserActivador(): bool
-    {
-        return (bool) $this->hasRole(User::IsActivador());
-    }
-
     public function isUserAdministrador(): bool
     {
         return (bool) $this->hasRole(User::IsAdministrador());
@@ -533,7 +527,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function isUserExperto(): bool
     {
-        return (bool) $this->hasRole(User::IsExperto()) && $this->gestor() != null;
+        return (bool) $this->hasRole(User::IsGestor()) && $this->gestor() != null;
     }
 
     public function isUserArticulador(): bool
@@ -563,26 +557,6 @@ class User extends Authenticatable implements JWTSubject
     public function isAuthUser(): bool
     {
         return (bool) $this->documento == \Auth::user()->documento;
-    }
-
-    public function getNodoUser()
-    {
-        if (session()->get('login_role') == $this->IsDinamizador()) {
-            return $this->dinamizador->nodo_id;
-        }
-        if (session()->get('login_role') == $this->IsInfocenter()) {
-            return $this->infocenter->nodo_id;
-        }
-        if (session()->get('login_role') == $this->IsExperto()) {
-            return $this->gestor->nodo_id;
-        }
-        if (session()->get('login_role') == $this->IsArticulador()) {
-            return $this->articulador->nodo_id;
-        }
-        if (session()->get('login_role') == $this->IsApoyoTecnico()) {
-            return $this->apoyotecnico->nodo_id;
-        }
-        return null;
     }
 
     public static function enableTalentsArticulacion($articulacion)

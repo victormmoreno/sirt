@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\{EmpresaFormRequest, IdeaFormRequest};
-use App\Models\{Departamento, EstadoIdea, Idea, Entidad, Sector, TamanhoEmpresa, TipoEmpresa, Nodo};
-use App\Repositories\Repository\{IdeaRepository, EmpresaRepository, UserRepository\GestorRepository, ComiteRepository};
+use App\Models\{Departamento, EstadoIdea, Idea, Entidad, Sector, TamanhoEmpresa, TipoEmpresa};
+use App\Repositories\Repository\{IdeaRepository, EmpresaRepository};
 use App\User;
 use Illuminate\Support\Facades\{Session, Validator};
 use Illuminate\Http\Request;
@@ -15,153 +15,33 @@ class IdeaController extends Controller
 {
     public $ideaRepository;
 
-    public function __construct(IdeaRepository $ideaRepository, EmpresaRepository $empresaRepository, GestorRepository $gestorRepository)
+    public function __construct(IdeaRepository $ideaRepository, EmpresaRepository $empresaRepository)
     {
         $this->ideaRepository = $ideaRepository;
         $this->empresaRepository = $empresaRepository;
-        $this->gestorRepository = $gestorRepository;
         $this->middleware('auth');
-    }
-
-    /**
-     * Retorna los ids de los nodos en un array
-     * 
-     * @param $request
-     * @param bool $bandera Indica si se seleccionaron todos los nodos
-     * @return array
-     * @author dum
-     */
-    public function retornarSelectedNodos($request, $bandera)
-    {
-        $list_nodos = [];
-        if ($bandera) {
-            $nodos = Nodo::SelectNodo()->get();
-            foreach ($nodos as $key => $nodo) {
-                $list_nodos[] = $nodo->id;
-            }
-        } else {
-            $list_nodos = $request->filter_nodo;
-        }
-        return $list_nodos;
-    }
-
-    /**
-     * Verifica que se haya seleccionado la opción de "Todos" en el select de nodos
-     * 
-     * @param $request
-     * @return bool
-     * @author dum
-     */
-    public function verificarSelectAllNodos($request)
-    {
-        if (isset($request->filter_nodo)) {
-            foreach ($request->filter_nodo as $key => $select) {
-                if ($select == 'all') {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    
-    /**
-     * Retorna el id del nodo para realizar consultas sobre las ideas de proyeco
-     * 
-     * @param $request
-     * @return mixed
-     * @author dum
-     */
-    public function getIdNodoForIdeas($request)
-    {
-        $nodo = null;
-        if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
-            $bandera = $this->verificarSelectAllNodos($request);
-            $nodo = $this->retornarSelectedNodos($request, $bandera);
-        } else {
-            $nodo = [request()->user()->getNodoUser()];
-        }
-        return $nodo;
     }
 
     /*========================================================================================================
     =            metodo para mostrar el registro de ideas en la pagina principal de la aplicacion            =
     ========================================================================================================*/
+
     /**
      * Display a create of the resource.
      * @author devjul
      */
     public function create()
     {
-        if(!request()->user()->can('create', Idea::class)) {
-            alert('No autorizado', 'No tienes permisos para registrar ideas de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
         $nodos = $this->ideaRepository->getSelectNodo();
+        // $nodos = $this->ideaRepository->getSelectNodoPrueba();
         if (Session::get('login_role') == User::IsTalento()) {
-            return view('ideas.create', [
+            return view('ideas.talento.create', [
                 'nodos' => $nodos,
                 'departamentos' => Departamento::all(),
                 'sectores' => Sector::all(),
                 'tamanhos' => TamanhoEmpresa::all(),
                 'tipos' => TipoEmpresa::all()
             ]);
-        }
-    }
-
-    /**
-     * Formulario para asginar la idea de proyecto a un experto
-     *
-     * @param int $id Id de la idea de proyecto
-     * @return Response
-     * @author dum
-     **/
-    public function asignar_experto(int $id)
-    {
-        $idea = Idea::find($id);
-        // dd($idea->nodo_id);
-        if(!request()->user()->can('asignar', $idea)) {
-            alert('No autorizado', 'No tienes permisos para asignar esta idea de proyecto a un experto', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
-        return view('ideas.asignar', [
-            'idea' => $idea,
-            'gestores' => $this->gestorRepository->getAllGestoresPorNodo($idea->nodo_id)->selectRaw('gestores.id as gestor_id, CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) AS nombres_gestor')->get()
-        ]);
-    }
-
-    /**
-     * Formulario para asginar la idea de proyecto a un experto
-     *
-     * @param int $id Id de la idea de proyecto
-     * @return Response
-     * @author dum
-     **/
-    public function asignar(Request $request)
-    {
-        $idea = Idea::find($request->idea);
-
-        if(!request()->user()->can('asignar', $idea)) {
-            alert('No autorizado', 'No tienes permisos para asignar esta idea de proyecto a un experto', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
-
-        $validator = Validator::make($request->all(), [
-            'txtgestor_id' => 'required',
-        ], [
-            'txtgestor_id.required' => 'El experto es obligatorio.'
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->route('idea.asignar', $request->idea)
-            ->withErrors($validator)
-            ->withInput();
-        }
-        $asignacion = $this->ideaRepository->asginarIdeaExperto($request, $idea);
-        alert($asignacion['title'], $asignacion['msg'], $asignacion['type'])->showConfirmButton('Ok', '#3085d6');
-        if ($asignacion['state']) {
-            return redirect()->route('idea.detalle', $request->idea);
-        } else {
-          return back()->withInput();
         }
     }
 
@@ -269,28 +149,30 @@ class IdeaController extends Controller
     //metodo index para mostrar el listado de ideas
     public function index()
     {
-        if(!request()->user()->can('index', Idea::class)) {
-            alert('No autorizado', 'No tienes permisos para ver ideas de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
         $estadosIdeas = EstadoIdea::orderBy('id')->whereNotIn('nombre', [
             EstadoIdea::IsNoConvocado(),
             EstadoIdea::IsInhabilitado(),
-            EstadoIdea::IsRechazadoArticulador(),
             EstadoIdea::IsNoAplica()
         ])->pluck('nombre', 'id');
+        if (\Session::get('login_role') == User::IsInfocenter()) {
+            return view('ideas.infocenter.index', ['estadosIdeas' => $estadosIdeas]);
+        } else if (\Session::get('login_role') == User::IsTalento()) {
+            return view('ideas.talento.index');
+        } else if (\Session::get('login_role') == User::IsArticulador()) {
+            return view('ideas.articulador.index', ['estadosIdeas' => $estadosIdeas]);
+        } else {
+            $nodos = Entidad::has('nodo')->with('nodo')->get()->pluck('nombre', 'nodo.id');
+            $estadosIdeas = EstadoIdea::orderBy('id')->pluck('nombre', 'id');
+            return view('ideas.index', ['nodos' => $nodos, 'estadosIdeas' => $estadosIdeas]);
+        }
 
-        $nodos = Entidad::has('nodo')->with('nodo')->orderBy('entidades.nombre')->get()->pluck('nombre', 'nodo.id');
-        return view('ideas.index', [
-            'nodos' => $nodos,
-            'estadosIdeas' => $estadosIdeas
-        ]);
     }
 
     public function aceptarPostulacionIdea(Request $request, $id)
     {
         $idea = $this->ideaRepository->findByid($id);
         $this->authorize('show', $idea);
+        // dd($id);
         $update = $this->ideaRepository->aceptarPostulacion($idea, $request);
         if ($update) {
             Alert::success('Postulación aceptada!', 'La postulación de la idea se ha aceptado en el nodo!')->showConfirmButton('Ok', '#3085d6');
@@ -348,25 +230,36 @@ class IdeaController extends Controller
 
     public function datatableFiltros(Request $request)
     {
-        if (session()->get('login_role') == request()->user()->IsTalento()) {
-            $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('talento_id', auth()->user()->talento->id)
-            ->whereHas('estadoIdea',
-            function ($query){
-                $query->whereNotIn('nombre', [EstadoIdea::IsRechazadoArticulador()]);
-            })->get();
-        } else {
-            $nodos = $this->getIdNodoForIdeas($request);
-            $ideas = [];
-            if (!empty($request->filter_year) && !empty($request->filter_state) && !empty($request->filter_vieneConvocatoria)) {
-                $ideas = Idea::with(['estadoIdea'])->createdAt($request->filter_year)
+        switch (\Session::get('login_role')) {
+            case User::IsAdministrador():
+                $nodo = $request->filter_nodo;
+                break;
+            case User::IsDinamizador():
+                $nodo = auth()->user()->dinamizador->nodo_id;
+                break;
+            case User::IsGestor():
+                $nodo = auth()->user()->gestor->nodo_id;
+                break;
+            case User::IsInfocenter():
+                $nodo = auth()->user()->infocenter->nodo_id;
+                break;
+            case User::IsArticulador():
+                $nodo = auth()->user()->articulador->nodo_id;
+                break;
+            default:
+                return abort('403');
+                break;
+        }
+        $ideas = [];
+        if (!empty($request->filter_year) && !empty($request->filter_state) && !empty($request->filter_vieneConvocatoria)) {
+
+            $ideas = Idea::with(['estadoIdea'])->createdAt($request->filter_year)
                 ->vieneConvocatoria($request->filter_vieneConvocatoria)
                 ->state($request->filter_state)
                 ->convocatoria($request->filter_convocatoria)
-                ->nodo($nodos)
+                ->nodo($nodo)
                 ->orderBy('created_at', 'desc')
                 ->get();
-            }
-
         }
         return $this->datatableIdeas($ideas);
     }
@@ -395,17 +288,13 @@ class IdeaController extends Controller
      * @return Response
      * @author dum
      **/
-    public function duplicarIdea(Request $request, $id)
+    public function duplicarIdeaRechazada(Request $request, $id)
     {
         $idea = $this->ideaRepository->findByid($id);
-        if(!request()->user()->can('duplicar', $idea)) {
-            alert('No autorizado', 'No tienes permisos para duplicar idea de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
         $resultado = $this->ideaRepository->duplicarIdea($idea);
         alert($resultado['title'], $resultado['msg'], $resultado['type'])->showConfirmButton('Ok', '#3085d6');;
         if ($resultado['state']) {
-            return redirect()->route('idea.detalle', ['id' => $resultado['id']]);
+            return redirect('idea');
         } else {
             return back();
         }
@@ -422,10 +311,6 @@ class IdeaController extends Controller
     public function inhabilitarIdea(Request $request, $id)
     {
         $idea = $this->ideaRepository->findByid($id);
-        if(!request()->user()->can('inhabilitar', $idea)) {
-            alert('No autorizado', 'No tienes permisos para inhabilitar idea de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
         $resultado = $this->ideaRepository->inhabilitarIdea($idea);
         alert($resultado['title'], $resultado['msg'], $resultado['type'])->showConfirmButton('Ok', '#3085d6');;
         if ($resultado['state']) {
@@ -481,19 +366,18 @@ class IdeaController extends Controller
         })->editColumn('nodo', function ($data) {
             return $data->nodo->entidad->nombre;
         })->addColumn('info', function ($data) {
-            $info = '<a class="btn m-b-xs bg-secondary" href='.route('idea.detalle', $data->id).'>
+            $info = '<a class="btn m-b-xs modal-trigger" href='.route('idea.detalle', $data->id).'>
             <i class="material-icons">search</i>
             </a>';
                 return $info;
         })->addColumn('edit', function ($data) {
-            $editable = !request()->user()->can('update', $data) ? 'disabled' : '';
-            $edit = '<a class="btn m-b-xs bg-warning" '.$editable.' href='.route('idea.edit', $data->id).'>
+            $edit = '<a class="btn m-b-xs modal-trigger" href='.route('idea.edit', $data->id).'>
             <i class="material-icons">edit</i>
             </a>';
-            return $edit;
+                return $edit;
         })->addColumn('details', function ($data) {
             $button = '
-            <a class="btn m-b-xs modal-trigger bg-secondary" href="#modal1" onclick="detallesIdeaPorId(' . $data->id . ')">
+            <a class="btn light-blue m-b-xs modal-trigger" href="#modal1" onclick="detallesIdeaPorId(' . $data->id . ')">
                 <i class="material-icons">info</i>
             </a>
             ';
@@ -529,12 +413,10 @@ class IdeaController extends Controller
     public function edit($id)
     {
         $idea = $this->ideaRepository->findByid($id);
-        if(!request()->user()->can('update', $idea)) {
-            alert('No autorizado', 'No tienes permisos para cambiar la información de esta idea de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
+        $this->authorize('update', $idea);
         $nodos = $this->ideaRepository->getSelectNodo();
-        return view('ideas.edit', ['idea' => $idea,
+        // $nodos = $this->ideaRepository->getSelectNodoPrueba();
+        return view('ideas.talento.edit', ['idea' => $idea,
         'nodos' => $nodos,
         'departamentos' => Departamento::all(),
         'sectores' => Sector::all(),
@@ -554,10 +436,7 @@ class IdeaController extends Controller
     {
         $empresa = null;
         $idea = $this->ideaRepository->findByid($id);
-        if(!request()->user()->can('update', $idea)) {
-            alert('No autorizado', 'No tienes permisos para cambiar la información de esta idea de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
+        $this->authorize('update', $idea);
 
         if ($request->input('txtidea_empresa') == 1) {
             // Idea con empresa
@@ -616,10 +495,6 @@ class IdeaController extends Controller
     public function enviarIdeaAlNodo(Request $request, $id)
     {
         $idea = $this->ideaRepository->findByid($id);
-        if(!request()->user()->can('postularIdea', $idea)) {
-            alert('No autorizado', 'No tienes permisos para postular esta idea de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
         $update = $this->ideaRepository->enviarIdeaAlNodo($request, $idea);
         alert($update['title'], $update['msg'], $update['type'])->showConfirmButton('Ok', '#3085d6');
         if ($update['state']) {
@@ -632,30 +507,61 @@ class IdeaController extends Controller
     public function detalle($id)
     {
         $idea = $this->ideaRepository->findByid($id);
-        if(!request()->user()->can('show', $idea)) {
-            alert('No autorizado', 'No tienes permisos para ver la información de esta idea de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
         $estadosIdea = EstadoIdea::all();
-        return view('ideas.show', [
-            'idea' => $idea,
-            'estadosIdea' => $estadosIdea
-        ]);
+        switch (Session::get('login_role')) {
+            case User::IsTalento():
+                return view('ideas.talento.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
+                break;
+            case User::IsArticulador():
+                return view('ideas.articulador.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
+                break;
+            case User::IsAdministrador():
+                return view('ideas.administrador.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
+                break;
+            case User::IsDinamizador():
+                return view('ideas.administrador.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
+                break;
+            case User::IsInfocenter():
+                return view('ideas.administrador.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
+                break;
+            case User::IsGestor():
+                return view('ideas.administrador.show', ['idea' => $idea, 'estadosIdea' => $estadosIdea]);
+                break;
+            default:
+                return abort('403');
+                break;
+        }
     }
 
     public function export(Request $request, $extension = 'xlsx')
     {
-        if(!request()->user()->can('export', Idea::class)) {
-            alert('No autorizado', 'No puedes descargar información de las ideas de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
+        $this->authorize('view', Idea::class);
+        switch (\Session::get('login_role')) {
+            case User::IsAdministrador():
+                $nodo = $request->filter_nodo;
+                break;
+            case User::IsDinamizador():
+                $nodo = auth()->user()->dinamizador->nodo_id;
+                break;
+            case User::IsGestor():
+                $nodo = auth()->user()->gestor->nodo_id;
+                break;
+            case User::IsArticulador():
+                $nodo = auth()->user()->gestor->nodo_id;
+                break;
+            case User::IsInfocenter():
+                $nodo = auth()->user()->infocenter->nodo_id;
+                break;
+            default:
+                return abort('403');
+                break;
         }
-        $nodos = $this->getIdNodoForIdeas($request);
 
         $ideas = Idea::with(['estadoIdea'])->createdAt($request->filter_year)
             ->vieneConvocatoria($request->filter_vieneConvocatoria)
             ->state($request->filter_state)
             ->convocatoria($request->filter_convocatoria)
-            ->nodo($nodos)
+            ->nodo($nodo)
             ->orderBy('created_at', 'desc')
             ->get();
 

@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <table id="charlasInformativasNodo_table" width="100%" class="display responsive-table datatable-example dataTable">
   <thead>
     <tr>
@@ -7,7 +8,10 @@
       <th>Encargado</th>
       <th>Número de Asistentes</th>
       <th>Detalles</th>
-      <th>Editar</th>
+      @if ( \Session::get('login_role') == App\User::IsInfocenter() || \Session::get('login_role') == App\User::IsArticulador() )
+        <th>Editar</th>
+        
+      @endif
       <th>Evidencias</th>
     </tr>
   </thead>

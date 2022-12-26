@@ -9,7 +9,6 @@ use App\Repositories\Repository\LineaRepository;
 use App\Repositories\Repository\MantenimientoRepository;
 use App\User;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Repositories\Repository\NodoRepository;
 
@@ -19,8 +18,8 @@ class MantenimientoController extends Controller
     public function __construct(MantenimientoRepository $mantenimientoRepository, LineaRepository $lineaRepository, NodoRepository $nodoRepository)
     {
         $this->mantenimientoRepository = $mantenimientoRepository;
-        $this->lineaRepository = $lineaRepository;
-        $this->nodoRepository = $nodoRepository;
+        $this->lineaRepository         = $lineaRepository;
+        $this->nodoRepository          = $nodoRepository;
         $this->middleware('auth');
     }
     /**
@@ -31,12 +30,11 @@ class MantenimientoController extends Controller
     public function index()
     {
         
-        if(!request()->user()->can('index', EquipoMantenimiento::class)) {
-            alert('No autorizado', 'No puedes ver la información de los equipos', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
+        $this->authorize('index', EquipoMantenimiento::class);
         if (request()->ajax()) {
-            if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsExperto()) {
+
+            if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsGestor()) {
+
                 if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
                     $nodo           = auth()->user()->dinamizador->nodo->id;
                     $mantenimientos = $this->getMantenimientoRepository()->findInfoMantenimiento()
@@ -44,7 +42,7 @@ class MantenimientoController extends Controller
                             $query->where('id',$nodo);
                         })
                         ->get();
-                } elseif (session()->has('login_role') && session()->get('login_role') == User::IsExperto()) {
+                } elseif (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
                     $linea          = auth()->user()->gestor->lineatecnologica->id;
                     $nodo           = auth()->user()->gestor->nodo->id;
                     $mantenimientos = $this->getMantenimientoRepository()->findInfoMantenimiento()
@@ -56,15 +54,15 @@ class MantenimientoController extends Controller
                         })
                         ->get();
                 }
-                // dd($mantenimientos);
+
                 return datatables()->of($mantenimientos)
                     ->addColumn('edit', function ($data) {
-                        $button = '<a href="' . route("mantenimiento.edit", $data->id) . '" class="btn bg-warning tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+                        $button = '<a href="' . route("mantenimiento.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
 
                         return $button;
                     })
                     ->addColumn('detail', function ($data) {
-                        $button = '<a href="' . route("mantenimiento.show", $data->id) . '" class="btn bg-info tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle"><i class="material-icons">info_outline</i></a>';
+                        $button = '<a href="' . route("mantenimiento.show", $data->id) . '" class="btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle"><i class="material-icons">info_outline</i></a>';
 
                         return $button;
                     })
@@ -91,9 +89,22 @@ class MantenimientoController extends Controller
             }
 
         }
-        return view('mantenimiento.index', [
-            'nodos' => $this->getNodoRepository()->getSelectNodo(),
-        ]);
+        switch (session()->get('login_role')) {
+            case User::IsAdministrador():
+                return view('mantenimiento.index', [
+                    'nodos' => $this->getNodoRepository()->getSelectNodo(),
+                ]);
+                break;
+            case User::IsDinamizador():
+                return view('mantenimiento.index');
+                break;
+            case User::IsGestor():
+                return view('mantenimiento.index');
+                break;
+            default:
+                return abort('403');
+                break;
+        }
 
     }
 
@@ -107,57 +118,47 @@ class MantenimientoController extends Controller
     public function getMantenimientosEquiposPorNodo($nodo)
     {
         if (request()->ajax()) {
-            $nodo_id = null;
-            if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
-                $nodo_id = $nodo;
-            }
-            if (session()->get('login_role') == User::IsDinamizador()) {
-                $nodo_id = auth()->user()->dinamizador->nodo_id;
-            }
-            if (session()->get('login_role') == User::IsExperto()) {
-                $nodo_id = auth()->user()->gestor->nodo_id;
-            }
-            
-            $mantenimientos = $this->getMantenimientoRepository()->findInfoMantenimiento()
-            ->whereHas('equipo.nodo', function($query) use ($nodo_id) {
-                $query->where('id',$nodo_id);
-            })->get();
-            return datatables()->of($mantenimientos)
-            ->addColumn('edit', function ($data) {
-                if (auth()->user()->can('edit', $data)) {
-                    $button = '<a href="' . route("mantenimiento.edit", $data->id) . '" class="btn bg-warning tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar">
-                    <i class="material-icons">edit</i>
-                    </a>';
-                } else {
-                    $button = '<a disabled class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar">
-                    <i class="material-icons">edit</i>
-                    </a>';
-                }
-                return $button;
-            })
-            ->addColumn('detail', function ($data) {
-                $button = '<a href="' . route("mantenimiento.show", $data->id) . '" class="btn bg-info tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle"><i class="material-icons">info_outline</i></a>';
+            if (session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()) {
 
-                return $button;
-            })
-            ->addColumn('valor_mantenimiento', function ($data) {
-                return '$ ' . number_format(round($data->valor_mantenimiento, 2));
-            })
-            ->editColumn('costo_adquisicion', function ($data) {
-                return '$ ' . number_format($data->equipo->each(function ($item) {
-                    $item->costo_adquisicion;
-                }));
-            })
-            ->editColumn('lineatecnologica', function ($data) {
-                return $data->equipo->lineatecnologica->abreviatura.' - '.$data->equipo->lineatecnologica->nombre;
+                $mantenimientos = $this->getMantenimientoRepository()->findInfoMantenimiento()
+                        ->whereHas('equipo.nodo', function($query) use($nodo){
+                            $query->where('id',$nodo);
+                        })
+                        ->get();
 
-            })->editColumn('equipo', function ($data) {
-                return $data->equipo->nombre;
-            })->editColumn('nodo', function ($data) {
-                return $data->equipo->nodo->entidad->nombre;
-            })
-            ->rawColumns(['edit', 'detail', 'nombrelinea', 'costo_adquisicion', 'valor_mantenimiento', 'equipo_nombre'])
-            ->make(true);
+                return datatables()->of($mantenimientos)
+                    ->addColumn('edit', function ($data) {
+                        $button = '<a href="' . route("mantenimiento.edit", $data->id) . '" class=" btn tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar"><i class="material-icons">edit</i></a>';
+
+                        return $button;
+                    })
+                    ->addColumn('detail', function ($data) {
+                        $button = '<a href="' . route("mantenimiento.show", $data->id) . '" class="btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle"><i class="material-icons">info_outline</i></a>';
+
+                        return $button;
+                    })
+
+                    ->addColumn('valor_mantenimiento', function ($data) {
+                        return '$ ' . number_format(round($data->valor_mantenimiento, 2));
+                    })
+                    ->editColumn('costo_adquisicion', function ($data) {
+                        return '$ ' . number_format($data->equipo->each(function ($item) {
+                                        $item->costo_adquisicion;
+                                }));
+                    })
+                    ->editColumn('lineatecnologica', function ($data) {
+                        return $data->equipo->lineatecnologica->abreviatura.' - '.$data->equipo->lineatecnologica->nombre;
+
+                    })->editColumn('equipo', function ($data) {
+                        return $data->equipo->nombre;
+                    })
+
+                    ->rawColumns(['edit', 'detail', 'nombrelinea', 'costo_adquisicion', 'valor_mantenimiento', 'equipo_nombre'])
+                    ->make(true);
+            }  else {
+                return response()->json(['data' => 'no response']);
+            }
+
         } else {
             abort('403');
         }
@@ -172,16 +173,18 @@ class MantenimientoController extends Controller
     public function create()
     {
         $this->authorize('create', EquipoMantenimiento::class);
-        $nodos = $this->getNodoRepository()->getSelectNodo();
-        $nodo = session()->get('login_role') == User::IsAdministrador() ? $nodos->first()->id : auth()->user()->dinamizador->nodo->id;
-        $lineastecnologicas = $this->getLineaTecnologicaRepository()->getAllLineaNodo($nodo);
-        
-        return view('mantenimiento.create', [
-            'lineastecnologicas' => $lineastecnologicas->lineas,
-            'year' =>  Carbon::now()->isoFormat('YYYY'),
-            'nodos' => $nodos,
-            'nodo' => $nodo
-        ]);
+        if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
+            $nodoDinamizador = auth()->user()->dinamizador->nodo->id;
+
+            $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodoDinamizador);
+            return view('mantenimiento.create', [
+                'lineastecnologicas' => $lineastecnologicas,
+                'year' =>  Carbon::now()->isoFormat('YYYY'),
+            ]);
+        } else {
+            abort('403');
+        }
+
     }
 
     /**
@@ -190,25 +193,18 @@ class MantenimientoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MantenimientoFormRequest $request)
     {
 
-        $this->authorize('create', EquipoMantenimiento::class);
-        $req = new MantenimientoFormRequest;
-        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-        if ($validator->fails()) {
-            return response()->json([
-                'state'   => 'error_form',
-                'errors' => $validator->errors(),
-            ]);
+        $this->authorize('store', EquipoMantenimiento::class);
+        $mantenimientoCreate = $this->getMantenimientoRepository()->storeMantenimiento($request);
+        if ($mantenimientoCreate === true) {
+
+            alert()->success('Registro Exitoso.', 'El mantenimiento ha sido creado satisfactoriamente');
         } else {
-            $result = $this->getMantenimientoRepository()->storeMantenimiento($request);
-            if ($result['state']) {
-                return response()->json(['state' => true, 'url' => route('mantenimiento.index'), 'msj' => $result['msj'], 'title' => $result['title']]);
-            } else {
-                return response()->json(['state' => false, 'msj' => $result['msj'], 'title' => $result['title']]);
-            }
+            alert()->error('Registro Erróneo.', 'El mantenimiento no se ha creado.');
         }
+        return redirect()->route('mantenimiento.index');
     }
 
     /**
@@ -237,15 +233,17 @@ class MantenimientoController extends Controller
     {
         $mantenimiento = $this->getMantenimientoRepository()->findInfoMantenimiento()->findOrFail($id);
         $this->authorize('edit', $mantenimiento);
-        $nodos = $this->getNodoRepository()->getSelectNodo();
-        $nodo = session()->get('login_role') == User::IsAdministrador() ? $nodos->first()->id : auth()->user()->dinamizador->nodo->id;
-        $lineastecnologicas = $this->getLineaTecnologicaRepository()->getAllLineaNodo($nodo);
-        return view('mantenimiento.edit', [
-            'year' =>  Carbon::now()->isoFormat('YYYY'),
-            'lineastecnologicas' => $lineastecnologicas->lineas,
-            'mantenimiento' => $mantenimiento,
-            'nodos' => $nodos,
-        ]);
+        if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
+            $nodoDinamizador    = auth()->user()->dinamizador->nodo->id;
+            $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodoDinamizador);
+            return view('mantenimiento.edit', [
+                'year' =>  Carbon::now()->isoFormat('YYYY'),
+                'lineastecnologicas' => $lineastecnologicas,
+                'mantenimiento'      => $mantenimiento,
+            ]);
+        } else {
+            abort('403');
+        }
     }
 
     /**
@@ -255,26 +253,19 @@ class MantenimientoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(MantenimientoFormRequest $request, $id)
     {
         $mantenimiento = $this->getMantenimientoRepository()->findInfoMantenimiento()->findOrFail($id);
-        $this->authorize('edit', $mantenimiento);
-        
-        $req = new MantenimientoFormRequest;
-        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-        if ($validator->fails()) {
-            return response()->json([
-                'state'   => 'error_form',
-                'errors' => $validator->errors(),
-            ]);
+        $this->authorize('update', $mantenimiento);
+        $mantenimientoUpdate = $this->getMantenimientoRepository()->updateMantenimiento($request, $mantenimiento);
+        if ($mantenimientoUpdate == true) {
+
+            alert()->success("El mantenimiento ha sido  modificado.", 'Modificación Exitosa', "success");
         } else {
-            $result = $this->getMantenimientoRepository()->updateMantenimiento($request, $mantenimiento);
-            if ($result['state']) {
-                return response()->json(['state' => true, 'url' => route('mantenimiento.index'), 'msj' => $result['msj'], 'title' => $result['title']]);
-            } else {
-                return response()->json(['state' => false, 'msj' => $result['msj'], 'title' => $result['title']]);
-            }
+            alert()->error("El mantenimiento no ha sido  modificado.", 'Modificación Errónea', "error");
         }
+
+        return redirect()->route('mantenimiento.index');
 
     }
 

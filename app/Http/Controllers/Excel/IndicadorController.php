@@ -12,12 +12,11 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Imports\MigracionMetasImport;
 use Illuminate\Http\Request;
-use App\Models\{Proyecto, Nodo};
+use App\Models\Proyecto;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 
 class IndicadorController extends Controller
 {
@@ -47,7 +46,7 @@ class IndicadorController extends Controller
     {
         $query = null;
 
-        if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
+        if (Session::get('login_role') == User::IsAdministrador()) {
 
         if ($idnodo == 'all') {
             $query = $this->getProyectoRepository()->proyectosIndicadores_Repository($fecha_inicio, $fecha_fin)->get();
@@ -56,11 +55,11 @@ class IndicadorController extends Controller
             $query->where('id', $idnodo);
             })->get();
         }
-        } else if (session()->get('login_role') == User::IsDinamizador()) {
+        } else if (Session::get('login_role') == User::IsDinamizador()) {
             $query = $this->getProyectoRepository()->proyectosIndicadores_Repository($fecha_inicio, $fecha_fin)->whereHas('nodo', function($query) {
                 $query->where('id', auth()->user()->dinamizador->nodo_id);
             })->get();
-        } else if (session()->get('login_role') == User::IsInfocenter()) {
+        } else if (Session::get('login_role') == User::IsInfocenter()) {
             $query = $this->getProyectoRepository()->proyectosIndicadores_Repository($fecha_inicio, $fecha_fin)->whereHas('nodo', function($query) {
                 $query->where('id', auth()->user()->infocenter->nodo_id);
             })->get();
@@ -78,7 +77,7 @@ class IndicadorController extends Controller
     {
         $query = null;
 
-        if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
+        if (Session::get('login_role') == User::IsAdministrador()) {
 
         if ($idnodo == 'all') {
             $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('articulacion_proyecto.actividad', function ($query) use ($fecha_inicio, $fecha_fin) {
@@ -97,7 +96,7 @@ class IndicadorController extends Controller
             $query->where('id', $idnodo);
             })->get();
         }
-        } else if (session()->get('login_role') == User::IsDinamizador()) {
+        } else if (Session::get('login_role') == User::IsDinamizador()) {
         $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('articulacion_proyecto.actividad', function ($query) use ($fecha_inicio, $fecha_fin) {
             $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
         })
@@ -106,7 +105,7 @@ class IndicadorController extends Controller
         })->whereHas('nodo', function($query) {
             $query->where('id', auth()->user()->dinamizador->nodo_id);
         })->get();
-        } else if (session()->get('login_role') == User::IsInfocenter()) {
+        } else if (Session::get('login_role') == User::IsInfocenter()) {
         $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('articulacion_proyecto.actividad', function ($query) use ($fecha_inicio, $fecha_fin) {
             $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
         })
@@ -132,7 +131,8 @@ class IndicadorController extends Controller
     {
         $query = null;
 
-        if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
+        if (Session::get('login_role') == User::IsAdministrador()) {
+
         if ($idnodo == 'all') {
             $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('articulacion_proyecto.actividad', function ($query) use ($fecha_inicio, $fecha_fin) {
             $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
@@ -144,13 +144,13 @@ class IndicadorController extends Controller
             $query->where('id', $idnodo);
             })->get();
         }
-        } else if (session()->get('login_role') == User::IsDinamizador()) {
+        } else if (Session::get('login_role') == User::IsDinamizador()) {
         $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('articulacion_proyecto.actividad', function ($query) use ($fecha_inicio, $fecha_fin) {
             $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
         })->whereHas('nodo', function($query) {
             $query->where('id', auth()->user()->dinamizador->nodo_id);
         })->get();
-        } else if (session()->get('login_role') == User::IsInfocenter()) {
+        } else if (Session::get('login_role') == User::IsInfocenter()) {
         $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('articulacion_proyecto.actividad', function ($query) use ($fecha_inicio, $fecha_fin) {
             $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
         })->whereHas('nodo', function($query) {
@@ -170,7 +170,7 @@ class IndicadorController extends Controller
     {
         $query = null;
 
-        if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
+        if (Session::get('login_role') == User::IsAdministrador()) {
 
         if ($idnodo == 'all') {
             $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('fase', function ($query) {
@@ -183,13 +183,13 @@ class IndicadorController extends Controller
             $query->where('id', $idnodo);
             })->get();
         }
-        } else if (session()->get('login_role') == User::IsDinamizador()) {
+        } else if (Session::get('login_role') == User::IsDinamizador()) {
         $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('fase', function ($query) {
             $query->whereIn('nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
         })->whereHas('nodo', function($query) {
             $query->where('id', auth()->user()->dinamizador->nodo_id);
         })->get();
-        } else if (session()->get('login_role') == User::IsInfocenter()) {
+        } else if (Session::get('login_role') == User::IsInfocenter()) {
         $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('fase', function ($query) {
             $query->whereIn('nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
         })->whereHas('nodo', function($query) {
@@ -209,10 +209,10 @@ class IndicadorController extends Controller
     {
         session()->put('errorMigracion', null);
         Excel::import(new MigracionMetasImport(), $request->file('nombreArchivo'));
-        if (session()->get('errorMigracion') == null) {
+        if (Session::get('errorMigracion') == null) {
             alert()->success('Migración Exitosa!', 'La información se ha migrado exitósamente!')->showConfirmButton('Ok', '#3085d6');
         } else {
-            alert()->error('Migración Errónea!', session()->get('errorMigracion'))->showConfirmButton('Ok', '#3085d6');
+            alert()->error('Migración Errónea!', Session::get('errorMigracion'))->showConfirmButton('Ok', '#3085d6');
         }
         session()->put('errorMigracion', null);
         return back();
@@ -220,50 +220,22 @@ class IndicadorController extends Controller
 
     public function downloadIdeas(Request $request)
     {
-        if ($request->txtnodo_ideas_download[0] != 'all') {
-            if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
-                $nodos = $request->txtnodo_ideas_download;
-            } else {
-                $nodos = [request()->user()->getNodoUser()];
-            }
-        } else {
-            $nodos_temp = Nodo::SelectNodo()->get();
-            foreach ($nodos_temp as $nodo) {
-                $nodos[] = $nodo->id;
-            }
-        }
         $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->whereHas('estadoIdea', function ($query) use ($request) {
             $query->where('nombre', $request->txtestado_idea_download);
-        })->whereIn('nodo_id', $nodos)
-        ->orderBy('nodo_id');
-        if (session()->get('login_role') == User::IsExperto()) {
-            $ideas = $ideas->where('ideas.gestor_id', request()->user()->gestor->id);
-        }
-        $ideas = $ideas->get();
+        })->whereIn('nodo_id', $request->txtnodo_ideas_download)
+        ->orderBy('nodo_id')->get();
         return Excel::download(new IdeasIndicadorExport($ideas), 'Ideas.xlsx');
     }
 
     public function downloadMetas(Request $request)
-    {   
-        if ($request->txtnodo_metas_id[0] != 'all') {
-            if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
-                $nodos = $request->txtnodo_metas_id;
-            } else {
-                $nodos = [request()->user()->getNodoUser()];
-            }
-        } else {
-            $nodos_temp = Nodo::SelectNodo()->get();
-            foreach ($nodos_temp as $nodo) {
-                $nodos[] = $nodo->id;
-            }
-        }
-        $metas = $this->nodoRepository->consultarMetasDeTecnoparque($nodos)->get();
+    {        
+        $metas = $this->nodoRepository->consultarMetasDeTecnoparque($request->txtnodo_metas_id)->get();
         $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $this->year_now, [Proyecto::IsTrl6Obtenido()])
-        ->whereIn('nodos.id', $nodos)
+        ->whereIn('nodos.id', $request->txtnodo_metas_id)
         ->groupBy('mes')
         ->get();
         $pbts_trl7_8 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $this->year_now, [Proyecto::IsTrl7Obtenido(), Proyecto::IsTrl8Obtenido()])
-        ->whereIn('nodos.id', $nodos)
+        ->whereIn('nodos.id', $request->txtnodo_metas_id)
         ->groupBy('mes')
         ->get();
         $activos = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->select('nodo_id')->selectRaw('count(id) as cantidad')->whereHas('fase', function ($query) {

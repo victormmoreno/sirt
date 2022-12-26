@@ -94,7 +94,7 @@ class EdtController extends Controller
 
         $edt = $this->edtRepository->consultarDetalleDeUnaEdt($id);
 
-        if ( Session::get('login_role') == User::IsExperto() ) {
+        if ( Session::get('login_role') == User::IsGestor() ) {
         return view('edt.gestor.evidencias', [
             'edt' => $edt,
         ]);
@@ -188,7 +188,7 @@ class EdtController extends Controller
     public function consultarEdtsDeUnGestor($idgestor, $anho)
     {
         $id = "";
-        if ( Session::get('login_role') == User::IsExperto() ) {
+        if ( Session::get('login_role') == User::IsGestor() ) {
         $id = auth()->user()->gestor->id;
         }
         $edts = $this->edtRepository->consultarEdtsDeUnGestor($id, $anho);
@@ -202,7 +202,7 @@ class EdtController extends Controller
     */
     public function index()
     {
-        if ( Session::get('login_role') == User::IsExperto() ) {
+        if ( Session::get('login_role') == User::IsGestor() ) {
         return view('edt.gestor.index');
         } else if ( Session::get('login_role') == User::IsDinamizador() ) {
         return view('edt.dinamizador.index');
@@ -267,7 +267,7 @@ class EdtController extends Controller
     */
     public function edit($id)
     {
-        if ( Session::get('login_role') == User::IsExperto() ) {
+        if ( Session::get('login_role') == User::IsGestor() ) {
         return view('edt.gestor.edit', [
             'edt' => $this->edtRepository->consultarDetalleDeUnaEdt($id),
             'areasconocimiento' => AreaConocimiento::all()->pluck('nombre', 'id'),
@@ -293,7 +293,7 @@ class EdtController extends Controller
     */
     public function update(Request $request, $id)
     {
-        if ( Session::get('login_role') == User::IsExperto() ) {
+        if ( Session::get('login_role') == User::IsGestor() ) {
         $req = new EdtFormRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {

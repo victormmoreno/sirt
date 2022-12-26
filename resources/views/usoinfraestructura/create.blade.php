@@ -76,7 +76,7 @@
                             <i class="large material-icons prefix">
                                 block
                             </i>
-                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
+                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
                             <p>
                                 Aún no tienes proyectos en fase de inicio, planeacion o en fase de ejecución o puedes que no esten aprobados.
                             </p>
@@ -352,7 +352,7 @@
                 $('#txtmaterial').append('<option value="">Seleccione el material de formación</option>');
 
                 if (response.proyecto.length != 0) {
-                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
+                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
                         let cont;
                         let a = document.getElementsByName("gestor[]");
                         let fila ="";
@@ -388,7 +388,7 @@
                     $('#txtnodo').val(response.proyecto.nodo_id);
                     $("label[for='txtlinea']").addClass('active');
                 }else{
-                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
+                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
                         let cont;
                         let a = document.getElementsByName("gestor[]");
                         let fila ="";
@@ -544,7 +544,7 @@
                     $('#txtnodo').val(response.articulacion.nodo_id);
                     $("label[for='txtlinea']").addClass('active');
                 }else{
-                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
+                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
                         let cont;
                         let a = document.getElementsByName("gestor[]");
                         let fila ="";
@@ -937,7 +937,7 @@
                 var a = document.getElementsByName("equipo[]");
                 let fila ="";
 
-                fila = '<tr class="selected" id="filaEquipo'+cont+'"><td><input type="hidden" name="equipo[]" value="'+idequipo+'">'+nombreEquipo+'</td><td><input type="hidden" name="tiempouso[]" value="'+tiempouso+'">'+tiempouso+'</td><td><a class="waves-effect bg-danger white-text btn" onclick="eliminarEquipo('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
+                fila = '<tr class="selected" id="filaEquipo'+cont+'"><td><input type="hidden" name="equipo[]" value="'+idequipo+'">'+nombreEquipo+'</td><td><input type="hidden" name="tiempouso[]" value="'+tiempouso+'">'+tiempouso+'</td><td><a class="waves-effect red lighten-3 btn" onclick="eliminarEquipo('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
                 cont++;
                 $('#detallesUsoInfraestructura').append(fila);
               }else{

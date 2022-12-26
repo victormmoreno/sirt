@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use App\User;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class MaterialesFormRequest extends FormRequest
 {
@@ -25,19 +24,30 @@ class MaterialesFormRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'txtnodo_id'          => Rule::requiredIf(session()->get('login_role') == User::IsAdministrador()),
-            'txtlineatecnologica' => Rule::requiredIf(session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsDinamizador()),
-            'txtcategoria'     => 'required',
-            'txtpresentacion'     => 'required|min:1|max:45',
-            'txtmedida'           => 'required|min:1|max:45',
-            'txtfecha'            => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
-            'txtcantidad'         => 'numeric|required|digits_between:1,10|min:1',
-            'txtnombre'           => 'required|min:1|max:1000',
-            'txtvalorcompra'      => 'numeric|required|between:1,9999999999999999.99|min:1',
-            'txtmarca'            => 'required|min:1|max:45',
-            'txtproveedor'        => 'required|min:1|max:45',
-        ];
+        if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
+            return [
+                'txtlineatecnologica' => 'required',
+                'txtpresentacion'     => 'required|min:1|max:45',
+                'txtmedida'           => 'required|min:1|max:45',
+                'txtfecha'            => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
+                'txtcantidad'         => 'numeric|required|digits_between:1,10|min:1',
+                'txtnombre'           => 'required|min:1|max:1000',
+                'txtvalorcompra'      => 'numeric|required|between:1,9999999999999999.99|min:1',
+                'txtmarca'            => 'required|min:1|max:45',
+                'txtproveedor'        => 'required|min:1|max:45',
+            ];
+        } elseif (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
+            return [
+                'txtpresentacion'     => 'required|min:1|max:45',
+                'txtmedida'           => 'required|min:1|max:45',
+                'txtfecha'            => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
+                'txtcantidad'         => 'numeric|required|digits_between:1,10|min:1',
+                'txtnombre'           => 'required|min:1|max:1000',
+                'txtvalorcompra'      => 'numeric|required|between:1,9999999999999999.99|min:1',
+                'txtmarca'            => 'required|min:1|max:45',
+                'txtproveedor'        => 'required|min:1|max:45',
+            ];
+        }
     }
 
     /**
@@ -48,9 +58,7 @@ class MaterialesFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'txtnodo_id.required' => 'El nodo es obligatorio.',
             'txtlineatecnologica.required' => 'La linea tecnológica es obligatoria.',
-            'txtcategoria.required' => 'La categoría del material es obligatoria.',
             'txttipomaterial.required'     => 'El tipo de material es obligatorio.',
             'txtpresentacion.required'     => 'La presentación del material es obligatoria.',
             'txtmedida.required'           => 'La unidad de medida del material es obligatoria.',

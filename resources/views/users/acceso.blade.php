@@ -1,32 +1,41 @@
 @extends('layouts.app')
+
 @section('meta-title', 'Acceso |' . $user->nombres. ' '. $user->apellidos)
+
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
-        <div class="row no-m-t no-m-b m-r-lg m-l-lg">
-            <div class="left left-align">
-                <h5 class="left-align primary-text">
-                    <a class="footer-text left-align" href="{{route('usuario.usuarios.show', $user->present()->userDocumento())}}">
-                        <i class="material-icons left">arrow_back</i>
-                    </a>Usuarios | Acceso
-                </h5>
-            </div>
-            <div class="right right-align show-on-large hide-on-med-and-down">
-                <ol class="breadcrumbs">
-                    <li><a href="{{route('home')}}">Inicio</a></li>
-                    <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
-                    <li class="active">Acceso</li>
-                </ol>
-            </div>
-        </div>
-        <div class="row no-m-t no-m-">
+        <div class="row no-m-t no-m-b">
+            <div class="col s12 m12 l12">
+                <div class="row">
+                    <div class="col s10 m10 l10">
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
+                            <a class="footer-text left-align" href="{{route('usuario.usuarios.show', $user->present()->userDocumento())}}">
+                                <i class="material-icons arrow-l">
+                                    arrow_back
+                                </i>
+                            </a>
+                            Usuarios | Acceso
+                        </h5>
+                    </div>
+                    <div class="col s4 m4 l2 rigth-align rigth-align show-on-large hide-on-med-and-down">
+                        <ol class="breadcrumbs">
+                            <li><a href="{{route('home')}}">Inicio</a></li>
+                            <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
+                            <li class="active">Acceso</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col s12 m12 l12">
                         <div class="card mailbox-content">
                             <div class="card-content">
                                 <div class="row no-m-t no-m-b">
                                     <div class="col s12 m12 l12">
+                                        
                                         <div class="mailbox-view">
                                             <div class="mailbox-view-header">
+                                                {{-- @include('users.profile.nav.header') --}}
                                                 <div class="right mailbox-buttons">
                                                     <span class="mailbox-title">
                                                         <p class="center">
@@ -52,12 +61,12 @@
                                                                         <h5 class="title center green-complement-text"><b> Acceso</b></h5>
                                                                     <p>Después de una actualización correcta del acceso a la plataforma, si el usuario fue Inhabilitado no podrá acceder a la plataforma {{config('app.name')}}</p>
                                                                     </li>
-
+                                                
                                                                 </ul>
                                                             </blockquote>
                                                         </div>
                                                         <div class="col s12 m9 l9"><br>
-
+                                                            
                                                             <div class="center">
                                                                 <span class="title green-complement-text">Cambia Acceso a la plataforma {{config('app.name')}}</span>
                                                             </div>
@@ -83,7 +92,7 @@
                                                                 <div class="center">
                                                                     <div class="input-field col s12 m12 l12 offset-l6 offset-m12">
                                                                         <div class="switch m-b-md">
-
+                                                
                                                                           <label class="active">Aceeso a plataforma *</label>
                                                                             <label>
                                                                                 SI
@@ -102,17 +111,17 @@
                                                                         @enderror
                                                                     </div>
                                                                 </div>
-
+                                                
                                                             </div>
                                                             <div class="divider mailbox-divider">
                                                         </div>
                                                         <div class="row">
                                                             <div class="center">
-                                                                <button type="submit" class="waves-effect waves-teal bg-secondary white-text btn-flat m-t-xs">
+                                                                <button type="submit" class="waves-effect waves-teal darken-2 btn-flat m-t-xs">
                                                                     Guardar Cambios
                                                                 </button>
-
-
+                                                                
+                                                        
                                                             </div>
                                                         </div>
                                                     </div>
@@ -126,6 +135,8 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
     </div>
 </main>
 @endsection

@@ -3,7 +3,7 @@
         <blockquote>
             <ul class="collection">
                 <li class="collection-item">
-                    @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto() || session()->get('login_role') == App\User::IsApoyoTecnico()))
+                    @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsApoyoTecnico()))
                         <span class="title"><b>Paso 5</b></span>
                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
                         <span class="title"><b>Paso 4</b></span>
@@ -18,7 +18,7 @@
 
     <div class="col s12 m12 l9" >
         <fieldset>
-            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto() || session()->get('login_role') == App\User::IsApoyoTecnico()))
+            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsApoyoTecnico()))
                 <legend>Paso 5</legend>
             @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
                 <legend>Paso 4</legend>
@@ -59,7 +59,7 @@
                     <label class="error" for="txtcantidad" id="txtcantidad-error"></label>
                 </div>
                 <div class="input-field col s12 m3 l3 offset-s3">
-                    <a class="waves-effect waves-light btn bg-secondary white-text m-b-xs btnAgregarMaterial"  onclick="addMaterialesAUso()">
+                    <a class="waves-effect waves-light btn blue m-b-xs btnAgregarMaterial"  onclick="addMaterialesAUso()">
                         Agregar Material
                     </a>
                 </div>
@@ -94,7 +94,7 @@
                                                 {{$material->pivot->unidad}}
                                             </td>
                                             <td>
-                                                <a class="waves-effect bg-danger white-text btn" onclick="eliminarMaterial({{$material->id}});">
+                                                <a class="waves-effect red lighten-3 btn" onclick="eliminarMaterial({{$material->id}});">
                                                     <i class="material-icons">delete_sweep</i>
                                                 </a>
                                             </td>

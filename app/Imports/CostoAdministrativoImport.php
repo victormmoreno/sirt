@@ -28,7 +28,6 @@ class CostoAdministrativoImport implements ToCollection, WithHeadingRow
     */
     public function collection(Collection $rows)
     {
-        DB::beginTransaction();
         $validacion = null;
         $year = Carbon::now()->year;
         try {

@@ -23,14 +23,45 @@ class EmpresaController extends Controller
         ]);
     }
 
+    public function validarAccesoForms($empresa)
+    {
+        if ( (!$empresa->ideaPerteneceAUsuario() && Session::get('login_role') == User::IsTalento()) || (Session::get('role_session') == User::IsGestor() || Session::get('role_session') == User::IsArticulador() || Session::get('role_session') == User::IsInfocenter() ) ) {
+            if ($empresa->user == null) {
+                alert('No tienes permisos', 'Solo el administrador del sistema tiene permisos para cambiar la información de esta empresa', 'warning')->showConfirmButton('Ok', '#3085d6');
+            } else {
+                alert('No tienes permisos', 'Solo el usuario ' . $empresa->user->nombres . ' ' . $empresa->user->apellidos . ' tiene permisos para cambiar la información de esta empresa', 'warning')->showConfirmButton('Ok', '#3085d6');
+            }
+            return false;
+        }
+        return true;
+    }
+
     public function detalle(int $id)
     {
         $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
-        if (!request()->user()->can('show', $empresa)) {
-            alert('No autorizado', 'No puedes ver la información de esta empresa', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
+        switch (Session::get('login_role')) {
+            case User::IsTalento():
+                return view('empresa.talento.show', ['empresa' => $empresa]);
+                break;
+            case User::IsAdministrador():
+                return view('empresa.administrador.show', ['empresa' => $empresa]);
+                break;
+            case User::IsDinamizador():
+                return view('empresa.show_no_option', ['empresa' => $empresa]);
+                break;
+            case User::IsGestor():
+                return view('empresa.show_no_option', ['empresa' => $empresa]);
+                break;
+            case User::IsArticulador():
+                return view('empresa.show_no_option', ['empresa' => $empresa]);
+                break;
+            case User::IsInfocenter():
+                return view('empresa.show_no_option', ['empresa' => $empresa]);
+                break;
+            default:
+                return abort('403');
+                break;
         }
-        return view('empresa.show', ['empresa' => $empresa]);
     }
 
     public function search_empresa(Request $request)
@@ -60,11 +91,11 @@ class EmpresaController extends Controller
     */
     public function index()
     {
-        if (!request()->user()->can('index', Empresa::class)) {
-            alert('No autorizado', 'No puedes ver la información de empresas', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
+        if (Session::get('login_role') == User::IsTalento()) {
+            return view('empresa.talento.index');
+        } else {
+            return view('empresa.index');
         }
-        return view('empresa.index');
     }
 
     public function datatableEmpresas($empresas)
@@ -72,23 +103,23 @@ class EmpresaController extends Controller
         return datatables()->of($empresas)
             ->addColumn('details', function ($data) {
             $button = '
-            <a class="btn bg-info m-b-xs" href="'.route('empresa.detalle', $data->id).'">
+            <a class="btn m-b-xs" href="'.route('empresa.detalle', $data->id).'">
                 <i class="material-icons">search</i>
             </a>
             ';
             return $button;
             })->addColumn('add_propietario', function ($data) {
-                $add_propietario = '<a onclick="addEntidadEmpresa('.$data->id.')" class="btn bg-secondary m-b-xs"><i class="material-icons">done</i></a>';
+                $add_propietario = '<a onclick="addEntidadEmpresa('.$data->id.')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
                 return $add_propietario;
             })
             ->addColumn('add_company_art', function ($data) {
-                $add_propietario = '<a onclick="addCompanyArticulacion('.$data->id.')" class="btn bg-secondary m-b-xs"><i class="material-icons">done</i></a>';
+                $add_propietario = '<a onclick="addCompanyArticulacion('.$data->id.')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
                 return $add_propietario;
             })
             ->rawColumns(['details', 'edit', 'add_propietario', 'add_company_art'])->make(true);
     }
-
     // Datatable que muestra las empresas de tecnoparque por parte del dinamizador
+
     public function datatableEmpresasDeTecnoparque()
     {
         if (Session::get('login_role') == User::IsTalento()) {
@@ -107,10 +138,7 @@ class EmpresaController extends Controller
     */
     public function create()
     {
-        if (!request()->user()->can('create', Empresa::class)) {
-            alert('No autorizado', 'No puedes registrar información de empresas', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
+        // $this->authorize('create', Empresa::class);
         return view('empresa.create', [
         'departamentos' => $this->userRepository->getAllDepartamentos(),
         'sectores' => Sector::SelectAllSectors()->get(),
@@ -128,11 +156,8 @@ class EmpresaController extends Controller
     */
     public function store(Request $request)
     {
-        if (!request()->user()->can('create', Empresa::class)) {
-            alert('No autorizado', 'No puedes registrar información de empresas', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
         $req = new EmpresaFormRequest;
+
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
 
         $message = "";
@@ -170,11 +195,10 @@ class EmpresaController extends Controller
     public function edit($id)
     {
         $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
-        if (!request()->user()->can('edit', $empresa)) {
-            alert('No autorizado', 'No puedes cambiar la informacion de esta empresa', 'error')->showConfirmButton('Ok', '#3085d6');
+        if (!$this->validarAccesoForms($empresa))
             return back();
-        }
-        return view('empresa.edit', [
+        // $this->authorize('edit', $empresa);
+        return view('empresa.talento.edit', [
             'empresa' => $empresa,
             'departamentos' => $this->userRepository->getAllDepartamentos(),
             'sectores' => Sector::SelectAllSectors()->get(),
@@ -227,12 +251,11 @@ class EmpresaController extends Controller
     public function sedes_edit($id, $id_sede)
     {
         $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
-        if (!request()->user()->can('edit', $empresa)) {
-            alert('No autorizado', 'No puedes cambiar la informacion de esta empresa', 'error')->showConfirmButton('Ok', '#3085d6');
+        if (!$this->validarAccesoForms($empresa))
             return back();
-        }
+
         $sede = $empresa->sedes->where('id', $id_sede)->first();
-        return view('empresa.edit_sede', [
+        return view('empresa.talento.edit_sede', [
             'empresa' => $empresa,
             'sede' => $sede,
             'departamentos' => $this->userRepository->getAllDepartamentos()
@@ -249,11 +272,9 @@ class EmpresaController extends Controller
     public function form_responsable($id)
     {
         $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
-        if (!request()->user()->can('edit', $empresa)) {
-            alert('No autorizado', 'No puedes cambiar la informacion de esta empresa', 'error')->showConfirmButton('Ok', '#3085d6');
+        if (!$this->validarAccesoForms($empresa))
             return back();
-        }
-        return view('empresa.edit_responsable', [
+        return view('empresa.talento.edit_responsable', [
             'empresa' => $empresa
         ]);
     }
@@ -269,10 +290,8 @@ class EmpresaController extends Controller
     public function update_responsable(Request $request, $id)
     {
         $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
-        if (!request()->user()->can('edit', $empresa)) {
-            alert('No autorizado', 'No puedes cambiar la informacion de esta empresa', 'error')->showConfirmButton('Ok', '#3085d6');
+        if (!$this->validarAccesoForms($empresa))
             return back();
-        }
 
         if ($request->input('txttype_search') == 1) {
             $messages = [
@@ -340,10 +359,10 @@ class EmpresaController extends Controller
     public function update(Request $request, $id)
     {
         $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
-        if (!request()->user()->can('edit', $empresa)) {
-            alert('No autorizado', 'No puedes cambiar la informacion de esta empresa', 'error')->showConfirmButton('Ok', '#3085d6');
+        if (!$this->validarAccesoForms($empresa))
             return back();
-        }
+        // $this->authorize('update', $empresa);
+
         $req       = new EmpresaFormRequest;
         $validator = Validator::make($request->all(), $req->rules('just_comp'), $req->messages());
 
@@ -379,10 +398,8 @@ class EmpresaController extends Controller
     public function update_sede(Request $request, $id, $id_sede)
     {
         $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
-        if (!request()->user()->can('edit', $empresa)) {
-            alert('No autorizado', 'No puedes cambiar la informacion de esta empresa', 'error')->showConfirmButton('Ok', '#3085d6');
+        if (!$this->validarAccesoForms($empresa))
             return back();
-        }
         $sede = $empresa->sedes->where('id', $id_sede)->first();
 
         $req       = new EmpresaFormRequest;
@@ -420,10 +437,7 @@ class EmpresaController extends Controller
     public function store_sede(Request $request, $id)
     {
         $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
-        if (!request()->user()->can('edit', $empresa)) {
-            alert('No autorizado', 'No puedes cambiar la informacion de esta empresa', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
+
         $req       = new EmpresaFormRequest;
         $validator = Validator::make($request->all(), $req->rules('just_hq'), $req->messages());
 

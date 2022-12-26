@@ -188,10 +188,6 @@ class UserPresenter extends Presenter
     {
         return $this->user->has('articulador.nodo.entidad') ? "Tecnoparque Nodo {$this->user->articulador->nodo->entidad->nombre}" : $this->message('No Registra');
     }
-    public function userArticuladorHonorarios()
-    {
-        return $this->user->has('articulador') ? "{$this->user->articulador->honorarios}" : $this->message('No Registra');
-    }
     public function userApoyoTecnicoNodoName()
     {
         return $this->user->has('apoyotecnico.nodo.entidad') ? "Tecnoparque Nodo {$this->user->apoyotecnico->nodo->entidad->nombre}" : $this->message('No Registra');
@@ -363,13 +359,12 @@ class UserPresenter extends Presenter
     {
         return $this->user->hasAnyRole([
             User::IsDinamizador(),
-            User::IsActivador(),
             User::IsAdministrador(),
             User::IsInfocenter(),
             User::IsArticulador(),
             User::IsIngreso(),
             User::IsDesarrollador(),
-            User::IsExperto(),
+            User::IsGestor(),
             User::IsApoyoTecnico()
         ]) ? true : false;
     }

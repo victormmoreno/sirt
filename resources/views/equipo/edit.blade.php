@@ -7,12 +7,14 @@
       	<div class="row no-m-t no-m-b">
         	<div class="col s12 m12 l12">
         		<div class="row">
-                    <h5 class="left left-align primary-text">
-                        <a href="{{route('equipo.index')}}">
-                              <i class="material-icons arrow-l left primary-text">arrow_back</i>
-                        </a> Equipos
-                    </h5>
-                    <div class="right right-align">
+                    <div class="col s8 m8 l9">
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
+                            <a class="footer-text left-align" href="{{route('equipo.index')}}">
+				              	<i class="material-icons arrow-l">arrow_back</i>
+				            </a> Equipos
+                        </h5>
+                    </div>
+                    <div class="col s4 m4 l3 rigth-align">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li><a href="{{route('equipo.index')}}">Equipos</a></li>
@@ -24,8 +26,8 @@
             		<div class="card-content">
               			<div class="row">
                             <div class="col s12 m12 l12">
-                                <div class="center-align primary-text">
-                                    <span class="card-title center-align">Editar Equipo <b> Tecnoparque nodo {{$equipo->nodo->entidad->nombre}} 
+                                <div class="center-align hand-of-Sean-fonts orange-text text-darken-3">
+                                    <span class="card-title center-align">Editar Equipo <b> Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }}
                                 </div>
                             </div>
                 			<div class="divider"></div>
@@ -36,7 +38,7 @@
                                         block
                                     </i>
                                     <p>
-                                        Para registrar un nuevo equipo, el tecnoparque debe tener lineas asociadas, por favor solicita al administrador de la plataforma para que este agregue nuevas lineas tecnológicas al nodo.
+                                        Para registrar un nuevo equipo, Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }} debe tener lineas asociadas, por favor solicita al administrador de la plataforma para que este agregue nuevas lineas tecnológicas al nodo.
                                     </p>
                                 </div>
                             @else

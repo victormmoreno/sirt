@@ -1767,11 +1767,11 @@ p .copyrigth {
 }
 
 .amber.darken-3 {
-  background-color: var(--primary) !important;
+  background-color: #ff8f00 !important;
 }
 
 .amber-text.text-darken-3 {
-  color: var(--primary) !important;
+  color: #ff8f00 !important;
 }
 
 .amber.darken-4 {

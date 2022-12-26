@@ -184,6 +184,13 @@ var equipo = {
                     width: '15%',
                     orderable: false
                 },
+                {
+                    data: 'delete',
+                    name: 'delete',
+                    width: '15%',
+                    orderable: false
+                },
+
             ],
         });
     },
@@ -270,7 +277,7 @@ var equipo = {
                             <span class="cyan-text text-darken-3">Valor depreciación por año: </span>
                         </div>
                         <div class="col s12 m6 l6">
-                            <span class="black-text">${response.data.depreciacion}</span>
+                            <span class="black-text">$ ${response.data.depreciacion}</span>
                         </div>
                     </div>
                     `);
@@ -278,64 +285,64 @@ var equipo = {
             }
         })
     },
-    // deleteEquipo: function(id){
-    //     Swal.fire({
-    //         title: '¿Estas seguro de eliminar este equipo?',
-    //         text: "Recuerde que si lo elimina no lo podrá recuperar.",
-    //         icon: 'warning',
-    //         showCancelButton: true,
-    //         confirmButtonColor: '#3085d6',
-    //         cancelButtonColor: '#d33',
-    //         confirmButtonText: 'si, elminar equipo',
-    //         cancelButtonText: 'No, cancelar',
-    //       }).then((result) => {
-    //         if (result.value) {
-    //             let token = $("meta[name='csrf-token']").attr("content");
-    //             $.ajax(
-    //             {
-    //                 url: host_url + `/equipos/${id}`,
-    //                 type: 'DELETE',
-    //                 data: {
-    //                     "id": id,
-    //                     "_token": token,
-    //                 },
-    //                 success: function (response){
-    //                     if(response.statusCode == 200){
-    //                         Swal.fire(
-    //                             'Eliminado!',
-    //                             'El equipo ha sido eliminado satisfactoriamente.',
-    //                             'success'
-    //                         );
-    //                         location.href = response.route;
-    //                     }else if(response.statusCode == 226){
-    //                         Swal.fire(
-    //                             'No se puede elimnar!',
-    //                             response.message,
-    //                             'error'
-    //                         );
-    //                     }
-    //                 },
-    //                 error: function (xhr, textStatus, errorThrown) {
-    //                     alert("Error: " + errorThrown);
-    //                 }
-    //             });
-    //         }else if ( result.dismiss === Swal.DismissReason.cancel ) {
-    //             swalWithBootstrapButtons.fire(
-    //                 'Cancelado',
-    //                 'Tu equipo está a salvo',
-    //                 'error'
-    //             )
-    //         }
-    //     })
-    // },
-    changeState: function(id){
+    deleteEquipo: function(id){
         Swal.fire({
-            title: '¿Estas seguro de cambiar el estado a este equipo?',
+            title: '¿Estas seguro de eliminar este equipo?',
+            text: "Recuerde que si lo elimina no lo podrá recuperar.",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, cambiar estado',
+            confirmButtonText: 'si, elminar equipo',
+            cancelButtonText: 'No, cancelar',
+          }).then((result) => {
+            if (result.value) {
+                let token = $("meta[name='csrf-token']").attr("content");
+                $.ajax(
+                {
+                    url: host_url + `/equipos/${id}`,
+                    type: 'DELETE',
+                    data: {
+                        "id": id,
+                        "_token": token,
+                    },
+                    success: function (response){
+                        if(response.statusCode == 200){
+                            Swal.fire(
+                                'Eliminado!',
+                                'El equipo ha sido eliminado satisfactoriamente.',
+                                'success'
+                            );
+                            location.href = response.route;
+                        }else if(response.statusCode == 226){
+                            Swal.fire(
+                                'No se puede elimnar!',
+                                response.message,
+                                'error'
+                            );
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert("Error: " + errorThrown);
+                    }
+                });
+            }else if ( result.dismiss === Swal.DismissReason.cancel ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelado',
+                    'Tu equipo está a salvo',
+                    'error'
+                )
+            }
+        })
+    },
+    changeState: function(id){
+        Swal.fire({
+            title: '¿Estas seguro de cambiar el estado a  este equipo?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'si, cambiar estado',
             cancelButtonText: 'No, cancelar',
           }).then((result) => {
             if (result.value) {

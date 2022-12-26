@@ -1,6 +1,6 @@
 @extends('auth.layouts.app')
 
-@section('meta-title', 'Reestablecer Contraseña')
+@section('meta-tittle', 'Reestablecer Contraseña')
 @section('meta-content', 'Reestablecer Contraseña')
 @section('meta-keywords', 'Reestablecer Contraseña')
 
@@ -30,7 +30,7 @@
                                 <div class="row">
                                     <div class="col s12 m12 l12">
                                         <a href="{{route('/')}}">
-                                            <img  width="200px" height="60px" src="{{ asset('img/logo-sirt-green.svg') }}" class="chapter-title responsive-img"></img>
+                                            <img class="chapter-title responsive-img" width="200px" height="60px" src="{{ asset('img/logonacional_Negro.png') }}"/>
                                         </a>
                                     </div>
                                     <br>
@@ -82,24 +82,28 @@
                                         @enderror
                                     </div>
                                     <div class="col s12 center-align m-t-sm">
-                                        <button class="waves-effect waves-light btn bg-secondary center-align " type="submit">
+                                        <button class="waves-effect waves-light btn center-align " type="submit">
                                             <i class="material-icons left">
                                                 mail
                                             </i>
                                             {{ __('Send Password Reset Link') }}
                                         </button>
                                         <div class="divider"></div>
-                                        <small class="m-t-lg">¿Ya estas registrado?
-                                            <a class="m-t-sm primary-text center-align " href="{{route('login')}}">
+                                        <small>¿Ya estas registrado? 
+                                            <a class="m-t-sm orange-text text-darken-3  center-align " href="{{route('login')}}">
                                             {{__('Login')}}
                                             </a>
                                         </small>
-                                        <br>
+                                        <br> 
                                         <small>¿Ya no tiene acceso a su correo electrónico?
-                                            <a class="m-t-sm primary-text center-align " href="{{route('email.request')}}">
+                                            <a class="m-t-sm orange-text text-darken-3  center-align " href="{{route('email.request')}}">
                                             {{__('Change email')}}
                                             </a>
                                         </small>
+                                        <br><br> 
+                                        <a class="m-t-sm orange-text text-darken-3  center-align " href="{{route('/')}}">
+                                            Inicio
+                                        </a>
                                     </div>
                                 </form>
                             </div>

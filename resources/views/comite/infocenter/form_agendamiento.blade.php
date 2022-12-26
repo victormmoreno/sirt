@@ -100,7 +100,7 @@
                                                     <td><input type="hidden" name="ideas[]" value="{{$value->id}}">{{$value->nombre_proyecto}}</td>
                                                     <td><input type="hidden" name="horas[]" value="{{$value->pivot->hora}}">{{$value->pivot->hora}}</td>
                                                     <td><input type="hidden" name="direcciones[]" value="{{$value->pivot->direccion}}">{{$value->pivot->direccion}}</td>
-                                                    <td><a class="waves-effect bg-danger white-text btn" onclick="eliminarIdeaDelAgendamiento('{{$value->id}}')"><i class="material-icons">delete_sweep</i></a></td>
+                                                    <td><a class="waves-effect red lighten-3 btn" onclick="eliminarIdeaDelAgendamiento('{{$value->id}}')"><i class="material-icons">delete_sweep</i></a></td>
                                                 </tr>
                                             @endforeach
                                         @endif

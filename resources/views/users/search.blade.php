@@ -5,25 +5,27 @@
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
-        <div class="row no-m-t no-m-b m-r-lg m-l-lg">
-            <div class="left left-align">
-                <h5 class="left-align primary-text">
-                    <a class="footer-text left-align" href="{{route('usuario.index')}}">
-                    <i class="material-icons left">arrow_back</i>
-                    </a>
-                    Usuarios | Perfil
-                </h5>
-            </div>
-            <div class="right right-align show-on-large hide-on-med-and-down">
-                <ol class="breadcrumbs">
-                    <li><a href="{{route('home')}}">Inicio</a></li>
-                    <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
-                    <li class="active">Buscar Usuario</li>
-                </ol>
-            </div>
-        </div>
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
+                <div class="row">
+                    <div class="col s8 m8 l9">
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
+                            <a class="footer-text left-align" href="{{route('usuario.index')}}">
+                                <i class="material-icons arrow-l">
+                                    arrow_back
+                                </i>
+                            </a>
+                            Usuarios
+                        </h5>
+                    </div>
+                    <div class="col s4 m4 l3 rigth-align show-on-large hide-on-med-and-down">
+                        <ol class="breadcrumbs">
+                            <li><a href="{{route('home')}}">Inicio</a></li>
+                            <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
+                            <li class="active">Buscar Usuario</li>
+                        </ol>
+                    </div>
+                </div>
                 <div class="card">
                     <div class="card-content">
                         <div class="row">
@@ -33,7 +35,7 @@
                                         <div class="search-users">
                                             <div class="container">
                                                 <br><br>
-                                                <h2 class="header center primary-text">Usuarios</h2>
+                                                <h2 class="header center hand-of-Sean-fonts orange-text text-darken-3">Usuarios</h2>
                                                 <div class="row center">
                                                     <h5 class="header col s12 light black-text text-lighten-1"> Ingrese los campos para verificar si el usuario está registrado.</h5>
                                                 </div>
@@ -58,7 +60,7 @@
                                                         </div>
                                                         <div class="row">
                                                             <div class="input-field col s6  center-align offset-s3">
-                                                                <button  type="submit" class="waves-effect waves-light bg-secondary btn-large"><i class="material-icons right">search</i><span class="Nombre-usuario">Buscar Usuario</span></button>
+                                                                <button  type="submit" class="waves-effect waves-light btn-large"><i class="material-icons right">search</i><span class="Nombre-usuario">Buscar Usuario</span></button>
                                                             </div>
                                                         </div>
                                                     </form>

@@ -1,6 +1,6 @@
 $(document).ready(function() {
-    // consultarProyectosDelGestorPorAnho();
-    consultarProyectosUnNodoPorAnho();
+    consultarProyectosDelGestorPorAnho();
+    consultarProyectosDelNodoPorAnho();
 });
 
 function verHorasDeExpertosEnProyecto(id) {
@@ -37,10 +37,10 @@ function verHorasDeExpertosEnProyecto(id) {
   });
 }
 
-function consultarProyectosDeTalentos() {
+function consultarProyectosDeTalentos () {
 
-    $('#tblProyectos_Master').dataTable().fnDestroy();
-    $('#tblProyectos_Master').DataTable({
+    $('#tblProyectoDelTalento').dataTable().fnDestroy();
+    $('#tblProyectoDelTalento').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
@@ -137,92 +137,92 @@ function verTalentosDeUnProyecto(id){
 }
 
 // Ajax que muestra los proyectos de un experto por año
-// function consultarProyectosDelGestorPorAnho() {
-//     let anho = $('#anho_proyectoPorAnhoGestorNodo').val();
-//     $('#tblproyectosGestorPorAnho').dataTable().fnDestroy();
-//     $('#tblproyectosGestorPorAnho').DataTable({
-//         language: {
-//             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-//         },
-//         pageLength: 20,
-//         processing: true,
-//         serverSide: true,
-//         order: [ 0, 'desc' ],
-//         "lengthChange": false,
-//         ajax:{
-//             url: host_url + "/proyecto/datatableProyectosDelGestorPorAnho/"+0+"/"+anho,
-//             data: function (d) {
-//                 d.codigo_proyecto = $('.codigo_proyecto').val(),
-//                 d.nombre = $('.nombre').val(),
-//                 d.nombre_fase = $('.nombre_fase').val(),
-//                 d.search = $('input[type="search"]').val()
-//             }
-//         },
-//         columns: [
-//             {
-//                 width: '15%',
-//                 data: 'codigo_proyecto',
-//                 name: 'codigo_proyecto',
-//             },
-//             {
-//                 data: 'nombre',
-//                 name: 'nombre',
-//             },
-//             {
-//                 data: 'nombre_fase',
-//                 name: 'nombre_fase',
-//             },
-//             {
-//                 width: '8%',
-//                 data: 'info',
-//                 name: 'info',
-//                 orderable: false
-//             },
-//             {
-//                 width: '8%',
-//                 data: 'proceso',
-//                 name: 'proceso',
-//                 orderable: false
-//             },
-//         ],
-//     });
-// }
-// $(".codigo_proyecto").keyup(function(){
-//     $('#tblproyectosGestorPorAnho').DataTable().draw();
-// });
+function consultarProyectosDelGestorPorAnho() {
+    let anho = $('#anho_proyectoPorAnhoGestorNodo').val();
+    $('#tblproyectosGestorPorAnho').dataTable().fnDestroy();
+    $('#tblproyectosGestorPorAnho').DataTable({
+        language: {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        pageLength: 20,
+        processing: true,
+        serverSide: true,
+        order: [ 0, 'desc' ],
+        "lengthChange": false,
+        ajax:{
+            url: host_url + "/proyecto/datatableProyectosDelGestorPorAnho/"+0+"/"+anho,
+            data: function (d) {
+                d.codigo_proyecto = $('.codigo_proyecto').val(),
+                d.nombre = $('.nombre').val(),
+                d.nombre_fase = $('.nombre_fase').val(),
+                d.search = $('input[type="search"]').val()
+            }
+        },
+        columns: [
+            {
+                width: '15%',
+                data: 'codigo_proyecto',
+                name: 'codigo_proyecto',
+            },
+            {
+                data: 'nombre',
+                name: 'nombre',
+            },
+            {
+                data: 'nombre_fase',
+                name: 'nombre_fase',
+            },
+            {
+                width: '8%',
+                data: 'info',
+                name: 'info',
+                orderable: false
+            },
+            {
+                width: '8%',
+                data: 'proceso',
+                name: 'proceso',
+                orderable: false
+            },
+        ],
+    });
+}
+$(".codigo_proyecto").keyup(function(){
+    $('#tblproyectosGestorPorAnho').DataTable().draw();
+});
 
-// $(".nombre").keyup(function(){
-//     $('#tblproyectosGestorPorAnho').DataTable().draw();
-// });
+$(".nombre").keyup(function(){
+    $('#tblproyectosGestorPorAnho').DataTable().draw();
+});
 
-// $(".nombre_fase").keyup(function(){
-//     $('#tblproyectosGestorPorAnho').DataTable().draw();
-// });
+$(".nombre_fase").keyup(function(){
+    $('#tblproyectosGestorPorAnho').DataTable().draw();
+});
 
-// $("#codigo_proyecto_tblProyectosDelNodoPorAnho").keyup(function(){
-//     $('#tblproyectosDelNodoPorAnho').DataTable().draw();
-// });
+$("#codigo_proyecto_tblProyectosDelNodoPorAnho").keyup(function(){
+    $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+});
 
-// $("#gestor_tblProyectosDelNodoPorAnho").keyup(function(){
-//     $('#tblproyectosDelNodoPorAnho').DataTable().draw();
-// });
+$("#gestor_tblProyectosDelNodoPorAnho").keyup(function(){
+    $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+});
 
-// $("#nombre_tblProyectosDelNodoPorAnho").keyup(function(){
-//     $('#tblproyectosDelNodoPorAnho').DataTable().draw();
-// });
+$("#nombre_tblProyectosDelNodoPorAnho").keyup(function(){
+    $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+});
 
-// $("#sublinea_nombre_tblProyectosDelNodoPorAnho").keyup(function(){
-//     $('#tblproyectosDelNodoPorAnho').DataTable().draw();
-// });
+$("#sublinea_nombre_tblProyectosDelNodoPorAnho").keyup(function(){
+    $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+});
 
-// $("#fase_nombre_tblProyectosDelNodoPorAnho").keyup(function(){
-//     $('#tblproyectosDelNodoPorAnho').DataTable().draw();
-// });
+$("#fase_nombre_tblProyectosDelNodoPorAnho").keyup(function(){
+    $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+});
 
-function preguntaReversar(e, id, fase){
+function preguntaReversar(e){
     e.preventDefault();
     Swal.fire({
-    title: '¿Está seguro(a) de reversar este proyecto a la fase de '+fase+'?',
+    title: '¿Está seguro(a) de reversar este proyecto a la fase de Inicio?',
     type: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -231,31 +231,156 @@ function preguntaReversar(e, id, fase){
     confirmButtonText: 'Sí!'
     }).then((result) => {
         if (result.value) {
-            sendReversarProyecto(id, fase);
+            document.frmReversarFase.submit();
         }
     })
 }
 
-function sendReversarProyecto(id, fase) {
+function preguntaReversarPlaneacion(e){
+    e.preventDefault();
+    Swal.fire({
+    title: '¿Está seguro(a) de reversar este proyecto a la fase de Planeación?',
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Sí!'
+    }).then((result) => {
+        if (result.value) {
+            document.frmReversarFasePlaneacion.submit();
+        }
+    })
+}
+
+function preguntaReversarEjecucion(e){
+    e.preventDefault();
+    Swal.fire({
+    title: '¿Está seguro(a) de reversar este proyecto a la fase de Ejecución?',
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Sí!'
+    }).then((result) => {
+        if (result.value) {
+            document.frmReversarFaseEjecucion.submit();
+        }
+    })
+}
+
+/**
+* Consulta los proyectos del nodo por año
+*/
+function consultarProyectosDelNodoPorAnho() {
+  let anho_proyectos_nodo = $('#anho_proyectoPorNodoYAnho').val();
+  $('#tblproyectosDelNodoPorAnho').dataTable().fnDestroy();
+  $('#tblproyectosDelNodoPorAnho').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    order: [ 0, 'desc' ],
+    "lengthChange": false,
+    ajax:{
+      url: host_url + "/proyecto/datatableProyectosDelNodoPorAnho/"+0+"/"+anho_proyectos_nodo,
+      data: function (d) {
+        d.codigo_proyecto = $('#codigo_proyecto_tblProyectosDelNodoPorAnho').val(),
+        d.gestor = $('#gestor_tblProyectosDelNodoPorAnho').val(),
+        d.nombre = $('#nombre_tblProyectosDelNodoPorAnho').val(),
+        d.sublinea_nombre = $('#sublinea_nombre_tblProyectosDelNodoPorAnho').val(),
+        d.nombre_fase = $('#fase_nombre_tblProyectosDelNodoPorAnho').val(),
+        d.search = $('input[type="search"]').val()
+      }
+      // type: "get",
+    },
+    columns: [
+      {
+        width: '15%',
+        data: 'codigo_proyecto',
+        name: 'codigo_proyecto',
+      },
+      {
+        data: 'gestor',
+        name: 'gestor',
+      },
+      {
+        data: 'nombre',
+        name: 'nombre',
+      },
+      {
+        data: 'sublinea_nombre',
+        name: 'sublinea_nombre',
+      },
+      {
+        data: 'nombre_fase',
+        name: 'nombre_fase',
+      },
+      {
+        width: '6%',
+        data: 'info',
+        name: 'info',
+        orderable: false
+      },
+      {
+        width: '6%',
+        data: 'proceso',
+        name: 'proceso',
+        orderable: false
+      },
+      {
+        width: '6%',
+        data: 'download_trazabilidad',
+        name: 'download_trazabilidad',
+        orderable: false
+      },
+      {
+        width: '6%',
+        data: 'ver_horas',
+        name: 'ver_horas',
+        orderable: false
+      },
+
+    ],
+  });
+}
+
+function eliminarProyectoPorId_event(id, e) {
+    Swal.fire({
+        title: '¿Desea eliminar el Proyecto?',
+        text: "Al hacer esto, todo lo relacionado con este proyecto será eliminado de la base de datos, eso incluye usos de infraestructura y los archivos subidos al servidor!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        cancelButtonText: 'No',
+        confirmButtonText: 'Sí, eliminar!'
+    }).then((result) => {
+        if (result.value) {
+            eliminarProyectoPorId_moment(id);
+        }
+    })
+}
+
+function eliminarProyectoPorId_moment(id) {
     $.ajax({
-        type: 'get',
-        url: host_url + '/proyecto/reversar/'+id+'/'+fase,
         dataType: 'json',
+        type: 'get',
+        url: host_url + '/proyecto/eliminarProyecto/'+id,
         success: function (data) {
-            Swal.fire({
-                title: data.msg,
-                type: data.type_alert,
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                cancelButtonText: 'Cancelar',
-                confirmButtonText: 'Ok!'
-            });
+            if (data.retorno) {
+                Swal.fire('Eliminación Exitosa!', 'El proyecto se ha eliminado completamente!', 'success');
+                location.href = '/proyecto';
+            } else {
+                Swal.fire('Eliminación Errónea!', 'El proyecto no se ha eliminado!', 'error');
+            }
         },
         error: function (xhr, textStatus, errorThrown) {
             alert("Error: " + errorThrown);
-        }
-    });
+        },
+    })
 }
 
 var infoActividad = {
@@ -268,7 +393,7 @@ var infoActividad = {
             }).done(function (response) {
                 $("#actividad_titulo").empty();
                 $("#detalleActividad").empty();
-                $("#actividad_titulo").append("<span class='primary-text'>"+response.data.actividad.codigo_actividad +' - '+ response.data.actividad.nombre+" </span><br>");
+                $("#actividad_titulo").append("<span class='cyan-text text-darken-3'>"+response.data.actividad.codigo_actividad +' - '+ response.data.actividad.nombre+" </span><br>");
                 if(response.data.actividad.articulacion_proyecto.proyecto !== null){
                     infoActividad.openIsProyect(response);
                 }else if(response.data.actividad.articulacion_proyecto.articulacion !== null){
@@ -282,27 +407,27 @@ var infoActividad = {
         $("#detalleActividad").append(`
             <table class="striped centered">
                 <TR>
-                    <TH class="secondary-text" width="25%">Código Proyecto</TH>
+                    <TH width="25%">Código Proyecto</TH>
                     <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.codigo_actividad)}</TD>
-                    <TH class="secondary-text" width="25%" >Nombre Proyecto</TH>
+                    <TH width="25%" >Nombre Proyecto</TH>
                     <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.nombre)}</TD>
                 </TR>
                 <TR>
-                    <TH class="secondary-text" width="25%">Experto</TH>
+                    <TH width="25%">Experto</TH>
                     <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.proyecto.asesor.user.documento)} - ${response.data.actividad.articulacion_proyecto.proyecto.asesor.user.nombres} ${response.data.actividad.articulacion_proyecto.proyecto.asesor.user.apellidos}</TD>
-                    <TH class="secondary-text" width="25%">Correo Electrónico</TH>
+                    <TH width="25%">Correo Electrónico</TH>
                     <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.proyecto.asesor.user.email)}</TD>
                 </TR>
             </table>
             <div class="right">
                 <small>
-                    <b class="secondary-text">Cantidad de usos de infraestructura:  </b>
+                    <b>Cantidad de usos de infraestructura:  </b>
                     ${infoActividad.showInfoNull(response.data.total_usos)}
                 </small>
             </div>
             <div class="divider mailbox-divider"></div>
             <div class="center">
-                <span class="mailbox-title primary-text">
+                <span class="mailbox-title">
                     <i class="material-icons">group</i>
                     Talentos que participan en el proyecto y dueño(s) de la propiedad intelectual.
                 </span>
@@ -310,10 +435,10 @@ var infoActividad = {
             <div class="divider mailbox-divider"></div>
                 <div class="row">
                 <div class="col s12 m12 l12">
-                        <div class="card-transparent">
-                            <h5 class="center primary-text">Talentos que participan en el proyecto</h5>
+                        <div class="card-panel blue lighten-5">
+                            <h5 class="center">Talentos que participan en el proyecto</h5>
                             <table>
-                                <thead class="bg-primary white-text">
+                                <thead>
                                     <tr>
                                         <th style="width: 10%">Talento Interlocutor</th>
                                         <th style="width: 40%">Talento</th>
@@ -329,30 +454,31 @@ var infoActividad = {
                     </div>
                 </div>
                 <div class="row">
-                    <div class="card-transparent col s12 m12 l12">
-                        <h5 class="center primary-text">Dueño(s) de la propiedad intelectual</h5>
+                    <div class="card-panel green lighten-5 col s12 m12 l12">
+                        <h5 class="center">Dueño(s) de la propiedad intelectual</h5>
                         <div class="row">
                             <div class="col s12 m4 l4">
-                                <div class="card-transparent">
+                                <div class="card-panel">
                                     <ul class="collection with-header">
-                                        <li class="collection-header"><h5 class="secondary-text">Empresas</h5></li>
+                                        <li class="collection-header"><h5>Empresas</h5></li>
                                         <div id="detalleEmpresas"></div>
                                     </ul>
                                 </div>
                             </div>
                             <div class="col s12 m4 l4">
-                                <div class="card-transparent">
+                                <div class="card-panel">
                                     <ul class="collection with-header">
-                                        <li class="collection-header"><h5 class="secondary-text">Personas (Talentos)</h5></li>
+                                        <li class="collection-header"><h5>Personas (Talentos)</h5></li>
                                         <div id="detallePropiedadTalentos"></div>
                                     </ul>
                                 </div>
                             </div>
                             <div class="col s12 m4 l4">
-                                <div class="card-transparent">
+                                <div class="card-panel">
                                     <ul class="collection with-header">
-                                        <li class="collection-header"><h5 class="secondary-text">Grupos de Investigación</h5></li>
+                                        <li class="collection-header"><h5>Grupos de Investigación</h5></li>
                                         <div id="detallePropiedadGrupo"></div>
+
                                     </ul>
                                 </div>
                             </div>
@@ -523,89 +649,4 @@ var infoActividad = {
         document.getElementById("detallePropiedadGrupo").innerHTML = info;
     },
 
-}
-
-$("#codigo_proyecto_tblProyectos_Master").keyup(function(){
-    $('#tblProyectos_Master').DataTable().draw();
-});
-
-$("#gestor_tblProyectos_Master").keyup(function(){
-    $('#tblProyectos_Master').DataTable().draw();
-});
-
-$("#nombre_tblProyectos_Master").keyup(function(){
-    $('#tblProyectos_Master').DataTable().draw();
-});
-
-$("#sublinea_nombre_tblProyectos_Master").keyup(function(){
-    $('#tblProyectos_Master').DataTable().draw();
-});
-
-$("#estado_nombre_tblProyectos_Master").keyup(function(){
-    $('#tblProyectos_Master').DataTable().draw();
-});
-
-/**
- * Consulta los proyectos de un nodo por año (Este método es para el dinamizador)
- */
-function consultarProyectosUnNodoPorAnho() {
-let anho_proyectos_nodo = $('#anho_proyectoPorNodoYAnho').val();
-let nodo = $('#nodo_proyectoPorNodoYAnho').val();
-
-$('#tblProyectos_Master').dataTable().fnDestroy();
-$('#tblProyectos_Master').DataTable({
-    language: {
-    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    order: [ 0, 'desc' ],
-    "lengthChange": false,
-    ajax:{
-    url: host_url + "/proyecto/datatableProyectosAnho/"+nodo+"/"+anho_proyectos_nodo,
-    data: function (d) {
-        d.codigo_proyecto = $('#codigo_proyecto_tblProyectos_Master').val(),
-        d.gestor = $('#gestor_tblProyectos_Master').val(),
-        d.nombre = $('#nombre_tblProyectos_Master').val(),
-        d.sublinea_nombre = $('#sublinea_nombre_tblProyectos_Master').val(),
-        d.nombre_fase = $('#estado_nombre_tblProyectos_Master').val(),
-        d.search = $('input[type="search"]').val()
-    }
-    },
-    columns: [
-    {
-        width: '15%',
-        data: 'codigo_proyecto',
-        name: 'codigo_proyecto',
-    },
-    {
-        data: 'gestor',
-        name: 'gestor',
-    },
-    {
-        data: 'nombre',
-        name: 'nombre',
-    },
-    {
-        data: 'sublinea_nombre',
-        name: 'sublinea_nombre',
-    },
-    {
-        data: 'nombre_fase',
-        name: 'nombre_fase',
-    },
-    {
-        width: '8%',
-        data: 'info',
-        name: 'info',
-        orderable: false
-    },
-    {
-        width: '8%',
-        data: 'proceso',
-        name: 'proceso',
-        orderable: false
-    },
-    ],
-    });
 }

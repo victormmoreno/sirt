@@ -2729,7 +2729,7 @@ nav {
 .divider {
   height: 1px;
   overflow: hidden;
-  background-color: var(--primary);
+  background-color: #e0e0e0;
 }
 
 blockquote {

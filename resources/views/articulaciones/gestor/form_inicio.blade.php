@@ -157,7 +157,7 @@ $cont = 0;
                                                             </td>
                                                             @if ($articulacion->fase->nombre == 'Inicio')
                                                             <td>
-                                                                <a class="waves-effect bg-danger white-text btn" onclick="eliminarTalentoDeArticulacion_FaseInicio({{$value->id}});"><i class="material-icons">delete_sweep</i></a>
+                                                                <a class="waves-effect red lighten-3 btn" onclick="eliminarTalentoDeArticulacion_FaseInicio({{$value->id}});"><i class="material-icons">delete_sweep</i></a>
                                                             </td>
                                                             @endif
                                                         </tr>
@@ -196,7 +196,7 @@ $cont = 0;
                             <label for="producto-{{$value->id}}">{{$value->nombre}}</label>
                         </p>
                     </li>
-                </div>
+                </div>    
             @endforeach
         @else
             @foreach ($productos as $item => $value)
@@ -207,7 +207,7 @@ $cont = 0;
                         <label for="producto-{{$value->id}}">{{$value->nombre}}</label>
                     </p>
                 </li>
-            </div>
+            </div>   
             @endforeach
         @endif
     </ul>
@@ -254,7 +254,7 @@ $cont = 0;
     <button type="submit" class="waves-effect cyan darken-1 btn center-aling">
         <i class="material-icons right">{{ isset($btnText) ? $btnText == 'Modificar' ? 'done' : 'done_all' : '' }}</i>
         {{isset($btnText) ? $btnText : 'error'}}
-    </button>
+    </button>   
     @endif
     <a href="{{route('articulacion')}}" class="waves-effect red lighten-2 btn center-aling">
         <i class="material-icons right">backspace</i>Cancelar

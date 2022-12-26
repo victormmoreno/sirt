@@ -3,8 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
-use App\User;
 
 class EquipoFormRequest extends FormRequest
 {
@@ -26,7 +24,6 @@ class EquipoFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'txtnodo_id'          => Rule::requiredIf(session()->get('login_role') == User::IsAdministrador()),
             'txtlineatecnologica' => 'required',
             'txtreferencia'       => 'required|min:1|max:45',
             'txtnombre'           => 'required|min:1|max:45|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/',
@@ -41,7 +38,6 @@ class EquipoFormRequest extends FormRequest
     public function messages()
     {
         return $messages = [
-            'txtnodo_id.required' => 'El nodo es obligatorio.',
             'txtlineatecnologica.required' => 'La Linea Tecnológica es obligatoria.',
             'txtreferencia.required'       => 'La referencia del equipo es obligatoria.',
             'txtreferencia.min'            => 'La referencia del equipo debe ser minimo 1 caracter',

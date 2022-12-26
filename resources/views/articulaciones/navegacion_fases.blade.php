@@ -18,7 +18,7 @@
         </ul>
     </div>
 </div>
-@if (Session::get('login_role') == App\User::IsExperto() || Session::get('login_role') == App\User::IsDinamizador())
+@if (Session::get('login_role') == App\User::IsGestor() || Session::get('login_role') == App\User::IsDinamizador())
 <div class="divider"></div>
 <div class="row">
     <div class="col s12 m4 l4">

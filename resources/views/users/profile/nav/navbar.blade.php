@@ -15,7 +15,7 @@
                 Cambiar Contraseña
             </a>
         </li>
-        @if(\Session::get('login_role') == App\User::IsTalento() || \Session::get('login_role') == App\User::IsExperto())
+        @if(\Session::get('login_role') == App\User::IsTalento() || \Session::get('login_role') == App\User::IsGestor())
         <li>
             <a href="{{{route('perfil.actividades')}}}">
                 Mis Actividades

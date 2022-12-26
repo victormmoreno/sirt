@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{AreaConocimiento, Centro, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, Actividad, Fase};
-use App\Repositories\Repository\{EmpresaRepository, ProyectoRepository, UserRepository\GestorRepository};
-use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
+use App\Models\{AreaConocimiento, Centro, Gestor, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, TipoArticulacionProyecto, Actividad, Empresa, Fase};
+use App\Repositories\Repository\{EmpresaRepository, EntidadRepository, ProyectoRepository, UserRepository\GestorRepository, ConfiguracionRepository\ServidorVideoRepository};
+use Illuminate\Support\{Str, Facades\Session, Facades\Validator, Facades\DB};
 use App\Http\Requests\{ProyectoFaseInicioFormRequest, ProyectoFaseCierreFormRequest};
 use Illuminate\Http\{Request, Response};
 use App\User;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Controllers\CostoController;
-use App\Policies\IndicadorPolicy;
 
 class ProyectoController extends Controller
 {
@@ -18,27 +17,66 @@ class ProyectoController extends Controller
     private $empresaRepository;
     private $proyectoRepository;
     private $gestorRepository;
+    private $entidadRepository;
+    private $servidorVideoRepository;
     private $costoController;
 
-    public function __construct(CostoController $costoController, EmpresaRepository $empresaRepository, ProyectoRepository $proyectoRepository, GestorRepository $gestorRepository)
+    public function __construct(CostoController $costoController, ServidorVideoRepository $servidorVideoRepository, EmpresaRepository $empresaRepository, ProyectoRepository $proyectoRepository, GestorRepository $gestorRepository, EntidadRepository $entidadRepository)
     {
         $this->setEmpresaRepository($empresaRepository);
         $this->setProyectoRepository($proyectoRepository);
         $this->setGestorRepository($gestorRepository);
+        $this->setEntidadRepository($entidadRepository);
+        $this->setServidorVideoRepository($servidorVideoRepository);
         $this->costoController = $costoController;
         $this->middleware(['auth']);
+    }
+
+    public function validarAccesoAExpertoACambiarTalentos($proyecto)
+    {
+        if ( (Session::get('login_role') == User::IsGestor()) && ($proyecto->asesor_id != auth()->user()->gestor->id) ) {
+            Alert::error('Acceso no permitido!', 'No puedes cambiar los talentos de un proyecto que no estás asesorando!')->showConfirmButton('Ok', '#3085d6');
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Elimina un proyecto de la base de datos
+     * @param int $id Id del proyecto a eliminar
+     * @return Response
+     * @author dum
+     */
+    public function eliminarProyecto_Controller($id)
+    {
+
+        if (Session::get('login_role') == User::IsDinamizador()) {
+            $delete = $this->getProyectoRepository()->eliminarProyecto_Repository($id);
+            return response()->json([
+                'retorno' => $delete
+            ]);
+        } else {
+            abort('403');
+        }
+    }
+
+    /**
+     * Datatable para el rol de talento
+     * @return Datatables
+     * @author dum
+     */
+    public function datatableProyectoTalento(Request $request)
+    {
+        $proyectos = $this->getProyectoRepository()->proyectosDelTalento(auth()->user()->talento->id);
+        return $this->datatableProyectos($request, $proyectos);
     }
 
     public function detalle(int $id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        if(!request()->user()->can('detalle_end', $proyecto)) {
-            alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte y/o que aún no han finalizado', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
         $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
         $costo = $this->costoController->costoProject($proyecto->id);
-        return view('proyectos.detalles.detalle', [
+        return view('proyectos.detalle', [
             'proyecto' => $proyecto,
             'costo' => $costo,
             'historico' => $historico
@@ -47,7 +85,7 @@ class ProyectoController extends Controller
 
     /**
      * Formulario que permite cambiar los talentos de un proyecto en cualquier fase
-     *
+     * 
      * @param int id del proyecto
      * @return Response
      * @author dum
@@ -55,12 +93,10 @@ class ProyectoController extends Controller
     public function cambiar_talento($id)
     {
         $proyecto = Proyecto::find($id);
-        if(!request()->user()->can('cambiar_talentos', $proyecto)) {
-            alert('No autorizado', 'No tienes permisos para cambiar los talentos que desarrollan este proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
+        if ($this->validarAccesoAExpertoACambiarTalentos($proyecto))
             return back();
-        }
         $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
-        return view('proyectos.forms.form_cambio_talentos', [
+        return view('proyectos.gestor.form_cambio_talentos', [
             'proyecto' => $proyecto,
             'historico' => $historico
         ]);
@@ -68,7 +104,7 @@ class ProyectoController extends Controller
 
     /**
      * Cambia los talentos de un proyecto
-     *
+     * 
      * @param Request $request
      * @param int id del proyecto
      * @return Response
@@ -76,10 +112,9 @@ class ProyectoController extends Controller
     public function updateTalentos(Request $request, $id)
     {
         $proyecto = Proyecto::find($id);
-        if(!request()->user()->can('cambiar_talentos', $proyecto)) {
-            alert('No autorizado', 'No tienes permisos para cambiar los talentos que desarrollan este proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
+        if ($this->validarAccesoAExpertoACambiarTalentos($proyecto))
             return back();
-        }
+        
         $req = new ProyectoFaseInicioFormRequest;
         $validator = Validator::make($request->all(), $req->rulesTalentos(), $req->messages());
         if ($validator->fails()) {
@@ -95,6 +130,7 @@ class ProyectoController extends Controller
                 return response()->json(['state' => 'no_update']);
             }
         }
+
     }
 
     public function consultarHorasDeExpertos(int $id)
@@ -115,33 +151,38 @@ class ProyectoController extends Controller
      */
     private function datatableProyectos($request, $proyectos)
     {
-        // dd($request);
         return datatables()->of($proyectos)
             ->addColumn('info', function ($data) {
-                $button = "<a class=\"btn bg-info m-b-xs modal-trigger\" href=\"#!\" onclick=\"infoActividad.infoDetailActivityModal('$data->codigo_proyecto')\">
+                $button = "<a class=\"btn light-blue m-b-xs modal-trigger\" href=\"#!\" onclick=\"infoActividad.infoDetailActivityModal('$data->codigo_proyecto')\">
                 <i class=\" material-icons\">info</i>
                 </a>";
-                return $button;
+                    return $button;
+                })->addColumn('details', function ($data) {
+                            $details = '
+                <a class="btn light-blue m-b-xs" onclick="detallesDeUnProyecto(' . $data->id . ')">
+                    <i class="material-icons">info</i>
+                </a>';
+                return $details;
             })->addColumn('download_seguimiento', function ($data) {
                 $seguimiento = '<a class="btn green lighten-1 m-b-xs" href=' . route('pdf.actividad.usos', [$data->id, 'proyecto']) . ' target="_blank"><i class="far fa-file-pdf"></i></a>';
                 return $seguimiento;
             })->addColumn('download_trazabilidad', function ($data) {
-                $seguimiento = '<a class="btn bg-success white-text m-b-xs" href=' . route('excel.proyecto.trazabilidad', $data->actividad_id) . '  target="_blank"><i class="far fa-file-excel"></i></a>';
+                $seguimiento = '<a class="btn green lighten-1 m-b-xs" href=' . route('excel.proyecto.trazabilidad', $data->actividad_id) . '  target="_blank"><i class="far fa-file-excel"></i></a>';
                 return $seguimiento;
             })->addColumn('ver_horas', function ($data) {
-                $seguimiento = '<a class="btn bg-warning white-text m-b-xs" onclick="verHorasDeExpertosEnProyecto('.$data->id.')"><i class="material-icons">access_time</i></a>';
+                $seguimiento = '<a class="btn brown lighten-1 m-b-xs" onclick="verHorasDeExpertosEnProyecto('.$data->id.')"><i class="material-icons">access_time</i></a>';
                 return $seguimiento;
             })->addColumn('proceso', function ($data) {
                 if ($data->nombre_fase == 'Finalizado' || $data->nombre_fase == 'Suspendido') {
-                    $edit = '<a class="btn bg-secondary m-b-xs" href=' . route('proyecto.detalle', $data->id) . '><i class="material-icons">search</i></a>';
+                    $edit = '<a class="btn m-b-xs" href=' . route('proyecto.detalle', $data->id) . '><i class="material-icons">search</i></a>';
                 } else if ($data->nombre_fase == 'Inicio') {
-                    $edit = '<a class="btn bg-secondary m-b-xs" href=' . route('proyecto.inicio', $data->id) . '><i class="material-icons">search</i></a>';
+                    $edit = '<a class="btn m-b-xs" href=' . route('proyecto.inicio', $data->id) . '><i class="material-icons">search</i></a>';
                 } else if ($data->nombre_fase == 'Planeación') {
-                    $edit = '<a class="btn bg-secondary m-b-xs" href=' . route('proyecto.planeacion', $data->id) . '><i class="material-icons">search</i></a>';
+                    $edit = '<a class="btn m-b-xs" href=' . route('proyecto.planeacion', $data->id) . '><i class="material-icons">search</i></a>';
                 } else if ($data->nombre_fase == 'Ejecución') {
-                    $edit = '<a class="btn bg-secondary m-b-xs" href=' . route('proyecto.ejecucion', $data->id) . '><i class="material-icons">search</i></a>';
+                    $edit = '<a class="btn m-b-xs" href=' . route('proyecto.ejecucion', $data->id) . '><i class="material-icons">search</i></a>';
                 } else {
-                    $edit = '<a class="btn bg-secondary m-b-xs" href=' . route('proyecto.cierre', $data->id) . '><i class="material-icons">search</i></a>';
+                    $edit = '<a class="btn m-b-xs" href=' . route('proyecto.cierre', $data->id) . '><i class="material-icons">search</i></a>';
                 }
                 return $edit;
             })->filter(function ($instance) use ($request) {
@@ -204,27 +245,20 @@ class ProyectoController extends Controller
      * @return Response
      * @author dum
      */
-    public function datatableProyectosAnho(Request $request, $idnodo = null, $anho = null)
+    public function datatableProyectosDelNodoPorAnho(Request $request, $idnodo, $anho)
     {
-        $id = "";
-        if (session()->get('login_role') == User::IsDinamizador()) {
-            $id = auth()->user()->dinamizador->nodo_id;
-        } elseif (session()->get('login_role') == User::IsInfocenter()) {
-            $id = auth()->user()->infocenter->nodo_id;
-        } elseif (session()->get('login_role') == User::IsExperto()) {
-            $id = auth()->user()->gestor->id;
-        } else {
-            $id = $idnodo;
-        }
-
-        if (session()->get('login_role') == User::IsTalento()) {
-            $proyectos = $proyectos = $this->getProyectoRepository()->proyectosDelTalento(auth()->user()->talento->id);
-        } else if (session()->get('login_role') == User::IsExperto()) {
-            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('asesor_id', $id)->get();
-        } else {
+        if (request()->ajax()) {
+            $id = "";
+            if (Session::get('login_role') == User::IsDinamizador()) {
+                $id = auth()->user()->dinamizador->nodo_id;
+            } elseif (Session::get('login_role') == User::IsInfocenter()) {
+                $id = auth()->user()->infocenter->nodo_id;
+            } else {
+                $id = $idnodo;
+            }
             $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('nodos.id', $id)->get();
+            return $this->datatableProyectos($request, $proyectos);
         }
-        return $this->datatableProyectos($request, $proyectos);
     }
 
     /**
@@ -236,7 +270,7 @@ class ProyectoController extends Controller
      **/
     public function proyectosCostos(string $anho)
     {
-        if (Session::get('login_role') == User::IsExperto()) {
+        if (Session::get('login_role') == User::IsGestor()) {
             $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('gestores.id', auth()->user()->gestor->id)->get();
         } else {
 
@@ -257,13 +291,15 @@ class ProyectoController extends Controller
      */
     public function updateEntregables(Request $request, $id)
     {
-        $update = $this->getProyectoRepository()->updateEntregablesInicioProyectoRepository($request, $id);
-        if ($update) {
-            Alert::success('Modificación Exitosa!', 'Los entregables del proyecto se han modificado!')->showConfirmButton('Ok', '#3085d6');
-            return redirect()->route('proyecto.inicio', $id);
-        } else {
-            Alert::error('Modificación Errónea!', 'Los entregables del proyecto no se han modificado!')->showConfirmButton('Ok', '#3085d6');
-            return back();
+        if (Session::get('login_role') == User::IsGestor()) {
+            $update = $this->getProyectoRepository()->updateEntregablesInicioProyectoRepository($request, $id);
+            if ($update) {
+                Alert::success('Modificación Exitosa!', 'Los entregables del proyecto se han modificado!')->showConfirmButton('Ok', '#3085d6');
+                return redirect('proyecto');
+            } else {
+                Alert::error('Modificación Errónea!', 'Los entregables del proyecto no se han modificado!')->showConfirmButton('Ok', '#3085d6');
+                return back();
+            }
         }
     }
 
@@ -277,13 +313,11 @@ class ProyectoController extends Controller
     public function entregables_inicio($id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        if(!request()->user()->can('adjuntar_entregables', [$proyecto, 'Inicio'])) {
-            alert('No autorizado', 'No puedes adjuntar entregables de la fase de inicio en este proyecto!', 'warning')->showConfirmButton('Ok', '#3085d6');
-            return back();
+        if (Session::get('login_role') == User::IsGestor()) {
+            return view('proyectos.gestor.entregables_inicio', [
+                'proyecto' => $proyecto
+            ]);
         }
-        return view('proyectos.forms.views.entregables_inicio', [
-            'proyecto' => $proyecto
-        ]);
     }
 
     /**
@@ -296,13 +330,11 @@ class ProyectoController extends Controller
     public function entregables_cierre(int $id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        if(!request()->user()->can('adjuntar_entregables', [$proyecto, 'Cierre'])) {
-            alert('No autorizado', 'No puedes adjuntar entregables de la fase de cierre en este proyecto!', 'warning')->showConfirmButton('Ok', '#3085d6');
-            return back();
+        if (Session::get('login_role') == User::IsGestor()) {
+            return view('proyectos.gestor.entregables_cierre', [
+                'proyecto' => $proyecto
+            ]);
         }
-        return view('proyectos.forms.views.entregables_cierre', [
-            'proyecto' => $proyecto
-        ]);
     }
 
     /**
@@ -317,7 +349,7 @@ class ProyectoController extends Controller
     {
         if (request()->ajax()) {
             $idgestor = $id;
-            if (Session::get('login_role') == User::IsExperto()) {
+            if (Session::get('login_role') == User::IsGestor()) {
                 $idgestor = auth()->user()->gestor->id;
             }
             $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('gestores.id', $idgestor)->get();
@@ -326,32 +358,27 @@ class ProyectoController extends Controller
     }
 
     // Datatable para listar las ideas de proyectos con emprendedores (que aprobaron el CSIBT)
-    public function ideasAsignadaAExperto($nodo = null, $id_experto = null)
+    public function datatableIdeasConEmprendedores()
     {
-        // dd($nodo);
-        // exit;
-        // dd($nodo);
-        if (session()->get('login_role') == User::IsExperto()) {
-            $ideas = Idea::ConsultarIdeasAprobadasEnComite(auth()->user()->gestor->nodo_id, auth()->user()->gestor->user_id)->get();
-        } else {
-            $ideas = Idea::ConsultarIdeasAprobadasEnComite($nodo, $id_experto)->get();
-        }
+        if (request()->ajax()) {
+            $ideas = Idea::ConsultarIdeasAprobadasEnComite(auth()->user()->gestor->nodo_id, auth()->user()->gestor->id)->get();
 
-        return datatables()->of($ideas)
-        ->addColumn('checkbox', function ($data) {
-                $checkbox = '
-                <a class="btn blue" onclick="asociarIdeaDeProyectoAProyecto(' . $data->consecutivo . ', \'' . $data->nombre_proyecto . '\', \'' . $data->codigo_idea . '\')">
-                <i class="material-icons">done</i>
-                </a>
-                ';
-                return $checkbox;
-        })->editColumn('nombres_contacto', function ($data) {
-                if ($data->talento_id == null) {
-                    return "{$data->nombres_contacto}";
-                } else {
-                    return "{$data->nombres_talento}";
-                }
-        })->rawColumns(['checkbox'])->make(true);
+            return datatables()->of($ideas)
+            ->addColumn('checkbox', function ($data) {
+                    $checkbox = '
+                    <a class="btn blue" onclick="asociarIdeaDeProyectoAProyecto(' . $data->consecutivo . ', \'' . $data->nombre_proyecto . '\', \'' . $data->codigo_idea . '\')">
+                    <i class="material-icons">done</i>
+                    </a>
+                    ';
+                    return $checkbox;
+            })->editColumn('nombres_contacto', function ($data) {
+                    if ($data->talento_id == null) {
+                        return "{$data->nombres_contacto}";
+                    } else {
+                        return "{$data->nombres_talento}";
+                    }
+            })->rawColumns(['checkbox'])->make(true);
+        }
     }
 
     // Datatable para listar las ideas de proyectos con emprendedores (que aprobaron el CSIBT)
@@ -426,55 +453,56 @@ class ProyectoController extends Controller
     // Consulta los grupos de investigación (se filtra por grupo de investigación)
     public function datatableGruposInvestigacionTecnoparque($tipo)
     {
-        if ($tipo == GrupoInvestigacion::IsInterno()) {
-            $grupo = GrupoInvestigacion::ConsultarGruposDeInvestigaciónTecnoparqueSena()->get();
-        } else {
-            $grupo = GrupoInvestigacion::ConsultarGruposDeInvestigaciónTecnoparqueExterno()->get();
+        if (request()->ajax()) {
+            if ($tipo == GrupoInvestigacion::IsInterno()) {
+                $grupo = GrupoInvestigacion::ConsultarGruposDeInvestigaciónTecnoparqueSena()->get();
+            } else {
+                $grupo = GrupoInvestigacion::ConsultarGruposDeInvestigaciónTecnoparqueExterno()->get();
+            }
         }
         return datatables()->of($grupo)
-        ->addColumn('checkbox', function ($data) {
-            $nombre   = strval($data->nombre);
-            $checkbox = '
-                <input type="radio" class="with-gap" name="txtentidad_grupo_id"
-                onclick="asociarGrupoInvestigacionAProyecto(' . $data->id_entidad . ', \'' . $data->codigo_grupo . '\', \'' . $nombre . '\')" id="radioButton' . $data->id_entidad . '"
-                value="' . $data->id_entidad . '"/>
-                <label for ="radioButton' . $data->id_entidad . '"></label>
-                ';
-            return $checkbox;
-        })->rawColumns(['checkbox'])->make(true);
+            ->addColumn('checkbox', function ($data) {
+                $nombre   = strval($data->nombre);
+                $checkbox = '
+                    <input type="radio" class="with-gap" name="txtentidad_grupo_id"
+                    onclick="asociarGrupoInvestigacionAProyecto(' . $data->id_entidad . ', \'' . $data->codigo_grupo . '\', \'' . $nombre . '\')" id="radioButton' . $data->id_entidad . '"
+                    value="' . $data->id_entidad . '"/>
+                    <label for ="radioButton' . $data->id_entidad . '"></label>
+                    ';
+                return $checkbox;
+            })->rawColumns(['checkbox'])->make(true);
     }
 
     // Datatable de las empresas de tecnoparque
     public function datatableEmpresasTecnoparque()
     {
-        $empresas = $this->getEmpresaRepository()->consultarEmpresasDeRedTecnoparque();
-        return datatables()->of($empresas)
-        ->addColumn('checkbox', function ($data) {
-            $nombre   = strval($data->nombre_empresa);
-            $checkbox = '
-                <input type="radio" class="with-gap" name="txtentidad_id"
-                onclick="asociarEmpresaAProyecto(' . $data->id_entidad . ', ' . $data->nit . ', \'' . $nombre . '\')" id="radioButton' . $data->id_entidad . '"
-                value="' . $data->id_entidad . '"/>
-                <label for ="radioButton' . $data->id_entidad . '"></label>
-                ';
-            return $checkbox;
-        })->rawColumns(['checkbox'])->make(true);
+        if (request()->ajax()) {
+            $empresas = $this->getEmpresaRepository()->consultarEmpresasDeRedTecnoparque();
+            return datatables()->of($empresas)
+                ->addColumn('checkbox', function ($data) {
+                    $nombre   = strval($data->nombre_empresa);
+                    $checkbox = '
+                        <input type="radio" class="with-gap" name="txtentidad_id"
+                        onclick="asociarEmpresaAProyecto(' . $data->id_entidad . ', ' . $data->nit . ', \'' . $nombre . '\')" id="radioButton' . $data->id_entidad . '"
+                        value="' . $data->id_entidad . '"/>
+                        <label for ="radioButton' . $data->id_entidad . '"></label>
+                        ';
+                    return $checkbox;
+                })->rawColumns(['checkbox'])->make(true);
+        }
     }
 
 
-    /**
-     * Consulta las sublineas que tiene un experto
-     * 
-     * @param int $id Id de la línea tecnológica.
-     * @return Response
-     * @author dum
-     */
-    public function consultarSublineas($id)
+    public function datatableEntidadesTecnoparque($id)
     {
-        $sublineas = Sublinea::SubLineasDeUnaLinea($id)->get();
-        return response()->json([
-            'sublineas' => $sublineas
-        ]);
+        if (request()->ajax()) {
+            $nombre    = TipoArticulacionProyecto::where('id', $id)->get()->last();
+            $nombre    = $nombre->nombre;
+            $entidades = "";
+            if ($nombre == 'Grupos y Semilleros del SENA') {
+                $entidades = GrupoInvestigacion::ConsultarGruposDeInvestigaciónTecnoparqueSena()->get();
+            }
+        }
     }
     /**
      * Display a listing of the resource.
@@ -483,9 +511,38 @@ class ProyectoController extends Controller
      */
     public function index()
     {
-        return view('proyectos.index', [
-            'nodos' => Nodo::SelectNodo()->get(),
-        ]);
+        switch (Session::get('login_role')) {
+            case User::IsGestor():
+                return view('proyectos.gestor.index');
+                break;
+
+            case User::IsDinamizador():
+                return view('proyectos.dinamizador.index', [
+                    'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
+                ]);
+                break;
+
+            case User::IsAdministrador():
+                return view('proyectos.administrador.index', [
+                    'nodos' => Nodo::SelectNodo()->get(),
+                ]);
+                break;
+
+            case User::IsTalento():
+                return view('proyectos.talento.index');
+                break;
+
+            case User::IsInfocenter():
+                return view('proyectos.infocenter.index', [
+                    'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->infocenter->nodo_id)->pluck('nombres_gestor', 'id'),
+                ]);
+                break;
+
+            default:
+                return abort(Response::HTTP_FORBIDDEN);
+
+                break;
+        }
     }
 
     /**
@@ -495,20 +552,13 @@ class ProyectoController extends Controller
      */
     public function create()
     {
-        if(!request()->user()->can('create', Proyecto::class)) {
-            alert('No autorizado', 'No tienes permisos para registrar proyectos!', 'warning')->showConfirmButton('Ok', '#3085d6');
-            return back();
+
+        if (Session::get('login_role') == User::IsGestor()) {
+            return view('proyectos.gestor.create', [
+                'sublineas' => Sublinea::SubLineasDeUnaLinea(auth()->user()->gestor->lineatecnologica->id)->get()->pluck('nombre', 'id'),
+                'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
+            ]);
         }
-        if (session()->get('login_role') == User::IsExperto()) {
-            $sublineas = Sublinea::SubLineasDeUnaLinea(auth()->user()->gestor->lineatecnologica->id)->get()->pluck('nombre', 'id');
-        } else {
-            $sublineas = null;
-        }
-        return view('proyectos.create', [
-            'sublineas' => $sublineas,
-            'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
-            'nodos' => Nodo::SelectNodo()->get()
-        ]);
     }
 
     /**
@@ -538,15 +588,13 @@ class ProyectoController extends Controller
 
     /**
      * Método que valida que un experto no pueda hacer operaciones sobre un proyecto que no está asesorando
-     *
+     * 
      * @param Proyecto $proyecto
      * @return bool
      * @author dum
      */
     private function validarExperto($proyecto) {
-        if (session()->get('login_role') == User::IsAdministrador())
-            return true;
-        if (session()->get('login_role') == User::IsExperto() && $proyecto->asesor->user->id != auth()->user()->id) {
+        if ($proyecto->asesor->user->id != auth()->user()->id) {
             Alert::error('Acceso no permitido!', 'No puedes ver/gestionar proyectos que no estás asesorando!')->showConfirmButton('Ok', '#3085d6');
             return false;
         }
@@ -567,12 +615,11 @@ class ProyectoController extends Controller
         if (!$this->validarExperto($proyecto))
             return back();
         
-        if ($proyecto->fase->nombre == Proyecto::IsInicio() || session()->get('login_role') == User::IsAdministrador()) {
-            return view('proyectos.forms.views.form_inicio_view', [
-                'sublineas' => Sublinea::SubLineasDeUnaLinea($proyecto->asesor->lineatecnologica->id)->get()->pluck('nombre', 'id'),
+        if ($proyecto->fase->nombre == Proyecto::IsInicio()) {
+            return view('proyectos.gestor.form_inicio_view', [
+                'sublineas' => Sublinea::SubLineasDeUnaLinea(auth()->user()->gestor->lineatecnologica->id)->get()->pluck('nombre', 'id'),
                 'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
-                'proyecto' => $proyecto,
-                'nodos' => Nodo::SelectNodo()->get()
+                'proyecto' => $proyecto
             ]);
         } else {
             Alert::error('Error!', 'No es posible cambiar la información de la fase de inicio, el proyecto debe estar en esta fase!')->showConfirmButton('Ok', '#3085d6');
@@ -593,8 +640,8 @@ class ProyectoController extends Controller
         if (!$this->validarExperto($proyecto))
             return back();
         
-        if ($proyecto->fase->nombre == Proyecto::IsPlaneacion() || session()->get('login_role') == User::IsAdministrador()) {
-            return view('proyectos.forms.views.form_planeacion_view', [
+        if ($proyecto->fase->nombre == Proyecto::IsPlaneacion()) {
+            return view('proyectos.gestor.form_planeacion_view', [
                 'proyecto' => $proyecto
             ]);
         } else {
@@ -616,8 +663,8 @@ class ProyectoController extends Controller
         if (!$this->validarExperto($proyecto))
             return back();
         
-        if ($proyecto->fase->nombre == Proyecto::IsEjecucion() || session()->get('login_role') == User::IsAdministrador()) {
-            return view('proyectos.forms.views.form_ejecucion_view', [
+        if ($proyecto->fase->nombre == Proyecto::IsEjecucion()) {
+            return view('proyectos.gestor.form_ejecucion_view', [
                 'proyecto' => $proyecto
             ]);
         } else {
@@ -637,16 +684,21 @@ class ProyectoController extends Controller
     {
         $proyecto = Proyecto::findOrFail($id);
         if (!$this->validarExperto($proyecto))
-        return back();
+            return back();
         
-        return view('proyectos.forms.views.form_cierre_view', [
-            'proyecto' => $proyecto,
-            'costo' => $this->costoController->costoProject($proyecto->id)
-        ]);
+        if ($proyecto->fase->nombre == Proyecto::IsCierre()) {
+            return view('proyectos.gestor.form_cierre_view', [
+                'proyecto' => $proyecto,
+                'costo' => $this->costoController->costoProject($proyecto->id)
+            ]);
+        } else {
+            Alert::error('Error!', 'No es posible cambiar la información de la fase de cierre, el proyecto no se encuentra en la fase de cierre!')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
     }
 
     /**
-     * Muestra el detalle de la fase de inicio de un proyecto
+     * Show the form for editing the specified resource.
      *
      * @param int  $id
      * @return \Illuminate\Http\Response
@@ -655,42 +707,102 @@ class ProyectoController extends Controller
     public function inicio($id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        if(!request()->user()->can('detalle', $proyecto)) {
-            alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
         $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
-        $ult_notificacion = $this->proyectoRepository->retornarUltimaNotificacionPendiente($proyecto);
+        $ult_notificacion = $proyecto->notificaciones()->where('fase_id',  $proyecto->fase_id)->whereNull('fecha_aceptacion')->get()->last();
         $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
-        return view('proyectos.fases.fase_inicio', [
-            'proyecto' => $proyecto,
-            'historico' => $historico,
-            'ult_notificacion' => $ult_notificacion,
-            'rol_destinatario' => $rol_destinatario
-        ]);
+
+
+        switch (Session::get('login_role')) {
+            case User::IsGestor():
+                if (!$this->validarExperto($proyecto))
+                    return back();
+                return view('proyectos.gestor.fase_inicio', [
+                    'proyecto' => $proyecto,
+                    'historico' => $historico,
+                    'rol_destinatario' => $rol_destinatario
+                ]);
+                break;
+
+            case User::IsDinamizador():
+                return view('proyectos.dinamizador.fase_inicio', [
+                    'proyecto' => $proyecto,
+                    'historico' => $historico,
+                    'ult_notificacion' => $ult_notificacion
+                ]);
+                break;
+
+            case User::IsTalento():
+                return view('proyectos.talento.fase_inicio', [
+                    'proyecto' => $proyecto,
+                    'historico' => $historico,
+                    'ult_notificacion' => $ult_notificacion
+                ]);
+                break;
+
+            case User::IsAdministrador():
+                return view('proyectos.administrador.fase_inicio', [
+                    'proyecto' => $proyecto,
+                    'historico' => $historico 
+                ]);
+                break;
+
+            case User::IsInfocenter():
+                return view('proyectos.infocenter.fase_inicio', [
+                    'proyecto' => $proyecto,
+                    'historico' => $historico 
+                ]);
+                break;
+
+            default:
+                return abort(Response::HTTP_FORBIDDEN);
+                break;
+        }
     }
 
     public function planeacion($id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        if(!request()->user()->can('detalle', $proyecto)) {
-            alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
         $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
-        $ult_notificacion = $this->proyectoRepository->retornarUltimaNotificacionPendiente($proyecto);
+        $ult_notificacion = $proyecto->notificaciones()->where('fase_id',  $proyecto->fase_id)->whereNull('fecha_aceptacion')->get()->last();
         $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
 
-        if ($proyecto->fase->nombre == $proyecto->IsInicio()) {
-            alert('No autorizado', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!', 'warning')->showConfirmButton('Ok', '#3085d6');
+        if ($proyecto->fase->nombre == 'Inicio') {
+            Alert::error('Error!', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!')->showConfirmButton('Ok', '#3085d6');
             return back();
         } else {
-            return view('proyectos.fases.fase_planeacion', [
-                'proyecto' => $proyecto,
-                'historico' => $historico,
-                'rol_destinatario' => $rol_destinatario,
-                'ult_notificacion' => $ult_notificacion
-            ]);
+            if (Session::get('login_role') == User::IsGestor()) {
+                if (!$this->validarExperto($proyecto))
+                    return back();
+                return view('proyectos.gestor.fase_planeacion', [
+                    'proyecto' => $proyecto,
+                    'historico' => $historico,
+                    'rol_destinatario' => $rol_destinatario
+                ]);
+            } else if (Session::get('login_role') == User::IsDinamizador()) {
+                return view('proyectos.dinamizador.fase_planeacion', [
+                    'proyecto' => $proyecto,
+                    'historico' => $historico,
+                    'ult_notificacion' => $ult_notificacion
+                ]);
+            } else if (Session::get('login_role') == User::IsTalento()) {
+                return view('proyectos.talento.fase_planeacion', [
+                    'proyecto' => $proyecto,
+                    'historico' => $historico,
+                    'ult_notificacion' => $ult_notificacion
+                ]);
+            } else if (Session::get('login_role') == User::IsAdministrador()) {
+                return view('proyectos.administrador.fase_planeacion', [
+                    'proyecto' => $proyecto,
+                    'historico' => $historico
+                ]);
+            } else if (Session::get('login_role') == User::IsInfocenter()) {
+                return view('proyectos.infocenter.fase_planeacion', [
+                    'proyecto' => $proyecto,
+                    'historico' => $historico
+                ]);
+            } else {
+                return abort(Response::HTTP_FORBIDDEN);
+            }
         }
     }
 
@@ -703,24 +815,54 @@ class ProyectoController extends Controller
     public function ejecucion(int $id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        if(!request()->user()->can('detalle', $proyecto)) {
-            alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
         $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
-        $ult_notificacion = $this->proyectoRepository->retornarUltimaNotificacionPendiente($proyecto);
+        $ult_notificacion = $proyecto->notificaciones()->where('fase_id',  $proyecto->fase_id)->whereNull('fecha_aceptacion')->get()->last();
         $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
 
-        if ($proyecto->fase->nombre == $proyecto->IsInicio() || $proyecto->fase->nombre == $proyecto->IsPlaneacion()) {
-            alert('No autorizado', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!', 'warning')->showConfirmButton('Ok', '#3085d6');
+        if ($proyecto->fase->nombre == 'Inicio' || $proyecto->fase->nombre == 'Planeación') {
+            Alert::error('Error!', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!')->showConfirmButton('Ok', '#3085d6');
             return back();
         } else {
-            return view('proyectos.fases.fase_ejecucion', [
-                'proyecto' => $proyecto,
-                'historico' => $historico,
-                'rol_destinatario' => $rol_destinatario,
-                'ult_notificacion' => $ult_notificacion
-            ]);
+            switch (Session::get('login_role')) {
+                case User::IsGestor():
+                    if (!$this->validarExperto($proyecto))
+                    return back();
+                    return view('proyectos.gestor.fase_ejecucion', [
+                        'proyecto' => $proyecto,
+                        'historico' => $historico,
+                        'rol_destinatario' => $rol_destinatario
+                    ]);
+                    break;
+                case User::IsDinamizador():
+                    return view('proyectos.dinamizador.fase_ejecucion', [
+                        'proyecto' => $proyecto,
+                        'historico' => $historico,
+                        'ult_notificacion' => $ult_notificacion
+                    ]);
+                    break;
+                case User::IsTalento():
+                    return view('proyectos.talento.fase_ejecucion', [
+                        'proyecto' => $proyecto,
+                        'historico' => $historico,
+                        'ult_notificacion' => $ult_notificacion
+                    ]);
+                    break;
+                case User::IsAdministrador():
+                    return view('proyectos.administrador.fase_ejecucion', [
+                        'proyecto' => $proyecto,
+                        'historico' => $historico
+                    ]);
+                    break;
+                case User::IsInfocenter():
+                    return view('proyectos.infocenter.fase_ejecucion', [
+                        'proyecto' => $proyecto,
+                        'historico' => $historico
+                    ]);
+                    break;
+                default:
+                    return abort(Response::HTTP_FORBIDDEN);
+                    break;
+            }
         }
     }
 
@@ -733,25 +875,60 @@ class ProyectoController extends Controller
     public function cierre(int $id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        if(!request()->user()->can('detalle', $proyecto)) {
-            alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
-        if ($proyecto->fase->nombre == $proyecto->IsInicio() || $proyecto->fase->nombre == $proyecto->IsPlaneacion() || $proyecto->fase->nombre == $proyecto->IsEjecucion()) {
-            alert('No autorizado', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!', 'warning')->showConfirmButton('Ok', '#3085d6');
+        if ($proyecto->fase->nombre == 'Inicio' || $proyecto->fase->nombre == 'Planeación' || $proyecto->fase->nombre == 'Ejecución') {
+            Alert::error('Error!', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!')->showConfirmButton('Ok', '#3085d6');
             return back();
         } else {
             $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+            $ult_notificacion = $proyecto->notificaciones()->where('fase_id',  $proyecto->fase_id)->whereNull('fecha_aceptacion')->get()->last();
             $costo = $this->costoController->costoProject($proyecto->id);
-            $ult_notificacion = $this->proyectoRepository->retornarUltimaNotificacionPendiente($proyecto);
             $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
-            return view('proyectos.fases.fase_cierre', [
-                'proyecto' => $proyecto,
-                'costo' => $costo,
-                'historico' => $historico,
-                'ult_notificacion' => $ult_notificacion,
-                'rol_destinatario' => $rol_destinatario
-            ]);
+            switch (Session::get('login_role')) {
+                case User::IsGestor():
+                    if (!$this->validarExperto($proyecto))
+                    return back();
+                    return view('proyectos.gestor.fase_cierre', [
+                        'proyecto' => $proyecto,
+                        'costo' => $costo,
+                        'historico' => $historico,
+                        'ult_notificacion' => $ult_notificacion,
+                        'rol_destinatario' => $rol_destinatario
+                    ]);
+                    break;
+                case User::IsDinamizador():
+                    return view('proyectos.dinamizador.fase_cierre', [
+                        'proyecto' => $proyecto,
+                        'costo' => $costo,
+                        'historico' => $historico,
+                        'ult_notificacion' => $ult_notificacion
+                    ]);
+                    break;
+                case User::IsTalento():
+                    return view('proyectos.talento.fase_cierre', [
+                        'proyecto' => $proyecto,
+                        'costo' => $costo,
+                        'historico' => $historico,
+                        'ult_notificacion' => $ult_notificacion
+                    ]);
+                    break;
+                case User::IsAdministrador():
+                    return view('proyectos.administrador.fase_cierre', [
+                        'proyecto' => $proyecto,
+                        'costo' => $costo,
+                        'historico' => $historico
+                    ]);
+                    break;
+                case User::IsInfocenter():
+                    return view('proyectos.infocenter.fase_cierre', [
+                        'proyecto' => $proyecto,
+                        'costo' => $costo,
+                        'historico' => $historico
+                    ]);
+                    break;
+                default:
+                    return abort(Response::HTTP_FORBIDDEN);
+                    break;
+            }
         }
     }
 
@@ -765,20 +942,33 @@ class ProyectoController extends Controller
     public function suspender(int $id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        if(!request()->user()->can('detalle', $proyecto)) {
-            alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
         $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
         $ult_notificacion = $proyecto->notificaciones()->where('fase_id',  Fase::where('nombre', $proyecto->IsSuspendido())->first()->id)->whereNull('fecha_aceptacion')->get()->last();
         $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
-        return view('proyectos.fases.fase_suspendido', [
-            'proyecto' => $proyecto,
-            'historico' => $historico,
-            'ult_notificacion' => $ult_notificacion,
-            'rol_destinatario' => $rol_destinatario
-        ]);
+        switch (Session::get('login_role')) {
+            case User::IsGestor():
+                if (!$this->validarExperto($proyecto))
+                    return back();
+                return view('proyectos.gestor.fase_suspendido', [
+                    'proyecto' => $proyecto,
+                    'historico' => $historico,
+                    'ult_notificacion' => $ult_notificacion,
+                    'rol_destinatario' => $rol_destinatario
+                ]);
+                break;
 
+            case User::IsDinamizador():
+
+                return view('proyectos.dinamizador.fase_suspendido', [
+                    'proyecto' => $proyecto,
+                    'historico' => $historico,
+                    'ult_notificacion' => $ult_notificacion,
+                    'rol_destinatario' => $rol_destinatario
+                ]);
+            default:
+                return abort(Response::HTTP_FORBIDDEN);
+                break;
+        }
     }
 
     /**
@@ -791,17 +981,21 @@ class ProyectoController extends Controller
     public function cambiar_gestor(int $id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        if(!request()->user()->can('cambiar_gestor', $proyecto)) {
-            alert('No autorizado', 'No puedes cambiar el experto de un proyecto de otro nodo!', 'warning')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
         $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
-        $gestores = $this->getGestorRepository()->consultarGestoresPorLineaTecnologicaYNodoRepository($proyecto->sublinea->lineatecnologica_id, $proyecto->nodo_id)->pluck('nombre', 'id');
-        return view('proyectos.forms.cambiar_gestor', [
-            'proyecto' => $proyecto,
-            'historico' => $historico,
-            'gestores' => $gestores
-        ]);
+        $gestores = $this->getGestorRepository()->consultarGestoresPorLineaTecnologicaYNodoRepository($proyecto->sublinea->lineatecnologica_id, auth()->user()->dinamizador->nodo_id)->pluck('gestor', 'id');
+        switch (Session::get('login_role')) {
+            case User::IsDinamizador();
+                return view('proyectos.dinamizador.cambiar_gestor', [
+                    'proyecto' => $proyecto,
+                    'historico' => $historico,
+                    'gestores' => $gestores
+                ]);
+                break;
+
+            default:
+                return abort(403);
+                break;
+        }
     }
 
     /**
@@ -814,11 +1008,13 @@ class ProyectoController extends Controller
     public function solicitar_aprobacion(int $id, string $fase = null)
     {
         $proyecto = Proyecto::find($id);
-        if(!request()->user()->can('notificar_aprobacion', $proyecto)) {
-            alert('No autorizado', 'No puedes solicitar la aprobación de este proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
+        if (!$this->validarExperto($proyecto))
+            return back();
+
+        if ($proyecto->fase->nombre == Proyecto::IsFinalizado() || $proyecto->fase->nombre == Proyecto::IsSuspendido()) {
+            Alert::error('Acceso no permitido!', 'No puedes enviar solicitudes de aprobación en un proyecto finalizado o suspendido!')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-
         $notificacion = $this->getProyectoRepository()->notificarAprobacionDeFase($proyecto, $fase);
         if ($notificacion['notificacion']) {
             Alert::success('Notificación Exitosa!', $notificacion['msg'])->showConfirmButton('Ok', '#3085d6');
@@ -854,23 +1050,27 @@ class ProyectoController extends Controller
      */
     public function updateInicio(Request $request, $id)
     {
-        $req = new ProyectoFaseInicioFormRequest;
-        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-        if ($validator->fails()) {
-            return response()->json([
-                'state'   => 'error_form',
-                'errors' => $validator->errors(),
-            ]);
-        } else {
-            $result = $this->getProyectoRepository()->update($request, $id);
-            if ($result) {
+        if (Session::get('login_role') == User::IsGestor()) {
+            $req = new ProyectoFaseInicioFormRequest;
+            $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+            if ($validator->fails()) {
                 return response()->json([
-                    'state' => 'update',
-                    'url' => route('proyecto.inicio', $id)
-            ]);
+                    'state'   => 'error_form',
+                    'errors' => $validator->errors(),
+                ]);
             } else {
-                return response()->json(['state' => 'no_update']);
+                $result = $this->getProyectoRepository()->update($request, $id);
+                if ($result) {
+                    return response()->json([
+                        'state' => 'update',
+                        'url' => route('proyecto.inicio', $id)
+                ]);
+                } else {
+                    return response()->json(['state' => 'no_update']);
+                }
             }
+        }else{
+            return abort(403);
         }
     }
 
@@ -887,11 +1087,7 @@ class ProyectoController extends Controller
         $update = $this->getProyectoRepository()->aprobacionFaseInicio($request, $id);
         if ($update['state']) {
             Alert::success($update['title'], $update['mensaje'])->showConfirmButton('Ok', '#3085d6');
-            if ($update['route'] != null) {
-                return redirect($update['route']);
-            } else {
-                return back();
-            }
+            return redirect('proyecto');
         } else {
             Alert::error($update['title'], $update['mensaje'])->showConfirmButton('Ok', '#3085d6');
             return back();
@@ -908,13 +1104,36 @@ class ProyectoController extends Controller
      */
     public function updatePlaneacion(Request $request, $id)
     {
-        $update = $this->getProyectoRepository()->updateEntregablesPlaneacionProyectoRepository($request, $id);
-        if ($update) {
-            Alert::success('Modificación Exitosa!', 'Los entregables del proyecto en la fase de planeación se han modificado!')->showConfirmButton('Ok', '#3085d6');
+        if (Session::get('login_role') == User::IsGestor()) {
+            $update = $this->getProyectoRepository()->updateEntregablesPlaneacionProyectoRepository($request, $id);
+            if ($update) {
+                Alert::success('Modificación Exitosa!', 'Los entregables del proyecto en la fase de planeación se han modificado!')->showConfirmButton('Ok', '#3085d6');
+                return back();
+            } else {
+                Alert::error('Modificación Errónea!', 'Los entregables del proyecto en la fase de planeación no se han modificado!')->showConfirmButton('Ok', '#3085d6');
+                return back();
+            }
         } else {
-            Alert::error('Modificación Errónea!', 'Los entregables del proyecto en la fase de planeación no se han modificado!')->showConfirmButton('Ok', '#3085d6');
+            if ($request->decision == 'aceptado') {
+                $aprobar = $this->getProyectoRepository()->updateFaseProyecto($id, 'Ejecución');
+                if ($aprobar) {
+                    Alert::success('Modificación Exitosa!', 'El proyecto ha cambiado a fase de ejecución!')->showConfirmButton('Ok', '#3085d6');
+                    return redirect('proyecto');
+                } else {
+                    Alert::error('Modificación Errónea!', 'El proyecto no ha cambiado a fase de ejecución!')->showConfirmButton('Ok', '#3085d6');
+                    return back();
+                }
+            } else {
+                $update = $this->getProyectoRepository()->noAprobarFaseProyecto($request, $id, 'Planeación');
+                if ($update) {
+                    Alert::success('Notificación Exitosa!', 'Se le ha notificado al experto del proyecto los motivos por los que no se aprueba esta fase del proyecto!')->showConfirmButton('Ok', '#3085d6');
+                    return redirect('proyecto');
+                } else {
+                    Alert::error('Notificación Errónea!', 'No se ha podido enviar la notificación al experto del proyecto!')->showConfirmButton('Ok', '#3085d6');
+                    return back();
+                }
+            }
         }
-        return back();
     }
 
     /**
@@ -926,25 +1145,54 @@ class ProyectoController extends Controller
      **/
     public function updateEjecucion(Request $request, $id)
     {
-        $update = $this->getProyectoRepository()->updateEntregablesEjecucionProyectoRepository($request, $id);
-        if ($update) {
-            Alert::success('Modificación Exitosa!', 'Los entregables del proyecto en la fase de ejecución se han modificado!')->showConfirmButton('Ok', '#3085d6');
-            return back();
+        if (Session::get('login_role') == User::IsGestor()) {
+            $update = $this->getProyectoRepository()->updateEntregablesEjecucionProyectoRepository($request, $id);
+            if ($update) {
+                Alert::success('Modificación Exitosa!', 'Los entregables del proyecto en la fase de ejecución se han modificado!')->showConfirmButton('Ok', '#3085d6');
+                return back();
+            } else {
+                Alert::error('Modificación Errónea!', 'Los entregables del proyecto en la fase de ejecución no se han modificado!')->showConfirmButton('Ok', '#3085d6');
+                return back();
+            }
         } else {
-            Alert::error('Modificación Errónea!', 'Los entregables del proyecto en la fase de ejecución no se han modificado!')->showConfirmButton('Ok', '#3085d6');
-            return back();
+            if ($request->decision == 'aceptado') {
+                $update = $this->getProyectoRepository()->setPostCierreProyectoRepository($id);
+                if ($update) {
+                    Alert::success('Modificación Exitosa!', 'La fase de ejecución del proyecto se ha aprobado!')->showConfirmButton('Ok', '#3085d6');
+                    return redirect('proyecto');
+                } else {
+                    Alert::error('Modificación Errónea!', 'La fase de ejecución del proyecto no se ha aprobado!')->showConfirmButton('Ok', '#3085d6');
+                    return back();
+                }
+            } else {
+                $update = $this->getProyectoRepository()->noAprobarFaseProyecto($request, $id, 'Ejecución');
+                if ($update) {
+                    Alert::success('Notificación Exitosa!', 'Se le ha notificado al experto del proyecto los motivos por los que no se aprueba esta fase del proyecto!')->showConfirmButton('Ok', '#3085d6');
+                    return redirect('proyecto');
+                } else {
+                    Alert::error('Notificación Errónea!', 'No se ha podido enviar la notificación al experto del proyecto!')->showConfirmButton('Ok', '#3085d6');
+                    return back();
+                }
+            }
         }
     }
 
     public function updateEntregables_Cierre(Request $request, $id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        $update = $this->getProyectoRepository()->updateEntregableCierreProyectoRepository($request, $id);
-        if ($update) {
-            Alert::success('Modificación Exitosa!', 'Los entregables del proyecto en la fase de cierre se han modificado!')->showConfirmButton('Ok', '#3085d6');
-            return back();
+        if ($proyecto->fase->nombre == "Cierre") {
+            if (Session::get('login_role') == User::IsGestor()) {
+                $update = $this->getProyectoRepository()->updateEntregableCierreProyectoRepository($request, $id);
+                if ($update) {
+                    Alert::success('Modificación Exitosa!', 'Los entregables del proyecto en la fase de cierre se han modificado!')->showConfirmButton('Ok', '#3085d6');
+                    return back();
+                } else {
+                    Alert::error('Modificación Errónea!', 'Los entregables del proyecto en la fase de cierre no se han modificado!')->showConfirmButton('Ok', '#3085d6');
+                    return back();
+                }
+            }
         } else {
-            Alert::error('Modificación Errónea!', 'Los entregables del proyecto en la fase de cierre no se han modificado!')->showConfirmButton('Ok', '#3085d6');
+            Alert::error('Error!', 'Este proyecto no está en fase de cierre!')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
     }
@@ -958,22 +1206,45 @@ class ProyectoController extends Controller
      */
     public function updateCierre(Request $request, int $id)
     {
-        $req = new ProyectoFaseCierreFormRequest;
-        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-        if ($validator->fails()) {
-            return response()->json([
-                'state'   => 'error_form',
-                'errors' => $validator->errors(),
-            ]);
-        } else {
-            $result = $this->getProyectoRepository()->updateCierreProyectoRepository($request, $id);
-            if ($result) {
+        if (Session::get('login_role') == User::IsGestor()) {
+            $proyecto = Proyecto::findOrFail($id);
+            $req = new ProyectoFaseCierreFormRequest;
+            $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+            if ($validator->fails()) {
                 return response()->json([
-                    'state' => 'update',
-                    'url' => route('proyecto.cierre', $id)
-            ]);
+                    'state'   => 'error_form',
+                    'errors' => $validator->errors(),
+                ]);
             } else {
-                return response()->json(['state' => 'no_update']);
+                $result = $this->getProyectoRepository()->updateCierreProyectoRepository($request, $id);
+                if ($result) {
+                    return response()->json([
+                        'state' => 'update',
+                        'url' => route('proyecto.cierre', $id)
+                ]);
+                } else {
+                    return response()->json(['state' => 'no_update']);
+                }
+            }
+        } else {
+            if ($request->decision == 'aceptado') {
+                $update = $this->getProyectoRepository()->updateAprobacionDinamizador($id);
+                if ($update) {
+                    Alert::success('Modificación Exitosa!', 'La fase de cierre se aprobó!')->showConfirmButton('Ok', '#3085d6');
+                    return redirect('proyecto');
+                } else {
+                    Alert::error('Modificación Errónea!', 'La fase de cierre no se aprobó!')->showConfirmButton('Ok', '#3085d6');
+                    return back();
+                }
+            } else {
+                $update = $this->getProyectoRepository()->noAprobarFaseProyecto($request, $id, 'Cierre');
+                if ($update) {
+                    Alert::success('Notificación Exitosa!', 'Se le ha notificado al experto del proyecto los motivos por los que no se aprueba esta fase del proyecto!')->showConfirmButton('Ok', '#3085d6');
+                    return redirect('proyecto');
+                } else {
+                    Alert::error('Notificación Errónea!', 'No se ha podido enviar la notificación al experto del proyecto!')->showConfirmButton('Ok', '#3085d6');
+                    return back();
+                }
             }
         }
     }
@@ -988,18 +1259,43 @@ class ProyectoController extends Controller
      **/
     public function updateSuspendido(Request $request, int $id)
     {
-        $proyecto = Proyecto::find($id);
-        if(!request()->user()->can('aprobar_suspendido', $proyecto)) {
-            alert('No autorizado', 'No puedes suspender proyectos que los que no haces parte', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
-        $update = $this->getProyectoRepository()->updateAprobacionSuspendido($id, $request);
-        if ($update) {
-            Alert::success('Modificación Exitosa!', 'La fase de suspendido del proyecto se aprobó!')->showConfirmButton('Ok', '#3085d6');
-            return redirect('proyecto');
+        if (Session::get('login_role') == User::IsDinamizador()) {
+            $update = $this->getProyectoRepository()->updateAprobacionSuspendido($id, $request);
+            if ($update) {
+                Alert::success('Modificación Exitosa!', 'La fase de suspendido del proyecto se aprobó!')->showConfirmButton('Ok', '#3085d6');
+                return redirect('proyecto');
+            } else {
+                Alert::error('Modificación Errónea!', 'La fase de suspendido del proyecto no se aprobó!')->showConfirmButton('Ok', '#3085d6');
+                return back();
+            }
         } else {
-            Alert::error('Modificación Errónea!', 'La fase de suspendido del proyecto no se aprobó!')->showConfirmButton('Ok', '#3085d6');
-            return back();
+            $proyecto = Proyecto::findOrFail($id);
+            if ($proyecto->articulacion_proyecto->aprobacion_dinamizador_suspender == 1) {
+                $validator = Validator::make(
+                    $request->all(),
+                    [
+                        'txtfecha_cierre' => 'required|date_format:"Y-m-d"',
+                    ],
+                    [
+                        'txtfecha_cierre.required' => 'La fecha de cierre del proyecto es obligatoria.',
+                        'txtfecha_cierre.date_format' => 'El formato de la fecha de cierre es incorrecto ("AAAA-MM-DD")'
+                    ]
+                );
+                if ($validator->fails()) {
+                    Alert::error('Modificación Errónea!', 'Estás ingresando mal la fecha de cierre!')->showConfirmButton('Ok', '#3085d6');
+                    return back()
+                        ->withErrors($validator)
+                        ->withInput();
+                }
+                $suspender = $this->getProyectoRepository()->suspenderProyecto($request, $proyecto);
+                if ($suspender) {
+                    Alert::success('Modificación Exitosa!', 'El proyecto se ha suspendido!')->showConfirmButton('Ok', '#3085d6');
+                    return redirect('proyecto');
+                } else {
+                    Alert::error('Modificación Errónea!', 'El proyecto no se ha suspendido!')->showConfirmButton('Ok', '#3085d6');
+                    return back();
+                }
+            }
         }
     }
 
@@ -1012,11 +1308,6 @@ class ProyectoController extends Controller
      **/
     public function updateGestor(Request $request, int $id)
     {
-        $proyecto = Proyecto::findOrFail($id);
-        if(!request()->user()->can('cambiar_gestor', $proyecto)) {
-            alert('No autorizado', 'No puedes cambiar el experto de un proyecto de otro nodo!', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
         $messages = [
             'txtgestor_id.required' => 'El experto es obligatorio.',
         ];
@@ -1034,7 +1325,7 @@ class ProyectoController extends Controller
         $update = $this->getProyectoRepository()->updateGestor($request, $id);
         if ($update) {
             Alert::success('Se ha cambiado el experto del proyecto!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
-            return redirect()->route('proyecto.inicio', $id);
+            return redirect('proyecto');
         } else {
             Alert::error('No se ha cambiado el experto del proyecto!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
             return back();
@@ -1050,90 +1341,60 @@ class ProyectoController extends Controller
      * @return Response
      * @author dum
      **/
-    public function updateReversar(int $id, string $fase)
+    public function updateReversar(Request $request, int $id, string $fase)
     {
         $proyecto = Proyecto::findOrFail($id);
-        $check = $this->isPosibleReversar($proyecto, $fase);
-        if (!$check['return']) {
-            return response()->json([
-                'msg' => $check['msg'],
-                'type_alert' => 'error'
-            ]);
-        }
-
-        $update = $this->getProyectoRepository()->reversarProyecto($proyecto, $fase);
-        if ($update) {
-            return response()->json([
-                'msg' => 'La fase del proyecto se ha reversado a '.$fase.'!',
-                'type_alert' => 'success'
-            ]);
-        } else {
-            return response()->json([
-                'msg' => 'El proyecto no se ha reversado!',
-                'type_alert' => 'error'
-            ]);
-        }
-
-    }
-    /**
-     * Verificar que se puede reversa la fase de un proyecto
-     *
-     * @param App\Models\Proyecto $proyecto
-     * @param string $fase_a_reversar
-     * @return array
-     * @auth dum
-     **/
-    private function isPosibleReversar($proyecto, $fase_a_reversar)
-    {
-        if ($proyecto->fase->nombre == $proyecto->IsFinalizado()) {
-            return [
-                'return' => true, 
-                'msg' => 'ok'
-            ];
-        }
-        if ($proyecto->fase->nombre == $fase_a_reversar) {
-            return [
-                'return' => false,
-                'msg' => 'El proyecto ya se encuentra en la fase de ' . $fase_a_reversar
-            ];
+        if ($proyecto->fase->nombre == $fase) {
+            Alert::warning('El proyecto ya se encuentra en fase de '.$fase.'!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+            return back();
         } else {
             if ($proyecto->fase->nombre == 'Suspendido') {
-                return [
-                    'return' => true, 
-                    'msg' => 'ok'
-                ];
-            } else {
-                if (($proyecto->fase->nombre == 'Planeación' && $fase_a_reversar == 'Inicio')) {
-                    return [
-                        'return' => true, 
-                        'msg' => 'ok'
-                    ];
+                $update = $this->getProyectoRepository()->reversarProyecto($proyecto, $fase);
+                if ($update) {
+                    Alert::success('La fase del proyecto se ha reversado a '.$fase.'!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
+                    return redirect('proyecto');
                 } else {
-                    if (($proyecto->fase->nombre == 'Ejecución' && $fase_a_reversar == 'Planeación') || ($proyecto->fase->nombre == 'Ejecución' && $fase_a_reversar == 'Inicio')) {
-                        return [
-                            'return' => true, 
-                            'msg' => 'ok'
-                        ];
+                    Alert::error('El proyecto no se ha reversado!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+                    return back();
+                }
+            } else {
+                if (($proyecto->fase->nombre == 'Planeación' && $fase == 'Inicio')) {
+                    $update = $this->getProyectoRepository()->reversarProyecto($proyecto, $fase);
+                    if ($update) {
+                        Alert::success('La fase del proyecto se ha reversado a '.$fase.'!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
+                        return redirect('proyecto');
                     } else {
-                        if (($proyecto->fase->nombre == 'Cierre' && $fase_a_reversar == 'Ejecución') || ($proyecto->fase->nombre == 'Cierre' && $fase_a_reversar == 'Planeación') || ($proyecto->fase->nombre == 'Cierre' && $fase_a_reversar == 'Inicio')) {
-                            return [
-                                'return' => true, 
-                                'msg' => 'ok'
-                            ];
+                        Alert::error('El proyecto no se ha reversado!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+                        return back();
+                    }
+                } else {
+                    if (($proyecto->fase->nombre == 'Ejecución' && $fase == 'Planeación') || ($proyecto->fase->nombre == 'Ejecución' && $fase == 'Inicio')) {
+                        $update = $this->getProyectoRepository()->reversarProyecto($proyecto, $fase);
+                        if ($update) {
+                            Alert::success('La fase del proyecto se ha reversado a '.$fase.'!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
+                            return redirect('proyecto');
                         } else {
-                            return [
-                                'return' => false,
-                                'msg' => 'No se puede revesar el proyecto se ' . $proyecto->fase->nombre . ' a ' . $fase_a_reversar
-                            ];
+                            Alert::error('El proyecto no se ha reversado!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+                            return back();
+                        }
+                    } else {
+                        if (($proyecto->fase->nombre == 'Cierre' && $fase == 'Ejecución') || ($proyecto->fase->nombre == 'Cierre' && $fase == 'Planeación') || ($proyecto->fase->nombre == 'Cierre' && $fase == 'Inicio')) {
+                            $update = $this->getProyectoRepository()->reversarProyecto($proyecto, $fase);
+                            if ($update) {
+                                Alert::success('La fase del proyecto se ha reversado a '.$fase.'!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
+                                return redirect('proyecto');
+                            } else {
+                                Alert::error('El proyecto no se ha reversado!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+                                return back();
+                            }
+                        } else {
+                            Alert::warning('El proyecto no se puede reversar a la fase de '.$fase.'!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
+                            return back();
                         }
                     }
                 }
             }
         }
-        return [
-            'return' => true, 
-            'msg' => 'ok'
-        ];
     }
 
     /*===============================================
@@ -1194,7 +1455,22 @@ class ProyectoController extends Controller
                 },
                 'articulacion_proyecto.proyecto.nodo.entidad' => function ($query) {
                     $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
-                }
+                },
+                'edt',
+                'edt.entidades',
+                'edt.areaconocimiento',
+                'edt.tipoedt',
+                'edt.nodo' => function ($query) {
+                    $query->select('id', 'entidad_id', 'direccion', 'telefono');
+                },
+                'edt.nodo.entidad' => function ($query) {
+                    $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
+                },
+                'articulacion_proyecto.articulacion',
+                'articulacion_proyecto.articulacion.productos',
+                'articulacion_proyecto.articulacion.fase',
+
+
             ])->where('codigo_actividad', $code)->first();
 
 
@@ -1238,8 +1514,9 @@ class ProyectoController extends Controller
                     'proyecto' => $proyecto,
                     'status_code' => Response::HTTP_OK
                 ]
-            ]);
+            ],Response::HTTP_OK);
         }
+
         return response()->json([
             'data' => [
                 'proyecto' => null,
@@ -1251,7 +1528,7 @@ class ProyectoController extends Controller
     public function datatableProyectosFinalizados(Request $request)
     {
         switch (\Session::get('login_role')) {
-            case User::IsActivador():
+            case User::IsAdministrador():
                 $nodo = $request->filter_nodo_art;
                 break;
             case User::IsDinamizador():
@@ -1290,13 +1567,13 @@ class ProyectoController extends Controller
     {
         return datatables()->of($proyectos  )
             ->addColumn('add_proyecto', function ($data) {
-                $checkbox = '';
-                if (isset($data->articulacion_proyecto->actividad)) {
-                    $checkbox = '<a class="btn blue" onclick="filter_project.addProjectToArticulacion(\'' .($data->articulacion_proyecto->actividad->codigo_actividad) . '\')">
-                                    <i class="material-icons">done</i>
-                                </a>';
-                }
-                return $checkbox;
+                    $checkbox = '';
+                    if (isset($data->articulacion_proyecto->actividad)) {
+                        $checkbox = '<a class="btn blue" onclick="filter_project.addProjectToArticulacion(\'' .($data->articulacion_proyecto->actividad->codigo_actividad) . '\')">
+                                        <i class="material-icons">done</i>
+                                    </a>';
+                    }
+                    return $checkbox;
             })
             ->editColumn('codigo_proyecto', function ($data) {
                 if (isset($data->articulacion_proyecto->actividad)) {
@@ -1383,4 +1660,45 @@ class ProyectoController extends Controller
         return $this->gestorRepository;
     }
 
+    /**
+     * Asigna un valor a $entidadRepository
+     * @param object $entidadRepository
+     * @return void
+     * @author dum
+     */
+    private function setEntidadRepository($entidadRepository)
+    {
+        $this->entidadRepository = $entidadRepository;
+    }
+
+    /**
+     * Retorna el valor de $entidadRepository
+     * @return object
+     * @author dum
+     */
+    private function getEntidadRepository()
+    {
+        return $this->entidadRepository;
+    }
+
+    /**
+     * Asigna un valor a $servidorVideoRepository
+     * @param object $servidorVideoRepository
+     * @return void
+     * @author dum
+     */
+    private function setServidorVideoRepository($servidorVideoRepository)
+    {
+        $this->servidorVideoRepository = $servidorVideoRepository;
+    }
+
+    /**
+     * Retorna el valor de $servidorVideoRepository
+     * @return object
+     * @author dum
+     */
+    private function getServidorVideoRepository()
+    {
+        return $this->servidorVideoRepository;
+    }
 }

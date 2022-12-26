@@ -61,9 +61,7 @@
                                                     @endif
                                                 @endif
                                             @endif
-                                            @can('downloadFormCierre', $articulacion)
-                                                <a target="_blank" href="{{route('pdf.articulacion.cierre', $articulacion->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Descargar Formulario</a>
-                                                @endcan
+                                            <a target="_blank" href="{{route('pdf.articulacion.cierre', $articulacion->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Descargar Formulario</a>
                                         </div>
                                     </div>
                                     <div class="mailbox-view-header">

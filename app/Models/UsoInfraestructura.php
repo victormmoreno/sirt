@@ -228,7 +228,7 @@ class UsoInfraestructura extends Model
                 )->whereHasMorph('asesorable', [\App\Models\ArticulacionPbt::class, \App\Models\Idea::class]);
             }
         }
-        else if ((session()->has('login_role') && session()->get('login_role') == User::IsExperto()) && (!empty($user) && $user != null && $user != 'all')) {
+        else if ((session()->has('login_role') && session()->get('login_role') == User::IsGestor()) && (!empty($user) && $user != null && $user != 'all')) {
             if ((!empty($actividad) && $actividad != null && $actividad != 'all')) {
                 $query->whereHasMorph(
                     'asesorable',
@@ -294,7 +294,7 @@ class UsoInfraestructura extends Model
                     }
                 )->whereHasMorph('asesorable', [\App\Models\ArticulacionPbt::class, \App\Models\Idea::class]);
             }
-            if((session()->has('login_role') && (session()->get('login_role') == User::IsApoyoTecnico() || session()->get('login_role') == User::IsExperto()))){
+            if((session()->has('login_role') && (session()->get('login_role') == User::IsApoyoTecnico() || session()->get('login_role') == User::IsGestor()))){
                 return $query->whereHas(
                     'usogestores',
                     function (Builder $query) use($asesor) {

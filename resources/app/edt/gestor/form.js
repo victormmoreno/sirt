@@ -63,7 +63,7 @@ function addEmpresaAEdt(id) {
       let fila = '<tr class="selected" id=entidadAsociadaAEdt'+idEntidad+'>'
       +'<td><input type="hidden" name="entidades[]" value="'+idEntidad+'">'+ajax.detalles.nit+'</td>'
       +'<td>'+ajax.detalles.nombre+'</td>'
-      +'<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarEntidadAsociadaAEdt('+idEntidad+');"><i class="material-icons">delete_sweep</i></a></td>'
+      +'<td><a class="waves-effect red lighten-3 btn" onclick="eliminarEntidadAsociadaAEdt('+idEntidad+');"><i class="material-icons">delete_sweep</i></a></td>'
       +'</tr>';
       $('#detalleEntidadesAsociadasAEdt').append(fila);
       Swal.fire({

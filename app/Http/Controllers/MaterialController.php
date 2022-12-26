@@ -20,7 +20,7 @@ class MaterialController extends Controller
 
     public function __construct(MaterialRepository $materialRepository, LineaRepository $lineaRepository, NodoRepository $nodoRepository)
     {
-        $this->middleware(['auth', 'role_session:Activador|Dinamizador|Articulador|Experto|Talento|'.User::IsApoyoTecnico()]);
+        $this->middleware(['auth', 'role_session:Administrador|Dinamizador|Articulador|Experto|Talento|'.User::IsApoyoTecnico()]);
         $this->setMaterialRepository($materialRepository);
         $this->setLineaTecnologicaRepository($lineaRepository);
         $this->setNodoRepository($nodoRepository);
@@ -96,11 +96,48 @@ class MaterialController extends Controller
      */
     public function index(MaterialDatatable $materialDatatable)
     {
-        $this->authorize('index', Material::class);
-        return view('materiales.index', [
-            'nodos' => $this->getNodoRepository()->getSelectNodo(),
-        ]);
 
+        $this->authorize('index', Material::class);
+        if (request()->ajax()) {
+
+            if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
+                $nodo       = auth()->user()->dinamizador->nodo->id;
+                $materiales = $this->getMaterialRepository()->getInfoDataMateriales()
+                    ->whereHas('nodo', function ($query) use ($nodo) {
+                        $query->where('id', $nodo);
+                    })->get();
+            } elseif (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
+
+                $linea      = auth()->user()->gestor->lineatecnologica->id;
+                $nodo       = auth()->user()->gestor->nodo->id;
+                $materiales = $this->getMaterialRepository()->getInfoDataMateriales()
+                    ->whereHas('nodo', function ($query) use ($nodo) {
+                        $query->where('id', $nodo);
+                    })
+                    ->whereHas('lineatecnologica', function ($query) use ($linea) {
+                        $query->where('id', $linea);
+                    })->orderBy('nombre')->get();
+            }
+
+            return $materialDatatable->indexDatatable($materiales);
+        }
+
+        switch (Session::get('login_role')) {
+            case User::IsAdministrador():
+                return view('materiales.index', [
+                    'nodos' => $this->getNodoRepository()->getSelectNodo(),
+                ]);
+                break;
+            case User::IsDinamizador():
+                return view('materiales.index');
+                break;
+            case User::IsGestor():
+                return view('materiales.index');
+                break;
+            default:
+                return abort(Response::HTTP_FORBIDDEN);
+                break;
+        }
     }
 
     /**
@@ -112,33 +149,22 @@ class MaterialController extends Controller
     public function getMaterialesPorNodo(MaterialDatatable $materialDatatable, $nodo)
     {
         $this->authorize('getMaterialesPorNodo', Material::class);
-        if ($nodo == 0) {
-            $nodo = request()->user()->getNodoUser();
+
+        if (request()->ajax()) {
+
+            if (session()->has('login_role') && session()->get('login_role') == User::IsAdministrador()) {
+
+                $materiales = $this->getMaterialRepository()->getInfoDataMateriales()
+                    ->whereHas('nodo', function ($query) use ($nodo) {
+                        $query->where('id', $nodo);
+                    })->orderBy('nombre')->get();
+
+                return $materialDatatable->getMaterialesPorNodoDatatable($materiales);
+            } else {
+                return response()->json(['data' => 'no response']);
+            }
         }
-        if (session()->get('login_role') == User::IsExperto()) {
-            $linea = auth()->user()->gestor->lineatecnologica_id;
-        }
-        $materiales = $this->getMaterialRepository()->consultar()->where('n.id', $nodo);
-
-        isset($linea) ? $materiales = $materiales->where('lt.id', $linea) : $materiales;
-
-        return $materialDatatable->getMaterialesPorNodoDatatable($materiales->get());
-
-    }
-
-    /**
-     * Muestra el formulario para importar materiales de formación
-     * 
-     * @return Response
-     * @author dum
-     */
-    public function importar()
-    {
-        if(!request()->user()->can('import', Material::class)) {
-            alert('No autorizado', 'No puedes importar materiales de este nodo', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
-        return view('materiales.import');
+        abort(Response::HTTP_FORBIDDEN);
     }
 
     /**
@@ -148,23 +174,21 @@ class MaterialController extends Controller
      */
     public function create()
     {
-        // $this->authorize('create', Material::class);
-        $nodos = $this->getNodoRepository()->getSelectNodo();
-        if (session()->get('login_role') == User::IsDinamizador()) {
+        $this->authorize('create', Material::class);
+
+        if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
             $nodo = auth()->user()->dinamizador->nodo->id;
-        } elseif (session()->get('login_role') == User::IsExperto()) {
+        } elseif (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
             $nodo = auth()->user()->gestor->nodo->id;
-        } else {
-            $nodo = $nodos->first()->id;
         }
 
-        $lineastecnologicas = $this->getLineaTecnologicaRepository()->getAllLineaNodo($nodo);
+        $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
+
         return view('materiales.create', [
             'lineastecnologicas'   => $lineastecnologicas,
             'categoriasMateriales' => CategoriaMaterial::selectAllCategoriasMateriales($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
             'medidas'              => Medida::selectAllMedidas($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
             'presentaciones'       => Presentacion::selectAllPresentaciones($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
-            'nodos'                => $nodos
         ]);
     }
 
@@ -179,7 +203,7 @@ class MaterialController extends Controller
         $this->authorize('store', Material::class);
 
         $materialStore = $this->getMaterialRepository()->store($request);
-        if ($materialStore) {
+        if ($materialStore === true) {
 
             alert()->success('Registro Exitoso.', 'El Material de Formación ha sido creado satisfactoriamente');
         } else {
@@ -197,10 +221,8 @@ class MaterialController extends Controller
     public function show($id)
     {
         $material = $this->getMaterialRepository()->getInfoDataMateriales()->findOrFail($id);
-        if(!request()->user()->can('show', $material)) {
-            alert('No autorizado', 'No puedes ver la información de este material de formación.', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
+        $this->authorize('show', $material);
+
         return view('materiales.show', [
             'material' => $material,
         ]);
@@ -216,17 +238,22 @@ class MaterialController extends Controller
     {
         $materiales = $this->getMaterialRepository()->getInfoDataMateriales()->findOrFail($id);
         $this->authorize('edit', $materiales);
-        $nodos = $this->getNodoRepository()->getSelectNodo();
 
-        $lineastecnologicas = $this->getLineaTecnologicaRepository()->getAllLineaNodo($materiales->lineatecnologica_id);
+        if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
+            $nodo = auth()->user()->dinamizador->nodo->id;
+        } elseif (session()->has('login_role') && session()->get('login_role') == User::IsGestor()) {
+            $nodo = auth()->user()->gestor->nodo->id;
+        }
+
+        $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
+
         return view('materiales.edit', [
             'material'             => $materiales,
-            'lineastecnologicas'   => $lineastecnologicas->lineas,
+            'lineastecnologicas'   => $lineastecnologicas,
             'categoriasMateriales' => CategoriaMaterial::selectAllCategoriasMateriales($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
             'tiposmateriales'      => TipoMaterial::selectAllTiposMateriales($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
             'medidas'              => Medida::selectAllMedidas($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
             'presentaciones'       => Presentacion::selectAllPresentaciones($orderBy = 'nombre')->get()->pluck('nombre', 'id'),
-            'nodos'                => $nodos
         ]);
     }
 
@@ -284,13 +311,13 @@ class MaterialController extends Controller
                 return response()->json([
                     'material' => $material,
                     'status' => Response::HTTP_IM_USED,
-                    'message' => 'No puedes eliminar el material de formación, está en en siendo utilizado en usos de infraestructura',
+                    'message' => 'no puedes eliminar el material de formación, está en en siendo utilizado en usos de infraestructura',
                 ], Response::HTTP_IM_USED);
             }
             $material->delete();
             return response()->json([
                 'status' => Response::HTTP_OK,
-                'message' => 'El material fue eliminado',
+                'message' => 'el material fue eliminado',
                 'route' => route('material.index')
             ], Response::HTTP_OK);
         }

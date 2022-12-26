@@ -135,10 +135,11 @@ class ArticulacionPbtRepository
      * @return array
      * @author devjul
      */
-    public function updateInicio($request, $articulacion)
+    public function updateInicio($request, $id)
     {
-        DB::beginTransaction();
-        try {
+        // DB::beginTransaction();
+        // try {
+            $articulacion = ArticulacionPbt::find($id);
 
             $articulacion->update([
                 'asesor_id' => auth()->user()->id,
@@ -165,12 +166,12 @@ class ArticulacionPbtRepository
 
             User::enableTalentsArticulacion($articulacion);
 
-            DB::commit();
+            // DB::commit();
             return $articulacion;
-        } catch (\Exception $e) {
-            DB::rollback();
-            return null;
-        }
+        // } catch (\Exception $e) {
+        //     DB::rollback();
+        //     return null;
+        // }
     }
 
 
@@ -182,14 +183,18 @@ class ArticulacionPbtRepository
    * @return array
    * @author devjul
    */
-    public function updateEntregablesInicioArticulacon($request, $articulacion)
+    public function updateEntregablesInicioArticulacon($request, $id)
     {
         DB::beginTransaction();
         try {
             $form_inicio = 0;
+
             if (isset($request->txtformulario_inicio)) {
                 $form_inicio = 1;
             }
+
+            $articulacion = ArticulacionPbt::find($id);
+
             $articulacion->update([
                 'formulario_inicio' => $form_inicio
             ]);
@@ -208,10 +213,11 @@ class ArticulacionPbtRepository
     * @return boolean
     * @author devjul
     */
-    public function notificarAlTalento($articulacion, string $fase)
+    public function notificarAlTalento(int $id, string $fase)
     {
         DB::beginTransaction();
         try {
+            $articulacion = ArticulacionPbt::findOrFail($id);
             $talentLider = $articulacion->talentos()->wherePivot('talento_lider', 1)->first();
             $articulacion->registerHistoryArticulacion(Movimiento::IsSolicitarTalento(),Session::get('login_role'), null, "{$fase}");
             Notification::send($talentLider->user, new ArticulacionAprobarInicio($articulacion, strtolower($fase), $talentLider->user));
@@ -230,7 +236,7 @@ class ArticulacionPbtRepository
      * @param $id Id del proyecto
      * @param $fase Fase que se está aprobando
      */
-    public function aprobacionFase($request, $articulacion, $fase)
+    public function aprobacionFase($request, $id, $fase)
     {
         DB::beginTransaction();
         try {
@@ -239,6 +245,7 @@ class ArticulacionPbtRepository
             $mensaje = null;
             $title = null;
 
+            $articulacion = ArticulacionPbt::findOrFail($id);
             $dinamizadorRepository = new DinamizadorRepository;
             $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulacion->nodo_id)->get();
             $destinatarios = $dinamizadorRepository->getAllDinamizadorPorNodoArray($dinamizadores);
@@ -315,10 +322,12 @@ class ArticulacionPbtRepository
    * @return array
    * @author devjul
    */
-  public function updateEntregablesEjecucionRepository($request, $articulacion)
+  public function updateEntregablesEjecucionRepository($request, $id)
   {
         DB::beginTransaction();
         try {
+            $articulacion = ArticulacionPbt::findOrFail($id);
+
             $seguimiento = 0;
             $documento_convocatoria = 0;
             if (isset($request->txtseguimiento)) {
@@ -536,17 +545,20 @@ class ArticulacionPbtRepository
     * @return response
     * @author devjul
     **/
-    public function updateArticulador($request, $articulacion)
+    public function updateArticulador($request, $id)
     {
         DB::beginTransaction();
         try {
+            $articulacion = ArticulacionPbt::find($id);
             $fase = Fase::where('id', $articulacion->fase_id)->first()->nombre;
+
             if ($articulacion->asesor_id != $request->txtgestor) {
                 $articulacion->registerHistoryArticulacion(Movimiento::IsCambiar(),Session::get('login_role'), null, $fase);
             }
             $articulacion->update([
                 'asesor_id' => $request->txtgestor
             ]);
+
             DB::commit();
             return $articulacion;
         } catch (\Throwable $th) {

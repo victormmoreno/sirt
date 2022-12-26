@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
-    <title>
-        Certificado | {{$user->present()->userFullName()}}
-    </title>
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
-    <link href="{{ asset('img/web.png') }}" rel="shortcut icon" type="image/x-icon"/>
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+        <title>
+            Certificado | {{$user->present()->userFullName()}}
+        </title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+        <link href="{{ asset('img/web.png') }}" rel="shortcut icon" type="image/x-icon"/>
 
-    <style type="text/css">
+        <style type="text/css">
         body,
         body *:not(html):not(style):not(br):not(tr):not(code) {
             font-family: Arial, Helvetica, sans-serif;
@@ -30,7 +30,7 @@
             -webkit-text-size-adjust: none;
             word-break: break-all;
             word-break: break-word;
-            border: #39A900 5px double;
+            border: PowderBlue 5px double;
             border-top-left-radius: 20px;
             border-bottom-right-radius: 20px;
         }
@@ -45,7 +45,7 @@
         }
 
         a {
-            color: #39A900 !important;
+            color: #ff9800 !important;
             text-decoration:none;
             font-weight: 600;
         }
@@ -60,8 +60,8 @@
 
 
         .card-image {
-            height: 80px;
-            width: 250px;
+            height: 89px;
+            width: 342px;
         }
 
         .certificad{
@@ -78,7 +78,7 @@
 
 
         h1 {
-            color: #39A900 !important;
+            color: #ff9800 !important;
             font-size: 19px;
             font-weight: bold;
             margin-top: 0;
@@ -86,7 +86,7 @@
         }
 
         h2 {
-            color: #39A900 !important;
+            color: #ff9800 !important;
             font-size: 16px;
             font-weight: bold;
             margin-top: 0;
@@ -94,7 +94,7 @@
         }
 
         h3 {
-            color: #39A900 !important;
+            color: #ff9800 !important;
             font-size: 14px;
             font-weight: bold;
             margin-top: 0;
@@ -121,7 +121,7 @@
         /* Layout */
 
         .wrapper {
-            background-color: #39A900 !important;
+            background-color: #ff9800 !important;
             margin: 0;
             padding: 0;
             width: 100%;
@@ -148,7 +148,7 @@
         }
 
         .header a {
-            color: #39A900 !important;
+            color: #ff9800 !important;
             font-size: 19px;
             font-weight: bold;
             text-decoration: none;
@@ -160,8 +160,8 @@
 
         .body {
             background-color: #e0f2f1;
-            border-bottom: 1px solid #39A900 !important;
-            border-top: 1px solid #39A900 !important;
+            border-bottom: 1px solid #ff9800 !important;
+            border-top: 1px solid #ff9800 !important;
             margin: 0;
             padding: 0;
             width: 100%;
@@ -174,7 +174,7 @@
         .inner-body {
             background-color: rgba(178, 223, 219, 0.2);
             /*opacity:0.6;*/
-            border: 4px solid #39A900 !important;
+            border: 4px solid #ff9800 !important;
             margin: 0 auto;
             padding: 0;
             width: 570px;
@@ -186,7 +186,7 @@
         /* Subcopy */
 
         .subcopy {
-            border-top: 1px solid #39A900 !important;
+            border-top: 1px solid #ff9800 !important;
             margin-top: 25px;
             padding-top: 25px;
         }
@@ -215,9 +215,7 @@
             height: 60px;
             width: 250px;
             bottom: 40px;
-            margin-left: 30px;
-            margin-right: 30px;
-            margin-top: 50px;
+            margin: 30px;
             padding: 0;
             text-align: center;
             position: fixed;
@@ -225,12 +223,10 @@
         }
 
         .image-footer-right{
-            height: 50px;
-            width: 220px;
+            height: 60px;
+            width: 250;
             bottom: 40px;
-            margin-left: 200px;
-            margin-right: 4px;
-            margin-top: 50px;
+            margin: 30px;
             padding-left: 500px;
             text-align: center;
             position: fixed;
@@ -255,7 +251,7 @@
         }
 
         .table th {
-            border-bottom: 1px solid #39A900;
+            border-bottom: 1px solid #00796b;
             padding-bottom: 8px;
             margin: 0;
         }
@@ -296,7 +292,7 @@
         }
         .tittle {
             text-align: center;
-            color: #39A900 !important;
+            color: #ff9800 !important;
 
         }
 
@@ -347,69 +343,71 @@
             padding: 3px;
             border-width: 1px;
             border-style: solid;
-            border-color: #39A900 #ccc;
+            border-color: #f79646 #ccc;
             width: 100%;
             border-collapse: collapse;
 
         }
         .subtittle{
-            color:#39A900 !important;
+            color:#ff9800 !important;
             text-align: center;
         }
         .subtittle-value{
             color:black;
             text-align: center;
         }
-    </style>
+        </style>
 </head>
-<body>
-<div class="content">
-    <p class="title-date">
-        http://sennova.senaedu.edu.co
-    </p>
-    <div class="header">
-        <div class="center">
-            <p class="z-depth-3">
-            <center>
-                <img class="card-image" src="{{asset('img/logo-sirt-green.svg')}}">
-                </img>
-            </center>
+    <body>
+        <div class="content">
+            <p class="title-date">
+                http://sennova.senaedu.edu.co
             </p>
-        </div>
-    </div>
-    <div class="certificad">
-        <h1 class="tittle">
-            Certificado de Registro en el Sistema
-        </h1>
-        <p class="promotion">
-            La Red Tecnoparque Colombia
+            <div class="header">
+                <div class="center">
+                    <p class="z-depth-3">
+                        <center>
+                            <img class="card-image" src="{{asset('img/logonacional_Negro.png')}}">
+                            </img>
+                        </center>
+                    </p>
+                </div>
+            </div>
+            <div class="certificad">
+                <h1 class="tittle">
+                    Certificado de Registro en el Sistema
+                </h1>
+                <p class="promotion">
+                    La Red Tecnoparque Colombia
             brinda un servicio que apoya el desarrollo de proyectos innovadores de base tecnológica para generar productos y servicios  que contribuyan al crecimiento económico y la competitividad del país y las regiones, apalancados en los sectores de clase mundial.
-            <br/>
-            <br/>
-            Siendo un programa de innovación tecnológica del Servicio Nacional de Aprendizaje (SENA) dirigida a todos los Colombianos, que actúa como acelerador para el desarrollo de proyectos de I+D+i, La Red Tecnoparque Colombia,  hace constar que el señor(a)
-            <b>
-                {{$user->present()->userFullName()}}
-            </b>
-            identificado con
+                    <br/>
+                    <br/>
+                    Siendo un programa de innovación tecnológica del Servicio Nacional de Aprendizaje (SENA) dirigida a todos los Colombianos, que actúa como acelerador para el desarrollo de proyectos de I+D+i, La Red Tecnoparque Colombia,  hace constar que el señor(a)
+                    <b>
+                        {{$user->present()->userFullName()}}
+                    </b>
+                    identificado con
             {{$user->tipodocumento->nombre}} {{$user->documento}}, se inscribió en nuestro sistema el día
             {{optional($user->created_at)->isoFormat('LL')}}.
-            <br/>
-            <br/>
-            El presente certificado se genera el día {{Carbon\Carbon::now()->isoFormat('LL')}}, por solicitud del interesado.
-            <br/>
-            <br/>
-            Recuerde que todos nuestros servicios son públicos, gratuitos, indiscriminados y
+                    <br/>
+                    <br/>
+                    El presente certificado se genera el día {{Carbon\Carbon::now()->isoFormat('LL')}}, por solicitud del interesado.
+                    <br/>
+                    <br/>
+                    Recuerde que todos nuestros servicios son públicos, gratuitos, indiscriminados y
             no requieren intermediarios.
-        </p>
-        <div class="footer">
-            <img class="image-footer-left" src="{{asset('img/logo-tecnoparque-green.svg')}}"/>
-            <img class="image-footer-right" src="{{asset('img/sennova.png')}}"/>
-            <p class="center">
-                {{config('app.url')}}
-            </p>
+                </p>
+                <div class="footer">
+                    <img class="image-footer-left" src="{{asset('img/logonacional_Negro.png')}}"/>
+                    <img class="image-footer-right" src="{{asset('img/sennova.png')}}"/>
+                    <p class="center">
+                        {{config('app.url')}}
+                    </p>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-</body>
+    </body>
 </html>
+
+
 

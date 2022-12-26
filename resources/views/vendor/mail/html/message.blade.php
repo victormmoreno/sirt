@@ -2,7 +2,7 @@
     {{-- Header --}}
     @slot('header')
         @component('mail::header', ['url' => config('app.url')])
-            <img src="{{ asset('img/logo-sirt-blanco.svg') }}" width="200" height="auto" alt="{{config('app.name')}}" border="0" class="CToWUd">
+            <img src="{{ asset('img/logonegro.png') }}" width="200" height="auto" alt="{{config('app.name')}}" border="0" class="CToWUd">
         @endcomponent
     @endslot
 
@@ -21,7 +21,6 @@
     {{-- Footer --}}
     @slot('footer')
         @component('mail::footer')
-            <img src="{{ asset('img/logo-tecnoparque-white.svg') }}" width="200" height="auto" alt="{{config('app.name')}}" border="0" class="CToWUd">
             © {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')
         @endcomponent
     @endslot

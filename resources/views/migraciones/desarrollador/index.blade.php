@@ -28,13 +28,6 @@
               </div>
               <div class="divider"></div>
               <div class="row">
-              @if ($errors->any())
-                @if(collect($errors->all())->count() > 1)
-                <span class="red-text">{{collect($errors->all())->count()}} errores</span> 
-                @else
-                <span class="red-text">Tienes {{collect($errors->all())->count()}} error</span>
-                @endif
-              @endif
                 <div class="col s12 m12 l12">
                     <form action="{{route('migracion.proyectos.store')}}" method="POST" enctype="multipart/form-data">
                         {!! csrf_field() !!}
@@ -44,14 +37,10 @@
                                 <div class="btn">
                                   <span>File</span>
                                   <input type="file" name="nombreArchivo" accept=".xlsx">
-                                  
                                 </div>
                                 <div class="file-path-wrapper">
-                                  <input class="file-path validate" type="text">  
+                                  <input class="file-path validate" type="text">
                                 </div>
-                                @error('nombreArchivo')
-                                    <label id="nombreArchivo-error" class="error" for="nombreArchivo">{{ $message }}</label>
-                                  @enderror 
                             </div>
                           </div>
                           <div class="input-field col s12 m6 l6">
@@ -61,9 +50,6 @@
                               @endforeach
                             </select>
                             <label for="txtnodo_id" class="active">Seleccione el Nodo</label>
-                            @error('txtnodo_id')
-                              <label id="txtnodo_id-error" class="error" for="txtnodo_id">{{ $message }}</label>
-                            @enderror 
                           </div>
                         </div>
                         <center>

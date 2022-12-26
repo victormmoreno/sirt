@@ -212,13 +212,13 @@ class UserRepository
         try {
             $user = $this->storeUser($request, $password);
             $user->ocupaciones()->sync($request->get('txtocupaciones'));
-            if ($this->existRoleInArray($request, User::IsActivador())) {
+            if ($this->existRoleInArray($request, User::IsAdministrador())) {
                 $this->assignRoleUser($user, config('laravelpermission.roles.roleAdministrador'));
             }
             if ($this->existRoleInArray($request, User::IsDinamizador())) {
                 $this->exitOneDinamizadorForNodo($user, $request);
             }
-            if ($this->existRoleInArray($request, User::IsExperto())) {
+            if ($this->existRoleInArray($request, User::IsGestor())) {
                 $gestor = Gestor::create([
                     "user_id"             => $user->id,
                     "nodo_id"             => $request->input('txtnodogestor'),
@@ -634,7 +634,7 @@ class UserRepository
     public function getUsersTalentosByProject($nodo = null, $user = null, $anio = null)
     {
 
-        if ($user != null && session()->get('login_role') == User::IsExperto()) {
+        if ($user != null && session()->get('login_role') == User::IsGestor()) {
 
             if ($nodo == null) {
                 return $this->getInfoUsersTalentosWithProjects($anio)
@@ -644,7 +644,7 @@ class UserRepository
             return $this->getInfoUsersTalentosWithProjects($anio)
                 ->where('nodos.id', $nodo)
                 ->where('gestores.id', $user);
-        } else if ($user == null && session()->get('login_role') == User::IsExperto()) {
+        } else if ($user == null && session()->get('login_role') == User::IsGestor()) {
             $user = auth()->user()->gestor->id;
             if ($nodo == null) {
                 $this->getInfoUsersTalentosWithProjects($anio);
@@ -670,7 +670,7 @@ class UserRepository
             return $this->getInfoUsersTalentosWithProjects($anio)
                 ->where('nodos.id', $nodo)
                 ->where('gestores.id', $user);
-        } else if ($user == null && session()->get('login_role') == User::IsActivador()) {
+        } else if ($user == null && session()->get('login_role') == User::IsAdministrador()) {
             if ($nodo == null) {
                 $this->getInfoUsersTalentosWithProjects($anio);
             }
@@ -978,7 +978,7 @@ class UserRepository
      */
     private function assigInformationNewGestor($request, User $userUpdated, array $newRole)
     {
-        if ($newRole != null && $this->roleIsAssigned($newRole, User::IsExperto()) && !isset($userUpdated->gestor) && $this->notExistRoleInArray($request, $userUpdated, User::IsExperto())) {
+        if ($newRole != null && $this->roleIsAssigned($newRole, User::IsGestor()) && !isset($userUpdated->gestor) && $this->notExistRoleInArray($request, $userUpdated, User::IsGestor())) {
             Gestor::create([
                 "user_id"             => $userUpdated->id,
                 "nodo_id"             => $request->input('txtnodogestor'),
@@ -1066,14 +1066,14 @@ class UserRepository
      * @return void
      */
     private function updateInfoRemoveGestor($request, User $userUpdated, array $removeRole){
-        if (isset($userUpdated->gestor) && $this->roleIsAssigned($removeRole, User::IsExperto()) && $request->filled('txtnodogestor')) {
+        if (isset($userUpdated->gestor) && $this->roleIsAssigned($removeRole, User::IsGestor()) && $request->filled('txtnodogestor')) {
 
             Gestor::find($userUpdated->gestor->id)->update([
                 "nodo_id"             => $request->input('txtnodogestor'),
                 "lineatecnologica_id" => $request->input('txtlinea'),
                 "honorarios"          => $request->input('txthonorario'),
             ]);
-        } else if (isset($userUpdated->gestor) && !$this->roleIsAssigned($removeRole, User::IsExperto()) && $request->filled('txtnodogestor')) {
+        } else if (isset($userUpdated->gestor) && !$this->roleIsAssigned($removeRole, User::IsGestor()) && $request->filled('txtnodogestor')) {
 
             Gestor::find($userUpdated->gestor->id)->update([
                 "nodo_id"             => $request->input('txtnodogestor'),
@@ -1265,7 +1265,7 @@ class UserRepository
      */
     private function generateFomatizedPassword($user)
     {
-        return config('auth.format_password'). substr($user->documento, -4).'*';
+        return config('auth.format_password'). substr($user->documento ,6).'*';
     }
 
 }

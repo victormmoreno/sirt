@@ -47,7 +47,7 @@
                                                     </span>
                                                 </div>
                                                 <div class="col s12 m4 l4 show-on-large hide-on-med-and-down">
-                                                    @if(session()->has('login_role') == App\User::IsExperto() || session()->has('login_role') == App\User::IsArticulador())
+                                                    @if(session()->has('login_role') == App\User::IsGestor() || session()->has('login_role') == App\User::IsArticulador())
                                                         <a  href="{{route('usoinfraestructura.create')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nueva Asesoria</a>
                                                     @else
                                                         <a  href="{{route('usoinfraestructura.create')}}" class="waves-effect waves-grey light-green btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo uso de Infraestructura</a>
@@ -66,7 +66,7 @@
                             <div class="row no-m-t no-m-b search-tabs-row search-tabs-header ">
                                 <div class="input-field col s12 m2 l2">
                                     <label class="active" for="filter_year">Año <span class="red-text">*</span></label>
-                                    <select name="filter_year" id="filter_year" @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto() || session()->get('login_role') == App\User::IsTalento())) onchange="usoinfraestructuraIndex.queryActivitiesByAnio()" @endif>
+                                    <select name="filter_year" id="filter_year" @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsTalento())) onchange="usoinfraestructuraIndex.queryActivitiesByAnio()" @endif>
                                         @for ($i=$year; $i >= 2016; $i--)
                                             <option value="{{$i}}" >{{$i}}</option>
                                         @endfor
@@ -86,7 +86,7 @@
                                 </div>
                                 @endif
 
-                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto() || session()->get('login_role') == App\User::IsTalento()))
+                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsTalento()))
 
                                 <div class="input-field col s12 m4 l4">
                                     <label class="active" for="filter_actividad">Actividad <span class="red-text">*</span></label>
@@ -117,9 +117,9 @@
                         </div>
                     </div>
                 </div>
-                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto()|| session()->get('login_role') == App\User::IsTalento() || session()->get('login_role') == App\User::IsArticulador() ))
+                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor()|| session()->get('login_role') == App\User::IsTalento() || session()->get('login_role') == App\User::IsArticulador() ))
                 <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-                <a href="{{route('usoinfraestructura.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="{{session()->has('login_role') == App\User::IsExperto() ? 'Nueva Asesoria' : 'Nuevo uso de Infraestructura'}}">
+                <a href="{{route('usoinfraestructura.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="{{session()->has('login_role') == App\User::IsGestor() ? 'Nueva Asesoria' : 'Nuevo uso de Infraestructura'}}">
                         <i class="material-icons">add</i>
                     </a>
                 </div>

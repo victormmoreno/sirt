@@ -36,47 +36,11 @@ class MaterialRepository
         ]);
     }
 
-    /**
-     * Consulta información de los materiales de formación
-     * 
-     * @return Builder
-     * @author dum
-     */
-    public function consultar()
-    {
-        return Material::select(
-            'codigo_material',
-            'e.nombre as nodo',
-            'materiales.nombre as material',
-            'fecha',
-            'materiales.id',
-            'p.nombre as presentacion',
-            'tm.nombre as tipo_material',
-            'cm.nombre as categoria_material',
-            'm.nombre as medida',
-            'cantidad',
-            'valor_compra',
-            'proveedor',
-            'marca',
-            'lt.nombre as linea'
-        )
-        ->join('nodos as n', 'n.id', '=', 'materiales.nodo_id')
-        ->join('entidades as e', 'e.id', '=', 'n.entidad_id')
-        ->join('tiposmateriales as tm', 'tm.id', '=', 'materiales.tipomaterial_id')
-        ->join('categoria_material as cm', 'cm.id', '=', 'materiales.categoria_material_id')
-        ->join('presentaciones as p', 'p.id', '=', 'materiales.presentacion_id')
-        ->join('lineastecnologicas as lt', 'lt.id', '=', 'materiales.lineatecnologica_id')
-        ->join('medidas as m', 'm.id', '=', 'materiales.medida_id')
-        ->orderBy('nodo')
-        ->orderBy('material');
-    }
-
     public function store($request)
     {
 
         DB::beginTransaction();
 
-        // dd($this->findLineaBySession($request));
         Material::create([
             'nodo_id'               => $this->findNodoBySession(),
             'lineatecnologica_id'   => $this->findLineaBySession($request),
@@ -133,9 +97,8 @@ class MaterialRepository
             ]);
             DB::commit();
             return true;
-        } catch (Exception $ex) {
+        } catch (Exception $e) {
             DB::rollback();
-            throw $ex;
             return false;
         }
     }
@@ -144,9 +107,11 @@ class MaterialRepository
     {
         $anho = Carbon::now()->isoFormat('YYYY');
 
-        $nodo = Nodo::find($this->findNodoBySession());
+        $nodoAuth = session()->has('login_role') && session()->get('login_role') == User::Isgestor() ? auth()->user()->gestor->nodo->id : auth()->user()->dinamizador->nodo->id;
 
-        $lineaAuth = session()->has('login_role') && session()->get('login_role') == User::IsExperto() ? auth()->user()->gestor->lineatecnologica_id : $request->input('txtlineatecnologica');
+        $nodo = Nodo::find($nodoAuth);
+
+        $lineaAuth = session()->has('login_role') && session()->get('login_role') == User::Isgestor() ? auth()->user()->gestor->lineatecnologica_id : $request->input('txtlineatecnologica');
 
         $tecnoparque = sprintf("%02d", $nodo->id);
 
@@ -168,10 +133,8 @@ class MaterialRepository
     {
         if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
             return auth()->user()->dinamizador->nodo_id;
-        }elseif(session()->has('login_role') && session()->get('login_role') == User::IsExperto()){
-            return auth()->user()->gestor->nodo_id;
-        } else {
-            return request()->txtnodo_id;
+        }elseif(session()->has('login_role') && session()->get('login_role') == User::IsGestor()){
+            return auth()->user()->gestor->nodo_id ;
         }
         
 
@@ -186,9 +149,11 @@ class MaterialRepository
     private function findLineaBySession($request)
     {
 
-        $nodo = Nodo::find($this->findNodoBySession());
-        $lineaAuth = session()->has('login_role') && session()->get('login_role') == User::IsExperto() ? auth()->user()->gestor->lineatecnologica_id : $request->input('txtlineatecnologica');
-        // dd($nodo->lineas);
+        $nodoAuth = session()->has('login_role') && session()->get('login_role') == User::Isgestor() ? auth()->user()->gestor->nodo->id : auth()->user()->dinamizador->nodo->id;
+
+        $nodo = Nodo::find($nodoAuth);
+
+        $lineaAuth = session()->has('login_role') && session()->get('login_role') == User::Isgestor() ? auth()->user()->gestor->lineatecnologica_id : $request->input('txtlineatecnologica');
 
         return $nodo->lineas->find($lineaAuth)->id;
 

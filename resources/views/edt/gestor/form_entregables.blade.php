@@ -18,24 +18,24 @@
 <div class="row">
   <div class="col s4 m4 l4">
     <p class="p-v-xs">
-      <input type="checkbox" name="txtfotografias" {{ $edt->fotografias == 'No' ? '' : 'checked' }} {{ \Session::get('login_role') != App\User::IsExperto() ? 'disabled' : '' }} id="txtfotografias" value="1">
+      <input type="checkbox" name="txtfotografias" {{ $edt->fotografias == 'No' ? '' : 'checked' }} {{ \Session::get('login_role') != App\User::IsGestor() ? 'disabled' : '' }} id="txtfotografias" value="1">
       <label for="txtfotografias">Fotografias</label>
     </p>
   </div>
   <div class="col s4 m4 l4">
     <p class="p-v-xs">
-      <input type="checkbox" name="txtlistado_asistencia" {{ $edt->listado_asistencia == 'No' ? '' : 'checked' }} {{ \Session::get('login_role') != App\User::IsExperto() ? 'disabled' : '' }} id="txtlistado_asistencia" value="1">
+      <input type="checkbox" name="txtlistado_asistencia" {{ $edt->listado_asistencia == 'No' ? '' : 'checked' }} {{ \Session::get('login_role') != App\User::IsGestor() ? 'disabled' : '' }} id="txtlistado_asistencia" value="1">
       <label for="txtlistado_asistencia">Listado de Asistencia</label>
     </p>
   </div>
   <div class="col s4 m4 l4">
     <p class="p-v-xs">
-      <input type="checkbox" name="txtinforme_final" {{ $edt->informe_final == 'No' ? '' : 'checked' }} {{ \Session::get('login_role') != App\User::IsExperto() ? 'disabled' : '' }} id="txtinforme_final" value="1">
+      <input type="checkbox" name="txtinforme_final" {{ $edt->informe_final == 'No' ? '' : 'checked' }} {{ \Session::get('login_role') != App\User::IsGestor() ? 'disabled' : '' }} id="txtinforme_final" value="1">
       <label for="txtinforme_final">Informe Final</label>
     </p>
   </div>
 </div>
-@if ( \Session::get('login_role') == App\User::IsExperto() )
+@if ( \Session::get('login_role') == App\User::IsGestor() )
   <div class="row">
     <ul class="collapsible" data-collapsible="accordion">
       <li>

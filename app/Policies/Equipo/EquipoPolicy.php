@@ -2,7 +2,6 @@
 
 namespace App\Policies\Equipo;
 
-use Illuminate\Support\Str;
 use App\Models\Equipo;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -19,7 +18,7 @@ class EquipoPolicy
      */
     public function view(User $user)
     {
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsExperto(), $user->IsAdministrador(), $user->IsInfocenter(), $user->IsActivador()]);
+        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor()]);
     }
 
     /**
@@ -30,30 +29,18 @@ class EquipoPolicy
      */
     public function create(User $user)
     {
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador()]);
+        return (bool) $user->hasAnyRole([User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador();
     }
 
     /**
-     * Determine whether the user can show equipos.
+     * Determine whether the user can store equipos.
      *
      * @param  \App\User  $user
      * @return mixed
      */
-    public function show(User $user, Equipo $equipo)
+    public function store(User $user)
     {
-        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador()) {
-            return true;
-        }
-        if (session()->get('login_role') == $user->IsDinamizador() && $equipo->nodo_id == request()->user()->dinamizador->nodo_id) {
-            return true;
-        }
-        if (session()->get('login_role') == $user->IsExperto() && $equipo->nodo_id == request()->user()->gestor->nodo_id && $equipo->lineatecnologica_id == request()->user()->gestor->lineatecnologica_id) {
-            return true;
-        }
-        if (session()->get('login_role') == $user->IsInfocenter() && $equipo->nodo_id == request()->user()->infocenter->nodo_id) {
-            return true;
-        }
-        return false;
+        return (bool) $user->hasAnyRole([User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador();
     }
 
     /**
@@ -65,76 +52,42 @@ class EquipoPolicy
      */
     public function edit(User $user, $equipo)
     {
-        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador()) {
-            return true;
-        }
-        if (session()->get('login_role') == $user->IsDinamizador() && $equipo->nodo_id == request()->user()->dinamizador->nodo_id) {
-            return true;
-        }
-        if (session()->get('login_role') == $user->IsInfocenter() && $equipo->nodo_id == request()->user()->infocenter->nodo_id) {
-            return true;
-        }
-        return false;
+        return (bool) $user->hasAnyRole([User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador() && $equipo->nodo->id == $user->dinamizador->nodo->id;
     }
 
     /**
-     * True para las opciones que pueden realizar los administrador
+     * Determine whether the user can edit usos de infraestructura.
      *
-     * @param User $user
+     * @param  \App\User  $user
+     * @param  \App\Models\Equipo  $uso
      * @return bool
-     * @author dum
-     **/
-    public function showOptionsForAdmin(User $user)
+     */
+    public function update(User $user, $equipo)
     {
-        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador()) {
-            return true;
-        }
-        return false;
+        return (bool) $user->hasAnyRole([User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador() && $equipo->nodo->id == $user->dinamizador->nodo->id;
     }
 
     /**
-     * Indica quienes pueden realizar registros de equipos
+     * Determine whether the user can destroy any equipo.
      *
-     * @param User $user
+     * @param  \App\User  $user
+     * @param  \App\Models\Equipo  $equipo
      * @return bool
-     * @author dum
-     **/
-    public function showCreateButton(User $user)
+     */
+    public function destroy(User $user, $equipo)
     {
-        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsDinamizador()) {
-            return true;
-        }
-        return false;
+        return (bool) $user->hasAnyRole([User::IsDinamizador()]) && (session()->get('login_role') == User::IsDinamizador() && $equipo->nodo->id == $user->dinamizador->nodo->id);
     }
 
     /**
-     * Valida que el usuario sea administrador para mostrar el input del nodo y línea tecnológica
+     * Determine whether the user can change state any equipo.
      *
-     * @param \App\User $user
+     * @param  \App\User  $user
+     * @param  \App\Models\Equipo  $equipo
      * @return bool
-     * @author dum
-     **/
-    public function showInputsForAdmin(User $user)
+     */
+    public function changeState(User $user, $equipo)
     {
-        if (session()->get('login_role') == $user->IsAdministrador()) {
-            return true;
-        }
-        return false;
+        return (bool) $user->hasAnyRole([User::IsDinamizador()]) && (session()->get('login_role') == User::IsDinamizador() && $equipo->nodo->id == $user->dinamizador->nodo->id);
     }
-
-    /**
-     * Valida que el usuario sea administrador para mostrar el input del nodo y línea tecnológica
-     *
-     * @param \App\User $user
-     * @return bool
-     * @author dum
-     **/
-    public function showInputsForDinamizador(User $user)
-    {
-        if (session()->get('login_role') == $user->IsDinamizador() || session()->get('login_role') == $user->IsInfocenter()) {
-            return true;
-        }
-        return false;
-    }
-
 }
