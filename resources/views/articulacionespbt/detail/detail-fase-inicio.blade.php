@@ -48,7 +48,7 @@
                     </li>
                     <li class="collection-item">
                         <span class="title black-text text-darken-3">
-                            Fecha Incio de la Articulación
+                            Fecha Inicio de la Articulación
                         </span>
                         <p>
                             {{$articulacion->present()->articulacionPbtstartDate()}}

@@ -20,6 +20,9 @@
                 Fecha de Inicio
             </th>
             <th>
+                Fecha de Cierre
+            </th>
+            <th>
                 PBT
             </th>
             <th>
@@ -72,6 +75,9 @@
             </td>
             <td>
                 {{$articulacion->present()->articulacionPbtstartDate()}}
+            </td>
+            <td>
+                {{$articulacion->present()->articulacionPbtEndDate()}}
             </td>
             <td>
                 {{$articulacion->present()->articulacionPbtCodeProyecto()}} - {{$articulacion->present()->articulacionPbtNameProyecto()}}

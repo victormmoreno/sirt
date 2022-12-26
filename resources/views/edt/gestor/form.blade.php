@@ -124,7 +124,7 @@
               <tr class="selected" id="entidadAsociadaAEdt{{$value->id}}">
                 <td><input type="hidden" name="entidades[]" value="{{$value->id}}">{{$value->nit}}</td>
                 <td>{{$value->nombre}}</td>
-                <td><a class="waves-effect red lighten-3 btn" onclick="eliminarEntidadAsociadaAEdt({{$value->id}});"><i class="material-icons">delete_sweep</i></a></td>
+                <td><a class="waves-effect bg-danger white-text btn" onclick="eliminarEntidadAsociadaAEdt({{$value->id}});"><i class="material-icons">delete_sweep</i></a></td>
               </tr>
             @endforeach
           @endif

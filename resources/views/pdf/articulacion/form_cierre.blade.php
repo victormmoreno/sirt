@@ -28,7 +28,7 @@
 
     <title>Formulario de Cierre - {{$articulacion->articulacion_proyecto->actividad->codigo_actividad}}</title>
   </head>
-  
+
   <body>
     <footer>
         GD-F-007 V01
@@ -83,7 +83,7 @@
               <li>
                 Producto: {{$value->nombre}}
                 <br>
-                ¿Se cumplió?: {{$value->pivot->logrado == 1 ? 'SI' : 'NO'}} 
+                ¿Se cumplió?: {{$value->pivot->logrado == 1 ? 'SI' : 'NO'}}
               </li>
               @endforeach
             </ul>

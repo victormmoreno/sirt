@@ -31,7 +31,7 @@
                     </p>
                 </a>
             </li>
-            @if(\Session::get('login_role') == App\User::IsTalento() || \Session::get('login_role') == App\User::IsGestor())
+            @if(\Session::get('login_role') == App\User::IsTalento() || \Session::get('login_role') == App\User::IsExperto())
             <li>
                 <a href="{{{route('perfil.actividades')}}}">
                     <h4 class="mail-title">

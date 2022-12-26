@@ -17,7 +17,7 @@ class CostoAdministrativoPolicy
      */
     public function index(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador()]);
+        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDinamizador()]);
     }
 
     /**
@@ -28,7 +28,7 @@ class CostoAdministrativoPolicy
      */
     public function getCostoAdministrativoPorNodo(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador(), User::IsDinamizador()]) && session()->has('login_role') && (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsDinamizador());
     }
 
     /**
@@ -52,7 +52,7 @@ class CostoAdministrativoPolicy
      */
     public function update(User $user, $costoAdministrativo)
     {
-        return (bool) $user->hasAnyRole([User::IsDinamizador()]) && session()->has('login_role') && session()->get('login_role') == User::IsDinamizador() && $user->dinamizador->nodo->id == $costoAdministrativo->nodo_id;
+        return (bool) $user->hasAnyRole([User::IsDinamizador(), User::IsAdministrador()]) && session()->has('login_role') && ((session()->get('login_role') == User::IsDinamizador() && $user->dinamizador->nodo->id == $costoAdministrativo->nodo_id) || session()->get('login_role') == User::IsAdministrador());
     }
 
 }

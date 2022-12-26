@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use App\Imports\MigracionProyectosImport;
 use App\Models\Nodo;
-use Excel;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MigracionController extends Controller
 {
@@ -19,6 +19,13 @@ class MigracionController extends Controller
 
     public function import(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'nombreArchivo' => ['required'],
+            'txtnodo_id' => ['required']
+        ]);
+        if ($validator->fails()) {
+            return back()->withErrors($validator->errors());
+        }
         session()->put('errorMigracion', null);
         Excel::import(new MigracionProyectosImport($request->txtnodo_id), request()->file('nombreArchivo'));
         if (Session::get('errorMigracion') == null) {

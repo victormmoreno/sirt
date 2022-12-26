@@ -156,19 +156,16 @@ class Idea extends Model
             'convocatoria',
             'ideas.talento_id'
         )
-            ->selectRaw('concat(nombres_contacto, " ", apellidos_contacto) AS nombres_contacto')
-            ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombres_talento')
-            ->join('comite_idea', 'comite_idea.idea_id', '=', 'ideas.id')
-            ->join('comites', 'comites.id', '=', 'comite_idea.comite_id')
-            ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
-            ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
-            ->leftjoin('talentos', 'talentos.id', '=', 'ideas.talento_id')
-            ->leftjoin('users', 'users.id', '=', 'talentos.user_id')
-            ->where('nodos.id', $idnodo)
-            ->where('comite_idea.admitido', 1)
-            ->where('estadosidea.nombre', EstadoIdea::IsAdmitido())
-            ->where('tipo_idea', $this->IsEmprendedor())
-            ->where('gestor_id', '=', $idgestor);
+        ->selectRaw('concat(nombres_contacto, " ", apellidos_contacto) AS nombres_contacto')
+        ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombres_talento')
+        ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
+        ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
+        ->join('gestores', 'gestores.id', '=', 'ideas.gestor_id')
+        ->leftjoin('talentos', 'talentos.id', '=', 'ideas.talento_id')
+        ->leftjoin('users', 'users.id', '=', 'talentos.user_id')
+        ->where('nodos.id', $idnodo)
+        ->where('estadosidea.nombre', EstadoIdea::IsAdmitido())
+        ->where('gestores.user_id', $idgestor);
     }
 
     public function scopeConsultarIdeasConvocadasAComite($query, $id)
@@ -339,7 +336,7 @@ class Idea extends Model
     public function scopeNodo($query, $nodo)
     {
         if (!empty($nodo) && $nodo != null && $nodo != 'all') {
-            return $query->where('nodo_id', $nodo);
+            return $query->whereIn('nodo_id', $nodo);
         }
         return $query;
     }

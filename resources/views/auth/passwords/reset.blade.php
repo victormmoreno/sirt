@@ -1,6 +1,6 @@
 @extends('auth.layouts.app')
 
-@section('meta-tittle', 'Reestablecer Contraseña')
+@section('meta-title', 'Reestablecer Contraseña')
 @section('meta-content', 'Reestablecer Contraseña')
 @section('meta-keywords', 'Reestablecer Contraseña')
 
@@ -17,7 +17,7 @@
                                     <div class="row">
                                         <div class="col s12 m12 l12">
                                             <a href="{{ route('/') }}">
-                                                <img  width="200px" height="60px" src="{{ asset('img/logonacional_Negro.png') }}" class="chapter-title responsive-img"></img>
+                                                <img  width="200px" height="60px" src="{{ asset('img/logo-sirt-green.svg') }}" class="chapter-title responsive-img"></img>
                                             </a>
                                         </div>
                                         <br>
@@ -35,7 +35,7 @@
                                     <div class="input-field col s12">
                                         <i class="material-icons prefix">mail</i>
                                         <input id="email" type="email" class="validate @error('email') is-invalid @enderror" name="email" value="{{ $email ?? old('email') }}"autocomplete="email" autofocus>
-                                        
+
                                         <label for="email" >{{ __('E-Mail Address') }}</label>
                                         @error('email')
                                         <label id="email-error" class="error" for="email">{{ $message }}</label>
@@ -55,19 +55,19 @@
                                         <label for="password-confirm">{{ __('Confirm Password') }}</label>
                                     </div>
                                     <div class="col s12 center-align m-t-sm">
-                                        <button type="submit" class="btn btn-primary">
+                                        <button type="submit" class="btn bg-secondary">
                                                     <i class="material-icons left">fingerprint</i>
                                             {{ __('Reset Password') }}
                                         </button>
                                         <br><br>
-                                        <small>¿No recibió un correo electrónico de confirmación? <a class="m-t-sm orange-text text-darken-3 center-align" href="{{ route('password.request') }}">solicita uno nuevo</a>,
-                                            <b>¿Ya estas registrado?</b> 
-                                            <a class="m-t-sm orange-text text-darken-3 center-align" href="{{ route('login') }}">
+                                        <small>¿No recibió un correo electrónico de confirmación? <a class="m-t-sm primary-text center-align" href="{{ route('password.request') }}">solicita uno nuevo</a>,
+                                            <b>¿Ya estas registrado?</b>
+                                            <a class="m-t-sm primary-text center-align" href="{{ route('login') }}">
                                                 {{{__('Login')}}}
                                             </a>
                                         </small>
                                         <div class="divider"></div>
-                                        <a class="m-t-sm orange-text text-darken-3 center-align" href="{{ route('/') }}">
+                                        <a class="m-t-sm primary-text text-darken-3 center-align" href="{{ route('/') }}">
                                             Inicio
                                         </a>
                                     </div>
