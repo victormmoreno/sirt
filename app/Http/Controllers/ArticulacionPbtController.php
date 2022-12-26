@@ -66,14 +66,20 @@ class ArticulacionPbtController extends Controller
 
     public function datatableFiltros(Request $request)
     {
+        // dd($request);
         if(request()->user()->cannot('datatable', ArticulacionPbt::class))
         {
             alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
         }
+        // dd('entrando');
         $talent = null;
         switch (\Session::get('login_role')) {
             case User::IsActivador():
+                $nodo = $request->filter_nodo_art;
+                $user = null;
+                break;
+            case User::IsAdministrador():
                 $nodo = $request->filter_nodo_art;
                 $user = null;
                 break;

@@ -166,6 +166,14 @@ function consultarSeguimientoDeTecnoparqueFases() {
 };
 
 function graficoSeguimientoEsperado(data, name) {
+  let nodos = [];
+  let trl6 = [];
+  let trl7_8 = [];
+  data.datos.forEach(element => {
+    nodos.push(element.nodo);
+    trl6.push(element.trl6);
+    trl7_8.push(element.trl7_8);
+  });
   Highcharts.chart(name, {
     chart: {
       type: 'column'
@@ -174,42 +182,55 @@ function graficoSeguimientoEsperado(data, name) {
       text: 'Proyectos que se encuentran activos'
     },
     yAxis: {
+      min: 0,
       title: {
-        text: 'Cantidad'
+          text: 'Cantidad de proyectos'
+      },
+      stackLabels: {
+          enabled: true,
+          style: {
+              fontWeight: 'bold',
+              color: ( // theme
+                  Highcharts.defaultOptions.title.style &&
+                  Highcharts.defaultOptions.title.style.color
+              ) || 'gray',
+              textOutline: 'none'
+          }
       }
     },
     xAxis: {
-        type: 'category'
+      title: {
+        text: 'Nodos'
+      },
+      categories: nodos
     },
     legend: {
-        enabled: false
+      align: 'left',
+      x: 70,
+      verticalAlign: 'top',
+      y: 20,
+      floating: true,
+      backgroundColor:
+          Highcharts.defaultOptions.legend.backgroundColor || 'white',
+      borderColor: '#CCC',
+      borderWidth: 1,
+      shadow: false
     },
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">Cantidad</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
-    },
-    series: [
-      {
-        colorByPoint: true,
-        dataLabels: {
-          enabled: true
-        },
-        data: [
-          {
-            name: "TRL 6 esperados",
-            y: data.datos.Esperado6,
-          },
-          {
-            name: "TRL 7 - 8 esperados",
-            y: data.datos.Esperado7_8,
-          },
-          {
-            name: "Total de proyectos activos",
-            y: data.datos.Activos,
-          },
-        ]
+    plotOptions: {
+      column: {
+          stacking: 'normal',
+          dataLabels: {
+              enabled: true
+          }
       }
-    ],
+    },
+    series: [{
+        name: 'TRL 6 esperado',
+        data: trl6
+    }, {
+        name: 'TRL 7 y 8 esperado',
+        data: trl7_8
+    }]
   });
 }
 
@@ -331,10 +352,6 @@ function graficoSeguimientoFases(data, name) {
         borderWidth: 1,
         shadow: false
     },
-    // tooltip: {
-    //     headerFormat: '<b>{point.x}</b><br/>',
-    //     pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-    // },
     plotOptions: {
         column: {
             stacking: 'normal',
@@ -363,65 +380,4 @@ function graficoSeguimientoFases(data, name) {
       data: suspendido
     }]
 });
-  // Highcharts.chart(name, {
-  //   chart: {
-  //     type: 'column'
-  //   },
-  //   title: {
-  //     text: 'Proyectos actuales y finalizados en el año actual'
-  //   },
-  //   yAxis: {
-  //     title: {
-  //       text: 'Cantidad'
-  //     }
-  //   },
-  //   xAxis: {
-  //       type: 'category'
-  //   },
-  //   legend: {
-  //       enabled: false
-  //   },
-  //   tooltip: {
-  //     headerFormat: '<span style="font-size:11px">Cantidad</span><br>',
-  //     pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
-  //   },
-  //   series: [
-  //     {
-  //       colorByPoint: true,
-  //       dataLabels: {
-  //         enabled: true
-  //       },
-  //       data: [
-  //         {
-  //           name: "Proyectos en inicio",
-  //           y: data.datos.Inicio,
-  //         },
-  //         {
-  //           name: "Proyectos en planeación",
-  //           y: data.datos.Planeacion,
-  //         },
-  //         {
-  //           name: "Proyectos en ejecución",
-  //           y: data.datos.Ejecucion,
-  //         },
-  //         {
-  //           name: "Proyectos en cierre",
-  //           y: data.datos.Cierre,
-  //         },
-  //         {
-  //           name: "Proyectos finalizados",
-  //           y: data.datos.Finalizado,
-  //         },
-  //         {
-  //           name: "Proyectos suspendidos",
-  //           y: data.datos.Suspendido,
-  //         },
-  //         {
-  //           name: "Total de proyecto en el año actual",
-  //           y: data.datos.Total,
-  //         },
-  //       ]
-  //     }
-  //   ],
-  // });
 }

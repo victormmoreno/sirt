@@ -5,7 +5,7 @@
   <main class="mn-inner inner-active-sidebar">
       <div class="middle-content">
           <div class="row">
-            <div class="col s12 m5 l5">
+            {{-- <div class="col s12 m5 l5">
               <div class="card stats-card">
                 <div class="card-content">
                   <span class="stats-counter">
@@ -17,8 +17,8 @@
                   <div class="determinate"></div>
                 </div>
               </div>
-            </div>
-            <div class="col s12 m5 l5">
+            </div> --}}
+            {{-- <div class="col s12 m5 l5">
               <div class="card stats-card">
                 <div class="card-content">
                   <span class="stats-counter">
@@ -30,7 +30,7 @@
                   <div class="determinate"></div>
                 </div>
               </div>
-            </div>
+            </div> --}}
           </div>
           <div class="row">
             <div class="col s12 m5 l5">
@@ -71,8 +71,8 @@
 @push('script')
   <script>
     $(document).ready(function() {
-      consultarSeguimientoDeUnGestor({{auth()->user()->gestor->id}});
-      consultarSeguimientoActualDeUnGestor({{auth()->user()->gestor->id}});
+      // consultarSeguimientoDeUnGestor({{auth()->user()->gestor->id}});
+      // consultarSeguimientoActualDeUnGestor({{auth()->user()->gestor->id}});
       consultarProyectosInscritosPorMes({{auth()->user()->gestor->id}});
     });
   </script>

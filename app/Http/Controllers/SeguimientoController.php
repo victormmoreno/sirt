@@ -6,7 +6,7 @@ use App\Repositories\Repository\{ProyectoRepository, LineaRepository};
 use Illuminate\Support\Facades\{Session};
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Models\{Gestor, Nodo};
+use App\Models\{Gestor, Nodo, Proyecto};
 use App\User;
 use Carbon\Carbon;
 
@@ -92,6 +92,36 @@ class SeguimientoController extends Controller
       ];
     }
 
+    return $datos;
+  }
+
+  /**
+   * Agrupar la información de los proyectos esptados por trl
+   *
+   * @param $trl6
+   * @param $trl7_8
+   * @return array
+   * @author dum
+   **/
+  public function agruparProyectosEsperados($trl6, $trl7_8)
+  {
+    $datos = [];
+    $nodos = Nodo::SelectNodo()->select('entidades.nombre')->get();
+    foreach ($nodos as $nodo) {
+      $nodo_str = $nodo->nombre;
+      $cnt_trl6 = $trl6->where('nombre', $nodo_str)->first();
+      $cnt_trl7_8 = $trl7_8->where('nombre', $nodo_str)->first();
+      
+      $cnt_trl6 != null ? $cnt_trl6 = $cnt_trl6->trl_esperado : $cnt_trl6 = 0;
+      $cnt_trl7_8 != null ? $cnt_trl7_8 = $cnt_trl7_8->trl_esperado : $cnt_trl7_8 = 0;
+      
+      $datos[] = [
+        'nodo' => $nodo_str,
+        'trl6' => $cnt_trl6,
+        'trl7_8' => $cnt_trl7_8
+      ];
+    }
+    // dd($datos);
     return $datos;
   }
 
@@ -245,12 +275,9 @@ class SeguimientoController extends Controller
   }
     // dd($nodos_list);
     $datos = array();
-    $trlEsperados = 0;
-    $trlEsperados = $this->getProyectoRepository()->proyectosSeguimientoAbiertos('trl_esperado')->whereIn('nodos.id', $nodos)->get();
-    $trlEsperadosAgrupados = $this->agruparTrls($trlEsperados, 'esperados');
-
-    $datos = $this->retornarValoresDelSeguimientoEsperados($trlEsperadosAgrupados);
-
+    $trlEsperados_6 = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->select('entidades.nombre')->selectRaw('count(trl_esperado) as trl_esperado')->where('trl_esperado', Proyecto::IsTrl6Esperado())->whereIn('nodos.id', $nodos)->groupBy('entidades.nombre')->get();
+    $trlEsperados_7_8 = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->select('entidades.nombre')->selectRaw('count(trl_esperado) as trl_esperado')->where('trl_esperado', Proyecto::IsTrl78Esperado())->whereIn('nodos.id', $nodos)->groupBy('entidades.nombre')->get();
+    $datos = $this->agruparProyectosEsperados($trlEsperados_6, $trlEsperados_7_8);
     return response()->json([
       'datos' => $datos
     ]);
@@ -294,10 +321,10 @@ class SeguimientoController extends Controller
     }
     $Pabiertos = 0;
     $Pfinalizados = 0;
-    $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->whereIn('nodos.id', $nodos)->get();
+    $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->select('entidades.nombre', 'fases.nombre as fase')->selectRaw('count(trl_esperado) as trl_esperado')->groupBy('entidades.nombre', 'fase')->whereIn('nodos.id', $nodos)->get();
     $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->get();
-    
     $agrupados = $this->agruparProyectos($Pabiertos, $Pfinalizados);
+    // dd($agrupados);
     return response()->json([
       'datos' => $agrupados
     ]);

@@ -361,9 +361,7 @@ class ProyectoRepository
 
     public function proyectosSeguimientoAbiertos()
     {
-        return Proyecto::select('fases.nombre AS fase', 'entidades.nombre')
-        ->selectRaw('count(trl_esperado) as trl_esperado')
-        ->join('articulacion_proyecto AS ap', 'ap.id', '=', 'proyectos.articulacion_proyecto_id')
+        return Proyecto::join('articulacion_proyecto AS ap', 'ap.id', '=', 'proyectos.articulacion_proyecto_id')
         ->join('actividades AS a', 'a.id', '=', 'ap.actividad_id')
         ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
@@ -371,7 +369,7 @@ class ProyectoRepository
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
         ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
-        ->groupBy('entidades.nombre', 'fase')
+        // ->groupBy('entidades.nombre', 'fase')
         ->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
     }
 

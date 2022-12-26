@@ -50,7 +50,7 @@ class ArticulacionPbtPolicy
      */
     public function datatable(User $user)
     {
-        return (bool) ($user->hasAnyRole([User::IsActivador(), User::IsDinamizador(), User::IsArticulador(), User::IsTalento()]) &&
+        return (bool) ($user->hasAnyRole([User::IsActivador(), User::IsAdministrador(), User::IsDinamizador(), User::IsArticulador(), User::IsTalento()]) &&
         session()->has('login_role')
         && (session()->get('login_role') == User::IsAdministrador()
         || session()->get('login_role') == User::IsActivador()
