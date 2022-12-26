@@ -1,5 +1,5 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
-@if (Session::get('login_role') == App\User::IsExperto())
+@if (Session::get('login_role') == App\User::IsGestor())
   <table id="articulacionesGestor_table" class="display responsive-table datatable-example dataTable">
     <thead>
       <tr>
@@ -45,7 +45,7 @@
     </tfoot>
   </table>
 @endif
-@if (Session::get('login_role') == App\User::IsActivador())
+@if (Session::get('login_role') == App\User::IsAdministrador())
   <table id="articulacionesNodo_table" class="display responsive-table datatable-example dataTable">
     <thead>
       <tr>

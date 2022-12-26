@@ -55,7 +55,7 @@ class EdtController extends Controller
     public function edtPorFechaCierreYGestor($id, $fecha_inicio, $fecha_fin)
     {
         $idgestor = $id;
-        if ( Session::get('login_role') == User::IsExperto() ) {
+        if ( Session::get('login_role') == User::IsGestor() ) {
         $idgestor = auth()->user()->gestor->id;
         }
         $query = $this->getEdtRepository()->consultarEdtPorFechaDeCierre_Repository($fecha_inicio, $fecha_fin)->where('gestores.id', $idgestor)->get();

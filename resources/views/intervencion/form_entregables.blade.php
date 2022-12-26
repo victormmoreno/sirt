@@ -1,7 +1,7 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 {!! method_field('PUT')!!}
 {!! csrf_field() !!}
-@php \Session::get('login_role') != App\User::IsExperto() ? $disabled = 'disabled' : $disabled = '' @endphp
+@php \Session::get('login_role') != App\User::IsGestor() ? $disabled = 'disabled' : $disabled = '' @endphp
 <div class="row">
   <div class="input-field col s12 m6 l6">
     <input id="txtcodigo_actividad" disabled value="{{$articulacion->codigo_articulacion}}">

@@ -1,10 +1,11 @@
 @extends('auth.layouts.app')
 
-@section('meta-title', 'Inicio Sesión')
+@section('meta-tittle', 'Inicio Sesión')
 @section('meta-content', 'Inicio Sesión')
 @section('meta-keywords', 'Inicio Sesión')
 
 @section('content-auth')
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <div class="mn-content valign-wrapper" id="app">
     <main class="mn-inner container">
         <div class="valign">
@@ -34,7 +35,7 @@
                                 <div class="row">
                                     <div class="col s12 m12 l12">
                                         <a href="{{route('/')}}">
-                                            <img  width="200px" height="60px" src="{{ asset('img/logo-sirt-green.svg') }}" class="chapter-title responsive-img"></img>
+                                            <img  width="200px" height="60px" src="{{ asset('img/logonacional_Negro.png') }}" class="chapter-title responsive-img"></img>
                                         </a>
                                     </div>
                                     <br><br>
@@ -76,20 +77,20 @@
                                         </div>
                                     </div>
                                     <div class="col s12 center-align m-t-sm">
-                                        <button type="submit" id="login-btn" class="waves-effect waves-light btn bg-secondary center-align">
+                                        <button type="submit" id="login-btn" class="waves-effect waves-light btn center-align">
                                             <i class="material-icons left">fingerprint</i>
                                             {{ __('Login') }}
                                         </button>
                                         <br><br>
                                         @if (Route::has('registro'))
                                         ¿Aún no tienes cuenta?
-                                        <a class="m-t-sm primary-text  center-align" href="{{ route('registro') }}">
+                                        <a class="m-t-sm  orange-text text-darken-3  center-align" href="{{ route('registro') }}">
                                             Registrate
                                         </a>
                                         <br>
                                         @endif
                                         @if (Route::has('password.request'))
-                                            <a class="m-t-sm primary-text  center-align" href="{{ route('password.request') }}">
+                                            <a class="m-t-sm  orange-text text-darken-3  center-align" href="{{ route('password.request') }}">
                                                 {{ __('Forgot Your Password?') }}
                                             </a>
                                         @endif

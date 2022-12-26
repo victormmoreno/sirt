@@ -32,7 +32,7 @@ class UsoInfraestructuraController extends Controller
         LineaRepository $lineaRepository,
         ProyectoRepository $proyectoRepository
     ) {
-        $this->middleware(['auth', 'role_session:Activador|Dinamizador|Articulador|'.User::IsExperto().'|Talento|'.User::IsApoyoTecnico()]);
+        $this->middleware(['auth', 'role_session:Administrador|Dinamizador|Articulador|'.User::IsGestor().'|Talento|'.User::IsApoyoTecnico()]);
         $this->setUsoIngraestructuraProyectoRepository($UsoInfraestructuraProyectoRepository);
         $this->setUsoIngraestructuraArtculacionRepository($setUsoIngraestructuraArtculacionRepository);
         $this->setUsoInfraestructuraRepository($UsoInfraestructuraRepository);
@@ -177,7 +177,7 @@ class UsoInfraestructuraController extends Controller
     {
         $this->authorize('index', UsoInfraestructura::class);
         switch (\Session::get('login_role')) {
-            case User::IsActivador():
+            case User::IsAdministrador():
                 $nodo = $request->filter_nodo;
                 $asesor = $request->filter_gestor;
                 $user = null;
@@ -189,7 +189,7 @@ class UsoInfraestructuraController extends Controller
                 $user = null;
                 $actividad = null;
                 break;
-            case User::IsExperto():
+            case User::IsGestor():
                 $nodo = auth()->user()->gestor->nodo_id;
                 $user = auth()->user()->id;
                 $asesor = auth()->user()->id;
@@ -230,7 +230,7 @@ class UsoInfraestructuraController extends Controller
             return $usoDatatable->indexDatatable($usos);
         }
         switch (Session::get('login_role')) {
-            case User::IsActivador():
+            case User::IsAdministrador():
                 return view('usoinfraestructura.administrador.index', [
                     'nodos' =>  Entidad::has('nodo')->with('nodo')->get()->pluck('nombre', 'nodo.id'),
                 ]);
@@ -240,12 +240,12 @@ class UsoInfraestructuraController extends Controller
                     ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) as user')
                     ->join('gestores', 'gestores.user_id', 'users.id')
                     ->where('gestores.nodo_id', $nodo)
-                    ->role(User::IsExperto())
+                    ->role(User::IsGestor())
                     ->withTrashed()
                     ->pluck('user', 'idgestor');
                 return view('usoinfraestructura.index', ['gestores' => $gestores]);
                 break;
-            case User::IsExperto():
+            case User::IsGestor():
                 return view('usoinfraestructura.index');
                 break;
             case User::IsArticulador():
@@ -298,7 +298,7 @@ class UsoInfraestructuraController extends Controller
         $sumasArray   = [];
         $date         = Carbon::now()->format('Y-m-d');
         switch (\Session::get('login_role')) {
-            case User::IsExperto():
+            case User::IsGestor():
                 $projects     = $this->getDataProjectsForUser()->count();
                 $sumasArray = ['projects'=> $projects];
                 $cantActividades = array_sum($sumasArray);
@@ -483,7 +483,7 @@ class UsoInfraestructuraController extends Controller
         }
         $date = Carbon::now()->format('Y-m-d');
         switch (\Session::get('login_role')) {
-            case User::IsExperto():
+            case User::IsGestor():
                 $relations = [
                     'user'             => function ($query) {
                         $query->select('id', 'documento', 'nombres', 'apellidos');
@@ -666,7 +666,7 @@ class UsoInfraestructuraController extends Controller
             },
         ];
 
-        if (Session::has('login_role') && Session::get('login_role') == User::IsExperto()) {
+        if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
             return [];
         }elseif(Session::has('login_role') && Session::get('login_role') == User::IsArticulador()) {
 
@@ -737,7 +737,7 @@ class UsoInfraestructuraController extends Controller
             },
         ];
 
-        if (Session::has('login_role') && Session::get('login_role') == User::IsExperto()) {
+        if (Session::has('login_role') && Session::get('login_role') == User::IsGestor()) {
 
             return $this->getUsoIngraestructuraProyectoRepository()->getProjectsForFaseById($relations, $fase)
                 ->whereHas('asesor.user', function ($query) use ($user) {
@@ -936,7 +936,7 @@ class UsoInfraestructuraController extends Controller
     public function activitiesByAnio($anio = null)
     {
         $activities = [];
-        if (Session::get('login_role') == User::IsExperto()) {
+        if (Session::get('login_role') == User::IsGestor()) {
             $gestor = auth()->user()->gestor->id;
             if ((!empty($anio) && $anio != null && $anio != 'all')) {
 
@@ -1011,7 +1011,7 @@ class UsoInfraestructuraController extends Controller
         $this->authorize('index', UsoInfraestructura::class);
 
         switch (\Session::get('login_role')) {
-            case User::IsActivador():
+            case User::IsAdministrador():
                 $nodo = $request->filter_nodo;
                 $asesor = $request->filter_gestor;
                 $user = null;
@@ -1023,7 +1023,7 @@ class UsoInfraestructuraController extends Controller
                 $user = null;
                 $actividad = null;
                 break;
-            case User::IsExperto():
+            case User::IsGestor():
                 $nodo = auth()->user()->gestor->nodo_id;
                 $user = auth()->user()->gestor->user->id;
                 $asesor = auth()->user()->id;

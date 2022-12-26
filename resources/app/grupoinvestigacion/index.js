@@ -1,14 +1,3 @@
-$('#txttipogrupo').change(function () {
-  let idtipo = $('#txttipogrupo').val();
-  if (idtipo == 1) {
-    $('#txtinstitucion').val('SENA');
-    $('#labelins').addClass('active', true)
-  } else if (idtipo == 0) {
-    $('#txtinstitucion').val('');
-    $('#labelins').removeClass('active')
-  }
-});
-
 $(document).ready(function() {
   $('#grupoDeInvestigacionTecnoparque_table').DataTable({
     language: {
@@ -52,6 +41,11 @@ $(document).ready(function() {
         orderable: false
       },
       {
+        data: 'contacts',
+        name: 'contacts',
+        orderable: false
+      },
+      {
         data: 'edit',
         name: 'edit',
         orderable: false
@@ -59,6 +53,49 @@ $(document).ready(function() {
     ],
   });
 });
+
+  $('#grupoDeInvestigacionTecnoparque_tableNoGestor').DataTable({
+    language: {
+      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    ajax:{
+      url: host_url + "/grupo/datatableGruposInvestigacionDeTecnoparque",
+      type: "get",
+    },
+    columns: [
+      {
+        data: 'codigo_grupo',
+        name: 'codigo_grupo',
+      },
+      {
+        data: 'nombre',
+        name: 'nombre',
+      },
+      {
+        data: 'ciudad',
+        name: 'ciudad',
+      },
+      {
+        data: 'tipo_grupo',
+        name: 'tipo_grupo',
+      },
+      {
+        data: 'institucion',
+        name: 'institucion',
+      },
+      {
+        data: 'clasificacioncolciencias',
+        name: 'clasificacioncolciencias',
+      },
+      {
+        data: 'details',
+        name: 'details',
+        orderable: false
+      },
+    ],
+  });
 
 var grupoInvestigacionIndex = {
   consultarDetallesDeUnGrupoInvestigacion:function(id){

@@ -420,13 +420,6 @@ class ArticulacionPbtPresenter extends Presenter
         return "No registra";
     }
 
-    public function articulacionPbtEndDate(){
-        if (isset($this->articulacionpbt)) {
-            return optional($this->articulacionpbt->fecha_cierre)->isoFormat('YYYY-MM-DD');
-        }
-        return "No registra";
-    }
-
     public function articulacionPbtUserAsesor(){
         if (isset($this->articulacionpbt)) {
             return $this->articulacionpbt->asesor->present()->userFullName();
@@ -457,4 +450,6 @@ class ArticulacionPbtPresenter extends Presenter
         }
         return "No registra";
     }
+
+
 }

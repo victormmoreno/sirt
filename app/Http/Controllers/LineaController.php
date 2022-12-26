@@ -18,7 +18,7 @@ class LineaController extends Controller
 
         $this->middleware([
             'auth',
-            'role_session:Administrador|Activador|Dinamizador|Experto|Talento',
+            'role_session:Administrador|Dinamizador|Experto|Talento',
         ])->except('getAllLineasForNodo');
         $this->setLineaRepository($lineaRepository);
     }
@@ -95,7 +95,7 @@ class LineaController extends Controller
      */
     public function store(LineaFormRequest $request)
     {
-        $this->authorize('store', LineaTecnologica::class);
+        $this->authorize('store', User::class);
 
         $linea = $this->getLineaRepository()->store($request);
 

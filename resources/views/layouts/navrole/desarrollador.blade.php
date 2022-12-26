@@ -8,6 +8,11 @@
         <i class="material-icons {{setActiveRouteActiveIcon('migracion')}}">attach_file</i>Migraciones
     </a>
 </li>
+<li class="no-padding {{setActiveRoute('exportar')}}">
+    <a href="{{route('exportar.index')}}" class="{{setActiveRouteActivePage('exportar')}}" rel="canonical" title="Exportar">
+        <i class="material-icons {{setActiveRouteActiveIcon('exportar')}}">get_app</i>Exportar
+    </a>
+</li>
 <li class="no-padding {{setActiveRoute('support')}}">
     <a href="{{route('support.index')}}" class="{{setActiveRouteActivePage('support')}}" rel="canonical" title="Soporte">
         <i class="material-icons {{setActiveRouteActiveIcon('support')}}">help</i>Soporte

@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\CharlaInformativaFormRequest;
-use Illuminate\Support\Facades\{Session};
-use App\{User, Models\Nodo};
+use Illuminate\Support\Facades\{Session, Validator};
+use App\{User, Models\CharlaInformativa, Models\Nodo};
 use App\Repositories\Repository\{CharlaInformativaRepository};
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Helpers\{ArrayHelper};
-use App\Models\CharlaInformativa;
 
 class CharlaInformativaController extends Controller
 {
@@ -50,17 +49,13 @@ class CharlaInformativaController extends Controller
      * @author Victor Manuel Moreno Vega
      */
     public function detallesDeUnaCharlaInformativa($id)
-    {  
+    {
         if (request()->ajax()) {
-            $charla = $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id)->toArray();
-            if(!request()->user()->can('show', $charla)) {
-                alert('No autorizado', 'No puedes ver charlas informativas', 'error')->showConfirmButton('Ok', '#3085d6');
-                return back();
-            }
-            $charla = ArrayHelper::validarDatoNullDeUnArray($charla);
-            return response()->json([
-                'charla' => $charla
-            ]);
+        $charla = $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id)->toArray();
+        $charla = ArrayHelper::validarDatoNullDeUnArray($charla);
+        return response()->json([
+            'charla' => $charla
+        ]);
         }
     }
 
@@ -71,9 +66,24 @@ class CharlaInformativaController extends Controller
      */
     public function evidencias($id)
     {
-        return view('charlas.evidencia', [
+        if ( Session::get('login_role') == User::IsInfocenter() ) {
+        return view('charlas.infocenter.evidencia', [
             'charla' => $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id)
         ]);
+        } else if ( Session::get('login_role') == User::IsArticulador() ) {
+        return view('charlas.articulador.evidencia', [
+            'charla' => $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id)
+        ]);
+        } else if ( Session::get('login_role') == User::IsDinamizador() ) {
+        return view('charlas.dinamizador.evidencia', [
+            'charla' => $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id)
+        ]);
+        } else {
+        return view('charlas.administrador.evidencia', [
+            'charla' => $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id)
+        ]);
+
+        }
     }
 
     /**
@@ -86,21 +96,21 @@ class CharlaInformativaController extends Controller
         return datatables()->of($datos)
         ->addColumn('details', function ($data) {
         $details = '
-        <a class="btn bg-info m-b-xs" onclick="consultarDetallesDeUnaCharlaInformativa(' . $data->id . ')">
+        <a class="btn light-blue m-b-xs" onclick="consultarDetallesDeUnaCharlaInformativa(' . $data->id . ')">
             <i class="material-icons">info</i>
         </a>
         ';
         return $details;
         })->addColumn('edit', function ($data) {
         if ( $data->estado == 'Inactiva') {
-            $edit = '<a class="btn bg-warning m-b-xs" disabled><i class="material-icons">edit</i></a>';
+            $edit = '<a class="btn m-b-xs" disabled><i class="material-icons">edit</i></a>';
         } else {
-            $edit = '<a class="btn bg-warning m-b-xs" href='.route('charla.edit', $data->id).'><i class="material-icons">edit</i></a>';
+            $edit = '<a class="btn m-b-xs" href='.route('charla.edit', $data->id).'><i class="material-icons">edit</i></a>';
         }
         return $edit;
         })->addColumn('evidencias', function ($data) {
         $evidencias = '
-        <a class="btn bg-tertiary m-b-xs" href='. route('charla.evidencias', $data->id) .'>
+        <a class="btn blue-grey m-b-xs" href='. route('charla.evidencias', $data->id) .'>
             <i class="material-icons">library_books</i>
         </a>
         ';
@@ -122,40 +132,23 @@ class CharlaInformativaController extends Controller
      */
     public function datatableCharlasInformativosDeUnNodo($id)
     {
-        $nodo_id = $this->getNodoForIndex($id);
-        $charlas = $this->charlaInformativaRepository->consultarCharlasInformativasDeUnNodoRepository($nodo_id);
+        $charlas = $this->charlaInformativaRepository->consultarCharlasInformativasDeUnNodoRepository($id);
         return $this->datatableCharlasInformativas($charlas);
-    }
-
-    public function getNodoForIndex($id)
-    {
-        if (session()->get('login_role') == User::IsInfocenter()) {
-            return auth()->user()->infocenter->nodo_id;
-          } 
-          if (session()->get('login_role') == User::IsArticulador()) {
-            return auth()->user()->articulador->nodo_id;
-          }
-          if (session()->get('login_role') == User::IsDinamizador()) {
-            return auth()->user()->dinamizador->nodo_id;
-          }
-          if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsArticulador()) {
-            if ($id == 0) {
-                return Nodo::SelectNodo()->get()->first()->id;
-            } else {
-                return $id;
-            }
-          }
     }
 
     public function index()
     {
-        if(!request()->user()->can('index', CharlaInformativa::class)) {
-            alert('No autorizado', 'No puedes ver charlas informativas', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
-        return view('charlas.index', [
+        if ( Session::get('login_role') == User::IsInfocenter() ) {
+        return view('charlas.infocenter.index');
+        } else if ( Session::get('login_role') == User::IsDinamizador() ) {
+        return view('charlas.dinamizador.index');
+        } else if ( Session::get('login_role') == User::IsArticulador() ) {
+        return view('charlas.articulador.index');
+        } else {
+        return view('charlas.administrador.index', [
             'nodos' => Nodo::SelectNodo()->get()
         ]);
+        }
     }
     /**
      * Show the form for creating a new resource.
@@ -164,13 +157,7 @@ class CharlaInformativaController extends Controller
     */
     public function create()
     {
-        if(!request()->user()->can('create', CharlaInformativa::class)) {
-            alert('No autorizado', 'No puedes registrar charlas informativas', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
-        return view('charlas.create', [
-            'nodos' => Nodo::SelectNodo()->get()
-        ]);
+        return view('charlas.infocenter.create');
     }
 
     /**
@@ -199,14 +186,8 @@ class CharlaInformativaController extends Controller
     */
     public function edit($id)
     {
-        $charla = $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id);
-        if(!request()->user()->can('edit', $charla)) {
-            alert('No autorizado', 'No puedes cambiar la información de esta charla informativa', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
-        return view('charlas.edit', [
-        'charla' => $charla,
-        'nodos' => Nodo::SelectNodo()->get()
+        return view('charlas.infocenter.edit', [
+        'charla' => $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id)
         ]);
     }
 

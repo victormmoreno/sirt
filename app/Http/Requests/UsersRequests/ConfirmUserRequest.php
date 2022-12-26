@@ -36,10 +36,10 @@ class ConfirmUserRequest extends FormRequest
             'txtnodoarticulador'        => Rule::requiredIf(collect(request()->role)->contains(User::IsArticulador())) . '|nullable',
             'txthonorarioarticulador'   => Rule::requiredIf(collect(request()->role)->contains(User::IsArticulador()))  . '|nullable|digits_between:1,10|numeric',
             'txtnododinamizador'        => Rule::requiredIf(collect(request()->role)->contains(User::IsDinamizador())) . '|nullable',
-            'txtnodogestor'             => Rule::requiredIf(collect (request()->role)->contains(User::IsExperto())) . '|nullable',
+            'txtnodogestor'             => Rule::requiredIf(collect (request()->role)->contains(User::IsGestor())) . '|nullable',
 
-            'txtlinea'                  => Rule::requiredIf(collect(request()->role)->contains(User::IsExperto())) . '|nullable',
-            'txthonorario'              => Rule::requiredIf(collect(request()->role)->contains(User::IsExperto())) . '|nullable|digits_between:1,10|numeric',
+            'txtlinea'                  => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor())) . '|nullable',
+            'txthonorario'              => Rule::requiredIf(collect(request()->role)->contains(User::IsGestor())) . '|nullable|digits_between:1,10|numeric',
             'txtnodoinfocenter'         => Rule::requiredIf(collect(request()->role)->contains(User::IsInfocenter())) . '|nullable',
             'txttipotalento'            => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento())) . '|nullable',
             'txtnodoingreso'            => Rule::requiredIf(collect(request()->role)->contains(User::IsIngreso())) . '|nullable',

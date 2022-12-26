@@ -8,22 +8,25 @@
 @endphp
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
-        <div class="row no-m-t no-m-b m-r-lg m-l-lg">
-            <div class="left left-align">
-                <h5 class="left-align primary-text">
-                    <i class="material-icons left">supervised_user_circle</i>Talentos
-                </h5>
-            </div>
-            <div class="right right-align show-on-large hide-on-med-and-down">
-                <ol class="breadcrumbs">
-                    <li><a href="{{route('home')}}">Inicio</a></li>
-                    <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
-                    <li class="active">Mis Talentos</li>
-                </ol>
-            </div>
-        </div>
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
+                <div class="row no-m-t no-m-b">
+                    <div class="col s8 m8 l10">
+                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
+                            <i class="material-icons left">
+                                supervised_user_circle
+                            </i>
+                            Talentos
+                        </h5>
+                    </div>
+                    <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
+                        <ol class="breadcrumbs">
+                            <li><a href="{{route('home')}}">Inicio</a></li>
+                            <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
+                            <li class="active">Mis Talentos</li>
+                        </ol>
+                    </div>
+                </div>
                 <div class="card mailbox-content">
                     <div class="card-content">
                         <div class="row no-m-t no-m-b">
@@ -44,7 +47,7 @@
                                 </div>
                                 <div class="mailbox-view">
                                     <div class="mailbox-view-header">
-                                        <span class="card-title primary-text">Mis talentos</span>
+                                        <span class="card-title hand-of-Sean-fonts orange-text text-darken-3">Mis talentos</span>
                                         <div class="right mailbox-buttons">
                                             <div class=" show-on-large hide-on-med-and-down">
                                                 <a  href="{{route('usuario.search')}}" class="waves-effect waves-grey darken-1 white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down"><i class="material-icons">add_circle</i> Nuevo usuario</a>
@@ -76,13 +79,15 @@
                                         <option value="all" >todos</option>
                                     </select>
                                 </div>
+
+
                                 <div class="col s12 m6 l4 offset-m3 right">
                                 <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_talentos"><i class="material-icons">cloud_download</i>Descargar</button>
                                     <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_talentos"><i class="material-icons">search</i>Filtrar</button>
                                 </div>
                             </div>
                             <table id="mytalento_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
-                                <thead class="bg-primary white-text">
+                                <thead>
                                 <tr>
                                     <th>Tipo Documento</th>
                                     <th>Documento</th>

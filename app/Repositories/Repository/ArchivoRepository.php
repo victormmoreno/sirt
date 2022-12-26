@@ -69,7 +69,7 @@ class ArchivoRepository
     */
     public function consultarRutaDeArchivoDeUnaArticulacionProyectoPorId($id)
     {
-        return ArchivoArticulacionProyecto::where('id', $id)->get()->last();
+        return ArchivoArticulacionProyecto::select('id', 'ruta')->where('id', $id)->get()->last();
     }
 
     /**

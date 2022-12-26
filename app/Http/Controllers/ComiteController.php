@@ -55,27 +55,27 @@ class ComiteController extends Controller
       return view('comite.dinamizador.detalle_asignado', [
         'comite' => $comite
       ]);
-    } else if (Session::get('login_role') == User::IsExperto() && $comite->estado->nombre == 'Programado') {
+    } else if (Session::get('login_role') == User::IsGestor() && $comite->estado->nombre == 'Programado') {
       return view('comite.gestor.detalle_agendamiento', [
         'comite' => $comite
       ]);
-    } else if (Session::get('login_role') == User::IsExperto() && $comite->estado->nombre == 'Realizado') {
+    } else if (Session::get('login_role') == User::IsGestor() && $comite->estado->nombre == 'Realizado') {
       return view('comite.gestor.detalle_realizado', [
         'comite' => $comite
       ]);
-    } else if (Session::get('login_role') == User::IsExperto() && $comite->estado->nombre == 'Proyectos asignados') {
+    } else if (Session::get('login_role') == User::IsGestor() && $comite->estado->nombre == 'Proyectos asignados') {
       return view('comite.gestor.detalle_asignado', [
         'comite' => $comite
       ]);
-    } else if (Session::get('login_role') == User::IsActivador() && $comite->estado->nombre == 'Programado') {
+    } else if (Session::get('login_role') == User::IsAdministrador() && $comite->estado->nombre == 'Programado') {
       return view('comite.administrador.detalle_agendamiento', [
         'comite' => $comite
       ]);
-    } else if (Session::get('login_role') == User::IsActivador() && $comite->estado->nombre == 'Realizado') {
+    } else if (Session::get('login_role') == User::IsAdministrador() && $comite->estado->nombre == 'Realizado') {
       return view('comite.administrador.detalle_realizado', [
         'comite' => $comite
       ]);
-    } else if (Session::get('login_role') == User::IsActivador() && $comite->estado->nombre == 'Proyectos asignados') {
+    } else if (Session::get('login_role') == User::IsAdministrador() && $comite->estado->nombre == 'Proyectos asignados') {
       return view('comite.administrador.detalle_asignado', [
         'comite' => $comite
       ]);
@@ -129,7 +129,7 @@ class ComiteController extends Controller
         })->rawColumns(['details'])->make(true);
       }
       return view('comite.infocenter.index');
-    } else if ( Session::get('login_role') == User::IsExperto() ) {
+    } else if ( Session::get('login_role') == User::IsGestor() ) {
       if (request()->ajax()) {
         $csibt = $this->getComiteRepository()->consultarComitesPorNodo( auth()->user()->gestor->nodo_id );
         return datatables()->of($csibt)
@@ -139,7 +139,7 @@ class ComiteController extends Controller
         })->rawColumns(['details'])->make(true);
       }
       return view('comite.gestor.index');
-    } else if ( Session::get('login_role') == User::IsActivador() ) {
+    } else if ( Session::get('login_role') == User::IsAdministrador() ) {
       $nodos = Nodo::SelectNodo()->get();
       return view('comite.administrador.index', compact('nodos'));
     } else if ( Session::get('login_role') == User::IsDinamizador() ) {
@@ -273,7 +273,7 @@ class ComiteController extends Controller
    * @return Response
    * @author dum
    **/
-  public function updateGestor(Request $request, Idea $idea, Comite $comite = null)
+  public function updateGestor(Request $request, Idea $idea, Comite $comite)
   {
     $messages = [
       'txtgestor_id.required' => 'El experto es obligatorio.',
@@ -291,7 +291,7 @@ class ComiteController extends Controller
     $update = $this->getComiteRepository()->updateGestorIdea($request, $idea);
     if ($update) {
       alert()->success('Se ha cambiado el experto de la idea de proyecto!', 'Modificación Exitosa!')->showConfirmButton('Ok', '#3085d6');
-      return redirect(route('idea.detalle', $idea->id));
+      return redirect(route('csibt.detalle', $comite->id));
     } else {
       alert()->error('No se ha cambiado el experto de la idea de proyecto!', 'Modificación Errónea!')->showConfirmButton('Ok', '#3085d6');
       return back();

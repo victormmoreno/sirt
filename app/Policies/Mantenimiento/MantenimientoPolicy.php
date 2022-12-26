@@ -3,58 +3,11 @@
 namespace App\Policies\Mantenimiento;
 
 use App\User;
-use Illuminate\Support\Str;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MantenimientoPolicy
 {
     use HandlesAuthorization;
-
-
-    /**
-     * Valida que el usuario sea administrador para mostrar los inputs correspondientes a este
-     *
-     * @param User $user
-     * @return bool
-     * @author dum
-     **/
-    public function showInputAdmin(User $user)
-    {
-        if (session()->get('login_role') == $user->IsAdministrador()) {
-            return true;
-        }
-        return false;
-    }
-    /**
-     * Valida el index a mostrar para el administador/activador
-     * 
-     * @param User $user
-     * @return bool
-     * @author dum
-     */
-    public function showIndexForAdmin(User $user)
-    {
-        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador()) {
-            return true;
-        }
-        return false;
-    }
-
-
-    /**
-     * Valida el index a mostrar para el experto
-     * 
-     * @param User $user
-     * @return bool
-     * @author dum
-     */
-    public function showIndexForExperto(User $user)
-    {
-        if (session()->get('login_role') == $user->IsExperto()) {
-            return true;
-        }
-        return false;
-    }
 
     /**
      * Determine si un usuario puede ver el index de las equipo mantenimientos.
@@ -63,8 +16,7 @@ class MantenimientoPolicy
      */
     public function index(User $user)
     {
-
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador(), $user->IsExperto(), $user->IsActivador()]);
+        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador() || collect($user->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador() || collect($user->getRoleNames())->contains(User::IsGestor()) && session()->get('login_role') == User::IsGestor();
     }
 
     /**
@@ -75,7 +27,18 @@ class MantenimientoPolicy
      */
     public function create(User $user)
     {
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador()]);
+        return (bool) $user->hasAnyRole([User::IsDinamizador()]) && session()->has('login_role') && session()->get('login_role') == User::IsDinamizador();
+    }
+
+    /**
+     * Determine whether the user can store equipo mantenimientos.
+     *
+     * @param  \App\User  $user
+     * @return mixed
+     */
+    public function store(User $user)
+    {
+        return (bool) $user->hasAnyRole([User::IsDinamizador()]) && session()->has('login_role') && session()->get('login_role') == User::IsDinamizador();
     }
 
     /**
@@ -87,16 +50,17 @@ class MantenimientoPolicy
      */
     public function show(User $user, $mantenimiento)
     {
-        if (session()->get('login_role') == $user->IsActivador() || session()->get('login_role') == $user->IsAdministrador()) {
+        if ($user->hasAnyRole([User::IsAdministrador()]) && session()->get('login_role') == User::IsAdministrador()) {
             return true;
-        }
-        if (session()->get('login_role') == $user->IsDinamizador() && $mantenimiento->equipo->nodo_id == $user->dinamizador->nodo_id) {
+        } elseif ($user->hasAnyRole([User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador() && $mantenimiento->equipo->nodo->id == $user->dinamizador->nodo->id) {
             return true;
-        }
-        if (session()->get('login_role') == $user->IsExperto() && $mantenimiento->equipo->nodo_id == $user->gestor->nodo_id) {
+        } elseif ($user->hasAnyRole([User::IsGestor()]) && session()->get('login_role') == User::IsGestor() && $mantenimiento->equipo->lineatecnologica->id == $user->gestor->lineatecnologica->id) {
+
             return true;
+        } else {
+            return false;
         }
-        return false;
+
     }
 
     /**
@@ -108,16 +72,20 @@ class MantenimientoPolicy
      */
     public function edit(User $user, $mantenimiento)
     {
-        if (session()->get('login_role') == $user->IsAdministrador()) {
-            return true;
-        }
-        if (session()->get('login_role') == $user->IsDinamizador() && $mantenimiento->equipo->nodo_id == $user->dinamizador->nodo_id) {
-            return true;
-        }
-        // if (session()->get('login_role') == $user->IsExperto() && $mantenimiento->equipo->lineatecnologica_id == $user->gestor->lineatecnologica_id) {
-        //     return true;
-        // }
-        return false;
+        return (bool) $user->hasAnyRole([User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador() && $mantenimiento->equipo->nodo->id == $user->dinamizador->nodo->id;
+
+    }
+
+    /**
+     * Determine whether the user can update equipo mantenimientos.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Models\EquipoMantenimiento  $mantenimiento
+     * @return bool
+     */
+    public function update(User $user, $mantenimiento)
+    {
+        return (bool) $user->hasAnyRole([User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador() && $mantenimiento->equipo->nodo->id == $user->dinamizador->nodo->id;
 
     }
 

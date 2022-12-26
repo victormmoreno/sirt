@@ -10,15 +10,15 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
         <link rel="dns-prefetch" href="//fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/web.svg') }}">
-        <link href="{{ asset('vendor/themify-icons/themify-icons.css') }}" rel="stylesheet">
+        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/web.png') }}">
+        <link href="{{ asset('vendor/themify-icons/themify-icons.css') }}" rel="stylesheet">   
         <link rel="stylesheet" href="{{ asset('vendor/themify-icons/themify-icons.css') }}">
 
         <meta name="title" content="@yield('meta-title',   config('app.name') )" />
         <meta name="abstract" content="@yield('meta-title',   config('app.name') )" />
         <meta name="description" content="@yield('meta-content', 'Tecnoparque Red Colombia')" /> <!-- maximo 160 caracteres -->
         <meta name="author" content="SENA" />
-        <meta name="copyright" content="red tecnoparque colombia" />
+        <meta name="copyright" content="© 2019 redtecnoparquecolombia" />
         <meta http-equiv="Content-Language" content="{{config('app.locale')}}"/>
         <meta name="distribution" content="global"/>
         <meta name="robots" content="index"/>
@@ -29,42 +29,10 @@
         <meta property="og:title" content="{{config('app.name')}}" />
         <meta property="og:description" content="@yield('meta-content', 'Tecnoparque Red Colombia')" />
         <meta property="og:url" content="{{config('app.url')}}" />
-        <meta property="og:site_name" content="{{config('app.name')}}" />
+        <meta property="og:site_name" content="{{config('app.name')}}" /> 
 
         <!-- Styles -->
         <style>
-            :root {
-                --blue: #007bff;
-                --indigo: #6610f2;
-                --purple: #6f42c1;
-                --pink: #e83e8c;
-                --red: #dc3545;
-                --orange: #fd7e14;
-                --yellow: #ffc107;
-                --green: #28a745;
-                --teal: #20c997;
-                --cyan: #17a2b8;
-                --white: #fff;
-                --gray: #6c757d;
-                --gray-dark: #343a40;
-                --primary-lighten: #c8e6c9;
-                --primary: #39A900;
-                --primary-darken: #1b5e20;
-                --secondary: #00324D;
-                --tertiary: #82DEF0;
-                --success: #28a745;
-                --info: #17a2b8;
-                --warning: #ffc107;
-                --danger: #dc3545;
-                --light: #f8f9fa;
-                --dark: #343a40;
-                --breakpoint-xs: 0;
-                --breakpoint-sm: 576px;
-                --breakpoint-md: 768px;
-                --breakpoint-lg: 992px;
-                --breakpoint-xl: 1200px;
-                --font-family-work-sans: "Work Sans", -apple-system,Roboto, BlinkMacSystemFont, "Segoe UI",  "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            }
             html {
                 line-height: 1.15;
                     -ms-text-size-adjust: 100%;
@@ -73,10 +41,10 @@
 
             body  {
                 margin: 0;
-
+                
             }
             .antialiased {
-                background: url('/img/banner.jpg') no-repeat;
+                background: url('/img/Tecnoparque_Fondo.jpg') no-repeat;
                 background-size: cover;
             }
 
@@ -286,7 +254,7 @@
             }
 
             .bg-color-template {
-                background-color: var(--primary);
+                background-color: #fd7e14;
             }
 
 
@@ -306,6 +274,9 @@
                 background-color: #7886d7;
             }
 
+            .bg-purple-light {
+                background-color: #fd7e14;
+            }
 
             .bg-no-repeat {
                 background-repeat: no-repeat;
@@ -526,6 +497,7 @@
 
                 <div class="max-w-sm m-8">
                     <div class="text-black text-5xl md:text-15xl font-black">
+                        {{-- @yield('icon', __('error')) --}}
                         <i class="ti-alert"></i>
                     </div>
                 </div>
@@ -535,7 +507,7 @@
                         @yield('code', __('Oh no'))
                     </div>
 
-                    <div class="w-16 h-1 bg-color-template my-3 md:my-6"></div>
+                    <div class="w-16 h-1 bg-purple-light my-3 md:my-6"></div>
 
                     <p class="text-grey-darker text-2xl md:text-3xl font-light mb-8 leading-normal">
                         @yield('message')

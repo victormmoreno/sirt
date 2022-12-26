@@ -1,5 +1,6 @@
 @extends('layouts.app')
-@section('meta-title', 'tipo articulaciones')
+@section('meta-title', 'Soporte')
+
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="row no-m-t no-m-b">
@@ -44,25 +45,27 @@
                         <div class="card-content">
                             <div class="row no-m-t no-m-b">
                                 <div class="col s12 m12 l12">
+
                                     <div class="mailbox-view">
                                         <div class="mailbox-view-header">
                                             <div class="left">
+
                                                 <div class="left">
                                                     <span class="mailbox-title">{{$typeArticulation->present()->nombre()}}</span>
                                                     <span class="mailbox-author">{{$typeArticulation->present()->estado()}}</span>
+
                                                 </div>
                                             </div>
                                             <div class="right mailbox-buttons">
-                                                @can('edit', $typeArticulation)
-                                                    <a href="{{ route('tipoarticulaciones.edit', $typeArticulation->id) }}" class="waves-effect waves-orange btn-flat m-t-xs" >Cambiar información</a>
-                                                @endcan
-                                                @can('destroy', $typeArticulation)
-                                                    <a href="javascript:void(0)" class="waves-effect waves-red btn-flat m-t-xs" onclick="typeArticulacion.destroyTypeArticulation('{{$typeArticulation->id}}')">Eliminar</a>
-                                                    @endcan
+                                                <a href="{{ route('tipoarticulaciones.edit', $typeArticulation->id) }}" class="waves-effect waves-orange btn-flat m-t-xs" >Cambiar información</a>
+                                                @if(!$typeArticulation->articulacionespbt->count() > 0 )
+                                                <a href="javascript:void(0)" class="waves-effect waves-red btn-flat m-t-xs" onclick="typeArticulacion.destroyTypeArticulation('{{$typeArticulation->id}}')">Eliminar</a>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="divider mailbox-divider"></div>
                                         <div class="mailbox-text">
+
                                             <div class="card card-transparent ">
                                                 <div class="card-content ">
                                                     <span class="mailbox-title">{{$typeArticulation->present()->nombre()}}</span>
@@ -85,19 +88,24 @@
                                                     <span class="mailbox-author">Fecha registro</span>
                                                 </div>
                                                 <div class="card-content mt-2">
+                                                    {{-- <span class="mailbox-author">Nodos</span> --}}
                                                     <span class="card-title m-t-sm">Nodos</span>
                                                     @foreach($typeArticulation->nodos as $nodo)
                                                     <div class="chip m-t-sm">{{$nodo->entidad->nombre}}</div>
                                                     @endforeach
                                                 </div>
                                             </div>
+
                                             <div class="divider mailbox-divider"></div>
-                                            <div class="row details-list" style="display: block;">
-                                                <div class="right right-alignl">
-                                                    <span>Fecha actualización: </span>
-                                                    <span>{{optional($typeArticulation->updated_at)->isoFormat('lll')}} ({{optional($typeArticulation->updated_at)->diffForHumans()}})</span>
+
+                                                <div class="row details-list" style="display: block;">
+
+                                                    <div class="right right-alignl">
+                                                        <span>Fecha actualización: </span>
+                                                        <span>{{optional($typeArticulation->updated_at)->isoFormat('lll')}} ({{optional($typeArticulation->updated_at)->diffForHumans()}})</span>
+                                                    </div>
                                                 </div>
-                                            </div>
+
                                         </div>
                                     </div>
                                 </div>

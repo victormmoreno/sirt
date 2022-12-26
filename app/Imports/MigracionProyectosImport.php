@@ -20,7 +20,7 @@ class MigracionProyectosImport implements WithMultipleSheets
                 // 'Ideas' => new IdeasImport($this->nodo),
                 // 'Empresas' => new EmpresasImport(),
                 // 'Talentos' => new TalentosImport(),
-                // 'Funcionarios' => new FuncionarioImport($this->nodo),
+                'Funcionarios' => new FuncionarioImport($this->nodo),
                 'Materiales' => new MaterialImport($this->nodo),
                 'Equipos' => new EquipoImport($this->nodo),
                 'Costos' => new CostoAdministrativoImport($this->nodo),

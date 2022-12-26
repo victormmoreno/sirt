@@ -181,7 +181,9 @@ class Equipo extends Model
     public function scopeNodoEquipo($query, $nodo)
     {
         if (isset($nodo) && $nodo != null && $nodo != 'all') {
-            return $query->where('nodo_id', $nodo);
+            return $query->whereHas('nodo',  function ($subquery) use ($nodo) {
+                $subquery->where('id', $nodo);
+            });
         }
         return $query;
     }
@@ -189,7 +191,9 @@ class Equipo extends Model
     public function scopeLineaEquipo($query, $linea)
     {
         if (isset($linea) && $linea != null && $linea != 'all') {
-            return $query->where('lineatecnologica_id', $linea);
+            return $query->whereHas('lineatecnologica',  function ($subquery) use ($linea) {
+                $subquery->where('id', $linea);
+            });
         }
         return $query;
     }

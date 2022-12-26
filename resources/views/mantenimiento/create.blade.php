@@ -5,13 +5,16 @@
     <div class="content">
       	<div class="row no-m-t no-m-b">
         	<div class="col s12 m12 l12">
-                <div class="row">
-                    <h5 class="left left-align primary-text">
-                        <a class="footer-text left-align " href="{{route('equipo.index')}}">
-                              <i class="left material-icons primary-text">arrow_back</i>
-                        </a> Mantenimientos de Equipos
-                    </h5>
-                    <div class="right right-align show-on-large hide-on-med-and-down">
+        		<div class="row">
+                    <div class="col s8 m8 l9">
+                        <h5 class="left-align hand-of-Sean-fonts">
+                                <form  action="{{route('mantenimiento.store')}}" method="POST" onsubmit="return checkSubmit()">
+                            <a class="footer-text left-align " href="{{route('equipo.index')}}">
+				              	<i class="left material-icons white-text">arrow_back</i>
+				            </a> Mantenimientos de Equipos | Tecnoparque Nodo  {{\NodoHelper::returnNameNodoUsuario()}}
+                        </h5>
+                    </div>
+                    <div class="col s4 m4 l3 rigth-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li><a href="{{route('mantenimiento.index')}}">Mantenimientos</a></li>
@@ -22,17 +25,29 @@
           		<div class="card">
             		<div class="card-content">
               			<div class="row">
-                            <div class="center-align primary-text">
-                                <span class="card-title center-align">Nuevo equipo tecnoparque</span>
-                            </div>
+			                <center>
+				                <span class="card-title center-align">Nuevo Mantenimiento de Equipos | Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }}
+				                </span>
+			                </center>
                 			<div class="divider"></div>
                 			<br/>
-                        </div>
-                        <form id="frmMantenimientoEquipo" action="{{route('mantenimiento.store')}}" method="POST">
-                              @include('mantenimiento.form', [
-                              'btnText' => 'Registrar'
-                              ])
-                        </form>
+                            @if( $lineastecnologicas->count() == 0)
+                                <div class="center-align">
+                                    <i class="large material-icons prefix">
+                                        block
+                                    </i>
+                                    <p>
+                                        Para registrar un nuevo mantenimiento, Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }} debe tener lineas asociadas, por favor solicita al administrador de la plataforma para que este agregue nuevas lineas tecnológicas al nodo.
+                                    </p>                                    
+                                </div>
+                            @else
+                    			<form  action="{{route('mantenimiento.store')}}" method="POST" onsubmit="return checkSubmit()">
+    			                  	@include('mantenimiento.form', [
+    			                  	'btnText' => 'Registrar'
+    			                  	])
+                    			</form>
+                            @endif
+              			</div>
             		</div>
           		</div>
         	</div>
@@ -41,7 +56,7 @@
 </main>
 @endsection
 
-{{-- @push('script')
+@push('script')
     <script>
 
         $(document).ready(function() {
@@ -53,7 +68,7 @@
         var mantenimientoCreate = {
             getEquipoPorLinea:function(){
                 let lineatecnologica = $('#txtlineatecnologica').val();
-                let nodo = {{$nodo}};
+                let nodo = {{auth()->user()->dinamizador->nodo_id}};
                 $.ajax({
                     dataType:'json',
                     type:'get',
@@ -84,4 +99,4 @@
         }
     
     </script>
-@endpush --}}
+@endpush

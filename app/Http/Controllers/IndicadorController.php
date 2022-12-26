@@ -19,42 +19,39 @@ class IndicadorController extends Controller
       $this->proyectoRepository = $proyectoRepository;
   }
 
-  public function nodo_pagination(Request $request)
-  {
-      $nodos_g = Nodo::SelectNodo()->paginate(6);
-      return view('indicadores.componentes.nodo_pagination', compact('nodos_g'))->render();
-  }
-
   public function index()
   {
     $year_now = Carbon::now()->format('Y');
-
-    if(!request()->user()->can('index_indicadores', Illuminate\Database\Eloquent\Model::class)) {
-      alert('No autorizado', 'No puedes acceder a los indicadores', 'error')->showConfirmButton('Ok', '#3085d6');
-      return back();
-    }
-    if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsActivador()) {
-      $nodos_temp = Nodo::SelectNodo()->get()->toArray();
-      foreach($nodos_temp as $nodo) {
-        $nodos[] = $nodo['id'];
-      }
+    if ( Session::get('login_role') == User::IsDinamizador() ) {
+      $metas = $this->nodoRepository->consultarMetasDeTecnoparque()->where('nodo_id', auth()->user()->dinamizador->nodo_id);
+      $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl6Obtenido()])->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
+      $pbts_trl7_8 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl7Obtenido(), Proyecto::IsTrl8Obtenido()])->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
+      $activos = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->select('nodo_id')->selectRaw('count(id) as cantidad')->whereHas('fase', function ($query) {
+        $query->whereIn('nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
+      })->where('nodo_id', auth()->user()->dinamizador->nodo_id)->groupBy('nodo_id')->get();
+      $metas = $this->retornarTodasLasMetasArray($metas, $pbts_trl6, $pbts_trl7_8, $activos);
+      return view('indicadores.dinamizador.index', [
+        'metas' => $metas,
+        'metas_graph' => $metas->first(),
+        'nodos' => Nodo::SelectNodo()->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get()
+      ]);
+    } else if ( Session::get('login_role') == User::IsAdministrador() ) {
+      $metas = $this->nodoRepository->consultarMetasDeTecnoparque();
+      $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl6Obtenido()])->get();
+      $pbts_trl7_8 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl7Obtenido(), Proyecto::IsTrl8Obtenido()])->get();
+      $activos = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->select('nodo_id')->selectRaw('count(id) as cantidad')->whereHas('fase', function ($query) {
+        $query->whereIn('nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
+      })->groupBy('nodo_id')->get();
+      $metas = $this->retornarTodasLasMetasArray($metas, $pbts_trl6, $pbts_trl7_8, $activos);
+      return view('indicadores.administrador.index', [
+        'nodos' => Nodo::SelectNodo()->get(),
+        'metas' => $metas
+        ]);
+    } else if (Session::get('login_role') == User::IsInfocenter()) {
+      return view('indicadores.infocenter.index');
     } else {
-      $nodos = [request()->user()->getNodoUser()];
+      return view('indicadores.gestor.index');
     }
-
-    $metas = $this->nodoRepository->consultarMetasDeTecnoparque()->whereIn('nodo_id', $nodos);
-    $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl6Obtenido()])->whereIn('nodos.id', $nodos)->get();
-    $pbts_trl7_8 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl7Obtenido(), Proyecto::IsTrl8Obtenido()])->whereIn('nodos.id', $nodos)->get();
-    $activos = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->select('nodo_id')->selectRaw('count(id) as cantidad')->whereHas('fase', function ($query) {
-      $query->whereIn('nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
-    })->whereIn('nodo_id', $nodos)->groupBy('nodo_id')->get();
-    $metas = $this->retornarTodasLasMetasArray($metas, $pbts_trl6, $pbts_trl7_8, $activos);
-    $nodos = Nodo::SelectNodo()->whereIn('nodos.id', $nodos)->get();
-    return view('indicadores.index', [
-      'nodos' => $nodos,
-      'nodos_g' => $nodos,
-      'metas' => $metas
-    ]);
   }
 
   public function retornarTodasLasMetasArray($metas, $trl6, $trl7_8, $activos)
@@ -89,7 +86,7 @@ class IndicadorController extends Controller
 
   public function form_import_metas()
   {
-    return view('indicadores.register_metas');
+    return view('indicadores.administrador.register_metas');
   }
 
 }

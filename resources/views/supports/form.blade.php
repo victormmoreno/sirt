@@ -28,7 +28,7 @@
     </div>
     <div>
         <div class="file-field input-field">
-            <div class="btn bg-primary">
+            <div class="btn yellow darken-2">
                 <span>Archivo</span>
                 <input type="file" name="filedocument">
             </div>
@@ -39,6 +39,6 @@
         </div>
     </div>
     <div class="row">
-        <button type="submit" class="waves-effect waves-light btn bg-secondary m-b-xs right">Enviar</button>
+        <button type="submit" class="waves-effect waves-light btn orange m-b-xs right">Enviar</button>
     </div>
 </form>

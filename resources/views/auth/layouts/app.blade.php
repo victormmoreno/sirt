@@ -4,12 +4,14 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>{{config('app.name')}} | @yield('meta-title',   config('app.name') )</title>
-
+        <title>{{config('app.name')}} | @yield('meta-tittle',   config('app.name') )</title>
+        
         <link href="{{config('app.url')}}" rel="canonical"/>
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/web.png') }}">
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
+        
+
        <meta name="title" content="@yield('meta-title',   config('app.name') )" />
         <meta name="abstract" content="@yield('meta-title',   config('app.name') )" />
         <meta name="description" content="@yield('meta-content', 'Tecnoparque Red Colombia')" /> <!-- maximo 160 caracteres -->
@@ -25,8 +27,8 @@
         <meta property="og:title" content="{{config('app.name')}}" />
         <meta property="og:description" content="@yield('meta-content', 'Tecnoparque Red Colombia')" />
         <meta property="og:url" content="{{config('app.url')}}" />
-        <meta property="og:site_name" content="{{config('app.name')}}" />
-
+        <meta property="og:site_name" content="{{config('app.name')}}" /> 
+       
     </head>
     <body class="signin-page">
         @if(session()->has('info'))

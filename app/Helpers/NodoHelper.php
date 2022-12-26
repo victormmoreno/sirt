@@ -9,7 +9,7 @@ class NodoHelper
 {
     public static function returnNodoUsuario()
     {
-        if (\Session::get('login_role') == User::IsExperto() && isset(auth()->user()->gestor->nodo_id)) {
+        if (\Session::get('login_role') == User::IsGestor() && isset(auth()->user()->gestor->nodo_id)) {
             return 'Experto nodo ' . Nodo::userNodo(auth()->user()->gestor->nodo_id)->first()->nombre;
         } else if (\Session::get('login_role') == User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo_id)) {
             return User::IsDinamizador(). ' nodo ' . Nodo::userNodo(auth()->user()->dinamizador->nodo_id)->first()->nombre;
@@ -21,10 +21,6 @@ class NodoHelper
             return User::IsArticulador().' nodo ' . Nodo::userNodo(auth()->user()->articulador->nodo_id)->first()->nombre;
         }else if (\Session::get('login_role') == User::IsApoyoTecnico() && isset(auth()->user()->apoyotecnico->nodo_id)) {
             return User::IsApoyoTecnico(). ' del nodo ' . Nodo::userNodo(auth()->user()->apoyotecnico->nodo_id)->first()->nombre;
-        } else if (\Session::get('login_role') == User::IsAdministrador()) {
-            return User::IsAdministrador();
-        } else if (\Session::get('login_role') == User::IsActivador()) {
-            return User::IsActivador();
         }
         else {
             return 'No hay información disponible.';
@@ -34,7 +30,7 @@ class NodoHelper
     // Retorna únicamente el nombre del nodo al que pertenece el usuario
     public static function returnNameNodoUsuario()
     {
-        if (\Session::get('login_role') == User::IsExperto() && isset(auth()->user()->gestor->nodo_id)) {
+        if (\Session::get('login_role') == User::IsGestor() && isset(auth()->user()->gestor->nodo_id)) {
             return Nodo::userNodo(auth()->user()->gestor->nodo_id)->first()->nombre;
         } else if (\Session::get('login_role') == User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo_id)) {
             return Nodo::userNodo(auth()->user()->dinamizador->nodo_id)->first()->nombre;
@@ -53,7 +49,7 @@ class NodoHelper
 
     public static function returnIdNodoUser()
     {
-        if (\Session::get('login_role') == User::IsExperto() && isset(auth()->user()->gestor->nodo_id)) {
+        if (\Session::get('login_role') == User::IsGestor() && isset(auth()->user()->gestor->nodo_id)) {
             return auth()->user()->gestor->nodo_id;
         } else if (\Session::get('login_role') == User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo_id)) {
             return auth()->user()->dinamizador->nodo_id;

@@ -53,3 +53,6 @@
         </tfoot>
     @endif
 </table>
+@if (Session::get('login_role') == App\User::IsDinamizador())
+    @include('indicadores.componentes.metas.metas_dinamizador')
+@endif

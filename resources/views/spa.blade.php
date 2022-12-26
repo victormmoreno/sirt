@@ -269,6 +269,113 @@
 
     <!---------------------------------------------------------------------------------------------------------------------------------->
 
+    <!---Noticia-->
+
+    <section id="noticia">
+        <?php
+        use App\Noticias;
+        ?>
+        <img src="{!! asset('img/menu-ahmburguesa.png') !!}" class="not-cel">
+        <div class="presentNoti">
+            <div class="boton-escritorio">
+                @foreach (Noticias::orderBy('id','DESC')->limit('1')->get('Titulo') as $item1)
+                    <button class="titulo1" onclick="titulo1();">{!! $item1->Titulo !!}</button>
+                @endforeach
+                @foreach (Noticias::orderBy('id','DESC')->skip(1)->take(1)->get('Titulo') as $item2)
+                    <button class="titulo2" onclick="titulo2();">{!! $item2->Titulo !!}</button>
+                @endforeach
+                @foreach (Noticias::orderBy('id','DESC')->skip(2)->take(1)->get('Titulo') as $item3)
+                    <button class="titulo3" onclick="titulo3();">{!! $item3->Titulo !!}</button>
+                @endforeach
+                @foreach (Noticias::orderBy('id','DESC')->skip(3)->take(1)->get('Titulo') as $item4)
+                    <button class="titulo4" onclick="titulo4();">{!! $item4->Titulo !!}</button>
+                @endforeach
+                @foreach (Noticias::orderBy('id','DESC')->skip(4)->take(1)->get('Titulo') as $item5)
+                    <button class="titulo5" onclick="titulo5();">{!! $item5->Titulo !!}</button>
+                @endforeach
+            </div>
+            <div class="botones">
+                @foreach (Noticias::orderBy('id','DESC')->limit('1')->get('Titulo') as $item1)
+                    <button class="titulo1" onclick="titulo1();">{!! $item1->Titulo !!}</button>
+                @endforeach
+                @foreach (Noticias::orderBy('id','DESC')->skip(1)->take(1)->get('Titulo') as $item2)
+                    <button class="titulo2" onclick="titulo2();">{!! $item2->Titulo !!}</button>
+                @endforeach
+                @foreach (Noticias::orderBy('id','DESC')->skip(2)->take(1)->get('Titulo') as $item3)
+                    <button class="titulo3" onclick="titulo3();">{!! $item3->Titulo !!}</button>
+                @endforeach
+                @foreach (Noticias::orderBy('id','DESC')->skip(3)->take(1)->get('Titulo') as $item4)
+                    <button class="titulo4" onclick="titulo4();">{!! $item4->Titulo !!}</button>
+                @endforeach
+                @foreach (Noticias::orderBy('id','DESC')->skip(4)->take(1)->get('Titulo') as $item5)
+                    <button class="titulo5" onclick="titulo5();">{!! $item5->Titulo !!}</button>
+                @endforeach
+            </div>
+            <div class="contenedor-principal">
+
+                @foreach (Noticias::orderBy('id','DESC')->limit('1')->get() as $item1)
+                <div id="contenido1" class="conte-general">
+                    <div class="cont-tituloNoticia">
+                        <h3>{!! $item1->Titulo !!}</h3>
+                    </div>
+                    <img src="{{ asset('storage').'/'.$item1->Imagen }}" class="img-thumbnail img-fluid">
+                    <div class="cont-textNoticia">
+                        <p>{!! $item1->Descripcion !!}</p>
+                    </div>
+                </div>
+                @endforeach
+
+                @foreach (Noticias::orderBy('id','DESC')->skip(1)->take(1)->get() as $item2)
+                <div id="contenido2" class="contenidoOculto conte-general">
+                    <div class="cont-tituloNoticia">
+                        <h3>{!! $item2->Titulo !!}</h3>
+                    </div>
+                    <img src="{{ asset('storage').'/'.$item2->Imagen }}" class="img-thumbnail img-fluid">
+                    <div class="cont-textNoticia">
+                        <p>{!! $item2->Descripcion !!}</p>
+                    </div>
+                </div>
+                @endforeach
+
+                @foreach (Noticias::orderBy('id','DESC')->skip(2)->take(1)->get() as $item3)
+                <div id="contenido3" class="contenidoOculto conte-general">
+                    <div class="cont-tituloNoticia">
+                        <h3>{!! $item3->Titulo !!}</h3>
+                    </div>
+                    <img src="{{ asset('storage').'/'.$item3->Imagen }}" class="img-thumbnail img-fluid">
+                    <div class="cont-textNoticia">
+                        <p>{!! $item3->Descripcion !!}</p>
+                    </div>
+                </div>
+                @endforeach
+
+                @foreach (Noticias::orderBy('id','DESC')->skip(3)->take(1)->get() as $item4)
+                <div id="contenido4" class="contenidoOculto conte-general">
+                    <div class="cont-tituloNoticia">
+                        <h3>{!! $item4->Titulo !!}</h3>
+                    </div>
+                    <img src="{{ asset('storage').'/'.$item4->Imagen }}" class="img-thumbnail img-fluid">
+                    <div class="cont-textNoticia">
+                        <p>{!! $item4->Descripcion !!}</p>
+                    </div>
+                </div>
+                @endforeach
+
+                @foreach (Noticias::orderBy('id','DESC')->skip(4)->take(1)->get() as $item5)
+                <div id="contenido5" class="contenidoOculto conte-general">
+                    <div class="cont-tituloNoticia">
+                        <h3>{!! $item5->Titulo !!}</h3>
+                    </div>
+                    <img src="{{ asset('storage').'/'.$item5->Imagen }}" class="img-thumbnail img-fluid">
+                    <div class="cont-textNoticia">
+                        <p>{!! $item5->Descripcion !!}</p>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
     <section id="Nodos">
         <div id="cont-nodos">
             <div class="caja-mapa">

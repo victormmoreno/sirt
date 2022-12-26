@@ -1,9 +1,11 @@
 @extends('auth.layouts.app')
 
-@section('meta-title', 'Cambiar Correo Electrónico')
+@section('meta-tittle', 'Cambiar Correo Electrónico')
 @section('meta-content', 'Cambiar Correo Electrónico')
 @section('meta-keywords', 'Cambiar Correo Electrónico')
+
 @section('content-auth')
+
 <div class="mn-content valign-wrapper" id="app">
     <main class="mn-inner container">
         <div class="valign">
@@ -30,7 +32,7 @@
                                 <div class="row">
                                     <div class="col s12 m12 l12">
                                         <a href="{{route('/')}}">
-                                            <img  width="200px" height="60px" src="{{ asset('img/logo-sirt-green.svg') }}" class="chapter-title responsive-img"></img>
+                                            <img class="chapter-title responsive-img" width="200px" height="60px" src="{{ asset('img/logonacional_Negro.png') }}"/>
                                         </a>
                                     </div>
                                     <br>
@@ -112,9 +114,9 @@
                                         @enderror
                                     </div>
                                     <div class="col s12 center-align m-t-sm">
-                                        <button class="waves-effect waves-light btn bg-secondary center-align" type="submit">
+                                        <button class="waves-effect waves-light btn center-align " type="submit">
                                             {{ __('register new mail') }}
-                                        </button>
+                                        </button> 
                                     </div>
                                 </form>
                             </div>

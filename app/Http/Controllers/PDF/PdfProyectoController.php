@@ -5,7 +5,6 @@ namespace App\Http\Controllers\PDF;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Proyecto;
-use App\Models;
 use Barryvdh\DomPDF\Facade as PDF;
 use App\Http\Controllers\CostoController;
 
@@ -19,10 +18,6 @@ class PdfProyectoController extends Controller
     public function printFormularioCierre($id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        if(!request()->user()->can('generar_docs', $proyecto)) {
-            alert('No autorizado', 'No puedes generar documentos de este proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
         $costo = $this->costoController->costoProject($proyecto->id);
         $pdf = PDF::loadView('pdf.proyecto.form_cierre', ['proyecto' => $proyecto, 'costo' => $costo]);
         return $pdf->stream();
@@ -31,10 +26,6 @@ class PdfProyectoController extends Controller
     public function printFormularioAcuerdoDeInicio($id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        if(!request()->user()->can('generar_docs', $proyecto)) {
-            alert('No autorizado', 'No puedes generar documentos de este proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
         $pdf = PDF::loadView('pdf.proyecto.form_inicio', ['proyecto' => $proyecto]);
         return $pdf->stream();
     }
@@ -42,10 +33,6 @@ class PdfProyectoController extends Controller
     public function printCartaCertificacionPbt(Request $request, $id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        if(!request()->user()->can('generar_docs', $proyecto)) {
-            alert('No autorizado', 'No puedes generar documentos de este proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
         $dato = explode(',', $request->txtentidad_id);
         $entidad = [];
         if ($dato[1] == 'empresa') {
@@ -68,11 +55,7 @@ class PdfProyectoController extends Controller
     public function printActaCatergorizacion($id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        if(!request()->user()->can('generar_docs', $proyecto)) {
-            alert('No autorizado', 'No puedes generar documentos de este proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
-        $pdf = PDF::loadView('pdf.proyecto.acta_categorizacion', ['proyecto' => $proyecto]);
+        $pdf = PDF::loadView('pdf.proyecto.acta_consultoria', ['proyecto' => $proyecto]);
         return $pdf->stream();
     }
 }

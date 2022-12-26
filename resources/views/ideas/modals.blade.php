@@ -9,7 +9,7 @@
         </p>
     </div>
     <div class="modal-footer">
-        <a href="#!" class="modal-close waves-effect waves-primary btn-flat">Entendido.</a>
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Entendido.</a>
     </div>
 </div>
 <div id="modalRecordatorioDeRegistroDeIdea" class="modal">
@@ -21,7 +21,7 @@
         </p>
     </div>
     <div class="modal-footer">
-        <a href="#!" class="modal-close waves-effect waves-primary btn-flat">Entendido.</a>
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Entendido.</a>
     </div>
 </div>
 <div id="modalInformacionIdea" class="modal">
@@ -31,6 +31,6 @@
         <div id="detalle_idea"></div>
     </div>
     <div class="modal-footer">
-        <a href="#!" class="modal-action modal-close waves-effect waves-primary btn-flat ">Cerrar</a>
+        <a href="#!" class="modal-action modal-close waves-effect waves-yellow btn-flat ">Cerrar</a>
     </div>
 </div>

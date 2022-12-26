@@ -26,7 +26,7 @@ class GraficoController extends Controller
   {
     if ( Session::get('login_role') == User::IsDinamizador() ) {
       return view('grafico.dinamizador.index');
-    } else if ( Session::get('login_role') == User::IsActivador() ) {
+    } else if ( Session::get('login_role') == User::IsAdministrador() ) {
       return view('grafico.administrador.index');
     }
   }
@@ -61,7 +61,7 @@ class GraficoController extends Controller
         'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
         'lineas' => $this->getLineaRepository()->getAllLineaNodo(auth()->user()->dinamizador->nodo_id)->lineas->pluck('nombre', 'id')
       ]);
-    }else if ( Session::get('login_role') == User::IsActivador() ) {
+    }else if ( Session::get('login_role') == User::IsAdministrador() ) {
       return view('grafico.administrador.edt', [
         'nodos' => Nodo::SelectNodo()->get()->pluck('nodos', 'id')
       ]);
@@ -81,7 +81,7 @@ class GraficoController extends Controller
       'gestores' => Gestor::ConsultarGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->pluck('nombres_gestor', 'id'),
       'lineas' => $this->getLineaRepository()->getAllLineaNodo(auth()->user()->dinamizador->nodo_id)->lineas->pluck('nombre', 'id')
       ]);
-    } else if ( Session::get('login_role') == User::IsActivador() ) {
+    } else if ( Session::get('login_role') == User::IsAdministrador() ) {
       return view('grafico.administrador.articulacion', [
         'nodos' => Nodo::SelectNodo()->get()->pluck('nodos', 'id')
       ]);
