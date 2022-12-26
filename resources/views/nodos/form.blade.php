@@ -1,9 +1,8 @@
-<div class="row">
-    
+<div class="row no-m-t no-m-b">
     <div class="col s12 m12 l12">
         @if ($errors->any())
-            <div class="card red lighten-3">
-                <div class="row">
+            <div class="card bg-danger lighten-3">
+                <div class="row no-m-t no-m-b">
                     <div class="col s12 m12">
                         <div class="card-content white-text">
                             <p>
@@ -23,12 +22,12 @@
         @endif
         <br>
         {!! csrf_field() !!}
-        <div class="row">
+        <div class="row no-m-t no-m-b">
             <div class="card stats-card">
                 <div class="card-content">
                     <div class="row">
                         <div class="col s12 m12 l12">
-                            <span class="title green-complement-text">
+                            <span class="title primary-text">
                                 Esencial
                             </span>
                         </div>
@@ -39,26 +38,26 @@
                                 <option value="">Seleccione regional </option>
                                 @foreach($regionales as $id => $nombre)
                                     @if(isset($nodo->entidad->nodo->centro->regional->id))
-                                        <option value="{{$id}}" {{old('txtregional',$nodo->entidad->nodo->centro->regional->id) ==  $id ? 'selected':''}}>{{$nombre}}</option> 
+                                        <option value="{{$id}}" {{old('txtregional',$nodo->entidad->nodo->centro->regional->id) ==  $id ? 'selected':''}}>{{$nombre}}</option>
                                     @else
-                                            <option value="{{$id}}" {{old('txtregional') == $id  ? 'selected':''}}> {{$nombre}}</option> 
+                                            <option value="{{$id}}" {{old('txtregional') == $id  ? 'selected':''}}> {{$nombre}}</option>
                                     @endif
                                 @endforeach
                             </select>
                             <label for="txtregional" class="active">Regional <span class="red-text">*</span></label>
                             @error('txtregional')
                                 <label id="txtregional-error" class="error" for="txtregional">{{ $message }}</label>
-                            @enderror 
+                            @enderror
                         </div>
                         <div class="input-field col s12 m6 l6">
                             <select class="js-states browser-default select2" id="txtcentro" name="txtcentro" style="width: 100%" tabindex="-1">
-                                <option value="">Seleccione Primero la regional</option> 
+                                <option value="">Seleccione Primero la regional</option>
                             </select>
                             <label for="txtcentro" class="active">Centro de formacion <span class="red-text">*</span></label>
                             @error('txtcentro')
                                 <label id="txtcentro-error" class="error" for="txtcentro">{{ $message }}</label>
-                            @enderror 
-                        </div>      
+                            @enderror
+                        </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s12 m4 l4">
@@ -101,8 +100,8 @@
                 <div class="card-content">
                     <div class="row">
                         <div class="col s12 m12 l12">
-                            <span class="title green-complement-text">
-                                Ubicación   
+                            <span class="title primary-text">
+                                Ubicación
                             </span>
                         </div>
                     </div>
@@ -113,9 +112,9 @@
                                     <option value="">Seleccione departamento</option>
                                     @foreach($departamentos as $id =>$nombre)
                                         @if(isset($nodo->entidad->ciudad->departamento->id))
-                                            <option value="{{$id}}" {{old('txtdepartamento',$nodo->entidad->ciudad->departamento->id) ==  $id ? 'selected':''}}>{{$nombre}}</option> 
+                                            <option value="{{$id}}" {{old('txtdepartamento',$nodo->entidad->ciudad->departamento->id) ==  $id ? 'selected':''}}>{{$nombre}}</option>
                                         @else
-                                            <option value="{{$id}}" {{old('txtdepartamento') == $id  ? 'selected':''}}>{{$nombre}}</option> 
+                                            <option value="{{$id}}" {{old('txtdepartamento') == $id  ? 'selected':''}}>{{$nombre}}</option>
                                         @endif
                                     @endforeach
                                 </select>
@@ -124,9 +123,9 @@
                                     <option value="">Seleccione departamento</option>
                                     @foreach($departamentos as $id => $nombre)
                                         @if(isset($nodo->entidad->ciudad->departamento->id))
-                                            <option value="{{$id}}" {{old('txtdepartamento',$nodo->entidad->ciudad->departamento->id) ==  $id ? 'selected':''}}>{{$nombre}}</option> 
+                                            <option value="{{$id}}" {{old('txtdepartamento',$nodo->entidad->ciudad->departamento->id) ==  $id ? 'selected':''}}>{{$nombre}}</option>
                                         @else
-                                            <option value="{{$id}}" {{old('txtdepartamento') == $id  ? 'selected':''}}>{{$nombre}}</option> 
+                                            <option value="{{$id}}" {{old('txtdepartamento') == $id  ? 'selected':''}}>{{$nombre}}</option>
                                         @endif
                                     @endforeach
                                 </select>
@@ -134,7 +133,7 @@
                             <label for="txtdepartamento" class="active">Departamento de Ubicación <span class="red-text">*</span></label>
                             @error('txtdepartamento')
                                 <label id="txtdepartamento-error" class="error" for="txtdepartamento">{{ $message }}</label>
-                            @enderror 
+                            @enderror
                         </div>
                         <div class="input-field col s12 m4 l4">
                             @if(isset($nodo->entidad->ciudad->id))
@@ -143,13 +142,13 @@
                                 </select>
                             @else
                                 <select class="js-states browser-default select2" id="txtciudad" name="txtciudad" style="width: 100%" tabindex="-1">
-                                    <option value="">Seleccione Primero el Departamento</option> 
+                                    <option value="">Seleccione Primero el Departamento</option>
                                 </select>
                             @endif
                             <label for="txtciudad" class="active">Ciudad de Ubicación <span class="red-text">*</span></label>
                             @error('txtciudad')
                                 <label id="txtciudad-error" class="error" for="txtciudad">{{ $message }}</label>
-                            @enderror 
+                            @enderror
                         </div>
                         <div class="input-field col s12 m4 l4">
                             <input class="validate" id="txtdireccion" name="txtdireccion" type="text"  value="{{ isset($nodo->entidad->nodo->direccion) ? $nodo->entidad->nodo->direccion : old('txtdireccion')}}"/>
@@ -167,8 +166,8 @@
                 <div class="card-content">
                     <div class="row">
                         <div class="col s12 m12 l12">
-                            <span class="title green-complement-text">
-                                Lineas Tecnológicas del nodo   
+                            <span class="title primary-text">
+                                Lineas Tecnológicas del nodo
                             </span>
                         </div>
                     </div>
@@ -200,13 +199,13 @@
                                     </i>
                                     <p class="center-align">No tienes lineas tecnológicas registradas aún, por favor registre al menos una.</p>
                                 </div>
-                                @endforelse                    
+                                @endforelse
                             </ul>
                              @if(isset($lineas))
                                 <div class="center">
                                     {{ $lineas->links() }}
                                 </div>
-                            @endif      
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -217,16 +216,17 @@
 
 <div class="row">
     <div class="col s12 m12 l12">
-        <div class="row">
-            <center>
-                <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>{{isset($btnText) ? $btnText : 'Guardar'}}</button> 
-                <a class="waves-effect red lighten-2 btn center-aling" href="{{route('nodo.index')}}">
-                    <i class="material-icons right">
-                        backspace
-                    </i>
-                    Cancelar
-                </a>
-            </center>
+        <div class="col s12 center-align m-t-sm">
+            <button type="submit"
+                    class="waves-effect waves-light btn bg-secondary center-align">
+                <i class="material-icons left">send</i>
+                {{isset($btnText) ? $btnText : 'Guardar'}}
+            </button>
+            <a href="{{route('nodo.index')}}"
+                    class="modal-action modal-open waves-effect bg-danger btn center-align">
+                <i class="material-icons right">backspace</i>
+                Regresar
+            </a>
         </div>
     </div>
 </div>

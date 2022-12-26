@@ -17,7 +17,7 @@
                 </div>
                 <div class="row">
                     <form id="frmCartaCertificacion" action="{{route('pdf.proyecto.certificacion', $proyecto->id)}}" method="POST">
-                        @include('proyectos.form_certificacion', [
+                        @include('proyectos.forms.form_certificacion', [
                         'btnText' => 'Modificar'])
                     </form>
                 </div>

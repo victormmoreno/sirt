@@ -314,7 +314,7 @@
                 $('#txtmaterial').append('<option value="">Seleccione el material de formación</option>');
 
                 if (response.proyecto.length != 0) {
-                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
                         $('#txtgestor').val(response.proyecto.documento+ ' - '+ response.proyecto.nombres + ' ' + response.proyecto.apellidos);
                         $("label[for='txtgestor']").addClass('active');
                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
@@ -326,7 +326,7 @@
                     $('#txtnodo').val(response.proyecto.nodo_id);
                     $("label[for='txtlinea']").addClass('active');
                 }else{
-                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
                         let cont;
                         let a = document.getElementsByName("gestor[]");
                         let fila ="";
@@ -482,7 +482,7 @@
                     @endif
                     $('#txtnodo').val(response.articulacion.actividad.nodo_id);
                 }else{
-                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
                         let cont;
                         let a = document.getElementsByName("gestor[]");
                         let fila ="";
@@ -918,7 +918,7 @@
                 });
                 let a = document.getElementsByName("talento[]");
                 let fila ="";
-                fila = '<tr class="selected" id="filaTalento'+cont+'"><td><input type="hidden" name="talento[]" value="'+idtalento+'">'+nombreTalento+'</td><td><a class="waves-effect red lighten-3 btn" onclick="eliminarTalento('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
+                fila = '<tr class="selected" id="filaTalento'+cont+'"><td><input type="hidden" name="talento[]" value="'+idtalento+'">'+nombreTalento+'</td><td><a class="waves-effect bg-danger white-text btn" onclick="eliminarTalento('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
                 cont++;
                 $('#detalleTalento').append(fila);
             }

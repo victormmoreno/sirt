@@ -9,7 +9,7 @@
                         señor(a) usuario, por favor ingrese las horas de asesoria.
                     </p>
                 </li>
-                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor()))
+                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto()))
                 <li class="collection-item">
                     <span class="title"><b>Paso 2</b></span>
                     <p>Señor(a) usuario, si la asesoria fue acompañada por otro experto agregue a este en la sección de expertos Asesores, pulsando el boton agregar experto.</p>
@@ -28,7 +28,7 @@
                     <table class="striped centered responsive-table" id="tbldetallegestores">
                         <thead>
                             <tr>
-                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor()))
+                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto()))
                                     <th>
                                         Linea Tecnológica
                                     </th>
@@ -49,7 +49,7 @@
                                 @forelse ($usoinfraestructura->usogestores as $key => $user)
                                     @if($user->id === auth()->user()->id)
                                         <tr id="filaGestor{{$user->id}}">
-                                            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor()))
+                                            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto()))
                                                 <td>{{$user->gestor->lineatecnologica->abreviatura}} -  {{$user->gestor->lineatecnologica->nombre}}</td>
                                             @endif
                                             <td>
@@ -61,7 +61,7 @@
                                     @endif
                                 @empty
                                 <tr id="filaGestor{{$usoinfraestructura->asesorable->asesor_id}}">
-                                    @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor()))
+                                    @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto()))
                                         <td>{{$usoinfraestructura->asesorable->asesor->lineatecnologica->abreviatura}} -  {{$usoinfraestructura->asesorable->asesor->lineatecnologica->nombre}}</td>
                                     @endif
                                     <td>
@@ -88,7 +88,7 @@
                     </table>
                 </div>
             </div>
-            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor()))
+            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto()))
             <br>
             <div class="divider"></div>
             <h5 class="center-align"><mark>Expertos Asesores</mark></h5>
@@ -138,7 +138,7 @@
                     <small class="center-align red-text text-ligth-3">solo se permite ingresar hasta 99 horas</small>
                 </div>
                 <div class="input-field col s12 m3 l3 offset-s3">
-                    <a class="waves-effect waves-light btn blue m-b-xs btnAgregarGestorAsesor"  onclick="addGestoresAUso()">Agregar Experto</a>
+                    <a class="waves-effect waves-light btn bg-secondary white-text m-b-xs btnAgregarGestorAsesor"  onclick="addGestoresAUso()">Agregar Experto</a>
                 </div>
                 <div class="row">
                     <div class="col s12 m8 l8 offset-l2 m2">
@@ -170,7 +170,7 @@
                                                     <td><input type="number" name="asesoriadirecta[]" value="{{$user->pivot->asesoria_directa}}"></td>
                                                     <td><input type="number" name="asesoriaindirecta[]" value="{{$user->pivot->asesoria_indirecta}}"></td>
                                                     <td>
-                                                        <a class="waves-effect red lighten-3 btn" onclick="eliminarGestorAsesor({{$user->id}});">
+                                                        <a class="waves-effect bg-danger white-text btn" onclick="eliminarGestorAsesor({{$user->id}});">
                                                             <i class="material-icons">delete_sweep</i>
                                                         </a>
                                                     </td>

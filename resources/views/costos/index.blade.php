@@ -36,7 +36,7 @@
                                     @include('costos.project')
                                     @include('costos.articulacionpbt')
                                     @break
-                                @case(App\User::IsGestor())
+                                @case(App\User::IsExperto())
                                     @include('costos.project')
                                     @break
                                 @case(App\User::IsArtocilador())

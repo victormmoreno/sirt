@@ -87,26 +87,6 @@ class GrupoInvestigacionRepository
         });
     }
 
-    // Consulta los contactos que tiene el nodo con las empresas
-    public function consultarContactosPorNodoDeUnGrupo($identidad, $idnodo)
-    {
-        return GrupoInvestigacion::select(
-            'contactosentidades.nombres_contacto',
-            'contactosentidades.correo_contacto',
-            'contactosentidades.telefono_contacto',
-            'enodo.nombre AS nodo',
-            'nodos.id'
-        )
-        ->join('entidades', 'entidades.id', '=', 'gruposinvestigacion.entidad_id')
-        ->join('contactosentidades', 'contactosentidades.entidad_id', '=', 'entidades.id')
-        ->join('nodos', 'nodos.id', '=', 'contactosentidades.nodo_id')
-        ->join('entidades AS enodo', 'enodo.id', '=', 'nodos.entidad_id')
-        ->where('nodos.id', $idnodo)
-        ->where('entidades.id', $identidad)
-        ->groupBy('contactosentidades.id')
-        ->get();
-    }
-
     // Consulta los detalles de una empresa
     public function consultarDetalleDeUnGrupoDeInvestigacion($id)
     {

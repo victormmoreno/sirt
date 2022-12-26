@@ -2,12 +2,29 @@
 
 namespace App\Policies\Nodo;
 
+use App\Models\Nodo;
 use App\User;
+use Illuminate\Support\Str;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class NodoPolicy
 {
     use HandlesAuthorization;
+    /**
+     * Perform pre-authorization checks.
+     *
+     * @param $user
+     * @param  string  $ability
+     * @return void|bool
+     */
+    public function before(User $user, $ability)
+    {
+        if ($user->hasAnyRole([User::IsAdministrador()])
+            && session()->has('login_role')
+            && session()->get('login_role') == User::IsAdministrador()) {
+            return true;
+        }
+    }
 
     /**
      * Determine whether the user can view the nodos.
@@ -18,12 +35,7 @@ class NodoPolicy
     public function index(User $user)
     {
 
-        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsDinamizador(), User::IsGestor(), User::IsInfocenter()]) &&
-            session()->has('login_role')
-            && session()->get('login_role') == User::IsAdministrador()
-            || session()->get('login_role') == User::IsDinamizador()
-            || session()->get('login_role') == User::IsGestor()
-            || session()->get('login_role') == User::IsInfocenter();
+        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDinamizador(), User::IsExperto(), User::IsInfocenter()]);
     }
 
     /**
@@ -34,20 +46,7 @@ class NodoPolicy
      */
     public function create(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador()])
-            && session()->has('login_role')
-            && session()->get('login_role') == User::IsAdministrador();
-    }
-
-    /**
-     * Determine whether the user can store a nodo.
-     *
-     * @param  \App\User  $user
-     * @return bool
-     */
-    public function store(User $user)
-    {
-        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador()]);
     }
 
     /**
@@ -56,9 +55,9 @@ class NodoPolicy
      * @param  \App\User  $user
      * @return bool
      */
-    public function show(User $user)
+    public function show(User $user,  Nodo $nodo)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador()]);
     }
 
     /**
@@ -67,19 +66,43 @@ class NodoPolicy
      * @param  \App\User  $user
      * @return bool
      */
-    public function edit(User $user)
+    public function edit(User $user, Nodo $nodo)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador()]);
     }
 
     /**
-     * Determine whether the user can update a nodo.
+     * Determine whether the user can create a nodo.
      *
      * @param  \App\User  $user
      * @return bool
      */
-    public function update(User $user)
+    public function downloadAll(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->has('login_role') && session()->get('login_role') == User::IsAdministrador();
+        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador()]) && session()->has('login_role') && (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador());
+    }
+
+    /**
+     * Determine whether the user can edit a nodo.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Models\Nodo  $nodo
+     * @return bool
+     */
+    public function downloadOne(User $user, Nodo $nodo)
+    {
+        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador()]) && session()->has('login_role') && (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador());
+    }
+
+    /**
+     * Determina si el usuario puede inhabilitar a los funcionarios de un nodo
+     *
+     * @param  \App\User  $user
+     * @return mixed
+     * @author dum
+     */
+    public function inhabilitar(User $user)
+    {
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsActivador(), $user->IsAdministrador()]);
     }
 }

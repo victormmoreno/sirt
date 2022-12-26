@@ -37,7 +37,7 @@ class GrupoInvestigacionFormRequest extends FormRequest
 
     public function messages()
     {
-        return $messages = [
+        return [
             // Mensajes personalizados para el campo del código de grupo
             'txtcodigo_grupo.required' => 'El Código del Grupo de Investigación es obligatorio.',
             'txtcodigo_grupo.max' => 'El Código del Grupo de Investigación debe ser máximo 15 caracteres.',
@@ -56,15 +56,15 @@ class GrupoInvestigacionFormRequest extends FormRequest
             // Mensajes personalizados para el campo de clasificacion de colciencias
             'txtclasificacionclociencias_id' => 'La Clasificación de Colciencias es obligatoria.',
             // Mensajes personalizados para el campo de tipo de grupo de investigación
-            'txttipogrupo' => 'El Tipo de Grupo de Investigación es obligatorio.',
+            'txttipogrupo.required' => 'El Tipo de Grupo de Investigación es obligatorio.',
             // Mensajes personalizados para el campo de institución del grupo de investigación
             'txtinstitucion.required' => 'La Institución que avala es obligatoria.',
             'txtinstitucion.max' => 'La Institución que avala debe ser máxima de 200 caracteres',
             'txtinstitucion.regex' => 'El formato del campo Institución que avala es incorrecto.',
             // Mensajes personalizados para el campo de departamento del grupo de investigación
-            'txtdepartamento' => 'El Departamento del Grupo de Investigación es obligatorio.',
+            'txtdepartamento.required' => 'El Departamento del Grupo de Investigación es obligatorio.',
             // Mensajes personalizados para el campo de ciudad del grupo de investigación
-            'txtciudad_id' => 'La Ciudad del Grupo de Investigación es obligatoria.',
+            'txtciudad_id.required' => 'La Ciudad del Grupo de Investigación es obligatoria.',
         ];
     }
 
