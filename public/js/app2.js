@@ -7,7 +7,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: {
-            url: "lineas",
+            url: host_url + "/lineas",
         },
         columns: [{
             data: 'abreviatura',
@@ -15,7 +15,7 @@ $(document).ready(function() {
         }, {
             data: 'nombre',
             name: 'nombre',
-        }, 
+        },
         {
             data: 'show',
             name: 'show',
@@ -24,9 +24,10 @@ $(document).ready(function() {
             data: 'action',
             name: 'action',
             orderable: false
-        }, ],
+        }]
     });
 });
+
 $(document).ready(function() {
     $('#linea_dinamizador_table').DataTable({
         language: {
@@ -36,7 +37,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: {
-            url: "lineas",
+            url: host_url + "/lineas",
         },
         columns: [{
             data: 'abreviatura',
@@ -51,6 +52,7 @@ $(document).ready(function() {
         }, ],
     });
 });
+
 $(document).ready(function() {
     $('#nodos_table').DataTable({
         language: {
@@ -80,7 +82,7 @@ $(document).ready(function() {
             }
         }, ],
         ajax: {
-            url: "/nodo",
+            url: host_url + "/nodo",
         },
         columns: [{
             data: 'centro',
@@ -103,52 +105,138 @@ $(document).ready(function() {
     });
 });
 
-// function eliminarNodoPorId(id, e) {
-//     Swal.fire({
-//         title: '¿Desea eliminar el nodo?',
-//         text: "Al hacer esto, todo lo relacionado con este proyecto será eliminado de la base de datos, eso incluye usos de infraestructura y los archivos subidos al servidor!",
-//         type: 'warning',
-//         showCancelButton: true,
-//         confirmButtonColor: '#d33',
-//         cancelButtonColor: '#3085d6',
-//         cancelButtonText: 'No',
-//         confirmButtonText: 'Sí, eliminar!'
-//     }).then((result) => {
-//         if (result.value) {
-//             eliminarNodoId_moment(id);
-//         }
-//     })
-// };
-
-// function eliminarNodoId_moment(id) {
+$.fn.pageMe = function(opts){
+    var $this = this,
+        defaults = {
+            activeColor: 'blue',
+            perPage: 10,
+            showPrevNext: false,
+            nextText: '',
+            prevText: '',
+            hidePageNumbers: false
+        },
+        settings = $.extend(defaults, opts);
     
-//     $.ajax({
-//         dataType: "JSON",
-//         type: 'POST',
-//         data: {
-//             '_token': $('meta[name=csrf-token]').attr("content"),
-//             '_method': 'DELETE',
-//             "id": id
-//         },
-//         success: function(data) {
-//             console.log(data);
-//             // if (data.retorno) {
-//             //     Swal.fire('Eliminación Exitosa!', 'El proyecto se ha eliminado completamente!', 'success');
-//             //     location.href = '/nodo';
-//             // } else {
-//             //     Swal.fire('Eliminación Errónea!', 'El proyecto no se ha eliminado!', 'error');
-//             // }
-//         },
-//         error: function(xhr, textStatus, errorThrown) {
-//             alert("Error: " + errorThrown);
-//         },
-//     });
-// }
+    //$this.addClass('initialized');
+
+    var listElement = $this.find("tbody");
+    var perPage = settings.perPage;
+    var children = listElement.children();
+    var pager = $('.pager');
+    
+    if (typeof settings.childSelector!="undefined") {
+        children = listElement.find(settings.childSelector);
+    }
+
+    if (typeof settings.pagerSelector!="undefined") {
+        pager = $(settings.pagerSelector);
+    }
+
+    var numItems = children.size();
+    var numPages = Math.ceil(numItems/perPage);
+    
+    // $("#total_reg").html(numItems+" Entradas en total");
+
+    pager.data("curr",0);
+
+    if (settings.showPrevNext){
+        $('<li><a href="#" class="prev_link" title="'+settings.prevText+'"><i class="material-icons">chevron_left</i></a></li>').appendTo(pager);
+    }
+
+    var curr = 0;
+    while(numPages > curr && (settings.hidePageNumbers==false)){
+        $('<li class="waves-effect"><a href="#" class="page_link">'+(curr+1)+'</a></li>').appendTo(pager);
+        curr++;
+    }
+
+    if (settings.showPrevNext){
+        $('<li><a href="#" class="next_link"  title="'+settings.nextText+'"><i class="material-icons">chevron_right</i></a></li>').appendTo(pager);
+    }
+
+    pager.find('.page_link:first').addClass('active');
+    pager.find('.prev_link').hide();
+    if (numPages<=1) {
+        pager.find('.next_link').hide();
+    }
+  	pager.children().eq(1).addClass("active "+settings.activeColor);
+
+    children.hide();
+    children.slice(0, perPage).show();
+
+    pager.find('li .page_link').click(function(){
+        var clickedPage = $(this).html().valueOf()-1;
+        goTo(clickedPage,perPage);
+        return false;
+    });
+    pager.find('li .prev_link').click(function(){
+        previous();
+        return false;
+    });
+    pager.find('li .next_link').click(function(){
+        next();
+        return false;
+    });
+
+    function previous(){
+        var goToPage = parseInt(pager.data("curr")) - 1;
+        goTo(goToPage);
+    }
+
+    function next(){
+        goToPage = parseInt(pager.data("curr")) + 1;
+        goTo(goToPage);
+    }
+
+    function goTo(page){
+        var startAt = page * perPage,
+            endOn = startAt + perPage;
+
+        children.css('display','none').slice(startAt, endOn).show();
+
+        if (page>=1) {
+            pager.find('.prev_link').show();
+        }
+        else {
+            pager.find('.prev_link').hide();
+        }
+
+        if (page<(numPages-1)) {
+            pager.find('.next_link').show();
+        }
+        else {
+            pager.find('.next_link').hide();
+        }
+
+        pager.data("curr",page);
+      	pager.children().removeClass("active "+settings.activeColor);
+        pager.children().eq(page+1).addClass("active "+settings.activeColor);
+
+    }
+};
+
+function inhabilitarFuncionarios(e, rt) {
+    e.preventDefault();
+    Swal.fire({
+        title: '¿Está seguro(a) de inhabilitar los funcionarios de este nodo?',
+        text: 'Al hacerlo estás bloqueando el acceso al sistema de todos los funcionarios de este nodo, luego los deberás volver a inhabilitar desde el menú de usuarios.',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Sí, inhabilitar funcionarios!'
+    }).then((result) => {
+        if (result.value) {
+            location.href = rt;
+        }
+    })
+}
+
 function detallesIdeasDelEntrenamiento(id){
   $.ajax({
      dataType:'json',
      type:'get',
-     url:"entrenamientos/"+id,
+     url: host_url + "/taller/"+id,
      data: {
        identrenamiento: id,
      }
@@ -166,649 +254,19 @@ function detallesIdeasDelEntrenamiento(id){
   });
 }
 
-$(document).ready(function() {
-  $('#entrenamientosPorNodo_tableDinamizador').DataTable({
+function consultarEntrenamientosPorNodo(nodo) {
+  $('#entrenamientosPorNodo_table').dataTable().fnDestroy();
+  $('#entrenamientosPorNodo_table').DataTable({
     language: {
       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
     },
     processing: true,
     serverSide: true,
     ajax:{
-      url: "/entrenamientos/consultarEntrenamientosPorNodo",
-      type: "get",
-    },
-    columns: [
-      {
-        title: 'Código del Entrenamiento',
-        data: 'codigo_entrenamiento',
-        name: 'codigo_entrenamiento',
-      },
-      {
-        data: 'fecha_sesion1',
-        name: 'fecha_sesion1',
-      },
-      {
-        width: '8%',
-        data: 'details',
-        name: 'details',
-        orderable: false
-      },
-      {
-        width: '8%',
-        data: 'evidencias',
-        name: 'evidencias',
-        orderable: false
-      },
-    ],
-  });
-  $('#entrenamientos_nodo_table_articulador').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    ajax:{
-      url: "/entrenamientos/consultarEntrenamientosPorNodo",
+      url: host_url + "/taller/consultarEntrenamientosPorNodo/" + nodo,
       type: "get",
       data: {
-        nodo: null,
-      }
-    },
-    columns: [
-      {
-        title: 'Código del Entrenamiento',
-        data: 'codigo_entrenamiento',
-        name: 'codigo_entrenamiento',
-      },
-      {
-        data: 'fecha_sesion1',
-        name: 'fecha_sesion1',
-      },
-      {
-        width: '8%',
-        data: 'details',
-        name: 'details',
-        orderable: false
-      },
-      {
-        width: '8%',
-        data: 'edit',
-        name: 'edit',
-        orderable: false
-      },
-      {
-        width: '8%',
-        data: 'evidencias',
-        name: 'evidencias',
-        orderable: false
-      },
-    ],
-  });
-});
-
-$(document).ready(function () {
-    // Contenedores
-    divProductoParecido = $('#productoParecido_content');
-    divReemplaza = $('#reemplaza_content');
-    divPacking = $('#packing_content');
-    divRequisitosLegales = $('#requisitosLegales_content');
-    divCertificaciones = $('#certificaciones_content');
-    divRecursos = $('#recursos_content');
-    divConvocatoria = $('#convocatoria_content');
-    divAvalEmpresa = $('#avalEmpresa_content');
-    divBuscarEmpresa = $('#buscarEmpresa_content');
-    divRegistrarEmpresa = $('#registrarEmpresa_content');
-    divEmpresaRegistrada = $('#consultarEmpresa_content');
-    // Ocultar contenedores
-    divProductoParecido.hide();
-    divReemplaza.hide();
-    divPacking.hide();
-    divRequisitosLegales.hide();
-    divCertificaciones.hide();
-    divRecursos.hide();
-    divConvocatoria.hide();
-    divAvalEmpresa.hide();
-    divBuscarEmpresa.hide();
-    divRegistrarEmpresa.hide();
-    divEmpresaRegistrada.hide();
-
-    showInput_ProductoParecido();
-    showInput_Reemplaza();
-    showInput_Packing();
-    showInput_RequisitosLegales();
-    showInput_Certificaciones();
-    showInput_Recursos();
-    showInput_Convocatoria();
-    showInput_AvalEmpresa();
-    showInput_BuscarEmpresa();
-});
-
-function consultarEmpresaTecnoparque() {
-    let nit = $('#txtnit').val();
-    let field = 'nit';
-    if (nit.length < 9 || nit.length > 13) {
-        Swal.fire({
-            title: 'Advertencia!',
-            text: "El nit de la empresa debe tener entre 9 y 13 dígitos!",
-            type: 'warning',
-            showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Ok'
-          })
-    } else {
-        if (nit == "") {
-          Swal.fire({
-            title: 'Advertencia!',
-            text: "Digite el nit de la empresa!",
-            type: 'warning',
-            showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Ok'
-          })
-        } else {
-          $.ajax({
-            dataType: 'json',
-            type: 'get',
-            url : '/empresa/ajaxDetallesDeUnaEmpresa/'+nit+'/'+field,
-            success: function (response) {
-              if (response.empresa == null) {
-                divEmpresaRegistrada.hide();
-                divRegistrarEmpresa.show();
-                $('#txtnit_empresa').val(nit);
-                $("label[for='txtnit_empresa']").addClass('active');
-              } else {
-                let registros;
-                asignarValoresFRMIdeas(response);
-                divEmpresaRegistrada.show();
-                divRegistrarEmpresa.hide();
-                reiniciarSede();
-                registros = mostrarSedesEmpresa(response);
-                $('#sedesEmpresaFormIdea').append(registros);
-              }
-            },
-            error: function (xhr, textStatus, errorThrown) {
-              alert("Error: " + errorThrown);
-            }
-          })
-        }
-    }
-}
-
-function reiniciarSede() {
-  $('#sedesEmpresaFormIdea').empty();
-  $('#txtsede_id').val('');
-  $('#txtnombre_sede_disabled').val('Primero debes seleccionar una sede');
-}
-
-function mostrarSedesEmpresa(ajax) {
-  let fila = "";
-  ajax.empresa.sedes.forEach(element => {
-    fila += `<li class="collection-item">
-      ` + element.nombre_sede + ` - ` + element.direccion + ` ` + element.ciudad.nombre + ` (` + element.ciudad.departamento.nombre + `)
-      <a href="#!" class="secondary-content" onclick="asociarSedeAIdeaProyecto(`+element.id+`)">Asociar esta sede de la empresa a la idea de proyecto</a></div>
-    </li>`;
-  });
-  return fila
-}
-
-function asociarSedeAIdeaProyecto(sede_id) {
-  $.ajax({
-    dataType: 'json',
-    type: 'get',
-    url : '/empresa/ajaxDetalleDeUnaSede/'+sede_id,
-    success: function (response) {
-      $('#txtsede_id').val(response.sede.id);
-      $('#txtnombre_sede_disabled').val(response.sede.nombre_sede + ' - ' + response.sede.direccion + ' ' + response.sede.ciudad.nombre + ' (' + response.sede.ciudad.departamento.nombre + ')');
-      Swal.fire({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 1500,
-        type: 'success',
-        title: 'La sede '+response.sede.nombre_sede+' se asoció a la idea de proyecto!'
-    });
-    },
-    error: function (xhr, textStatus, errorThrown) {
-      alert("Error: " + errorThrown);
-    }
-  })
-}
-
-  $(document).on('click', '.btnModalIdeaCancelar', function(event) {
-    Swal.close();
-  });
-
-  $(document).on('click', '.btnModalIdeaGuardar', function(event) {
-    $('#txtopcionRegistro').val('guardar');
-    Swal.clickConfirm();
-    enviarIdeaRegistro(event, 'create');
-  });
-
-  $(document).on('click', '.btnModalIdeaModificar', function(event) {
-    $('#txtopcionRegistro').val('guardar');
-    Swal.clickConfirm();
-    enviarIdeaRegistro(event, 'update');
-  });
-  
-  $(document).on('click', '.btnModalIdeaPostular', function(event) {
-    $('#txtopcionRegistro').val('postular');
-    Swal.clickConfirm();
-    enviarIdeaRegistro(event, 'create');
-  });
-  
-  $(document).on('click', '.btnModalIdeaPostularModificar', function(event) {
-    $('#txtopcionRegistro').val('postular');
-    Swal.clickConfirm();
-    enviarIdeaRegistro(event, 'update');
-  });
-
-  function modalOpcionesFormulario(e) {
-    e.preventDefault();
-    Swal.fire({
-    title: 'Guardar información',
-    html: "¿Qué desea hacer?" +
-        "<br>" +
-        '<button type="button" role="button" tabindex="0" class="btnModalIdeaGuardar swal2-guardar-custom">' + 'Guardar' + '</button>' +
-        '<button type="button" role="button" tabindex="0" class="btnModalIdeaPostular swal2-postular-custom">' + 'Postular' + '</button>' +
-        '<button type="button" role="button" tabindex="0" class="btnModalIdeaCancelar swal2-cancelar-custom">' + 'Cancelar' + '</button>',
-    showCancelButton: false,
-    showConfirmButton: false,
-    type: 'warning',
-    })
-  }
-
-  function modalOpcionesFormularioModificar(e) {
-    e.preventDefault();
-    Swal.fire({
-    title: 'Modificar información',
-    html: "¿Qué desea hacer?" +
-        "<br>" +
-        '<button type="button" role="button" tabindex="0" class="btnModalIdeaModificar swal2-guardar-custom">' + 'Modificar' + '</button>' +
-        '<button type="button" role="button" tabindex="0" class="btnModalIdeaPostularModificar swal2-postular-custom">' + 'Postular' + '</button>' +
-        '<button type="button" role="button" tabindex="0" class="btnModalIdeaCancelar swal2-cancelar-custom">' + 'Cancelar' + '</button>',
-    showCancelButton: false,
-    showConfirmButton: false,
-    type: 'warning',
-    })
-  }
-
-function enviarIdeaRegistro(event, tipo) {
-    $('button[type="submit"]').attr('disabled', 'disabled');
-    event.preventDefault();
-    var form = null;
-    var data = null;
-    if (tipo == 'create') {
-        form = $('#frmIdea_Inicio');
-        data = new FormData($('#frmIdea_Inicio')[0]);
-    } else {
-        form = $('#frmIdea_Update');
-        data = new FormData($('#frmIdea_Update')[0]);
-    }
-    var url = form.attr("action");
-    ajaxSendFormIdea(form, data, url);
-}
-
-function asignarValoresFRMIdeas(response) {
-    $('#txtnombre_empresa_det').val(response.empresa.nombre);
-    $("label[for='txtnombre_empresa_det']").addClass('active');
-    $('#txttipo_empresa_det').val(response.empresa.tipoempresa.nombre);
-    $("label[for='txttipo_empresa_det']").addClass('active');
-    $('#txttamanho_empresa_det').val(response.empresa.tamanhoempresa.nombre);
-    $("label[for='txttamanho_empresa_det']").addClass('active');
-    $('#txtsector_empresa_det').val(response.empresa.sector.nombre);
-    $("label[for='txtsector_empresa_det']").addClass('active');
-    $('#txtnit_empresa').val(response.empresa.nit);
-  }
-
-function ajaxSendFormIdea(form, data, url) {
-    $.ajax({
-        type: form.attr('method'),
-        url: url,
-        data: data,
-        cache: false,
-        contentType: false,
-        dataType: 'json',
-        processData: false,
-        success: function (data) {
-            $('button[type="submit"]').removeAttr('disabled');
-            $('.error').hide();
-            printErroresFormulario(data);
-            mensajesIdeaForm(data);
-        },
-        error: function (xhr, textStatus, errorThrown) {
-            alert("Error: " + errorThrown);
-        }
-    });
-};
-
-function pintarMensajeIdeaForm(title, text, type) {
-    Swal.fire({
-        title: title,
-        html: text,
-        type: type,
-        showCancelButton: false,
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Ok'
-    });
-}
-
-function mensajesIdeaForm(data) {
-    let title = "error";
-    let text = "error";
-    let type = "error";
-    title = data.title;
-    text = data.msg;
-    type = data.type;
-    if (data.state != 'error_form') {
-        pintarMensajeIdeaForm(title, text, type);
-    }
-
-    if (data.state == 'registro') {
-        setTimeout(function () {
-            window.location.href = data.url;
-        }, 5000);
-    }
-
-    if (data.state == 'update') {
-        setTimeout(function () {
-            window.location.href = data.url;
-        }, 5000);
-    }
-};
-
-
-function showInput_ProductoParecido() {
-    if ($('#txtproducto_parecido').is(':checked')) {
-        divProductoParecido.show();
-    } else {
-        divProductoParecido.hide();
-    }
-}
-
-function showInput_Reemplaza() {
-    if ($('#txtreemplaza').is(':checked')) {
-        divReemplaza.show();
-    } else {
-        divReemplaza.hide();
-    }
-}
-
-function showInput_Packing() {
-    if ($('#txtpacking').is(':checked')) {
-        divPacking.show();
-    } else {
-        divPacking.hide();
-    }
-}
-
-function showInput_RequisitosLegales() {
-    if ($('#txtrequisitos_legales').is(':checked')) {
-        divRequisitosLegales.show();
-    } else {
-        divRequisitosLegales.hide();
-    }
-}
-
-function showInput_BuscarEmpresa() {
-    if ($('#txtidea_empresa').is(':checked')) {
-        divBuscarEmpresa.show();
-    } else {
-        divBuscarEmpresa.hide();
-    }
-}
-
-function showInput_Certificaciones() {
-    if ($('#txtrequiere_certificaciones').is(':checked')) {
-        divCertificaciones.show();
-    } else {
-        divCertificaciones.hide();
-    }
-}
-
-function showInput_Recursos() {
-    if ($('#txtrecursos_necesarios').is(':checked')) {
-        divRecursos.show();
-    } else {
-        divRecursos.hide();
-    }
-}
-
-function showInput_Convocatoria() {
-    if ($('#txtviene_convocatoria').is(':checked')) {
-        divConvocatoria.show();
-    } else {
-        divConvocatoria.hide();
-    }
-}
-
-function showInput_AvalEmpresa() {
-    if ($('#txtaval_empresa').is(':checked')) {
-        divAvalEmpresa.show();
-    } else {
-        divAvalEmpresa.hide();
-    }
-}
-
-function consultarProyectosDeTalentos () {
-
-  $('#tblProyectoDelTalento').dataTable().fnDestroy();
-  $('#tblProyectoDelTalento').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    order: [ 0, 'desc' ],
-    "lengthChange": false,
-    ajax:{
-      url: "/proyecto/datatableProyectosDelTalento/",
-      // type: "get",
-      data: function (d) {
-        d.codigo_proyecto = $('.codigo_proyecto').val(),
-        d.nombre = $('.nombre').val(),
-        d.nombre_fase = $('.nombre_fase').val(),
-        d.search = $('input[type="search"]').val()
-      }
-    },
-    columns: [
-      {
-        width: '15%',
-        data: 'codigo_proyecto',
-        name: 'codigo_proyecto',
-      },
-      {
-        data: 'nombre_gestor',
-        name: 'nombre_gestor',
-      },
-      {
-        data: 'nombre',
-        name: 'nombre',
-      },
-      {
-        data: 'nombre_fase',
-        name: 'nombre_fase',
-      },
-      {
-        width: '8%',
-        data: 'info',
-        name: 'info',
-        orderable: false
-      },
-      {
-        width: '8%',
-        data: 'proceso',
-        name: 'proceso',
-        orderable: false
-      },
-    ],
-  });
-}
-function consultarIdeasDelTalento () {
-    $('#tbl_IdeasDelTalento').dataTable().fnDestroy();
-    $('#tbl_IdeasDelTalento').DataTable({
-      language: {
-        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-      },
-      processing: true,
-      serverSide: true,
-      order: [ 0, 'desc' ],
-      "lengthChange": false,
-      ajax:{
-        url: "/idea/datatableIdeasDeTalentos/",
-      },
-      columns: [
-        {
-          width: '15%',
-          data: 'codigo_idea',
-          name: 'codigo_idea',
-        },
-        {
-          width: '8%',
-          data: 'nodo',
-          name: 'nodo',
-        },
-        {
-          data: 'nombre_proyecto',
-          name: 'nombre_proyecto',
-        },
-        {
-          data: 'estado',
-          name: 'estado',
-        },
-        {
-          width: '8%',
-          data: 'info',
-          name: 'info',
-          orderable: false
-        },
-        {
-          width: '8%',
-          data: 'postular',
-          name: 'postular',
-          orderable: false
-        },
-        {
-          width: '8%',
-          data: 'edit',
-          name: 'edit',
-          orderable: false
-        },
-      ],
-    });
-}
-
-function confirmacionPostulacion(e){
-  e.preventDefault();
-  Swal.fire({
-  title: '¿Está seguro(a) de postular esta idea de proyecto?',
-  text: "Una vez que se postule la idea de proyecto, ya no se podrá cambiar los datos de esta.",
-  type: 'warning',
-  showCancelButton: true,
-  confirmButtonColor: '#3085d6',
-  cancelButtonColor: '#d33',
-  cancelButtonText: 'Cancelar',
-  confirmButtonText: 'Sí!'
-  }).then((result) => {
-    if (result.value) {
-      document.frmEnviarIdeaTalento.submit();
-    }
-  })
-}
-
-function confirmacionDuplicacion(e){
-  e.preventDefault();
-  Swal.fire({
-  title: '¿Está seguro(a) de duplicar esta idea de proyecto?',
-  text: "Esto se recomienda hacer en caso de que se quiera continuar con el proceso en tecnoparque.",
-  type: 'warning',
-  showCancelButton: true,
-  confirmButtonColor: '#3085d6',
-  cancelButtonColor: '#d33',
-  cancelButtonText: 'Cancelar',
-  confirmButtonText: 'Sí!'
-  }).then((result) => {
-    if (result.value) {
-      document.frmDuplicarIdea.submit();
-    }
-  })
-}
-
-function confirmacionInhabilitar(e){
-  e.preventDefault();
-  Swal.fire({
-  title: '¿Está seguro(a) de inhabilitar esta idea de proyecto?',
-  text: "Esto quiere decir que esta idea de proyecto no se le podrá realizar un proceso en tecnoparque.",
-  type: 'warning',
-  showCancelButton: true,
-  confirmButtonColor: '#3085d6',
-  cancelButtonColor: '#d33',
-  cancelButtonText: 'Cancelar',
-  confirmButtonText: 'Sí!'
-  }).then((result) => {
-    if (result.value) {
-      document.frmInhabilitarIdea.submit();
-    }
-  })
-}
-function consultarIdeasEnviadasAlNodo () {
-    $('#tbl_IdeasEnviadasDelNodo').dataTable().fnDestroy();
-    $('#tbl_IdeasEnviadasDelNodo').DataTable({
-      language: {
-        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-      },
-      processing: true,
-      serverSide: true,
-      order: [ 0, 'desc' ],
-      "lengthChange": false,
-      ajax:{
-        url: "/idea/datatableIdeasDeTalentos/",
-      },
-      columns: [
-        {
-            width: '15%',
-            data: 'codigo_idea',
-            name: 'codigo_idea',
-        },
-        {
-            data: 'nombre_proyecto',
-            name: 'nombre_proyecto',
-        },
-        {
-            data: 'nombre_talento',
-            name: 'nombre_talento',
-        },
-        {
-            data: 'estado',
-            name: 'estado',
-        },
-        {
-            width: '8%',
-            data: 'info',
-            name: 'info',
-            orderable: false
-        },
-        // {
-        //     width: '8%',
-        //     data: 'edit',
-        //     name: 'edit',
-        //     orderable: false
-        // },
-      ],
-    });
-}
-function consultarEntrenamientosPorNodo_Administrador(id) {
-  $('#entrenamientosPorNodo_tableAdministrador').dataTable().fnDestroy();
-  $('#entrenamientosPorNodo_tableAdministrador').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    ajax:{
-      url: "/entrenamientos/consultarEntrenamientosPorNodo/",
-      type: "get",
-      data: {
-        filter_nodo: id.value,
+        filter_nodo: $('#filter_nodo').val(),
       }
     },
     columns: [
@@ -835,157 +293,6 @@ function consultarEntrenamientosPorNodo_Administrador(id) {
       },
     ],
   });
-}
-
-function noSeEncontraronResultados() {
-  Swal.fire({
-    title: '¿Desea inhabilitar elentrenamiento?',
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    cancelButtonText: 'Cancelar',
-    confirmButtonText: 'Sí, inhabilitar'
-  })
-}
-
-$(document).ready(function() {
-  $('#entrenamientos_nodo_table').dataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    paging: true,
-    ajax:{
-      url: "/entrenamientos",
-      type: "get",
-    },
-
-    columns: [
-      {
-        title: 'Código del Entrenamiento',
-        data: 'codigo_entrenamiento',
-        name: 'codigo_entrenamiento',
-      },
-      {
-        data: 'fecha_sesion1',
-        name: 'fecha_sesion1',
-      },
-      {
-        data: 'fecha_sesion2',
-        name: 'fecha_sesion2',
-      },
-      {
-        data: 'correos',
-        name: 'correos',
-      },
-      {
-        data: 'fotos',
-        name: 'fotos',
-      },
-      {
-        data: 'listado_asistencia',
-        name: 'listado_asistencia',
-      },
-      {
-        width: '8%',
-        data: 'details',
-        name: 'details',
-        orderable: false
-      },
-      {
-        width: '8%',
-        data: 'edit',
-        name: 'edit',
-        orderable: false
-      },
-      {
-        width: '8%',
-        data: 'update_state',
-        name: 'update_state',
-        orderable: false
-      },
-      {
-        width: '8%',
-        data: 'evidencias',
-        name: 'evidencias',
-        orderable: false
-      },
-    ],
-  });
-  $('a.toggle-vis').on( 'click', function (e) {
-    e.preventDefault();
-
-    // Get the column API object
-    var column = table.column( $(this).attr('data-column') );
-
-    // Toggle the visibility
-    column.visible( ! column.visible() );
-  } );
-});
-
-function inhabilitarEntrenamientoPorId(id, e) {
-  Swal.fire({
-    title: '¿Desea inhabilitar el entrenamiento?',
-    // text: "You won't be able to revert this!",
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    cancelButtonText: 'Cancelar',
-    confirmButtonText: 'Sí, inhabilitar'
-  }).then((result) => {
-    if (result.value) {
-      Swal.fire({
-        title: '¿Qué desea hacer?',
-        text: "Seleccione lo que ocurrirá con las ideas de proyecto que están asociasdas al entrenamiento",
-        type: 'warning',
-        footer: '<a onclick="Swal.close()" href="#">Cancelar</a>',
-        confirmButtonText: '<a class="white-text" onclick="cambiarEstadoDeIdeasDeProyectoDeEntrenamiento('+id+', \'Inhabilitado\'); Swal.close()" href="#">Inhabilitar las ideas de proyecto</a>',
-        cancelButtonColor: '#d33',
-        showCancelButton: true,
-        cancelButtonText: '<a class="white-text" onclick="cambiarEstadoDeIdeasDeProyectoDeEntrenamiento('+id+', \'Inicio\'); Swal.close()" href="#">Regresar las ideas de proyecto al estado de Inicio</a>',
-        focusConfirm: false,
-      })
-    }
-  })
-}
-
-function cambiarEstadoDeIdeasDeProyectoDeEntrenamiento(idea, estado) {
-  $.ajax({
-    dataType:'json',
-    type:'get',
-    url:"/entrenamientos/inhabilitarEntrenamiento/"+idea+"/"+estado,
-    success: function (data) {
-      console.log(data);
-      if (data.update == "true") {
-        Swal.fire({
-          title: 'El entrenamiento se ha inhabilitado!',
-          html: 'Las ideas de proyecto del entrenamiento han cambiado su estado a: ' + data.estado ,
-          type: 'success',
-          showCancelButton: false,
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok!'
-        })
-      }
-      if (data.update == "1") {
-        // console.log('No se cambió');
-        Swal.fire({
-          title: 'No se puede inhabilitar el entrenamiento!',
-          html: 'Al parecer, las siguientes ideas de proyecto se encuentran registradas en un comité: </br> <b> ' + data.ideas + '</b></br>' +
-          'Si deseas hacer esto, las ideas de proyecto asociadas al entrenamiento no pueden estar en proyecto ó CSIBT' ,
-          type: 'warning',
-          showCancelButton: false,
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Entiendo!'
-        })
-      }
-    },
-    error: function (xhr, textStatus, errorThrown) {
-      alert("Error: " + errorThrown);
-    }
-  })
 }
 
 $(document).ready(function() {
@@ -1134,7 +441,7 @@ function pintarIdeaEnLaTablaTaller(id, confirmacion, asistencia) {
   $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/idea/detallesIdea/' + id
+      url: host_url + '/idea/detallesIdea/' + id
   }).done(function (ajax) {
       let fila = prepararFilaEnLaTablaDeIdeasTaller(ajax, confirmacion, asistencia);
       $('#tblIdeasEntrenamientoForm').append(fila);
@@ -1157,11 +464,11 @@ function reiniciarCamposTaller() {
 
 function prepararFilaEnLaTablaDeIdeasTaller(ajax, confirmacion, asistencia) {
   let idIdea = ajax.detalles.id;
-  let fila = '<tr class="selected" id=ideaAsociadaTaller' + idIdea + '>' + 
+  let fila = '<tr class="selected" id=ideaAsociadaTaller' + idIdea + '>' +
       '<td><input type="hidden" name="ideas_taller[]" value="' + idIdea + '">' + ajax.detalles.codigo_idea + ' - ' + ajax.detalles.nombre_proyecto + '</td>' +
       '<td><input type="hidden" name="confirmaciones[]" value="' + confirmacion + '">' + getYesOrNot(confirmacion) + '</td>' +
       '<td><input type="hidden" name="asistencias[]" value="' + asistencia + '">' + getYesOrNot(asistencia) + '</td>' +
-      '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarIdeaDelTaller(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' + 
+      '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarIdeaDelTaller(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' +
       '</tr>';
   return fila;
 }
@@ -1178,11 +485,844 @@ function getYesOrNot(value) {
   }
 }
 
+$(document).ready(function() {
 
+    let filter_nodo = $('#filter_nodo').val();
+    let filter_year = $('#filter_year_ideas').val();
+    let filter_state = $('#filter_state').val();
+    let filter_vieneconvocatoria = $('#filter_vieneconvocatoria').val();
+    let filter_convocatoria = $('#filter_convocatoria').val();
+
+    consultarIdeasDelTalento();
+    if((filter_nodo == '' || filter_nodo == null) && filter_year !='' && filter_state != '' && filter_vieneconvocatoria != '' && (filter_convocatoria == '' || filter_convocatoria == null)){
+        idea.fill_datatatables_ideas(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
+    }else if((filter_nodo != '' || filter_nodo != null) && filter_year !='' && filter_state != '' && filter_vieneconvocatoria != '' && (filter_convocatoria != '' || filter_convocatoria != null)){
+        idea.fill_datatatables_ideas(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
+    }else{
+        $('#ideas_data_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false
+        }).clear().draw();
+    }
+
+
+});
+
+$('#filter_idea').click(function () {
+    let filter_nodo = $('#filter_nodo').val();
+    // console.log(filter_nodo);
+    let filter_year = $('#filter_year_ideas').val();
+    let filter_state = $('#filter_state').val();
+    let filter_vieneconvocatoria = $('#filter_vieneconvocatoria').val();
+    let filter_convocatoria = $('#filter_convocatoria').val();
+    $('#ideas_data_table').dataTable().fnDestroy();
+    if((filter_nodo == '' || filter_nodo == null) && filter_year !='' && filter_state != '' && filter_vieneconvocatoria != '' && (filter_convocatoria == '' || filter_convocatoria == null)){
+        idea.fill_datatatables_ideas(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
+    }else if((filter_nodo != '' || filter_nodo != null) && filter_year !='' && filter_state != '' && filter_vieneconvocatoria != '' && (filter_convocatoria != '' || filter_convocatoria != null)){
+        idea.fill_datatatables_ideas(filter_nodo, filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria);
+    }else{
+        $('#ideas_data_action_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            pageLength: 20,
+            "lengthChange": false
+        }).clear().draw();
+        $('#ideas_data_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false
+        }).clear().draw();
+    }
+});
+
+$('#download_excel').click(function(){
+        let filter_nodo = $('#filter_nodo').val();
+        let filter_year = $('#filter_year_ideas').val();
+        let filter_state = $('#filter_state').val();
+        let filter_vieneConvocatoria = $('#filter_vieneconvocatoria').val();
+        let filter_convocatoria = $('#filter_convocatoria').val();
+        var query = {
+            filter_nodo: filter_nodo,
+            filter_year: filter_year,
+            filter_state: filter_state,
+            filter_vieneConvocatoria: filter_vieneConvocatoria,
+            filter_convocatoria: filter_convocatoria,
+        }
+
+        var url = host_url + "/idea/export?" + $.param(query)
+
+        window.location = url;
+    });
+
+
+
+var idea ={
+    fill_datatatables_ideas: function(filter_nodo = null,filter_year='', filter_state='',filter_vieneConvocatoria='', filter_convocatoria = null){
+        var datatable = $('#ideas_data_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "lengthChange": false,
+            processing: true,
+            serverSide: true,
+            pageLength: 20,
+            "order": [[ 1, "desc" ]],
+            ajax:{
+                url: host_url + "/idea/datatable_filtros",
+                type: "get",
+                data: {
+                    filter_nodo: filter_nodo,
+                    filter_year: filter_year,
+                    filter_state: filter_state,
+                    filter_vieneConvocatoria: filter_vieneConvocatoria,
+                    filter_convocatoria: filter_convocatoria,
+                }
+            },
+            columns: [
+                {
+                    data: 'nodo',
+                    name: 'nodo',
+                },
+                {
+                    data: 'codigo_idea',
+                    name: 'codigo_idea',
+                },
+                {
+                    data: 'created_at',
+                    name: 'created_at',
+                },
+                {
+                    data: 'persona',
+                    name: 'persona',
+                },
+                {
+                    data: 'correo_contacto',
+                    name: 'correo_contacto',
+                },
+                {
+                    data: 'telefono_contacto',
+                    name: 'telefono_contacto',
+                },
+                {
+                    data: 'nombre_proyecto',
+                    name: 'nombre_proyecto',
+                },
+                {
+                    data: 'estado',
+                    name: 'estado',
+                },
+                {
+                    data: 'info',
+                    name: 'info',
+                    orderable: false
+                },
+            ],
+        });
+    },
+    getSelectConvocatoria: function (){
+        let convocatoria = $('#txtconvocatoria').val();
+        $('#txtnombreconvocatoria').attr("disabled", "disabled");
+        if(convocatoria == 1){
+            $('#txtnombreconvocatoria').removeAttr("disabled").focus().val('');
+        }else if(convocatoria == 0){
+            $('#txtnombreconvocatoria').val('');
+            $('#txtnombreconvocatoria').attr("disabled", "disabled");
+        }else{
+            $('#txtnombreconvocatoria').val('');
+            $('#txtnombreconvocatoria').attr("disabled", "disabled");
+        }
+    },
+
+    getSelectAvalEmpresa: function (){
+        let avalaEmpresa = $('#txtavalempresa').val();
+        $('#txtempresa').attr("disabled", "disabled");
+        if(avalaEmpresa == 1){
+            $('#txtempresa').removeAttr("disabled").focus().val('');
+        }else if(avalaEmpresa == 0){
+            $('#txtempresa').val('');
+            $('#txtempresa').attr("disabled", "disabled");
+        }else{
+            $('#txtempresa').val('');
+            $('#txtempresa').attr("disabled", "disabled");
+        }
+    },
+    vieneConvocatoria: function(value){
+        if(value == 1){
+            return "Si";
+        }else{
+            return "No";
+        }
+    },
+     nombreConvocatoria: function(value, convocatoria){
+        if(value == 1){
+            return convocatoria;
+        }else{
+            return "No Aplica";
+        }
+    },
+    avalEmpresa: function(value){
+        if(value == 1){
+            return "Si";
+        }else{
+            return "No";
+        }
+    },
+    nombreEmpresa: function(value, empresa){
+        if(value == 1){
+            return empresa;
+        }else{
+            return "No Aplica";
+        }
+    }
+}
+
+
+function cambiarEstadoIdeaDeProyecto(id, estado) {
+Swal.fire({
+    title: '¿Desea cambiar el estado de la idea de proyecto a '+estado+'?',
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Sí'
+}).then((result) => {
+    if (result.value) {
+    $.ajax({
+        dataType:'json',
+        type:'get',
+        url: host_url + '/idea/updateEstadoIdea/'+id+'/'+estado,
+        success: function (data) {
+        Swal.fire({
+            title: 'El estado de la idea se ha cambiado exitosamente!',
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Sí'
+        }).then((result) => {
+            window.location.replace(data.route);
+        })
+        },
+        error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+        }
+    })
+    }
+})
+
+}
+
+function detallesIdeaPorId(id){
+    $.ajax({
+        dataType:'json',
+        type:'get',
+        url: host_url + "/idea/modalIdeas/"+id
+    }).done(function(respuesta){
+        $("#detalle_idea").empty();
+        if (respuesta == null) {
+        swal('Ups!!!', 'Ha ocurrido un error', 'warning');
+        } else {
+        $("#detalle_idea").append(respuesta.view);
+        $('#modalInformacionIdea').openModal();
+        }
+    })
+}
+
+function consultarIdeasDelTalento() {
+    // $('#ideas_talento').dataTable().fnDestroy();
+    $('#ideas_talento').DataTable({
+      language: {
+        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+      },
+      "lengthChange": false,
+      processing: true,
+      serverSide: true,
+      pageLength: 20,
+      order: [ 0, 'desc' ],
+      "lengthChange": false,
+      ajax:{
+        url: host_url + "/idea/datatable_filtros",
+        type: "get",
+        data: {
+            filter_nodo: null,
+            filter_year: null,
+            filter_state: null,
+            filter_vieneConvocatoria: null,
+            filter_convocatoria: null,
+        }
+      },
+      columns: [
+        {
+          width: '15%',
+          data: 'codigo_idea',
+          name: 'codigo_idea',
+        },
+        {
+          width: '8%',
+          data: 'nodo',
+          name: 'nodo',
+        },
+        {
+          data: 'nombre_proyecto',
+          name: 'nombre_proyecto',
+        },
+        {
+          data: 'estado',
+          name: 'estado',
+        },
+        {
+          width: '8%',
+          data: 'info',
+          name: 'info',
+          orderable: false
+        },
+        {
+          width: '8%',
+          data: 'postular',
+          name: 'postular',
+          orderable: false
+        },
+        {
+          width: '8%',
+          data: 'edit',
+          name: 'edit',
+          orderable: false
+        },
+      ],
+    });
+}
+
+function confirmacionPostulacion(e){
+  e.preventDefault();
+  Swal.fire({
+  title: '¿Está seguro(a) de postular esta idea de proyecto?',
+  text: "Una vez que se postule la idea de proyecto, ya no se podrá cambiar los datos de esta.",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  cancelButtonText: 'Cancelar',
+  confirmButtonText: 'Sí!'
+  }).then((result) => {
+    if (result.value) {
+      document.frmPostularIdea.submit();
+    }
+  })
+}
+
+function confirmacionInhabilitar(e){
+  e.preventDefault();
+  Swal.fire({
+  title: '¿Está seguro(a) de inhabilitar esta idea de proyecto?',
+  text: "Esto quiere decir que esta idea de proyecto no se le podrá realizar un proceso en tecnoparque.",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  cancelButtonText: 'Cancelar',
+  confirmButtonText: 'Sí!'
+  }).then((result) => {
+    if (result.value) {
+      document.frmInhabilitarIdea.submit();
+    }
+  })
+}
+
+$(document).ready(function () {
+    // Contenedores
+    divProductoParecido = $('#productoParecido_content');
+    divReemplaza = $('#reemplaza_content');
+    divPacking = $('#packing_content');
+    divRequisitosLegales = $('#requisitosLegales_content');
+    divCertificaciones = $('#certificaciones_content');
+    divRecursos = $('#recursos_content');
+    divConvocatoria = $('#convocatoria_content');
+    divAvalEmpresa = $('#avalEmpresa_content');
+    divBuscarEmpresa = $('#buscarEmpresa_content');
+    divRegistrarEmpresa = $('#registrarEmpresa_content');
+    divEmpresaRegistrada = $('#consultarEmpresa_content');
+    // Ocultar contenedores
+    divProductoParecido.hide();
+    divReemplaza.hide();
+    divPacking.hide();
+    divRequisitosLegales.hide();
+    divCertificaciones.hide();
+    divRecursos.hide();
+    divConvocatoria.hide();
+    divAvalEmpresa.hide();
+    divBuscarEmpresa.hide();
+    divRegistrarEmpresa.hide();
+    divEmpresaRegistrada.hide();
+
+    showInput_ProductoParecido();
+    showInput_Reemplaza();
+    showInput_Packing();
+    showInput_RequisitosLegales();
+    showInput_Certificaciones();
+    showInput_Recursos();
+    showInput_Convocatoria();
+    showInput_AvalEmpresa();
+    showInput_BuscarEmpresa();
+});
+
+divRegistrarEmpresa = $('#divRegistrarEmpresa');
+divIngresarEmpresaIdea = $('#divIngresarEmpresaIdea');
+divEmpresaRegistrada = $('#divEmpresaRegistrada');
+divIngresarEmpresaIdea.hide();
+divRegistrarEmpresa.hide();
+divEmpresaRegistrada.hide();
+
+function consultarEmpresaTecnoparque() {
+    let nit = $('#txtnit').val();
+    let field = 'nit';
+    if (nit.length < 9 || nit.length > 13) {
+        Swal.fire({
+            title: 'Advertencia!',
+            text: "El nit de la empresa debe tener entre 9 y 13 dígitos!",
+            type: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+          })
+    } else {
+        if (nit == "") {
+          Swal.fire({
+            title: 'Advertencia!',
+            text: "Digite el nit de la empresa!",
+            type: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+          })
+        } else {
+          $.ajax({
+            dataType: 'json',
+            type: 'get',
+            url : host_url + '/empresa/ajaxDetallesDeUnaEmpresa/'+nit+'/'+field,
+            success: function (response) {
+              if (response.empresa == null) {
+                divEmpresaRegistrada.hide();
+                divRegistrarEmpresa.show();
+                $('#txtnit_empresa').val(nit);
+                $("label[for='txtnit_empresa']").addClass('active');
+              } else {
+                let registros;
+                asignarValoresFRMIdeas(response);
+                divEmpresaRegistrada.show();
+                divRegistrarEmpresa.hide();
+                reiniciarSede();
+                registros = mostrarSedesEmpresa(response);
+                $('#sedesEmpresaFormIdea').append(registros);
+              }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+              alert("Error: " + errorThrown);
+            }
+          })
+        }
+    }
+}
+
+function reiniciarSede() {
+  $('#sedesEmpresaFormIdea').empty();
+  $('#txtsede_id').val('');
+  $('#txtnombre_sede_disabled').val('Primero debes seleccionar una sede');
+}
+
+function mostrarSedesEmpresa(ajax) {
+  let fila = "";
+  ajax.empresa.sedes.forEach(element => {
+    fila += `<li class="collection-item">
+      ` + element.nombre_sede + ` - ` + element.direccion + ` ` + element.ciudad.nombre + ` (` + element.ciudad.departamento.nombre + `)
+      <a href="#!" class="secondary-content" onclick="asociarSedeAIdeaProyecto(`+element.id+`)">Asociar esta sede de la empresa a la idea de proyecto</a></div>
+    </li>`;
+  });
+  return fila
+}
+
+function asociarSedeAIdeaProyecto(sede_id) {
+  $.ajax({
+    dataType: 'json',
+    type: 'get',
+    url : host_url + '/empresa/ajaxDetalleDeUnaSede/'+sede_id,
+    success: function (response) {
+      $('#txtsede_id').val(response.sede.id);
+      $('#txtnombre_sede_disabled').val(response.sede.nombre_sede + ' - ' + response.sede.direccion + ' ' + response.sede.ciudad.nombre + ' (' + response.sede.ciudad.departamento.nombre + ')');
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 1500,
+        type: 'success',
+        title: 'La sede '+response.sede.nombre_sede+' se asoció a la idea de proyecto!'
+    });
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    }
+  })
+}
+
+  $(document).on('click', '.btnModalIdeaCancelar', function(event) {
+    Swal.close();
+  });
+
+  $(document).on('click', '.btnModalIdeaGuardar', function(event) {
+    $('#txtopcionRegistro').val('guardar');
+    Swal.clickConfirm();
+    enviarIdeaRegistro(event, 'create');
+  });
+
+  $(document).on('click', '.btnModalIdeaModificar', function(event) {
+    $('#txtopcionRegistro').val('guardar');
+    Swal.clickConfirm();
+    enviarIdeaRegistro(event, 'update');
+  });
+  
+  $(document).on('click', '.btnModalIdeaPostular', function(event) {
+    $('#txtopcionRegistro').val('postular');
+    Swal.clickConfirm();
+    enviarIdeaRegistro(event, 'create');
+  });
+  
+  $(document).on('click', '.btnModalIdeaPostularModificar', function(event) {
+    $('#txtopcionRegistro').val('postular');
+    Swal.clickConfirm();
+    enviarIdeaRegistro(event, 'update');
+  });
+
+  function modalOpcionesFormulario(e) {
+    e.preventDefault();
+    Swal.fire({
+    title: 'Guardar información',
+    html: "¿Qué desea hacer?" +
+        "<br>" +
+        '<button type="button" role="button" tabindex="0" class="btnModalIdeaGuardar swal2-guardar-custom">' + 'Guardar' + '</button>' +
+        '<button type="button" role="button" tabindex="0" class="btnModalIdeaPostular swal2-postular-custom">' + 'Postular' + '</button>' +
+        '<button type="button" role="button" tabindex="0" class="btnModalIdeaCancelar swal2-cancelar-custom">' + 'Cancelar' + '</button>',
+    showCancelButton: false,
+    showConfirmButton: false,
+    type: 'warning',
+    })
+  }
+
+  function modalOpcionesFormularioModificar(e) {
+    e.preventDefault();
+    Swal.fire({
+    title: 'Modificar información',
+    html: "¿Qué desea hacer?" +
+        "<br>" +
+        '<button type="button" role="button" tabindex="0" class="btnModalIdeaModificar swal2-guardar-custom">' + 'Modificar' + '</button>' +
+        '<button type="button" role="button" tabindex="0" class="btnModalIdeaPostularModificar swal2-postular-custom">' + 'Postular' + '</button>' +
+        '<button type="button" role="button" tabindex="0" class="btnModalIdeaCancelar swal2-cancelar-custom">' + 'Cancelar' + '</button>',
+    showCancelButton: false,
+    showConfirmButton: false,
+    type: 'warning',
+    })
+  }
+
+function enviarIdeaRegistro(event, tipo) {
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = null;
+    var data = null;
+    
+    if (tipo == 'create') {
+        form = $('#frmIdea_Inicio');
+        data = new FormData($('#frmIdea_Inicio')[0]);
+    } else {
+        form = $('#frmIdea_Update');
+        data = new FormData($('#frmIdea_Update')[0]);
+    }
+    var url = form.attr("action");
+    ajaxSendFormIdea(form, data, url);
+}
+
+function asignarValoresFRMIdeas(response) {
+    $('#txtnombre_empresa_det').val(response.empresa.nombre);
+    $("label[for='txtnombre_empresa_det']").addClass('active');
+    $('#txttipo_empresa_det').val(response.empresa.tipoempresa.nombre);
+    $("label[for='txttipo_empresa_det']").addClass('active');
+    $('#txttamanho_empresa_det').val(response.empresa.tamanhoempresa.nombre);
+    $("label[for='txttamanho_empresa_det']").addClass('active');
+    $('#txtsector_empresa_det').val(response.empresa.sector.nombre);
+    $("label[for='txtsector_empresa_det']").addClass('active');
+    $('#txtnit_empresa').val(response.empresa.nit);
+  }
+
+function ajaxSendFormIdea(form, data, url) {
+    $.ajax({
+        type: form.attr('method'),
+        url: url,
+        data: data,
+        cache: false,
+        contentType: false,
+        dataType: 'json',
+        processData: false,
+        success: function (data) {
+            $('button[type="submit"]').removeAttr('disabled');
+            $('.error').hide();
+            printErroresFormulario(data);
+            mensajesIdeaForm(data);
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            alert("Error: " + errorThrown);
+        }
+    });
+};
+
+function pintarMensajeIdeaForm(title, text, type) {
+    Swal.fire({
+        title: title,
+        html: text,
+        type: type,
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok'
+    });
+}
+
+function mensajesIdeaForm(data) {
+    let title = "error";
+    let text = "error";
+    let type = "error";
+    title = data.title;
+    text = data.msg;
+    type = data.type;
+    
+    if (data.state != 'error_form') {
+        pintarMensajeIdeaForm(title, text, type);
+    }
+    
+    if (data.state == 'registro') {
+        setTimeout(function () {
+            window.location.href = data.url;
+        }, 5000);
+    }
+
+    if (data.state == 'update') {
+        setTimeout(function () {
+            window.location.href = data.url;
+        }, 5000);
+    }
+};
+
+
+function showInput_ProductoParecido() {
+    if ($('#txtproducto_parecido').is(':checked')) {
+        divProductoParecido.show();
+    } else {
+        divProductoParecido.hide();
+    }
+}
+
+function showInput_Reemplaza() {
+    if ($('#txtreemplaza').is(':checked')) {
+        divReemplaza.show();
+    } else {
+        divReemplaza.hide();
+    }
+}
+
+function showInput_Packing() {
+    if ($('#txtpacking').is(':checked')) {
+        divPacking.show();
+    } else {
+        divPacking.hide();
+    }
+}
+
+function showInput_RequisitosLegales() {
+    if ($('#txtrequisitos_legales').is(':checked')) {
+        divRequisitosLegales.show();
+    } else {
+        divRequisitosLegales.hide();
+    }
+}
+
+function showInput_BuscarEmpresa() {
+    if ($('#txtidea_empresa').is(':checked')) {
+        divBuscarEmpresa.show();
+    } else {
+        divBuscarEmpresa.hide();
+    }
+}
+
+function showInput_Certificaciones() {
+    if ($('#txtrequiere_certificaciones').is(':checked')) {
+        divCertificaciones.show();
+    } else {
+        divCertificaciones.hide();
+    }
+}
+
+function showInput_Recursos() {
+    if ($('#txtrecursos_necesarios').is(':checked')) {
+        divRecursos.show();
+    } else {
+        divRecursos.hide();
+    }
+}
+
+function showInput_Convocatoria() {
+    if ($('#txtviene_convocatoria').is(':checked')) {
+        divConvocatoria.show();
+    } else {
+        divConvocatoria.hide();
+    }
+}
+
+function showInput_AvalEmpresa() {
+    if ($('#txtaval_empresa').is(':checked')) {
+        divAvalEmpresa.show();
+    } else {
+        divAvalEmpresa.hide();
+    }
+}
+
+function banderaEmpresaIdea() {
+  if ($('#bandera_empresa').is(':checked')) {
+    divIngresarEmpresaIdea.show();
+  } else {
+    divIngresarEmpresaIdea.hide();
+    divRegistrarEmpresa.hide();
+    divEmpresaRegistrada.hide();
+  }
+}
+
+function mensajesIdeaCreate(data) {
+  if (data.state == 'registro') {
+      Swal.fire({
+          title: 'Registro Exitoso',
+          text: "La idea de proyecto ha sido registrada satisfactoriamente",
+          type: 'success',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+      });
+      setTimeout(function () {
+          window.location.replace("/idea");
+      }, 1000);
+  }
+  if (data.state == 'no_registro') {
+      Swal.fire({
+          title: 'La idea de proyecto no se ha registrado, por favor inténtalo de nuevo',
+          type: 'warning',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+      })
+  }
+};
+
+function mensajesIdeaUpdate(data) {
+  if (data.state == 'update') {
+      Swal.fire({
+          title: 'Modificación Exitosa',
+          text: "La idea de proyecto ha sido modificada satisfactoriamente",
+          type: 'success',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+      });
+      setTimeout(function () {
+          window.location.replace("/idea");
+      }, 1000);
+  }
+  if (data.state == 'no_update') {
+      Swal.fire({
+          title: 'La idea de proyecto no se ha modificado, por favor inténtalo de nuevo',
+          type: 'warning',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok'
+      })
+  }
+};
+function confirmacionDuplicacion(e){
+  e.preventDefault();
+  Swal.fire({
+  title: '¿Está seguro(a) de duplicar esta idea de proyecto?',
+  text: "Esto se recomienda hacer en caso de que se quiera continuar con el proceso en tecnoparque.",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  cancelButtonText: 'Cancelar',
+  confirmButtonText: 'Sí!'
+  }).then((result) => {
+    if (result.value) {
+      document.frmDuplicarIdea.submit();
+    }
+  })
+}
+
+function confirmacionAceptacionPostulacion(e) {
+    e.preventDefault();
+    Swal.fire({
+    title: '¿Está seguro(a) de aceptar la postulación de esta idea de proyecto?',
+    input: 'textarea',
+    inputPlaceholder: 'Puedes dejar algunas observaciones para el talento',
+    type: 'warning',
+    inputValidator: (value) => {
+      if (!value) {
+        return 'Se necesitan unas observaciones!'
+      } else {
+        $('#txtobservacionesAceptacion').val(value);
+      }
+    },
+    inputAttributes: {
+      maxlength: 2100
+    },
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Sí!'
+    }).then((result) => {
+      if (result.value) {
+        document.frmAceptarPostulacionIdea.submit();
+        // window.location.href = "{{ route('idea.aceptar.postulacion', $idea->id) }}";
+      }
+    })
+  }
+
+  function confirmacionRechazoPostulacion(e){
+    e.preventDefault();
+    Swal.fire({
+    title: '¿Está seguro(a) de devolver la postulación de esta idea de proyecto?',
+    input: 'textarea',
+    inputPlaceholder: 'Por favor, escriba los motivos por los cuales se está devolviendo la postulación de la idea de proyecto',
+    type: 'warning',
+    inputValidator: (value) => {
+      if (!value) {
+        return 'Los motivos por los cuales se devuelve la idea deben ser obligatorios!'
+      } else {
+        $('#txtmotivosRechazo').val(value);
+      }
+    },
+    inputAttributes: {
+      maxlength: 2100
+    },
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    cancelButtonText: 'Cancelar',
+    confirmButtonText: 'Enviar observaciones!'
+    }).then((result) => {
+      if (result.value) {
+        document.frmRechazarPostulacionIdea.submit();
+      }
+    })
+  }
 function enviarNotificacionResultadosCSIBT(idea, comite) {
     $.ajax({
         type: 'get',
-        url: '/csibt/notificar_resultado/' + idea + '/' + comite,
+        url: host_url + '/csibt/notificar_resultado/' + idea + '/' + comite,
         dataType: 'json',
         processData: false,
         success: function (data) {
@@ -1332,7 +1472,7 @@ $('.dataTables_length select').addClass('browser-default');
     serverSide: true,
     order: false,
     ajax:{
-      url: "/csibt",
+      url: host_url + "/csibt",
       type: "get",
     },
     columns: [
@@ -1377,7 +1517,7 @@ csibt = {
     $.ajax({
       dataType:'json',
       type:'get',
-      url:"/csibt/"+id,
+      url: host_url + "/csibt/"+id,
     }).done(function(respuesta){
       console.log(respuesta);
       $("#ideasProyectoDeUnComite").empty();
@@ -1402,7 +1542,7 @@ csibt = {
     $.ajax({
        dataType:'json',
        type:'get',
-       url:"/idea/detallesIdea/"+idIdea
+       url: host_url + "/idea/detallesIdea/"+idIdea
     }).done(function(respuesta){
       $("#titulo").empty();
       $("#detalle_idea").empty();
@@ -1528,8 +1668,8 @@ $('#txthoraidea').bootstrapMaterialDatePicker({
     weekStart : 1, cancelText : 'Cancelar',
     okText: 'Guardar'
 });
-  
-$('input[name*="horas_fin"]').bootstrapMaterialDatePicker({ 
+
+$('input[name*="horas_fin"]').bootstrapMaterialDatePicker({
     time:true,
     date:false,
     shortTime:true,
@@ -1538,8 +1678,8 @@ $('input[name*="horas_fin"]').bootstrapMaterialDatePicker({
     weekStart : 1, cancelText : 'Cancelar',
     okText: 'Guardar'
 });
- 
-$('input[name*="horas_inicio"]').bootstrapMaterialDatePicker({ 
+
+$('input[name*="horas_inicio"]').bootstrapMaterialDatePicker({
     time:true,
     date:false,
     shortTime: true,
@@ -1548,8 +1688,8 @@ $('input[name*="horas_inicio"]').bootstrapMaterialDatePicker({
     weekStart : 1, cancelText : 'Cancelar',
     okText: 'Guardar'
  });
- 
-$('#txthorafingestor').bootstrapMaterialDatePicker({ 
+
+$('#txthorafingestor').bootstrapMaterialDatePicker({
     time:true,
     date:false,
     shortTime: true,
@@ -1694,7 +1834,7 @@ function pintarIdeaEnLaTabla(id, hora, direccion) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/idea/detallesIdea/' + id
+        url: host_url + '/idea/detallesIdea/' + id
     }).done(function (ajax) {
         let fila = prepararFilaEnLaTablaDeIdeas(ajax, hora, direccion);
         $('#tblIdeasComiteCreate').append(fila);
@@ -1705,11 +1845,11 @@ function pintarIdeaEnLaTabla(id, hora, direccion) {
 
 function prepararFilaEnLaTablaDeIdeas(ajax, hora, direccion) {
 let idIdea = ajax.detalles.id;
-let fila = '<tr class="selected" id=ideaAsociadaAgendamiento' + idIdea + '>' + 
+let fila = '<tr class="selected" id=ideaAsociadaAgendamiento' + idIdea + '>' +
     '<td><input type="hidden" name="ideas[]" value="' + idIdea + '">' + ajax.detalles.nombre_proyecto + '</td>' +
     '<td><input type="hidden" name="horas[]" value="' + hora + '">' + hora + '</td>' +
     '<td><input type="hidden" name="direcciones[]" value="' + direccion + '">' + direccion + '</td>' +
-    '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarIdeaDelAgendamiento(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' + 
+    '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarIdeaDelAgendamiento(' + idIdea + ');"><i class="material-icons">delete_sweep</i></a></td>' +
     '</tr>';
 return fila;
 }
@@ -1770,6 +1910,7 @@ $('#txtdireccion').val('');
 $("label[for='txtdireccion']").removeClass('active');
 $("label[for='txthoraidea']").removeClass('active');
 }
+
 $(document).on('submit', 'form#formComiteRealizadoCreate', function (event) {
     event.preventDefault();
     Swal.fire({
@@ -1851,7 +1992,7 @@ $(document).ready(function() {
     serverSide: true,
     order: false,
     ajax:{
-      url: "/csibt",
+      url: host_url + "/csibt",
       type: "get",
     },
     columns: [
@@ -1904,7 +2045,7 @@ function consultarCsibtPorNodo() {
     serverSide: true,
     order: false,
     ajax:{
-      url: "/csibt/"+id+"/consultarCsibtPorNodo",
+      url: host_url + "/csibt/"+id+"/consultarCsibtPorNodo",
       type: "get",
     },
     columns: [
@@ -1942,7 +2083,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax:{
-        url: "/empresa/datatableEmpresasDeTecnoparque",
+        url: host_url + "/empresa/datatableEmpresasDeTecnoparque",
         type: "get",
         },
         columns: [
@@ -2174,58 +2315,57 @@ $(document).on('submit', 'form#formSearchEmpresas', function (event) {
     $('button[type="submit"]').attr('disabled', 'disabled');
     event.preventDefault();
     $('#empresas_encontradas').empty();
-    let nit = $('#txtnit_search').val();
-    let patronNit=new RegExp('^[0-9]{9,13}$');
-    if (!patronNit.test(nit)) {
-        Swal.fire(
-            'Estás ingresando mal los datos!',
-            'Por favor ingrese un nit válido entre 6 y 13 dígitos (no se permiten puntos ni código de verificación)',
-            'error'
-        );
-        $('button[type="submit"]').removeAttr('disabled');
-        $('button[type="submit"]').prop("disabled", false);
-    } else {
-        var form = $(this);
-        var data = new FormData($(this)[0]);
-        var url = form.attr("action");
-        $.ajax({
-            type: form.attr('method'),
-            url: url,
-            data: data,
-            cache: false,
-            contentType: false,
-            dataType: 'json',
-            processData: false,
-            success: function (data) {
-                if (data.empresas.length == 0) {
-                    $('#empresas_encontradas').append(`
-                        <div class="row">
-                            <ul class="collection with-header">
-                                <li class="collection-header"><h5>No se encontraron empresas</h5></li>
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    $.ajax({
+        type: form.attr('method'),
+        url: url,
+        data: data,
+        cache: false,
+        contentType: false,
+        dataType: 'json',
+        processData: false,
+        success: function (data) {
+            if (data.empresas.length == 0) {
+                $('#empresas_encontradas').append(`
+                    <div class="row">
+                        <ul class="collection with-header">
+                            <li class="collection-header"><h5>No se encontraron empresas</h5></li>
+                        </ul>
+                    </div>
+                `);
+            } else {
+                if (data.state == 'search') {
+                    $('#empresas_encontradas').append(`<div class="row">`);
+                        $.each( data.empresas, function( key, empresa ) {
+                        let route = data.urls[key];
+                        $('#empresas_encontradas').append(`
+                            <ul class="collection">
+                                <li class="collection-item"><h5>`+empresa.nit+` - `+empresa.nombre+`</h5></li>
+                                <li class="collection-item"><a href=`+route+`>Ver detalles</a></li>
                             </ul>
-                        </div>
-                    `);
-                } else {
-                    if (data.state == 'search') {
-                        $('#empresas_encontradas').append(`<div class="row">`);
-                            $.each( data.empresas, function( key, empresa ) {
-                            let route = data.urls[key];
-                            $('#empresas_encontradas').append(`
-                                <ul class="collection">
-                                    <li class="collection-item"><h5>`+empresa.nit+` - `+empresa.nombre+`</h5></li>
-                                    <li class="collection-item"><a href=`+route+`>Ver detalles</a></li>
-                                </ul>
-                            `);
-                        });
-                        $('#empresas_encontradas').append(`</div>`);
-                    }
+                        `);
+                    });
+                    $('#empresas_encontradas').append(`</div>`);
                 }
-                $('button[type="submit"]').removeAttr('disabled');
-                $('button[type="submit"]').prop("disabled", false);
-            },
-        });
-    }
+            }
+            $('button[type="submit"]').removeAttr('disabled');
+            $('button[type="submit"]').prop("disabled", false);
+        },
+    });
 });
+$('#txttipogrupo').change(function () {
+  let idtipo = $('#txttipogrupo').val();
+  if (idtipo == 1) {
+    $('#txtinstitucion').val('SENA');
+    $('#labelins').addClass('active', true)
+  } else if (idtipo == 0) {
+    $('#txtinstitucion').val('');
+    $('#labelins').removeClass('active')
+  }
+});
+
 $(document).ready(function() {
   $('#grupoDeInvestigacionTecnoparque_table').DataTable({
     language: {
@@ -2235,7 +2375,7 @@ $(document).ready(function() {
     serverSide: true,
     // order: false,
     ajax:{
-      url: "/grupo/datatableGruposInvestigacionDeTecnoparque",
+      url: host_url + "/grupo/datatableGruposInvestigacionDeTecnoparque",
       type: "get",
     },
     columns: [
@@ -2266,11 +2406,6 @@ $(document).ready(function() {
       {
         data: 'details',
         name: 'details',
-        orderable: false
-      },
-      {
-        data: 'contacts',
-        name: 'contacts',
         orderable: false
       },
       {
@@ -2282,55 +2417,12 @@ $(document).ready(function() {
   });
 });
 
-  $('#grupoDeInvestigacionTecnoparque_tableNoGestor').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    ajax:{
-      url: "/grupo/datatableGruposInvestigacionDeTecnoparque",
-      type: "get",
-    },
-    columns: [
-      {
-        data: 'codigo_grupo',
-        name: 'codigo_grupo',
-      },
-      {
-        data: 'nombre',
-        name: 'nombre',
-      },
-      {
-        data: 'ciudad',
-        name: 'ciudad',
-      },
-      {
-        data: 'tipo_grupo',
-        name: 'tipo_grupo',
-      },
-      {
-        data: 'institucion',
-        name: 'institucion',
-      },
-      {
-        data: 'clasificacioncolciencias',
-        name: 'clasificacioncolciencias',
-      },
-      {
-        data: 'details',
-        name: 'details',
-        orderable: false
-      },
-    ],
-  });
-
 var grupoInvestigacionIndex = {
   consultarDetallesDeUnGrupoInvestigacion:function(id){
     $.ajax({
       dataType:'json',
       type:'get',
-      url:"/grupo/ajaxDetallesDeUnGrupoInvestigacion/"+id
+      url: host_url + "/grupo/ajaxDetallesDeUnGrupoInvestigacion/"+id
     }).done(function(respuesta){
       $("#modalDetalleDeUnGrupoDeInvestigacion_titulo").empty();
       $("#modalDetalleDeUnGrupoDeInvestigacion_detalle_empresa").empty();
@@ -2550,7 +2642,7 @@ var user = {
         $.ajax({
           dataType:'json',
           type:'get',
-          url:'/usuario/getciudad/'+id
+          url: host_url + '/usuario/getciudad/'+id
         }).done(function(response){
           $('#txtciudadexpedicion').empty();
         //   $('#txtciudadexpedicion').append('<option value="">Seleccione la Ciudad</option>')
@@ -2579,7 +2671,7 @@ var user = {
         $.ajax({
           dataType:'json',
           type:'get',
-          url:'/usuario/getciudad/'+id
+          url: host_url + '/usuario/getciudad/'+id
         }).done(function(response){
           $('#txtciudad').empty();
           $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')
@@ -2823,7 +2915,7 @@ var tipoTalento = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:'/centro-formacion/getcentrosregional/'+regional
+            url: host_url + '/centro-formacion/getcentrosregional/'+regional
         }).done(function(response){
             $('#txtcentroformacion_aprendiz').empty();
             $('#txtcentroformacion_aprendiz').append('<option value="">Seleccione el centro de formación</option>')
@@ -2841,7 +2933,7 @@ var tipoTalento = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:'/centro-formacion/getcentrosregional/'+regional
+            url: host_url + '/centro-formacion/getcentrosregional/'+regional
         }).done(function(response){
             $('#txtcentroformacion_egresado').empty();
             $('#txtcentroformacion_egresado').append('<option value="">Seleccione el centro de formación</option>')
@@ -2859,7 +2951,7 @@ var tipoTalento = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:'/centro-formacion/getcentrosregional/'+regional
+            url: host_url + '/centro-formacion/getcentrosregional/'+regional
         }).done(function(response){
             $('#txtcentroformacion_funcionarioSena').empty();
             $('#txtcentroformacion_funcionarioSena').append('<option value="">Seleccione el centro de formación</option>')
@@ -2877,7 +2969,7 @@ var tipoTalento = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:'/centro-formacion/getcentrosregional/'+regional
+            url: host_url + '/centro-formacion/getcentrosregional/'+regional
         }).done(function(response){
             $('#txtcentroformacion_instructorSena').empty();
             $('#txtcentroformacion_instructorSena').append('<option value="">Seleccione el centro de formación</option>')
@@ -3264,7 +3356,7 @@ var UserIndex = {
             serverSide: true,
             "order": [[ 1, "desc" ]],
             ajax:{
-                url: "/usuario",
+                url: host_url + "/usuario",
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -3316,7 +3408,7 @@ var UserIndex = {
             serverSide: true,
             "order": [[ 1, "desc" ]],
             ajax:{
-                url: "/usuario/mistalentos",
+                url: host_url + "/usuario/mistalentos",
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -3428,7 +3520,7 @@ $('#download_users').click(function(){
         filter_year: filter_year,
     }
 
-    var url = "/usuario/export?" + $.param(query)
+    var url = host_url + "/usuario/export?" + $.param(query)
     window.location = url;
 });
 
@@ -3530,7 +3622,7 @@ var roleUserSession = {
         	    'role': nombre,
         	    '_token'  : $('meta[name="csrf-token"]').attr('content'),
             },
-            url:host_url+'/cambiar-role'
+            url: host_url+'/cambiar-role'
         }).done(function(response){
         	if (response.role != null) {
         		location.href= response.url;
@@ -3552,7 +3644,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax:{
-        	url: "/sublineas",
+        	url: host_url + "/sublineas",
             type: "get",
         },
         columns: [
@@ -3584,7 +3676,7 @@ function consultarArticulacionesDelGestor(anho) {
     order: [ 0, 'desc' ],
     "lengthChange": false,
     ajax:{
-      url: "/articulacion/datatableArticulacionesDelGestor/"+0+"/"+anho,
+      url: host_url + "/articulacion/datatableArticulacionesDelGestor/"+0+"/"+anho,
       data: function (d) {
         d.codigo_articulacion = $('#codigo_articulacion_GestorTable').val(),
         d.gestor = $('#nombre_GestorAdministradorTable').val(),
@@ -3645,7 +3737,7 @@ function consultarGruposInvestigacion_FaseInicio_Articulaciones() {
             0, 'desc'
         ],
         ajax: {
-            url: "/grupo/datatableGruposInvestigacionDeTecnoparque",
+            url: host_url + "/grupo/datatableGruposInvestigacionDeTecnoparque",
             type: "get"
         },
         select: true,
@@ -3671,7 +3763,7 @@ function addGrupoArticulacion(id) {
     $.ajax({
         dataType:'json',
         type:'get',
-        url:"/grupo/ajaxDetallesDeUnGrupoInvestigacion/"+id
+        url: host_url + "/grupo/ajaxDetallesDeUnGrupoInvestigacion/"+id
     }).done(function(respuesta){
         $('#txtgrupoInvestigacion').val(respuesta.detalles.codigo_grupo + ' - ' + respuesta.detalles.entidad.nombre);
         $("label[for='txtgrupoInvestigacion']").addClass('active');
@@ -3698,7 +3790,7 @@ function consultarTalentosDeTecnoparque_Articulacion_FaseInicio_table(tableName,
         processing: true,
         serverSide: true,
         ajax: {
-            url: "/usuario/talento/getTalentosDeTecnoparque/",
+            url: host_url + "/usuario/talento/getTalentosDeTecnoparque/",
             type: "get"
         },
         columns: [
@@ -3842,7 +3934,7 @@ function talentoSeAsocioALaArticulacion() {
 
 function prepararFilaEnLaTablaDeTalentos_Articulacion(ajax) { // El ajax.talento.id es el id del TALENTO, no del usuario
     let idTalento = ajax.talento.id;
-    let fila = '<tr class="selected" id=talentoAsociadoALaArticulacion' + idTalento + '>' + '<td><input type="radio" class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.talento.documento + ' - ' + ajax.talento.talento + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarTalentoDeArticulacion_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let fila = '<tr class="selected" id=talentoAsociadoALaArticulacion' + idTalento + '>' + '<td><input type="radio" class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.talento.documento + ' - ' + ajax.talento.talento + '</td>' + '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarTalentoDeArticulacion_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
@@ -3850,7 +3942,7 @@ function pintarTalentoEnTabla_Fase_Inicio_Articulacion(id) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/usuario/talento/consultarTalentoPorId/' + id
+        url: host_url + '/usuario/talento/consultarTalentoPorId/' + id
     }).done(function (ajax) {
         let fila = prepararFilaEnLaTablaDeTalentos_Articulacion(ajax);
         $('#detalleTalentosDeUnaArticulacion_Create').append(fila);
@@ -3961,7 +4053,7 @@ function verDetalleDeLaEntidadAsocidadALaArticulacion(id) {
   $.ajax({
     dataType:'json',
     type:'get',
-    url:"/articulacion/consultarEntidadDeLaArticulacion/"+id
+    url: host_url + "/articulacion/consultarEntidadDeLaArticulacion/"+id
   }).done(function(respuesta){
     $("#detalleDeUnaArticulacion_titulo").empty();
     $("#detalleArticulacion_body").empty();
@@ -4125,7 +4217,7 @@ function eliminarArticulacionPorId_moment(id) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/articulacion/eliminarArticulacion/'+id,
+    url: host_url + '/articulacion/eliminarArticulacion/'+id,
     success: function (data) {
       if (data.retorno) {
         Swal.fire('Eliminación Exitosa!', 'La articulación se ha eliminado completamente!', 'success');
@@ -4150,7 +4242,7 @@ function consultarIntervencionesEmpresaDelGestor(anho) {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/intervencion/datatableIntervencionEmpresaDelGestor/"+0+"/"+anho,
+      url: host_url + "/intervencion/datatableIntervencionEmpresaDelGestor/"+0+"/"+anho,
       // type: "get",
       data: function (d) {
         d.codigo_articulacion = $('#codigo_articulacion_GestorTable').val(),
@@ -4208,7 +4300,7 @@ function detallesDeUnaIntervencion(id){
     $.ajax({
        dataType:'json',
        type:'get',
-       url:"/intervencion/ajaxDetallesDeUnaArticulacion/"+id,
+       url: host_url + "/intervencion/ajaxDetallesDeUnaArticulacion/"+id,
     }).done(function(respuesta){
       $("#articulacionDetalle_titulo").empty();
       $("#detalleArticulacion").empty();
@@ -4290,7 +4382,7 @@ function detallesDeUnaIntervencion(id){
   $.ajax({
     dataType:'json',
     type:'get',
-    url:"/articulacion/consultarEntidadDeLaArticulacion/"+id
+    url: host_url + "/articulacion/consultarEntidadDeLaArticulacion/"+id
   }).done(function(respuesta){
     $("#detalleDeUnaArticulacion_titulo").empty();
     $("#detalleArticulacion_body").empty();
@@ -4454,7 +4546,7 @@ function detallesDeUnaIntervencion(id){
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/intervencion/eliminarArticulacion/'+id,
+      url: host_url + '/intervencion/eliminarArticulacion/'+id,
       success: function (data) {
         if (data.retorno) {
           Swal.fire('Eliminación Exitosa!', 'La Intervención a Empresa se ha eliminado completamente!', 'success');
@@ -4469,15 +4561,15 @@ function detallesDeUnaIntervencion(id){
     })
   }
 $(document).ready(function() {
-    consultarProyectosDelGestorPorAnho();
-    consultarProyectosDelNodoPorAnho();
+    // consultarProyectosDelGestorPorAnho();
+    consultarProyectosUnNodoPorAnho();
 });
 
 function verHorasDeExpertosEnProyecto(id) {
   $.ajax({
     dataType:'json',
     type:'get',
-    url:"/proyecto/consultarHorasExpertos/"+id
+    url: host_url + "/proyecto/consultarHorasExpertos/"+id
   }).done(function(respuesta){
     $("#horasAsesoriasExpertosPorProyeto_table").empty();
     if (respuesta.horas.length == 0 ) {
@@ -4507,10 +4599,10 @@ function verHorasDeExpertosEnProyecto(id) {
   });
 }
 
-function consultarProyectosDeTalentos () {
+function consultarProyectosDeTalentos() {
 
-    $('#tblProyectoDelTalento').dataTable().fnDestroy();
-    $('#tblProyectoDelTalento').DataTable({
+    $('#tblProyectos_Master').dataTable().fnDestroy();
+    $('#tblProyectos_Master').DataTable({
         language: {
             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
         },
@@ -4519,7 +4611,7 @@ function consultarProyectosDeTalentos () {
         order: [ 0, 'desc' ],
         "lengthChange": false,
         ajax:{
-            url: "/proyecto/datatableProyectosDelTalento/",
+            url: host_url + "/proyecto/datatableProyectosDelTalento/",
             data: function (d) {
                 d.codigo_proyecto = $('.codigo_proyecto').val(),
                 d.nombre = $('.nombre').val(),
@@ -4568,7 +4660,7 @@ function verTalentosDeUnProyecto(id){
     $.ajax({
         dataType:'json',
         type:'get',
-        url:"/proyecto/ajaxConsultarTalentosDeUnProyecto/"+id
+        url: host_url + "/proyecto/ajaxConsultarTalentosDeUnProyecto/"+id
     }).done(function(respuesta){
         $("#talentosAsociadosAUnProyecto_table").empty();
         if (respuesta.talentos.length != 0 ) {
@@ -4607,92 +4699,92 @@ function verTalentosDeUnProyecto(id){
 }
 
 // Ajax que muestra los proyectos de un experto por año
-function consultarProyectosDelGestorPorAnho() {
-    let anho = $('#anho_proyectoPorAnhoGestorNodo').val();
-    $('#tblproyectosGestorPorAnho').dataTable().fnDestroy();
-    $('#tblproyectosGestorPorAnho').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        pageLength: 20,
-        processing: true,
-        serverSide: true,
-        order: [ 0, 'desc' ],
-        "lengthChange": false,
-        ajax:{
-            url: "/proyecto/datatableProyectosDelGestorPorAnho/"+0+"/"+anho,
-            data: function (d) {
-                d.codigo_proyecto = $('.codigo_proyecto').val(),
-                d.nombre = $('.nombre').val(),
-                d.nombre_fase = $('.nombre_fase').val(),
-                d.search = $('input[type="search"]').val()
-            }
-        },
-        columns: [
-            {
-                width: '15%',
-                data: 'codigo_proyecto',
-                name: 'codigo_proyecto',
-            },
-            {
-                data: 'nombre',
-                name: 'nombre',
-            },
-            {
-                data: 'nombre_fase',
-                name: 'nombre_fase',
-            },
-            {
-                width: '8%',
-                data: 'info',
-                name: 'info',
-                orderable: false
-            },
-            {
-                width: '8%',
-                data: 'proceso',
-                name: 'proceso',
-                orderable: false
-            },
-        ],
-    });
-}
-$(".codigo_proyecto").keyup(function(){
-    $('#tblproyectosGestorPorAnho').DataTable().draw();
-});
+// function consultarProyectosDelGestorPorAnho() {
+//     let anho = $('#anho_proyectoPorAnhoGestorNodo').val();
+//     $('#tblproyectosGestorPorAnho').dataTable().fnDestroy();
+//     $('#tblproyectosGestorPorAnho').DataTable({
+//         language: {
+//             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+//         },
+//         pageLength: 20,
+//         processing: true,
+//         serverSide: true,
+//         order: [ 0, 'desc' ],
+//         "lengthChange": false,
+//         ajax:{
+//             url: host_url + "/proyecto/datatableProyectosDelGestorPorAnho/"+0+"/"+anho,
+//             data: function (d) {
+//                 d.codigo_proyecto = $('.codigo_proyecto').val(),
+//                 d.nombre = $('.nombre').val(),
+//                 d.nombre_fase = $('.nombre_fase').val(),
+//                 d.search = $('input[type="search"]').val()
+//             }
+//         },
+//         columns: [
+//             {
+//                 width: '15%',
+//                 data: 'codigo_proyecto',
+//                 name: 'codigo_proyecto',
+//             },
+//             {
+//                 data: 'nombre',
+//                 name: 'nombre',
+//             },
+//             {
+//                 data: 'nombre_fase',
+//                 name: 'nombre_fase',
+//             },
+//             {
+//                 width: '8%',
+//                 data: 'info',
+//                 name: 'info',
+//                 orderable: false
+//             },
+//             {
+//                 width: '8%',
+//                 data: 'proceso',
+//                 name: 'proceso',
+//                 orderable: false
+//             },
+//         ],
+//     });
+// }
+// $(".codigo_proyecto").keyup(function(){
+//     $('#tblproyectosGestorPorAnho').DataTable().draw();
+// });
 
-$(".nombre").keyup(function(){
-    $('#tblproyectosGestorPorAnho').DataTable().draw();
-});
+// $(".nombre").keyup(function(){
+//     $('#tblproyectosGestorPorAnho').DataTable().draw();
+// });
 
-$(".nombre_fase").keyup(function(){
-    $('#tblproyectosGestorPorAnho').DataTable().draw();
-});
+// $(".nombre_fase").keyup(function(){
+//     $('#tblproyectosGestorPorAnho').DataTable().draw();
+// });
 
-$("#codigo_proyecto_tblProyectosDelNodoPorAnho").keyup(function(){
-    $('#tblproyectosDelNodoPorAnho').DataTable().draw();
-});
+// $("#codigo_proyecto_tblProyectosDelNodoPorAnho").keyup(function(){
+//     $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+// });
 
-$("#gestor_tblProyectosDelNodoPorAnho").keyup(function(){
-    $('#tblproyectosDelNodoPorAnho').DataTable().draw();
-});
+// $("#gestor_tblProyectosDelNodoPorAnho").keyup(function(){
+//     $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+// });
 
-$("#nombre_tblProyectosDelNodoPorAnho").keyup(function(){
-    $('#tblproyectosDelNodoPorAnho').DataTable().draw();
-});
+// $("#nombre_tblProyectosDelNodoPorAnho").keyup(function(){
+//     $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+// });
 
-$("#sublinea_nombre_tblProyectosDelNodoPorAnho").keyup(function(){
-    $('#tblproyectosDelNodoPorAnho').DataTable().draw();
-});
+// $("#sublinea_nombre_tblProyectosDelNodoPorAnho").keyup(function(){
+//     $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+// });
 
-$("#fase_nombre_tblProyectosDelNodoPorAnho").keyup(function(){
-    $('#tblproyectosDelNodoPorAnho').DataTable().draw();
-});
+// $("#fase_nombre_tblProyectosDelNodoPorAnho").keyup(function(){
+//     $('#tblproyectosDelNodoPorAnho').DataTable().draw();
+// });
 
-function preguntaReversar(e){
+function preguntaReversar(e, id, fase){
     e.preventDefault();
     Swal.fire({
-    title: '¿Está seguro(a) de reversar este proyecto a la fase de Inicio?',
+    title: '¿Está seguro(a) de reversar este proyecto a la fase de '+fase+'?',
     type: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -4701,156 +4793,31 @@ function preguntaReversar(e){
     confirmButtonText: 'Sí!'
     }).then((result) => {
         if (result.value) {
-            document.frmReversarFase.submit();
+            sendReversarProyecto(id, fase);
         }
     })
 }
 
-function preguntaReversarPlaneacion(e){
-    e.preventDefault();
-    Swal.fire({
-    title: '¿Está seguro(a) de reversar este proyecto a la fase de Planeación?',
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    cancelButtonText: 'Cancelar',
-    confirmButtonText: 'Sí!'
-    }).then((result) => {
-        if (result.value) {
-            document.frmReversarFasePlaneacion.submit();
-        }
-    })
-}
-
-function preguntaReversarEjecucion(e){
-    e.preventDefault();
-    Swal.fire({
-    title: '¿Está seguro(a) de reversar este proyecto a la fase de Ejecución?',
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    cancelButtonText: 'Cancelar',
-    confirmButtonText: 'Sí!'
-    }).then((result) => {
-        if (result.value) {
-            document.frmReversarFaseEjecucion.submit();
-        }
-    })
-}
-
-/**
-* Consulta los proyectos del nodo por año
-*/
-function consultarProyectosDelNodoPorAnho() {
-  let anho_proyectos_nodo = $('#anho_proyectoPorNodoYAnho').val();
-  $('#tblproyectosDelNodoPorAnho').dataTable().fnDestroy();
-  $('#tblproyectosDelNodoPorAnho').DataTable({
-    language: {
-      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    processing: true,
-    serverSide: true,
-    order: [ 0, 'desc' ],
-    "lengthChange": false,
-    ajax:{
-      url: "/proyecto/datatableProyectosDelNodoPorAnho/"+0+"/"+anho_proyectos_nodo,
-      data: function (d) {
-        d.codigo_proyecto = $('#codigo_proyecto_tblProyectosDelNodoPorAnho').val(),
-        d.gestor = $('#gestor_tblProyectosDelNodoPorAnho').val(),
-        d.nombre = $('#nombre_tblProyectosDelNodoPorAnho').val(),
-        d.sublinea_nombre = $('#sublinea_nombre_tblProyectosDelNodoPorAnho').val(),
-        d.nombre_fase = $('#fase_nombre_tblProyectosDelNodoPorAnho').val(),
-        d.search = $('input[type="search"]').val()
-      }
-      // type: "get",
-    },
-    columns: [
-      {
-        width: '15%',
-        data: 'codigo_proyecto',
-        name: 'codigo_proyecto',
-      },
-      {
-        data: 'gestor',
-        name: 'gestor',
-      },
-      {
-        data: 'nombre',
-        name: 'nombre',
-      },
-      {
-        data: 'sublinea_nombre',
-        name: 'sublinea_nombre',
-      },
-      {
-        data: 'nombre_fase',
-        name: 'nombre_fase',
-      },
-      {
-        width: '6%',
-        data: 'info',
-        name: 'info',
-        orderable: false
-      },
-      {
-        width: '6%',
-        data: 'proceso',
-        name: 'proceso',
-        orderable: false
-      },
-      {
-        width: '6%',
-        data: 'download_trazabilidad',
-        name: 'download_trazabilidad',
-        orderable: false
-      },
-      {
-        width: '6%',
-        data: 'ver_horas',
-        name: 'ver_horas',
-        orderable: false
-      },
-
-    ],
-  });
-}
-
-function eliminarProyectoPorId_event(id, e) {
-    Swal.fire({
-        title: '¿Desea eliminar el Proyecto?',
-        text: "Al hacer esto, todo lo relacionado con este proyecto será eliminado de la base de datos, eso incluye usos de infraestructura y los archivos subidos al servidor!",
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        cancelButtonText: 'No',
-        confirmButtonText: 'Sí, eliminar!'
-    }).then((result) => {
-        if (result.value) {
-            eliminarProyectoPorId_moment(id);
-        }
-    })
-}
-
-function eliminarProyectoPorId_moment(id) {
+function sendReversarProyecto(id, fase) {
     $.ajax({
-        dataType: 'json',
         type: 'get',
-        url: '/proyecto/eliminarProyecto/'+id,
+        url: host_url + '/proyecto/reversar/'+id+'/'+fase,
+        dataType: 'json',
         success: function (data) {
-            if (data.retorno) {
-                Swal.fire('Eliminación Exitosa!', 'El proyecto se ha eliminado completamente!', 'success');
-                location.href = '/proyecto';
-            } else {
-                Swal.fire('Eliminación Errónea!', 'El proyecto no se ha eliminado!', 'error');
-            }
+            Swal.fire({
+                title: data.msg,
+                type: data.type_alert,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Ok!'
+            });
         },
         error: function (xhr, textStatus, errorThrown) {
             alert("Error: " + errorThrown);
-        },
-    })
+        }
+    });
 }
 
 var infoActividad = {
@@ -4859,11 +4826,11 @@ var infoActividad = {
             $.ajax({
                 dataType:'json',
                 type:'get',
-                url:'/actividad/detalle/'+code
+                url: host_url + '/actividad/detalle/'+code
             }).done(function (response) {
                 $("#actividad_titulo").empty();
                 $("#detalleActividad").empty();
-                $("#actividad_titulo").append("<span class='cyan-text text-darken-3'>"+response.data.actividad.codigo_actividad +' - '+ response.data.actividad.nombre+" </span><br>");
+                $("#actividad_titulo").append("<span class='primary-text'>"+response.data.actividad.codigo_actividad +' - '+ response.data.actividad.nombre+" </span><br>");
                 if(response.data.actividad.articulacion_proyecto.proyecto !== null){
                     infoActividad.openIsProyect(response);
                 }else if(response.data.actividad.articulacion_proyecto.articulacion !== null){
@@ -4877,27 +4844,27 @@ var infoActividad = {
         $("#detalleActividad").append(`
             <table class="striped centered">
                 <TR>
-                    <TH width="25%">Código Proyecto</TH>
+                    <TH class="secondary-text" width="25%">Código Proyecto</TH>
                     <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.codigo_actividad)}</TD>
-                    <TH width="25%" >Nombre Proyecto</TH>
+                    <TH class="secondary-text" width="25%" >Nombre Proyecto</TH>
                     <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.nombre)}</TD>
                 </TR>
                 <TR>
-                    <TH width="25%">Experto</TH>
+                    <TH class="secondary-text" width="25%">Experto</TH>
                     <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.proyecto.asesor.user.documento)} - ${response.data.actividad.articulacion_proyecto.proyecto.asesor.user.nombres} ${response.data.actividad.articulacion_proyecto.proyecto.asesor.user.apellidos}</TD>
-                    <TH width="25%">Correo Electrónico</TH>
+                    <TH class="secondary-text" width="25%">Correo Electrónico</TH>
                     <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.proyecto.asesor.user.email)}</TD>
                 </TR>
             </table>
             <div class="right">
                 <small>
-                    <b>Cantidad de usos de infraestructura:  </b>
+                    <b class="secondary-text">Cantidad de usos de infraestructura:  </b>
                     ${infoActividad.showInfoNull(response.data.total_usos)}
                 </small>
             </div>
             <div class="divider mailbox-divider"></div>
             <div class="center">
-                <span class="mailbox-title">
+                <span class="mailbox-title primary-text">
                     <i class="material-icons">group</i>
                     Talentos que participan en el proyecto y dueño(s) de la propiedad intelectual.
                 </span>
@@ -4905,10 +4872,10 @@ var infoActividad = {
             <div class="divider mailbox-divider"></div>
                 <div class="row">
                 <div class="col s12 m12 l12">
-                        <div class="card-panel blue lighten-5">
-                            <h5 class="center">Talentos que participan en el proyecto</h5>
+                        <div class="card-transparent">
+                            <h5 class="center primary-text">Talentos que participan en el proyecto</h5>
                             <table>
-                                <thead>
+                                <thead class="bg-primary white-text">
                                     <tr>
                                         <th style="width: 10%">Talento Interlocutor</th>
                                         <th style="width: 40%">Talento</th>
@@ -4924,31 +4891,30 @@ var infoActividad = {
                     </div>
                 </div>
                 <div class="row">
-                    <div class="card-panel green lighten-5 col s12 m12 l12">
-                        <h5 class="center">Dueño(s) de la propiedad intelectual</h5>
+                    <div class="card-transparent col s12 m12 l12">
+                        <h5 class="center primary-text">Dueño(s) de la propiedad intelectual</h5>
                         <div class="row">
                             <div class="col s12 m4 l4">
-                                <div class="card-panel">
+                                <div class="card-transparent">
                                     <ul class="collection with-header">
-                                        <li class="collection-header"><h5>Empresas</h5></li>
+                                        <li class="collection-header"><h5 class="secondary-text">Empresas</h5></li>
                                         <div id="detalleEmpresas"></div>
                                     </ul>
                                 </div>
                             </div>
                             <div class="col s12 m4 l4">
-                                <div class="card-panel">
+                                <div class="card-transparent">
                                     <ul class="collection with-header">
-                                        <li class="collection-header"><h5>Personas (Talentos)</h5></li>
+                                        <li class="collection-header"><h5 class="secondary-text">Personas (Talentos)</h5></li>
                                         <div id="detallePropiedadTalentos"></div>
                                     </ul>
                                 </div>
                             </div>
                             <div class="col s12 m4 l4">
-                                <div class="card-panel">
+                                <div class="card-transparent">
                                     <ul class="collection with-header">
-                                        <li class="collection-header"><h5>Grupos de Investigación</h5></li>
+                                        <li class="collection-header"><h5 class="secondary-text">Grupos de Investigación</h5></li>
                                         <div id="detallePropiedadGrupo"></div>
-
                                     </ul>
                                 </div>
                             </div>
@@ -5121,6 +5087,90 @@ var infoActividad = {
 
 }
 
+$("#codigo_proyecto_tblProyectos_Master").keyup(function(){
+    $('#tblProyectos_Master').DataTable().draw();
+});
+
+$("#gestor_tblProyectos_Master").keyup(function(){
+    $('#tblProyectos_Master').DataTable().draw();
+});
+
+$("#nombre_tblProyectos_Master").keyup(function(){
+    $('#tblProyectos_Master').DataTable().draw();
+});
+
+$("#sublinea_nombre_tblProyectos_Master").keyup(function(){
+    $('#tblProyectos_Master').DataTable().draw();
+});
+
+$("#estado_nombre_tblProyectos_Master").keyup(function(){
+    $('#tblProyectos_Master').DataTable().draw();
+});
+
+/**
+ * Consulta los proyectos de un nodo por año (Este método es para el dinamizador)
+ */
+function consultarProyectosUnNodoPorAnho() {
+let anho_proyectos_nodo = $('#anho_proyectoPorNodoYAnho').val();
+let nodo = $('#nodo_proyectoPorNodoYAnho').val();
+
+$('#tblProyectos_Master').dataTable().fnDestroy();
+$('#tblProyectos_Master').DataTable({
+    language: {
+    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    processing: true,
+    serverSide: true,
+    order: [ 0, 'desc' ],
+    "lengthChange": false,
+    ajax:{
+    url: host_url + "/proyecto/datatableProyectosAnho/"+nodo+"/"+anho_proyectos_nodo,
+    data: function (d) {
+        d.codigo_proyecto = $('#codigo_proyecto_tblProyectos_Master').val(),
+        d.gestor = $('#gestor_tblProyectos_Master').val(),
+        d.nombre = $('#nombre_tblProyectos_Master').val(),
+        d.sublinea_nombre = $('#sublinea_nombre_tblProyectos_Master').val(),
+        d.nombre_fase = $('#estado_nombre_tblProyectos_Master').val(),
+        d.search = $('input[type="search"]').val()
+    }
+    },
+    columns: [
+    {
+        width: '15%',
+        data: 'codigo_proyecto',
+        name: 'codigo_proyecto',
+    },
+    {
+        data: 'gestor',
+        name: 'gestor',
+    },
+    {
+        data: 'nombre',
+        name: 'nombre',
+    },
+    {
+        data: 'sublinea_nombre',
+        name: 'sublinea_nombre',
+    },
+    {
+        data: 'nombre_fase',
+        name: 'nombre_fase',
+    },
+    {
+        width: '8%',
+        data: 'info',
+        name: 'info',
+        orderable: false
+    },
+    {
+        width: '8%',
+        data: 'proceso',
+        name: 'proceso',
+        orderable: false
+    },
+    ],
+    });
+}
 function preguntaRechazarAprobacionProyecto(e) {
     e.preventDefault();
     $('button[type="submit"]').attr('disabled', true);
@@ -5383,14 +5433,14 @@ function prepararFilaEnLaTablaDeTalentos(ajax, isInterlocutor) {
         talentInterlocutor = "checked";
     }// El ajax.talento.id es el id del TALENTO, no del usuario
     let idTalento = ajax.talento.id;
-    let fila = '<tr class="selected" id=talentoAsociadoAProyecto' + idTalento + '>' + '<td><input type="radio" '+ talentInterlocutor +' class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.talento.documento + ' - ' + ajax.talento.talento + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarTalentoDeProyecto_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let fila = '<tr class="selected" id=talentoAsociadoAProyecto' + idTalento + '>' + '<td><input type="radio" '+ talentInterlocutor +' class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.talento.documento + ' - ' + ajax.talento.talento + '</td>' + '<td><a class="waves-effect bg-danger btn" onclick="eliminarTalentoDeProyecto_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
 // Prepara un string con la fila que se va a pintar en la tabla de los propietarios (users/persona) que son dueños de la propiedad intelectual
 function prepararFilaEnLaTablaDePropietarios_Users(ajax) { // El ajax.user.id es el id del USER
     let idUser = ajax.user.id;
-    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Persona' + idUser + '>' + '<td><input type="hidden" name="propietarios_user[]" value="' + idUser + '">' + ajax.user.documento + ' - ' + ajax.user.nombres + ' ' + ajax.user.apellidos + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Persona(' + idUser + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Persona' + idUser + '>' + '<td><input type="hidden" name="propietarios_user[]" value="' + idUser + '">' + ajax.user.documento + ' - ' + ajax.user.nombres + ' ' + ajax.user.apellidos + '</td>' + '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Persona(' + idUser + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
@@ -5401,7 +5451,7 @@ function prepararFilaEnLaTablaDePropietarios_Empresa(ajax) {
     let codigo = ajax.sede.empresa.nit;
     let nombre = ajax.sede.empresa.nombre;
     let nombre_sede = ajax.sede.nombre_sede;
-    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Empresa' + idSede + '>' + '<td><input type="hidden" name="propietarios_sedes[]" value="' + idSede + '">' + codigo + ' - ' + nombre + ' ('+ nombre_sede +')</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Empresa(' + idSede + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Empresa' + idSede + '>' + '<td><input type="hidden" name="propietarios_sedes[]" value="' + idSede + '">' + codigo + ' - ' + nombre + ' ('+ nombre_sede +')</td>' + '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Empresa(' + idSede + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
@@ -5410,7 +5460,7 @@ function prepararFilaEnLaTablaDePropietarios_Grupos(ajax) { // El ajax.user.id e
     let idGrupo = ajax.detalles.id;
     let codigo = ajax.detalles.codigo_grupo;
     let nombre = ajax.detalles.entidad.nombre;
-    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Grupo' + idGrupo + '>' + '<td><input type="hidden" name="propietarios_grupos[]" value="' + idGrupo + '">' + codigo + ' - ' + nombre + '</td>' + '<td><a class="waves-effect red lighten-3 btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Grupo(' + idGrupo + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Grupo' + idGrupo + '>' + '<td><input type="hidden" name="propietarios_grupos[]" value="' + idGrupo + '">' + codigo + ' - ' + nombre + '</td>' + '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Grupo(' + idGrupo + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
@@ -5419,7 +5469,7 @@ function pintarTalentoEnTabla_Fase_Inicio(id, isInterlocutor) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/usuario/talento/consultarTalentoPorId/' + id
+        url: host_url + '/usuario/talento/consultarTalentoPorId/' + id
     }).done(function (ajax) {
 
         let fila = prepararFilaEnLaTablaDeTalentos(ajax, isInterlocutor);
@@ -5433,7 +5483,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual(id) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/usuario/consultarUserPorId/' + id
+        url: host_url + '/usuario/consultarUserPorId/' + id
     }).done(function (ajax) {
         let fila = prepararFilaEnLaTablaDePropietarios_Users(ajax);
         $('#propiedadIntelectual_Personas').append(fila);
@@ -5446,7 +5496,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Sede(sede_id)
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url : '/empresa/ajaxDetalleDeUnaSede/'+sede_id,
+        url : host_url + '/empresa/ajaxDetalleDeUnaSede/'+sede_id,
         success: function (response) {
           Swal.fire({
             toast: true,
@@ -5471,7 +5521,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Grupo(id) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/grupo/ajaxDetallesDeUnGrupoInvestigacion/' + id
+        url: host_url + '/grupo/ajaxDetallesDeUnGrupoInvestigacion/' + id
     }).done(function (ajax) {
         let fila = prepararFilaEnLaTablaDePropietarios_Grupos(ajax);
         // let fila = Grupos);
@@ -5482,16 +5532,15 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Grupo(id) {
 
 // Valida que el talento no se encuentre asociado al proyecto
 function noRepeat(id) {
-    let idTalento = id;
-    let retorno = true;
+    // console.log('fff');
+    // let retorno = true;
     let a = document.getElementsByName("talentos[]");
     for (x = 0; x < a.length; x ++) {
-        if (a[x].value == idTalento) {
-            retorno = false;
-            break;
+        if (a[x].value == id) {
+            return false;
         }
     }
-    return retorno;
+    return true;
 }
 
 // Valida que el talento no se encuentre asociado al proyecto
@@ -5559,7 +5608,14 @@ function eliminarPropietarioDeUnProyecto_FaseInicio_Grupo(index) {
 // Método para agregar talentos a un proyecto
 // El parametro recibido es el id de la tabla talentos
 function addTalentoProyecto(id, isInterloculor) {
-    if (noRepeat(id) == false) {
+    let unique = true;
+    let a = document.getElementsByName("talentos[]");
+    for (x = 0; x < a.length; x ++) {
+        if (a[x].value == id) {
+            unique = false;
+        }
+    }
+    if (!unique) {
         talentoYaSeEncuentraAsociado();
     } else {
         pintarTalentoEnTabla_Fase_Inicio(id, isInterloculor);
@@ -5593,7 +5649,7 @@ function addEntidadEmpresa(id) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url : '/empresa/ajaxDetallesDeUnaEmpresa/'+id+'/id',
+        url : host_url + '/empresa/ajaxDetallesDeUnaEmpresa/'+id+'/id',
         success: function (response) {
             let filas_sedes = prepararSedesEmpresa(response.empresa.sedes);
             $('#sedesPropietarias_Empresas_detalles').append(filas_sedes);
@@ -5650,17 +5706,16 @@ function addValueToFields(nombre, codigo, value){
 // Asocia una idea de proyecto al registro de un proyecto
 function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
     $('#txtidea_id').val(id);
-    
+
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/idea/show/' + id
+        url: host_url + '/idea/show/' + id
     }).done(function (response) {
         let value = response.data.idea;
         if(idea =! null){
-            console.log(response);
             dumpAggregateValuesIntoTables();
-            
+
             addValueToFields(nombre, codigo, value);
             ideaProyectoAsociadaConExito(codigo, nombre);
 
@@ -5674,15 +5729,22 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
             }
             $('#ideasDeProyectoConEmprendedores_modal').closeModal();
         }
-        
+
     }).fail(function( jqXHR, textStatus, errorThrown ) {
         errorAjax(jqXHR, textStatus, errorThrown);
     });
-    
+
 }
 
 // Consultas las ideas de proyecto que fueron aprobadas en el comité
 function consultarIdeasDeProyectoEmprendedores_Proyecto_FaseInicio() {
+    let nodo = 1;
+    let id_experto = 1;
+    if (isset($('#txtnodo_id').val()))
+        nodo = $('#txtnodo_id').val();
+    if (isset($('#txtexperto_id_proyecto').val()))
+        id_experto = $('#txtexperto_id_proyecto').val();
+    //id_experto = $('#txtexperto_id_proyecto').val();
     $('#ideasDeProyectoConEmprendedores_proyecto_table').dataTable().fnDestroy();
     $('#ideasDeProyectoConEmprendedores_proyecto_table').DataTable({
         language: {
@@ -5694,7 +5756,7 @@ function consultarIdeasDeProyectoEmprendedores_Proyecto_FaseInicio() {
             0, 'desc'
         ],
         ajax: {
-            url: "/proyecto/datatableIdeasConEmprendedores",
+            url: host_url + "/proyecto/ideasAsociadasAExperto/"+nodo+"/"+id_experto,
             type: "get"
         },
         select: true,
@@ -5730,7 +5792,7 @@ function consultarEmpresasDeTecnoparque_Proyecto_FaseInicio_table() {
         serverSide: true,
         // order: false,
         ajax: {
-            url: "/empresa/datatableEmpresasDeTecnoparque",
+            url: host_url + "/empresa/datatableEmpresasDeTecnoparque",
             type: "get"
         },
         columns: [
@@ -5761,7 +5823,7 @@ function consultarGruposDeTecnoparque_Proyecto_FaseInicio_table() {
         serverSide: true,
         // order: false,
         ajax: {
-            url: "/grupo/datatableGruposInvestigacionDeTecnoparque",
+            url: host_url + "/grupo/datatableGruposInvestigacionDeTecnoparque",
             type: "get"
         },
         columns: [
@@ -5792,7 +5854,7 @@ function consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table(tableName, fie
         serverSide: true,
         // order: false,
         ajax: {
-            url: "/usuario/talento/getTalentosDeTecnoparque/",
+            url: host_url + "/usuario/talento/getTalentosDeTecnoparque/",
             type: "get"
         },
         columns: [
@@ -5880,6 +5942,56 @@ function errorAjax(jqXHR, textStatus, errorThrown){
       }
 }
 
+function consultarExpertosDeUnNodo(nodo_id) {
+    $.ajax({
+        dataType:'json',
+        type:'get',
+        url: host_url + "/usuario/usuarios/gestores/nodo/"+nodo_id
+      }).done(function(response){
+          $("#txtexperto_id_proyecto").empty();
+          $('#txtexperto_id_proyecto').append('<option value="">Seleccione el experto</option>');
+          $.each(response.gestores, function(i, e) {
+            $('#txtexperto_id_proyecto').append('<option  value="'+e.user_id+'">'+e.nombre+'</option>');
+          })
+          $('#txtexperto_id_proyecto').material_select();
+    });
+}
+
+function consultarInformacionExperto(user) {
+    $.ajax({
+        dataType:'json',
+        type:'get',
+        url: host_url + "/usuario/consultarUserPorId/"+user
+      }).done(function(response){
+          printLinea(response);
+          consultarSublineas(response.user.gestor.lineatecnologica.id);
+    });
+}
+
+function consultarSublineas(linea) {
+    $.ajax({
+        dataType:'json',
+        type:'get',
+        url: host_url + "/proyecto/sublineas_of/"+linea
+    }).done(function (response) {
+          console.log(response);
+        printSublineas(response);
+    });
+}
+
+function printSublineas(response) {
+    $("#txtsublinea_id").empty();
+    $('#txtsublinea_id').append('<option value="">Seleccione la sublinea</option>');
+    $.each(response.sublineas, function(i, e) {
+      $('#txtsublinea_id').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+    })
+    $('#txtsublinea_id').material_select();
+}
+
+function printLinea(response) {
+    $('#txtlinea').val(response.user.gestor.lineatecnologica.nombre);
+}
+
 // Enviar formulario para modificar el proyecto en fase de cierre
 $(document).on('submit', 'form#frmProyectos_FaseCierre_Update', function (event) { // $('button[type="submit"]').prop("disabled", true);
     $('button[type="submit"]').attr('disabled', 'disabled');
@@ -5965,7 +6077,7 @@ $(document).ready(function() {
     processing: true,
     serverSide: true,
     ajax:{
-      url: "/empresa/datatableEmpresasDeTecnoparque",
+      url: host_url + "/empresa/datatableEmpresasDeTecnoparque",
       type: "get",
     },
     deferRender: true,
@@ -6015,13 +6127,13 @@ function addEmpresaAEdt(id) {
     $.ajax({
       dataType:'json',
       type:'get',
-      url:'/empresa/ajaxConsultarEmpresaPorIdEntidad/'+id,
+      url: host_url + '/empresa/ajaxConsultarEmpresaPorIdEntidad/'+id,
     }).done(function(ajax){
       let idEntidad = ajax.detalles.entidad_id;
       let fila = '<tr class="selected" id=entidadAsociadaAEdt'+idEntidad+'>'
       +'<td><input type="hidden" name="entidades[]" value="'+idEntidad+'">'+ajax.detalles.nit+'</td>'
       +'<td>'+ajax.detalles.nombre+'</td>'
-      +'<td><a class="waves-effect red lighten-3 btn" onclick="eliminarEntidadAsociadaAEdt('+idEntidad+');"><i class="material-icons">delete_sweep</i></a></td>'
+      +'<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarEntidadAsociadaAEdt('+idEntidad+');"><i class="material-icons">delete_sweep</i></a></td>'
       +'</tr>';
       $('#detalleEntidadesAsociadasAEdt').append(fila);
       Swal.fire({
@@ -6067,7 +6179,7 @@ function consultarEdtsDeUnGestor(id) {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/edt/consultarEdtsDeUnGestor/"+id+"/"+anho,
+      url: host_url + "/edt/consultarEdtsDeUnGestor/"+id+"/"+anho,
       type: "get",
     },
     columns: [
@@ -6157,7 +6269,7 @@ function eliminarEdtPorId_moment(id) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/edt/eliminarEdt/'+id,
+    url: host_url + '/edt/eliminarEdt/'+id,
     success: function (data) {
       if (data.retorno) {
         Swal.fire('Eliminación Exitosa!', 'La edt se ha eliminado completamente!', 'success');
@@ -6183,7 +6295,7 @@ function datatableEdtsPorNodo(id) {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/edt/consultarEdtsDeUnNodo/"+id+"/"+anho,
+      url: host_url + "/edt/consultarEdtsDeUnNodo/"+id+"/"+anho,
       type: "get",
     },
     columns: [
@@ -6262,7 +6374,7 @@ function verEntidadesDeUnaEdt(id) {
   $.ajax({
     dataType:'json',
     type:'get',
-    url:"/edt/consultarDetallesDeUnaEdt/"+id+"/"+1,
+    url: host_url + "/edt/consultarDetallesDeUnaEdt/"+id+"/"+1,
     success: function (response) {
       $("#entidadesEdt_table").empty();
       if (response.entidades.length != 0 ) {
@@ -6301,7 +6413,7 @@ function detallesDeUnaEdt(id) {
   $.ajax({
     dataType:'json',
     type:'get',
-    url:'/edt/consultarDetallesDeUnaEdt/'+id+"/"+0,
+    url: host_url + '/edt/consultarDetallesDeUnaEdt/'+id+"/"+0,
     success: function (response) {
       /**
       * Limpiando el modal
@@ -6496,7 +6608,7 @@ var articulacion_pbt ={
             serverSide: false,
             "order": [[ 5, "desc" ]],
             ajax:{
-                url: "/articulaciones/datatable_filtros",
+                url: host_url + "/articulaciones/datatable_filtros",
                 type: "get",
 
                 data: {
@@ -6557,7 +6669,7 @@ $('#download_archive_art').click(function(){
         filter_alcance_articulacion: filter_alcance_articulacion,
     }
 
-    var url = "/articulaciones/export?" + $.param(query)
+    var url = host_url + "/articulaciones/export?" + $.param(query)
 
     window.location = url;
 });
@@ -6766,7 +6878,7 @@ var filter_project = {
             $.ajax({
                 dataType: 'json',
                 type: 'get',
-                url: '/actividades/filter-code/' + filter_code_project
+                url: host_url + '/actividades/filter-code/' + filter_code_project
             }).done(function (response) {
                 if(response.data.status_code == 200){
                     let activity = response.data.proyecto.articulacion_proyecto.actividad;
@@ -6874,7 +6986,7 @@ var filter_project = {
             $.ajax({
                 dataType: 'json',
                 type: 'get',
-                url: '/empresas/filter-code/' + filter_code_company
+                url: host_url + '/empresas/filter-code/' + filter_code_company
             }).done(function (response) {
                 if(response.data.status_code == 200){
                     let data = response.data;
@@ -6942,7 +7054,7 @@ var filter_project = {
         $.ajax({
             dataType: 'json',
             type: 'get',
-            url: '/empresas/sede/' + id
+            url: host_url + '/empresas/sede/' + id
         }).done(function (response) {
             if(response.data.status_code == 200){
             $('.alert-response-company').append(`
@@ -6984,7 +7096,7 @@ var filter_project = {
             processing: true,
             serverSide: true,
             ajax: {
-                url: "/proyecto/datatableproyectosfinalizados",
+                url: host_url + "/proyecto/datatableproyectosfinalizados",
                 type: "get",
                 data: {
                     filter_year_pro: filter_year_pro,
@@ -7023,7 +7135,7 @@ var filter_project = {
             serverSide: true,
             // order: false,
             ajax: {
-                url: "/empresa/datatableEmpresasDeTecnoparque",
+                url: host_url + "/empresa/datatableEmpresasDeTecnoparque",
                 type: "get"
             },
             columns: [
@@ -7051,7 +7163,7 @@ var filter_project = {
             processing: true,
             serverSide: true,
             ajax: {
-                url: "/usuario/talento/getTalentosDeTecnoparque/",
+                url: host_url + "/usuario/talento/getTalentosDeTecnoparque/",
                 type: "get"
             },
             columns: [
@@ -7082,7 +7194,7 @@ var filter_project = {
             $.ajax({
                 dataType: 'json',
                 type: 'get',
-                url: '/usuarios/filtro-talento/' + document
+                url: host_url + '/usuarios/filtro-talento/' + document
             }).done(function (response) {
                 if(response.data.status_code == 200){
                     let user = response.data.user;
@@ -7171,7 +7283,7 @@ var filter_project = {
         $.ajax({
             dataType: 'json',
             type: 'get',
-            url: '/usuario/talento/consultarTalentoPorId/' + id
+            url: host_url + '/usuario/talento/consultarTalentoPorId/' + id
         }).done(function (response) {
             let fila = filter_project.prepareTableRowTalent(response);
             $('.alert-response-talents').append(fila);
@@ -7296,7 +7408,7 @@ function addCompanyArticulacion(id){
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url : '/empresa/ajaxDetallesDeUnaEmpresa/'+id+'/id',
+        url : host_url + '/empresa/ajaxDetallesDeUnaEmpresa/'+id+'/id',
         success: function (response) {
             let filas_sedes = filter_project.sedesEmpresa(response.empresa.sedes);
             $('#sedes_detail').append(filas_sedes);
@@ -7308,208 +7420,139 @@ function addCompanyArticulacion(id){
       })
 }
 
-$(document).ready(function() {
-    $('#costoadministrativo_dinamizador_table1').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-        retrieve: true,
-        processing: true,
-        ajax: {
-            url: "/costos-administrativos",
-            type: "get",
-        },
-        columns: [{
-            data: 'entidad',
-            name: 'entidad',
-            width: '30%'
-        }, {
-            data: 'costoadministrativo',
-            name: 'costoadministrativo',
-            width: '30%'
-        }, {
-            data: 'valor',
-            name: 'valor',
-            width: '15%'
-        }, {
-            data: 'costosadministrativospordia',
-            name: 'costosadministrativospordia',
-            width: '15%'
-        },
-        {
-            data: 'costosadministrativosporhora',
-            name: 'costosadministrativosporhora',
-            width: '15%'
-        },
-        {
-            data: 'edit',
-            name: 'edit',
-            orderable: false,
-            width: '8%'
-        }, ],
-        "footerCallback": function ( row, data, start, end, display ) {
-            var api = this.api(), data;
-            // Remove the formatting to get integer data for summation
-            var intVal = function ( i ) {
-                return typeof i === 'string' ?
-                    i.replace(/[\$,]/g, '')*1 :
-                    typeof i === 'number' ?
-                        i : 0;
-            };
-            // Total over all pages
-            totalCostosHora = api
-                .column( 4 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            totalCostosDia = api
-                .column( 3 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            totalCostosMes = api
-                .column( 2 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            // Total over this page
-            pageTotalCostosHora = api
-                .column( 4, { page: 'current'} )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            pageTotalCostosDia = api
-                .column( 3, { page: 'current'} )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            pageTotalCostosMes = api
-                .column( 2, { page: 'current'} )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            // Update footer
-            $( api.column( 4 ).footer() ).html(
-                '$ '+pageTotalCostosHora +' ( $'+ totalCostosHora +' total)'
-            );
-            $( api.column( 3 ).footer() ).html(
-                '$ '+pageTotalCostosDia +' ( $'+ totalCostosDia +' total)'
-            );
-            $( api.column( 2 ).footer() ).html(
-                '$ '+pageTotalCostosMes +' ( $'+ totalCostosMes +' total)'
-            );
+var selectCostoAdministrativoNodo = {
+	selectCostoAdministrativoNodo: function(rol, nodo_id) {
+        let nodo = null;
+        if (rol == 'Administrador' || rol == 'Activador') {
+            nodo = $('#selectnodo').val();
+            $('#costoadministrativo_administrador_table').dataTable().fnDestroy();
+        } else {
+            nodo = nodo_id;
         }
-    });
-});
+        if (nodo != '') {
+            $('#costoadministrativo_administrador_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                "lengthChange": false,
+                "order": [[ 1, "asc" ]],
+                fixedHeader: {
+                    header: true,
+                    footer: true
+                },
 
-$(document).ready(function() {
-    $('#costoadministrativo_dinamizador_table1').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-        retrieve: true,
-        processing: true,
-        ajax: {
-            url: "/costos-administrativos",
-            type: "get",
-        },
-        columns: [{
-            data: 'entidad',
-            name: 'entidad',
-            width: '30%'
-        }, {
-            data: 'costoadministrativo',
-            name: 'costoadministrativo',
-            width: '30%'
-        }, {
-            data: 'valor',
-            name: 'valor',
-            width: '15%'
-        }, {
-            data: 'costosadministrativospordia',
-            name: 'costosadministrativospordia',
-            width: '15%'
-        },
-        {
-            data: 'costosadministrativosporhora',
-            name: 'costosadministrativosporhora',
-            width: '15%'
-        },
-        {
-            data: 'edit',
-            name: 'edit',
-            orderable: false,
-            width: '8%'
-        }, ],
-        "footerCallback": function ( row, data, start, end, display ) {
-            var api = this.api(), data;
-            // Remove the formatting to get integer data for summation
-            var intVal = function ( i ) {
-                return typeof i === 'string' ?
-                    i.replace(/[\$,]/g, '')*1 :
-                    typeof i === 'number' ?
-                        i : 0;
-            };
-            // Total over all pages
-            totalCostosHora = api
-                .column( 4 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            totalCostosDia = api
-                .column( 3 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            totalCostosMes = api
-                .column( 2 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            // Total over this page
-            pageTotalCostosHora = api
-                .column( 4, { page: 'current'} )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            pageTotalCostosDia = api
-                .column( 3, { page: 'current'} )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            pageTotalCostosMes = api
-                .column( 2, { page: 'current'} )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            // Update footer
-            $( api.column( 4 ).footer() ).html(
-                '$ '+pageTotalCostosHora +' ( $'+ totalCostosHora +' total)'
-            );
-            $( api.column( 3 ).footer() ).html(
-                '$ '+pageTotalCostosDia +' ( $'+ totalCostosDia +' total)'
-            );
-            $( api.column( 2 ).footer() ).html(
-                '$ '+pageTotalCostosMes +' ( $'+ totalCostosMes +' total)'
-            );
+                "pagingType": "full_numbers",
+                ajax: {
+                    url: host_url + "/costos-administrativos/costoadministrativo/" + nodo,
+                    type: "get",
+                },
+                columns: [
+                    {
+                        data: 'entidad',
+                        name: 'entidad',
+                        width: '30%'
+                    }, {
+                        data: 'costoadministrativo',
+                        name: 'costoadministrativo',
+                        width: '30%'
+                    }, {
+                        data: 'valor',
+                        name: 'valor',
+                        width: '15%'
+                    },
+                    {
+                        data: 'costosadministrativospordia',
+                        name: 'costosadministrativospordia',
+                        width: '15%'
+                    },
+                    {
+                        data: 'costosadministrativosporhora',
+                        name: 'costosadministrativosporhora',
+                        width: '15%'
+                    },
+                    {
+                        data: 'edit',
+                        name: 'edit',
+                        width: '15%'
+                    },
+			    ],
+                "footerCallback": function ( row, data, start, end, display ) {
+                    var api = this.api(), data;
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function ( i ) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '')*1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
+                    totalCostosHora = api
+                        .column( 4 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    totalCostosDia = api
+                        .column( 3 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    totalCostosMes = api
+                        .column( 2 )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                    // Total over this page
+                    pageTotalCostosHora = api
+                        .column( 4, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    pageTotalCostosDia = api
+                        .column( 3, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+
+                    pageTotalCostosMes = api
+                        .column( 2, { page: 'current'} )
+                        .data()
+                        .reduce( function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0 );
+                    // Update footer
+                    $( api.column( 4 ).footer() ).html(
+                        '$ '+pageTotalCostosHora +' ( $'+ totalCostosHora +' total)'
+                    );
+
+                    $( api.column( 3 ).footer() ).html(
+                        '$ '+pageTotalCostosDia +' ( $'+ totalCostosDia +' total)'
+                    );
+
+                    $( api.column( 2 ).footer() ).html(
+                        '$ '+pageTotalCostosMes +' ( $'+ totalCostosMes +' total)'
+                    );
+                }
+            });
+        }else{
+            $('#costoadministrativo_administrador_table').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "lengthChange": false,
+                "pagingType": "full_numbers",
+            }).clear().draw();
         }
-    });
-});
-
+    },
+}
 $(document).ready(function() {
 
     let filter_nodo = $('#filter_nodo').val();
@@ -7561,7 +7604,7 @@ var equipo = {
             },
             "pagingType": "full_numbers",
             ajax:{
-                url: "/equipos",
+                url: host_url + "/equipos",
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -7639,7 +7682,7 @@ var equipo = {
             },
             "pagingType": "full_numbers",
             ajax:{
-                url: "/equipos",
+                url: host_url + "/equipos",
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -7696,13 +7739,6 @@ var equipo = {
                     width: '15%',
                     orderable: false
                 },
-                {
-                    data: 'delete',
-                    name: 'delete',
-                    width: '15%',
-                    orderable: false
-                },
-
             ],
         });
     },
@@ -7710,7 +7746,7 @@ var equipo = {
         $.ajax({
             dataType:'json',
             type:'get',
-            url:`/equipos/${id}`
+            url: host_url + `/equipos/${id}`
         }).done(function(response){
 
             $("#titulo").empty();
@@ -7789,7 +7825,7 @@ var equipo = {
                             <span class="cyan-text text-darken-3">Valor depreciación por año: </span>
                         </div>
                         <div class="col s12 m6 l6">
-                            <span class="black-text">$ ${response.data.depreciacion}</span>
+                            <span class="black-text">${response.data.depreciacion}</span>
                         </div>
                     </div>
                     `);
@@ -7797,71 +7833,71 @@ var equipo = {
             }
         })
     },
-    deleteEquipo: function(id){
-        Swal.fire({
-            title: '¿Estas seguro de eliminar este equipo?',
-            text: "Recuerde que si lo elimina no lo podrá recuperar.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'si, elminar equipo',
-            cancelButtonText: 'No, cancelar',
-          }).then((result) => {
-            if (result.value) {
-                let token = $("meta[name='csrf-token']").attr("content");
-                $.ajax(
-                {
-                    url: `/equipos/${id}`,
-                    type: 'DELETE',
-                    data: {
-                        "id": id,
-                        "_token": token,
-                    },
-                    success: function (response){
-                        if(response.statusCode == 200){
-                            Swal.fire(
-                                'Eliminado!',
-                                'El equipo ha sido eliminado satisfactoriamente.',
-                                'success'
-                            );
-                            location.href = response.route;
-                        }else if(response.statusCode == 226){
-                            Swal.fire(
-                                'No se puede elimnar!',
-                                response.message,
-                                'error'
-                            );
-                        }
-                    },
-                    error: function (xhr, textStatus, errorThrown) {
-                        alert("Error: " + errorThrown);
-                    }
-                });
-            }else if ( result.dismiss === Swal.DismissReason.cancel ) {
-                swalWithBootstrapButtons.fire(
-                    'Cancelado',
-                    'Tu equipo está a salvo',
-                    'error'
-                )
-            }
-        })
-    },
+    // deleteEquipo: function(id){
+    //     Swal.fire({
+    //         title: '¿Estas seguro de eliminar este equipo?',
+    //         text: "Recuerde que si lo elimina no lo podrá recuperar.",
+    //         icon: 'warning',
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#3085d6',
+    //         cancelButtonColor: '#d33',
+    //         confirmButtonText: 'si, elminar equipo',
+    //         cancelButtonText: 'No, cancelar',
+    //       }).then((result) => {
+    //         if (result.value) {
+    //             let token = $("meta[name='csrf-token']").attr("content");
+    //             $.ajax(
+    //             {
+    //                 url: host_url + `/equipos/${id}`,
+    //                 type: 'DELETE',
+    //                 data: {
+    //                     "id": id,
+    //                     "_token": token,
+    //                 },
+    //                 success: function (response){
+    //                     if(response.statusCode == 200){
+    //                         Swal.fire(
+    //                             'Eliminado!',
+    //                             'El equipo ha sido eliminado satisfactoriamente.',
+    //                             'success'
+    //                         );
+    //                         location.href = response.route;
+    //                     }else if(response.statusCode == 226){
+    //                         Swal.fire(
+    //                             'No se puede elimnar!',
+    //                             response.message,
+    //                             'error'
+    //                         );
+    //                     }
+    //                 },
+    //                 error: function (xhr, textStatus, errorThrown) {
+    //                     alert("Error: " + errorThrown);
+    //                 }
+    //             });
+    //         }else if ( result.dismiss === Swal.DismissReason.cancel ) {
+    //             swalWithBootstrapButtons.fire(
+    //                 'Cancelado',
+    //                 'Tu equipo está a salvo',
+    //                 'error'
+    //             )
+    //         }
+    //     })
+    // },
     changeState: function(id){
         Swal.fire({
-            title: '¿Estas seguro de cambiar el estado a  este equipo?',
+            title: '¿Estas seguro de cambiar el estado a este equipo?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'si, cambiar estado',
+            confirmButtonText: 'Sí, cambiar estado',
             cancelButtonText: 'No, cancelar',
           }).then((result) => {
             if (result.value) {
 
                 $.ajax(
                 {
-                    url: `/equipos/cambiar-estado/${id}`,
+                    url: host_url + `/equipos/cambiar-estado/${id}`,
                     type: 'GET',
 
                     success: function (response){
@@ -7946,368 +7982,251 @@ $('#download_equipos').click(function(){
         filter_state: filter_state,
     }
 
-    var url = "/equipos/export?" + $.param(query)
+    var url = host_url + "/equipos/export?" + $.param(query)
     window.location = url;
 });
 
-$(document).ready(function() {
-    $('#mantenimientosequipos_administrador_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "pagingType": "full_numbers",
-        "lengthChange": false,
-    });
+$(document).on('submit', 'form#frmMantenimientoEquipo', function (event) {
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    ajaxSendFormMantenimiento(form, data, url);
+});
 
+$(document).on('submit', 'form#frmMantenimientoEquipoEdit', function (event) {
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    ajaxSendFormMantenimiento(form, data, url);
+});
+
+function ajaxSendFormMantenimiento(form, data, url) {
+    $.ajax({
+        type: form.attr('method'),
+        url: url,
+        data: data,
+        cache: false,
+        contentType: false,
+        dataType: 'json',
+        processData: false,
+        success: function (data) {
+            $('button[type="submit"]').removeAttr('disabled');
+            $('.error').hide();
+            printErroresFormulario(data);
+            if (data.state != 'error_form') {
+                mensajesFormMantenimiento(data);
+            }
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            alert("Error: " + errorThrown);
+        }
+    });
+};
+
+function mensajesFormMantenimiento(data) {
+    if (data.state) {
+        Swal.fire({
+            title: data.title,
+            text: data.msj,
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+        });
+        setTimeout(function () {
+            window.location.replace(data.url);
+        }, 1000);
+    } else {
+        Swal.fire({
+            title: data.title,
+            text: data.msj,
+            type: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+        })
+    }
+};
+
+var mantenimiento = {
+    getEquipoPorLinea:function(){
+        let lineatecnologica = $('#txtlineatecnologica').val();
+        let nodo = $('#txtnodo_id').val();
+        if (!isset(nodo)) {
+            nodo = 0;
+        }
+        if (!isset(lineatecnologica)) {
+            lineatecnologica = 0;
+        }
+        $.ajax({
+            dataType:'json',
+            type:'get',
+            url: host_url + '/equipos/getequiposporlinea/'+nodo+'/'+lineatecnologica
+        }).done(function(response){
+            $('#txtequipo').empty();
+            if (response.equipos == '' && response.equipos.length == 0) {
+                $('#txtequipo').append('<option value="">No se encontraron resultados</option>');
+            }else{
+                $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
+                $.each(response.equipos, function(i, e) {
+                    $('#txtequipo').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
+                });
+            }
+            $('#txtequipo').select2();
+        });
+    },
+}
+
+function getEquipoPorLineaEdit(nodo, linea, equipo){
+    $.ajax({
+        dataType:'json',
+        type:'get',
+        url: host_url + '/equipos/getequiposporlinea/'+nodo+'/'+linea
+    }).done(function(response){
+        $('#txtequipo').empty();
+        if (response.equipos == '' && response.equipos.length == 0) {
+            $('#txtequipo').append('<option value="">No se encontraron resultados</option>');
+        }else{
+            $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
+            $.each(response.equipos, function(i, e) {
+                if (e.id == equipo) {
+                    $('#txtequipo').append('<option selected value="'+e.id+'">'+e.nombre+'</option>');
+                } else {
+                    $('#txtequipo').append('<option value="'+e.id+'">'+e.nombre+'</option>');
+                }
+            });
+        }
+        $('#txtequipo').select2();
+    });
+}
+
+function consultarLineasNodoMantenimiento(nodo_id, linea_id) {
+    $.ajax({
+        dataType:'json',
+        type:'get',
+        url: host_url + "/lineas/getlineasnodo/"+nodo_id
+    }).done(function(response){
+        $("#txtlineatecnologica").empty();
+        $('#txtlineatecnologica').append('<option value="">Seleccione la línea tecnológica</option>');
+        $.each(response.lineasForNodo.lineas, function(i, e) {
+            if (e.id == linea_id) {
+                $('#txtlineatecnologica').append('<option value="'+e.id+'" selected>'+e.abreviatura+' - '+e.nombre+'</option>');
+            } else {
+                $('#txtlineatecnologica').append('<option value="'+e.id+'">'+e.abreviatura+' - '+e.nombre+'</option>');
+            }
+        })
+        $('#txtlineatecnologica').select2();
+    });
+}
+
+
+$(document).ready(function() {
+    // $('#mantenimientosequipos_table').DataTable({
+    //     language: {
+    //         "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    //     },
+    //     "pagingType": "full_numbers",
+    //     "lengthChange": false,
+    // });
+    selectMantenimientosEquiposPorNodo.selectMantenimientosEquipoForNodo();
 });
 
 var selectMantenimientosEquiposPorNodo = {
     selectMantenimientosEquipoForNodo: function() {
         let nodo = $('#selectnodo').val();
-        $('#mantenimientosequipos_administrador_table').dataTable().fnDestroy();
-        if (nodo != '') {
-            
-            $('#mantenimientosequipos_administrador_table').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                processing: true,
-                serverSide: true,
-                retrieve: true,
-                "lengthChange": false,
-                 fixedHeader: {
-                    header: true,
-                    footer: true
-                },
-                "pagingType": "full_numbers",
-                ajax: {
-                    url: "/mantenimientos/getmantenimientosequipospornodo/" + nodo,
-                    type: "get",
-                },
-                columns: [{
+        $('#mantenimientosequipos_table').dataTable().fnDestroy();
+        if (!isset(nodo)) {
+            nodo = 0;
+        }
+        $('#mantenimientosequipos_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            processing: true,
+            serverSide: true,
+            retrieve: true,
+            "lengthChange": false,
+             fixedHeader: {
+                header: true,
+                footer: true
+            },
+            "pagingType": "full_numbers",
+            ajax: {
+                url: host_url + "/mantenimientos/getmantenimientosequipospornodo/" + nodo,
+                type: "get",
+            },
+            columns: [
+                {
+                    data: 'nodo',
+                    name: 'nodo',
+                    width: '30%'
+                }, 
+                {
                     data: 'lineatecnologica',
                     name: 'lineatecnologica',
                     width: '30%'
-                }, {
+                }, 
+                {
                     data: 'equipo',
                     name: 'equipo',
                     width: '30%'
-                }, {
+                }, 
+                {
                     data: 'ultimo_anio_mantenimiento',
                     name: 'ultimo_anio_mantenimiento',
                     width: '15%'
-                }, {
+                }, 
+                {
                     data: 'valor_mantenimiento',
                     name: 'valor_mantenimiento',
                     width: '15%'
-                }, {
+                }, 
+                {
                     data: 'detail',
                     name: 'detail',
                     width: '15%'
-                }, ],
-            });
-
-
-        }else{
-            $('#mantenimientosequipos_administrador_table').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                "lengthChange": false,
-                "pagingType": "full_numbers",
-            }).clear().draw();
-        }
-        
-    },
-}
-$(document).ready(function() {
-    $('#mantenimientosequipos_dinamizador_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-        retrieve: true,
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: "/mantenimientos",
-            type: "get",
-        },
-        columns: [{
-            data: 'lineatecnologica',
-            name: 'lineatecnologica',
-            width: '30%'
-        }, {
-            data: 'equipo',
-            name: 'equipo',
-            width: '30%'
-        }, {
-            data: 'ultimo_anio_mantenimiento',
-            name: 'ultimo_anio_mantenimiento',
-            width: '15%'
-        }, {
-            data: 'valor_mantenimiento',
-            name: 'valor_mantenimiento',
-            width: '15%'
-        }, {
-            data: 'detail',
-            name: 'detail',
-            width: '15%'
-        }, {
-            data: 'edit',
-            name: 'edit',
-            orderable: false,
-            width: '8%'
-        }, ],
-    });
-});
-$(document).ready(function() {
-    $('#mantenimientosequipos_gestor_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-        retrieve: true,
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: "/mantenimientos",
-            type: "get",
-        },
-        columns: [{
-            data: 'lineatecnologica',
-            name: 'lineatecnologica',
-            width: '30%'
-        }, {
-            data: 'equipo',
-            name: 'equipo',
-            width: '30%'
-        }, {
-            data: 'ultimo_anio_mantenimiento',
-            name: 'ultimo_anio_mantenimiento',
-            width: '15%'
-        }, {
-            data: 'valor_mantenimiento',
-            name: 'valor_mantenimiento',
-            width: '15%'
-        }, {
-            data: 'detail',
-            name: 'detail',
-            width: '15%'
-        }, ],
-    });
-});
-$(document).ready(function() {
-    $('#materiales_administrador_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "pagingType": "full_numbers",
-        "lengthChange": false,
-    });
-
-});
-
-var selectMaterialesPorNodo = {
-    selectMaterialesForNodo: function() {
-        let nodo = $('#selectnodo').val();
-        $('#materiales_administrador_table').dataTable().fnDestroy();
-        if (nodo != '') {
+                }, 
+                {
+                    data: 'edit',
+                    name: 'edit',
+                    width: '15%'
+                }, 
+            ],
+        });
+        // if (nodo != '') {
             
-            $('#materiales_administrador_table').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                processing: true,
-                serverSide: true,
-                retrieve: true,
-                "lengthChange": false,
-                 fixedHeader: {
-                    header: true,
-                    footer: true
-                },
-                "pagingType": "full_numbers",
-                ajax: {
-                    url: "/materiales/getmaterialespornodo/" + nodo,
-                    type: "get",
-                },
-                columns: [
-                {
-                    data: 'fecha',
-                    name: 'fecha',
-                    width: '20%'
-                },
-                {
-                    data: 'nombrelinea',
-                    name: 'nombrelinea',
-                    width: '30%'
-                },{
-                    data: 'codigo_material',
-                    name: 'codigo_material',
-                    width: '30%'
-                },
-                {
-                    data: 'nombre',
-                    name: 'nombre',
-                    width: '30%'
-                }, {
-                    data: 'presentacion',
-                    name: 'presentacion',
-                    width: '15%'
-                }, {
-                    data: 'medida',
-                    name: 'medida',
-                    width: '15%'
-                },
-                {
-                    data: 'cantidad',
-                    name: 'cantidad',
-                    width: '15%'
-                },
-                {
-                    data: 'valor_unitario',
-                    name: 'valor_unitario',
-                    width: '15%'
-                },
-                {
-                    data: 'valor_compra',
-                    name: 'valor_compra',
-                    width: '15%'
-                },
-
-                {
-                    data: 'detail',
-                    name: 'detail',
-                    width: '15%'
-                }, ],
-            });
 
 
-        }else{
-            $('#materiales_administrador_table').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                "lengthChange": false,
-                "pagingType": "full_numbers",
-            }).clear().draw();
-        }
+        // }else{
+        //     $('#mantenimientosequipos_table').DataTable({
+        //         language: {
+        //             "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        //         },
+        //         "lengthChange": false,
+        //         "pagingType": "full_numbers",
+        //     }).clear().draw();
+        // }
         
     },
-    
 }
-$(document).ready(function() {
-    $('#materiales_dinamizador_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-        retrieve: true,
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: "/materiales",
-            type: "get",
-        },
-        columns: [{
-            data: 'fecha',
-            name: 'fecha',
-            width: '20%'
-        }, {
-            data: 'nombrelinea',
-            name: 'nombrelinea',
-            width: '30%'
-        }, {
-            data: 'codigo_material',
-            name: 'codigo_material',
-            width: '30%'
-        }, {
-            data: 'nombre',
-            name: 'nombre',
-            width: '30%'
-        }, {
-            data: 'presentacion',
-            name: 'presentacion',
-            width: '15%'
-        }, {
-            data: 'medida',
-            name: 'medida',
-            width: '15%'
-        }, {
-            data: 'cantidad',
-            name: 'cantidad',
-            width: '15%'
-        }, {
-            data: 'valor_unitario',
-            name: 'valor_unitario',
-            width: '15%'
-        }, {
-            data: 'valor_compra',
-            name: 'valor_compra',
-            width: '15%'
-        }, {
-            data: 'detail',
-            name: 'detail',
-            width: '15%'
-        },
-         ],
+function consultarLineasNodo(nodo_id) {
+    $.ajax({
+        dataType:'json',
+        type:'get',
+        url: host_url + "/lineas/getlineasnodo/"+nodo_id
+      }).done(function(response){
+          $("#txtlineatecnologica").empty();
+          $('#txtlineatecnologica').append('<option value="">Seleccione la línea tecnológica</option>');
+          $.each(response.lineasForNodo.lineas, function(i, e) {
+            $('#txtlineatecnologica').append('<option  value="'+e.id+'">'+e.abreviatura+' - '+e.nombre+'</option>');
+          })
+          $('#txtlineatecnologica').material_select();
     });
-});
-
-$(document).ready(function() {
-    $('#materiales_gestor_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "lengthChange": false,
-        retrieve: true,
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: "/materiales",
-            type: "get",
-        },
-        columns: [{
-            data: 'fecha',
-            name: 'fecha',
-            width: '20%'
-        },  {
-            data: 'codigo_material',
-            name: 'codigo_material',
-            width: '30%'
-        }, {
-            data: 'nombre',
-            name: 'nombre',
-            width: '30%'
-        }, {
-            data: 'presentacion',
-            name: 'presentacion',
-            width: '15%'
-        }, {
-            data: 'medida',
-            name: 'medida',
-            width: '15%'
-        }, {
-            data: 'cantidad',
-            name: 'cantidad',
-            width: '15%'
-        }, {
-            data: 'valor_unitario',
-            name: 'valor_unitario',
-            width: '15%'
-        }, {
-            data: 'valor_compra',
-            name: 'valor_compra',
-            width: '15%'
-        }, {
-            data: 'detail',
-            name: 'detail',
-            width: '15%'
-        },
-         ],
-    });
-});
-
+}
 function getSelectMaterialMedida(){
     let medida = $('#txtmedida option:selected').text();
     let id_medida = $('#txtmedida').val();
@@ -8343,7 +8262,7 @@ var materialFormacion = {
                 let token = $("meta[name='csrf-token']").attr("content");
                 $.ajax(
                 {
-                    url: "/materiales/"+id,
+                    url: host_url + "/materiales/"+id,
                     type: 'DELETE',
                     data: {
                         "id": id,
@@ -8381,141 +8300,86 @@ var materialFormacion = {
         })
     }
 }
-
-$(document).ready(function() {
-    $('#costoadministrativo_administrador_table').DataTable({
-        language: {
-            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-        },
-        "pagingType": "full_numbers",
-    });
-});
-
-var selectCostoAdministrativoNodo = {
-	selectCostoAdministrativoForNodo: function() {
+var selectMaterialesPorNodo = {
+    selectMaterialesForNodo: function() {
         let nodo = $('#selectnodo').val();
-        $('#costoadministrativo_administrador_table').dataTable().fnDestroy();
-        if (nodo != '') {
-
-            $('#costoadministrativo_administrador_table').DataTable({
+        if (!isset(nodo)) {
+            nodo = 0;
+        }
+        
+        $('#materiales_table').dataTable().fnDestroy();
+        if (isset(nodo)) {
+            $('#materiales_table').DataTable({
                 language: {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
                 },
                 processing: true,
                 serverSide: true,
+                retrieve: true,
                 "lengthChange": false,
-                "order": [[ 1, "asc" ]],
-                fixedHeader: {
+                 fixedHeader: {
                     header: true,
                     footer: true
                 },
-
                 "pagingType": "full_numbers",
                 ajax: {
-                    url: "/costos-administrativos/costoadministrativo/" + nodo,
+                    url: host_url + "/materiales/getmaterialespornodo/" + nodo,
                     type: "get",
                 },
                 columns: [
-                    {
-                        data: 'entidad',
-                        name: 'entidad',
-                        width: '30%'
-                    }, {
-                        data: 'costoadministrativo',
-                        name: 'costoadministrativo',
-                        width: '30%'
-                    }, {
-                        data: 'valor',
-                        name: 'valor',
-                        width: '15%'
-                    },
-                    {
-                        data: 'costosadministrativospordia',
-                        name: 'costosadministrativospordia',
-                        width: '15%'
-                    },
-                    {
-                        data: 'costosadministrativosporhora',
-                        name: 'costosadministrativosporhora',
-                        width: '15%'
-                    },
-			    ],
-                "footerCallback": function ( row, data, start, end, display ) {
-                    var api = this.api(), data;
-                    // Remove the formatting to get integer data for summation
-                    var intVal = function ( i ) {
-                        return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '')*1 :
-                            typeof i === 'number' ?
-                                i : 0;
-                    };
-                    totalCostosHora = api
-                        .column( 4 )
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0 );
-
-                    totalCostosDia = api
-                        .column( 3 )
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0 );
-
-                    totalCostosMes = api
-                        .column( 2 )
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0 );
-                    // Total over this page
-                    pageTotalCostosHora = api
-                        .column( 4, { page: 'current'} )
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0 );
-
-                    pageTotalCostosDia = api
-                        .column( 3, { page: 'current'} )
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0 );
-
-                    pageTotalCostosMes = api
-                        .column( 2, { page: 'current'} )
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0 );
-                    // Update footer
-                    $( api.column( 4 ).footer() ).html(
-                        '$ '+pageTotalCostosHora +' ( $'+ totalCostosHora +' total)'
-                    );
-
-                    $( api.column( 3 ).footer() ).html(
-                        '$ '+pageTotalCostosDia +' ( $'+ totalCostosDia +' total)'
-                    );
-
-                    $( api.column( 2 ).footer() ).html(
-                        '$ '+pageTotalCostosMes +' ( $'+ totalCostosMes +' total)'
-                    );
-                }
-            });
-        }else{
-            $('#costoadministrativo_administrador_table').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                {
+                    data: 'fecha',
+                    name: 'fecha',
+                    width: '20%'
                 },
-                "lengthChange": false,
-                "pagingType": "full_numbers",
-            }).clear().draw();
+                {
+                    data: 'nombrelinea',
+                    name: 'nombrelinea',
+                    width: '30%'
+                },{
+                    data: 'codigo_material',
+                    name: 'codigo_material',
+                    width: '30%'
+                },
+                {
+                    data: 'material',
+                    name: 'material',
+                    width: '30%'
+                }, {
+                    data: 'presentacion',
+                    name: 'presentacion',
+                    width: '15%'
+                }, {
+                    data: 'medida',
+                    name: 'medida',
+                    width: '15%'
+                },
+                {
+                    data: 'cantidad',
+                    name: 'cantidad',
+                    width: '15%'
+                },
+                {
+                    data: 'valor_unitario',
+                    name: 'valor_unitario',
+                    width: '15%'
+                },
+                {
+                    data: 'valor_compra',
+                    name: 'valor_compra',
+                    width: '15%'
+                },
+                {
+                    data: 'detail',
+                    name: 'detail',
+                    width: '15%'
+                }, ],
+            });
         }
+        
     },
+    
 }
-
 $(document).ready(function() {
 
     usoinfraestructuraIndex.queryActivitiesByAnio();
@@ -8553,7 +8417,7 @@ var usoinfraestructuraIndex = {
             serverSide: true,
             "order": [[ 0, "desc" ]],
             ajax:{
-                url: "/usoinfraestructura",
+                url: host_url + "/usoinfraestructura",
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -8612,7 +8476,7 @@ var usoinfraestructuraIndex = {
         }else{
             $.ajax({
                 type: 'GET',
-                url: '/usuario/usuarios/gestores/nodo/'+ nodo,
+                url: host_url + '/usuario/usuarios/gestores/nodo/'+ nodo,
                 contentType: false,
                 dataType: 'json',
                 processData: false,
@@ -8643,7 +8507,7 @@ var usoinfraestructuraIndex = {
         }else{
             $.ajax({
                 type: 'GET',
-                url: '/usoinfraestructura/actividades/'+ anio,
+                url: host_url + '/usoinfraestructura/actividades/'+ anio,
                 contentType: false,
                 dataType: 'json',
                 processData: false,
@@ -8678,7 +8542,7 @@ var usoinfraestructuraIndex = {
                 let token = $("meta[name='csrf-token']").attr("content");
                 $.ajax(
                 {
-                    url: "/usoinfraestructura/"+id,
+                    url: host_url + "/usoinfraestructura/"+id,
                     type: 'DELETE',
                     data: {
                         "id": id,
@@ -8743,7 +8607,7 @@ $('#download_usoinfraestructura').click(function(){
         filter_gestor: filter_gestor,
         filter_actividad: filter_actividad,
     }
-    var url = "/usoinfraestructura/export?" + $.param(query)
+    var url = host_url + "/usoinfraestructura/export?" + $.param(query)
     window.location = url;
 });
 
@@ -8757,7 +8621,7 @@ function datatableVisitantesPorNodo_Ingreso() {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/visitante/consultarVisitantesRedTecnoparque",
+      url: host_url + "/visitante/consultarVisitantesRedTecnoparque",
       type: "get",
     },
     columns: [
@@ -8806,7 +8670,7 @@ function datatableVisitantesPorNodo_DinamizadorAdministrador() {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/visitante/consultarVisitantesRedTecnoparque",
+      url: host_url + "/visitante/consultarVisitantesRedTecnoparque",
       type: "get",
     },
     columns: [
@@ -8903,7 +8767,7 @@ function consultarIngresosDeUnNodo(id) {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: "/ingreso/consultarIngresosDeUnNodoTecnoparque/"+id,
+      url: host_url + "/ingreso/consultarIngresosDeUnNodoTecnoparque/"+id,
       type: "get",
     },
     columns: [
@@ -8962,7 +8826,7 @@ function consultarVisitanteTecnoparque() {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url : '/visitante/consultarVisitantePorDocumento/'+doc,
+      url : host_url + '/visitante/consultarVisitantePorDocumento/'+doc,
       success: function (response) {
         if (response.visitante == null) {
           divVisitanteRegistrado.hide();
@@ -8987,7 +8851,7 @@ function consultarDetallesDeUnaCharlaInformativa(id) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/charla/consultarDetallesDeUnaCharlaInformativa/'+id,
+    url: host_url + '/charla/consultarDetallesDeUnaCharlaInformativa/'+id,
     success: function (data) {
       $("#modalDetalleDeUnaCharlaInformativa_titulo").empty();
       $("#modalDetalleDeUnaCharlaInformativa_detalle_charla").empty();
@@ -9381,7 +9245,7 @@ function consultarProyectosFinalizadosPorTipoNodoYFecha_column(bandera) {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/grafico/consultarProyectosFinalizadosPorTipoNodoYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+      url: host_url + '/grafico/consultarProyectosFinalizadosPorTipoNodoYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
       success: function (data) {
         graficosProyectosAgrupados(data, graficosProyectoId.grafico5, 'Tipo de Proyecto');
       },
@@ -9403,7 +9267,7 @@ function consultarProyectosInscritosPorTipoNodoYFecha_column(bandera) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/grafico/consultarProyectosInscritosPorTipoNodoYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+    url: host_url + '/grafico/consultarProyectosInscritosPorTipoNodoYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
     success: function (data) {
       graficosProyectosAgrupados(data, graficosProyectoId.grafico3, 'Tipo de Proyecto');
     },
@@ -9424,7 +9288,7 @@ function consultarProyectosFinalizadosPorAnho_combinate(bandera) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/grafico/consultarProyectosFinalzadosPorAnho/'+id+'/'+anho,
+    url: host_url + '/grafico/consultarProyectosFinalzadosPorAnho/'+id+'/'+anho,
     success: function (data) {
       graficosProyectosPromedioCantidadesMeses(data, graficosProyectoId.grafico4);
     },
@@ -9442,7 +9306,7 @@ function consultarProyectosInscritosConEmpresasPorAnho_combinate(bandera, anho) 
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/grafico/consultarProyectosInscritosConEmpresasPorAnho/'+id+'/'+anho,
+    url: host_url + '/grafico/consultarProyectosInscritosConEmpresasPorAnho/'+id+'/'+anho,
     success: function (data) {
       graficosProyectosPromedioCantidadesMeses(data, graficosProyectoId.grafico2);
     },
@@ -9460,7 +9324,7 @@ function consultarProyectosInscritosPorAnho_combinate(bandera, anho) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/grafico/consultarProyectosInscritosPorAnho/'+id+'/'+anho,
+    url: host_url + '/grafico/consultarProyectosInscritosPorAnho/'+id+'/'+anho,
     success: function (data) {
       graficosProyectosPromedioCantidadesMeses(data, graficosProyectoId.grafico1);
     },
@@ -9483,7 +9347,7 @@ function consultarEdtsDelNodoPorAnho_variablepie(bandera) {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/grafico/consultarEdtsPorNodoYAnho/'+idnodo+'/'+anho,
+      url: host_url + '/grafico/consultarEdtsPorNodoYAnho/'+idnodo+'/'+anho,
       success: function (data) {
         Highcharts.chart(graficosEdtId.grafico4, {
           chart: {
@@ -9546,7 +9410,7 @@ function consultarEdtsPorLineaYFecha_stacked(bandera) {
       $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/grafico/consultarEdtsPorLineaYFecha/'+id+'/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
+        url: host_url + '/grafico/consultarEdtsPorLineaYFecha/'+id+'/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
         success: function (data) {
           // console.log(data);
           Highcharts.chart(graficosEdtId.grafico3, {
@@ -9604,7 +9468,7 @@ function consultarEdtsPorGestorYFecha_stacked(bandera) {
       $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/grafico/consultarEdtsPorGestorYFecha/'+id+'/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
+        url: host_url + '/grafico/consultarEdtsPorGestorYFecha/'+id+'/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
         success: function (data) {
           // console.log(data);
           Highcharts.chart(graficosEdtId.grafico2, {
@@ -9658,7 +9522,7 @@ function consultarEdtsPorNodoGestorYFecha_stacked(bandera) {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/grafico/consultarEdtsPorNodoGestorYFecha/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
+      url: host_url + '/grafico/consultarEdtsPorNodoGestorYFecha/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
       success: function (data) {
         var tamanho = data.consulta.length;
         var datos = {
@@ -9749,7 +9613,7 @@ function consultarTiposDeArticulacionesDelAnho_variablepie(bandera) {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/grafico/consultarArticulacionesPorNodoYAnho/'+idnodo+'/'+anho,
+      url: host_url + '/grafico/consultarArticulacionesPorNodoYAnho/'+idnodo+'/'+anho,
       success: function (data) {
         Highcharts.chart(graficosId.grafico4, {
           chart: {
@@ -9800,7 +9664,7 @@ function articulacionesGrafico1Ajax(id, fecha_inicio, fecha_fin) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/grafico/consultarArticulacionesPorNodo/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+    url: host_url + '/grafico/consultarArticulacionesPorNodo/'+id+'/'+fecha_inicio+'/'+fecha_fin,
     success: function (data) {
       var tamanho = data.consulta.length;
       // console.log(tamanho);
@@ -9909,7 +9773,7 @@ function consultarArticulacionesDeUnGestorPorFecha_stacked() {
       $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/grafico/consultarArticulacionesPorGestorYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+        url: host_url + '/grafico/consultarArticulacionesPorGestorYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
         success: function (data) {
           // console.log(data);
           Highcharts.chart(graficosId.grafico2, {
@@ -9972,7 +9836,7 @@ function consultarArticulacionesDeUnaLineaDelNodoPorFechas_stacked(bandera) {
       $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/grafico/consultarCantidadDeArticulacionesPorTipoDeUnaLineaTecnologicaYFecha/'+idnodo+'/'+id+'/'+fecha_inicio+'/'+fecha_fin,
+        url: host_url + '/grafico/consultarCantidadDeArticulacionesPorTipoDeUnaLineaTecnologicaYFecha/'+idnodo+'/'+id+'/'+fecha_inicio+'/'+fecha_fin,
         error: function (xhr, textStatus, errorThrown) {
           alert("Error: " + errorThrown);
         },
@@ -10033,7 +9897,7 @@ function alertaGestorNoValido() {
 };
 
 function alertaNodoNoValido() {
-  Swal.fire('Advertencia!', 'Seleccione un nodo', 'warning');
+  Swal.fire('Advertencia!', 'Seleccione por lo menos un nodo', 'warning');
 };
 // 0 para cuando el Dinamizador consultar
 // 1 para cuando el experto consulta
@@ -10042,7 +9906,7 @@ function consultarSeguimientoDeUnGestor(gestor_id) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/seguimiento/seguimientoEsperadoDeUnGestor/'+gestor_id,
+    url: host_url + '/seguimiento/seguimientoEsperadoDeUnGestor/'+gestor_id,
     success: function (data) {
       graficoSeguimientoEsperado(data, graficosSeguimiento.gestor);
     },
@@ -10076,7 +9940,7 @@ function consultarSeguimientoEsperadoDeUnaLinea(bandera) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/seguimiento/seguimientoEsperadoDeUnaLinea/'+linea_id+'/'+nodo_id,
+    url: host_url + '/seguimiento/seguimientoEsperadoDeUnaLinea/'+linea_id+'/'+nodo_id,
     success: function (data) {
       graficoSeguimientoEsperado(data, graficosSeguimiento.linea_esperado);
     },
@@ -10093,7 +9957,7 @@ function consultarProyectosInscritosPorMes(gestor_id) {
     $.ajax({
       dataType: 'json',
       type: 'get',
-      url: '/seguimiento/seguimientoInscritosPorMesExperto/'+gestor_id,
+      url: host_url + '/seguimiento/seguimientoInscritosPorMesExperto/'+gestor_id,
       success: function (data) {
         console.log(data.datos.meses);
         graficoSeguimientoPorMes(data, graficosSeguimiento.inscritos_mes);
@@ -10126,7 +9990,7 @@ function consultarSeguimientoActualDeUnaLinea(bandera) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/seguimiento/seguimientoActualDeUnaLinea/'+linea_id+'/'+nodo_id,
+    url: host_url + '/seguimiento/seguimientoActualDeUnaLinea/'+linea_id+'/'+nodo_id,
     success: function (data) {
       graficoSeguimientoFases(data, graficosSeguimiento.linea_actual);
     },
@@ -10140,7 +10004,7 @@ function consultarSeguimientoActualDeUnGestor(gestor_id) {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/seguimiento/seguimientoActualDeUnGestor/'+gestor_id,
+    url: host_url + '/seguimiento/seguimientoActualDeUnGestor/'+gestor_id,
     success: function (data) {
       graficoSeguimientoFases(data, graficosSeguimiento.gestor_fases);
     },
@@ -10155,7 +10019,7 @@ function consultarSeguimientoEsperadoDeTecnoparque() {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/seguimiento/seguimientoEsperadoDeTecnoparque/',
+    url: host_url + '/seguimiento/seguimientoEsperadoDeTecnoparque/',
     success: function (data) {
       graficoSeguimientoEsperado(data, graficosSeguimiento.tecnoparque_esperado);
     },
@@ -10165,48 +10029,11 @@ function consultarSeguimientoEsperadoDeTecnoparque() {
   })
 };
 
-function consultarSeguimientoEsperadoDeUnNodo(nodo_id) {
-
-  if ( nodo_id === "" ) {
-    alertaNodoNoValido();
-  } else {
-    $.ajax({
-      dataType: 'json',
-      type: 'get',
-      url: '/seguimiento/seguimientoEsperadoDeUnNodo/'+nodo_id,
-      success: function (data) {
-        graficoSeguimientoEsperado(data, graficosSeguimiento.nodo_esperado);
-      },
-      error: function (xhr, textStatus, errorThrown) {
-        alert("Error: " + errorThrown);
-      },
-    })
-  }
-};
-
-function consultarSeguimientoDeUnNodoFases(nodo_id) {
-  if ( nodo_id === "" ) {
-    alertaNodoNoValido();
-  } else {
-    $.ajax({
-      dataType: 'json',
-      type: 'get',
-      url: '/seguimiento/seguimientoDeUnNodoFases/'+nodo_id,
-      success: function (data) {
-        graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
-      },
-      error: function (xhr, textStatus, errorThrown) {
-        alert("Error: " + errorThrown);
-      },
-    })
-  }
-};
-
 function consultarSeguimientoDeTecnoparqueFases() {
   $.ajax({
     dataType: 'json',
     type: 'get',
-    url: '/seguimiento/seguimientoDeTecnoparqueFases/',
+    url: host_url + '/seguimiento/seguimientoDeTecnoparqueFases/',
     success: function (data) {
       graficoSeguimientoFases(data, graficosSeguimiento.tecnoparque_fases);
     },
@@ -10217,6 +10044,14 @@ function consultarSeguimientoDeTecnoparqueFases() {
 };
 
 function graficoSeguimientoEsperado(data, name) {
+  let nodos = [];
+  let trl6 = [];
+  let trl7_8 = [];
+  data.datos.forEach(element => {
+    nodos.push(element.nodo);
+    trl6.push(element.trl6);
+    trl7_8.push(element.trl7_8);
+  });
   Highcharts.chart(name, {
     chart: {
       type: 'column'
@@ -10225,42 +10060,55 @@ function graficoSeguimientoEsperado(data, name) {
       text: 'Proyectos que se encuentran activos'
     },
     yAxis: {
+      min: 0,
       title: {
-        text: 'Cantidad'
+          text: 'Cantidad de proyectos'
+      },
+      stackLabels: {
+          enabled: true,
+          style: {
+              fontWeight: 'bold',
+              color: ( // theme
+                  Highcharts.defaultOptions.title.style &&
+                  Highcharts.defaultOptions.title.style.color
+              ) || 'gray',
+              textOutline: 'none'
+          }
       }
     },
     xAxis: {
-        type: 'category'
+      title: {
+        text: 'Nodos'
+      },
+      categories: nodos
     },
     legend: {
-        enabled: false
+      align: 'left',
+      x: 70,
+      verticalAlign: 'top',
+      y: 20,
+      floating: true,
+      backgroundColor:
+          Highcharts.defaultOptions.legend.backgroundColor || 'white',
+      borderColor: '#CCC',
+      borderWidth: 1,
+      shadow: false
     },
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">Cantidad</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
-    },
-    series: [
-      {
-        colorByPoint: true,
-        dataLabels: {
-          enabled: true
-        },
-        data: [
-          {
-            name: "TRL 6 esperados",
-            y: data.datos.Esperado6,
-          },
-          {
-            name: "TRL 7 - 8 esperados",
-            y: data.datos.Esperado7_8,
-          },
-          {
-            name: "Total de proyectos activos",
-            y: data.datos.Activos,
-          },
-        ]
+    plotOptions: {
+      column: {
+          stacking: 'normal',
+          dataLabels: {
+              enabled: true
+          }
       }
-    ],
+    },
+    series: [{
+        name: 'TRL 6 esperado',
+        data: trl6
+    }, {
+        name: 'TRL 7 y 8 esperado',
+        data: trl7_8
+    }]
   });
 }
 
@@ -10323,67 +10171,93 @@ function graficoSeguimientoPorMes(data, name) {
 }
 
 function graficoSeguimientoFases(data, name) {
+  let nodos = [];
+  let inicio = [];
+  let planeacion = [];
+  let ejecucion = [];
+  let cierre = [];
+  let finalizado = [];
+  let suspendido = [];
+  data.datos.forEach(element => {
+    nodos.push(element.nodo);
+    inicio.push(element.inicio);
+    planeacion.push(element.planeacion);
+    ejecucion.push(element.ejecucion);
+    cierre.push(element.cierre);
+    finalizado.push(element.finalizado);
+    suspendido.push(element.suspendido);
+  });
   Highcharts.chart(name, {
     chart: {
-      type: 'column'
+        type: 'column'
     },
     title: {
-      text: 'Proyectos actuales y finalizados en el año actual'
-    },
-    yAxis: {
-      title: {
-        text: 'Cantidad'
-      }
+        text: 'Proyectos actuales y finalizados en el año actual'
+        // align: 'left'
     },
     xAxis: {
-        type: 'category'
+        title: {
+          text: 'Nodos'
+        },
+        categories: nodos
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Cantidad de proyectos'
+        },
+        stackLabels: {
+            enabled: true,
+            style: {
+                fontWeight: 'bold',
+                color: ( // theme
+                    Highcharts.defaultOptions.title.style &&
+                    Highcharts.defaultOptions.title.style.color
+                ) || 'gray',
+                textOutline: 'none'
+            }
+        }
     },
     legend: {
-        enabled: false
+        align: 'left',
+        x: 70,
+        verticalAlign: 'top',
+        y: 20,
+        floating: true,
+        backgroundColor:
+            Highcharts.defaultOptions.legend.backgroundColor || 'white',
+        borderColor: '#CCC',
+        borderWidth: 1,
+        shadow: false
     },
-    tooltip: {
-      headerFormat: '<span style="font-size:11px">Cantidad</span><br>',
-      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
+    plotOptions: {
+        column: {
+            stacking: 'normal',
+            dataLabels: {
+                enabled: true
+            }
+        }
     },
-    series: [
-      {
-        colorByPoint: true,
-        dataLabels: {
-          enabled: true
-        },
-        data: [
-          {
-            name: "Proyectos en inicio",
-            y: data.datos.Inicio,
-          },
-          {
-            name: "Proyectos en planeación",
-            y: data.datos.Planeacion,
-          },
-          {
-            name: "Proyectos en ejecución",
-            y: data.datos.Ejecucion,
-          },
-          {
-            name: "Proyectos en cierre",
-            y: data.datos.Cierre,
-          },
-          {
-            name: "Proyectos finalizados",
-            y: data.datos.Finalizado,
-          },
-          {
-            name: "Proyectos suspendidos",
-            y: data.datos.Suspendido,
-          },
-          {
-            name: "Total de proyecto en el año actual",
-            y: data.datos.Total,
-          },
-        ]
-      }
-    ],
-  });
+    series: [{
+        name: 'Inicio',
+        data: inicio
+    }, {
+        name: 'Planeación',
+        data: planeacion
+    }, {
+        name: 'Ejecución',
+        data: ejecucion
+    }, {
+      name: 'Cierre',
+      data: cierre
+    }, {
+      name: 'Finalizado',
+      data: finalizado
+    }, {
+      name: 'Suspendido',
+      data: suspendido
+    }]
+});
 }
 
 var graficosCostos = {
@@ -10456,7 +10330,7 @@ function consultarCostosDeProyectos(bandera, tipo) {
             $.ajax({
                 dataType: 'json',
                 type: 'get',
-                url: '/costos/costosDeProyectos/'+idnodo+'/'+tiposArr+'/'+estado+'/'+fecha_inicio+'/'+fecha_fin+'/'+tipo,
+                url: host_url + '/costos/costosDeProyectos/'+idnodo+'/'+tiposArr+'/'+estado+'/'+fecha_inicio+'/'+fecha_fin+'/'+tipo,
                 success: function (data) {
                 setValueInput(data, chart);
                 graficoCostos(data, tipo == 1 ? graficosCostos.proyectos : graficosCostos.proyectos_ipe, 'Proyectos');
@@ -10479,7 +10353,7 @@ function consultarCostoDeUnaActividad() {
         $.ajax({
         dataType: 'json',
         type: 'get',
-        url: '/costos/proyecto/'+id,
+        url: host_url + '/costos/proyecto/'+id,
         success: function (data) {
             let chart = '_actividad';
             console.log(data);
@@ -10641,7 +10515,7 @@ let typeArticulacion ={
             serverSide: false,
             "order": [[ 1, "desc" ]],
             ajax:{
-                url: "/articulaciones/tipoarticulaciones",
+                url: host_url + "/articulaciones/tipoarticulaciones",
                 type: "get",
 
                 data: {
@@ -10693,7 +10567,7 @@ let typeArticulacion ={
                 let token = $("meta[name='csrf-token']").attr("content");
                 $.ajax(
                 {
-                    url: "/articulaciones/tipoarticulaciones/"+id,
+                    url: host_url + "/articulaciones/tipoarticulaciones/"+id,
                     type: 'DELETE',
                     data: {
                         "id": id,
@@ -10831,56 +10705,197 @@ $("#formTypeArticulation").on('submit', function(e){
     });
 });
 
+function isset(variable) {
+  if(typeof(variable) != "undefined" && variable !== null) {
+    return true;
+  }
+  return false;
+}
+
+function sendListNodos(url, input) {
+  let nodosSend = input;
+  return $.ajax({
+    dataType: 'json',
+    type: 'get',
+    data: {
+      nodos: nodosSend
+    },
+    url: url,
+    // success: function (data) { },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
+  });
+};
+
+function consultarSeguimientoDeUnNodoFases(e, url) {
+  e.preventDefault();
+  input = $("#txtnodo_select_actual").val();
+  if (!validarSelect(input)) {
+      Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
+      return false;
+  } else {
+    let ajax = sendListNodos(url, input);
+      ajax.success(function (data) {
+        graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
+      });
+  }
+};
+
+function consultarSeguimientoEsperado(e, url) {
+  e.preventDefault();
+  input = $("#txtnodo_select_list").val();
+  if (!validarSelect(input)) {
+      Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
+      return false;
+  } else {
+    let ajax = sendListNodos(url, input);
+      ajax.success(function (data) {
+        graficoSeguimientoEsperado(data, graficosSeguimiento.nodo_esperado);
+      });
+  }
+}
+
+function generarExcelConTodosLosIndicadores() {
+  let idnodo = $('#txtnodo_id').val();
+  let hoja = $('#txthoja_nombre').val();
+  let fecha_inicio = $('#txtfecha_inicio_todos').val();
+  let fecha_fin = $('#txtfecha_fin_todos').val();
+
+  if (!isset(idnodo)) {
+    idnodo = 0;
+  }
+  if (!isset(hoja)) {
+    hoja = 'all';
+  }
+
+  if (fecha_inicio > fecha_fin) {
+    Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
+  } else {
+    location.href = '/excel/export/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+hoja;
+  }
+}
+
+function generarExcelConTodosLosIndicadoresActuales() {
+  let idnodo = $('#txtnodo_id_actuales').val();
+  let hoja = $('#txthoja_nombre_actuales').val();
+  if (!isset(idnodo)) {
+    idnodo = 0;
+  }
+  if (!isset(hoja)) {
+    hoja = 'all';
+  }
+
+  location.href = '/excel/export_proyectos_actuales/'+idnodo+'/'+hoja;
+}
+
+function generarExcelConTodosLosIndicadoresFinalizados() {
+  let idnodo = $('#txtnodo_id_finalizados').val();
+  let hoja = $('#txthoja_nombre_finalizados').val();
+  let fecha_inicio = $('#txtfecha_inicio_cerrados').val();
+  let fecha_fin = $('#txtfecha_fin_cerrados').val();
+
+  if (!isset(idnodo)) {
+  idnodo = 0;
+  }
+  if (!isset(hoja)) {
+  hoja = 'all';
+  }
+
+  if (fecha_inicio > fecha_fin) {
+    Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
+  } else {
+    location.href = '/excel/export_proyectos_finalizados/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+hoja;
+  }
+}
+
+function generarExcelConTodosLosIndicadoresInscritos() {
+  let idnodo = $('#txtnodo_id_inscritos').val();
+  let hoja = $('#txthoja_nombre_inscritos').val();
+  let fecha_inicio = $('#txtfecha_inicio_inscritos').val();
+  let fecha_fin = $('#txtfecha_fin_inscritos').val();
+  if (!isset(idnodo)) {
+    idnodo = 0;
+  }
+  if (!isset(hoja)) {
+    hoja = 'all';
+  }
+
+  if (fecha_inicio > fecha_fin) {
+    Swal.fire('Error!', 'Seleccione un rango de fechas válido', 'error');
+  } else {
+    location.href = '/excel/export_proyectos_inscritos/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+hoja;
+  }
+
+}
+
 function selectAll(source, elementaName) {
-    checkboxes = document.getElementsByClassName(elementaName);
-    for(var i=0, n=checkboxes.length;i<n;i++) {
-      checkboxes[i].checked = source.checked;
+  checkboxes = document.getElementsByClassName(elementaName);
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+  }
+}
+
+function downloadMetas(e) {
+  e.preventDefault();
+  input = $("#txtnodo_metas_id").val();
+  if (!validarSelect(input)) {
+      Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
+      return false;
+  } else {
+      // location.href = route + '/' + input;
+      document.frmDescargarMetas.submit();
+  }
+}
+
+function validarSelect(input) {
+  // input = $(input).val();
+  if (input == null) {
+    return false;
+  }
+  return true;
+}
+
+function verificarChecks(source, padre) {
+  clase = source.classList[0];
+  checkboxes = document.getElementsByClassName(clase);
+  padre = document.getElementById(padre);
+  state = false;
+  for(var i=0, n= checkboxes.length; i< n;i++) {
+    if (checkboxes[i].checked) {
+      state = true;
+      break;
     }
   }
+  for(var i=0, n= checkboxes.length; i< n;i++) {
+    if (!checkboxes[i].checked) {
+      state = false;
+      break;
+    }
+  }
+  padre.checked = state;
+}
 
-  function downloadMetas(e) {
-    e.preventDefault();
-    if (!validarChecks("metas_down")) {
-        Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
+function validarChecks(elementaName) {
+  checkboxes = document.getElementsByClassName(elementaName);
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+      if (checkboxes[i].checked == false) {
         return false;
-    } else {
-        document.frmDescargarMetas.submit();
-    }
-  }
-
-  function verificarChecks(source, padre) {
-    clase = source.classList[0];
-    checkboxes = document.getElementsByClassName(clase);
-    padre = document.getElementById(padre);
-    state = true;
-    for(var i=0, n=checkboxes.length;i<n;i++) {
-      if (checkboxes[i].checked != source.checked) {
-        state = false;
-        break;
       }
     }
-    padre.checked = state;
-  }
+    return true;
+}
 
-  function validarChecks(elementaName) {
-    checkboxes = document.getElementsByClassName(elementaName);
-    for(var i=0, n=checkboxes.length;i<n;i++) {
-        if (checkboxes[i].checked == false) {
-          return false;
-        }
-      }
-      return true;
+function downloadIdeasIndicadores(e) {
+  e.preventDefault();
+  input = $("#txtnodo_ideas_download").val();
+  if (!validarSelect(input)) {
+      Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
+      return false;
+  } else {
+      document.frmDescargarIdeas.submit();
   }
-
-  function downloadIdeasIndicadores(e) {
-    e.preventDefault();
-    if (!validarChecks("ideas_download")) {
-        Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
-        return false;
-    } else {
-        document.frmDescargarIdeas.submit();
-    }
-  }
+}
 $('#txtcontenido').summernote({
   lang: 'es-ES',
   height: 300
@@ -11033,7 +11048,7 @@ let support ={
             serverSide: true,
             "order": [[ 1, "desc" ]],
             ajax:{
-                url: "/support",
+                url: host_url + "/support",
                 type: "get",
                 data: {
                     filter_year_support: filter_year_support,
@@ -11089,7 +11104,7 @@ let support ={
                 let token = $("meta[name='csrf-token']").attr("content");
                 $.ajax(
                 {
-                    url: "/support/"+ticket,
+                    url: host_url + "/support/"+ticket,
                     type: 'DELETE',
                     data: {
                         "id": ticket,
@@ -11134,7 +11149,7 @@ let support ={
                 let token = $("meta[name='csrf-token']").attr("content");
                 $.ajax(
                 {
-                    url: "/support/"+ticket,
+                    url: host_url + "/support/"+ticket,
                     type: 'PUT',
                     data: {
                         "id": ticket,

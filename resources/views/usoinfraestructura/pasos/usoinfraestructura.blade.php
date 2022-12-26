@@ -7,7 +7,7 @@
                     <span class="title"><b>Asesoría y uso</b></span>
                     <p>señor(a) usuario, por favor ingrese la información que se solcita en formulario.</p>
                 </li>
-                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsApoyoTecnico()))
+                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto() || session()->get('login_role') == App\User::IsApoyoTecnico()))
                     <li class="collection-item">
                         <span class="title"><b>Paso 1</b></span>
                         <p>Por favor seleccione el tipo de asesoría y uso (Proyectos)</p>
@@ -39,7 +39,7 @@
                     <p class="center p-v-xs">
 
                         @if(isset($usoinfraestructura->asesorable))
-                            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsTalento() || session()->get('login_role') == App\User::IsApoyoTecnico()))
+                            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto() || session()->get('login_role') == App\User::IsTalento() || session()->get('login_role') == App\User::IsApoyoTecnico()))
                             <input class="with-gap" id="IsProyecto" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->asesorable_type == App\Models\Proyecto::class ? 'checked' : old('txttipousoinfraestructura')}}  value="0"/>
                             <label for="IsProyecto">Proyectos</label>
                             @endif
@@ -51,7 +51,7 @@
                             @endif
 
                         @else
-                            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsTalento() || session()->get('login_role') == App\User::IsApoyoTecnico()))
+                            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto() || session()->get('login_role') == App\User::IsTalento() || session()->get('login_role') == App\User::IsApoyoTecnico()))
                             <input class="with-gap" id="IsProyecto" name="txttipousoinfraestructura" type="radio" value="0"/>
                             <label for="IsProyecto">Proyectos</label>
                             @endif
@@ -78,8 +78,8 @@
                 @endif
             </div>
             <div class="row">
-            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsArticulador() || session()->get('login_role') == App\User::IsApoyoTecnico()))
-                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor()))
+            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto() || session()->get('login_role') == App\User::IsArticulador() || session()->get('login_role') == App\User::IsApoyoTecnico()))
+                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto()))
                         <div class="input-field col s12 m6 l6">
                             <i class="material-icons prefix">date_range</i>
                             @if(isset($usoinfraestructura->fecha))
@@ -92,7 +92,7 @@
                         </div>
                         <div class="input-field col s12 m6 l6">
                             <i class="material-icons prefix">vertical_split</i>
-                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
                                 @if(isset($usoinfraestructura->asesorable->asesor->lineatecnologica))
                                     <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$usoinfraestructura->asesorable->asesor->lineatecnologica->nombre}}"/>
                                 @else

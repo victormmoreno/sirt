@@ -4,9 +4,9 @@
     </a>
 </li>
 <li class="no-padding">
-    <a class="collapsible-header waves-effect waves-grey {{ setActiveRouteActivePage('idea') }} {{ setActiveRouteActivePage('entrenamientos') }} {{setActiveRouteActivePage('csibt')}} {!! setActiveRoutePadding('idea'), setActiveRoutePadding('entrenamientos'), setActiveRoutePadding('csibt') !!}">
-        <i class="material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('csibt') }}">lightbulb_outline</i>Ideas de Proyecto
-        <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('entrenamientos') }} {{ setActiveRouteActiveIcon('csibt') }}">keyboard_arrow_right</i>
+    <a class="collapsible-header waves-effect waves-grey {{ setActiveRouteActivePage('idea') }} {{ setActiveRouteActivePage('taller') }} {{setActiveRouteActivePage('csibt')}} {!! setActiveRoutePadding('idea'), setActiveRoutePadding('taller'), setActiveRoutePadding('csibt') !!}">
+        <i class="material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('taller') }} {{ setActiveRouteActiveIcon('csibt') }}">lightbulb_outline</i>Ideas de Proyecto
+        <i class="nav-drop-icon material-icons {{ setActiveRouteActiveIcon('idea') }} {{ setActiveRouteActiveIcon('taller') }} {{ setActiveRouteActiveIcon('csibt') }}">keyboard_arrow_right</i>
     </a>
     <div class="collapsible-body">
         <ul>
@@ -16,8 +16,8 @@
             </a>
         </li>
         <li>
-            <a href="{{route('entrenamientos')}}" class="{{setActiveRouteActivePage('entrenamientos')}}" rel="canonical" title="Taller de fortalecimiento">
-            <i class="material-icons {{setActiveRouteActiveIcon('entrenamientos')}}">library_books</i>Taller de fortalecimiento
+            <a href="{{route('taller')}}" class="{{setActiveRouteActivePage('taller')}}" rel="canonical" title="Taller de fortalecimiento">
+            <i class="material-icons {{setActiveRouteActiveIcon('taller')}}">library_books</i>Taller de fortalecimiento
             </a>
         </li>
         <li class="no-padding">

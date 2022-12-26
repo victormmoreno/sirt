@@ -8,17 +8,15 @@
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
                 <div class="row">
-                    <div class="col s12 m8 l8">
-                        <h5 class="left-align">
-                            <a class="footer-text left-align" href="{{route('mantenimiento.index')}}">
-                                <i class="material-icons arrow-l">
-                                    arrow_back
-                                </i>
-                            </a>
-                            Mantenimiento de equipo {{$mantenimiento->equipo->nombre}}
-                        </h5>
-                    </div>
-                    <div class="col s12 m4 l4 rigth-align show-on-large hide-on-med-and-down">
+                    <h5 class="left left-align primary-text">
+                        <a class="footer-text left-align" href="{{route('mantenimiento.index')}}">
+                            <i class="material-icons arrow-l left primary-text">
+                                arrow_back
+                            </i>
+                        </a>
+                        Mantenimiento de equipo {{$mantenimiento->equipo->nombre}}
+                    </h5>
+                    <div class="right rigth-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li><a href="{{route('mantenimiento.index')}}">Mantenimientos</a></li>
@@ -31,38 +29,32 @@
                         <div class="card mailbox-content">
                             <div class="card-content">
                                 <div class="row no-m-t no-m-b">
-                                    
                                     <div class="col s12 m12 l12">
-                                        
                                         <div class="mailbox-view">
                                             <div class="mailbox-view-header">
-
+                                                <div class="left">
                                                     <div class="left">
-                                                        <div class="left">
-                                                            
-                                                            <i class="material-icons fas fa-building"></i>
-                                                        </div>
-                                                        <div class="left">
-                                                            <span class="mailbox-title">
-                                                                Tecnoparque nodo {{$mantenimiento->equipo->nodo->entidad->nombre}} 
-                                                            </span>
-                                                            <span class="mailbox-author">
-                                                                <b>Dirección: </b> {{$mantenimiento->equipo->nodo->direccion}}<br/>
-                                                                <b>Correo Electrónco: </b> 
-                                                                {{isset($mantenimiento->equipo->nodo->entidad->email_entidad) ? $mantenimiento->equipo->nodo->entidad->email_entidad : 'No registra'}}<br/>
-                                                                <b>Teléfono: </b> 
-                                                                {{isset($mantenimiento->equipo->nodo->telefono) ? $mantenimiento->equipo->nodo->telefono : 'No registra'}}<br/>
-                                                            </span>
-                                                        </div>
-                                                        
+                                                        <i class="material-icons fas fa-building"></i>
                                                     </div>
-                                                    <div class="right mailbox-buttons">
+                                                    <div class="left">
                                                         <span class="mailbox-title">
-                                                            <p class="center">Información Mantenimiento de equipo {{$mantenimiento->equipo->nombre}} </p><br/>
-                                                            <p class="center">Linea Tecnológica: {{$mantenimiento->equipo->lineatecnologica->abreviatura}} - {{$mantenimiento->equipo->lineatecnologica->nombre}} </p>
+                                                            Tecnoparque nodo {{$mantenimiento->equipo->nodo->entidad->nombre}} 
                                                         </span>
-
+                                                        <span class="mailbox-author">
+                                                            <b>Dirección: </b> {{$mantenimiento->equipo->nodo->direccion}}<br/>
+                                                            <b>Correo Electrónco: </b> 
+                                                            {{isset($mantenimiento->equipo->nodo->entidad->email_entidad) ? $mantenimiento->equipo->nodo->entidad->email_entidad : 'No registra'}}<br/>
+                                                            <b>Teléfono: </b> 
+                                                            {{isset($mantenimiento->equipo->nodo->telefono) ? $mantenimiento->equipo->nodo->telefono : 'No registra'}}<br/>
+                                                        </span>
                                                     </div>
+                                                </div>
+                                                <div class="right mailbox-buttons">
+                                                    <span class="mailbox-title">
+                                                        <p class="center">Información Mantenimiento de equipo {{$mantenimiento->equipo->nombre}} </p><br/>
+                                                        <p class="center">Linea Tecnológica: {{$mantenimiento->equipo->lineatecnologica->abreviatura}} - {{$mantenimiento->equipo->lineatecnologica->nombre}} </p>
+                                                    </span>
+                                                </div>
                                             </div>
                                             <div class="right">
                                                 <small>
