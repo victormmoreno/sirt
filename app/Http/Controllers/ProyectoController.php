@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{AreaConocimiento, Centro, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, Actividad, Fase};
+use App\Models\{AreaConocimiento, Centro, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, Actividad, Fase, Gestor};
 use App\Repositories\Repository\{EmpresaRepository, ProyectoRepository, UserRepository\GestorRepository};
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use App\Http\Requests\{ProyectoFaseInicioFormRequest, ProyectoFaseCierreFormRequest};
@@ -485,6 +485,7 @@ class ProyectoController extends Controller
     {
         return view('proyectos.index', [
             'nodos' => Nodo::SelectNodo()->get(),
+            'gestores' => Gestor::ConsultarGestoresPorNodo(request()->user()->getNodoUser())->pluck('nombres_gestor', 'id')
         ]);
     }
 
@@ -537,24 +538,6 @@ class ProyectoController extends Controller
     }
 
     /**
-     * Método que valida que un experto no pueda hacer operaciones sobre un proyecto que no está asesorando
-     *
-     * @param Proyecto $proyecto
-     * @return bool
-     * @author dum
-     */
-    private function validarExperto($proyecto) {
-        if (session()->get('login_role') == User::IsAdministrador())
-            return true;
-        if (session()->get('login_role') == User::IsExperto() && $proyecto->asesor->user->id != auth()->user()->id) {
-            Alert::error('Acceso no permitido!', 'No puedes ver/gestionar proyectos que no estás asesorando!')->showConfirmButton('Ok', '#3085d6');
-            return false;
-        }
-        return true;
-    }
-
-
-    /**
      * Muestra el formulario para cambiar los datos de la fase de inicio de un proyecto
      *
      * @param int $id Id del proyecto
@@ -564,9 +547,10 @@ class ProyectoController extends Controller
     public function form_inicio($id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        if (!$this->validarExperto($proyecto))
+        if(!request()->user()->can('detalle', $proyecto)) {
+            alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
-        
+        }
         if ($proyecto->fase->nombre == Proyecto::IsInicio() || session()->get('login_role') == User::IsAdministrador()) {
             return view('proyectos.forms.views.form_inicio_view', [
                 'sublineas' => Sublinea::SubLineasDeUnaLinea($proyecto->asesor->lineatecnologica->id)->get()->pluck('nombre', 'id'),
@@ -590,9 +574,10 @@ class ProyectoController extends Controller
     public function form_planeacion($id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        if (!$this->validarExperto($proyecto))
+        if(!request()->user()->can('detalle', $proyecto)) {
+            alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
-        
+        }
         if ($proyecto->fase->nombre == Proyecto::IsPlaneacion() || session()->get('login_role') == User::IsAdministrador()) {
             return view('proyectos.forms.views.form_planeacion_view', [
                 'proyecto' => $proyecto
@@ -613,9 +598,10 @@ class ProyectoController extends Controller
     public function form_ejecucion($id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        if (!$this->validarExperto($proyecto))
+        if(!request()->user()->can('detalle', $proyecto)) {
+            alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
-        
+        }
         if ($proyecto->fase->nombre == Proyecto::IsEjecucion() || session()->get('login_role') == User::IsAdministrador()) {
             return view('proyectos.forms.views.form_ejecucion_view', [
                 'proyecto' => $proyecto
@@ -636,9 +622,10 @@ class ProyectoController extends Controller
     public function form_cierre($id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        if (!$this->validarExperto($proyecto))
-        return back();
-        
+        if(!request()->user()->can('detalle', $proyecto)) {
+            alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
         return view('proyectos.forms.views.form_cierre_view', [
             'proyecto' => $proyecto,
             'costo' => $this->costoController->costoProject($proyecto->id)
