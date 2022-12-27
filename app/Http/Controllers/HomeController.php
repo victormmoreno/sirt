@@ -30,23 +30,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-
-        // $nodo = auth()->user()->dinamizador->nodo->id;
-        // $user = User::whereHas('gestor.nodo', function ($query) use ($nodo) {
-        //         $query->where('id', $nodo);
-        //     })->orWhereHas('infocenter.nodo', function ($query) use ($nodo) {
-        //         $query->where('id', $nodo);
-        //     })->orWhereHas('ingreso.nodo', function ($query) use ($nodo) {
-        //         $query->where('id', $nodo);
-        //     })->pluck('id');
-        // dd($nododinamizador);
-        //
-
-
-
-        // $user = auth()->user()->dinamizador->nodo->infocenter->user;
-        // dd($user);
-
       switch ( Session::get('login_role') ) {
         case User::IsActivador() :
 
@@ -73,8 +56,15 @@ class HomeController extends Controller
               'administradores' => User::role(User::IsActivador())->select('documento','nombres','apellidos')->get(),
             ]);
         case User::IsDinamizador():
-        // $datos = array('actualizacion' => 114215, 'spot' => 123);
-          return view('home.home');
+          $expertos = User::with(['gestor'])
+          ->role(User::IsExperto())
+          ->nodoUser(User::IsExperto(), request()->user()->getNodoUser())
+          ->stateDeletedAt('si')
+          ->orderBy('users.created_at', 'desc')
+          ->get();
+          return view('home.home', [
+            'expertos' => $expertos
+          ]);
           break;
 
         case User::IsExperto():

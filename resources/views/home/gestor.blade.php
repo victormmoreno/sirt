@@ -75,5 +75,18 @@
       // consultarSeguimientoActualDeUnGestor({{auth()->user()->gestor->id}});
       consultarProyectosInscritosPorMes({{auth()->user()->gestor->id}});
     });
+    function consultarProyectosInscritosPorMes(gestor_id) {
+      $.ajax({
+        dataType: 'json',
+        type: 'get',
+        url: host_url + '/seguimiento/seguimientoInscritosPorMesExperto/'+gestor_id,
+        success: function (data) {
+          graficoSeguimientoPorMes(data, graficosSeguimiento.inscritos_mes);
+        },
+        error: function (xhr, textStatus, errorThrown) {
+          alert("Error: " + errorThrown);
+        },
+      })
+    }
   </script>
 @endpush

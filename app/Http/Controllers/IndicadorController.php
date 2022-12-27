@@ -28,6 +28,7 @@ class IndicadorController extends Controller
   public function index()
   {
     $year_now = Carbon::now()->format('Y');
+    $expertos = null;
 
     if(!request()->user()->can('index_indicadores', Illuminate\Database\Eloquent\Model::class)) {
       alert('No autorizado', 'No puedes acceder a los indicadores', 'error')->showConfirmButton('Ok', '#3085d6');
@@ -39,9 +40,16 @@ class IndicadorController extends Controller
         $nodos[] = $nodo['id'];
       }
     } else {
+      $expertos = User::with(['gestor'])
+      ->role(User::IsExperto())
+      ->nodoUser(User::IsExperto(), request()->user()->getNodoUser())
+      ->stateDeletedAt('si')
+      // ->yearActividad(User::IsExperto(), $request->filter_year, $nodo)
+      ->orderBy('users.created_at', 'desc')
+      ->get();
       $nodos = [request()->user()->getNodoUser()];
     }
-
+    // dd($expertos);
     $metas = $this->nodoRepository->consultarMetasDeTecnoparque()->whereIn('nodo_id', $nodos);
     $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl6Obtenido()])->whereIn('nodos.id', $nodos)->get();
     $pbts_trl7_8 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl7Obtenido(), Proyecto::IsTrl8Obtenido()])->whereIn('nodos.id', $nodos)->get();
@@ -53,7 +61,8 @@ class IndicadorController extends Controller
     return view('indicadores.index', [
       'nodos' => $nodos,
       'nodos_g' => $nodos,
-      'metas' => $metas
+      'metas' => $metas,
+      'expertos' => $expertos
     ]);
   }
 

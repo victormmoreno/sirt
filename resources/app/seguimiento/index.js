@@ -81,7 +81,6 @@ function consultarProyectosInscritosPorMes(gestor_id) {
       type: 'get',
       url: host_url + '/seguimiento/seguimientoInscritosPorMesExperto/'+gestor_id,
       success: function (data) {
-        console.log(data.datos.meses);
         graficoSeguimientoPorMes(data, graficosSeguimiento.inscritos_mes);
       },
       error: function (xhr, textStatus, errorThrown) {
@@ -247,29 +246,17 @@ function graficoSeguimientoPorMes(data, name) {
         text: 'Cantidad de proyectos'
       }
     },
-  
     xAxis: {
       categories: data.datos.meses,
       accessibility: {
         rangeDescription: 'Mes'
       }
     },
-  
     legend: {
       layout: 'vertical',
       align: 'right',
       verticalAlign: 'middle'
     },
-  
-    // plotOptions: {
-    //   series: {
-    //     label: {
-    //       connectorAllowed: false
-    //     },
-    //     pointStart: 2010
-    //   }
-    // },
-  
     series: [{
       name: 'Proyectos inscritos',
       data: data.datos.cantidades
@@ -315,7 +302,6 @@ function graficoSeguimientoFases(data, name) {
     },
     title: {
         text: 'Proyectos actuales y finalizados en el año actual'
-        // align: 'left'
     },
     xAxis: {
         title: {

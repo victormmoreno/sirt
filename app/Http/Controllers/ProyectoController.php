@@ -724,6 +724,9 @@ class ProyectoController extends Controller
             alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
+        if ($proyecto->fase->nombre == $proyecto->IsFinalizado() || $proyecto->fase->nombre == $proyecto->IsSuspendido()) {
+            return redirect()->route('proyecto.detalle', $id);
+        }
         if ($proyecto->fase->nombre == $proyecto->IsInicio() || $proyecto->fase->nombre == $proyecto->IsPlaneacion() || $proyecto->fase->nombre == $proyecto->IsEjecucion()) {
             alert('No autorizado', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();

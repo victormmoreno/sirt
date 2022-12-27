@@ -363,6 +363,93 @@ class SeguimientoController extends Controller
     ]);
   }
 
+  /**
+   * Retorna el valor de los nodos de los que se consultarán el seguimiento
+   *
+   * @param $request
+   * @return array
+   * @author dum
+   **/
+  private function retornarValorDeNodos($request)
+  {
+    if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
+      if ($request->nodos[0] == 'all') {
+        $nodos_temp = Nodo::SelectNodo()->get();
+        foreach ($nodos_temp as $nodo) {
+            $nodos[] = $nodo->id;
+        }
+      } else {
+        $nodos = $request->nodos;
+      }
+    } else {
+      $nodos = [request()->user()->getNodoUser()];
+    }
+    return $nodos;
+  }
+
+  /**
+   * Retorna el valor de los expertos de los que se consultarán el seguimiento
+   *
+   * @param $request
+   * @return array
+   * @author dum
+   **/
+  private function retornarValorDeExpertos($request)
+  {
+    $expertos_temp = User::with(['gestor'])
+    ->role(User::IsExperto())
+    ->nodoUser(User::IsExperto(), request()->user()->getNodoUser())
+    ->stateDeletedAt('si')
+    ->orderBy('users.created_at', 'desc')
+    ->get();
+    if (Str::contains(session()->get('login_role'), [User::IsDinamizador(), User::IsInfocenter()])) {
+      if ($request->expertos[0] == 'all') {
+        foreach ($expertos_temp as $experto) {
+            $expertos[] = $experto->gestor->id;
+        }
+      } else {
+        $expertos = $request->expertos;
+      }
+    } else {
+      $expertos = [request()->user()->gestor->id];
+    }
+    return $expertos;
+  }
+
+  public function seguimientoProyectosInscritos(Request $request)
+  {
+    $nodos = $this->retornarValorDeNodos($request);
+    if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
+      $query = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->get();
+    } else {
+      $expertos = $this->retornarValorDeExpertos($request);
+      $query = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->whereIn('g.id', $expertos)->get();
+    }
+
+    $datos = $this->agruparDatosPorMeses($query);
+
+    return response()->json([
+      'datos' => $datos
+    ]);
+  }
+
+  public function seguimientoProyectosCerrados(Request $request)
+  {
+    $nodos = $this->retornarValorDeNodos($request);
+    if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
+      $query = $this->getProyectoRepository()->proyectosCerradosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->get();
+    } else {
+      $expertos = $this->retornarValorDeExpertos($request);
+      $query = $this->getProyectoRepository()->proyectosCerradosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->whereIn('g.id', $expertos)->get();
+    }
+
+    $datos = $this->agruparDatosPorMeses($query);
+
+    return response()->json([
+      'datos' => $datos
+    ]);
+  }
+
   public function agruparDatosPorMeses($datos)
   {
     $meses = [];

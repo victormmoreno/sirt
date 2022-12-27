@@ -35,12 +35,12 @@
     </div>
 </div>
 <div class="divider"></div>
-<center>
-    <button type="submit" target="_blank" class="waves-effect cyan darken-1 btn center-aling">
+<div class="center">
+    <button type="submit" target="_blank" class="bg-secondary btn center-aling">
         <i class="material-icons right">file_download</i>
         Generar carta
     </button>
-    <a href="{{route('proyecto')}}" class="waves-effect red lighten-2 btn center-aling">
-        <i class="material-icons right">backspace</i>Volver
+    <a href="{{route('proyecto')}}" class="bg-danger btn center-aling">
+        <i class="material-icons left">backspace</i>Volver
     </a>
-</center>
+</div>
