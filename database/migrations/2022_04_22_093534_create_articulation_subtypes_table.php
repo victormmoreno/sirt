@@ -16,12 +16,12 @@ class CreateArticulationSubtypesTable extends Migration
     {
         Schema::create('articulation_subtypes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name', 100)->unique();
+            $table->string('name', 600)->unique();
             $table->string('description',5000)->nullable();
             $table->json('entity')->nullable();
             $table->enum('state', [ArticulationSubtype::mostrar(),ArticulationSubtype::ocultar()])->default(ArticulationSubtype::mostrar());
             $table->unsignedBigInteger('articulation_type_id')->nullable();
-            $table->foreign('articulation_type_id')->references('id')->on('articulation_types')->onDelete('set null');
+            $table->foreign('articulation_type_id')->references('id')->on('articulation_types');
             $table->timestamps();
         });
     }

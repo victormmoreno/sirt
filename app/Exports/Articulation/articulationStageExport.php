@@ -15,7 +15,7 @@ class articulationStageExport extends FatherExport
     {
         $this->setQuery($query);
         $this->setCount($this->getQuery()->count() + 1);
-        $this->setRangeHeadingCell('A1:O1');
+        $this->setRangeHeadingCell('A1:Q1');
     }
 
     /**

@@ -16,7 +16,7 @@ class CreateArticulationsTable extends Migration
         Schema::create('articulations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('code', 50)->unique(); //codigo
-            $table->string('name', 100); //nombre
+            $table->string('name', 600); //nombre
             $table->text('description'); //descripcion
             $table->timestamp('start_date'); //fecha inicio
             $table->timestamp('end_date')->nullable(); //fecha inicio
@@ -30,7 +30,6 @@ class CreateArticulationsTable extends Migration
             $table->tinyInteger('postulation')->default('0'); //postulacion
             $table->tinyInteger('approval')->default('0'); //aprobacion
             $table->text('justification')->nullable(); //justificacion
-            $table->tinyInteger('justified_report')->default('0'); //aprobacion
             $table->tinyInteger('justified_report')->default('0'); //informe_justificado
             $table->text('report')->nullable(); //informe
             $table->string('receive')->nullable(); //recibira
@@ -46,11 +45,11 @@ class CreateArticulationsTable extends Migration
             $table->unsignedBigInteger('articulation_subtype_id')->nullable(); //tipo articulacion
             $table->unsignedInteger('created_by')->nullable(); //creado por
 
-            $table->foreign('articulation_stage_id')->references('id')->on('articulation_stages')->onDelete('set null');
-            $table->foreign('scope_id')->references('id')->on('articulation_scopes')->onDelete('set null');
-            $table->foreign('phase_id')->references('id')->on('fases')->onDelete('set null');
-            $table->foreign('articulation_subtype_id')->references('id')->on('articulation_subtypes')->onDelete('set null');
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('articulation_stage_id')->references('id')->on('articulation_stages');
+            $table->foreign('scope_id')->references('id')->on('articulation_scopes');
+            $table->foreign('phase_id')->references('id')->on('fases');
+            $table->foreign('articulation_subtype_id')->references('id')->on('articulation_subtypes');
+            $table->foreign('created_by')->references('id')->on('users');
 
             $table->timestamps();
         });

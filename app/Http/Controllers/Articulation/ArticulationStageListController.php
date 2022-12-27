@@ -59,10 +59,9 @@ class ArticulationStageListController extends Controller
                     'articulation_stages.*', 'articulations.code as articulation_code',
                     'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
                     'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
-                    'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id', 'interlocutor.documento', 'interlocutor.nombres',
-                    'interlocutor.apellidos', 'interlocutor.email', 'articulation_subtypes.name as articulation_subtype', 'articulation_types.name as articulation_type', 'articulation_scopes.name as scope'
+                    'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id'
                 )
-                ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by")
+                ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_state_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by")
                     ->node($node)
                     ->status($request->filter_status_articulationStage)
                     ->year($request->filter_year_articulationStage)
@@ -95,7 +94,7 @@ class ArticulationStageListController extends Controller
                     'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id', 'interlocutor.documento', 'interlocutor.nombres',
                     'interlocutor.apellidos', 'interlocutor.email', 'articulation_subtypes.name as articulation_subtype', 'articulation_types.name as articulation_type', 'articulation_scopes.name as scope'
                 )
-                ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by, GROUP_CONCAT(DISTINCT CONCAT(participants.documento, ' - ', participants.nombres, ' ', participants.apellidos)  SEPARATOR ';') as participants")
+                ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_state_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by, GROUP_CONCAT(DISTINCT CONCAT(participants.documento, ' - ', participants.nombres, ' ', participants.apellidos)  SEPARATOR ';') as participants")
                 ->node($node)
                 ->status($request->filter_status_articulationStage)
                 ->year($request->filter_year_articulationStage)
@@ -103,8 +102,6 @@ class ArticulationStageListController extends Controller
                 ->groupBy('articulation_code')
                 ->orderBy('articulation_stages.updated_at', 'desc')
                 ->get();
-
-                // return $articulationStages;
             }
             return (new articulationStageExport($articulationStages))->download(__('articulation-stage') .' - '. config('app.name') . ".{$extension}");
         }
@@ -211,7 +208,7 @@ class ArticulationStageListController extends Controller
                     </th>
                     <th>
                         <p>
-                            <span class='primary-text'>{$data->articulation_type}</span><br>
+                            <span class='primary-text'>{$data->articulation_state_type}</span><br>
                             <b>".Str::limit("{$data->codigo_proyecto} - {$data->nombre_proyecto}", 40, '...')."</b><br>
                         </p>
                     </th>
@@ -256,7 +253,7 @@ class ArticulationStageListController extends Controller
     private function checkRoleAuth(Request $request)
     {
         $talent = null;
-        $node = null;
+        $node = [];
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
                 $node = $request->filter_node_articulationStage;
@@ -265,10 +262,10 @@ class ArticulationStageListController extends Controller
                 $node = $request->filter_node_articulationStage;
                 break;
             case User::IsDinamizador():
-                $node = auth()->user()->dinamizador->nodo_id;
+                $node = [auth()->user()->dinamizador->nodo_id];
                 break;
             case User::IsArticulador():
-                $node = auth()->user()->articulador->nodo_id;
+                $node = [auth()->user()->articulador->nodo_id];
                 break;
             case User::IsTalento():
                 $node = null;

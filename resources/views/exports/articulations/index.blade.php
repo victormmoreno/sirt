@@ -12,25 +12,31 @@
             </th>
 
             <th>
-                {{__('Name articulation-stage')}}
+                {{__('Phase')}} {{__('articulation')}}
             </th>
             <th>
-                {{ __('Project') }}
+                {{ __('Name articulation-stage') }}
+            </th>
+            <th>
+                {{__('Status')}} {{__('articulation-stage')}}
+            </th>
+            <th>
+                {{__('ArticulationStage Type')}}
+            </th>
+            <th>
+                Información {{__('ArticulationStage Type')}}
             </th>
             <th>
                 {{__('Description')}}
             </th>
             <th>
-                {{__('Code articulation-stage')}}
+                {{__('articulation-subtype')}}
             </th>
             <th>
-                {{__('Name articulation-stage')}}
+                {{__('articulation-type')}}
             </th>
             <th>
                 {{__('Scope')}}
-            </th>
-            <th>
-                {{__('Status')}}
             </th>
             <th>
                 {{__('Start Date')}}
@@ -45,7 +51,7 @@
                 {{__('Interlocutory talent')}}
             </th>
             <th>
-                {{ __('Articulations') }}
+                {{ __('Participants talents') }}
             </th>
         </tr>
     </thead>
@@ -71,7 +77,7 @@
                 {{$articulationStage->present()->articulationStageStatus()}}
             </td>
             <td>
-                {{$articulationStage->articulation_type}}
+                {{$articulationStage->articulation_state_type}}
             </td>
             <td>
                 {{$articulationStage->codigo_proyecto}} - {{$articulationStage->nombre_proyecto}}

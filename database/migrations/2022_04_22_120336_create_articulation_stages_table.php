@@ -17,7 +17,7 @@ class CreateArticulationStagesTable extends Migration
         Schema::create('articulation_stages', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('code', 50)->unique(); //codigo
-            $table->string('name', 100); //nombre
+            $table->string('name', 600); //nombre
             $table->text('description')->nullable(); //descripcion
             $table->text('scope'); //alcance
             $table->boolean('status')->default(ArticulationStage::STATUS_OPEN); //Estado

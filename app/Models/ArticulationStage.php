@@ -63,6 +63,24 @@ class ArticulationStage extends Model
     }
 
     /**
+     * Define a polymorphic, inverse many-to-many relationship articulationstage and sedes
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function sedes()
+    {
+        return $this->morphedByMany(Sede::class, 'articulationable');
+    }
+
+    /**
+     * Define a polymorphic, inverse many-to-many relationship articulationstage and ideas
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function ideas()
+    {
+        return $this->morphedByMany(Idea::class, 'articulationable');
+    }
+
+    /**
      * Define a polymorphic, inverse one-to-one or many relationship.
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */

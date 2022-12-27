@@ -100,6 +100,7 @@ class DatabaseSeeder extends Seeder
                 'tipo_formacion',
                 'tipos_empresas',
                 'tamanhos_empresas',
+                'articulation_scopes',
 
             ]);
         } else if (app()->environment() == 'local') {
@@ -191,6 +192,7 @@ class DatabaseSeeder extends Seeder
                 'tipos_empresas',
                 'tamanhos_empresas',
                 'alcance_articulaciones',
+                'articulation_scopes',
                 'tipo_articulaciones',
                 'articulations',
                 'accompanimentables',

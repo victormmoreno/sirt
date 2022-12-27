@@ -730,6 +730,8 @@ Route::group([
 ], function () {
     Route::get('/', 'MigracionController@index')->name('migracion.index')->middleware('role_session:Desarrollador');
     Route::post('/importar', 'MigracionController@import')->name('migracion.proyectos.store')->middleware('role_session:Desarrollador');
+    Route::get('/articulaciones', 'MigracionController@articulations')->name('migracion.articulations');
+    Route::post('/migrar-articulaciones', 'MigracionController@migrateArticulations')->name('migracion.migrate-articulations');;
 });
 
     //-------------------------------- Route group para el módulo de exportar

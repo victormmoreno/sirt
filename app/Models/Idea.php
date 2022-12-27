@@ -83,6 +83,16 @@ class Idea extends Model
     ];
 
     /**
+     * The polymorfic relation much to much
+     *
+     * @return void
+     */
+    public function articulationables()
+    {
+        return $this->morphToMany(ArticulationStage::class, 'articulationable');
+    }
+
+    /**
      * Consulta todas las ideas de proyecto de un nodo, independientemente si han pasado por los respectivos procesos
      * @param collection query Propia de los scopes de laravel
      * @param int id Id del nodo porque el que se buscarán las ideas de proyectos
