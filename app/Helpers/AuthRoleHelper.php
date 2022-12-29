@@ -13,7 +13,7 @@ class AuthRoleHelper
     public static function checkRoleAuth($request): array
     {
         $talent = null;
-        $node = null;
+        $node = [];
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
                 if (!empty($request)) {
@@ -26,13 +26,13 @@ class AuthRoleHelper
                 }
                 break;
             case User::IsDinamizador():
-                $node = auth()->user()->dinamizador->nodo_id;
+                $node = [auth()->user()->dinamizador->nodo_id];
                 break;
             case User::IsInfocenter():
-                $node = auth()->user()->infocenter->nodo_id;
+                $node = [auth()->user()->infocenter->nodo_id];
                 break;
             case User::IsArticulador():
-                $node = auth()->user()->articulador->nodo_id;
+                $node = [auth()->user()->articulador->nodo_id];
                 break;
             case User::IsTalento():
                 $node = null;

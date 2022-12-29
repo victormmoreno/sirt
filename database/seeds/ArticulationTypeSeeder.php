@@ -2,8 +2,6 @@
 
 use Illuminate\Database\Seeder;
 use App\Models\ArticulationType;
-use App\Models\ArticulationSubtype;
-use App\Models\Nodo;
 
 class ArticulationTypeSeeder extends Seeder
 {
