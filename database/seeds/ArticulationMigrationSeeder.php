@@ -31,7 +31,10 @@ class ArticulationMigrationSeeder extends Seeder
      */
     public function run()
     {
-        $articulaciones = $this->getQuery()->get();
+        $articulaciones = $this->getQuery()
+        // ->take(200)
+        ->get();
+
         if($articulaciones->count() > 0){
             $articulaciones->each(function ($item){
                 $articulationStage = $this->updateOrCreateArticulationStage($item);
@@ -40,8 +43,7 @@ class ArticulationMigrationSeeder extends Seeder
 
                 $this->syncTalentsParticipants($articulation, $item);
                 $this->updateOrCreateTrazability($articulation, $item);
-                // $this->migrateArchivesArticulation($articulation, $item);
-                $this->updateArchivesArticulation($articulation, $item);
+                $this->updateArchivesArticulation($articulationStage, $articulation, $item);
             });
         }
 
@@ -55,7 +57,10 @@ class ArticulationMigrationSeeder extends Seeder
                 'talentos',
                 'alcancearticulacion',
                 'archivomodel'
-                ]);
+            ]);
+            // ->whereHas('archivomodel', function($query){
+            //     $query->where('model_id', 242);
+            // });
     }
 
     private function updateOrCreateArticulationStage($item){
@@ -179,47 +184,38 @@ class ArticulationMigrationSeeder extends Seeder
         }
     }
 
-    private function updateArchivesArticulation($articulation, $item)
+    private function updateArchivesArticulation($articulationStage, $articulation, $item)
     {
         if(isset($item->archivomodel)){
+            $item->archivomodel->each(function($i) use($item, $articulationStage,$articulation){
+                //var_dump(['mode_id' => $i->model_id,'ruta' => $i->ruta, 'fase_id' => $i->fase_id, 'fase' => $i->fase->nombre]);
+                if($i->fase_id == 1 && $i->fase->nombre == "Inicio"){
+                    if($item->codigo == $articulationStage->code)
+                    {
+                        $i->update([
+                            'model_id' => $articulationStage->id,
+                            'model_type'=> ArticulationStage::class
+                        ]);
+                        var_dump("el archivo {$i->ruta} en la fase {$i->fase_id} se guardará en la articulacion padre {$articulationStage->code}");
 
-            if(isset($item->archivomodel->fase_id)){
-                if($item->archivomodel->fase_id == 1){
-                    $item->archivomodel()->update([
-                        'model_id' => $articulation->articulationstage->id,
-                        'model_type'=> ArticulationStage::class
-                    ]);
-                    // $articulation->articulationstage->archivomodel()->updateOrCreate([
-                    //     'model_id'  => $item->archivomodel->model_id
-                    // ],[
-                    //     'ruta' => $item->archivomodel->ruta,
-                    //     'fase_id' => $item->archivomodel->fase_id
-                    // ]);
+                    }else{
+                        var_dump(" ojo con el archivo {$i->ruta} de la fase {$i->fase_id} en la padre");
+                    }
                 }else{
-                    $item->archivomodel()->update([
-                        'model_id' => $articulation->id,
-                        'model_type'=> Articulation::class
-                    ]);
-                    // $articulation->archivomodel()->updateOrCreate([
-                    //     'model_id'  => $item->archivomodel->model_id
-                    // ],[
-                    //     'ruta' => $item->archivomodel->ruta,
-                    //     'fase_id' => $item->archivomodel->fase_id
-                    // ]);
+                    if($item->codigo == $articulation->code){
+                        $i->update([
+                            'model_id' => $articulation->id,
+                            'model_type'=> \App\Models\Articulation::class
+                        ]);
+                        var_dump("el archivo {$i->ruta} en la fase {$i->fase_id} se guardará en la articulacion hija {$articulationStage->code}");
+
+                    }else{
+                        var_dump(" ojo con el archivo {$i->ruta} de la fase {$i->fase_id} en la hija");
+                    }
                 }
-            }else{
-                $item->archivomodel()->update([
-                    'model_id' => $articulation->id,
-                    'model_type'=> Articulation::class
-                ]);
-                // $articulation->archivomodel()->updateOrCreate([
-                //     'model_id'  => $item->archivomodel->model_id
-                // ],[
-                //     'ruta' => $item->archivomodel->ruta
-                // ]);
-            }
-            // $item->archivomodel()->delete();
+            });
         }
+
     }
 
     private function migrateArchivesArticulation($articulation, $item)
