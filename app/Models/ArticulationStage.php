@@ -183,12 +183,12 @@ class ArticulationStage extends Model
         if (isset($years) && (!collect($years)->contains('all'))) {
             return $query->where(function ($q) use($years){
                 $q->where(function ($subquery) use ($years) {
-                    $subquery->orWhereIn(DB::raw('YEAR(articulation_stages.end_date)'),$years)
-                        ->orWhereIn(DB::raw('YEAR(articulation_stages.start_date)'), $years)
-                        ->orWhereIn(DB::raw('YEAR(articulations.end_date)'), $years)
+                    $subquery->orWhereIn(DB::raw('YEAR(articulation_stages.start_date)'),$years)
+                        ->orWhereIn(DB::raw('YEAR(articulation_stages.end_date)'), $years)
                         ->orWhereIn(DB::raw('YEAR(articulations.start_date)'), $years)
-                        ->orWhereIn('fases.nombre',  ['Finalizado', 'Suspendido']);
-                })->orWhere(function ($query) {
+                        ->orWhereIn(DB::raw('YEAR(articulations.end_date)'), $years);
+                })
+                ->orWhere(function ($query) {
                     $query->whereIn('fases.nombre', ['Inicio', 'Ejecución', 'Cierre']);
                 });
             });

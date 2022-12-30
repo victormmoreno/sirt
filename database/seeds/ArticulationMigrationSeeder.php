@@ -32,7 +32,7 @@ class ArticulationMigrationSeeder extends Seeder
     public function run()
     {
         $articulaciones = $this->getQuery()
-        // ->take(200)
+        // ->take(10)
         ->get();
 
         if($articulaciones->count() > 0){
@@ -41,9 +41,10 @@ class ArticulationMigrationSeeder extends Seeder
                 $this->validateArticulationStageType($articulationStage, $item);
                 $articulation = $this->updateOrCreateArticulation($articulationStage, $item);
 
-                $this->syncTalentsParticipants($articulation, $item);
-                $this->updateOrCreateTrazability($articulation, $item);
-                $this->updateArchivesArticulation($articulationStage, $articulation, $item);
+                // $this->syncTalentsParticipants($articulation, $item);
+                // $this->updateOrCreateTrazability($articulation, $item);
+                // $this->updateArchivesArticulation($articulationStage, $articulation, $item);
+                $this->updateAsesorablesArticulation($articulation, $item);
             });
         }
 
@@ -56,7 +57,8 @@ class ArticulationMigrationSeeder extends Seeder
                 'asesor',
                 'talentos',
                 'alcancearticulacion',
-                'archivomodel'
+                'archivomodel',
+                'asesorias'
             ]);
             // ->whereHas('archivomodel', function($query){
             //     $query->where('model_id', 242);
@@ -269,5 +271,22 @@ class ArticulationMigrationSeeder extends Seeder
                     }
                 }
             }
+    }
+
+    private function updateAsesorablesArticulation($articulation, $item)
+    {
+        if(isset($item->asesorias)){
+            $item->asesorias->each(function($i) use($item, $articulation){
+                if($i->asesorable_type == ArticulacionPbt::class){
+                    if($item->codigo == $articulation->code)
+                    {
+                        $i->update([
+                            'asesorable_id' => $articulation->id,
+                            'asesorable_type'=> \App\Models\Articulation::class
+                        ]);
+                    }
+                }
+            });
+        }
     }
 }

@@ -57,15 +57,17 @@ class ArticulationStageRepository
             ->leftJoin('articulation_scopes', 'articulation_scopes.id', '=', 'articulations.scope_id')
             ->leftJoin('articulation_user', 'articulation_user.articulation_id', '=', 'articulations.id')
             ->leftJoin('users as participants', 'participants.id', '=', 'articulation_user.user_id')
-            ->leftJoin('articulationables', function($q) {
+            ->join('articulationables', function($q) {
                 $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
-                $q->where('articulationables.articulationable_type', '=', 'App\Models\Proyecto');
             })
             ->leftJoin('proyectos', 'proyectos.id', '=', 'articulationables.articulationable_id')
             ->leftJoin('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
             ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
             ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
-            ->leftJoin('users as createdby', 'createdby.id', '=', 'articulation_stages.created_by');
+            ->leftJoin('users as createdby', 'createdby.id', '=', 'articulation_stages.created_by')
+            ->leftJoin('sedes', 'sedes.id', '=', 'articulationables.articulationable_id')
+            ->leftJoin('empresas', 'empresas.id', '=', 'sedes.empresa_id')
+            ->leftJoin('ideas', 'ideas.id', '=', 'articulationables.articulationable_id');
     }
 
     /**
