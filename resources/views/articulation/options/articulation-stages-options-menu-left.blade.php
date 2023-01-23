@@ -1,5 +1,5 @@
 <div class="collection with-header col s12 m4 l3">
-    <h5 href="!#" class="collection-header">Opciones</h5>
+    <h5 href="!#" class="collection-header primary-text">Opciones</h5>
     @if (Route::currentRouteName() == 'articulation-stage.show')
         @can('showButtonAprobacion', $articulationStage)
             @include('articulation.form.endorsement-form')

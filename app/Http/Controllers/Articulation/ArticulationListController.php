@@ -39,6 +39,13 @@ class ArticulationListController extends Controller
                 'articulationstage'
             ])
             ->where('code', $code)->firstOrFail();
+        if (request()->user()->cannot('show', $articulation))
+        {
+
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
+
         $traceability = Articulation::getTraceability($articulation)->get();
         $ult_traceability = Articulation::getTraceability($articulation)->get()->last();
         $ult_notificacion = $this->articulationRespository->retornarUltimaNotificacionPendiente($articulation);

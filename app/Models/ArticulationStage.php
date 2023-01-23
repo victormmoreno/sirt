@@ -155,7 +155,7 @@ class ArticulationStage extends Model
     public function scopestatus($query, $status)
     {
         if (isset($status) && $status != 'all' && $status != null) {
-            return $query->orWhere('status', $status);
+            return $query->where('status', $status);
         }
         return $query;
     }
@@ -183,7 +183,7 @@ class ArticulationStage extends Model
         if (isset($years) && (!collect($years)->contains('all'))) {
             return $query->where(function ($q) use($years){
                 $q->where(function ($subquery) use ($years) {
-                    $subquery->orWhereIn(DB::raw('YEAR(articulation_stages.start_date)'),$years)
+                    $subquery->whereIn(DB::raw('YEAR(articulation_stages.start_date)'),$years)
                         ->orWhereIn(DB::raw('YEAR(articulation_stages.end_date)'), $years)
                         ->orWhereIn(DB::raw('YEAR(articulations.start_date)'), $years)
                         ->orWhereIn(DB::raw('YEAR(articulations.end_date)'), $years);

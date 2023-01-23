@@ -230,7 +230,7 @@ class ArticulationStageListController extends Controller
                         {$data->present()->articulationStageStartDate()}
                     </th>
                     <th>
-                        <a class='btn bg-secondary m-b-xs modal-trigger' href='".route('articulation-stage.show', $data)."'>
+                        <a class='btn bg-info m-b-xs modal-trigger' href='".route('articulation-stage.show', $data)."'>
                             <i class='material-icons'>search</i>
                         </a>
                     </th>
@@ -249,7 +249,7 @@ class ArticulationStageListController extends Controller
                 }
             })->addColumn('show', function ($data) {
                 if(isset($data->articulation_id)){
-                    return '<a class="btn bg-secondary m-b-xs modal-trigger" href='.route('articulations.show', [$data->articulation_code]).'>
+                    return '<a class="btn bg-info m-b-xs modal-trigger" href='.route('articulations.show', [$data->articulation_code]).'>
                             <i class="material-icons">search</i>
                         </a>';
                 }
@@ -318,12 +318,14 @@ class ArticulationStageListController extends Controller
             ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
             ->leftJoin('users as createdby', 'createdby.id', '=', 'articulation_stages.created_by')
             ->where('articulation_stages.code', $code)->firstOrFail();
+
         if (request()->user()->cannot('show', $articulationStage))
         {
             alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
         }
         $traceability = ArticulationStage::getTraceability($articulationStage)->get();
+
         $ult_traceability = ArticulationStage::getTraceability($articulationStage)->get()->last();
         $ult_notificacion = $this->articulationStageRepository->retornarUltimaNotificacionPendiente($articulationStage);
 

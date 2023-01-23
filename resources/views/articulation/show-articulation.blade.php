@@ -3,9 +3,9 @@
 @section('content')
 <main class="mn-inner">
     <div class="content">
-        <div class="row no-m-t no-m-b">
+        <div class="row no-m-t no-m-b m-r-lg m-l-lg">
             <div class="left left-align">
-                <h5 class="left-align orange-text text-darken-3">
+                <h5 class="left-align primary-text">
                     <i class="material-icons left">autorenew</i>{{__('articulation-stage')}}
                 </h5>
             </div>

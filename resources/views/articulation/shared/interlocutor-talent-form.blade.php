@@ -1,3 +1,4 @@
+
 <div class="section-talent">
     <div class="row search-tabs-row search-tabs-header">
         <h5><b>Seleccione el talento Interlocutor</b></h5>
@@ -6,7 +7,7 @@
         <label for="txtsearch_user">Número de documento</label>
         </div>
         <div class="col s12 m12 l8 right">
-            <a class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_talents_advanced"><i class="material-icons">list</i>Busqueda Avanzada</a>
+            <a class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right" id="filter_talents_advanced"><i class="material-icons">list</i>Busqueda Avanzada</a>
             <a class="waves-effect waves-grey btn-flat search-tabs-button right" id="search_talent"><i class="material-icons">search</i>Buscar</a>
         </div>
     </div>
@@ -25,11 +26,11 @@
                     <div class="input-field col m12 s12">
                         <input type="hidden" name="talent" id="talent" value="{{$articulationStage->interlocutor->id}}"/>
                     </div>
-                    <div class="position-top-right p f-12 mail-date hide-on-med-and-down">  Acceso al sistema: {{$articulationStage->interlocutor->present()->userAcceso()}}</div>
+                    <div class="position-top-right p f-12 mail-date hide-on-med-and-down">  {!!$articulationStage->interlocutor->present()->userAcceso()!!}</div>
                     <p class="hide-on-med-and-down"> Miembro desde {{$articulationStage->interlocutor->present()->userCreatedAtFormat()}}</p>
                 </div>
                 <div class="card-action">
-                    <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs orange-text" href="{{route('usuario.usuarios.show',$articulationStage->interlocutor->documento)}}"><i class="material-icons left">link</i>Ver más</a>
+                    <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="{{route('usuario.usuarios.show',$articulationStage->interlocutor->documento)}}"><i class="material-icons left">link</i>Ver más</a>
                 </div>
             </div>
         </div>

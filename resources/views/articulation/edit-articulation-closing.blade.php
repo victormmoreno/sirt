@@ -5,10 +5,10 @@
         $year = Carbon\Carbon::now()->year;
     @endphp
     <main class="mn-inner">
-        <div class="row content">
-            <div class="row no-m-t no-m-b">
+        <div class="content">
+            <div class="row no-m-t no-m-b m-r-lg m-l-lg">
                 <div class="left left-align">
-                    <h5 class="left-align orange-text text-darken-3">
+                    <h5 class="left-align primary-text">
                         <i class="material-icons left">autorenew</i>{{__('articulation-stage')}}
                     </h5>
                 </div>
@@ -50,7 +50,7 @@
                                                         <span class="mailbox-title">{{$articulation->present()->articulationCode()}} - {{$articulation->present()->articulationName()}}
                                                             @can('update', $articulation)
                                                                 <a href="{{route('accompaniments.edit', $articulation)}}"
-                                                                   class="orange-text text-darken-2 pointer tooltipped"
+                                                                   class="primary-text text-darken-2 pointer tooltipped"
                                                                    data-position="right"
                                                                    data-tooltip="editar {{__('articulation-stage')}}"><i
                                                                         class="tiny material-icons">edit</i></a>
@@ -62,7 +62,7 @@
                                                         @if (Route::currentRouteName() == 'articulation-stage.show')
                                                             @can('changeTalent', $articulation)
                                                                 <a href="{{ route('articulation-stage.changeinterlocutor', $articulation) }}"
-                                                                   class="orange-text text-darken-2 pointer tooltipped"
+                                                                   class="primary-text text-darken-2 pointer tooltipped"
                                                                    data-position="right"
                                                                    data-tooltip="cambiar {{__('Interlocutory talent')}}"><i
                                                                         class="tiny material-icons">edit</i></a>
@@ -74,7 +74,7 @@
                                         </div>
                                         <div class="divider mailbox-divider"></div>
                                         <form id="articulation-form-closing"
-                                              action="{{route('articulation.update.closing', $articulation)}}" method="POST">
+                                                action="{{route('articulation.update.closing', $articulation)}}" method="POST">
                                             {!! method_field('PUT')!!}
                                             <div class="wizard clearfix">
                                                 @include('articulation.form.closing-form', ['btnText' => 'Modificar'])
@@ -82,13 +82,13 @@
                                                     <ul role="menu" aria-label="Paginación">
                                                         <li aria-hidden="false" aria-disabled="false">
                                                             <a href="{{route('articulations.show', $articulation)}}"
-                                                               role="menuitem"
-                                                               class="waves-effect waves-blue btn-flat orange-text">Volver
+                                                                role="menuitem"
+                                                                class="waves-effect waves-blue btn-flat primary-text">Volver
                                                                 atrás</a>
                                                         </li>
                                                         <li class="disabled" aria-disabled="true">
                                                             <button type="submit" role="menuitem"
-                                                                    class="btn waves-effect waves-blue btn-flat orange-text">
+                                                                    class="btn waves-effect waves-blue btn-flat primary-text">
                                                                 Guardar
                                                             </button>
                                                         </li>

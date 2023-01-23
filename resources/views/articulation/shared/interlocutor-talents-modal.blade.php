@@ -2,12 +2,12 @@
     <div class="modal-content">
         <div class="row">
             <div class="col s12 m12 l12">
-                <span class=" mailbox-title title orange-text text-darken-3">
+                <span class=" mailbox-title title primary-text">
                     Talentos {{config('app.name')}}
                 </span>
                 <div class="row search-tabs-row search-tabs-header">
                     <table id="datatable_interlocutor_talents" class="display responsive-table datatable-example dataTable" style="width: 100%">
-                        <thead>
+                        <thead class="bg-primary white-text">
                             <tr>
                                 <th>Documento</th>
                                 <th>Talento</th>
@@ -20,6 +20,6 @@
         </div>
     </div>
     <div class="modal-footer">
-        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cerrar</a>
+        <a href="#!" class="modal-close waves-effect waves-primary btn-flat">Cerrar</a>
     </div>
 </div>

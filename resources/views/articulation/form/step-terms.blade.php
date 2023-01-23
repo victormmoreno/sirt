@@ -5,14 +5,14 @@
             <div class="row search-tabs-row search-tabs-header">
                 <div>
                     <ul class="collection with-header">
-                        <li class="collection-header">El articulador se compromete a:</li>
+                        <li class="collection-header bg-primary-lighten white-text">El articulador se compromete a:</li>
                         <li class="collection-item">Acompañar a talento en la recolección de información y procesos pertinentes para cumplir los requisitos de la postulación según el acompañamiento a ejecutar.</li>
                         <li class="collection-item">Guardar confidencialidad y compromiso de la información susceptible del proyecto, la empresa y/o emprendimiento.</li>
                     </ul>
                 </div>
                 <div>
                     <ul class="collection with-header">
-                        <li class="collection-header">El talento se compromete a:</li>
+                        <li class="collection-header bg-primary-lighten white-text">El talento se compromete a:</li>
                         <li class="collection-item">Guardar confidencialidad y compromiso de la información susceptible del proyecto, la empresa y/o emprendimiento.</li>
                         <li class="collection-item">Brindar la información necesaria para realizar seguimiento acompañamiento de la articulación y/o articulaciones.</li>
                         <li class="collection-item">Estar atento a las fechas de la postulación, convenio o participación.</li>
@@ -23,7 +23,7 @@
         </div>
         <div class="search-tabs-row search-tabs-header">
             <div class="file-field input-field container-error">
-                <div class="btn orange lighten-1">
+                <div class="btn bg-primary white-text">
                     <span>Formato confidencial</span>
                     <input type="file" name="confidency_format" placeholder="Formato confidencial">
                 </div>

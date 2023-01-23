@@ -131,7 +131,7 @@ class ArticulationStagePresenter extends Presenter
         ){
             return $this->articulationStage->projects->map(function ($item) {
                 if(isset($item)){
-                    return '<a class="orange-text text-darken-1" target="_blank"  href="'.route('proyecto.detalle', $this->articulationStageableId()).'">'.$this->articulationStageables().'</a>';
+                    return '<a class="primary-text" target="_blank"  href="'.route('proyecto.detalle', $this->articulationStageableId()).'">'.$this->articulationStageables().'</a>';
                 }
             })->implode(',');
         }

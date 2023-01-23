@@ -22,7 +22,12 @@ class ArticulationStagePolicy
     {
         if ($user->hasAnyRole([User::IsAdministrador()])
             && session()->has('login_role')
-            && session()->get('login_role') == User::IsAdministrador() && ($ability != 'showButtonAprobacion' || $ability != 'requestApproval')) {
+            && session()->get('login_role') == User::IsAdministrador()
+            && (
+                $ability != 'create' &&
+                $ability != 'showButtonAprobacion' &&
+                $ability != 'requestApproval'
+            )) {
             return true;
         }
     }
@@ -129,26 +134,23 @@ class ArticulationStagePolicy
      * @param  \App\Models\ArticulationStage  $articulationStage
      * @return bool
      */
-    public function show(User $user, ArticulationStage $articulationStage): bool
+    public function show(User $user, ArticulationStage $articulationStage)
     {
-        return (bool) $user->hasAnyRole([
-                User::IsActivador(),
-                User::IsDinamizador(),
-                User::IsArticulador(),
-                User::IsTalento()
-            ])
-            && session()->has('login_role')
+        return
+            session()->has('login_role')
             && (
                 session()->get('login_role') == User::IsActivador() ||
                 (session()->get('login_role') == User::IsDinamizador() && auth()->user()->dinamizador->nodo->id == $articulationStage->node_id) ||
                 (session()->get('login_role') == User::IsArticulador() && auth()->user()->articulador->nodo->id == $articulationStage->node_id) ||
                 (
                     session()->get('login_role') == User::IsTalento()
-                    && (
+                    &&
+                    (
                         $articulationStage->interlocutor()->where('id', $user->id)->first()
-                        || $articulationStage->articulations->map(function($articulation) use($user){
-                            $articulation->users()->where('id', $user->id)->first();
-                        })
+                        ||
+                        $articulationStage->whereHas('articulations.users', function ($particpant) use($user) {
+                            $particpant->where('user_id', $user->id);
+                        })->first()
                     )
 
                 )

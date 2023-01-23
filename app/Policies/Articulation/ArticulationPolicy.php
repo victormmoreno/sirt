@@ -194,6 +194,30 @@ class ArticulationPolicy
 
     }
 
+    public function show(User $user, Articulation $articulation)
+    {
+        return
+            session()->has('login_role')
+            && (
+                session()->get('login_role') == User::IsActivador() ||
+                (session()->get('login_role') == User::IsDinamizador() && auth()->user()->dinamizador->nodo->id == $articulation->articulationstage->node_id) ||
+                (session()->get('login_role') == User::IsArticulador() && auth()->user()->articulador->nodo->id == $articulation->articulationstage->node_id) ||
+                (
+                    session()->get('login_role') == User::IsTalento()
+                    &&
+                    (
+                        (isset($articulation->articulationstage->interlocutor) && $articulation->articulationstage->interlocutor()->where('id', $user->id)->first())
+                        ||
+                        $articulation->whereHas('users', function ($particpant) use($user) {
+                            $particpant->where('user_id', $user->id);
+                        })->first()
+                    )
+
+                )
+            );
+    }
+
+
     /**
      * Determine if the given articulations can be deleted by the user..
      *

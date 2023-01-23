@@ -14001,6 +14001,10 @@ a:focus {
     color: #f44336;
 }
 
+.btn-flat.waves-primary {
+    color:  var(--primary);
+}
+
 .btn.white {
     color: #343434;
 }
@@ -16695,11 +16699,11 @@ input[type=text]:focus:not([readonly])+label, input[type=password]:focus:not([re
 }
 
 .picker__weekday-display {
-    background-color: #eed1ab;
+    background-color: var(--primary-lighten);
 }
 
 .picker__day.picker__day--today {
-    color: #ff8f00 ;
+    color: var(--primary) ;
 }
 
 .picker__day--selected, .picker__day--selected:hover, .picker--focused .picker__day--selected {
@@ -18420,6 +18424,7 @@ select {
     --primary: #39A900;
     --primary-darken: #1b5e20;
     --secondary: #00324D;
+    --secondary-lighten: #4dafe4;
     --tertiary: #82DEF0;
     --success: #28a745;
     --info: #17a2b8;
@@ -18457,6 +18462,11 @@ html {
 .bg-secondary {
     background-color: var(--secondary) !important;
 }
+
+.bg-secondary-lighten {
+    background-color: var(--secondary-lighten) !important;
+}
+
 
 .bg-tertiary {
     background-color: var(--tertiary) !important;

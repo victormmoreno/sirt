@@ -3,9 +3,9 @@
 @section('content')
 <main class="mn-inner">
     <div class="content">
-        <div class="row no-m-t no-m-b">
+        <div class="row no-m-t no-m-b m-r-lg m-l-lg">
             <div class="left left-align">
-                <h5 class="left-align orange-text text-darken-3">
+                <h5 class="left-align primary-text">
                     <i class="material-icons left">autorenew</i>{{__('articulation-stage')}}
                 </h5>
             </div>
@@ -43,10 +43,10 @@
                                                 <div class="actions clearfix right-align">
                                                     <ul role="menu" aria-label="Paginación">
                                                         <li aria-hidden="false" aria-disabled="false">
-                                                            <a href="{{route('articulations.show', $articulation)}}" role="menuitem" class="waves-effect waves-blue btn-flat orange-text">Volver atrás</a>
+                                                            <a href="{{route('articulations.show', $articulation)}}" role="menuitem" class="waves-effect waves-blue btn-flat primary-text">Volver atrás</a>
                                                         </li>
                                                         <li class="disabled" aria-disabled="true">
-                                                            <button type="submit" role="menuitem" class="btn waves-effect waves-blue btn-flat orange-text">Guardar</button>
+                                                            <button type="submit" role="menuitem" class="btn waves-effect waves-blue btn-flat primary-text">Guardar</button>
                                                         </li>
                                                     </ul>
                                                 </div>

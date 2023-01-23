@@ -87,8 +87,8 @@ $( document ).ready(function() {
             current: "current step:",
             pagination: "Paginación",
             finish: "Guardar",
-            next: "Siguiente",
-            previous: "Anterior",
+            next: "Siguiente >",
+            previous: "< Anterior",
             loading: "Cargando ..."
         },
         onStepChanging: function (event, currentIndex, newIndex)
@@ -156,7 +156,7 @@ $( document ).ready(function() {
         }
     });
 
-    $(".wizard .actions ul li a").addClass("waves-effect waves-blue btn-flat");
+    $(".wizard .actions ul li a").addClass("waves-effect waves-primary btn-flat");
     $(".wizard .steps ul").addClass("tabs z-depth-1");
     $(".wizard .steps ul li").addClass("tab");
     $('ul.tabs').tabs();

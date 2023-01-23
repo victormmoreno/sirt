@@ -6,7 +6,7 @@
             <label for="filter_code">Código proyecto</label>
         </div>
         <div class="input-field col s12 m12 l8 right">
-            <a class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_project_advanced"><i class="material-icons">list</i>Busqueda Avanzada</a>
+            <a class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right" id="filter_project_advanced"><i class="material-icons">list</i>Busqueda Avanzada</a>
             <a class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_code_project"><i class="material-icons">search</i>Buscar</a>
         </div>
     </div>
@@ -35,7 +35,7 @@
                         <input type="hidden" id="projects" name="projects" value="{{ old('projects', isset($articulationStage) ? $articulationStage->present()->articulationStageableId(): '') }}"/>
                     </div>
                     <div class="card-action">
-                        <a class="orange-text text-darken-1" target="_blank" href="">Ver más</a>
+                        <a class="primary-text" target="_blank" href="{{route('proyecto.detalle', $articulationStage->present()->articulationStageableId())}}">Ver más</a>
                     </div>
                 </div>
             </div>

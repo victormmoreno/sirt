@@ -155,8 +155,8 @@ $( document ).ready(function() {
             current: "current step:",
             pagination: "Paginación",
             finish: "Guardar",
-            next: "Siguiente",
-            previous: "Anterior",
+            next: "Siguiente >",
+            previous: "< Anterior",
             loading: "Cargando ..."
         },
         onStepChanging: function (event, currentIndex, newIndex)
@@ -199,7 +199,7 @@ $( document ).ready(function() {
         }
     });
 
-    $(".wizard .actions ul li a").addClass("waves-effect waves-blue btn-flat");
+    $(".wizard .actions ul li a").addClass("waves-effect waves-primary btn-flat");
     $(".wizard .steps ul").addClass("tabs z-depth-1");
     $(".wizard .steps ul li").addClass("tab");
     $('ul.tabs').tabs();
@@ -288,7 +288,7 @@ const filter_articulations = {
                                     <div class="mailbox-text p f-12 hide-on-med-and-down">Miembro desde ${filter_articulations.formatDate(user.created_at)}</div>
                                 </div>
                                 <div class="card-action">
-                                <a class="waves-effect waves-red btn-flat m-b-xs orange-text" onclick="filter_articulations.addTalentToArticulation(${user.talento.id});" class="orange-text">Agregar</a>
+                                <a class="waves-effect waves-red btn-flat m-b-xs primary-text" onclick="filter_articulations.addTalentToArticulation(${user.talento.id});" class="primary-text">Agregar</a>
                                 </div>
                             </div>
                         </div>
@@ -389,7 +389,7 @@ const filter_articulations = {
                                     <input type="hidden" id="talents" name="talents[]" value="${data.talento.id}"/>
                                 </div>
                                 <div class="card-action">
-                                    <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs orange-text" href="/usuario/usuarios/${data.talento.documento}"><i class="material-icons left"> link</i>Ver más</a>
+                                    <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuario/usuarios/${data.talento.documento}"><i class="material-icons left"> link</i>Ver más</a>
                                     <a onclick="filter_articulations.deleteTalent( ${data.talento.id});" class="waves-effect waves-red btn-flat m-b-xs red-text"><i class="material-icons left"> delete_sweep</i>Eliminar</a>
                                 </div>
                             </div>

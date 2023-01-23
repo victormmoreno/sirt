@@ -39,19 +39,19 @@ class TalentoController extends Controller
             $talentos = Talento::ConsultarTalentosDeTecnoparque()
                 ->get();
             return datatables()->of($talentos)->addColumn('add_proyecto', function ($data) {
-                    $add = '<a onclick="addTalentoProyecto(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+                    $add = '<a onclick="addTalentoProyecto(' . $data->id . ')" class="btn bg-info white-text m-b-xs"><i class="material-icons">done</i></a>';
                     return $add;
                 })->addColumn('add_propiedad', function ($data) {
                     $propiedad = '<a onclick="addPersonaPropiedad(' . $data->user_id . ')" class="btn bg-secondary m-b-xs"><i class="material-icons">done</i></a>';
                     return $propiedad;
                 })
                 ->addColumn('add_intertocutor_talent_articulation', function ($data) {
-                    $add = '<a onclick="articulationStage.addInterlocutorTalentArticulacion(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+                    $add = '<a onclick="articulationStage.addInterlocutorTalentArticulacion(' . $data->id . ')" class="btn bg-info white-text m-b-xs"><i class="material-icons">done</i></a>';
                     return $add;
                 })
 
                 ->addColumn('add_talents_articulation', function ($data) {
-                    $add = '<a onclick="filter_articulations.addTalentToArticulation(' . $data->id . ')" class="btn blue m-b-xs"><i class="material-icons">done</i></a>';
+                    $add = '<a onclick="filter_articulations.addTalentToArticulation(' . $data->id . ')" class="btn bg-info white-text m-b-xs"><i class="material-icons">done</i></a>';
                     return $add;
                 })
                 ->rawColumns(['add_proyecto', 'add_proyecto', 'add_propiedad', 'add_talents_articulation', 'add_intertocutor_talent_articulation'])->make(true);

@@ -69,9 +69,9 @@
                                     </div>
                                     <div class="col s12 m6 l4 offset-m3 right">
                                         @can('downloadReports', App\Models\ArticulationStage::class)
-                                            <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_articulationStage"><i class="material-icons">cloud_download</i>{{__('Download')}}</button>
+                                            <button class="waves-effect waves-grey bg-secondary-lighten white-text btn-flat search-tabs-button right p-h-md" id="download_articulationStage"><i class="material-icons">cloud_download</i>{{__('Download')}}</button>
                                         @endcan
-                                        <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_articulationStage"><i class="material-icons">search</i>{{__('Filter')}}</button>
+                                        <button class="waves-effect  waves-grey bg-secondary white-text btn-flat search-tabs-button right p-h-md" id="filter_articulationStage"><i class="material-icons">search</i>{{__('Filter')}}</button>
                                     </div>
                                 </div>
                                 <table id="articulationStage_data_table" class="highlight  responsive-table datatable-example dataTable" style="width: 100%">

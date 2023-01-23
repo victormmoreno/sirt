@@ -1,94 +1,89 @@
 @extends('layouts.app')
 @section('meta-title', __('articulation-stage'))
 @section('content')
-    <main class="mn-inner">
-        <div class="content">
-            <div class="row no-m-t no-m-b">
-                <div class="left left-align">
-                    <h5 class="left-align orange-text text-darken-3">
-                        <a href="{{route('articulation-stage.show',  $articulationStage)}}" class="footer-text left-align">
-                            <i class="material-icons left">autorenew</i>{{__('articulation-stage')}}
-                        </a>
-                    </h5>
-                </div>
-                <div class="right right-align show-on-large hide-on-med-and-down">
-                    <ol class="breadcrumbs">
-                        <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
-                        <li><a href="{{route('articulation-stage')}}">{{__('articulation-stage')}}</a></li>
-                        <li ><a href="{{route('articulation-stage.show',  $articulationStage)}}">{{ $articulationStage->present()->articulationStageCode() }}</a></li>
-                        <li class="active">Evidencias</li>
-                    </ol>
-                </div>
+<main class="mn-inner inner-active-sidebar">
+    <div class="content">
+        <div class="row no-m-t no-m-b m-r-lg m-l-lg">
+            <div class="left left-align">
+                <h5 class="left-align primary-text">
+                    <i class="material-icons left">autorenew</i>{{__('articulation-stage')}}
+                </h5>
             </div>
-
-            <div class="row no-m-t no-m-b">
-                <div class="col s12 m12 l12 no-p-h">
-                    <div class="card mailbox-content">
-                        <div class="card-content">
-                            <div class="row no-m-t no-m-b">
-                                <div class="col s12 m12 l12">
-                                    <div class="mailbox-options">
-                                        <ul>
-                                            <li class="text-mailbox ">La {{__('articulation-stage')}} se encuentra
-                                                actualmente {{$articulationStage->present()->articulationStageStatus()}}</li>
-                                            <div class="right">
-                                                <li class="text-mailbox">Fecha
-                                                    registro: {{$articulationStage->present()->articulationStageCreatedDate()}}</li>
-                                            </div>
-                                        </ul>
-                                    </div>
-                                    <div class="mailbox-view no-s">
-                                        @include('articulation.options.articulation-stages-options-header')
-                                        <div class="divider mailbox-divider"></div>
-                                        <div class="mailbox-text">
-                                            <div class="row">
-                                                <div class="mailbox-text">
-                                                    <div class="row">
-                                                        <div class="card server-card card-transparent">
-                                                            <div class="card-content">
-                                                                <span class="card-title center orange-text m-t-lg">Evidencias</span>
-
-                                                                <div class="stats-info">
-                                                                    <ul>
-                                                                        <li>Formato confidencial
-                                                                            <div class="percent-info orange-text left">
-                                                                                <i class="material-icons">check</i>
-                                                                            </div>
-                                                                        </li>
-                                                                        <li> Acta de inicio
-                                                                            <div class="percent-info orange-text left">
-                                                                                <i class="material-icons">check</i>
-                                                                            </div>
-                                                                        </li>
-                                                                        <li>Acta de cierre
-                                                                            <div class="percent-info orange-text left">
-                                                                                <i class="material-icons">check</i>
-                                                                            </div>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col s12 m12 l12">
-                                                                        <div class="row">
-                                                                            <div class="dropzone"
-                                                                                 id="fase_inicio_articulacion"></div>
-
+            <div class="right right-align show-on-large hide-on-med-and-down">
+                <ol class="breadcrumbs">
+                    <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
+                    <li><a href="{{route('articulation-stage')}}">{{__('articulation-stage')}}</a></li>
+                    <li ><a href="{{route('articulation-stage.show',  $articulationStage)}}">{{ $articulationStage->present()->articulationStageCode() }}</a></li>
+                    <li class="active">Evidencias</li>
+                </ol>
+            </div>
+        </div>
+        <div class="row no-m-t no-m-b">
+            <div class="col s12 m12 l12 no-p-h">
+                <div class="card mailbox-content">
+                    <div class="card-content">
+                        <div class="row no-m-t no-m-b">
+                            <div class="col s12 m12 l12">
+                                <div class="mailbox-options">
+                                    <ul>
+                                        <li class="text-mailbox ">La {{__('articulation-stage')}} se encuentra
+                                            actualmente {{$articulationStage->present()->articulationStageStatus()}}</li>
+                                        <div class="right">
+                                            <li class="text-mailbox">Fecha
+                                                registro: {{$articulationStage->present()->articulationStageCreatedDate()}}</li>
+                                        </div>
+                                    </ul>
+                                </div>
+                                <div class="mailbox-view no-s">
+                                    @include('articulation.options.articulation-stages-options-header')
+                                    <div class="divider mailbox-divider"></div>
+                                    <div class="mailbox-text">
+                                        <div class="row">
+                                            <div class="mailbox-text">
+                                                <div class="row">
+                                                    <div class="card server-card card-transparent">
+                                                        <div class="card-content">
+                                                            <span class="card-title center primary-text m-t-lg">Evidencias</span>
+                                                            <div class="stats-info">
+                                                                <ul>
+                                                                    <li>Formato confidencial
+                                                                        <div class="percent-info primary-text left">
+                                                                            <i class="material-icons">check</i>
                                                                         </div>
-                                                                        <div class="divider"></div>
-                                                                        <table
-                                                                            class="display responsive-table datatable-example dataTable"
-                                                                            style="width: 100%"
-                                                                            id="archivosArticulacion">
-                                                                            <thead>
-                                                                            <tr>
-                                                                                <th>Archivo</th>
-                                                                                <th style="width: 10%">Descargar</th>
+                                                                    </li>
+                                                                    <li> Acta de inicio
+                                                                        <div class="percent-info primary-text left">
+                                                                            <i class="material-icons">check</i>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>Acta de cierre
+                                                                        <div class="percent-info primary-text left">
+                                                                            <i class="material-icons">check</i>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col s12 m12 l12">
+                                                                    <div class="row">
+                                                                        <div class="dropzone"
+                                                                                id="fase_inicio_articulacion"></div>
 
-                                                                                <th style="width: 10%">Eliminar</th>
-                                                                            </tr>
-                                                                            </thead>
-                                                                        </table>
                                                                     </div>
+                                                                    <div class="divider"></div>
+                                                                    <table
+                                                                        class="display responsive-table datatable-example dataTable"
+                                                                        style="width: 100%"
+                                                                        id="archivosArticulacion">
+                                                                        <thead class="bg-primary white-text">
+                                                                        <tr>
+                                                                            <th>Archivo</th>
+                                                                            <th style="width: 10%">Descargar</th>
+
+                                                                            <th style="width: 10%">Eliminar</th>
+                                                                        </tr>
+                                                                        </thead>
+                                                                    </table>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -103,7 +98,9 @@
                     </div>
                 </div>
             </div>
-    </main>
+        </div>
+    </div>
+</main>
 @endsection
 @push('script')
     <script>

@@ -5,12 +5,12 @@
             @if($articulation->phase->nombre != \App\Models\Articulation::IsInicio())
                 <li class="disabled" aria-disabled="true">
                     <form class="left-align"
-                          action="{{route('articulation.change-previus-phase', [$articulation, $articulation->phase->nombre == \App\Models\Articulation::IsEjecucion() ? 'inicio': ($articulation->phase->nombre == \App\Models\Articulation::IsCierre() ? 'ejecucion': 'inicio')])}}"
-                          method="POST" style="width: 100%" name="frmChangePreviusPhase">
+                        action="{{route('articulation.change-previus-phase', [$articulation, $articulation->phase->nombre == \App\Models\Articulation::IsEjecucion() ? 'inicio': ($articulation->phase->nombre == \App\Models\Articulation::IsCierre() ? 'ejecucion': 'inicio')])}}"
+                        method="POST" style="width: 100%" name="frmChangePreviusPhase">
                         {!! method_field('PUT')!!}
                         @csrf
                         <button type="submit" onclick="changePreviusPhaseArticulation(event)"
-                                class="left-align waves-effect waves-grey orange white-text btn-flat"
+                                class="left-align waves-effect waves-grey bg-secondary white-text btn-flat"
                                 style="margin-bottom: 10px; margin-right: 10px; margin-top: 10px; width: 100%;">
                             <i class="material-icons left">arrow_back</i>
                             ir a la
@@ -27,7 +27,7 @@
                         {!! method_field('PUT')!!}
                         @csrf
                         <button type="submit" onclick="changeNextPhaseArticulation(event)" role="menuitem"
-                                class="right-align waves-effect waves-grey orange white-text btn-flat"
+                                class="right-align waves-effect waves-grey bg-secondary white-text btn-flat"
                                 style="margin-bottom: 10px; margin-right: 10px; margin-top: 10px; width: 100%;">
                             <i class="material-icons right">arrow_forward</i>
                             ir a la

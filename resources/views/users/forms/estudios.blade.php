@@ -1,9 +1,9 @@
 <div class="row">
     <div class="col s12 m12 l12">
         <div class="divider mailbox-divider"></div>
-        <h5 class="text-primarycolor center-align hand-of-Sean-fonts orange-text text-darken-3">Último estudio y ocupaciones</h5>
+        <h5 class="center-align primary-text">Último estudio y ocupaciones</h5>
         <div class="col m6 vertical-line">
-            <h5 class="text-primarycolor center-align hand-of-Sean-fonts orange-text text-darken-3">Último estudio</h5>
+            <h5 class="center-align primary-text">Último estudio</h5>
             <div class="row">
                 <div class="input-field col l6 m10 s12 offset-m1">
                     <input class="validate" id="txtinstitucion" name="txtinstitucion" type="text"  value="{{ isset($user->institucion) ? $user->institucion : old('txtinstitucion')}}">
@@ -42,7 +42,7 @@
         <div class="col m6 l6">
             <div class="row">
                 <div class="col s12 m12 l12">
-                    <h5 class="text-primarycolor center-align hand-of-Sean-fonts orange-text text-darken-3">Ocupaciones</h5>
+                    <h5 class="primary-text">Ocupaciones</h5>
                     <div class="row">
                         <div class="input-field col s12 m10 l8 offset-l3 offset-m-1">
                             <select class="js-states browser-default  selectMultipe" id="txtocupaciones" name="txtocupaciones[]" style="width: 100%" tabindex="-1" multiple onchange="user.getOtraOcupacion(this)">

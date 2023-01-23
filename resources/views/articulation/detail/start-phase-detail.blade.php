@@ -116,7 +116,7 @@
     </div>
 </div>
 <div class="center">
-    <span class="mailbox-title orange-text">
+    <span class="mailbox-title primary-text">
         <i class="material-icons">group</i>
         Talentos que participan en la articulación.
     </span>
@@ -131,12 +131,12 @@
                     <div class="card bs-dark ">
                         <div class="card-content">
                             <span class="card-title p-h-lg"> {{$user->present()->userDocumento()}} - {{$user->present()->userFullName()}}</span>
-                            <div class=" p-h-lg mail-date hide-on-med-and-down">  Acceso al sistema: {{$user->present()->userAcceso()}}</div>
+                            <div class=" p-h-lg mail-date hide-on-med-and-down">  Acceso al sistema: {!!$user->present()->userAcceso()!!}</div>
 
                             <p class="hide-on-med-and-down p-h-lg"> Miembro desde {{$user->present()->userCreatedAtFormat()}}</p>
                         </div>
                         <div class="card-action">
-                            <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs orange-text" href="{{route('usuario.usuarios.show',$user->documento)}}"><i class="material-icons left"> link</i>Ver más</a>
+                            <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="{{route('usuario.usuarios.show',$user->documento)}}"><i class="material-icons left"> link</i>Ver más</a>
 
                         </div>
                     </div>

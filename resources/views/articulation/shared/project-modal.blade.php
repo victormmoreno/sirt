@@ -2,7 +2,7 @@
     <div class="modal-content">
         <div class="row">
             <div class="col s12 m12 l12">
-                <span class=" mailbox-title title orange-text text-darken-3">
+                <span class=" mailbox-title title primary-text">
                     Proyectos Finalizados Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }}
                 </span>
                 <div class="row search-tabs-row search-tabs-header">
@@ -17,13 +17,13 @@
                     </div>
 
                     <div class="col s12 m6 l4 offset-m3 right">
-                        <button class="waves-effect waves-light btn orange m-b-xs search-tabs-button right" id="filter_project_modal"><i class="material-icons">search</i>Filtrar</button>
+                        <button class="waves-effect waves-light btn bg-primary white-text m-b-xs search-tabs-button right" id="filter_project_modal"><i class="material-icons">search</i>Filtrar</button>
                     </div>
                 </div>
                 <div class="row search-tabs-row search-tabs-header">
                 </div>
                 <table id="datatable_projects_finalizados" class="display responsive-table datatable-example dataTable" style="width: 100%">
-                    <thead>
+                    <thead class="bg-primary white-text">
                         <tr>
                             <th>Código de Proyecto</th>
                             <th>Nombre</th>
@@ -36,6 +36,6 @@
         </div>
     </div>
     <div class="modal-footer">
-        <a href="#!" class="modal-close waves-effect waves-orange btn-flat">Cerrar</a>
+        <a href="#!" class="modal-close waves-effect waves-primary btn-flat">Cerrar</a>
     </div>
 </div>

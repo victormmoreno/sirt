@@ -4,7 +4,7 @@
         <div>
             <div class="mailbox-view-header">
                 <div class="center">
-                    <h5 class="text-primarycolor center-align hand-of-Sean-fonts orange-text text-darken-3">Información talento</h5>
+                    <h5 class="center-align primary-text text-darken-3">Información talento</h5>
                 </div>
             </div>
             <div class="row">

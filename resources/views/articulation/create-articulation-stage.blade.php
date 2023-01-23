@@ -5,19 +5,16 @@
         $year = Carbon\Carbon::now()->year;
     @endphp
     <main class="mn-inner">
-        <div class="row content">
-            <div class="col s12">
+        <div class="content">
+            <div class="row no-m-t no-m-b m-r-lg m-l-lg">
                 <div class="left left-align">
-                    <h5 class="left-align orange-text text-darken-3">
-                        <i class="material-icons left">
-                            autorenew
-                        </i>
-                        {{__('articulation-stage')}}
+                    <h5 class="left-align primary-text">
+                        <i class="material-icons left">autorenew</i>{{__('articulation-stage')}}
                     </h5>
                 </div>
                 <div class="right right-align show-on-large hide-on-med-and-down">
                     <ol class="breadcrumbs">
-                        <li><a href="{{route('home')}}">{{__('Home')}}</a></li>
+                        <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
                         <li class="active"><a href="{{route('articulation-stage')}}">{{__('articulation-stage')}}</a>
                         </li>
                         <li class="active">{{__('New ArticulationStage')}}</li>
@@ -28,7 +25,7 @@
                 <div class="card mailbox-content">
                     <div class="card-content">
                         <form method="POST" id="articulations-form" action="{{route('articulation-stage.store')}}"
-                              accept-charset="UTF-8" enctype="multipart/form-data">
+                            accept-charset="UTF-8" enctype="multipart/form-data">
                             @csrf
                             <div>
                                 @include('articulation.form.step-basic-information-articulation-stage')
@@ -40,7 +37,6 @@
                 </div>
             </div>
         </div>
-        @include('articulation.shared.articulation-stage-modal')
         @include('articulation.shared.project-modal')
         @include('articulation.shared.interlocutor-talents-modal')
     </main>

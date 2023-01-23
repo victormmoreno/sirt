@@ -8,7 +8,7 @@
                 <div class="col s12 m12 l12">
                     <div class="row">
                         <div class="col s12 m8 l10">
-                            <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
+                            <h5 class="left-align primary-text">
                                 <a class="footer-text left-align" href="{{route('usoinfraestructura.index')}}">
                                     <i class="material-icons arrow-l">arrow_back</i>
                                 </a>Asesoría y Uso
@@ -30,7 +30,7 @@
                                             <div class="mailbox-view">
                                                 <div class="mailbox-view-header">
                                                     <div class="left">
-                                                        <span class="mailbox-title orange-text text-darken-3">
+                                                        <span class="mailbox-title primary-text">
                                                             Asesoría y uso | {{$usoinfraestructura->present()->actividadUsoInfraestructura()}}
                                                         </span>
                                                         <span class="mailbox-author">

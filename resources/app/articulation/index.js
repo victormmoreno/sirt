@@ -178,7 +178,7 @@ const articulationStage = {
                                 </div>
                             </div>
                             <div class="card-action">
-                                <a class="waves-effect waves-red btn-flat m-b-xs orange-text" target="_blank" href="/proyecto/detalle/${data.proyecto.id}"><i class="material-icons left">link</i>Ver más</a>
+                                <a class="waves-effect waves-red btn-flat m-b-xs primary-text" target="_blank" href="/proyecto/detalle/${data.proyecto.id}"><i class="material-icons left">link</i>Ver más</a>
                             </div>
                         </div>`
                     );
@@ -196,7 +196,7 @@ const articulationStage = {
                                             <p class="hide-on-med-and-down"> Miembro desde ${articulationStage.formatDate(talento.user.created_at)}</p>
                                         </div>
                                         <div class="card-action">
-                                            <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs orange-text" href="/usuario/usuarios/${talento.user.documento}"><i class="material-icons left">link</i>Ver más</a>
+                                            <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuario/usuarios/${talento.user.documento}"><i class="material-icons left">link</i>Ver más</a>
                                         </div>
                                     </div>`
                                 );
@@ -304,7 +304,7 @@ const articulationStage = {
                                 </div>
                             </div>
                             <div class="card-action">
-                                <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs orange-text" href="/usuario/usuarios/`+user.documento+ `"><i class="material-icons left"> link</i>Ver más</a>
+                                <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuario/usuarios/`+user.documento+ `"><i class="material-icons left"> link</i>Ver más</a>
                             </div>
                         </div>
                     `);

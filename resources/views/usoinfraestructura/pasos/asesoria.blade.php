@@ -21,7 +21,7 @@
     <div class="col s12 m12 l9">
         <fieldset>
             <legend>Paso 2</legend>
-            <p class="center card-title orange-text text-darken-3"><b> Asesorias</b></p>
+            <p class="center card-title primary-text"><b> Asesorias</b></p>
             <div class="divider"></div>
             <div class="row">
                 <div class="col s12 m8 l8 offset-l2 m2">

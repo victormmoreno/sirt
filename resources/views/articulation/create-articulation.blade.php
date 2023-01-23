@@ -2,17 +2,14 @@
 @section('meta-title', __('articulation-stage'))
 @section('content')
 @php
-  $year = Carbon\Carbon::now()->year;
+    $year = Carbon\Carbon::now()->year;
 @endphp
 <main class="mn-inner">
-    <div class="row content">
-        <div class="col s12">
+    <div class="content">
+        <div class="row no-m-t no-m-b m-r-lg m-l-lg">
             <div class="left left-align">
-                <h5 class="left-align orange-text text-darken-3">
-                    <i class="material-icons left">
-                        autorenew
-                    </i>
-                    {{__('articulation-stage')}}
+                <h5 class="left-align primary-text">
+                    <i class="material-icons left">autorenew</i>{{__('articulation-stage')}}
                 </h5>
             </div>
             <div class="right right-align show-on-large hide-on-med-and-down">

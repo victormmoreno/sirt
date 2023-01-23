@@ -50,16 +50,15 @@
                                 <span
                                     class="card-title p-h-lg  p f-12"> {{$user->present()->userDocumento()}} - {{$user->present()->userFullName()}}</span>
                                 <input type="hidden" name="talents[]" value="{{$user->id}}"/>
-                                <div class="position-top-right p f-12 mail-date hide-on-med-and-down no-m-b"> Acceso al
-                                    sistema: {{$user->present()->userAcceso()}}</div>
+                                <div class="position-top-right p f-12 mail-date hide-on-med-and-down no-m-b"> {!!$user->present()->userAcceso()!!}</div>
 
                             </div>
                             <div class="card-action">
-                                <a target="_blank" class="waves-effect waves-red btn-flat m-b-xs orange-text"
-                                   href="{{route('usuario.usuarios.show',$user->documento)}}"><i
+                                <a target="_blank" class="waves-effect waves-red btn-flat m-b-xs primary-text"
+                                    href="{{route('usuario.usuarios.show',$user->documento)}}"><i
                                         class="material-icons left"> link</i>Ver más</a>
                                 <a onclick="filter_articulations.deleteTalent({{$user->id}});"
-                                   class="waves-effect waves-red btn-flat m-b-xs red-text"><i
+                                    class="waves-effect waves-red btn-flat m-b-xs danger-text"><i
                                         class="material-icons left"> delete_sweep</i>Eliminar</a>
                             </div>
                         </div>

@@ -6,7 +6,7 @@
     @if($articulation->phase_id == 4)
     @can('requestApproval', $articulation)
             <a href="{{route('articulation.request-approval', $articulation)}}"
-               class="collection-item yellow lighten-3">
+                class="collection-item yellow lighten-3">
                 <i class="material-icons left">notifications</i>
                 @if($rol_destinatario == \App\User::IsDinamizador())
                     Enviar solicitud de aval al {{\App\User::IsDinamizador()}}
@@ -25,7 +25,7 @@
     @if($articulation->phase_id == 1)
     @can('showStart', $articulation)
         <a href="{{route('articulations.show.phase', [$articulation, 'inicio'])}}"
-           class="collection-item">
+            class="collection-item">
             <i class="material-icons left">edit</i>
             Editar fase de inicio
         </a>
@@ -34,7 +34,7 @@
     @if($articulation->phase_id == 3)
     @can('showExecution', $articulation)
         <a href="{{route('articulations.show.phase', [$articulation, 'ejecucion'])}}"
-           class="collection-item">
+            class="collection-item">
             <i class="material-icons left">edit</i>
             Editar fase de ejecución
         </a>
@@ -43,7 +43,7 @@
     @if($articulation->phase_id == 4)
     @can('showClosing', $articulation)
         <a href="{{route('articulations.show.phase', [$articulation, 'cierre'])}}"
-           class="collection-item">
+            class="collection-item">
             <i class="material-icons left">edit</i>
             Editar fase de cierre
         </a>
@@ -51,7 +51,7 @@
     @endif
     @can('changeTalents', $articulation)
         <a href="{{ route('articulations.changetalents', $articulation) }}"
-           class="collection-item">
+            class="collection-item">
             <i class="material-icons left">group</i>
             Cambiar participantes
         </a>

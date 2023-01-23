@@ -8,10 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Articulation\ArticulationStageRequest;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Response;
 use App\Repositories\Repository\Articulation\ArticulationStageRepository;
-use Illuminate\Database\Eloquent\Model;
-use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\ArticulationStage;
 
 class ArticulationStageRegisterController extends Controller
@@ -30,21 +27,19 @@ class ArticulationStageRegisterController extends Controller
      */
     public function create()
     {
-        if (request()->user()->can('create', ArticulationStage::class))
+        if (request()->user()->cannot('create', ArticulationStage::class))
         {
-            $nodos = null;
-            if(request()->user()->can('listNodes', ArticulationStage::class))
-            {
-                $nodos = Nodo::query()->with('entidad')->get();
-                $nodos = collect($nodos)->sortBy('entidad.nombre')->pluck('entidad.nombre', 'id');
-            }
-            $articulationTypes= ArticulationType::query()
-                ->with('articulationsubtypes')
-                ->where('articulation_types.state', ArticulationType::mostrar())
-                ->orderBy('name')->get();
-            return view('articulation.create-articulation-stage', compact('nodos', 'articulationTypes'));
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
         }
-        return redirect()->route('home');
+        $nodos = null;
+        if(request()->user()->can('listNodes', ArticulationStage::class))
+        {
+            $nodos = Nodo::query()->with('entidad')->get();
+            $nodos = collect($nodos)->sortBy('entidad.nombre')->pluck('entidad.nombre', 'id');
+        }
+        return view('articulation.create-articulation-stage', compact('nodos'));
+
     }
 
     /**
@@ -55,35 +50,36 @@ class ArticulationStageRegisterController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->ajax() && $request->user()->can('create', ArticulationStage::class)) {
-            $req = new ArticulationStageRequest;
-            $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-            if ($validator->fails()) {
+        if ($request->ajax() && $request->user()->cannot('create', ArticulationStage::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
+        $req = new ArticulationStageRequest;
+        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+        if ($validator->fails()) {
+            return response()->json([
+                'fail'   => true,
+                'errors' => $validator->errors(),
+                'message' => null,
+                'redirect_url' => null,
+            ]);
+        } else {
+            $response = $this->articulationStageRepository->store($request);
+            if (!$response['state']) {
                 return response()->json([
-                    'fail'   => true,
-                    'errors' => $validator->errors(),
+                    'fail'         => true,
+                    'errors'       => $this->articulationStageRepository->getError(),
                     'message' => null,
                     'redirect_url' => null,
                 ]);
-            } else {
-                $response = $this->articulationStageRepository->store($request);
-                if (!$response['state']) {
-                    return response()->json([
-                        'fail'         => true,
-                        'errors'       => $this->articulationStageRepository->getError(),
-                        'message' => null,
-                        'redirect_url' => null,
-                    ]);
-                }
-                return response()->json([
-                    'fail'         => false,
-                    'errors'       => null,
-                    'message' => "Registro extioso",
-                    'redirect_url' => url(route('articulation-stage.show', $response['data'])),
-                ]);
             }
+            return response()->json([
+                'fail'         => false,
+                'errors'       => null,
+                'message' => "Registro extioso",
+                'redirect_url' => url(route('articulation-stage.show', $response['data'])),
+            ]);
         }
-        return redirect()->route('home');
     }
 
     /**
@@ -99,21 +95,22 @@ class ArticulationStageRegisterController extends Controller
                 'projects.articulacion_proyecto.actividad',
                 'interlocutor'
             ])->where('code',$code)->firstOrFail();
-        if (request()->user()->can('update', $articulationStage))
+        if (request()->user()->cannot('update', $articulationStage))
         {
-            $nodos = null;
-            if(request()->user()->can('listNodes', ArticulationStage::class))
-            {
-                $nodos = Nodo::query()->with('entidad')->get();
-                $nodos = collect($nodos)->sortBy('entidad.nombre')->pluck('entidad.nombre', 'id');
-            }
-            $articulationTypes= ArticulationType::query()
-                ->with('articulationsubtypes')
-                ->where('articulation_types.state', ArticulationType::mostrar())
-                ->orderBy('name')->get();
-            return view('articulation.edit-articulation-stage', compact('nodos', 'articulationStage', 'articulationTypes'));
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
         }
-        return redirect()->route('home');
+        $nodos = null;
+        if(request()->user()->can('listNodes', ArticulationStage::class))
+        {
+            $nodos = Nodo::query()->with('entidad')->get();
+            $nodos = collect($nodos)->sortBy('entidad.nombre')->pluck('entidad.nombre', 'id');
+        }
+        $articulationTypes= ArticulationType::query()
+            ->with('articulationsubtypes')
+            ->where('articulation_types.state', ArticulationType::mostrar())
+            ->orderBy('name')->get();
+        return view('articulation.edit-articulation-stage', compact('nodos', 'articulationStage', 'articulationTypes'));
     }
 
     /**
@@ -123,34 +120,37 @@ class ArticulationStageRegisterController extends Controller
     public function update(Request $request, $code)
     {
         $articulationStage = ArticulationStage::query()->where('code',$code)->firstOrFail();
-        if (request()->user()->can('update', $articulationStage)) {
-            $req = new ArticulationStageRequest;
-            $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-            if ($validator->fails()) {
+        if (request()->user()->cannot('update', $articulationStage)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
+        $req = new ArticulationStageRequest;
+        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+        if ($validator->fails()) {
+            return response()->json([
+                'data' => [
+                    'state' => 'danger',
+                    'errors' => $validator->errors(),
+                ]
+            ]);
+        } else {
+            $response = $this->articulationStageRepository->update($request, $articulationStage);
+            if (!$response['state']) {
                 return response()->json([
-                    'data' => [
-                        'state' => 'danger',
-                        'errors' => $validator->errors(),
-                    ]
-                ]);
-            } else {
-                $response = $this->articulationStageRepository->update($request, $articulationStage);
-                if (!$response['state']) {
-                    return response()->json([
-                        'fail' => true,
-                        'errors' => $this->articulationStageRepository->getError(),
-                        'message' => null,
-                        'redirect_url' => null,
-                    ]);
-                }
-                return response()->json([
-                    'data' => $response['data'],
-                    'fail' => false,
-                    'errors' => null,
-                    'message' => "Actualización extiosa",
-                    'redirect_url' => url(route('articulation-stage.show', $response['data'])),
+                    'fail' => true,
+                    'errors' => $this->articulationStageRepository->getError(),
+                    'message' => null,
+                    'redirect_url' => null,
                 ]);
             }
+            return response()->json([
+                'data' => $response['data'],
+                'fail' => false,
+                'errors' => null,
+                'message' => "Actualización extiosa",
+                'redirect_url' => url(route('articulation-stage.show', $response['data'])),
+            ]);
         }
+
     }
 }
