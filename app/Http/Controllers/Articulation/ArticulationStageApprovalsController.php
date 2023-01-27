@@ -24,6 +24,11 @@ class ArticulationStageApprovalsController extends Controller
     public function requestApproval(int $id, string $phase = null)
     {
         $articulationStage = ArticulationStage::findOrFail($id);
+        if (request()->user()->cannot('requestApproval', $articulationStage))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $notification = $this->articulationStageRepository->notifyApprovalEndorsement($articulationStage, $phase);
         if ($notification['notificacion']) {
             Alert::success('Notificación Exitosa!', $notification['msg'])->showConfirmButton('Ok', '#3085d6');
@@ -40,7 +45,13 @@ class ArticulationStageApprovalsController extends Controller
      */
     public function manageEndorsement(Request $request, $id, string $phase = null)
     {
-        $update = $this->articulationStageRepository->manageEndorsement($request, $id, $phase);
+        $articulationStage = ArticulationStage::findOrFail($id);
+        if (request()->user()->cannot('showButtonAprobacion', $articulationStage))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
+        $update = $this->articulationStageRepository->manageEndorsement($request, $articulationStage, $phase);
         if ($update['state']) {
             Alert::success($update['title'], $update['mensaje'])->showConfirmButton('Ok', '#3085d6');
             return back();

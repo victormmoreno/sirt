@@ -168,7 +168,7 @@ class ArticulationStageRepository
         try {
             $articulationStage = $this->updateArticulationStage($request, $articulationStage);
             $this->validateArticulationStageType($request, $articulationStage);
-            $this->updateFile( $request , $articulationStage );
+            $this->updateFile( $request , $articulationStage);
             DB::commit();
             return [
                 'state' => true,
@@ -188,19 +188,20 @@ class ArticulationStageRepository
         * @param Request $request
     */
     public function updateArticulationStage(Request $request, ArticulationStage $articulationStage){
-         $articulationStage->update([
+        $articulationStage->update([
             'name' => $request->name,
             'description' => $request->description,
             'scope'  => $request->scope,
             'confidentiality_format' => ArticulationStage::CONFIDENCIALITY_FORMAT_YES,
             'terms_verified_at' => Carbon::now(),
             'interlocutor_talent_id' => $request->talent,
+            'node_id' => request()->user()->can('listNodes', ArticulationStage::class) ? $request->node : (isset(auth()->user()->articulador->nodo) ? auth()->user()->articulador->nodo->id : 1),
         ]);
-         return $articulationStage;
+        return $articulationStage;
     }
 
 
-    private function updateFile(Request $request, \Illuminate\Database\Eloquent\Model $model = null)
+    private function updateFile(Request $request, $model = null)
     {
         if($model){
             if ($request->hasFile('confidency_format')) {
@@ -305,6 +306,7 @@ class ArticulationStageRepository
             $articulationStage->update([
                 'interlocutor_talent_id' => $request->talent,
             ]);
+            $articulationStage->createTraceability(Movimiento::IsCambiarInterlocutor(),Session::get('login_role'), Movimiento::IsCambiarInterlocutor());
             return  [
                 'data' => $articulationStage,
                 'message' => '',
@@ -356,11 +358,7 @@ class ArticulationStageRepository
 
             if ($conf_envios != false) {
                 $msg = "Enviar notificacion " . __('articulation-stage');
-
-                Notification::send($notificacion->receptor, new AccompanyingApprovalNotification($notificacion));
-                // Enviar email
                 event(new AccompanyingApprovalRequest($notificacion, $conf_envios['destinatarios']));
-                // Registrar el historial
                 $model->createTraceability($conf_envios['tipo_movimiento'],$conf_envios['tipo_movimiento'], null);
             }
 
@@ -433,8 +431,6 @@ class ArticulationStageRepository
         }else{
             return $articulationState->notifications()->whereNull('fecha_aceptacion')->get()->last();
         }
-        //return $articulationState->notifications()->where('descripcion',  $status)->whereNull('fecha_aceptacion')->where('estado', \App\Models\ControlNotificaciones::IsPendiente())->get()->last();
-        //return $articulationState->notifications()->where('estado', \App\Models\ControlNotificaciones::IsPendiente())->get()->last();
     }
 
     public function verifyRecipientNotification($notificacion)
@@ -567,7 +563,7 @@ class ArticulationStageRepository
      * @param $request
      * @param $id Id
      */
-    public function manageEndorsement($request, $id, string $phase)
+    public function manageEndorsement($request, $articulationStage, string $phase)
     {
         DB::beginTransaction();
         try {
@@ -575,7 +571,6 @@ class ArticulationStageRepository
             $movimiento = null;
             $mensaje = null;
             $title = null;
-            $articulationStage = ArticulationStage::findOrFail($id);
             $dinamizadorRepository = new DinamizadorRepository;
             $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulationStage->node_id)->get();
             $asesores = User::InfoUserDatatable()
@@ -638,8 +633,31 @@ class ArticulationStageRepository
             DB::rollBack();
             return [
                 'state' => false,
-                'mensaje' => 'No se ha aprobado la fase de inicio del proyecto',
+                'mensaje' => $th->getMessage(),
                 'title' => 'Aprobación errónea'
+            ];
+        }
+    }
+
+    public function updateStatus($articulationStage)
+    {
+        DB::beginTransaction();
+        try {
+            $articulationStage->update([
+                'status' => ($articulationStage->status == 0) ? 1 : 0,
+                'endorsement' => ($articulationStage->endorsement == 0) ? 1 : 0,
+            ]);
+            DB::commit();
+            return [
+                'state' => true,
+                'data' => $articulationStage
+            ];
+        } catch (\Exception $e) {
+            $this->strError = $e->getMessage();
+            DB::rollback();
+            return [
+                'state' => false,
+                'data' => null
             ];
         }
     }

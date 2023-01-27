@@ -16,15 +16,6 @@ use Illuminate\Support\Facades\Storage;
 class ArticulationMigrationSeeder extends Seeder
 {
     /**
-     * model_id
-     * model_type
-     * ruta
-     * fase_id
-     * created_at
-     * updated_at
-     *
-    */
-    /**
      * Run the database seeds.
      *
      * @return void
@@ -60,9 +51,6 @@ class ArticulationMigrationSeeder extends Seeder
                 'archivomodel',
                 'asesorias'
             ]);
-            // ->whereHas('archivomodel', function($query){
-            //     $query->where('model_id', 242);
-            // });
     }
 
     private function updateOrCreateArticulationStage($item){
@@ -74,7 +62,7 @@ class ArticulationMigrationSeeder extends Seeder
             'description'=> $item->objetivo ? $item->objetivo : __('No register'),
             'scope'=> isset($scope->name) ? $scope->name : __('No register'),
             'status'=> $item->fase_id == 6 ?  ArticulationStage::STATUS_CLOSE : ArticulationStage::STATUS_OPEN,
-            'endorsement'=> 1,
+            'endorsement'=> $item->fase_id == 6 ?  ArticulationStage::STATUS_CLOSE : ArticulationStage::STATUS_OPEN,
             'start_date'=> $item->fecha_inicio,
             'end_date'=> $item->fecha_cierre,
             'confidentiality_format'=> 0,

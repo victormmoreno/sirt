@@ -40,8 +40,12 @@
                                 el articulador de la {{__('articulation-stage')}} {{$traceability[$i]->descripcion}}.
                             @endif
                             @if ( isset($traceability[$i]->usuario) && $traceability[$i]->movimiento == App\Models\Movimiento::IsReversar())
-                                El {{$traceability[$i]->rol}} {{$traceability[$i]->usuario}} {{$traceability[$i]->movimiento}} la articulación a
+                                El {{$traceability[$i]->rol}} {{$traceability[$i]->usuario}} {{$traceability[$i]->movimiento}} la {{__('articulation-stage')}} a
                                 la fase {{$traceability[$i]->descripcion}} en la fecha {{$traceability[$i]->created_at->isoFormat('MMMM Do YYYY, h:mm:ss a')}}
+                            @endif
+                            @if ( isset($traceability[$i]->usuario) && $traceability[$i]->movimiento == App\Models\Movimiento::IsCambiarInterlocutor())
+                                El {{$traceability[$i]->rol}} {{$traceability[$i]->usuario}} {{$traceability[$i]->movimiento}} de la {{__('articulation-stage')}}
+                                en la fecha {{$traceability[$i]->created_at->isoFormat('MMMM Do YYYY, h:mm:ss a')}}
                             @endif
                         </li>
                         @endfor

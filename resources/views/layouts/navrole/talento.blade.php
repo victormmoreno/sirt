@@ -14,11 +14,11 @@
     </a>
 </li>
 @can('index', App\Models\ArticulationStage::class)
-    <li class="no-padding {{setActiveRoute('articulaciones')}}">
-        <a href="{{route('articulation-stage')}}" class="{{setActiveRouteActivePage('articulaciones')}}" rel="canonical" title="{{__('articulation-stage')}}">
-            <i class="material-icons {{setActiveRouteActiveIcon('articulaciones')}}">autorenew</i>{{__('articulation-stage')}}
-        </a>
-    </li>
+<li class="no-padding {{setActiveRoute('etapa-articulaciones')}}">
+    <a href="{{route('articulation-stage')}}" class="{{setActiveRouteActivePage('etapa-articulaciones')}}" rel="canonical" title="{{__('articulation-stage')}}">
+        <i class="material-icons {{setActiveRouteActiveIcon('etapa-articulaciones')}}">autorenew</i>{{__('articulation-stage')}}
+    </a>
+</li>
 @endcan
 <li class="no-padding {{setActiveRoute('usoinfraestructura')}}">
     <a class="waves-effect waves-grey {{setActiveRouteActivePage('usoinfraestructura')}}" href="{{route('usoinfraestructura.index')}}" rel="canonical" title="Usos de infraestructura">

@@ -135,6 +135,7 @@ class ArticulationStageRegisterController extends Controller
             ]);
         } else {
             $response = $this->articulationStageRepository->update($request, $articulationStage);
+
             if (!$response['state']) {
                 return response()->json([
                     'fail' => true,

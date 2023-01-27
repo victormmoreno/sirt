@@ -27,7 +27,7 @@ class ArticulationStageRequest extends FormRequest
     public function rules()
     {
             return [
-                'name' => 'required|min:1|max:100',
+                'name' => 'required|min:1|max:600',
                 'node' => Rule::requiredIf(function (){
                     return (bool) request()->user()->can('listNodes', ArticulationStage::class);
                 }) ,

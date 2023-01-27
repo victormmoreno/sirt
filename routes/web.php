@@ -849,6 +849,7 @@ Route::group(
         Route::put('/articulaciones/{code}/cambiar-participantes', 'ArticulationListController@updateTalents')->name('articulations.updatetalents');
         Route::get('/{code}/cambiar-interlocutor', 'ArticulationStageListController@changeInterlocutor')->name('articulation-stage.changeinterlocutor');
         Route::put('/{code}/cambiar-interlocutor', 'ArticulationStageListController@updateInterlocutor')->name('articulation-stage.updateinterlocutor');
+        Route::put('/{code}/cambiar-estado', 'ArticulationStageListController@changeStatus')->name('articulations.changeStatus');
 
 
         Route::get('/articulaciones/{code}/crear', 'ArticulationRegisterController@create')->name('articulations.create');

@@ -66,6 +66,7 @@ class ArticulationStageListController extends Controller
                     ->status($request->filter_status_articulationStage)
                     ->year($request->filter_year_articulationStage)
                     ->interlocutorTalent($talent)
+                    ->groupBy('articulation_code')
                     ->orderBy('articulation_stages.updated_at', 'desc')
                     ->get();
             }
@@ -299,7 +300,7 @@ class ArticulationStageListController extends Controller
         $articulationStage = ArticulationStage::query()
             ->select(
                 'articulation_stages.*', 'articulations.code as articulation_code',
-                'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
+                'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase', 'fases.id as fase_id',
                 'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
                 'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id', 'interlocutor.documento', 'interlocutor.nombres',
                 'interlocutor.apellidos', 'interlocutor.email'
@@ -317,7 +318,9 @@ class ArticulationStageListController extends Controller
             ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
             ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
             ->leftJoin('users as createdby', 'createdby.id', '=', 'articulation_stages.created_by')
+            ->groupBy('articulation_code')
             ->where('articulation_stages.code', $code)->firstOrFail();
+
 
         if (request()->user()->cannot('show', $articulationStage))
         {
@@ -342,42 +345,45 @@ class ArticulationStageListController extends Controller
     public function destroy($articulationState)
     {
         $articulationStage = ArticulationStage::findOrFail($articulationState);
+        if (request()->user()->cannot('delete', $articulationStage)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
+        if (!$articulationStage->articulations->IsEmpty()) {
 
-        if (request()->user()->can('delete', $articulationStage)) {
-            if (!$articulationStage->articulations->IsEmpty()) {
-                return response()->json([
-                    'fail' => true,
-                    'redirect_url' => route('articulation-stage.show', $articulationStage->id),
-                ]);
-            }
-            if (isset($articulationStage->projects)) {
-                $articulationStage->projects()->detach();
-            }
-            if (isset($articulationStage->articulations->users)) {
-                $articulationStage->articulations()->delete();
-                $articulationStage->articulations->users()->detach();
-            }
-            if (isset($articulationStage->archivomodel)) {
-                foreach ($articulationStage->archivomodel as $archive){
-                    $filePath = str_replace('storage', 'public', $archive->ruta);
-                    Storage::delete($filePath);
-                    $archive->delete();
-                }
-            }
-
-            if (isset($articulationStage->notifications)) {
-                $articulationStage->notifications()->delete();
-            }
-            if (isset($articulationStage->traceability)) {
-                $articulationStage->traceability()->delete();
-            }
-            $articulationStage->delete();
             return response()->json([
-                'fail' => false,
-                'redirect_url' => route('articulation-stage'),
+                'fail' => true,
+                'redirect_url' => route('articulation-stage.show', $articulationStage->id),
             ]);
         }
-        return redirect()->route('home');
+        if (isset($articulationStage->projects)) {
+            $articulationStage->projects()->detach();
+        }
+        if (isset($articulationStage->articulations->users)) {
+            $articulationStage->articulations()->delete();
+            $articulationStage->articulations->users()->detach();
+        }
+        if (isset($articulationStage->archivomodel)) {
+            foreach ($articulationStage->archivomodel as $archive){
+                $filePath = str_replace('storage', 'public', $archive->ruta);
+                Storage::delete($filePath);
+                $archive->delete();
+            }
+        }
+
+        if (isset($articulationStage->notifications)) {
+            $articulationStage->notifications()->delete();
+        }
+        if (isset($articulationStage->traceability)) {
+            $articulationStage->traceability()->delete();
+        }
+        $articulationStage->delete();
+        return response()->json([
+            'fail' => false,
+            'redirect_url' => route('articulation-stage'),
+        ]);
+
+
     }
 
     public function downloadCertificate(string $phase, $code){
@@ -417,11 +423,38 @@ class ArticulationStageListController extends Controller
     public function evidences($code)
     {
         $articulationStage = ArticulationStage::query()->where('code',$code)->firstOrFail();
-        if (request()->user()->can('uploadEvidences', $articulationStage)) {
-            return view('articulation.articulation-stages-evidences', ['articulationStage' =>$articulationStage]);
+        if (request()->user()->cannot('uploadEvidences', $articulationStage)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
         }
-        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
-        return redirect()->route('home');
+        return view('articulation.articulation-stages-evidences', ['articulationStage' =>$articulationStage]);
+
+    }
+
+    public function changeStatus($code)
+    {
+        $articulationStage = ArticulationStage::query()->where('code',$code)->firstOrFail();
+        if (request()->user()->cannot('changeState', $articulationStage)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
+        // $articulationStage->status != $articulationStage->status;
+        $response = $this->articulationStageRepository->updateStatus($articulationStage);
+        if (!$response['state']) {
+            return response()->json([
+                'fail' => true,
+                'errors' => $this->articulationStageRepository->getError(),
+                'message' => null,
+                'redirect_url' => null,
+            ]);
+        }
+        return response()->json([
+            'data' => $response['data'],
+            'fail' => false,
+            'errors' => null,
+            'message' => "Actualización extiosa",
+            'redirect_url' => url(route('articulation-stage.show', $response['data'])),
+        ]);
     }
 
 }

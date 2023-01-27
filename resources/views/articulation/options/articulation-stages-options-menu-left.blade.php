@@ -1,4 +1,5 @@
-<div class="collection with-header col s12 m4 l3">
+@canany(['showButtonAprobacion', 'requestApproval', 'changeTalent', 'update', 'downloadCertificateEnd', 'downloadCertificateStart', 'uploadEvidences', 'delete'], $articulationStage)
+<div class="collection with-header  col s12 m4 l3">
     <h5 href="!#" class="collection-header primary-text">Opciones</h5>
     @if (Route::currentRouteName() == 'articulation-stage.show')
         @can('showButtonAprobacion', $articulationStage)
@@ -7,7 +8,7 @@
         @can('create', App\Models\Articulation::class)
             @if($articulationStage->status == \App\Models\ArticulationStage::STATUS_OPEN)
                 <a href="{{ route('articulations.create', $articulationStage) }}"
-                   class="collection-item">
+                    class="collection-item">
                     <i class="material-icons left">autorenew</i>
                     {{ __('New Articulation') }}
                 </a>
@@ -16,7 +17,7 @@
         @can('requestApproval', $articulationStage)
             @if($articulationStage->status == \App\Models\ArticulationStage::STATUS_CLOSE)
                 <a href="{{route('articulation-stage.request-approval', [$articulationStage->id , 'abrir' ])}}"
-                   class="collection-item yellow lighten-3">
+                    class="collection-item yellow lighten-3">
                     <i class="material-icons left">notifications</i>
                     @if($rol_destinatario == \App\User::IsTalento())
                         Enviar solicitud de aval al {{\App\User::IsTalento()}}
@@ -34,7 +35,7 @@
                 </a>
             @elseif($articulationStage->status == \App\Models\ArticulationStage::STATUS_OPEN)
                 <a href="{{route('articulation-stage.request-approval', [$articulationStage->id , 'cerrar' ])}}"
-                   class="collection-item yellow lighten-3">
+                    class="collection-item yellow lighten-3">
                     <i class="material-icons left">notifications</i>
                     @if($rol_destinatario == \App\User::IsTalento())
                         Enviar solicitud de aval al talento
@@ -62,15 +63,22 @@
         @endcan
         @can('update', $articulationStage)
             <a href="{{ route('articulation-stage.edit',$articulationStage) }}"
-               class="collection-item">
+                class="collection-item">
                 <i class="material-icons left">edit</i>
                 Editar {{__('articulation-stage')}}
             </a>
         @endcan
+        @can('changeState', $articulationStage)
+        <a href="javascript:void(0)" class="collection-item"
+            onclick="articulationStage.changeStateArticulationStage('{{$articulationStage->code}}')">
+            <i class="material-icons left">autorenew</i>
+            Cambiar estado
+        </a>
+        @endcan
         @can('downloadCertificateEnd', $articulationStage)
             <a target="_blank"
-               href="{{ route('articulation-stage.download-certificate', [ 'cierre',$articulationStage]) }}"
-               class="collection-item">
+                href="{{ route('articulation-stage.download-certificate', [ 'cierre',$articulationStage]) }}"
+                class="collection-item">
                 <i class="material-icons left">cloud_download</i>
                 Descargar acta cierre
             </a>
@@ -92,11 +100,13 @@
         @endcan
         @can('delete', $articulationStage)
             <a href="javascript:void(0)" class="collection-item"
-               onclick="articulationStage.destroyArticulationStage('{{$articulationStage->id}}')">
+                onclick="articulationStage.destroyArticulationStage('{{$articulationStage->id}}')">
                 <i class="material-icons left">delete_forever</i>
                 Eliminar {{__('articulation-stage')}}
             </a>
         @endcan
+
     @endif
 </div>
+@endcanany
 

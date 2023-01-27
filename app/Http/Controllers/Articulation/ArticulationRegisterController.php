@@ -29,6 +29,11 @@ class ArticulationRegisterController extends Controller
      */
     public function create($code)
     {
+        if (request()->user()->cannot('create', Articulation::class))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $scopes = AlcanceArticulacion::orderBy('name')->pluck('name', 'id');
         $articulationStage= ArticulationStage::where('code', $code)->firstOrFail();
         $articulationTypes= ArticulationType::query()

@@ -1,3 +1,4 @@
+@canany(['showButtonAprobacion', 'requestApproval', 'showStart', 'showExecution', 'showClosing', 'changeTalents'], $articulation)
 <div class="collection with-header col s12 m4 l3">
     <h5 href="!#" class="collection-header">Opciones</h5>
     @can('showButtonAprobacion', $articulation)
@@ -57,3 +58,4 @@
         </a>
     @endcan
 </div>
+@endcanany

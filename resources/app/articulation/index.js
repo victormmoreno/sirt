@@ -492,6 +492,55 @@ const articulationStage = {
             }
         })
     },
+    changeStateArticulationStage: function(code){
+        Swal.fire({
+            title: '¿Estas seguro de cambiar el estado de esta etapa de articulación?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'si, cambiar',
+            cancelButtonText: 'No, cancelar',
+        }).then((result) => {
+            if (result.value) {
+                let token = $("meta[name='csrf-token']").attr("content");
+                $.ajax({
+                    url: `${host_url}/etapa-articulaciones/${code}/cambiar-estado`,
+                    type: 'PUT',
+                    data: {
+                        "_token": token,
+                    },
+                    success: function (data){
+                        console.log(data);
+                        if(!data.fail){
+                            Swal.fire(
+                                'Actialización exitosa!',
+                                'La etapa de articulación ha sido actualizada satisfactoriamente.',
+                                'success'
+                            );
+                            location.href = data.redirect_url;
+                        }else{
+                            Swal.fire(
+                                'Cuidado!',
+                                'La etapa de articulación no se ha eliminado, ya que continene articulaciones.',
+                                'warining'
+                            );
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        Swal.fire({
+                            title: 'Error, vuelve a intentarlo',
+                            html: "Error: " + textStatus,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok',
+                        });
+                    }
+                });
+            }
+        })
+    },
 }
 
 $(document).on('submit', 'form#interlocutor-form', function (event) {

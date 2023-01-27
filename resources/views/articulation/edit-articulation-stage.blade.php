@@ -25,7 +25,7 @@
         <div class="col s12 m12 l12">
             <div class="card mailbox-content">
                 <div class="card-content">
-                    <form method="POST" id="articulations-form"
+                    <form method="POST" id="articulation-stage-form"
                         action="{{route('articulation-stage.update', $articulationStage)}}"
                         enctype="multipart/form-data">
                         @csrf

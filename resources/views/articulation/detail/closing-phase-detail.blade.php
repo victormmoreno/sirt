@@ -1,6 +1,6 @@
 <div class="row">
     @include('articulation.options.articulation-options-menu-left')
-    <div class="col s12 m8 l9">
+    <div class="@canany(['showButtonAprobacion', 'requestApproval', 'showStart', 'showExecution', 'showClosing', 'changeTalents'], $articulation)col s12 m8 l9 @elsecanany(['create'], App\Models\Articulation::class) col s12 m8 l9 @else col s12 m12 l12  @endcanany">
         <div class="row">
             <div class="col s12 m6 l6">
                 <ul class="collection">

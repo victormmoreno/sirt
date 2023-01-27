@@ -1,11 +1,11 @@
 $( document ).ready(function() {
-    const form = $("#articulations-form");
-    const validator = $("#articulations-form").validate({
+    const form = $("#articulation-stage-form");
+    const validator = $("#articulation-stage-form").validate({
         rules: {
             name:{
                 required:true,
                 minlength: 2,
-                maxlength: 255
+                maxlength: 600
             },
             description:{
                 maxlength: 3000
@@ -113,7 +113,7 @@ $( document ).ready(function() {
         onFinished: function (event, currentIndex)
         {
             event.preventDefault();
-            const data = new FormData(document.getElementById("articulations-form"));
+            const data = new FormData(document.getElementById("articulation-stage-form"));
             const url = form.attr("action");
             $.ajax({
                 type: form.attr('method'),
@@ -142,9 +142,8 @@ $( document ).ready(function() {
                     }
                 },
                 error: function (xhr, textStatus, errorThrown) {
-                    console.log("Error: " + errorThrown);
                     Swal.fire({
-                        title: ' Registro erróneo, vuelve a intentarlo',
+                        title: ' Error, vuelve a intentarlo',
                         html:  `${xhr.status} ${errorThrown}`,
                         type: 'error',
                         showCancelButton: false,

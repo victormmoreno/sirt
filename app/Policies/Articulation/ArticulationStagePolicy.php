@@ -124,8 +124,20 @@ class ArticulationStagePolicy
     {
         return (bool) $user->hasAnyRole([User::IsArticulador()])
             && session()->has('login_role')
-            && session()->get('login_role') == User::IsArticulador();
+            && session()->get('login_role') == User::IsArticulador() &&
+            (($articulationStage->status != ArticulationStage::STATUS_CLOSE && optional($articulationStage->end_date)->format('Y') > 2022 || is_null($articulationStage->end_date)));
     }
+
+
+    public function changeState(User $user, ArticulationStage $articulationStage): bool
+    {
+        return (bool) session()->has('login_role')
+            && session()->get('login_role') == User::IsAdministrador() &&
+            (($articulationStage->status != ArticulationStage::STATUS_CLOSE && optional($articulationStage->end_date)->format('Y') > 2022 || is_null($articulationStage->end_date)));
+    }
+
+
+
 
     /**
      * Determine if the given articulations can be show by the user.
@@ -140,8 +152,8 @@ class ArticulationStagePolicy
             session()->has('login_role')
             && (
                 session()->get('login_role') == User::IsActivador() ||
-                (session()->get('login_role') == User::IsDinamizador() && auth()->user()->dinamizador->nodo->id == $articulationStage->node_id) ||
-                (session()->get('login_role') == User::IsArticulador() && auth()->user()->articulador->nodo->id == $articulationStage->node_id) ||
+                (session()->get('login_role') == User::IsDinamizador() && isset($user->dinamizador->nodo_id) && auth()->user()->dinamizador->nodo_id == $articulationStage->node_id) ||
+                (session()->get('login_role') == User::IsArticulador() && isset($user->articulador->nodo->id) && auth()->user()->articulador->nodo->id == $articulationStage->node_id) ||
                 (
                     session()->get('login_role') == User::IsTalento()
                     &&
@@ -168,9 +180,9 @@ class ArticulationStagePolicy
     public function update(User $user, ArticulationStage $articulationStage)
     {
         return (bool) $user->hasAnyRole([User::IsArticulador()])
-            && ( (session()->has('login_role')
-            && session()->get('login_role') == User::IsArticulador()))
-            && (auth()->user()->articulador->nodo->id == $articulationStage->node_id || session()->get('login_role') == User::IsAdministrador());
+            && (session()->has('login_role') && (session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsAdministrador()))
+            && (isset($user->articulador) && $user->articulador->nodo->id == $articulationStage->node_id )
+            && ($articulationStage->status != ArticulationStage::STATUS_CLOSE && optional($articulationStage->end_date)->format('Y') > 2022 || is_null($articulationStage->end_date));
     }
 
     /**
@@ -183,10 +195,10 @@ class ArticulationStagePolicy
     public function delete(User $user, ArticulationStage $articulationStage)
     {
         return (bool) $user->hasAnyRole([User::IsArticulador()])
-                && (session()->has('login_role')
-                && session()->get('login_role') == User::IsArticulador())
-                && auth()->user()->articulador->nodo->id == $articulationStage->node_id
-                && $articulationStage->articulations->count() <= 0;
+                && (session()->has('login_role') && session()->get('login_role') == User::IsArticulador())
+                && (isset($user->articulador) && $user->articulador->nodo_id == $articulationStage->node_id)
+                && $articulationStage->articulations->count() == 0
+                && ($articulationStage->status != ArticulationStage::STATUS_CLOSE && optional($articulationStage->end_date)->format('Y') > 2022 || is_null($articulationStage->end_date));
     }
 
     /**
@@ -196,20 +208,20 @@ class ArticulationStagePolicy
      * @param  \App\Models\ArticulationStage  $articulationStage
      * @return bool
      */
-    public function changeTalent(User $user, ArticulationStage $articulationStage):bool
+    public function changeTalent(User $user, ArticulationStage $articulationStage)
     {
-        return (bool) $user->hasAnyRole([
-                User::IsActivador(),
-                User::IsDinamizador(),
-                User::IsArticulador()
-            ])
-            && (session()->has('login_role')
-                && (
-                    session()->get('login_role') == User::IsActivador()
-                    || session()->get('login_role') == User::IsDinamizador()
-                    || session()->get('login_role') == User::IsArticulador()
-                )
-            );
+
+        return (bool) $user->hasAnyRole([User::IsDinamizador(), User::IsArticulador()])
+            && (
+                    session()->has('login_role') &&
+                    (
+                        (session()->get('login_role') == User::IsDinamizador() && isset($user->dinamizador) && $user->dinamizador->nodo_id == $articulationStage->node_id)
+                        || (session()->get('login_role') == User::IsArticulador() && isset($user->articulador) && $user->articulador->nodo_id == $articulationStage->node_id)
+                    ) &&
+                    ($articulationStage->status != ArticulationStage::STATUS_CLOSE && optional($articulationStage->end_date)->format('Y') > 2022 || is_null($articulationStage->end_date))
+                );
+
+
     }
     /**
      * Determine if the given articulations can be updated by the user..
@@ -221,10 +233,10 @@ class ArticulationStagePolicy
     public function downloadCertificateEnd(User $user, ArticulationStage $articulationStage)
     {
         return (bool) $user->hasAnyRole([User::IsArticulador()])
-            && ( (session()->has('login_role')
-                && session()->get('login_role') == User::IsArticulador()))
+            && (session()->has('login_role') && session()->get('login_role') == User::IsArticulador())
             && (auth()->user()->articulador->nodo_id == $articulationStage->node_id)
-            && $articulationStage->articulations()->count() > 0;
+            && ($articulationStage->has('articulations') && $articulationStage->articulations->count() > 0)
+            && ($articulationStage->status != ArticulationStage::STATUS_CLOSE && optional($articulationStage->end_date)->format('Y') > 2022 || is_null($articulationStage->end_date));
     }
 
     /**
@@ -237,9 +249,9 @@ class ArticulationStagePolicy
     public function downloadCertificateStart(User $user, ArticulationStage $articulationStage)
     {
         return (bool) $user->hasAnyRole([User::IsArticulador()])
-            && ( (session()->has('login_role')
-                && session()->get('login_role') == User::IsArticulador()))
-            && (auth()->user()->articulador->nodo_id == $articulationStage->node_id);
+            && ((session()->has('login_role') && session()->get('login_role') == User::IsArticulador()))
+            && ($user->articulador->nodo_id == $articulationStage->node_id)
+            && ($articulationStage->status != ArticulationStage::STATUS_CLOSE && optional($articulationStage->end_date)->format('Y') > 2022 || is_null($articulationStage->end_date));
     }
     /**
      * Determine if the given articulations can be Upload Evidences by the user..
@@ -252,9 +264,10 @@ class ArticulationStagePolicy
     {
         return (bool) $user->hasAnyRole([User::IsArticulador()])
             && ( (session()->has('login_role')
-                && session()->get('login_role') == User::IsArticulador()))
-            && (auth()->user()->articulador->nodo->id == $articulationStage->node_id || session()->get('login_role') == User::IsAdministrador())
-            && ($articulationStage->articulations()->count() == 0 || $articulationStage->status == ArticulationStage::IsAbierto());
+                && (session()->get('login_role') == User::IsArticulador()|| session()->get('login_role') == User::IsAdministrador())))
+            && (auth()->user()->articulador->nodo->id == $articulationStage->node_id)
+            && ($articulationStage->articulations()->count() == 0 || $articulationStage->status == ArticulationStage::IsAbierto())
+            && ($articulationStage->status != ArticulationStage::STATUS_CLOSE && optional($articulationStage->end_date)->format('Y') > 2022 || is_null($articulationStage->end_date));
     }
 
     /**
@@ -263,13 +276,12 @@ class ArticulationStagePolicy
      * @param \App\User $user
      * @param \App\Models\Proyecto $ult_notificacion
      * @return bool
-     * @author dum
      **/
     public function showButtonAprobacion(User $user, ArticulationStage $articulationStage)
     {
-        //$ult_notificacion = $articulationStage->notifications()->where('estado', ControlNotificaciones::IsPendiente())->get()->last();
         $ult_notificacion = $articulationStage->notifications()->get()->last();
-        if ($ult_notificacion != null) {
+        //$ult_notificacion = $articulationStage->notifications()->latest('created_at')->first();
+        if ($ult_notificacion != null && (isset($articulationStage->interlocutor_talent_id) && $articulationStage->interlocutor_talent_id == $user->id || ($user->IsDinamizador()))) {
             if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsDinamizador() || session()->get('login_role') == $user->IsTalento()) {
                 if ($ult_notificacion->estado == $ult_notificacion->IsPendiente()) {
                     if (session()->get('login_role') == $user->IsAdministrador() && $ult_notificacion->estado == ControlNotificaciones::IsPendiente()) {

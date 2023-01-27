@@ -57,8 +57,8 @@ $( document ).ready(function() {
             }
         },
         messages:{
-            articulation_type:{
-                    required:"Por favor selecciona el tipo de subarticulación",
+            articulation_subtype:{
+                required:"Por favor selecciona el tipo de subarticulación",
             },
             articulation_type:{
                 required:"Por favor selecciona el tipo de articulación",
@@ -67,65 +67,64 @@ $( document ).ready(function() {
                 required:"Este campo es obligatorio",
                 date: "Por favor introduzca una fecha válida"
             },
-                name_articulationStage:
-                    {
-                        required:"Este campo es obligatorio",
-                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-                    },
-                description_articulationStage:
-                    {
-                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-                    },
-                scope_articulation:
-                    {
-                        required:"Por favor seleccione un alcance",
-                    },
-                name_articulation:
-                    {
-                        required:"Este campo es obligatorio",
-                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-                    },
-                scope:
-                    {
-                        required:"Este campo es obligatorio",
-                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-                    },
-                name_entity:
-                    {
-                        required:"Este campo es obligatorio",
-                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-                    },
-                name_contact:
-                    {
-                        required:"Este campo es obligatorio",
-                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-                    },
-                email:{
+            name_articulationStage:
+                {
                     required:"Este campo es obligatorio",
-                    email: "Por favor, introduce una dirección de correo electrónico válida."
+                    minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
                 },
-                call_name:
-                    {
-                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-                    },
-                expected_date:{
+            description_articulationStage:
+                {
+                    minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                },
+            scope_articulation:
+                {
+                    required:"Por favor seleccione un alcance",
+                },
+            name_articulation:
+                {
                     required:"Este campo es obligatorio",
-                    date: "Por favor introduzca una fecha válida"
+                    minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
                 },
-                objective:{
+            scope:
+                {
+                    required:"Este campo es obligatorio",
+                    minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                },
+            name_entity:
+                {
                     required:"Este campo es obligatorio",
                     maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
                 },
-                talents:
-                    {
-                        required:"Por favor agrega por lo menos un talento participante",
-                    }
+            name_contact:
+                {
+                    required:"Este campo es obligatorio",
+                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                },
+            email:{
+                required:"Este campo es obligatorio",
+                email: "Por favor, introduce una dirección de correo electrónico válida."
             },
+            call_name:
+                {
+                    minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                },
+            expected_date:{
+                required:"Este campo es obligatorio",
+                date: "Por favor introduzca una fecha válida"
+            },
+            objective:{
+                required:"Este campo es obligatorio",
+                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+            },
+            talents:{
+                required:"Por favor agrega por lo menos un talento participante",
+            }
+        },
         errorPlacement: function(error, element)
         {
             if ( element.is(":radio") )

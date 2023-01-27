@@ -1292,6 +1292,55 @@ const articulationStage = {
             }
         })
     },
+    changeStateArticulationStage: function(code){
+        Swal.fire({
+            title: '¿Estas seguro de cambiar el estado de esta etapa de articulación?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'si, cambiar',
+            cancelButtonText: 'No, cancelar',
+        }).then((result) => {
+            if (result.value) {
+                let token = $("meta[name='csrf-token']").attr("content");
+                $.ajax({
+                    url: `${host_url}/etapa-articulaciones/${code}/cambiar-estado`,
+                    type: 'PUT',
+                    data: {
+                        "_token": token,
+                    },
+                    success: function (data){
+                        console.log(data);
+                        if(!data.fail){
+                            Swal.fire(
+                                'Actialización exitosa!',
+                                'La etapa de articulación ha sido actualizada satisfactoriamente.',
+                                'success'
+                            );
+                            location.href = data.redirect_url;
+                        }else{
+                            Swal.fire(
+                                'Cuidado!',
+                                'La etapa de articulación no se ha eliminado, ya que continene articulaciones.',
+                                'warining'
+                            );
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        Swal.fire({
+                            title: 'Error, vuelve a intentarlo',
+                            html: "Error: " + textStatus,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok',
+                        });
+                    }
+                });
+            }
+        })
+    },
 }
 
 $(document).on('submit', 'form#interlocutor-form', function (event) {
@@ -1488,13 +1537,13 @@ function changePreviusPhaseArticulation(e) {
 
 
 $( document ).ready(function() {
-    const form = $("#articulations-form");
-    const validator = $("#articulations-form").validate({
+    const form = $("#articulation-stage-form");
+    const validator = $("#articulation-stage-form").validate({
         rules: {
             name:{
                 required:true,
                 minlength: 2,
-                maxlength: 255
+                maxlength: 600
             },
             description:{
                 maxlength: 3000
@@ -1602,7 +1651,7 @@ $( document ).ready(function() {
         onFinished: function (event, currentIndex)
         {
             event.preventDefault();
-            const data = new FormData(document.getElementById("articulations-form"));
+            const data = new FormData(document.getElementById("articulation-stage-form"));
             const url = form.attr("action");
             $.ajax({
                 type: form.attr('method'),
@@ -1631,9 +1680,8 @@ $( document ).ready(function() {
                     }
                 },
                 error: function (xhr, textStatus, errorThrown) {
-                    console.log("Error: " + errorThrown);
                     Swal.fire({
-                        title: ' Registro erróneo, vuelve a intentarlo',
+                        title: ' Error, vuelve a intentarlo',
                         html:  `${xhr.status} ${errorThrown}`,
                         type: 'error',
                         showCancelButton: false,
@@ -1787,8 +1835,8 @@ $( document ).ready(function() {
             }
         },
         messages:{
-            articulation_type:{
-                    required:"Por favor selecciona el tipo de subarticulación",
+            articulation_subtype:{
+                required:"Por favor selecciona el tipo de subarticulación",
             },
             articulation_type:{
                 required:"Por favor selecciona el tipo de articulación",
@@ -1797,65 +1845,64 @@ $( document ).ready(function() {
                 required:"Este campo es obligatorio",
                 date: "Por favor introduzca una fecha válida"
             },
-                name_articulationStage:
-                    {
-                        required:"Este campo es obligatorio",
-                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-                    },
-                description_articulationStage:
-                    {
-                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-                    },
-                scope_articulation:
-                    {
-                        required:"Por favor seleccione un alcance",
-                    },
-                name_articulation:
-                    {
-                        required:"Este campo es obligatorio",
-                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-                    },
-                scope:
-                    {
-                        required:"Este campo es obligatorio",
-                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-                    },
-                name_entity:
-                    {
-                        required:"Este campo es obligatorio",
-                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-                    },
-                name_contact:
-                    {
-                        required:"Este campo es obligatorio",
-                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-                    },
-                email:{
+            name_articulationStage:
+                {
                     required:"Este campo es obligatorio",
-                    email: "Por favor, introduce una dirección de correo electrónico válida."
+                    minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
                 },
-                call_name:
-                    {
-                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-                    },
-                expected_date:{
+            description_articulationStage:
+                {
+                    minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                },
+            scope_articulation:
+                {
+                    required:"Por favor seleccione un alcance",
+                },
+            name_articulation:
+                {
                     required:"Este campo es obligatorio",
-                    date: "Por favor introduzca una fecha válida"
+                    minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
                 },
-                objective:{
+            scope:
+                {
+                    required:"Este campo es obligatorio",
+                    minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                },
+            name_entity:
+                {
                     required:"Este campo es obligatorio",
                     maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
                 },
-                talents:
-                    {
-                        required:"Por favor agrega por lo menos un talento participante",
-                    }
+            name_contact:
+                {
+                    required:"Este campo es obligatorio",
+                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                },
+            email:{
+                required:"Este campo es obligatorio",
+                email: "Por favor, introduce una dirección de correo electrónico válida."
             },
+            call_name:
+                {
+                    minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                },
+            expected_date:{
+                required:"Este campo es obligatorio",
+                date: "Por favor introduzca una fecha válida"
+            },
+            objective:{
+                required:"Este campo es obligatorio",
+                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+            },
+            talents:{
+                required:"Por favor agrega por lo menos un talento participante",
+            }
+        },
         errorPlacement: function(error, element)
         {
             if ( element.is(":radio") )

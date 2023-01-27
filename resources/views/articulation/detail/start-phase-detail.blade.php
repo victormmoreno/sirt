@@ -1,6 +1,6 @@
 <div class="row">
     @include('articulation.options.articulation-options-menu-left')
-    <div class="col s12 m8 l9">
+    <div class="@canany(['showButtonAprobacion', 'requestApproval', 'showStart', 'showExecution', 'showClosing', 'changeTalents'], $articulation)col s12 m8 l9 @elsecanany(['create'], App\Models\Articulation::class) col s12 m8 l9 @else col s12 m12 l12  @endcanany">
         <div class="row">
             <div class="col s12 m4 l4">
                 <ul class="collection">
@@ -28,10 +28,9 @@
                             {!! $articulation->articulationStage->present()->articulationStageableLink() !!}
                         </p>
                     </li>
-
                     <li class="collection-item">
                         <span class="title black-text text-darken-3">
-                            Fecha Incio de la Articulación
+                            {{__('Start Date')}}
                         </span>
                         <p>
                             {{$articulation->present()->articulationStartDate()}}
@@ -45,7 +44,6 @@
                             {{$articulation->present()->articulationExpectedEndDate()}}
                         </p>
                     </li>
-
                 </ul>
             </div>
             <div class="col s12 m4 l4">
@@ -135,10 +133,11 @@
 
                             <p class="hide-on-med-and-down p-h-lg"> Miembro desde {{$user->present()->userCreatedAtFormat()}}</p>
                         </div>
+                        @can('show',$user)
                         <div class="card-action">
                             <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="{{route('usuario.usuarios.show',$user->documento)}}"><i class="material-icons left"> link</i>Ver más</a>
-
                         </div>
+                        @endcan
                     </div>
                 </div>
             @empty

@@ -23,9 +23,14 @@ class ArticulationPolicy
      */
     public function before(User $user, $ability)
     {
-        if ($user->hasAnyRole([User::IsAdministrador()])
+        if (
+            $user->hasAnyRole([User::IsAdministrador()])
             && session()->has('login_role')
-            && session()->get('login_role') == User::IsAdministrador()) {
+            && session()->get('login_role') == User::IsAdministrador()
+            && (
+                $ability != 'create'
+                )
+            ) {
             return true;
         }
     }
@@ -200,8 +205,8 @@ class ArticulationPolicy
             session()->has('login_role')
             && (
                 session()->get('login_role') == User::IsActivador() ||
-                (session()->get('login_role') == User::IsDinamizador() && auth()->user()->dinamizador->nodo->id == $articulation->articulationstage->node_id) ||
-                (session()->get('login_role') == User::IsArticulador() && auth()->user()->articulador->nodo->id == $articulation->articulationstage->node_id) ||
+                (session()->get('login_role') == User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo_id) && auth()->user()->dinamizador->nodo_id == $articulation->articulationstage->node_id) ||
+                (session()->get('login_role') == User::IsArticulador() && isset(auth()->user()->articulador->nodo) && auth()->user()->articulador->nodo->id == $articulation->articulationstage->node_id) ||
                 (
                     session()->get('login_role') == User::IsTalento()
                     &&

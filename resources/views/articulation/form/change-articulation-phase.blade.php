@@ -22,8 +22,8 @@
             @if($articulation->phase->nombre != \App\Models\Articulation::IsCierre())
                 <li aria-hidden="false" aria-disabled="false">
                     <form class="right-align"
-                          action="{{route('articulation.change-next-phase', [$articulation, $articulation->phase->nombre == \App\Models\Articulation::IsInicio() ? 'ejecucion': ($articulation->phase->nombre == \App\Models\Articulation::IsEjecucion() ? 'cierre': 'inicio')])}}"
-                          method="POST" style="width: 100%" name="frmChangeNextPhase">
+                            action="{{route('articulation.change-next-phase', [$articulation, $articulation->phase->nombre == \App\Models\Articulation::IsInicio() ? 'ejecucion': ($articulation->phase->nombre == \App\Models\Articulation::IsEjecucion() ? 'cierre': 'inicio')])}}"
+                            method="POST" style="width: 100%" name="frmChangeNextPhase">
                         {!! method_field('PUT')!!}
                         @csrf
                         <button type="submit" onclick="changeNextPhaseArticulation(event)" role="menuitem"
