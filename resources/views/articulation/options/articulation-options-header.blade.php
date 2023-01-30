@@ -17,7 +17,7 @@
         </div>
     </div>
     <div class="right mailbox-buttons">
-            @can('create', App\Models\Articulation::class)
+            @can('changePhase', $articulation)
                 @include('articulation.form.change-articulation-phase')
             @endcan
     </div>

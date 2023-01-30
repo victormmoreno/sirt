@@ -4,7 +4,6 @@
     @can('showButtonAprobacion', $articulation)
         @include('articulation.form.approval-articulation-form')
     @endcan
-    @if($articulation->phase_id == 4)
     @can('requestApproval', $articulation)
             <a href="{{route('articulation.request-approval', $articulation)}}"
                 class="collection-item yellow lighten-3">
@@ -22,8 +21,6 @@
                 @endif
             </a>
     @endcan
-    @endif
-    @if($articulation->phase_id == 1)
     @can('showStart', $articulation)
         <a href="{{route('articulations.show.phase', [$articulation, 'inicio'])}}"
             class="collection-item">
@@ -31,8 +28,6 @@
             Editar fase de inicio
         </a>
     @endcan
-    @endif
-    @if($articulation->phase_id == 3)
     @can('showExecution', $articulation)
         <a href="{{route('articulations.show.phase', [$articulation, 'ejecucion'])}}"
             class="collection-item">
@@ -40,8 +35,6 @@
             Editar fase de ejecución
         </a>
     @endcan
-    @endif
-    @if($articulation->phase_id == 4)
     @can('showClosing', $articulation)
         <a href="{{route('articulations.show.phase', [$articulation, 'cierre'])}}"
             class="collection-item">
@@ -49,7 +42,6 @@
             Editar fase de cierre
         </a>
     @endcan
-    @endif
     @can('changeTalents', $articulation)
         <a href="{{ route('articulations.changetalents', $articulation) }}"
             class="collection-item">

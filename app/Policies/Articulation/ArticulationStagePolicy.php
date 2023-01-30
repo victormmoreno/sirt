@@ -152,8 +152,8 @@ class ArticulationStagePolicy
             session()->has('login_role')
             && (
                 session()->get('login_role') == User::IsActivador() ||
-                (session()->get('login_role') == User::IsDinamizador() && isset($user->dinamizador->nodo_id) && auth()->user()->dinamizador->nodo_id == $articulationStage->node_id) ||
-                (session()->get('login_role') == User::IsArticulador() && isset($user->articulador->nodo->id) && auth()->user()->articulador->nodo->id == $articulationStage->node_id) ||
+                (session()->get('login_role') == User::IsDinamizador() && isset($user->dinamizador->nodo_id) && $user->dinamizador->nodo_id == $articulationStage->node_id) ||
+                (session()->get('login_role') == User::IsArticulador() && isset($user->articulador->nodo->id) && $user->articulador->nodo->id == $articulationStage->node_id) ||
                 (
                     session()->get('login_role') == User::IsTalento()
                     &&
@@ -234,7 +234,7 @@ class ArticulationStagePolicy
     {
         return (bool) $user->hasAnyRole([User::IsArticulador()])
             && (session()->has('login_role') && session()->get('login_role') == User::IsArticulador())
-            && (auth()->user()->articulador->nodo_id == $articulationStage->node_id)
+            && ($user->articulador->nodo_id == $articulationStage->node_id)
             && ($articulationStage->has('articulations') && $articulationStage->articulations->count() > 0)
             && ($articulationStage->status != ArticulationStage::STATUS_CLOSE && optional($articulationStage->end_date)->format('Y') > 2022 || is_null($articulationStage->end_date));
     }
@@ -265,7 +265,7 @@ class ArticulationStagePolicy
         return (bool) $user->hasAnyRole([User::IsArticulador()])
             && ( (session()->has('login_role')
                 && (session()->get('login_role') == User::IsArticulador()|| session()->get('login_role') == User::IsAdministrador())))
-            && (auth()->user()->articulador->nodo->id == $articulationStage->node_id)
+            && ($user->articulador->nodo_id == $articulationStage->node_id)
             && ($articulationStage->articulations()->count() == 0 || $articulationStage->status == ArticulationStage::IsAbierto())
             && ($articulationStage->status != ArticulationStage::STATUS_CLOSE && optional($articulationStage->end_date)->format('Y') > 2022 || is_null($articulationStage->end_date));
     }
@@ -281,7 +281,7 @@ class ArticulationStagePolicy
     {
         $ult_notificacion = $articulationStage->notifications()->get()->last();
         //$ult_notificacion = $articulationStage->notifications()->latest('created_at')->first();
-        if ($ult_notificacion != null && (isset($articulationStage->interlocutor_talent_id) && $articulationStage->interlocutor_talent_id == $user->id || ($user->IsDinamizador()))) {
+        if ($ult_notificacion != null && (isset($articulationStage->interlocutor_talent_id) && $articulationStage->interlocutor_talent_id == $user->id || ($user->IsDinamizador() && isset($user->dinamizador) && $user->dinamizador->nodo_id == $articulationStage->node_id))) {
             if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsDinamizador() || session()->get('login_role') == $user->IsTalento()) {
                 if ($ult_notificacion->estado == $ult_notificacion->IsPendiente()) {
                     if (session()->get('login_role') == $user->IsAdministrador() && $ult_notificacion->estado == ControlNotificaciones::IsPendiente()) {

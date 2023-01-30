@@ -27,7 +27,7 @@ class ArticulationRequest extends FormRequest
         return [
             'articulation_type' => 'required',
             'articulation_subtype' => 'required',
-            'name_articulation' => 'required|min:1|max:100',
+            'name_articulation' => 'required|min:1|max:600',
             'description_articulation'  => 'max:3000',
             'talents'  => 'required'
         ];

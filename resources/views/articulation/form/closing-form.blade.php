@@ -86,7 +86,7 @@
                     <p class="p-v-xs">
                         <input type="checkbox"  {{ isset($articulation) && $articulation->non_approval_document == 1 ? 'checked' : '' }}
                         id="non_approval_document" name="non_approval_document" value="0">
-                        <label for="no_approval_document">
+                        <label for="non_approval_document">
                             PDF de no aprobación
                         </label>
                         <br>

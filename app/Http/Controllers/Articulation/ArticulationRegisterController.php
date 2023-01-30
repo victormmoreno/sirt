@@ -52,6 +52,11 @@ class ArticulationRegisterController extends Controller
     public function store(Request $request, string $code)
     {
         $articulationStage = ArticulationStage::where('code', $code)->firstOrFail();
+        if (request()->user()->cannot('create', Articulation::class))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $req = new ArticulationRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
@@ -62,7 +67,6 @@ class ArticulationRegisterController extends Controller
                 ]
             ]);
         } else {
-
             $response = $this->articulationRespository->store($request, $articulationStage);
             if($response["isCompleted"]){
                 return response()->json([
@@ -91,6 +95,11 @@ class ArticulationRegisterController extends Controller
     public function update(Request $request, $code)
     {
         $articulation = Articulation::query()->where('code', $code)->firstOrFail();
+        if (request()->user()->cannot('showStart', $articulation))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $req = new ArticulationRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
@@ -121,5 +130,4 @@ class ArticulationRegisterController extends Controller
             }
         }
     }
-
 }

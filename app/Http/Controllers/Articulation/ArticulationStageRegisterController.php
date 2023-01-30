@@ -39,7 +39,6 @@ class ArticulationStageRegisterController extends Controller
             $nodos = collect($nodos)->sortBy('entidad.nombre')->pluck('entidad.nombre', 'id');
         }
         return view('articulation.create-articulation-stage', compact('nodos'));
-
     }
 
     /**

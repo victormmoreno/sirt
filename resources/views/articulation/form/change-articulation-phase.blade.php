@@ -1,4 +1,4 @@
-@if($articulation->phase->nombre != \App\Models\Articulation::IsFinalizado())
+
 <div class="wizard clearfix">
     <div class="actions clearfix right-align">
         <ul role="menu" aria-label="Paginación">
@@ -39,6 +39,5 @@
         </ul>
     </div>
 </div>
-@endif
 
 

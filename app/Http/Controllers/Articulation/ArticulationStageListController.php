@@ -49,31 +49,31 @@ class ArticulationStageListController extends Controller
      */
     public function datatableFiltros(Request $request)
     {
-        if (request()->ajax() && request()->user()->can('index', ArticulationStage::class)) {
-            $talent = $this->checkRoleAuth($request)['talent'];
-            $node = $this->checkRoleAuth($request)['node'];
-            $articulationStages = [];
-            if (isset($request->filter_status_articulationStage) || isset($request->filter_year_articulationStage)) {
-                $articulationStages = $this->articulationStageRepository->getListArticulacionStagesWithArticulations()
-                ->select(
-                    'articulation_stages.*', 'articulations.code as articulation_code',
-                    'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
-                    'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
-                    'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id'
-                )
-                ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', if(articulationables.articulationable_type = 'App\\\Models\\\Sede', 'Empresa', if(articulationables.articulationable_type = 'App\\\Models\\\Idea', 'Idea', 'No registra'))) as articulation_state_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by, concat(empresas.nit, ' - ', empresas.nombre, ' - ', sedes.nombre_sede) as sede, concat(ideas.codigo_idea, ' - ', ideas.nombre_proyecto) as idea")
-                    ->node($node)
-                    ->status($request->filter_status_articulationStage)
-                    ->year($request->filter_year_articulationStage)
-                    ->interlocutorTalent($talent)
-                    ->groupBy('articulation_code')
-                    ->orderBy('articulation_stages.updated_at', 'desc')
-                    ->get();
-            }
-            return $this->datatablearticulationStages($articulationStages);
+        if (request()->ajax() && request()->user()->cannot('index', ArticulationStage::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return $this->datatablearticulationStages([]);
         }
-        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
-        return $this->datatablearticulationStages([]);
+        $talent = $this->checkRoleAuth($request)['talent'];
+        $node = $this->checkRoleAuth($request)['node'];
+        $articulationStages = [];
+        if (isset($request->filter_status_articulationStage) || isset($request->filter_year_articulationStage)) {
+            $articulationStages = $this->articulationStageRepository->getListArticulacionStagesWithArticulations()
+            ->select(
+                'articulation_stages.*', 'articulations.code as articulation_code',
+                'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
+                'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
+                'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id'
+            )
+            ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', if(articulationables.articulationable_type = 'App\\\Models\\\Sede', 'Empresa', if(articulationables.articulationable_type = 'App\\\Models\\\Idea', 'Idea', 'No registra'))) as articulation_state_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by, concat(empresas.nit, ' - ', empresas.nombre, ' - ', sedes.nombre_sede) as sede, concat(ideas.codigo_idea, ' - ', ideas.nombre_proyecto) as idea")
+                ->node($node)
+                ->status($request->filter_status_articulationStage)
+                ->year($request->filter_year_articulationStage)
+                ->interlocutorTalent($talent)
+                ->groupBy('articulation_code')
+                ->orderBy('articulation_stages.updated_at', 'desc')
+                ->get();
+        }
+        return $this->datatablearticulationStages($articulationStages);
     }
 
     /**
@@ -82,32 +82,33 @@ class ArticulationStageListController extends Controller
      */
     public function export(Request $request, $extension = 'xlsx')
     {
-        if (request()->user()->can('downloadReports', ArticulationStage::class)) {
-            $talent = $this->checkRoleAuth($request)['talent'];
-            $node = $this->checkRoleAuth($request)['node'];
-            $articulationStages = [];
-            if (isset($request->filter_status_articulationStage)) {
-                $articulationStages = $this->articulationStageRepository->getListArticulacionStagesWithArticulations()
-                ->select(
-                    'articulation_stages.*', 'articulations.code as articulation_code',
-                    'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
-                    'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
-                    'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id', 'interlocutor.documento', 'interlocutor.nombres',
-                    'interlocutor.apellidos', 'interlocutor.email', 'articulation_subtypes.name as articulation_subtype', 'articulation_types.name as articulation_type', 'articulation_scopes.name as scope'
-                )
-                ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_state_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by, GROUP_CONCAT(DISTINCT CONCAT(participants.documento, ' - ', participants.nombres, ' ', participants.apellidos)  SEPARATOR ';') as participants")
-                ->node($node)
-                ->status($request->filter_status_articulationStage)
-                ->year($request->filter_year_articulationStage)
-                ->interlocutorTalent($talent)
-                ->groupBy('articulation_code')
-                ->orderBy('articulation_stages.updated_at', 'desc')
-                ->get();
-            }
-            return (new articulationStageExport($articulationStages))->download(__('articulation-stage') .' - '. config('app.name') . ".{$extension}");
+        if (request()->user()->cannot('downloadReports', ArticulationStage::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
         }
-        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
-        return redirect()->route('home');
+        $talent = $this->checkRoleAuth($request)['talent'];
+        $node = $this->checkRoleAuth($request)['node'];
+        $articulationStages = [];
+        if (isset($request->filter_status_articulationStage)) {
+            $articulationStages = $this->articulationStageRepository->getListArticulacionStagesWithArticulations()
+            ->select(
+                'articulation_stages.*', 'articulations.code as articulation_code',
+                'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
+                'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
+                'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id', 'interlocutor.documento', 'interlocutor.nombres',
+                'interlocutor.apellidos', 'interlocutor.email', 'articulation_subtypes.name as articulation_subtype', 'articulation_types.name as articulation_type', 'articulation_scopes.name as scope'
+            )
+            ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_state_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by, GROUP_CONCAT(DISTINCT CONCAT(participants.documento, ' - ', participants.nombres, ' ', participants.apellidos)  SEPARATOR ';') as participants")
+            ->node($node)
+            ->status($request->filter_status_articulationStage)
+            ->year($request->filter_year_articulationStage)
+            ->interlocutorTalent($talent)
+            ->groupBy('articulation_code')
+            ->orderBy('articulation_stages.updated_at', 'desc')
+            ->get();
+        }
+        return (new articulationStageExport($articulationStages))->download(__('articulation-stage') .' - '. config('app.name') . ".{$extension}");
+
     }
 
 
@@ -120,11 +121,11 @@ class ArticulationStageListController extends Controller
     public function changeInterlocutor($code)
     {
         $articulationStage = ArticulationStage::query()->where('code',$code)->firstOrFail();
-        if (request()->user()->can('changeTalent', $articulationStage)) {
-            return view('articulation.change-interlocutor', compact('articulationStage'));
+        if (request()->user()->cannot('changeTalent', $articulationStage)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
         }
-        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
-        return redirect()->route('home');
+        return view('articulation.change-interlocutor', compact('articulationStage'));
     }
 
     /**
@@ -136,40 +137,39 @@ class ArticulationStageListController extends Controller
     public function updateInterlocutor(Request $request, $code)
     {
         $articulationStage = ArticulationStage::query()->where('code',$code)->firstOrFail();
-        if (request()->user()->can('changeTalent', $articulationStage)) {
-
-            $validator = Validator::make($request->all(), [
-                'talent' => 'required'
-            ], [
-                'talent' => 'Debes seleccionar por lo menos un talento interlocutor'
-            ]);
-            if ($validator->fails()) {
-                return response()->json([
-                    'state' => 'error_form',
-                    'errors' => $validator->errors(),
-                ]);
-            } else {
-                $response = $this->articulationStageRepository->updateInterlocutor($request, $articulationStage);
-                if ($response["isCompleted"]) {
-                    return response()->json([
-                        'data' => [
-                            'state' => 'success',
-                            'url' => route('articulation-stage.show', $response['data']),
-                            'status_code' => Response::HTTP_CREATED,
-                            'errors' => [],
-                        ],
-                    ], Response::HTTP_CREATED);
-                } else {
-                    return response()->json([
-                        'data' => [
-                            'state' => 'danger',
-                            'errors' => [],
-                        ],
-                    ]);
-                }
-            }
+        if (request()->user()->cannot('changeTalent', $articulationStage)) {
             alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
+        }
+        $validator = Validator::make($request->all(), [
+            'talent' => 'required'
+        ], [
+            'talent' => 'Debes seleccionar por lo menos un talento interlocutor'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'state' => 'error_form',
+                'errors' => $validator->errors(),
+            ]);
+        } else {
+            $response = $this->articulationStageRepository->updateInterlocutor($request, $articulationStage);
+            if ($response["isCompleted"]) {
+                return response()->json([
+                    'data' => [
+                        'state' => 'success',
+                        'url' => route('articulation-stage.show', $response['data']),
+                        'status_code' => Response::HTTP_CREATED,
+                        'errors' => [],
+                    ],
+                ], Response::HTTP_CREATED);
+            } else {
+                return response()->json([
+                    'data' => [
+                        'state' => 'danger',
+                        'errors' => [],
+                    ],
+                ]);
+            }
         }
     }
 
@@ -438,7 +438,6 @@ class ArticulationStageListController extends Controller
             alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
         }
-        // $articulationStage->status != $articulationStage->status;
         $response = $this->articulationStageRepository->updateStatus($articulationStage);
         if (!$response['state']) {
             return response()->json([
@@ -456,5 +455,4 @@ class ArticulationStageListController extends Controller
             'redirect_url' => url(route('articulation-stage.show', $response['data'])),
         ]);
     }
-
 }

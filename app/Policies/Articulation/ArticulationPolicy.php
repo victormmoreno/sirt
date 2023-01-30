@@ -8,7 +8,6 @@ use App\Models\Fase;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\ArticulationStage;
-use Illuminate\Auth\Access\Response;
 
 class ArticulationPolicy
 {
@@ -28,9 +27,10 @@ class ArticulationPolicy
             && session()->has('login_role')
             && session()->get('login_role') == User::IsAdministrador()
             && (
-                $ability != 'create'
-                )
-            ) {
+                $ability != 'create' &&
+                $ability != 'showButtonAprobacion' &&
+                $ability != 'requestApproval'
+            )) {
             return true;
         }
     }
@@ -42,13 +42,7 @@ class ArticulationPolicy
      */
     public function index(User $user)
     {
-        return (bool) $user->hasAnyRole([
-                User::IsActivador(),
-                User::IsDinamizador(),
-                User::IsArticulador(),
-                User::IsTalento(),
-            ])
-            && session()->has('login_role')
+        return (bool)session()->has('login_role')
             && (
                 session()->get('login_role') == User::IsActivador() ||
                 session()->get('login_role') != User::IsDinamizador() ||
@@ -85,13 +79,7 @@ class ArticulationPolicy
      */
     public function downloadReports(User $user)
     {
-        return (bool) $user->hasAnyRole([
-                User::IsActivador(),
-                User::IsDinamizador(),
-                User::IsArticulador(),
-                User::IsTalento(),
-            ])
-            && session()->has('login_role')
+        return (bool) session()->has('login_role')
             && (
                 session()->get('login_role') == User::IsActivador() ||
                 session()->get('login_role') != User::IsDinamizador() ||
@@ -122,37 +110,37 @@ class ArticulationPolicy
      */
     public function changeTalents(User $user, Articulation $articulation):bool
     {
-        return (bool) $user->hasAnyRole([
-                User::IsActivador(),
-                User::IsArticulador()
-            ])
-            && (session()->has('login_role')
+        return (bool) (session()->has('login_role')
                 && (
-                    session()->get('login_role') == User::IsActivador()
-                    || session()->get('login_role') == User::IsArticulador()
+                    session()->get('login_role') == User::IsArticulador()
+                    && (isset($user->articulador) && isset($articulation->articulationstage)  && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
                 )
-            ) && $articulation->phase_id != Fase::IsFinalizado();
+            )
+            && $articulation->phase_id != Fase::IsFinalizado() &&
+            (isset($articulation->articulationstage) && $articulation->articulationstage->status != ArticulationStage::STATUS_CLOSE) &&
+            (($articulation->phase_id != Fase::IsFinalizado()&& optional($articulation->end_date)->format('Y') > 2022 || is_null($articulation->end_date)));
     }
 
     /**
      * Determine if the given articulations can be change talent by the user.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\$articulation  $articulation
+     * @param  \App\Models\Articulation  $articulation
      * @return bool
      */
     public function updatePhaseClosing(User $user, Articulation $articulation):bool
     {
         return (bool) $user->hasAnyRole([
-                User::IsActivador(),
                 User::IsArticulador()
             ])
             && (session()->has('login_role')
                 && (
-                    session()->get('login_role') == User::IsActivador()
-                    || session()->get('login_role') == User::IsArticulador()
+                    session()->get('login_role') == User::IsArticulador()
+                    && (isset($user->articulador) && isset($articulation->articulationstage)  && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
                 )
-            ) && $articulation->phase_id == Fase::IsCierre();
+            ) && $articulation->phase_id == Fase::IsCierre() &&
+            (isset($articulation->articulationstage) && $articulation->articulationstage->status != ArticulationStage::STATUS_CLOSE) &&
+            (($articulation->phase_id != Fase::IsFinalizado()&& optional($articulation->end_date)->format('Y') > 2022 || is_null($articulation->end_date)));
     }
 
     /**
@@ -165,11 +153,16 @@ class ArticulationPolicy
     public function showClosing(User $user, Articulation $articulation):bool
     {
         return (bool) $user->hasAnyRole([
-                User::IsArticulador()
-            ])
-            && (session()->has('login_role')
-                && session()->get('login_role') == User::IsArticulador()
-            ) && $articulation->phase_id == Fase::IsCierre();
+            User::IsArticulador()
+        ])
+        && (session()->has('login_role')
+            && (
+                session()->get('login_role') == User::IsArticulador()
+                && (isset($user->articulador) && isset($articulation->articulationstage)  && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
+            )
+        ) && $articulation->phase_id == Fase::IsCierre() &&
+        (isset($articulation->articulationstage) && $articulation->articulationstage->status != ArticulationStage::STATUS_CLOSE) &&
+        (($articulation->phase_id != Fase::IsFinalizado()&& optional($articulation->end_date)->format('Y') > 2022 || is_null($articulation->end_date)));
     }
 
     /**
@@ -181,7 +174,17 @@ class ArticulationPolicy
      */
     public function showExecution(User $user, Articulation $articulation):bool
     {
-        return $articulation->phase_id == Fase::IsEjecucion();
+        return (bool) $user->hasAnyRole([
+            User::IsArticulador()
+        ])
+        && (session()->has('login_role')
+            && (
+                session()->get('login_role') == User::IsArticulador()
+                && (isset($user->articulador) && isset($articulation->articulationstage)  && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
+            )
+        ) && $articulation->phase_id == Fase::IsEjecucion() &&
+        (isset($articulation->articulationstage) && $articulation->articulationstage->status != ArticulationStage::STATUS_CLOSE) &&
+        (($articulation->phase_id != Fase::IsFinalizado()&& optional($articulation->end_date)->format('Y') > 2022 || is_null($articulation->end_date)));
     }
     /**
      * Determine if the given articulations can be change talent by the user.
@@ -192,10 +195,18 @@ class ArticulationPolicy
      */
     public function showStart(User $user, Articulation $articulation):bool
     {
-        if($articulation->phase_id == Fase::IsInicio()){
-            return true;
-        }
-        return false;
+        return (bool) $user->hasAnyRole([
+            User::IsArticulador()
+        ])
+        && (session()->has('login_role')
+            && (
+                session()->get('login_role') == User::IsArticulador()
+                && (isset($user->articulador) && isset($articulation->articulationstage)  && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
+            )
+        ) && $articulation->phase_id == Fase::IsInicio() &&
+        (isset($articulation->articulationstage) && $articulation->articulationstage->status != ArticulationStage::STATUS_CLOSE) &&
+        (($articulation->phase_id != Fase::IsFinalizado()&& optional($articulation->end_date)->format('Y') > 2022 || is_null($articulation->end_date)));
+
 
     }
 
@@ -205,8 +216,8 @@ class ArticulationPolicy
             session()->has('login_role')
             && (
                 session()->get('login_role') == User::IsActivador() ||
-                (session()->get('login_role') == User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo_id) && auth()->user()->dinamizador->nodo_id == $articulation->articulationstage->node_id) ||
-                (session()->get('login_role') == User::IsArticulador() && isset(auth()->user()->articulador->nodo) && auth()->user()->articulador->nodo->id == $articulation->articulationstage->node_id) ||
+                (session()->get('login_role') == User::IsDinamizador() && isset($user->dinamizador) && $user->dinamizador->nodo_id == $articulation->articulationstage->node_id) ||
+                (session()->get('login_role') == User::IsArticulador() && isset($user->articulador) && $user->articulador->nodo_id == $articulation->articulationstage->node_id) ||
                 (
                     session()->get('login_role') == User::IsTalento()
                     &&
@@ -237,7 +248,6 @@ class ArticulationPolicy
                 && (session()->get('login_role') == User::IsArticulador() || session()->get('login_role') != User::IsAdministrador()))
             && auth()->user()->articulador->nodo->id == $articulationStage->node_id
             && $articulationStage->articulations->count() > 0;
-        //$articulationSubtype->articulations->IsEmpty()
     }
     /**
      * Determine if the given articulations can be change talent by the user.
@@ -249,15 +259,17 @@ class ArticulationPolicy
     public function requestApproval(User $user, Articulation $articulation):bool
     {
         return (bool) $user->hasAnyRole([
-                User::IsActivador(),
                 User::IsArticulador()
             ])
             && (session()->has('login_role')
                 && (
-                    session()->get('login_role') == User::IsActivador()
-                    || session()->get('login_role') == User::IsArticulador()
+                    session()->get('login_role') == User::IsArticulador()
+                && (isset($user->articulador) && isset($articulation->articulationstage)  && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
                 )
-            ) && $articulation->phase_id == Fase::IsCierre();
+            ) && $articulation->phase_id == Fase::IsCierre()
+            &&
+        (isset($articulation->articulationstage) && $articulation->articulationstage->status != ArticulationStage::STATUS_CLOSE) &&
+        (($articulation->phase_id != Fase::IsFinalizado()&& optional($articulation->end_date)->format('Y') > 2022 || is_null($articulation->end_date)));
     }
 
     /**
@@ -272,7 +284,7 @@ class ArticulationPolicy
     {
         //$ult_notificacion = $articulationStage->notifications()->where('estado', ControlNotificaciones::IsPendiente())->get()->last();
         $ult_notificacion = $articulation->notifications()->get()->last();
-        if ($ult_notificacion != null) {
+        if ($ult_notificacion != null && $articulation->phase_id == Fase::IsCierre()) {
             if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsDinamizador()) {
                 if ($ult_notificacion->estado == $ult_notificacion->IsPendiente()) {
                     if (session()->get('login_role') == $user->IsAdministrador() && $ult_notificacion->estado == ControlNotificaciones::IsPendiente()) {
@@ -285,5 +297,25 @@ class ArticulationPolicy
                 }
             }
         }
+    }
+
+    /**
+     * Determine if the given articulations can be change phase by the user.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Articulation  $articulation
+     * @return bool
+     */
+    public function changePhase(User $user, Articulation $articulation):bool
+    {
+        return (bool) (session()->has('login_role')
+                && (
+                    session()->get('login_role') == User::IsArticulador()
+                    && (isset($user->articulador) && isset($articulation->articulationstage)  && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
+                )
+            )
+            && $articulation->phase_id != Fase::IsFinalizado() &&
+            (isset($articulation->articulationstage) && $articulation->articulationstage->status != ArticulationStage::STATUS_CLOSE) &&
+            (($articulation->phase_id != Fase::IsFinalizado()&& optional($articulation->end_date)->format('Y') > 2022 || is_null($articulation->end_date)));
     }
 }

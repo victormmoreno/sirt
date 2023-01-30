@@ -127,6 +127,9 @@ class ArticulationRepository
                 'articulation_subtype_id' => $request->articulation_subtype,
                 'scope_id' => $request->scope_articulation
             ]);
+            if ($request->filled('talents')) {
+                $articulation->users()->sync($request->talents);
+            }
             return [
                 'data' => $articulation,
                 'message' => '',
@@ -351,7 +354,7 @@ class ArticulationRepository
      * @param $request
      * @param $id Id
      */
-    public function manageEndorsement($request, $id, string $phase)
+    public function manageEndorsement($request, $articulation, string $phase)
     {
         DB::beginTransaction();
         try {
@@ -359,7 +362,6 @@ class ArticulationRepository
             $movimiento = null;
             $mensaje = null;
             $title = null;
-            $articulation = Articulation::findOrFail($id);
             /*$asesores = User::InfoUserDatatable()
                 ->Join('user_nodo', 'user_nodo.user_id', '=', 'users.id')
                 ->role(User::IsArticulador())
