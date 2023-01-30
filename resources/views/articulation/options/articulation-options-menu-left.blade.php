@@ -49,5 +49,12 @@
             Cambiar participantes
         </a>
     @endcan
+    @can('delete', $articulation)
+        <a href="javascript:void(0)" class="collection-item"
+            onclick="filter_articulations.destroyArticulation('{{$articulation->id}}')">
+            <i class="material-icons left">delete_forever</i>
+            Eliminar {{__('articulation-stage')}}
+        </a>
+    @endcan
 </div>
 @endcanany

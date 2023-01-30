@@ -870,6 +870,7 @@ Route::group(
         Route::put('/articulaciones/{code}/ejecutar', 'ArticulationListController@updatePhaseExecute')->name('articulation.update.execution');
         Route::put('/articulaciones/{code}/cierre', 'ArticulationListController@updatePhaseClosing')->name('articulation.update.closing');
         Route::delete('/{id}', 'ArticulationStageListController@destroy')->name('articulation-stage.destroy');
+        Route::delete('articulaciones/{id}', 'ArticulationListController@destroy')->name('articulation.destroy');
     }
 );
 

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\Articulation\ArticulationClosingRequest;
+use Illuminate\Support\Facades\Storage;
 
 
 class ArticulationListController extends Controller
@@ -317,5 +318,41 @@ class ArticulationListController extends Controller
             Alert::error($update['title'], $update['mensaje'])->showConfirmButton('Ok', '#3085d6');
             return back();
         }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $articulationState
+     */
+    public function destroy($articulation)
+    {
+        $articulation = Articulation::findOrFail($articulation);
+        if (request()->user()->cannot('delete', $articulation)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
+        if (isset($articulation->users)) {
+            $articulation->users()->detach();
+        }
+        if (isset($articulation->archivomodel)) {
+            foreach ($articulation->archivomodel as $archive){
+                $filePath = str_replace('storage', 'public', $archive->ruta);
+                Storage::delete($filePath);
+                $archive->delete();
+            }
+        }
+
+        if (isset($articulation->notifications)) {
+            $articulation->notifications()->delete();
+        }
+        if (isset($articulation->traceability)) {
+            $articulation->traceability()->delete();
+        }
+        $articulation->delete();
+        return response()->json([
+            'fail' => false,
+            'redirect_url' => route('articulation-stage'),
+        ]);
     }
 }

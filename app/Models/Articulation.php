@@ -62,7 +62,8 @@ class Articulation extends Model
 
     public function archivomodel()
     {
-        return $this->morphOne(ArchivoModel::class, 'model');
+        // return $this->morphOne(ArchivoModel::class, 'model');
+        return $this->morphMany(ArchivoModel::class, 'model');
     }
 
 

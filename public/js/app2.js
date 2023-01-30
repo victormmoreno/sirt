@@ -1357,7 +1357,7 @@ $(document).on('submit', 'form#interlocutor-form', function (event) {
 
 
 $(document).ready(function() {
-    //var groupColumn = 0;
+
     var table = $('#articulation_data_table').DataTable({
         language: {
             "decimal": "",
@@ -1395,7 +1395,6 @@ $(document).ready(function() {
 
 function endorsementQuestionArticulationStage(e) {
     e.preventDefault();
-    //$('button[type="submit"]').attr('disabled', true);
     Swal.fire({
         title: '¿Está seguro(a) de aprobar el aval?',
         text: 'Al hacerlo estás aceptando y aprobando toda la información de esta etapa de articulación, los documento adjuntos y las asesorias recibidas.',
@@ -2294,7 +2293,6 @@ const filter_articulations = {
             dataType: 'json',
             processData: false,
             success: function (response) {
-                console.log(response.data);
                 $('button[type="submit"]').removeAttr('disabled');
                 $('.error').hide();
                 printErrorsForm(response.data);
@@ -2312,6 +2310,56 @@ const filter_articulations = {
             }
         });
     },
+    destroyArticulation: function(id){
+        Swal.fire({
+            title: '¿Estas seguro de eliminar esta  articulación?',
+            text: "Recuerde que si lo elimina no lo podrá recuperar.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'si, eliminar',
+            cancelButtonText: 'No, cancelar',
+        }).then((result) => {
+            if (result.value) {
+                let token = $("meta[name='csrf-token']").attr("content");
+                $.ajax({
+                    url: `${host_url}/etapa-articulaciones/articulaciones/${id}`,
+                    type: 'DELETE',
+                    data: {
+                        "id": id,
+                        "_token": token,
+                    },
+                    success: function (data){
+                        if(!data.fail){
+                            Swal.fire(
+                                'Eliminado!',
+                                'La articulación ha sido eliminado satisfactoriamente.',
+                                'success'
+                            );
+                            location.href = data.redirect_url;
+                        }else{
+                            Swal.fire(
+                                'Error!',
+                                'La etapa de articulación no se ha eliminado.',
+                                'warining'
+                            );
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        Swal.fire({
+                            title: 'Error, vuelve a intentarlo',
+                            html: "Error: " + textStatus,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok',
+                        });
+                    }
+                });
+            }
+        })
+    }
 }
 
 $(document).on('submit', 'form#talents-form', function (event) {
@@ -8609,7 +8657,6 @@ $(document).ready(function() {
 
 var usoinfraestructuraIndex = {
     fillDatatatablesUsosInfraestructura: function(filter_nodo, filter_module, filter_year){
-        //console.log(filter_nodo , filter_year);
         var datatable = $('#usoinfraestructa_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"

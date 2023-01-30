@@ -23,7 +23,6 @@ $(document).ready(function() {
 
 var usoinfraestructuraIndex = {
     fillDatatatablesUsosInfraestructura: function(filter_nodo, filter_module, filter_year){
-        //console.log(filter_nodo , filter_year);
         var datatable = $('#usoinfraestructa_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"

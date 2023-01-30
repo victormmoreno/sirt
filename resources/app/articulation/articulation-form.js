@@ -516,7 +516,6 @@ const filter_articulations = {
             dataType: 'json',
             processData: false,
             success: function (response) {
-                console.log(response.data);
                 $('button[type="submit"]').removeAttr('disabled');
                 $('.error').hide();
                 printErrorsForm(response.data);
@@ -534,6 +533,56 @@ const filter_articulations = {
             }
         });
     },
+    destroyArticulation: function(id){
+        Swal.fire({
+            title: '¿Estas seguro de eliminar esta  articulación?',
+            text: "Recuerde que si lo elimina no lo podrá recuperar.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'si, eliminar',
+            cancelButtonText: 'No, cancelar',
+        }).then((result) => {
+            if (result.value) {
+                let token = $("meta[name='csrf-token']").attr("content");
+                $.ajax({
+                    url: `${host_url}/etapa-articulaciones/articulaciones/${id}`,
+                    type: 'DELETE',
+                    data: {
+                        "id": id,
+                        "_token": token,
+                    },
+                    success: function (data){
+                        if(!data.fail){
+                            Swal.fire(
+                                'Eliminado!',
+                                'La articulación ha sido eliminado satisfactoriamente.',
+                                'success'
+                            );
+                            location.href = data.redirect_url;
+                        }else{
+                            Swal.fire(
+                                'Error!',
+                                'La etapa de articulación no se ha eliminado.',
+                                'warining'
+                            );
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        Swal.fire({
+                            title: 'Error, vuelve a intentarlo',
+                            html: "Error: " + textStatus,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok',
+                        });
+                    }
+                });
+            }
+        })
+    }
 }
 
 $(document).on('submit', 'form#talents-form', function (event) {

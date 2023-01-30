@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    //var groupColumn = 0;
+
     var table = $('#articulation_data_table').DataTable({
         language: {
             "decimal": "",
@@ -37,7 +37,6 @@ $(document).ready(function() {
 
 function endorsementQuestionArticulationStage(e) {
     e.preventDefault();
-    //$('button[type="submit"]').attr('disabled', true);
     Swal.fire({
         title: '¿Está seguro(a) de aprobar el aval?',
         text: 'Al hacerlo estás aceptando y aprobando toda la información de esta etapa de articulación, los documento adjuntos y las asesorias recibidas.',
