@@ -50,7 +50,7 @@ class User extends Authenticatable implements JWTSubject
     const IS_TALENTO       = "Talento";
     const IS_INGRESO       = "Ingreso";
     const IS_PROVEEDOR     = "Proveedor";
-    const IS_DESARROLLADOR     = "Desarrollador";
+    const IS_DESARROLLADOR  = "Desarrollador";
     const IS_ARTICULADOR     = "Articulador";
     const IS_APOYO_TECNICO     = "Apoyo Técnico";
 
@@ -692,6 +692,27 @@ class User extends Authenticatable implements JWTSubject
     {
         return (bool) $this->documento == \Auth::user()->documento;
     }
+
+    public function getNodoUser()
+    {
+        if (session()->get('login_role') == $this->IsDinamizador()) {
+            return $this->dinamizador->nodo_id;
+        }
+        if (session()->get('login_role') == $this->IsInfocenter()) {
+            return $this->infocenter->nodo_id;
+        }
+        if (session()->get('login_role') == $this->IsExperto()) {
+            return $this->gestor->nodo_id;
+        }
+        if (session()->get('login_role') == $this->IsArticulador()) {
+            return $this->articulador->nodo_id;
+        }
+        if (session()->get('login_role') == $this->IsApoyoTecnico()) {
+            return $this->apoyotecnico->nodo_id;
+        }
+        return null;
+    }
+
 
     public static function enableTalentsArticulacion($articulacion)
     {

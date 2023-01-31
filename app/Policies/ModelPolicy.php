@@ -26,12 +26,10 @@ class ModelPolicy
      * Determina si el usuario puede hacer registro de metas
      *
      * @param App\User $user
-    //  * @return bool
-     * @author dum
      **/
     public function index_indicadores(User $user)
     {
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsActivador(), $user->IsAdministrador(), $user->IsDinamizador(), $user->IsInfocenter(), $user->IsExperto()]);
+        return Str::contains(session()->get('login_role'), [$user->IsAdministrador(),$user->IsActivador(), $user->IsDinamizador(), $user->IsInfocenter(), $user->IsExperto(),$user->IsArticulador()]);
     }
 
     public function showIndicadoresProyectoOptions(User $user)

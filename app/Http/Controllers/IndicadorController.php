@@ -32,15 +32,15 @@ class IndicadorController extends Controller
         $year_now = Carbon::now()->format('Y');
 
         if(request()->user()->cannot('index_indicadores', \Illuminate\Database\Eloquent\Model::class)) {
-            alert('No autorizado', 'No puedes acceder a los indicadores', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
         }
         if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsActivador()) {
             $nodos_temp = Nodo::SelectNodo()->get()->toArray();
             foreach($nodos_temp as $nodo) {
                 $nodos[] = $nodo['id'];
             }
-            } else {
+        } else {
             $nodos = [request()->user()->getNodoUser()];
         }
 
@@ -99,7 +99,6 @@ class IndicadorController extends Controller
 
     public function retornarTodasLasMetasArticulacionArray($metas, $values)
     {
-        // dd($values['finish']);
         foreach ($metas as $meta) {
             $cantidad_inicio = $values['start']->where('nodo', $meta->nodo_id)->first();
 
