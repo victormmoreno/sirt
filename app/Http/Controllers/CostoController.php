@@ -19,7 +19,7 @@ class CostoController extends Controller
             case User::IsArticulador():
                 abort('403');
                 break;
-            case User::IsGestor():
+            case User::IsExperto():
                 $projects = Proyecto::where('asesor_id', auth()->user()->gestor->id)->get()->pluck('proyecto', 'id');
                 break;
             case User::IsDinamizador():

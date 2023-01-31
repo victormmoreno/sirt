@@ -176,7 +176,7 @@ class ProfileController extends Controller
                     }
                 ])->paginate(10);
         }
-        if (\Session::get('login_role') == User::IsGestor()) {
+        if (\Session::get('login_role') == User::IsExperto()) {
 
             $actividades = $user->gestor->actividades()
                 ->with(['articulacion_proyecto.proyecto'])

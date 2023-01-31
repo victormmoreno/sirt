@@ -26,7 +26,7 @@ class GestorRepository
         return User::InfoUserDatatable()
             ->Join('gestores', 'gestores.user_id', '=', 'users.id')
             ->Join('nodos', 'nodos.id', '=', 'gestores.nodo_id')
-            ->role(User::IsGestor())
+            ->role(User::IsExperto())
             ->where('nodos.id', '=', $nodo);
     }
 
@@ -49,13 +49,13 @@ class GestorRepository
 
     /**
      * Consulta todos los datos de todos los gestor por nodo
-     * @param array $nodo 
+     * @param array $nodo
      * @return Collection
      * @author devjul
      **/
     public function getInfoGestor(array $relations)
     {
         return Gestor::with($relations);
-        
+
     }
 }

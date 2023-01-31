@@ -3,7 +3,7 @@
         <blockquote>
             <ul class="collection">
                 <li class="collection-item">
-                    @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsGestor() || session()->get('login_role') == App\User::IsApoyoTecnico()))
+                    @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto() || session()->get('login_role') == App\User::IsApoyoTecnico()))
                         <span class="title"><b>Paso 3</b></span>
                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
                         <span class="title"><b>Paso 2</b></span>
@@ -17,7 +17,7 @@
     </div>
     <div class="col s12 m12 l9">
         <fieldset>
-            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
                 <legend>Paso 3</legend>
             @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
                 <legend>Paso 2</legend>

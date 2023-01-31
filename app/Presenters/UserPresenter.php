@@ -370,7 +370,7 @@ class UserPresenter extends Presenter
             User::IsArticulador(),
             User::IsIngreso(),
             User::IsDesarrollador(),
-            User::IsGestor(),
+            User::IsExperto(),
             User::IsApoyoTecnico()
         ]) ? true : false;
     }

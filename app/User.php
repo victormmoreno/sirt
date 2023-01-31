@@ -45,6 +45,7 @@ class User extends Authenticatable implements JWTSubject
     const IS_ADMINISTRADOR = "Administrador";
     const IS_DINAMIZADOR   = "Dinamizador";
     const IS_GESTOR        = "Experto";
+    const IS_EXPERTO        = "Experto";
     const IS_INFOCENTER    = "Infocenter";
     const IS_TALENTO       = "Talento";
     const IS_INGRESO       = "Ingreso";
@@ -365,7 +366,7 @@ class User extends Authenticatable implements JWTSubject
                     $subQuery->where('id', $nodo);
                 });
             }
-            if ($role == User::IsGestor()) {
+            if ($role == User::IsExperto()) {
                 return $query->whereHas('gestor.nodo', function ($subQuery) use ($nodo) {
                     $subQuery->where('id', $nodo);
                 });
@@ -396,7 +397,7 @@ class User extends Authenticatable implements JWTSubject
             }
         }
 
-        if (session()->get('login_role') == User::IsGestor()) {
+        if (session()->get('login_role') == User::IsExperto()) {
             if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && !empty($nodo) && $nodo != null && $nodo != 'all') {
 
                 return $query->has('talento');
@@ -463,7 +464,7 @@ class User extends Authenticatable implements JWTSubject
                         ->whereIn('nodos.id', $nodos);
                 });
             }
-            if (collect($roles)->contains(User::IsGestor())) {
+            if (collect($roles)->contains(User::IsExperto())) {
                 return $query->join('gestores', function ($join) {
                     $join->on('users.id', '=', 'gestores.user_id');
                 })->join('nodos', function ($join) use ($nodos) {
@@ -526,7 +527,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function scopeYearActividad($query, $role, $year, $nodo)
     {
-        if (session()->get('login_role') != User::IsGestor()) {
+        if (session()->get('login_role') != User::IsExperto()) {
             if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && !empty($year) && $year != null && $year == 'all'  && (!empty($nodo) && $nodo != null && $nodo == 'all')) {
                 return $query->has('talento.articulacionproyecto.actividad');
             }
@@ -660,7 +661,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function isUserExperto(): bool
     {
-        return (bool) $this->hasRole(User::IsGestor()) && $this->gestor() != null;
+        return (bool) $this->hasRole(User::IsExperto()) && $this->gestor() != null;
     }
 
     public function isUserArticulador(): bool

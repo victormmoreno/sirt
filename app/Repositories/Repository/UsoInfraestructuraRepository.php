@@ -28,7 +28,7 @@ class UsoInfraestructuraRepository
         $model = null;
         $asesorable = null;
 
-        if (Session::get('login_role') == User::IsGestor() || Session::get('login_role') == User::IsTalento() || Session::get('login_role') == User::IsApoyoTecnico()) {
+        if (Session::get('login_role') == User::IsExperto() || Session::get('login_role') == User::IsTalento() || Session::get('login_role') == User::IsApoyoTecnico()) {
             $asesorable = Actividad::where('codigo_actividad', explode(" - ", $request->txtactividad)[0])
             ->first();
             $model = $asesorable->articulacion_proyecto->proyecto;
@@ -137,7 +137,7 @@ class UsoInfraestructuraRepository
             }else if($usoInfraestructura->asesorable_type == \App\Models\Idea::class){
                 $asesor = User::where('id', $value)->first();
             }
-            if(isset($asesor->gestor) && \Session::get('login_role') == User::IsGestor()){
+            if(isset($asesor->gestor) && \Session::get('login_role') == User::IsExperto()){
                 $honorarioAsesor = $asesor->gestor->honorarios;
             }else if(isset($asesor->articulador) && \Session::get('login_role') == User::IsArticulador()){
                 $honorarioAsesor = $asesor->articulador->honorarios;

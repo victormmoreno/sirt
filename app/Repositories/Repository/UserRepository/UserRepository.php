@@ -473,7 +473,7 @@ class UserRepository
 
     public function getUsersTalentosByProject($nodo = null, $user = null, $anio = null)
     {
-        if ($user != null && session()->get('login_role') == User::IsGestor()) {
+        if ($user != null && session()->get('login_role') == User::IsExperto()) {
             if ($nodo == null) {
                 return $this->getInfoUsersTalentosWithProjects($anio)
                     ->where('gestores.id', $user);
@@ -482,7 +482,7 @@ class UserRepository
             return $this->getInfoUsersTalentosWithProjects($anio)
                 ->where('nodos.id', $nodo)
                 ->where('gestores.id', $user);
-        } else if ($user == null && session()->get('login_role') == User::IsGestor()) {
+        } else if ($user == null && session()->get('login_role') == User::IsExperto()) {
             $user = auth()->user()->gestor->id;
             if ($nodo == null) {
                 $this->getInfoUsersTalentosWithProjects($anio);
@@ -783,7 +783,7 @@ class UserRepository
     private function UpdateOrCreateRoleExpert($request, User $userUpdated, array $role)
     {
         if (
-            $request->filled('txtnodogestor') && is_array($role) && collect($request->role)->contains(User::IsGestor())
+            $request->filled('txtnodogestor') && is_array($role) && collect($request->role)->contains(User::IsExperto())
         ) {
             Gestor::updateOrCreate(
                 ['user_id' => $userUpdated->id],

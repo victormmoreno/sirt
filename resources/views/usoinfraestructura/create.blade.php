@@ -76,7 +76,7 @@
                             <i class="large material-icons prefix">
                                 block
                             </i>
-                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
                             <p>
                                 Aún no tienes proyectos en fase de inicio, planeacion o en fase de ejecución o puedes que no esten aprobados.
                             </p>
@@ -352,7 +352,7 @@
                 $('#txtmaterial').append('<option value="">Seleccione el material de formación</option>');
 
                 if (response.proyecto.length != 0) {
-                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
                         let cont;
                         let a = document.getElementsByName("gestor[]");
                         let fila ="";
@@ -388,7 +388,7 @@
                     $('#txtnodo').val(response.proyecto.nodo_id);
                     $("label[for='txtlinea']").addClass('active');
                 }else{
-                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
                         let cont;
                         let a = document.getElementsByName("gestor[]");
                         let fila ="";
@@ -545,7 +545,7 @@
                     $('#txtnodo').val(response.articulacion.articulationstage.node_id);
                     $("label[for='txtlinea']").addClass('active');
                 }else{
-                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
                         let cont;
                         let a = document.getElementsByName("gestor[]");
                         let fila ="";

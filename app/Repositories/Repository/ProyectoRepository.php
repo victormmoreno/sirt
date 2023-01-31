@@ -11,8 +11,9 @@ use App\Events\Proyecto\{ProyectoWasntApproved, ProyectoWasApproved, ProyectoApp
 use App\User;
 use App\Repositories\Repository\UserRepository\DinamizadorRepository;
 use Illuminate\Support\Arr;
+use App\Repositories\Repository\Repository;
 
-class ProyectoRepository
+class ProyectoRepository extends Repository
 {
 
     private $ideaRepository;
@@ -20,17 +21,6 @@ class ProyectoRepository
     public function __construct(IdeaRepository $ideaRepository)
     {
         $this->setIdeaRepository($ideaRepository);
-    }
-
-    /**
-     * Método para traducir los meses que genera algunos querys
-     *
-     * @return void
-     * @author dum
-     */
-    private function traducirMeses()
-    {
-        DB::statement("SET lc_time_names = 'es_ES'");
     }
 
     /**
@@ -135,7 +125,7 @@ class ProyectoRepository
      **/
     private function verificarNuevoTalento($talentos_nuevos)
     {
-        for ($i=0; $i < count($talentos_nuevos); $i++) { 
+        for ($i=0; $i < count($talentos_nuevos); $i++) {
             if ($talentos_nuevos[$i]['talento_lider'] == 1) {
                 return $talentos_nuevos[$i]['talento_id'];
             }
@@ -1064,7 +1054,7 @@ class ProyectoRepository
             $movimiento = null;
             $mensaje = null;
             $title = null;
-    
+
             $proyecto = Proyecto::findOrFail($id);
             $dinamizadorRepository = new DinamizadorRepository;
             $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->nodo_id)->get();
@@ -1073,31 +1063,31 @@ class ProyectoRepository
             $talento_lider = $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first();
             $talento_lider = $talento_lider->user;
             $notificacion_act = ControlNotificaciones::find($request->control_notificacion_id);
-    
+
             if ($request->decision == 'rechazado') {
                 $title = 'Aprobación rechazada!';
                 $mensaje = 'Se le han notificado al experto los motivos por los cuales no se aprueba el cambio de fase del proyecto';
                 $comentario = $request->motivosNoAprueba;
                 $movimiento = Movimiento::IsNoAprobar();
-    
+
                 $this->crearMovimiento($proyecto, $proyecto->fase->nombre, $movimiento, $comentario);
                 // Recuperar el útlimo registro de movimientos ya que el método attach no retorna nada
                 $regMovimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
                 // Envio de un correo informando porque no se aprobó el cambio de fase
                 event(new ProyectoWasntApproved($proyecto, $regMovimiento));
-    
+
                 Notification::send($proyecto->asesor->user, new ProyectoNoAprobarFase($proyecto, $regMovimiento));
                 $notificacion_act->update(['estado' => $notificacion_act->IsRechazado()]);
-    
+
             } else {
                 $title = 'Aprobación Exitosa!';
                 $mensaje = 'Se ha aprobado la fase de ' . $proyecto->fase->nombre . ' de este proyecto';
                 $movimiento = Movimiento::IsAprobar();
-    
+
                 $this->crearMovimiento($proyecto, $proyecto->fase->nombre, $movimiento, $comentario);
                 $regMovimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
                 $notificacion_act->update(['fecha_aceptacion' => Carbon::now(), 'estado' => $notificacion_act->IsAceptado()]);
-    
+
                 event(new ProyectoWasApproved($proyecto, $regMovimiento, $destinatarios));
                 if (Session::get('login_role') == User::IsTalento()) {
                     $notificacion = $proyecto->registerNotifyProject($dinamizadores->last()->id, User::IsDinamizador());
@@ -1353,7 +1343,7 @@ class ProyectoRepository
 
     /**
      * Genera la información el talento al que se le enviarán las notificaciones de solicitud de aprobación de fase
-     * 
+     *
      * @param Proyecto $proyecto
      * @return array
      * @author dum

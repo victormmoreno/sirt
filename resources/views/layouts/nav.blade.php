@@ -234,7 +234,7 @@
                 @case(App\User::IsInfocenter())
                     @include('layouts.navrole.infocenter')
                     @break
-                @case(App\User::IsGestor())
+                @case(App\User::IsExperto())
                     @include('layouts.navrole.gestor')
                     @break
                 @case(App\User::IsTalento())

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\User;
 use App\Models\ArticulationSubtype;
 use App\Models\ArticulationType;
 use App\Models\CostoAdministrativo;
@@ -12,6 +13,8 @@ use App\Models\Idea;
 use App\Models\LineaTecnologica;
 use App\Models\Nodo;
 use App\Models\Material;
+use App\Models\ArticulationStage;
+use App\Models\Articulation;
 use App\Models\UsoInfraestructura;
 use App\Policies\Articulation\ArticulationSubtypePolicy;
 use App\Policies\CostoAdministrativo\CostoAdministrativoPolicy;
@@ -24,12 +27,11 @@ use App\Policies\User\UserPolicy;
 use App\Policies\UsoInfraestrucutura\UsoInfraestructuraPolicy;
 use App\Policies\Material\MaterialPolicy;
 use App\Policies\Idea\IdeaPolicy;
-use App\Models\ArticulationStage;
-use App\Models\Articulation;
+use App\Policies\ModelPolicy;
 use App\Policies\Articulation\ArticulationStagePolicy;
 use App\Policies\Articulation\ArticulationTypePolicy;
 use App\Policies\Articulation\ArticulationPolicy;
-use App\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -55,6 +57,7 @@ class AuthServiceProvider extends ServiceProvider
         ArticulationSubtype::class => ArticulationSubtypePolicy::class,
         Articulation::class => ArticulationPolicy::class,
         UsoInfraestructura::class  => UsoInfraestructuraPolicy::class,
+        Model::class => ModelPolicy::class,
     ];
 
     /**

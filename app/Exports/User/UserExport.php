@@ -36,7 +36,7 @@ class UserExport implements WithMultipleSheets
         $sheets = [];
         if ($this->request->filled('filter_role') && $this->request->filter_role == User::IsDinamizador()) {
             $sheets[] = new DinamizadorSheetExport($this->request, $this->query);
-        } else if ($this->request->filled('filter_role') && $this->request->filter_role == User::IsGestor()) {
+        } else if ($this->request->filled('filter_role') && $this->request->filter_role == User::IsExperto()) {
             $sheets[] = new GestorSheetExport($this->request, $this->query);
         } else if ($this->request->filled('filter_role') && $this->request->filter_role == User::IsInfocenter()) {
             $sheets[] = new InfocenterSheetExport($this->request, $this->query);

@@ -109,7 +109,7 @@
                 </div>
                 @can('create', \App\Models\UsoInfraestructura::class)
                 <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-                <a href="{{route('usoinfraestructura.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="{{session()->has('login_role') == App\User::IsGestor() ? 'Nueva Asesoria' : 'Nuevo uso de Infraestructura'}}">
+                <a href="{{route('usoinfraestructura.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="{{session()->has('login_role') == App\User::IsExperto() ? 'Nueva Asesoria' : 'Nuevo uso de Infraestructura'}}">
                         <i class="material-icons">add</i>
                     </a>
                 </div>

@@ -25,7 +25,7 @@ class EmpresaController extends Controller
 
     public function validarAccesoForms($empresa)
     {
-        if ( (!$empresa->ideaPerteneceAUsuario() && Session::get('login_role') == User::IsTalento()) || (Session::get('role_session') == User::IsGestor() || Session::get('role_session') == User::IsArticulador() || Session::get('role_session') == User::IsInfocenter() ) ) {
+        if ( (!$empresa->ideaPerteneceAUsuario() && Session::get('login_role') == User::IsTalento()) || (Session::get('role_session') == User::IsExperto() || Session::get('role_session') == User::IsArticulador() || Session::get('role_session') == User::IsInfocenter() ) ) {
             if ($empresa->user == null) {
                 alert('No tienes permisos', 'Solo el administrador del sistema tiene permisos para cambiar la información de esta empresa', 'warning')->showConfirmButton('Ok', '#3085d6');
             } else {
@@ -49,7 +49,7 @@ class EmpresaController extends Controller
             case User::IsDinamizador():
                 return view('empresa.show_no_option', ['empresa' => $empresa]);
                 break;
-            case User::IsGestor():
+            case User::IsExperto():
                 return view('empresa.show_no_option', ['empresa' => $empresa]);
                 break;
             case User::IsArticulador():

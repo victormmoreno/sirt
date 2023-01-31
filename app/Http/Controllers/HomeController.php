@@ -34,7 +34,7 @@ class HomeController extends Controller
             $dinamizadores = User::role(User::IsDinamizador());
             $admin = User::role(User::IsAdministrador());
 
-            $expertos = User::role(User::IsGestor());
+            $expertos = User::role(User::IsExperto());
 
             $talentos = User::role(User::IsTalento());
 
@@ -52,7 +52,7 @@ class HomeController extends Controller
           return view('home.home');
           break;
 
-        case User::IsGestor():
+        case User::IsExperto():
           return view('home.gestor');
           break;
 

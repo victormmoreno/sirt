@@ -17,9 +17,11 @@ use App\Models\Fase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Session;
+use App\Repositories\Repository\Repository;
 
 
-class ArticulationRepository
+
+class ArticulationRepository extends Repository
 {
     /**
      * variable to store errors
@@ -410,5 +412,32 @@ class ArticulationRepository
                 'title' => 'Aprobación errónea'
             ];
         }
+    }
+
+    /**
+     * Consulta trls esperado entre fechas
+     * @param string $field Trl que se va a consultar
+     * @param string $field_date Campo por el que se va a filtrar (fecha)
+     * @param string $year Anño de cierre de los proyectos
+     * @param array $tipos_trl Tipo de trl que se va a consultar
+     * @return Builder
+     **/
+    public function articulationsForPhase(string $field, string $field_date = null, string $year, array $phase)
+    {
+        $this->traducirMeses();
+        return Articulation::select($field)
+        ->selectRaw('count(articulations.id) AS cantidad, nodos.id AS nodo, MONTHNAME(articulations.end_date) AS mes')
+        ->join('articulation_stages', 'articulation_stages.id', '=', 'articulations.articulation_stage_id')
+        ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
+        //->join('users', 'users.id', '=', 'articulations.created_by')
+        ->join('fases', 'fases.id', '=', 'articulations.phase_id')
+        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+        ->where(function($query) use ($field_date, $year)  {
+            if(isset($field_date) && $field_date !=null) {
+                $query->whereYear($field_date, $year);
+            }
+        })
+        ->whereIn('fases.nombre', $phase)
+        ->groupBy('nodos.id');
     }
 }
