@@ -8,6 +8,7 @@ use App\Models\Proyecto;
 use App\Models\Articulation;
 use App\Models\Idea;
 use App\Presenters\UsoInfraestructuraPresenter;
+use Illuminate\Support\Facades\DB;
 
 class UsoInfraestructura extends Model
 {
@@ -42,7 +43,6 @@ class UsoInfraestructura extends Model
      * @var array
      */
     protected $casts = [
-
         'tipo_usoinfraestructura' => 'integer',
         'fecha'                   => 'date:Y-m-d',
         'descripcion'             => 'string',
@@ -198,16 +198,32 @@ class UsoInfraestructura extends Model
         if ((!empty($module) && $module != null && $module != 'all')) {
             switch ($module){
                 case class_basename(Proyecto::class):
-                    return $query->select('usoinfraestructuras.id', 'usoinfraestructuras.fecha')
-                                    ->selectRaw("faseproyecto.nombre as fase, concat(actividades.codigo_actividad, ' - ', actividades.nombre) as nombre, if(usoinfraestructuras.asesorable_type='App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as tipo_asesoria, sum(gestor_uso.asesoria_directa) as aseseria_directa, sum(gestor_uso.asesoria_indirecta) as asesoria_indirecta, GROUP_CONCAT(DISTINCT CONCAT(asesores.documento, ' - ', asesores.nombres, ' ', asesores.apellidos) SEPARATOR ';') as asesores");
+                    return $query
+                    ->select('usoinfraestructuras.id', 'usoinfraestructuras.fecha as fecha', 'entidades.nombre as nodo')
+                        ->selectRaw("faseproyecto.nombre as fase, concat(actividades.codigo_actividad, ' - ', actividades.nombre) as nombre, if(usoinfraestructuras.asesorable_type='App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as tipo_asesoria,
+                        GROUP_CONCAT(DISTINCT CONCAT(asesores.documento, ' - ', asesores.nombres, ' ', asesores.apellidos) SEPARATOR ';') as asesores,
+                        GROUP_CONCAT(DISTINCT CONCAT(talents.documento, ' - ', talents.nombres, ' ', talents.apellidos) SEPARATOR ';') as talentos,
+                        GROUP_CONCAT(DISTINCT CONCAT(equipos.referencia, ' - ', equipos.nombre) SEPARATOR ';') as equipos,
+                        GROUP_CONCAT(DISTINCT CONCAT(materiales.codigo_material, ' - ', materiales.nombre) SEPARATOR ';') as materiales,
+                        sum(gestor_uso.asesoria_directa) as aseseria_directa, sum(gestor_uso.asesoria_indirecta) as asesoria_indirecta");
                     break;
                 case class_basename(Articulation::class):
-                    return $query->select('usoinfraestructuras.id', 'usoinfraestructuras.fecha')
-                        ->selectRaw("fasearticulation.nombre as fase, concat(articulations.code, ' - ',articulations.name) as nombre, if(usoinfraestructuras.asesorable_type='App\\\Models\\\Articulation', 'Articulación', 'No registra') as tipo_asesoria, sum(gestor_uso.asesoria_directa) as aseseria_directa, sum(gestor_uso.asesoria_indirecta) as asesoria_indirecta, GROUP_CONCAT(DISTINCT CONCAT(asesores.documento, ' - ', asesores.nombres, ' ', asesores.apellidos) SEPARATOR ';') as asesores");
+                    return $query->select('usoinfraestructuras.id', 'usoinfraestructuras.fecha', 'entidades.nombre as nodo')
+                        ->selectRaw("fasearticulation.nombre as fase, concat(articulations.code, ' - ',articulations.name) as nombre, if(usoinfraestructuras.asesorable_type='App\\\Models\\\Articulation', 'Articulación', 'No registra') as tipo_asesoria,
+                        sum( gestor_uso.asesoria_directa) as aseseria_directa, sum(gestor_uso.asesoria_indirecta) as asesoria_indirecta,
+                        GROUP_CONCAT(DISTINCT CONCAT(asesores.documento, ' - ', asesores.nombres, ' ', asesores.apellidos) SEPARATOR ';') as asesores,
+                        GROUP_CONCAT(DISTINCT CONCAT(talents.documento, ' - ', talents.nombres, ' ', talents.apellidos) SEPARATOR ';') as talentos,
+                        GROUP_CONCAT(DISTINCT CONCAT(equipos.referencia, ' - ', equipos.nombre) SEPARATOR ';') as equipos,
+                        GROUP_CONCAT(DISTINCT CONCAT(materiales.codigo_material, ' - ', materiales.nombre) SEPARATOR ';') as materiales");
                     break;
                 case class_basename(Idea::class):
-                    return $query->select('usoinfraestructuras.id', 'usoinfraestructuras.fecha')
-                        ->selectRaw("estadosidea.nombre as fase, concat(ideas.codigo_idea, ' - ',ideas.nombre_proyecto) as nombre, if(usoinfraestructuras.asesorable_type='App\\\Models\\\Idea', 'Idea', 'No registra') as tipo_asesoria, sum(gestor_uso.asesoria_directa) as aseseria_directa, sum(gestor_uso.asesoria_indirecta) as asesoria_indirecta, GROUP_CONCAT(DISTINCT CONCAT(asesores.documento, ' - ', asesores.nombres, ' ', asesores.apellidos)  SEPARATOR ';') as asesores");
+                    return $query->select('usoinfraestructuras.id', 'usoinfraestructuras.fecha', 'entidades.nombre as nodo')
+                        ->selectRaw("estadosidea.nombre as fase, concat(ideas.codigo_idea, ' - ',ideas.nombre_proyecto) as nombre, if(usoinfraestructuras.asesorable_type='App\\\Models\\\Idea', 'Idea', 'No registra') as tipo_asesoria,
+                        sum(gestor_uso.asesoria_directa) as aseseria_directa, sum(gestor_uso.asesoria_indirecta) as asesoria_indirecta,
+                        GROUP_CONCAT(DISTINCT CONCAT(asesores.documento, ' - ', asesores.nombres, ' ', asesores.apellidos)  SEPARATOR ';') as asesores,
+                        GROUP_CONCAT(DISTINCT CONCAT(talents.documento, ' - ', talents.nombres, ' ', talents.apellidos) SEPARATOR ';') as talentos,
+                        GROUP_CONCAT(DISTINCT CONCAT(equipos.referencia, ' - ', equipos.nombre) SEPARATOR ';') as equipos,
+                        GROUP_CONCAT(DISTINCT CONCAT(materiales.codigo_material, ' - ', materiales.nombre) SEPARATOR ';') as materiales");
                     break;
                 default:
                     return "No registra";
@@ -250,17 +266,21 @@ class UsoInfraestructura extends Model
                 switch ($module){
                     case class_basename(Proyecto::class):
                         if((session()->has('login_role') && session()->get('login_role') == User::IsTalento())){
-                            return $query
-                            ->where('talents.id', $asesor);
+                            return $query->where('talents.id', $asesor);
                         }
-                         return $query
-                        ->where('gestor_uso.asesorable_id', $asesor);
+                        return $query->where('gestor_uso.asesorable_id', $asesor);
                         break;
                     case class_basename(Articulation::class):
-                        return $query;
+                        if((session()->has('login_role') && session()->get('login_role') == User::IsTalento())){
+                            return $query->where('talents.id', $asesor);
+                        }
+                        return $query->where('gestor_uso.asesorable_id', $asesor);
                         break;
                     case class_basename(Idea::class):
-                        return $query;
+                        if((session()->has('login_role') && session()->get('login_role') == User::IsTalento())){
+                            return $query->where('talents.id', $asesor);
+                        }
+                        return $query->where('gestor_uso.asesorable_id', $asesor);
                         break;
                     default:
                         return $query;
@@ -270,50 +290,6 @@ class UsoInfraestructura extends Model
             return $query;
         }
         return $query;
-    }
-
-    private function getLeftJoinWithModules($query){
-        return $query
-            ->leftJoin('proyectos', function ($join) {
-                $join->on('proyectos.id', '=', 'usoinfraestructuras.asesorable_id')
-                    ->where('usoinfraestructuras.asesorable_type', Proyecto::class);
-            })
-            ->leftJoin('fases as faseproyecto', function ($join) {
-                $join->on('faseproyecto.id', '=', 'proyectos.fase_id');
-            })
-            ->leftJoin('articulacion_proyecto', function ($join) {
-                $join->on('articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id');
-            })->leftJoin('actividades', function ($join)  {
-                $join->on('actividades.id', '=', 'articulacion_proyecto.actividad_id');
-            })->leftJoin('articulations', function ($join) {
-                $join->on('articulations.id', '=', 'usoinfraestructuras.asesorable_id')
-                    ->where('usoinfraestructuras.asesorable_type', Articulation::class);
-            })
-            ->leftJoin('fases as fasearticulation', function ($join) {
-                $join->on('fasearticulation.id', '=', 'articulations.phase_id');
-            })
-            ->leftJoin('articulation_stages', function ($join) {
-                $join->on('articulation_stages.id', '=', 'articulations.articulation_stage_id');
-            })->leftJoin('ideas', function ($join) {
-                    $join->on('ideas.id', '=', 'usoinfraestructuras.asesorable_id')
-                        ->where('usoinfraestructuras.asesorable_type', Idea::class);
-            })
-            ->leftJoin('estadosidea as estadosidea', function ($join) {
-                $join->on('estadosidea.id', '=', 'ideas.estadoidea_id');
-            })
-            ->join('gestor_uso', function ($join) {
-                $join->on('gestor_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id')
-                    ->where('gestor_uso.asesorable_type', User::class);
-            })
-            ->leftJoin('users as asesores', function ($join) {
-                $join->on('asesores.id', '=', 'gestor_uso.asesorable_id');
-            })->leftJoin('uso_talentos', function ($join) {
-                $join->on('uso_talentos.usoinfraestructura_id', '=', 'usoinfraestructuras.id');
-            })->leftJoin('talentos', function ($join) {
-                $join->on('talentos.id', '=', 'uso_talentos.talento_id');
-            })->leftJoin('users as talents', function ($join) {
-                $join->on('talents.id', '=', 'talentos.user_id');
-            });
     }
 
     private function getJoinWithProjects($query){
@@ -327,7 +303,7 @@ class UsoInfraestructura extends Model
                 $join->on('articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id');
             })->join('actividades', function ($join)  {
                 $join->on('actividades.id', '=', 'articulacion_proyecto.actividad_id');
-            })->join('gestor_uso', function ($join) {
+            })->leftJoin('gestor_uso', function ($join) {
                 $join->on('gestor_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id')
                     ->where('gestor_uso.asesorable_type', User::class);
             })
@@ -339,6 +315,19 @@ class UsoInfraestructura extends Model
                 $join->on('talentos.id', '=', 'uso_talentos.talento_id');
             })->leftJoin('users as talents', function ($join) {
                 $join->on('talents.id', '=', 'talentos.user_id');
+            })->join('nodos', function ($join) {
+                $join->on('nodos.id', '=', 'proyectos.nodo_id');
+            })
+            ->leftJoin('entidades', function ($join) {
+                $join->on('entidades.id', '=', 'nodos.entidad_id');
+            })->leftJoin('equipo_uso', function ($join) {
+                $join->on('equipo_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id');
+            })->leftJoin('equipos', function ($join) {
+                $join->on('equipos.id', '=', 'equipo_uso.equipo_id');
+            })->leftJoin('material_uso', function ($join) {
+                $join->on('material_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id');
+            })->leftJoin('materiales', function ($join) {
+                $join->on('materiales.id', '=', 'material_uso.material_id');
             });
     }
 
@@ -365,6 +354,18 @@ class UsoInfraestructura extends Model
                 $join->on('talentos.id', '=', 'uso_talentos.talento_id');
             })->leftJoin('users as talents', function ($join) {
                 $join->on('talents.id', '=', 'talentos.user_id');
+            })->join('nodos', function ($join) {
+                $join->on('nodos.id', '=', 'articulation_stages.node_id');
+            })->join('entidades', function ($join) {
+                $join->on('entidades.id', '=', 'nodos.entidad_id');
+            })->leftJoin('equipo_uso', function ($join) {
+                $join->on('equipo_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id');
+            })->leftJoin('equipos', function ($join) {
+                $join->on('equipos.id', '=', 'equipo_uso.equipo_id');
+            })->leftJoin('material_uso', function ($join) {
+                $join->on('material_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id');
+            })->leftJoin('materiales', function ($join) {
+                $join->on('materiales.id', '=', 'material_uso.material_id');
             });
     }
     private function getJoinWithIdeas($query){
@@ -386,6 +387,19 @@ class UsoInfraestructura extends Model
                 $join->on('talentos.id', '=', 'uso_talentos.talento_id');
             })->leftJoin('users as talents', function ($join) {
                 $join->on('talents.id', '=', 'talentos.user_id');
+            })->join('nodos', function ($join) {
+                $join->on('nodos.id', '=', 'ideas.nodo_id');
+            })
+            ->leftJoin('entidades', function ($join) {
+                $join->on('entidades.id', '=', 'nodos.entidad_id');
+            })->leftJoin('equipo_uso', function ($join) {
+                $join->on('equipo_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id');
+            })->leftJoin('equipos', function ($join) {
+                $join->on('equipos.id', '=', 'equipo_uso.equipo_id');
+            })->leftJoin('material_uso', function ($join) {
+                $join->on('material_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id');
+            })->leftJoin('materiales', function ($join) {
+                $join->on('materiales.id', '=', 'material_uso.material_id');
             });
     }
 
@@ -395,26 +409,29 @@ class UsoInfraestructura extends Model
             if((!empty($year) && $year != null && $year != 'all')){
                 switch ($module){
                     case class_basename(Proyecto::class):
-                        return $query
-                            ->whereYear('usoinfraestructuras.fecha', $year)
-                            ->orWhereYear('usoinfraestructuras.created_at', $year)
-                            ->orWhereYear('usoinfraestructuras.updated_at', $year);
+                        return $query->where(function($subquery) use($year){
+                            $subquery->whereYear('usoinfraestructuras.fecha', $year);
+                            // ->orWhereYear('usoinfraestructuras.created_at', $year)
+                            // ->orWhereYear('usoinfraestructuras.updated_at', $year);
+                        });
                             //->orWhereYear('actividades.fecha_inicio', $year)
                             //->orWhereYear('actividades.fecha_cierre', $year);
                         break;
                     case class_basename(Articulation::class):
-                        return $query
-                            ->whereYear('usoinfraestructuras.fecha', $year)
-                            ->orWhereYear('usoinfraestructuras.created_at', $year)
-                            ->orWhereYear('usoinfraestructuras.updated_at', $year);
+                        return $query->where(function($subquery) use($year){
+                            $subquery->whereYear('usoinfraestructuras.fecha', $year);
+                            // ->orWhereYear('usoinfraestructuras.created_at', $year)
+                            // ->orWhereYear('usoinfraestructuras.updated_at', $year);
+                        });
                             // ->orWhereYear('articulations.start_date', $year)
                             // ->orWhereYear('articulations.end_date', $year);
                         break;
                     case class_basename(Idea::class):
-                        return $query
-                            ->whereYear('usoinfraestructuras.fecha', $year)
-                            ->orWhereYear('usoinfraestructuras.created_at', $year)
-                            ->orWhereYear('usoinfraestructuras.updated_at', $year);
+                        return $query->where(function($subquery) use($year){
+                            $subquery->whereYear('usoinfraestructuras.fecha', $year);
+                            // ->orWhereYear('usoinfraestructuras.created_at', $year)
+                            // ->orWhereYear('usoinfraestructuras.updated_at', $year);
+                        });
                         break;
                     default:
                         return $query;
@@ -444,7 +461,6 @@ class UsoInfraestructura extends Model
                     break;
             }
         }
-        return  $this->getLeftJoinWithModules($query);
 
     }
 

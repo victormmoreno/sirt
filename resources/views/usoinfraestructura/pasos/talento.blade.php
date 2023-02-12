@@ -22,7 +22,7 @@
             @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
                 <legend>Paso 2</legend>
             @endif
-            <p class="center card-title primary-text text-darken-3">
+            <p class="center card-title primary-text">
                 <b> Talentos</b>
             </p>
             <div class="divider"></div>

@@ -5,7 +5,7 @@
             <div class="col s12 m6 l6">
                 <ul class="collection">
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             {{__('Name ArticulationStage')}}
                         </span>
                         <p>
@@ -13,7 +13,7 @@
                         </p>
                     </li>
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             Articulación
                         </span>
                         <p>
@@ -21,7 +21,7 @@
                         </p>
                     </li>
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             {{__('Project')}}
                         </span>
                         <p>
@@ -30,7 +30,7 @@
                     </li>
 
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             Fecha Incio de la Articulación
                         </span>
                         <p>
@@ -38,7 +38,7 @@
                         </p>
                     </li>
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             Fecha esperada de finalización de la Articulación
                         </span>
                         <p>
@@ -46,7 +46,7 @@
                         </p>
                     </li>
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             Alcance Articulación
                         </span>
                         <p>
@@ -54,7 +54,7 @@
                         </p>
                     </li>
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             Objetivo de la articulación
                         </span>
                         <p>
@@ -62,7 +62,7 @@
                         </p>
                     </li>
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             {{ __('Interlocutory talent') }}
                         </span>
                         <p>
@@ -75,7 +75,7 @@
             <div class="col s12 m6 l6">
                 <ul class="collection">
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             Entidad con la que se realiza la articulación
                         </span>
                         <p>
@@ -83,7 +83,7 @@
                         </p>
                     </li>
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             Nombre de contacto
                         </span>
                         <p>
@@ -91,7 +91,7 @@
                         </p>
                     </li>
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             Mail institucional de contacto de la organización
                         </span>
                         <p>
@@ -99,7 +99,7 @@
                         </p>
                     </li>
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             Tipo articulación / tipo subarticulación
                         </span>
                         <p>
@@ -107,7 +107,7 @@
                         </p>
                     </li>
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             Se realizo la postulación al convenio, convocatoria y/o instrumento
                         </span>
                         <p>
@@ -116,7 +116,7 @@
                     </li>
                     @if ($articulation->postulation == 0)
                         <li class="collection-item">
-                            <span class="title black-text text-darken-3">
+                            <span class="title black-text">
                                 PDF justificativo firmado por el Talento
                             </span>
                             <p>
@@ -124,7 +124,7 @@
                             </p>
                         </li>
                         <li class="collection-item">
-                            <span class="title black-text text-darken-3">
+                            <span class="title black-text">
                                 Justificación
                             </span>
                             <p>
@@ -133,7 +133,7 @@
                         </li>
                     @else
                         <li class="collection-item">
-                            <span class="title black-text text-darken-3">
+                            <span class="title black-text">
                                 Aprobación
                             </span>
                             <p>
@@ -142,7 +142,7 @@
                         </li>
                         @if ($articulation->approval == 1)
                             <li class="collection-item">
-                                <span class="title black-text text-darken-3">
+                                <span class="title black-text">
                                     Qué recibirá
                                 </span>
                                 <p>
@@ -150,7 +150,7 @@
                                 </p>
                             </li>
                             <li class="collection-item">
-                                <span class="title black-text text-darken-3">
+                                <span class="title black-text">
                                     Cuando
                                 </span>
                                 <p>
@@ -158,7 +158,7 @@
                                 </p>
                             </li>
                             <li class="collection-item">
-                                <span class="title black-text text-darken-3">
+                                <span class="title black-text">
                                     PDF de aprobación
                                 </span>
                                 <p>
@@ -166,7 +166,7 @@
                                 </p>
                             </li>
                             <li class="collection-item">
-                                <span class="title black-text text-darken-3">
+                                <span class="title black-text">
                                     PDF de documentos de postulación
                                 </span>
                                 <p>
@@ -175,7 +175,7 @@
                             </li>
                         @else
                             <li class="collection-item">
-                                <span class="title black-text text-darken-3">
+                                <span class="title black-text">
                                     Informe
                                 </span>
                                 <p>
@@ -183,7 +183,7 @@
                                 </p>
                             </li>
                             <li class="collection-item">
-                                <span class="title black-text text-darken-3">
+                                <span class="title black-text">
                                     PDF de no aprobación
                                 </span>
                                 <p>
@@ -191,7 +191,7 @@
                                 </p>
                             </li>
                             <li class="collection-item">
-                                <span class="title black-text text-darken-3">
+                                <span class="title black-text">
                                     PDF de documentos de postulación
                                 </span>
                                 <p>
@@ -201,7 +201,7 @@
                         @endif
                     @endif
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             Lecciones aprendidas
                         </span>
                         <p>

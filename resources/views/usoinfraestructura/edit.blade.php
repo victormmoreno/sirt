@@ -3,28 +3,22 @@
 @section('content')
     <main class="mn-inner inner-active-sidebar">
         <div class="content">
+            <div class="row no-m-t no-m-b m-r-lg m-l-lg">
+                <div class="left left-align">
+                    <h5 class="left-align primary-text">
+                        <i class="material-icons left">domain</i> Asesorías y usos
+                    </h5>
+                </div>
+                <div class="right right-align show-on-large hide-on-med-and-down">
+                    <ol class="breadcrumbs">
+                        <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
+                        <li><a href="{{route('usoinfraestructura.index')}}">Asesoría y uso</a></li>
+                        <li class="active">Editar Asesoría y uso</li>
+                    </ol>
+                </div>
+            </div>
             <div class="row no-m-t no-m-b">
                 <div class="col s12 m12 l12">
-                    <div class="row">
-                        <div class="col s12 m8 l8">
-                            <h5 class="left-align">
-                                <a class="footer-text left-align" href="{{route('usoinfraestructura.index')}}">
-                                    <i class="material-icons arrow-l">arrow_back</i>
-                                </a>Asesoría y uso
-                            </h5>
-                        </div>
-                        <div class="col s12 m4 l4 push-m2 l2">
-                            <ol class="breadcrumbs">
-                                <li>
-                                    <a href="{{route('home')}}">Inicio</a>
-                                </li>
-                                <li>
-                                    <a href="{{route('usoinfraestructura.index')}}">Asesoría y uso</a>
-                                </li>
-                                <li class="active">Editar Asesoría y uso</li>
-                            </ol>
-                        </div>
-                    </div>
                     <div class="card">
                         <div class="card-content">
                             <div class="row">
@@ -833,7 +827,7 @@
                     });
                     var a = document.getElementsByName("equipo[]");
                     let fila ="";
-                    fila = '<tr class="selected" id="filaEquipo'+cont+'"><td><input type="hidden" name="equipo[]" value="'+idequipo+'">'+nombreEquipo+'</td><td><input type="hidden" name="tiempouso[]" value="'+tiempouso+'">'+tiempouso+'</td><td><a class="waves-effect red lighten-3 btn" onclick="eliminarEquipo('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
+                    fila = '<tr class="selected" id="filaEquipo'+cont+'"><td><input type="hidden" name="equipo[]" value="'+idequipo+'">'+nombreEquipo+'</td><td><input type="hidden" name="tiempouso[]" value="'+tiempouso+'">'+tiempouso+'</td><td><a class="waves-grey bg-danger white-text btn" onclick="eliminarEquipo('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
                     cont++;
                     $('#detallesUsoInfraestructura').append(fila);
                 }else{
@@ -918,7 +912,7 @@
                     });
                     let a = document.getElementsByName("talento[]");
                     let fila ="";
-                    fila = '<tr class="selected" id="filaTalento'+cont+'"><td><input type="hidden" name="talento[]" value="'+idtalento+'">'+nombreTalento+'</td><td><a class="waves-effect red lighten-3 btn" onclick="eliminarTalento('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
+                    fila = '<tr class="selected" id="filaTalento'+cont+'"><td><input type="hidden" name="talento[]" value="'+idtalento+'">'+nombreTalento+'</td><td><a class="waves-grey bg-danger white-text btn" onclick="eliminarTalento('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
                     cont++;
                     $('#detalleTalento').append(fila);
                 }
@@ -1024,7 +1018,7 @@
                     });
                     let a = document.getElementsByName("gestor[]");
                     let fila ="";
-                    fila = '<tr class="selected" id="filaGestorAsesor'+cont+'"><td><input type="hidden" name="gestor[]" value="'+idgestor+'">'+nombreGestor+'</td><td><input type="hidden" name="asesoriadirecta[]" value="'+asesoriadirecta+'">'+asesoriadirecta+'</td><td><input type="hidden" name="asesoriaindirecta[]" value="'+asesoriaindirecta+'">'+asesoriaindirecta+'</td><td><a class="waves-effect red lighten-3 btn" onclick="eliminarGestorAsesor('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
+                    fila = '<tr class="selected" id="filaGestorAsesor'+cont+'"><td><input type="hidden" name="gestor[]" value="'+idgestor+'">'+nombreGestor+'</td><td><input type="hidden" name="asesoriadirecta[]" value="'+asesoriadirecta+'">'+asesoriadirecta+'</td><td><input type="hidden" name="asesoriaindirecta[]" value="'+asesoriaindirecta+'">'+asesoriaindirecta+'</td><td><a class="waves-grey bg-danger white-text btn" onclick="eliminarGestorAsesor('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
                     cont++;
                     $('#detallesGestoresAsesores').append(fila);
                     $("#txtasesoriadirecta").val(0);
@@ -1108,7 +1102,7 @@
                     });
                     let a = document.getElementsByName("material[]");
                     let fila ="";
-                    fila = '<tr class="selected" id="filaMaterial'+cont+'"><td><input type="hidden" name="material[]" value="'+idmaterial+'">'+nombreMaterial+'</td><td><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td><td><a class="waves-effect red lighten-3 btn" onclick="eliminarMaterial('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
+                    fila = '<tr class="selected" id="filaMaterial'+cont+'"><td><input type="hidden" name="material[]" value="'+idmaterial+'">'+nombreMaterial+'</td><td><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td><td><a class="waves-grey bg-danger white-text btn" onclick="eliminarMaterial('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
                     cont++;
                     $('#detalleMaterialUso').append(fila);
                     $("#txtcantidad").val(1);

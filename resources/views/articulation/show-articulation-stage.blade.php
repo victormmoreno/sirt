@@ -48,7 +48,7 @@
                                                     <div class="col s12 m6 l6">
                                                         <ul class="collection">
                                                             <li class="collection-item">
-                                                            <span class="title black-text text-darken-3">
+                                                            <span class="title black-text">
                                                                 {{__('Code ArticulationStage')}}
                                                             </span>
                                                                 <p>
@@ -56,7 +56,7 @@
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item">
-                                                            <span class="title black-text text-darken-3">
+                                                            <span class="title black-text">
                                                                 {{__('Name ArticulationStage')}}
                                                             </span>
                                                                 <p>
@@ -64,7 +64,7 @@
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item">
-                                                            <span class="title black-text text-darken-3">
+                                                            <span class="title black-text">
                                                                 {{ __('Start Date') }}
                                                             </span>
                                                                 <p>
@@ -72,7 +72,7 @@
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item">
-                                                            <span class="title black-text text-darken-3">
+                                                            <span class="title black-text">
                                                                 {{ __('Status') }}
                                                             </span>
                                                                 <p>
@@ -81,7 +81,7 @@
                                                             </li>
                                                             @if(isset($articulationStage->articulation_type))
                                                             <li class="collection-item">
-                                                                <span class="title black-text text-darken-3">
+                                                                <span class="title black-text">
                                                                     {{__('ArticulationStage Type')}}
                                                                 </span>
                                                                 <p>
@@ -91,7 +91,7 @@
                                                             @endif
                                                             @if(isset($articulationStage->codigo_proyecto))
                                                             <li class="collection-item">
-                                                                <span class="title black-text text-darken-3">
+                                                                <span class="title black-text">
                                                                     {{__('Project')}}
                                                                 </span>
                                                                     <p>
@@ -104,7 +104,7 @@
                                                     <div class="col s12 m6 l6">
                                                         <ul class="collection">
                                                             <li class="collection-item">
-                                                            <span class="title black-text text-darken-3">
+                                                            <span class="title black-text">
                                                                 {{ __('Descrition') }}
                                                             </span>
                                                                 <p>
@@ -112,7 +112,7 @@
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item">
-                                                            <span class="title black-text text-darken-3">
+                                                            <span class="title black-text">
                                                                 {{ __('Scope') }}
                                                             </span>
                                                                 <p>
@@ -120,7 +120,7 @@
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item">
-                                                            <span class="title black-text text-darken-3">
+                                                            <span class="title black-text">
                                                                 {{ __('Interlocutory talent') }}
                                                             </span>
                                                                 <p>
@@ -128,7 +128,7 @@
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item">
-                                                            <span class="title black-text text-darken-3">
+                                                            <span class="title black-text">
                                                                 {{ __('Created_by') }}
                                                             </span>
                                                                 <p>

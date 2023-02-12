@@ -72,6 +72,11 @@ class Articulation extends Model
         return $this->belongsToMany(\App\User::class, 'articulation_user', 'articulation_id', 'user_id');
     }
 
+    public function asesorable()
+    {
+        return $this->morphMany(UsoInfraestructura::class, 'asesorable');
+    }
+
     public function asesorias()
     {
         return $this->morphMany(UsoInfraestructura::class, 'asesorable');

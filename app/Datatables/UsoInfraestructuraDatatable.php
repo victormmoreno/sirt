@@ -13,7 +13,7 @@ class UsoInfraestructuraDatatable
     {
         return datatables()->of($usoinfraestructura)
             ->editColumn('fecha', function ($data) {
-                return optional($data->fecha)->isoFormat('d/M/Y');
+                return optional($data->fecha)->format('d-m-Y');
             })
             ->editColumn('actividad', function ($data) {
                 return $data->nombre;

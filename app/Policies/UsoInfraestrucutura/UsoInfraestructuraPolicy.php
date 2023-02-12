@@ -20,7 +20,15 @@ class UsoInfraestructuraPolicy
      */
     public function index(User $user)
     {
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsAdministrador(), $user->IsActivador(), $user->IsDinamizador(), $user->IsExperto(), $user->IsArticulador(), $user->IsTalento(), $user->IsApoyoTecnico()]);
+        return (bool) Str::contains(session()->get('login_role'), [
+            $user->IsAdministrador(),
+            $user->IsActivador(),
+            $user->IsDinamizador(),
+            $user->IsExperto(),
+            $user->IsArticulador(),
+            $user->IsTalento(),
+            $user->IsApoyoTecnico()
+        ]);
     }
 
     /**
@@ -31,9 +39,27 @@ class UsoInfraestructuraPolicy
      */
     public function listNodes(User $user): bool
     {
-        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador()])
-            && session()->has('login_role')
-            && (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador());
+        return (bool) Str::contains(session()->get('login_role'), [
+            $user->IsAdministrador(),
+            $user->IsActivador(),
+        ]);
+    }
+
+    /**
+     * Determine if the given user can be export reports by the articulationstage.
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function export(User $user)
+    {
+        return (bool) Str::contains(session()->get('login_role'), [
+            $user->IsAdministrador(),
+            $user->IsActivador(),
+            $user->IsDinamizador(),
+            $user->IsExperto(),
+            $user->IsArticulador(),
+            $user->IsApoyoTecnico()
+        ]);
     }
 
     /**
@@ -44,9 +70,13 @@ class UsoInfraestructuraPolicy
      */
     public function moduleType(User $user): bool
     {
-        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador(),User::IsDinamizador(), User::IsTalento(), User::IsArticulador()])
-            && session()->has('login_role')
-            && (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsTalento());
+        return (bool) Str::contains(session()->get('login_role'), [
+            $user->IsAdministrador(),
+            $user->IsActivador(),
+            $user->IsDinamizador(),
+            $user->IsArticulador(),
+            $user->IsTalento(),
+        ]);
     }
 
     /**
@@ -57,13 +87,12 @@ class UsoInfraestructuraPolicy
      */
     public function create(User $user)
     {
-        return (bool) session()->has('login_role')
-        && (
-            session()->get('login_role') == User::IsExperto()
-            || session()->get('login_role') == User::IsArticulador()
-            || session()->get('login_role') == User::IsTalento()
-            || session()->get('login_role') == User::IsApoyoTecnico()
-        );
+        return (bool) Str::contains(session()->get('login_role'), [
+            $user->IsExperto(),
+            $user->IsArticulador(),
+            $user->IsApoyoTecnico(),
+            $user->IsTalento()
+        ]);
     }
 
 
@@ -88,103 +117,41 @@ class UsoInfraestructuraPolicy
      */
     public function show(User $user, UsoInfraestructura $uso)
     {
-        if ($user->hasAnyRole([User::IsAdministrador()]) && session()->get('login_role') == User::IsAdministrador()) {
-            return true;
-        } else if ($user->hasAnyRole([ User::IsDinamizador()]) && session()->get('login_role') == User::IsDinamizador() && $uso->asesorable->nodo->id == $user->dinamizador->nodo->id) {
-            return true;
-        } else if ($user->hasAnyRole([ User::IsExperto()]) && session()->get('login_role') == User::IsExperto() && $uso->whereHas(
-            'usogestores',
-            function ($query) use($user) {
-                return $query->where('users.id', $user->id);
-            })
-        ) {
-            return true;
-        } else if ($user->hasAnyRole([User::IsArticulador()]) && session()->get('login_role') == User::IsArticulador() && $uso->whereHas(
-            'usogestores',
-            function ($query) use($user) {
-                return $query->where('users.id', $user->id);
-            })
-        ) {
-            return true;
-        }else if ($user->hasAnyRole([User::IsApoyoTecnico()]) && session()->get('login_role') == User::IsApoyoTecnico() &&
-        $uso->whereHas(
-            'usogestores',
-            function ($query) use($user) {
-                return $query->where('users.id', $user->id);
-            })
-        ) {
-            return true;
-        } else if ($user->hasAnyRole([User::IsTalento()]) && session()->get('login_role') == User::IsTalento() &&
-        //$uso->asesorable->articulacion_proyecto->talentos->contains($user->talento->id)
-        $uso->whereHas(
-            'usotalentos.user',
-            function ($query) use($user) {
-                return $query->where('id', $user);
-            }
-        )
-        ) {
-            return true;
-        }else{
-            return false;
-        }
-
+        return (bool) (session()->has('login_role')
+            && (
+                session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsActivador()
+                || (
+                    session()->get('login_role') == User::IsDinamizador()
+                    && (
+                        (isset($uso->asesorable->articulationstage) &&  $uso->asesorable->articulationstage->node_id == $user->dinamizador->nodo_id)
+                        || (isset($uso->asesorable->nodo_id) && $uso->asesorable->nodo_id == $user->dinamizador->nodo_id)
+                        )
+                )
+                || (
+                    session()->get('login_role') == User::IsExperto()
+                    && (isset($uso->asesorable->nodo_id) &&  $uso->asesorable->nodo_id == $user->gestor->nodo_id)
+                    && (isset($uso->asesorable->asesor_id) &&  $uso->asesorable->asesor_id == $user->gestor->id)
+                )
+                || (
+                    session()->get('login_role') == User::IsArticulador()
+                    && ((isset($uso->asesorable->articulationstage) &&  $uso->asesorable->articulationstage->node_id == $user->articulador->nodo_id)
+                    || (isset($uso->asesorable->nodo_id) &&  $uso->asesorable->nodo_id == $user->articulador->nodo_id))
+                )
+                || (
+                    session()->get('login_role') == User::IsApoyoTecnico()
+                    && (isset($uso->asesorable->nodo_id) &&  $uso->asesorable->nodo_id == $user->apoyotecnico->nodo_id)
+                )
+                || (
+                    session()->get('login_role') == User::IsTalento()
+                    && (isset($uso->usotalentos) &&
+                    $uso->whereHas('usotalentos.user', function ($particpant) use($user) {
+                        $particpant->where('user_id', $user->id);
+                    })->first()
+                    )
+                )
+            )
+        );
     }
-
-    /**
-     * Determine whether the user can edit usos de infraestructura.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Models\UsoInfraestructura  $uso
-     * @return bool
-     */
-    public function edit(User $user, UsoInfraestructura $uso)
-    {
-
-        if ($user->hasAnyRole([ User::IsExperto()]) && session()->get('login_role') == User::IsExperto() && $uso->whereHas(
-            'usogestores',
-            function ($query) use($user) {
-                return $query->where('users.id', $user->id);
-            })
-            // && $uso->whereHasMorph(
-            //     'asesorable',
-            //     [ \App\Models\Proyecto::class],
-            //     function (Builder $subquery) {
-            //         return $subquery->whereHas('fase', function ($subquery)  {
-            //             $subquery->where('id','!=' ,Fase::where('nombre', 'Finalizado')->first()->id);
-            //         });
-            //     }
-            // )->whereHasMorph('asesorable', \App\Models\Proyecto::class)
-        ) {
-            return true;
-        } else if ($user->hasAnyRole([User::IsArticulador()]) && session()->get('login_role') == User::IsArticulador() && $uso->whereHas(
-            'usogestores',
-            function ($query) use($user) {
-                return $query->where('users.id', $user->id);
-            })
-        ) {
-            return true;
-        }else if ($user->hasAnyRole([User::IsApoyoTecnico()]) && session()->get('login_role') == User::IsApoyoTecnico() &&
-        $uso->whereHas(
-            'usogestores',
-            function ($query) use($user) {
-                return $query->where('users.id', $user->id);
-            })
-        ) {
-            return true;
-        } else if ($user->hasAnyRole([User::IsTalento()]) && session()->get('login_role') == User::IsTalento() &&
-        $uso->whereHas(
-            'usotalentos.user',
-            function ($query) use($user) {
-                return $query->where('id', $user);
-            }
-        )
-        ) {
-            return true;
-        }else{
-            return false;
-        }
-    }
-
 
     /**
      * Determine whether the user can update usos de infraestructura.
@@ -195,41 +162,56 @@ class UsoInfraestructuraPolicy
      */
     public function update(User $user, UsoInfraestructura $uso)
     {
+        $date = \Carbon\Carbon::now()->subYear(1)->format('Y');
+        return (bool) (session()->has('login_role')
+            && (
+                (
+                    session()->get('login_role') == User::IsExperto()
+                    && $uso->fecha->format('Y') > $date
+                    && class_basename($uso->asesorable) === class_basename(\App\Models\Proyecto::class)
+                    && (isset($uso->asesorable->nodo_id) &&  $uso->asesorable->nodo_id == $user->gestor->nodo_id)
+                    && (isset($uso->asesorable->asesor_id) &&  $uso->asesorable->asesor_id == $user->gestor->id)
+                    && $uso->whereHas(
+                        'usogestores',
+                        function ($query) use($user) {
+                            return $query->where('users.id', $user->id);
+                        })
+                )
+                || (
+                    session()->get('login_role') == User::IsArticulador()
+                    && $uso->fecha->format('Y') > $date
+                    && ((isset($uso->asesorable->articulationstage) &&  $uso->asesorable->articulationstage->node_id == $user->articulador->nodo_id)
+                    || (isset($uso->asesorable->nodo_id) &&  $uso->asesorable->nodo_id == $user->articulador->nodo_id))
+                    && $uso->whereHas(
+                        'usogestores',
+                        function ($query) use($user) {
+                            return $query->where('users.id', $user->id);
+                        })
+                )
+                || (
+                    session()->get('login_role') == User::IsApoyoTecnico()
+                    && $uso->fecha->format('Y') > $date
+                    && class_basename($uso->asesorable) === class_basename(\App\Models\Proyecto::class)
+                    && (isset($uso->asesorable->nodo_id) &&  $uso->asesorable->nodo_id == $user->apoyotecnico->nodo_id)
+                    && $uso->whereHas(
+                        'usogestores',
+                        function ($query) use($user) {
+                            return $query->where('users.id', $user->id);
+                        })
+                )
+                || (
 
-        if ($user->hasAnyRole([ User::IsExperto()]) && session()->get('login_role') == User::IsExperto() && $uso->whereHas(
-            'usogestores',
-            function ($query) use($user) {
-                return $query->where('users.id', $user->id);
-            })
-        ) {
-            return true;
-        } else if ($user->hasAnyRole([User::IsArticulador()]) && session()->get('login_role') == User::IsArticulador() && $uso->whereHas(
-            'usogestores',
-            function ($query) use($user) {
-                return $query->where('users.id', $user->id);
-            })
-        ) {
-            return true;
-        }else if ($user->hasAnyRole([User::IsApoyoTecnico()]) && session()->get('login_role') == User::IsApoyoTecnico() &&
-        $uso->whereHas(
-            'usogestores',
-            function ($query) use($user) {
-                return $query->where('users.id', $user->id);
-            })
-        ) {
-            return true;
-        } else if ($user->hasAnyRole([User::IsTalento()]) && session()->get('login_role') == User::IsTalento() &&
-        $uso->whereHas(
-            'usotalentos.user',
-            function ($query) use($user) {
-                return $query->where('id', $user);
-            }
-        )
-        ) {
-            return true;
-        }else{
-            return false;
-        }
+                    session()->get('login_role') == User::IsTalento()
+                    && $uso->fecha->format('Y') > $date
+                    && class_basename($uso->asesorable) === class_basename(\App\Models\Proyecto::class)
+                    && (isset($uso->usotalentos) &&
+                    $uso->whereHas('usotalentos.user', function ($particpant) use($user) {
+                        $particpant->where('user_id', $user->id);
+                    })->first()
+                    )
+                )
+            )
+        );
     }
 
     /**
@@ -241,40 +223,57 @@ class UsoInfraestructuraPolicy
      */
     public function destroy(User $user, UsoInfraestructura $uso)
     {
-        if ($user->hasAnyRole([ User::IsExperto()]) && session()->get('login_role') == User::IsExperto() && $uso->whereHas(
-            'usogestores',
-            function ($query) use($user) {
-                return $query->where('users.id', $user->id);
-            })
-        ) {
-            return true;
-        } else if ($user->hasAnyRole([User::IsArticulador()]) && session()->get('login_role') == User::IsArticulador() && $uso->whereHas(
-            'usogestores',
-            function ($query) use($user) {
-                return $query->where('users.id', $user->id);
-            })
-        ) {
-            return true;
-        }else if ($user->hasAnyRole([User::IsApoyoTecnico()]) && session()->get('login_role') == User::IsApoyoTecnico() &&
-        $uso->whereHas(
-            'usogestores',
-            function ($query) use($user) {
-                return $query->where('users.id', $user->id);
-            })
-        ) {
-            return true;
-        } else if ($user->hasAnyRole([User::IsTalento()]) && session()->get('login_role') == User::IsTalento() &&
-        $uso->whereHas(
-            'usotalentos.user',
-            function ($query) use($user) {
-                return $query->where('id', $user);
-            }
-        )
-        ) {
-            return true;
-        }else{
-            return false;
-        }
+        $date = \Carbon\Carbon::now()->subYear(1)->format('Y');
+        return (bool) (
+            session()->has('login_role')
+            && (
+                session()->get('login_role') == User::IsAdministrador()
+                || (
+                    session()->get('login_role') == User::IsExperto()
+                    && $uso->fecha->format('Y') > $date
+                    && class_basename($uso->asesorable) === class_basename(\App\Models\Proyecto::class)
+                    && (isset($uso->asesorable->nodo_id) &&  $uso->asesorable->nodo_id == $user->gestor->nodo_id)
+                    && (isset($uso->asesorable->asesor_id) &&  $uso->asesorable->asesor_id == $user->gestor->id)
+                    && $uso->whereHas(
+                        'usogestores',
+                        function ($query) use($user) {
+                            return $query->where('users.id', $user->id);
+                        })
+                )
+                || (
+                    session()->get('login_role') == User::IsArticulador()
+                    && $uso->fecha->format('Y') > $date
+                    && ((isset($uso->asesorable->articulationstage) &&  $uso->asesorable->articulationstage->node_id == $user->articulador->nodo_id)
+                    || (isset($uso->asesorable->nodo_id) &&  $uso->asesorable->nodo_id == $user->articulador->nodo_id))
+                    && $uso->whereHas(
+                        'usogestores',
+                        function ($query) use($user) {
+                            return $query->where('users.id', $user->id);
+                        })
+                )
+                || (
+                    session()->get('login_role') == User::IsApoyoTecnico()
+                    && $uso->fecha->format('Y') > $date
+                    && class_basename($uso->asesorable) === class_basename(\App\Models\Proyecto::class)
+                    && (isset($uso->asesorable->nodo_id) &&  $uso->asesorable->nodo_id == $user->apoyotecnico->nodo_id)
+                    && $uso->whereHas(
+                        'usogestores',
+                        function ($query) use($user) {
+                            return $query->where('users.id', $user->id);
+                        })
+                )
+                || (
+                    session()->get('login_role') == User::IsTalento()
+                    && $uso->fecha->format('Y') > $date
+                    && class_basename($uso->asesorable) === class_basename(\App\Models\Proyecto::class)
+                    && (isset($uso->usotalentos) &&
+                        $uso->whereHas('usotalentos.user', function ($particpant) use($user) {
+                            $particpant->where('user_id', $user->id);
+                        })->first()
+                    )
+                )
+            )
+        );
     }
 }
 

@@ -30,13 +30,9 @@
                                 <div class="mailbox-view">
                                     <div class="mailbox-view-header center-align">
                                         <div class="row no-m-t no-m-b">
-                                            <div class="col s12 m8 l8">
+                                            <div class="@canany(['create'], App\Models\UsoInfraestructura::class) col s12 m8 l8 @else col s12 m12 l12 @endcanany">
                                                 <span class="card-title center-align absolute-center primary-text">
-                                                     @can('listNodes', App\Models\UsoInfraestructura::class)
-                                                        Asesorias y usos de Infraestructura
-                                                    @else
-                                                        Asesorias y usos de Tecnoparque Nodo  {{ \NodoHelper::returnNameNodoUsuario() }}
-                                                    @endcan
+                                                    Asesorias y usos de Infraestructura
                                                 </span>
                                             </div>
                                             @can('create', App\Models\UsoInfraestructura::class)
@@ -88,8 +84,10 @@
                                     </select>
                                 </div>
                                 <div class="col s12 m6 l4 offset-m3 right">
-                                    <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_usoinfraestructura"><i class="material-icons">cloud_download</i>Descargar</button>
-                                    <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_usoinfraestructura"><i class="material-icons">search</i>Filtrar</button>
+                                    @can('export', \App\Models\UsoInfraestructura::class)
+                                    <button class="waves-effect waves-grey bg-secondary-lighten white-text btn-flat search-tabs-button right p-h-md" id="download_usoinfraestructura"><i class="material-icons">cloud_download</i>Descargar</button>
+                                    @endcan
+                                    <button class="waves-effect  waves-grey bg-secondary white-text btn-flat search-tabs-button right p-h-md" id="filter_usoinfraestructura"><i class="material-icons">search</i>Filtrar</button>
                                 </div>
                             </div>
                             <table class="display responsive-table datatable-example dataTable" id="usoinfraestructa_data_table" width="100%">
@@ -108,11 +106,11 @@
                     </div>
                 </div>
                 @can('create', \App\Models\UsoInfraestructura::class)
-                <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-                <a href="{{route('usoinfraestructura.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="{{session()->has('login_role') == App\User::IsExperto() ? 'Nueva Asesoria' : 'Nuevo uso de Infraestructura'}}">
-                        <i class="material-icons">add</i>
-                    </a>
-                </div>
+                    <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
+                        <a href="{{route('usoinfraestructura.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="{{session()->has('login_role') == App\User::IsExperto() ? 'Nueva Asesoria' : 'Nuevo uso de Infraestructura'}}">
+                            <i class="material-icons">add</i>
+                        </a>
+                    </div>
                 @endcan
             </div>
         </div>

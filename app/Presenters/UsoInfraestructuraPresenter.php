@@ -81,6 +81,14 @@ class UsoInfraestructuraPresenter extends Presenter
         ){
             return $this->uso->asesorable->nodo->entidad->nombre;
         }
+        else if(
+            $this->uso->whereHasMorph(
+                'asesorable',
+                [ \App\Models\Articulation::class]
+            ) && isset($this->uso->asesorable->articulationstage->node)
+        ){
+            return $this->uso->asesorable->articulationstage->node->entidad->nombre;
+        }
         return "No registra";
     }
 

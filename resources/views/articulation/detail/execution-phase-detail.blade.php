@@ -5,7 +5,7 @@
             <div class="col s12 m4 l4">
                 <ul class="collection">
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             {{__('Name ArticulationStage')}}
                         </span>
                         <p>
@@ -13,7 +13,7 @@
                         </p>
                     </li>
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             Articulación
                         </span>
                         <p>
@@ -21,7 +21,7 @@
                         </p>
                     </li>
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             {{__('Project')}}
                         </span>
                         <p>
@@ -30,7 +30,7 @@
                     </li>
 
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             Fecha Incio de la Articulación
                         </span>
                         <p>
@@ -38,7 +38,7 @@
                         </p>
                     </li>
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             Fecha esperada de finalización de la Articulación
                         </span>
                         <p>
@@ -51,7 +51,7 @@
             <div class="col s12 m4 l4">
                 <ul class="collection">
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             Alcance Articulación
                         </span>
                         <p>
@@ -59,7 +59,7 @@
                         </p>
                     </li>
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             Objetivo de la articulación
                         </span>
                         <p>
@@ -67,7 +67,7 @@
                         </p>
                     </li>
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             {{ __('Interlocutory talent') }}
                         </span>
                         <p>
@@ -79,7 +79,7 @@
             <div class="col s12 m4 l4">
                 <ul class="collection">
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             Entidad con la que se realiza la articulación
                         </span>
                         <p>
@@ -87,7 +87,7 @@
                         </p>
                     </li>
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             Nombre de contacto
                         </span>
                         <p>
@@ -95,7 +95,7 @@
                         </p>
                     </li>
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             Mail institucional de contacto de la organización
                         </span>
                         <p>
@@ -103,7 +103,7 @@
                         </p>
                     </li>
                     <li class="collection-item">
-                        <span class="title black-text text-darken-3">
+                        <span class="title black-text">
                             Tipo articulación / tipo subarticulación
                         </span>
                         <p>

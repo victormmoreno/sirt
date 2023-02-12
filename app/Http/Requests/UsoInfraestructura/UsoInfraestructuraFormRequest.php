@@ -4,6 +4,7 @@ namespace App\Http\Requests\UsoInfraestructura;
 
 use App\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UsoInfraestructuraFormRequest extends FormRequest
 {
@@ -24,21 +25,19 @@ class UsoInfraestructuraFormRequest extends FormRequest
      */
     public function rules()
     {
-        if (session()->has('login_role') && session()->get('login_role') == User::IsExperto()) {
+        if (session()->has('login_role') && (session()->get('login_role') == User::IsExperto() || session()->get('login_role') == User::IsApoyoTecnico())) {
 
             return [
                 'txtfecha'                  => 'required|date_format:"Y-m-d"',
-                'txtlinea'                  => 'required',
+                'txtlinea'                  =>  Rule::requiredIf(session()->get('login_role') == User::IsExperto()) . '|nullable',
                 'asesoriadirecta'           => 'required|array',
                 'asesoriaindirecta'         => 'required|array',
-
                 'txttipousoinfraestructura' => 'required',
                 'txtactividad'              => 'required',
                 'txtcompromisos'            => 'required|max:2400',
                 'txtdescripcion'            => 'nullable|max:2000',
                 'txtasesoriadirecta'        => 'nullable|numeric|min:0|max:99|between:0,99.9',
                 'txtasesoriaindirecta'      => 'nullable|numeric|min:0|max:99|between:0,99.9',
-
                 'txttiempouso'              => 'nullable|numeric|min:0|max:99|between:0,99.9',
                 'txtcantidad'               => 'nullable|numeric|min:0|max:99|between:0,99.9',
 
@@ -48,9 +47,8 @@ class UsoInfraestructuraFormRequest extends FormRequest
 
             return [
                 'txtfecha'                  => 'required|date_format:"Y-m-d"',
-                'asesoriadirecta'           => 'required|array',
-                'asesoriaindirecta'         => 'required|array',
-
+                'asesoriadirecta'           => 'required|array|min:1|max:99',
+                'asesoriaindirecta'         => 'required|array|min:1|max:99',
                 'txttipousoinfraestructura' => 'required',
                 'txtactividad'              => 'required',
                 'txtcompromisos'            => 'required|max:2400',

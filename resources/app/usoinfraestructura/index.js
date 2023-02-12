@@ -206,19 +206,16 @@ $('#filter_usoinfraestructura').click(function(){
             "lengthChange": false
         }).clear().draw();
     }
-
 });
 
 $('#download_usoinfraestructura').click(function(){
-    let filter_nodo = $('#filter_nodo').val();
+    let filter_nodo = $('#filter_node').val();
     let filter_year = $('#filter_year').val();
-    let filter_gestor = $('#filter_gestor').val();
-    let filter_actividad = $('#filter_actividad').val();
+    let filter_module = $('#filter_module').val();
     var query = {
         filter_nodo: filter_nodo,
         filter_year: filter_year,
-        filter_gestor: filter_gestor,
-        filter_actividad: filter_actividad,
+        filter_module: filter_module,
     }
     var url = host_url + "/usoinfraestructura/export?" + $.param(query)
     window.location = url;

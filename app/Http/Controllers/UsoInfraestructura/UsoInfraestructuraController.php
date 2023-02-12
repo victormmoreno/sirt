@@ -15,8 +15,7 @@ use App\Models\{Articulation,
     Equipo,
     Gestor,
     LineaTecnologica,
-    Material,
-    Entidad};
+    Material};
 use App\Datatables\UsoInfraestructuraDatatable;
 use App\Repositories\Repository\UserRepository\GestorRepository;
 use App\Repositories\Repository\{LineaRepository, ProyectoRepository,  UsoInfraestructuraRepository};
@@ -30,10 +29,10 @@ use App\Exports\UsoInfraestructura\UsoInfraestructuraExport;
 class UsoInfraestructuraController extends Controller
 {
     private $UsoInfraestructuraProyectoRepository;
-    private $UsoInfraestructuraArticulacionRepository;
     private $UsoInfraestructuraRepository;
     private $lineaRepository;
     private $proyectoRepository;
+    private $gestorRepository;
 
     public function __construct(
         ProyectoRepository $UsoInfraestructuraProyectoRepository,
@@ -53,7 +52,6 @@ class UsoInfraestructuraController extends Controller
      * Asigna un valor a $UsoInfraestructuraProyectoRepository
      * @param object $UsoInfraestructuraProyectoRepository
      * @return void
-     * @author devjul
      */
     private function setUsoIngraestructuraProyectoRepository($UsoInfraestructuraProyectoRepository)
     {
@@ -63,7 +61,6 @@ class UsoInfraestructuraController extends Controller
     /**
      * Retorna el valor de $UsoInfraestructuraProyectoRepository
      * @return object
-     * @author devjul
      */
     private function getUsoIngraestructuraProyectoRepository()
     {
@@ -75,7 +72,6 @@ class UsoInfraestructuraController extends Controller
      * Asigna un valor a $UsoInfraestructuraRepository
      * @param object $UsoInfraestructuraRepository
      * @return void
-     * @author devjul
      */
     private function setUsoInfraestructuraRepository($UsoInfraestructuraRepository)
     {
@@ -85,7 +81,6 @@ class UsoInfraestructuraController extends Controller
     /**
      * Retorna el valor de $UsoInfraestructuraRepository
      * @return object
-     * @author devjul
      */
     private function getUsoInfraestructuraRepository()
     {
@@ -96,7 +91,6 @@ class UsoInfraestructuraController extends Controller
      * Asigna un valor a $gestorRepository
      * @param object $gestorRepository
      * @return void
-     * @author devjul
      */
     private function setGestorRepository($gestorRepository)
     {
@@ -106,7 +100,6 @@ class UsoInfraestructuraController extends Controller
     /**
      * Retorna el valor de $gestorRepository
      * @return object
-     * @author devjul
      */
     private function getGestorRepository()
     {
@@ -117,7 +110,6 @@ class UsoInfraestructuraController extends Controller
      * Asigna un valor a $lineaRepository
      * @param object $lineaRepository
      * @return void
-     * @author devjul
      */
     private function setLineaTecnologicaRepository($lineaRepository)
     {
@@ -127,7 +119,6 @@ class UsoInfraestructuraController extends Controller
     /**
      * Retorna el valor de $lineaRepository
      * @return object
-     * @author devjul
      */
     private function getLineaTecnologicaRepository()
     {
@@ -138,7 +129,6 @@ class UsoInfraestructuraController extends Controller
      * Asigna un valor a $proyectoRepository
      * @param object $proyectoRepository
      * @return void type
-     * @author dum
      */
     private function setProyectoRepository($proyectoRepository)
     {
@@ -148,7 +138,6 @@ class UsoInfraestructuraController extends Controller
     /**
      * Retorna el valor de $proyectoRepository
      * @return object
-     * @author dum
      */
     private function getProyectoRepository()
     {
@@ -175,15 +164,11 @@ class UsoInfraestructuraController extends Controller
             if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null)) {
 
                 $usos = UsoInfraestructura::query()
-
-
                     ->selectAsesoria($model)
                     ->joins($model)
                     ->nodoAsesoriaQuery($model, $nodeUser)
                     ->yearAsesoriaQuery($model, $request->filter_year)
                     ->asesorQuery($model, $asesorUser)
-
-
                     ->groupBy('usoinfraestructuras.id')
                     ->latest('usoinfraestructuras.updated_at')
                     ->get();
@@ -272,19 +257,6 @@ class UsoInfraestructuraController extends Controller
         return ['user' => $user, 'node' => $node, 'model' => $model];
     }
 
-    private function getUsosDeProyectos($proyectos)
-    {
-        $usos_models = [];
-        foreach ($proyectos as $ke1 => $proyecto) {
-            foreach ($proyecto->asesorias as $key2 => $usos) {
-                if ($usos != null) {
-                    $usos_models[] = $usos;
-                }
-            }
-        }
-        return $usos_models;
-    }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -292,7 +264,10 @@ class UsoInfraestructuraController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', UsoInfraestructura::class);
+        if (request()->user()->cannot('create',UsoInfraestructura::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
+        }
         $sumasArray   = [];
         $date         = Carbon::now()->format('Y-m-d');
         switch (\Session::get('login_role')) {
@@ -402,7 +377,10 @@ class UsoInfraestructuraController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('store', UsoInfraestructura::class);
+        if (request()->user()->cannot('create',UsoInfraestructura::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
+        }
         $req       = new UsoInfraestructuraFormRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
@@ -438,16 +416,16 @@ class UsoInfraestructuraController extends Controller
                 $query->withTrashed();
             },'usogestores' => function($query){
                 $query->withTrashed();
-            }
+            },'usoequipos'
         ])->findOrFail($id);
-        // dd($usoinfraestructura);
+        if (request()->user()->cannot('show',$usoinfraestructura)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
+        }
         $equipos = [];
         if ($usoinfraestructura->has('usoequipos')) {
             $equipos = $usoinfraestructura->usoequipos()->withTrashed()->get();
         }
-
-        $this->authorize('show', $usoinfraestructura);
-
         $totalCostos = 0;
 
         $totalCostos = $usoinfraestructura->usoequipos->sum('pivot.costo_equipo') + $usoinfraestructura->usogestores->sum('pivot.costo_asesoria') + $usoinfraestructura->usoequipos->sum('pivot.costo_administrativo') + $usoinfraestructura->usomateriales->sum('pivot.costo_material');
@@ -474,7 +452,10 @@ class UsoInfraestructuraController extends Controller
                 $query->withTrashed();
             }]
         )->findOrFail($id);
-        $this->authorize('edit', $usoinfraestructura);
+        if (request()->user()->cannot('update',$usoinfraestructura)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
+        }
         $equipos = [];
         if ($usoinfraestructura->has('usoequipos')) {
             $equipos = $usoinfraestructura->usoequipos()->withTrashed()->get();
@@ -587,8 +568,10 @@ class UsoInfraestructuraController extends Controller
     public function update(Request $request, $id)
     {
         $usoinfraestructura = UsoInfraestructura::findOrFail($id);
-        $this->authorize('update', $usoinfraestructura);
-
+        if (request()->user()->cannot('update',$usoinfraestructura)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
+        }
         $req       = new UsoInfraestructuraFormRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
 
@@ -617,7 +600,6 @@ class UsoInfraestructuraController extends Controller
     /**
      * retorna query con las articulaciones en fase Inicio, En ejecuci車n por usuarios
      * @return collection
-     * @author devjul
      */
     public function articulacionesForUser()
     {
@@ -689,7 +671,6 @@ class UsoInfraestructuraController extends Controller
      * retorna string sin comillas dobles
      * @param string $data
      * @return string
-     * @author devjul
      **/
     private function reemplezarComillas($data)
     {
@@ -754,7 +735,6 @@ class UsoInfraestructuraController extends Controller
      * devuelve consulta con los talentos por proyecto
      * @param int $id
      * @return collection
-     * @author devjul
      */
     public function talentosPorProyecto(int $id)
     {
@@ -834,7 +814,6 @@ class UsoInfraestructuraController extends Controller
      * devuelve consulta con los talentos por artculacion emprendedores
      * @param int $id
      * @return collection
-     * @author devjul
      */
     public function talentosPorArticulacion(int $id)
     {
@@ -887,7 +866,6 @@ class UsoInfraestructuraController extends Controller
     /**
      * retorna query con los proyectos en fase Inicio, planeacion, En ejecucion por usuarios
      * @return object
-     * @author devjul
      */
     public function projectsForUser()
     {
@@ -976,14 +954,15 @@ class UsoInfraestructuraController extends Controller
     public function destroy(int $id)
     {
         $usoinfraestructura = UsoInfraestructura::findOrFail($id);
-        $this->authorize('destroy', $usoinfraestructura);
-
-        $usoinfraestructura->usoequipos()->sync([]);
-        $usoinfraestructura->usotalentos()->sync([]);
-        $usoinfraestructura->usomateriales()->sync([]);
-        $usoinfraestructura->usogestores()->sync([]);
+        if (request()->user()->cannot('destroy',$usoinfraestructura)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
+        }
+        $usoinfraestructura->usoequipos()->detach();
+        $usoinfraestructura->usotalentos()->detach();
+        $usoinfraestructura->usomateriales()->detach();
+        $usoinfraestructura->usogestores()->detach();
         $usoinfraestructura->delete();
-
         return response()->json([
             'usoinfraestructura' => 'success',
             'route' => route('usoinfraestructura.index')
@@ -992,82 +971,42 @@ class UsoInfraestructuraController extends Controller
 
     public function export(Request $request, $extension = 'xlsx')
     {
-        $this->authorize('index', UsoInfraestructura::class);
-
-        switch (\Session::get('login_role')) {
-            case User::IsAdministrador():
-                $nodo = $request->filter_nodo;
-                $asesor = $request->filter_gestor;
-                $user = null;
-                $actividad = null;
-                break;
-            case User::IsDinamizador():
-                $nodo = auth()->user()->dinamizador->nodo_id;
-                $asesor = $request->filter_gestor;
-                $user = null;
-                $actividad = null;
-                break;
-            case User::IsExperto():
-                $nodo = auth()->user()->gestor->nodo_id;
-                $user = auth()->user()->gestor->user->id;
-                $asesor = auth()->user()->id;
-                $actividad = $request->filter_actividad;
-                break;
-            case User::IsArticulador():
-                $nodo = auth()->user()->articulador->nodo_id;
-                $user = auth()->user()->id;
-                $asesor = auth()->user()->id;
-                $actividad = $request->filter_actividad;
-                break;
-            case User::IsApoyoTecnico():
-                $nodo = auth()->user()->apoyotecnico->nodo_id;
-                $user = auth()->user()->id;
-                $asesor = auth()->user()->id;
-                $actividad = $request->filter_actividad;
-                break;
-            case User::IsTalento():
-                $nodo = null;
-                $user = auth()->user()->id;
-                $asesor = null;
-                $actividad = $request->filter_actividad;
-                break;
-            default:
-                return abort('403');
-                break;
+        if (request()->user()->cannot('export',UsoInfraestructura::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
         }
-
+        $asesorUser = $this->checkRoleAuth($request)['user'];
+        $nodeUser = $this->checkRoleAuth($request)['node'];
+        $model = $this->checkRoleAuth($request)['model'];
         $usos = [];
-
-        if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null) && ($request->filled('filter_gestor') || $request->filter_gestor == null)  && ($request->filled('filter_actividad') || $request->filter_actividad == null)) {
-            $usos = UsoInfraestructura::
-            nodoAsesoria($nodo)
-                    ->yearAsesoria($request->filter_year)
-                    ->asesoria($actividad, $user)
-                    ->asesor($asesor)
-                    ->orderBy('usoinfraestructuras.created_at', 'desc')
-                    ->get();
+        if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null)) {
+            $usos = UsoInfraestructura::query()
+                ->selectAsesoria($model)
+                ->joins($model)
+                ->nodoAsesoriaQuery($model, $nodeUser)
+                ->yearAsesoriaQuery($model, $request->filter_year)
+                ->asesorQuery($model, $asesorUser)
+                ->groupBy('usoinfraestructuras.id')
+                ->latest('usoinfraestructuras.updated_at')
+                ->get();
         }
-        return (new UsoInfraestructuraExport($request, $usos))->download("Usos de infraestructura - " . config('app.name') . ".{$extension}");
+        return (new UsoInfraestructuraExport($request, $usos))->download("Asesorias y usos - " . config('app.name') . ".{$extension}");
     }
 
     /**
      * retorna query con las ideas
      * @return collection
-     * @author devjul
      */
     public function ideasForNode()
     {
         $ideas = $this->getDataIdeas();
-
         if (request()->ajax()) {
-
             return datatables()->of($ideas)
                 ->addColumn('checkbox', function ($data) {
                     $checkbox = '
                     <a class="btn cyan m-b-xs" onclick="asociarIdeaAUsoInfraestructura(' . $data->id . ', \'' . $data->present()->ideaCode() . '\', \'' . $this->reemplezarComillas($data->present()->ideaName()) . '\')">
                         <i class="material-icons">done_all</i>
                     </a>';
-
                     return $checkbox;
                 })->editColumn('codigo_idea', function ($data) {
                     return $data->present()->ideaCode();
@@ -1091,26 +1030,21 @@ class UsoInfraestructuraController extends Controller
             \App\Models\EstadoIdea::IsConvocado(),
             \App\Models\EstadoIdea::IsPostulado(),
         ];
-
         $relations = [
             'estadoIdea'                => function ($query) {
                 $query->select('id', 'nombre');
             },
         ];
-
         if(Session::has('login_role') && Session::get('login_role') == User::IsArticulador()) {
             $user = auth()->user()->articulador;
             return $this->getUsoInfraestructuraRepository()
                 ->getIdeasForUser($relations)
-
                 ->whereHas('nodo', function ($query) use ($user) {
                     $query->where('id', $user->nodo_id);
                 })
                 ->whereHas('estadoIdea',function($query)use ($fase){
                     $query->whereIn('nombre', $fase);
-                })
-
-                ->get();
+                })->get();
         } else {
             response()->json([
                 'error' => 'no tienes permisos'
@@ -1121,17 +1055,14 @@ class UsoInfraestructuraController extends Controller
     public  function infoidea(int $id)
     {
         if (request()->ajax()) {
-
             $relations = [
                 'estadoIdea'                => function ($query) {
                     $query->select('id', 'nombre');
                 },
             ];
-
             $idea = $this->getUsoInfraestructuraRepository()
                 ->getIdeasForUser($relations)
                 ->findOrFail($id);
-
             return response()->json([
                 'idea'       => $idea,
             ]);

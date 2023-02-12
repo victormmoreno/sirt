@@ -29,7 +29,7 @@
     <div class="col s12 m12 l9">
         <fieldset>
             <legend>Paso 1</legend>
-            <p class="center card-title primary-text text-darken-3"><b> Asesoría y uso</b></p>
+            <p class="center card-title primary-text"><b> Asesoría y uso</b></p>
             <div class="divider"></div>
             <h5 class="center-align">
                 <mark><i class="material-icons">info_outline</i> Seleccione a que se le hará la asesoría y uso</mark>

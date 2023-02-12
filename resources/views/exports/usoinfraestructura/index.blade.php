@@ -2,14 +2,13 @@
     <thead>
         <tr>
             <th >Nodo</th>
-            <th >Linea Tecnológica</th>
             <th >Fecha</th>
             <th >Tipo Asesoria</th>
-            <th >Nombre de Actividad</th>
+            <th >Nombre</th>
             <th >Fase</th>
             <th >Total horas Asesoria Directa</th>
             <th >Total horas Asesoria Indirecta</th>
-            <th >Expertos</th>
+            <th >Asesor(a)</th>
             <th >Talentos</th>
             <th >Equipos</th>
             <th >Materiales de Formación</th>
@@ -19,37 +18,34 @@
         @forelse($usos as $uso)
         <tr>
             <td>
-                {{$uso->present()->nodoUso()}}
+                {{$uso->nodo}}
             </td>
             <td>
-                {{$uso->present()->actividadLinea()}}
+                {{$uso->fecha}}
             </td>
             <td>
-                {{$uso->present()->fechaUsoInfraestructura()}}
+                {{$uso->tipo_asesoria}}
             </td>
             <td>
-                {{$uso->present()->tipoUsoInfraestructura()}}
+                {{$uso->nombre}}
             </td>
             <td>
-                {{$uso->present()->actividadUsoInfraestructura()}}
+                {{$uso->fase}}
             </td>
             <td>
-                {{$uso->present()->faseActividad()}}
+                {{$uso->aseseria_directa}}
             </td>
             <td>
-                {{$uso->present()->asesoriaDirecta()}}
+                {{$uso->asesoria_indirecta}}
             </td>
             <td>
-                {{$uso->present()->asesoriaIndirecta()}}
+                {{$uso->asesores}}
             </td>
             <td>
-                {{$uso->present()->usoGestores()}}
+                {{$uso->talentos}}
             </td>
             <td>
-                {{$uso->present()->usoTalentos()}}
-            </td>
-            <td>
-                {{$uso->present()->usoEquipos()}}
+                {{$uso->equipos}}
             </td>
             <td>
                 {{$uso->present()->usoMateriales()}}
