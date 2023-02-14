@@ -152,6 +152,11 @@ class UserController extends Controller
     public function show($documento)
     {
         $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
+        if(request()->user()->cannot('show', $user))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
+        }
         if (request()->ajax()) {
             return response()->json([
                 'data' => [
@@ -159,14 +164,17 @@ class UserController extends Controller
                 ]
             ]);
         }
-        $this->authorize('show', $user);
         return view('users.show', ['user' => $user]);
     }
 
     public function acceso($document)
     {
         $user = User::withTrashed()->where('documento', $document)->firstOrFail();
-        $this->authorize('acceso', $user);
+        if(request()->user()->cannot('acceso', $user))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
+        }
         return view('users.acceso', ['user' => $user]);
     }
 
@@ -175,9 +183,13 @@ class UserController extends Controller
     {
         $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
 
-        $this->authorize('acceso', $user);
+        if(request()->user()->cannot('acceso', $user))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
+        }
 
-        if(($user->has('dinamizador') && isset($user->dinamizador)) || ($user->has('gestor') && isset($user->gestor)) || ($user->has('infocenter') && isset($user->infocenter)) || ($user->has('ingreso') && isset($user->ingreso))){
+        if(($user->has('dinamizador') && isset($user->dinamizador)) || ($user->has('gestor') && isset($user->gestor)) || ($user->has('infocenter') && isset($user->infocenter)) || ($user->has('ingreso') && isset($user->ingreso)) || ($user->has('articulador') && isset($user->articulador)) || ($user->has('apoyotecnico') && isset($user->apoyotecnico))){
             if ($request->get('txtestado') == 'on') {
                 $user->update(['estado' => 0]);
                 $user->delete();
