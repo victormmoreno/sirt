@@ -101,8 +101,8 @@ class CharlaInformativaPolicy
     public function showDropzone(User $user)
     {
         if (Str::contains(session()->get('login_role'), [$user->IsInfocenter(), $user->IsArticulador(), $user->IsAdministrador()])) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 }

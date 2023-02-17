@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\{User, Models\Nodo, Models\Fase, Models\Proyecto, Models\Articulation};
+use App\{User, Models\Nodo, Models\Proyecto};
 use Repositories\Repository\NodoRepository;
 use App\Repositories\Repository\ProyectoRepository;
-use App\Repositories\Repository\Articulation\ArticulationRepository;
 use Carbon\Carbon;
 
 class IndicadorController extends Controller
@@ -28,6 +27,7 @@ class IndicadorController extends Controller
   public function index()
   {
     $year_now = Carbon::now()->format('Y');
+    $expertos = null;
 
     if(!request()->user()->can('index_indicadores', Illuminate\Database\Eloquent\Model::class)) {
       alert('No autorizado', 'No puedes acceder a los indicadores', 'error')->showConfirmButton('Ok', '#3085d6');
@@ -39,10 +39,17 @@ class IndicadorController extends Controller
         $nodos[] = $nodo['id'];
       }
     } else {
+      $expertos = User::with(['gestor'])
+      ->role(User::IsExperto())
+      ->nodoUser(User::IsExperto(), request()->user()->getNodoUser())
+      ->stateDeletedAt('si')
+      // ->yearActividad(User::IsExperto(), $request->filter_year, $nodo)
+      ->orderBy('users.created_at', 'desc')
+      ->get();
       $nodos = [request()->user()->getNodoUser()];
     }
-
-    $metas = $this->nodoRepository->consultarMetasDeTecnoparque()->whereIn('nodo_id', $nodos);
+    // dd($expertos);
+    $metas = $this->nodoRepository->consultarMetasDeTecnoparque($nodos)->whereYear('anho', Carbon::now()->format('Y'))->get();
     $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl6Obtenido()])->whereIn('nodos.id', $nodos)->get();
     $pbts_trl7_8 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl7Obtenido(), Proyecto::IsTrl8Obtenido()])->whereIn('nodos.id', $nodos)->get();
     $activos = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->select('nodo_id')->selectRaw('count(id) as cantidad')->whereHas('fase', function ($query) {
@@ -53,7 +60,8 @@ class IndicadorController extends Controller
     return view('indicadores.index', [
       'nodos' => $nodos,
       'nodos_g' => $nodos,
-      'metas' => $metas
+      'metas' => $metas,
+      'expertos' => $expertos
     ]);
   }
 

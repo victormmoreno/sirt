@@ -70,6 +70,90 @@
 @endsection
 @push('script')
     <script>
+      function consultarProyectosInscritosMes(e, rt) {
+        e.preventDefault();
+        $.ajax({
+          dataType: 'json',
+          type: 'get',
+          url: host_url + '/' + rt,
+          data: {
+            nodos: $("#txtnodo_select_inscritos_mes").val(),
+            expertos: $("#txtexperto_inscritos").val(),
+          },
+          success: function (data) {
+            graficoSeguimientoPorMes(data, graficosSeguimiento.inscritos_mes);
+          },
+          error: function (xhr, textStatus, errorThrown) {
+            alert("Error: " + errorThrown);
+          },
+        })
+      }
+
+      function consultarProyectosCerradosMes(e, rt) {
+        e.preventDefault();
+        $.ajax({
+          dataType: 'json',
+          type: 'get',
+          url: host_url + '/' + rt,
+          data: {
+            nodos: $("#txtnodo_select_cerrados_mes").val(),
+            expertos: $("#txtexperto_cerrados").val(),
+          },
+          success: function (data) {
+            graficoSeguimientoCerradoPorMes(data, 'graficoSeguimientoCerradosPorMes_column');
+          },
+          error: function (xhr, textStatus, errorThrown) {
+            alert("Error: " + errorThrown);
+          },
+        })
+      }
+
+      function graficoSeguimientoCerradoPorMes(data, name) {
+        Highcharts.chart(name, {
+          title: {
+            text: 'Proyectos cerrados por mes en el año actual'
+          },
+          subtitle: {
+            text: 'Cuando el mes no aparece es porque el valor es cero(0)'
+          },
+          yAxis: {
+            title: {
+              text: 'Cantidad de proyectos'
+            }
+          },
+          xAxis: {
+            categories: data.datos.meses,
+            accessibility: {
+              rangeDescription: 'Mes'
+            }
+          },
+          legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle'
+          },
+          series: [{
+            name: 'Proyectos cerrados',
+            data: data.datos.cantidades
+          }],
+        
+          responsive: {
+            rules: [{
+              condition: {
+                maxWidth: 500
+              },
+              chartOptions: {
+                legend: {
+                  layout: 'horizontal',
+                  align: 'center',
+                  verticalAlign: 'bottom'
+                }
+              }
+            }]
+          }
+        });
+      }
+
       $(document).ready(function(){
         $('#TableEsperado').pageMe({
             pagerSelector:'#PagerEsperado',

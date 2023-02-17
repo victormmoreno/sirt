@@ -257,7 +257,7 @@ class IndicadorController extends Controller
                 $nodos[] = $nodo->id;
             }
         }
-        $metas = $this->nodoRepository->consultarMetasDeTecnoparque($nodos)->get();
+        $metas = $this->nodoRepository->consultarMetasDeTecnoparque($nodos)->whereYear('anho', Carbon::now()->format('Y'))->get();
         $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $this->year_now, [Proyecto::IsTrl6Obtenido()])
         ->whereIn('nodos.id', $nodos)
         ->groupBy('mes')

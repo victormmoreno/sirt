@@ -5,7 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Helpers\AuthRoleHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsersRequests\UserFormEditRequest;
-use App\Models\{Etnia, Nodo, TipoTalento, TipoFormacion, TipoEstudio, LineaTecnologica};
+use App\Models\{Etnia, Nodo, TipoTalento, TipoFormacion, TipoEstudio, LineaTecnologica, Entidad};
 use App\Repositories\Repository\{UserRepository\UserRepository, ProfileRepository\ProfileRepository};
 use App\User;
 use Illuminate\Http\Request;
@@ -212,10 +212,6 @@ class UserController extends Controller
                 ]
             ]);
         }
-        if (request()->user()->cannot('show', $user)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
-            return redirect()->route('home');
-        }
         return view('users.show', ['user' => $user]);
     }
 
@@ -227,9 +223,51 @@ class UserController extends Controller
     public function access(int $document)
     {
         $user = User::withTrashed()->where('documento', $document)->firstOrFail();
-        if (request()->user()->cannot('access', $user)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
-            return redirect()->route('home');
+        if(request()->user()->cannot('acceso', $user))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
+        }
+        return view('users.acceso', ['user' => $user]);
+    }
+
+
+    public function updateAcceso(Request $request, $documento)
+    {
+        $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
+
+        if(request()->user()->cannot('acceso', $user))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
+        }
+
+        if(($user->has('dinamizador') && isset($user->dinamizador)) || ($user->has('gestor') && isset($user->gestor)) || ($user->has('infocenter') && isset($user->infocenter)) || ($user->has('ingreso') && isset($user->ingreso)) || ($user->has('articulador') && isset($user->articulador)) || ($user->has('apoyotecnico') && isset($user->apoyotecnico))){
+            if ($request->get('txtestado') == 'on') {
+                $user->update(['estado' => 0]);
+                $user->delete();
+                return redirect()->back()->withSuccess('Acceso de usuario modificado');
+            } else {
+                $user->update([
+                    'estado' => User::IsActive(),
+                ]);
+                $user->restore();
+                return redirect()->back()->withSuccess('Acceso de usuario modificado');
+            }
+
+        }else if($user->has('talento') && isset($user->talento))
+        {
+            if ($request->get('txtestado') == 'on') {
+                $user->update(['estado' => 0]);
+                $user->delete();
+                return redirect()->back()->withSuccess('Acceso de usuario modificado');
+            } else {
+                $user->update([
+                    'estado' => User::IsActive(),
+                ]);
+                $user->restore();
+                return redirect()->back()->withSuccess('Acceso de usuario modificado');
+            }
         }
         return view('users.access', ['user' => $user]);
     }

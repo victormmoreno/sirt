@@ -45,7 +45,7 @@
                         <div class="center">
                             <button type="submit" class="waves-effect bg-secondary btn center-aling">
                                 <i class="material-icons right">send</i>
-                                Importar metas
+                                Importar materiales
                             </button>
                             <a href="{{route('material.index')}}" class="waves-effect bg-danger btn center-aling"><i class="material-icons left">backspace</i>Cancelar</a>
                         </div>
