@@ -145,7 +145,7 @@
                                                         <ul class="collection">
                                                             <li class="collection-item">
                                                                 <div class="row">
-                                                                    <div class="col s12 m5 l5">
+                                                                    <div class="col s12 m4 l4">
                                                                         <span class="title cyan-text text-darken-3">
                                                                             Nombre de la sede
                                                                         </span>
@@ -153,7 +153,7 @@
                                                                             {{$sede->nombre_sede}}
                                                                         </p>
                                                                     </div>
-                                                                    <div class="col s12 m5 l5">
+                                                                    <div class="col s12 m4 l4">
                                                                         <span class="title cyan-text text-darken-3">
                                                                             Ciudad y dirección
                                                                         </span>
@@ -161,11 +161,16 @@
                                                                             {{$sede->direccion}} - <b>{{$sede->ciudad->nombre}} ({{$sede->ciudad->departamento->nombre}})</b>
                                                                         </p>
                                                                     </div>
-                                                                    <div class="col s12 m2 l2">
-                                                                        <a class="waves-effect waves-light btn-large" href="{{ route('empresa.edit.sedes', [$empresa->id, $sede->id]) }}">
-                                                                            <i class="material-icons left">edit</i>
-                                                                        </a>
-                                                                    </div>
+                                                                    @can('edit', $empresa)
+                                                                        <div class="col s12 m4 l4">
+                                                                            <span class="title primary-text">
+                                                                                Cambiar información de la sede
+                                                                            </span>
+                                                                            <a class="btn bg-warning" href="{{ route('empresa.edit.sedes', [$empresa->id, $sede->id]) }}">
+                                                                                <i class="material-icons left">edit</i>
+                                                                            </a>
+                                                                        </div>
+                                                                    @endcan
                                                                 </div>
                                                             </li>
                                                         </ul>
@@ -173,39 +178,88 @@
                                                     </div>
                                                 </li>
                                             </ul>
-                                            <ul class="collection with-header">
-                                                <li class="collection-header"><h5>Ideas de proyecto asociadas a la empresa</h5></li>
-                                                <li class="collection-item">
-                                                    <div class="col s12 m12 l12">
-                                                        @foreach ($empresa->sedes as $sede)
-                                                            @foreach ($sede->ideas as $idea)
+                                            @can('showInfoRestricted', $empresa)
+                                                <ul class="collapsible" data-collapsible="accordion">
+                                                    <li>
+                                                        <div class="collapsible-header"><h5>Ideas de proyecto asociadas a la empresa</h5></div>
+                                                        <div class="collapsible-body">
                                                             <ul class="collection">
-                                                                <li class="collection-item">
-                                                                    <div class="row">
-                                                                        <div class="col s12 m6 l6">
-                                                                            <span class="title cyan-text text-darken-3">
-                                                                                Idea de proyecto
-                                                                            </span>
-                                                                            <p>
-                                                                                {{$idea->codigo_idea}} - {{$idea->nombre_proyecto}}
-                                                                            </p>
-                                                                        </div>
-                                                                        <div class="col s12 m6 l6">
-                                                                            <span class="title cyan-text text-darken-3">
-                                                                                Nodo de registro de la idea
-                                                                            </span>
-                                                                            <p>
-                                                                                {{$idea->nodo->entidad->nombre}}
-                                                                            </p>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
+                                                            @foreach ($empresa->sedes as $sede)
+                                                                @if ($sede->ideas->count() == 0)
+                                                                    <li class="collection-item">
+                                                                        No hay ideas registradas para la sede de <b>{{$sede->ciudad->nombre}} ({{$sede->ciudad->departamento->nombre}})</b>
+                                                                    </li>
+                                                                @else
+                                                                    @foreach ($sede->ideas as $idea)
+                                                                        <li class="collection-item" style="padding-bottom: 0px">
+                                                                            <div class="row">
+                                                                                <div class="col s12 m4 l4">
+                                                                                    <span class="title cyan-text text-darken-3">
+                                                                                        Nodo de registro de la idea
+                                                                                    </span>
+                                                                                    <br>
+                                                                                    {{$idea->nodo->entidad->nombre}}
+                                                                                </div>
+                                                                                <div class="col s12 m8 l8">
+                                                                                    <span class="title cyan-text text-darken-3">
+                                                                                        Idea de proyecto
+                                                                                    </span>
+                                                                                    <br>
+                                                                                    <a href="{{route('idea.detalle', $idea->id)}}" target="_blank">
+                                                                                        {{$idea->codigo_idea}} - {{$idea->nombre_proyecto}}
+                                                                                    </a>
+                                                                                    - <b class="secondary-text">{{$idea->estadoIdea->nombre}}</b>
+                                                                                </div>
+                                                                            </div>
+                                                                        </li>
+                                                                    @endforeach
+                                                                @endif
                                                             @endforeach
-                                                        @endforeach
-                                                    </div>
-                                                </li>
-                                            </ul>
+                                                            </ul>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                                <ul class="collapsible" data-collapsible="accordion">
+                                                    <li>
+                                                        <div class="collapsible-header"><h5>Proyectos a la empresa</h5></div>
+                                                        <div class="collapsible-body">
+                                                            <ul class="collection">
+                                                            @foreach ($empresa->sedes as $sede)
+                                                                @if ($sede->proyectos->count() == 0)
+                                                                    <li class="collection-item">
+                                                                        No hay proyectos registradas para la sede de <b>{{$sede->ciudad->nombre}} ({{$sede->ciudad->departamento->nombre}})</b>
+                                                                    </li>
+                                                                @else
+                                                                    @foreach ($sede->proyectos as $proyecto)
+                                                                        <li class="collection-item" style="padding-bottom: 0px">
+                                                                            <div class="row">
+                                                                                <div class="col s12 m4 l4">
+                                                                                    <span class="title cyan-text text-darken-3">
+                                                                                        Nodo de registro del proyecto
+                                                                                    </span>
+                                                                                    <br>
+                                                                                    {{$proyecto->nodo->entidad->nombre}}
+                                                                                </div>
+                                                                                <div class="col s12 m8 l8">
+                                                                                    <span class="title cyan-text text-darken-3">
+                                                                                        Proyecto
+                                                                                    </span>
+                                                                                    <br>
+                                                                                    <a href="{{$proyecto->fase->nombre == 'Finalizado' || $proyecto->fase->nombre == 'Suspendido' ? route('proyecto.detalle', $proyecto->id) : route('proyecto.inicio', $proyecto->id)}}" target="_blank">
+                                                                                        {{$proyecto->present()->proyectoCode()}} - {{$proyecto->present()->proyectoName()}}
+                                                                                    </a>
+                                                                                    - <b class="secondary-text">{{$proyecto->fase->nombre}}</b>
+                                                                                </div>
+                                                                            </div>
+                                                                        </li>
+                                                                    @endforeach
+                                                                @endif
+                                                            @endforeach
+                                                            </ul>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            @endcan
                                         </div>
                                     </div>
                                 </div>

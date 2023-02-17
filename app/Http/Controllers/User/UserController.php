@@ -30,7 +30,7 @@ class UserController extends Controller
     public function findUserById(int $id)
     {
         return response()->json([
-            'user' => User::withTrashed()->with(['gestor'])->where('id', $id)->first(),
+            'user' => User::withTrashed()->with(['gestor', 'gestor.lineatecnologica'])->where('id', $id)->first(),
         ]);
     }
 
@@ -41,10 +41,13 @@ class UserController extends Controller
      */
     public function index(Request $request, UserDatatable $usersDatatables)
     {
-        $this->authorize('index', User::class);
+        //$this->authorize('index', User::class);
 
         switch (\Session::get('login_role')) {
             case User::IsAdministrador():
+                $nodo = $request->filter_nodo;
+                break;
+            case User::IsActivador():
                 $nodo = $request->filter_nodo;
                 break;
             case User::IsArticulador():
@@ -53,7 +56,7 @@ class UserController extends Controller
             case User::IsDinamizador():
                 $nodo = auth()->user()->dinamizador->nodo_id;
                 break;
-            case User::IsGestor():
+            case User::IsExperto():
                 $nodo = auth()->user()->gestor->nodo_id;
                 break;
             case User::IsInfocenter():
@@ -79,6 +82,13 @@ class UserController extends Controller
             return $usersDatatables->datatableUsers($users);
         }
         switch (session()->get('login_role')) {
+            case User::IsActivador():
+                $nodos = Entidad::has('nodo')->with('nodo')->orderby('nombre')->get()->pluck('nombre', 'nodo.id');
+                return view('users.administrador.index', [
+                    'roles' => $this->userRepository->getAllRoles(),
+                    'nodos' => $nodos,
+                ]);
+                break;
             case User::IsAdministrador():
                 $nodos = Entidad::has('nodo')->with('nodo')->orderby('nombre')->get()->pluck('nombre', 'nodo.id');
                 return view('users.administrador.index', [
@@ -87,7 +97,7 @@ class UserController extends Controller
                 ]);
                 break;
             case User::IsDinamizador():
-                $role = [User::IsGestor(), User::IsArticulador(), User::IsInfocenter(), User::IsTalento(), User::IsIngreso(), User::IsApoyoTecnico()];
+                $role = [User::IsExperto(), User::IsArticulador(), User::IsInfocenter(), User::IsTalento(), User::IsIngreso(), User::IsApoyoTecnico()];
                 return view('users.index', [
                     'roles' => $this->userRepository->getRoleWhereInRole($role),
                 ]);
@@ -99,14 +109,14 @@ class UserController extends Controller
                 ]);
                 break;
 
-            case User::IsGestor():
+            case User::IsExperto():
                 $role = [User::IsTalento()];
                 return view('users.gestor.index', [
                     'roles' => $this->userRepository->getRoleWhereInRole($role),
                 ]);
                 break;
             case User::IsInfocenter():
-                $role = [User::IsGestor(),User::IsArticulador(), User::IsInfocenter(), User::IsTalento(), User::IsIngreso(), User::IsApoyoTecnico()];
+                $role = [User::IsExperto(),User::IsArticulador(), User::IsInfocenter(), User::IsTalento(), User::IsIngreso(), User::IsApoyoTecnico()];
                 return view('users.index', [
                     'roles' => $this->userRepository->getRoleWhereInRole($role),
                 ]);
@@ -142,6 +152,11 @@ class UserController extends Controller
     public function show($documento)
     {
         $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
+        if(request()->user()->cannot('show', $user))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
+        }
         if (request()->ajax()) {
             return response()->json([
                 'data' => [
@@ -149,14 +164,17 @@ class UserController extends Controller
                 ]
             ]);
         }
-        $this->authorize('show', $user);
         return view('users.show', ['user' => $user]);
     }
 
     public function acceso($document)
     {
         $user = User::withTrashed()->where('documento', $document)->firstOrFail();
-        $this->authorize('acceso', $user);
+        if(request()->user()->cannot('acceso', $user))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
+        }
         return view('users.acceso', ['user' => $user]);
     }
 
@@ -165,9 +183,13 @@ class UserController extends Controller
     {
         $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
 
-        $this->authorize('acceso', $user);
+        if(request()->user()->cannot('acceso', $user))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
+        }
 
-        if(($user->has('dinamizador') && isset($user->dinamizador)) || ($user->has('gestor') && isset($user->gestor)) || ($user->has('infocenter') && isset($user->infocenter)) || ($user->has('ingreso') && isset($user->ingreso))){
+        if(($user->has('dinamizador') && isset($user->dinamizador)) || ($user->has('gestor') && isset($user->gestor)) || ($user->has('infocenter') && isset($user->infocenter)) || ($user->has('ingreso') && isset($user->ingreso)) || ($user->has('articulador') && isset($user->articulador)) || ($user->has('apoyotecnico') && isset($user->apoyotecnico))){
             if ($request->get('txtestado') == 'on') {
                 $user->update(['estado' => 0]);
                 $user->delete();
@@ -204,13 +226,12 @@ class UserController extends Controller
 
     public function gestoresByNodo($nodo = null)
     {
-        $gestores = User::select('gestores.id')
+        $gestores = User::select('gestores.id', 'users.id AS user_id')
             ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) as nombre')
             ->join('gestores', 'gestores.user_id', 'users.id')
-            ->role(User::IsGestor())
+            ->role(User::IsExperto())
             ->where('gestores.nodo_id', $nodo)
-            ->withTrashed()
-            ->pluck('nombre', 'id');
+            ->get();
 
         return response()->json([
             'gestores' => $gestores
@@ -222,6 +243,9 @@ class UserController extends Controller
         $this->authorize('export', User::class);
 
         switch (\Session::get('login_role')) {
+            case User::IsActivador():
+                $nodo = $request->filter_nodo;
+                break;
             case User::IsAdministrador():
                 $nodo = $request->filter_nodo;
                 break;
@@ -231,7 +255,7 @@ class UserController extends Controller
             case User::IsArticulador():
                 $nodo = auth()->user()->articulador->nodo_id;
                 break;
-            case User::IsGestor():
+            case User::IsExperto():
                 $nodo = auth()->user()->gestor->nodo_id;
                 break;
             case User::IsInfocenter():
@@ -281,6 +305,7 @@ class UserController extends Controller
 
     public function userSearch()
     {
+        $this->authorize('index', User::class);
         return view('users.search');
     }
 
@@ -336,7 +361,7 @@ class UserController extends Controller
 
         $user = User::withTrashed()->where('documento', $document)->firstOrFail();
 
-        // $this->authorize('acceso', $user);
+        $this->authorize('acceso', $user);
         return view('users.permissions', [
             'user' => $user,
             'roles' => $this->userRepository->getRoleWhereNotInRole([User::IsDesarrollador()]),
@@ -372,7 +397,7 @@ class UserController extends Controller
                     $projects = $user->gestor->proyectos()->proyectosGestor();
                     $removeRole = array_diff(collect($user->getRoleNames())->toArray(), $request->input('role'));
 
-                    if($projects->count() > 0 || ($removeRole != null && collect($removeRole)->contains(User::IsGestor())))
+                    if($projects->count() > 0 || ($removeRole != null && collect($removeRole)->contains(User::IsExperto())))
                     {
                         return response()->json([
                             'state'   => 'error',
@@ -458,7 +483,7 @@ class UserController extends Controller
     {
         $user = User::withTrashed()->where('documento', $document)->firstOrFail();
 
-        //$this->authorize('editAccount', $authUser);
+        $this->authorize('acceso', $user);
 
         return view('users.edit', [
             'user'              => $user,

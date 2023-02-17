@@ -8,7 +8,6 @@
 
         }
 
-
         footer.page-footer {
             margin-top: 20px;
             padding-top: 20px;
@@ -174,7 +173,7 @@
     </style>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet"/>
     <title>Seguimiento</title>
 </head>
 <body>
@@ -187,7 +186,7 @@
             <tr>
                 <td colspan="8" class="centered">
                 @if ($tipo_actividad == 'proyecto')
-                    <b>ACTA No. {{ substr($data->present()->proyectoCode(), -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b>
+                    <b>ACTA No. {{ substr($data->codigo_proyecto, -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b>
                 @elseif($tipo_actividad == 'articulacion')
                     <b>ACTA No. {{ substr($data->present()->articulacionCode(), -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b>
                 @else
@@ -214,10 +213,10 @@
             </tr>
             <tr>
                 @if ($tipo_actividad == 'proyecto')
-                    <td colspan="2">{{$data->present()->proyectoCode() }}</td>
-                    <td colspan="2">{{$data->present()->proyectoName()}}</td>
-                    <td colspan="2">{{$data->present()->proyectoUserAsesor() }}</td>
-                    <td colspan="2">{{$data->present()->proyectoAbreviaturaLinea() }} - {{$data->present()->proyectoSublinea() }}</td>
+                    <td colspan="2">{{ $data->codigo_proyecto }}</td>
+                    <td colspan="2">{{ $data->nombre }}</td>
+                    <td colspan="2">{{ $data->gestor }}</td>
+                    <td colspan="2">{{ $data->abreviatura_linea }} - {{ $data->sublinea_nombre }}</td>
                 @elseif($tipo_actividad == 'articulacion')
                     <td colspan="2">{{$data->present()->articulacionCode()}}</td>
                     <td colspan="3">{{$data->present()->articulacionName() }}</td>
@@ -248,10 +247,10 @@
                 </tr>
                 @forelse ($data->articulacion_proyecto->talentos as $value)
                     <tr>
-                        <td colspan="2">{{ $value->user->present()->userDocumento() }}</td>
-                        <td colspan="2">{{ $value->user->present()->userFullName()}}</td>
-                        <td colspan="2">{{ $value->user->present()->userEmail() }}</td>
-                        <td colspan="2">{{ $value->user->present()->userCelular() }} - {{ $value->user->present()->userTelefono() }}</td>
+                        <td colspan="2">{{ $value->user->documento }}</td>
+                        <td colspan="2">{{ $value->user->nombres . ' ' . $value->user->nombres }}</td>
+                        <td colspan="2">{{ $value->user->email }}</td>
+                        <td colspan="2">{{ $value->user->celular }} - {{ $value->user->telefono }}</td>
                     </tr>
                 @empty
                     <tr>

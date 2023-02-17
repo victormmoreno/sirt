@@ -1,5 +1,5 @@
 <header class="mn-header navbar-fixed">
-    <nav class="grey darken-1">
+    <nav class="bg-primary">
         <div class="nav-wrapper row">
             <section class="material-design-hamburger navigation-toggle">
                 <a class="button-collapse show-on-large material-design-hamburger__icon" data-activates="slide-out" href="#">
@@ -7,10 +7,9 @@
                 </span>
                 </a>
             </section>
-            <div class="header-title col s2 m2 l2">
+            <div class="header-title col s1 m1 l1">
                 <a href="{{route('home')}}">
-                    <img class="chapter-title desktop" src="{{ asset('img/logonacional_Blanco.png') }}" alt="{{config('app.name')}}" width="200px">
-                    <img class="chapter-title mobile" src="{{ asset('img/logonacional_Blanco_Mobile.png') }}" alt="{{config('app.name')}}">
+                    <img width="150px" class="chapter-title" src="{{ asset('img/logo-sirt-blanco.svg') }}" alt="{{config('app.name')}}">
                 </a>
             </div>
             <ul class="right col s10 m10 l10 nav-right-menu">
@@ -65,7 +64,7 @@
                         <li>
                             <a href="{{ route('perfil.index')}}" rel="canonical" title="Mi perfil">
                                 <div class="notification">
-                                    <div class="notification-icon circle teal lighten-4"><i class="material-icons">perm_contact_calendar</i></div>
+                                    <div class="notification-icon circle bg-secondary"><i class="material-icons">perm_contact_calendar</i></div>
                                     <div class="notification-text"><b>Mi perfil</b></div>
                                 </div>
                             </a>
@@ -73,7 +72,7 @@
                         <li>
                             <a href="{{ route('logout') }}" rel="canonical" onclick="event.preventDefault(); document.getElementById('logout-form-nav').submit();">
                                 <div class="notification">
-                                    <div class="notification-icon circle teal lighten-2">
+                                    <div class="notification-icon circle bg-danger">
                                         <i class="material-icons">power_settings_new</i>
                                     </div>
                                     <div class="notification-text">
@@ -111,7 +110,7 @@
                         @empty
                             <li class="notification-drop-title">
                                 <div class="center">
-                                <i class="large material-icons  teal-text lighten-2 center ">
+                                <i class="large material-icons primary-text center ">
                                         notifications_off
                                     </i>
                                     <p class="center-align">No tienes notificationes</p>
@@ -122,7 +121,7 @@
                         <li class="notification-drop-title">
                             <a href="{{route('notifications.index')}}" rel="canonical">
                                 <div class="notification">
-                                <div class="notification-icon circle cyan">
+                                <div class="notification-icon circle bg-secondary">
                                     <i class="material-icons">add_alert</i>
                                 </div>
                                 <div class="notification-text">
@@ -146,7 +145,7 @@
                         <li>
                             <a href="{{route('help.handbook')}}">
                                 <div class="notification">
-                                <div class="notification-icon circle orange">
+                                <div class="notification-icon circle bg-primary">
                                     <i class="material-icons">book</i>
                                 </div>
                                 <div class="notification-text"><p> Descargar Manual</p></div>
@@ -156,7 +155,7 @@
                         <li>
                             <a href="{{route('support.send')}}">
                                 <div class="notification">
-                                <div class="notification-icon circle orange">
+                                <div class="notification-icon circle bg-primary">
                                     <i class="material-icons">sms</i>
                                 </div>
                                 <div class="notification-text"><p>{{config('app.technical_support.title')}}</p></div>
@@ -179,13 +178,13 @@
                     <span>
                         @guest
                         @else
-                        @if( \Session::get('login_role') != App\User::IsTalento() && \Session::get('login_role') != App\User::IsAdministrador() && \Session::get('login_role') != App\User::IsDesarrollador() )
+                        @if( \Session::get('login_role') != App\User::IsTalento() && \Session::get('login_role') != App\User::IsActivador() && \Session::get('login_role') != App\User::IsDesarrollador() )
                             {{ \NodoHelper::returnNodoUsuario() }}
                         @else
                             @if (\Session::get('login_role') == App\User::IsTalento())
                                 Talento de Tecnoparque
-                            @elseif (\Session::get('login_role') == App\User::IsAdministrador())
-                                Administrador de Tecnoparque
+                            @elseif (\Session::get('login_role') == App\User::IsActivador())
+                                Activador de Tecnoparque
                             @else
                                 Desarrollador de Tecnoparque
                             @endif
@@ -235,7 +234,7 @@
             @case(App\User::IsInfocenter())
                 @include('layouts.navrole.infocenter')
             @break
-            @case(App\User::IsGestor())
+            @case(App\User::IsExperto())
                 @include('layouts.navrole.gestor')
             @break
             @case(App\User::IsTalento())
@@ -249,12 +248,16 @@
                     @include('layouts.navrole.dinamizador')
                 @endif
             @break
+            @case(App\User::IsActivador())
+                @if(\Session::has('login_role') && \Session::get('login_role') == App\User::IsActivador())
+                    @include('layouts.navrole.activador')
+                @endif
+            @break
             @case(App\User::IsAdministrador())
                 @if(\Session::has('login_role') && \Session::get('login_role') == App\User::IsAdministrador())
                     @include('layouts.navrole.admin')
                 @endif
             @break
-
             @case(App\User::IsDesarrollador())
 
             @include('layouts.navrole.desarrollador')

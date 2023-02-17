@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ArticulacionPbt;
 use Illuminate\Http\Request;
 use App\Models\Entidad;
 use App\Models\TipoArticulacion;
@@ -15,7 +16,7 @@ class TipoArticulacionController extends Controller
 
     public function __construct(TipoArticulacionRepository $tipoArticulacionRepository)
     {
-        $this->middleware(['auth', 'role_session:Administrador'])->except(['show']);
+        $this->middleware(['auth', 'role_session:Administrador|Activador'])->except(['show']);
         $this->tipoArticulacionRepository = $tipoArticulacionRepository;
     }
 
@@ -91,11 +92,15 @@ class TipoArticulacionController extends Controller
     public function show( $typeArticulation)
     {
         $typeArticulation = TipoArticulacion::findOrFail($typeArticulation);
-
         if (request()->ajax()) {
             return response()->json([
                 'data' => $typeArticulation
             ]);
+        }
+        if(request()->user()->cannot('show', $typeArticulation))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
         }
         return view('tipoarticulaciones.show', ['typeArticulation' => $typeArticulation]);
     }
@@ -148,7 +153,6 @@ class TipoArticulacionController extends Controller
             'message' => "Actualización Exitosa",
             'redirect_url' => url(route('tipoarticulaciones.index')),
         ]);
-
     }
 
     /**

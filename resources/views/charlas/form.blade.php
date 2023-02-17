@@ -10,6 +10,31 @@
   </div>
 @endif
 <div class="divider"></div>
+@can('showNodosInput', App\Models\CharlaInformativa::class)
+<div class="row">
+  <div class="input-field col s12 m12 l12">
+      <select style="width: 100%" class="js-states" id="txtnodo_id" name="txtnodo_id">
+        <option value="">Seleccione el nodo en el que se registrará la charla informativa</option>
+        @if (isset($charla))
+            @forelse ($nodos as $nodo)
+            <option value="{{$nodo->id}}" {{ $charla->nodo_id == $nodo->id ? 'selected' : '' }}>{{$nodo->nodos}}</option>
+            @empty
+            <option value=""> No hay información disponible</option>
+            @endforelse
+        @else
+            @forelse ($nodos as $nodo)
+            <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
+            @empty
+            <option value=""> No hay información disponible</option>
+            @endforelse
+        @endif
+      </select>
+      @error('txtnodo_id')
+      <label id="txtnodo_id-error" class="error" for="txtnodo_id">{{ $message }}</label>
+      @enderror
+  </div>
+</div>
+@endcan
 <div class="row">
   <div class="input-field col s12 m3 l3">
     <i class="material-icons prefix">location_city</i>
@@ -47,7 +72,7 @@
   </div>
 </div>
 <div class="divider"></div>
-<center>
-  <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">{{ isset($btnText) ? $btnText == 'Modificar' ? 'done' : 'done_all' : '' }}</i>{{isset($btnText) ? $btnText : 'error'}}</button>
-  <a href="{{route('charla')}}" class="btn waves-effect red lighten-2  center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
-</center>
+<div class="center">
+  <button type="submit" class="waves-effect bg-secondary btn center-aling"><i class="material-icons right">send</i>{{isset($btnText) ? $btnText : 'error'}}</button>
+  <a href="{{route('charla')}}" class="btn bg-danger center-aling"><i class="material-icons left">backspace</i>Cancelar</a>
+</div>

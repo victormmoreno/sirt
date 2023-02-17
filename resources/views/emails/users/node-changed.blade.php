@@ -25,7 +25,7 @@ Hemos enviado este correo para informarle que su cuenta fue asignada a un nuevo 
         @endif
         @if($user->isUserExperto() || $user->isUserArticulador())
             @if($user->isUserExperto())
-                <h3 class="subtittle">{{App\User::IsGestor()}}:</h3> 
+                <h3 class="subtittle">{{App\User::IsExperto()}}:</h3> 
             @else
                 <h3 class="subtittle">{{App\User::IsArticulador()}}:</h3> 
             @endif

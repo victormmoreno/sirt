@@ -38,7 +38,7 @@ class IdeasExport extends FatherExport
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                $this->styledCells($event);
+                // $this->styledCells($event);
                 $this->setFilters($event);
             },
         ];

@@ -30,25 +30,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-
-        // $nodo = auth()->user()->dinamizador->nodo->id;
-        // $user = User::whereHas('gestor.nodo', function ($query) use ($nodo) {
-        //         $query->where('id', $nodo);
-        //     })->orWhereHas('infocenter.nodo', function ($query) use ($nodo) {
-        //         $query->where('id', $nodo);
-        //     })->orWhereHas('ingreso.nodo', function ($query) use ($nodo) {
-        //         $query->where('id', $nodo);
-        //     })->pluck('id');
-        // dd($nododinamizador);
-        //
-
-
-
-        // $user = auth()->user()->dinamizador->nodo->infocenter->user;
-        // dd($user);
-
       switch ( Session::get('login_role') ) {
-        case User::IsAdministrador() :
+        case User::IsActivador() :
 
             $dinamizadoresActivos = Dinamizador::with('user')
             ->whereHas('user', function($query){
@@ -70,14 +53,21 @@ class HomeController extends Controller
               'totalGestores' =>  Gestor::with('user')->get()->count(),
               'countTalentosActivos' =>  $talentosActivos,
               'totalTalentos' => Talento::with('user')->get()->count(),
-              'administradores' => User::role(User::IsAdministrador())->select('documento','nombres','apellidos')->get(),
+              'administradores' => User::role(User::IsActivador())->select('documento','nombres','apellidos')->get(),
             ]);
         case User::IsDinamizador():
-        // $datos = array('actualizacion' => 114215, 'spot' => 123);
-          return view('home.home');
+          $expertos = User::with(['gestor'])
+          ->role(User::IsExperto())
+          ->nodoUser(User::IsExperto(), request()->user()->getNodoUser())
+          ->stateDeletedAt('si')
+          ->orderBy('users.created_at', 'desc')
+          ->get();
+          return view('home.home', [
+            'expertos' => $expertos
+          ]);
           break;
 
-        case User::IsGestor():
+        case User::IsExperto():
           return view('home.gestor');
           break;
 
@@ -110,7 +100,7 @@ class HomeController extends Controller
 
         // $user  = auth()->user()->infocenter->nodo_id;
 
-       //  $filtered = collect(auth()->user()->roles)->firstWhere('name', 'Administrador')->name;
+       //  $filtered = collect(auth()->user()->roles)->firstWhere('name', 'Activador')->name;
        // // $filtered->all();
        //  dd($filtered);
        //      // dd($administradores);

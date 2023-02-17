@@ -36164,6 +36164,7 @@ function checkSubmit() {
     return true;
 }
 
+<<<<<<< HEAD
 
 $(document).ready(function() {
 
@@ -36669,3 +36670,5 @@ function mensajesIdeaUpdate(data) {
       })
   }
 };
+=======
+>>>>>>> be5b695d26b51c11b3fbd0f4ffb9bd14bd4fb72f

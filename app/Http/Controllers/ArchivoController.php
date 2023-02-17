@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Fase, Proyecto, ArchivoArticulacionProyecto, Articulacion, RutaModel, ArticulacionPbt, ArchivoModel};
+use App\Models\{Fase, Proyecto, ArchivoArticulacionProyecto, Articulacion, RutaModel, ArticulacionPbt, ArchivoModel, Entrenamiento, Entrenamienton};
 use App\Repositories\Repository\{ArticulacionRepository, ArchivoRepository, ProyectoRepository, EntrenamientoRepository, EdtRepository, CharlaInformativaRepository};
 use Illuminate\Support\Facades\{Storage, Session};
 use App\User;
@@ -65,8 +65,8 @@ class ArchivoController extends Controller
 
     /**
      * Sube un archivo de las charlas informativas al servidor, además de que lo registra en la base de datos
-    * @param Request
-    * @param int $id Id de la edt con el que se le subirá el archivo
+    * @param Request $request
+    * @param int $id Id de la charla con el que se le subirá el archivo
     * @return void
     */
     public function uploadFileCharlaInformartiva(Request $request, $id)
@@ -79,12 +79,8 @@ class ArchivoController extends Controller
                 'nombreArchivo.mimes' => 'El tipo de archivo no es permitido',
                 'nombreArchivo.max' => 'El tamaño del archivo no puede superar las 50MB'
             ]);
-            $nodo_id = null;
-            if (Session::get('login_role') == User::IsInfocenter()) {
-                $nodo_id = auth()->user()->infocenter->nodo_id;
-            } else {
-                $nodo_id = auth()->user()->articulador->nodo_id;
-            }
+            $charla = $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id);
+            $nodo_id = $charla->nodo_id;
             $file = request()->file('nombreArchivo');
             $route = "";
             // La ruta con la se guardan los archivos de una es la siguiente:
@@ -92,7 +88,6 @@ class ArchivoController extends Controller
             $idArchivoCharlaInformativa = RutaModel::selectRaw('MAX(id+1) AS max')->get()->last();
             $fileName = $idArchivoCharlaInformativa->max . '_' . $file->getClientOriginalName();
             // Creando la ruta
-            $charla = $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id);
             $nodo = sprintf("%02d", $nodo_id);
             $anho = Carbon::parse($charla->fecha)->isoFormat('YYYY');
             // $anho = $edt->fecha_inicio->isoFormat('YYYY');
@@ -281,18 +276,24 @@ class ArchivoController extends Controller
         return datatables()->of($files)
         ->addColumn('download', function ($data) {
             $download = '
-            <a target="_blank" href="' . route('entrenamientos.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
+            <a target="_blank" href="' . route('taller.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
             <i class="material-icons">file_download</i>
             </a>
             ';
             return $download;
         })->addColumn('delete', function ($data) {
-            $delete = '<form method="POST" action="' . route('entrenamientos.files.destroy', $data) . '">
-            ' . method_field('DELETE') . '' .  csrf_field() . '
-            <button class="btn red darken-4 m-b-xs">
-            <i class="material-icons">delete_forever</i>
-            </button>
-            </form>';
+            if (request()->user()->can('delete', Entrenamiento::class)) {
+                $delete = '<form method="POST" action="' . route('taller.files.destroy', $data) . '">
+                ' . method_field('DELETE') . '' .  csrf_field() . '
+                <button class="btn red darken-4 m-b-xs">
+                <i class="material-icons">delete_forever</i>
+                </button>
+                </form>';
+            } else {
+                $delete = '<button class="btn disabled darken-4 m-b-xs">
+                <i class="material-icons">delete_forever</i>
+                </button>';
+            }
             return $delete;
         })->addColumn('file', function ($data) {
             $file = '
@@ -360,7 +361,7 @@ class ArchivoController extends Controller
         // Creando la ruta
         $proyecto = Proyecto::findOrFail($id);
         $route = "";
-        $nodo = sprintf("%02d", auth()->user()->gestor->nodo_id);
+        $nodo = sprintf("%02d", $proyecto->nodo_id);
         $anho = Carbon::parse($proyecto->fecha_inicio)->isoFormat('YYYY');
         $linea = $proyecto->sublinea->lineatecnologica_id;
         $gestor = sprintf("%03d", $proyecto->asesor_id);
@@ -383,10 +384,14 @@ class ArchivoController extends Controller
     public function destroyFileProyecto($idFile)
     {
         $file = ArchivoArticulacionProyecto::find($idFile);
-        $file->delete();
-        $filePath = str_replace('storage', 'public', $file->ruta);
-        Storage::delete($filePath);
-        toast('El Archivo se ha eliminado con éxito!','success')->autoClose(2000)->position('top-end');
+        if(!request()->user()->can('delete_files', [$file->articulacion_proyecto->proyecto, $file->articulacion_proyecto->proyecto->fase->nombre])) {
+            toast('No tienes permisos para borrar este archivo!','success')->autoClose(2000)->position('top-end');
+        } else {
+            $file->delete();
+            $filePath = str_replace('storage', 'public', $file->ruta);
+            Storage::delete($filePath);
+            toast('El Archivo se ha eliminado con éxito!','success')->autoClose(2000)->position('top-end');
+        }
         return back();
     }
 
@@ -395,12 +400,50 @@ class ArchivoController extends Controller
     {
         try {
             $ruta = $this->archivoRepository->consultarRutaDeArchivoDeUnaArticulacionProyectoPorId($idFile);
+            // dd($ruta->articulacion_proyecto->proyecto->asesor_id);
+            if (!$this->verificarAccesoADescarga($ruta)) {
+                toast('No haces parte de este proyecto, por lo que no lo puedes descargar!','warning')->autoClose(2000)->position('top-end');
+                return back();
+            }
             $path = str_replace('storage', 'public', $ruta->ruta);
             return Storage::response($path);
         } catch (\Exception $e) {
-            return abort(404, $e->getMessage());
+            return $e->getMessage();
         }
+    }
 
+    public function verificarAccesoADescarga($file)
+    {
+        if (session()->get('login_role') == User::IsDinamizador()) {
+            if ($file->articulacion_proyecto->proyecto->nodo_id == auth()->user()->dinamizador->nodo_id) {
+                return true;
+            }
+        }
+        if (session()->get('login_role') == User::IsInfocenter()) {
+            if ($file->articulacion_proyecto->proyecto->nodo_id == auth()->user()->infocenter->nodo_id) {
+                return true;
+            }
+        }
+        if (session()->get('login_role') == User::IsExperto()) {
+            if ($file->articulacion_proyecto->proyecto->asesor_id == auth()->user()->gestor->id) {
+                return true;
+            }
+        }
+        if (session()->get('login_role') == User::IsArticulador()) {
+            if ($file->articulacion_proyecto->proyecto->nodo_id == auth()->user()->articulador->nodo_id) {
+                return true;
+            }
+        }
+        if (session()->get('login_role') == User::IsTalento()) {
+            $talento = $file->articulacion_proyecto->proyecto->articulacion_proyecto->talentos()->wherePivot('talento_id', auth()->user()->talento->id)->first();
+            if ($talento != null) {
+                return true;
+            }
+        }
+        if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsArticulador())
+            return true;
+        
+        return false;
     }
 
 
@@ -414,16 +457,14 @@ class ArchivoController extends Controller
         } catch (\Exception $e) {
             return abort(404, $e->getMessage());
         }
-
     }
-
-    /**
+      /**
      * Tabla para mostrar los archivos de una articulacion_proyecto
     * @param int $id Id de la articulacion_proyecto
     * @return Reponse
     * @author Victor Manuel Moreno Vega
     */
-    public function datatableArchivosArticulacionProyecto($query)
+    public function datatableArchivosArticulacionProyecto($query, $proyecto)
     {
         return datatables()->of($query)
         ->addColumn('download', function ($data) {
@@ -461,7 +502,7 @@ class ArchivoController extends Controller
         if (request()->ajax()) {
             $proyecto = Proyecto::findOrFail($id);
             $archivosDeUnProyecto = $this->archivoRepository->consultarRutasArchivosDeUnaArticulacionProyecto($proyecto->articulacion_proyecto_id, $fase)->get();
-            return $this->datatableArchivosArticulacionProyecto($archivosDeUnProyecto);
+            return $this->datatableArchivosArticulacionProyecto($archivosDeUnProyecto, $proyecto);
         }
     }
 

@@ -3,7 +3,7 @@
 @section('content')
 <main class="mn-inner inner-active-sidebar">
 
-    <div class="orange darken-1 z-depth-2">
+    <div class="bg-primary z-depth-2">
         <div class="container ">
             <div class="row">
                 <div class="col s12 m12 l12">
