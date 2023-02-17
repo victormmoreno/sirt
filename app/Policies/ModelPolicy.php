@@ -41,4 +41,17 @@ class ModelPolicy
         }
         return false;
     }
+
+    // /**
+    //  * Determina si el usuario puede ver la gráfica que muestra los proyectos inscritos por un experto en el año actual
+    //  *
+    //  * @param App\User $user
+    //  * @return bool
+    //  * @author dum
+    //  **/
+    // public function grafico_inscrito_expertos(User $user)
+    // {
+    //     return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsExperto()]);
+    // }
+
 }

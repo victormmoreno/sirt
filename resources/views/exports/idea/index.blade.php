@@ -30,7 +30,6 @@
             </th>
             <th>
                 ¿Cómo está conformado su equipo de trabajo?
-
             </th>
             <th>
                 ¿Categoria de clasificación de propuesta?

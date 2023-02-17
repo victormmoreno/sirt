@@ -349,6 +349,23 @@ class ProyectoRepository extends Repository
         ->orderBy("mes");
     }
 
+    public function proyectosCerradosPorMes($year)
+    {
+        $this->traducirMeses();
+        return Proyecto::selectRaw('MONTH(fecha_cierre) AS mes, COUNT(proyectos.id) AS cantidad, DATE_FORMAT(fecha_cierre, "%M") AS nombre_mes')
+        ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+        ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+        ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
+        ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
+        ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
+        ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
+        ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
+        ->whereYear('fecha_cierre', $year)
+        ->whereIn('fases.nombre', [Proyecto::IsFinalizado()])
+        ->groupBy("mes", "nombre_mes")
+        ->orderBy("mes");
+    }
+
     public function proyectosSeguimientoAbiertos()
     {
         return Proyecto::join('articulacion_proyecto AS ap', 'ap.id', '=', 'proyectos.articulacion_proyecto_id')

@@ -246,29 +246,17 @@ function graficoSeguimientoPorMes(data, name) {
         text: 'Cantidad de proyectos'
       }
     },
-
     xAxis: {
       categories: data.datos.meses,
       accessibility: {
         rangeDescription: 'Mes'
       }
     },
-
     legend: {
       layout: 'vertical',
       align: 'right',
       verticalAlign: 'middle'
     },
-
-    // plotOptions: {
-    //   series: {
-    //     label: {
-    //       connectorAllowed: false
-    //     },
-    //     pointStart: 2010
-    //   }
-    // },
-
     series: [{
       name: 'Proyectos inscritos',
       data: data.datos.cantidades
@@ -314,7 +302,6 @@ function graficoSeguimientoFases(data, name) {
     },
     title: {
         text: 'Proyectos actuales y finalizados en el año actual'
-        // align: 'left'
     },
     xAxis: {
         title: {

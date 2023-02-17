@@ -49,7 +49,15 @@ class HomeController extends Controller
               'administradores' => $admin->select('documento','nombres','apellidos')->get(),
             ]);
         case User::IsDinamizador():
-          return view('home.home');
+          $expertos = User::with(['gestor'])
+          ->role(User::IsExperto())
+          ->nodoUser(User::IsExperto(), request()->user()->getNodoUser())
+          ->stateDeletedAt('si')
+          ->orderBy('users.created_at', 'desc')
+          ->get();
+          return view('home.home', [
+            'expertos' => $expertos
+          ]);
           break;
 
         case User::IsExperto():

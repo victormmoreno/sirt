@@ -43,8 +43,8 @@ class ProyectoPolicy
     */
     public function detalle(User $user, Proyecto $proyecto)
     {
-        if ($proyecto->present()->proyectoFase() == $proyecto->IsFinalizado() || $proyecto->present()->proyectoFase() == $proyecto->IsSuspendido())
-            return false;
+        // if ($proyecto->present()->proyectoFase() == $proyecto->IsFinalizado() || $proyecto->present()->proyectoFase() == $proyecto->IsSuspendido())
+        //     return false;
         if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador())
             return true;
         if (session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->user->id == auth()->user()->id)
