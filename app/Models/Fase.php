@@ -55,19 +55,9 @@ class Fase extends Model
         return $this->hasMany(Proyecto::class, 'fase_id', 'id');
     }
 
-    public function articulacionespbt()
-    {
-        return $this->hasMany(ArticulacionPbt::class, 'fase_id', 'id');
-    }
-
     public function archivomodel()
     {
         return $this->hasMany(ArchivoModel::class, 'fase_id', 'id');
-    }
-
-    public function articulaciones()
-    {
-        return $this->hasMany(Articulacion::class, 'fase_id', 'id');
     }
 
     public function actividades_movimientos()
@@ -92,5 +82,14 @@ class Fase extends Model
     {
         return $this->belongsToMany(Movimiento::class, 'movimientos_actividades_users_roles')
         ->withTimestamps();
+    }
+
+    /**
+     * The inverse relation one to much articulations
+     *
+     * @return void
+     */
+    public function articulations(){
+        return $this->hasMany(Articulation::class, 'phase_id');
     }
 }

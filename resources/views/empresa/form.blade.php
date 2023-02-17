@@ -49,12 +49,12 @@
         @foreach($sectores as $value)
             @if($existe)
                 @if ($empresa->sector_id == $value->id)
-                <option value="{{$value->id}}" selected>{{$value->nombre}}</option> 
+                <option value="{{$value->id}}" selected>{{$value->nombre}}</option>
                 @else
-                <option value="{{$value->id}}">{{$value->nombre}}</option> 
+                <option value="{{$value->id}}">{{$value->nombre}}</option>
                 @endif
             @else
-            <option value="{{$value->id}}">{{$value->nombre}}</option> 
+            <option value="{{$value->id}}">{{$value->nombre}}</option>
             @endif
         @endforeach
         </select>
@@ -80,12 +80,12 @@
         @foreach($tamanhos as $value)
             @if($existe)
                 @if ($empresa->tamanhoempresa_id == $value->id)
-                <option value="{{$value->id}}" selected>{{$value->nombre}}</option> 
+                <option value="{{$value->id}}" selected>{{$value->nombre}}</option>
                 @else
-                <option value="{{$value->id}}">{{$value->nombre}}</option> 
+                <option value="{{$value->id}}">{{$value->nombre}}</option>
                 @endif
             @else
-            <option value="{{$value->id}}">{{$value->nombre}}</option> 
+            <option value="{{$value->id}}">{{$value->nombre}}</option>
             @endif
         @endforeach
     </select>
@@ -98,9 +98,9 @@
         @foreach($tipos as $value)
             @if($existe)
                 @if ($empresa->tipoempresa_id == $value->id)
-                <option value="{{$value->id}}" selected>{{$value->nombre}}</option> 
+                <option value="{{$value->id}}" selected>{{$value->nombre}}</option>
                 @else
-                <option value="{{$value->id}}">{{$value->nombre}}</option> 
+                <option value="{{$value->id}}">{{$value->nombre}}</option>
                 @endif
             @else
             <option value="{{$value->id}}">{{$value->nombre}}</option>

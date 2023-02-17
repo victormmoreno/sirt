@@ -34,48 +34,36 @@
                                             <p class="m-t-lg flow-text secondary-text">{{$user->present()->userFullName()}}</p>
                                             <span class="mailbox-title">{{$user->present()->userYearOld()}}</span>
                                             @foreach($user->getRoleNames() as $value)
-                                            <div class="chip m-t-sm blue-grey white-text"> {{$value}}</div>
+                                                <div class="chip m-t-sm blue-grey white-text"> {{$value}}</div>
                                             @endforeach
                                             <div class="position-top-right p f-12 mail-date show-on-large hide-on-med-and-down">Miembro desde {{$user->present()->userCreatedAtFormat()}}</div>
                                         </div>
                                         <div class="right mailbox-buttons">
-                                            @if($user->documento != auth()->user()->documento)
-                                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsAdministrador()))
-                                                    <a href="{{route('usuario.usuarios.acceso', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar Acceso</a>
-                                                    <a href="{{route('user.newpassword', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Generar nueva contraseña</a>
-
-                                                    <a class='dropdown-button btn waves-effect secondary-text btn-flat m-t-xs' href='#' data-activates='dropdown-actions'>Cambiar información</a>
-
-                                                    <ul id='dropdown-actions' class='dropdown-content'>
-                                                        <li><a href="{{route('usuario.usuarios.edit', $user->present()->userDocumento())}}">Cambiar Información personal</a></li>
-                                                        <li class="divider"></li>
-                                                        <li><a  href="{{route('usuario.usuarios.changenode', $user->present()->userDocumento())}}">Cambiar Roles y Nodos</a></li>
-                                                    </ul>
-                                                @endif
-                                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && !$user->hasAnyRole([App\User::IsDinamizador(), App\User::IsActivador() ]))
-                                                    <a href="{{route('usuario.usuarios.acceso', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar Acceso</a>
-                                                    <a href="{{route('user.newpassword', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Generar nueva contraseña</a>
-                                                    <a class='dropdown-button btn waves-effect secondary-text btn-flat m-t-xs' href='#' data-activates='dropdown-actions'>Cambiar información</a>
-                                                    <!-- Dropdown Structure -->
-                                                    <ul id='dropdown-actions' class='dropdown-content'>
-                                                        <li><a href="{{route('usuario.usuarios.edit', $user->present()->userDocumento())}}">Cambiar Información personal</a></li>
-                                                        <li class="divider"></li>
-                                                        <li><a  href="{{route('usuario.usuarios.changenode', $user->present()->userDocumento())}}">Cambiar Roles y Nodos</a></li>
-                                                    </ul>
-                                                @endif
-                                                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto() || session()->get('login_role') == App\User::IsArticulador()) && !$user->present()->userChangeAccess())
-                                                    <a href="{{route('usuario.usuarios.acceso', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar Acceso</a>
-                                                    <a href="{{route('user.newpassword', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Generar nueva contraseña</a>
-                                                    <a href="{{route('usuario.usuarios.edit', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar información</a>
-                                                @endif
-                                            @endif
+                                            @can('access', $user)
+                                                <a href="{{route('usuario.usuarios.acceso', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar Acceso</a>
+                                            @endcan
+                                            @can('generatePassword', $user)
+                                                <a href="{{route('user.newpassword', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Generar nueva contraseña</a>
+                                            @endcan
+                                            @canany(['update','updateNodeAndRole'], $user)
+                                            <a class='dropdown-button btn waves-effect secondary-text btn-flat m-t-xs' href='#' data-activates='dropdown-actions'>Cambiar información</a>
+                                            <ul id='dropdown-actions' class='dropdown-content'>
+                                                @can('update',$user)
+                                                    <li><a href="{{route('usuario.usuarios.edit', $user->present()->userDocumento())}}">Cambiar Información personal</a></li>
+                                                @endcan
+                                                @can('updateNodeAndRole',$user)
+                                                    <li class="divider"></li>
+                                                    <li><a  href="{{route('usuario.usuarios.changenode', $user->present()->userDocumento())}}">Cambiar Roles y Nodos</a></li>
+                                                @endcan
+                                            </ul>
+                                            @endcanany
                                         </div>
                                     </div>
                                     <div class="divider mailbox-divider"></div>
                                     <div class="mailbox-text">
                                         @if(session()->has('status') || session()->has('error'))
-                                            <div class="center">
-                                                <div class="card  {{session('status') ? 'green': ''}} {{session('error') ? 'red': ''}}  darken-1">
+                                            <div class="center ">
+                                                <div class="card  {{session('status') ? 'bg-success': ''}} {{session('error') ? 'bg-danger': ''}}  white-text">
                                                     <div class="row">
                                                         <div class="col s12 m10">
                                                             <div class="card-content white-text">
@@ -92,7 +80,7 @@
                                         @endif
                                         <div class="card-content">
                                             <span class="card-title primary-text center">Información básica</span>
-                                            <span class="badge green lighten-1 white-text">{{$user->present()->userAcceso()}}</span>
+                                            {!!$user->present()->userAcceso()!!}
                                             <div class="server-load row">
                                                 <div class="server-stat col s12 m4 l3">
                                                     <p>{{$user->present()->userTipoDocuento() }}</p>
@@ -279,6 +267,19 @@
                                                     <div class="server-stat col s12 m6 l6">
                                                         <p>{{$user->present()->userTipoTalento()}}</p>
                                                         <span>Otra información {{App\User::IsTalento()}}</span>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                            @if($user->isUserArticulador())
+                                            <span class="secondary-text">Información {{App\User::IsArticulador()}}</span>
+                                                <div class="server-load row">
+                                                    <div class="server-stat col s12 m4 l4">
+                                                        <p>{{$user->present()->userArticuladorNodoName()}}</p>
+                                                        <span>Nodo</span>
+                                                    </div>
+                                                    <div class="server-stat col s12 m4 l4">
+                                                        <p>{{$user->present()->userArticuladorHonorarios()}}</p>
+                                                        <span>Honorario</span>
                                                     </div>
                                                 </div>
                                             @endif

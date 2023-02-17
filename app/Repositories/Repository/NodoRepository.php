@@ -33,42 +33,23 @@ class NodoRepository
         return Nodo::SelectNodo()->get();
     }
 
-    /*=================================================================================
-    =            metodo para consultar todos los centros de formacion SENA            =
-    =================================================================================*/
 
     public function getAllCentros()
     {
         return Centro::allCentros()->pluck('nombre', 'id');
     }
 
-    /*=====  End of metodo para consultar todos los centros de formacion SENA  ======*/
-
-    /*================================================================
-    =            metaodo para consultar todas las lineas             =
-    ================================================================*/
 
     public function getAllLineas()
     {
         return LineaTecnologica::AllLineas();
     }
 
-    /*=====  End of metaodo para consultar todas las lineas   ======*/
-
-    /*===========================================================================
-    =            metodo para consultar todos las regionales del pais            =
-    ===========================================================================*/
 
     public function getAllRegionales()
     {
         return Regional::allRegionales()->pluck('nombre', 'id');
     }
-
-    /*=====  End of metodo para consultar todos las regionales del pais  ======*/
-
-    /*===================================================
-    =            metodo para guardar un nodo            =
-    ===================================================*/
 
     public function storeNodo($request)
     {
@@ -117,20 +98,14 @@ class NodoRepository
 
             DB::commit();
             return true;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return false;
         }
     }
 
-    /*=====  End of metodo para guardar un nodo  ======*/
-
-    /*======================================================
-    =            metodo para actualizar un nodo            =
-    ======================================================*/
     public function Update($request, $entidadNodo)
     {
-
         DB::beginTransaction();
 
         try {
@@ -165,23 +140,20 @@ class NodoRepository
             }
             DB::commit();
             return true;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return false;
         }
     }
 
-    /*=====  End of metodo para actualizar un nodo  ======*/
 
     /**
      * mostar equipo humano de tecnoparque.
      *
-     * @return array
-     * @author julian londo単o
+     * @return object
      */
     public function getTeamTecnoparque()
     {
-
         return Nodo::teamTecnoparque([
             'entidad',
             'entidad.ciudad',
@@ -202,20 +174,6 @@ class NodoRepository
             'ingresos',
             'ingresos.user',
         ]);
-            
-        
-        // ->orWhereHas('infocenter.user', function ($query){
-        //     $query->where('estado', User::IsActive())
-        //             ->where('deleted_at',null);
-        // })
-        // ->orWhereHas('dinamizador.user', function ($query){
-        //     $query->where('estado', User::IsActive())
-        //             ->where('deleted_at',null);
-        // })
-        // ->orWhereHas('ingresos.user', function ($query){
-        //     $query->where('estado', User::IsActive())
-        //             ->where('deleted_at',null);
-        // });
     }
 
     /**
@@ -232,9 +190,14 @@ class NodoRepository
     public function consultarMetasDeTecnoparque($nodos = null)
     {
         if ($nodos == null) {
-            return MetaNodo::all();
+            return MetaNodo::query()->select(['nodo_id','anho','articulaciones','trl6','trl7_trl8', 'entidades.nombre as nodo'])
+            ->join('nodos','nodos.id','metas_nodo.nodo_id')
+            ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id');
         } else {
-            return MetaNodo::whereIn('nodo_id', $nodos);
+            return MetaNodo::query()->select(['nodo_id','anho','articulaciones','trl6','trl7_trl8', 'entidades.nombre as nodo'])
+            ->join('nodos','nodos.id','metas_nodo.nodo_id')
+            ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+            ->whereIn('nodo_id', $nodos);
         }
     }
 

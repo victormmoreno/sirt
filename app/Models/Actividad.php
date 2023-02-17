@@ -100,11 +100,6 @@ class Actividad extends Model
         return $this->belongsTo(Gestor::class, 'gestor_id', 'id');
     }
 
-    public function articulacionpbt()
-    {
-        return $this->hasOne(ArticulacionPbt::class, 'actividad_id', 'id');
-    }
-
     public function nodo()
     {
         return $this->belongsTo(Nodo::class, 'nodo_id', 'id');

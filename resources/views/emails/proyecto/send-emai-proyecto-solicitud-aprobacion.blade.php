@@ -5,7 +5,7 @@ Señor(a)<br>
 <b>_{{$notificacion->receptor->nombres.' '.$notificacion->receptor->apellidos}}_</b><br>
 Cordial Saludo.
 <br>
-Se ha enviado este correo para informar que el {{$notificacion->rol_remitente->name}} {{$notificacion->remitente->nombres .' '. $notificacion->remitente->apellidos}} ha solicitado 
+Se ha enviado este correo para informar que el {{$notificacion->rol_remitente->name}} {{$notificacion->remitente->nombres .' '. $notificacion->remitente->apellidos}} ha solicitado
 aprobar la fase de {{$notificacion->fase->nombre}} del proyecto {{$notificacion->notificable->present()->proyectoName()}}.
 <br>
 

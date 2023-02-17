@@ -1,12 +1,25 @@
 {
-    "name": "tecnoparque/gestion2020",
-    "type": "project",
-    "description": "The Laravel Framework.",
+    "name": "tecnoparque/gestion2021",
+    "description": "SIRT es un sistema de información para la gestion de los procesos internos de la red Tecnoparque Colombia, basado en Laravel",
     "keywords": [
         "framework",
-        "laravel"
+        "Laravel",
+        "Sistema",
+        "SIRT",
+        "SENA"
+    ],
+    "authors": [
+        {
+            "name": "Julian Londoño Raigosa",
+            "email": "jlondono433@gmail.com"
+        },
+        {
+            "name": "Victor Manuel Moreno Vega",
+            "email": "vmmorenov@sena.edu.co"
+        }
     ],
     "license": "MIT",
+    "type": "project",
     "require": {
         "php": "^7.1.3",
         "barryvdh/laravel-dompdf": "^0.8.5",
@@ -21,7 +34,7 @@
         "yajra/laravel-datatables": "1.5"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.7",
+        "barryvdh/laravel-debugbar": "3.2.3",
         "beyondcode/laravel-dump-server": "^1.0",
         "filp/whoops": "^2.0",
         "fzaninotto/faker": "^1.4",

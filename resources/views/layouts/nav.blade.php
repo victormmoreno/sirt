@@ -260,16 +260,16 @@
             @break
             @case(App\User::IsDesarrollador())
 
-            @include('layouts.navrole.desarrollador')
-            @break
+                    @include('layouts.navrole.desarrollador')
+                    @break
 
-            @case(App\User::IsArticulador())
-                @include('layouts.navrole.articulador')
-            @break
-            @case(App\User::IsApoyoTecnico())
-                @include('layouts.navrole.apoyo-tecnico')
-            @break
-            @default
+                @case(App\User::IsArticulador())
+                    @include('layouts.navrole.articulador')
+                    @break
+                @case(App\User::IsApoyoTecnico())
+                    @include('layouts.navrole.apoyo-tecnico')
+                    @break
+                @default
             @endswitch
         </ul>
         <div class="footer">

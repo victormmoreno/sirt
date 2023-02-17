@@ -35,8 +35,7 @@
                                     </div>
                                     <div class="divider m-b-md"></div>
                                     <div class="row search-tabs-row search-tabs-header">
-
-                                        <div class="input-field col s12 m2 l1">
+                                        <div class="input-field col s12 m4 l1">
                                             <label class="active" for="filter_year_support">Año <span
                                                     class="red-text">*</span></label>
                                             <select name="filter_year_support" id="filter_year_support">
@@ -46,7 +45,7 @@
                                                 <option value="all">todos</option>
                                             </select>
                                         </div>
-                                        <div class="input-field col s12 m3 l4">
+                                        <div class="input-field col s12 m4 l4">
                                             <label class="active" for="filter_request_support">Tipo Solicitud<span
                                                     class="red-text">*</span></label>
                                             <select name="filter_request_support" id="filter_request_support">
@@ -55,7 +54,7 @@
                                                 <option value="Requerimiento">Requerimiento</option>
                                             </select>
                                         </div>
-                                        <div class="input-field col s12 m2 l2">
+                                        <div class="input-field col s12 m4 l2">
                                             <label class="active" for="filter_state_support">Estado</label>
                                             <select name="filter_state_support" id="filter_state_support">
                                                 <option value="Pendiente">Pendiente</option>
@@ -65,14 +64,12 @@
                                             </select>
                                         </div>
                                         <div class="col s12 m6 l4 offset-m3 right">
-                                            <button class="waves-effect waves-grey btn-flat search-tabs-button right"
-                                                    id="filter_support"><i class="material-icons">search</i>Buscar
-                                            </button>
+                                            <button id="filter_support" class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right"><i class="material-icons">search</i>Filtrar</button>
                                         </div>
                                     </div>
                                     <table id="support_data_table"
-                                           class="display responsive-table datatable-example dataTable"
-                                           style="width: 100%">
+                                            class="display responsive-table datatable-example dataTable"
+                                            style="width: 100%">
                                         <thead class="bg-primary white-text">
                                         <tr>
                                             <th>Ticket</th>

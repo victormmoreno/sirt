@@ -29,3 +29,4 @@ class ProyectoApproveWasRequestedInPhase
         Mail::to($event->destinatarios)->send(new SendEmailAprobarProyecto($event->notificacion));
     }
 }
+

@@ -50,7 +50,6 @@ class EdtRepository
         $padre = $edt->actividad;
         // dd($padre);
         // Se usa el método sync sin nada para eliminar los datos de las relaciones muchos a muchos
-        // Elimina los datos de la tabla edt_entidad relacionados con la articulacion
         $edt->entidades()->sync([]);
         // Directorio del proyecto
         $directory = $this->returnDirectoryEdtFiles($edt->id);
@@ -439,115 +438,113 @@ class EdtRepository
     ->get();
   }
 
-  /**
-  * Registrar una edt en la base de datos
-  * @param Request request Datos del formulario de edt (create)
-  * @return boolean
-  */
-  public function storeEdtRepository($request)
-  {
-    DB::beginTransaction();
-    try {
+    /**
+     * Registrar una edt en la base de datos
+    * @param Request request Datos del formulario de edt (create)
+    * @return boolean
+    */
+    public function storeEdtRepository($request)
+    {
+        DB::beginTransaction();
+        try {
 
-      $codigo_edt = "";
-      $anho       = Carbon::now()->isoFormat('YYYY');
+        $codigo_edt = "";
+        $anho       = Carbon::now()->isoFormat('YYYY');
 
-      $idnodo                           = sprintf("%02d", auth()->user()->gestor->nodo_id);
-      $linea                            = auth()->user()->gestor->lineatecnologica_id;
-      $gestor                           = sprintf("%03d", auth()->user()->gestor->id);
-      $idEdt                            = Edt::selectRaw('MAX(id+1) AS max')->get()->last();
-      $idEdt->max == null ? $idEdt->max = 1 : $idEdt->max = $idEdt->max;
-      $idEdt->max                       = sprintf("%04d", $idEdt->max);
+        $idnodo                           = sprintf("%02d", auth()->user()->gestor->nodo_id);
+        $linea                            = auth()->user()->gestor->lineatecnologica_id;
+        $gestor                           = sprintf("%03d", auth()->user()->gestor->id);
+        $idEdt                            = Edt::selectRaw('MAX(id+1) AS max')->get()->last();
+        $idEdt->max == null ? $idEdt->max = 1 : $idEdt->max = $idEdt->max;
+        $idEdt->max                       = sprintf("%04d", $idEdt->max);
 
-      $codigo_edt = 'E' . $anho . '-' . $idnodo . $linea . $gestor . '-' . $idEdt->max;
+        $codigo_edt = 'E' . $anho . '-' . $idnodo . $linea . $gestor . '-' . $idEdt->max;
 
-      $actividad = Actividad::create([
-      'gestor_id'        => auth()->user()->gestor->id,
-      'nodo_id'          => auth()->user()->gestor->nodo_id,
-      'codigo_actividad' => $codigo_edt,
-      'nombre'           => $request->txtnombre,
-      'fecha_inicio'     => $request->txtfecha_inicio,
-      ]);
+        $actividad = Actividad::create([
+        'gestor_id'        => auth()->user()->gestor->id,
+        'nodo_id'          => auth()->user()->gestor->nodo_id,
+        'codigo_actividad' => $codigo_edt,
+        'nombre'           => $request->txtnombre,
+        'fecha_inicio'     => $request->txtfecha_inicio,
+        ]);
 
-      $edt = Edt::create([
-      'actividad_id'        => $actividad->id,
-      'areaconocimiento_id' => $request->txtareaconocimiento_id,
-      'tipoedt_id'          => $request->txttipo_edt,
-      'observaciones'       => $request->txtobservaciones,
-      'empleados'           => $request->txtempleados,
-      'instructores'        => $request->txtinstructores,
-      'aprendices'          => $request->txtaprendices,
-      'publico'             => $request->txtpublico,
-      'estado'              => Edt::IsActive(),
-      ]);
+        $edt = Edt::create([
+        'actividad_id'        => $actividad->id,
+        'areaconocimiento_id' => $request->txtareaconocimiento_id,
+        'tipoedt_id'          => $request->txttipo_edt,
+        'observaciones'       => $request->txtobservaciones,
+        'empleados'           => $request->txtempleados,
+        'instructores'        => $request->txtinstructores,
+        'aprendices'          => $request->txtaprendices,
+        'publico'             => $request->txtpublico,
+        'estado'              => Edt::IsActive(),
+        ]);
 
-      $edt->entidades()->sync($request->get('entidades'), false);
+        $edt->entidades()->sync($request->get('entidades'), false);
 
-      DB::commit();
-      return true;
-    } catch (\Exception $e) {
-      DB::rollback();
-      return false;
+        DB::commit();
+        return true;
+        } catch (\Exception $e) {
+            DB::rollback();
+            return false;
+        }
+
     }
 
-  }
+    /**
+     * undocumented function summary
+    * @param Request request Datos del formulario de edt (create)
+    * @param int id Id del edt que se va a editar
+    * @return boolean
+    * @author dum
+    */
+    public function updateEdtRepository($request, $id)
+    {
+        DB::beginTransaction();
+        try {
+        $edt = Edt::find($id);
 
-  /**
-  * undocumented function summary
-  * @param Request request Datos del formulario de edt (create)
-  * @param int id Id del edt que se va a editar
-  * @return boolean
-  * @author dum
-  */
-  public function updateEdtRepository($request, $id)
-  {
-    DB::beginTransaction();
-    try {
-      $edt = Edt::find($id);
+        $fecha_fin = $edt->fecha_fin;
+        $estado    = 1;
+        if (isset($request->txtestado)) {
+            $estado    = 0;
+            $fecha_fin = $request->txtfecha_fin;
+        }
 
-      $fecha_fin = $edt->fecha_fin;
-      $estado    = 1;
-      if (isset($request->txtestado)) {
-        $estado    = 0;
-        $fecha_fin = $request->txtfecha_fin;
-      }
+        $edt->actividad()->update([
+        'nombre'       => $request->txtnombre,
+        'fecha_inicio' => $request->txtfecha_inicio,
+        'fecha_cierre' => $fecha_fin,
+        ]);
 
-      $edt->actividad()->update([
-      'nombre'       => $request->txtnombre,
-      'fecha_inicio' => $request->txtfecha_inicio,
-      'fecha_cierre' => $fecha_fin,
-      ]);
+        $edt->update([
+        'areaconocimiento_id' => $request->txtareaconocimiento_id,
+        'tipoedt_id'          => $request->txttipo_edt,
+        'observaciones'       => $request->txtobservaciones,
+        'empleados'           => $request->txtempleados,
+        'instructores'        => $request->txtinstructores,
+        'aprendices'          => $request->txtaprendices,
+        'publico'             => $request->txtpublico,
+        'estado'              => $estado,
+        ]);
 
-      $edt->update([
-      'areaconocimiento_id' => $request->txtareaconocimiento_id,
-      'tipoedt_id'          => $request->txttipo_edt,
-      'observaciones'       => $request->txtobservaciones,
-      'empleados'           => $request->txtempleados,
-      'instructores'        => $request->txtinstructores,
-      'aprendices'          => $request->txtaprendices,
-      'publico'             => $request->txtpublico,
-      'estado'              => $estado,
-      ]);
-
-      $edt->entidades()->sync($request->get('entidades'), true);
-      DB::commit();
-      return true;
-    } catch (\Exception $e) {
-      DB::rollback();
-      return false;
+        $edt->entidades()->sync($request->get('entidades'), true);
+        DB::commit();
+        return true;
+        } catch (\Exception $e) {
+        DB::rollback();
+        return false;
+        }
     }
-  }
 
-  /**
-  * retorna edt por usuario --- gestor // talento ---
-  * @param array id Id del edt que se va a editar
-  * @return collection
-  * @author devjul
-  */
-
-  public function findEdtByUser(array $relations)
-  {
-    return Edt::infoEdt($relations);
-  }
-
+    /**
+     * retorna edt por usuario --- gestor // talento ---
+    * @param array id Id del edt que se va a editar
+    * @return collection
+    * @author devjul
+    */
+    public function findEdtByUser(array $relations)
+    {
+        return Edt::infoEdt($relations);
+    }
 }

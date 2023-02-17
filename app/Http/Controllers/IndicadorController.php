@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\{Session};
-use App\{User, Models\Nodo, Models\Fase, Models\Proyecto, Models\MetaNodo};
+use App\{User, Models\Nodo, Models\Proyecto};
 use Repositories\Repository\NodoRepository;
 use App\Repositories\Repository\ProyectoRepository;
 use Carbon\Carbon;
@@ -66,39 +65,79 @@ class IndicadorController extends Controller
     ]);
   }
 
-  public function retornarTodasLasMetasArray($metas, $trl6, $trl7_8, $activos)
-  {
-    foreach ($metas as $meta) {
-      $cantidad_trl6 = $trl6->where('nodo', $meta->nodo_id)->first();
-      $cantidad_trl7_8 = $trl7_8->where('nodo', $meta->nodo_id)->first();
-      $cantidad_activos = $activos->where('nodo_id', $meta->nodo_id)->first();
-      if ($cantidad_trl6 == null) {
-        $meta['trl6_obtenido'] = 0;
-      } else {
-        $meta['trl6_obtenido'] = $cantidad_trl6->cantidad;
-      }
+    public function retornarTodasLasMetasArray($metas, $trl6, $trl7_8, $activos)
+    {
+        foreach ($metas as $meta) {
+        $cantidad_trl6 = $trl6->where('nodo', $meta->nodo_id)->first();
+        $cantidad_trl7_8 = $trl7_8->where('nodo', $meta->nodo_id)->first();
+        $cantidad_activos = $activos->where('nodo_id', $meta->nodo_id)->first();
+        if ($cantidad_trl6 == null) {
+            $meta['trl6_obtenido'] = 0;
+        } else {
+            $meta['trl6_obtenido'] = $cantidad_trl6->cantidad;
+        }
 
-      if ($cantidad_trl7_8 == null) {
-        $meta['trl7_8_obtenido'] = 0;
-      } else {
-        $meta['trl7_8_obtenido'] = $cantidad_trl7_8->cantidad;
-      }
-      
-      if ($cantidad_activos == null) {
-        $meta['activos'] = 0;
-      } else {
-        $meta['activos'] = $cantidad_activos->cantidad;
-      }
+        if ($cantidad_trl7_8 == null) {
+            $meta['trl7_8_obtenido'] = 0;
+        } else {
+            $meta['trl7_8_obtenido'] = $cantidad_trl7_8->cantidad;
+        }
 
-      $meta['progreso_total'] = round(100*($meta->trl7_8_obtenido+$meta->trl6_obtenido)/($meta->trl6+$meta->trl7_trl8), 2);
+        if ($cantidad_activos == null) {
+            $meta['activos'] = 0;
+        } else {
+            $meta['activos'] = $cantidad_activos->cantidad;
+        }
+
+        $meta['progreso_total'] = round(100*($meta->trl7_8_obtenido+$meta->trl6_obtenido)/($meta->trl6+$meta->trl7_trl8), 2);
+        }
     }
 
-    return $metas;
-  }
+    public function retornarTodasLasMetasArticulacionArray($metas, $values)
+    {
+        foreach ($metas as $meta) {
+            $cantidad_inicio = $values['start']->where('nodo', $meta->nodo_id)->first();
 
-  public function form_import_metas()
-  {
-    return view('indicadores.register_metas');
-  }
+            $cantidad_ejecucion = $values['execution']->where('nodo', $meta->nodo_id)->first();
+            $cantidad_cierre = $values['closing']->where('nodo', $meta->nodo_id)->first();
+            $cantidad_finalizado = $values['finish']->where('nodo', $meta->nodo_id)->first();
+            if ($cantidad_inicio == null) {
+                $meta['articulation_start'] = 0;
+            } else {
+                $meta['articulation_start'] = $cantidad_inicio->cantidad;
+            }
+
+            if ($cantidad_ejecucion == null) {
+                $meta['articulation_execution'] = 0;
+            } else {
+                $meta['articulation_execution'] = $cantidad_ejecucion->cantidad;
+            }
+
+            if ($cantidad_cierre == null) {
+                $meta['articulation_closing'] = 0;
+            } else {
+                $meta['articulation_closing'] = $cantidad_cierre->cantidad;
+            }
+
+            if ($cantidad_finalizado == null) {
+                $meta['articulation_finish'] = 0;
+            } else {
+                $meta['articulation_finish'] = $cantidad_finalizado->cantidad;
+            }
+
+            if(isset($meta->articulation_finish) && $meta->articulation_finish != 0){
+                $meta['progreso_total_articulaciones'] = round(100*($meta->articulation_finish/$meta->articulaciones), 2);
+            }else{
+                $meta['progreso_total_articulaciones'] = round(0, 2);
+            }
+
+        }
+        return $metas;
+    }
+
+    public function form_import_metas()
+    {
+        return view('indicadores.register_metas');
+    }
 
 }

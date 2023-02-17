@@ -464,7 +464,6 @@ function consultarEdtsPorLineaYFecha_stacked(bandera) {
         type: 'get',
         url: host_url + '/grafico/consultarEdtsPorLineaYFecha/'+id+'/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
         success: function (data) {
-          // console.log(data);
           Highcharts.chart(graficosEdtId.grafico3, {
             chart: {
               type: 'column'
@@ -522,7 +521,6 @@ function consultarEdtsPorGestorYFecha_stacked(bandera) {
         type: 'get',
         url: host_url + '/grafico/consultarEdtsPorGestorYFecha/'+id+'/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin,
         success: function (data) {
-          // console.log(data);
           Highcharts.chart(graficosEdtId.grafico2, {
             chart: {
               type: 'column'
@@ -719,16 +717,13 @@ function articulacionesGrafico1Ajax(id, fecha_inicio, fecha_fin) {
     url: host_url + '/grafico/consultarArticulacionesPorNodo/'+id+'/'+fecha_inicio+'/'+fecha_fin,
     success: function (data) {
       var tamanho = data.consulta.length;
-      // console.log(tamanho);
       var datos = {
         gestores: [],
         gruposArray: [],
         empresasArray: [],
         emprendedoresArray: []
       };
-      // console.log(data.tipos);
       for (var i = 0; i < tamanho; i++) {
-        // console.log(data.consulta[i].gestor);
         if (data.consulta[i].gestor != null) {
           datos.gestores.push(data.consulta[i].gestor);
         }
@@ -827,7 +822,6 @@ function consultarArticulacionesDeUnGestorPorFecha_stacked() {
         type: 'get',
         url: host_url + '/grafico/consultarArticulacionesPorGestorYFecha/'+id+'/'+fecha_inicio+'/'+fecha_fin,
         success: function (data) {
-          // console.log(data);
           Highcharts.chart(graficosId.grafico2, {
             chart: {
               type: 'column'

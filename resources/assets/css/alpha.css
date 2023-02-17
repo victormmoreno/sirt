@@ -72,6 +72,10 @@ a:focus {
     color: #f44336;
 }
 
+.btn-flat.waves-primary {
+    color:  var(--primary);
+}
+
 .btn.white {
     color: #343434;
 }
@@ -2766,11 +2770,11 @@ input[type=text]:focus:not([readonly])+label, input[type=password]:focus:not([re
 }
 
 .picker__weekday-display {
-    background-color: #00796b;
+    background-color: var(--primary-lighten);
 }
 
 .picker__day.picker__day--today {
-    color: #26a69a ;
+    color: var(--primary) ;
 }
 
 .picker__day--selected, .picker__day--selected:hover, .picker--focused .picker__day--selected {

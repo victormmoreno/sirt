@@ -136,7 +136,7 @@ function consultarSeguimientoActualDeUnGestor(gestor_id) {
 };
 
 function consultarSeguimientoEsperadoDeTecnoparque() {
-  
+
   $.ajax({
     dataType: 'json',
     type: 'get',
@@ -261,7 +261,7 @@ function graficoSeguimientoPorMes(data, name) {
       name: 'Proyectos inscritos',
       data: data.datos.cantidades
     }],
-  
+
     responsive: {
       rules: [{
         condition: {

@@ -8,8 +8,6 @@ use App\Models\Gestor;
 use App\Models\Talento;
 use App\User;
 use Illuminate\Support\Facades\Session;
-use Spatie\Permission\Models\Role;
-
 
 class HomeController extends Controller
 {
@@ -33,27 +31,22 @@ class HomeController extends Controller
       switch ( Session::get('login_role') ) {
         case User::IsActivador() :
 
-            $dinamizadoresActivos = Dinamizador::with('user')
-            ->whereHas('user', function($query){
-                $query->where('estado', User::IsActive());
-            })->get()->count();
+            $dinamizadores = User::role(User::IsDinamizador());
+            $admin = User::role(User::IsAdministrador());
 
+            $expertos = User::role(User::IsExperto());
 
-            $gestoresActivos = Gestor::with('user')->whereHas('user', function($query){
-                $query->where('estado', User::IsActive());
-            })->get()->count();
-
-            $talentosActivos = Talento::with('user')->get()->count();
+            $talentos = User::role(User::IsTalento());
 
             return view('home.administrador',[
               'countNodos' => Nodo::countNodos(),
-              'countDinamizadoresActivos' => $dinamizadoresActivos,
-              'totalDinamizadores' => Dinamizador::with('user')->get()->count(),
-              'countGestoresActivos' =>  $gestoresActivos,
-              'totalGestores' =>  Gestor::with('user')->get()->count(),
-              'countTalentosActivos' =>  $talentosActivos,
-              'totalTalentos' => Talento::with('user')->get()->count(),
-              'administradores' => User::role(User::IsActivador())->select('documento','nombres','apellidos')->get(),
+              'countDinamizadoresActivos' => $dinamizadores->where('estado', User::IsActive())->get()->count(),
+              'totalDinamizadores' => $dinamizadores->get()->count(),
+              'countGestoresActivos' =>  $expertos->where('estado', User::IsActive())->get()->count(),
+              'totalGestores' =>  $expertos->get()->count(),
+              'countTalentosActivos' =>  $talentos->where('estado', User::IsActive())->get()->count(),
+              'totalTalentos' => $talentos->get()->count(),
+              'administradores' => $admin->select('documento','nombres','apellidos')->get(),
             ]);
         case User::IsDinamizador():
           $expertos = User::with(['gestor'])

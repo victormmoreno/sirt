@@ -59,7 +59,6 @@
                     type:'get',
                     url: host_url + '/equipos/getequiposporlinea/'+nodo+'/'+lineatecnologica
                 }).done(function(response){
-                    console.log(response);
                     $('#txtequipo').empty();
                     if (response.equipos == '' && response.equipos.length == 0) {
                         $('#txtequipo').append('<option value="">No se encontraron resultados</option>');
@@ -82,6 +81,6 @@
                 });
             },
         }
-    
+
     </script>
 @endpush --}}

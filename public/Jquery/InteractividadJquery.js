@@ -462,7 +462,6 @@ $(document).ready(function() {
         var paginationPosition = $(this).index() + 1; // Conseguir el numero en el que esta la img o elementos
         // al que se le ha dado click (".paginacion li" para este caso)
 
-
         $(".slider-escritorio li").hide(); //Ocultar Imgs o Elementos
 
         $(".slider-escritorio li:nth-child(" + paginationPosition + ")").fadeIn("slow"); // Mostrar el elemento correspondiente
@@ -501,7 +500,6 @@ $(document).ready(function() {
     /* == Aparecer titulo ==*/
 
     $(window).scroll(function() {
-
         var altoseccionvideo = $("#video").offset().top;
 
         var posicionhtml = $(window).scrollTop();

@@ -156,7 +156,7 @@ var tipoTalento = {
     getSelectTipoTalento:function (tipotal) {
         let valor = $(tipotal).val();
         let nombreTipoTalento = $("#txttipotalento option:selected").text();
-        
+
         if(valor == 1 || valor == 2){
             tipoTalento.showAprendizSena();
         }
@@ -389,7 +389,7 @@ var tipoTalento = {
 }
 
 $('button[type="reset"]').click(function() {       // apply to reset button's click event
-            this.form.reset();                    // reset the for   
+            this.form.reset();                    // reset the for
             $(".talento").show();
             $(".contratista").hide();
             $('#document').empty();
@@ -409,7 +409,7 @@ $('button[type="reset"]').click(function() {       // apply to reset button's cl
 });
 
 $('button[type="reset"]').click(function() {       // apply to reset button's click event
-            this.form.reset();                    // reset the for   
+            this.form.reset();                    // reset the for
             $(".talento").show();
             $(".contratista").hide();
             $('#document').empty();
@@ -425,9 +425,9 @@ $('button[type="reset"]').click(function() {       // apply to reset button's cl
                 starting_top: '10%',
                 ending_top: '10%'
             });
-            
+
             $('small[class="error red-text"]').empty();
-            
+
             return false;                         // prevent reset button from resetting again
 });
 
@@ -449,7 +449,6 @@ $(document).on('submit', 'form#formRegisterUser', function (event) {
         dataType: 'json',
         processData: false,
         success: function (data) {
-                console.log(data);
             $('button[type="submit"]').prop("disabled", false);
             $('.error').hide();
             if (data.fail) {
@@ -514,4 +513,4 @@ var createUser = {
             });
         }
     }
-}  
+}

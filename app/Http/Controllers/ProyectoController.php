@@ -464,7 +464,7 @@ class ProyectoController extends Controller
 
     /**
      * Consulta las sublineas que tiene un experto
-     * 
+     *
      * @param int $id Id de la línea tecnológica.
      * @return Response
      * @author dum
@@ -1077,7 +1077,7 @@ class ProyectoController extends Controller
     {
         if ($proyecto->fase->nombre == $proyecto->IsFinalizado()) {
             return [
-                'return' => true, 
+                'return' => true,
                 'msg' => 'ok'
             ];
         }
@@ -1089,25 +1089,25 @@ class ProyectoController extends Controller
         } else {
             if ($proyecto->fase->nombre == 'Suspendido') {
                 return [
-                    'return' => true, 
+                    'return' => true,
                     'msg' => 'ok'
                 ];
             } else {
                 if (($proyecto->fase->nombre == 'Planeación' && $fase_a_reversar == 'Inicio')) {
                     return [
-                        'return' => true, 
+                        'return' => true,
                         'msg' => 'ok'
                     ];
                 } else {
                     if (($proyecto->fase->nombre == 'Ejecución' && $fase_a_reversar == 'Planeación') || ($proyecto->fase->nombre == 'Ejecución' && $fase_a_reversar == 'Inicio')) {
                         return [
-                            'return' => true, 
+                            'return' => true,
                             'msg' => 'ok'
                         ];
                     } else {
                         if (($proyecto->fase->nombre == 'Cierre' && $fase_a_reversar == 'Ejecución') || ($proyecto->fase->nombre == 'Cierre' && $fase_a_reversar == 'Planeación') || ($proyecto->fase->nombre == 'Cierre' && $fase_a_reversar == 'Inicio')) {
                             return [
-                                'return' => true, 
+                                'return' => true,
                                 'msg' => 'ok'
                             ];
                         } else {
@@ -1121,7 +1121,7 @@ class ProyectoController extends Controller
             }
         }
         return [
-            'return' => true, 
+            'return' => true,
             'msg' => 'ok'
         ];
     }
@@ -1256,7 +1256,7 @@ class ProyectoController extends Controller
         }
         $proyectos = [];
 
-        if (!empty($request->filter_year_pro)) {
+        if (isset($request->filter_year_pro)) {
             $proyectos = Proyecto::select('id','idea_id','fase_id','articulacion_proyecto_id','alcance_proyecto')
             ->with([
                 'fase',
@@ -1280,13 +1280,13 @@ class ProyectoController extends Controller
     {
         return datatables()->of($proyectos  )
             ->addColumn('add_proyecto', function ($data) {
-                $checkbox = '';
-                if (isset($data->articulacion_proyecto->actividad)) {
-                    $checkbox = '<a class="btn blue" onclick="filter_project.addProjectToArticulacion(\'' .($data->articulacion_proyecto->actividad->codigo_actividad) . '\')">
-                                    <i class="material-icons">done</i>
-                                </a>';
-                }
-                return $checkbox;
+                    $checkbox = '';
+                    if (isset($data->articulacion_proyecto->actividad)) {
+                        $checkbox = '<a class="btn bg-info" onclick="articulationStage.addProjectToArticulacion(\'' .($data->articulacion_proyecto->actividad->codigo_actividad) . '\')">
+                                        <i class="material-icons">done</i>
+                                    </a>';
+                    }
+                    return $checkbox;
             })
             ->editColumn('codigo_proyecto', function ($data) {
                 if (isset($data->articulacion_proyecto->actividad)) {

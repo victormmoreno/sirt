@@ -67,7 +67,7 @@
                                             </a>
                                         </small>
                                         <div class="divider"></div>
-                                        <a class="m-t-sm primary-text text-darken-3 center-align" href="{{ route('/') }}">
+                                        <a class="m-t-sm primary-text center-align" href="{{ route('/') }}">
                                             Inicio
                                         </a>
                                     </div>

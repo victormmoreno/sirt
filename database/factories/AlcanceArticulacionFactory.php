@@ -7,6 +7,6 @@ use Faker\Generator as Faker;
 
 $factory->define(AlcanceArticulacion::class, function (Faker $faker) {
     return [
-        'nombre' => $faker->unique()->word,
+        'name' => $faker->unique()->word,
     ];
 });

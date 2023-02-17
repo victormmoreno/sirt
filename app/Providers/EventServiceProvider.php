@@ -21,7 +21,6 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\User\UserHasNewPasswordGenerated' => [
             'App\Listeners\User\SendEmailNewPasswordGenerated',
         ],
-
         'Illuminate\Auth\Events\Login'      => [
             'App\Listeners\User\Auth\LogSuccessfulLogin',
         ],
@@ -31,7 +30,6 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Idea\IdeaHasReceived' => [
             'App\Listeners\Idea\IdeaHasBeenReceived'
         ],
-
         'App\Events\Comite\ComiteWasRegistered' => [
             'App\Listeners\Comite\IdeaWasRegisteredInComite',
         ],
@@ -62,6 +60,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Support\MessageWasSent' => [
             'App\Listeners\Support\AutoReplyMessage',
         ],
+        'App\Events\Proyecto\ProyectoApproveWasRequested' => [
+            'App\Listeners\Proyecto\ProyectoApproveWasRequestedInPhase',
+        ]
     ];
 
     /**

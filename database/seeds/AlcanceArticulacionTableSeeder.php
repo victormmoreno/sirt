@@ -13,19 +13,19 @@ class AlcanceArticulacionTableSeeder extends Seeder
     public function run()
     {
         AlcanceArticulacion::create([
-            'nombre' => 'Internacional',
+            'name' => 'Internacional',
         ]);
 
         AlcanceArticulacion::create([
-            'nombre' => 'Nacional',
+            'name' => 'Nacional',
         ]);
 
         AlcanceArticulacion::create([
-            'nombre' => 'Regional',
+            'name' => 'Regional',
         ]);
 
         AlcanceArticulacion::create([
-            'nombre' => 'local',
+            'name' => 'local',
         ]);
     }
 }

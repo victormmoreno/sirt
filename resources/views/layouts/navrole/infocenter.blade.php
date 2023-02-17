@@ -38,11 +38,13 @@
         <i class="material-icons {{setActiveRouteActiveIcon('indicadores')}}">info_outline</i>Indicadores
     </a>
 </li>
+@can('index', App\User::class)
 <li class="no-padding {{setActiveRoute('usuario')}}">
     <a class="waves-effect waves-grey {{setActiveRouteActivePage('usuario')}}" href="{{route('usuario.index')}}" rel="canonical" title="Usuarios">
         <i class="material-icons {{ setActiveRouteActiveIcon('usuario') }}">supervised_user_circle</i>Usuarios
     </a>
 </li>
+@endcan
 <li class="no-padding {{setActiveRoute('empresa')}}">
     <a class="waves-effect waves-grey {{setActiveRouteActivePage('empresa')}}" href="{{route('empresa')}}" rel="canonical" title="Empresas">
         <i class="material-icons {{ setActiveRouteActiveIcon('empresa') }}">business_center</i>Empresas
