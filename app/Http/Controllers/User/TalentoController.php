@@ -38,22 +38,23 @@ class TalentoController extends Controller
         if (request()->ajax()) {
             $talentos = Talento::ConsultarTalentosDeTecnoparque()
                 ->get();
-            return datatables()->of($talentos)
-                ->addColumn('add_articulacion', function ($data) {
-                    $add = '<a onclick="addTalentoArticulacion(' . $data->id . ')" class="btn bg-secondary m-b-xs"><i class="material-icons">done</i></a>';
-                    return $add;
-                })->addColumn('add_proyecto', function ($data) {
-                    $add = '<a onclick="addTalentoProyecto(' . $data->id . ')" class="btn bg-secondary m-b-xs"><i class="material-icons">done</i></a>';
+            return datatables()->of($talentos)->addColumn('add_proyecto', function ($data) {
+                    $add = '<a onclick="addTalentoProyecto(' . $data->id . ')" class="btn bg-info white-text m-b-xs"><i class="material-icons">done</i></a>';
                     return $add;
                 })->addColumn('add_propiedad', function ($data) {
                     $propiedad = '<a onclick="addPersonaPropiedad(' . $data->user_id . ')" class="btn bg-secondary m-b-xs"><i class="material-icons">done</i></a>';
                     return $propiedad;
                 })
-                ->addColumn('add_articulacion_pbt', function ($data) {
-                    $add = '<a onclick="filter_project.addTalentArticulacionPbt(' . $data->id . ')" class="btn bg-secondary m-b-xs"><i class="material-icons">done</i></a>';
+                ->addColumn('add_intertocutor_talent_articulation', function ($data) {
+                    $add = '<a onclick="articulationStage.addInterlocutorTalentArticulacion(' . $data->id . ')" class="btn bg-info white-text m-b-xs"><i class="material-icons">done</i></a>';
                     return $add;
                 })
-                ->rawColumns(['add_articulacion', 'add_proyecto', 'add_propiedad', 'add_articulacion_pbt'])->make(true);
+
+                ->addColumn('add_talents_articulation', function ($data) {
+                    $add = '<a onclick="filter_articulations.addTalentToArticulation(' . $data->id . ')" class="btn bg-info white-text m-b-xs"><i class="material-icons">done</i></a>';
+                    return $add;
+                })
+                ->rawColumns(['add_proyecto', 'add_proyecto', 'add_propiedad', 'add_talents_articulation', 'add_intertocutor_talent_articulation'])->make(true);
         }
         abort('404');
     }

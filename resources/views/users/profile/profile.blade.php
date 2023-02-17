@@ -81,8 +81,7 @@
                                                     <div class="card-content">
                                                         <span
                                                             class="card-title primary-text center">Información básica</span>
-                                                        <span
-                                                            class="badge green lighten-1 white-text">{{$user->present()->userAcceso()}}</span>
+                                                        {!!$user->present()->userAcceso()!!}
                                                         <div class="server-load row">
                                                             <div class="server-stat col s6 m4 l3">
                                                                 <p>{{$user->present()->userTipoDocuento() }}</p>
@@ -237,7 +236,7 @@
                                                                     </div>
                                                                 @else
                                                                     <div class="server-stat col s12 m4 l4">
-                                                                        <p>{{$user->present()->userArticuladorName()}}</p>
+                                                                        <p>{{$user->present()->userArticuladorNodoName()}}</p>
                                                                         <span>Nodo</span>
                                                                     </div>
                                                                 @endif

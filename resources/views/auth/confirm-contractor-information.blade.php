@@ -1,561 +1,517 @@
 @extends('layouts.app')
-
-@section('meta-title', $user->nombres. ' '. $user->apellidos)
-
+@section('meta-title', "Confimar nuevo funcionario {$user->nombres} {$user->apellidos}")
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
+        <div class="row no-m-t no-m-b m-r-lg m-l-lg">
+            <div class="left left-align">
+                <h5 class="left-align primary-text">
+                    <i class="material-icons left">supervised_user_circle</i>
+                    Usuarios | Confirmar funcionario
+                </h5>
+            </div>
+            <div class="right right-align show-on-large hide-on-med-and-down">
+                <ol class="breadcrumbs">
+                    <li><a href="{{route('home')}}">Inicio</a></li>
+                    <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
+                    <li><a href="{{route('usuario.usuarios.show', $user->documento)}}">{{$user->documento}}</a></li>
+                    <li class="active">Confirmar funcionario</li>
+                </ol>
+            </div>
+        </div>
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
-                <div class="row">
-                    <div class="col s10 m10 l10">
-                        <h5 class="left-align hand-of-Sean-fonts orange-text text-darken-3">
-                            <i class="material-icons left ">
-                                supervised_user_circle
-                            </i>
-                            Usuario | Confirmar información
-                        </h5>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col s12 m12 l12">
-                        <div class="card mailbox-content">
-                            <div class="card-content">
-                                <div class="row no-m-t no-m-b">
-                                    <div class="col s12 m12 l12">
-                                        <div class="mailbox-view">
-                                            <div class="mailbox-view-header">
-                                                <div class="left">
-                                                    <div class="left">
-                                                        @if($user->genero == App\User::IsMasculino())
-                                                            <img alt="{{$user->present()->userFullName()}}" class="circle mailbox-profile-image z-depth-1" src="{{ asset('img/profile-image-masculine.png') }}"></img>
-                                                        @elseif($user->genero == App\User::IsFemenino())
-                                                            <img alt="{{$user->present()->userFullName()}}" class="circle mailbox-profile-image z-depth-1" src="{{ asset('img/profile-image-female.png') }}"></img>
-                                                        @else
-                                                            <img alt="{{$user->present()->userFullName()}}" class="circle mailbox-profile-image z-depth-1" src="{{ asset('img/profile-image-default.png') }}"></img>
-                                                        @endif
-                                                    </div>
-                                                    <div class="left">
-                                                        <span class="mailbox-title">
-                                                            {{$user->present()->userFullName()}}
-                                                        </span>
-                                                        <span class="mailbox-author">
-                                                            Tipo contrato: {{$user->present()->tipoContratista()}}
-                                                            <br>
-                                                                Miembro desde {{isset($user->created_at) ? $user->created_at->isoFormat('LL') : ': No Registra'}}
-                                                                <br>
-                                                            @if(isset($user->fechanacimiento))
-                                                            {{$user->fechanacimiento->age}} años
-                                                            @endif
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="right mailbox-buttons">
-                                                    <span class="mailbox-title">
-                                                        <p class="center">
-                                                            {{$user->present()->userFullName()}} está solicitando acceso al nodo {{$user->present()->nodoContratista()}}.
-                                                        </p>
-                                                        <p class="center-align">
-                                                            Ingrese los datos solicitados y darás acesso al usuario.
-                                                        </p>
-                                                    </span>
-                                                </div>
+                <div class="card mailbox-content">
+                    <div class="card-content">
+                        <div class="row no-m-t no-m-b">
+                            <div class="col s12 m12 l12">
+                                <div class="mailbox-view">
+                                    <div class="mailbox-view-header">
+                                        <div class="left">
+                                            <div class="left">
+                                                @if($user->genero == App\User::IsMasculino())
+                                                    <img alt="{{$user->present()->userFullName()}}" class="circle mailbox-profile-image z-depth-1" src="{{ asset('img/profile-image-masculine.png') }}"></img>
+                                                @elseif($user->genero == App\User::IsFemenino())
+                                                    <img alt="{{$user->present()->userFullName()}}" class="circle mailbox-profile-image z-depth-1" src="{{ asset('img/profile-image-female.png') }}"></img>
+                                                @else
+                                                    <img alt="{{$user->present()->userFullName()}}" class="circle mailbox-profile-image z-depth-1" src="{{ asset('img/profile-image-default.png') }}"></img>
+                                                @endif
                                             </div>
-                                            <div class="right">
-                                                <small>{{{$user->email}}}  </small>
-                                            </div>
-                                            <div class="divider mailbox-divider">
-                                            </div>
-                                            <div class="mailbox-text">
-                                                <form id="FormConfirmUser" action="{{ route('user.contractor.confirm', $user->documento)}}" method="POST" onsubmit="return checkSubmit()">
-                                                    {!! csrf_field() !!}
-                                                    {!! method_field('PUT')!!}
-                                                    <div class="row">
-
-                                                        <div class="col s12 m3 l3">
-                                                            <div class="col s12 m12 l12">
-                                                                @forelse($roles as  $name)
-                                                                    <p class="p-v-xs">
-                                                                        @switch( \Session::get('login_role'))
-                                                                            @case(App\User::IsActivador())
-                                                                                @if(isset($user))
-                                                                                    <input class="filled-in" type="checkbox" name="role[]" {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
-                                                                                @else
-                                                                                    <input class="filled-in" type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
-                                                                                @endif
-                                                                            @break
-                                                                            @case(App\User::IsDinamizador())
-                                                                                @if(isset($user))
-                                                                                    <input type="checkbox" name="role[]"  {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  {{$name == App\User::IsActivador() ? 'onclick=this.checked=!this.checked;' : ($name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked;' : '' )}} value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
-                                                                                @else
-                                                                                    <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" {{$name == App\User::IsActivador() ? 'onclick=this.checked=!this.checked;' : ($name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked;' : '' )}} onchange="roles.getRoleSeleted(this)">
-                                                                                @endif
-                                                                            @break
-                                                                            @case(App\User::IsExperto())
-                                                                                @if(isset($user))
-                                                                                    <input type="checkbox" name="role[]"  {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  {{$name != App\User::IsTalento() ? 'onclick=this.checked=!this.checked;': '' }} value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
-                                                                                @else
-                                                                                    <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" {{$name != App\User::IsTalento() ? 'onclick=this.checked=!this.checked;' : '' }} onchange="roles.getRoleSeleted(this)">
-                                                                                @endif
-                                                                            @case(App\User::IsArticulador())
-                                                                                @if(isset($user))
-                                                                                    <input type="checkbox" name="role[]"  {{collect(old('role',$user->roles->pluck('name')))->contains($name) ? 'checked' : ''  }}  {{$name != App\User::IsTalento() ? 'onclick=this.checked=!this.checked;': '' }} value="{{$name}}" id="test-{{$name}}" onchange="roles.getRoleSeleted(this)">
-                                                                                @else
-                                                                                    <input type="checkbox" name="role[]" {{collect(old('role'))->contains($name) ? 'checked' : ''  }}  value="{{$name}}" id="test-{{$name}}" {{$name != App\User::IsTalento() ? 'onclick=this.checked=!this.checked;' : '' }} onchange="roles.getRoleSeleted(this)">
-                                                                                @endif
-                                                                            @break
-                                                                            @default
-                                                                            @break
-                                                                        @endswitch
-
-                                                                        <label for="test-{{$name}}">{{$name}}</label>
-                                                                    </p>
-                                                                @empty
-                                                                    <p class="p-v-xs">No tienes roles asignados</p>
-                                                                @endforelse
-                                                                @error('role')
-                                                                    <div class="center">
-                                                                        <label class="red-text error">{{ $message }}</label>
-                                                                    </div>
-                                                                @enderror
-                                                                <small id="role-error" class="error red-text"></small>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col s12 m9 l9 ">
-                                                            @if(session()->has('status') || session()->has('error'))
-                                                                <div class="center">
-                                                                    <div class="card  {{session('status') ? 'green': ''}} {{session('error') ? 'red': ''}}  darken-1">
-                                                                        <div class="row">
-                                                                            <div class="col s12 m10">
-                                                                                <div class="card-content white-text">
-                                                                                    <p>
-                                                                                        <i class="material-icons left">info_outline</i>
-                                                                                        {{session('status') ? : session('error')}}
-                                                                                    </p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                            @endif
-                                                            <div class="row">
-                                                                <div class="input-field col s12 m12 l12 valign-wrapper selectRole" style="display:block">
-                                                                    <h5><- Selecciona los roles</h5>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div id="section-user_apoyo" class="input-field col s12 m12 l6 offset-l3">
-                                                                    <div  class="card mailbox-content">
-                                                                        <div class="card-content">
-                                                                            <span class=" card-title activator grey-text text-darken-4 center-align">Información {{App\User::IsApoyoTecnico()}}</span>
-                                                                            <div class="input-field col s12 m12 l12">
-                                                                                <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnodouser" name="txtnodouser"  style="width: 100%" tabindex="-1">
-                                                                                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
-                                                                                        <option value="">Seleccione Nodo</option>
-                                                                                        @foreach($nodos as $id => $nodo)
-                                                                                            @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsExperto()))
-                                                                                                <option value="{{$id}}" {{old('txtnodouser',$user->dinamizador->nodo->id) ==  $id ? 'selected':''}} >{{$nodo}}</option>
-                                                                                            @else
-                                                                                                <option value="{{$id}}" {{old('txtnodouser') ==  $id ? 'selected':''}}>{{$nodo}}</option>
-                                                                                            @endif
-                                                                                        @endforeach
-                                                                                    @endif
-                                                                                    @if(isset($user->gestor->nodo->id) && session()->has('login_role') &&  collect($user->roles)->contains('name',App\User::IsExperto()))
-                                                                                    <option value="{{$user->gestor->nodo->id}}" selected="">Tecnoparque Nodo {{$user->gestor->nodo->entidad->nombre}}</option>
-                                                                                    @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id))
-                                                                                        <option value="">Seleccione Nodo</option>
-                                                                                        <option value="{{auth()->user()->dinamizador->nodo->id}}">Tecnoparque Nodo {{auth()->user()->dinamizador->nodo->entidad->nombre}}</option>
-                                                                                    @endif
-                                                                                </select>
-                                                                                <label for="txtnodouser" class="active">Nodo <span class="red-text">*</span></label>
-                                                                                <small id="txtnodouser-error" class="error red-text"></small>
-                                                                            </div>
-                                                                            <div class="input-field col s12 m12 l12">
-                                                                                <input id="txthonorariouser" name="txthonorariouser" type="text" value="{{ isset($user->gestor->honorarios) ? $user->gestor->honorarios : old('txthonorario')}}" {{ isset($user->gestor->honorarios) && session()->get('login_role') == App\User::IsExperto() ||   (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id)  && isset($user->gestor->nodo->id ) && $user->gestor->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : ''}}>
-                                                                                <label for="txthonorariouser">Honorario mensual <span class="red-text">*</span></label>
-                                                                                <small id="txthonorariouser-error" class="error red-text"></small>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div id="section-articulador" class="input-field col s12 m12 l6 offset-l3">
-                                                                    <div  class="card mailbox-content">
-                                                                        <div class="card-content">
-                                                                            <span class=" card-title activator grey-text text-darken-4 center-align">Información {{App\User::IsArticulador()}}</span>
-                                                                            <div class="input-field col s12 m12 l12">
-                                                                                <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnodoarticulador" name="txtnodoarticulador"  style="width: 100%" tabindex="-1">
-                                                                                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
-                                                                                        <option value="">Seleccione Nodo</option>
-                                                                                        @foreach($nodos as $id => $nodo)
-                                                                                            @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsExperto()))
-                                                                                                <option value="{{$id}}" {{old('txtnodoarticulador',$user->dinamizador->nodo->id) ==  $id ? 'selected':''}} >{{$nodo}}</option>
-                                                                                            @else
-                                                                                                <option value="{{$id}}" {{old('txtnodoarticulador') ==  $id ? 'selected':''}}>{{$nodo}}</option>
-                                                                                            @endif
-                                                                                        @endforeach
-                                                                                    @endif
-                                                                                    @if(isset($user->gestor->nodo->id) && session()->has('login_role') &&  collect($user->roles)->contains('name',App\User::IsExperto()))
-                                                                                    <option value="{{$user->gestor->nodo->id}}" selected="">Tecnoparque Nodo {{$user->gestor->nodo->entidad->nombre}}</option>
-                                                                                    @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id))
-                                                                                        <option value="">Seleccione Nodo</option>
-                                                                                        <option value="{{auth()->user()->dinamizador->nodo->id}}">Tecnoparque Nodo {{auth()->user()->dinamizador->nodo->entidad->nombre}}</option>
-                                                                                    @endif
-                                                                                </select>
-                                                                                <label for="txtnodoarticulador" class="active">Nodo <span class="red-text">*</span></label>
-                                                                                <small id="txtnodoarticulador-error" class="error red-text"></small>
-                                                                            </div>
-                                                                            <div class="input-field col s12 m12 l12">
-                                                                                <input id="txthonorarioarticulador" name="txthonorarioarticulador" type="text" value="{{ isset($user->gestor->honorarios) ? $user->gestor->honorarios : old('txthonorarioarticulador')}}" {{ isset($user->gestor->honorarios) && session()->get('login_role') == App\User::IsExperto() ||   (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id)  && isset($user->gestor->nodo->id ) && $user->gestor->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : ''}}>
-                                                                                <label for="txthonorarioarticulador">Honorario mensual <span class="red-text">*</span></label>
-                                                                                <small id="txthonorarioarticulador-error" class="error red-text"></small>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div id="section-dinamizador" class="input-field col s12 m12 l6 offset-l3">
-                                                                    <div  class="card mailbox-content">
-                                                                        <div class="card-content">
-                                                                            <span class="card-title activator grey-text text-darken-4 center-align">Información Dinamizador</span>
-                                                                            <div class="input-field col s12 m12 l12">
-                                                                                <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnododinamizador" name="txtnododinamizador" style="width: 100%; display: none
-                                                                                " tabindex="-1">
-                                                                                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
-                                                                                        <option value="">Seleccione Nodo</option>
-                                                                                        @foreach($nodos as $id => $nodo)
-                                                                                            @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsDinamizador()))
-                                                                                                <option value="{{$id}}" {{old('txtnododinamizador',$user->dinamizador->nodo->id) ==  $id ? 'selected':''}} >{{$nodo}}</option>
-                                                                                            @else
-                                                                                                <option value="{{$id}}" {{old('txtnododinamizador') ==  $id ? 'selected':''}}>{{$nodo}}</option>
-                                                                                            @endif
-                                                                                        @endforeach
-                                                                                    @else
-                                                                                        @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsDinamizador()))
-                                                                                            <option value="{{$user->dinamizador->nodo->id}}" selected>Tecnoparque Nodo {{$user->dinamizador->nodo->entidad->nombre}}</option>
-                                                                                        @endif
-                                                                                    @endif
-                                                                                </select>
-                                                                                <label for="txtnododinamizador" class="active">Nodo <span class="red-text">*</span></label>
-                                                                                <small id="txtnododinamizador-error" class="error red-text"></small>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div id="section-gestor" class="input-field col s12 m12 l6 offset-l3">
-                                                                    <div  class="card mailbox-content">
-                                                                        <div class="card-content">
-                                                                            <span class=" card-title activator grey-text text-darken-4 center-align">Información {{App\User::IsExperto()}}</span>
-                                                                            <div class="input-field col s12 m12 l12">
-                                                                                <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnodogestor" name="txtnodogestor" onchange="linea.getSelectLineaForNodo()" style="width: 100%" tabindex="-1">
-                                                                                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
-                                                                                        <option value="">Seleccione Nodo</option>
-                                                                                        @foreach($nodos as $id => $nodo)
-                                                                                            @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsExperto()))
-                                                                                                <option value="{{$id}}" {{old('txtnodogestor',$user->dinamizador->nodo->id) ==  $id ? 'selected':''}} >{{$nodo}}</option>
-                                                                                            @else
-                                                                                                <option value="{{$id}}" {{old('txtnodogestor') ==  $id ? 'selected':''}}>{{$nodo}}</option>
-                                                                                            @endif
-                                                                                        @endforeach
-                                                                                    @endif
-                                                                                    @if(isset($user->gestor->nodo->id) && session()->has('login_role') &&  collect($user->roles)->contains('name',App\User::IsExperto()))
-                                                                                    <option value="{{$user->gestor->nodo->id}}" selected="">Tecnoparque Nodo {{$user->gestor->nodo->entidad->nombre}}</option>
-                                                                                    @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id))
-                                                                                        <option value="">Seleccione Nodo</option>
-                                                                                        <option value="{{auth()->user()->dinamizador->nodo->id}}">Tecnoparque Nodo {{auth()->user()->dinamizador->nodo->entidad->nombre}}</option>
-                                                                                    @endif
-                                                                                </select>
-                                                                                <label for="txtnodogestor" class="active">Nodo del experto<span class="red-text">*</span></label>
-                                                                                <small id="txtnodogestor-error" class="error red-text"></small>
-                                                                            </div>
-                                                                            <div class="input-field col s12 m12 l12 linea">
-                                                                                <select class="js-states browser-default select2" id="txtlinea" name="txtlinea" style="width: 100%" tabindex="-1">
-                                                                                    @if(isset($user->gestor->lineatecnologica->id) && session()->get('login_role') == App\User::IsExperto() && collect($user->roles)->contains('name',App\User::IsExperto()))
-                                                                                    <option value="{{$user->gestor->lineatecnologica->id}}" selected>{{$user->gestor->lineatecnologica->nombre}}</option>
-                                                                                    @else
-                                                                                        @foreach($lineas as $id => $linea)
-                                                                                            @if(isset($user->gestor->lineatecnologica->id) && collect($user->roles)->contains('name',App\User::IsExperto()))
-                                                                                                <option value="{{$id}}" {{old('txtlinea',$user->gestor->lineatecnologica->id) ==  $id ? 'selected':''}} >{{$linea}}</option>
-                                                                                            @else
-                                                                                                <option value="{{$id}}" {{old('txtlinea') ==  $id ? 'selected':''}}>{{$linea}}</option>
-                                                                                            @endif
-                                                                                        @endforeach
-                                                                                    @endif
-                                                                                </select>
-                                                                                <label for="txtlinea" class="active">Linea <span class="red-text">*</span></label>
-                                                                                <small id="txtlinea-error" class="error red-text"></small>
-                                                                            </div>
-                                                                            <div class="input-field col s12 m12 l12">
-                                                                                <input id="txthonorario" name="txthonorario" type="text" value="{{ isset($user->gestor->honorarios) ? $user->gestor->honorarios : old('txthonorario')}}" {{ isset($user->gestor->honorarios) && session()->get('login_role') == App\User::IsExperto() ||   (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id)  && isset($user->gestor->nodo->id ) && $user->gestor->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : ''}}>
-                                                                                <label for="txthonorario">Honorario mensual <span class="red-text">*</span></label>
-                                                                                <small id="txthonorario-error" class="error red-text"></small>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div id="section-infocenter" class="input-field col s12 m12 l6 offset-l3">
-                                                                    <div  class="card mailbox-content">
-                                                                        <div class="card-content">
-                                                                            <span class="card-title activator grey-text text-darken-4 center-align">Información Infocenter</span>
-                                                                            <div class="input-field col s12 m12 l12">
-                                                                                <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnodoinfocenter" name="txtnodoinfocenter"  style="width: 100%" tabindex="-1">
-                                                                                        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
-                                                                                            <option value="">Seleccione Nodo</option>
-                                                                                            @foreach($nodos as $id => $nodo)
-                                                                                                @if(isset($user->infocenter) && collect($user->roles)->contains('name',App\User::IsInfocenter()))
-                                                                                                    <option value="{{$id}}" {{old('txtnodoinfocenter',$user->infocenter->nodo->id) ==  $id ? 'selected':''}} >{{$nodo}}</option>
-                                                                                                @else
-                                                                                                    <option value="{{$id}}" {{old('txtnodoinfocenter') ==  $id ? 'selected':''}}>{{$nodo}}</option>
-                                                                                                @endif
-                                                                                            @endforeach
-                                                                                        @endif
-                                                                                        @if(isset($user) && session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && collect($user->roles)->contains('name',App\User::Isinfocenter()))
-                                                                                        <option selected value="{{$user->infocenter->nodo->id}}">Tecnoparque Nodo {{$user->infocenter->nodo->entidad->nombre}}</option>
-                                                                                        @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id))
-                                                                                            <option value="">Seleccione Nodo</option>
-                                                                                            <option value="{{auth()->user()->dinamizador->nodo->id}}">Tecnoparque Nodo {{auth()->user()->dinamizador->nodo->entidad->nombre}}</option>
-                                                                                        @endif
-                                                                                        @if(isset($user->infocenter->nodo->id) && session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
-                                                                                            <option selected value="{{$user->infocenter->nodo->id}}">Tecnoparque Nodo {{$user->infocenter->nodo->entidad->nombre}}</option>
-                                                                                        @endif
-                                                                                </select>
-                                                                                <label for="txtnodoinfocenter" class="active">Nodo Infocenter<span class="red-text">*</span></label>
-
-                                                                                <small id="txtnodoinfocenter-error" class="error red-text"></small>
-                                                                            </div>
-                                                                            <div class="input-field col s12 m12 l12">
-                                                                                <input id="txtextension" name="txtextension" type="text" value="{{ isset($user->infocenter->extension) && collect($user->roles)->contains('name',App\User::IsInfocenter()) ? $user->infocenter->extension : old('txtextension')}}" {{isset($user->infocenter->extension) && session()->get('login_role') == App\User::IsExperto() ||    (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->gestor->nodo->id ) &&   $user->gestor->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : ''}}>
-                                                                                <label for="txtextension">Extensión <span class="red-text">*</span></label>
-                                                                                <small id="txtextension-error" class="error red-text"></small>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div id="section-ingreso" class="input-field col s12 m12 l6 offset-l3">
-                                                                    <div  class="card mailbox-content">
-                                                                        <div class="card-content">
-                                                                            <span class="card-title activator grey-text text-darken-4 center-align">Información Ingreso</span>
-                                                                            <div class="input-field col s12 m12 l12">
-                                                                                <select class="js-states browser-default select2 select2-hidden-accessible"  id="txtnodoingreso" name="txtnodoingreso"  style="width: 100%" tabindex="-1">
-                                                                                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
-                                                                                        <option value="">Seleccione Nodo</option>
-                                                                                        @foreach($nodos as $id => $nodo)
-                                                                                            @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsIngreso()))
-                                                                                                <option value="{{$id}}" {{old('txtnodoingreso',$user->dinamizador->nodo->id) ==  $id ? 'selected':''}} >{{$nodo}}</option>
-                                                                                            @else
-                                                                                                <option value="{{$id}}" {{old('txtnodoingreso') ==  $id ? 'selected':''}}>{{$nodo}}</option>
-                                                                                            @endif
-                                                                                        @endforeach
-                                                                                    @endif
-                                                                                    @if(isset($user->ingreso->nodo) && collect($user->roles)->contains('name',App\User::IsIngreso()))
-                                                                                    <option selected value="{{$user->ingreso->nodo->id}}">Tecnoparque Nodo {{$user->ingreso->nodo->entidad->nombre}}</option>
-                                                                                    @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id))
-                                                                                        <option value="{{auth()->user()->dinamizador->nodo->id}}">Tecnoparque Nodo {{auth()->user()->dinamizador->nodo->entidad->nombre}}</option>
-                                                                                    @endif
-                                                                                </select>
-                                                                                <label for="txtnodoingreso" class="active">Nodo<span class="red-text">*</span></label>
-                                                                                <small id="txtnodoingreso-error" class="error red-text"></small>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div id="section-talento" class="row">
-                                                                    <div class="input-field col s12 m12 l6 offset-l3">
-                                                                        <div  class="card mailbox-content">
-                                                                            <div class="card-content">
-                                                                                <span class="card-title activator grey-text text-darken-4 center-align">Información {{App\User::IsTalento()}}</span>
-                                                                                <div class="input-field col s12 m12 l12">
-                                                                                    <select class="js-states browser-default select2 select2-hidden-accessible" id="txttipotalento" name="txttipotalento" style="width: 100%" tabindex="-1" onchange="tipoTalento.getSelectTipoTalento(this)">
-                                                                                        <option value="">Seleccione tipo de talento</option>
-                                                                                        @foreach($tipotalentos as $id => $nombre)
-                                                                                            @if(isset($user->talento->tipotalento->id))
-                                                                                            <option value="{{$id}}" {{old('txttipotalento',$user->talento->tipotalento->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
-                                                                                            @else
-                                                                                                <option value="{{$id}}" {{old('txttipotalento') ==$id ? 'selected':''}}>{{$nombre}}</option>
-                                                                                            @endif
-                                                                                        @endforeach
-                                                                                    </select>
-                                                                                    <label for="txttipotalento" class="active">Tipo Talento <span class="red-text">*</span></label>
-                                                                                    <small id="txttipotalento-error"  class="error red-text"></small>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row aprendizSena" style="display:none">
-                                                                        <div class="input-field input-field col s12 m12 l6 offset-l3"  >
-                                                                            <select class=" js-states browser-default select2 select2-hidden-accessible" id="txtregional_aprendiz" name="txtregional_aprendiz" style="width: 100%" tabindex="-1" onchange="tipoTalento.getCentroFormacionAprendiz()">
-                                                                                <option value="">Seleccione regional</option>
-                                                                                @foreach($regionales as $id => $nombre)
-                                                                                    @if(isset($user->talento->entidad->centro->regional->id))
-                                                                                        <option value="{{$id}}" {{old('txtregional_aprendiz',$user->talento->entidad->centro->regional->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
-                                                                                    @else
-                                                                                        <option value="{{$id}}" {{old('txtregional_aprendiz') ==$id ? 'selected':''}}>{{$nombre}}</option>
-                                                                                    @endif
-                                                                                @endforeach
-                                                                            </select>
-                                                                            <label for="txtregional_aprendiz" class="active">Regional <span class="red-text">*</span></label>
-                                                                            <small id="txtregional_aprendiz-error"  class="error red-text"></small>
-                                                                        </div>
-                                                                        <div class="input-field input-field col s12 m12 l6 offset-l3">
-                                                                            <select class="js-states browser-default select2 select2-hidden-accessible" id="txtcentroformacion_aprendiz" name="txtcentroformacion_aprendiz" style="width: 100%" tabindex="-1" >
-                                                                                <option value="">Seleccione Primero la regional</option>
-                                                                            </select>
-                                                                            <label for="txtcentroformacion_aprendiz" class="active">Centro de formación <span class="red-text">*</span></label>
-                                                                            <small id="txtcentroformacion_aprendiz-error"  class="error red-text"></small>
-                                                                        </div>
-                                                                        <div class="input-field input-field col s12 m12 l6 offset-l3 ">
-                                                                            <input class="validate" id="txtprogramaformacion_aprendiz" name="txtprogramaformacion_aprendiz" type="text"  value="{{ isset($user->talento->programa_formacion) ? $user->talento->programa_formacion : old('txtprogramaformacion_aprendiz')}}">
-                                                                            <label for="txtprogramaformacion_aprendiz">Programa de Formación <span class="red-text">*</span></label>
-                                                                            <small id="txtprogramaformacion_aprendiz-error"  class="error red-text"></small>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row egresadoSena" style="display:none">
-                                                                        <div class="input-field input-field col s12 m12 l6 offset-l3" >
-                                                                            <select class=" js-states browser-default select2 select2-hidden-accessible" id="txtregional_egresado" name="txtregional_egresado" style="width: 100%" tabindex="-1" onchange="tipoTalento.getCentroFormacionEgresadoSena()">
-                                                                                <option value="">Seleccione regional</option>
-                                                                                @foreach($regionales as $id => $nombre)
-                                                                                    @if(isset($user->talento->entidad->centro->regional->id))
-                                                                                        <option value="{{$id}}" {{old('txtregional_egresado',$user->talento->entidad->centro->regional->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
-                                                                                    @else
-                                                                                        <option value="{{$id}}" {{old('txtregional_egresado') ==$id ? 'selected':''}}>{{$nombre}}</option>
-                                                                                    @endif
-                                                                                @endforeach
-                                                                            </select>
-                                                                            <label for="txtregional_egresado" class="active">Regional <span class="red-text">*</span></label>
-                                                                            <small id="txtregional_egresado-error"  class="error red-text"></small>
-                                                                        </div>
-                                                                        <div class="input-field input-field col s12 m12 l6 offset-l3">
-                                                                            <select class="js-states browser-default select2 select2-hidden-accessible" id="txtcentroformacion_egresado" name="txtcentroformacion_egresado" style="width: 100%" tabindex="-1" >
-                                                                                <option value="">Seleccione Primero la regional</option>
-                                                                            </select>
-                                                                            <label for="txtcentroformacion_egresado" class="active">Centro de formación <span class="red-text">*</span></label>
-                                                                            <small id="txtcentroformacion_egresado-error"  class="error red-text"></small>
-                                                                        </div>
-                                                                        <div class="input-field input-field col s12 m12 l6 offset-l3 ">
-                                                                            <input class="validate" id="txtprogramaformacion_egresado" name="txtprogramaformacion_egresado" type="text"  value="{{ isset($user->talento->programa_formacion) ? $user->talento->programa_formacion : old('txtprogramaformacion_egresado')}}">
-                                                                            <label for="txtprogramaformacion_egresado">Programa de Formación <span class="red-text">*</span></label>
-                                                                            <small id="txtprogramaformacion_egresado-error"  class="error red-text"></small>
-                                                                        </div>
-                                                                        <div class="input-field input-field col s12 m12 l6 offset-l3 ">
-                                                                            <select class="" id="txttipoformacion" name="txttipoformacion" style="width: 100%" tabindex="-1">
-                                                                                <option value="">Seleccione Tipo Formación</option>
-                                                                                @foreach($tipoformaciones as $id => $nombre)
-                                                                                    @if(isset($user->talento->tipoformacion->id))
-                                                                                        <option value="{{$id}}" {{old('txttipoformacion',$user->talento->tipoformacion->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
-                                                                                    @else
-                                                                                    <option value="{{$id}}" {{old('txttipoformacion') ==$id ? 'selected':''}}>{{$nombre}}</option>
-                                                                                    @endif
-                                                                                @endforeach
-                                                                            </select>
-                                                                            <label for="txttipoformacion">Tipo Formación <span class="red-text">*</span></label>
-                                                                            <small id="txttipoformacion-error"  class="error red-text"></small>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row funcionarioSena" style="display:none">
-                                                                        <div class="input-field input-field col s12 m12 l6 offset-l3" >
-                                                                            <select class=" js-states browser-default select2 select2-hidden-accessible" id="txtregional_funcionarioSena" name="txtregional_funcionarioSena" style="width: 100%" tabindex="-1" onchange="tipoTalento.getCentroFormacionFuncionarioSena()">
-                                                                                <option value="">Seleccione regional</option>
-                                                                                @foreach($regionales as $id => $nombre)
-                                                                                    @if(isset($user->talento->entidad->centro->regional->id))
-                                                                                        <option value="{{$id}}" {{old('txtregional_funcionarioSena',$user->talento->entidad->centro->regional->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
-                                                                                    @else
-                                                                                        <option value="{{$id}}" {{old('txtregional_funcionarioSena') ==$id ? 'selected':''}}>{{$nombre}}</option>
-                                                                                    @endif
-                                                                                @endforeach
-                                                                            </select>
-                                                                            <label for="txtregional_funcionarioSena" class="active">Regional <span class="red-text">*</span></label>
-                                                                            <small id="txtregional_funcionarioSena-error"  class="error red-text"></small>
-                                                                        </div>
-                                                                        <div class="input-field input-field col s12 m12 l6 offset-l3">
-                                                                            <select class="js-states browser-default select2 select2-hidden-accessible" id="txtcentroformacion_funcionarioSena" name="txtcentroformacion_funcionarioSena" style="width: 100%" tabindex="-1" >
-                                                                                <option value="">Seleccione Primero la regional</option>
-                                                                            </select>
-                                                                            <label for="txtcentroformacion_funcionarioSena" class="active">Centro de formación <span class="red-text">*</span></label>
-                                                                            <small id="txtcentroformacion_funcionarioSena-error"  class="error red-text"></small>
-                                                                        </div>
-                                                                        <div class="input-field input-field col s12 m12 l6 offset-l3">
-                                                                            <input class="validate" id="txtdependencia" name="txtdependencia" type="text"  value="{{ isset($user->talento->dependencia) ? $user->talento->dependencia : old('txtdependencia')}}">
-                                                                            <label for="txtdependencia">Dependencia</label>
-                                                                            <small id="txtdependencia-error"  class="error red-text"></small>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row instructorSena" style="display:none">
-                                                                        <div class="input-field col s12 m12 l6 offset-l3" >
-                                                                            <select class=" js-states browser-default select2 select2-hidden-accessible" id="txtregional_instructorSena" name="txtregional_instructorSena" style="width: 100%" tabindex="-1" onchange="tipoTalento.getCentroFormacionInstructorSena()">
-                                                                                <option value="">Seleccione regional</option>
-                                                                                @foreach($regionales as $id => $nombre)
-                                                                                    @if(isset($user->talento->entidad->centro->regional->id))
-                                                                                        <option value="{{$id}}" {{old('txtregional_instructorSena',$user->talento->entidad->centro->regional->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
-                                                                                    @else
-                                                                                        <option value="{{$id}}" {{old('txtregional_instructorSena') ==$id ? 'selected':''}}>{{$nombre}}</option>
-                                                                                    @endif
-                                                                                @endforeach
-                                                                            </select>
-                                                                            <label for="txtregional_instructorSena" class="active">Regional <span class="red-text">*</span></label>
-                                                                            <small id="txtregional_instructorSena-error"  class="error red-text"></small>
-                                                                        </div>
-                                                                        <div class="input-field col s12 m12 l6 offset-l3">
-                                                                            <select class="js-states browser-default select2 select2-hidden-accessible" id="txtcentroformacion_instructorSena" name="txtcentroformacion_instructorSena" style="width: 100%" tabindex="-1">
-                                                                                <option value="">Seleccione Primero la regional</option>
-                                                                            </select>
-                                                                            <label for="txtcentroformacion_instructorSena" class="active">Centro de formación <span class="red-text">*</span></label>
-                                                                            <small id="txtcentroformacion_instructorSena-error"  class="error red-text"></small>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="row universitario" style="display:none">
-                                                                        <div class="input-field col s12 m12 l6 offset-l3" >
-                                                                            <select class="" id="txttipoestudio" name="txttipoestudio" style="width: 100%" tabindex="-1" >
-                                                                                    <option value="">Seleccione Tipo Estudio</option>
-                                                                                    @foreach($tipoestudios as $id => $nombre)
-                                                                                        @if(isset($user->talento->tipoestudio->id))
-                                                                                        <option value="{{$id}}" {{old('txttipoestudio',$user->talento->tipoestudio->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
-                                                                                        @else
-                                                                                            <option value="{{$id}}" {{old('txttipoestudio') ==$id ? 'selected':''}}>{{$nombre}}</option>
-                                                                                        @endif
-                                                                                    @endforeach
-                                                                            </select>
-                                                                            <label for="txttipoestudio">Tipo Estudio <span class="red-text">*</span></label>
-                                                                            <small id="txttipoestudio-error"  class="error red-text"></small>
-                                                                        </div>
-                                                                        <div class="input-field col s12 m12 l6 offset-l3" >
-                                                                            <input class="validate" id="txtuniversidad" name="txtuniversidad" type="text"  value="{{ isset($user->talento->universidad) ? $user->talento->universidad : old('txtuniversidad')}}">
-                                                                            <label for="txtuniversidad">Universidad <span class="red-text">*</span></label>
-                                                                            <small id="txtuniversidad-error"  class="error red-text"></small>
-                                                                        </div>
-                                                                        <div class="input-field col s12 m12 l6 offset-l3" >
-                                                                            <input class="validate" id="txtcarrera" name="txtcarrera" type="text"  value="{{ isset($user->talento->carrera_universitaria) ? $user->talento->carrera_universitaria : old('txtcarrera')}}">
-                                                                            <label for="txtcarrera">Nombre de la Carrera <span class="red-text">*</span></label>
-                                                                            <small id="txtcarrera-error"  class="error red-text"></small>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row funcionarioEmpresa" style="display:none">
-                                                                        <div class="input-field col s12 m12 l6 offset-l3" >
-                                                                            <input class="validate" id="txtempresa" name="txtempresa" type="text"  value="{{ isset($user->talento->empresa) ? $user->talento->empresa : old('txtempresa')}}">
-                                                                            <label for="txtempresa">Nombre de la Empresa <span class="red-text">*</span></label>
-                                                                            <small id="txtempresa-error"  class="error red-text"></small>
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                        <div class="col s12 m8 l8 offset-l4 offset-m4">
-                                                            <div class="divider mailbox-divider m-b-5">
-                                                            </div>
-                                                            <div class="center">
-                                                                <button type="submit" class="waves-effect waves-teal darken-2 btn-flat m-t-xs">
-                                                                    Guardar cambios
-                                                                </button>
-                                                                <a href="{{route('home')}}" class="waves-effect waves-red btn-flat m-t-xs">
-                                                                    cancelar
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </form>
+                                            <div class="left">
+                                                <span class="mailbox-title">
+                                                    {{$user->present()->userFullName()}}
+                                                </span>
+                                                <span class="mailbox-author">
+                                                    Tipo contrato: {{$user->present()->tipoContratista()}}
+                                                    <br>
+                                                        Miembro desde {{isset($user->created_at) ? $user->created_at->isoFormat('LL') : ': No Registra'}}
+                                                        <br>
+                                                    @if(isset($user->fechanacimiento))
+                                                    {{$user->fechanacimiento->age}} años
+                                                    @endif
+                                                </span>
                                             </div>
                                         </div>
+                                        <div class="right mailbox-buttons">
+                                            <span class="mailbox-title">
+                                                <p class="center">
+                                                    {{$user->present()->userFullName()}} está solicitando acceso al nodo {{$user->present()->nodoContratista()}}.
+                                                </p>
+                                                <p class="center-align">
+                                                    Ingrese los datos solicitados y darás acesso al usuario.
+                                                </p>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="right">
+                                        <small>{{{$user->email}}}  </small>
+                                    </div>
+                                    <div class="divider mailbox-divider">
+                                    </div>
+                                    <div class="mailbox-text">
+                                        <form id="FormConfirmUser" action="{{ route('user.contractor.confirm', $user->documento)}}" method="POST" onsubmit="return checkSubmit()">
+                                            {!! csrf_field() !!}
+                                            {!! method_field('PUT')!!}
+                                            <div class="row">
+
+                                                <div class="col s12 m3 l3">
+                                                    <div class="col s12 m12 l12">
+                                                        @include('users.forms.role-input-checkbox')
+                                                        <small id="role-error" class="error red-text"></small>
+                                                    </div>
+                                                </div>
+                                                <div class="col s12 m9 l9 ">
+                                                    @if(session()->has('status') || session()->has('error'))
+                                                        <div class="center">
+                                                            <div class="card  {{session('status') ? 'bg-success': ''}} {{session('error') ? 'bg-danger': ''}}  darken-1">
+                                                                <div class="row">
+                                                                    <div class="col s12 m10">
+                                                                        <div class="card-content white-text">
+                                                                            <p>
+                                                                                <i class="material-icons left">info_outline</i>
+                                                                                {{session('status') ? : session('error')}}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endif
+                                                    <div class="row">
+                                                        <div class="input-field col s12 m12 l12 valign-wrapper selectRole" style="display:block">
+                                                            <h5><- Selecciona los roles</h5>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div id="section-user_apoyo" class="input-field col s12 m12 l6 offset-l3">
+                                                            <div  class="card mailbox-content">
+                                                                <div class="card-content">
+                                                                    <span class=" card-title activator grey-text text-darken-4 center-align">Información {{App\User::IsApoyoTecnico()}}</span>
+                                                                    <div class="input-field col s12 m12 l12">
+                                                                        <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnodouser" name="txtnodouser"  style="width: 100%" tabindex="-1">
+                                                                            @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsActivador()))
+                                                                                <option value="">Seleccione Nodo</option>
+                                                                                @foreach($nodos as $id => $nodo)
+                                                                                    @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsGestor()))
+                                                                                        <option value="{{$id}}" {{old('txtnodouser',$user->dinamizador->nodo->id) ==  $id ? 'selected':''}} >{{$nodo}}</option>
+                                                                                    @else
+                                                                                        <option value="{{$id}}" {{old('txtnodouser') ==  $id ? 'selected':''}}>{{$nodo}}</option>
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            @endif
+                                                                            @if(isset($user->gestor->nodo->id) && session()->has('login_role') &&  collect($user->roles)->contains('name',App\User::IsGestor()))
+                                                                            <option value="{{$user->gestor->nodo->id}}" selected="">Tecnoparque Nodo {{$user->gestor->nodo->entidad->nombre}}</option>
+                                                                            @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id))
+                                                                                <option value="">Seleccione Nodo</option>
+                                                                                <option value="{{auth()->user()->dinamizador->nodo->id}}">Tecnoparque Nodo {{auth()->user()->dinamizador->nodo->entidad->nombre}}</option>
+                                                                            @endif
+                                                                        </select>
+                                                                        <label for="txtnodouser" class="active">Nodo <span class="red-text">*</span></label>
+                                                                        <small id="txtnodouser-error" class="error red-text"></small>
+                                                                    </div>
+                                                                    <div class="input-field col s12 m12 l12">
+                                                                        <input id="txthonorariouser" name="txthonorariouser" type="text" value="{{ isset($user->gestor->honorarios) ? $user->gestor->honorarios : old('txthonorario')}}" {{ isset($user->gestor->honorarios) && session()->get('login_role') == App\User::IsGestor() ||   (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id)  && isset($user->gestor->nodo->id ) && $user->gestor->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : ''}}>
+                                                                        <label for="txthonorariouser">Honorario mensual <span class="red-text">*</span></label>
+                                                                        <small id="txthonorariouser-error" class="error red-text"></small>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div id="section-articulador" class="input-field col s12 m12 l6 offset-l3">
+                                                            <div  class="card mailbox-content">
+                                                                <div class="card-content">
+                                                                    <span class=" card-title activator grey-text text-darken-4 center-align">Información {{App\User::IsArticulador()}}</span>
+                                                                    <div class="input-field col s12 m12 l12">
+                                                                        <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnodoarticulador" name="txtnodoarticulador"  style="width: 100%" tabindex="-1">
+                                                                            @if(session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsActivador()))
+                                                                                <option value="">Seleccione Nodo</option>
+                                                                                @foreach($nodos as $id => $nodo)
+                                                                                    @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsGestor()))
+                                                                                        <option value="{{$id}}" {{old('txtnodoarticulador',$user->dinamizador->nodo->id) ==  $id ? 'selected':''}} >{{$nodo}}</option>
+                                                                                    @else
+                                                                                        <option value="{{$id}}" {{old('txtnodoarticulador') ==  $id ? 'selected':''}}>{{$nodo}}</option>
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            @endif
+                                                                            @if(isset($user->gestor->nodo->id) && session()->has('login_role') &&  collect($user->roles)->contains('name',App\User::IsGestor()))
+                                                                            <option value="{{$user->gestor->nodo->id}}" selected="">Tecnoparque Nodo {{$user->gestor->nodo->entidad->nombre}}</option>
+                                                                            @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id))
+                                                                                <option value="">Seleccione Nodo</option>
+                                                                                <option value="{{auth()->user()->dinamizador->nodo->id}}">Tecnoparque Nodo {{auth()->user()->dinamizador->nodo->entidad->nombre}}</option>
+                                                                            @endif
+                                                                        </select>
+                                                                        <label for="txtnodoarticulador" class="active">Nodo <span class="red-text">*</span></label>
+                                                                        <small id="txtnodoarticulador-error" class="error red-text"></small>
+                                                                    </div>
+                                                                    <div class="input-field col s12 m12 l12">
+                                                                        <input id="txthonorarioarticulador" name="txthonorarioarticulador" type="text" value="{{ isset($user->gestor->honorarios) ? $user->gestor->honorarios : old('txthonorarioarticulador')}}" {{ isset($user->gestor->honorarios) && session()->get('login_role') == App\User::IsGestor() ||   (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id)  && isset($user->gestor->nodo->id ) && $user->gestor->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : ''}}>
+                                                                        <label for="txthonorarioarticulador">Honorario mensual <span class="red-text">*</span></label>
+                                                                        <small id="txthonorarioarticulador-error" class="error red-text"></small>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div id="section-dinamizador" class="input-field col s12 m12 l6 offset-l3">
+                                                            <div  class="card mailbox-content">
+                                                                <div class="card-content">
+                                                                    <span class="card-title activator grey-text text-darken-4 center-align">Información Dinamizador</span>
+                                                                    <div class="input-field col s12 m12 l12">
+                                                                        <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnododinamizador" name="txtnododinamizador" style="width: 100%; display: none
+                                                                        " tabindex="-1">
+                                                                            @if(session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsActivador()))
+                                                                                <option value="">Seleccione Nodo</option>
+                                                                                @foreach($nodos as $id => $nodo)
+                                                                                    @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsDinamizador()))
+                                                                                        <option value="{{$id}}" {{old('txtnododinamizador',$user->dinamizador->nodo->id) ==  $id ? 'selected':''}} >{{$nodo}}</option>
+                                                                                    @else
+                                                                                        <option value="{{$id}}" {{old('txtnododinamizador') ==  $id ? 'selected':''}}>{{$nodo}}</option>
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            @else
+                                                                                @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsDinamizador()))
+                                                                                    <option value="{{$user->dinamizador->nodo->id}}" selected>Tecnoparque Nodo {{$user->dinamizador->nodo->entidad->nombre}}</option>
+                                                                                @endif
+                                                                            @endif
+                                                                        </select>
+                                                                        <label for="txtnododinamizador" class="active">Nodo <span class="red-text">*</span></label>
+                                                                        <small id="txtnododinamizador-error" class="error red-text"></small>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div id="section-gestor" class="input-field col s12 m12 l6 offset-l3">
+                                                            <div  class="card mailbox-content">
+                                                                <div class="card-content">
+                                                                    <span class=" card-title activator grey-text text-darken-4 center-align">Información {{App\User::IsGestor()}}</span>
+                                                                    <div class="input-field col s12 m12 l12">
+                                                                        <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnodogestor" name="txtnodogestor" onchange="linea.getSelectLineaForNodo()" style="width: 100%" tabindex="-1">
+                                                                            @if(session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsActivador()))
+                                                                                <option value="">Seleccione Nodo</option>
+                                                                                @foreach($nodos as $id => $nodo)
+                                                                                    @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsGestor()))
+                                                                                        <option value="{{$id}}" {{old('txtnodogestor',$user->dinamizador->nodo->id) ==  $id ? 'selected':''}} >{{$nodo}}</option>
+                                                                                    @else
+                                                                                        <option value="{{$id}}" {{old('txtnodogestor') ==  $id ? 'selected':''}}>{{$nodo}}</option>
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            @endif
+                                                                            @if(isset($user->gestor->nodo->id) && session()->has('login_role') &&  collect($user->roles)->contains('name',App\User::IsGestor()))
+                                                                            <option value="{{$user->gestor->nodo->id}}" selected="">Tecnoparque Nodo {{$user->gestor->nodo->entidad->nombre}}</option>
+                                                                            @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id))
+                                                                                <option value="">Seleccione Nodo</option>
+                                                                                <option value="{{auth()->user()->dinamizador->nodo->id}}">Tecnoparque Nodo {{auth()->user()->dinamizador->nodo->entidad->nombre}}</option>
+                                                                            @endif
+                                                                        </select>
+                                                                        <label for="txtnodogestor" class="active">Nodo del experto<span class="red-text">*</span></label>
+                                                                        <small id="txtnodogestor-error" class="error red-text"></small>
+                                                                    </div>
+                                                                    <div class="input-field col s12 m12 l12 linea">
+                                                                        <select class="js-states browser-default select2" id="txtlinea" name="txtlinea" style="width: 100%" tabindex="-1">
+                                                                            @if(isset($user->gestor->lineatecnologica->id) && session()->get('login_role') == App\User::IsGestor() && collect($user->roles)->contains('name',App\User::IsGestor()))
+                                                                            <option value="{{$user->gestor->lineatecnologica->id}}" selected>{{$user->gestor->lineatecnologica->nombre}}</option>
+                                                                            @else
+                                                                                @foreach($lineas as $id => $linea)
+                                                                                    @if(isset($user->gestor->lineatecnologica->id) && collect($user->roles)->contains('name',App\User::IsGestor()))
+                                                                                        <option value="{{$id}}" {{old('txtlinea',$user->gestor->lineatecnologica->id) ==  $id ? 'selected':''}} >{{$linea}}</option>
+                                                                                    @else
+                                                                                        <option value="{{$id}}" {{old('txtlinea') ==  $id ? 'selected':''}}>{{$linea}}</option>
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            @endif
+                                                                        </select>
+                                                                        <label for="txtlinea" class="active">Linea <span class="red-text">*</span></label>
+                                                                        <small id="txtlinea-error" class="error red-text"></small>
+                                                                    </div>
+                                                                    <div class="input-field col s12 m12 l12">
+                                                                        <input id="txthonorario" name="txthonorario" type="text" value="{{ isset($user->gestor->honorarios) ? $user->gestor->honorarios : old('txthonorario')}}" {{ isset($user->gestor->honorarios) && session()->get('login_role') == App\User::IsGestor() ||   (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id)  && isset($user->gestor->nodo->id ) && $user->gestor->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : ''}}>
+                                                                        <label for="txthonorario">Honorario mensual <span class="red-text">*</span></label>
+                                                                        <small id="txthonorario-error" class="error red-text"></small>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div id="section-infocenter" class="input-field col s12 m12 l6 offset-l3">
+                                                            <div  class="card mailbox-content">
+                                                                <div class="card-content">
+                                                                    <span class="card-title activator grey-text text-darken-4 center-align">Información Infocenter</span>
+                                                                    <div class="input-field col s12 m12 l12">
+                                                                        <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnodoinfocenter" name="txtnodoinfocenter"  style="width: 100%" tabindex="-1">
+                                                                                @if(session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsActivador()))
+                                                                                    <option value="">Seleccione Nodo</option>
+                                                                                    @foreach($nodos as $id => $nodo)
+                                                                                        @if(isset($user->infocenter) && collect($user->roles)->contains('name',App\User::IsInfocenter()))
+                                                                                            <option value="{{$id}}" {{old('txtnodoinfocenter',$user->infocenter->nodo->id) ==  $id ? 'selected':''}} >{{$nodo}}</option>
+                                                                                        @else
+                                                                                            <option value="{{$id}}" {{old('txtnodoinfocenter') ==  $id ? 'selected':''}}>{{$nodo}}</option>
+                                                                                        @endif
+                                                                                    @endforeach
+                                                                                @endif
+                                                                                @if(isset($user) && session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && collect($user->roles)->contains('name',App\User::Isinfocenter()))
+                                                                                <option selected value="{{$user->infocenter->nodo->id}}">Tecnoparque Nodo {{$user->infocenter->nodo->entidad->nombre}}</option>
+                                                                                @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id))
+                                                                                    <option value="">Seleccione Nodo</option>
+                                                                                    <option value="{{auth()->user()->dinamizador->nodo->id}}">Tecnoparque Nodo {{auth()->user()->dinamizador->nodo->entidad->nombre}}</option>
+                                                                                @endif
+                                                                                @if(isset($user->infocenter->nodo->id) && session()->has('login_role') && session()->get('login_role') == App\User::IsGestor())
+                                                                                    <option selected value="{{$user->infocenter->nodo->id}}">Tecnoparque Nodo {{$user->infocenter->nodo->entidad->nombre}}</option>
+                                                                                @endif
+                                                                        </select>
+                                                                        <label for="txtnodoinfocenter" class="active">Nodo Infocenter<span class="red-text">*</span></label>
+
+                                                                        <small id="txtnodoinfocenter-error" class="error red-text"></small>
+                                                                    </div>
+                                                                    <div class="input-field col s12 m12 l12">
+                                                                        <input id="txtextension" name="txtextension" type="text" value="{{ isset($user->infocenter->extension) && collect($user->roles)->contains('name',App\User::IsInfocenter()) ? $user->infocenter->extension : old('txtextension')}}" {{isset($user->infocenter->extension) && session()->get('login_role') == App\User::IsGestor() ||    (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->gestor->nodo->id ) &&   $user->gestor->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : ''}}>
+                                                                        <label for="txtextension">Extensión <span class="red-text">*</span></label>
+                                                                        <small id="txtextension-error" class="error red-text"></small>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div id="section-ingreso" class="input-field col s12 m12 l6 offset-l3">
+                                                            <div  class="card mailbox-content">
+                                                                <div class="card-content">
+                                                                    <span class="card-title activator grey-text text-darken-4 center-align">Información Ingreso</span>
+                                                                    <div class="input-field col s12 m12 l12">
+                                                                        <select class="js-states browser-default select2 select2-hidden-accessible"  id="txtnodoingreso" name="txtnodoingreso"  style="width: 100%" tabindex="-1">
+                                                                            @if(session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsActivador()))
+                                                                                <option value="">Seleccione Nodo</option>
+                                                                                @foreach($nodos as $id => $nodo)
+                                                                                    @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsIngreso()))
+                                                                                        <option value="{{$id}}" {{old('txtnodoingreso',$user->dinamizador->nodo->id) ==  $id ? 'selected':''}} >{{$nodo}}</option>
+                                                                                    @else
+                                                                                        <option value="{{$id}}" {{old('txtnodoingreso') ==  $id ? 'selected':''}}>{{$nodo}}</option>
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            @endif
+                                                                            @if(isset($user->ingreso->nodo) && collect($user->roles)->contains('name',App\User::IsIngreso()))
+                                                                            <option selected value="{{$user->ingreso->nodo->id}}">Tecnoparque Nodo {{$user->ingreso->nodo->entidad->nombre}}</option>
+                                                                            @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id))
+                                                                                <option value="{{auth()->user()->dinamizador->nodo->id}}">Tecnoparque Nodo {{auth()->user()->dinamizador->nodo->entidad->nombre}}</option>
+                                                                            @endif
+                                                                        </select>
+                                                                        <label for="txtnodoingreso" class="active">Nodo<span class="red-text">*</span></label>
+                                                                        <small id="txtnodoingreso-error" class="error red-text"></small>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div id="section-talento" class="row">
+                                                            <div class="input-field col s12 m12 l6 offset-l3">
+                                                                <div  class="card mailbox-content">
+                                                                    <div class="card-content">
+                                                                        <span class="card-title activator grey-text text-darken-4 center-align">Información {{App\User::IsTalento()}}</span>
+                                                                        <div class="input-field col s12 m12 l12">
+                                                                            <select class="js-states browser-default select2 select2-hidden-accessible" id="txttipotalento" name="txttipotalento" style="width: 100%" tabindex="-1" onchange="tipoTalento.getSelectTipoTalento(this)">
+                                                                                <option value="">Seleccione tipo de talento</option>
+                                                                                @foreach($tipotalentos as $id => $nombre)
+                                                                                    @if(isset($user->talento->tipotalento->id))
+                                                                                    <option value="{{$id}}" {{old('txttipotalento',$user->talento->tipotalento->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
+                                                                                    @else
+                                                                                        <option value="{{$id}}" {{old('txttipotalento') ==$id ? 'selected':''}}>{{$nombre}}</option>
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            </select>
+                                                                            <label for="txttipotalento" class="active">Tipo Talento <span class="red-text">*</span></label>
+                                                                            <small id="txttipotalento-error"  class="error red-text"></small>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row aprendizSena" style="display:none">
+                                                                <div class="input-field input-field col s12 m12 l6 offset-l3"  >
+                                                                    <select class=" js-states browser-default select2 select2-hidden-accessible" id="txtregional_aprendiz" name="txtregional_aprendiz" style="width: 100%" tabindex="-1" onchange="tipoTalento.getCentroFormacionAprendiz()">
+                                                                        <option value="">Seleccione regional</option>
+                                                                        @foreach($regionales as $id => $nombre)
+                                                                            @if(isset($user->talento->entidad->centro->regional->id))
+                                                                                <option value="{{$id}}" {{old('txtregional_aprendiz',$user->talento->entidad->centro->regional->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
+                                                                            @else
+                                                                                <option value="{{$id}}" {{old('txtregional_aprendiz') ==$id ? 'selected':''}}>{{$nombre}}</option>
+                                                                            @endif
+                                                                        @endforeach
+                                                                    </select>
+                                                                    <label for="txtregional_aprendiz" class="active">Regional <span class="red-text">*</span></label>
+                                                                    <small id="txtregional_aprendiz-error"  class="error red-text"></small>
+                                                                </div>
+                                                                <div class="input-field input-field col s12 m12 l6 offset-l3">
+                                                                    <select class="js-states browser-default select2 select2-hidden-accessible" id="txtcentroformacion_aprendiz" name="txtcentroformacion_aprendiz" style="width: 100%" tabindex="-1" >
+                                                                        <option value="">Seleccione Primero la regional</option>
+                                                                    </select>
+                                                                    <label for="txtcentroformacion_aprendiz" class="active">Centro de formación <span class="red-text">*</span></label>
+                                                                    <small id="txtcentroformacion_aprendiz-error"  class="error red-text"></small>
+                                                                </div>
+                                                                <div class="input-field input-field col s12 m12 l6 offset-l3 ">
+                                                                    <input class="validate" id="txtprogramaformacion_aprendiz" name="txtprogramaformacion_aprendiz" type="text"  value="{{ isset($user->talento->programa_formacion) ? $user->talento->programa_formacion : old('txtprogramaformacion_aprendiz')}}">
+                                                                    <label for="txtprogramaformacion_aprendiz">Programa de Formación <span class="red-text">*</span></label>
+                                                                    <small id="txtprogramaformacion_aprendiz-error"  class="error red-text"></small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row egresadoSena" style="display:none">
+                                                                <div class="input-field input-field col s12 m12 l6 offset-l3" >
+                                                                    <select class=" js-states browser-default select2 select2-hidden-accessible" id="txtregional_egresado" name="txtregional_egresado" style="width: 100%" tabindex="-1" onchange="tipoTalento.getCentroFormacionEgresadoSena()">
+                                                                        <option value="">Seleccione regional</option>
+                                                                        @foreach($regionales as $id => $nombre)
+                                                                            @if(isset($user->talento->entidad->centro->regional->id))
+                                                                                <option value="{{$id}}" {{old('txtregional_egresado',$user->talento->entidad->centro->regional->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
+                                                                            @else
+                                                                                <option value="{{$id}}" {{old('txtregional_egresado') ==$id ? 'selected':''}}>{{$nombre}}</option>
+                                                                            @endif
+                                                                        @endforeach
+                                                                    </select>
+                                                                    <label for="txtregional_egresado" class="active">Regional <span class="red-text">*</span></label>
+                                                                    <small id="txtregional_egresado-error"  class="error red-text"></small>
+                                                                </div>
+                                                                <div class="input-field input-field col s12 m12 l6 offset-l3">
+                                                                    <select class="js-states browser-default select2 select2-hidden-accessible" id="txtcentroformacion_egresado" name="txtcentroformacion_egresado" style="width: 100%" tabindex="-1" >
+                                                                        <option value="">Seleccione Primero la regional</option>
+                                                                    </select>
+                                                                    <label for="txtcentroformacion_egresado" class="active">Centro de formación <span class="red-text">*</span></label>
+                                                                    <small id="txtcentroformacion_egresado-error"  class="error red-text"></small>
+                                                                </div>
+                                                                <div class="input-field input-field col s12 m12 l6 offset-l3 ">
+                                                                    <input class="validate" id="txtprogramaformacion_egresado" name="txtprogramaformacion_egresado" type="text"  value="{{ isset($user->talento->programa_formacion) ? $user->talento->programa_formacion : old('txtprogramaformacion_egresado')}}">
+                                                                    <label for="txtprogramaformacion_egresado">Programa de Formación <span class="red-text">*</span></label>
+                                                                    <small id="txtprogramaformacion_egresado-error"  class="error red-text"></small>
+                                                                </div>
+                                                                <div class="input-field input-field col s12 m12 l6 offset-l3 ">
+                                                                    <select class="" id="txttipoformacion" name="txttipoformacion" style="width: 100%" tabindex="-1">
+                                                                        <option value="">Seleccione Tipo Formación</option>
+                                                                        @foreach($tipoformaciones as $id => $nombre)
+                                                                            @if(isset($user->talento->tipoformacion->id))
+                                                                                <option value="{{$id}}" {{old('txttipoformacion',$user->talento->tipoformacion->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
+                                                                            @else
+                                                                            <option value="{{$id}}" {{old('txttipoformacion') ==$id ? 'selected':''}}>{{$nombre}}</option>
+                                                                            @endif
+                                                                        @endforeach
+                                                                    </select>
+                                                                    <label for="txttipoformacion">Tipo Formación <span class="red-text">*</span></label>
+                                                                    <small id="txttipoformacion-error"  class="error red-text"></small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row funcionarioSena" style="display:none">
+                                                                <div class="input-field input-field col s12 m12 l6 offset-l3" >
+                                                                    <select class=" js-states browser-default select2 select2-hidden-accessible" id="txtregional_funcionarioSena" name="txtregional_funcionarioSena" style="width: 100%" tabindex="-1" onchange="tipoTalento.getCentroFormacionFuncionarioSena()">
+                                                                        <option value="">Seleccione regional</option>
+                                                                        @foreach($regionales as $id => $nombre)
+                                                                            @if(isset($user->talento->entidad->centro->regional->id))
+                                                                                <option value="{{$id}}" {{old('txtregional_funcionarioSena',$user->talento->entidad->centro->regional->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
+                                                                            @else
+                                                                                <option value="{{$id}}" {{old('txtregional_funcionarioSena') ==$id ? 'selected':''}}>{{$nombre}}</option>
+                                                                            @endif
+                                                                        @endforeach
+                                                                    </select>
+                                                                    <label for="txtregional_funcionarioSena" class="active">Regional <span class="red-text">*</span></label>
+                                                                    <small id="txtregional_funcionarioSena-error"  class="error red-text"></small>
+                                                                </div>
+                                                                <div class="input-field input-field col s12 m12 l6 offset-l3">
+                                                                    <select class="js-states browser-default select2 select2-hidden-accessible" id="txtcentroformacion_funcionarioSena" name="txtcentroformacion_funcionarioSena" style="width: 100%" tabindex="-1" >
+                                                                        <option value="">Seleccione Primero la regional</option>
+                                                                    </select>
+                                                                    <label for="txtcentroformacion_funcionarioSena" class="active">Centro de formación <span class="red-text">*</span></label>
+                                                                    <small id="txtcentroformacion_funcionarioSena-error"  class="error red-text"></small>
+                                                                </div>
+                                                                <div class="input-field input-field col s12 m12 l6 offset-l3">
+                                                                    <input class="validate" id="txtdependencia" name="txtdependencia" type="text"  value="{{ isset($user->talento->dependencia) ? $user->talento->dependencia : old('txtdependencia')}}">
+                                                                    <label for="txtdependencia">Dependencia</label>
+                                                                    <small id="txtdependencia-error"  class="error red-text"></small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row instructorSena" style="display:none">
+                                                                <div class="input-field col s12 m12 l6 offset-l3" >
+                                                                    <select class=" js-states browser-default select2 select2-hidden-accessible" id="txtregional_instructorSena" name="txtregional_instructorSena" style="width: 100%" tabindex="-1" onchange="tipoTalento.getCentroFormacionInstructorSena()">
+                                                                        <option value="">Seleccione regional</option>
+                                                                        @foreach($regionales as $id => $nombre)
+                                                                            @if(isset($user->talento->entidad->centro->regional->id))
+                                                                                <option value="{{$id}}" {{old('txtregional_instructorSena',$user->talento->entidad->centro->regional->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
+                                                                            @else
+                                                                                <option value="{{$id}}" {{old('txtregional_instructorSena') ==$id ? 'selected':''}}>{{$nombre}}</option>
+                                                                            @endif
+                                                                        @endforeach
+                                                                    </select>
+                                                                    <label for="txtregional_instructorSena" class="active">Regional <span class="red-text">*</span></label>
+                                                                    <small id="txtregional_instructorSena-error"  class="error red-text"></small>
+                                                                </div>
+                                                                <div class="input-field col s12 m12 l6 offset-l3">
+                                                                    <select class="js-states browser-default select2 select2-hidden-accessible" id="txtcentroformacion_instructorSena" name="txtcentroformacion_instructorSena" style="width: 100%" tabindex="-1">
+                                                                        <option value="">Seleccione Primero la regional</option>
+                                                                    </select>
+                                                                    <label for="txtcentroformacion_instructorSena" class="active">Centro de formación <span class="red-text">*</span></label>
+                                                                    <small id="txtcentroformacion_instructorSena-error"  class="error red-text"></small>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row universitario" style="display:none">
+                                                                <div class="input-field col s12 m12 l6 offset-l3" >
+                                                                    <select class="" id="txttipoestudio" name="txttipoestudio" style="width: 100%" tabindex="-1" >
+                                                                            <option value="">Seleccione Tipo Estudio</option>
+                                                                            @foreach($tipoestudios as $id => $nombre)
+                                                                                @if(isset($user->talento->tipoestudio->id))
+                                                                                <option value="{{$id}}" {{old('txttipoestudio',$user->talento->tipoestudio->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
+                                                                                @else
+                                                                                    <option value="{{$id}}" {{old('txttipoestudio') ==$id ? 'selected':''}}>{{$nombre}}</option>
+                                                                                @endif
+                                                                            @endforeach
+                                                                    </select>
+                                                                    <label for="txttipoestudio">Tipo Estudio <span class="red-text">*</span></label>
+                                                                    <small id="txttipoestudio-error"  class="error red-text"></small>
+                                                                </div>
+                                                                <div class="input-field col s12 m12 l6 offset-l3" >
+                                                                    <input class="validate" id="txtuniversidad" name="txtuniversidad" type="text"  value="{{ isset($user->talento->universidad) ? $user->talento->universidad : old('txtuniversidad')}}">
+                                                                    <label for="txtuniversidad">Universidad <span class="red-text">*</span></label>
+                                                                    <small id="txtuniversidad-error"  class="error red-text"></small>
+                                                                </div>
+                                                                <div class="input-field col s12 m12 l6 offset-l3" >
+                                                                    <input class="validate" id="txtcarrera" name="txtcarrera" type="text"  value="{{ isset($user->talento->carrera_universitaria) ? $user->talento->carrera_universitaria : old('txtcarrera')}}">
+                                                                    <label for="txtcarrera">Nombre de la Carrera <span class="red-text">*</span></label>
+                                                                    <small id="txtcarrera-error"  class="error red-text"></small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row funcionarioEmpresa" style="display:none">
+                                                                <div class="input-field col s12 m12 l6 offset-l3" >
+                                                                    <input class="validate" id="txtempresa" name="txtempresa" type="text"  value="{{ isset($user->talento->empresa) ? $user->talento->empresa : old('txtempresa')}}">
+                                                                    <label for="txtempresa">Nombre de la Empresa <span class="red-text">*</span></label>
+                                                                    <small id="txtempresa-error"  class="error red-text"></small>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col s12 m8 l8 offset-l4 offset-m4">
+                                                    <div class="divider mailbox-divider m-b-5">
+                                                    </div>
+                                                    <div class="center">
+                                                        <button type="submit" class="waves-effect waves-teal darken-2 btn-flat m-t-xs">
+                                                            Guardar cambios
+                                                        </button>
+                                                        <a href="{{route('home')}}" class="waves-effect waves-red btn-flat m-t-xs">
+                                                            cancelar
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>

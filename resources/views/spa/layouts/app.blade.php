@@ -12,6 +12,7 @@
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet"/>
         <link href="{{ asset('sweetalert2/sweetalert2.css') }}" rel="stylesheet"/>
         <link href="{{ asset('img/web.svg') }}" rel="shortcut icon" type="image/x-icon"/>
+        <meta name="theme-color" content="#39A900" />
         @stack('style')
         <meta name="title" content="@yield('meta-title',   config('app.name') )" />
         <meta name="abstract" content="@yield('meta-title',   config('app.name') )" />
@@ -23,14 +24,11 @@
         <meta name="robots" content="index"/>
         <meta name="Keywords" content="@yield('meta-keywords', 'Tecnoparque, SENA, Innovacion, Tecnologia, desarrollo, emprendimiento' )"/>
         <meta content="{{ csrf_token()}}" name="csrf-token"/>
-
         <meta property="og:locale" content="es_ES" />
         <meta property="og:title" content="{{config('app.name')}}" />
         <meta property="og:description" content="@yield('meta-content', 'Tecnoparque Red Colombia')" />
         <meta property="og:url" content="{{config('app.url')}}" />
         <meta property="og:site_name" content="{{config('app.name')}}" />
-
-
     </head>
     <body class="white">
         <div id="app">
@@ -65,7 +63,9 @@
             </div>
 
         </div>
-
+        <script>
+            const host_url = "{{config('app.url')}}";
+        </script>
         <script src="{{ asset('js/app.js') }}">
         </script>
         <script src="{{ asset('js/libs.js') }}">
@@ -73,9 +73,6 @@
         <script src="{{ asset('js/web.js') }}">
         </script>
         @include('sweetalert::alert')
-        <script>
-            const host_url = "{{config('app.url')}}";
-        </script>
         @stack('script')
     </body>
 </html>

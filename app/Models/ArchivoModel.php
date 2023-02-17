@@ -15,7 +15,7 @@ class ArchivoModel extends Model
         'fase_id'
     ];
 
-    public function archivomodel()
+    public function archives()
     {
         return $this->morphTo();
     }

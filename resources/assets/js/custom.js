@@ -28,6 +28,25 @@ function printErroresFormulario(data) {
   }
 }
 
+function printErrorsForm(data) {
+    if (data.fail) {
+        let errores = "";
+        for (control in data.errors) {
+            errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
+            $('#' + control + '-error').html(data.errors[control]);
+            $('#' + control + '-error').show();
+        }
+        Swal.fire({
+            title: 'Advertencia!',
+            html: 'Estas ingresando mal los datos. ' + errores,
+            type: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+        });
+    }
+}
+
 function formatMoney(amount, decimalCount = 2, decimal = ",", thousands = ".") {
   try {
     decimalCount = Math.abs(decimalCount);
@@ -40,7 +59,6 @@ function formatMoney(amount, decimalCount = 2, decimal = ",", thousands = ".") {
 
     return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
   } catch (e) {
-    console.log(e)
   }
 };
 
@@ -176,7 +194,6 @@ $(document).ready(function() {
 });
 
 function checkSubmit() {
-    // console.log('Clickeando');
     $('input[type="text"]').keypress(function() {
         if ($(this).val() != '') {
             $('button[type="submit"]').removeAttr('disabled');

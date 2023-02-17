@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Presenters\TipoArticulacionPresenter;
 
 class TipoArticulacion extends Model
 {
@@ -60,11 +59,4 @@ class TipoArticulacion extends Model
         }
         return $query;
     }
-
-    public function present()
-    {
-        return new TipoArticulacionPresenter($this);
-    }
-
-
 }

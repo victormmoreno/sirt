@@ -82,7 +82,6 @@
       type:'get',
       url: host_url + "/publicacion/updateEstado/"+id+"/"+estado,
       success: function (data) {
-        console.log(data);
         let msg = '';
         let type = '';
         if (data) {

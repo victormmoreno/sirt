@@ -9,7 +9,7 @@
                 <div class="left left-align">
                     <h5 class="left-align primary-text">
                         <a class="footer-text left-align"
-                           href="{{route('usuario.usuarios.show', $user->present()->userDocumento())}}">
+                            href="{{route('usuario.usuarios.show', $user->present()->userDocumento())}}">
                             <i class="material-icons left">arrow_back</i>
                         </a>Usuarios
                     </h5>
@@ -17,8 +17,9 @@
                 <div class="right right-align show-on-large hide-on-med-and-down">
                     <ol class="breadcrumbs">
                         <li><a href="{{route('home')}}">Inicio</a></li>
-                        <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
-                        <li class="active">Cambiar Información</li>
+                    <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
+                    <li><a href="{{route('usuario.usuarios.show', $user->documento)}}">{{$user->documento}}</a></li>
+                    <li class="active">Cambiar información</li>
                     </ol>
                 </div>
             </div>
@@ -57,8 +58,7 @@
                                                                     <div class="input-field col m6 s12">
                                                                         <select name="txttipo_documento"
                                                                                 style="width: 100%" tabindex="-1">
-                                                                            <option value="">Seleccione tipo documento
-                                                                            </option>
+                                                                            <option value="">Seleccione tipo documento</option>
                                                                             @foreach($tiposdocumentos as $value)
                                                                                 @if(isset($user->tipoDocumento->id))
                                                                                     <option
@@ -78,16 +78,14 @@
                                                                         @if($view == 'create')
                                                                             <input id="txtdocumento" name="txtdocumento"
                                                                                    type="text" value="{{$documento}}"
-                                                                                   readonly>
+                                                                                   readonly/>
                                                                         @elseif(isset($user->documento))
                                                                             <input id="txtdocumento" name="txtdocumento"
                                                                                    type="text"
-                                                                                   value="{{$user->documento}}">
+                                                                                   value="{{$user->documento}}"/>
                                                                         @endif
-                                                                        <label for="txtdocumento">Documento <span
-                                                                                class="red-text">*</span></label>
-                                                                        <small id="txtdocumento-error"
-                                                                               class="error red-text"></small>
+                                                                        <label for="txtdocumento">Documento <span class="red-text">*</span></label>
+                                                                        <small id="txtdocumento-error"class="error red-text"></small>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
@@ -110,12 +108,8 @@
                                                                                 @endif
                                                                             @endforeach
                                                                         </select>
-                                                                        <label class="active"
-                                                                               for="txtdepartamentoexpedicion">Departamento
-                                                                            de Expedición <span
-                                                                                class="red-text">*</span></label>
-                                                                        <small id="txtdepartamentoexpedicion-error"
-                                                                               class="error red-text"></small>
+                                                                        <label class="active" for="txtdepartamentoexpedicion">Departamentode Expedición <span class="red-text">*</span></label>
+                                                                        <small id="txtdepartamentoexpedicion-error" class="error red-text"></small>
                                                                     </div>
                                                                     <div class="input-field col m6 s12">
                                                                         <select
@@ -123,9 +117,7 @@
                                                                             id="txtciudadexpedicion"
                                                                             name="txtciudadexpedicion"
                                                                             style="width: 100%" tabindex="-1">
-                                                                            <option value="">Seleccione Primero el
-                                                                                Departamento
-                                                                            </option>
+                                                                            <option value="">Seleccione Primero el Departamento</option>
                                                                         </select>
                                                                         <label class="active" for="txtciudadexpedicion">Ciudad
                                                                             de Expedición <span
@@ -573,10 +565,10 @@
         </div>
     </main>
 @endsection
-
 @push('script')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
+
             $('.selectMultipe').select2({
                 language: "es",
             });
@@ -594,7 +586,7 @@
         });
 
         var ocupacion = {
-            getOtraOcupacion: function (idocupacion) {
+            getOtraOcupacion:function (idocupacion) {
                 $('#otraocupacion').hide();
                 let id = $(idocupacion).val();
                 let nombre = $("#txtocupaciones option:selected").text();
@@ -602,12 +594,12 @@
                 @if($errors->any())
                 $('#otraocupacion').hide();
 
-                if (resultado != null && resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
+                if (resultado != null  && resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
                     $('#otraocupacion').show();
                 }
 
                 @endif
-                if (resultado != null) {
+                if (resultado != null ) {
                     if (resultado.includes('{{App\Models\Ocupacion::IsOtraOcupacion() }}')) {
                         $('#otraocupacion').show();
                     }
@@ -617,20 +609,20 @@
 
 
         var user = {
-            getCiudadExpedicion: function () {
+            getCiudadExpedicion:function(){
                 let id;
                 id = $('#txtdepartamentoexpedicion').val();
                 $.ajax({
-                    dataType: 'json',
-                    type: 'get',
-                    url: host_url + '/usuario/getciudad/' + id
-                }).done(function (response) {
+                    dataType:'json',
+                    type:'get',
+                    url: host_url + '/usuario/getciudad/'+id
+                }).done(function(response){
                     $('#txtciudadexpedicion').empty();
                     $('#txtciudadexpedicion').append('<option value="">Seleccione la Ciudad</option>')
-                    $.each(response.ciudades, function (i, e) {
-                        $('#txtciudadexpedicion').append('<option  value="' + e.id + '">' + e.nombre + '</option>');
+                    $.each(response.ciudades, function(i, e) {
+                        $('#txtciudadexpedicion').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
                         @if(isset($user->ciudadexpedicion->id))
-                        $('#txtciudadexpedicion').select2('val', '{{$user->ciudadexpedicion->id}}');
+                        $('#txtciudadexpedicion').select2('val','{{$user->ciudadexpedicion->id}}');
 
                         @endif
                     });
@@ -639,20 +631,20 @@
             },
 
 
-            getCiudad: function () {
+            getCiudad:function(){
                 let id;
                 id = $('#txtdepartamento').val();
                 $.ajax({
-                    dataType: 'json',
-                    type: 'get',
-                    url: host_url + '/usuario/getciudad/' + id
-                }).done(function (response) {
+                    dataType:'json',
+                    type:'get',
+                    url: host_url + '/usuario/getciudad/'+id
+                }).done(function(response){
                     $('#txtciudad').empty();
                     $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')
-                    $.each(response.ciudades, function (i, e) {
-                        $('#txtciudad').append('<option  value="' + e.id + '">' + e.nombre + '</option>');
+                    $.each(response.ciudades, function(i, e) {
+                        $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
                         @if(isset($user->ciudad->id))
-                        $('#txtciudad').select2('val', '{{$user->ciudad->id}}');
+                        $('#txtciudad').select2('val','{{$user->ciudad->id}}');
 
                         @endif
                     })
@@ -661,7 +653,7 @@
                 });
             },
 
-            getOtraEsp: function (ideps) {
+            getOtraEsp:function (ideps) {
                 let id = $(ideps).val();
                 let nombre = $("#txteps option:selected").text();
 
@@ -670,23 +662,23 @@
                     $(".otraeps").css("display", "none");
 
 
-                } else {
+
+                }else{
 
                     $(".otraeps").css("display", "block");
                 }
             },
 
-            getGradoDiscapacidad() {
+            getGradoDiscapacidad(){
                 let discapacidad = $('#txtgrado_discapacidad').val();
                 if (discapacidad == 1) {
                     $('.gradodiscapacidad').css("display", "block");
 
-                } else {
+                }else{
                     $(".gradodiscapacidad").css("display", "none");
                 }
             }
-
         }
-
     </script>
 @endpush
+

@@ -20,13 +20,11 @@ class UsoInfraestructuraExport extends FatherExport
         $this->request = $request;
         $this->query = $query;
         $this->setCount($this->query->count() + 1);
-        $this->setRangeHeadingCell('A1:L1');
+        $this->setRangeHeadingCell('A1:K1');
     }
 
     public function registerEvents(): array
     {
-        $columnPar = $this->styleArrayColumnsPar();
-        $columnImPar = $this->styleArrayColumnsImPar();
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 $this->setFilters($event);
@@ -51,6 +49,6 @@ class UsoInfraestructuraExport extends FatherExport
      */
     public function title(): String
     {
-        return "Usos de Infraestructura";
+        return "Asesorias y usos";
     }
 }

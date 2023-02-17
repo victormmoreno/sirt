@@ -55,7 +55,6 @@ csibt = {
       type:'get',
       url: host_url + "/csibt/"+id,
     }).done(function(respuesta){
-      console.log(respuesta);
       $("#ideasProyectoDeUnComite").empty();
       if (respuesta != null ) {
         $("#fechaComiteModal").empty();
@@ -162,5 +161,5 @@ csibt = {
       }
     });
   }
-    
+
 }

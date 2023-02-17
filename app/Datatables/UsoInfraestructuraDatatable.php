@@ -13,33 +13,28 @@ class UsoInfraestructuraDatatable
     {
         return datatables()->of($usoinfraestructura)
             ->editColumn('fecha', function ($data) {
-                return $data->present()->fechaUsoInfraestructura();
+                return optional($data->fecha)->format('d-m-Y');
             })
             ->editColumn('actividad', function ($data) {
-                return $data->present()->actividadUsoInfraestructura();
+                return $data->nombre;
             })
             ->editColumn('tipo_asesoria', function ($data) {
-                return $data->present()->tipoUsoInfraestructura();
+                return $data->tipo_asesoria;
             })
             ->editColumn('fase', function ($data) {
-                return $data->present()->faseActividad();
+                return $data->fase;
             })
             ->editColumn('asesoria_directa', function ($data) {
-
-                return $data->present()->asesoriaDirecta();
+                return $data->aseseria_directa;
             })
             ->editColumn('asesoria_indirecta', function ($data) {
-                return $data->present()->asesoriaIndirecta();
+                return $data->asesoria_indirecta;
             })
             ->addColumn('gestorEncargado', function ($data) {
-
-                return $data->present()->asesor();
+                return $data->asesores;
             })
             ->addColumn('detail', function ($data) {
-
-                $button = '<a class="btn tooltipped green-complement  m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="' . route("usoinfraestructura.show", $data->id) . '" ><i class="material-icons">visibility</i></a>';
-
-                return $button;
+                return '<a class="btn tooltipped bg-info m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="' . route("usoinfraestructura.show", $data->id) . '" ><i class="material-icons">visibility</i></a>';
             })
             ->rawColumns(['fecha','tipo_asesoria', 'actividad', 'gestorEncargado', 'fase', 'asesoria_directa', 'asesoria_indirecta', 'detail'])
             ->make(true);

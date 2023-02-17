@@ -4,6 +4,7 @@ namespace App\Exports;
 use Maatwebsite\Excel\Concerns\{FromView, ShouldAutoSize, WithTitle, WithEvents};
 use PhpOffice\PhpSpreadsheet\Style\{Border, Fill};
 use Maatwebsite\Excel\Events\{AfterSheet};
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Contracts\View\View;
 abstract class FatherExport implements FromView, WithTitle, WithEvents, ShouldAutoSize
 {

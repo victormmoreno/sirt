@@ -41,5 +41,4 @@ class ModelPolicy
         }
         return false;
     }
-
 }

@@ -35,24 +35,18 @@ class Sede extends Model
         return $this->hasMany(Idea::class, 'sede_id', 'id');
     }
 
-    // public function articulaciones()
-    // {
-    //     return $this->hasMany(ArticulacionPbt::class, 'sede_id', 'id');
-    // }
-
     public function proyectos()
     {
         return $this->morphToMany(Proyecto::class, 'propietario')->withTimestamps();
     }
 
     /**
-     * Define a polymorphic, inverse many-to-many relationship between sede and articulacion_pbt
-     * @author dum
-     * @return \Illuminate\Database\Eloquent\Relations\morphOne
+     * The polymorfic relation much to much
+     *
+     * @return void
      */
-    public function articulacion()
+    public function articulationables()
     {
-        return $this->morphOne(ArticulacionPbt::class,'articulable');
+        return $this->morphToMany(ArticulationStage::class, 'articulationable');
     }
-
 }

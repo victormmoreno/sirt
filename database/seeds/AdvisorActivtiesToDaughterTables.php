@@ -35,72 +35,9 @@ class AdvisorActivtiesToDaughterTables extends Seeder
                     'asesor_id' => $val->gestor->user_id,
                     'nodo_id' => $val->nodo_id
                 ]);
-
-                // $val->edt->entidades->each(function ($entidad) use($val) {
-                //     if(isset($entidad->empresa)){
-                //         dd($entidad->empresa);
-                //     }
-
-                //     $entidad->update([
-                //         'edtable_id' => $val->edt->id,
-                //         'edtable_type'  => \App\Models\Sede::class
-                //     ]);
-
-                // });
             }
         }
 
-        $articulaciones = Actividad::with(['articulacion_proyecto.articulacion'])->whereHas('articulacion_proyecto.articulacion')->get();
-
-        foreach ($articulaciones as $key => $articulacion) {
-            if ($articulacion->articulacion_proyecto->articulacion != null) {
-
-                $articulacion->articulacion_proyecto->articulacion->update([
-                    'asesor_id' => $articulacion->gestor->user_id,
-                    'nodo_id' => $articulacion->nodo_id
-                ]);
-            }
-        }
-
-        $artpbts = Actividad::with(['articulacionpbt'])->whereHas('articulacionpbt')->get();
-
-        foreach ($artpbts as $key => $artpbt) {
-            if ($artpbt->articulacionpbt != null) {
-
-                $artpbt->articulacionpbt->update([
-                    'asesor_id' => $artpbt->gestor->user_id,
-                    'nodo_id' => $artpbt->nodo_id,
-                    'articulable_id' => $this->articulableId($artpbt),
-                    'articulable_type' => $this->articulableModel($artpbt),
-                    'codigo' => $artpbt->codigo_actividad,
-                    'nombre' => $artpbt->nombre,
-                    'fecha_inicio' => $artpbt->fecha_inicio,
-                    'fecha_cierre' => $artpbt->fecha_cierre,
-                    'aprobacion_dinamizador' => $artpbt->aprobacion_dinamizador,
-                    'formulario_inicio' => $artpbt->formulario_inicio,
-                    'seguimiento' => $artpbt->seguimiento,
-                ]);
-            }
-        }
     }
 
-    protected function articulableId($model){
-        if($model->articulacionpbt->proyecto_id != null){
-            return $model->articulacionpbt->proyecto_id;
-        }
-        if($model->articulacionpbt->sede_id != null){
-            return $model->articulacionpbt->sede_id;
-        }
-        return null;
-    }
-
-    protected function articulableModel($model){
-        if($model->articulacionpbt->proyecto_id != null){
-            return \App\Models\Proyecto::class;
-        }
-        if($model->articulacionpbt->sede_id != null){
-            return \App\Models\Sede::class;
-        }
-        return null;
-    }
 }

@@ -2,13 +2,19 @@
 
 namespace App\Exports\User;
 
+use Carbon\Traits\Date;
+use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Illuminate\Contracts\View\View;
 use App\Exports\FatherExport;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+
 
 class UserSheetExport extends FatherExport
 {
-
+    use Queueable,Exportable, SerializesModels;
     private $request;
     private $query;
 
@@ -50,5 +56,26 @@ class UserSheetExport extends FatherExport
     public function title(): String
     {
         return "Usuarios";
+    }
+
+    /**
+     * @var Invoice $invoice
+     */
+    public function map($invoice): array
+    {
+        // This example will return 3 rows.
+        // First row will have 2 column, the next 2 will have 1 column
+        return [
+            [
+                $invoice->invoice_number,
+                Date::dateTimeToExcel($invoice->created_at),
+            ],
+            [
+                $invoice->lines->first()->description,
+            ],
+            [
+                $invoice->lines->last()->description,
+            ]
+        ];
     }
 }

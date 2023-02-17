@@ -22,7 +22,7 @@ use App\Models\{
     TipoDocumento,
     Contratista,
     ControlNotificaciones,
-    UserNodo,
+    UserNodo
 };
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -49,7 +49,7 @@ class User extends Authenticatable implements JWTSubject
     const IS_TALENTO       = "Talento";
     const IS_INGRESO       = "Ingreso";
     const IS_PROVEEDOR     = "Proveedor";
-    const IS_DESARROLLADOR     = "Desarrollador";
+    const IS_DESARROLLADOR  = "Desarrollador";
     const IS_ARTICULADOR     = "Articulador";
     const IS_APOYO_TECNICO     = "Apoyo Técnico";
 
@@ -296,14 +296,6 @@ class User extends Authenticatable implements JWTSubject
 
     public function usoinfraestructuras()
     {
-        // return $this->belongsToMany(UsoInfraestructura::class, 'gestor_uso', 'usoinfraestructura_id', 'gestor_id')
-        //     ->withTimestamps()
-        //     ->withPivot([
-        //         'asesoria_directa',
-        //         'asesoria_indirecta',
-        //         'costo_asesoria',
-        //     ]);
-
             return $this->morphToMany(UsoInfraestructura::class, 'asesorable', 'gestor_uso', 'usoinfraestructura_id')->withTimestamps()
             ->withPivot([
                 'asesoria_directa',
@@ -316,7 +308,6 @@ class User extends Authenticatable implements JWTSubject
 
     public function scopeInfoUserRole($query, array $role = [], array $relations = [])
     {
-
         return $query->with($relations)
             ->role($role);
     }
@@ -344,6 +335,24 @@ class User extends Authenticatable implements JWTSubject
             return $query->whereHas('roles', function ($subQuery) use ($role) {
                 $subQuery->where('name', $role);
             });
+        }
+        return $query;
+    }
+
+    public function scopeRoleIn($query, $role)
+    {
+        if (!empty($role) && $role != null && $role != 'all') {
+            return $query->whereHas('roles', function ($subQuery) use ($role) {
+                $subQuery->whereIn('name', $role);
+            });
+        }
+        return $query;
+    }
+
+    public function scopeRoleQuery($query, $roles)
+    {
+        if (isset($roles) && (!collect($roles)->contains('all'))) {
+            return $query->roleIn($roles);
         }
         return $query;
     }
@@ -440,7 +449,64 @@ class User extends Authenticatable implements JWTSubject
                     });
             }
         }
+        return $query;
+    }
 
+    public function scopeNodoUserQuery($query, $roles, $nodos)
+    {
+        if ((!empty($roles) && !collect($roles)->contains('all') && (!collect($roles)->contains(User::IsTalento())) && !empty($nodos) &&  !collect($nodos)->contains('all'))) {
+            if (collect($roles)->contains(User::IsDinamizador())) {
+                return $query->join('dinamizador', function ($join) {
+                    $join->on('users.id', '=', 'dinamizador.user_id');
+                })->join('nodos', function ($join) use ($nodos) {
+                    $join->on('nodos.id', '=', 'dinamizador.nodo_id')
+                        ->whereIn('nodos.id', $nodos);
+                });
+            }
+            if (collect($roles)->contains(User::IsExperto())) {
+                return $query->join('gestores', function ($join) {
+                    $join->on('users.id', '=', 'gestores.user_id');
+                })->join('nodos', function ($join) use ($nodos) {
+                    $join->on('nodos.id', '=', 'gestores.nodo_id')
+                        ->whereIn('nodos.id', $nodos);
+                });
+            }
+            if (collect($roles)->contains(User::IsArticulador())) {
+                return $query->join('user_nodo', function ($join) {
+                    $join->on('users.id', '=', 'user_nodo.user_id')
+                        ->where('user_nodo.role', User::IsArticulador());
+                })->join('nodos', function ($join) use ($nodos) {
+                    $join->on('nodos.id', '=', 'user_nodo.nodo_id')
+                        ->whereIn('nodos.id', $nodos);
+                });
+            }
+            if (collect($roles)->contains(User::IsApoyoTecnico())) {
+                return $query->join('user_nodo', function ($join) {
+                    $join->on('users.id', '=', 'user_nodo.user_id')
+                        ->where('user_nodo.role', User::IsApoyoTecnico());
+                })->join('nodos', function ($join) use ($nodos) {
+                    $join->on('nodos.id', '=', 'user_nodo.nodo_id')
+                        ->whereIn('nodos.id', $nodos);
+                });
+            }
+            if (collect($roles)->contains(User::IsInfocenter())) {
+                return $query->join('infocenter', function ($join) {
+                    $join->on('users.id', '=', 'infocenter.user_id');
+                })->join('nodos', function ($join) use ($nodos) {
+                    $join->on('nodos.id', '=', 'infocenter.nodo_id')
+                        ->whereIn('nodos.id', $nodos);
+                });
+            }
+            if (collect($roles)->contains(User::IsIngreso())) {
+                return $query->join('ingresos', function ($join) {
+                    $join->on('users.id', '=', 'ingresos.user_id');
+                })->join('nodos', function ($join) use ($nodos) {
+                    $join->on('nodos.id', '=', 'ingresos.nodo_id')
+                        ->whereIn('nodos.id', $nodos);
+                });
+            }
+            return $query;
+        }
         return $query;
     }
 
@@ -449,10 +515,10 @@ class User extends Authenticatable implements JWTSubject
         if (!empty($state) && $state != null && $state != 'all') {
             if ($state == 'si') {
                 $state = User::IsActive();
-                return $query->where('estado', $state);
+                return $query->where('users.estado', $state);
             } else {
                 $state = User::IsInactive();
-                return $query->where('estado', $state)->onlyTrashed();
+                return $query->where('users.estado', $state)->onlyTrashed();
             }
         }
         return $query->withTrashed();
@@ -483,17 +549,14 @@ class User extends Authenticatable implements JWTSubject
                 });
             }
         }
-
         return $query;
     }
 
     public function scopeActivitiesTalento($query, $role, $year, $nodo)
     {
-
         if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && !empty($year) && $year != null && $year == 'all'  && (!empty($nodo) && $nodo != null && $nodo == 'all')) {
             return $query->has('talento.articulacionproyecto.actividad');
         }
-
         if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && (!empty($year) && $year != null && $year != 'all') && (!empty($nodo) && $nodo != null && $nodo != 'all')) {
             return $query->wherehas('talento.articulacionproyecto.actividad', function ($query) use ($year, $nodo) {
                 $query->where(function ($subquery) use ($year) {
@@ -511,8 +574,72 @@ class User extends Authenticatable implements JWTSubject
                 $query->where('id', $nodo);
             });
         }
+        return $query;
+    }
 
-
+    public function scopeActivitiesTalentsQuery($query, $role, $year, $nodo)
+    {
+        if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && !empty($year) && $year != null && $year == 'all'  && (!empty($nodo) && $nodo != null && $nodo == 'all')) {
+            return $query->join('talentos', function ($join) {
+                $join->on('talentos.user_id', '=', 'users.id');
+            })->join('articulacion_proyecto_talento', function ($join) {
+                $join->on('articulacion_proyecto_talento.talento_id', '=', 'talentos.id');
+            })->join('articulacion_proyecto', function ($join) {
+                $join->on('articulacion_proyecto.id', '=', 'articulacion_proyecto_talento.articulacion_proyecto_id');
+            })->join('proyectos', function ($join) {
+                $join->on('proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+                    ->where('proyectos.asesor_id', auth()->user()->id);
+            });
+        }
+        if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && (!empty($year) && $year != null && $year != 'all') && (!empty($nodo) && $nodo != null && $nodo != 'all')) {
+            return $query->join('talentos', function ($join) {
+                $join->on('talentos.user_id', '=', 'users.id');
+            })->join('articulacion_proyecto_talento', function ($join) {
+                $join->on('articulacion_proyecto_talento.talento_id', '=', 'talentos.id');
+            })->join('articulacion_proyecto', function ($join) {
+                $join->on('articulacion_proyecto.id', '=', 'articulacion_proyecto_talento.articulacion_proyecto_id');
+            })->join('proyectos', function ($join) {
+                $join->on('proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+                    ->where('proyectos.asesor_id', auth()->user()->id);
+            })->join('nodos', function ($join) use ($nodo) {
+                $join->on('nodos.id', '=', 'proyectos.nodo_id')
+                    ->where('nodos.id', $nodo);
+            })->join('actividades', function ($join) {
+                $join->on('actividades.id', '=', 'articulacion_proyecto.actividad_id');
+            })->whereYear('actividades.fecha_inicio', $year)->orWhereYear('actividades.fecha_cierre', $year);
+        }
+        if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && (!empty($year) && $year != null && $year != 'all') && (!empty($nodo) && $nodo != null && $nodo == 'all')) {
+            return $query->join('talentos', function ($join) {
+                $join->on('talentos.user_id', '=', 'users.id');
+            })->join('articulacion_proyecto_talento', function ($join) {
+                $join->on('articulacion_proyecto_talento.talento_id', '=', 'talentos.id');
+            })->join('articulacion_proyecto', function ($join) {
+                $join->on('articulacion_proyecto.id', '=', 'articulacion_proyecto_talento.articulacion_proyecto_id');
+            })
+                ->join('proyectos', function ($join) {
+                    $join->on('proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+                        ->where('proyectos.asesor_id', auth()->user()->id);
+                })
+                ->join('actividades', function ($join) use ($year) {
+                $join->on('actividades.id', '=', 'articulacion_proyecto.actividad_id')
+                    ->whereYear('actividades.fecha_inicio', $year)->orWhereYear('actividades.fecha_cierre', $year);
+            });
+        }
+        if ((!empty($role) && $role != null && $role != 'all' && $role == User::IsTalento()) && (!empty($year) && $year != null && $year == 'all') && (!empty($nodo) && $nodo != null && $nodo != 'all')) {
+            return $query->join('talentos', function ($join) {
+                $join->on('talentos.user_id', '=', 'users.id');
+            })->join('articulacion_proyecto_talento', function ($join) {
+                $join->on('articulacion_proyecto_talento.talento_id', '=', 'talentos.id');
+            })->join('articulacion_proyecto', function ($join) {
+                $join->on('articulacion_proyecto.id', '=', 'articulacion_proyecto_talento.articulacion_proyecto_id');
+            })->join('proyectos', function ($join) {
+                $join->on('proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
+                    ->where('proyectos.asesor_id', auth()->user()->id);
+            })->join('nodos', function ($join) use($nodo) {
+                $join->on('nodos.id', '=', 'proyectos.nodo_id')
+                    ->where('nodos.id', $nodo);
+            });
+        }
         return $query;
     }
 
@@ -599,3 +726,4 @@ class User extends Authenticatable implements JWTSubject
         return new UserPresenter($this);
     }
 }
+

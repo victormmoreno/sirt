@@ -27,8 +27,8 @@ mix.styles([
 		'resources/assets/plugins/dropzone/dropzone.css',
 		'resources/assets/plugins/summernote/dist/summernote-lite.css',
 		'resources/assets/css/alpha.css',
-		'resources/assets/css/custom.css',
         'resources/assets/css/responsive.css',
+        'resources/assets/css/custom.css',
 	],'public/css/libs.css');
 
 mix.minify('public/css/libs.css')
@@ -38,7 +38,8 @@ mix.scripts([
 		'resources/assets/plugins/jquery/dist/jquery.js',
 		'resources/assets/plugins/materialize/js/materialize.min.js',
 		'resources/assets/plugins/jquery-blockui/jquery.blockui.js',
-		'resources/assets/plugins/jquery-validation/jquery.validate.js',
+		'resources/assets/plugins/jquery-steps/jquery.steps.min.js',
+        'resources/assets/plugins/jquery-validation/jquery.validate.js',
 		'resources/assets/plugins/datatables/js/jquery.dataTables.js',
 		'resources/assets/plugins/datatables/js/datatables.buttons.min.js',
 		'resources/assets/plugins/font-awesome/js/all.js',
@@ -51,8 +52,8 @@ mix.scripts([
 		'resources/assets/plugins/highcharts/modules/exporting.js',
 		'resources/assets/plugins/highcharts/modules/export-data.js',
 		'resources/assets/plugins/highcharts/modules/variable-pie.js',
-    	'resources/assets/plugins/summernote/dist/summernote-lite.js',
-    	'resources/assets/plugins/summernote/dist/lang/summernote-es-ES.js',
+        'resources/assets/plugins/summernote/dist/summernote-lite.js',
+        'resources/assets/plugins/summernote/dist/lang/summernote-es-ES.js',
 		'resources/assets/js/alpha.js',
         'resources/assets/js/custom.js'
 	],'public/js/libs.js');
@@ -91,10 +92,6 @@ mix.scripts([
     'resources/app/user/edit-profile.js',
     'resources/app/user/role/roleuser.js',
     'resources/app/sublinea/administrador/index.js',
-    'resources/app/articulaciones/gestor/index.js',
-    'resources/app/articulaciones/gestor/form.js',
-    'resources/app/articulaciones/gestor/form_cierre.js',
-    'resources/app/articulaciones/index.js',
     'resources/app/intervenciones/gestor/index.js',
     'resources/app/intervenciones/index.js',
     'resources/app/proyecto/index.js',
@@ -104,8 +101,6 @@ mix.scripts([
     'resources/app/edt/gestor/form.js',
     'resources/app/edt/gestor/index.js',
     'resources/app/edt/index.js',
-    'resources/app/articulacionespbt/index.js',
-    'resources/app/articulacionespbt/form.js',
     'resources/app/costoadministrativo/index.js',
     'resources/app/equipos/index.js',
     'resources/app/mantenimiento/form.js',
@@ -120,9 +115,10 @@ mix.scripts([
     'resources/app/graficos/index.js',
     'resources/app/seguimiento/index.js',
     'resources/app/costos/index.js',
-    'resources/app/tipoarticulaciones/index.js',
-    'resources/app/tipoarticulaciones/form.js',
-    'resources/app/tipoarticulaciones/form.js',
+    'resources/app/articulationtypes/index.js',
+    'resources/app/articulationtypes/form.js',
+    'resources/app/articulationsubtypes/index.js',
+    'resources/app/articulationsubtypes/form.js',
     'resources/app/indicadores/index.js',
     'resources/app/publicacion/form.js',
     'resources/app/support/form.js',
@@ -146,7 +142,8 @@ mix.browserSync({
             'resources/views/**/*',
             'resources/lang/**/*',
             'routes/**/*'
-        ]
+        ],
+        open: false
  });
 
 

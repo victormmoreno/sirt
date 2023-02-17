@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col m6 vertical-line">
-        <h5 class="text-primarycolor center-align hand-of-Sean-fonts orange-text text-darken-3">Información Documento Identidad</h5>
+        <h5 class="text-primarycolor center-align primary-text">Información Documento Identidad</h5>
         <div class="row">
             <div class="input-field col l6 m10 s12 offset-m1">
                 <select  name="txttipo_documento" style="width: 100%" tabindex="-1">
@@ -52,7 +52,7 @@
                 <small id="txtciudadexpedicion-error" class="error red-text"></small>
             </div>
         </div>
-        <h5 class="text-primarycolor center hand-of-Sean-fonts orange-text text-darken-3">Datos de contacto</h5>
+        <h5 class="center primary-text">Datos de contacto</h5>
         <div class="row">
             <div class="input-field col s12">
                 <input class="validate" id="txtemail" name="txtemail" type="email" value="{{ isset($user->email) ? $user->email : old('txtemail')}}">
@@ -72,7 +72,7 @@
                 <small id="txtcelular-error"  class="error red-text"></small>
             </div>
         </div>
-        <h5 class="text-primarycolor center hand-of-Sean-fonts orange-text text-darken-3">Datos de residencia</h5>
+        <h5 class="center primary-text">Datos de residencia</h5>
         <div class="row">
             <div class="input-field col l6 m10 s12 offset-m1">
                 <select class="js-states browser-default select2" id="txtdepartamento" name="txtdepartamento" onchange="user.getCiudad()" style="width: 100%" tabindex="-1">
@@ -111,7 +111,7 @@
     </div>
     <div class="col m6 l6">
         <div class="row">
-            <h5 class="text-primarycolor center-align hand-of-Sean-fonts orange-text text-darken-3">Datos de identificación</h5>
+            <h5 class="center-align primary-text">Datos de identificación</h5>
 
             <div class="input-field col l6 m10 s12 offset-m1">
                 <input class="validate" id="txtnombres" name="txtnombres" type="text"  value="{{ isset($user->nombres) ? $user->nombres : old('txtnombres')}}">
