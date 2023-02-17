@@ -384,7 +384,7 @@ class ArchivoController extends Controller
     public function destroyFileProyecto($idFile)
     {
         $file = ArchivoArticulacionProyecto::find($idFile);
-        if(!$this->authorize('delete', $file)) {
+        if(!request()->user()->can('delete_files', [$file->articulacion_proyecto->proyecto, $file->articulacion_proyecto->proyecto->fase->nombre])) {
             toast('No tienes permisos para borrar este archivo!','success')->autoClose(2000)->position('top-end');
         } else {
             $file->delete();

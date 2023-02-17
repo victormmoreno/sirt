@@ -300,7 +300,7 @@ class ArticulacionPbtPolicy
      */
     public function gestionarAprobacion(User $user, ArticulacionPbt $articulacionPbt): bool
     {
-        return (bool) $user->hasAnyRole([User::IsArticulador()])
+        return (bool) $user->hasAnyRole([User::IsArticulador(), User::IsTalento(), User::IsDinamizador()])
             && session()->has('login_role')
             && (
                 session()->get('login_role') == User::IsTalento()  &&

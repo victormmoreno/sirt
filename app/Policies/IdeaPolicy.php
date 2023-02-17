@@ -93,6 +93,12 @@ class IdeaPolicy
         if (session()->get('login_role') == $user->IsDinamizador() && $user->dinamizador->nodo_id == $idea->nodo_id) {
             return true;
         }
+        if (session()->get('login_role') == $user->IsArticulador() && $user->articulador->nodo_id == $idea->nodo_id) {
+            return true;
+        }
+        if (session()->get('login_role') == $user->IsInfocenter() && $user->infocenter->nodo_id == $idea->nodo_id) {
+            return true;
+        }
         if (session()->get('login_role') == $user->IsAdministrador()) {
             return true;
         }
@@ -116,6 +122,12 @@ class IdeaPolicy
             return true;
         }
         if (session()->get('login_role') == $user->IsDinamizador() && $user->dinamizador->nodo_id == $idea->nodo_id) {
+            return true;
+        }
+        if (session()->get('login_role') == $user->IsArticulador() && $user->articulador->nodo_id == $idea->nodo_id) {
+            return true;
+        }
+        if (session()->get('login_role') == $user->IsInfocenter() && $user->infocenter->nodo_id == $idea->nodo_id) {
             return true;
         }
         if (session()->get('login_role') == $user->IsAdministrador()) {
