@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Session};
-use App\{User, Models\Nodo, Models\Fase, Models\Proyecto};
+use App\{User, Models\Nodo, Models\Fase, Models\Proyecto, Models\MetaNodo};
 use Repositories\Repository\NodoRepository;
 use App\Repositories\Repository\ProyectoRepository;
 use Carbon\Carbon;
@@ -50,7 +50,7 @@ class IndicadorController extends Controller
       $nodos = [request()->user()->getNodoUser()];
     }
     // dd($expertos);
-    $metas = $this->nodoRepository->consultarMetasDeTecnoparque()->whereIn('nodo_id', $nodos);
+    $metas = $this->nodoRepository->consultarMetasDeTecnoparque($nodos)->whereYear('anho', Carbon::now()->format('Y'))->get();
     $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl6Obtenido()])->whereIn('nodos.id', $nodos)->get();
     $pbts_trl7_8 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl7Obtenido(), Proyecto::IsTrl8Obtenido()])->whereIn('nodos.id', $nodos)->get();
     $activos = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->select('nodo_id')->selectRaw('count(id) as cantidad')->whereHas('fase', function ($query) {
