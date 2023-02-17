@@ -68,7 +68,7 @@ class HelpController extends Controller
     protected function base_sesion()
     {
         switch (Session::get('login_role')) {
-            case User::IsAdministrador():
+            case User::IsActivador():
                 return "Manual_Usuario_Administrador.pdf";
                 break;
             case User::IsApoyoTecnico():

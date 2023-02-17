@@ -11,7 +11,7 @@
                     <a class="footer-text left-align" href="{{route('costoadministrativo.index')}}">
                         <i class="material-icons left">arrow_back</i>
                     </a>
-                    Editar Costos Administrativos Tecnoparque Nodo {{\NodoHelper::returnNameNodoUsuario()}}
+                    Editar Costos Administrativos Tecnoparque nodo {{$costoadministrativo->entidad}}
                 </h5>
             </div>
             <div class="right right-align show-on-large hide-on-med-and-down">
@@ -31,7 +31,7 @@
                                 <div class="center-align">
                                     <span class="card-title center-align primary-text">Editar Costo Administrativo <b>{{$costoadministrativo->costoadministrativo}} - {{$costoadministrativo->anho}}</b></span>
                                 </div>
-                                <form action="{{ route('costoadministrativo.update', $costoadministrativo->id)}}" method="POST" onsubmit="return checkSubmit()">
+                                <form action="{{ route('costoadministrativo.update', [$costoadministrativo->id, $nodo])}}" method="POST" onsubmit="return checkSubmit()">
                                 	{!! method_field('PUT')!!}
 	                                @include('costoadministrativo.form', [
 								    	'btnText' => 'Modificar',

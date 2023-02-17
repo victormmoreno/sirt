@@ -551,7 +551,7 @@ var roles = {
         $('#section-talento').hide();
         $('#section-ingreso').hide();
         $("input[type=checkbox]:checked").each(function(){
-            if ($(this).val() == '{{App\User::IsAdministrador()}}') {
+            if ($(this).val() == '{{App\User::IsActivador()}}') {
                 roles.hideSelectRole();
             }else if ($(this).val() == '{{App\User::IsApoyoTecnico()}}') {
                 roles.hideSelectRole();
@@ -563,7 +563,7 @@ var roles = {
             }else if ($(this).val() == '{{App\User::IsDinamizador()}}') {
                 roles.hideSelectRole();
                 $('#section-dinamizador').show();
-            }else if($(this).val() == '{{App\User::IsGestor()}}' ){
+            }else if($(this).val() == '{{App\User::IsExperto()}}' ){
                 roles.hideSelectRole();
                 $('#section-gestor').show();
             }else if($(this).val() == '{{App\User::IsInfocenter()}}'){
@@ -817,7 +817,7 @@ var tipoTalento = {
             url: host_url + '/centro-formacion/getcentrosregional/'+regional
         }).done(function(response){
             $('#txtcentroformacion_aprendiz').empty();
-            @if(isset($user->talento->entidad) && collect($user->roles)->contains('name',App\User::IsTalento()) &&  session()->get('login_role') != App\User::IsGestor())
+            @if(isset($user->talento->entidad) && collect($user->roles)->contains('name',App\User::IsTalento()) &&  session()->get('login_role') != App\User::IsExperto())
                 $('#txtcentroformacion_aprendiz').append(`<option value=`+'{{$user->talento->entidad->id}}'+`>`+'{{$user->talento->entidad->nombre}}'+`</option>`);
                 @if(isset($user->talento->entidad))
                     $('#txtcentroformacion_aprendiz').select2('val','{{$user->talento->entidad->id}}');

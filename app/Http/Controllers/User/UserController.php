@@ -63,6 +63,13 @@ class UserController extends Controller
             return $usersDatatables->datatableUsers($users);
         }
         switch (session()->get('login_role')) {
+            case User::IsActivador():
+                $nodos = Entidad::has('nodo')->with('nodo')->orderby('nombre')->get()->pluck('nombre', 'nodo.id');
+                return view('users.administrador.index', [
+                    'roles' => $this->userRepository->getAllRoles(),
+                    'nodos' => $nodos,
+                ]);
+                break;
             case User::IsAdministrador():
                 return view('users.index', [
                     'roles' => $this->userRepository->getAllRoles(),
@@ -193,6 +200,11 @@ class UserController extends Controller
     public function show($documento)
     {
         $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
+        if(request()->user()->cannot('show', $user))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
+        }
         if (request()->ajax()) {
             return response()->json([
                 'data' => [

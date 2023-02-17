@@ -29,7 +29,7 @@ class HomeController extends Controller
     public function index()
     {
       switch ( Session::get('login_role') ) {
-        case User::IsAdministrador() :
+        case User::IsActivador() :
 
             $dinamizadores = User::role(User::IsDinamizador());
             $admin = User::role(User::IsAdministrador());
@@ -67,5 +67,35 @@ class HomeController extends Controller
           return view('home.home');
           break;
       }
+
+
+        // $value = Session::get('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d');
+         // session()->put('login_role', 'value');
+
+         //    $value = Session::all();
+
+         //    dd($value);
+
+        // if (auth()->user()->hasRole('Infocenter')) {
+        // $nodo = Nodo::where('id','=',auth()->user()->infocenter->nodo_id)->first()->nombre;
+
+
+        // $nodo = Nodo::userNodo(auth()->user()->infocenter->nodo_id)->first()->nombre;
+
+
+        // $user  = auth()->user()->infocenter->nodo_id;
+
+       //  $filtered = collect(auth()->user()->roles)->firstWhere('name', 'Activador')->name;
+       // // $filtered->all();
+       //  dd($filtered);
+       //      // dd($administradores);
+       //      return view('home.home');
+        // } else if(auth()->user()->hasRole('Dinamizador')){
+        //     echo "Infocenter";
+        // }else{
+        //   abort(403);
+        // }
+        //
+
     }
 }

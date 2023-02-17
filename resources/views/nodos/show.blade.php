@@ -51,6 +51,13 @@
                                             </div>
                                         </div>
                                         <div class="right hide-on-med-and-down">
+                                            {{-- @can('inhabilitar', $nodo)
+                                                <small class="danger-text">
+                                                    <a class="waves-effect waves-danger btn-flat" onclick="inhabilitarFuncionarios(event, '{{route('nodo.inhabilitar', $nodo)}}')">
+                                                        <i class="fas fa-user-lock fa-lg"></i>Inhabilitar funcionarios
+                                                    </a>
+                                                </small>
+                                            @endcan --}}
                                             @can('downloadOne', $nodo)
                                                 <small class="success-text">
                                                     <a class="waves-effect waves-success btn-flat"
@@ -81,6 +88,10 @@
                                                                 <span class="title">
                                                                     {{$value->abreviatura}} - {{$value->nombre}}
                                                                 </span>
+                                                                <a href="{{route("lineas.show", $value->slug)}}" target="_blank" class="info tooltipped" data-position="bottom" data-tooltip="Ver más información">
+                                                                    <i class="material-icons right">info</i>
+                                                                </a>
+
                                                             </li>
                                                         @empty
                                                             <div class="center">
@@ -164,6 +175,10 @@
                                                                                 {{$dinamizador->user->present()->userCelular()}}
                                                                                 <br/>
                                                                             </p>
+                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $dinamizador->user->documento)}}" class="info">
+                                                                                Ver mas información del usuario. 
+                                                                            </a>
+
                                                                         </li>
                                                                     @endif
                                                                 @empty
@@ -183,7 +198,8 @@
                                                         <div class="col s12 m12 l6">
                                                             <div class="center">
                                                                 <span
-                                                                    class="secondary-text"><b>{{App\User::IsInfocenter()}}</b></span>
+                                                                    class="secondary-text"><b>{{App\User::IsInfocenter()}}</b>
+                                                                </span>
                                                             </div>
                                                             <ul class="collection">
                                                                 @forelse($nodo->infocenter as $infocenter)
@@ -205,6 +221,9 @@
                                                                                 {{$infocenter->user->present()->userCelular()}}
                                                                                 <br/>
                                                                             </p>
+                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $infocenter->user->documento)}}" class="info">
+                                                                                Ver mas información del usuario. 
+                                                                            </a>
                                                                         </li>
                                                                     @endif
                                                                 @empty
@@ -229,8 +248,8 @@
                                                         </div>
                                                         <div class="divider mailbox-divider"></div>
                                                         @forelse($nodo->gestores as $gestor)
-                                                            <div class="col s12 m12 l6">
-                                                                @if(isset($gestor->user) && $gestor->user->hasRole(App\User::IsGestor()) && $gestor->user->estado == App\User::IsActive() &&  $gestor->user->deleted_at == null)
+                                                            @if(isset($gestor->user) && $gestor->user->hasRole(App\User::IsExperto()) && $gestor->user->estado == App\User::IsActive() &&  $gestor->user->deleted_at == null)
+                                                                <div class="col s12 m12 l6">
                                                                     <ul class="collection">
                                                                         <li class="collection-item">
                                                                     <span class="title">
@@ -252,10 +271,13 @@
                                                                                 {{$gestor->user->present()->userRolesNames()}}
                                                                                 <br/>
                                                                             </p>
+                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $gestor->user->documento)}}" class="info">
+                                                                                Ver mas información del usuario. 
+                                                                            </a>
                                                                         </li>
                                                                     </ul>
-                                                                @endif
-                                                            </div>
+                                                                </div>
+                                                            @endif
                                                         @empty
                                                             <div class="col s12 m12 l6">
                                                                 <ul class="collection">
@@ -266,7 +288,7 @@
                                                                         <p class="center-align">Tecnoparque
                                                                             Nodo {{$nodo->entidad->present()->entidadName()}}
                                                                             no cuenta con
-                                                                            un {{App\User::IsGestor()}} aún</p>
+                                                                            un {{App\User::IsExperto()}} aún</p>
                                                                     </div>
                                                                 </ul>
                                                             </div>
@@ -280,8 +302,8 @@
                                                         <div class="divider mailbox-divider">
                                                         </div>
                                                         @forelse($nodo->articuladores as $articulador)
-                                                            <div class="col s12 m12 l6">
-                                                                @if(isset($articulador->user) && $articulador->user->hasRole(App\User::IsArticulador()) && $articulador->user->estado == App\User::IsActive() &&  $articulador->user->deleted_at == null)
+                                                            @if(isset($articulador->user) && $articulador->user->hasRole(App\User::IsArticulador()) && $articulador->user->estado == App\User::IsActive() &&  $articulador->user->deleted_at == null)
+                                                                <div class="col s12 m12 l6">
                                                                     <ul class="collection">
                                                                         <li class="collection-item">
                                                                             <span class="title">
@@ -303,11 +325,13 @@
                                                                                 {{$articulador->user->present()->userRolesNames()}}
                                                                                 <br/>
                                                                             </p>
+                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $articulador->user->documento)}}" class="info">
+                                                                                Ver mas información del usuario. 
+                                                                            </a>
                                                                         </li>
                                                                     </ul>
-                                                                @endif
-
-                                                            </div>
+                                                                </div>
+                                                            @endif
                                                         @empty
                                                             <div class="col s12 m12 l6">
                                                                 <ul class="collection">
@@ -333,8 +357,8 @@
                                                         <div class="divider mailbox-divider">
                                                         </div>
                                                         @forelse($nodo->apoyostecnicos as $apoyotecnico)
-                                                            <div class="col s12 m12 l6">
-                                                                @if(isset($apoyotecnico->user) && $apoyotecnico->user->hasRole(App\User::IsApoyoTecnico()) && $apoyotecnico->user->estado == App\User::IsActive() &&  $apoyotecnico->user->deleted_at == null)
+                                                            @if(isset($apoyotecnico->user) && $apoyotecnico->user->hasRole(App\User::IsApoyoTecnico()) && $apoyotecnico->user->estado == App\User::IsActive() &&  $apoyotecnico->user->deleted_at == null)
+                                                                <div class="col s12 m12 l6">
                                                                     <ul class="collection">
                                                                         <li class="collection-item">
                                                                             <span class="title">
@@ -356,10 +380,13 @@
                                                                                 {{$apoyotecnico->user->present()->userRolesNames()}}
                                                                                 <br/>
                                                                             </p>
+                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $apoyotecnico->user->documento)}}" class="info">
+                                                                                Ver mas información del usuario. 
+                                                                            </a>
                                                                         </li>
                                                                     </ul>
-                                                                @endif
-                                                            </div>
+                                                                </div>
+                                                            @endif
                                                         @empty
                                                             <div class="col s12 m12 l6">
                                                                 <ul class="collection">
@@ -377,7 +404,7 @@
                                                             </div>
                                                         @endforelse
                                                     </div>
-                                                    <div class="row">
+                                                    {{-- <div class="row">
                                                         <div class="col s12 m12 l12">
                                                             <div class="center">
                                                                 <span
@@ -427,7 +454,7 @@
                                                                 </div>
                                                             @endforelse
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
                                                 </div>
                                             </div>
                                         </div>

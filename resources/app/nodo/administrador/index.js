@@ -68,7 +68,6 @@ $.fn.pageMe = function(opts){
     var perPage = settings.perPage;
     var children = listElement.children();
     var pager = $('.pager');
-
     if (typeof settings.childSelector!="undefined") {
         children = listElement.find(settings.childSelector);
     }
@@ -79,7 +78,6 @@ $.fn.pageMe = function(opts){
 
     var numItems = children.size();
     var numPages = Math.ceil(numItems/perPage);
-
     // $("#total_reg").html(numItems+" Entradas en total");
 
     pager.data("curr",0);

@@ -4,46 +4,55 @@
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
         <div class="row no-m-t no-m-b">
-        <div class="col s12 m12 l12">
-            <h5>
-            <a class="footer-text left-align" href="{{route('empresa')}}">
-                <i class="left material-icons">arrow_back</i>
-            </a> Empresas
-            </h5>
-            <div class="card">
-            <div class="card-content">
+            <div class="col s12 m12 l12">
                 <div class="row">
-                <div class="col s12 m12 l12">
-                    <br>
-                    <center>
-                    <span class="card-title center-align">Nueva Empresa - Red Tecnoparque</span>
-                    </center>
-                    <div class="divider"></div>
-                    <form id="formRegisterCompany"  action="{{route('empresa.store')}}" method="POST" onsubmit="return checkSubmit()">
-                    {!! csrf_field() !!}
-                    <div class="card red lighten-3">
+                    <h5 class="left left-align primary-text">
+                        <a class="primary-text" href="{{route('empresa')}}">
+                            <i class="material-icons left">arrow_back</i>
+                        </a>
+                        Empresas
+                    </h5>
+                    <div class="right right-align show-on-large hide-on-med-and-down">
+                        <ol class="breadcrumbs">
+                            <li><a href="{{route('home')}}">Inicio</a></li>
+                            <li class="active">Empresas</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-content">
                         <div class="row">
-                        <div class="col s12 m12">
-                            <div class="card-content white-text">
-                            <p><i class="material-icons left"> info_outline</i> Los datos marcados con * son obligatorios</p>
+                            <div class="col s12 m12 l12">
+                                <br>
+                                <div class="center primary-text">
+                                    <span class="card-title center-align">Nueva Empresa - Red Tecnoparque</span>
+                                </div>
+                                <div class="divider"></div>
+                                <form id="formRegisterCompany" action="{{route('empresa.store')}}" method="POST" onsubmit="return checkSubmit()">
+                                    {!! csrf_field() !!}
+                                    <div class="card red lighten-3">
+                                        <div class="row">
+                                        <div class="col s12 m12">
+                                            <div class="card-content white-text">
+                                            <p><i class="material-icons left"> info_outline</i> Los datos marcados con * son obligatorios</p>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    @include('empresa.form', ['vista' => 'empresa'])
+                                    <div class="divider"></div>
+                                    @include('empresa.form_sedes', ['vista' => 'empresa'])
+                                    <div class="divider"></div>
+                                    <div class="center">
+                                        <button type="submit" class="btn bg-secondary center-aling"><i class="material-icons right">send</i>Registrar</button>
+                                        <a href="{{route('empresa')}}" class="btn bg-danger center-aling"><i class="material-icons left">backspace</i>Cancelar</a>
+                                    <div>
+                                </form>
                             </div>
                         </div>
-                        </div>
                     </div>
-                    @include('empresa.form', ['vista' => 'empresa'])
-                    <div class="divider"></div>
-                    @include('empresa.form_sedes', ['vista' => 'empresa'])
-                    <div class="divider"></div>
-                    <center>
-                        <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>Registrar</button>
-                        <a href="{{route('empresa')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
-                    <center>
-                    </form>
-                </div>
                 </div>
             </div>
-            </div>
-        </div>
         </div>
     </div>
 </main>
@@ -52,7 +61,7 @@
 <script>
   $(document).ready(function() {
     @if($errors->any())
-        EmpresaCreate.getCiudad();
+    EmpresaCreate.getCiudad();
     @endif
   });
   function getCiudadSede() {

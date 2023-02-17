@@ -3,21 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Articulation,
-    ArticulationStage,
-    Fase,
-    Proyecto,
-    ArchivoArticulacionProyecto,
-    RutaModel,
-    ArchivoModel};
-use App\Repositories\Repository\{ArticulacionProyectoRepository,
-    ArchivoRepository,
-    Articulation\ArticulationStageRepository,
-    ProyectoRepository,
-    EntrenamientoRepository,
-    EdtRepository,
-    CharlaInformativaRepository};
+// use App\Models\{Articulation,
+//     ArticulationStage,
+//     Fase,
+//     Proyecto,
+//     ArchivoArticulacionProyecto,
+//     RutaModel,
+//     ArchivoModel};
+// use App\Repositories\Repository\{ArticulacionProyectoRepository,
+//     ArchivoRepository,
+//     Articulation\ArticulationStageRepository,
+//     ProyectoRepository,
+//     EntrenamientoRepository,
+//     EdtRepository,
+//     CharlaInformativaRepository};
 use Illuminate\Support\Str;
+use App\Models\{Fase, Proyecto, ArchivoArticulacionProyecto, Articulation, RutaModel, ArticulationStage, ArchivoModel, Entrenamiento, Entrenamienton};
+use App\Repositories\Repository\{Articulation\ArticulationStageRepository, ArchivoRepository, ProyectoRepository, EntrenamientoRepository, EdtRepository, CharlaInformativaRepository};
 use Illuminate\Support\Facades\{Storage, Session};
 use App\User;
 use Carbon\Carbon;
@@ -78,26 +80,22 @@ class ArchivoController extends Controller
 
     /**
      * Sube un archivo de las charlas informativas al servidor, además de que lo registra en la base de datos
-     * @param Request
-     * @param int $id Id de la edt con el que se le subirá el archivo
-     * @return void
-     */
+    * @param Request $request
+    * @param int $id Id de la charla con el que se le subirá el archivo
+    * @return void
+    */
     public function uploadFileCharlaInformartiva(Request $request, $id)
     {
         if (request()->ajax()) {
             $this->validate(request(), [
                 'nombreArchivo' => 'max:50000|mimes:jpeg,png,jpg,docx,doc,pdf,exe,xlsl,xlsx,xls,pptx,sldx,ppsx,zip',
             ],
-                [
-                    'nombreArchivo.mimes' => 'El tipo de archivo no es permitido',
-                    'nombreArchivo.max' => 'El tamaño del archivo no puede superar las 50MB'
-                ]);
-            $nodo_id = null;
-            if (Session::get('login_role') == User::IsInfocenter()) {
-                $nodo_id = auth()->user()->infocenter->nodo_id;
-            } else {
-                $nodo_id = auth()->user()->articulador->nodo_id;
-            }
+            [
+                'nombreArchivo.mimes' => 'El tipo de archivo no es permitido',
+                'nombreArchivo.max' => 'El tamaño del archivo no puede superar las 50MB'
+            ]);
+            $charla = $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id);
+            $nodo_id = $charla->nodo_id;
             $file = request()->file('nombreArchivo');
             $route = "";
             // La ruta con la se guardan los archivos de una es la siguiente:
@@ -105,7 +103,6 @@ class ArchivoController extends Controller
             $idArchivoCharlaInformativa = RutaModel::selectRaw('MAX(id+1) AS max')->get()->last();
             $fileName = $idArchivoCharlaInformativa->max . '_' . $file->getClientOriginalName();
             // Creando la ruta
-            $charla = $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id);
             $nodo = sprintf("%02d", $nodo_id);
             $anho = Carbon::parse($charla->fecha)->isoFormat('YYYY');
             // $anho = $edt->fecha_inicio->isoFormat('YYYY');
@@ -290,25 +287,31 @@ class ArchivoController extends Controller
     public function datatableArchivosDeUnEntrenamiento($id)
     {
         if (request()->ajax()) {
-            $files = $this->entrenamientoRepository->consultarArchivosDeUnEntrenamiento($id);
-            return datatables()->of($files)
-                ->addColumn('download', function ($data) {
-                    $download = '
-            <a target="_blank" href="' . route('entrenamientos.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
+        $files = $this->entrenamientoRepository->consultarArchivosDeUnEntrenamiento($id);
+        return datatables()->of($files)
+        ->addColumn('download', function ($data) {
+            $download = '
+            <a target="_blank" href="' . route('taller.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
             <i class="material-icons">file_download</i>
             </a>
             ';
-                    return $download;
-                })->addColumn('delete', function ($data) {
-                    $delete = '<form method="POST" action="' . route('entrenamientos.files.destroy', $data) . '">
-            ' . method_field('DELETE') . '' .  csrf_field() . '
-            <button class="btn red darken-4 m-b-xs">
-            <i class="material-icons">delete_forever</i>
-            </button>
-            </form>';
-                    return $delete;
-                })->addColumn('file', function ($data) {
-                    $file = '
+            return $download;
+        })->addColumn('delete', function ($data) {
+            if (request()->user()->can('delete', Entrenamiento::class)) {
+                $delete = '<form method="POST" action="' . route('taller.files.destroy', $data) . '">
+                ' . method_field('DELETE') . '' .  csrf_field() . '
+                <button class="btn red darken-4 m-b-xs">
+                <i class="material-icons">delete_forever</i>
+                </button>
+                </form>';
+            } else {
+                $delete = '<button class="btn disabled darken-4 m-b-xs">
+                <i class="material-icons">delete_forever</i>
+                </button>';
+            }
+            return $delete;
+        })->addColumn('file', function ($data) {
+            $file = '
             <i class="material-icons">insert_drive_file</i> ' . basename( url($data->ruta) ) . '
             ';
                     return $file;
@@ -358,33 +361,33 @@ class ArchivoController extends Controller
     public function uploadFileProyecto(Request $request, $id)
     {
         if (request()->ajax()) {
-            $this->validate(request(), [
-                'nombreArchivo' => 'max:50000|mimes:jpeg,png,jpg,docx,doc,pdf,exe,xlsl,xlsx,xls,pptx,sldx,ppsx,exe,zip',
-            ],
-                [
-                    'nombreArchivo.mimes' => 'El tipo de archivo no es permitido',
-                    'nombreArchivo.max' => 'El tamaño del archivo no puede superar las 50MB'
-                ]);
-            $file = request()->file('nombreArchivo');
-            // La ruta con la se guardan los archivos de un proyecto es la siguiente:
-            // id_nodo/anho_de_la_fecha_de_inicio_del_proyecto/Proyectos/linea_tecnológica/id_gestor/id_del_proyecto/fase_del_archivo/max_id_archivo_proyecto_nombre_del_archivo.extension
-            $idArchivoArtulacionProyecto = ArchivoArticulacionProyecto::selectRaw('MAX(id+1) AS max')->get()->last();
-            $fileName = $idArchivoArtulacionProyecto->max . '_' . $file->getClientOriginalName();
-            // Creando la ruta
-            $proyecto = Proyecto::findOrFail($id);
-            $route = "";
-            $nodo = sprintf("%02d", $proyecto->nodo_id);
-            $anho = Carbon::parse($proyecto->fecha_inicio)->isoFormat('YYYY');
-            $linea = $proyecto->sublinea->lineatecnologica_id;
-            $gestor = sprintf("%03d", $proyecto->asesor_id);
-            $idproyecto = $proyecto->id;
-            $fase = Fase::select('id', 'nombre')->where('nombre', $request->fase)->get()->last();
-            $fase_id = $fase->id;
-            $fase = $fase->nombre;
-            $route = 'public/' . $nodo . '/' . $anho . '/Proyectos' . '/' . $linea . '/' . $gestor . '/' . $idproyecto . '/' . $fase;
-            $fileUrl = $file->storeAs($route, $fileName);
-            $id = $proyecto->articulacion_proyecto_id;
-            $this->archivoRepository->storeFileArticulacionProyecto($id, $fase_id, Storage::url($fileUrl));
+        $this->validate(request(), [
+            'nombreArchivo' => 'max:50000|mimes:jpeg,png,jpg,docx,doc,pdf,exe,xlsl,xlsx,xls,pptx,sldx,ppsx,exe,zip',
+        ],
+        [
+            'nombreArchivo.mimes' => 'El tipo de archivo no es permitido',
+            'nombreArchivo.max' => 'El tamaño del archivo no puede superar las 50MB'
+        ]);
+        $file = request()->file('nombreArchivo');
+        // La ruta con la se guardan los archivos de un proyecto es la siguiente:
+        // id_nodo/anho_de_la_fecha_de_inicio_del_proyecto/Proyectos/linea_tecnológica/id_gestor/id_del_proyecto/fase_del_archivo/max_id_archivo_proyecto_nombre_del_archivo.extension
+        $idArchivoArtulacionProyecto = ArchivoArticulacionProyecto::selectRaw('MAX(id+1) AS max')->get()->last();
+        $fileName = $idArchivoArtulacionProyecto->max . '_' . $file->getClientOriginalName();
+        // Creando la ruta
+        $proyecto = Proyecto::findOrFail($id);
+        $route = "";
+        $nodo = sprintf("%02d", $proyecto->nodo_id);
+        $anho = Carbon::parse($proyecto->fecha_inicio)->isoFormat('YYYY');
+        $linea = $proyecto->sublinea->lineatecnologica_id;
+        $gestor = sprintf("%03d", $proyecto->asesor_id);
+        $idproyecto = $proyecto->id;
+        $fase = Fase::select('id', 'nombre')->where('nombre', $request->fase)->get()->last();
+        $fase_id = $fase->id;
+        $fase = $fase->nombre;
+        $route = 'public/' . $nodo . '/' . $anho . '/Proyectos' . '/' . $linea . '/' . $gestor . '/' . $idproyecto . '/' . $fase;
+        $fileUrl = $file->storeAs($route, $fileName);
+        $id = $proyecto->articulacion_proyecto_id;
+        $this->archivoRepository->storeFileArticulacionProyecto($id, $fase_id, Storage::url($fileUrl));
         }
     }
 
@@ -412,6 +415,7 @@ class ArchivoController extends Controller
     {
         try {
             $ruta = $this->archivoRepository->consultarRutaDeArchivoDeUnaArticulacionProyectoPorId($idFile);
+            // dd($ruta->articulacion_proyecto->proyecto->asesor_id);
             if (!$this->verificarAccesoADescarga($ruta)) {
                 toast('No haces parte de este proyecto, por lo que no lo puedes descargar!','warning')->autoClose(2000)->position('top-end');
                 return back();
@@ -419,10 +423,11 @@ class ArchivoController extends Controller
             $path = str_replace('storage', 'public', $ruta->ruta);
             return Storage::response($path);
         } catch (\Exception $e) {
-            return abort(404, $e->getMessage());
+            return $e->getMessage();
         }
-
     }
+
+
 
     public function verificarAccesoADescarga($file)
     {
@@ -472,10 +477,10 @@ class ArchivoController extends Controller
     }
       /**
      * Tabla para mostrar los archivos de una articulacion_proyecto
-     * @param int $id Id de la articulacion_proyecto
-     * @return Reponse
-     * @author Victor Manuel Moreno Vega
-     */
+    * @param int $id Id de la articulacion_proyecto
+    * @return Reponse
+    * @author Victor Manuel Moreno Vega
+    */
     public function datatableArchivosArticulacionProyecto($query, $proyecto)
     {
         return datatables()->of($query)

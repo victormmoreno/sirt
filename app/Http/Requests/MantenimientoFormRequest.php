@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use App\User;
 
 class MantenimientoFormRequest extends FormRequest
 {
@@ -24,6 +26,7 @@ class MantenimientoFormRequest extends FormRequest
     public function rules()
     {
         return [
+            'txtnodo_id'          => Rule::requiredIf(session()->get('login_role') == User::IsAdministrador()),
             'txtlineatecnologica' => 'required',
             'txtequipo'           => 'required',
             'txtanio'             => 'required|date_format:"Y"',
@@ -34,6 +37,7 @@ class MantenimientoFormRequest extends FormRequest
     public function messages()
     {
         return $messages = [
+            'txtnodo_id.required'          => 'El nodo es obligatorio.',
             'txtlineatecnologica.required' => 'La linea Tecnológica es obligatoria.',
             'txtequipo.required'           => 'El equipo es obligatorio.',
             'txtanio.required'             => 'El año de mantenimiento es obligatorio.',

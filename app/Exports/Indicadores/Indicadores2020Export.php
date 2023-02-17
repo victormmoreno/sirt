@@ -18,6 +18,7 @@ class Indicadores2020Export implements WithMultipleSheets
         $this->setQuery($queryProyectos);
         $this->hoja = $hoja;
     }
+    
     /**
      * @return array
      */

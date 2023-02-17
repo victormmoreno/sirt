@@ -14,7 +14,7 @@ class MaterialDatatable
         return datatables()->of($materiales)
 
             ->addColumn('detail', function ($data) {
-                $button = '<a href="' . route("material.show", $data->id) . '" class="btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle"><i class="material-icons">info_outline</i></a>';
+                $button = '<a href="' . route("material.show", $data->id) . '" class="btn tooltipped bg-info"><i class="material-icons">info_outline</i></a>';
 
                 return $button;
             })
@@ -50,7 +50,7 @@ class MaterialDatatable
     {
         return datatables()->of($materiales)
             ->addColumn('detail', function ($data) {
-                $button = '<a href="' . route("material.show", $data->id) . '" class="btn tooltipped blue-grey m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver Detalle"><i class="material-icons">info_outline</i></a>';
+                $button = '<a href="' . route("material.show", $data->id) . '" class="btn tooltipped bg-info"><i class="material-icons">info_outline</i></a>';
 
                 return $button;
             })
@@ -64,13 +64,13 @@ class MaterialDatatable
                 return '$ ' . number_format($data->valor_compra);
             })
             ->editColumn('nombrelinea', function ($data) {
-                return $data->lineatecnologica->abreviatura . ' - ' . $data->lineatecnologica->nombre;
+                return $data->linea;
             })
             ->editColumn('presentacion', function ($data) {
-                return $data->presentacion->nombre;
+                return $data->presentacion;
             })
             ->editColumn('medida', function ($data) {
-                return $data->medida->nombre;
+                return $data->medida;
             })
             ->rawColumns(['detail', 'nombrelinea', 'valor_unitario', 'valor_compra', 'presentacion', 'medida'])
             ->make(true);

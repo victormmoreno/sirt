@@ -4,7 +4,9 @@ namespace App\Policies\User;
 
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Str;
+
 
 class UserPolicy
 {
@@ -174,7 +176,9 @@ class UserPolicy
      */
     public function export(User $user): bool
     {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador())
+        return (bool) collect($user->getRoleNames())->contains(User::IsActivador())
+            && session()->get('login_role') == User::IsActivador()
+            || collect($user->getRoleNames())->contains(User::IsAdministrador())
             && session()->get('login_role') == User::IsAdministrador()
             || collect($user->getRoleNames())->contains(User::IsDinamizador())
             && session()->get('login_role') == User::IsDinamizador()

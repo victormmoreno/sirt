@@ -10,7 +10,7 @@ class MantenimientoRepository
 
     /**
      * devolve registro de mantenimientos de equipos .
-     * @return boolean
+     * @return array
      * @author devjul
      * @param array $request
      */
@@ -20,16 +20,23 @@ class MantenimientoRepository
 
         try {
             EquipoMantenimiento::create([
-                'lineatecnologica_id'       => $request->input('txtlineatecnologica'),
                 'equipo_id'                 => $request->input('txtequipo'),
                 'ultimo_anio_mantenimiento' => $request->input('txtanio'),
                 'valor_mantenimiento'       => $request->input('txtvalor'),
             ]);
             DB::commit();
-            return true;
-        } catch (Exception $e) {
+            return [
+                'state' => true,
+                'msj' => 'El mantenimiento se ha registrado',
+                'title' => 'Registro exitoso'
+            ];
+        } catch (\Exception $e) {
             DB::rollback();
-            return false;
+            return [
+                'state' => false,
+                'msj' => $e->getPrevious()->getMessage(),
+                'title' => 'Registro erróneo'
+            ];
         }
     }
 
@@ -50,28 +57,33 @@ class MantenimientoRepository
 
     /**
      * devolve actualizacion de mantenimientos de equipos .
-     * @return boolean
+     * @return array
      * @author devjul
      * @param array $request
      * @param array $mantenimiento
      */
     public function updateMantenimiento($request, $mantenimiento)
     {
-
         DB::beginTransaction();
-
         try {
             $mantenimiento->update([
-                'lineatecnologica_id'       => $request->input('txtlineatecnologica'),
                 'equipo_id'                 => $request->input('txtequipo'),
                 'ultimo_anio_mantenimiento' => $request->input('txtanio'),
                 'valor_mantenimiento'       => $request->input('txtvalor'),
             ]);
             DB::commit();
-            return true;
-        } catch (Exception $e) {
+            return [
+                'state' => true,
+                'msj' => 'El mantenimiento se ha modificado',
+                'title' => 'Modificación exitosa'
+            ];
+        } catch (\Exception $e) {
             DB::rollback();
-            return false;
+            return [
+                'state' => false,
+                'msj' => $e->getPrevious()->getMessage(),
+                'title' => 'Modificación errónea'
+            ];
         }
     }
 }

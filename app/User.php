@@ -44,7 +44,6 @@ class User extends Authenticatable implements JWTSubject
     const IS_ACTIVADOR = "Activador";
     const IS_ADMINISTRADOR = "Administrador";
     const IS_DINAMIZADOR   = "Dinamizador";
-    const IS_GESTOR        = "Experto";
     const IS_EXPERTO        = "Experto";
     const IS_INFOCENTER    = "Infocenter";
     const IS_TALENTO       = "Talento";
@@ -712,7 +711,6 @@ class User extends Authenticatable implements JWTSubject
         }
         return null;
     }
-
 
     public static function enableTalentsArticulacion($articulacion)
     {

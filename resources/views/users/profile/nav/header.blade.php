@@ -4,7 +4,7 @@
     </div>
     <div class="left">
         <span class="mailbox-title secondary-text">
-            {{auth()->check() ? auth()->user()->nombres.' '.auth()->user()->apellidos : ''}}
+            {{$user->nombres.' '.$user->apellidos}}
         </span>
         <span class="mailbox-author">
             {{$user->getRoleNames()->implode(', ')}}

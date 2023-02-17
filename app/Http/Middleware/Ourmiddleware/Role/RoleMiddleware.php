@@ -20,6 +20,9 @@ class RoleMiddleware
         if (Auth::guest()) {
             throw UnauthorizedException::notLoggedIn();
         }
+        if (session()->get('login_role') == 'Administrador') {
+            return $next($request);
+        }
         $roles = is_array($role) ? $role : explode('|', $role);
         if ( !collect($roles)->contains( session()->get('login_role') ) ) {
             //throw UnauthorizedException::forRoles($roles);

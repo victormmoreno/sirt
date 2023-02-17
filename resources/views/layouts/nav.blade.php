@@ -7,7 +7,7 @@
                 </span>
                 </a>
             </section>
-            <div class="header-title col s2 m2 l2">
+            <div class="header-title col s1 m1 l1">
                 <a href="{{route('home')}}">
                     <img width="150px" class="chapter-title" src="{{ asset('img/logo-sirt-blanco.svg') }}" alt="{{config('app.name')}}">
                 </a>
@@ -231,34 +231,34 @@
                 </a>
             </li>
             @switch( \Session::get('login_role'))
-                @case(App\User::IsInfocenter())
-                    @include('layouts.navrole.infocenter')
-                    @break
-                @case(App\User::IsExperto())
-                    @include('layouts.navrole.gestor')
-                    @break
-                @case(App\User::IsTalento())
-                    @include('layouts.navrole.talento')
-                    @break
-                @case(App\User::IsIngreso())
-                    @include('layouts.navrole.ingreso')
-                    @break
-                @case(App\User::IsDinamizador())
-                    @if(\Session::has('login_role') && \Session::get('login_role') == 'Dinamizador')
-                        @include('layouts.navrole.dinamizador')
-                    @endif
-                    @break
-                @case(App\User::IsActivador())
-                    @if(\Session::has('login_role') && \Session::get('login_role') == App\User::IsActivador())
-                        @include('layouts.navrole.activador')
-                    @endif
-                    @break
-                @case(App\User::IsAdministrador())
-                    @if(\Session::has('login_role') && \Session::get('login_role') == App\User::IsAdministrador())
-                        @include('layouts.navrole.admin')
-                    @endif
-                    @break
-                @case(App\User::IsDesarrollador())
+            @case(App\User::IsInfocenter())
+                @include('layouts.navrole.infocenter')
+            @break
+            @case(App\User::IsExperto())
+                @include('layouts.navrole.gestor')
+            @break
+            @case(App\User::IsTalento())
+                @include('layouts.navrole.talento')
+            @break
+            @case(App\User::IsIngreso())
+                @include('layouts.navrole.ingreso')
+            @break
+            @case(App\User::IsDinamizador())
+                @if(\Session::has('login_role') && \Session::get('login_role') == 'Dinamizador')
+                    @include('layouts.navrole.dinamizador')
+                @endif
+            @break
+            @case(App\User::IsActivador())
+                @if(\Session::has('login_role') && \Session::get('login_role') == App\User::IsActivador())
+                    @include('layouts.navrole.activador')
+                @endif
+            @break
+            @case(App\User::IsAdministrador())
+                @if(\Session::has('login_role') && \Session::get('login_role') == App\User::IsAdministrador())
+                    @include('layouts.navrole.admin')
+                @endif
+            @break
+            @case(App\User::IsDesarrollador())
 
                     @include('layouts.navrole.desarrollador')
                     @break

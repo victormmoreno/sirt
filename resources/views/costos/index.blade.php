@@ -35,7 +35,7 @@
                                 @case(App\User::IsDinamizador())
                                     @include('costos.project')
                                     @break
-                                @case(App\User::IsGestor())
+                                @case(App\User::IsExperto())
                                     @include('costos.project')
                                     @break
                                 @case(App\User::IsArticulador())

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Repositories\Repository\SublineaRepository;
 use Illuminate\Http\Request;
 use App\Http\Requests\SublineaFormRequest;
+use App\User;
 
 class SublineaController extends Controller
 {
@@ -21,6 +22,9 @@ class SublineaController extends Controller
      */
     public function index()
     {
+        if (!$this->validarPermisosUserForSublineas()) {
+            return $this->retornarMsgUserForSublineas();
+        }
         if (request()->ajax()) {
             return datatables()->of($this->sublineaRepository->getAllSublineas())
                 ->addColumn('edit', function ($data) {
@@ -40,6 +44,9 @@ class SublineaController extends Controller
      */
     public function create()
     {
+        if (!$this->validarPermisosUserForSublineas()) {
+            return $this->retornarMsgUserForSublineas();
+        }
         return view('sublineas.create',[
             'lineas' => $this->sublineaRepository->getAllLineas(),
         ]);
@@ -53,6 +60,9 @@ class SublineaController extends Controller
      */
     public function store(SublineaFormRequest $request)
     {
+        if (!$this->validarPermisosUserForSublineas()) {
+            return $this->retornarMsgUserForSublineas();
+        }
         $sublineaStore = $this->sublineaRepository->store($request);
         if ($sublineaStore != null) {
             alert()->success('Registro Exitoso.',"La sublinea {$sublineaStore->nombre} ha creado satisfactoriamente");
@@ -70,6 +80,9 @@ class SublineaController extends Controller
      */
     public function edit($id)
     {
+        if (!$this->validarPermisosUserForSublineas()) {
+            return $this->retornarMsgUserForSublineas();
+        }
         return view('sublineas.edit',[
             'sublinea' => $this->sublineaRepository->findById($id),
             'lineas' => $this->sublineaRepository->getAllLineas(),
@@ -85,6 +98,9 @@ class SublineaController extends Controller
      */
     public function update(SublineaFormRequest $request, $id)
     {
+        if (!$this->validarPermisosUserForSublineas()) {
+            return $this->retornarMsgUserForSublineas();
+        }
         $sublinea = $this->sublineaRepository->findById($id);
         $sublineaUpdate = $this->sublineaRepository->update($request, $sublinea);
         if ($sublineaUpdate == true) {
@@ -92,6 +108,19 @@ class SublineaController extends Controller
         }else{
             alert()->error('Modificación Errónea',"La sublinea {$sublinea->nombre} no se ha modificado.", "error");
         }
-        return redirect()->route('sublineas.index');
+
+        return redirect()->route('sublineas.index'); 
+
+    }
+
+    private function retornarMsgUserForSublineas()
+    {
+        alert()->error('Error de permisos','Tu rol no tiene permitido realizar esta acción.');
+        return back();
+    }
+    
+    private function validarPermisosUserForSublineas()
+    {
+        return (bool) (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsActivador());
     }
 }
