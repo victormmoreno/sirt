@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
-use App\Models\ArticulacionPbt;
 use App\Presenters\ProyectoPresenter;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
@@ -168,6 +167,7 @@ class Proyecto extends Model
         return $this->morphMany(ControlNotificaciones::class, 'notificable');
     }
 
+
     /**
      * Define a polymorphic, inverse many-to-many relationship between projects and sedes
      * @author dum
@@ -187,6 +187,18 @@ class Proyecto extends Model
     {
         return $this->belongsTo(Gestor::class, 'asesor_id', 'id');
     }
+
+    /**
+     * The polymorfic relation much to much
+     *
+     * @return void
+     */
+    public function articulationables()
+    {
+        return $this->morphToMany(ArticulationStage::class, 'articulationable');
+    }
+
+
 
     /**
      * Define an inverse one-to-one or many relationship between projects and node
@@ -218,15 +230,6 @@ class Proyecto extends Model
         return $this->morphedByMany(User::class, 'propietario')->withTimestamps()->withTrashed();
     }
 
-    /**
-     * Define a polymorphic, inverse many-to-many relationship between proyectos and articulacion_pbt
-     * @author dum
-     * @return \Illuminate\Database\Eloquent\Relations\morphOne
-     */
-    public function articulacion()
-    {
-        return $this->morphOne(ArticulacionPbt::class,'articulable');
-    }
 
     /**
      * Define an inverse one-to-one or many relationship between projects and users
@@ -283,16 +286,6 @@ class Proyecto extends Model
         return $this->belongsTo(ArticulacionProyecto::class, 'articulacion_proyecto_id', 'id');
     }
 
-    /**
-     * Define a one-to-one relationship between projects and articulacionpbt
-     * @author dum
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    // public function articulacionpbt()
-    // {
-    //     return $this->hasOne(ArticulacionPbt::class, 'proyecto_id', 'id');
-    // }
-
     public function scopeEstadoOfProjects($query, array $relations, array $estado = [])
     {
         return $query->with($relations)->whereHas(
@@ -342,7 +335,7 @@ class Proyecto extends Model
 
     /**
      * Registra el control de una notificación de un proyecto
-     * 
+     *
      * @param int $receptor id del receptor de la notificacion
      * @param string $rol_receptor Nombre del rol que espera la notificación
      * @return ControlNotificacion
@@ -382,7 +375,7 @@ class Proyecto extends Model
     public function consultarNotificaciones()
     {
         return $this->with([
-                'notificaciones', 
+                'notificaciones',
                 'notificaciones.fase',
                 'notificaciones.remitente',
                 'notificaciones.receptor',

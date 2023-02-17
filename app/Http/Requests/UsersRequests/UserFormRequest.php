@@ -231,6 +231,7 @@ class UserFormRequest extends FormRequest
             'txtfechaterminacion.date'            => 'La fecha de terminación no es una fecha válida.',
             'txtfechaterminacion.before_or_equal' => 'La fecha de terminación  debe ser una fecha anterior o igual a la fecha de hoy',
 
+            'txttipotalento.required'                  => 'El campo tipo talento es obligatorio.',
             'txtgrupoinvestigacion.required'      => 'El grupo de investigación es obligatoria.',
             'txtotrotipotalento.required'         => 'El otro tipo de talento es obligatorio.',
             'txtempresa.required'                 => 'La empresa es obligatoria.',

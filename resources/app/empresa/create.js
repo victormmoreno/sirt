@@ -40,9 +40,6 @@ $(document).on('submit', 'form#formRegisterCompany', function (event) {
         }, 1000);
         }
     },
-    // error: function (xhr, textStatus, errorThrown) {
-    //   alert("Error: " + errorThrown);
-    // }
     });
 });
 

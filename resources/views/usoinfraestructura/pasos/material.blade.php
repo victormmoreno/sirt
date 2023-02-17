@@ -24,7 +24,7 @@
                 <legend>Paso 4</legend>
             @endif
 
-            <p class="center card-title orange-text text-darken-3">
+            <p class="center card-title primary-text">
                 <b> Materiales de Formación</b>
             </p>
             <div class="divider"></div>
@@ -115,7 +115,7 @@
         </fieldset>
         <fieldset>
             <legend>Paso 6</legend>
-            <p class="center card-title orange-text text-darken-3">
+            <p class="center card-title primary-text">
                 <b>Próximos Compromisos</b>
             </p>
             <div class="divider"></div>

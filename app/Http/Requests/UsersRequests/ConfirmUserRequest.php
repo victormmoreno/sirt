@@ -41,6 +41,7 @@ class ConfirmUserRequest extends FormRequest
             'txtlinea'                  => Rule::requiredIf(collect(request()->role)->contains(User::IsExperto())) . '|nullable',
             'txthonorario'              => Rule::requiredIf(collect(request()->role)->contains(User::IsExperto())) . '|nullable|digits_between:1,10|numeric',
             'txtnodoinfocenter'         => Rule::requiredIf(collect(request()->role)->contains(User::IsInfocenter())) . '|nullable',
+            'txtextension'         => Rule::requiredIf(collect(request()->role)->contains(User::IsInfocenter())) . '|nullable|integer|max:99999',
             'txttipotalento'            => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento())) . '|nullable',
             'txtnodoingreso'            => Rule::requiredIf(collect(request()->role)->contains(User::IsIngreso())) . '|nullable',
             'txtregional_aprendiz'      => Rule::requiredIf(collect(request()->role)->contains(User::IsTalento()) &&
@@ -162,6 +163,10 @@ class ConfirmUserRequest extends FormRequest
             'txttipoestudio.required'                  => 'El tipo de estudio es obligatorio.',
 
             'txtnodoinfocenter.required'          => 'El nodo del infocenter es obligatorio',
+            'txtextension.required'          => 'El campo extensión es obligatorio',
+            'txtextension.numeric'          => 'El campo extensión debe ser numérico',
+            'txtextension.between'          => 'El campo extensión tiene que estar entre 1 y 4',
+            'txtextension.max'          => 'El campo extensión debe tener máximo 5 caracteres',
         ];
     }
 

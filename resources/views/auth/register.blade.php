@@ -1,5 +1,4 @@
 @extends('spa.layouts.app')
-
 @section('meta-title', 'Registro para usuarios nuevos')
 @section('meta-content', 'Registro para usuarios nuevos')
 @section('content-spa')

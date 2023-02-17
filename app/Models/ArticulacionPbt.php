@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Presenters\ArticulacionPbtPresenter;
 use App\User;
 
 class ArticulacionPbt extends Model
@@ -131,10 +130,6 @@ class ArticulacionPbt extends Model
         return $this->belongsTo(Fase::class, 'fase_id', 'id');
     }
 
-    public function tipoarticulacion()
-    {
-        return $this->belongsTo(TipoArticulacion::class, 'tipo_articulacion_id', 'id');
-    }
 
     public function alcancearticulacion()
     {
@@ -143,7 +138,7 @@ class ArticulacionPbt extends Model
 
     public function archivomodel()
     {
-        return $this->morphOne(ArchivoModel::class, 'model');
+        return $this->morphMany(ArchivoModel::class, 'model');
     }
 
     public function talentos()
@@ -200,6 +195,12 @@ class ArticulacionPbt extends Model
         return $query;
     }
 
+    public function tipoarticulacion()
+    {
+        return $this->belongsTo(TipoArticulacion::class, 'tipo_articulacion_id', 'id');
+    }
+
+
     public function scopeArticulacionesArticulador($query)
     {
         return $query
@@ -230,10 +231,6 @@ class ArticulacionPbt extends Model
         return $query;
     }
 
-    public function present()
-    {
-        return new ArticulacionPbtPresenter($this);
-    }
 
     public function registerHistoryArticulacion($movimiento, $role, $comentario, $descripcion)
     {

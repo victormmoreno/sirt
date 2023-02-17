@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\User;
+use App\Presenters\NodoPresenter;
 
 class Nodo extends Model
 {
@@ -136,25 +137,6 @@ class Nodo extends Model
         return $this->hasMany(Edt::class, 'nodo_id', 'id');
     }
 
-    /**
-     * Devolver devjul entre articulacion_pbt y nodo
-     * @author devjil
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function articulaciopbts()
-    {
-        return $this->hasMany(ArticulacionPbt::class, 'nodo_id', 'id');
-    }
-
-    /**
-     * Devolver devjul entre articulaciones y nodo
-     * @author devjil
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function articulaciones()
-    {
-        return $this->hasMany(Articulacion::class, 'nodo_id', 'id');
-    }
 
     public function lineas()
     {
@@ -167,9 +149,20 @@ class Nodo extends Model
         return $this->hasMany(ContactoEntidad::class, 'nodo_id', 'id');
     }
 
-    public function tiposarticulaciones()
+    /**
+     * Define one to many relationship between accompanient and node
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function articulationstages()
     {
-        return $this->belongsToMany(User::class, 'nodo_tipoarticulacion')
+        return $this->hasMany(ArticulationStage::class, 'node_id', 'id');
+    }
+
+
+    public function articulationsubtypes()
+    {
+        return $this->belongsToMany(ArticulationSubtype::class, 'nodo_tipoarticulacion')
             ->withTimestamps();
     }
 
@@ -335,5 +328,15 @@ class Nodo extends Model
     public function scopeCountNodos($query)
     {
         return $query->count();
+    }
+
+    /**
+     * The presenter
+     *
+     * @return void
+     */
+    public function present()
+    {
+        return new NodoPresenter($this);
     }
 }

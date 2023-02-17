@@ -94,7 +94,6 @@ function consultarCostoDeUnaActividad() {
         url: host_url + '/costos/proyecto/'+id,
         success: function (data) {
             let chart = '_actividad';
-            console.log(data);
             setValueInput(data, chart);
             $('#txtgestor' + chart).val(data.gestorActividad);
             $("label[for='txtgestor"+chart+"']").addClass("active", true);

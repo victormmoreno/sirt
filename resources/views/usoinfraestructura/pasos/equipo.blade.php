@@ -20,27 +20,24 @@
             @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
                 <legend>Paso 3</legend>
             @endif
-            <p class="center card-title orange-text text-darken-3"><b> Equipos</b></p>
+            <p class="center card-title primary-text"><b> Equipos</b></p>
             <div class="divider"></div>
             <div class="row">
                 <div class="input-field col s12 m4 l4">
-
-                        @if(isset($usoinfraestructura->asesorable->nodo->equipos))
-                            <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtlineatecnologica" id="txtlineatecnologica" onchange="getEquipoPorLinea()">
-                                <option value="">Seleccione Linea Tecnológica</option>
-                                @foreach($usoinfraestructura->asesorable->nodo->lineas as $lineatecnologica)
-
-                                    <option value="{{$lineatecnologica->id}}">
-                                        {{$lineatecnologica->abreviatura}} - {{$lineatecnologica->nombre}}
-                                    </option>
-
-                                @endforeach
-                            </select>
-                        @else
-                            <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtlineatecnologica" id="txtlineatecnologica" onchange="getEquipoPorLinea()">
-                                <option value="">Seleccione Linea Tecnológica</option>
-                            </select>
-                        @endif
+                    @if(isset($usoinfraestructura->asesorable->nodo->equipos))
+                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtlineatecnologica" id="txtlineatecnologica" onchange="getEquipoPorLinea()">
+                            <option value="">Seleccione Linea Tecnológica</option>
+                            @foreach($usoinfraestructura->asesorable->nodo->lineas as $lineatecnologica)
+                                <option value="{{$lineatecnologica->id}}">
+                                    {{$lineatecnologica->abreviatura}} - {{$lineatecnologica->nombre}}
+                                </option>
+                            @endforeach
+                        </select>
+                    @else
+                        <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtlineatecnologica" id="txtlineatecnologica" onchange="getEquipoPorLinea()">
+                            <option value="">Seleccione Linea Tecnológica</option>
+                        </select>
+                    @endif
                     <label class="active" for="txtlineatecnologica">
                         Linea Tecnológica
                     </label>
@@ -67,47 +64,46 @@
                     </label>
                 </div>
                 <div class="input-field col s12 m3 l2 ">
-
                     <input class="validate" id="txttiempouso" name="txttiempouso" type="number"  value="1" min="0" step="0.1"/>
-                        <label for="txttiempouso">
-                            Tiempo Uso (Horas)
-                        </label>
-                        <label class="error" for="txttiempouso" id="txttiempouso-error"></label>
+                    <label for="txttiempouso">
+                        Tiempo Uso (Horas)
+                    </label>
+                    <label class="error" for="txttiempouso" id="txttiempouso-error"></label>
                 </div>
                 <div class="input-field col s12 m12 l2 offset-s3 offset-m4">
-                    <a class="waves-effect waves-light btn bg-secondary white-text m-b-xs btnAgregarEquipo"  onclick="agregarEquipoAusoInfraestructura()">Agregar Equipo</a>
+                    <a class="waves-effect waves-grey btn bg-secondary white-text m-b-xs btnAgregarEquipo"  onclick="agregarEquipoAusoInfraestructura()">Agregar Equipo</a>
                 </div>
                 <table class="striped centered responsive-table" id="tbldetallelineas">
                     <thead>
-                        <tr>
-                            <th>Equipo</th>
-                            <th>Tiempo Uso (Horas)</th>
-                            <th>Eliminar</th>
-                        </tr>
+                    <tr>
+                        <th>Equipo</th>
+                        <th>Tiempo Uso (Horas)</th>
+                        <th>Eliminar</th>
+                    </tr>
                     </thead>
                     <tbody id="detallesUsoInfraestructura">
-                        @if(isset( $equipos))
-                            @forelse ($equipos as $key => $equipo)
-                                    <tr id="filaEquipo{{$equipo->id}}">
-                                        <td>
-                                            <input type="hidden" name="equipo[]" value="{{$equipo->id}}"/>{{$equipo->nombre}}
-                                        </td>
-                                        <td>
-                                            <input type="hidden" name="tiempouso[]" value="{{$equipo->pivot->tiempo}}"/>
-                                            {{$equipo->pivot->tiempo}}
-                                        </td>
-                                        <td>
-                                            <a class="waves-effect bg-danger white-text btn" onclick="eliminarEquipo({{$equipo->id}});">
-                                                <i class="material-icons">delete_sweep</i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                            @empty
-                                <td>No se encontraron resultados</td>
-                                <td></td>
-                                <td></td>
-                            @endforelse
-                        @endif
+                    @if(isset( $equipos))
+                        @forelse ($equipos as $key => $equipo)
+                            <tr id="filaEquipo{{$equipo->id}}">
+                                <td>
+                                    <input type="hidden" name="equipo[]" value="{{$equipo->id}}"/>{{$equipo->nombre}}
+                                </td>
+                                <td>
+                                    <input type="hidden" name="tiempouso[]" value="{{$equipo->pivot->tiempo}}"/>
+                                    {{$equipo->pivot->tiempo}}
+                                </td>
+                                <td>
+                                    <a class="waves-grey bg-danger white-text btn" onclick="eliminarEquipo({{$equipo->id}});">
+                                        <i class="material-icons">delete_sweep</i>
+                                    </a>
+                                </td>
+                            </tr>
+                        @empty
+                            <td>No se encontraron resultados</td>
+                            <td></td>
+                            <td></td>
+                        @endforelse
+                    @endif
                     </tbody>
                 </table>
             </div>

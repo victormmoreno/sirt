@@ -24,9 +24,15 @@
         </div>
     </li>
     <li>
-        <div class="collapsible-header"><i class="material-icons">assignment</i>Metas de tecnoparque</div>
+        <div class="collapsible-header"><i class="material-icons">assignment</i>Metas de tecnoparque (Proyectos)</div>
         <div class="collapsible-body">
-        @include('indicadores.componentes.metas.metas')
+        @include('indicadores.componentes.metas.metas-proyectos')
+        </div>
+    </li>
+    <li>
+        <div class="collapsible-header"><i class="material-icons">assignment</i>Metas de tecnoparque ({{__('Articulations')}})</div>
+        <div class="collapsible-body">
+        @include('indicadores.componentes.metas.metas-articulaciones')
         </div>
     </li>
     <li>

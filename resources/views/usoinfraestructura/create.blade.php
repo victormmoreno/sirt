@@ -4,91 +4,52 @@
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
+        <div class="row no-m-t no-m-b m-r-lg m-l-lg">
+            <div class="left left-align">
+                <h5 class="left-align primary-text">
+                    <i class="material-icons left">domain</i> Asesorías y usos
+                </h5>
+            </div>
+            <div class="right right-align show-on-large hide-on-med-and-down">
+                <ol class="breadcrumbs">
+                    <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
+                    <li><a href="{{route('usoinfraestructura.index')}}">Asesoría y uso</a></li>
+                    <li class="active">Nueva Asesoría y uso</li>
+                </ol>
+            </div>
+        </div>
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
-                <div class="row">
-                    <div class="col s12 m8 l8">
-                        <h5 class="left-align">
-                            <a class="footer-text left-align" href="{{route('usoinfraestructura.index')}}">
-                                <i class="material-icons arrow-l">
-                                    arrow_back
-                                </i>
-                            </a>
-                            Asesoría y uso
-                        </h5>
-                    </div>
-                    <div class="col s12 m4 l4 push-m2 l2 show-on-large hide-on-med-and-down">
-                        <ol class="breadcrumbs">
-                            <li>
-                                <a href="{{route('home')}}">
-                                    Inicio
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{route('usoinfraestructura.index')}}">
-                                    Asesoría y uso
-                                </a>
-                            </li>
-                            <li class="active">
-                                Nueva Asesoría y uso
-                            </li>
-                        </ol>
-                    </div>
-                </div>
                 <div class="card">
                     <div class="card-content">
+                        <div class="center-align primary-text">
+                            <span class="card-title center-align">Nueva Asesoría y uso</span>
+                        </div>
+                        <div class="divider"></div>
                         @if($cantidadActividades != 0)
-                        <div class="row">
-                            <div class="row">
-                                <center>
-                                    <span class="card-title center-align">
-                                        Nueva Asesoría y uso
-                                    </span>
-                                    <i class="Small material-icons prefix">
-                                        domain
-                                    </i>
-                                </center>
-                                <div class="divider">
-                                </div>
-                                <form action="{{ route('usoinfraestructura.store')}}" id="formUsoInfraestructuraCreate" method="POST">
-                                    @include('usoinfraestructura.form', [
-                                        'btnText' => 'Guardar',
-                                    ])
-                                </form>
-                            </div>
-                        </div>
+                            <form action="{{ route('usoinfraestructura.store')}}" id="formUsoInfraestructuraCreate" method="POST">
+                                @include('usoinfraestructura.form', [
+                                    'btnText' => 'Guardar',
+                                ])
+                            </form>
                         @else
-                        <div class="row">
-                            <div class="row">
-                                <center>
-                                    <span class="card-title center-align">
-                                        Nueva Asesoría y uso
-                                    </span>
-                                    <i class="Small material-icons prefix">
-                                        domain
-                                    </i>
-                                </center>
-                                <div class="divider">
-                                </div>
+                            <div class="center-align">
+                                <i class="large material-icons prefix">
+                                    block
+                                </i>
+                                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
+                                <p>
+                                    Aún no tienes proyectos en fase de inicio, planeacion o en fase de ejecución o puedes que no esten aprobados.
+                                </p>
+                                <p>
+                                    Aún no tienes articulaciones en fase de inicio, planeacion o en fase de ejecución.
+                                </p>
+                                @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
+                                <p>
+                                    Aún no tienes proyectos en fase de inicio, planeacion o en fase de ejecución o puedes que no esten aprobados. Por favor consulta con el experto asesor.
+                                </p>
+                                @endif
                             </div>
-                        </div>
-                        <div class="center-align">
-                            <i class="large material-icons prefix">
-                                block
-                            </i>
-                            @if(session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
-                            <p>
-                                Aún no tienes proyectos en fase de inicio, planeacion o en fase de ejecución o puedes que no esten aprobados.
-                            </p>
-                            <p>
-                                Aún no tienes articulaciones en fase de inicio, planeacion o en fase de ejecución.
-                            </p>
-                            @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
-                            <p>
-                                Aún no tienes proyectos en fase de inicio, planeacion o en fase de ejecución o puedes que no esten aprobados. Por favor consulta con el experto asesor.
-                            </p>
-                            @endif
-                        </div>
                         @endif
                     </div>
                 </div>
@@ -405,8 +366,6 @@
                     $('#txtnodo').val();
                     $("label[for='txtlinea']").addClass('active');
                 }
-
-
                 if (response.talentos.length != 0) {
                     $.each(response.talentos, function(e, talento) {
                         $('#txttalento').append('<option value="'+talento.id+'">'+ talento.documento +' - '+talento.nombres+' '+ talento.apellidos + '</option>');
@@ -513,6 +472,7 @@
                 type:'get',
                 url: host_url + '/usoinfraestructura/talentosporarticulacion/'+id
             }).done(function(response){
+                console.log(response)
                 $('#txttalento').empty();
                 $('#txtequipo').empty();
                 $('#txtlinea').empty();
@@ -525,35 +485,32 @@
                 $('#txttalento').append('<option value="">Seleccione el talento</option>');
                 $('#txtequipo').append('<option value="">Seleccione el equipo</option>');
                 $('#txtmaterial').append('<option value="">Seleccione el material de formación</option>');
-
                 if (response.articulacion.length != 0) {
                     @if(session()->has('login_role') && ( session()->get('login_role') == App\User::IsArticulador()))
+                    let userid = {{auth()->user()->id}}
+                        let userdocument = {{auth()->user()->documento }}
+                        let username = "{{auth()->user()->present()->userFullName()}}";
                         let cont;
                         let a = document.getElementsByName("gestor[]");
                         let fila ="";
-
-                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td><input type="hidden" name="gestor[]" value="'+response.articulacion.asesor_id+'">'+response.articulacion.asesor.documento + ' - ' +response.articulacion.asesor.nombres+' '+ response.articulacion.asesor.apellidos +'</td><td><input type="number" min="0" maxlength="6" name="asesoriadirecta[]" value="0"><label class="error" for="asesoriadirecta" id="asesoriadirecta-error"></label></td><td><input type="number" min="0" maxlength="6" name="asesoriaindirecta[]" value="0"><label class="error" for="asesoriaindirecta" id="asesoriaindirecta-error"></label></td></td><td></tr>';
+                        fila = '<tr class="selected" id="filaGestor'+cont+'"><td><input type="hidden" name="gestor[]"  value="'+userid+'">'+userdocument + ' -  ' +username+'</td><td><input type="number" min="0" step="0.1" name="asesoriadirecta[]" min="0" maxlength="6" value="0"><label class="error" for="asesoriadirecta" id="asesoriadirecta-error"></label></td><td><input type="number" min="0" step="0.1" name="asesoriaindirecta[]" min="0" maxlength="6" value="0"/><label class="error" for="asesoriaindirecta" id="asesoriaindirecta-error"></label></td></td><td></tr>';
                         cont++;
                         $('#detallesGestores').append(fila);
                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
                         $('#txtgestor').attr('value');
-                        $('#txtgestor').val(response.articulacion.asesor.documento+ ' - '+ response.articulacion.asesor.nombres + ' ' + response.articulacion.asesor.apellidos);
+                        $('#txtgestor').val(response.articulacion.articulationstage.created_by.documento+ ' - '+ response.articulacion.articulationstage.created_by.nombres + ' ' + response.articulacion.articulationstage.created_by.apellidos);
                         $("label[for='txtgestor']").addClass('active');
                     @endif
-
-                    $('#txtnodo').val(response.articulacion.nodo_id);
+                    $('#txtnodo').val(response.articulacion.articulationstage.node_id);
                     $("label[for='txtlinea']").addClass('active');
                 }else{
                     @if(session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
                         let cont;
                         let a = document.getElementsByName("gestor[]");
                         let fila ="";
-
-
                         fila = '<tr class="selected" id="filaGestor'+cont+'"><td>No se encontraron resultados</td><td></td><td></td><td></td></td><td></tr>';
                         cont++;
                         $('#detallesGestores').append(fila);
-
                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
                         $('#txtgestor').val("No se encontraron resultados");
                         $("label[for='txtgestor']").addClass('active');
@@ -564,24 +521,19 @@
                 }
 
                 if (response.talentos.length != 0) {
-                    $.each(response.talentos, function(e, talento) {
-                        $('#txttalento').append('<option value="'+talento.id+'">'+ talento.user.documento +' - '+talento.user.nombres+' '+ talento.user.apellidos + '</option>');
+                    $.each(response.talentos, function(e, user) {
+                        $('#txttalento').append('<option value="'+user.talento.id+'">'+ user.documento +' - '+user.nombres+' '+ user.apellidos + '</option>');
                     });
                 }else{
                     $('#txttalento').append('<option value="">no se encontraron resultados</option>');
                 }
-
                 if (response.lineastecnologicas.length != 0) {
                     $.each(response.lineastecnologicas, function(e, lineatecnologica) {
-
                         $('#txtlineatecnologica').append('<option  value="'+lineatecnologica.linea_tecnologica_id+'">'+ lineatecnologica.abreviatura + ' - ' + lineatecnologica.nombre + '</option>');
                     });
-
                 }else{
                     $('#txtlineatecnologica').append('<option value="">no se encontraron resultados</option>');
                 }
-
-
                 if (response.equipos.length != 0) {
                     $.each(response.equipos, function(e, equipo) {
                         if (equipo.nombre.length > 40){
@@ -593,7 +545,6 @@
                 }else{
                     $('#txtequipo').append('<option value="">no se encontraron resultados</option>');
                 }
-
                 if (response.materiales.length != 0) {
                     $.each(response.materiales, function(e, material) {
                         if (material.material_nombre.length > 40){
@@ -605,12 +556,10 @@
                 }else{
                     $('#txtmaterial').append('<option value="">no se encontraron resultados</option>');
                 }
-
                 $('#txttalento').select2();
                 $('#txtmaterial').select2();
                 $('#txtequipo').select2();
                 $('#txtlineatecnologica').select2();
-
             });
         },
         //IDEAS
@@ -661,14 +610,12 @@
                 dismissible: false,
             });
         },
-
         getSelectInfoIdea:function (id){
             $.ajax({
                 dataType:'json',
                 type:'get',
                 url: host_url + '/usoinfraestructura/idea/'+id
             }).done(function(response){
-                console.log(response);
                 $('#txttalento').empty();
                 $('#txtequipo').empty();
                 $('#txtlinea').empty();
@@ -879,12 +826,10 @@
         $divActividad.show();
     }
     function agregarEquipoAusoInfraestructura(){
-
             let  cont = 0;
             let idequipo = $("#txtequipo").val();
             let tiempouso = $("#txttiempouso").val();
             let nombreEquipo = $('#txtequipo option:selected').text();
-
             if ($("#txtequipo").val() == ""){
                 Swal.fire({
                 toast: true,
@@ -912,7 +857,6 @@
                     type: 'warning',
                     title: 'el tiempo de uso debe ser mayor o igual a 1.'
                 });
-
             }else if(usoInfraestructuraCreate.validateTiempoUso() != true){
                 Swal.fire({
                     toast: true,
@@ -923,39 +867,34 @@
                     title: 'El tiempo de uso debe ser un valor numerico entre 0 y 99.9.'
                 });
             }else{
-              if (usoInfraestructuraCreate.noRepeatEquipo() == true) {
-
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    type: 'success',
-                    title: 'Equipo ' + nombreEquipo + ' agregado.'
-                });
-
-                var a = document.getElementsByName("equipo[]");
-                let fila ="";
-
-                fila = '<tr class="selected" id="filaEquipo'+cont+'"><td><input type="hidden" name="equipo[]" value="'+idequipo+'">'+nombreEquipo+'</td><td><input type="hidden" name="tiempouso[]" value="'+tiempouso+'">'+tiempouso+'</td><td><a class="waves-effect bg-danger white-text btn" onclick="eliminarEquipo('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
-                cont++;
-                $('#detallesUsoInfraestructura').append(fila);
-              }else{
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 1500,
-                    type: 'error',
-                    title: 'El Equipo ' + nombreEquipo + ' ya esta listado.'
-                  });
-
-              }
+                if (usoInfraestructuraCreate.noRepeatEquipo() == true) {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: 'success',
+                        title: 'Equipo ' + nombreEquipo + ' agregado.'
+                    });
+                    var a = document.getElementsByName("equipo[]");
+                    let fila ="";
+                    fila = '<tr class="selected" id="filaEquipo'+cont+'"><td><input type="hidden" name="equipo[]" value="'+idequipo+'">'+nombreEquipo+'</td><td><input type="hidden" name="tiempouso[]" value="'+tiempouso+'">'+tiempouso+'</td><td><a class="waves-grey bg-danger white-text btn" onclick="eliminarEquipo('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
+                    cont++;
+                    $('#detallesUsoInfraestructura').append(fila);
+                }else{
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        type: 'error',
+                        title: 'El Equipo ' + nombreEquipo + ' ya esta listado.'
+                    });
+                }
             }
             $("#txtequipo option[value='']").attr("selected", true);
             $('#txtequipo').select2();
             $("#txttiempouso").val(1);
-
         }
 
         function addTalentoAUso(id) {
@@ -963,20 +902,16 @@
             let idtalento = $("#txttalento").val();
             let nombreTalento = $('#txttalento option:selected').text();
             if ($("#txttalento").val() == ""){
-
                 Swal.fire({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 1500,
-                        type: 'warning',
-                        title: 'Debe seleccionar un talento'
-                      });
-
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    type: 'warning',
+                    title: 'Debe seleccionar un talento'
+                });
             }else{
                 if (usoInfraestructuraCreate.noRepeatTalento(idtalento) == false) {
-
-
                     Swal.fire({
                         toast: true,
                         position: 'top-end',
@@ -984,8 +919,7 @@
                         timer: 1500,
                         type: 'error',
                         title: 'El Talento ' + nombreTalento + ' ya esta listado.'
-                      });
-
+                    });
                     $("#txttalento").val();
                 }else{
                     Swal.fire({
@@ -995,34 +929,29 @@
                         timer: 1500,
                         type: 'success',
                         title: 'el Talento ' + nombreTalento + ' agregado.'
-                      });
-
+                    });
                     let a = document.getElementsByName("talento[]");
                     let fila ="";
-
-                    fila = '<tr class="selected" id="filaTalento'+cont+'"><td><input type="hidden" name="talento[]" value="'+idtalento+'">'+nombreTalento+'</td><td><a class="waves-effect red lighten-3 btn" onclick="eliminarTalento('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
+                    fila = '<tr class="selected" id="filaTalento'+cont+'"><td><input type="hidden" name="talento[]" value="'+idtalento+'">'+nombreTalento+'</td><td><a class="waves-grey bg-danger white-text btn" onclick="eliminarTalento('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
                     cont++;
                     $('#detalleTalento').append(fila);
-
                 }
             }
-
             $("#txttalento option[value='']").attr("selected", true);
             $('#txttalento').select2();
         }
 
         function eliminarTalento(index){
-          $('#filaTalento'+ index).remove();
-          Swal.fire({
+            $('#filaTalento'+ index).remove();
+            Swal.fire({
                 toast: true,
                 position: 'top-end',
                 showConfirmButton: false,
                 timer: 1500,
                 type: 'success',
                 title: 'Talento eliminado.'
-              });
+            });
         }
-
         function eliminarEquipo(index){
             $('#filaEquipo'+ index).remove();
             Swal.fire({
@@ -1035,14 +964,12 @@
             });
         }
         function addGestoresAUso() {
-
             let cont = 0;
             let idgestor = $("#txtgestorasesor").val();
             let asesoriadirecta = $("#txtasesoriadirecta").val();
             let asesoriaindirecta = $("#txtasesoriaindirecta").val();
             let nombreGestor = $('#txtgestorasesor option:selected').text();
             if ($("#txtgestorasesor").val() == ""){
-
                 Swal.fire({
                     toast: true,
                     position: 'top-end',
@@ -1051,11 +978,8 @@
                     type: 'warning',
                     title: 'Debe seleccionar un experto'
                 });
-
             }else{
                 if (usoInfraestructuraCreate.noRepeatGestor(idgestor) == false) {
-
-
                     Swal.fire({
                         toast: true,
                         position: 'top-end',
@@ -1063,8 +987,7 @@
                         timer: 1500,
                         type: 'error',
                         title: 'El experto ' + nombreGestor + ' ya esta listado.'
-                      });
-
+                    });
                     $("#txtgestorasesor").val();
                 }else if($("#txtasesoriadirecta").val() == '' ||  (!/^([0-9])\d*(\.\d+)?$/.test($("#txtasesoriadirecta").val()))){
                     Swal.fire({
@@ -1074,7 +997,7 @@
                         timer: 1500,
                         type: 'error',
                         title: 'Por favor ingrese una hora de asesoria directa correcta'
-                      });
+                    });
                     $("#txtasesoriadirecta").val(1);
                     $("label[for='txtasesoriadirecta']").addClass('active');
                 }else if($("#txtasesoriadirecta").val() == 0 && $("#txtasesoriaindirecta").val() < 1 || $("#txtasesoriadirecta").val() < 1 && $("#txtasesoriaindirecta").val() == 0 || $("#txtasesoriadirecta").val() == 0 && $("#txtasesoriaindirecta").val() == 0){
@@ -1085,7 +1008,7 @@
                         timer: 1500,
                         type: 'error',
                         title: 'Debe de haber al menos una asesoria con el valor de 1'
-                      });
+                    });
                     $("#txtasesoriadirecta").val(0);
                     $("label[for='txtasesoriadirecta']").addClass('active');
                     $("#txtasesoriaindirecta").val(0);
@@ -1099,7 +1022,7 @@
                         timer: 1500,
                         type: 'error',
                         title: 'Por favor ingrese una hora de asesoria indirecta correcta.'
-                      });
+                    });
                     $("#txtasesoriaindirecta").val(0);
                     $("label[for='txtasesoriaindirecta']").addClass('active');
 
@@ -1111,14 +1034,11 @@
                         timer: 1500,
                         type: 'success',
                         title: 'El experto ' + nombreGestor + ' ha sido agregado.'
-                      });
-
-
-
+                    });
                     let a = document.getElementsByName("gestor[]");
                     let fila ="";
 
-                    fila = '<tr class="selected" id="filaGestorAsesor'+cont+'"><td><input type="hidden" name="gestor[]" value="'+idgestor+'">'+nombreGestor+'</td><td><input type="hidden" min="0" step="0.1" name="asesoriadirecta[]" value="'+asesoriadirecta+'">'+asesoriadirecta+'</td><td><input type="hidden" name="asesoriaindirecta[]" min="0" step="0.1" value="'+asesoriaindirecta+'">'+asesoriaindirecta+'</td><td><a class="waves-effect red lighten-3 btn" onclick="eliminarGestorAsesor('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
+                    fila = '<tr class="selected" id="filaGestorAsesor'+cont+'"><td><input type="hidden" name="gestor[]" value="'+idgestor+'">'+nombreGestor+'</td><td><input type="hidden" min="0" step="0.1" name="asesoriadirecta[]" value="'+asesoriadirecta+'">'+asesoriadirecta+'</td><td><input type="hidden" name="asesoriaindirecta[]" min="0" step="0.1" value="'+asesoriaindirecta+'">'+asesoriaindirecta+'</td><td><a class="waves-grey bg-danger white-text btn" onclick="eliminarGestorAsesor('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
                     cont++;
                     $('#detallesGestoresAsesores').append(fila);
 
@@ -1215,7 +1135,7 @@
                     let a = document.getElementsByName("material[]");
                     let fila ="";
 
-                    fila = '<tr class="selected" id="filaMaterial'+cont+'"><td><input type="hidden" name="material[]" min="0" step="0.1" value="'+idmaterial+'">'+nombreMaterial+'</td><td><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td><td><a class="waves-effect red lighten-3 btn" onclick="eliminarMaterial('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
+                    fila = '<tr class="selected" id="filaMaterial'+cont+'"><td><input type="hidden" name="material[]" min="0" step="0.1" value="'+idmaterial+'">'+nombreMaterial+'</td><td><input type="hidden" name="cantidad[]" value="'+cantidad+'">'+cantidad+'</td><td><a class="waves-grey bg-danger white-text btn" onclick="eliminarMaterial('+cont+');"><i class="material-icons">delete_sweep</i></a></td></tr>';
                     cont++;
                     $('#detalleMaterialUso').append(fila);
 

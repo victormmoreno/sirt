@@ -6,12 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class AlcanceArticulacion extends Model
 {
-    protected $table = 'alcance_articulaciones';
+    protected $table = 'articulation_scopes';
 
     /**
-     * The attributes that are mass assignable.
+     * The inverse relation one to much articulations
      *
-     * @var array
+     * @return void
      */
-    protected $fillable = [ 'nombre'];
+    public function articulations(){
+        return $this->hasMany(Articulation::class, 'scope_id');
+    }
 }

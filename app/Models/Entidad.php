@@ -99,11 +99,6 @@ class Entidad extends Model
         return $this->belongsTo(Ciudad::class, 'ciudad_id', 'id');
     }
 
-    public function articulaciones()
-    {
-        return $this->hasMany(Articulacion::class, 'entidad_id', 'id');
-    }
-
     public function contactosentidades()
     {
         return $this->hasMany(ContactoEntidad::class, 'entidad_id', 'id');

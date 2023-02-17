@@ -2,7 +2,7 @@ $(document).ready(function() {
     let filter_role = $('#filter_rol').val();
     let filter_nodo = $('#filter_nodo').val();
     let filter_state = $('#filter_state').val();
-    let filter_year = $('#filter_year_activo').val();
+    let filter_year = $('#filter_year').val();
 
     $('#users_data_table').dataTable().fnDestroy();
     if((filter_nodo != '' || filter_nodo != null) && (filter_role !='' || filter_role != null) && filter_state != '' && filter_year !=''){
@@ -19,10 +19,8 @@ $(document).ready(function() {
     }
 
     $('#mytalento_data_table').dataTable().fnDestroy();
-    if((filter_nodo != '' || filter_nodo != null) && (filter_role !='' || filter_role != null) && filter_state != '' && filter_year !=''){
-        UserIndex.fillDatatatablesTalentos(filter_nodo , filter_role, filter_state, filter_year);
-    }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && (filter_role == '' || filter_role == null || filter_role == undefined) && filter_state != '' && (filter_year == '' || filter_year == null || filter_year == undefined)){
-        UserIndex.fillDatatatablesTalentos(filter_nodo = null , filter_role = null, filter_state, filter_year = null);
+    if(filter_state != '' && filter_year !=''){
+        UserIndex.fillDatatatablesTalentos(filter_year, filter_state);
     }else{
         $('#mytalento_data_table').DataTable({
             language: {
@@ -34,17 +32,6 @@ $(document).ready(function() {
 });
 
 var UserIndex = {
-    showInputs(){
-        let filter_role = $('#filter_rol').val();
-        if(filter_role == 'Talento'){
-            $("#divyear").show();
-            $('#filter_year>option[value="all"]').attr('selected', 'selected');
-        }else{
-            $("#divyear").hide();
-            $('#filter_year>option[value="all"]').attr('selected', 'selected');
-        }
-        
-    },
     fillDatatatablesUsers(filter_nodo ,filter_role, filter_state, filter_year){
         var datatable = $('#users_data_table').DataTable({
             language: {
@@ -53,6 +40,7 @@ var UserIndex = {
             "lengthChange": false,
             processing: true,
             serverSide: true,
+            responsive: true,
             "order": [[ 1, "desc" ]],
             ajax:{
                 url: host_url + "/usuario",
@@ -92,12 +80,13 @@ var UserIndex = {
                 }, {
                     data: 'detail',
                     name: 'detail',
+                    searchable: false,
                     orderable: false,
-                }, 
+                },
             ],
         });
     },
-    fillDatatatablesTalentos(filter_nodo ,filter_role, filter_state, filter_year){
+    fillDatatatablesTalentos(filter_year,filter_state){
         var datatable = $('#mytalento_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -110,10 +99,8 @@ var UserIndex = {
                 url: host_url + "/usuario/mistalentos",
                 type: "get",
                 data: {
-                    filter_nodo: filter_nodo,
-                    filter_role: filter_role,
-                    filter_state: filter_state,
                     filter_year: filter_year,
+                    filter_state: filter_state
                 }
             },
             columns: [
@@ -145,7 +132,7 @@ var UserIndex = {
                     data: 'detail',
                     name: 'detail',
                     orderable: false,
-                }, 
+                },
             ],
         });
     }
@@ -174,27 +161,17 @@ $('#filter_user').click(function(){
             },
             "lengthChange": false
         }).clear().draw();
-        
+
     }
-    
+
 });
 
 $('#filter_talentos').click(function(){
-
-    let filter_role = $('#filter_rol').val();
-    let filter_nodo = $('#filter_nodo').val();
     let filter_state = $('#filter_state').val();
     let filter_year = $('#filter_year').val();
-
-
     $('#mytalento_data_table').dataTable().fnDestroy();
-
-
-    if((filter_nodo != '' || filter_nodo != null) && filter_role !='' && filter_state != '' && filter_year !=''){
-        UserIndex.fillDatatatablesTalentos(filter_nodo , filter_role, filter_state, filter_year);
-        
-    }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && filter_role !='' && filter_state != '' && filter_year !=''){
-        UserIndex.fillDatatatablesTalentos(filter_nodo = null , filter_role, filter_state, filter_year);
+    if(filter_state != '' && filter_year !=''){
+        UserIndex.fillDatatatablesTalentos(filter_year, filter_state);
     }else{
         $('#mytalento_data_table').DataTable({
             language: {
@@ -202,9 +179,7 @@ $('#filter_talentos').click(function(){
             },
             "lengthChange": false
         }).clear().draw();
-        
     }
-    
 });
 
 $('#download_users').click(function(){

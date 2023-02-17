@@ -52,11 +52,6 @@ class ArticulacionProyecto extends Model
         return $this->hasOne(Proyecto::class, 'articulacion_proyecto_id', 'id');
     }
 
-    public function articulacion()
-    {
-        return $this->hasOne(Articulacion::class, 'articulacion_proyecto_id', 'id');
-    }
-
     public function entidad()
     {
         return $this->belongsTo(Entidad::class, 'entidad_id', 'id');

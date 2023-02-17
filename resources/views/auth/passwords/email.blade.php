@@ -13,7 +13,7 @@
                 <div class="col s12 m6 l4 offset-l4 offset-m3">
                     <div class="card white darken-1">
                         @if (session('status'))
-                            <div class="card green darken-1">
+                            <div class="card bg-success white-text">
                                 <div class="row">
                                     <div class="col s12 m12">
                                         <div class="card-content white-text">

@@ -5,7 +5,6 @@ $(document).ready(function() {
 
 // Ajax que muestra los proyectos de un gestor por año
 function consultarEdtsDeUnGestor(id) {
-  // console.log('event');
   let anho = $('#txtanho_edts_Gestor').val();
   // let gestor = $('#txtgestor_id').val();
   $('#edtPorGestor_table').dataTable().fnDestroy();

@@ -1,7 +1,5 @@
 
 {!! csrf_field() !!}
-
-
 <div class="row">
     <div class="col s12 m4 l3">
         <blockquote>
@@ -29,9 +27,7 @@
             <div class="input-field col s12 m12 l12">
                 <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnododinamizador" name="txtnododinamizador" style="width: 100%; display: none
                 " tabindex="-1" >
-
-
-                        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
+                        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
                             <option value="">Seleccione Nodo</option>
                             @foreach($nodos as $id => $nodo)
                                 @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsDinamizador()))
@@ -43,12 +39,10 @@
                         @else
                             @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsDinamizador()))
                                 <option value="{{$user->dinamizador->nodo->id}}" selected>Tecnoparque Nodo {{$user->dinamizador->nodo->entidad->nombre}}</option>
-
                             @endif
                         @endif
                 </select>
                 <label for="txtnododinamizador" class="active">Nodo Dinamizador<span class="red-text">*</span></label>
-
                 <small id="role-error" class="error red-text"></small>
             </div>
         </div>
@@ -67,8 +61,8 @@
                                 @endif
                             @endforeach
                         @endif
-                        
-                        @if(isset($user->gestor->nodo->id) && session()->has('login_role') &&  (collect($user->roles)->contains('name',App\User::IsExperto()) || collect($user->roles)->contains('name',App\User::IsArticulador())))
+
+                        @if(isset($user->gestor->nodo->id) && session()->has('login_role') &&  (collect($user->roles)->contains('name',App\User::IsGestor()) || collect($user->roles)->contains('name',App\User::IsArticulador())))
                         <option value="{{$user->gestor->nodo->id}}" selected="">Tecnoparque Nodo {{$user->gestor->nodo->entidad->nombre}}</option>
 
                         @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id))
@@ -166,24 +160,17 @@
     </div>
     <div class="col s12 m8 l9">
         <div class="divider mailbox-divider"></div>
-        
+
         @include('users.forms.infopersonal')
         @include('users.forms.estudios')
-        
-        @if(  isset($user->talento->tipotalento) && collect($user->roles)->contains('name',App\User::IsTalento()) && $view == 'edit' && session()->has('login_role') && session()->get('login_role') != App\User::IsExperto())
-         
+
+        @if(  isset($user->talento->tipotalento) && collect($user->roles)->contains('name',App\User::IsTalento()) && $view == 'edit' && session()->has('login_role') && session()->get('login_role') != App\User::IsGestor())
+            @include('users.forms.tipo_talento')
+        @elseif(session()->get('login_role') == App\User::IsGestor())
 
             @include('users.forms.tipo_talento')
-          
 
-        @elseif(session()->get('login_role') == App\User::IsExperto())
-                
-            @include('users.forms.tipo_talento')
-            
         @endif
-
-        
-
         <div class="col s12 center-align m-t-sm">
             <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>{{isset($btnText) ? $btnText : 'Guardar'}}</button>
             <a class="waves-effect red lighten-2 btn center-aling " href="{{route('usuario.index')}}">

@@ -136,7 +136,6 @@ class TalentosImport implements ToCollection, WithHeadingRow
                         $this->registrarTalento($row['programa_formacion'], $user, $queryTipoTalento, $tipo_formacion_id, $datos_universidad, $entidad_id, $dependencia, $empresa);
                     } else {
                         // El correo ya se encuentra registrado en un usuario
-                        // dd('registra nueva usuario con correo existente - ERROR' . ($key+2));
                         return $this->validaciones->errorValidacionCorreo($row['correo'], $key, $user_email->documento, $this->hoja);
                     }
                 } else {
@@ -155,7 +154,7 @@ class TalentosImport implements ToCollection, WithHeadingRow
                     } else {
                         // No permite actualizar la información porque el correo se encuentra asociado a otra persona
                         return $this->validaciones->errorValidacionCorreo($row['correo'], $key, $user->documento, $this->hoja);
-                    } 
+                    }
                 }
             }
             DB::commit();
@@ -252,23 +251,23 @@ class TalentosImport implements ToCollection, WithHeadingRow
         $entidad_id = null;
 
         if ($tipo_talento != null) {
-            if ($tipo_talento->nombre == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)->first()->nombre || 
-            $tipo_talento->nombre == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_CON_APOYO)->first()->nombre || 
+            if ($tipo_talento->nombre == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)->first()->nombre ||
+            $tipo_talento->nombre == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_CON_APOYO)->first()->nombre ||
             $tipo_talento->nombre == TipoTalento::where('nombre', TipoTalento::IS_EGRESADO_SENA)->first()->nombre ) {
-                
+
                 $entidad_id = Entidad::where('nombre', $row['centro_formacion'])->first();
                 if ($entidad_id != null) {
                     $entidad_id = $entidad_id->id;
                 }
             }
-    
+
             if ($tipo_talento->nombre == TipoTalento::where('nombre', TipoTalento::IS_FUNCIONARIO_SENA)->first()->nombre) {
                 $entidad_id = Entidad::where('nombre', $row['centro_formacion_funcionario'])->first();
                 if ($entidad_id != null) {
                     $entidad_id = $entidad_id->id;
                 }
             }
-    
+
             if ($tipo_talento->nombre == TipoTalento::where('nombre', TipoTalento::IS_INSTRUCTOR_SENA)->first()->nombre) {
                 $entidad_id = Entidad::where('nombre', $row['centro_formacion_instructor'])->first();
                 if ($entidad_id != null) {
@@ -333,7 +332,7 @@ class TalentosImport implements ToCollection, WithHeadingRow
 
     private function registrarTalento($programa, $user, $tipo_talento, $tipo_formacion, array $datos_universidad, $entidad_id, $dependencia, $empresa)
     {
-        
+
         return Talento::create([
             "user_id" => $user->id,
             "tipo_talento_id" => $tipo_talento == null ? null : $tipo_talento->id,
@@ -378,5 +377,5 @@ class TalentosImport implements ToCollection, WithHeadingRow
             "otra_ocupacion" => $otra_ocupacion
         ]);
     }
-    
+
 }

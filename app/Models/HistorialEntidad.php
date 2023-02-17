@@ -17,11 +17,6 @@ class HistorialEntidad extends Model
         'descripcion'
     ];
 
-    // public function historial()
-    // {
-    //     return $this->hasMany(HistorialEntidad::class, 'role_id', 'id');
-    // }
-
     public function historial_entidad()
     {
         return $this->morphTo();

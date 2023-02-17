@@ -24,7 +24,8 @@ class ControlNotificaciones extends Model
         'rol_receptor_id',
         'fecha_envio',
         'fecha_aceptacion',
-        'estado'
+        'estado',
+        'descripcion'
     ];
 
     protected $attributes = [
@@ -77,5 +78,5 @@ class ControlNotificaciones extends Model
     {
         return $this->belongsTo(Fase::class, 'fase_id', 'id');
     }
-
 }
+

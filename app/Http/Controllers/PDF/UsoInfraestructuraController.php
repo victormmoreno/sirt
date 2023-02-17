@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\PDF;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Proyecto, ArticulacionPbt, UsoInfraestructura};
+use App\Models\Articulation;
 use App\Repositories\Repository\{ProyectoRepository};
 use Barryvdh\DomPDF\Facade as PDF;
 
@@ -34,23 +34,16 @@ class UsoInfraestructuraController extends Controller
                 return redirect()->route('home');
             }
             $pdf = PDF::loadView('pdf.usos.seguimiento', ['data' => $data, 'tipo_actividad' => $tipoActividad]);
-
             $pdf->setPaper(strtolower('LETTER'), $orientacion = 'landscape');
             return $pdf->stream('Seguimiento_' . $data->articulacion_proyecto->actividad->present()->actividadCode() . '.pdf');
 
-        } else if($tipoActividad == 'articulacion'){
-            $data = ArticulacionPbt::findOrFail($id);
-            if(request()->user()->cannot('downloadFile', $data))
-            {
-                alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
-                return redirect()->route('home');
-            }
+        }else if ($tipoActividad == 'articulacion') {
+            $data = Articulation::findOrFail($id);
             $pdf = PDF::loadView('pdf.usos.seguimiento', ['data' => $data, 'tipo_actividad' => $tipoActividad]);
             $pdf->setPaper(strtolower('LETTER'), $orientacion = 'landscape');
-            return $pdf->stream('Seguimiento_' . $data->present()->articulacionCode(). '.pdf');
+            return $pdf->stream('Seguimiento_' . $data->code . '.pdf');
         }else{
             return abort('404');
         }
     }
-
 }

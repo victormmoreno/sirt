@@ -34,13 +34,12 @@
                             @switch(session()->get('login_role'))
                                 @case(App\User::IsDinamizador())
                                     @include('costos.project')
-                                    @include('costos.articulacionpbt')
                                     @break
                                 @case(App\User::IsExperto())
                                     @include('costos.project')
                                     @break
-                                @case(App\User::IsArtocilador())
-                                    @include('costos.articulacionpbt')
+                                @case(App\User::IsArticulador())
+
                                 @break
                                 @default
                             @endswitch
