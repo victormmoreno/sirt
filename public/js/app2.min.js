@@ -8967,6 +8967,1588 @@ function graficoCostos(data, name, title) {
 }
 
 $(document).ready(function() {
+
+    let filter_node_articulationStage = $('#filter_node_articulationStage').val();
+    let filter_year_articulationStage = $('#filter_year_articulationStage').val();
+    let filter_status_articulationStage = $('#filter_status_articulationStage').val();
+    if((filter_node_articulationStage == '' || filter_node_articulationStage == null) && (filter_year_articulationStage =='' || filter_year_articulationStage == null) && (filter_status_articulationStage == '' || filter_status_articulationStage == null)){
+        articulationStage.filtersDatatableAccompanibles(filter_node_articulationStage = null,filter_year_articulationStage = null, filter_status_articulationStage = null);
+    }else if((filter_node_articulationStage != '' || filter_node_articulationStage != null) || filter_year_articulationStage !='' && filter_status_articulationStage != ''){
+        articulationStage.filtersDatatableAccompanibles(filter_node_articulationStage, filter_year_articulationStage, filter_status_articulationStage);
+    }else{
+
+        $('#articulationStage_data_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "pageLength": 10,
+            "lengthChange": false,
+        }).clear().draw();
+    }
+});
+
+$('#filter_articulationStage').click(function () {
+    let filter_node_articulationStage = $('#filter_node_articulationStage').val();
+    let filter_year_articulationStage = $('#filter_year_articulationStage').val();
+    let filter_status_articulationStage = $('#filter_status_articulationStage').val();
+    $('#articulationStage_data_table').dataTable().fnDestroy();
+    if((filter_node_articulationStage == '' || filter_node_articulationStage == null) && filter_year_articulationStage !='' && filter_status_articulationStage != ''){
+        articulationStage.filtersDatatableAccompanibles(filter_node_articulationStage = null,filter_year_articulationStage, filter_status_articulationStage);
+    }else if((filter_node_articulationStage != '' || filter_node_articulationStage != null) && filter_year_articulationStage !='' && filter_status_articulationStage != ''){
+        articulationStage.filtersDatatableAccompanibles(filter_node_articulationStage, filter_year_articulationStage, filter_status_articulationStage);
+    }else{
+        $('#articulationStage_data_table').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "pageLength": 10,
+            "lengthChange": false,
+        }).clear().draw();
+    }
+});
+
+$('#download_articulationStage').click(function(){
+    let filter_node_articulationStage = $('#filter_node_articulationStage').val();
+    let filter_year_articulationStage = $('#filter_year_articulationStage').val();
+    let filter_status_articulationStage= $('#filter_status_articulationStage').val();
+    const query = {
+        filter_node_articulationStage: filter_node_articulationStage,
+        filter_year_articulationStage: filter_year_articulationStage,
+        filter_status_articulationStage: filter_status_articulationStage
+    }
+    const url = "/etapa-articulaciones/export?" + $.param(query)
+    window.location = url;
+});
+
+const articulationStage = {
+    filtersDatatableAccompanibles: function(filter_node_articulationStage,filter_year_articulationStage, filter_status_articulationStage){
+        let groupColumn = 1;
+        let table = $('#articulationStage_data_table').DataTable({
+            language: {
+                "decimal": "",
+                "emptyTable": "No hay información",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar Entradas _MENU_",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "Sin resultados encontrados",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+            lengthMenu: [
+                [5, 10, 25,50, 100, -1],
+                [5, 10,25, 50, 100, 'Todos'],
+            ],
+            "pageLength": 10,
+            "lengthChange": false,
+            processing: false,
+            serverSide: false,
+
+            ajax:{
+                url: "/etapa-articulaciones/datatable_filtros",
+                type: "get",
+                data: {
+                    filter_node_articulationStage: filter_node_articulationStage,
+                    filter_year_articulationStage: filter_year_articulationStage,
+                    filter_status_articulationStage: filter_status_articulationStage,
+                }
+            },
+            columns: [
+                {
+                    data: 'node',
+                    name: 'node',
+                },
+                {
+                    data: 'articulationstate_name',
+                    name: 'articulationstate_name',
+                },
+                {
+                    data: 'articulation_name',
+                    name: 'articulation_name',
+                },{
+                    data: 'description',
+                    name: 'description',
+                },
+                {
+                    data: 'phase',
+                    name: 'phase',
+                },
+                {
+                    data: 'starDate',
+                    name: 'starDate',
+                },
+                {
+                    data: 'show',
+                    name: 'show',
+                    orderable: false
+                },
+            ],
+
+            columnDefs: [{ visible: false, targets: groupColumn }],
+            displayLength: 25,
+            drawCallback: function (settings) {
+                  var api = this.api();
+                 var rows = api.rows({ page: 'current' }).nodes();
+                 var last = null;
+                 api
+                     .column(groupColumn, { page: 'current' })
+                     .data()
+                     .each(function (group, i) {
+                         if (last !== group) {
+                             $(rows)
+                                 .eq(i)
+                                 .before(`${group}`);
+
+                          last = group;
+                     }
+                     });
+            },
+        });
+        // Order by the grouping
+        $('#articulationStage_data_table tbody').on('click', 'tr.group', function () {
+            var currentOrder = table.order()[0];
+            if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
+                table.order([groupColumn, 'desc']).draw();
+            } else {
+                table.order([groupColumn, 'asc']).draw();
+            }
+        });
+    },
+    fill_code_project:function(filter_code_project = null){
+        articulationStage.emptyResult('result-projects');
+        if(filter_code_project.length > 0){
+            $.ajax({
+                dataType: 'json',
+                type: 'get',
+                url: '/actividades/filter-code/' + filter_code_project
+            }).done(function (response) {
+                if(response.data.status_code == 200){
+                    articulationStage.emptyResult('result-talents');
+                    let activity = response.data.proyecto.articulacion_proyecto.actividad;
+                    let data = response.data;
+                    $('.result-projects').append(`
+                        <div class="card card-transparent p f-12 m-t-lg">
+                            <div class="card-content">
+                                <span class="card-title p f-12">${activity.codigo_actividad} ${activity.nombre}</span>
+                                <div class="position-top-right p f-12 mail-date hide-on-med-and-down">${articulationStage.formatDate(activity.fecha_cierre)}</div>
+                                <p>${activity.objetivo_general}</p>
+                                <div class="input-field col m12 s12">
+                                    <input type="hidden" name="projects" id="projects" style="display:none" value="${response.data.proyecto.id}"/>
+                                </div>
+                            </div>
+                            <div class="card-action">
+                                <a class="waves-effect waves-red btn-flat m-b-xs primary-text" target="_blank" href="/proyecto/detalle/${data.proyecto.id}"><i class="material-icons left">link</i>Ver más</a>
+                            </div>
+                        </div>`
+                    );
+                    if (data.proyecto.articulacion_proyecto.talentos.length != 0) {
+                        $.each(data.proyecto.articulacion_proyecto.talentos, function(e, talento) {
+                            if(talento.pivot.talento_lider == 1){
+                                $('.result-talents').append(`
+                                    <div class="card card-transparent p f-12 m-t-lg">
+                                        <div class="card-content">
+                                            <span class="card-title p f-12">${talento.user.documento} - ${talento.user.nombres} ${talento.user.apellidos}</span>
+                                            <div class="input-field col m12 s12">
+                                                <input type="hidden" name="talent" id="talent" style="display:none" value="${talento.user.id}"/>
+                                            </div>
+                                            <div class="position-top-right p f-12 mail-date hide-on-med-and-down">  Acceso al sistema: ${userSearch.state(talento.user.estado)}</div>
+                                            <p class="hide-on-med-and-down"> Miembro desde ${articulationStage.formatDate(talento.user.created_at)}</p>
+                                        </div>
+                                        <div class="card-action">
+                                            <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuario/usuarios/${talento.user.documento}"><i class="material-icons left">link</i>Ver más</a>
+                                        </div>
+                                    </div>`
+                                );
+                            }
+                        });
+                    }
+                }else{
+                    articulationStage.notFound('result-projects', 'projects');
+                    articulationStage.notFound('result-talents', 'talent');
+                }
+            });
+        }else{
+            articulationStage.emptyResult('result-projects');
+            articulationStage.emptyResult('result-talents');
+            articulationStage.notFound('result-projects', 'projects');
+            articulationStage.notFound('result-talents', 'talent');
+        }
+    },
+    queryProyectosFaseInicioTable:function(filter_year_pro=null) {
+        $('#datatable_projects_finalizados').dataTable().fnDestroy();
+        $('#datatable_projects_finalizados').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "/proyecto/datatableproyectosfinalizados",
+                type: "get",
+                data: {
+                    filter_year_pro: filter_year_pro,
+                }
+            },
+            columns: [
+                {
+                    data: 'codigo_proyecto',
+                    name: 'codigo_proyecto'
+                }, {
+                    data: 'nombre',
+                    name: 'nombre'
+                }, {
+                    data: 'fase',
+                    name: 'fase'
+                },{
+                    data: 'add_proyecto',
+                    name: 'add_proyecto',
+                    orderable: false
+                },
+            ]
+        });
+        $('#filter_project_advanced_modal').openModal();
+    },
+    addProjectToArticulacion:function(code) {
+        articulationStage.fill_code_project(code);
+        articulationStage.emptyResult('result-talents');
+        $('#filter_project_advanced_modal').closeModal();
+    },
+    emptyResult: function(cl){
+        if(cl != null){
+            $('.'+ cl).empty();
+        }
+    },
+    notFound: function(cl, value = null){
+        if(cl != null){
+            return $('.'+ cl).append(`
+                <div class="col s12 m12 l12">
+                    <div class="card card-transparent p f-12 m-t-lg">
+                        <div class="card-content">
+                            <span class="card-title p f-12 ">No se encontraron resultados</span>
+                            <div class="input-field col m12 s12">
+                            <input type="hidden" name="${value}" id="${value}" style="display:none"/>
+                        </div>
+                        </div>
+                    </div>
+                </div>`);
+        }
+    },
+    formatDate: function(date){
+        if(date == null){
+            return "no registra";
+        }else{
+            return moment(date).format('LL');
+        }
+    },
+    searchUser:function(document){
+        if(document != null){
+            articulationStage.emptyResult('result-talents');
+            $.ajax({
+                dataType: 'json',
+                type: 'get',
+                url: '/usuarios/filtro-talento/' + document
+            }).done(function (response) {
+                if(response.data.status_code == 200){
+                    let user = response.data.user;
+                    $('.result-talents').append(
+                        `<div class="card card-transparent p f-12 m-t-lg">
+                            <div class="card-content">
+                                <span class="card-title p f-12 ">${user.documento} - ${user.nombres} ${user.apellidos}</span>
+                                <div class="input-field col m12 s12">
+                                    <input type="hidden" name="talent" id="talent" style="display:none" value="${user.id}"/>
+                                </div>
+                                <p class="position-top-right p f-12 mail-date hide-on-med-and-down"> Acceso al sistema: `+ userSearch.state(user.estado) +`</p>
+                                <div class="mailbox-text p f-12 hide-on-med-and-down">
+                                    Miembro desde ${articulationStage.formatDate(user.created_at)}
+                                </div>
+                            </div>
+                            <div class="card-action">
+                                <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuario/usuarios/`+user.documento+ `"><i class="material-icons left"> link</i>Ver más</a>
+                            </div>
+                        </div>
+                    `);
+                }else{
+                    articulationStage.emptyResult('result-talents');
+                    articulationStage.notFound('result-talents', 'talent');
+                }
+            });
+        }else{
+            articulationStage.emptyResult('result-talents');
+            articulationStage.notFound('result-talents', 'talent')
+        }
+    },
+    queryTalentos: function(){
+        $('#datatable_interlocutor_talents').dataTable().fnDestroy();
+        $('#datatable_interlocutor_talents').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "/usuario/talento/getTalentosDeTecnoparque",
+                type: "get"
+            },
+            columns: [
+                {
+                    data: 'documento',
+                    name: 'documento'
+                }, {
+                    data: 'talento',
+                    name: 'talento'
+                }, {
+                    data: 'add_intertocutor_talent_articulation',
+                    name: 'add_intertocutor_talent_articulation',
+                    orderable: false
+                },
+            ]
+        });
+        $('#filter_talents_advanced_modal').openModal();
+    },
+    addInterlocutorTalentArticulacion: function(talent){
+        if (articulationStage.noRepeat(talent) == false) {
+            articulationStage.talentAssociated();
+        } else {
+            articulationStage.emptyResult('talent-empty');
+            articulationStage.printInterlocutorTalentoInTable(talent);
+        }
+        $('#filter_talents_advanced_modal').closeModal();
+    },
+    noRepeat: function(id) {
+        let idTalento = id;
+        let retorno = true;
+        let a = document.getElementsByName("talentos[]");
+        for (x = 0; x < a.length; x ++) {
+            if (a[x].value == idTalento) {
+                retorno = false;
+                break;
+            }
+        }
+        return retorno;
+    },
+    talentAssociated: function() {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            type: 'warning',
+            title: 'El talento ya se encuentra asociado a la articulación!'
+        });
+    },
+    printInterlocutorTalentoInTable: function(id) {
+        $.ajax({
+            dataType: 'json',
+            type: 'get',
+            url: '/usuario/talento/consultarTalentoPorId/' + id
+        }).done(function (response) {
+            if(response != null){
+                articulationStage.searchUser(response.talento.documento);
+            }else{
+                articulationStage.emptyResult('result-talents');
+                articulationStage.notFound('result-talents', 'talent')
+            }
+        });
+    },
+    messageAccompaniable: function(data, action, title) {
+        if (data.status_code == 201) {
+            Swal.fire({
+                title: title,
+                text: "La etapa de articulación  ha sido "+action+" satisfactoriamente",
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+            });
+            setTimeout(function () {
+                window.location.replace(data.url);
+            }, 1000);
+        }
+        if (data.state == 404) {
+            Swal.fire({
+                title: 'La etapa de articulación  no se ha '+action+', por favor inténtalo de nuevo',
+                type: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+            })
+        }
+    },
+    updateInterlocutor: function(form, data, url) {
+        $.ajax({
+            type: form.attr('method'),
+            url: url,
+            data: data,
+            cache: false,
+            contentType: false,
+            dataType: 'json',
+            processData: false,
+            success: function (response) {
+                $('button[type="submit"]').removeAttr('disabled');
+                $('.error').hide();
+                printErroresFormulario(response.data);
+                articulationStage.messageAccompaniable(response.data, 'actualizado', 'Modificación Exitosa');
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                Swal.fire({
+                    title: 'Error, vuelve a intentarlo',
+                    html: "Error: " + textStatus,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok',
+                });
+            }
+        });
+    },
+    destroyArticulationStage: function(id){
+        Swal.fire({
+            title: '¿Estas seguro de eliminar esta etapa de articulación?',
+            text: "Recuerde que si lo elimina no lo podrá recuperar.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'si, eliminar',
+            cancelButtonText: 'No, cancelar',
+        }).then((result) => {
+            if (result.value) {
+                let token = $("meta[name='csrf-token']").attr("content");
+                $.ajax({
+                    url: host_url + "/etapa-articulaciones/"+id,
+                    type: 'DELETE',
+                    data: {
+                        "id": id,
+                        "_token": token,
+                    },
+                    success: function (data){
+                        if(!data.fail){
+                            Swal.fire(
+                                'Eliminado!',
+                                'La etapa de articulación ha sido eliminado satisfactoriamente.',
+                                'success'
+                            );
+                            location.href = data.redirect_url;
+                        }else{
+                            Swal.fire(
+                                'Cuidado!',
+                                'La etapa de articulación no se ha eliminado, ya que continene articulaciones.',
+                                'warining'
+                            );
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        Swal.fire({
+                            title: 'Error, vuelve a intentarlo',
+                            html: "Error: " + textStatus,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok',
+                        });
+                    }
+                });
+            }
+        })
+    },
+    changeStateArticulationStage: function(code){
+        Swal.fire({
+            title: '¿Estas seguro de cambiar el estado de esta etapa de articulación?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'si, cambiar',
+            cancelButtonText: 'No, cancelar',
+        }).then((result) => {
+            if (result.value) {
+                let token = $("meta[name='csrf-token']").attr("content");
+                $.ajax({
+                    url: `${host_url}/etapa-articulaciones/${code}/cambiar-estado`,
+                    type: 'PUT',
+                    data: {
+                        "_token": token,
+                    },
+                    success: function (data){
+                        console.log(data);
+                        if(!data.fail){
+                            Swal.fire(
+                                'Actialización exitosa!',
+                                'La etapa de articulación ha sido actualizada satisfactoriamente.',
+                                'success'
+                            );
+                            location.href = data.redirect_url;
+                        }else{
+                            Swal.fire(
+                                'Cuidado!',
+                                'La etapa de articulación no se ha eliminado, ya que continene articulaciones.',
+                                'warining'
+                            );
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        Swal.fire({
+                            title: 'Error, vuelve a intentarlo',
+                            html: "Error: " + textStatus,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok',
+                        });
+                    }
+                });
+            }
+        })
+    },
+}
+
+$(document).on('submit', 'form#interlocutor-form', function (event) {
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    const form = $(this);
+    const data = new FormData($(this)[0]);
+    const url = form.attr("action");
+    articulationStage.updateInterlocutor(form, data, url);
+});
+
+
+
+
+
+$(document).ready(function() {
+
+    var table = $('#articulation_data_table').DataTable({
+        language: {
+            "decimal": "",
+            "emptyTable": "No hay información",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+            "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+            "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar Entradas _MENU_",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "Buscar:",
+            "zeroRecords": "Sin resultados encontrados",
+            "paginate": {
+                "first": "Primero",
+                "last": "Ultimo",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+        },
+        lengthMenu: [
+            [5, 10, -1],
+            [5, 10, 'Todos'],
+        ],
+        autoWidth: false,
+        columnDefs: [
+            {
+                targets: ['_all'],
+                className: 'mdc-data-table__cell',
+            },
+        ]
+    });
+});
+
+function endorsementQuestionArticulationStage(e) {
+    e.preventDefault();
+    Swal.fire({
+        title: '¿Está seguro(a) de aprobar el aval?',
+        text: 'Al hacerlo estás aceptando y aprobando toda la información de esta etapa de articulación, los documento adjuntos y las asesorias recibidas.',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Sí!'
+    }).then((result) => {
+        $('button[type="submit"]').attr('disabled', false);
+        if (result.value) {
+            $('#decision').val('aceptado');
+            document.frmEndorsementArticulationStage.submit();
+        }
+    });
+}
+
+function questionRejectEndorsementArticulationStage(e) {
+    e.preventDefault();
+    //$('button[type="submit"]').attr('disabled', true);
+    Swal.fire({
+        title: '¿Está seguro(a) de no aprobar el aval?',
+        input: 'text',
+        type: 'warning',
+        inputValidator: (value) => {
+            if (!value) {
+                return 'Las observaciones deben ser obligatorias!'
+            } else {
+                $('#decision').val('rechazado');
+                $('#motivosNoAprueba').val(value);
+            }
+        },
+        inputAttributes: {
+            maxlength: 100,
+            placeHolder: '¿Por qué?'
+        },
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Enviar observaciones!'
+    }).then((result) => {
+        if (result.value) {
+            document.frmEndorsementArticulationStage.submit();
+        }
+    })
+}
+function endorsementQuestionArticulation(e) {
+    e.preventDefault();
+    //$('button[type="submit"]').attr('disabled', true);
+    Swal.fire({
+        title: '¿Está seguro(a) de aprobar el aval?',
+        text: 'Al hacerlo estás aceptando y aprobando toda la información de esta etapa de articulación, los documento adjuntos y las asesorias recibidas.',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Sí!'
+    }).then((result) => {
+        $('button[type="submit"]').attr('disabled', false);
+        if (result.value) {
+            $('#decision').val('aceptado');
+            document.getElementById("frmApprovalArticulations").submit();
+        }
+    });
+}
+
+function questionRejectEndorsementArticulation(e) {
+    e.preventDefault();
+    //$('button[type="submit"]').attr('disabled', true);
+    Swal.fire({
+        title: '¿Está seguro(a) de no aprobar el aval?',
+        input: 'text',
+        type: 'warning',
+        inputValidator: (value) => {
+            if (!value) {
+                return 'Las observaciones deben ser obligatorias!'
+            } else {
+                $('#decision').val('rechazado');
+                $('#motivosNoAprueba').val(value);
+            }
+        },
+        inputAttributes: {
+            maxlength: 100,
+            placeHolder: '¿Por qué?'
+        },
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Enviar observaciones!'
+    }).then((result) => {
+        if (result.value) {
+            document.getElementById("frmApprovalArticulations").submit();
+        }
+    })
+}
+
+function changeNextPhaseArticulation(e) {
+    e.preventDefault();
+    $('button[type="submit"]').attr('disabled', true);
+    Swal.fire({
+        title: '¿Está seguro(a) de continuar a la siguiente fase?',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Sí!'
+    }).then((result) => {
+        $('button[type="submit"]').attr('disabled', false);
+        if (result.value) {
+            document.frmChangeNextPhase.submit();
+        }
+    });
+}
+
+function changePreviusPhaseArticulation(e) {
+    e.preventDefault();
+    $('button[type="submit"]').attr('disabled', true);
+    Swal.fire({
+        title: '¿Está seguro(a) de volver a la anterior fase?',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Sí!'
+    }).then((result) => {
+        $('button[type="submit"]').attr('disabled', false);
+        if (result.value) {
+            document.frmChangePreviusPhase.submit();
+        }
+    });
+}
+
+
+
+$( document ).ready(function() {
+    const form = $("#articulation-stage-form");
+    const validator = $("#articulation-stage-form").validate({
+        rules: {
+            name:{
+                required:true,
+                minlength: 2,
+                maxlength: 600
+            },
+            description:{
+                maxlength: 3000
+            },
+            scope:{
+                required:true,
+                minlength: 2,
+                maxlength: 3000
+            },
+            projects: {
+                required:true,
+                number: true
+            },
+            talent: {
+                required: true,
+                number: true
+            },
+            confidency_format: {
+                required:true,
+                accept: "application/pdf"
+            }
+        },
+        messages:
+            {
+                name:
+                    {
+                        required:"El nombre es obligatorio",
+                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                    },
+                description:
+                    {
+                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                    },
+                scope:
+                    {
+                        required:"El alcalce es obligatorio",
+                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                    },
+
+                projects:
+                    {
+                        required:"Por favor agrega el proyecto",
+                    },
+                talent:
+                    {
+                        required:"Por favor agrega el talento interlocutor",
+                    },
+                confidency_format:
+                    {
+                        required: jQuery.validator.format("El campo formato confidencial es obligatorio"),
+                        accept: jQuery.validator.format("El formato permitido es PDF"),
+                    }
+            },
+        errorPlacement: function(error, element)
+        {
+            if ( element.is(":radio") ){
+                error.appendTo( element.parents('.container-error') );
+            }
+            else if ( element.is(":file") ){
+                error.appendTo( element.parents('.container-error') );
+            }
+            else if ( element.is(":hidden") ){
+                error.appendTo( element.parents('.container-error') );
+            }
+            else{
+                element.after(error);
+            }
+        }
+    });
+    form.children("div").steps({
+        headerTag: "h3",
+        bodyTag: "section",
+        transitionEffect: "fade",
+        labels: {
+            cancel: "Cancelar",
+            current: "current step:",
+            pagination: "Paginación",
+            finish: "Guardar",
+            next: "Siguiente >",
+            previous: "< Anterior",
+            loading: "Cargando ..."
+        },
+        onStepChanging: function (event, currentIndex, newIndex)
+        {
+            if (currentIndex == 1) {
+                form.validate().settings.ignore = ":disabled,:hidden:not(input[type='hidden'])";
+            }else{
+                form.validate().settings.ignore = ":disabled,:hidden";
+            }
+
+            return form.valid();
+        },
+        onFinishing: function (event, currentIndex)
+        {
+            if (currentIndex == 1) {
+                form.validate().settings.ignore = ":disabled,:hidden:not(input[type='hidden'])";
+            }else{
+                form.validate().settings.ignore = ":disabled,:hidden";
+            }
+            return form.valid();
+        },
+        onFinished: function (event, currentIndex)
+        {
+            event.preventDefault();
+            const data = new FormData(document.getElementById("articulation-stage-form"));
+            const url = form.attr("action");
+            $.ajax({
+                type: form.attr('method'),
+                url: url,
+                data: data,
+                cache: false,
+                contentType: false,
+                dataType: 'json',
+                processData: false,
+                success: function (response) {
+                    $('.error').hide();
+                    $('button[type="submit"]').removeAttr('disabled');
+                    printErrorsForm(response);
+
+                    if(!response.fail && response.errors == null){
+                        Swal.fire({
+                            title: response.message,
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok',
+                        });
+                        setTimeout(function () {
+                            window.location.href = response.redirect_url;
+                        }, 1500);
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    Swal.fire({
+                        title: ' Error, vuelve a intentarlo',
+                        html:  `${xhr.status} ${errorThrown}`,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok',
+                    });
+                }
+            });
+        }
+    });
+
+    $(".wizard .actions ul li a").addClass("waves-effect waves-primary btn-flat");
+    $(".wizard .steps ul").addClass("tabs z-depth-1");
+    $(".wizard .steps ul li").addClass("tab");
+    $('ul.tabs').tabs();
+    $('select').material_select();
+    $('.select-wrapper.initialized').prev( "ul" ).remove();
+    $('.select-wrapper.initialized').prev( "input" ).remove();
+    $('.select-wrapper.initialized').prev( "span" ).remove();
+
+    $.validator.addMethod('accept', function (value, element, param) {
+        return  (element.files[0].type == param)
+    }, 'El archivo debe tener formato PDF');
+
+    $('#filter_code_project').click(function () {
+        let filter_code_project = $('#filter_code').val();
+        if((filter_code_project != '' || filter_code_project != null || filter_code_project.length  > 0)){
+            articulationStage.fill_code_project(filter_code_project);
+        }
+    });
+    $('#filter_project_modal').click(function () {
+        let filter_year_pro = $('#filter_year_pro').val();
+        articulationStage.queryProyectosFaseInicioTable(filter_year_pro);
+    });
+    $('#filter_project_advanced').click(function () {
+        let filter_year_pro = $('#filter_year_pro').val();
+        articulationStage.queryProyectosFaseInicioTable(filter_year_pro);
+    });
+    $('#search_talent').click(function () {
+        let filter_user = $('#txtsearch_user').val();
+        if(filter_user.length > 0 ){
+            articulationStage.searchUser(filter_user);
+        }else{
+            articulationStage.emptyResult('result-talents');
+            articulationStage.notFound('result-talents');
+        }
+    });
+    $('#filter_talents_advanced').click(function () {
+        articulationStage.queryTalentos();
+    });
+
+    $('.datepicker_accompaniable_date').pickadate({
+        selectMonths: true,
+        selectYears: 10,
+        labelMonthNext: 'Próximo Mes',
+        labelMonthPrev: 'Mes anterior',
+        labelMonthSelect: 'Selecione Mes',
+        labelYearSelect: 'Selecione Año',
+        monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        weekdaysFull: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+        weekdaysLetter: ['D', 'L', 'M', 'Mi', 'J', 'V', 'S'],
+        today: 'Hoy',
+        clear: 'Limpiar',
+        close: 'Cerrar',
+        format: 'yyyy-mm-dd',
+        onClose: function() {
+            $(document.activeElement).blur()
+        }
+    });
+    $('.datepicker_accompaniable_max_date').pickadate({
+        selectMonths: true,
+        selectYears: 10,
+        labelMonthNext: 'Próximo Mes',
+        labelMonthPrev: 'Mes anterior',
+        labelMonthSelect: 'Selecione Mes',
+        labelYearSelect: 'Selecione Año',
+        monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        weekdaysFull: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+        weekdaysLetter: ['D', 'L', 'M', 'Mi', 'J', 'V', 'S'],
+        today: 'Hoy',
+        clear: 'Limpiar',
+        close: 'Cerrar',
+        max: new Date(),
+        format: 'yyyy-mm-dd',
+        onClose: function() {
+            $(document.activeElement).blur()
+        }
+    });
+});
+
+$( document ).ready(function() {
+    var form = $("#articulation-form");
+    var validator = $("#articulation-form").validate({
+        rules: {
+            articulation_type: {
+                required:true,
+            },
+            articulation_subtype: {
+                required:true,
+            },
+            start_date: {
+                required:true,
+                date: true
+            },
+            name_articulation:{
+                required: true,
+                minlength: 2,
+                maxlength: 255
+            },
+            description_articulation:{
+                maxlength: 3000
+            },
+            scope:{
+                required: true,
+                minlength: 2,
+                maxlength: 1000
+            },
+            scope_articulation:{
+                required: true,
+            },
+            email:{
+                required: true,
+                email: true
+            },
+            talents: {
+                required: true,
+                number: true
+            },
+            name_entity: {
+                required: true,
+                maxlength: 100
+            },
+            name_contact: {
+                required: true,
+                maxlength: 100
+            },
+            call_name:{
+                maxlength: 100
+            },
+            expected_date: {
+                required:true,
+                date: true
+            },
+            objective:{
+                required: true,
+                maxlength: 2500
+            }
+        },
+        messages:{
+            articulation_subtype:{
+                required:"Por favor selecciona el tipo de subarticulación",
+            },
+            articulation_type:{
+                required:"Por favor selecciona el tipo de articulación",
+            },
+            start_date:{
+                required:"Este campo es obligatorio",
+                date: "Por favor introduzca una fecha válida"
+            },
+            name_articulationStage:
+                {
+                    required:"Este campo es obligatorio",
+                    minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                },
+            description_articulationStage:
+                {
+                    minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                },
+            scope_articulation:
+                {
+                    required:"Por favor seleccione un alcance",
+                },
+            name_articulation:
+                {
+                    required:"Este campo es obligatorio",
+                    minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                },
+            scope:
+                {
+                    required:"Este campo es obligatorio",
+                    minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                },
+            name_entity:
+                {
+                    required:"Este campo es obligatorio",
+                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                },
+            name_contact:
+                {
+                    required:"Este campo es obligatorio",
+                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                },
+            email:{
+                required:"Este campo es obligatorio",
+                email: "Por favor, introduce una dirección de correo electrónico válida."
+            },
+            call_name:
+                {
+                    minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                },
+            expected_date:{
+                required:"Este campo es obligatorio",
+                date: "Por favor introduzca una fecha válida"
+            },
+            objective:{
+                required:"Este campo es obligatorio",
+                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+            },
+            talents:{
+                required:"Por favor agrega por lo menos un talento participante",
+            }
+        },
+        errorPlacement: function(error, element)
+        {
+            if ( element.is(":radio") )
+            {
+                error.appendTo( element.parents('.container-error'));
+            }
+            else if ( element.is(":file") )
+            {
+                error.appendTo( element.parents('.container-error') );
+            }
+            else if ( element.is(":hidden") )
+            {
+                error.appendTo( element.parents('.container-error') );
+            }
+            else
+            {
+                element.after(error);
+            }
+        }
+    });
+    form.children("div").steps({
+        headerTag: "h3",
+        bodyTag: "section",
+        transitionEffect: "fade",
+        labels: {
+            cancel: "Cancelar",
+            current: "current step:",
+            pagination: "Paginación",
+            finish: "Guardar",
+            next: "Siguiente >",
+            previous: "< Anterior",
+            loading: "Cargando ..."
+        },
+        onStepChanging: function (event, currentIndex, newIndex)
+        {
+            if (currentIndex == 3) {
+                form.validate().settings.ignore = ":disabled,:hidden:not(input[type='hidden'])";
+            }else{
+                form.validate().settings.ignore = ":disabled,:hidden";
+            }
+            return form.valid();
+        },
+        onFinishing: function (event, currentIndex)
+        {
+            form.validate().settings.ignore = ":disabled,:hidden:not(input[type='hidden'])";
+            return form.valid();
+        },
+        onFinished: function (event, currentIndex)
+        {
+            event.preventDefault();
+            const data = new FormData(document.getElementById("articulation-form"));
+            const url = form.attr("action");
+
+            $.ajax({
+                type: form.attr('method'),
+                url: url,
+                data: data,
+                cache: false,
+                contentType: false,
+                dataType: 'json',
+                processData: false,
+                success: function (response) {
+                    $('button[type="submit"]').removeAttr('disabled');
+                    printErrorsForm(response.data);
+                    filter_articulations.messageArticulation(response.data,  'registrada', 'Registro exitoso');
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert("Error: " + errorThrown);
+                }
+            });
+        }
+    });
+
+    $(".wizard .actions ul li a").addClass("waves-effect waves-primary btn-flat");
+    $(".wizard .steps ul").addClass("tabs z-depth-1");
+    $(".wizard .steps ul li").addClass("tab");
+    $('ul.tabs').tabs();
+    $('select').material_select();
+    $('.select-wrapper.initialized').prev( "ul" ).remove();
+    $('.select-wrapper.initialized').prev( "input" ).remove();
+    $('.select-wrapper.initialized').prev( "span" ).remove();
+
+    $('.datepicker_articulation_date').pickadate({
+        selectMonths: true,
+        selectYears: 10,
+        labelMonthNext: 'Próximo Mes',
+        labelMonthPrev: 'Mes anterior',
+        labelMonthSelect: 'Selecione Mes',
+        labelYearSelect: 'Selecione Año',
+        monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        weekdaysFull: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+        weekdaysLetter: ['D', 'L', 'M', 'Mi', 'J', 'V', 'S'],
+        today: 'Hoy',
+        clear: 'Limpiar',
+        close: 'Cerrar',
+        format: 'yyyy-mm-dd',
+        onClose: function() {
+            $(document.activeElement).blur()
+        }
+    });
+    $('.datepicker_articulation_max_date').pickadate({
+        selectMonths: true,
+        selectYears: 10,
+        labelMonthNext: 'Próximo Mes',
+        labelMonthPrev: 'Mes anterior',
+        labelMonthSelect: 'Selecione Mes',
+        labelYearSelect: 'Selecione Año',
+        monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        weekdaysFull: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+        weekdaysLetter: ['D', 'L', 'M', 'Mi', 'J', 'V', 'S'],
+        today: 'Hoy',
+        clear: 'Limpiar',
+        close: 'Cerrar',
+        max: new Date(),
+        format: 'yyyy-mm-dd',
+        onClose: function() {
+            $(document.activeElement).blur()
+        }
+    });
+
+    $('#search_talents').click(function () {
+        let filter_user = $('#txtsearch_user').val();
+        if(filter_user.length > 0 ){
+            filter_articulations.searchUser(filter_user);
+        }else{
+            filter_articulations.emptyResult('result-talents');
+            filter_articulations.notFound('result-talents');
+        }
+    });
+    $('#advanced_talent_filter').click(function () {
+        filter_articulations.queryTalentos();
+    });
+    $('#show_type_articulations').click(function () {
+        $('#type_articulations_modal').openModal();
+    });
+    filter_articulations.valueArticulationType();
+});
+
+const filter_articulations = {
+    searchUser:function(document){
+        $('.result-talents').empty();
+        if(document != null || document != null){
+            $.ajax({
+                dataType: 'json',
+                type: 'get',
+                url: '/usuarios/filtro-talento/' + document
+            }).done(function (response) {
+                if(response.data.status_code == 200){
+                    let user = response.data.user;
+                    $('.result-talents').append(`<div class="row">
+                        <div class="col s12 m12 l12">
+                            <div class="card card-panel card-transparent">
+                                <div class="card-content">
+                                    <span class="card-title p f-12 ">${user.documento} - ${user.nombres} ${user.apellidos}</span>
+                                    <p class="position-top-right p f-12 mail-date hide-on-med-and-down"> Acceso al sistema: ${userSearch.state(user.estado)}</p>
+                                    <div class="mailbox-text p f-12 hide-on-med-and-down">Miembro desde ${filter_articulations.formatDate(user.created_at)}</div>
+                                </div>
+                                <div class="card-action">
+                                <a class="waves-effect waves-red btn-flat m-b-xs primary-text" onclick="filter_articulations.addTalentToArticulation(${user.talento.id});" class="primary-text">Agregar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`);
+                }else{
+                    filter_articulations.notFound('result-talents');
+                }
+
+            });
+        }
+    },
+    emptyResult: function(cl){
+        if(cl != null){
+            $('.'+ cl).empty();
+        }
+    },
+    notFound: function(cl, value = null){
+        if(cl != null){
+            return $('.'+ cl).append(`
+                <div class="col s12 m12 l12">
+                    <div class="card card-panel card-transparent p f-12 m-t-lg">
+                        <div class="card-content">
+                            <span class="card-title p f-12 ">No se encontraron resultados</span>
+                            <div class="input-field col m12 s12">
+                            <input type="hidden" name="${value}" id="${value}" style="display:none"/>
+                        </div>
+                        </div>
+                    </div>
+                </div>`);
+        }
+    },
+    formatDate: function(date){
+        if(date == null){
+            return "no registra";
+        }else{
+            return moment(date).format('LL');
+        }
+    },
+    addTalentToArticulation: function(user){
+        filter_articulations.emptyResult('alert-empty-talents');
+        if (filter_articulations.noRepeat(user) == false) {
+            filter_articulations.talentAssociated();
+        } else {
+            filter_articulations.emptyResult('talent-empty');
+            filter_articulations.printTalentoInTable(user);
+        }
+        $('#filter_talents_advanced_modal').closeModal();
+    },
+    noRepeat: function(id) {
+        let user = id;
+        let retorno = true;
+        let a = document.getElementsByName("talents[]");
+        for (x = 0; x < a.length; x ++) {
+            if (a[x].value == user) {
+                retorno = false;
+                break;
+            }
+        }
+        return retorno;
+    },
+    talentAssociated: function() {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            type: 'warning',
+            title: 'El talento ya se encuentra asociado a la articulación!'
+        });
+    },
+    printTalentoInTable: function(id) {
+        $.ajax({
+            dataType: 'json',
+            type: 'get',
+            url: '/usuario/talento/consultarTalentoPorId/' + id
+        }).done(function (response) {
+            let fila = filter_articulations.prepareTableRowTalent(response);
+            $('.alert-response-talents').append(fila);
+        });
+    },
+    printTalentoInTable: function(id) {
+        $.ajax({
+            dataType: 'json',
+            type: 'get',
+            url: '/usuario/talento/consultarTalentoPorId/' + id
+        }).done(function (response) {
+            let fila = filter_articulations.prepareTableRowTalent(response);
+            $('.alert-response-talents').append(fila);
+        });
+    },
+    prepareTableRowTalent: function(response) {
+        let data = response;
+        let fila =`<div class="row card-talent`+data.talento.id+`">
+                        <div class="col s12 m12 l12">
+                            <div class="card card-panel server-card">
+                                <div class="card-content">
+                                    <span class="card-title">${data.talento.documento} - ${data.talento.talento}</span>
+                                    <input type="hidden" id="talents" name="talents[]" value="${data.talento.id}"/>
+                                </div>
+                                <div class="card-action">
+                                    <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuario/usuarios/${data.talento.documento}"><i class="material-icons left"> link</i>Ver más</a>
+                                    <a onclick="filter_articulations.deleteTalent( ${data.talento.id});" class="waves-effect waves-red btn-flat m-b-xs red-text"><i class="material-icons left"> delete_sweep</i>Eliminar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+        return fila;
+    },
+    deleteTalent:function(id){
+        $('.card-talent'+ id).remove();
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+            type: 'success',
+            title: 'Talento eliminado.'
+        });
+    },
+    queryTalentos: function(){
+        $('#datatable_interlocutor_talents').dataTable().fnDestroy();
+        $('#datatable_interlocutor_talents').DataTable({
+            language: {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "/usuario/talento/getTalentosDeTecnoparque/",
+                type: "get"
+            },
+            columns: [
+                {
+                    data: 'documento',
+                    name: 'documento'
+                }, {
+                    data: 'talento',
+                    name: 'talento'
+                }, {
+                    data: 'add_talents_articulation',
+                    name: 'add_talents_articulation',
+                    orderable: false
+                },
+            ]
+        });
+        $('#filter_talents_advanced_modal').openModal();
+    },
+    messageArticulation: function(data, action, title) {
+        if (data.status_code == 201) {
+            Swal.fire({
+                title: title,
+                text: "La articulación ha sido "+action+" satisfactoriamente",
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+            });
+            setTimeout(function () {
+                window.location.replace(data.url);
+            }, 1000);
+        }
+        else {
+            Swal.fire({
+                title: 'La articulación no se ha '+action+', por favor inténtalo de nuevo',
+                type: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok'
+            })
+        }
+    },
+    valueArticulationType: function (){
+        $("#articulation_type").on('change', function () {
+                let articulaciontype = $(this).val();
+                if(articulaciontype !=null || articulaciontype != ''){
+                    $.ajax({
+                        dataType: 'json',
+                        type: 'get',
+                        url: `/tipoarticulaciones/${articulaciontype}/tiposubarticulaciones`
+                    }).done(function (response) {
+                        $("#articulation_subtype").empty();
+                        $('#articulation_subtype').append('<option value="">Seleccione el tipo de subarticulación</option>');
+                        $.each(response.data, function(i, element) {
+                                $('#articulation_subtype').append(`<option  value="${element.id}">${element.name}</option>`);
+                        });
+                        $('#articulation_subtype').material_select();
+
+                    });
+                }
+        });
+    },
+    updateTalentsParticipants: function(form, data, url) {
+        $.ajax({
+            type: form.attr('method'),
+            url: url,
+            data: data,
+            cache: false,
+            contentType: false,
+            dataType: 'json',
+            processData: false,
+            success: function (response) {
+                $('button[type="submit"]').removeAttr('disabled');
+                $('.error').hide();
+                printErrorsForm(response.data);
+                filter_articulations.messageArticulation(response.data, 'actualizado', 'Modificación Exitosa');
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                Swal.fire({
+                    title: 'Error, vuelve a intentarlo',
+                    html: "Error: " + textStatus,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok',
+                });
+            }
+        });
+    },
+    ajaxSendFormArticulationClosing: function(form, data, url) {
+        $.ajax({
+            type: form.attr('method'),
+            url: url,
+            data: data,
+            cache: false,
+            contentType: false,
+            dataType: 'json',
+            processData: false,
+            success: function (response) {
+                $('button[type="submit"]').removeAttr('disabled');
+                $('.error').hide();
+                printErrorsForm(response.data);
+                filter_articulations.messageArticulation(response.data, 'registro guardado', 'registro guardado');
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                Swal.fire({
+                    title: 'Error, vuelve a intentarlo',
+                    html: "Error: " + textStatus,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok',
+                });
+            }
+        });
+    },
+    destroyArticulation: function(id){
+        Swal.fire({
+            title: '¿Estas seguro de eliminar esta  articulación?',
+            text: "Recuerde que si lo elimina no lo podrá recuperar.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'si, eliminar',
+            cancelButtonText: 'No, cancelar',
+        }).then((result) => {
+            if (result.value) {
+                let token = $("meta[name='csrf-token']").attr("content");
+                $.ajax({
+                    url: `${host_url}/etapa-articulaciones/articulaciones/${id}`,
+                    type: 'DELETE',
+                    data: {
+                        "id": id,
+                        "_token": token,
+                    },
+                    success: function (data){
+                        if(!data.fail){
+                            Swal.fire(
+                                'Eliminado!',
+                                'La articulación ha sido eliminado satisfactoriamente.',
+                                'success'
+                            );
+                            location.href = data.redirect_url;
+                        }else{
+                            Swal.fire(
+                                'Error!',
+                                'La etapa de articulación no se ha eliminado.',
+                                'warining'
+                            );
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        Swal.fire({
+                            title: 'Error, vuelve a intentarlo',
+                            html: "Error: " + textStatus,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok',
+                        });
+                    }
+                });
+            }
+        })
+    }
+}
+
+$(document).on('submit', 'form#talents-form', function (event) {
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    const form = $(this);
+    const data = new FormData($(this)[0]);
+    const url = form.attr("action");
+    filter_articulations.updateTalentsParticipants(form, data, url);
+});
+
+$(document).on('submit', 'form#articulation-form-closing', function (event) {
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    filter_articulations.ajaxSendFormArticulationClosing(form, data, url);
+});
+
+$(document).ready(function() {
     let filter_state_type_art = $('#filter_state_type_art').val();
     if(filter_state_type_art == '' || filter_state_type_art == null){
         typeArticulacion.fillDatatatablesTypeArt(filter_state_type_art = null);
