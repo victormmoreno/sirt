@@ -48,7 +48,6 @@ class IndicadorController extends Controller
       ->get();
       $nodos = [request()->user()->getNodoUser()];
     }
-    // dd($expertos);
     $metas = $this->nodoRepository->consultarMetasDeTecnoparque($nodos)->whereYear('anho', Carbon::now()->format('Y'))->get();
     $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl6Obtenido()])->whereIn('nodos.id', $nodos)->get();
     $pbts_trl7_8 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl7Obtenido(), Proyecto::IsTrl8Obtenido()])->whereIn('nodos.id', $nodos)->get();
@@ -67,30 +66,33 @@ class IndicadorController extends Controller
 
     public function retornarTodasLasMetasArray($metas, $trl6, $trl7_8, $activos)
     {
-        foreach ($metas as $meta) {
-        $cantidad_trl6 = $trl6->where('nodo', $meta->nodo_id)->first();
-        $cantidad_trl7_8 = $trl7_8->where('nodo', $meta->nodo_id)->first();
-        $cantidad_activos = $activos->where('nodo_id', $meta->nodo_id)->first();
-        if ($cantidad_trl6 == null) {
-            $meta['trl6_obtenido'] = 0;
-        } else {
-            $meta['trl6_obtenido'] = $cantidad_trl6->cantidad;
+        if ($metas != null) {
+            foreach ($metas as $meta) {
+                $cantidad_trl6 = $trl6->where('nodo', $meta->nodo_id)->first();
+                $cantidad_trl7_8 = $trl7_8->where('nodo', $meta->nodo_id)->first();
+                $cantidad_activos = $activos->where('nodo_id', $meta->nodo_id)->first();
+                if ($cantidad_trl6 == null) {
+                    $meta['trl6_obtenido'] = 0;
+                } else {
+                    $meta['trl6_obtenido'] = $cantidad_trl6->cantidad;
+                }
+    
+                if ($cantidad_trl7_8 == null) {
+                    $meta['trl7_8_obtenido'] = 0;
+                } else {
+                    $meta['trl7_8_obtenido'] = $cantidad_trl7_8->cantidad;
+                }
+    
+                if ($cantidad_activos == null) {
+                    $meta['activos'] = 0;
+                } else {
+                    $meta['activos'] = $cantidad_activos->cantidad;
+                }
+    
+                $meta['progreso_total'] = round(100*($meta->trl7_8_obtenido+$meta->trl6_obtenido)/($meta->trl6+$meta->trl7_trl8), 2);
+            }
         }
-
-        if ($cantidad_trl7_8 == null) {
-            $meta['trl7_8_obtenido'] = 0;
-        } else {
-            $meta['trl7_8_obtenido'] = $cantidad_trl7_8->cantidad;
-        }
-
-        if ($cantidad_activos == null) {
-            $meta['activos'] = 0;
-        } else {
-            $meta['activos'] = $cantidad_activos->cantidad;
-        }
-
-        $meta['progreso_total'] = round(100*($meta->trl7_8_obtenido+$meta->trl6_obtenido)/($meta->trl6+$meta->trl7_trl8), 2);
-        }
+        return $metas;
     }
 
     public function retornarTodasLasMetasArticulacionArray($metas, $values)
