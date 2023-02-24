@@ -99,7 +99,7 @@ var usoinfraestructuraIndex = {
                     $('#filter_gestor').empty();
                     $('#filter_gestor').append('<option value="all">todos</option>');
                     $.each(data.gestores, function(i, e) {
-                        $('#filter_gestor').append('<option  value="'+i+'">'+e+'</option>');
+                        $('#filter_gestor').append('<option  value="'+i.id+'">'+e.nombre+'</option>');
                     })
                     $('#filter_gestor').material_select();
                 },
