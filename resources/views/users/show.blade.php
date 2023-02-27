@@ -296,19 +296,6 @@
                                                     </div>
                                                 </div>
                                             @endif
-                                            @if($user->isUserArticulador())
-                                            <span class="orange-text">Información {{App\User::IsArticulador()}}</span>
-                                                <div class="server-load row">
-                                                    <div class="server-stat col s12 m4 l4">
-                                                        <p>{{$user->present()->userArticuladorName()}}</p>
-                                                        <span>Nodo</span>
-                                                    </div>
-                                                    <div class="server-stat col s12 m4 l4">
-                                                        <p>{{$user->present()->userArticuladorHonorarios()}}</p>
-                                                        <span>Honorario</span>
-                                                    </div>
-                                                </div>
-                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -321,3 +308,4 @@
     </div>
 </main>
 @endsection
+
