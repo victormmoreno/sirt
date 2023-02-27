@@ -32,9 +32,9 @@ class ArticulationMigrationSeeder extends Seeder
                 $this->validateArticulationStageType($articulationStage, $item);
                 $articulation = $this->updateOrCreateArticulation($articulationStage, $item);
 
-                // $this->syncTalentsParticipants($articulation, $item);
-                // $this->updateOrCreateTrazability($articulation, $item);
-                // $this->updateArchivesArticulation($articulationStage, $articulation, $item);
+                $this->syncTalentsParticipants($articulation, $item);
+                $this->updateOrCreateTrazability($articulation, $item);
+                $this->updateArchivesArticulation($articulationStage, $articulation, $item);
                 $this->updateAsesorablesArticulation($articulation, $item);
             });
         }

@@ -12,12 +12,7 @@
         </tr>
     </thead>
     <tbody>
-        @if ($metas->count() == 0)
-            <tr>
-                <td colspan="6" class="center">No hay metas registradas para el año actual.</td>
-            </tr>
-        @else
-            @foreach ($metas as $meta)
+            @forelse ($metas as $meta)
                 <tr>
                     <td>{{$meta->nodo}}</td>
                     <td>{{$meta->trl6 + $meta->trl7_trl8}}</td>
@@ -28,8 +23,11 @@
                     <td class="green lighten-5">{{$meta->trl7_8_obtenido}}</td>
                     <td class="green lighten-5">{{$meta->trl7_8_obtenido + $meta->trl6_obtenido}} <b>({{$meta->progreso_total_proyectos}}%)</b></td>
                 </tr>
-            @endforeach
-        @endif
+            @empty
+                <tr>
+                    <td colspan="6" class="center">No hay metas registradas para el año actual.</td>
+                </tr>
+            @endforelse
     </tbody>
     @if ($metas->count() != 0)
         <tfoot class="centered">

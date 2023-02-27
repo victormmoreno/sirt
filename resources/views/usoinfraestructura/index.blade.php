@@ -97,8 +97,6 @@
                                     <th width="10%">Tipo Asesoria</th>
                                     <th width="35%">Nombre</th>
                                     <th width="10%">Fase</th>
-                                    <th width="5%">Asesoría Directa</th>
-                                    <th width="5%">Asesoría Indirecta</th>
                                     <th width="5%">Detalles</th>
                                 </thead>
                             </table>

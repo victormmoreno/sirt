@@ -20,7 +20,7 @@ class UsoInfraestructuraExport extends FatherExport
         $this->request = $request;
         $this->query = $query;
         $this->setCount($this->query->count() + 1);
-        $this->setRangeHeadingCell('A1:K1');
+        $this->setRangeHeadingCell('A1:I1');
     }
 
     public function registerEvents(): array

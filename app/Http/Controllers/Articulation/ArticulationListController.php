@@ -235,8 +235,10 @@ class ArticulationListController extends Controller
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'fail' => true,
-                'errors' => $validator->errors(),
+                'data' => [
+                    'fail' => true,
+                    'errors' => $validator->errors(),
+                ]
             ]);
         } else {
             $response = $this->articulationRespository->updateTalentsParticipants($request, $articulation);

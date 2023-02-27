@@ -434,7 +434,7 @@ class ArticulationRepository extends Repository
         ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
         ->where(function($query) use ($field_date, $year)  {
             if(isset($field_date) && $field_date !=null) {
-                $query->whereYear($field_date, $year);
+                $query->where($field_date, $year);
             }
         })
         ->whereIn('fases.nombre', $phase)

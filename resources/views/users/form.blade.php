@@ -1,5 +1,7 @@
 
 {!! csrf_field() !!}
+
+
 <div class="row">
     <div class="col s12 m4 l3">
         <blockquote>
@@ -8,7 +10,7 @@
                     <span class="title"><b>Configuración principal</b></span>
                     <p>Esta información aparecerá en el perfil del usuario</p>
                 </li>
-                @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsAdministrador() ) )
+                @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador() )
                 <li class="collection-item">
                     <span class="title"><b>Dinamizadores</b></span>
                     <p>Sólo se permite un dinamizador por nodo, tenga cuidado si desea asignar un dinamizador a un nodo que ya lo tiene, este último perderá ese rol</p>
@@ -51,7 +53,7 @@
                 <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnodogestor" name="txtnodogestor" onchange="linea.getSelectLineaForNodo()" style="width: 100%" tabindex="-1">
 
 
-                        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
+                        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
                             <option value="">Seleccione Nodo</option>
                             @foreach($nodos as $id => $nodo)
                                 @if(isset($user->dinamizador->nodo->id) && (collect($user->roles)->contains('name',App\User::IsExperto()) || collect($user->roles)->contains('name',App\User::IsArticulador())))
@@ -62,7 +64,7 @@
                             @endforeach
                         @endif
 
-                        @if(isset($user->gestor->nodo->id) && session()->has('login_role') &&  (collect($user->roles)->contains('name',App\User::IsGestor()) || collect($user->roles)->contains('name',App\User::IsArticulador())))
+                        @if(isset($user->gestor->nodo->id) && session()->has('login_role') &&  (collect($user->roles)->contains('name',App\User::IsExperto()) || collect($user->roles)->contains('name',App\User::IsArticulador())))
                         <option value="{{$user->gestor->nodo->id}}" selected="">Tecnoparque Nodo {{$user->gestor->nodo->entidad->nombre}}</option>
 
                         @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id))
@@ -105,7 +107,7 @@
            <div class="input-field col s12 m12 l12">
                 <select class="js-states browser-default select2 select2-hidden-accessible" id="txtnodoinfocenter" name="txtnodoinfocenter"  style="width: 100%" tabindex="-1">
 
-                        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
+                        @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
                             <option value="">Seleccione Nodo</option>
                             @foreach($nodos as $id => $nodo)
                                 @if(isset($user->infocenter) && collect($user->roles)->contains('name',App\User::IsInfocenter()))
@@ -135,7 +137,7 @@
         <div id="ingreso">
             <div class="input-field col s12 m12 l12">
                 <select class="js-states browser-default select2 select2-hidden-accessible"  id="txtnodoingreso" name="txtnodoingreso"  style="width: 100%" tabindex="-1">
-                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
+                    @if(session()->has('login_role') && session()->get('login_role') == App\User::IsAdministrador())
                         <option value="">Seleccione Nodo</option>
                         @foreach($nodos as $id => $nodo)
                             @if(isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name',App\User::IsIngreso()))
@@ -164,9 +166,13 @@
         @include('users.forms.infopersonal')
         @include('users.forms.estudios')
 
-        @if(  isset($user->talento->tipotalento) && collect($user->roles)->contains('name',App\User::IsTalento()) && $view == 'edit' && session()->has('login_role') && session()->get('login_role') != App\User::IsGestor())
+        @if(  isset($user->talento->tipotalento) && collect($user->roles)->contains('name',App\User::IsTalento()) && $view == 'edit' && session()->has('login_role') && session()->get('login_role') != App\User::IsExperto())
+
+
             @include('users.forms.tipo_talento')
-        @elseif(session()->get('login_role') == App\User::IsGestor())
+
+
+        @elseif(session()->get('login_role') == App\User::IsExperto())
 
             @include('users.forms.tipo_talento')
 

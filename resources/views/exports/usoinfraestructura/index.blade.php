@@ -6,8 +6,6 @@
             <th >Tipo Asesoria</th>
             <th >Nombre</th>
             <th >Fase</th>
-            <th >Total horas Asesoria Directa</th>
-            <th >Total horas Asesoria Indirecta</th>
             <th >Asesor(a)</th>
             <th >Talentos</th>
             <th >Equipos</th>
@@ -31,12 +29,6 @@
             </td>
             <td>
                 {{$uso->fase}}
-            </td>
-            <td>
-                {{$uso->aseseria_directa}}
-            </td>
-            <td>
-                {{$uso->asesoria_indirecta}}
             </td>
             <td>
                 {{$uso->asesores}}
