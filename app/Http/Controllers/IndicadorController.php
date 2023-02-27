@@ -3,19 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\{User, Models\Nodo, Models\Proyecto};
+use App\{User, Models\Nodo, Models\Proyecto, Models\Articulation};
 use Repositories\Repository\NodoRepository;
 use App\Repositories\Repository\ProyectoRepository;
+use App\Repositories\Repository\Articulation\ArticulationRepository;
 use Carbon\Carbon;
 
 class IndicadorController extends Controller
 {
   private $nodoRepository;
   private $proyectoRepository;
-  public function __construct(NodoRepository $nodoRepository, ProyectoRepository $proyectoRepository)
+  private $articulationRepository;
+  public function __construct(NodoRepository $nodoRepository, ProyectoRepository $proyectoRepository, ArticulationRepository $articulationRepository)
   {
       $this->nodoRepository = $nodoRepository;
       $this->proyectoRepository = $proyectoRepository;
+      $this->articulationRepository = $articulationRepository;
   }
 
   public function nodo_pagination(Request $request)
@@ -48,18 +51,25 @@ class IndicadorController extends Controller
       ->get();
       $nodos = [request()->user()->getNodoUser()];
     }
-    $metas = $this->nodoRepository->consultarMetasDeTecnoparque($nodos)->whereYear('anho', Carbon::now()->format('Y'))->get();
+    $metas = $this->nodoRepository->consultarMetasDeTecnoparque($nodos)->where('anho', $year_now)->get();
     $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl6Obtenido()])->whereIn('nodos.id', $nodos)->get();
     $pbts_trl7_8 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl7Obtenido(), Proyecto::IsTrl8Obtenido()])->whereIn('nodos.id', $nodos)->get();
     $activos = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->select('nodo_id')->selectRaw('count(id) as cantidad')->whereHas('fase', function ($query) {
       $query->whereIn('nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
     })->whereIn('nodo_id', $nodos)->groupBy('nodo_id')->get();
-    $metas = $this->retornarTodasLasMetasArray($metas, $pbts_trl6, $pbts_trl7_8, $activos);
+    $articulations_start = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsInicio()])->whereIn('nodos.id', $nodos)->get();
+    $articulations_execution = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsEjecucion()])->whereIn('nodos.id', $nodos)->get();
+    $articulations_closing = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsCierre()])->whereIn('nodos.id', $nodos)->get();
+    $articulations_finish = $this->articulationRepository->articulationsForPhase('fases.nombre', 'articulations.end_date', $year_now, [Articulation::IsFinalizado()])->whereIn('nodos.id', $nodos)->get();
+
+    $metasProyectos = $this->retornarTodasLasMetasArray($metas, $pbts_trl6, $pbts_trl7_8, $activos);
+    $metasArticulaciones = $this->retornarTodasLasMetasArticulacionArray($metas, ['start' => $articulations_start, 'execution' => $articulations_execution, 'closing' => $articulations_closing, 'finish' => $articulations_finish]);
     $nodos = Nodo::SelectNodo()->whereIn('nodos.id', $nodos)->get();
     return view('indicadores.index', [
       'nodos' => $nodos,
       'nodos_g' => $nodos,
-      'metas' => $metas,
+      'metas' => $metasProyectos,
+      'metasArticulaciones' => $metasArticulaciones,
       'expertos' => $expertos
     ]);
   }
@@ -89,7 +99,7 @@ class IndicadorController extends Controller
                     $meta['activos'] = $cantidad_activos->cantidad;
                 }
     
-                $meta['progreso_total'] = round(100*($meta->trl7_8_obtenido+$meta->trl6_obtenido)/($meta->trl6+$meta->trl7_trl8), 2);
+                $meta['progreso_total_proyectos'] = round(100*($meta->trl7_8_obtenido+$meta->trl6_obtenido)/($meta->trl6+$meta->trl7_trl8), 2);
             }
         }
         return $metas;
