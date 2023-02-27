@@ -65,14 +65,6 @@ var usoinfraestructuraIndex = {
                     name: 'fase',
                     width: '10%'
                 },  {
-                    data: 'asesoria_directa',
-                    name: 'asesoria_directa',
-                    width: '5%'
-                },  {
-                    data: 'asesoria_indirecta',
-                    name: 'asesoria_indirecta',
-                    width: '5%'
-                },  {
                     data: 'detail',
                     name: 'detail',
                     width: '5%',
