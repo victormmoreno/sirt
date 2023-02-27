@@ -313,10 +313,30 @@ class ArticulationPolicy
      */
     public function delete(User $user, Articulation $articulation)
     {
-        return (bool) $user->hasAnyRole([User::IsArticulador()])
-                && (session()->has('login_role') && session()->get('login_role') == User::IsAdministrador())
-                && $articulation->phase_id != Fase::IsFinalizado() &&
+        return (bool)(
+            session()->has('login_role') && (
+                session()->get('login_role') == User::IsAdministrador()
+            )
+            && $articulation->phase_id != Fase::IsFinalizado() &&
             (isset($articulation->articulationstage) && $articulation->articulationstage->status != ArticulationStage::STATUS_CLOSE) &&
-            (($articulation->phase_id != Fase::IsFinalizado()&& optional($articulation->end_date)->format('Y') > 2022 || is_null($articulation->end_date)));
+            (($articulation->phase_id != Fase::IsFinalizado()&& optional($articulation->end_date)->format('Y') > 2022 || is_null($articulation->end_date))));
+    }
+
+    /**
+     * Determina quienes pueden generar documentos de un proyecto
+     *
+     * @param App\User $user
+     * @param App\Models\Articulation $articulation
+     * @return bool
+    */
+    public function generateDocumentAdvisory(User $user, Articulation $articulation)
+    {
+        return session()->get('login_role') == $user->IsAdministrador() ||
+        (
+            session()->get('login_role') == $user->IsArticulador() &&
+            $articulation->articulationstage->node_id == auth()->user()->articulador->nodo_id &&
+            $articulation->phase_id == Fase::IsEjecucion()
+        );
+
     }
 }

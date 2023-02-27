@@ -64,12 +64,6 @@ trait UsersTrait
         return self::IS_EXPERTO;
     }
 
-    public static function IsExperto()
-    {
-        return self::IS_EXPERTO;
-    }
-
-
     public static function IsInfocenter()
     {
         return self::IS_INFOCENTER;

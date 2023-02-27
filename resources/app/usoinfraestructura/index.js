@@ -65,14 +65,6 @@ var usoinfraestructuraIndex = {
                     name: 'fase',
                     width: '10%'
                 },  {
-                    data: 'asesoria_directa',
-                    name: 'asesoria_directa',
-                    width: '5%'
-                },  {
-                    data: 'asesoria_indirecta',
-                    name: 'asesoria_indirecta',
-                    width: '5%'
-                },  {
                     data: 'detail',
                     name: 'detail',
                     width: '5%',
@@ -99,7 +91,7 @@ var usoinfraestructuraIndex = {
                     $('#filter_gestor').empty();
                     $('#filter_gestor').append('<option value="all">todos</option>');
                     $.each(data.gestores, function(i, e) {
-                        $('#filter_gestor').append('<option  value="'+i+'">'+e+'</option>');
+                        $('#filter_gestor').append('<option  value="'+i.id+'">'+e.nombre+'</option>');
                     })
                     $('#filter_gestor').material_select();
                 },

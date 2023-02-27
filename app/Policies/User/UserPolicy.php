@@ -169,7 +169,6 @@ class UserPolicy
             );
     }
 
-
     /**
      * Determine whether the user can export list users
      * @return boolean

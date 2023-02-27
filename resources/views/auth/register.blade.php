@@ -983,12 +983,9 @@
                     user.getOtraOcupacion();
                     user.checkedTypeUser();
                     tipoTalento.getSelectTipoTalento();
-
                     $('.selectMultipe').select2({
                         language: "es",
                     });
-
-
                 });
             </script>
     @endpush
