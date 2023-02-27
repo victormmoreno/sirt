@@ -957,6 +957,9 @@ class UserRepository
     {
         if(
             ($user->has('dinamizador') && isset($user->dinamizador)) ||
+            ($user->isUserActivador()) ||
+            ($user->has('articulador') && isset($user->articulador)) ||
+            ($user->has('apoyotecnico') && isset($user->apoyotecnico)) ||
             ($user->has('gestor') && isset($user->gestor)) ||
             ($user->has('infocenter') && isset($user->infocenter)) ||
             ($user->has('ingreso') && isset($user->ingreso)) ||
