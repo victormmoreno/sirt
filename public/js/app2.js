@@ -6978,14 +6978,6 @@ var usoinfraestructuraIndex = {
                     name: 'fase',
                     width: '10%'
                 },  {
-                    data: 'asesoria_directa',
-                    name: 'asesoria_directa',
-                    width: '5%'
-                },  {
-                    data: 'asesoria_indirecta',
-                    name: 'asesoria_indirecta',
-                    width: '5%'
-                },  {
                     data: 'detail',
                     name: 'detail',
                     width: '5%',
@@ -7012,7 +7004,7 @@ var usoinfraestructuraIndex = {
                     $('#filter_gestor').empty();
                     $('#filter_gestor').append('<option value="all">todos</option>');
                     $.each(data.gestores, function(i, e) {
-                        $('#filter_gestor').append('<option  value="'+i+'">'+e+'</option>');
+                        $('#filter_gestor').append('<option  value="'+i.id+'">'+e.nombre+'</option>');
                     })
                     $('#filter_gestor').material_select();
                 },
@@ -9264,7 +9256,7 @@ const articulationStage = {
                             <div class="card-content">
                                 <span class="card-title p f-12 ">${user.documento} - ${user.nombres} ${user.apellidos}</span>
                                 <div class="input-field col m12 s12">
-                                    <input type="hidden" name="talent" id="talent" style="display:none" value="${user.id}"/>
+                                    <input type="hidden" name="talent" id="talent" style="display:none" value="${user.user_id}"/>
                                 </div>
                                 <p class="position-top-right p f-12 mail-date hide-on-med-and-down"> Acceso al sistema: `+ userSearch.state(user.estado) +`</p>
                                 <div class="mailbox-text p f-12 hide-on-med-and-down">
@@ -10325,16 +10317,16 @@ const filter_articulations = {
     },
     prepareTableRowTalent: function(response) {
         let data = response;
-        let fila =`<div class="row card-talent`+data.talento.id+`">
+        let fila =`<div class="row card-talent`+data.talento.user_id+`">
                         <div class="col s12 m12 l12">
                             <div class="card card-panel server-card">
                                 <div class="card-content">
                                     <span class="card-title">${data.talento.documento} - ${data.talento.talento}</span>
-                                    <input type="hidden" id="talents" name="talents[]" value="${data.talento.id}"/>
+                                    <input type="hidden" id="talents" name="talents[]" value="${data.talento.user_id}"/>
                                 </div>
                                 <div class="card-action">
                                     <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuario/usuarios/${data.talento.documento}"><i class="material-icons left"> link</i>Ver más</a>
-                                    <a onclick="filter_articulations.deleteTalent( ${data.talento.id});" class="waves-effect waves-red btn-flat m-b-xs red-text"><i class="material-icons left"> delete_sweep</i>Eliminar</a>
+                                    <a onclick="filter_articulations.deleteTalent( ${data.talento.user_id});" class="waves-effect waves-red btn-flat m-b-xs red-text"><i class="material-icons left"> delete_sweep</i>Eliminar</a>
                                 </div>
                             </div>
                         </div>

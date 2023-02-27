@@ -380,16 +380,16 @@ const filter_articulations = {
     },
     prepareTableRowTalent: function(response) {
         let data = response;
-        let fila =`<div class="row card-talent`+data.talento.id+`">
+        let fila =`<div class="row card-talent`+data.talento.user_id+`">
                         <div class="col s12 m12 l12">
                             <div class="card card-panel server-card">
                                 <div class="card-content">
                                     <span class="card-title">${data.talento.documento} - ${data.talento.talento}</span>
-                                    <input type="hidden" id="talents" name="talents[]" value="${data.talento.id}"/>
+                                    <input type="hidden" id="talents" name="talents[]" value="${data.talento.user_id}"/>
                                 </div>
                                 <div class="card-action">
                                     <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuario/usuarios/${data.talento.documento}"><i class="material-icons left"> link</i>Ver más</a>
-                                    <a onclick="filter_articulations.deleteTalent( ${data.talento.id});" class="waves-effect waves-red btn-flat m-b-xs red-text"><i class="material-icons left"> delete_sweep</i>Eliminar</a>
+                                    <a onclick="filter_articulations.deleteTalent( ${data.talento.user_id});" class="waves-effect waves-red btn-flat m-b-xs red-text"><i class="material-icons left"> delete_sweep</i>Eliminar</a>
                                 </div>
                             </div>
                         </div>

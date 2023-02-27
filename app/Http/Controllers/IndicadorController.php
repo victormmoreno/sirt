@@ -21,41 +21,41 @@ class IndicadorController extends Controller
       $this->articulationRepository = $articulationRepository;
   }
 
-  public function nodo_pagination(Request $request)
-  {
-      $nodos_g = Nodo::SelectNodo()->paginate(6);
-      return view('indicadores.componentes.nodo_pagination', compact('nodos_g'))->render();
-  }
+public function nodo_pagination(Request $request)
+{
+    $nodos_g = Nodo::SelectNodo()->paginate(6);
+    return view('indicadores.componentes.nodo_pagination', compact('nodos_g'))->render();
+}
 
-  public function index()
-  {
+public function index()
+{
     $year_now = Carbon::now()->format('Y');
     $expertos = null;
 
     if(!request()->user()->can('index_indicadores', Illuminate\Database\Eloquent\Model::class)) {
-      alert('No autorizado', 'No puedes acceder a los indicadores', 'error')->showConfirmButton('Ok', '#3085d6');
-      return back();
+    alert('No autorizado', 'No puedes acceder a los indicadores', 'error')->showConfirmButton('Ok', '#3085d6');
+    return back();
     }
     if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsActivador()) {
-      $nodos_temp = Nodo::SelectNodo()->get()->toArray();
-      foreach($nodos_temp as $nodo) {
+    $nodos_temp = Nodo::SelectNodo()->get()->toArray();
+    foreach($nodos_temp as $nodo) {
         $nodos[] = $nodo['id'];
-      }
+    }
     } else {
-      $expertos = User::with(['gestor'])
-      ->role(User::IsExperto())
-      ->nodoUser(User::IsExperto(), request()->user()->getNodoUser())
-      ->stateDeletedAt('si')
-      // ->yearActividad(User::IsExperto(), $request->filter_year, $nodo)
-      ->orderBy('users.created_at', 'desc')
-      ->get();
-      $nodos = [request()->user()->getNodoUser()];
+    $expertos = User::with(['gestor'])
+    ->role(User::IsExperto())
+    ->nodoUser(User::IsExperto(), request()->user()->getNodoUser())
+    ->stateDeletedAt('si')
+    // ->yearActividad(User::IsExperto(), $request->filter_year, $nodo)
+    ->orderBy('users.created_at', 'desc')
+    ->get();
+    $nodos = [request()->user()->getNodoUser()];
     }
     $metas = $this->nodoRepository->consultarMetasDeTecnoparque($nodos)->where('anho', $year_now)->get();
     $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl6Obtenido()])->whereIn('nodos.id', $nodos)->get();
     $pbts_trl7_8 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl7Obtenido(), Proyecto::IsTrl8Obtenido()])->whereIn('nodos.id', $nodos)->get();
     $activos = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->select('nodo_id')->selectRaw('count(id) as cantidad')->whereHas('fase', function ($query) {
-      $query->whereIn('nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
+    $query->whereIn('nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
     })->whereIn('nodo_id', $nodos)->groupBy('nodo_id')->get();
     $articulations_start = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsInicio()])->whereIn('nodos.id', $nodos)->get();
     $articulations_execution = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsEjecucion()])->whereIn('nodos.id', $nodos)->get();
@@ -72,7 +72,7 @@ class IndicadorController extends Controller
       'metasArticulaciones' => $metasArticulaciones,
       'expertos' => $expertos
     ]);
-  }
+}
 
     public function retornarTodasLasMetasArray($metas, $trl6, $trl7_8, $activos)
     {
@@ -118,38 +118,31 @@ class IndicadorController extends Controller
             } else {
                 $meta['articulation_start'] = $cantidad_inicio->cantidad;
             }
-
             if ($cantidad_ejecucion == null) {
                 $meta['articulation_execution'] = 0;
             } else {
                 $meta['articulation_execution'] = $cantidad_ejecucion->cantidad;
             }
-
             if ($cantidad_cierre == null) {
                 $meta['articulation_closing'] = 0;
             } else {
                 $meta['articulation_closing'] = $cantidad_cierre->cantidad;
             }
-
             if ($cantidad_finalizado == null) {
                 $meta['articulation_finish'] = 0;
             } else {
                 $meta['articulation_finish'] = $cantidad_finalizado->cantidad;
             }
-
             if(isset($meta->articulation_finish) && $meta->articulation_finish != 0){
                 $meta['progreso_total_articulaciones'] = round(100*($meta->articulation_finish/$meta->articulaciones), 2);
             }else{
                 $meta['progreso_total_articulaciones'] = round(0, 2);
             }
-
         }
         return $metas;
     }
-
     public function form_import_metas()
     {
         return view('indicadores.register_metas');
     }
-
 }
