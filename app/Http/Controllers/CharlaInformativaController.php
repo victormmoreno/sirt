@@ -52,7 +52,7 @@ class CharlaInformativaController extends Controller
     public function detallesDeUnaCharlaInformativa($id)
     {  
         if (request()->ajax()) {
-            $charla = $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id)->toArray();
+            $charla = $this->charlaInformativaRepository->consultarInformacionDeUnaCharlaInformativaRepository($id);
             if(!request()->user()->can('show', $charla)) {
                 alert('No autorizado', 'No puedes ver charlas informativas', 'error')->showConfirmButton('Ok', '#3085d6');
                 return back();

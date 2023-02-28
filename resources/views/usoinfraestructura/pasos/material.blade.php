@@ -126,9 +126,7 @@
                         create
                     </i>
 
-                        <textarea class="materialize-textarea" id="txtcompromisos" length="2400" name="txtcompromisos">
-                            {{isset($usoinfraestructura->compromisos) ? $usoinfraestructura->compromisos: '' }}
-                        </textarea>
+                        <textarea class="materialize-textarea" id="txtcompromisos" length="2400" name="txtcompromisos">{{isset($usoinfraestructura->compromisos) ? $usoinfraestructura->compromisos: '' }}</textarea>
 
                     <label for="txtcompromisos">
                         Próximos Compromisos <span class="red-text">*</span>

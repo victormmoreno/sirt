@@ -296,7 +296,7 @@ const articulationStage = {
                             <div class="card-content">
                                 <span class="card-title p f-12 ">${user.documento} - ${user.nombres} ${user.apellidos}</span>
                                 <div class="input-field col m12 s12">
-                                    <input type="hidden" name="talent" id="talent" style="display:none" value="${user.user_id}"/>
+                                    <input type="hidden" name="talent" id="talent" style="display:none" value="${user.id}"/>
                                 </div>
                                 <p class="position-top-right p f-12 mail-date hide-on-med-and-down"> Acceso al sistema: `+ userSearch.state(user.estado) +`</p>
                                 <div class="mailbox-text p f-12 hide-on-med-and-down">

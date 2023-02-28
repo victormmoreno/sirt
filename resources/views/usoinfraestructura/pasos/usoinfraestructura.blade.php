@@ -178,12 +178,9 @@
                 <div class="input-field col s12 m12 l12">
                     <i class="material-icons prefix">create</i>
                     @if(isset($usoinfraestructura->descripcion))
-                        <textarea class="materialize-textarea" id="txtdescripcion" length="2000" name="txtdescripcion">
-                                {{$usoinfraestructura->descripcion}}
-                            </textarea>
+                        <textarea class="materialize-textarea" id="txtdescripcion" length="2000" name="txtdescripcion">{{$usoinfraestructura->descripcion}}</textarea>
                     @else
-                        <textarea class="materialize-textarea" id="txtdescripcion" length="2000" name="txtdescripcion">
-                            </textarea>
+                        <textarea class="materialize-textarea" id="txtdescripcion" length="2000" name="txtdescripcion"></textarea>
                     @endif
                     <label for="txtdescripcion">Descripción</label>
                     <label class="error" for="txtdescripcion" id="txtdescripcion-error"></label>
