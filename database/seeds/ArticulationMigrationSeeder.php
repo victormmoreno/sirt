@@ -106,6 +106,7 @@ class ArticulationMigrationSeeder extends Seeder
     private function updateOrCreateArticulation($articulationStage, $item)
     {
         $fase = \App\Models\Fase::where('id',$item->fase_id)->first()->id;
+        // echo $item->alcance_articulacion_id .'<br>';
         $alcance = \App\Models\AlcanceArticulacion::where('id',$item->alcance_articulacion_id)->first()->id;
         $articulationSubtype = \App\Models\ArticulationSubtype::where('name',$item->tipoarticulacion->nombre)->first()->id;
 
