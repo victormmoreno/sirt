@@ -379,6 +379,10 @@ class EquipoController extends Controller
                 $nodo = $request->filter_nodo;
                 $linea = null;
                 break;
+            case User::IsAdministrador():
+                $nodo = $request->filter_nodo;
+                $linea = null;
+                break;
             case User::IsDinamizador():
                 $nodo = auth()->user()->dinamizador->nodo_id;
                 $linea = null;

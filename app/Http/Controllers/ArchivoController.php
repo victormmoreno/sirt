@@ -442,7 +442,7 @@ class ArchivoController extends Controller
             }
         }
         if (session()->get('login_role') == User::IsExperto()) {
-            if ($file->articulacion_proyecto->proyecto->asesor_id != auth()->user()->gestor->nodo_id) {
+            if ($file->articulacion_proyecto->proyecto->asesor_id != auth()->user()->gestor->id) {
                 return false;
             }
         }
