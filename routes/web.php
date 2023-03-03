@@ -370,7 +370,7 @@ Route::group(
         Route::get('/cambiar_asignacion/{idea}/{comite}', 'ComiteController@cambiar_idea_gestor')->name('comite.cambiar.asignacion')->middleware('role_session:Dinamizador');
         Route::get('/{id}', 'ComiteController@show')->name('csibt.show');
         Route::get('/{id}/evidencias', 'ComiteController@evidencias')->name('csibt.evidencias')->middleware('role_session:Infocenter|Dinamizador|Activador');
-        Route::get('/{id}/consultarCsibtPorNodo', 'ComiteController@datatableCsibtPorNodo_Activador')->name('csibt.show');
+        Route::get('/{id}/consultarCsibtPorNodo', 'ComiteController@datatableCsibtPorNodo');
         Route::get('/getideasComiteCreate', 'ComiteController@get_ideasComiteCreate');
         Route::get('/eliminarIdeaCC/{id}', 'ComiteController@get_eliminarIdeaComiteCreate');
         Route::get('/archivosDeUnComite/{id}', 'ComiteController@datatableArchivosDeUnComite');

@@ -21,6 +21,7 @@ use App\Models\CharlaInformativa;
 use App\Models\Proyecto;
 use App\Models\GrupoInvestigacion;
 use App\Models\Entrenamiento;
+use App\Models\Comite;
 use App\Policies\CostoAdministrativo\CostoAdministrativoPolicy;
 use App\Policies\Equipo\EquipoPolicy;
 use App\Policies\LineaTecnologica\LineaTecnologicaPolicy;
@@ -39,6 +40,7 @@ use App\Policies\ProyectoPolicy;
 use App\Policies\CharlaInformativaPolicy;
 use App\Policies\GrupoPolicy;
 use App\Policies\TallerPolicy;
+use App\Policies\ComitePolicy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -73,6 +75,7 @@ class AuthServiceProvider extends ServiceProvider
         Model::class => ModelPolicy::class,
         GrupoInvestigacion::class => GrupoPolicy::class,
         Entrenamiento::class => TallerPolicy::class,
+        Comite::class => ComitePolicy::class,
     ];
 
     /**

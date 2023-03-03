@@ -31,55 +31,72 @@ class ComiteController extends Controller
   public function detalle(int $id)
   {
     $comite = Comite::findOrFail($id);
-    if ( Session::get('login_role') == User::IsInfocenter() && $comite->estado->nombre == 'Programado' ) {
-      return view('comite.infocenter.detalle_agendamiento', [
-        'comite' => $comite
-      ]);
-    } else if ( Session::get('login_role') == User::IsInfocenter() && $comite->estado->nombre == 'Realizado' ) {
-      return view('comite.infocenter.detalle_realizado', [
-        'comite' => $comite
-      ]);
-    } else if (Session::get('login_role') == User::IsInfocenter() && $comite->estado->nombre == 'Proyectos asignados') {
-      return view('comite.infocenter.detalle_asignado', [
-        'comite' => $comite
-      ]);
-    } else if (Session::get('login_role') == User::IsDinamizador() && $comite->estado->nombre == 'Programado') {
-      return view('comite.dinamizador.detalle_agendamiento', [
-        'comite' => $comite
-      ]);
-    } else if (Session::get('login_role') == User::IsDinamizador() && $comite->estado->nombre == 'Realizado') {
-      return view('comite.dinamizador.detalle_realizado', [
-        'comite' => $comite
-      ]);
-    } else if (Session::get('login_role') == User::IsDinamizador() && $comite->estado->nombre == 'Proyectos asignados') {
-      return view('comite.dinamizador.detalle_asignado', [
-        'comite' => $comite
-      ]);
-    } else if (Session::get('login_role') == User::IsExperto() && $comite->estado->nombre == 'Programado') {
-      return view('comite.gestor.detalle_agendamiento', [
-        'comite' => $comite
-      ]);
-    } else if (Session::get('login_role') == User::IsExperto() && $comite->estado->nombre == 'Realizado') {
-      return view('comite.gestor.detalle_realizado', [
-        'comite' => $comite
-      ]);
-    } else if (Session::get('login_role') == User::IsExperto() && $comite->estado->nombre == 'Proyectos asignados') {
-      return view('comite.gestor.detalle_asignado', [
-        'comite' => $comite
-      ]);
-    } else if (Session::get('login_role') == User::IsActivador() && $comite->estado->nombre == 'Programado') {
-      return view('comite.administrador.detalle_agendamiento', [
-        'comite' => $comite
-      ]);
-    } else if (Session::get('login_role') == User::IsActivador() && $comite->estado->nombre == 'Realizado') {
-      return view('comite.administrador.detalle_realizado', [
-        'comite' => $comite
-      ]);
-    } else if (Session::get('login_role') == User::IsActivador() && $comite->estado->nombre == 'Proyectos asignados') {
-      return view('comite.administrador.detalle_asignado', [
-        'comite' => $comite
-      ]);
+
+    switch ($comite->estado->nombre) {
+      case $comite->estado->IsProgramado():
+        return view('comite.detalle_agendamiento', ['comite' => $comite]);
+        break;
+        case $comite->estado->IsRealizado():
+          return view('comite.detalle_realizado', ['comite' => $comite]);
+          break;
+        case $comite->estado->IsAsignado():
+          return view('comite.detalle_asignado', ['comite' => $comite]);
+          break;
+    
+      default:
+        
+        break;
     }
+
+    // if ( Session::get('login_role') == User::IsInfocenter() && $comite->estado->nombre == 'Programado' ) {
+    //   return view('comite.infocenter.detalle_agendamiento', [
+    //     'comite' => $comite
+    //   ]);
+    // } else if ( Session::get('login_role') == User::IsInfocenter() && $comite->estado->nombre == 'Realizado' ) {
+    //   return view('comite.infocenter.detalle_realizado', [
+    //     'comite' => $comite
+    //   ]);
+    // } else if (Session::get('login_role') == User::IsInfocenter() && $comite->estado->nombre == 'Proyectos asignados') {
+    //   return view('comite.infocenter.detalle_asignado', [
+    //     'comite' => $comite
+    //   ]);
+    // } else if (Session::get('login_role') == User::IsDinamizador() && $comite->estado->nombre == 'Programado') {
+    //   return view('comite.dinamizador.detalle_agendamiento', [
+    //     'comite' => $comite
+    //   ]);
+    // } else if (Session::get('login_role') == User::IsDinamizador() && $comite->estado->nombre == 'Realizado') {
+    //   return view('comite.dinamizador.detalle_realizado', [
+    //     'comite' => $comite
+    //   ]);
+    // } else if (Session::get('login_role') == User::IsDinamizador() && $comite->estado->nombre == 'Proyectos asignados') {
+    //   return view('comite.dinamizador.detalle_asignado', [
+    //     'comite' => $comite
+    //   ]);
+    // } else if (Session::get('login_role') == User::IsExperto() && $comite->estado->nombre == 'Programado') {
+    //   return view('comite.gestor.detalle_agendamiento', [
+    //     'comite' => $comite
+    //   ]);
+    // } else if (Session::get('login_role') == User::IsExperto() && $comite->estado->nombre == 'Realizado') {
+    //   return view('comite.gestor.detalle_realizado', [
+    //     'comite' => $comite
+    //   ]);
+    // } else if (Session::get('login_role') == User::IsExperto() && $comite->estado->nombre == 'Proyectos asignados') {
+    //   return view('comite.gestor.detalle_asignado', [
+    //     'comite' => $comite
+    //   ]);
+    // } else if (Session::get('login_role') == User::IsActivador() && $comite->estado->nombre == 'Programado') {
+    //   return view('comite.administrador.detalle_agendamiento', [
+    //     'comite' => $comite
+    //   ]);
+    // } else if (Session::get('login_role') == User::IsActivador() && $comite->estado->nombre == 'Realizado') {
+    //   return view('comite.administrador.detalle_realizado', [
+    //     'comite' => $comite
+    //   ]);
+    // } else if (Session::get('login_role') == User::IsActivador() && $comite->estado->nombre == 'Proyectos asignados') {
+    //   return view('comite.administrador.detalle_asignado', [
+    //     'comite' => $comite
+    //   ]);
+    // }
   }
 
   /**
@@ -119,40 +136,41 @@ class ComiteController extends Controller
   */
   public function index()
   {
-    if ( Session::get('login_role') == User::IsInfocenter() ) {
-      if (request()->ajax()) {
-        $csibt = $this->getComiteRepository()->consultarComitesPorNodo( auth()->user()->infocenter->nodo_id );
-        return datatables()->of($csibt)
-        ->addColumn('details', function ($data) {
-          $details = '<a class="btn m-b-xs" href="' . route('csibt.detalle', $data->id) . '"><i class="material-icons">search</i></a>';
-          return $details;
-        })->rawColumns(['details'])->make(true);
-      }
-      return view('comite.infocenter.index');
-    } else if ( Session::get('login_role') == User::IsExperto() ) {
-      if (request()->ajax()) {
-        $csibt = $this->getComiteRepository()->consultarComitesPorNodo( auth()->user()->gestor->nodo_id );
-        return datatables()->of($csibt)
-        ->addColumn('details', function ($data) {
-          $details = '<a class="btn m-b-xs" href="' . route('csibt.detalle', $data->id) . '"><i class="material-icons">search</i></a>';
-          return $details;
-        })->rawColumns(['details'])->make(true);
-      }
-      return view('comite.gestor.index');
-    } else if ( Session::get('login_role') == User::IsActivador() ) {
-      $nodos = Nodo::SelectNodo()->get();
-      return view('comite.administrador.index', compact('nodos'));
-    } else if ( Session::get('login_role') == User::IsDinamizador() ) {
-      if (request()->ajax()) {
-        $csibt = $this->getComiteRepository()->consultarComitesPorNodo( auth()->user()->dinamizador->nodo_id );
-        return datatables()->of($csibt)
-        ->addColumn('details', function ($data) {
-          $details = '<a class="btn m-b-xs" href="' . route('csibt.detalle', $data->id) . '"><i class="material-icons">search</i></a>';
-          return $details;
-        })->rawColumns(['details'])->make(true);
-      }
-      return view('comite.dinamizador.index');
-    }
+    // if ( Session::get('login_role') == User::IsInfocenter() ) {
+    //   if (request()->ajax()) {
+    //     $csibt = $this->getComiteRepository()->consultarComitesPorNodo( auth()->user()->infocenter->nodo_id );
+    //     return datatables()->of($csibt)
+    //     ->addColumn('details', function ($data) {
+    //       $details = '<a class="btn m-b-xs" href="' . route('csibt.detalle', $data->id) . '"><i class="material-icons">search</i></a>';
+    //       return $details;
+    //     })->rawColumns(['details'])->make(true);
+    //   }
+    //   return view('comite.infocenter.index');
+    // } else if ( Session::get('login_role') == User::IsExperto() ) {
+    //   if (request()->ajax()) {
+    //     $csibt = $this->getComiteRepository()->consultarComitesPorNodo( auth()->user()->gestor->nodo_id );
+    //     return datatables()->of($csibt)
+    //     ->addColumn('details', function ($data) {
+    //       $details = '<a class="btn m-b-xs" href="' . route('csibt.detalle', $data->id) . '"><i class="material-icons">search</i></a>';
+    //       return $details;
+    //     })->rawColumns(['details'])->make(true);
+    //   }
+    //   return view('comite.gestor.index');
+    // } else if ( Session::get('login_role') == User::IsActivador() ) {
+    //   $nodos = Nodo::SelectNodo()->get();
+    //   return view('comite.administrador.index', compact('nodos'));
+    // } else if ( Session::get('login_role') == User::IsDinamizador() ) {
+    //   if (request()->ajax()) {
+    //     $csibt = $this->getComiteRepository()->consultarComitesPorNodo( auth()->user()->dinamizador->nodo_id );
+    //     return datatables()->of($csibt)
+    //     ->addColumn('details', function ($data) {
+    //       $details = '<a class="btn m-b-xs" href="' . route('csibt.detalle', $data->id) . '"><i class="material-icons">search</i></a>';
+    //       return $details;
+    //     })->rawColumns(['details'])->make(true);
+    //   }
+    //   return view('comite.dinamizador.index');
+    // }
+    return view('comite.index', ['nodos' => Nodo::SelectNodo()->get()]);
   }
 
   // Datatable para mostrar los archivos de un comité (Infocenter)
@@ -204,7 +222,7 @@ class ComiteController extends Controller
     }
   }
 
-  public function datatableCsibtPorNodo_Administrador($id)
+  public function datatableCsibtPorNodo($id)
   {
     if (request()->ajax()) {
       return datatables()->of($this->getComiteRepository()->consultarComitesPorNodo($id))
