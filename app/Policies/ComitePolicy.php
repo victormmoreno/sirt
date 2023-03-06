@@ -38,10 +38,10 @@ class ComitePolicy
      * @return bool
      * @author dum
      **/
-    public function notificar_idea(User $user,Comite $comite, Idea $idea)
+    public function notificar_comite(User $user,Comite $comite, Idea $idea)
     {
         if ($comite->estado->IsProgramado()) {
-            if (session()->get('login_role') == $user->IsInfocenter() && $idea->nodo_id == $user->getNodoUser()) {
+            if ((session()->get('login_role') == $user->IsInfocenter() && $idea->nodo_id == $user->getNodoUser()) || session()->get('login_role') == $user->IsAdministrador() ) {
                 return true;
             }
         }

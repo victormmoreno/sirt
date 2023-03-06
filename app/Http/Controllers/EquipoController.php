@@ -101,7 +101,7 @@ class EquipoController extends Controller
             return back();
         }
         if (request()->ajax()) {
-            $nodo = request()->user()->getNodoUser();
+            $nodo = request()->user()->getNodoUser() == null ? $request->filter_nodo : request()->user()->getNodoUser();
             $linea = $this->getEquipoRepository()->getLineaRole();
             $equipos = [];
             if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_state') || $request->filter_state == null)) {
