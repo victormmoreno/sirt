@@ -31,22 +31,26 @@ class ComiteController extends Controller
   public function detalle(int $id)
   {
     $comite = Comite::findOrFail($id);
-
-    switch ($comite->estado->nombre) {
-      case $comite->estado->IsProgramado():
-        return view('comite.detalle_agendamiento', ['comite' => $comite]);
-        break;
-        case $comite->estado->IsRealizado():
-          return view('comite.detalle_realizado', ['comite' => $comite]);
-          break;
-        case $comite->estado->IsAsignado():
-          return view('comite.detalle_asignado', ['comite' => $comite]);
-          break;
-    
-      default:
-        
-        break;
+    if(!request()->user()->can('show', $comite)) {
+      alert('No autorizado', 'No tienes permisos para ver la información de este comité', 'error')->showConfirmButton('Ok', '#3085d6');
+      return back();
     }
+    return view('comite.detalle', ['comite' => $comite]);
+    // switch ($comite->estado->nombre) {
+    //   case $comite->estado->IsProgramado():
+    //     return view('comite.detalle_agendamiento', ['comite' => $comite]);
+    //     break;
+    //     case $comite->estado->IsRealizado():
+    //       return view('comite.detalle_realizado', ['comite' => $comite]);
+    //       break;
+    //     case $comite->estado->IsAsignado():
+    //       return view('comite.detalle_asignado', ['comite' => $comite]);
+    //       break;
+    
+    //   default:
+        
+    //     break;
+    // }cargar_evidencias
 
     // if ( Session::get('login_role') == User::IsInfocenter() && $comite->estado->nombre == 'Programado' ) {
     //   return view('comite.infocenter.detalle_agendamiento', [
@@ -122,8 +126,12 @@ class ComiteController extends Controller
   public function realizar(int $id)
   {
     $comite = Comite::findOrFail($id);
+    if (!request()->user()->can('calificar', $comite)) {
+      alert()->warning('Error!','No tienes permisos para calificar este comité.')->showConfirmButton('Ok', '#3085d6');
+      return back(); 
+    }
     $estados = EstadoIdea::whereIn('nombre', [EstadoIdea::IsReprogramado(), EstadoIdea::IsAdmitido(), EstadoIdea::IsRechazadoComite()])->get();
-    return view('comite.infocenter.realizar_comite', [
+    return view('comite.realizar_comite', [
       'comite' => $comite,
       'estados' => $estados
     ]);
@@ -136,40 +144,6 @@ class ComiteController extends Controller
   */
   public function index()
   {
-    // if ( Session::get('login_role') == User::IsInfocenter() ) {
-    //   if (request()->ajax()) {
-    //     $csibt = $this->getComiteRepository()->consultarComitesPorNodo( auth()->user()->infocenter->nodo_id );
-    //     return datatables()->of($csibt)
-    //     ->addColumn('details', function ($data) {
-    //       $details = '<a class="btn m-b-xs" href="' . route('csibt.detalle', $data->id) . '"><i class="material-icons">search</i></a>';
-    //       return $details;
-    //     })->rawColumns(['details'])->make(true);
-    //   }
-    //   return view('comite.infocenter.index');
-    // } else if ( Session::get('login_role') == User::IsExperto() ) {
-    //   if (request()->ajax()) {
-    //     $csibt = $this->getComiteRepository()->consultarComitesPorNodo( auth()->user()->gestor->nodo_id );
-    //     return datatables()->of($csibt)
-    //     ->addColumn('details', function ($data) {
-    //       $details = '<a class="btn m-b-xs" href="' . route('csibt.detalle', $data->id) . '"><i class="material-icons">search</i></a>';
-    //       return $details;
-    //     })->rawColumns(['details'])->make(true);
-    //   }
-    //   return view('comite.gestor.index');
-    // } else if ( Session::get('login_role') == User::IsActivador() ) {
-    //   $nodos = Nodo::SelectNodo()->get();
-    //   return view('comite.administrador.index', compact('nodos'));
-    // } else if ( Session::get('login_role') == User::IsDinamizador() ) {
-    //   if (request()->ajax()) {
-    //     $csibt = $this->getComiteRepository()->consultarComitesPorNodo( auth()->user()->dinamizador->nodo_id );
-    //     return datatables()->of($csibt)
-    //     ->addColumn('details', function ($data) {
-    //       $details = '<a class="btn m-b-xs" href="' . route('csibt.detalle', $data->id) . '"><i class="material-icons">search</i></a>';
-    //       return $details;
-    //     })->rawColumns(['details'])->make(true);
-    //   }
-    //   return view('comite.dinamizador.index');
-    // }
     return view('comite.index', ['nodos' => Nodo::SelectNodo()->get()]);
   }
 
@@ -177,48 +151,29 @@ class ComiteController extends Controller
   public function datatableArchivosDeUnComite($id)
   {
     if (request()->ajax()) {
-      if ( Session::get('login_role') == User::IsInfocenter() ) {
-        $archivosComite = $this->getComiteRepository()->consultarRutasArchivosDeUnComite( $id );
-        return datatables()->of($archivosComite)
-        ->addColumn('download', function ($data) {
-          $download = '
-          <a target="_blank" href="' . route('csibt.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
-          <i class="material-icons">file_download</i>
-          </a>
-          ';
-          return $download;
-        })->addColumn('delete', function ($data) {
-          $delete = '<form method="POST" action="' . route('csibt.files.destroy', $data) . '">
-          ' . method_field('DELETE') . '' .  csrf_field() . '
-          <button class="btn red darken-4 m-b-xs">
-          <i class="material-icons">delete_forever</i>
-          </button>
-          </form>';
-          return $delete;
-        })->addColumn('file', function ($data) {
-          $file = '
-          <i class="material-icons">insert_drive_file</i> ' . basename( url($data->ruta) ) . '
-          ';
-          return $file;
-        })->rawColumns(['download', 'delete', 'file'])->make(true);
-      } else {
-        $archivosComite = $this->getComiteRepository()->consultarRutasArchivosDeUnComite( $id );
-        return datatables()->of($archivosComite)
-        ->addColumn('download', function ($data) {
-          $download = '
-          <a target="_blank" href="' . route('csibt.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
-          <i class="material-icons">file_download</i>
-          </a>
-          ';
-          return $download;
-        })->addColumn('file', function ($data) {
-          $file = '
-          <i class="material-icons">insert_drive_file</i> ' . basename( url($data->ruta) ) . '
-          ';
-          return $file;
-        })->rawColumns(['download', 'file'])->make(true);
-
-      }
+      $archivosComite = $this->getComiteRepository()->consultarRutasArchivosDeUnComite( $id );
+      return datatables()->of($archivosComite)
+      ->addColumn('download', function ($data) {
+        $download = '
+        <a target="_blank" href="' . route('csibt.files.download', $data->id) . '" class="btn blue darken-4 m-b-xs">
+        <i class="material-icons">file_download</i>
+        </a>
+        ';
+        return $download;
+      })->addColumn('delete', function ($data) {
+        $delete = '<form method="POST" action="' . route('csibt.files.destroy', $data) . '">
+        ' . method_field('DELETE') . '' .  csrf_field() . '
+        <button class="btn red darken-4 m-b-xs">
+        <i class="material-icons">delete_forever</i>
+        </button>
+        </form>';
+        return $delete;
+      })->addColumn('file', function ($data) {
+        $file = '
+        <i class="material-icons">insert_drive_file</i> ' . basename( url($data->ruta) ) . '
+        ';
+        return $file;
+      })->rawColumns(['download', 'delete', 'file'])->make(true);
     }
   }
 
@@ -236,6 +191,10 @@ class ComiteController extends Controller
   // Método para modificar las evidencias de un comité
   public function updateEvidencias(Request $request, $id)
   {
+    if (!request()->user()->can('cargar_evidencias', Comite::find($id))) {
+      alert('No autorizado', 'No tienes permisos para cargar información de este comité', 'error')->showConfirmButton('Ok', '#3085d6');
+      return back();
+    }
     !isset($request['ev_correos']) ? $request['ev_correos'] = 0 : $request['ev_correos'] = 1;
     !isset($request['ev_listado']) ? $request['ev_listado'] = 0 : $request['ev_listado'] = 1;
     !isset($request['ev_otros']) ? $request['ev_otros'] = 0 : $request['ev_otros'] = 1;
@@ -350,24 +309,20 @@ class ComiteController extends Controller
   */
   public function updateAgendamiento(Request $request, $id)
   {
-    if ( Session::get('login_role') == User::IsInfocenter() ) {
-      $req = new ComiteAgendamientoFormRequest;
-      $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-      if ($validator->fails()) {
-        return response()->json([
-          'state'   => 'error_form',
-          'errors' => $validator->errors(),
-        ]);
-      } else {
-        $result = $this->getComiteRepository()->updateAgendamiento($request, $id);
-        if ($result) {
-          return response()->json(['state' => 'update']);
-        } else {
-          return response()->json(['state' => 'no_update']);
-        }
-      }
+    $req = new ComiteAgendamientoFormRequest;
+    $validator = Validator::make($request->all(), $req->rules(), $req->messages());
+    if ($validator->fails()) {
+      return response()->json([
+        'state'   => 'error_form',
+        'errors' => $validator->errors(),
+      ]);
     } else {
-      abort('403');
+      $result = $this->getComiteRepository()->updateAgendamiento($request, $id);
+      if ($result) {
+        return response()->json(['state' => 'update']);
+      } else {
+        return response()->json(['state' => 'no_update']);
+      }
     }
   }
 
@@ -487,13 +442,12 @@ class ComiteController extends Controller
   // Muestra las evidencias/entregables de un comité
   public function evidencias($id)
   {
-    if ( Session::get('login_role') == User::IsInfocenter() ) {
-      $comite = Comite::findOrFail($id);
-      return view('comite.infocenter.evidencias', compact('comite'));
-    } else if (Session::get('login_role') != User::IsIngreso() && Session::get('login_role') != User::IsTalento())  {
-      $comite = Comite::findOrFail($id);
-      return view('comite.evidencias', compact('comite'));
-    }
+    $comite = Comite::findOrFail($id);
+    if(!request()->user()->can('cargar_evidencias', $comite)) {
+      alert('No autorizado', 'No tienes permisos para ver las evidencias de este comité', 'error')->showConfirmButton('Ok', '#3085d6');
+      return back();
+  }
+    return view('comite.evidencias', compact('comite'));
   }
 
   /**
@@ -520,17 +474,15 @@ class ComiteController extends Controller
   */
   public function edit(int $id)
   {
-    if ( Session::get('login_role') == User::IsInfocenter() ) {
-      $csibt = Comite::findOrFail($id);
-      $idideas = $this->getIdIdeasDelComiteArray($csibt);
-      $ideas = Idea::ConsultarIdeasConvocadasAComite( auth()->user()->infocenter->nodo_id )->orWhereIn('ideas.id', $idideas)->get();
-      $gestores = $this->getGestorRepository()->getAllGestoresPorNodo( auth()->user()->infocenter->nodo_id )->get();
-      return view('comite.infocenter.edit_agendamiento', [
-        'ideas' => $ideas,
-        'comite' => $csibt,
-        'gestores' => $gestores
-      ]);
-    }
+    $csibt = Comite::findOrFail($id);
+    $idideas = $this->getIdIdeasDelComiteArray($csibt);
+    $ideas = Idea::ConsultarIdeasConvocadasAComite( $csibt->ideas()->first()->nodo_id )->orWhereIn('ideas.id', $idideas)->get();
+    $gestores = $this->getGestorRepository()->getAllGestoresPorNodo( $csibt->ideas()->first()->nodo_id )->get();
+    return view('comite.edit_agendamiento', [
+      'ideas' => $ideas,
+      'comite' => $csibt,
+      'gestores' => $gestores
+    ]);
   }
 
   /**

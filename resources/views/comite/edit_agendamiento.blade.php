@@ -35,7 +35,7 @@
                         <div class="row">
                           <form action="{{route('csibt.agendamiento.update', $comite->id)}}" id="formComiteAgendamientoUpdate" method="post">
                             {!! method_field('PUT')!!}
-                            @include('comite.infocenter.form_agendamiento', [
+                            @include('comite.form_agendamiento', [
                                 'btnText' => 'Modificar'
                             ])
                           </form>

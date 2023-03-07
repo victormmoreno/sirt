@@ -10,7 +10,7 @@
                     <div class="col s8 m8 l10">
                         <h5 class="left-align">
                             <a class="footer-text left-align" href="{{route('csibt')}}">
-                                <i class="material-icons arrow-l">
+                                <i class="material-icons arrow-l left">
                                     arrow_back
                                 </i>
                             </a>
@@ -35,7 +35,7 @@
                         <div class="row">
                             <form action="{{route('csibt.realizar.store', $comite->id)}}" id="formComiteRealizadoCreate" method="post">
                                 {!! method_field('PUT')!!}
-                            @include('comite.infocenter.form_realizar', [
+                            @include('comite.form_realizar', [
                                 'btnText' => 'Guardar'
                             ])
                             </form>

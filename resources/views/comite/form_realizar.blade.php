@@ -21,7 +21,7 @@
 <div class="row">
     <div class="input-field col s12 m6 l6">
         <i class="material-icons prefix">location_city</i>
-        <input id="txtnombrenodo" type="text" value="{{ \NodoHelper::returnNameNodoUsuario() }}" name="txtnombrenodo" disabled>
+        <input id="txtnombrenodo" type="text" value="{{ $comite->ideas()->first()->nodo->entidad->nombre }}" name="txtnombrenodo" disabled>
         <label for="txtnombrenodo">Nodo <span class="red-text">*</span></label>
     </div>
     <div class="input-field col s12 m6 l6">
@@ -111,8 +111,8 @@
 <div class="divider"></div>
 <div class="row">
     <center>
-        <button type="submit" class="btn waves-effect cyan darken-1 center-aling"><i class="material-icons right">{{ isset($btnText) ? $btnText == 'Modificar' ? 'done' : 'done_all' : '' }}</i>{{isset($btnText) ? $btnText : 'error'}}</button>
-        <a href="{{route('csibt.detalle', $comite->id)}}" class="btn waves-effect red lighten-2  center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
+        <button type="submit" class="waves-effect waves-light btn bg-secondary center-align"><i class="material-icons right">send</i>Guardar</button>
+        <a href="{{route('csibt.detalle', $comite->id)}}" class="waves-effect bg-danger btn center-align"><i class="material-icons left">backspace</i>Cancelar</a>
     </center>
 </div>
 <div id="modalEstados" class="modal">

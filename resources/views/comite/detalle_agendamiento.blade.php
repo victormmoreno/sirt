@@ -1,57 +1,114 @@
-@extends('layouts.app')
-@section('meta-title', 'CSIBT')
-@section('content')
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
-<main class="mn-inner inner-active-sidebar">
-    <div class="content">
-        <div class="row no-m-t no-m-b">
-            <div class="col s12 m12 l12">
-                <div class="row">
-                    <div class="col s8 m8 l10">
-                        <h5 class="left-align">
-                            <a class="footer-text left-align" href="{{route('csibt')}}">
-                                <i class="material-icons arrow-l">
-                                    arrow_back
-                                </i>
-                            </a>
-                            Comité de Selección de Ideas
-                        </h5>
+<div class="mailbox-text">
+    <div class="row">
+        <div class="col s12 m12 l12">
+            <div class="center">
+                <span class="mailbox-title">
+                    <i class="material-icons">build</i>
+                    Información del comité: {{$comite->codigo}}
+                </span>
+            </div>
+            <div class="divider mailbox-divider"></div>
+            <div class="row">
+                <div class="col s12 m12 l12">
+                    <div class="row">
+                        <ul class="collection">
+                            <li class="collection-item">
+                                <span class="title cyan-text text-darken-3">
+                                    Fecha en la que se realiza el comité
+                                </span>
+                                <p>
+                                    {{$comite->fechacomite->isoFormat('YYYY-MM-DD')}}
+                                </p>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="col s4 m4 l2 rigth-align show-on-large hide-on-med-and-down">
-                        <ol class="breadcrumbs">
-                            <li><a href="{{route('home')}}">Inicio</a></li>
-                            <li><a href="{{route('csibt')}}">CSIBT</a></li>
-                            <li class="active">{{$comite->codigo}}</li>
-                        </ol>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-content">
-                        <br>
-                        <center>
-                            <span class="card-title center-align">Comité - {{$comite->codigo}} <b>({{$comite->estado->nombre}})</b></span>
-                        </center>
-                        <div class="divider"></div>
-                        <div class="row">
-                            <div class="col s12 m4 l4">
-                                <div class="row">
-                                    @include('comite.options')
-                                </div>
-                            </div>
-                            <div class="col s12 m8 l8">
-                                @include('comite.detalle')
+                    <div class="row">
+                        <div class="col s12 m12 l12">
+                            <div class="card-panel blue lighten-5">
+                                <h5 class="center">Ideas que se agendaron para el comité</h5>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30%">Idea de proyecto</th>
+                                            <th style="width: 40%">Dirección</th>
+                                            <th style="width: 10%">Hora</th>
+                                            @can('notificar_comite', [$comite, $comite->ideas->first()])
+                                                <th style="width: 20%">Enviar citación</th>
+                                            @endcan
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($comite->ideas as $key => $value)
+                                            <tr>
+                                                <td>{{$value->codigo_idea}} - {{$value->nombre_proyecto}}</td>
+                                                <td>{{$value->pivot->direccion}}</td>
+                                                <td>{{$value->pivot->hora}}</td>
+                                                @can('notificar_comite', [$comite, $value])
+                                                    <td>
+                                                        <a href="{{route('csibt.notificar.agendamiento', [$comite->id, $value->id ,'talentos'])}}">
+                                                            <div class="card-panel {{$value->pivot->notificado >= 1 ? 'green lighten-3' : 'blue-grey lighten-3'}} black-text center">
+                                                                <i class="material-icons left">notifications</i>Enviar citación al talento.
+                                                            </div>
+                                                        </a>
+                                                    </td>
+                                                @endcan
+                                            </tr>
+                                            <tr>
+                                                <td colspan="4">
+                                                    <p>
+                                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus quibusdam perspiciatis, accusantium quaerat impedit sequi laborum sint deleniti illum aspernatur assumenda unde quas dignissimos eum repellat iste tempore culpa obcaecati?
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    <p>
+                                                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsam quidem quis molestiae quisquam aliquam, et optio praesentium fugit dolorum nam, ipsa vel non in ea at aspernatur qui! Velit, ullam.
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                        <div class="divider"></div>
-                        <div class="row center">
-                            <a href="{{route('csibt')}}" class="waves-effect red lighten-2 btn center-aling">
-                                <i class="material-icons right">backspace</i>Cancelar
-                            </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m12 l12">
+                <div class="row">
+                    <div class="col s12 m12 l12">
+                        <div class="card-panel green lighten-5">
+                            <h5 class="center">Expertos que se agendaron para el comité</h5>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th colspan="1" style="width: 60%">Experto</th>
+                                        <th colspan="1" style="width: 20%">Desde</th>
+                                        <th colspan="1" style="width: 20%">Hasta</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if ($comite->gestores->isEmpty())
+                                        <tr>
+                                            <td>No se han encontrado resultados</td>
+                                            <td>No se han encontrado resultados</td>
+                                            <td>No se han encontrado resultados</td>
+                                        </tr>
+                                    @else
+                                        @foreach ($comite->gestores as $key => $value2)
+                                            <tr>
+                                                <td colspan="1">{{$value2->user->documento}} - {{$value2->user->nombres}} {{$value2->user->apellidos}}</td>
+                                                <td colspan="1">{{$value2->pivot->hora_inicio}}</td>
+                                                <td colspan="1">{{$value2->pivot->hora_fin}}</td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</main>
-@endsection
+    {{-- <div class="divider mailbox-divider"></div> --}}
+</div>

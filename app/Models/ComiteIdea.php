@@ -19,7 +19,8 @@ class ComiteIdea extends Model
         'admitido',
         'asistencia',
         'observaciones',
-        'direccion'
+        'direccion',
+        'notificado'
     ];
 
     public function getAdmitidoAttribute($admitido)
