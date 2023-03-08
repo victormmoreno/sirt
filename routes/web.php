@@ -371,7 +371,7 @@ Route::group(
         Route::get('/{id}', 'ComiteController@show')->name('csibt.show');
         Route::get('/{id}/evidencias', 'ComiteController@evidencias')->name('csibt.evidencias')->middleware('role_session:Infocenter|Dinamizador|Activador');
         Route::get('/{id}/consultarCsibtPorNodo', 'ComiteController@datatableCsibtPorNodo');
-        Route::get('/getideasComiteCreate', 'ComiteController@get_ideasComiteCreate');
+        // Route::get('/getideasComiteCreate', 'ComiteController@get_ideasComiteCreate');
         Route::get('/eliminarIdeaCC/{id}', 'ComiteController@get_eliminarIdeaComiteCreate');
         Route::get('/archivosDeUnComite/{id}', 'ComiteController@datatableArchivosDeUnComite');
         Route::get('/downloadFile/{id}', 'ArchivoComiteController@downloadFile')->name('csibt.files.download');

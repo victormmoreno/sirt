@@ -69,7 +69,7 @@
                         <div class="divider"></div>
                         <div class="row center">
                             <a href="{{route('csibt')}}" class="waves-effect bg-danger btn center-align">
-                                <i class="material-icons right">backspace</i>Cancelar
+                                <i class="material-icons left">backspace</i>Cancelar
                             </a>
                         </div>
                     </div>

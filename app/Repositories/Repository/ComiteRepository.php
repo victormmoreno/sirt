@@ -133,7 +133,7 @@ class ComiteRepository
         try {
             $comite = Comite::findOrFail($id);
             $dinamizadorRepository = new DinamizadorRepository;
-            $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo(auth()->user()->infocenter->nodo_id)->get();
+            $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($comite->ideas()->first()->nodo_id)->get();
             $infocenter = auth()->user()->nombres . " " . auth()->user()->apellidos;
             Notification::send($dinamizadores, new ComiteRealizado($comite, $infocenter));
             DB::commit();

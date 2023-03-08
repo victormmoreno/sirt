@@ -35,4 +35,9 @@
         <i class="material-icons left">notifications</i>Notificar al dinamizador.
     </a>
     @endcan
+    @can('asignar_ideas', $comite)
+        <a href="{{route('csibt.asignar', $comite->id)}}" class="collection-item">
+            <i class="material-icons left">edit</i>Asignar expertos a las ideas de proyecto.
+        </a>
+    @endcan
 </div>

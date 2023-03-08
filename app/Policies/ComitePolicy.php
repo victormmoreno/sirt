@@ -30,6 +30,38 @@ class ComitePolicy
     }
 
     /**
+     * Determina si el usuario puede registrar un comité
+     *
+     * @param User $user
+     * @param Comite $user
+     * @return bool
+     * @author dum
+     **/
+    public function create(User $user)
+    {
+        if (session()->get('login_role') == $user->IsInfocenter()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Determina si el usuario puede filtrar comités por nodo
+     *
+     * @param User $user
+     * @param Comite $comite
+     * @return bool
+     * @author dum
+     **/
+    public function show_filters(User $user)
+    {
+        if (Str::contains(session()->get('login_role'), [$user->IsAdministrador(), $user->IsActivador()])) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Determina si el usuario puede cambiar informacion de un comité
      *
      * @param User $user
@@ -102,7 +134,12 @@ class ComitePolicy
      **/
     public function notificar_dinamizador(User $user, Comite $comite)
     {
-        
+        if ($comite->estado->nombre == $comite->estado->IsRealizado()) {
+            if ((Str::contains(session()->get('login_role'), [$user->IsInfocenter()]) && $comite->ideas->first()->nodo_id == $user->getNodoUser()) || Str::contains(session()->get('login_role'), [$user->IsAdministrador()])) {
+                return true;
+            }
+            return false;
+        }
         return false;
     }
 
@@ -119,7 +156,7 @@ class ComitePolicy
         if (Str::contains(session()->get('login_role'), [$user->IsAdministrador()])) {
             return true;
         }
-        if (Str::contains(session()->get('login_role'), [$user->IsInfocenter()]) && $comite->ideas->first()->nodo_id == $user->getNodoUser()) {
+        if ((Str::contains(session()->get('login_role'), [$user->IsInfocenter()]) && $comite->ideas->first()->nodo_id == $user->getNodoUser()) && Str::contains($comite->estado->nombre, [$comite->estado->IsProgramado(), $comite->estado->IsRealizado()])) {
             return true;
         }
         return false;
@@ -138,9 +175,74 @@ class ComitePolicy
         if (Str::contains(session()->get('login_role'), [$user->IsAdministrador(), $user->IsActivador()])) {
             return true;
         }
-        if (Str::contains(session()->get('login_role'), [$user->IsInfocenter(), $user->IsDinamizador(), $user->IsExperto()]) && $file->comite->first()->nodo_id == $user->getNodoUser()) {
+        if (Str::contains(session()->get('login_role'), [$user->IsInfocenter(), $user->IsDinamizador(), $user->IsExperto()]) && Comite::find($file->model_id)->ideas()->first()->nodo_id == $user->getNodoUser()) {
             return true;
         }
+        return false;
+    }
+
+    /**
+     * Determina si el usuario puede ver la información adicional de la idea y comité
+     *
+     * @param User $user
+     * @param Comite $comite
+     * @param Idea $idea
+     * @return bool
+     * @author dum
+     **/
+    public function show_agendamiento(User $user, Comite $comite, Idea $idea)
+    {
+        if ($comite->estado->nombre == $comite->estado->IsRealizado() || $comite->estado->nombre == $comite->estado->IsAsignado()) {
+            if (Str::contains(session()->get('login_role'), [$user->IsAdministrador(), $user->IsActivador()])) {
+                return true;
+            }
+            if (Str::contains(session()->get('login_role'), [$user->IsInfocenter(), $user->IsDinamizador(), $user->IsExperto()]) && $idea->nodo_id == $user->getNodoUser()) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    /**
+     * Determina si el usuario puede ver informacion sobre la asignacion de la idea de proyecto
+     *
+     * @param User $user
+     * @param Comite $comite
+     * @param Idea $idea
+     * @return bool
+     * @author dum
+     **/
+    public function show_asginacion(User $user, Comite $comite, Idea $idea)
+    {
+        if ($comite->estado->nombre == $comite->estado->IsAsignado()) {
+            if (Str::contains(session()->get('login_role'), [$user->IsAdministrador(), $user->IsActivador()])) {
+                return true;
+            }
+            if (Str::contains(session()->get('login_role'), [$user->IsInfocenter(), $user->IsDinamizador(), $user->IsExperto()]) && $idea->nodo_id == $user->getNodoUser()) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    /**
+     * Determina si el usuario puede asignar expertos a las ideas de proyectos
+     *
+     * @param User $user
+     * @param Comite $comite
+     * @return bool
+     * @author dum
+     **/
+    public function asignar_ideas(User $user, Comite $comite)
+    {
+        if ($comite->estado->nombre == $comite->estado->IsRealizado()) {
+            if ((Str::contains(session()->get('login_role'), [$user->IsDinamizador()]) && $comite->ideas->first()->nodo_id == $user->getNodoUser()) || Str::contains(session()->get('login_role'), [$user->IsAdministrador()])) {
+                return true;
+            }
+            return false;
+        }        
         return false;
     }
 }

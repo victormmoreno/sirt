@@ -55,14 +55,104 @@
                                             </tr>
                                             <tr>
                                                 <td colspan="4">
-                                                    <p>
-                                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus quibusdam perspiciatis, accusantium quaerat impedit sequi laborum sint deleniti illum aspernatur assumenda unde quas dignissimos eum repellat iste tempore culpa obcaecati?
-                                                    </p>
-                                                </td>
-                                                <td>
-                                                    <p>
-                                                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsam quidem quis molestiae quisquam aliquam, et optio praesentium fugit dolorum nam, ipsa vel non in ea at aspernatur qui! Velit, ullam.
-                                                    </p>
+                                                    <ul class="collapsible">
+                                                        <li>
+                                                            <div class="collapsible-header"><i class="material-icons">supervised_user_circle</i>Datos del talento</div>
+                                                            <div class="collapsible-body">
+                                                                <p>
+                                                                    <b class="black-text">
+                                                                        Nombres y apellidos de la persona que inscribió la idea de proyecto:
+                                                                    </b> 
+                                                                    @if (isset($value->talento->user->nombres))
+                                                                    {{$value->talento->user->nombres}} {{$value->talento->user->apellidos}}
+                                                                    @else
+                                                                    {{$value->nombres_contacto}} {{$value->apellidos_contacto}}
+                                                                    @endif
+                                                                    <br>
+                                                                    <b class="black-text">
+                                                                        Celular de la persona que inscribió la idea de proyecto:
+                                                                    </b> 
+                                                                    @if (isset($value->talento->user->celular))
+                                                                        {{$value->talento->user->celular}}
+                                                                    @else
+                                                                        {{$value->telefono_contacto}}
+                                                                    @endif
+                                                                    <br>
+                                                                    <b class="black-text">
+                                                                        Email de la persona que inscribió la idea de proyecto:
+                                                                    </b> 
+                                                                    @if (isset($value->talento->user->email))
+                                                                        {{$value->talento->user->email}}
+                                                                    @else
+                                                                        {{$value->correo_contacto}}
+                                                                    @endif
+                                                                </p>
+                                                            </div>
+                                                        </li>
+                                                        @can('show_agendamiento', [$comite, $value])
+                                                            <li>
+                                                                <div class="collapsible-header {{ $value->pivot->admitido == 1 ? 'green lighten-3' : 'red lighten-3'}}"><i class="material-icons">{{ $value->pivot->admitido == 1 ? 'done' : 'close'}}</i>Resultado del comité</div>
+                                                                <div class="collapsible-body">
+                                                                    <p>
+                                                                        <b class="black-text">
+                                                                             ¿Asisitó?:
+                                                                         </b> {{$value->pivot->asistencia == 0 ? 'No' : 'Si'}}
+                                                                         <br>
+                                                                         <b class="black-text">
+                                                                             ¿Fue admitida?:
+                                                                         </b> {{$value->pivot->admitido == 0 ? 'No' : 'Si'}}
+                                                                         <br>
+                                                                         <b class="black-text">
+                                                                             Observaciones:
+                                                                         </b> {{$value->pivot->observaciones == null ? 'No hay información disponible' : $value->pivot->observaciones}}
+                                                                     </p>
+                                                                </div>
+                                                            </li>
+                                                        @endcan
+                                                        @can('show_asginacion', [$comite, $value])
+                                                            <li>
+                                                                <div class="collapsible-header"><i class="material-icons">assignment_ind</i>Asignación de idea</div>
+                                                                <div class="collapsible-body">
+                                                                    <p>
+                                                                        <b class="black-text">
+                                                                            Experto asignado a la idea de proyecto:
+                                                                        </b> 
+                                                                        @if ($value->pivot->admitido == 1)
+                                                                            @if(isset($value->gestor->user))
+                                                                            {{$value->gestor->user->nombres}} {{$value->gestor->user->apellidos}}
+                                                                            @else
+                                                                            Esta idea de proyecto no ha sido asignada a ningún experto(a)
+                                                                            @endif
+                                                                        @else
+                                                                            Esta idea de proyecto no fue aprobada en el comité.
+                                                                        @endif
+                                                                    </p>
+                                                                    <div class="row">
+                                                                        <div class="col s12 {{ $value->pivot->admitido == 1 ? 'm6 l6' : 'm12 l12'}}">
+                                                                            <a href="javascript:void(0)" onclick="enviarNotificacionResultadosCSIBT({{$value->id}}, {{$comite->id}})">
+                                                                                <div class="card-panel blue-grey lighten-3 black-text center">
+                                                                                    <i class="material-icons left">notifications_active</i>
+                                                                                    Enviar resultados del comité.
+                                                                                    <i class="material-icons right">notifications_active</i>
+                                                                                </div>
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="col s12 m6 l6">
+                                                                            @if ($value->pivot->admitido == 1)
+                                                                                <a href="{{route('comite.cambiar.asignacion', [$value, $comite])}}">
+                                                                                    <div class="card-panel yellow lighten-3 black-text center">
+                                                                                        <i class="material-icons left">edit</i>
+                                                                                        Cambiar asignación del experto.
+                                                                                        <i class="material-icons right">edit</i>
+                                                                                    </div>
+                                                                                </a>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        @endcan
+                                                    </ul>
                                                 </td>
                                             </tr>
                                         @endforeach

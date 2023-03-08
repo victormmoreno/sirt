@@ -21,7 +21,7 @@
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li><a href="{{route('csibt')}}">CSIBT</a></li>
-                            <li class="active">{{$comite->codigo}}</li>
+                            <li class="active">Nuevo CSIBT</li>
                         </ol>
                     </div>
                 </div>
@@ -29,25 +29,15 @@
                     <div class="card-content">
                         <br>
                         <center>
-                            <span class="card-title center-align">Comité - {{$comite->codigo}} <b>({{$comite->estado->nombre}})</b></span>
+                            <span class="card-title center-align">Nuevo Comité de Selección de Ideas</span>
                         </center>
                         <div class="divider"></div>
-                        @include('comite.detalle_asignado')
-                        <div class="divider"></div>
                         <div class="row">
-                            <div class="col s12 m12 l12 center">
-                                <a href="{{route('csibt.evidencias', $comite->id)}}">
-                                  <div class="card-panel blue-grey white-text">
-                                    <i class="material-icons left">library_books</i>Evidencias del comité.
-                                  </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="divider"></div>
-                        <div class="row center">
-                            <a href="{{route('csibt')}}" class="waves-effect red lighten-2 btn center-aling">
-                                <i class="material-icons left">arrow_back</i>Cancelar
-                            </a>
+                            <form action="{{route('csibt.store')}}" id="formComiteAgendamientoCreate" method="post">
+                            @include('comite.form_agendamiento', [
+                                'btnText' => 'Guardar'
+                            ])
+                            </form>
                         </div>
                     </div>
                 </div>

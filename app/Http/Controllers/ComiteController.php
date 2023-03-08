@@ -36,71 +36,6 @@ class ComiteController extends Controller
       return back();
     }
     return view('comite.detalle', ['comite' => $comite]);
-    // switch ($comite->estado->nombre) {
-    //   case $comite->estado->IsProgramado():
-    //     return view('comite.detalle_agendamiento', ['comite' => $comite]);
-    //     break;
-    //     case $comite->estado->IsRealizado():
-    //       return view('comite.detalle_realizado', ['comite' => $comite]);
-    //       break;
-    //     case $comite->estado->IsAsignado():
-    //       return view('comite.detalle_asignado', ['comite' => $comite]);
-    //       break;
-    
-    //   default:
-        
-    //     break;
-    // }cargar_evidencias
-
-    // if ( Session::get('login_role') == User::IsInfocenter() && $comite->estado->nombre == 'Programado' ) {
-    //   return view('comite.infocenter.detalle_agendamiento', [
-    //     'comite' => $comite
-    //   ]);
-    // } else if ( Session::get('login_role') == User::IsInfocenter() && $comite->estado->nombre == 'Realizado' ) {
-    //   return view('comite.infocenter.detalle_realizado', [
-    //     'comite' => $comite
-    //   ]);
-    // } else if (Session::get('login_role') == User::IsInfocenter() && $comite->estado->nombre == 'Proyectos asignados') {
-    //   return view('comite.infocenter.detalle_asignado', [
-    //     'comite' => $comite
-    //   ]);
-    // } else if (Session::get('login_role') == User::IsDinamizador() && $comite->estado->nombre == 'Programado') {
-    //   return view('comite.dinamizador.detalle_agendamiento', [
-    //     'comite' => $comite
-    //   ]);
-    // } else if (Session::get('login_role') == User::IsDinamizador() && $comite->estado->nombre == 'Realizado') {
-    //   return view('comite.dinamizador.detalle_realizado', [
-    //     'comite' => $comite
-    //   ]);
-    // } else if (Session::get('login_role') == User::IsDinamizador() && $comite->estado->nombre == 'Proyectos asignados') {
-    //   return view('comite.dinamizador.detalle_asignado', [
-    //     'comite' => $comite
-    //   ]);
-    // } else if (Session::get('login_role') == User::IsExperto() && $comite->estado->nombre == 'Programado') {
-    //   return view('comite.gestor.detalle_agendamiento', [
-    //     'comite' => $comite
-    //   ]);
-    // } else if (Session::get('login_role') == User::IsExperto() && $comite->estado->nombre == 'Realizado') {
-    //   return view('comite.gestor.detalle_realizado', [
-    //     'comite' => $comite
-    //   ]);
-    // } else if (Session::get('login_role') == User::IsExperto() && $comite->estado->nombre == 'Proyectos asignados') {
-    //   return view('comite.gestor.detalle_asignado', [
-    //     'comite' => $comite
-    //   ]);
-    // } else if (Session::get('login_role') == User::IsActivador() && $comite->estado->nombre == 'Programado') {
-    //   return view('comite.administrador.detalle_agendamiento', [
-    //     'comite' => $comite
-    //   ]);
-    // } else if (Session::get('login_role') == User::IsActivador() && $comite->estado->nombre == 'Realizado') {
-    //   return view('comite.administrador.detalle_realizado', [
-    //     'comite' => $comite
-    //   ]);
-    // } else if (Session::get('login_role') == User::IsActivador() && $comite->estado->nombre == 'Proyectos asignados') {
-    //   return view('comite.administrador.detalle_asignado', [
-    //     'comite' => $comite
-    //   ]);
-    // }
   }
 
   /**
@@ -110,8 +45,12 @@ class ComiteController extends Controller
   public function asignar(int $id)
   {
     $comite = Comite::findOrFail($id);
-    $gestores = $this->getGestorRepository()->getAllGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->get();
-    return view('comite.dinamizador.asignar_ideas', [
+    if (!request()->user()->can('asignar_ideas', $comite)) {
+      alert()->warning('Error!','No tienes permisos para para asignar las ideas de este comité a los expertos.')->showConfirmButton('Ok', '#3085d6');
+      return back(); 
+    }
+    $gestores = $this->getGestorRepository()->getAllGestoresPorNodo($comite->ideas()->first()->nodo_id)->get();
+    return view('comite.asignar_ideas', [
       'comite' => $comite,
       'gestores' => $gestores
     ]);
@@ -210,14 +149,16 @@ class ComiteController extends Controller
   */
   public function create()
   {
-    if ( Session::get('login_role') == User::IsInfocenter() ) {
-      $ideas = Idea::ConsultarIdeasConvocadasAComite( auth()->user()->infocenter->nodo_id )->get();
-      $gestores = $this->getGestorRepository()->getAllGestoresPorNodo( auth()->user()->infocenter->nodo_id )->get();
-      return view('comite.infocenter.create2', [
-        'ideas' => $ideas,
-        'gestores' => $gestores
-      ]);
+    if (!request()->user()->can('create', Comite::class)) {
+      alert('No autorizado', 'No tienes permisos para registrar un comité', 'error')->showConfirmButton('Ok', '#3085d6');
+      return back();
     }
+    $ideas = Idea::ConsultarIdeasConvocadasAComite( request()->user()->getNodoUser() )->get();
+    $gestores = $this->getGestorRepository()->getAllGestoresPorNodo( request()->user()->getNodoUser() )->get();
+    return view('comite.create', [
+      'ideas' => $ideas,
+      'gestores' => $gestores
+    ]);
   }
 
   /**
