@@ -170,16 +170,15 @@ class ComiteController extends Controller
    */
   public function cambiar_idea_gestor(Idea $idea, Comite $comite)
   {
-    if ($idea->nodo_id != auth()->user()->dinamizador->nodo_id) {
-      alert()->error('Error!','Esta idea de proyecto no pertenece a tu nodo.')->showConfirmButton('Ok', '#3085d6');
-      return back(); 
-    } else {
-      $gestores = $this->getGestorRepository()->getAllGestoresPorNodo(auth()->user()->dinamizador->nodo_id)->get();
-      return view('comite.dinamizador.update_gestor', [
-      'idea' => $idea,
-      'comite' => $comite,
-      'gestores' => $gestores]);
+    if (!request()->user()->can('cambiar_asignacion', [$idea, $comite])) {
+      alert('No autorizado', 'No tienes permisos para cambiar al asignación de experto de esta idea', 'error')->showConfirmButton('Ok', '#3085d6');
+      return back();
     }
+    $gestores = $this->getGestorRepository()->getAllGestoresPorNodo($idea->nodo_id)->get();
+    return view('comite.update_gestor', [
+    'idea' => $idea,
+    'comite' => $comite,
+    'gestores' => $gestores]);
   }
 
   /**

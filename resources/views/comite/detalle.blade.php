@@ -4,7 +4,7 @@
 @php
     $class = 'm12 l12';
 @endphp
-@canany(['cargar_evidencias', 'edit', 'calificar', 'notificar_comite'], [$comite, $comite->ideas->first()])
+@canany(['cargar_evidencias', 'edit', 'calificar', 'notificar_comite', 'asignar_ideas'], [$comite, $comite->ideas->first()])
     @php
         $class = 'm8 l8';
     @endphp
@@ -18,7 +18,7 @@
                     <div class="col s8 m8 l10">
                         <h5 class="left-align">
                             <a class="footer-text left-align" href="{{route('csibt')}}">
-                                <i class="material-icons arrow-l">
+                                <i class="material-icons arrow-l left">
                                     arrow_back
                                 </i>
                             </a>
@@ -41,7 +41,7 @@
                         </center>
                         <div class="divider"></div>
                         <div class="row">
-                            @canany(['cargar_evidencias', 'edit', 'calificar', 'notificar_comite'], [$comite, $comite->ideas->first()])
+                            @canany(['cargar_evidencias', 'edit', 'calificar', 'notificar_comite', 'asignar_ideas'], [$comite, $comite->ideas->first()])
                                 <div class="col s12 m4 l4">
                                     <div class="row">
                                         @include('comite.options')
