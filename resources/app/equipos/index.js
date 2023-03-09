@@ -173,6 +173,11 @@ var equipo = {
                     width: '15%'
                 },
                 {
+                    data: 'destacar',
+                    name: 'destacar',
+                    width: '15%'
+                },
+                {
                     data: 'edit',
                     name: 'edit',
                     width: '15%',
@@ -369,6 +374,41 @@ var equipo = {
                     'Tu equipo está a salvo',
                     'error'
                 )
+            }
+        })
+    },
+    destacarEquipo: function(id, destacado, limite) {
+        let estado = destacado == 0 ? 'destacar' : 'dejar de destacar'
+        Swal.fire({
+            title: '¿Estás seguro de '+estado+' este equipo?',
+            text: 'Solo puede haber un límite de '+limite+' equipos destacados.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: destacado == 0 ? 'Sí, destacar equipo' : 'Sí, dejar de destacar equipo',
+            cancelButtonText: 'No, cancelar',
+          }).then((result) => {
+            if (result.value) {
+                $.ajax(
+                {
+                    url: host_url + `/equipos/destacar/${id}`,
+                    type: 'GET',
+                    success: function (response){
+                        Swal.fire(
+                            response.title,
+                            response.message,
+                            response.type
+                        );
+                        if(response.state){
+                            $('#equipo_actions_data_table').DataTable().ajax.reload();
+                            // location.href = response.route;
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert("Error: " + errorThrown);
+                    }
+                });
             }
         })
     }

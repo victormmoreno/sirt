@@ -128,15 +128,17 @@
                                                                         @endif
                                                                     </p>
                                                                     <div class="row">
-                                                                        <div class="col s12 {{ $value->pivot->admitido == 1 ? 'm6 l6' : 'm12 l12'}}">
-                                                                            <a href="javascript:void(0)" onclick="enviarNotificacionResultadosCSIBT({{$value->id}}, {{$comite->id}})">
-                                                                                <div class="card-panel blue-grey lighten-3 black-text center">
-                                                                                    <i class="material-icons left">notifications_active</i>
-                                                                                    Enviar resultados del comité.
-                                                                                    <i class="material-icons right">notifications_active</i>
-                                                                                </div>
-                                                                            </a>
-                                                                        </div>
+                                                                        @can('notificar_resultado', [$comite, $value])
+                                                                            <div class="col s12 {{ $value->pivot->admitido == 1 ? 'm6 l6' : 'm12 l12'}}">
+                                                                                <a href="javascript:void(0)" onclick="enviarNotificacionResultadosCSIBT({{$value->id}}, {{$comite->id}})">
+                                                                                    <div class="card-panel blue-grey lighten-3 black-text center">
+                                                                                        <i class="material-icons left">notifications_active</i>
+                                                                                        Enviar resultados del comité.
+                                                                                        <i class="material-icons right">notifications_active</i>
+                                                                                    </div>
+                                                                                </a>
+                                                                            </div>
+                                                                        @endcan
                                                                         <div class="col s12 m6 l6">
                                                                             @if ($value->pivot->admitido == 1)
                                                                                 <a href="{{route('comite.cambiar.asignacion', [$value, $comite])}}">

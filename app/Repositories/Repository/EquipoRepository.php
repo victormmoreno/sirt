@@ -129,4 +129,69 @@ class EquipoRepository
         }
         return $linea;
     }
+
+    /**
+     * Destaca o deja de destacar un equipo
+     *
+     * @param Equipo $equipo
+     * @return bool
+     * @author dum
+     **/
+    public function destacar(Equipo $equipo)
+    {
+        DB::beginTransaction();
+        try {
+            $nuevo_estado = null;
+            $msj = 'null';
+            if ($equipo->destacado == $equipo->IsDestacado()) {
+                $nuevo_estado = $equipo->NoDestacado();
+                $msj = 'El equipo se ha dejado de destacar';
+            } else {
+                $nuevo_estado = $equipo->IsDestacado();
+                $msj = 'El equipo se ha destacado';
+            }
+            $destacados = $this->consultarCantidadDestacados()->where('n.id', $equipo->nodo_id)->where('lt.id', $equipo->lineatecnologica_id)->first();
+            if ($nuevo_estado == $equipo->IsDestacado() && $destacados->cantidad > config('app.equipos.num_destacados')) {
+                return [
+                    'state' => false,
+                    'msj' => 'Excediste el límite de equipos para destacar, primero debes dejar de destacar un equipo para destacar otro, recuerdo que el límite de equipos destacados por línea es: ' . config('app.equipos.num_destacados'),
+                    'type' => 'warning',
+                    'title' => 'Advertencia!'
+                ];
+            }
+            $equipo->update(['destacado' => $nuevo_estado]);
+            DB::commit();
+            return [
+                'state' => true,
+                'msj' => $msj,
+                'type' => 'success',
+                'title' => 'Realizado!'
+            ];
+        } catch (\Exception $e) {
+            DB::rollback();
+            return [
+                'state' => false,
+                'msj' => $e->getMessage(),
+                'type' => 'error',
+                'title' => 'Error'
+            ];
+        }
+    }
+
+    /**
+     * Consulta la cantidad de equipos destacados de un nodo y línea
+     *
+     * @return type
+     * @author dum
+     **/
+    public function consultarCantidadDestacados()
+    {
+        return Equipo::select('e.nombre as nodo', 'lt.nombre as linea')
+        ->selectRaw('count(equipos.id) AS cantidad')
+        ->join('nodos as n', 'n.id', '=', 'equipos.nodo_id')
+        ->join('entidades as e', 'e.id', '=', 'n.entidad_id')
+        ->join('lineastecnologicas as lt', 'lt.id', '=', 'equipos.lineatecnologica_id')
+        ->where('equipos.destacado', Equipo::IsDestacado())
+        ->groupBy('nodo', 'linea');
+    }
 }

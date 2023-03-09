@@ -150,8 +150,8 @@ Route::get('/equipos/export', 'EquipoController@export')->name('equipo.export');
 Route::get('/equipos/getequiposporlinea/{nodo}/{lineatecnologica}', 'EquipoController@getEquiposPorLinea')
     ->name('equipo.getequiposporlinea');
 
-Route::get('/equipos/cambiar-estado/{id}/', 'EquipoController@changeState')
-    ->name('equipo.cambiar-estado');
+Route::get('/equipos/cambiar-estado/{id}/', 'EquipoController@changeState')->name('equipo.cambiar-estado');
+Route::get('/equipos/destacar/{id}/', 'EquipoController@destacarEquipo')->name('equipo.destacar');
 Route::resource('equipos', 'EquipoController', [
     'as' => 'equipos',
 ])->names([

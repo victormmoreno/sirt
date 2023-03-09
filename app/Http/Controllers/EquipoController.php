@@ -370,6 +370,30 @@ class EquipoController extends Controller
         ], Response::HTTP_OK);
     }
 
+    /**
+     * Método que destacar o deja de destacar un equipo
+     *
+     * @param int $id Id del equipo
+     * @return Response
+     * @author dum
+     **/
+    public function destacarEquipo(int $id)
+    {
+        $equipo = Equipo::find($id);
+        if(!request()->user()->can('destacar', $equipo)) {
+            alert('No autorizado', 'No puedes destacar este equipo', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+        $destacar = $this->getEquipoRepository()->destacar($equipo);
+        return response()->json([
+            'state' => $destacar['state'],
+            'type' => $destacar['type'],
+            'title' => $destacar['title'],
+            'equipo' => $equipo,
+            'message' => $destacar['msj']
+        ]);
+    }
+
     public function export(Request $request, $extension = 'xlsx')
     {
         $this->authorize('view', Equipo::class);

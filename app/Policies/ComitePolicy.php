@@ -245,4 +245,24 @@ class ComitePolicy
         }        
         return false;
     }
+
+    /**
+     * Determina si el usuario puede notificar el resultado del comité
+     *
+     * @param User $user
+     * @param Comite $comite
+     * @param Idea $idea
+     * @return bool
+     * @author dum
+     **/
+    public function notificar_resultado(User $user, Comite $comite, Idea $idea)
+    {
+        if ($comite->estado->nombre == $comite->estado->IsAsignado()) {
+            if ((Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter()]) && $idea->nodo_id == $user->getNodoUser()) || Str::contains(session()->get('login_role'), [$user->IsAdministrador()])) {
+                return true;
+            }
+            return false;
+        }        
+        return false;
+    }
 }
