@@ -253,5 +253,8 @@ return [
         ],
         'response_time' => env('TEC_SUPP_RESPONSE_TIME', '72 horas')
     ],
+    'equipos' => [
+        'num_destacados' => env('EQUIPOS_NUM_DESTACADOS', 10)
+    ]
 
 ];
