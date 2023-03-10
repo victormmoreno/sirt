@@ -26,9 +26,7 @@ class EquipoRepository
     {
 
         DB::beginTransaction();
-
         try {
-
             Equipo::create([
                 'nodo_id' => $this->findLineaTecnologicaNodoByRequest($request),
                 'lineatecnologica_id' => $request->input('txtlineatecnologica'),
@@ -40,7 +38,6 @@ class EquipoRepository
                 'anio_compra'          => $request->input('txtaniocompra'),
                 'horas_uso_anio'       => $request->input('txthorasuso'),
             ]);
-
             DB::commit();
             return true;
         } catch (\Exception $e) {
@@ -77,6 +74,35 @@ class EquipoRepository
             DB::rollback();
             return false;
         }
+    }
+
+    /**
+     * Consulta la información de los materiales
+     *
+     * @return Builder
+     * @author dum
+     **/
+    public function consultar()
+    {
+        return Equipo::select(
+            'e.nombre as nodo',
+            'lt.nombre as linea',
+            'codigo',
+            'destacado',
+            'referencia',
+            'equipos.nombre',
+            'marca',
+            'costo_adquisicion',
+            'vida_util',
+            'anio_compra',
+            'horas_uso_anio',
+            'deleted_at'
+        )
+        ->join('nodos as n', 'n.id', '=', 'equipos.nodo_id')
+        ->join('entidades as e', 'e.id', '=', 'n.entidad_id')
+        ->join('lineastecnologicas as lt', 'lt.id', '=', 'equipos.lineatecnologica_id')
+        ->orderBy('nodo')
+        ->orderBy('equipos.nombre');
     }
 
     /**

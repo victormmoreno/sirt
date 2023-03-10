@@ -26,6 +26,7 @@ class Equipo extends Model
     protected $fillable = [
         'nodo_id',
         'lineatecnologica_id',
+        'codigo',
         'destacado',
         'referencia',
         'nombre',

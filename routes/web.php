@@ -152,6 +152,7 @@ Route::get('/equipos/getequiposporlinea/{nodo}/{lineatecnologica}', 'EquipoContr
 
 Route::get('/equipos/cambiar-estado/{id}/', 'EquipoController@changeState')->name('equipo.cambiar-estado');
 Route::get('/equipos/destacar/{id}/', 'EquipoController@destacarEquipo')->name('equipo.destacar');
+Route::get('/equipos/importar', 'EquipoController@importar')->name('equipo.import');
 Route::resource('equipos', 'EquipoController', [
     'as' => 'equipos',
 ])->names([
@@ -630,6 +631,7 @@ Route::group(
         Route::get('/export_trazabilidad/{idproyecto}', 'Excel\ProyectoController@exportTrazabilidadProyecto')->name('excel.proyecto.trazabilidad');
         Route::get('/import_metas_form', 'IndicadorController@form_import_metas')->name('indicadores.form.metas')->middleware('role_session:Activador');
         Route::get('/export_materiales', 'Excel\MaterialController@download')->name('download.materiales');
+        Route::get('/export_equipos', 'Excel\EquipoController@download')->name('download.equipos');
 
         //Rutas para la generación de excel del módulo de nodo
         Route::get('/excelnodo', 'Excel\NodoController@exportQueryAllNodo')
@@ -641,6 +643,7 @@ Route::group(
         ->name('excel.exportexcelfornodo');
 
         Route::post('/import_materiales', 'Excel\MaterialController@import')->name('import.materiales');
+        Route::post('/import_equipos', 'Excel\EquipoController@import')->name('import.equipos');
         Route::post('/import_metas', 'Excel\IndicadorController@importIndicadoresAll')->name('indicadores.import.metas')->middleware('role_session:Activador');
     }
 );

@@ -156,4 +156,16 @@ class EquipoPolicy
         return false;
     }
 
+    /**
+     * Determina si el usuario puede importar información de equipos
+     *
+     * @param User $user
+     * @return type
+     * @throws conditon
+     **/
+    public function import(User $user)
+    {
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador()]);
+    }
+
 }
