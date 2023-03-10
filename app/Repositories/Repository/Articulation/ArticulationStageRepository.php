@@ -81,7 +81,6 @@ class ArticulationStageRepository
         try {
             $articulationStage = $this->storeArticulationStage($request);
             $this->validateArticulationStageType($request, $articulationStage);
-            $this->storageFile( $request, $articulationStage );
             DB::commit();
             return [
                 'state' => true,
@@ -113,33 +112,6 @@ class ArticulationStageRepository
     }
 
     /**
-     * method to store the confidentiality format
-     * @param Request $request
-     * @param $model
-     */
-    private function storageFile(Request $request, \Illuminate\Database\Eloquent\Model $model = null)
-    {
-        if($request->hasFile('confidency_format')){
-            try {
-
-                $fileName =  $model->code.'_' .$request->file('confidency_format')->getClientOriginalName();
-                $node = sprintf('%02d',$model->node->id);
-                $year = Carbon::parse($model->start_date)->isoFormat('YYYY');
-                $module = class_basename($model);
-                $route = "public/{$node}/{$year}/".Str::slug(__('articulation-stage'))."/{$model->code}";
-                $fileUrl = $request->file('confidency_format')
-                    ->storeAs($route, $fileName);
-                $model->archivomodel()->create([
-                    'ruta' => Storage::url($fileUrl)
-                ]);
-                return $model;
-            } catch (\Exception $ex) {
-                return $ex->getMessage();
-            }
-        }
-    }
-
-    /**
         * store articulations
         * @param Request $request
     */
@@ -148,10 +120,10 @@ class ArticulationStageRepository
             'code' => $this->generateCode('EA'),
             'name' => $request->name,
             'description' => $request->description,
+            'expected_results' => $request->expected_results,
             'scope'  => $request->scope,
             'status' => ArticulationStage::STATUS_CLOSE,
             'start_date' => Carbon::now(),
-            'confidentiality_format' => ArticulationStage::CONFIDENCIALITY_FORMAT_YES,
             'terms_verified_at' => Carbon::now(),
             'node_id' => request()->user()->can('listNodes', ArticulationStage::class) ? $request->node : auth()->user()->articulador->nodo->id,
             'interlocutor_talent_id' => $request->talent,
@@ -168,7 +140,6 @@ class ArticulationStageRepository
         try {
             $articulationStage = $this->updateArticulationStage($request, $articulationStage);
             $this->validateArticulationStageType($request, $articulationStage);
-            $this->updateFile( $request , $articulationStage);
             DB::commit();
             return [
                 'state' => true,
@@ -191,8 +162,8 @@ class ArticulationStageRepository
         $articulationStage->update([
             'name' => $request->name,
             'description' => $request->description,
+            'expected_results' => $request->expected_results,
             'scope'  => $request->scope,
-            'confidentiality_format' => ArticulationStage::CONFIDENCIALITY_FORMAT_YES,
             'terms_verified_at' => Carbon::now(),
             'interlocutor_talent_id' => $request->talent,
             'node_id' => request()->user()->can('listNodes', ArticulationStage::class) ? $request->node : (isset(auth()->user()->articulador->nodo) ? auth()->user()->articulador->nodo->id : 1),
@@ -200,39 +171,6 @@ class ArticulationStageRepository
         return $articulationStage;
     }
 
-
-    private function updateFile(Request $request, $model = null)
-    {
-        if($model){
-            if ($request->hasFile('confidency_format')) {
-                try {
-                    $fileName =  $model->code.'_' .$request->file('confidency_format')->getClientOriginalName();
-                    $node = sprintf('%02d',$model->node->id);
-                    $year = Carbon::parse($model->start_date)->isoFormat('YYYY');
-                    $module = class_basename($model);
-                    $route = "public/{$node}/{$year}/".Str::slug(__('articulation-stage'))."/{$model->code}";
-                    $fileUrl = $request->file('confidency_format') ->storeAs($route, $fileName);
-                    if(isset($model->archivomodel)){
-                        $filePath = str_replace('storage', 'public', $model->archivomodel->ruta);
-                        Storage::delete($filePath);
-                        $model->archivomodel()->update([
-                            'ruta' => Storage::url($fileUrl)
-                        ]);
-                    }else{
-                        $model->archivomodel()->create([
-                            'ruta' => Storage::url($fileUrl)
-                        ]);
-                    }
-
-                    return $model;
-                }catch (\Exception $ex) {
-                    return $ex->getMessage();
-                }
-            }
-            return $model;
-        }
-
-    }
 
     /**
      * Genera un código para el acompañamiento
@@ -465,7 +403,6 @@ class ArticulationStageRepository
 
     /**
      * @param ArticulationStage $articulationStage
-     * @return array
      */
     public function notifyApprovalEndorsement(ArticulationStage $articulationStage, string $fase = null)
     {

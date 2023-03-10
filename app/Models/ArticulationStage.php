@@ -14,8 +14,6 @@ class ArticulationStage extends Model
      * The constants for handling static or boolean values.
      * @const
      */
-    const CONFIDENCIALITY_FORMAT_YES = 1;
-    const CONFIDENCIALITY_FORMAT_NO = 0;
     const  STATUS_OPEN = 1;
     const  STATUS_CLOSE = 0;
     const  ENDORSEMENT_YES = 1;
@@ -274,8 +272,6 @@ class ArticulationStage extends Model
     }
     /**
      * The presenter
-     *
-     * @return void
      */
     public function present()
     {
