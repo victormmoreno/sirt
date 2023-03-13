@@ -76,17 +76,17 @@ class EquipoImport implements ToCollection, WithHeadingRow
                 return false;
             } 
             foreach ($rows as $key => $row) {
-                // Quitar espacios a los campos que no los necesita
+                // // Quitar espacios a los campos que no los necesita
                 $row['nodo'] = ltrim(rtrim($row['nodo']));
                 $row['linea_tecnologica'] = ltrim(rtrim($row['linea_tecnologica']));
-                $row['codigo_del_equipo'] = ltrim(rtrim( $row['codigo_del_equipo']));
-                $row['equipo'] = ltrim(rtrim( $row['equipo']));
+                $row['codigo_del_equipo'] = ltrim(rtrim($row['codigo_del_equipo']));
+                $row['equipo'] = ltrim(rtrim($row['equipo']));
                 $row['referencia'] = ltrim(rtrim($row['referencia']));
                 $row['marca'] = ltrim(rtrim($row['marca']));
                 $row['costo_adquisicion'] = ltrim(rtrim($row['costo_adquisicion']));
                 $row['vida_util_anos'] = ltrim(rtrim($row['vida_util_anos']));
                 $row['promedio_horas_uso_al_ano'] = ltrim(rtrim($row['promedio_horas_uso_al_ano']));
-                $row['ano_de_compra'] = ltrim(rtrim($row['ano_de_compra']));
+                // $row['ano_de_compra'] = ltrim(rtrim($row['ano_de_compra']));
                 $row['estado'] = ltrim(rtrim($row['estado']));
 
                 if ($this->session == User::IsAdministrador()) {

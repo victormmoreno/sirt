@@ -22,6 +22,18 @@ class EquipoRepository
         ]);
     }
 
+    public function generarCodigoEquipo($request)
+    {
+        $codigo = null;
+        $prefix = 'EQ';
+        $anho = $request->txtaniocompra;
+        $nodo = sprintf("%02d", $request->user()->getNodoUser() == null ? $request->txtnodo_id : $request->user()->getNodoUser());
+        $linea = sprintf("%02d", $request->user()->getLineaUser() == null ? $request->txtlineatecnologica : $request->user()->getLineaUser());
+        $id = sprintf("%06d", Equipo::selectRaw('MAX(id+1) AS max')->get()->last()->max);
+        $codigo = $prefix . $anho . '-' . $nodo . $linea . '-' . $id; 
+        return $codigo;
+    }
+
     public function storeEquipo($request)
     {
 
@@ -30,6 +42,7 @@ class EquipoRepository
             Equipo::create([
                 'nodo_id' => $this->findLineaTecnologicaNodoByRequest($request),
                 'lineatecnologica_id' => $request->input('txtlineatecnologica'),
+                'codigo' => $this->generarCodigoEquipo($request),
                 'nombre'               => $request->input('txtnombre'),
                 'referencia'           => $request->input('txtreferencia'),
                 'marca'                => $request->input('txtmarca'),
@@ -177,7 +190,12 @@ class EquipoRepository
                 $msj = 'El equipo se ha destacado';
             }
             $destacados = $this->consultarCantidadDestacados()->where('n.id', $equipo->nodo_id)->where('lt.id', $equipo->lineatecnologica_id)->first();
-            if ($nuevo_estado == $equipo->IsDestacado() && $destacados->cantidad > config('app.equipos.num_destacados')) {
+            if ($destacados == null) {
+                $destacados = 0;
+            } else {
+                $destacados = $destacados->cantidad;
+            }
+            if ($nuevo_estado == $equipo->IsDestacado() && $destacados >= config('app.equipos.num_destacados')) {
                 return [
                     'state' => false,
                     'msj' => 'Excediste el límite de equipos para destacar, primero debes dejar de destacar un equipo para destacar otro, recuerdo que el límite de equipos destacados por línea es: ' . config('app.equipos.num_destacados'),

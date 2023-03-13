@@ -181,10 +181,9 @@ class EquipoController extends Controller
             return back();
         }
         $nodos = $this->getNodoRepository()->getSelectNodo();
-        $nodo = session()->get('login_role') == User::IsAdministrador() ? $nodos->first()->id : auth()->user()->dinamizador->nodo->id;
-
+        $nodo = request()->user()->getNodoUser() == null ? $nodos->first()->id : request()->user()->getNodoUser();
         $lineastecnologicas = $this->getLineaTecnologicaRepository()->getAllLineaNodo($nodo);
-
+        // dd($lineastecnologicas);
         return view('equipo.create', [
             'lineastecnologicas' => $lineastecnologicas,
             'year' => Carbon::now()->isoFormat('YYYY'),
@@ -265,7 +264,7 @@ class EquipoController extends Controller
 
         return view('equipo.edit', [
             'year'               => Carbon::now()->isoFormat('YYYY'),
-            'lineastecnologicas' => $lineastecnologicas->lineas,
+            'lineastecnologicas' => $lineastecnologicas,
             'equipo'             => $equipo,
             'nodos' => $nodos
         ]);
@@ -314,6 +313,7 @@ class EquipoController extends Controller
             $equipo->restore();
         } else {
             $equipo->delete();
+            $equipo->update(['destacado' => $equipo->NoDestacado()]);
         }
         return response()->json([
             'statusCode' => Response::HTTP_OK,
