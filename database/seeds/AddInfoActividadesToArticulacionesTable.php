@@ -27,8 +27,10 @@ class AddInfoActividadesToArticulacionesTable extends Seeder
                 $cronograma = $articulacion->articulacion_proyecto->actividad->cronograma;
                 $seguimiento = $articulacion->articulacion_proyecto->actividad->seguimiento;
                 $formulario_final = $articulacion->articulacion_proyecto->actividad->formulario_final;
+                $entidad_id = $articulacion->articulacion_proyecto->entidad_id;
                 $articulacion->update([
                     'codigo_articulacion' => $codigo_articulacion,
+                    'entidad_id' => $entidad_id,
                     'nombre' => $nombre,
                     'fecha_inicio' => $fecha_inicio,
                     'fecha_cierre' => $fecha_cierre,

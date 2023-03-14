@@ -4,10 +4,9 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterEquiposTable extends Migration
+class AlterArticulacionesAddEntidadTable extends Migration
 {
-    public $tableName = 'equipos';
-
+    public $tableName = 'articulaciones';
     /**
      * Run the migrations.
      *
@@ -16,7 +15,12 @@ class AlterEquiposTable extends Migration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->string('codigo', 50)->default(0)->after('lineatecnologica_id');
+            $table->unsignedInteger('entidad_id')->nullable()->after('id');
+            $table->index(["entidad_id"], 'fk_articulacion_entidades1_idx');
+            $table->foreign('entidad_id', 'fk_articulacion_entidades1_idx')
+            ->references('id')->on('entidades')
+            ->onDelete('no action')
+            ->onUpdate('no action');
         });
     }
 
@@ -28,7 +32,7 @@ class AlterEquiposTable extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->dropColumn(['codigo']);
+            $table->dropColumn(['entidad_id']);
         });
     }
 }
