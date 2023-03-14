@@ -8,7 +8,7 @@
     <table class="bordered">
         <tr>
             <td colspan="1" rowspan="2"><img class="center-image" src="{{asset('img/web.png')}}"></td>
-            <td colspan="5" class="centered"><b>Acta de cierre<b></td>
+            <td colspan="5" class="centered"><b>Resumen {{ __('articulation-stage') }}<b></td>
         </tr>
         <tr>
             <td colspan="5" class="centered"><b>ACTA No. {{ substr($articulationStage->present()->articulationStageCode(), -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b></td>

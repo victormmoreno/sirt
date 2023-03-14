@@ -248,10 +248,7 @@ class ArticulationStagePolicy
      */
     public function downloadCertificateStart(User $user, ArticulationStage $articulationStage)
     {
-        return (bool) $user->hasAnyRole([User::IsArticulador()])
-            && ((session()->has('login_role') && session()->get('login_role') == User::IsArticulador()))
-            && ($user->articulador->nodo_id == $articulationStage->node_id)
-            && ($articulationStage->status != ArticulationStage::STATUS_CLOSE && optional($articulationStage->end_date)->format('Y') > 2022 || is_null($articulationStage->end_date));
+        return false;
     }
     /**
      * Determine if the given articulations can be Upload Evidences by the user..

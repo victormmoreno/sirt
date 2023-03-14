@@ -80,7 +80,7 @@
                 href="{{ route('articulation-stage.download-certificate', [ 'cierre',$articulationStage]) }}"
                 class="collection-item">
                 <i class="material-icons left">cloud_download</i>
-                Descargar acta cierre
+                Descargar resumen {{ __('articulation-stage') }}
             </a>
         @endcan
         @can('downloadCertificateStart', $articulationStage)
