@@ -156,5 +156,16 @@
             </div>
         </div>
     </div>
+    <table
+        class="display responsive-table datatable-example dataTable"
+        style="width: 100%"
+        id="archivosArticulacion">
+        <thead class="bg-primary white-text">
+        <tr>
+            <th>Archivo</th>
+            <th style="width: 10%">Descargar</th>
+        </tr>
+        </thead>
+    </table>
 </div>
 

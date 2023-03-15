@@ -1,6 +1,5 @@
 $(document).ready(function() {
-
-    var table = $('#articulation_data_table').DataTable({
+    const table = $('#articulation_data_table').DataTable({
         language: {
             "decimal": "",
             "emptyTable": "No hay información",
@@ -57,7 +56,6 @@ function endorsementQuestionArticulationStage(e) {
 
 function questionRejectEndorsementArticulationStage(e) {
     e.preventDefault();
-    //$('button[type="submit"]').attr('disabled', true);
     Swal.fire({
         title: '¿Está seguro(a) de no aprobar el aval?',
         input: 'text',

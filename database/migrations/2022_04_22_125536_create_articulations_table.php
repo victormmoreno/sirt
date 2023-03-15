@@ -19,7 +19,7 @@ class CreateArticulationsTable extends Migration
             $table->string('name', 600); //nombre
             $table->text('description'); //descripcion
             $table->timestamp('start_date'); //fecha inicio
-            $table->timestamp('end_date')->nullable(); //fecha inicio
+            $table->timestamp('end_date')->nullable(); //fecha cierre
             $table->timestamp('expected_end_date')->nullable(); //fecha esperada
             $table->string('entity')->nullable();  //fecha esperada
             $table->string('contact_name')->nullable(); //nombre_contacto

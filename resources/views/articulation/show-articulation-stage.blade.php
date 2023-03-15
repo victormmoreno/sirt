@@ -139,22 +139,7 @@
                                                         </ul>
                                                     </div>
                                                 </div>
-
-                                                <div class="divider"></div>
-                                                <table
-                                                    class="display responsive-table datatable-example dataTable"
-                                                    style="width: 100%"
-                                                    id="archivosArticulacion">
-                                                    <thead class="bg-primary white-text">
-                                                    <tr>
-                                                        <th>Archivo</th>
-                                                        <th style="width: 10%">Descargar</th>
-                                                    </tr>
-                                                    </thead>
-                                                </table>
                                             </div>
-
-
                                             <div class="col s12 m12 l12">
                                                 <span class="mailbox-title primary-text text-center">Articulaciones</span>
                                             </div>
@@ -218,41 +203,4 @@
     </div>
 </main>
 @endsection
-@push('script')
-    <script>
-        datatableArchiveArticulationStage();
-
-        function datatableArchiveArticulationStage() {
-            $('#archivosArticulacion').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                processing: true,
-                serverSide: true,
-                order: false,
-
-                "ajax": {
-                    "url": "{{route('articulation.files', [$articulationStage->id])}}",
-                    "type": "get",
-                    "data":{
-                        type: "{{ basename(\App\Models\ArticulationStage::class)}}"
-                    },
-                },
-                columns: [
-                    {
-                        data: 'file',
-                        name: 'file',
-                        orderable: false,
-                    },
-                    {
-                        data: 'download',
-                        name: 'download',
-                        orderable: false,
-                    },
-                ],
-            });
-        }
-
-    </script>
-@endpush
 
