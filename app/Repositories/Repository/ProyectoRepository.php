@@ -50,25 +50,25 @@ class ProyectoRepository extends Repository
      * @return mixed
      * @author dum
      */
-    private function returnDirectoryProyectoFiles($id)
-    {
-        // consulta los archivos de un proyecto (registro de la base de datos)
-        $tempo = ArchivoArticulacionProyecto::where('articulacion_proyecto_id', $id)->first();
+    // private function returnDirectoryProyectoFiles($id)
+    // {
+    //     // consulta los archivos de un proyecto (registro de la base de datos)
+    //     $tempo = ArchivoArticulacionProyecto::where('articulacion_proyecto_id', $id)->first();
 
-        if ($tempo == null) {
-            return false;
-        } else {
-        // Función para dividir la cadena en un array (Partiendolos con el delimitador /)
-        $route = preg_split("~/~", $tempo->ruta, 9);
-        // Extrae el último elemento del array
-        array_pop($route);
-        // Une el array en un string, dicho string se separa por /
-        $route = implode("/", $route);
-        // Reemplaza storage por public en la routa
-        $route = str_replace('storage', 'public', $route);
-        return $route;
-        }
-    }
+    //     if ($tempo == null) {
+    //         return false;
+    //     } else {
+    //     // Función para dividir la cadena en un array (Partiendolos con el delimitador /)
+    //     $route = preg_split("~/~", $tempo->ruta, 9);
+    //     // Extrae el último elemento del array
+    //     array_pop($route);
+    //     // Une el array en un string, dicho string se separa por /
+    //     $route = implode("/", $route);
+    //     // Reemplaza storage por public en la routa
+    //     $route = str_replace('storage', 'public', $route);
+    //     return $route;
+    //     }
+    // }
 
     // public function horasAsesoriaPorExperto(int $id)
     // {
@@ -109,7 +109,7 @@ class ProyectoRepository extends Repository
     private function verificarCambioDeTalentoInterlocutor($talentos_nuevos, $proyecto)
     {
         $talento_nuevo = $this->verificarNuevoTalento($talentos_nuevos);
-        $talento_actual = $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first()->id;
+        $talento_actual = $proyecto->talentos()->wherePivot('talento_lider', 1)->first()->id;
         if ($talento_nuevo == $talento_actual) {
             return false;
         }
@@ -171,12 +171,12 @@ class ProyectoRepository extends Repository
         DB::beginTransaction();
         try {
             $proyecto_actual = $proyecto;
-            $talentos_actuales = $proyecto_actual->articulacion_proyecto->talentos()->orderBy('id')->get();
+            $talentos_actuales = $proyecto_actual->talentos()->orderBy('id')->get();
             $syncData = array();
             $syncData = $this->arraySyncTalentosDeUnProyecto($request);
             $cambio_talento_interlocutor = $this->verificarCambioDeTalentoInterlocutor($syncData, $proyecto_actual);
-            $proyecto->articulacion_proyecto->talentos()->sync($syncData, true);
-            $cambio_talentos_proyecto = $this->verificarCambioDeTalentos($talentos_actuales, $proyecto->articulacion_proyecto->talentos()->orderBy('id')->get());
+            $proyecto->talentos()->sync($syncData, true);
+            $cambio_talentos_proyecto = $this->verificarCambioDeTalentos($talentos_actuales, $proyecto->talentos()->orderBy('id')->get());
             if ($cambio_talento_interlocutor) {
                 // Historial del cambio de talento interlocutor
                 $this->registrarHistorialProyecto($proyecto, 'cambió el talento interlocutor');
@@ -185,7 +185,7 @@ class ProyectoRepository extends Repository
                 // Historial del cambio de talentos ejecutores
                 $this->registrarHistorialProyecto($proyecto, 'cambió los talentos del proyecto');
             }
-            ArticulacionProyecto::habilitarTalentos($proyecto->articulacion_proyecto);
+            Proyecto::habilitarTalentos($proyecto);
             DB::commit();
             return ['state' => true, 'id' => $proyecto->id];
         } catch (\Throwable $th) {
@@ -197,11 +197,11 @@ class ProyectoRepository extends Repository
 
     public function registrarHistorialProyecto($proyecto, $movimiento)
     {
-        $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', $movimiento)->first(), [
-            'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
+        $proyecto->movimientos()->attach(Movimiento::where('movimiento', $movimiento)->first(), [
+            'proyecto_id' => $proyecto->id,
             'user_id' => auth()->user()->id,
             'fase_id' => $proyecto->fase_id,
-            'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+            'role_id' => Role::where('name', session()->get('login_role'))->first()->id
         ]);
     }
 
@@ -215,12 +215,10 @@ class ProyectoRepository extends Repository
     public function selectProyecto()
     {
         return Proyecto::select(
-            'actividades.codigo_actividad AS codigo_proyecto',
-            'actividades.nombre',
+            'codigo_proyecto',
+            'proyectos.nombre',
             'areasconocimiento.nombre AS nombre_areaconocimiento',
             'sublineas.nombre AS sublinea_nombre',
-            'articulacion_proyecto.id AS articulacion_proyecto_id',
-            'actividades.fecha_cierre AS fecha_fin',
             'lineastecnologicas.abreviatura AS abreviatura_linea',
             'lineastecnologicas.nombre AS nombre_linea',
             'fecha_inicio',
@@ -228,14 +226,11 @@ class ProyectoRepository extends Repository
             'economia_naranja',
             'fases.nombre AS nombre_fase',
             'proyectos.id',
-            'actividades.id AS actividad_id',
             'proyectos.asesor_id'
         )
         ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
         ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) as nombre_idea')
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
-        ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-        ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
         ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
         ->join('users', 'users.id', '=', 'gestores.user_id')
         ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
@@ -259,8 +254,6 @@ class ProyectoRepository extends Repository
         $this->traducirMeses();
         return Proyecto::select($field)
         ->selectRaw('count(proyectos.id) AS cantidad, nodos.id AS nodo, MONTHNAME(fecha_cierre) AS mes')
-        ->join('articulacion_proyecto AS ap', 'ap.id', '=', 'proyectos.articulacion_proyecto_id')
-        ->join('actividades AS a', 'a.id', '=', 'ap.actividad_id')
         ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
@@ -282,8 +275,6 @@ class ProyectoRepository extends Repository
     public function consultarProyectoCerradosEntreFecha(string $fase, string $fecha_inicio, string $fecha_fin)
     {
         return Proyecto::selectRaw('count(proyectos.id) as cantidad')
-        ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-        ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
         ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
@@ -300,8 +291,6 @@ class ProyectoRepository extends Repository
     public function consultarProyectosFase()
     {
         return Proyecto::selectRaw('count(proyectos.id) as cantidad')
-        ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-        ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
         ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
@@ -319,8 +308,6 @@ class ProyectoRepository extends Repository
     {
         return Proyecto::select('fases.nombre AS fase', 'entidades.nombre')
         ->selectRaw('count(proyectos.id) as cantidad')
-        ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-        ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
         ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
@@ -337,8 +324,6 @@ class ProyectoRepository extends Repository
     {
         $this->traducirMeses();
         return Proyecto::selectRaw('MONTH(fecha_inicio) AS mes, COUNT(proyectos.id) AS cantidad, DATE_FORMAT(fecha_inicio, "%M") AS nombre_mes')
-        ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-        ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
         ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
@@ -353,8 +338,6 @@ class ProyectoRepository extends Repository
     {
         $this->traducirMeses();
         return Proyecto::selectRaw('MONTH(fecha_cierre) AS mes, COUNT(proyectos.id) AS cantidad, DATE_FORMAT(fecha_cierre, "%M") AS nombre_mes')
-        ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-        ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
         ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
@@ -368,15 +351,12 @@ class ProyectoRepository extends Repository
 
     public function proyectosSeguimientoAbiertos()
     {
-        return Proyecto::join('articulacion_proyecto AS ap', 'ap.id', '=', 'proyectos.articulacion_proyecto_id')
-        ->join('actividades AS a', 'a.id', '=', 'ap.actividad_id')
-        ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
+        return Proyecto::join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
         ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
         ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
-        // ->groupBy('entidades.nombre', 'fase')
         ->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
     }
 
@@ -384,8 +364,6 @@ class ProyectoRepository extends Repository
     {
         return Proyecto::select('fases.nombre AS fase', 'entidades.nombre')
         ->selectRaw('count(trl_esperado) as trl_esperado')
-        ->join('articulacion_proyecto AS ap', 'ap.id', '=', 'proyectos.articulacion_proyecto_id')
-        ->join('actividades AS a', 'a.id', '=', 'ap.actividad_id')
         ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
@@ -410,18 +388,16 @@ class ProyectoRepository extends Repository
             'sublinea.linea',
             'areaconocimiento',
             'fase',
-            'articulacion_proyecto',
-            'articulacion_proyecto.talentos',
-            'articulacion_proyecto.talentos.user' => function($query) {
+            'talentos',
+            'talentos.user' => function($query) {
                 $query->withTrashed();
             },
-            'articulacion_proyecto.talentos.user.grupoSanguineo',
-            'articulacion_proyecto.talentos.user.eps',
-            'articulacion_proyecto.talentos.user.etnia',
-            'articulacion_proyecto.talentos.user.gradoescolaridad',
-            'articulacion_proyecto.talentos.user.ciudad',
-            'articulacion_proyecto.talentos.user.ciudad.departamento',
-            'articulacion_proyecto.actividad',
+            'talentos.user.grupoSanguineo',
+            'talentos.user.eps',
+            'talentos.user.etnia',
+            'talentos.user.gradoescolaridad',
+            'talentos.user.ciudad',
+            'talentos.user.ciudad.departamento',
             'asesor',
             'asesor.user'=> function($query) {
                 $query->withTrashed();
@@ -453,9 +429,8 @@ class ProyectoRepository extends Repository
             'asesor.user',
             'nodo',
             'nodo.entidad',
-            'articulacion_proyecto',
-            'articulacion_proyecto.talentos',
-            'articulacion_proyecto.talentos.user',
+            'talentos',
+            'talentos.user',
         ]);
     }
 
@@ -475,17 +450,16 @@ class ProyectoRepository extends Repository
             'sublinea.linea',
             'areaconocimiento',
             'fase',
-            'articulacion_proyecto',
-            'articulacion_proyecto.talentos',
-            'articulacion_proyecto.talentos.user' => function($query) {
+            'talentos',
+            'talentos.user' => function($query) {
                 $query->withTrashed();
             },
-            'articulacion_proyecto.talentos.user.grupoSanguineo',
-            'articulacion_proyecto.talentos.user.eps',
-            'articulacion_proyecto.talentos.user.etnia',
-            'articulacion_proyecto.talentos.user.gradoescolaridad',
-            'articulacion_proyecto.talentos.user.ciudad',
-            'articulacion_proyecto.talentos.user.ciudad.departamento',
+            'talentos.user.grupoSanguineo',
+            'talentos.user.eps',
+            'talentos.user.etnia',
+            'talentos.user.gradoescolaridad',
+            'talentos.user.ciudad',
+            'talentos.user.ciudad.departamento',
             'asesor.user' => function($query) {
                 $query->withTrashed();
             },
@@ -508,10 +482,8 @@ class ProyectoRepository extends Repository
     {
         $this->traducirMeses();
         return Proyecto::selectRaw('count(proyectos.id) AS cantidad')
-        ->selectRaw('MONTH(actividades.fecha_cierre) AS meses')
-        ->selectRaw('CONCAT(UPPER(LEFT(date_format(actividades.fecha_cierre, "%M"), 1)), LOWER(SUBSTRING(date_format(actividades.fecha_cierre, "%M"), 2))) AS mes')
-        ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-        ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+        ->selectRaw('MONTH(fecha_cierre) AS meses')
+        ->selectRaw('CONCAT(UPPER(LEFT(date_format(fecha_cierre, "%M"), 1)), LOWER(SUBSTRING(date_format(fecha_cierre, "%M"), 2))) AS mes')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
         ->where('nodos.id', $id)
         ->groupBy('meses', 'mes')
@@ -595,9 +567,8 @@ class ProyectoRepository extends Repository
         return Proyecto::select('users.documento', 'tiposdocumentos.nombre AS nombre_documento', 'fechanacimiento')
         ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombre_talento')
         ->selectRaw('concat(ciudades.nombre, " - ", departamentos.nombre) AS ciudad_expedicion')
-        ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-        ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
-        ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
+        ->join('proyecto_talento', 'proyecto_talento.proyecto_id', '=', 'proyecto.id')
+        ->join('talentos', 'talentos.id', '=', 'proyecto_talento.talento_id')
         ->join('users', 'users.id', '=', 'talentos.user_id')
         ->join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
         ->join('ciudades', 'ciudades.id', '=', 'users.ciudad_expedicion_id')
@@ -617,16 +588,14 @@ class ProyectoRepository extends Repository
         return Proyecto::select('proyectos.id', 'sublineas.nombre as sublinea_nombre', 'actividades.codigo_actividad AS codigo_proyecto', 'actividades.nombre', 'fases.nombre AS nombre_fase', 'actividades.id AS actividad_id')
         ->selectRaw('concat(codigo_idea, " - ", nombre_proyecto) AS nombre_idea')
         ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
-        ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-        ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
         ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
         ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
         ->join('users', 'users.id', '=', 'gestores.user_id')
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
-        ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
-        ->join('talentos', 'talentos.id', '=', 'articulacion_proyecto_talento.talento_id')
+        ->join('proyecto_talento', 'proyecto_talento.proyecto_id', '=', 'proyecto.id')
+        ->join('talentos', 'talentos.id', '=', 'proyecto_talento.talento_id')
         ->join('users AS user_talento', 'user_talento.id', '=', 'talentos.user_id')
         ->where('talentos.id', $id)
         ->get();
@@ -698,12 +667,9 @@ class ProyectoRepository extends Repository
                 $fabrica_productividad = 0;
             }
 
-            $proyecto->articulacion_proyecto->actividad()->update([
-                'nombre' => request()->txtnombre,
-                'objetivo_general' => request()->txtobjetivo
-            ]);
-
             $proyecto->update([
+                'nombre' => request()->txtnombre,
+                'objetivo_general' => request()->txtobjetivo,
                 'areaconocimiento_id' => request()->txtareaconocimiento_id,
                 'otro_areaconocimiento' => request()->txtotro_areaconocimiento,
                 'sublinea_id' => request()->txtsublinea_id,
@@ -722,23 +688,23 @@ class ProyectoRepository extends Repository
 
             $syncData = array();
             $syncData = $this->arraySyncTalentosDeUnProyecto($request);
-            $proyecto->articulacion_proyecto->talentos()->sync($syncData, true);
+            $proyecto->talentos()->sync($syncData, true);
 
-            ArticulacionProyecto::habilitarTalentos($proyecto->articulacion_proyecto);
+            Proyecto::habilitarTalentos($proyecto);
 
-            $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(0)->update([
+            $proyecto->objetivos_especificos->get(0)->update([
                 'objetivo' => request()->txtobjetivo_especifico1
             ]);
 
-            $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(1)->update([
+            $proyecto->objetivos_especificos->get(1)->update([
                 'objetivo' => request()->txtobjetivo_especifico2
             ]);
 
-            $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(2)->update([
+            $proyecto->objetivos_especificos->get(2)->update([
                 'objetivo' => request()->txtobjetivo_especifico3
             ]);
 
-            $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(3)->update([
+            $proyecto->objetivos_especificos->get(3)->update([
                 'objetivo' => request()->txtobjetivo_especifico4
             ]);
 
@@ -798,26 +764,23 @@ class ProyectoRepository extends Repository
                 'trl_prototipo' => $request->txttrl_prototipo,
                 'trl_pruebas' => $request->txttrl_pruebas,
                 'trl_modelo' => $request->txttrl_modelo,
-                'trl_normatividad' => $request->txttrl_normatividad
-            ]);
-
-            $proyecto->articulacion_proyecto->actividad()->update([
+                'trl_normatividad' => $request->txttrl_normatividad,
                 'conclusiones' => $request->txtconclusiones
             ]);
 
-            $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(0)->update([
+            $proyecto->objetivos_especificos->get(0)->update([
                 'cumplido' => $objetivo1_alcanzado
             ]);
 
-            $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(1)->update([
+            $proyecto->objetivos_especificos->get(1)->update([
                 'cumplido' => $objetivo2_alcanzado
             ]);
 
-            $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(2)->update([
+            $proyecto->objetivos_especificos->get(2)->update([
                 'cumplido' => $objetivo3_alcanzado
             ]);
 
-            $proyecto->articulacion_proyecto->actividad->objetivos_especificos->get(3)->update([
+            $proyecto->objetivos_especificos->get(3)->update([
                 'cumplido' => $objetivo4_alcanzado
             ]);
 
@@ -845,11 +808,11 @@ class ProyectoRepository extends Repository
         $proyecto = Proyecto::findOrFail($id);
 
         if ($proyecto->asesor_id != $request->txtgestor_id) {
-            $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Cambió')->first(), [
-            'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
+            $proyecto->movimientos()->attach(Movimiento::where('movimiento', 'Cambió')->first(), [
+            'proyecto_id' => $proyecto->id,
             'user_id' => auth()->user()->id,
             'fase_id' => $proyecto->fase_id,
-            'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+            'role_id' => Role::where('name', session()->get('login_role'))->first()->id
             ]);
         }
 
@@ -878,11 +841,11 @@ class ProyectoRepository extends Repository
     {
         DB::beginTransaction();
         try {
-            $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Reversó')->first(), [
-                'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
+            $proyecto->movimientos()->attach(Movimiento::where('movimiento', 'Reversó')->first(), [
+                'proyecto_id' => $proyecto->id,
                 'user_id' => auth()->user()->id,
                 'fase_id' => $proyecto->fase_id,
-                'role_id' => Role::where('name', Session::get('login_role'))->first()->id,
+                'role_id' => Role::where('name', session()->get('login_role'))->first()->id,
                 'comentarios' => $fase
             ]);
 
@@ -938,10 +901,7 @@ class ProyectoRepository extends Repository
             $proyecto->update([
                 'acc' => $acc,
                 'manual_uso_inf' => $manual_uso_inf,
-                'doc_titular' => $doc_titular
-            ]);
-
-            $proyecto->articulacion_proyecto->actividad()->update([
+                'doc_titular' => $doc_titular,
                 'formulario_inicio' => $formulario_inicio
             ]);
 
@@ -959,16 +919,13 @@ class ProyectoRepository extends Repository
         try {
             $proyecto = Proyecto::findOrFail($id);
 
-            $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Aprobó')->first(), [
-                'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
+            $proyecto->movimientos()->attach(Movimiento::where('movimiento', 'Aprobó')->first(), [
+                'actividad_id' => $proyecto->id,
                 'user_id' => auth()->user()->id,
                 'fase_id' => Fase::where('nombre', 'Ejecución')->first()->id,
-                'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+                'role_id' => Role::where('name', session()->get('login_role'))->first()->id
             ]);
 
-            $proyecto->articulacion_proyecto()->update([
-                'aprobacion_dinamizador_ejecucion' => 1
-            ]);
             DB::commit();
             return true;
         } catch (\Throwable $th) {
@@ -991,15 +948,15 @@ class ProyectoRepository extends Repository
         DB::beginTransaction();
         try {
             $proyecto = Proyecto::findOrFail($id);
-            $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'no aprobó')->first(), [
-            'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
+            $proyecto->movimientos()->attach(Movimiento::where('movimiento', 'no aprobó')->first(), [
+            'actividad_id' => $proyecto->id,
                 'user_id' => auth()->user()->id,
                 'fase_id' => Fase::where('nombre', $fase)->first()->id,
-                'role_id' => Role::where('name', Session::get('login_role'))->first()->id,
+                'role_id' => Role::where('name', session()->get('login_role'))->first()->id,
                 'comentarios' => $request->motivosNoAprueba
             ]);
 
-            $movimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
+            $movimiento = Proyecto::consultarHistoricoProyecto($proyecto->id)->get()->last();
             event(new ProyectoWasntApproved($proyecto, $movimiento));
             Notification::send($proyecto->asesor, new ProyectoNoAprobarFase($proyecto, $movimiento));
             DB::commit();
@@ -1032,7 +989,7 @@ class ProyectoRepository extends Repository
             $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->nodo_id)->get();
             $destinatarios = $dinamizadorRepository->getAllDinamizadorPorNodoArray($dinamizadores);
             array_push($destinatarios, ['email' => $proyecto->asesor->user->email]);
-            $talento_lider = $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first();
+            $talento_lider = $proyecto->talentos()->wherePivot('talento_lider', 1)->first();
             $talento_lider = $talento_lider->user;
             $notificacion_act = ControlNotificaciones::find($request->control_notificacion_id);
             if ($notificacion_act->estado != $notificacion_act->IsPendiente()) {
@@ -1050,7 +1007,7 @@ class ProyectoRepository extends Repository
 
                     $this->crearMovimiento($proyecto, $proyecto->fase->nombre, $movimiento, $comentario);
                     // Recuperar el útlimo registro de movimientos ya que el método attach no retorna nada
-                    $regMovimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
+                    $regMovimiento = Proyecto::consultarHistoricoProyecto($proyecto->id)->get()->last();
                     // Envio de un correo informando porque no se aprobó el cambio de fase
                     event(new ProyectoWasntApproved($proyecto, $regMovimiento));
 
@@ -1063,7 +1020,7 @@ class ProyectoRepository extends Repository
                     $movimiento = Movimiento::IsAprobar();
 
                     $this->crearMovimiento($proyecto, $proyecto->fase->nombre, $movimiento, $comentario);
-                    $regMovimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
+                    $regMovimiento = Proyecto::consultarHistoricoProyecto($proyecto->id)->get()->last();
                     $notificacion_act->update(['fecha_aceptacion' => Carbon::now(), 'estado' => $notificacion_act->IsAceptado()]);
 
                     event(new ProyectoWasApproved($proyecto, $regMovimiento, $destinatarios));
@@ -1091,12 +1048,9 @@ class ProyectoRepository extends Repository
                         ]);
                         }
                         if ($proyecto->fase->nombre == "Cierre") {
-                        // Cambiar el proyecto de fase
+                        // Cambiar el proyecto de fase y asignar le fecha actual como fecha de cierre
                         $proyecto->update([
-                            'fase_id' => Fase::where('nombre', 'Finalizado')->first()->id
-                        ]);
-                        // Asignar la fecha de cierre el día actuyal
-                        $proyecto->articulacion_proyecto->actividad()->update([
+                            'fase_id' => Fase::where('nombre', 'Finalizado')->first()->id,
                             'fecha_cierre' => Carbon::now()
                         ]);
                         // Crear el movimiento con el cierre del proyecto
@@ -1148,10 +1102,7 @@ class ProyectoRepository extends Repository
 
             $proyecto = Proyecto::findOrFail($id);
             $proyecto->update([
-                'estado_arte' => $estado_arte
-            ]);
-
-            $proyecto->articulacion_proyecto->actividad()->update([
+                'estado_arte' => $estado_arte,
                 'cronograma' => $cronograma
             ]);
 
@@ -1187,12 +1138,10 @@ class ProyectoRepository extends Repository
                 $formulario_final = 0;
             }
             $proyecto->update([
-                'evidencia_trl' => $evidencia_trl
-            ]);
-
-            $proyecto->articulacion_proyecto->actividad()->update([
+                'evidencia_trl' => $evidencia_trl,
                 'formulario_final' => $formulario_final
             ]);
+
             DB::commit();
             return true;
         } catch (\Throwable $th) {
@@ -1203,8 +1152,8 @@ class ProyectoRepository extends Repository
 
     private function crearMovimiento($proyecto, $fase, $movimiento, $comentario)
     {
-        $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', $movimiento)->first(), [
-        'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
+        $proyecto->movimientos()->attach(Movimiento::where('movimiento', $movimiento)->first(), [
+        'proyecto_id' => $proyecto->id,
         'user_id' => auth()->user()->id,
         'fase_id' => Fase::where('nombre', $fase)->first()->id,
         'role_id' => Role::where('name', Session::get('login_role'))->first()->id,
@@ -1353,7 +1302,7 @@ class ProyectoRepository extends Repository
             $destinatarios = $dinamizadorRepository->getAllDinamizadorPorNodoArray($dinamizadores);
             Notification::send($dinamizadores, new ProyectoAprobarSuspendido($proyecto));
             $this->crearMovimiento($proyecto, 'Suspendido', 'solicitó al dinamizador', null);
-            $movimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
+            $movimiento = Proyecto::consultarHistoricoProyecto($proyecto->id)->get()->last();
             event(new ProyectoSuspenderWasRequested($proyecto, $movimiento, $destinatarios));
             DB::commit();
         return true;
@@ -1371,17 +1320,14 @@ class ProyectoRepository extends Repository
         try {
         $proyecto = Proyecto::findOrFail($id);
 
-        $proyecto->articulacion_proyecto->actividad->movimientos()->attach(Movimiento::where('movimiento', 'Aprobó')->first(), [
-            'actividad_id' => $proyecto->articulacion_proyecto->actividad->id,
+        $proyecto->movimientos()->attach(Movimiento::where('movimiento', 'Aprobó')->first(), [
+            'actividad_id' => $proyecto->id,
             'user_id' => auth()->user()->id,
             'fase_id' => Fase::where('nombre', 'Cierre')->first()->id,
-            'role_id' => Role::where('name', Session::get('login_role'))->first()->id
+            'role_id' => Role::where('name', session()->get('login_role'))->first()->id
         ]);
 
         Notification::send(User::find($proyecto->asesor->user->id), new ProyectoCierreAprobado($proyecto));
-        $proyecto->articulacion_proyecto->actividad()->update([
-            'aprobacion_dinamizador' => 1
-        ]);
         DB::commit();
         return true;
         } catch (\Throwable $th) {
@@ -1406,9 +1352,7 @@ class ProyectoRepository extends Repository
             $notificacion_act->update(['fecha_aceptacion' => Carbon::now(), 'estado' => $notificacion_act->IsAceptado()]);
             $this->crearMovimiento($proyecto, $proyecto->IsSuspendido(), Movimiento::IsAprobar(), null);
             $proyecto->update([
-                'fase_id' => Fase::where('nombre', $proyecto->IsSuspendido())->first()->id
-            ]);
-            $proyecto->articulacion_proyecto->actividad()->update([
+                'fase_id' => Fase::where('nombre', $proyecto->IsSuspendido())->first()->id,
                 'fecha_cierre' => Carbon::now()
             ]);
             Notification::send(User::findOrFail($proyecto->asesor->user->id), new ProyectoSuspendidoAprobado($proyecto));
@@ -1437,7 +1381,7 @@ class ProyectoRepository extends Repository
             if (!isset($request->txtseguimiento)) {
                 $seguimiento = 0;
             }
-            $proyecto->articulacion_proyecto->actividad()->update([
+            $proyecto->update([
                 'seguimiento' => $seguimiento
             ]);
             DB::commit();
@@ -1458,26 +1402,21 @@ class ProyectoRepository extends Repository
     public function ConsultarProyectosPorAnho($anho)
     {
         return Proyecto::select(
-            'actividades.codigo_actividad AS codigo_proyecto',
-            'actividades.nombre',
+            'codigo_proyecto',
+            'proyectos.nombre',
             'areasconocimiento.nombre AS nombre_areaconocimiento',
             'sublineas.nombre AS sublinea_nombre',
-            'articulacion_proyecto.id AS articulacion_proyecto_id',
-            'actividades.fecha_cierre AS fecha_fin',
             'lineastecnologicas.nombre AS nombre_linea',
             'fecha_inicio',
             'fecha_cierre',
             'economia_naranja',
             'fases.nombre AS nombre_fase',
             'proyectos.id',
-            'actividades.id AS actividad_id',
             'proyectos.asesor_id'
         )
         ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
         ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) as nombre_idea')
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
-        ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-        ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
         ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
         ->join('users', 'users.id', '=', 'gestores.user_id')
         ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
@@ -1487,7 +1426,7 @@ class ProyectoRepository extends Repository
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
         ->where(function ($q) use ($anho) {
             $q->where(function ($query) use ($anho) {
-            $query->whereYear('actividades.fecha_cierre', '=', $anho)
+            $query->whereYear('fecha_cierre', '=', $anho)
                 ->whereIn('fases.nombre', ['Finalizado', 'Suspendido']);
             })
             ->orWhere(function ($query) {
@@ -1571,20 +1510,11 @@ class ProyectoRepository extends Repository
                 $fabrica_productividad = 0;
             }
 
-            $actividad = Actividad::create([
-                'codigo_actividad' => $codigo_actividad,
+            $proyecto = Proyecto::create([
+                'codigo_proyecto' => $codigo_actividad,
                 'nombre' => request()->txtnombre,
                 'fecha_inicio' => Carbon::now()->isoFormat('YYYY-MM-DD'),
-                'objetivo_general' => request()->txtobjetivo
-            ]);
-
-            $articulacion_proyecto = ArticulacionProyecto::create([
-                'entidad_id' => $entidad_id,
-                'actividad_id' => $actividad->id
-            ]);
-
-            $proyecto = Proyecto::create([
-                'articulacion_proyecto_id' => $articulacion_proyecto->id,
+                'objetivo_general' => request()->txtobjetivo,
                 'asesor_id' => $experto->gestor->id,
                 'nodo_id' => $experto->gestor->nodo_id,
                 'fase_id' => Fase::where('nombre', 'Inicio')->first()->id,
@@ -1605,23 +1535,23 @@ class ProyectoRepository extends Repository
             ]);
             $syncData = array();
             $syncData = $this->arraySyncTalentosDeUnProyecto($request);
-            $articulacion_proyecto->talentos()->sync($syncData, false);
+            $proyecto->talentos()->sync($syncData, false);
 
-            ArticulacionProyecto::habilitarTalentos($articulacion_proyecto);
+            Proyecto::habilitarTalentos($proyecto);
 
-            $actividad->objetivos_especificos()->create([
+            $proyecto->objetivos_especificos()->create([
                 'objetivo' => request()->txtobjetivo_especifico1
             ]);
 
-            $actividad->objetivos_especificos()->create([
+            $proyecto->objetivos_especificos()->create([
                 'objetivo' => request()->txtobjetivo_especifico2
             ]);
 
-            $actividad->objetivos_especificos()->create([
+            $proyecto->objetivos_especificos()->create([
                 'objetivo' => request()->txtobjetivo_especifico3
             ]);
 
-            $actividad->objetivos_especificos()->create([
+            $proyecto->objetivos_especificos()->create([
                 'objetivo' => request()->txtobjetivo_especifico4
             ]);
 

@@ -26,7 +26,7 @@
                             </button>
                             @endif
                             <a href="{{route('proyecto.planeacion', $proyecto->id)}}" class="waves-effect bg-danger btn center-aling">
-                                <i class="material-icons right">backspace</i>Cancelar
+                                <i class="material-icons left">backspace</i>Cancelar
                             </a>
                         </div>
                     </form>

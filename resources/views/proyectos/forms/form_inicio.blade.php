@@ -96,7 +96,7 @@
                 <div class="row">
                     <div class="input-field col s12 m12 l12">
                         @if ($existe)
-                            <input type="text" id="txtnombre" name="txtnombre" value="{{ $proyecto->articulacion_proyecto->actividad->nombre }}">
+                            <input type="text" id="txtnombre" name="txtnombre" value="{{ $proyecto->nombre }}">
                         @else
                             <input type="text" id="txtnombre" name="txtnombre" value="">
                         @endif
@@ -401,7 +401,7 @@
                                                     </thead>
                                                     <tbody>
                                                         @if ($existe)
-                                                            @foreach ($proyecto->articulacion_proyecto->talentos as $key => $value)
+                                                            @foreach ($proyecto->talentos as $key => $value)
                                                                 <tr id="talentoAsociadoAProyecto{{$value->id}}">
                                                                 <td><input type="radio" class="with-gap" {{$value->pivot->talento_lider == 1 ? 'checked' : ''}} name="radioTalentoLider" id="radioButton'{{$value->id}}'" value="{{$value->id}}"/><label for ="radioButton'{{$value->id}}'"></label></td>
                                                                 <td><input type="hidden" name="talentos[]" value="{{$value->id}}">{{$value->user()->withTrashed()->first()->documento}} - {{$value->user()->withTrashed()->first()->nombres}} {{$value->user()->withTrashed()->first()->apellidos}}</td>
@@ -433,7 +433,7 @@
     <div class="col s12 m6 l6">
         <div class="input-field col s12 m12 l12">
             @if ($existe)
-            <textarea name="txtobjetivo" class="materialize-textarea" length="500" maxlength="500" id="txtobjetivo">{{ $proyecto->articulacion_proyecto->actividad->objetivo_general }}</textarea>
+            <textarea name="txtobjetivo" class="materialize-textarea" length="500" maxlength="500" id="txtobjetivo">{{ $proyecto->objetivo_general }}</textarea>
             @else
             <textarea name="txtobjetivo" class="materialize-textarea" length="500" maxlength="500" id="txtobjetivo"></textarea>
             @endif
@@ -457,7 +457,7 @@
     <div class="col s12 m12 l12">
         <div class="input-field col s12 m12 l12">
             @if ($existe)
-            <input type="text" id="txtobjetivo_especifico1" name="txtobjetivo_especifico1" value="{{$proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->objetivo}}">
+            <input type="text" id="txtobjetivo_especifico1" name="txtobjetivo_especifico1" value="{{$proyecto->objetivos_especificos[0]->objetivo}}">
             @else
             <input type="text" id="txtobjetivo_especifico1" name="txtobjetivo_especifico1" value="">
             @endif
@@ -466,7 +466,7 @@
         </div>
         <div class="input-field col s12 m12 l12">
             @if ($existe)
-            <input type="text" id="txtobjetivo_especifico2" name="txtobjetivo_especifico2" value="{{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo }}">
+            <input type="text" id="txtobjetivo_especifico2" name="txtobjetivo_especifico2" value="{{ $proyecto->objetivos_especificos[1]->objetivo }}">
             @else
             <input type="text" id="txtobjetivo_especifico2" name="txtobjetivo_especifico2" value="">
             @endif
@@ -475,7 +475,7 @@
         </div>
         <div class="input-field col s12 m12 l12">
             @if ($existe)
-            <input type="text" id="txtobjetivo_especifico3" name="txtobjetivo_especifico3" value="{{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo }}">
+            <input type="text" id="txtobjetivo_especifico3" name="txtobjetivo_especifico3" value="{{ $proyecto->objetivos_especificos[2]->objetivo }}">
             @else
             <input type="text" id="txtobjetivo_especifico3" name="txtobjetivo_especifico3" value="">
             @endif
@@ -484,7 +484,7 @@
         </div>
         <div class="input-field col s12 m12 l12">
             @if ($existe)
-            <input type="text" id="txtobjetivo_especifico4" name="txtobjetivo_especifico4" value="{{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo }}">
+            <input type="text" id="txtobjetivo_especifico4" name="txtobjetivo_especifico4" value="{{ $proyecto->objetivos_especificos[3]->objetivo }}">
             @else
             <input type="text" id="txtobjetivo_especifico4" name="txtobjetivo_especifico4" value="">
             @endif
@@ -648,17 +648,17 @@
     @if ($existe)
         @can('showUpdateButton', [$proyecto, 'Inicio'])
         <button type="submit" class="waves-effect waves-light btn bg-secondary center-align">
-            <i class="material-icons left">{{ isset($btnText) ? $btnText == 'Guardar' ? 'send' : 'send' : '' }}</i>
+            <i class="material-icons right">{{ isset($btnText) ? $btnText == 'Guardar' ? 'send' : 'send' : '' }}</i>
             {{isset($btnText) ? $btnText : 'error'}}
         </button>
         @endcan
     @else
         <button type="submit" class="waves-effect waves-light btn bg-secondary center-align">
-            <i class="material-icons left">{{ isset($btnText) ? $btnText == 'Guardar' ? 'send' : 'send' : '' }}</i>
+            <i class="material-icons right">{{ isset($btnText) ? $btnText == 'Guardar' ? 'send' : 'send' : '' }}</i>
             {{isset($btnText) ? $btnText : 'error'}}
         </button>
     @endif
     <a href="{{ $existe ? route('proyecto.inicio', $proyecto->id) : route('proyecto') }}" class="waves-effect bg-danger btn center-align">
-        <i class="material-icons right">backspace</i>Cancelar
+        <i class="material-icons left">backspace</i>Cancelar
     </a>
 </center>

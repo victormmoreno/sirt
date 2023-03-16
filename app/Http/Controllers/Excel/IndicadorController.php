@@ -131,37 +131,17 @@ class IndicadorController extends Controller
     public function exportIndicadoresProyectosInscritos($idnodo, string $fecha_inicio, string $fecha_fin, string $hoja = null)
     {
         $query = null;
-
+        $nodo_user = request()->user()->getNodoUser();
         if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
         if ($idnodo == 'all') {
-            $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('articulacion_proyecto.actividad', function ($query) use ($fecha_inicio, $fecha_fin) {
-            $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
-            })->get();
+            $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
         } else {
-            $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('articulacion_proyecto.actividad', function ($query) use ($fecha_inicio, $fecha_fin) {
-            $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
-            })->whereHas('nodo', function($query) use ($idnodo) {
-            $query->where('id', $idnodo);
-            })->get();
+            $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])->where('proyectos.nodo_id', $idnodo);
         }
-        } else if (session()->get('login_role') == User::IsDinamizador()) {
-        $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('articulacion_proyecto.actividad', function ($query) use ($fecha_inicio, $fecha_fin) {
-            $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
-        })->whereHas('nodo', function($query) {
-            $query->where('id', auth()->user()->dinamizador->nodo_id);
-        })->get();
-        } else if (session()->get('login_role') == User::IsInfocenter()) {
-        $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('articulacion_proyecto.actividad', function ($query) use ($fecha_inicio, $fecha_fin) {
-            $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
-        })->whereHas('nodo', function($query) {
-            $query->where('id', auth()->user()->infocenter->nodo_id);
-        })->get();
+    } else if (session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsInfocenter()) {
+            $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])->where('proyectos.nodo_id', $nodo_user);
         } else {
-        $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('articulacion_proyecto.actividad', function ($query) use ($fecha_inicio, $fecha_fin) {
-            $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
-        })->whereHas('asesor', function($query) {
-            $query->where('id', auth()->user()->gestor->id);
-        })->get();
+            $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])->where('id', auth()->user()->gestor->id);
         }
         return Excel::download(new Indicadores2020Export($query, $hoja), 'Indicadores_Inscritos_'.$fecha_inicio.'_a_'.$fecha_fin.'.xlsx');
     }

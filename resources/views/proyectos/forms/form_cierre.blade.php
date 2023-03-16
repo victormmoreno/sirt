@@ -2,11 +2,11 @@
 <div class="row">
     <div class="input-field col s12 m6 l6">
         <input name="txtcodigo_proyecto" disabled
-            value="{{ $proyecto->articulacion_proyecto->actividad->present()->actividadCode() }}" id="txtcodigo_proyecto">
+            value="{{ $proyecto->present()->proyectoCode() }}" id="txtcodigo_proyecto">
         <label class="active" for="txtcodigo_proyecto">Código de Proyecto</label>
     </div>
     <div class="input-field col s12 m6 l6">
-        <input name="txtnombre" value="{{ $proyecto->articulacion_proyecto->actividad->present()->actividadName() }}" disabled
+        <input name="txtnombre" value="{{ $proyecto->present()->proyectoName() }}" disabled
             id="txtnombre" required>
         <label class="active" for="txtnombre">Nombre del Proyecto</label>
     </div>
@@ -80,26 +80,26 @@
     <div class="col s12 m6 l6">
         <h5 class="center">Objetivos cumplidos.</h5>
         <p class="p-v-xs">
-            <input type="checkbox" name="txtobjetivo1_alcanzado" id="txtobjetivo1_alcanzado" value="1" {{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->cumplido == 1 ? 'checked' : '' }}>
-            <label for="txtobjetivo1_alcanzado">{{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->objetivo }}</label>
+            <input type="checkbox" name="txtobjetivo1_alcanzado" id="txtobjetivo1_alcanzado" value="1" {{ $proyecto->objetivos_especificos[0]->cumplido == 1 ? 'checked' : '' }}>
+            <label for="txtobjetivo1_alcanzado">{{ $proyecto->objetivos_especificos[0]->objetivo }}</label>
         </p>
         <p class="p-v-xs">
-            <input type="checkbox" name="txtobjetivo2_alcanzado" id="txtobjetivo2_alcanzado" value="1" {{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->cumplido == 1 ? 'checked' : '' }}>
-            <label for="txtobjetivo2_alcanzado">{{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo }}</label>
+            <input type="checkbox" name="txtobjetivo2_alcanzado" id="txtobjetivo2_alcanzado" value="1" {{ $proyecto->objetivos_especificos[1]->cumplido == 1 ? 'checked' : '' }}>
+            <label for="txtobjetivo2_alcanzado">{{ $proyecto->objetivos_especificos[1]->objetivo }}</label>
         </p>
         <p class="p-v-xs">
-            <input type="checkbox" name="txtobjetivo3_alcanzado" id="txtobjetivo3_alcanzado" value="1" {{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->cumplido == 1 ? 'checked' : '' }}>
-            <label for="txtobjetivo3_alcanzado">{{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo }}</label>
+            <input type="checkbox" name="txtobjetivo3_alcanzado" id="txtobjetivo3_alcanzado" value="1" {{ $proyecto->objetivos_especificos[2]->cumplido == 1 ? 'checked' : '' }}>
+            <label for="txtobjetivo3_alcanzado">{{ $proyecto->objetivos_especificos[2]->objetivo }}</label>
         </p>
         <p class="p-v-xs">
-            <input type="checkbox" name="txtobjetivo4_alcanzado" id="txtobjetivo4_alcanzado" value="1" {{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->cumplido == 1 ? 'checked' : '' }}>
-            <label for="txtobjetivo4_alcanzado">{{ $proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo }}</label>
+            <input type="checkbox" name="txtobjetivo4_alcanzado" id="txtobjetivo4_alcanzado" value="1" {{ $proyecto->objetivos_especificos[3]->cumplido == 1 ? 'checked' : '' }}>
+            <label for="txtobjetivo4_alcanzado">{{ $proyecto->objetivos_especificos[3]->objetivo }}</label>
         </p>
     </div>
     <div class="col s12 m6 l6">
         <h5 class="center">Conclusiones y siguiente paso del proyecto</h5>
         <div class="input-field col s12 m12 l12">
-            <textarea name="txtconclusiones" class="materialize-textarea" length="1000" maxlength="1000" id="txtconclusiones">{{ $proyecto->articulacion_proyecto->actividad->conclusiones }}</textarea>
+            <textarea name="txtconclusiones" class="materialize-textarea" length="1000" maxlength="1000" id="txtconclusiones">{{ $proyecto->conclusiones }}</textarea>
             <label for="txtconclusiones">Conclusiones y siguiente paso del proyecto <span class="red-text">*</span></label>
             <small id="txtconclusiones-error" class="error red-text"></small>
         </div>
@@ -139,11 +139,11 @@
 <div class="center">
     @can('showUpdateButton', [$proyecto, 'Cierre'])
         <button type="submit" class="waves-effect bg-secondary btn center-aling">
-            <i class="material-icons left">send</i>
+            <i class="material-icons right">send</i>
             Guardar
         </button>
     @endcan
     <a href="{{route('proyecto.ejecucion', $proyecto->id)}}" class="waves-effect bg-danger btn center-aling">
-        <i class="material-icons right">backspace</i>Cancelar
+        <i class="material-icons left">backspace</i>Cancelar
     </a>
 </div>

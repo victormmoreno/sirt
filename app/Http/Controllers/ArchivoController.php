@@ -371,8 +371,8 @@ class ArchivoController extends Controller
         $file = request()->file('nombreArchivo');
         // La ruta con la se guardan los archivos de un proyecto es la siguiente:
         // id_nodo/anho_de_la_fecha_de_inicio_del_proyecto/Proyectos/linea_tecnológica/id_gestor/id_del_proyecto/fase_del_archivo/max_id_archivo_proyecto_nombre_del_archivo.extension
-        $idArchivoArtulacionProyecto = ArchivoArticulacionProyecto::selectRaw('MAX(id+1) AS max')->get()->last();
-        $fileName = $idArchivoArtulacionProyecto->max . '_' . $file->getClientOriginalName();
+        $idArchivoModel = ArchivoModel::selectRaw('MAX(id+1) AS max')->get()->last();
+        $fileName = $idArchivoModel->max . '_' . $file->getClientOriginalName();
         // Creando la ruta
         $proyecto = Proyecto::findOrFail($id);
         $route = "";
@@ -386,8 +386,11 @@ class ArchivoController extends Controller
         $fase = $fase->nombre;
         $route = 'public/' . $nodo . '/' . $anho . '/Proyectos' . '/' . $linea . '/' . $gestor . '/' . $idproyecto . '/' . $fase;
         $fileUrl = $file->storeAs($route, $fileName);
-        $id = $proyecto->articulacion_proyecto_id;
-        $this->archivoRepository->storeFileArticulacionProyecto($id, $fase_id, Storage::url($fileUrl));
+        $id = $proyecto->id;
+        $proyecto->archivos()->create([
+            'ruta' => Storage::url($fileUrl),
+            'fase_id' => $fase_id
+        ]);
         }
     }
 
@@ -398,8 +401,8 @@ class ArchivoController extends Controller
      */
     public function destroyFileProyecto($idFile)
     {
-        $file = ArchivoArticulacionProyecto::find($idFile);
-        if(!request()->user()->can('delete_files', [$file->articulacion_proyecto->proyecto, $file->articulacion_proyecto->proyecto->fase->nombre])) {
+        $file = ArchivoModel::find($idFile);
+        if(!request()->user()->can('delete_files', [$file->model, $file->model->fase->nombre])) {
             toast('No tienes permisos para borrar este archivo!','success')->autoClose(2000)->position('top-end');
         } else {
             $file->delete();
@@ -414,8 +417,7 @@ class ArchivoController extends Controller
     public function downloadFileProyecto($idFile)
     {
         try {
-            $ruta = $this->archivoRepository->consultarRutaDeArchivoDeUnaArticulacionProyectoPorId($idFile);
-            // dd($ruta->articulacion_proyecto->proyecto->asesor_id);
+            $ruta = ArchivoModel::find($idFile);
             if (!$this->verificarAccesoADescarga($ruta)) {
                 toast('No haces parte de este proyecto, por lo que no lo puedes descargar!','warning')->autoClose(2000)->position('top-end');
                 return back();
@@ -432,27 +434,27 @@ class ArchivoController extends Controller
     public function verificarAccesoADescarga($file)
     {
         if (session()->get('login_role') == User::IsDinamizador()) {
-            if ($file->articulacion_proyecto->proyecto->nodo_id != auth()->user()->dinamizador->nodo_id) {
+            if ($file->model->nodo_id != auth()->user()->dinamizador->nodo_id) {
                 return false;
             }
         }
         if (session()->get('login_role') == User::IsInfocenter()) {
-            if ($file->articulacion_proyecto->proyecto->nodo_id != auth()->user()->infocenter->nodo_id) {
+            if ($file->model->nodo_id != auth()->user()->infocenter->nodo_id) {
                 return false;
             }
         }
         if (session()->get('login_role') == User::IsExperto()) {
-            if ($file->articulacion_proyecto->proyecto->asesor_id != auth()->user()->gestor->id) {
+            if ($file->model->asesor_id != auth()->user()->gestor->id) {
                 return false;
             }
         }
         if (session()->get('login_role') == User::IsArticulador()) {
-            if ($file->articulacion_proyecto->proyecto->nodo_id != auth()->user()->articulador->nodo_id) {
+            if ($file->model->nodo_id != auth()->user()->articulador->nodo_id) {
                 return false;
             }
         }
         if (session()->get('login_role') == User::IsTalento()) {
-            $talento = $file->articulacion_proyecto->proyecto->articulacion_proyecto->talentos()->wherePivot('talento_id', auth()->user()->talento->id)->first();
+            $talento = $file->model->talentos()->wherePivot('talento_id', auth()->user()->talento->id)->first();
             if ($talento == null) {
                 return false;
             }
@@ -518,7 +520,10 @@ class ArchivoController extends Controller
     {
         if (request()->ajax()) {
             $proyecto = Proyecto::findOrFail($id);
-            $archivosDeUnProyecto = $this->archivoRepository->consultarRutasArchivosDeUnaArticulacionProyecto($proyecto->articulacion_proyecto_id, $fase)->get();
+            // $archivosDeUnProyecto = $this->archivoRepository->consultarRutasArchivosDeUnaArticulacionProyecto($proyecto->articulacion_proyecto_id, $fase)->get();
+            $archivosDeUnProyecto =  $proyecto->archivos()->whereHas('fase', function($query) use($fase) {
+                $query->where('nombre', $fase);
+            })->get();
             return $this->datatableArchivosArticulacionProyecto($archivosDeUnProyecto, $proyecto);
         }
     }

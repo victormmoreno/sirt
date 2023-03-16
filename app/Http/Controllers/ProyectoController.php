@@ -36,7 +36,7 @@ class ProyectoController extends Controller
             alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte y/o que aún no han finalizado', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+        $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
         $costo = $this->costoController->costoProject($proyecto->id);
         return view('proyectos.detalles.detalle', [
             'proyecto' => $proyecto,
@@ -59,7 +59,7 @@ class ProyectoController extends Controller
             alert('No autorizado', 'No tienes permisos para cambiar los talentos que desarrollan este proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+        $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
         return view('proyectos.forms.form_cambio_talentos', [
             'proyecto' => $proyecto,
             'historico' => $historico
@@ -126,7 +126,7 @@ class ProyectoController extends Controller
                 $seguimiento = '<a class="btn green lighten-1 m-b-xs" href=' . route('pdf.actividad.usos', [$data->id, 'proyecto']) . ' target="_blank"><i class="far fa-file-pdf"></i></a>';
                 return $seguimiento;
             })->addColumn('download_trazabilidad', function ($data) {
-                $seguimiento = '<a class="btn bg-success white-text m-b-xs" href=' . route('excel.proyecto.trazabilidad', $data->actividad_id) . '  target="_blank"><i class="far fa-file-excel"></i></a>';
+                $seguimiento = '<a class="btn bg-success white-text m-b-xs" href=' . route('excel.proyecto.trazabilidad', $data->id) . '  target="_blank"><i class="far fa-file-excel"></i></a>';
                 return $seguimiento;
             })->addColumn('ver_horas', function ($data) {
                 $seguimiento = '<a class="btn bg-warning white-text m-b-xs" onclick="verHorasDeExpertosEnProyecto('.$data->id.')"><i class="material-icons">access_time</i></a>';
@@ -646,9 +646,7 @@ class ProyectoController extends Controller
             alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        // $archivos = ArchivoArticulacionProyecto::all();
-        // dd($archivos->articulacion_proyectos);
-        $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+        $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
         $ult_notificacion = $this->proyectoRepository->retornarUltimaNotificacionPendiente($proyecto);
         $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
         return view('proyectos.fases.fase_inicio', [
@@ -666,7 +664,7 @@ class ProyectoController extends Controller
             alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+        $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
         $ult_notificacion = $this->proyectoRepository->retornarUltimaNotificacionPendiente($proyecto);
         $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
 
@@ -696,7 +694,7 @@ class ProyectoController extends Controller
             alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+        $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
         $ult_notificacion = $this->proyectoRepository->retornarUltimaNotificacionPendiente($proyecto);
         $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
 
@@ -733,7 +731,7 @@ class ProyectoController extends Controller
             alert('No autorizado', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         } else {
-            $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+            $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
             $costo = $this->costoController->costoProject($proyecto->id);
             $ult_notificacion = $this->proyectoRepository->retornarUltimaNotificacionPendiente($proyecto);
             $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
@@ -761,7 +759,7 @@ class ProyectoController extends Controller
             alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+        $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
         $ult_notificacion = $proyecto->notificaciones()->where('fase_id',  Fase::where('nombre', $proyecto->IsSuspendido())->first()->id)->whereNull('fecha_aceptacion')->get()->last();
         $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
         return view('proyectos.fases.fase_suspendido', [
@@ -787,7 +785,7 @@ class ProyectoController extends Controller
             alert('No autorizado', 'No puedes cambiar el experto de un proyecto de otro nodo!', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+        $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
         $gestores = $this->getGestorRepository()->consultarGestoresPorLineaTecnologicaYNodoRepository($proyecto->sublinea->lineatecnologica_id, $proyecto->nodo_id)->pluck('nombre', 'id');
         return view('proyectos.forms.cambiar_gestor', [
             'proyecto' => $proyecto,

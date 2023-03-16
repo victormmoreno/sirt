@@ -81,7 +81,7 @@
                     <td colspan="2">Correo electrónico</td>
                     <td colspan="2">Número de contacto</td>
                 </tr>
-                @forelse ($data->articulacion_proyecto->talentos as $value)
+                @forelse ($data->talentos as $value)
                     <tr>
                         <td colspan="2">{{ $value->user->documento }}</td>
                         <td colspan="2">{{ $value->user->nombres . ' ' . $value->user->nombres }}</td>

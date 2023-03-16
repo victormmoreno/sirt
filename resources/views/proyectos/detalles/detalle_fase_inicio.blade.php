@@ -8,7 +8,7 @@
                             Código del Proyecto
                         </span>
                         <p>
-                            {{$proyecto->articulacion_proyecto->actividad->present()->actividadCode()}}
+                            {{$proyecto->present()->proyectoCode()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -16,7 +16,7 @@
                             Nombre del Proyecto
                         </span>
                         <p>
-                            {{$proyecto->articulacion_proyecto->actividad->present()->actividadName()}}
+                            {{$proyecto->present()->proyectoName()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -171,7 +171,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($proyecto->articulacion_proyecto->talentos as $key => $value)
+                    @foreach ($proyecto->talentos as $key => $value)
                         <tr>
                         <td>{{$value->pivot->talento_lider == 1 ? 'SI' : 'NO'}}</td>
                         <td>
@@ -271,7 +271,7 @@
     </div>
     <div class="col s6 m3 l3">
         <p class="p-v-xs">
-            <input type="checkbox" disabled {{ $proyecto->articulacion_proyecto->actividad->formulario_inicio == 1 ? 'checked' : '' }} id="txtformulario_inicio" name="txtformulario_inicio" value="1">
+            <input type="checkbox" disabled {{ $proyecto->formulario_inicio == 1 ? 'checked' : '' }} id="txtformulario_inicio" name="txtformulario_inicio" value="1">
             <label for="txtformulario_inicio">Acta de Inicio.</label>
         </p>
     </div>

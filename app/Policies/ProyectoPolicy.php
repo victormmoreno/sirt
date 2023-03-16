@@ -56,7 +56,7 @@ class ProyectoPolicy
         if (session()->get('login_role') == $user->IsArticulador() && $proyecto->nodo_id == auth()->user()->articulador->nodo_id)
             return true;
         if (session()->get('login_role') == $user->IsTalento()) {
-            $talento = $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_id', auth()->user()->talento->id)->first();
+            $talento = $proyecto->talentos()->wherePivot('talento_id', auth()->user()->talento->id)->first();
             if ($talento != null) {
                 return true;
             }
@@ -86,7 +86,7 @@ class ProyectoPolicy
             if (session()->get('login_role') == $user->IsArticulador() && $proyecto->nodo_id == auth()->user()->articulador->nodo_id)
                 return true;
             if (session()->get('login_role') == $user->IsTalento()) {
-                $talento = $proyecto->articulacion_proyecto->talentos()->wherePivot('talento_id', auth()->user()->talento->id)->first();
+                $talento = $proyecto->talentos()->wherePivot('talento_id', auth()->user()->talento->id)->first();
                 if ($talento != null) {
                     return true;
                 }

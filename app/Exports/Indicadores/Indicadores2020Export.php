@@ -33,7 +33,7 @@ class Indicadores2020Export implements WithMultipleSheets
             $sheets[] = new TalentoUserExport($this->getQuery(), 'Propietarios');
         } else {
             if ($this->hoja == 'proyectos') {
-                $sheets[] = new ProyectosExport($this->getQuery());
+                $sheets[] = new ProyectosExport($this->getQuery()->get());
             }
             if ($this->hoja == 'tal_ejecutores') {
                 $sheets[] = new TalentoUserExport($this->getQuery(), 'Ejecutores');

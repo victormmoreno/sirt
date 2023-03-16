@@ -34,7 +34,7 @@
                                             <div class="right mailbox-buttons">
                                             <span class="mailbox-title">
                                             <p class="rigth">
-                                                {{$proyecto->articulacion_proyecto->actividad->present()->actividadCode()}} -  {{$proyecto->articulacion_proyecto->actividad->present()->actividadName()}}
+                                                {{$proyecto->present()->proyectoCode()}} -  {{$proyecto->present()->proyectoName()}}
                                             </p>
                                             <br/>
                                             <p class="right">Linea Tecnológica:
@@ -42,7 +42,7 @@
                                             </p>
                                             <br/>
                                             <small class="right">Fecha de inicio del proyecto:
-                                                {{$proyecto->articulacion_proyecto->actividad->present()->actividadcreatedAt()}}
+                                                {{$proyecto->fecha_inicio}}
                                             </small>
                                         </span>
                                             </div>

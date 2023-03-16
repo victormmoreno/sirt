@@ -27,7 +27,6 @@
         <th>¿Articulado con CT+i?</th>
         <th>¿Nombre del actor CT+i?</th>
         <th>¿Dirigido a área de emprendimiento SENA?</th>
-
         <th>Nit de la empresa</th>
         <th>Codigo CIIU</th>
         <th>Nombre de la empresa</th>
