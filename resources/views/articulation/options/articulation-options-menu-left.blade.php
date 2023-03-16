@@ -49,6 +49,13 @@
             Cambiar participantes
         </a>
     @endcan
+    @can('uploadEvidences', [$articulation, 'Inicio'])
+            <a href="{{ route('articulations.evidences', [$articulation]) }}"
+               class="collection-item">
+                <i class="material-icons left">cloud_upload</i>
+                Cargar evidencias
+            </a>
+    @endcan
     @can('delete', $articulation)
         <a href="javascript:void(0)" class="collection-item"
             onclick="filter_articulations.destroyArticulation('{{$articulation->id}}')">

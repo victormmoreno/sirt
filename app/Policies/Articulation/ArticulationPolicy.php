@@ -339,4 +339,30 @@ class ArticulationPolicy
         );
 
     }
+
+    /**
+     * Determine if the given articulations can be Upload Evidences by the user..
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Articulation  $articulation
+     * @return bool
+     */
+    public function uploadEvidences(User $user, Articulation $articulation, string $phase)
+    {
+        return (bool) $user->hasAnyRole([User::IsArticulador()])
+            && ( (
+                    session()->has('login_role')
+                    && (
+                        session()->get('login_role') == User::IsArticulador() ||
+                        session()->get('login_role') == User::IsAdministrador()
+                        )
+                    )
+                )
+            && ($user->articulador->nodo_id == $articulation->articulationstage->node_id)
+                && (isset($articulation->phase) && $articulation->phase->nombre == $phase)
+            && (
+
+                $articulation->articulationstage->status == ArticulationStage::IsAbierto() && optional($articulation->articulationstage->end_date)->format('Y') > 2022 || is_null($articulation->articulationstage->end_date)
+            );
+    }
 }

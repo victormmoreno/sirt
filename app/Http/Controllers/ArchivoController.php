@@ -589,7 +589,7 @@ class ArchivoController extends Controller
      * @return Datatable
      * @author devjul
      */
-    public function datatableArchiveArticulationStage(Request $request,$id)
+    public function datatableArchiveArticulations(Request $request,$id)
     {
         if (request()->ajax()) {
             switch ($request->type){

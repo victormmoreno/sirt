@@ -67,7 +67,7 @@
     <script>
         datatableArchiveArticulation();
 
-        var Dropzone = new Dropzone('#articulation-execution-phase', {
+        let Dropzone = new Dropzone('#articulation-execution-phase', {
 
             url: '{{ route('articulation.files.upload', [$articulation->id]) }}',
             headers: {

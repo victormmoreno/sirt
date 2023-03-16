@@ -1,4 +1,4 @@
-@canany(['showButtonAprobacion', 'requestApproval', 'changeTalent', 'update', 'downloadCertificateEnd', 'downloadCertificateStart', 'uploadEvidences', 'delete'], $articulationStage)
+@canany(['showButtonAprobacion', 'requestApproval', 'changeTalent', 'update', 'downloadCertificateEnd', 'downloadCertificateStart',  'delete'], $articulationStage)
 <div class="collection with-header  col s12 m4 l3">
     <h5 href="!#" class="collection-header primary-text">Opciones</h5>
     @if (Route::currentRouteName() == 'articulation-stage.show')
@@ -89,13 +89,6 @@
                class="collection-item">
                 <i class="material-icons left">cloud_download</i>
                 Descargar acta inicio
-            </a>
-        @endcan
-        @can('uploadEvidences', $articulationStage)
-            <a href="{{ route('articulation-stage.evidences', [$articulationStage]) }}"
-               class="collection-item">
-                <i class="material-icons left">cloud_upload</i>
-                Cargar evidencias
             </a>
         @endcan
         @can('delete', $articulationStage)

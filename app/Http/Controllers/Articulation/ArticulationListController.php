@@ -179,6 +179,17 @@ class ArticulationListController extends Controller
         }
     }
 
+    public function evidences(string $code)
+    {
+        $articulation = Articulation::query()->where('code',$code)->firstOrFail();
+        if (request()->user()->cannot('uploadEvidences', [$articulation, "Inicio"])) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
+        }
+        return view('articulation.articulation-evidences', ['articulation' =>$articulation]);
+
+    }
+
     /**
      * Display the specified resource for change the interlocutor talent of an articulation stage.
      *

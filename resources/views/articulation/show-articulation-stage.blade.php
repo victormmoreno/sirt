@@ -43,7 +43,7 @@
                                         <div class="row">
                                             @include('articulation.options.articulation-stages-options-menu-left')
 
-                                            <div class="@canany(['showButtonAprobacion', 'requestApproval', 'changeTalent', 'update', 'downloadCertificateEnd', 'downloadCertificateStart', 'uploadEvidences', 'delete'], $articulationStage) col s12 m8 l9 @elsecanany(['create'], App\Models\Articulation::class) @if($articulationStage->status == \App\Models\ArticulationStage::STATUS_OPEN) col s12 m8 l9 @else col s12 m12 l12  @endif  @else col s12 m12 l12 @endcanany ">
+                                            <div class="@canany(['showButtonAprobacion', 'requestApproval', 'changeTalent', 'update', 'downloadCertificateEnd', 'downloadCertificateStart', 'delete'], $articulationStage) col s12 m8 l9 @elsecanany(['create'], App\Models\Articulation::class) @if($articulationStage->status == \App\Models\ArticulationStage::STATUS_OPEN) col s12 m8 l9 @else col s12 m12 l12  @endif  @else col s12 m12 l12 @endcanany ">
                                                 <div class="row">
                                                     <div class="col s12 m6 l6">
                                                         <ul class="collection">

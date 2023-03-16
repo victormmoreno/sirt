@@ -420,16 +420,7 @@ class ArticulationStageListController extends Controller
         return redirect()->route('home');
     }
 
-    public function evidences($code)
-    {
-        $articulationStage = ArticulationStage::query()->where('code',$code)->firstOrFail();
-        if (request()->user()->cannot('uploadEvidences', $articulationStage)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
-            return redirect()->route('home');
-        }
-        return view('articulation.articulation-stages-evidences', ['articulationStage' =>$articulationStage]);
 
-    }
 
     public function changeStatus($code)
     {

@@ -330,7 +330,7 @@ Route::group(
         Route::get('/', 'TallerController@index')->name('taller');
         Route::get('/consultarEntrenamientosPorNodo/{id}', 'TallerController@datatableEntrenamientosPorNodo');
         Route::get('/create', 'TallerController@create')->name('taller.create')->middleware('role_session:Articulador');
-        // Route::get('/{id}/edit', 'TallerController@edit')->name('taller.edit')->middleware('role_session:Infocenter');
+
         Route::get('/{id}', 'TallerController@details')->name('taller.details');
         Route::get('/inhabilitarEntrenamiento/{id}/{estado}', 'TallerController@inhabilitarEntrenamiento')->name('taller.inhabilitar')->middleware('role_session:Infocenter');
         Route::get('/{id}/evidencias', 'TallerController@evidencias')->name('taller.evidencias');
@@ -830,15 +830,9 @@ Route::get('creditos', function () {
 
 Route::get('usuarios/filtro-talento/{documento}', 'User\UserController@filterTalento')->name('articulacion.usuario.talento.search');
 
-//     Route::get('/', 'NoticiasController@index')->name('noticias.index')->middleware('role_session:Activador');
-//     Route::get('/create', 'NoticiasController@create')->name('noticias.create');
-//     Route::post('/', 'NoticiasController@store')->name('noticias.store');
-//     Route::get('/{id}/edit', 'NoticiasController@edit')->name('noticias.edit')->middleware('role_session:Activador');
-//     Route::patch('/{id}', 'NoticiasController@update')->name('noticias.update')->middleware('role_session:Activador');
-//     Route::delete('/{id}', 'NoticiasController@destroy')->name('noticias.destroy');
 
 Route::get('articulaciones/downloadFile/{id}', 'ArchivoController@downloadFileArticulation')->name('articulation.files.download');
-Route::get('articulaciones/files/{id}/', 'ArchivoController@datatableArchiveArticulationStage')->name('articulation.files');
+Route::get('articulaciones/files/{id}/', 'ArchivoController@datatableArchiveArticulations')->name('articulation.files');
 Route::delete('articulaciones/{idFile}/files', 'ArchivoController@destroyFileArticulation')->name('articulation.files.destroy');
 Route::post('articulaciones/files/{id}', 'ArchivoController@uploadFileArticulacion')->name('articulation.files.upload');
 
@@ -874,11 +868,14 @@ Route::group(
         Route::get('/articulaciones/{code}/crear', 'ArticulationRegisterController@create')->name('articulations.create');
         Route::get('/descargar/{phase}/{code}', 'ArticulationStageListController@downloadCertificate')->name('articulation-stage.download-certificate');
         Route::get('/solicitar-aprobacion/{id}/{fase}', 'ArticulationStageApprovalsController@requestApproval')->name('articulation-stage.request-approval');
+
+        Route::get('/articulaciones/{code}/evidencias', 'ArticulationListController@evidences')->name('articulations.evidences');
         Route::get('/articulaciones/{code}/solicitar-aprobacion', 'ArticulationListController@requestApproval')->name('articulation.request-approval');
-        Route::get('/evidencias/{code}', 'ArticulationStageListController@evidences')->name('articulation-stage.evidences');
+
         Route::get('/articulaciones/{code}/{fase}', 'ArticulationListController@showPhase')->name('articulations.show.phase');
 
         Route::post('/articulaciones/{code}/crear', 'ArticulationRegisterController@store')->name('articulations.store');
+
 
         Route::get('/articulaciones/{code}', 'ArticulationListController@show')->name('articulations.show');
         Route::put('/articulaciones/{code}/editar', 'ArticulationRegisterController@update')->name('articulation.update');
