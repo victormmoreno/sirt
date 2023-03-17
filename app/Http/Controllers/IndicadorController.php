@@ -54,9 +54,7 @@ public function index()
     $metas = $this->nodoRepository->consultarMetasDeTecnoparque($nodos)->where('anho', $year_now)->get();
     $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl6Obtenido()])->whereIn('nodos.id', $nodos)->get();
     $pbts_trl7_8 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl7Obtenido(), Proyecto::IsTrl8Obtenido()])->whereIn('nodos.id', $nodos)->get();
-    $activos = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->select('nodo_id')->selectRaw('count(id) as cantidad')->whereHas('fase', function ($query) {
-    $query->whereIn('nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
-    })->whereIn('nodo_id', $nodos)->groupBy('nodo_id')->get();
+    $activos = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->select('proyectos.nodo_id')->selectRaw('count(proyectos.id) as cantidad')->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre'])->whereIn('proyectos.nodo_id', $nodos)->groupBy('proyectos.nodo_id')->get();
     $articulations_start = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsInicio()])->whereIn('nodos.id', $nodos)->get();
     $articulations_execution = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsEjecucion()])->whereIn('nodos.id', $nodos)->get();
     $articulations_closing = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsCierre()])->whereIn('nodos.id', $nodos)->get();

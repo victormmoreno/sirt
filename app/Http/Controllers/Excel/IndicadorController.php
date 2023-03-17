@@ -133,12 +133,12 @@ class IndicadorController extends Controller
         $query = null;
         $nodo_user = request()->user()->getNodoUser();
         if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
-        if ($idnodo == 'all') {
-            $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
-        } else {
-            $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])->where('proyectos.nodo_id', $idnodo);
-        }
-    } else if (session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsInfocenter()) {
+            if ($idnodo == 'all') {
+                $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
+            } else {
+                $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])->where('proyectos.nodo_id', $idnodo);
+            }
+        } else if (session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsInfocenter()) {
             $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])->where('proyectos.nodo_id', $nodo_user);
         } else {
             $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])->where('id', auth()->user()->gestor->id);

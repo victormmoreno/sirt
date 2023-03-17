@@ -3,7 +3,7 @@
 namespace App\Repositories\Repository;
 
 
-use App\Models\{Proyecto, Entidad, Fase, Actividad, ArticulacionProyecto, ArchivoArticulacionProyecto, ControlNotificaciones, Movimiento, UsoInfraestructura, Role, Idea, EstadoIdea};
+use App\Models\{Proyecto, Entidad, Fase, ControlNotificaciones, Movimiento, Role, Idea, EstadoIdea, Sede, GrupoInvestigacion};
 use Illuminate\Support\Facades\{DB, Notification, Storage, Session};
 use App\Notifications\Proyecto\{ProyectoCierreAprobado, ProyectoAprobarFase, ProyectoAprobarSuspendido, ProyectoSuspendidoAprobado, ProyectoNoAprobarFase};
 use Carbon\Carbon;
@@ -436,38 +436,49 @@ class ProyectoRepository extends Repository
 
     public function proyectosIndicadoresSeparados_Repository()
     {
-        return Proyecto::with([
-            'users_propietarios',
-            'gruposinvestigacion',
-            'gruposinvestigacion.clasificacioncolciencias',
-            'gruposinvestigacion.entidad',
-            'sedes',
-            'sedes.empresa',
-            'sedes.empresa.tamanhoempresa',
-            'sedes.empresa.tipoempresa',
-            'sedes.empresa',
-            'sublinea',
-            'sublinea.linea',
-            'areaconocimiento',
-            'fase',
-            'talentos',
-            'talentos.user' => function($query) {
-                $query->withTrashed();
-            },
-            'talentos.user.grupoSanguineo',
-            'talentos.user.eps',
-            'talentos.user.etnia',
-            'talentos.user.gradoescolaridad',
-            'talentos.user.ciudad',
-            'talentos.user.ciudad.departamento',
-            'asesor.user' => function($query) {
-                $query->withTrashed();
-            },
-            'nodo',
-            'nodo.entidad',
-            'fase',
-            'idea',
-        ]);
+        $sede = Sede::class;
+        $user = User::class;
+        $grupo = GrupoInvestigacion::class;
+        return Proyecto::select(
+            'entidades.nombre AS nombre_nodo', 'lineastecnologicas.nombre AS nombre_linea', 'sublineas.nombre AS nombre_sublinea',
+            'ideas.codigo_idea', 'ideas.nombre_proyecto AS nombre_idea', 'codigo_proyecto',
+            'areasconocimiento.nombre AS nombre_area_conocimiento', 'otro_areaconocimiento', 'fecha_inicio',
+            'fases.nombre AS nombre_fase', 'fecha_cierre', 'proyectos.id', 'proyectos.nombre AS nombre_proyecto'
+        )
+        ->selectRaw('concat(users.nombres, " ", users.apellidos) AS experto')
+        ->selectRaw('IF(trl_esperado = '.Proyecto::IsTrl6Esperado().', "TRL 6", "TRL 7 - TRL 8") AS trl_esperado')
+        ->selectRaw('IF(fases.nombre = "'.Proyecto::IsFinalizado().'", IF(trl_obtenido = 0, "TRL 6", IF(trl_obtenido = 1, "TRL 7", "TRL 8")), "El proyecto no se ha cerrado") AS trl_obtenido')
+        ->selectRaw('IF(fabrica_productividad = 0, "No", "Si") AS fabrica_productividad')
+        ->selectRaw('IF(reci_ar_emp = 0, "No", "Si") AS reci_ar_emp')
+        ->selectRaw('IF(economia_naranja = 0, "No", "Si") AS economia_naranja')
+        ->selectRaw('IF(economia_naranja = 0, "No aplica", tipo_economianaranja) AS tipo_economianaranja')
+        ->selectRaw('IF(dirigido_discapacitados = 0, "No", "Si") AS dirigido_discapacitados')
+        ->selectRaw('IF(dirigido_discapacitados = 0, "No aplica", tipo_discapacitados) AS tipo_discapacitados')
+        ->selectRaw('IF(art_cti = 0, "No", "Si") AS art_cti')
+        ->selectRaw('IF(art_cti = 0, "No aplica", nom_act_cti) AS nom_act_cti')
+        ->selectRaw('IF(fases.nombre = "'.Proyecto::IsFinalizado().'", IF(diri_ar_emp = 0, "No", "Si"), "El proyecto no se ha cerrado") AS diri_ar_emp')
+        ->selectRaw('DATE_FORMAT(fecha_cierre, "%Y") AS anho')
+        ->selectRaw('DATE_FORMAT(fecha_cierre, "%m") AS mes')
+        ->selectRaw('GROUP_CONCAT(empresas.nit, " - ", empresas.nombre, ";") AS empresas')
+        ->selectRaw('GROUP_CONCAT(up.nombres, " ",up.apellidos,";") AS personas')
+        ->selectRaw('GROUP_CONCAT(gruposinvestigacion.codigo_grupo, " ", eg.nombre, ";") AS grupos')
+        ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
+        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+        ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
+        ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
+        ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
+        ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
+        ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
+        ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
+        ->join('users', 'users.id', '=', 'gestores.user_id')
+        ->join('propietarios', 'propietarios.proyecto_id', '=', 'proyectos.id')
+        ->leftJoin('sedes', function($q) use ($sede) {$q->on('sedes.id', '=', 'propietarios.propietario_id')->where('propietarios.propietario_type', "$sede");})
+        ->leftJoin('empresas', 'empresas.id', '=', 'sedes.empresa_id')
+        ->leftJoin('users AS up', function($q) use ($user) {$q->on('up.id', '=', 'propietarios.propietario_id')->where('propietarios.propietario_type', "$user");})
+        ->leftJoin('gruposinvestigacion', function($q) use ($grupo) {$q->on('gruposinvestigacion.id', '=', 'propietarios.propietario_id')->where('propietarios.propietario_type', "$grupo");})
+        ->leftJoin('entidades AS eg', 'eg.id', '=', 'gruposinvestigacion.entidad_id')
+        ->groupBy('proyectos.id')
+        ->orderBy('entidades.nombre');
     }
 
 

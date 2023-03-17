@@ -34,7 +34,7 @@
     <tbody>
         @foreach($proyectos as $proyecto)
         <tr>
-            <td>{{ $proyecto->nodo->entidad->nombre }}</td>
+            <td>{{ $proyecto->nombre_nodo }}</td>
             <td>{{ $proyecto->experto }}</td>
             <td>{{ $proyecto->nombre_linea }}</td>
             <td>{{ $proyecto->nombre_sublinea }}</td>
@@ -45,16 +45,16 @@
             <td>{{ $proyecto->nombre_area_conocimiento == 'Otro' ? $proyecto->otro_areaconocimiento : 'No aplica' }}</td>
             <td>{{ $proyecto->fecha_inicio }}</td>
             <td>{{ $proyecto->nombre_fase }}</td>
-            <td>{{ $proyecto->nombre_fase == 'Suspendido' || $proyecto->nombre_fase == 'Finalizado' ? 'El proyecto no se ha cerrado' : $proyecto->fecha_cierre }}</td>
+            <td>{{ $proyecto->nombre_fase == 'Suspendido' || $proyecto->nombre_fase == 'Finalizado' ? $proyecto->fecha_cierre : 'El proyecto no se ha cerrado' }}</td>
 
             @if ($proyecto->nombre_fase == 'Finalizado' || $proyecto->nombre_fase == 'Suspendido')
-                <td>{{ $proyecto->fecha_cierre->isoFormat('YYYY') }}</td>
+                <td>{{ $proyecto->anho }}</td>
             @else
                 <td>El proyecto no se ha cerrado</td>
             @endif
 
             @if ($proyecto->nombre_fase == 'Finalizado' || $proyecto->nombre_fase == 'Suspendido')
-                <td>{{ $proyecto->fecha_cierre->isoFormat('MM') }}</td>
+                <td>{{ $proyecto->mes }}</td>
             @else
                 <td>El proyecto no se ha cerrado</td>
             @endif
@@ -71,19 +71,13 @@
             <td>{{ $proyecto->nom_act_cti }}</td>
             <td>{{ $proyecto->diri_ar_emp }}</td>
             <td>
-                {{-- @foreach ($proyecto->sedes as $sede)
-                {{ $sede->empresa->nit }} - {{ $sede->empresa->nombre }};
-                @endforeach --}}
+                {{ $proyecto->empresas }}
             </td>
             <td>
-                {{-- @foreach ($proyecto->gruposinvestigacion as $grupo)
-                {{ $grupo->codigo_grupo }} - {{ $grupo->entidad->nombre }};
-                @endforeach --}}
+                {{ $proyecto->grupos }}
             </td>
             <td>
-                {{-- @foreach ($proyecto->users_propietarios as $user)
-                {{ $user->present()->userFullName() }};
-                @endforeach --}}
+                {{ $proyecto->personas }}
             </td>
         </tr>
         @endforeach
