@@ -1569,7 +1569,7 @@ class ProyectoRepository extends Repository
             $proyecto->users_propietarios()->attach(request()->propietarios_user);
             $proyecto->sedes()->attach(request()->propietarios_sedes);
             $proyecto->gruposinvestigacion()->attach(request()->propietarios_grupos);
-            $proyecto->idea->registrarHistorialIdea(Movimiento::IsRegistrar(), Session::get('login_role'), null, 'como un PBT asociado con el código ' . $actividad->codigo_actividad);
+            $proyecto->idea->registrarHistorialIdea(Movimiento::IsRegistrar(), Session::get('login_role'), null, 'como un PBT asociado con el código ' . $proyecto->codigo_proyecto);
 
             DB::commit();
             return ['state' => true, 'id' => $proyecto->id];
