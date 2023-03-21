@@ -7,16 +7,28 @@ use App\Exports\Proyectos\{ProyectosExport};
 // use App\Exports\ es\{ esExport};
 use App\Exports\Empresas\{EmpresasExport};
 use App\Exports\GruposInvestigacion\{GruposExport};
+use App\Repositories\Repository\{EmpresaRepository, GrupoInvestigacionRepository, ProyectoRepository};
 use App\Exports\User\Talento\TalentoUserExport;
+use App\Repositories\Repository\UserRepository\TalentoRepository;
 
 class Indicadores2020Export implements WithMultipleSheets
 {
     private $query;
     private $hoja;
+    private $request;
+    private $proyectoRepository;
+    private $talentoRepository;
+    private $empresaRepository;
+    private $grupoRepository;
 
-    public function __construct($queryProyectos, $hoja) {
-        $this->setQuery($queryProyectos);
-        $this->hoja = $hoja;
+    public function __construct($request) {
+        // $this->setQuery($queryProyectos);
+        $this->request = $request;
+        $this->hoja = $request->hoja;
+        $this->proyectoRepository = new ProyectoRepository;
+        $this->talentoRepository = new TalentoRepository;
+        $this->empresaRepository = new EmpresaRepository;
+        $this->grupoRepository = new GrupoInvestigacionRepository;
     }
     
     /**
@@ -33,7 +45,8 @@ class Indicadores2020Export implements WithMultipleSheets
             $sheets[] = new TalentoUserExport($this->getQuery(), 'Propietarios');
         } else {
             if ($this->hoja == 'proyectos') {
-                $sheets[] = new ProyectosExport($this->getQuery()->get());
+                $query = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$this->request->fecha_inicio, $this->request->fecha_fin]);
+                $sheets[] = new ProyectosExport($query->get());
             }
             if ($this->hoja == 'tal_ejecutores') {
                 $sheets[] = new TalentoUserExport($this->getQuery(), 'Ejecutores');

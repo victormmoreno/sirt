@@ -19,7 +19,7 @@ use Maatwebsite\Excel\Events\{AfterSheet};
 class ProyectosExport extends FatherExport implements WithColumnWidths
 {
 
-    public function __construct($query)
+    public function __construct($query = null)
     {
         $this->setQuery($query);
         $this->setCount($this->getQuery()->count() + 1);

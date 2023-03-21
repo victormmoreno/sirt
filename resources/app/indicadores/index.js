@@ -117,6 +117,24 @@ function generarExcelConTodosLosIndicadoresInscritos() {
   if (fecha_inicio > fecha_fin) {
     Swal.fire('Error!', 'Seleccione un rango de fechas válido', 'error');
   } else {
+    // e.preventDefault();
+    // $.ajax({
+    //   dataType: 'json',
+    //   type: 'get',
+    //   url: host_url + '/excel/export_proyectos_inscritos',
+    //   data: {
+    //     nodos: idnodo,
+    //     hoja: hoja,
+    //     fecha_inicio: fecha_inicio,
+    //     fecha_fin: fecha_fin
+    //   },
+    //   success: function (data) {
+    //     location.href = '/indicadores'
+    //   },
+    //   error: function (xhr, textStatus, errorThrown) {
+    //     alert("Error: " + errorThrown);
+    //   },
+    // })
     location.href = '/excel/export_proyectos_inscritos/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+hoja;
   }
 

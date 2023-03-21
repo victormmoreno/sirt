@@ -18,7 +18,7 @@ class ProyectoRepository extends Repository
 
     private $ideaRepository;
 
-    public function __construct(IdeaRepository $ideaRepository)
+    public function __construct(IdeaRepository $ideaRepository = null)
     {
         $this->setIdeaRepository($ideaRepository);
     }

@@ -4,7 +4,7 @@
     @can('showIndicadoresProyectoOptions', Illuminate\Database\Eloquent\Model::class)
         <div class="row">
             <div class="input-field col s12 m6 l6">
-                <select name="txtnodo_id_inscritos" id="txtnodo_id_inscritos" style="width: 100%">
+                <select multiple name="txtnodo_id_inscritos[]" id="txtnodo_id_inscritos" style="width: 100%">
                 <option value="all">Todos</option>
                 @foreach($nodos as $nodo)
                     <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
