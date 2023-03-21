@@ -144,7 +144,10 @@ class TallerController extends Controller
             return back();
         }
         $now = Carbon::now()->isoFormat('YYYY');
-        $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('nodo_id', auth()->user()->articulador->nodo_id)->whereYear('created_at', $now)->get();
+        $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('nodo_id', auth()->user()->articulador->nodo_id)->whereYear('created_at', $now)->whereHas('estadoIdea',
+        function ($query){
+            $query->whereIn('nombre', [EstadoIdea::IsRegistro(), EstadoIdea::IsPostulado()]);
+        })->get();
         return view('talleres.create', ['ideas' => $ideas]);
     }
 

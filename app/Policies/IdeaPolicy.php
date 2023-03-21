@@ -208,6 +208,9 @@ class IdeaPolicy
         if ($idea->estadoIdea->nombre == EstadoIdea::IsRegistro() && session()->get('login_role') == $user->IsTalento() && $user->talento->id == $idea->talento_id) {
             return true;
         }
+        if ($idea->estadoIdea->nombre == EstadoIdea::IsRegistro() && Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsArticulador()]) && $user->getNodoUser() == $idea->nodo_id) {
+            return true;
+        }
         if (session()->get('login_role') == $user->IsAdministrador()) {
             return true;
         }
