@@ -69,6 +69,13 @@ class ComiteRepository
     {
         
         DB::beginTransaction();
+        // $comite = Comite::findOrFail($id);
+
+        // foreach ($comite->ideas as $key => $value) {
+        //     $this->aumentar_contador_notificado($value->pivot);
+        //     event(new AgendamientoWasRegistered($value, $comite));
+        // }
+        // DB::rollBack();
         try {
             $comite = Comite::findOrFail($id);
 
@@ -76,6 +83,7 @@ class ComiteRepository
                 // La notificación se le enviará a todos los participantes, tanto talentos como expertos
                 event(new GestoresWereRegistered($comite, $this->getEmailGestoresDelComite($comite)));
                 foreach ($comite->ideas as $key => $value) {
+                    $this->aumentar_contador_notificado($value->pivot);
                     event(new AgendamientoWasRegistered($value, $comite));
                 }
             } else if ($rol == 'talentos') {
@@ -83,17 +91,21 @@ class ComiteRepository
                 if ($idea == -1) {
                     // Cuando se trata de todas las ideas de proyecto
                     foreach ($comite->ideas as $key => $value) {
+                        $this->aumentar_contador_notificado($value->pivot);
                         event(new AgendamientoWasRegistered($value, $comite));
                     }
                 } else {
                     // Cuando se trata de solo una idea de proyecto
                     $idea = Idea::findOrFail($idea);
+                    $comite = Comite::findOrFail($id);
+                    $idea_comite = $comite->ideas()->wherePivot('idea_id', $idea->id)->first();
+                    $pivot = $idea_comite->pivot;
+                    $this->aumentar_contador_notificado($pivot);
                     event(new AgendamientoWasRegistered($idea, $comite));
                 }
             } else {
                 event(new GestoresWereRegistered($comite, $this->getEmailGestoresDelComite($comite)));
             }
-            
             DB::commit();
             return true;
         } catch (\Throwable $th) {
@@ -102,13 +114,26 @@ class ComiteRepository
         }
     }
 
+    /**
+     * Aumenta las veces que se ha notificado el comité de una idea.
+     *
+     * @param $pivot Pivot de la tabla comite_idea
+     * @return void
+     * @author dum
+     **/
+    private function aumentar_contador_notificado($pivot)
+    {
+        $pivot->update(['notificado' => $pivot->notificado + 1]);
+        $pivot->save();
+    }
+
     public function notificar_realizado(int $id)
     {
         DB::beginTransaction();
         try {
             $comite = Comite::findOrFail($id);
             $dinamizadorRepository = new DinamizadorRepository;
-            $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo(auth()->user()->infocenter->nodo_id)->get();
+            $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($comite->ideas()->first()->nodo_id)->get();
             $infocenter = auth()->user()->nombres . " " . auth()->user()->apellidos;
             Notification::send($dinamizadores, new ComiteRealizado($comite, $infocenter));
             DB::commit();
@@ -554,8 +579,8 @@ class ComiteRepository
     {
         return Comite::where('id', $idComite)
             ->update([
-                "correos"            => $request['ev_correos'],
-                "listado_asistencia"   => $request['ev_listado'],
+                "correos" => $request['ev_correos'],
+                "listado_asistencia" => $request['ev_listado'],
                 "otros" => $request['ev_otros'],
             ]);
     }

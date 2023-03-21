@@ -253,5 +253,15 @@ return [
         ],
         'response_time' => env('TEC_SUPP_RESPONSE_TIME', '72 horas')
     ],
+    'equipos' => [
+        'num_destacados' => env('EQUIPOS_NUM_DESTACADOS', 10)
+    ],
+    'proyectos' => [
+        'duracion' => [
+            // Duración en días
+            'inicio' => env('DURACION_PROYECTO_INICIO', 15),
+            'planeacion' => env('DURACION_PROYECTO_PLANEACION', 30)
+        ]
+    ]
 
 ];

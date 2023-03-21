@@ -28,7 +28,7 @@
   <p style="text-align: justify">
     Luego de seguir las recomendaciones usted podrá solicitar una nueva citación al comité y este decidirá si se le asigna un experto de Tecnoparque,
     quien lo contactará para iniciar con la metodología en caso de que el proyecto se admitido.
-    Cualquier información adicional la puede solicitar a los teléfonos {{ $idea->nodo->telefono }} <b>ext.</b> {{ $extensiones }}.
+    Cualquier información adicional la puede solicitar a los teléfonos {{ $idea->nodo->telefono }} <b>ext.</b> {{ $idea->nodo->extension }}.
   </p>
   <p>
     Recuerde que además de la Asesoría Técnica para el Desarrollo de Proyectos de Base Tecnológica, la Red Tecnoparque Colombia pone a su disposición los siguientes servicios:

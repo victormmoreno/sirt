@@ -39,15 +39,15 @@
                     </div>
                   </div>
                   <div class="divider"></div>
-                <center>
-                  <button type="submit" value="send" class="waves-effect cyan darken-1 btn center-aling">
-                    <i class="material-icons right">done</i>
+                <div class="center">
+                  <button type="submit" value="send" class="waves-effect waves-light btn bg-secondary center-align">
+                    <i class="material-icons right">send</i>
                     Cambiar experto.
                   </button>
-                  <a href="{{route('csibt.detalle', $comite->id)}}" class="waves-effect red lighten-2 btn center-aling">
-                    <i class="material-icons right">backspace</i>Cancelar
+                  <a href="{{route('csibt.detalle', $comite->id)}}" class="waves-effect bg-danger btn center-align">
+                    <i class="material-icons left">backspace</i>Cancelar
                   </a>
-                </center>
+                </div>
               </form>
             </div>
           </div>

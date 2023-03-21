@@ -14,6 +14,8 @@ use RealRashid\SweetAlert\Facades\Alert;
 class IdeaController extends Controller
 {
     public $ideaRepository;
+    public $empresaRepository;
+    public $gestorRepository;
 
     public function __construct(IdeaRepository $ideaRepository, EmpresaRepository $empresaRepository, GestorRepository $gestorRepository)
     {

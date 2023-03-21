@@ -32,9 +32,10 @@
                                 </div>
                             </div>
                             @can('create', App\Models\Equipo::class)
-                                <div class="col s12 m4 l4 ">
-                                    <a href="{{route('equipo.create')}}" class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nuevo Equipo</a>
-                                </div>
+                                <a href="{{route('equipo.create')}}" class="waves-effect waves-grey bg-secondary white-text btn-flat right show-on-large hide-on-med-and-down m-l-xs">Nuevo Equipo</a>
+                            @endcan
+                            @can('import', App\Models\Equipo::class)
+                                <a href="{{route('equipo.import')}}" class="waves-effect waves-grey bg-secondary-darken white-text btn-flat right show-on-large hide-on-med-and-down m-l-xs">Importar equipos</a>
                             @endcan
                         </div>
                         <div class="divider"></div>

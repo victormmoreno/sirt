@@ -87,7 +87,7 @@ class Comite extends Model
     {
         return $this->belongsToMany(Idea::class, 'comite_idea')
         ->withTimestamps()
-        ->withPivot(['hora', 'admitido', 'asistencia', 'observaciones', 'direccion']);
+        ->withPivot(['id', 'hora', 'admitido', 'asistencia', 'observaciones', 'direccion', 'notificado']);
     }
 
     public function gestores()
