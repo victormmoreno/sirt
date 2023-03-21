@@ -28,6 +28,11 @@ class ArticulationStagePresenter extends Presenter
         return isset($this->articulationStage->description) ? $this->articulationStage->description : 'No registra';
     }
 
+    public function articulationStageExpectedResults()
+    {
+        return isset($this->articulationStage->expected_results) ? $this->articulationStage->expected_results : 'No registra';
+    }
+
     public function articulationStageScope()
     {
         return isset($this->articulationStage->scope) ? $this->articulationStage->scope : 'No registra';
@@ -79,7 +84,11 @@ class ArticulationStagePresenter extends Presenter
 
     public function articulationStageEndDate()
     {
-        return optional($this->articulationStage->end_date)->isoFormat('DD/MM/YYYY');
+        if($this->articulationStage->status == ArticulationStage::STATUS_OPEN && isset($this->articulationStage->end_date)){
+            return optional($this->articulationStage->end_date)->isoFormat('DD/MM/YYYY');
+        }
+        return "No aplica";
+
     }
 
     public function articulationStageNode()
@@ -92,10 +101,6 @@ class ArticulationStagePresenter extends Presenter
         return $this->articulationStage->has('interlocutor') ? $this->articulationStage->interlocutor->present()->userDocumento() . ' - '. $this->articulationStage->interlocutor->present()->userFullName() : 'No Registra';
     }
 
-    public function articulationStageConfidentialityFormat()
-    {
-        return $this->articulationStage->confidentiality_format ? ($this->articulationStage->confidentiality_format == 1 ? 'Aceptado' : 'No aceptado') : 'No registra';
-    }
 
     public function articulationStageTermsVerifiedAt()
     {

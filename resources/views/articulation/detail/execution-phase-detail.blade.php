@@ -2,7 +2,7 @@
     @include('articulation.options.articulation-options-menu-left')
     <div class="@canany(['showButtonAprobacion', 'requestApproval', 'showStart', 'showExecution', 'showClosing', 'changeTalents', 'changePhase'], $articulation)col s12 m8 l9 @else col s12 m12 l12  @endcanany">
         <div class="row">
-            <div class="col s12 m4 l4">
+            <div class="col s12 m12 l4">
                 <ul class="collection">
                     <li class="collection-item">
                         <span class="title black-text">
@@ -48,7 +48,7 @@
 
                 </ul>
             </div>
-            <div class="col s12 m4 l4">
+            <div class="col s12 m12 l4">
                 <ul class="collection">
                     <li class="collection-item">
                         <span class="title black-text">
@@ -76,7 +76,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col s12 m4 l4">
+            <div class="col s12 m12 l4">
                 <ul class="collection">
                     <li class="collection-item">
                         <span class="title black-text">

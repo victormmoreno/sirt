@@ -19,12 +19,12 @@ class CreateArticulationStagesTable extends Migration
             $table->string('code', 50)->unique(); //codigo
             $table->string('name', 600); //nombre
             $table->text('description')->nullable(); //descripcion
+            $table->text('expected_results')->nullable(); //resultados esperados
             $table->text('scope'); //alcance
             $table->boolean('status')->default(ArticulationStage::STATUS_OPEN); //Estado
             $table->boolean('endorsement')->default(0); //aval
             $table->timestamp('start_date'); //fecha inicio
             $table->timestamp('end_date')->nullable(); //fecha fin
-            $table->boolean('confidentiality_format')->default(ArticulationStage::CONFIDENCIALITY_FORMAT_NO); //formato de confidencialidad
             $table->timestamp('terms_verified_at')->nullable()->default(null); //terminos y condiciones
             $table->unsignedInteger('node_id')->nullable(); //nodo
             $table->unsignedInteger('interlocutor_talent_id')->nullable(); //talento_interlocutor

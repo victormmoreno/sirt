@@ -37,12 +37,12 @@
                         <small id="start_date-error" class="error red-text"></small>
                     </div>
                     <div class="input-field col m12 s12">
-                        <label for="name_articulation">Nombre Articulación <span class="red-text">*</span></label>
-                        <input id="name_articulation" name="name_articulation" value="{{isset($articulation) ? $articulation->name : old('name_articulation')}}" type="text">
+                        <label for="name">Nombre Articulación <span class="red-text">*</span></label>
+                        <input id="name" name="name" value="{{isset($articulation) ? $articulation->name : old('name')}}" type="text">
                     </div>
                     <div class="input-field col m12 s12">
-                        <label for="description_articulation">Descripción Articulación (Opcional)</label>
-                        <textarea id="description_articulation" name="description_articulation"  type="text" class="materialize-textarea validate">{{isset($articulation) ? $articulation->description : old('description_articulation')}}</textarea>
+                        <label for="description">{{ __('Description') }} <span class="red-text">*</span></label>
+                        <textarea id="description" name="description"  type="text" class="materialize-textarea validate">{{isset($articulation) ? $articulation->description : old('description')}}</textarea>
                     </div>
                 </div>
             </div>

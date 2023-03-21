@@ -10,7 +10,6 @@ use App\Repositories\Repository\LineaRepository;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Response;
 use Repositories\Repository\NodoRepository;
 use App\Exports\Equipo\EquipoExport;
@@ -129,7 +128,6 @@ class EquipoController extends Controller
     public function getEquiposPorLinea($nodo, $lineatecnologica)
     {
         if (request()->ajax()) {
-
             if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
                 $nodo_id = $nodo;
             }
@@ -141,11 +139,12 @@ class EquipoController extends Controller
             }
 
             if (session()->get('login_role') == User::IsExperto()) {
-                $linea_id = auth()->user()->gestor->lineatecnologica_id;
-            } 
-            // if (session()->get('login_role') == User::IsDinamizador()) {
-            //     $linea_id = $lineatecnologica;
-            // } 
+                if(isset($lineatecnologica)){
+                    $linea_id = $lineatecnologica;
+                }else{
+                    $linea_id = auth()->user()->gestor->lineatecnologica_id;
+                }
+            }
             if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsDinamizador()) {
                 $linea_id = $lineatecnologica;
             }
@@ -162,18 +161,6 @@ class EquipoController extends Controller
                 ->where('lineatecnologica_id', $linea_id)
                 ->get();
             }
-            // if (isset($nodo_id)) {
-            //     $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-            //     ->where('nodo_id', $nodo_id)
-            //     ->where('lineatecnologica_id', $linea_id)
-            //     ->get();
-            // } else {
-            //     $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
-            //     ->whereHas('lineatecnologica', function ($query) use ($linea_id) {
-            //         $query->where('id', $linea_id);
-            //     })->get();
-            // }
-
             return response()->json([
                 'equipos' => $equipos,
             ]);
@@ -277,7 +264,7 @@ class EquipoController extends Controller
         $nodos = $this->getNodoRepository()->getSelectNodo();
         // $nodo = $equipo->nodo_id;
         $lineastecnologicas = $this->getLineaTecnologicaRepository()->getAllLineaNodo($equipo->nodo_id);
-        
+
         // $nodo               = auth()->user()->dinamizador->nodo->id;
         // $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
 
@@ -314,36 +301,6 @@ class EquipoController extends Controller
     }
 
     /**
-     * delete the specified resource in detroy.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function destroy(int $id)
-    // {
-    //     $equipo = Equipo::withTrashed()->findOrFail($id);
-
-    //     $cantidadUso = $equipo->usoinfraestructuras->count();
-    //     $cantidadMantenimiento = $equipo->equiposmantenimientos->count();
-
-    //     $this->authorize('destroy', $equipo);
-
-    //     if ($cantidadUso > 0 || $cantidadMantenimiento > 0) {
-    //         return response()->json([
-    //             'equipo' => $equipo,
-    //             'statusCode' => Response::HTTP_IM_USED,
-    //             'message' => 'no puedes eliminar el equipo.',
-    //         ], Response::HTTP_IM_USED);
-    //     }
-    //     $equipo->forceDelete();
-    //     return response()->json([
-    //         'statusCode' => Response::HTTP_OK,
-    //         'message' => 'el equipo fue eliminado',
-    //         'route' => route('equipo.index')
-    //     ], Response::HTTP_OK);
-    // }
-
-    /**
      * change state the specified resource in detroy.
      *
      * @param  int  $id
@@ -375,6 +332,10 @@ class EquipoController extends Controller
         $this->authorize('view', Equipo::class);
 
         switch (\Session::get('login_role')) {
+            case User::IsAdministrador():
+                $nodo = $request->filter_nodo;
+                $linea = null;
+                break;
             case User::IsActivador():
                 $nodo = $request->filter_nodo;
                 $linea = null;
