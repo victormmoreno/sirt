@@ -70,15 +70,9 @@
             <td>{{ $proyecto->art_cti }}</td>
             <td>{{ $proyecto->nom_act_cti }}</td>
             <td>{{ $proyecto->diri_ar_emp }}</td>
-            <td>
-                {{ $proyecto->empresas }}
-            </td>
-            <td>
-                {{ $proyecto->grupos }}
-            </td>
-            <td>
-                {{ $proyecto->personas }}
-            </td>
+            <td>{{ $proyecto->empresas }}</td>
+            <td>{{ $proyecto->grupos }}</td>
+            <td>{{ $proyecto->personas }}</td>
         </tr>
         @endforeach
     </tbody>
