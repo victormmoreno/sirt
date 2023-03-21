@@ -143,8 +143,8 @@ class TallerController extends Controller
             alert('No autorizado', 'No puedes registrar talleres de fortalecimiento', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        $now = Carbon::now()->isoFormat('YYYY');
-        $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('nodo_id', auth()->user()->articulador->nodo_id)->whereYear('created_at', $now)->whereHas('estadoIdea',
+        // $now = Carbon::now()->isoFormat('YYYY');
+        $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('nodo_id', auth()->user()->articulador->nodo_id)->whereHas('estadoIdea',
         function ($query){
             $query->whereIn('nombre', [EstadoIdea::IsRegistro(), EstadoIdea::IsPostulado()]);
         })->get();
