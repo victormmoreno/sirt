@@ -26,7 +26,7 @@
                         <input id="name" name="name" type="text"value="{{ old('name', isset($articulationStage->name) ? $articulationStage->name: '') }}">
                     </div>
                     <div class="input-field col m12 s12">
-                        <label for="description">{{ __('Description') }} (Opcional)</label>
+                        <label for="description">{{ __('Description') }} <span class="red-text">*</span></label>
                         <textarea id="description" name="description" type="text" class="materialize-textarea">{{ old('description', isset($articulationStage->description) ? $articulationStage->description: '') }}</textarea>
                     </div>
                     <div class="input-field col m12 s12">

@@ -10,7 +10,6 @@ use App\Repositories\Repository\LineaRepository;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Response;
 use Repositories\Repository\NodoRepository;
 use App\Exports\Equipo\EquipoExport;
@@ -18,6 +17,9 @@ use App\Exports\Equipo\EquipoExport;
 class EquipoController extends Controller
 {
 
+    public $equipoRepository;
+    public $lineaRepository;
+    public $nodoRepository;
     public function __construct(EquipoRepository $equipoRepository, LineaRepository $lineaRepository, NodoRepository $nodoRepository)
     {
         $this->setEquipoRepository($equipoRepository);
@@ -129,7 +131,6 @@ class EquipoController extends Controller
     public function getEquiposPorLinea($nodo, $lineatecnologica)
     {
         if (request()->ajax()) {
-
             if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
                 $nodo_id = $nodo;
             }
@@ -141,8 +142,12 @@ class EquipoController extends Controller
             }
 
             if (session()->get('login_role') == User::IsExperto()) {
-                $linea_id = auth()->user()->gestor->lineatecnologica_id;
-            } 
+                if(isset($lineatecnologica)){
+                    $linea_id = $lineatecnologica;
+                }else{
+                    $linea_id = auth()->user()->gestor->lineatecnologica_id;
+                }
+            }
             if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsDinamizador()) {
                 $linea_id = $lineatecnologica;
             }
@@ -159,7 +164,6 @@ class EquipoController extends Controller
                 ->where('lineatecnologica_id', $linea_id)
                 ->get();
             }
-
             return response()->json([
                 'equipos' => $equipos,
             ]);
@@ -262,6 +266,9 @@ class EquipoController extends Controller
         $nodos = $this->getNodoRepository()->getSelectNodo();
         $lineastecnologicas = $this->getLineaTecnologicaRepository()->getAllLineaNodo($equipo->nodo_id);
 
+        // $nodo               = auth()->user()->dinamizador->nodo->id;
+        // $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
+
         return view('equipo.edit', [
             'year'               => Carbon::now()->isoFormat('YYYY'),
             'lineastecnologicas' => $lineastecnologicas,
@@ -351,6 +358,10 @@ class EquipoController extends Controller
         $this->authorize('view', Equipo::class);
 
         switch (\Session::get('login_role')) {
+            case User::IsAdministrador():
+                $nodo = $request->filter_nodo;
+                $linea = null;
+                break;
             case User::IsActivador():
                 $nodo = $request->filter_nodo;
                 $linea = null;

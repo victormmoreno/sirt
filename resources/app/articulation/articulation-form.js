@@ -1,6 +1,6 @@
 $( document ).ready(function() {
-    var form = $("#articulation-form");
-    var validator = $("#articulation-form").validate({
+    let form = $("#articulation-form");
+    const validator = $("#articulation-form").validate({
         rules: {
             articulation_type: {
                 required:true,
@@ -12,25 +12,18 @@ $( document ).ready(function() {
                 required:true,
                 date: true
             },
-            name_articulation:{
+            name:{
                 required: true,
-                minlength: 2,
-                maxlength: 255
+                minlength: 1,
+                maxlength: 600
             },
-            description_articulation:{
+            description:{
+                required: true,
+                minlength: 1,
                 maxlength: 3000
             },
             scope:{
                 required: true,
-                minlength: 2,
-                maxlength: 1000
-            },
-            scope_articulation:{
-                required: true,
-            },
-            email:{
-                required: true,
-                email: true
             },
             talents: {
                 required: true,
@@ -44,7 +37,12 @@ $( document ).ready(function() {
                 required: true,
                 maxlength: 100
             },
-            call_name:{
+            email_entity:{
+                required: true,
+                email: true,
+                maxlength: 191
+            },
+            summon_name:{
                 maxlength: 100
             },
             expected_date: {
@@ -53,66 +51,53 @@ $( document ).ready(function() {
             },
             objective:{
                 required: true,
-                maxlength: 2500
+                maxlength: 3000
             }
         },
         messages:{
-            articulation_subtype:{
-                required:"Por favor selecciona el tipo de subarticulación",
-            },
             articulation_type:{
                 required:"Por favor selecciona el tipo de articulación",
+            },
+            articulation_subtype:{
+                required:"Por favor selecciona el tipo de subarticulación",
             },
             start_date:{
                 required:"Este campo es obligatorio",
                 date: "Por favor introduzca una fecha válida"
             },
-            name_articulationStage:
-                {
-                    required:"Este campo es obligatorio",
-                    minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-                },
-            description_articulationStage:
-                {
-                    minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-                },
-            scope_articulation:
-                {
-                    required:"Por favor seleccione un alcance",
-                },
-            name_articulation:
-                {
-                    required:"Este campo es obligatorio",
-                    minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-                },
-            scope:
-                {
-                    required:"Este campo es obligatorio",
-                    minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-                },
-            name_entity:
-                {
-                    required:"Este campo es obligatorio",
-                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-                },
-            name_contact:
-                {
-                    required:"Este campo es obligatorio",
-                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-                },
-            email:{
+            name:{
+                required:"Este campo es obligatorio",
+                minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+            },
+            description:{
+                required:"Este campo es obligatorio",
+                minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+            },
+            scope:{
+                required:"Por favor seleccione un alcance",
+            },
+
+            talents:{
+                required:"Por favor agrega por lo menos un talento participante",
+            },
+            name_entity:{
+                required:"Este campo es obligatorio",
+                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+            },
+            name_contact: {
+                required:"Este campo es obligatorio",
+                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+            },
+            email_entity:{
                 required:"Este campo es obligatorio",
                 email: "Por favor, introduce una dirección de correo electrónico válida."
             },
-            call_name:
-                {
-                    minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
-                    maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
-                },
+            summon_name:{
+                minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+            },
             expected_date:{
                 required:"Este campo es obligatorio",
                 date: "Por favor introduzca una fecha válida"
@@ -121,9 +106,6 @@ $( document ).ready(function() {
                 required:"Este campo es obligatorio",
                 maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
             },
-            talents:{
-                required:"Por favor agrega por lo menos un talento participante",
-            }
         },
         errorPlacement: function(error, element)
         {
@@ -177,7 +159,6 @@ $( document ).ready(function() {
             event.preventDefault();
             const data = new FormData(document.getElementById("articulation-form"));
             const url = form.attr("action");
-
             $.ajax({
                 type: form.attr('method'),
                 url: url,
@@ -265,6 +246,7 @@ $( document ).ready(function() {
         $('#type_articulations_modal').openModal();
     });
     filter_articulations.valueArticulationType();
+    filter_articulations.changeLabelArticulationSubtype();
 });
 
 const filter_articulations = {
@@ -479,6 +461,15 @@ const filter_articulations = {
                 }
         });
     },
+    changeLabelArticulationSubtype: function() {
+        // $("#articulation_subtype").on('change', function () {
+        //     if($(this).val() != null || $(this).val() != ''){
+        //         $("label[for='program_description']").text( 'Nombre de ' + $('select[name="articulation_subtype"] option:selected').text());
+        //     }else{
+        //         $("label[for='program_description']").text("Nombre del programa");
+        //     }
+        // });
+    },
     updateTalentsParticipants: function(form, data, url) {
         $.ajax({
             type: form.attr('method'),
@@ -564,7 +555,7 @@ const filter_articulations = {
                         }else{
                             Swal.fire(
                                 'Error!',
-                                'La etapa de articulación no se ha eliminado.',
+                                'La fase de articulación no se ha eliminado.',
                                 'warining'
                             );
                         }
@@ -597,8 +588,8 @@ $(document).on('submit', 'form#talents-form', function (event) {
 $(document).on('submit', 'form#articulation-form-closing', function (event) {
     $('button[type="submit"]').attr('disabled', 'disabled');
     event.preventDefault();
-    var form = $(this);
-    var data = new FormData($(this)[0]);
-    var url = form.attr("action");
+    const form = $(this);
+    const data = new FormData($(this)[0]);
+    const url = form.attr("action");
     filter_articulations.ajaxSendFormArticulationClosing(form, data, url);
 });

@@ -124,35 +124,24 @@ const articulationStage = {
                     orderable: false
                 },
             ],
-
             columnDefs: [{ visible: false, targets: groupColumn }],
             displayLength: 25,
             drawCallback: function (settings) {
-                  var api = this.api();
-                 var rows = api.rows({ page: 'current' }).nodes();
-                 var last = null;
-                 api
-                     .column(groupColumn, { page: 'current' })
-                     .data()
-                     .each(function (group, i) {
-                         if (last !== group) {
-                             $(rows)
-                                 .eq(i)
-                                 .before(`${group}`);
-
-                          last = group;
-                     }
-                     });
+                let api = this.api();
+                let rows = api.rows({ page: 'current' }).nodes();
+                let last = null;
+                api
+                    .column(groupColumn, { page: 'current' })
+                    .data()
+                    .each(function (group, i) {
+                    if (last !== group) {
+                        $(rows)
+                            .eq(i)
+                            .before(`${group}`);
+                    last = group;
+                    }
+                    });
             },
-        });
-        // Order by the grouping
-        $('#articulationStage_data_table tbody').on('click', 'tr.group', function () {
-            var currentOrder = table.order()[0];
-            if (currentOrder[0] === groupColumn && currentOrder[1] === 'asc') {
-                table.order([groupColumn, 'desc']).draw();
-            } else {
-                table.order([groupColumn, 'asc']).draw();
-            }
         });
     },
     fill_code_project:function(filter_code_project = null){
@@ -395,7 +384,7 @@ const articulationStage = {
         if (data.status_code == 201) {
             Swal.fire({
                 title: title,
-                text: "La etapa de articulación  ha sido "+action+" satisfactoriamente",
+                text: "La fase de articulación  ha sido "+action+" satisfactoriamente",
                 type: 'success',
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
@@ -407,7 +396,7 @@ const articulationStage = {
         }
         if (data.state == 404) {
             Swal.fire({
-                title: 'La etapa de articulación  no se ha '+action+', por favor inténtalo de nuevo',
+                title: 'La fase de articulación  no se ha '+action+', por favor inténtalo de nuevo',
                 type: 'warning',
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
@@ -444,7 +433,7 @@ const articulationStage = {
     },
     destroyArticulationStage: function(id){
         Swal.fire({
-            title: '¿Estas seguro de eliminar esta etapa de articulación?',
+            title: '¿Estas seguro de eliminar esta fase de articulación?',
             text: "Recuerde que si lo elimina no lo podrá recuperar.",
             icon: 'warning',
             showCancelButton: true,
@@ -466,14 +455,14 @@ const articulationStage = {
                         if(!data.fail){
                             Swal.fire(
                                 'Eliminado!',
-                                'La etapa de articulación ha sido eliminado satisfactoriamente.',
+                                'La fase de articulación ha sido eliminado satisfactoriamente.',
                                 'success'
                             );
                             location.href = data.redirect_url;
                         }else{
                             Swal.fire(
                                 'Cuidado!',
-                                'La etapa de articulación no se ha eliminado, ya que continene articulaciones.',
+                                'La fase de articulación no se ha eliminado, ya que continene articulaciones.',
                                 'warining'
                             );
                         }
@@ -494,7 +483,7 @@ const articulationStage = {
     },
     changeStateArticulationStage: function(code){
         Swal.fire({
-            title: '¿Estas seguro de cambiar el estado de esta etapa de articulación?',
+            title: '¿Estas seguro de cambiar el estado de esta fase de articulación?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

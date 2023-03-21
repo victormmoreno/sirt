@@ -8,7 +8,12 @@ $( document ).ready(function() {
                 maxlength: 600
             },
             description:{
-                maxlength: 3000
+                required:true,
+                maxlength: 3000,
+            },
+            expected_results:{
+                required:true,
+                maxlength: 3000,
             },
             scope:{
                 required:true,
@@ -22,28 +27,31 @@ $( document ).ready(function() {
             talent: {
                 required: true,
                 number: true
-            },
-            confidency_format: {
-                required:true,
-                accept: "application/pdf"
             }
         },
         messages:
             {
                 name:
                     {
-                        required:"El nombre es obligatorio",
+                        required:"El campo nombre es obligatorio",
                         minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
                         maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
                     },
                 description:
                     {
+                        required:"El campo descripción es obligatorio",
+                        minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
+                        maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
+                    },
+                expected_results:
+                    {
+                        required:"El campo es obligatorio",
                         minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
                         maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
                     },
                 scope:
                     {
-                        required:"El alcalce es obligatorio",
+                        required:"El campo alcalce es obligatorio",
                         minlength: jQuery.validator.format("Necesitamos por lo menos {0} caracteres"),
                         maxlength: jQuery.validator.format("Por favor ingrese no más de {0} caracteres"),
                     },
@@ -55,11 +63,6 @@ $( document ).ready(function() {
                 talent:
                     {
                         required:"Por favor agrega el talento interlocutor",
-                    },
-                confidency_format:
-                    {
-                        required: jQuery.validator.format("El campo formato confidencial es obligatorio"),
-                        accept: jQuery.validator.format("El formato permitido es PDF"),
                     }
             },
         errorPlacement: function(error, element)
