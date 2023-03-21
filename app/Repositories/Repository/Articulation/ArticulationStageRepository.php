@@ -231,7 +231,7 @@ class ArticulationStageRepository
     }
 
     /**
-     * Update los miembros de una etapa.
+     * Update los miembros de una fase.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -524,7 +524,7 @@ class ArticulationStageRepository
             }
             if ($request->decision == 'rechazado') {
                 $title = 'Aprobación rechazada!';
-                $mensaje = 'Se le han notificado al asesor los motivos por los cuales no se aprueba el aval de la etapa de articulación';
+                $mensaje = 'Se le han notificado al asesor los motivos por los cuales no se aprueba el aval de la fase de articulación';
                 $comentario = $request->motivosNoAprueba;
                 $movimiento = Movimiento::IsNoAprobar();
 
@@ -537,7 +537,7 @@ class ArticulationStageRepository
 
             } else {
                 $title = 'Aprobación Exitosa!';
-                $mensaje = 'Se ha aprobado el aval de esta etapa de articulación';
+                $mensaje = 'Se ha aprobado el aval de esta ' . __('articulation-stage');
                 $movimiento = Movimiento::IsAprobar();
                 $regMovimiento = $articulationStage->traceability()->get()->last();
                 $notificacion_act->update(['fecha_aceptacion' => Carbon::now(), 'estado' => $notificacion_act->IsAceptado()]);

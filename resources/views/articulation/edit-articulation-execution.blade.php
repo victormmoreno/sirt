@@ -67,15 +67,14 @@
     <script>
         datatableArchiveArticulation();
 
-        let Dropzone = new Dropzone('#articulation-execution-phase', {
-
+        var Dropzone = new Dropzone('#articulation-execution-phase', {
             url: '{{ route('articulation.files.upload', [$articulation->id]) }}',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
             dictDefaultMessage: 'Arrastra los archivos aquí para subirlos.',
             params: {
-                type: "{{ basename(\App\Models\Articulation::class)}}",
+                type: "Articulation",
                 phase: 'Ejecución'
             },
             paramName: 'nombreArchivo'
@@ -117,11 +116,12 @@
                 processing: true,
                 serverSide: true,
                 order: false,
+                "lengthChange": false,
                 "ajax": {
                     "url": "{{route('articulation.files', [$articulation->id])}}",
                     "type": "get",
                     "data": {
-                        type: "{{ basename(\App\Models\Articulation::class)}}",
+                        type: "Articulation",
                         phase: "Ejecución"
                     },
                 },

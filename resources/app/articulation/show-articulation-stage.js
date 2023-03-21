@@ -38,7 +38,7 @@ function endorsementQuestionArticulationStage(e) {
     e.preventDefault();
     Swal.fire({
         title: '¿Está seguro(a) de aprobar el aval?',
-        text: 'Al hacerlo estás aceptando y aprobando toda la información de esta etapa de articulación, los documento adjuntos y las asesorias recibidas.',
+        text: 'Al hacerlo estás aceptando y aprobando toda la información de esta fase de articulación, los documento adjuntos y las asesorias recibidas.',
         type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -88,7 +88,7 @@ function endorsementQuestionArticulation(e) {
     //$('button[type="submit"]').attr('disabled', true);
     Swal.fire({
         title: '¿Está seguro(a) de aprobar el aval?',
-        text: 'Al hacerlo estás aceptando y aprobando toda la información de esta etapa de articulación, los documento adjuntos y las asesorias recibidas.',
+        text: 'Al hacerlo estás aceptando y aprobando toda la información de esta fase de articulación, los documento adjuntos y las asesorias recibidas.',
         type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',

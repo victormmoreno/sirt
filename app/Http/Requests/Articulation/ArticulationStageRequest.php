@@ -48,7 +48,7 @@ class ArticulationStageRequest extends FormRequest
             'description.min'          => 'El campo descripción debe ser de al menos :min caracter.',
             'description.max'   => 'El campo descripción no debe ser mayor a :max caracter(es)',
             'scope.required'     => 'El campo alcance es obligatorio.',
-            'expected_results.required'     => 'El campo'. __('Expected Results').' es obligatorio.',
+            'expected_results.required'     => 'El campo '. __('Expected Results').' es obligatorio.',
             'expected_results.min'          => 'El campo '. __('Expected Results').' debe ser de al menos :min caracter.',
             'expected_results.max'   => 'El campo '. __('Expected Results').' no debe ser mayor a :max caracter(es)',
             'scope.required'     => 'El campo alcance es obligatorio.',

@@ -2,7 +2,7 @@
     @include('articulation.options.articulation-options-menu-left')
     <div class="@canany(['showButtonAprobacion', 'requestApproval', 'showStart', 'showExecution', 'showClosing', 'changeTalents', 'changePhase'], $articulation)col s12 m8 l9 @else col s12 m12 l12  @endcanany">
         <div class="row">
-            <div class="col s12 m4 l4">
+            <div class="col s12 m12 l4">
                 <ul class="collection">
                     <li class="collection-item">
                         <span class="title black-text">
@@ -46,7 +46,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col s12 m4 l4">
+            <div class="col s12 m12 l4">
                 <ul class="collection">
                     <li class="collection-item">
                         <span class="title black-text">
@@ -74,7 +74,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col s12 m4 l4">
+            <div class="col s12 m12 l4">
                 <ul class="collection">
                     <li class="collection-item">
                         <span class="title black-text">
@@ -130,7 +130,6 @@
                         <div class="card-content">
                             <span class="card-title p-h-lg"> {{$user->present()->userDocumento()}} - {{$user->present()->userFullName()}}</span>
                             <div class=" p-h-lg mail-date hide-on-med-and-down">  Acceso al sistema: {!!$user->present()->userAcceso()!!}</div>
-
                             <p class="hide-on-med-and-down p-h-lg"> Miembro desde {{$user->present()->userCreatedAtFormat()}}</p>
                         </div>
                         @can('show',$user)

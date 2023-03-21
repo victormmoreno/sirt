@@ -40,19 +40,10 @@
                                                     <div class="card server-card card-transparent">
                                                         <div class="card-content">
                                                             <span class="card-title center primary-text m-t-lg">Evidencias</span>
-                                                            <div class="stats-info">
-                                                                <ul>
-                                                                    <li> Acta de inicio
-                                                                        <div class="percent-info primary-text left">
-                                                                            <i class="material-icons">check</i>
-                                                                        </div>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
                                                             <div class="row">
                                                                 <div class="col s12 m12 l12">
                                                                     <div class="row">
-                                                                        <div class="dropzone" id="fase_inicio_articulacion"></div>
+                                                                        <div class="dropzone" id="articulacion_upload_archives"></div>
 
                                                                     </div>
                                                                     <div class="divider"></div>
@@ -90,16 +81,15 @@
 @push('script')
     <script>
         datatableArchiveArticulationStart();
-
-        var Dropzone = new Dropzone('#fase_inicio_articulacion', {
+        var Dropzone = new Dropzone('#articulacion_upload_archives', {
             url: '{{ route('articulation.files.upload', [$articulation->id]) }}',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
             dictDefaultMessage: 'Arrastra los archivos aquí para subirlos.',
             params: {
-                type: "{{ basename(\App\Models\Articulation::class)}}",
-                phase: 'Inicio'
+                type: "Articulation",
+                phase: '{{isset($articulation->phase) ? $articulation->phase->nombre : "Inicio" }}'
             },
             paramName: 'nombreArchivo'
         });
@@ -140,12 +130,13 @@
                 processing: true,
                 serverSide: true,
                 order: false,
+                "lengthChange": false,
                 "ajax": {
                     "url": "{{route('articulation.files', [$articulation->id])}}",
                     "type": "get",
                     "data": {
-                        type: "{{ basename(\App\Models\Articulation::class)}}",
-                        phase: "Inicio"
+                        type: "Articulation",
+                        phase: '{{isset($articulation->phase) ? $articulation->phase->nombre : "Inicio" }}'
                     },
                 },
                 columns: [
@@ -167,7 +158,6 @@
                 ],
             });
         }
-
     </script>
 @endpush
 

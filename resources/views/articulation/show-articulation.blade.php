@@ -85,11 +85,12 @@
                 processing: true,
                 serverSide: true,
                 order: false,
+                "lengthChange": false,
                 "ajax": {
                     "url": "{{route('articulation.files', [$articulation->id])}}",
                     "type": "get",
                     "data":{
-                        type: "{{ basename(\App\Models\Articulation::class)}}",
+                        type: "Articulation",
                         phase: "Ejecución"
                     },
                 },
@@ -115,11 +116,12 @@
                 processing: true,
                 serverSide: true,
                 order: false,
+                "lengthChange": false,
                 "ajax": {
                     "url": "{{route('articulation.files', [$articulation->id])}}",
                     "type": "get",
                     "data":{
-                        type: "{{ basename(\App\Models\Articulation::class)}}",
+                        type: "Articulation",
                         phase: "Cierre"
                     },
                 },
@@ -146,12 +148,12 @@
                 processing: true,
                 serverSide: true,
                 order: false,
-
+                "lengthChange": false,
                 "ajax": {
                     "url": "{{route('articulation.files', [$articulation->id])}}",
                     "type": "get",
                     "data":{
-                        type: "{{ basename(\App\Models\Articulation::class)}}",
+                        type: "Articulation",
                         phase: "Inicio"
                     },
                 },

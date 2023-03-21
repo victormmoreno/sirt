@@ -555,7 +555,7 @@ const filter_articulations = {
                         }else{
                             Swal.fire(
                                 'Error!',
-                                'La etapa de articulación no se ha eliminado.',
+                                'La fase de articulación no se ha eliminado.',
                                 'warining'
                             );
                         }

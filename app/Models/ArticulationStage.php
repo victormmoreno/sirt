@@ -234,7 +234,7 @@ class ArticulationStage extends Model
     }
 
     /**
-     * Consulta la trazabilidad de la etapa de articulacion
+     * Consulta la trazabilidad de la fase de articulacion
      * @param $model
      * @return Builder|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder
      */

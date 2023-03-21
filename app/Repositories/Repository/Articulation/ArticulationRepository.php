@@ -378,7 +378,7 @@ class ArticulationRepository extends Repository
 
             } else {
                 $title = 'Aprobación Exitosa!';
-                $mensaje = 'Se ha aprobado el aval de esta etapa de articulación';
+                $mensaje = 'Se ha aprobado el aval de esta fase de articulación';
                 $movimiento = Movimiento::IsAprobar();
                 $notificacion_act->update(['fecha_aceptacion' => Carbon::now(), 'estado' => $notificacion_act->IsAceptado()]);
                 $articulation->createTraceability($movimiento,Session::get('login_role'), $comentario, $phase);

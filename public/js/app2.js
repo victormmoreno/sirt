@@ -9344,7 +9344,7 @@ const articulationStage = {
         if (data.status_code == 201) {
             Swal.fire({
                 title: title,
-                text: "La etapa de articulación  ha sido "+action+" satisfactoriamente",
+                text: "La fase de articulación  ha sido "+action+" satisfactoriamente",
                 type: 'success',
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
@@ -9356,7 +9356,7 @@ const articulationStage = {
         }
         if (data.state == 404) {
             Swal.fire({
-                title: 'La etapa de articulación  no se ha '+action+', por favor inténtalo de nuevo',
+                title: 'La fase de articulación  no se ha '+action+', por favor inténtalo de nuevo',
                 type: 'warning',
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
@@ -9393,7 +9393,7 @@ const articulationStage = {
     },
     destroyArticulationStage: function(id){
         Swal.fire({
-            title: '¿Estas seguro de eliminar esta etapa de articulación?',
+            title: '¿Estas seguro de eliminar esta fase de articulación?',
             text: "Recuerde que si lo elimina no lo podrá recuperar.",
             icon: 'warning',
             showCancelButton: true,
@@ -9415,14 +9415,14 @@ const articulationStage = {
                         if(!data.fail){
                             Swal.fire(
                                 'Eliminado!',
-                                'La etapa de articulación ha sido eliminado satisfactoriamente.',
+                                'La fase de articulación ha sido eliminado satisfactoriamente.',
                                 'success'
                             );
                             location.href = data.redirect_url;
                         }else{
                             Swal.fire(
                                 'Cuidado!',
-                                'La etapa de articulación no se ha eliminado, ya que continene articulaciones.',
+                                'La fase de articulación no se ha eliminado, ya que continene articulaciones.',
                                 'warining'
                             );
                         }
@@ -9443,7 +9443,7 @@ const articulationStage = {
     },
     changeStateArticulationStage: function(code){
         Swal.fire({
-            title: '¿Estas seguro de cambiar el estado de esta etapa de articulación?',
+            title: '¿Estas seguro de cambiar el estado de esta fase de articulación?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -9545,7 +9545,7 @@ function endorsementQuestionArticulationStage(e) {
     e.preventDefault();
     Swal.fire({
         title: '¿Está seguro(a) de aprobar el aval?',
-        text: 'Al hacerlo estás aceptando y aprobando toda la información de esta etapa de articulación, los documento adjuntos y las asesorias recibidas.',
+        text: 'Al hacerlo estás aceptando y aprobando toda la información de esta fase de articulación, los documento adjuntos y las asesorias recibidas.',
         type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -9595,7 +9595,7 @@ function endorsementQuestionArticulation(e) {
     //$('button[type="submit"]').attr('disabled', true);
     Swal.fire({
         title: '¿Está seguro(a) de aprobar el aval?',
-        text: 'Al hacerlo estás aceptando y aprobando toda la información de esta etapa de articulación, los documento adjuntos y las asesorias recibidas.',
+        text: 'Al hacerlo estás aceptando y aprobando toda la información de esta fase de articulación, los documento adjuntos y las asesorias recibidas.',
         type: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -10482,7 +10482,7 @@ const filter_articulations = {
                         }else{
                             Swal.fire(
                                 'Error!',
-                                'La etapa de articulación no se ha eliminado.',
+                                'La fase de articulación no se ha eliminado.',
                                 'warining'
                             );
                         }

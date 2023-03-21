@@ -84,7 +84,11 @@ class ArticulationStagePresenter extends Presenter
 
     public function articulationStageEndDate()
     {
-        return optional($this->articulationStage->end_date)->isoFormat('DD/MM/YYYY');
+        if($this->articulationStage->status == ArticulationStage::STATUS_OPEN && isset($this->articulationStage->end_date)){
+            return optional($this->articulationStage->end_date)->isoFormat('DD/MM/YYYY');
+        }
+        return "No aplica";
+
     }
 
     public function articulationStageNode()

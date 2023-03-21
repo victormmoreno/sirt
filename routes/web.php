@@ -866,9 +866,9 @@ Route::group(
 
 
         Route::get('/articulaciones/{code}/crear', 'ArticulationRegisterController@create')->name('articulations.create');
-        Route::get('/descargar/{phase}/{code}', 'ArticulationStageListController@downloadCertificate')->name('articulation-stage.download-certificate');
-        Route::get('/solicitar-aprobacion/{id}/{fase}', 'ArticulationStageApprovalsController@requestApproval')->name('articulation-stage.request-approval');
 
+        Route::get('/solicitar-aprobacion/{id}/{fase}', 'ArticulationStageApprovalsController@requestApproval')->name('articulation-stage.request-approval');
+        Route::get('/descargar/{phase}/{code}', 'ArticulationListController@downloadCertificate')->name('articulations.download-certificate');
         Route::get('/articulaciones/{code}/evidencias', 'ArticulationListController@evidences')->name('articulations.evidences');
         Route::get('/articulaciones/{code}/solicitar-aprobacion', 'ArticulationListController@requestApproval')->name('articulation.request-approval');
 

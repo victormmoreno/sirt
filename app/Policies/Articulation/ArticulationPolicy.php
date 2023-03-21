@@ -117,7 +117,7 @@ class ArticulationPolicy
                     && (isset($user->articulador) && isset($articulation->articulationstage)  && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
                 )
             )
-            && $articulation->phase_id != Fase::IsFinalizado() &&
+            && ($articulation->phase_id != Fase::IsFinalizado() && $articulation->phase_id != Fase::IsSuspendido()) &&
             (isset($articulation->articulationstage) && $articulation->articulationstage->status != ArticulationStage::STATUS_CLOSE) &&
             (($articulation->phase_id != Fase::IsFinalizado()&& optional($articulation->end_date)->format('Y') > 2022 || is_null($articulation->end_date)));
     }
@@ -299,9 +299,9 @@ class ArticulationPolicy
                     && (isset($user->articulador) && isset($articulation->articulationstage)  && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
                 )
             )
-            && $articulation->phase_id != Fase::IsFinalizado() &&
+            && ($articulation->phase_id != Fase::IsFinalizado() && $articulation->phase_id != Fase::IsSuspendido()) &&
             (isset($articulation->articulationstage) && $articulation->articulationstage->status != ArticulationStage::STATUS_CLOSE) &&
-            (($articulation->phase_id != Fase::IsFinalizado()&& optional($articulation->end_date)->format('Y') > 2022 || is_null($articulation->end_date)));
+            (($articulation->phase_id != Fase::IsFinalizado() && optional($articulation->end_date)->format('Y') > 2022 || is_null($articulation->end_date)));
     }
 
     /**
@@ -364,5 +364,35 @@ class ArticulationPolicy
 
                 $articulation->articulationstage->status == ArticulationStage::IsAbierto() && optional($articulation->articulationstage->end_date)->format('Y') > 2022 || is_null($articulation->articulationstage->end_date)
             );
+    }
+
+    /**
+     * Determine if the given articulations can be updated by the user..
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Articulation  $articulation
+     * @return bool
+     */
+    public function downloadCertificateEnd(User $user, Articulation $articulation)
+    {
+        return (bool) $user->hasAnyRole([User::IsArticulador()])
+            && (session()->has('login_role') && session()->get('login_role') == User::IsArticulador())
+            && ($user->articulador->nodo_id == $articulation->articulationstage->node_id)
+            && ($articulation->phase->nombre == Articulation::IsCierre());
+    }
+
+    /**
+     * Determine if the given articulations can be updated by the user..
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Articulation  $articulation
+     * @return bool
+     */
+    public function downloadCertificateStart(User $user, Articulation $articulation)
+    {
+        return (bool) $user->hasAnyRole([User::IsArticulador()])
+        && (session()->has('login_role') && session()->get('login_role') == User::IsArticulador())
+        && ($user->articulador->nodo_id == $articulation->articulationstage->node_id)
+        && ($articulation->phase->nombre == Articulation::IsInicio());
     }
 }

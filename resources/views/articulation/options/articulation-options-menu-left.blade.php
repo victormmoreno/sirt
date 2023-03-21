@@ -49,18 +49,41 @@
             Cambiar participantes
         </a>
     @endcan
+    @can('downloadCertificateEnd', $articulation)
+        <a target="_blank"
+            href="{{ route('articulations.download-certificate', [ 'cierre',$articulation]) }}"
+            class="collection-item">
+            <i class="material-icons left">cloud_download</i>
+            Descargar acta cierre
+        </a>
+    @endcan
+    @can('downloadCertificateStart', $articulation)
+        <a target="_blank"
+            href="{{ route('articulations.download-certificate', ['inicio',$articulation]) }}"
+            class="collection-item">
+            <i class="material-icons left">cloud_download</i>
+            Descargar acta inicio
+        </a>
+    @endcan
     @can('uploadEvidences', [$articulation, 'Inicio'])
-            <a href="{{ route('articulations.evidences', [$articulation]) }}"
-               class="collection-item">
-                <i class="material-icons left">cloud_upload</i>
-                Cargar evidencias
-            </a>
+        <a href="{{ route('articulations.evidences', [$articulation]) }}"
+            class="collection-item">
+            <i class="material-icons left">cloud_upload</i>
+            Cargar evidencias
+        </a>
+    @endcan
+    @can('uploadEvidences', [$articulation, 'Cierre'])
+        <a href="{{ route('articulations.evidences', [$articulation]) }}"
+            class="collection-item">
+            <i class="material-icons left">cloud_upload</i>
+            Cargar evidencias
+        </a>
     @endcan
     @can('delete', $articulation)
         <a href="javascript:void(0)" class="collection-item"
             onclick="filter_articulations.destroyArticulation('{{$articulation->id}}')">
             <i class="material-icons left">delete_forever</i>
-            Eliminar {{__('articulation-stage')}}
+            Eliminar {{__('articulation')}}
         </a>
     @endcan
 </div>

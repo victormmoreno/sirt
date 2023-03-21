@@ -223,34 +223,6 @@ class ArticulationStagePolicy
 
 
     }
-    /**
-     * Determine if the given articulations can be updated by the user..
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\ArticulationStage  $articulationStage
-     * @return bool
-     */
-    public function downloadCertificateEnd(User $user, ArticulationStage $articulationStage)
-    {
-        return (bool) $user->hasAnyRole([User::IsArticulador()])
-            && (session()->has('login_role') && session()->get('login_role') == User::IsArticulador())
-            && ($user->articulador->nodo_id == $articulationStage->node_id)
-            && ($articulationStage->has('articulations') && $articulationStage->articulations->count() > 0)
-            && ($articulationStage->status != ArticulationStage::STATUS_CLOSE && optional($articulationStage->end_date)->format('Y') > 2022 || is_null($articulationStage->end_date));
-    }
-
-    /**
-     * Determine if the given articulations can be updated by the user..
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\ArticulationStage  $articulationStage
-     * @return bool
-     */
-    public function downloadCertificateStart(User $user, ArticulationStage $articulationStage)
-    {
-        return false;
-    }
-
 
     /**
      * Determina quienes y cuando se pueden ver los botones de aprobación o rechazo de un cambio de fase

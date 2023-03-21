@@ -15,6 +15,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\Articulation\ArticulationClosingRequest;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade as PDF;
 
 
 class ArticulationListController extends Controller
@@ -182,11 +183,11 @@ class ArticulationListController extends Controller
     public function evidences(string $code)
     {
         $articulation = Articulation::query()->where('code',$code)->firstOrFail();
-        if (request()->user()->cannot('uploadEvidences', [$articulation, "Inicio"])) {
-            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
-            return redirect()->back();
+        if (request()->user()->can('uploadEvidences', [$articulation, "Inicio"]) || request()->user()->can('uploadEvidences', [$articulation, "Cierre"])) {
+            return view('articulation.articulation-evidences', ['articulation' => $articulation]);
         }
-        return view('articulation.articulation-evidences', ['articulation' =>$articulation]);
+        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
 
     }
 
@@ -331,6 +332,42 @@ class ArticulationListController extends Controller
             Alert::error($update['title'], $update['mensaje'])->showConfirmButton('Ok', '#3085d6');
             return back();
         }
+    }
+
+    public function downloadCertificate(string $phase, $code){
+        $articulation = Articulation::query()
+            ->select(
+                'articulations.*', 'articulation_stages.code as articulation_stage_code',
+                'articulation_stages.id as articulation_stages_id','articulation_stages.start_date as articulation_stages_start_date','articulation_stages.end_date as articulation_stages_end_date','articulation_stages.name as articulation_stages_name','articulation_stages.description as articulation_stages_description', 'articulation_stages.scope as articulation_stages_scope', 'articulation_stages.expected_results as articulation_stages_expected_results','fases.nombre as fase',
+                'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
+                'actividades.nombre as nombre_proyecto', 'interlocutor.documento', 'interlocutor.nombres',
+                'interlocutor.apellidos', 'interlocutor.email'
+            )
+            ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_type, if(articulation_stages.status = 1,'Abierta', 'Cerrada') as articulation_stages_status")
+            ->leftJoin('articulation_stages', 'articulation_stages.id', '=', 'articulations.articulation_stage_id')
+            ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
+            ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+
+            ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')
+            ->leftJoin('articulationables', function($q) {
+                $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
+                $q->where('articulationables.articulationable_type', '=', 'App\Models\Proyecto');
+            })
+            ->leftJoin('proyectos', 'proyectos.id', '=', 'articulationables.articulationable_id')
+            ->leftJoin('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+            ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+            ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
+            ->where('articulations.code',$code)->firstOrFail();
+
+        if (request()->user()->can('downloadCertificateStart', $articulation) && strtoupper($phase) == 'INICIO') {
+            $pdf = PDF::loadView('pdf.articulation.articulation-start', compact('articulation'));
+            return $pdf->download("Acta " .strtolower($phase) . " " .__("articulation"). " - " .$articulation->code.".pdf");
+        }else if(request()->user()->can('downloadCertificateEnd', $articulation) && strtoupper($phase) == 'CIERRE'){
+            $pdf = PDF::loadView('pdf.articulation.articulation-end', compact('articulation'));
+            return $pdf->stream("Acta " .strtolower($phase) . " " .__("articulation"). " - " .$articulation->code.".pdf");
+        }
+        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+        return redirect()->route('home');
     }
 
     /**
