@@ -361,7 +361,7 @@ class ArticulationListController extends Controller
 
         if (request()->user()->can('downloadCertificateStart', $articulation) && strtoupper($phase) == 'INICIO') {
             $pdf = PDF::loadView('pdf.articulation.articulation-start', compact('articulation'));
-            return $pdf->download("Acta " .strtolower($phase) . " " .__("articulation"). " - " .$articulation->code.".pdf");
+            return $pdf->stream("Acta " .strtolower($phase) . " " .__("articulation"). " - " .$articulation->code.".pdf");
         }else if(request()->user()->can('downloadCertificateEnd', $articulation) && strtoupper($phase) == 'CIERRE'){
             $pdf = PDF::loadView('pdf.articulation.articulation-end', compact('articulation'));
             return $pdf->stream("Acta " .strtolower($phase) . " " .__("articulation"). " - " .$articulation->code.".pdf");
