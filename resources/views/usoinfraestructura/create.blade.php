@@ -684,12 +684,12 @@
             return validacion;
         },
         noRepeatGestor: function () {
-            let idequipo = $("#txtgestorasesor").val();
+            let expert = $("#txtgestorasesor").val();
             let a = document.getElementsByName("gestor[]");
             validacion = true;
             if (a.length >= 1) {
                 for (x=0;x<a.length;x++){
-                    if (a[x].value == idequipo) {
+                    if (a[x].value == expert) {
                         validacion = false;
                     }
                 }

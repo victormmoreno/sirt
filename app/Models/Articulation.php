@@ -62,7 +62,6 @@ class Articulation extends Model
 
     public function archivomodel()
     {
-        // return $this->morphOne(ArchivoModel::class, 'model');
         return $this->morphMany(ArchivoModel::class, 'model');
     }
 
@@ -158,7 +157,11 @@ class Articulation extends Model
             (
                 $this->phase->nombre == Self::CLOSING_PHASE ? $progress = round((100/4)*3, 1) :
                 (
-                    $this->phase->nombre == Self::FINISHED_PHASE ? $progress = round((100/4)*4, 1) : $progress = 0
+                    $this->phase->nombre == Self::FINISHED_PHASE ? $progress = round((100/4)*4, 1) :
+
+                    ($this->phase->nombre == Self::SUSPENDED_PHASE ? $progress = 100 : $progress = 0)
+
+
                 )
             )
         );
@@ -254,7 +257,7 @@ class Articulation extends Model
     }
 
     /**
-     * Consulta la trazabilidad de la etapa de articulacion
+     * Consulta la trazabilidad de la fase de articulacion
      * @param $model
      * @return Builder|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder
      */

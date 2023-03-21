@@ -2,14 +2,9 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
-use App\Imports\MigracionProyectosImport;
-use App\Models\Nodo;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Models\Articulacion;
 use App\Models\ArticulacionPbt;
 use App\Models\ArticulationStage;
 use App\Models\Proyecto;
-use App\User;
 use App\Models\Sede;
 use Illuminate\Support\Facades\Storage;
 
@@ -65,7 +60,6 @@ class ArticulationMigrationSeeder extends Seeder
             'endorsement'=> $item->fase_id == 6 ?  ArticulationStage::STATUS_CLOSE : ArticulationStage::STATUS_OPEN,
             'start_date'=> $item->fecha_inicio,
             'end_date'=> $item->fecha_cierre,
-            'confidentiality_format'=> 0,
             'terms_verified_at'=> $item->created_at,
             'node_id'=> $item->nodo_id,
             'interlocutor_talent_id'=> $item->talentos()->where('talento_lider',1)->first()->user_id,

@@ -6,7 +6,7 @@
             <label for="txtsearch_user">Número de documento</label>
         </div>
         <div class="col s12 m12 l8 right">
-            <a class="waves-effect waves-grey btn-flat search-tabs-button right" id="advanced_talent_filter"><i
+            <a class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right" id="advanced_talent_filter"><i
                     class="material-icons">list</i>Busqueda Avanzada</a>
             <a class="waves-effect waves-grey btn-flat search-tabs-button right" id="search_talents"><i
                     class="material-icons">search</i>Buscar</a>
