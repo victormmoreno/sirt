@@ -4,9 +4,15 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Http\Traits\ApiResponser;
+use Illuminate\Support\Str;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class Handler extends ExceptionHandler
 {
+    use ApiResponser;
     /**
      * A list of the exception types that are not reported.
      *
@@ -51,6 +57,21 @@ class Handler extends ExceptionHandler
         }
         if ($request->fullUrlIs($request->root() . '/ideas')) {
             return redirect()->route('idea.create');
+        }
+        //Control excepciones api
+        if(Str::contains($request->url(), $request->root().'/api/')){
+            if($exception instanceof NotFoundHttpException){
+                return $this->errorResponse('página no encontrada', 404);
+            }
+            if($exception instanceof MethodNotAllowedHttpException){
+                return $this->errorResponse('El método especificado en la petición no es válido', 405);
+            }
+            if($exception instanceof HttpException){
+                return $this->errorResponse($exception->getMessage(), $exception->getStatusCode());
+            }
+            if($exception instanceof HttpException){
+                return $this->errorResponse($exception->getMessage(), $exception->getStatusCode());
+            }
         }
         return parent::render($request, $exception);
     }

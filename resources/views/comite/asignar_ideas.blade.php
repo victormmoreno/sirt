@@ -10,7 +10,7 @@
                     <div class="col s8 m8 l10">
                         <h5 class="left-align">
                             <a class="footer-text left-align" href="{{route('csibt')}}">
-                                <i class="material-icons arrow-l">
+                                <i class="material-icons arrow-l left">
                                     arrow_back
                                 </i>
                             </a>
@@ -21,7 +21,7 @@
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li><a href="{{route('csibt')}}">CSIBT</a></li>
-                            <li class="active">{{$comite->codigo}}</li>
+                            <li class="active">Asignar ideas</li>
                         </ol>
                     </div>
                 </div>
@@ -29,25 +29,16 @@
                     <div class="card-content">
                         <br>
                         <center>
-                            <span class="card-title center-align">Comité - {{$comite->codigo}} <b>({{$comite->estado->nombre}})</b></span>
+                            <span class="card-title center-align">Asignar ideas del comité a expertos - <b>{{$comite->codigo}}</b></span>
                         </center>
                         <div class="divider"></div>
-                        @include('comite.detalle_asignado')
-                        <div class="divider"></div>
                         <div class="row">
-                            <div class="col s12 m12 l12 center">
-                                <a href="{{route('csibt.evidencias', $comite->id)}}">
-                                  <div class="card-panel blue-grey white-text">
-                                    <i class="material-icons left">library_books</i>Evidencias del comité.
-                                  </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="divider"></div>
-                        <div class="row center">
-                            <a href="{{route('csibt')}}" class="waves-effect red lighten-2 btn center-aling">
-                                <i class="material-icons left">arrow_back</i>Cancelar
-                            </a>
+                            <form action="{{route('csibt.asignar.store', $comite->id)}}" id="formComiteAsignarCreate" method="post">
+                                {!! method_field('PUT')!!}
+                            @include('comite.form_asignar_ideas', [
+                                'btnText' => 'Guardar'
+                            ])
+                            </form>
                         </div>
                     </div>
                 </div>

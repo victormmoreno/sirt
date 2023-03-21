@@ -23,7 +23,7 @@ class GestoresWereRegistered
     {
         $this->comite = $comite;
         $this->emails = $emails;
-        $this->nodo = auth()->user()->infocenter->nodo->entidad->nombre;
+        $this->nodo = $comite->ideas->first()->nodo->entidad->nombre;
     }
 
     /**

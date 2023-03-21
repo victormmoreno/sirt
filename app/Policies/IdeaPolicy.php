@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\User;
-use App\Models\{Idea, EstadoIdea};
+use App\Models\{Idea, EstadoIdea, Comite};
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Str;
 
@@ -208,6 +208,9 @@ class IdeaPolicy
         if ($idea->estadoIdea->nombre == EstadoIdea::IsRegistro() && session()->get('login_role') == $user->IsTalento() && $user->talento->id == $idea->talento_id) {
             return true;
         }
+        if ($idea->estadoIdea->nombre == EstadoIdea::IsRegistro() && Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsArticulador()]) && $user->getNodoUser() == $idea->nodo_id) {
+            return true;
+        }
         if (session()->get('login_role') == $user->IsAdministrador()) {
             return true;
         }
@@ -234,6 +237,26 @@ class IdeaPolicy
         }
         return false;
 
+    }
+    
+    /**
+     * Determina si el usuario puede cambiar la asignación del experto de una idea de proyecto
+     *
+     * @param User $user
+     * @param Idea $idea
+     * @param Comite $comite
+     * @return bool
+     * @author dum
+     **/
+    public function cambiar_asignacion(User $user, Idea $idea, Comite $comite)
+    {
+        if ($comite->estado->nombre == $comite->estado->IsAsignado()) {
+            if ((Str::contains(session()->get('login_role'), [$user->IsDinamizador()]) && $idea->nodo_id == $user->getNodoUser()) || Str::contains(session()->get('login_role'), [$user->IsAdministrador()])) {
+                return true;
+            }
+            return false;
+        }        
+        return false;
     }
     
 }

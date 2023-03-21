@@ -10,7 +10,7 @@
                     <div class="col s8 m8 l10">
                         <h5 class="left-align">
                             <a class="footer-text left-align" href="{{route('csibt')}}">
-                                <i class="material-icons arrow-l">
+                                <i class="material-icons arrow-l left">
                                     arrow_back
                                 </i>
                             </a>
@@ -21,7 +21,7 @@
                         <ol class="breadcrumbs">
                             <li><a href="{{route('home')}}">Inicio</a></li>
                             <li><a href="{{route('csibt')}}">CSIBT</a></li>
-                            <li class="active">Asignar ideas</li>
+                            <li class="active">Realizar CSIBT</li>
                         </ol>
                     </div>
                 </div>
@@ -29,13 +29,13 @@
                     <div class="card-content">
                         <br>
                         <center>
-                            <span class="card-title center-align">Asignar ideas del comité a expertos - <b>{{$comite->codigo}}</b></span>
+                            <span class="card-title center-align">Realizar Comité de Selección de Ideas - <b>{{$comite->codigo}}</b></span>
                         </center>
                         <div class="divider"></div>
                         <div class="row">
-                            <form action="{{route('csibt.asignar.store', $comite->id)}}" id="formComiteAsignarCreate" method="post">
+                            <form action="{{route('csibt.realizar.store', $comite->id)}}" id="formComiteRealizadoCreate" method="post">
                                 {!! method_field('PUT')!!}
-                            @include('comite.dinamizador.form_asignar_ideas', [
+                            @include('comite.form_realizar', [
                                 'btnText' => 'Guardar'
                             ])
                             </form>
@@ -47,3 +47,23 @@
     </div>
 </main>
 @endsection
+@push('script')
+    <script>
+        function validarAdmitido(idIdea, idAdmitido, estado) {
+            $('#txtestadoidea' + idIdea).empty();
+            if ( $('#txtadmitidos' + idIdea).is(":checked") ) {
+                $('#txtestadoidea' + idIdea).append('<option  value="'+estado+'">'+estado+'</option>');
+                $('#txtestadoidea' + idIdea).val(estado);
+                $('#txtestadoidea' + idIdea).material_select();
+            } else {
+                $('#txtestadoidea'+ idIdea).append('<option value="">Seleccione el estado de la idea de proyecto</option>');
+                @foreach ($estados as $key => $item)
+                    @if ($item->nombre != 'Admitido')
+                    $('#txtestadoidea'+ idIdea).append('<option value="{{$item->nombre}}">{{$item->nombre}}</option>');
+                    @endif
+                @endforeach
+                $('#txtestadoidea' + idIdea).material_select();
+            }
+        }
+    </script>
+@endpush

@@ -10,6 +10,9 @@ use App\Presenters\EquipoPresenter;
 class Equipo extends Model
 {
     use SoftDeletes;
+
+    const IS_NO_DESTACADO = 0;
+    const IS_DESTACADO = 1;
     /**
      * define el nombre de la tabla.
      * @var string
@@ -23,6 +26,8 @@ class Equipo extends Model
     protected $fillable = [
         'nodo_id',
         'lineatecnologica_id',
+        'codigo',
+        'destacado',
         'referencia',
         'nombre',
         'marca',
@@ -47,6 +52,16 @@ class Equipo extends Model
         'anio_compra'         => 'year',
         'horas_uso_anio'      => 'integer',
     ];
+
+    public static function IsDestacado()
+    {
+        return self::IS_DESTACADO;
+    }
+
+    public static function NoDestacado()
+    {
+        return self::IS_NO_DESTACADO;
+    }
 
     /**
      * asesor para el campo referencia.

@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class ValidacionesImport
 {
@@ -37,6 +38,24 @@ class ValidacionesImport
     public function validarCelda($celda, $i, $nombre_campo, $hoja) {
         if($celda == null) {
             session()->put('errorMigracion', 'Error en la hoja de "'.$hoja.'": ' . $nombre_campo . ' ' . $celda . ' en el registro de la fila #' . ($i+2) . ' no es un valor correcto.');
+            return false;
+        }
+        return true;
+    }
+
+    public function validarNumero($celda, $i, $nombre_campo, $hoja)
+    {
+        if (!is_numeric($celda)) {
+            session()->put('errorMigracion', 'Error en la hoja de "'.$hoja.'": ' . $nombre_campo . ' ' . $celda . ' en el registro de la fila #' . ($i+2) . ' no es un número.');
+            return false;
+        }
+        return true;
+    }
+
+    public function validarDosOpciones($celda, $i, $nombre_campo, $hoja, $opcion_1, $opcion_2)
+    {
+        if (!Str::contains($celda, [$opcion_1, $opcion_2])) {
+            session()->put('errorMigracion', 'Error en la hoja de "'.$hoja.'": ' . $nombre_campo . ' ' . $celda . ' en el registro de la fila #' . ($i+2) . ' debe ser ' . $opcion_1 . ' o ' . $opcion_2);
             return false;
         }
         return true;

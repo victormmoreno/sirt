@@ -22,11 +22,14 @@ class EquipoDatatable
 
                 return $button;
             })
-            // ->addColumn('delete', function ($data) {
-            //     $button = '<a href="#" class="btn bg-danger m-b-xs" data-position="bottom" onclick="equipo.deleteEquipo(' . $data->id . ')" data-delay="50" data-tooltip="Eliminar"><i class="material-icons">delete_sweep</i></a>';
-
-            //     return $button;
-            // })
+            ->addColumn('destacar', function ($data) {
+                if ($data->destacado == 0) {
+                    $button = '<a href="#" class="btn green accent-2 m-b-xs" data-position="bottom" onclick="equipo.destacarEquipo(' . $data->id . ', '.$data->destacado.', '.config('app.equipos.num_destacados').')"><i class="material-icons">stars</i></a>';
+                } else {
+                    $button = '<a href="#" class="btn yellow accent-2 m-b-xs" data-position="bottom" onclick="equipo.destacarEquipo(' . $data->id . ', '.$data->destacado.', '.config('app.equipos.num_destacados').')"><i class="material-icons">stars</i></a>';
+                }
+                return $button;
+            })
             ->addColumn('detail', function ($data) {
                 $button = '
                     <a class="btn bg-info m-b-xs modal-trigger" href="#" onclick="equipo.detail(' . $data->id . ')">
@@ -51,7 +54,7 @@ class EquipoDatatable
                 return $data->present()->equipoLinea();
             })
 
-            ->rawColumns(['edit', 'changeState', 'detail', 'state', 'nombrelinea', 'costo_adquisicion', 'anio_fin_depreciacion'])
+            ->rawColumns(['edit', 'changeState', 'detail', 'state', 'nombrelinea', 'costo_adquisicion', 'anio_fin_depreciacion', 'destacar'])
             ->make(true);
     }
 }

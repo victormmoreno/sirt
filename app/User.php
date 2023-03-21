@@ -712,6 +712,14 @@ class User extends Authenticatable implements JWTSubject
         return null;
     }
 
+    public function getLineaUser()
+    {
+        if (session()->get('login_role') == $this->IsExperto()) {
+            return $this->gestor->lineatecnologica_id;
+        }
+        return false;
+    }
+
     public static function enableTalentsArticulacion($articulacion)
     {
         foreach ($articulacion->talentos as $value) {
