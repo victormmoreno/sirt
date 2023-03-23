@@ -29,7 +29,7 @@ class EquipoFormRequest extends FormRequest
             'txtnodo_id'          => Rule::requiredIf(session()->get('login_role') == User::IsAdministrador()),
             'txtlineatecnologica' => 'required',
             'txtreferencia'       => 'required|min:1|max:45',
-            'txtnombre'           => 'required|min:1|max:45|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/',
+            'txtnombre'           => 'required|min:1|max:45',
             'txtmarca'            => 'required|min:1|max:45|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/',
             'txtcostoadquisicion' => 'required|between:0,999999999999.99|numeric',
             'txtvida_util'        => 'required|integer|min:1',

@@ -1,8 +1,8 @@
 // Ajax para consultar los comités de un nodo y mostrarlos en la tabla
 function consultarCsibtPorNodo() {
   let id = $('#txtnodo').val();
-  $('#comitesDelNodoAdministrador_table').dataTable().fnDestroy();
-  $('#comitesDelNodoAdministrador_table').DataTable({
+  $('#comitesDelNodo_table').dataTable().fnDestroy();
+  $('#comitesDelNodo_table').DataTable({
     language: {
       "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
     },

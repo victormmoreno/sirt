@@ -2,26 +2,68 @@
 
 namespace App\Imports;
 
-use App\Models\Equipo;
+use App\Models\{Equipo, LineaTecnologica, Nodo};
+use App\User;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\{DB};
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Carbon\Carbon;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\{WithHeadingRow};
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 HeadingRowFormatter::default('slug');
+
 class EquipoImport implements ToCollection, WithHeadingRow
 {
     public $nodo;
+    public $session;
+    public $carbon;
+    public $date;
     public $validaciones;
     public $hoja = 'Equipos';
+    public $encabezado = [
+        'nodo',
+        'linea_tecnologica',
+        'codigo_del_equipo',
+        'equipo',
+        'referencia',
+        'marca',
+        'costo_adquisicion',
+        'vida_util_anos',
+        'promedio_horas_uso_al_ano',
+        'ano_de_compra',
+        'estado'
+    ];
 
     public function __construct($nodo)
     {
+        $this->session = session()->get('login_role');
         $this->nodo = $nodo;
+        $this->carbon = new Carbon();
+        $this->date = new Date();
         $this->validaciones = new ValidacionesImport;
     }
+
+    /**
+     * Validar encabezado
+     *
+     * @param Collection $row
+     * @return bool
+     * @author dum
+     **/
+    public function validar_encabezado(Collection $row)
+    {
+        foreach ($this->encabezado as $key => $columna) {
+            if (!isset($row[$columna])) {
+                session()->put('errorMigracion', 'No se encontró la columna ' . $columna . ', revisa el contenido del archivo.');
+                return false;
+            }
+        }
+        return true;
+        
+    }
+
     /**
     * @param Collection $collection
     */
@@ -30,116 +72,127 @@ class EquipoImport implements ToCollection, WithHeadingRow
         DB::beginTransaction();
         $validacion = null;
         try {
+            if (!$this->validar_encabezado($rows->first())) {
+                return false;
+            } 
             foreach ($rows as $key => $row) {
-                $row['linea'] = ltrim(rtrim($row['linea']));
+                // // Quitar espacios a los campos que no los necesita
+                $row['nodo'] = ltrim(rtrim($row['nodo']));
+                $row['linea_tecnologica'] = ltrim(rtrim($row['linea_tecnologica']));
+                $row['codigo_del_equipo'] = ltrim(rtrim($row['codigo_del_equipo']));
+                $row['equipo'] = ltrim(rtrim($row['equipo']));
                 $row['referencia'] = ltrim(rtrim($row['referencia']));
-                $row['nombre_equipo'] = ltrim(rtrim($row['nombre_equipo']));
-                $row['marca'] = ltrim(rtrim( $row['marca']));
-                $row['costo_adquisicion'] = ltrim(rtrim( $row['costo_adquisicion']));
-                $row['vida_util'] = ltrim(rtrim($row['vida_util']));
-                $row['anio_compra'] = ltrim(rtrim($row['anio_compra']));
-                $row['promedio_horas_uso'] = ltrim(rtrim($row['promedio_horas_uso']));
+                $row['marca'] = ltrim(rtrim($row['marca']));
+                $row['costo_adquisicion'] = ltrim(rtrim($row['costo_adquisicion']));
+                $row['vida_util_anos'] = ltrim(rtrim($row['vida_util_anos']));
+                $row['promedio_horas_uso_al_ano'] = ltrim(rtrim($row['promedio_horas_uso_al_ano']));
+                // $row['ano_de_compra'] = ltrim(rtrim($row['ano_de_compra']));
+                $row['estado'] = ltrim(rtrim($row['estado']));
+
+                if ($this->session == User::IsAdministrador()) {
+                    $nodo = Nodo::select('nodos.id')->join('entidades as e', 'e.id', '=', 'nodos.entidad_id')->where('nombre', $row['nodo'])->first();
+                    $validacion = $this->validaciones->validarQuery($nodo, $row['nodo'], $key, 'nodo', $this->hoja);
+                    if (!$validacion) {
+                        return $validacion;
+                    }
+                    $this->nodo = $nodo->id;
+                }
 
                 // Validar linea
-                $linea = \App\Models\LineaTecnologica::where('nombre', $row['linea'])->first();
-                $validacion = $this->validaciones->validarQuery($linea, $row['linea'], $key, 'linea', $this->hoja);
+                $linea = LineaTecnologica::where('nombre', $row['linea_tecnologica'])->first();
+                $validacion = $this->validaciones->validarQuery($linea, $row['linea_tecnologica'], $key, 'linea', $this->hoja);
+                if (!$validacion) {
+                    return $validacion;
+                }
+                
+                $validacion = $this->validaciones->validarCelda($row['equipo'], $key, 'nombre de equipo', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                // Validar referencia
-                $validacion = $this->validaciones->validarCelda($row['referencia'], $key, 'referencia', $this->hoja);
+                $validacion = $this->validaciones->validarTamanhoCelda($row['equipo'], $key, 'nombre de equipo', 200, $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                $validacion = $this->validaciones->validarTamanhoCelda($row['referencia'], $key, 'referencia', 200, $this->hoja);
+                $validacion = $this->validaciones->validarCelda($row['costo_adquisicion'], $key, 'costo de aquisición', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                // Validar nombre
-                $validacion = $this->validaciones->validarCelda($row['nombre_equipo'], $key, 'nombre equipo', $this->hoja);
+                $validacion = $this->validaciones->validarTamanhoCelda($row['costo_adquisicion'], $key, 'costo de aquisición', 45, $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                $validacion = $this->validaciones->validarTamanhoCelda($row['nombre_equipo'], $key, 'nombre equipo', 200, $this->hoja);
-                if (!$validacion) {
-                    return $validacion;
-                }
-                // Validar marca
-                $validacion = $this->validaciones->validarCelda($row['marca'], $key, 'marca', $this->hoja);
+                $validacion = $this->validaciones->validarNumero($row['costo_adquisicion'], $key, 'costo de aquisición', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                $validacion = $this->validaciones->validarTamanhoCelda($row['marca'], $key, 'marca', 200, $this->hoja);
+                $validacion = $this->validaciones->validarCelda($row['ano_de_compra'], $key, 'año de compra', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                // Validar costo_adquisicion
-                $validacion = $this->validaciones->validarCelda($row['costo_adquisicion'], $key, 'costo adquisición', $this->hoja);
+                $validacion = $this->validaciones->validarTamanhoCelda($row['ano_de_compra'], $key, 'año de compra', 4, $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                $validacion = $this->validaciones->validarTamanhoCelda($row['costo_adquisicion'], $key, 'costo_adquisicion', 45, $this->hoja);
+                $validacion = $this->validaciones->validarNumero($row['ano_de_compra'], $key, 'año de compra', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                // Validar vida_util
-                $validacion = $this->validaciones->validarCelda($row['vida_util'], $key, 'vida util', $this->hoja);
+                $validacion = $this->validaciones->validarCelda($row['promedio_horas_uso_al_ano'], $key, 'promedio de horas de uso al año', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                $validacion = $this->validaciones->validarTamanhoCelda($row['vida_util'], $key, 'vida_util', 11, $this->hoja);
+                $validacion = $this->validaciones->validarTamanhoCelda($row['promedio_horas_uso_al_ano'], $key, 'promedio de horas de uso al año', 4, $this->hoja);
+                if (!$validacion) {
+                    return $validacion;
+                }
+                
+                $validacion = $this->validaciones->validarCelda($row['vida_util_anos'], $key, 'vida útil', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                // Validar anio_compra
-                $validacion = $this->validaciones->validarCelda($row['anio_compra'], $key, 'año compra', $this->hoja);
+                $validacion = $this->validaciones->validarTamanhoCelda($row['vida_util_anos'], $key, 'vida útil', 4, $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                // Validar promedio_horas_uso
-                $validacion = $this->validaciones->validarCelda($row['promedio_horas_uso'], $key, 'promedio horas de uso', $this->hoja);
+                $validacion = $this->validaciones->validarNumero($row['vida_util_anos'], $key, 'vida útil', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
 
-                $validacion = $this->validaciones->validarTamanhoCelda($row['promedio_horas_uso'], $key, 'promedio horas de uso', 11, $this->hoja);
+                $validacion = $this->validaciones->validarDosOpciones($row['estado'], $key, 'estado', $this->hoja, 'Habilitado', 'Inhabilitado');
                 if (!$validacion) {
                     return $validacion;
                 }
-                $equipo = Equipo::where('nombre', $row['nombre_equipo'])
-                ->where('nodo_id', $this->nodo)
-                ->where('referencia', $row['referencia'])
-                ->where('marca', $row['marca'])
-                ->first();
-                if (!isset($equipo) && $equipo == null) {
-                    $equipo = $this->registerEquipo(
-                        $params = [
-                            'line' => $linea->id
-                        ],
-                        $row
-                    );
+
+                $equipo = Equipo::where('codigo', $row['codigo_del_equipo'])->first();
+                if ($equipo == null) {
+                    $codigo = $this->generarCodigo($row, $linea->id);
+                    $equipo = $this->registrarEquipo($codigo, $row, $linea->id);
                 } else {
-                    if ($this->nodo == $equipo->nodo_id) {
-                        $this->updateEquipo(
-                            $equipo,
-                            $params = [
-                                'line' => $linea->id
-                            ],
-                            $row
-                        );
+                    if ($row['estado'] == 'Inhabilitado') {
+                        $equipo->delete();
+                    }
+                    // En caso de actualizar
+                    if ($this->session == User::IsAdministrador()) {
+                        $this->updateEquipo($equipo, $row, $linea->id);
                     } else {
-                        session()->put('errorMigracion', 'Error en la hoja de "'.$this->hoja.'": El equipo '.$row['nombre_equipo'].' en el registro de la fila #' . ($key+2) . ' ya se encuentra registrado en un equipo del nodo '.$equipo->nodo->entidad->nombre);
+                        if ($this->nodo != $equipo->nodo_id) {
+                            session()->put('errorMigracion', 'Error en la hoja de "'.$this->hoja.'": El código de equipo '.$row['codigo'].' en el registro de la fila #' . ($key+2) . ' no pertenece a tu nodo');
+                            return false;
+                        } else {
+                            $this->updateEquipo($equipo, $row, $linea->id);
+                        }
                     }
                 }
             }
@@ -147,38 +200,57 @@ class EquipoImport implements ToCollection, WithHeadingRow
             return true;
         } catch (\Throwable $th) {
             DB::rollback();
-            throw $th;
+            session()->put('errorMigracion', $th->getMessage());
             return false;
         }
     }
 
-    private function registerEquipo($params = [], $row)
+
+    /**
+     * Genera el código para el equipo existente
+     *
+     * @return string
+     * @author dum
+     **/
+    private function generarCodigo($row, $linea)
+    {
+        $codigo = null;
+        $prefix = 'EQ';
+        $anho = $row['ano_de_compra'];
+        $nodo = sprintf("%02d", $this->nodo);
+        $linea = sprintf("%02d", $linea);
+        $id = sprintf("%06d", Equipo::selectRaw('MAX(id+1) AS max')->get()->last()->max);
+        $codigo = $prefix . $anho . '-' . $nodo . $linea . '-' . $id; 
+        return $codigo;
+    }
+
+    private function registrarEquipo($code, $row, $linea)
     {
         return Equipo::create([
-            'nodo_id'               => $this->nodo,
-            'lineatecnologica_id'   => $params['line'],
-            'referencia'            => $row['referencia'],
-            'nombre'                => $row['nombre_equipo'],
-            'marca'                 => $row['marca'],
-            'costo_adquisicion'     => $row['costo_adquisicion'],
-            'vida_util'             => $row['vida_util'],
-            'anio_compra'           => $row['anio_compra'],
-            'horas_uso_anio'        => $row['promedio_horas_uso'],
+            'nodo_id' => $this->nodo,
+            'lineatecnologica_id' => $linea,
+            'codigo' => $code,
+            'referencia' => $row['referencia'],
+            'nombre' => $row['equipo'],
+            'marca' => $row['marca'],
+            'costo_adquisicion' => $row['costo_adquisicion'],
+            'vida_util' => $row['vida_util_anos'],
+            'anio_compra' => $row['ano_de_compra'],
+            'horas_uso_anio' => $row['promedio_horas_uso_al_ano']
         ]);
     }
 
-    private function updateEquipo($equipo,$params = [], $row)
+    private function updateEquipo($equipo, $row, $linea)
     {
         return $equipo->update([
-            'nodo_id'               => $this->nodo,
-            'lineatecnologica_id'   => $params['line'],
-            'referencia'            => $row['referencia'],
-            'nombre'                => $row['nombre_equipo'],
-            'marca'                 => $row['marca'],
-            'costo_adquisicion'     => $row['costo_adquisicion'],
-            'vida_util'             => $row['vida_util'],
-            'anio_compra'           => $row['anio_compra'],
-            'horas_uso_anio'        => $row['promedio_horas_uso'],
+            'lineatecnologica_id' => $linea,
+            'referencia' => $row['referencia'],
+            'nombre' => $row['equipo'],
+            'marca' => $row['marca'],
+            'costo_adquisicion' => $row['costo_adquisicion'],
+            'vida_util' => $row['vida_util_anos'],
+            'anio_compra' => $row['ano_de_compra'],
+            'horas_uso_anio' => $row['promedio_horas_uso_al_ano']
         ]);
     }
 }

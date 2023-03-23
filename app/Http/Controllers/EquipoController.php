@@ -17,6 +17,9 @@ use App\Exports\Equipo\EquipoExport;
 class EquipoController extends Controller
 {
 
+    public $equipoRepository;
+    public $lineaRepository;
+    public $nodoRepository;
     public function __construct(EquipoRepository $equipoRepository, LineaRepository $lineaRepository, NodoRepository $nodoRepository)
     {
         $this->setEquipoRepository($equipoRepository);
@@ -100,7 +103,7 @@ class EquipoController extends Controller
             return back();
         }
         if (request()->ajax()) {
-            $nodo = request()->user()->getNodoUser();
+            $nodo = request()->user()->getNodoUser() == null ? $request->filter_nodo : request()->user()->getNodoUser();
             $linea = $this->getEquipoRepository()->getLineaRole();
             $equipos = [];
             if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_state') || $request->filter_state == null)) {
@@ -182,10 +185,9 @@ class EquipoController extends Controller
             return back();
         }
         $nodos = $this->getNodoRepository()->getSelectNodo();
-        $nodo = session()->get('login_role') == User::IsAdministrador() ? $nodos->first()->id : auth()->user()->dinamizador->nodo->id;
-
+        $nodo = request()->user()->getNodoUser() == null ? $nodos->first()->id : request()->user()->getNodoUser();
         $lineastecnologicas = $this->getLineaTecnologicaRepository()->getAllLineaNodo($nodo);
-
+        // dd($lineastecnologicas);
         return view('equipo.create', [
             'lineastecnologicas' => $lineastecnologicas,
             'year' => Carbon::now()->isoFormat('YYYY'),
@@ -262,7 +264,6 @@ class EquipoController extends Controller
             return back();
         }
         $nodos = $this->getNodoRepository()->getSelectNodo();
-        // $nodo = $equipo->nodo_id;
         $lineastecnologicas = $this->getLineaTecnologicaRepository()->getAllLineaNodo($equipo->nodo_id);
 
         // $nodo               = auth()->user()->dinamizador->nodo->id;
@@ -270,7 +271,7 @@ class EquipoController extends Controller
 
         return view('equipo.edit', [
             'year'               => Carbon::now()->isoFormat('YYYY'),
-            'lineastecnologicas' => $lineastecnologicas->lineas,
+            'lineastecnologicas' => $lineastecnologicas,
             'equipo'             => $equipo,
             'nodos' => $nodos
         ]);
@@ -319,12 +320,37 @@ class EquipoController extends Controller
             $equipo->restore();
         } else {
             $equipo->delete();
+            $equipo->update(['destacado' => $equipo->NoDestacado()]);
         }
         return response()->json([
             'statusCode' => Response::HTTP_OK,
             'message' => 'estado cambiado',
             'route' => route('equipo.index')
         ], Response::HTTP_OK);
+    }
+
+    /**
+     * Método que destacar o deja de destacar un equipo
+     *
+     * @param int $id Id del equipo
+     * @return Response
+     * @author dum
+     **/
+    public function destacarEquipo(int $id)
+    {
+        $equipo = Equipo::find($id);
+        if(!request()->user()->can('destacar', $equipo)) {
+            alert('No autorizado', 'No puedes destacar este equipo', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+        $destacar = $this->getEquipoRepository()->destacar($equipo);
+        return response()->json([
+            'state' => $destacar['state'],
+            'type' => $destacar['type'],
+            'title' => $destacar['title'],
+            'equipo' => $equipo,
+            'message' => $destacar['msj']
+        ]);
     }
 
     public function export(Request $request, $extension = 'xlsx')
@@ -337,6 +363,10 @@ class EquipoController extends Controller
                 $linea = null;
                 break;
             case User::IsActivador():
+                $nodo = $request->filter_nodo;
+                $linea = null;
+                break;
+            case User::IsAdministrador():
                 $nodo = $request->filter_nodo;
                 $linea = null;
                 break;
@@ -363,6 +393,21 @@ class EquipoController extends Controller
         }
 
         return (new EquipoExport($request, $equipos))->download("Equipos - " . config('app.name') . ".{$extension}");
+    }
+
+    /**
+     * Formulario para importar equipos
+     *
+     * @return Response
+     * @author dum
+     **/
+    public function importar()
+    {
+        if(!request()->user()->can('import', Equipo::class)) {
+            alert('No autorizado', 'No puedes importar equipos de este nodo', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+        return view('equipo.import');
     }
 
 }

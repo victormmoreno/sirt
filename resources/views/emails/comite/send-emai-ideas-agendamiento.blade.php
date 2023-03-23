@@ -34,7 +34,7 @@ impacto y equipo de trabajo. También se contara con un espacio de cinco minutos
 @if( $idea->nodo->infocenter->isEmpty())
 Para más información puede ocudir a las instalaciones de Tecnoparque nodo {{$idea->nodo->entidad->nombre}} ubicado en {{$idea->nodo->direccion}} en {{$idea->nodo->entidad->ciudad->nombre}} ({{$idea->nodo->entidad->ciudad->departamento->nombre}}).
 @else
-Para más información puede contactarse al telefono ☎️  <b>{{ $idea->nodo->telefono}}</b> ext <b>{{ $idea->nodo->infocenter->last()->extension}}</b>, o ocudir a las instalaciones de 🏬 <strong>Tecnoparque nodo {{$idea->nodo->entidad->nombre}}</strong>  ubicado en {{$idea->nodo->direccion}} en {{$idea->nodo->entidad->ciudad->nombre}} ({{$idea->nodo->entidad->ciudad->departamento->nombre}}).
+Para más información puede contactarse al telefono ☎️  <b>{{ $idea->nodo->telefono }}</b> ext <b>{{ $idea->nodo->extension }}</b>, o ocudir a las instalaciones de 🏬 <strong>Tecnoparque nodo {{$idea->nodo->entidad->nombre}}</strong>  ubicado en {{$idea->nodo->direccion}} en {{$idea->nodo->entidad->ciudad->nombre}} ({{$idea->nodo->entidad->ciudad->departamento->nombre}}).
 @endif
 
 Gracias,<br>

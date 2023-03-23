@@ -209,10 +209,7 @@
 <div class="divider"></div>
 <div class="row">
     <center>
-        <button type="submit" class="btn waves-effect cyan darken-1 center-aling"><i
-                class="material-icons right">{{ isset($btnText) ? $btnText == 'Modificar' ? 'done' : 'done_all' : '' }}</i>{{isset($btnText) ? $btnText : 'error'}}</button>
-        <a href="{{route('csibt')}}"
-            class="btn waves-effect red lighten-2  center-aling"><i
-                class="material-icons right">backspace</i>Cancelar</a>
+        <button type="submit" class="waves-effect waves-light btn bg-secondary center-align"><i class="material-icons right">send</i>Guardar</button>
+        <a href="{{route('csibt')}}" class="waves-effect bg-danger btn center-align"><i class="material-icons left">backspace</i>Cancelar</a>
     </center>
 </div>

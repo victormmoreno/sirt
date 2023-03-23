@@ -137,4 +137,35 @@ class EquipoPolicy
         return false;
     }
 
+    /**
+     * Determina si el usuario puede destacar un equipo
+     *
+     * @param User $user
+     * @param Equipo $equipo
+     * @return bool
+     * @author dum
+     **/
+    public function destacar(User $user, Equipo $equipo)
+    {
+        if (Str::contains(session()->get('login_role'), [$user->IsAdministrador()])) {
+            return true;
+        }
+        if (Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter()]) && $equipo->nodo_id == $user->getNodoUser()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Determina si el usuario puede importar información de equipos
+     *
+     * @param User $user
+     * @return type
+     * @throws conditon
+     **/
+    public function import(User $user)
+    {
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador()]);
+    }
+
 }

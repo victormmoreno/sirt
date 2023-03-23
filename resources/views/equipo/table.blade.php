@@ -25,6 +25,7 @@
         <th width="15%">Vida Util (Años)</th>
         <th width="15%">Estado</th>
         <th width="15%">Detalle</th>
+        <th width="15%">Destacar equipo</th>
         <th width="15%">Editar</th>
         <th width="15%">Cambiar estado</th>
         {{-- <th width="15%">Eliminar</th> --}}

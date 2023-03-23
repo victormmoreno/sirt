@@ -35,6 +35,10 @@ class ArchivoComiteController extends Controller
     {
         try {
             $ruta = $this->archivoComiteRepository->consultarRutaDeArchivoPorId($idFile);
+            if (!request()->user()->can('download_file', [Comite::find($ruta->model_id), $ruta])) {
+                toast('No puedes descargar este documento!','warning')->autoClose(2000)->position('top-end');
+                return back();
+            }
             $path = str_replace('storage', 'public', $ruta->ruta);
             return Storage::download($path);
         } catch (\Exception $e) {
@@ -59,11 +63,12 @@ class ArchivoComiteController extends Controller
             'nombreArchivo.mimes' => 'El tipo de archivo no es permitido',
             'nombreArchivo.max' => 'El tamaño del archivo no puede superar las 50MB'
         ]);
+        $comite = Comite::find($id);
         $file = request()->file('nombreArchivo');
         $idmax = RutaModel::selectRaw('MAX(id+1) AS max')->get()->last();
         $idmax = $idmax->max;
         $fileName = $idmax . '_' . $file->getClientOriginalName();
-        $fileUrl = $file->storeAs("public/" . auth()->user()->infocenter->nodo_id . '/'.Carbon::now()->format('Y').'/CSIBT//' . $id, $fileName);
+        $fileUrl = $file->storeAs("public/" . $comite->ideas()->first()->nodo_id . '/'.Carbon::now()->format('Y').'/CSIBT//' . $id, $fileName);
         $this->archivoComiteRepository->store($id, Storage::url($fileUrl));
         }
     }
