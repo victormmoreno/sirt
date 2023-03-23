@@ -1,58 +1,6 @@
-// var JavaScriptObfuscator = require('javascript-obfuscator');
-// var obfuscationResult = JavaScriptObfuscator.obfuscate(
-//   (function consultarIngresosDeUnNodo(id) {
-//       $('#ingresosDeUnNodo_table').dataTable().fnDestroy();
-//       $('#ingresosDeUnNodo_table').DataTable({
-//         language: {
-//           "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-//         },
-//         processing: true,
-//         serverSide: true,
-//         order: [ 0, 'desc' ],
-//         ajax:{
-//           url: "/ingreso/consultarIngresosDeUnNodoTecnoparque/"+id,
-//           type: "get",
-//         },
-//         columns: [
-//           {
-//             width: '15%',
-//             data: 'fecha_ingreso',
-//             name: 'fecha_ingreso',
-//           },
-//           {
-//             width: '15%',
-//             data: 'hora_salida',
-//             name: 'hora_salida',
-//           },
-//           {
-//             data: 'visitante',
-//             name: 'visitante',
-//           },
-//           {
-//             data: 'servicio',
-//             name: 'servicio'
-//           },
-//           {
-//             data: 'descripcion',
-//             name: 'descripcion'
-//           },
-//           {
-//             width: '8%',
-//             data: 'details',
-//             name: 'details',
-//             orderable: false
-//           },
-//           {
-//             width: '8%',
-//             data: 'edit',
-//             name: 'edit',
-//             orderable: false
-//           },
-//         ],
-//       });
-//     })(),{}
-// );
 function consultarIngresosDeUnNodo(id) {
+  let start_date = $('#txtstart_date').val();
+  let end_date = $('#txtend_date').val();
   $('#ingresosDeUnNodo_table').dataTable().fnDestroy();
   $('#ingresosDeUnNodo_table').DataTable({
     language: {
@@ -62,7 +10,7 @@ function consultarIngresosDeUnNodo(id) {
     serverSide: true,
     order: [ 0, 'desc' ],
     ajax:{
-      url: host_url + "/ingreso/consultarIngresosDeUnNodoTecnoparque/"+id,
+      url: host_url + "/ingreso/consultarIngresosDeUnNodoTecnoparque/"+id+"/"+start_date+"/"+end_date,
       type: "get",
     },
     columns: [
@@ -83,6 +31,10 @@ function consultarIngresosDeUnNodo(id) {
       {
         data: 'servicio',
         name: 'servicio'
+      },
+      {
+        data: 'quien_autoriza',
+        name: 'quien_autoriza'
       },
       {
         data: 'descripcion',

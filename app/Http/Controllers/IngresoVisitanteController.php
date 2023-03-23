@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests\IngresoVisitanteFormRequest;
 use Illuminate\Support\Facades\{Session, Validator};
 use App\Repositories\Repository\{IngresoVisitanteRepository, VisitanteRepository};
-use App\{User, Models\TipoVisitante, Models\TipoDocumento, Models\Servicio};
+use App\{User, Models\TipoVisitante, Models\TipoDocumento, Models\Servicio, Models\Nodo};
+use App\Exports\Ingresos\IngresosExport;
+use App\Models\IngresoVisitante;
 
 class IngresoVisitanteController extends Controller
 {
@@ -38,7 +40,7 @@ class IngresoVisitanteController extends Controller
     {
         return datatables()->of($ingresos)
         ->addColumn('edit', function ($data) {
-        $edit = '<a class="btn m-b-xs" href='.route('ingreso.edit', $data->id).'><i class="material-icons">edit</i></a>';
+        $edit = '<a class="btn bg-warning m-b-xs" href='.route('ingreso.edit', $data->id).'><i class="material-icons">edit</i></a>';
         return $edit;
         })->addColumn('details', function ($data) {
         $edit = '<a class="btn blue-grey m-b-xs" onclick="consultarDetalleDeUnIngreso('.$data->id.')"><i class="material-icons">info</i></a>';
@@ -49,17 +51,14 @@ class IngresoVisitanteController extends Controller
     /**
      * Consulta los ingresos de un nodo de tecnoparque
      * @param int $id Id del nodo por el que se consultaran los ingresos de visitantes
+     * @param string $start_date Primera fecha a consultar
+     * @param string $end_date Segunda feha a consultar
      * @return Response
      */
-    public function datatableIngresosDeUnNodo($id)
+    public function datatableIngresosDeUnNodo($id, $start_date, $end_date)
     {
-        if ( Session::get('login_role') == User::IsIngreso() ) {
-        $ingresos = $this->ingresoVisitanteRepository->consultarIngresosDeUnNodoRepository(auth()->user()->ingreso->nodo_id);
-        } else if ( Session::get('login_role') == User::IsDinamizador() ) {
-        $ingresos = $this->ingresoVisitanteRepository->consultarIngresosDeUnNodoRepository(auth()->user()->dinamizador->nodo_id);
-        } else {
-        $ingresos = $this->ingresoVisitanteRepository->consultarIngresosDeUnNodoRepository($id);
-        }
+        $id = request()->user()->getNodoUser() == null ? Nodo::first()->id : request()->user()->getNodoUser();
+        $ingresos = $this->ingresoVisitanteRepository->consultarIngresosRepository()->where('nodos.id', $id)->whereBetween('fecha_ingreso', [$start_date . ' 00:00:00', $end_date . ' 23:59:59'])->get();
         return $this->datatableIngresos($ingresos);
     }
     /**
@@ -69,13 +68,7 @@ class IngresoVisitanteController extends Controller
     */
     public function index()
     {
-        if ( Session::get('login_role') == User::IsIngreso() ) {
-        return view('ingreso.ingreso.index');
-        } else if ( Session::get('login_role') == User::IsDinamizador() ) {
-        return view('ingreso.dinamizador.index');
-        } else {
-        return view('ingreso.administrador.index');
-        }
+        return view('ingreso.index');
     }
 
     /**
@@ -85,10 +78,14 @@ class IngresoVisitanteController extends Controller
     */
     public function create()
     {
-        return view('ingreso.ingreso.create', [
-        'tiposdocumento' => TipoDocumento::all()->pluck('nombre', 'id'),
-        'tiposvisitante' => TipoVisitante::all()->pluck('nombre', 'id'),
-        'servicios' => Servicio::all()->pluck('nombre', 'id')
+        if(!request()->user()->can('create', IngresoVisitante::class)) {
+            alert('No autorizado', 'No tienes permisos para registrar ingresos de visitantes!', 'warning')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+        return view('ingreso.create', [
+            'tiposdocumento' => TipoDocumento::orderBy('nombre')->get(),
+            'tiposvisitante' => TipoVisitante::orderBy('nombre')->get(),
+            'servicios' => Servicio::orderBy('nombre')->get()
         ]);
     }
 
@@ -103,23 +100,22 @@ class IngresoVisitanteController extends Controller
         $req = new IngresoVisitanteFormRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
-        return response()->json([
-        'fail' => true,
-        'errors' => $validator->errors(),
-        ]);
+            return response()->json([
+                'fail' => true,
+                'errors' => $validator->errors(),
+            ]);
         }
         $result = $this->ingresoVisitanteRepository->storeIngresoVisitanteRepository($request);
-        // dd($result['store']);
         if ($result['store'] == false) {
-        return response()->json([
-        'fail' => false,
-        'redirect_url' => false
-        ]);
+            return response()->json([
+                'fail' => false,
+                'redirect_url' => false
+            ]);
         } else {
-        return response()->json([
-        'fail' => false,
-        'redirect_url' => url(route('ingreso.create'))
-        ]);
+            return response()->json([
+                'fail' => false,
+                'redirect_url' => url(route('ingreso.create'))
+            ]);
         }
     }
 
@@ -132,12 +128,16 @@ class IngresoVisitanteController extends Controller
     public function edit($id)
     {
         $ingreso = $this->ingresoVisitanteRepository->consultarIngresoVisitantePorId($id);
-        return view('ingreso.ingreso.edit', [
-        'tiposdocumento' => TipoDocumento::all()->pluck('nombre', 'id'),
-        'tiposvisitante' => TipoVisitante::all()->pluck('nombre', 'id'),
-        'servicios' => Servicio::all()->pluck('nombre', 'id'),
-        'ingreso' => $ingreso,
-        'visitanteIng' => $this->visitanteRepository->consultarVisitante($ingreso->visitante_id)
+        if(!request()->user()->can('edit', $ingreso)) {
+            alert('No autorizado', 'No tienes permisos para cambiar la información de este ingreso de visitante!', 'warning')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+        return view('ingreso.edit', [
+            'tiposdocumento' => TipoDocumento::orderBy('nombre')->get(),
+            'tiposvisitante' => TipoVisitante::orderBy('nombre')->get(),
+            'servicios' => Servicio::orderBy('nombre')->get(),
+            'ingreso' => $ingreso,
+            'visitanteIng' => $this->visitanteRepository->consultarVisitante($ingreso->visitante_id)
         ]);
     }
 
@@ -150,25 +150,42 @@ class IngresoVisitanteController extends Controller
     */
     public function update(Request $request, $id)
     {
+        $ingreso = $this->ingresoVisitanteRepository->consultarIngresoVisitantePorId($id);
+        if(!request()->user()->can('edit', $ingreso)) {
+            alert('No autorizado', 'No tienes permisos para cambiar la información de este ingreso de visitante', 'warning')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
         $req = new IngresoVisitanteFormRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
-        return response()->json([
-        'fail' => true,
-        'errors' => $validator->errors(),
-        ]);
+            return response()->json([
+                'fail' => true,
+                'errors' => $validator->errors(),
+            ]);
         }
         $result = $this->ingresoVisitanteRepository->updateIngresoVisitanteRepository($request, $id);
         if ($result['update'] == false) {
-        return response()->json([
-        'fail' => false,
-        'redirect_url' => false
-        ]);
+            return response()->json([
+                'fail' => false,
+                'redirect_url' => false
+            ]);
         } else {
-        return response()->json([
-        'fail' => false,
-        'redirect_url' => url(route('ingreso'))
-        ]);
+            return response()->json([
+                'fail' => false,
+                'redirect_url' => url(route('ingreso'))
+            ]);
         }
+    }
+
+    public function export(Request $request, $extension = 'xlsx')
+    {
+        if(!request()->user()->can('export', IngresoVisitante::class)) {
+            alert('No autorizado', 'No puedes descargar información de las ideas de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+        $ingresos = $this->ingresoVisitanteRepository->consultarIngresosRepository()->where('nodos.id', $request->nodo)->whereBetween('fecha_ingreso', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59'])->get();
+        // dd($ingresos);
+        // exit;
+        return (new IngresosExport($ingresos))->download("Ingresos - " . $request->start_date ."-". $request->end_date .".{$extension}");
     }
 }

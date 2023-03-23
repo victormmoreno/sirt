@@ -83,6 +83,15 @@ class UserPolicy
     }
 
     /**
+     * Determine whether the user can to show user
+     * @return boolean
+     */
+    public function tomar_control(User $user)
+    {
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsAdministrador()]);
+    }
+
+    /**
      * Determine if the given user can  view the users search
      * @return boolean
      */

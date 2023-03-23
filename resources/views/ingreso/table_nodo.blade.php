@@ -7,7 +7,7 @@
       <th>Visitante</th>
       <th>Servicio</th>
       <th>Descripcion</th>
-      {{-- <th>Detalles</th> --}}
+      <th>¿Quien autoriza el ingreso?</th>
       <th>Editar</th>
     </tr>
   </thead>

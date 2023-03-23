@@ -37,7 +37,8 @@ class IngresoVisitanteFormRequest extends FormRequest
             'txthora_entrada' => 'required|date_format:"H:i"',
             'txthora_salida' => 'required|date_format:"H:i"',
             'txtservicio_id' => 'required',
-            'txtdescripcion' => 'max:2000',
+            'txtautoriza' => 'required|max:200',
+            'txtdescripcion' => 'max:200',
         ];
     }
 
@@ -83,7 +84,9 @@ class IngresoVisitanteFormRequest extends FormRequest
             // Mensajes para el campo txtservicio_id
             'txtservicio_id.required' => 'El Servicio es obligatorio.',
             // Mensajes para el campo txtdescripcion
-            'txtdescripcion.max' => 'La Descripcion del Ingreso debe ser máximo de 2000 carácteres.',
+            'txtdescripcion.max' => 'La Descripcion del Ingreso debe ser máximo de 200 carácteres.',
+            'txtautoriza.max' => 'La persona que autoriza debe ser máximo de 200 carácteres.',
+            'txtautoriza.required' => 'La persona que autoriza debe ser obligatoria.',
         ];
     }
 }

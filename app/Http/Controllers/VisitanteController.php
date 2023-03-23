@@ -46,7 +46,7 @@ class VisitanteController extends Controller
         $visitantes = $this->visitanteRepository->visitantesRedTecnoparque();
         return datatables()->of($visitantes)
         ->addColumn('edit', function ($data) {
-        $edit = '<a class="btn m-b-xs" href='.route('visitante.edit', $data->id).'><i class="material-icons">edit</i></a>';
+        $edit = '<a class="btn bg-warning m-b-xs" href='.route('visitante.edit', $data->id).'><i class="material-icons">edit</i></a>';
         return $edit;
         })->rawColumns(['edit'])->make(true);
     }
@@ -58,13 +58,13 @@ class VisitanteController extends Controller
     */
     public function index()
     {
-        if ( Session::get('login_role') == User::IsIngreso() ) {
-        return view('visitante.ingreso.index');
-        } else if ( Session::get('login_role') == User::IsDinamizador() ) {
-        return view('visitante.dinamizador.index');
-        } else {
-        return view('visitante.administrador.index');
-        }
+        // if ( Session::get('login_role') == User::IsIngreso() ) {
+        // return view('visitante.ingreso.index');
+        // } else if ( Session::get('login_role') == User::IsDinamizador() ) {
+        // return view('visitante.dinamizador.index');
+        // } else {
+        // }
+        return view('visitante.index');
     }
 
     /**
@@ -74,9 +74,13 @@ class VisitanteController extends Controller
     */
     public function create()
     {
-        return view('visitante.ingreso.create', [
-        'tiposdocumento' => TipoDocumento::all()->pluck('nombre', 'id'),
-        'tiposvisitante' => TipoVisitante::all()->pluck('nombre', 'id')
+        if(!request()->user()->can('create', Visitante::class)) {
+            alert('No autorizado', 'No tienes permisos para registrar visitantes', 'warning')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+        return view('visitante.create', [
+            'tiposdocumento' => TipoDocumento::orderBy('nombre')->get(),
+            'tiposvisitante' => TipoVisitante::orderBy('nombre')->get()
         ]);
     }
 
@@ -88,6 +92,10 @@ class VisitanteController extends Controller
     */
     public function store(VisitanteFormRequest $request)
     {
+        if(!request()->user()->can('create', Visitante::class)) {
+            alert('No autorizado', 'No tienes permisos para registrar visitantes', 'warning')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
         $reg = $this->visitanteRepository->storeVisitanteRepository($request);
         if ($reg['reg']) {
         Alert::success('Registro Exitoso!', 'El Visitante se ha registrado satisfactoriamente')->showConfirmButton('Ok!', '#3085d6');
@@ -106,10 +114,14 @@ class VisitanteController extends Controller
     */
     public function edit($id)
     {
-        return view('visitante.ingreso.edit', [
-        'visitante' => $this->visitanteRepository->consultarVisitante($id),
-        'tiposdocumento' => TipoDocumento::all()->pluck('nombre', 'id'),
-        'tiposvisitante' => TipoVisitante::all()->pluck('nombre', 'id')
+        if(!request()->user()->can('create', Visitante::class)) {
+            alert('No autorizado', 'No tienes permisos para cambiar la información de los visitantes', 'warning')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+        return view('visitante.edit', [
+            'visitante' => $this->visitanteRepository->consultarVisitante($id),
+            'tiposdocumento' => TipoDocumento::orderBy('nombre')->get(),
+            'tiposvisitante' => TipoVisitante::orderBy('nombre')->get()
         ]);
     }
 
@@ -122,6 +134,10 @@ class VisitanteController extends Controller
     */
     public function update(VisitanteFormRequest $request, $id)
     {
+        if(!request()->user()->can('create', Visitante::class)) {
+            alert('No autorizado', 'No tienes permisos para cambiar la información de los visitantes', 'warning')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
         $update = $this->visitanteRepository->updateVisitanteRepository($request, $id);
         if ($update['update']) {
         Alert::success('Modificación Exitosa!', 'El Visitante se ha modificado satisfactoriamente')->showConfirmButton('Ok!', '#3085d6');

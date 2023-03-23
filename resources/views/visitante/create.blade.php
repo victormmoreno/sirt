@@ -7,15 +7,15 @@
         <div class="col s12 m12 l12">
           <h5>
             <a class="footer-text left-align" href="{{route('visitante')}}">
-              <i class="material-icons arrow-l">arrow_back</i>
-            </a> Usuarios
+              <i class="material-icons arrow-l left">arrow_back</i>
+            </a>Visitante
           </h5>
           <div class="card">
             <div class="card-content">
               <div class="row">
                 <br/>
                 <center>
-                  <span class="card-title center-align">Nuevo Visitante de Tecnoparque</span>
+                  <span class="card-title center-align">Nuevo visitante de Tecnoparque</span>
                 </center>
                 <div class="divider"></div>
                 <br/>
@@ -25,7 +25,7 @@
                       <div class="row">
                         <div class="col s12 m12">
                           <div class="card-content white-text">
-                            <p><i class="material-icons left"> info_outline</i>  Los datos marcados con * son obligatorios</p>
+                            <p><i class="material-icons left"> info_outline</i>Los datos marcados con * son obligatorios</p>
                           </div>
                         </div>
                       </div>
@@ -41,10 +41,10 @@
                       @enderror
                     </div>
                   </div>
-                  @include('visitante.ingreso.form')
+                  @include('visitante.form')
                   <center>
-                    <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>Registrar</button>
-                    <a href="{{route('visitante')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
+                    <button type="submit" class="waves-effect bg-secondary btn center-aling"><i class="material-icons right">send</i>Guardar</button>
+                    <a href="{{route('visitante')}}" class="waves-effect bg-danger btn center-aling"><i class="material-icons left">backspace</i>Cancelar</a>
                   </center>
                 </form>
               </div>
