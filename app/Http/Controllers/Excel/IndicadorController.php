@@ -154,6 +154,7 @@ class IndicadorController extends Controller
         // $query = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$request->fecha_inicio, $request->fecha_fin]);
         // return Excel::download(new ProyectosExport($query->get()), 'Proyectos_Inscritos_'.$request->fecha_inicio.'_a_'.$request->fecha_fin.'.xlsx');
         if ($request->hoja == 'proyectos') {
+            $query = $this->retornarQueryAExportar($request);
             $query = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$request->fecha_inicio, $request->fecha_fin]);
             return Excel::download(new ProyectosExport($query->get()), 'Proyectos_Inscritos_'.$request->fecha_inicio.'_a_'.$request->fecha_fin.'.xlsx');
         }
@@ -312,6 +313,18 @@ class IndicadorController extends Controller
             }
         }
         return $metas;
+    }
+
+    /**
+     * Retonar el query que se va a exportar según el caso
+     *
+     * @param Request $request
+     * @return Builder
+     * @author dum
+     **/
+    public function FunctionName(Type $var = null)
+    {
+        # code...
     }
 
     private function setProyectoRepository($proyectoRepository)
