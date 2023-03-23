@@ -6,6 +6,7 @@
             <th>Año</th>
             <th>Nombres y apellidos del visitante</th>
             <th>Número de documento</th>
+            <th>Tipo de visitante</th>
             <th>Persona que autoriza el ingreso</th>
             <th>Área de destino</th>
             <th>Hora de entrada</th>
@@ -22,6 +23,7 @@
             <td>{{$ingreso->anho_ingreso}}</td>
             <td>{{$ingreso->nombres_apellidos_visitante}}</td>
             <td>{{$ingreso->documento_visitante}}</td>
+            <td>{{$ingreso->tipovisitante}}</td>
             <td>{{$ingreso->quien_autoriza}}</td>
             <td>{{$ingreso->servicio}}</td>
             <td>{{$ingreso->hora_ingreso}}</td>

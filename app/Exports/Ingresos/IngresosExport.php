@@ -15,7 +15,7 @@ class IngresosExport extends FatherExport
     {
         $this->setQuery($query);
         $this->setCount($this->getQuery()->count() + 1);
-        $this->setRangeHeadingCell('A1:S1');
+        $this->setRangeHeadingCell('A1:L1');
     }
 
     /**
