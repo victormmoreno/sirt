@@ -16,6 +16,8 @@ class AlterEquiposTable extends Migration
     {
         Schema::table($this->tableName, function (Blueprint $table) {
             $table->tinyInteger('destacado')->default(0)->after('lineatecnologica_id');
+            $table->string('codigo', 50)->default(0)->after('destacado');
+
         });
     }
 
@@ -28,6 +30,7 @@ class AlterEquiposTable extends Migration
     {
         Schema::table($this->tableName, function (Blueprint $table) {
             $table->dropColumn(['destacado']);
+            $table->dropColumn(['codigo']);
         });
     }
 }

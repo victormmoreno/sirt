@@ -50,90 +50,12 @@
                                             </span>
                                             </div>
                                         </div>
-                                        <div class="right hide-on-med-and-down">
-                                            @can('uploadFiles', $nodo)
-                                            <small class="info-text">
-                                                <a href="{{route('nodo.upload-files', $nodo->entidad->slug)}}"
-                                                   class="waves-effect waves-grey info-text btn-flat">
-                                                   <i class="fas fa-upload fa-lg"></i> Subir documentos
-                                                </a>
-                                            </small>
-                                            @endcan
-                                            @can('downloadOne', $nodo)
-                                                <small class="success-text">
-                                                    <a class="waves-effect waves-grey  success-text btn-flat"
-                                                       href="{{route('excel.exportexcelfornodo',$nodo->entidad->slug)}}">
-                                                        <i class="fas fa-file-excel fa-lg"></i> Exportar a Excel
-                                                    </a>
-                                                </small>
-                                            @endcan
-                                            @can('edit', $nodo)
-                                                <small class="info-text">
-                                                    <a href="{{route('nodo.edit', $nodo->entidad->slug)}}"
-                                                       class="waves-effect waves-warning btn-flat">
-                                                       <i class="fas fa-edit fa-lg"></i> Cambiar Infomación
-                                                    </a>
-                                                </small>
-                                            @endcan
-                                        </div>
                                         <div class="divider mailbox-divider"></div>
                                         <div class="mailbox-text">
                                             <div class="row">
                                                 <div class="col s12 m4 l3 ">
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header center ">
-                                                            <h5 class="primary-text"><b>Lineas Tecnológicas ({{$nodo->lineas->count()}})</b></h5>
-                                                        </li>
-                                                        @forelse($lineatecnologicas as $value)
-                                                            <li class="collection-item">
-                                                                <span class="title">
-                                                                    {{$value->abreviatura}} - {{$value->nombre}}
-                                                                </span>
-                                                                <a href="{{route("lineas.show", $value->slug)}}" target="_blank" class="info tooltipped" data-position="bottom" data-tooltip="Ver más información">
-                                                                    <i class="material-icons right">info</i>
-                                                                </a>
 
-                                                            </li>
-                                                        @empty
-                                                            <div class="center">
-                                                                <i class="large material-icons center">
-                                                                    block
-                                                                </i>
-                                                                <p class="center-align">No tienes lineas
-                                                                    tecnológicas registradas aún.</p>
-                                                            </div>
-                                                        @endforelse
-                                                    </ul>
-                                                    @if(isset($lineatecnologicas))
-                                                        <div class="center">
-                                                            {{ $lineatecnologicas->links() }}
-                                                        </div>
-                                                    @endif
-                                                    <ul class="collection with-header">
-                                                        <li class="collection-header center">
-                                                            <h5 class="primary-text"><b>Equipos
-                                                                    ({{$nodo->equipos->count()}})</b></h5>
-                                                        </li>
-                                                        @forelse($equipos as $value)
-                                                            <li class="collection-item">
-                                                            <span class="title">
-                                                                {{$value->nombre}}
-                                                            </span>
-                                                                <p class="p-v-xs">
-                                                                    {{$value->lineatecnologica->abreviatura}}
-                                                                    - {{$value->lineatecnologica->nombre}}
-                                                                </p>
-                                                            </li>
-                                                        @empty
-                                                            <div class="center">
-                                                                <i class="large material-icons center">
-                                                                    block
-                                                                </i>
-                                                                <p class="center-align">No tienes equipos
-                                                                    registrados aún.</p>
-                                                            </div>
-                                                        @endforelse
-                                                    </ul>
+
                                                     @if(isset($equipos))
                                                         <div class="center">
                                                             {{ $equipos->links() }}

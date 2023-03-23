@@ -54,6 +54,7 @@ Route::post('cambiar-role', 'User\RolesPermissions@changeRoleSession')
 Route::get('/home', 'HomeController@index')->name('home')->middleware('disablepreventback');
 
 // Route::get('/nodo/inhabilitar_funcionarios/{nodo}', 'Nodo\NodoController@inhabilitar_funcionarios')->name('nodo.inhabilitar');
+Route::get('nodo/{nodo}/cargar-archivos',  'Nodo\NodoController@uploadFiles')->name('nodo.upload-files');
 Route::get('/nodo/fetch_data', 'Nodo\NodoController@nodo_pagination');
 Route::resource('nodo', 'Nodo\NodoController')->middleware(['disablepreventback', 'role_session:Administrador|Activador|Dinamizador|Infocenter|Experto']);
 

@@ -83,6 +83,27 @@ class NodoPolicy
     }
 
     /**
+     * Determine whether the user can upload files a nodo.
+     *
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function uploadFiles(User $user, Nodo $nodo)
+    {
+        return (bool) $user->hasAnyRole([User::IsArticulador()])
+            && ( (
+                    session()->has('login_role')
+                    && (
+                        session()->get('login_role') == User::IsAdministrador() ||
+                        session()->get('login_role') == User::IsActivador() ||
+                        session()->get('login_role') == User::IsDinamizador()
+                        )
+                    )
+                )
+            && ($user->dinamizador->nodo_id == $nodo->id);
+    }
+
+    /**
      * Determine whether the user can edit a nodo.
      *
      * @param  \App\User  $user
