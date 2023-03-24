@@ -7042,8 +7042,8 @@ function datatableVisitantesPorNodo_DinamizadorAdministrador() {
 }
 
 function consultarIngresosDeUnNodo(id) {
-  let start_date = $('#txtstart_date').val();
-  let end_date = $('#txtend_date').val();
+  let start_date = $('#txtstart_date_ingresos').val();
+  let end_date = $('#txtend_date_ingresos').val();
   $('#ingresosDeUnNodo_table').dataTable().fnDestroy();
   $('#ingresosDeUnNodo_table').DataTable({
     language: {
