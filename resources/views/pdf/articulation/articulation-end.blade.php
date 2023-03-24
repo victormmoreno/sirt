@@ -33,6 +33,12 @@
             <td colspan="5">{{$articulation->name}}</td>
         </tr>
         <tr>
+            <td><b>{{__('Code articulation-stage')}}<b></td>
+            <td colspan="3">{{$articulation->articulation_stage_code}}</td>
+            <td><b>{{__('ArticulationStage Type')}}</b></td>
+            <td>{{$articulation->articulation_type}}</td>
+        </tr>
+        <tr>
             <td><b>{{__('Start Date')}}</b></td>
             <td>{{$articulation->present()->articulationStartDate()}}</td>
             <td><b>{{__('Scope')}}</b></td>
@@ -90,31 +96,6 @@
         <tr>
             <td><b>Lecciones aprendidas</b></td>
             <td colspan="5">{{isset($articulation) ? $articulation->learned_lessons : '' }}</td>
-        </tr>
-        <tr class="tr-striped">
-            <td colspan="6" ><b>Información {{__('articulation-stage')}}<b></td>
-        </tr>
-        <tr>
-            <td><b>{{__('Code articulation-stage')}}<b></td>
-            <td colspan="3">{{$articulation->articulation_stage_code}}</td>
-            <td><b>{{__('ArticulationStage Type')}}</b></td>
-            <td>{{$articulation->articulation_type}}</td>
-        </tr>
-        <tr>
-            <td><b>{{__('Name articulation-stage')}}</b></td>
-            <td colspan="5">{{$articulation->articulationstage->present()->articulationStageName()}}</td>
-        </tr>
-        <tr>
-            <td><b>{{__('Description')}}</b></td>
-            <td colspan="5">{{$articulation->articulationstage->present()->articulationStageDescription()}}</td>
-        </tr>
-        <tr>
-            <td><b>{{__('Scope')}}</b></td>
-            <td colspan="5">{{$articulation->articulationstage->present()->articulationStageScope()}}</td>
-        </tr>
-        <tr>
-            <td><b>{{ __('Expected Results') }}</b></td>
-            <td colspan="5">{{$articulation->articulationStage->present()->articulationStageExpectedResults()}}</td>
         </tr>
         <tr>
             <td><b>Código Proyecto</b></td>

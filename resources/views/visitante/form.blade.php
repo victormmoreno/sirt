@@ -22,9 +22,9 @@
       <option value="" selected="">Seleccione Tipo de Documento</option>
       @forelse ($tiposdocumento as $id => $value)
         @if (isset($visitante))
-          <option value="{{ $id }}" {{ old('txttipodocumento_id', $visitante->tipodocumento_id) == $id ? 'selected': '' }}>{{$value}}</option>
+          <option value="{{ $value->id }}" {{ old('txttipodocumento_id', $visitante->tipodocumento_id) == $value->id ? 'selected': '' }}>{{$value->nombre}}</option>
         @else
-          <option value="{{$id}}" {{ old('txttipodocumento_id') == $id ? 'selected' : '' }}>{{$value}}</option>
+          <option value="{{$value->id}}" {{ old('txttipodocumento_id') == $value->id ? 'selected' : '' }}>{{$value->nombre}}</option>
         @endif
       @empty
         <option value="">No hay información disponible</option>
@@ -41,9 +41,9 @@
       <option value="" >Seleccione Tipo de Visitante</option>
       @forelse ($tiposvisitante as $id => $value)
         @if (isset($visitante))
-          <option value="{{ $id }}" {{ old('txttipovisitante_id', $visitante->tipovisitante_id) == $id ? 'selected': '' }}>{{$value}}</option>
+          <option value="{{$value->id}}" {{ old('txttipovisitante_id', $visitante->tipovisitante_id) == $value->id ? 'selected': '' }}>{{$value->nombre}} {{$value->descripcion != null ? '('.$value->descripcion.')' : ''}}</option>
         @else
-          <option value="{{$id}}" {{ old('txttipovisitante_id') == $id ? 'selected' : '' }}>{{$value}}</option>
+          <option value="{{$value->id}}" {{ old('txttipovisitante_id') == $value->id ? 'selected' : '' }}>{{$value->nombre}} {{$value->descripcion != null ? '('.$value->descripcion.')' : ''}}</option>
         @endif
       @empty
         <option value="">No hay información disponible</option>

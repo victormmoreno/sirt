@@ -709,6 +709,9 @@ class User extends Authenticatable implements JWTSubject
         if (session()->get('login_role') == $this->IsApoyoTecnico()) {
             return $this->apoyotecnico->nodo_id;
         }
+        if (session()->get('login_role') == $this->IsIngreso()) {
+            return $this->ingreso->nodo_id;
+        }
         return null;
     }
 

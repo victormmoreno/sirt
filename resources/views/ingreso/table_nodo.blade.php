@@ -6,8 +6,8 @@
       <th>Hora de Salida</th>
       <th>Visitante</th>
       <th>Servicio</th>
-      <th>Descripcion</th>
-      {{-- <th>Detalles</th> --}}
+      <th>¿Quien autoriza el ingreso?</th>
+      <th style="width: 30%">Descripcion</th>
       <th>Editar</th>
     </tr>
   </thead>

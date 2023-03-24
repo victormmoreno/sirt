@@ -42,10 +42,10 @@
                       @enderror
                     </div>
                   </div>
-                  @include('visitante.ingreso.form')
+                  @include('visitante.form')
                   <center>
-                    <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done_all</i>Registrar</button>
-                    <a href="{{route('visitante')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
+                    <button type="submit" class="waves-effect bg-secondary btn center-aling"><i class="material-icons right">send</i>Guardar</button>
+                    <a href="{{route('visitante')}}" class="waves-effect bg-danger btn center-aling"><i class="material-icons left">backspace</i>Cancelar</a>
                   </center>
                 </form>
               </div>

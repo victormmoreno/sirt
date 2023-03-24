@@ -112,7 +112,7 @@
                                                         <ul class="collection">
                                                             <li class="collection-item">
                                                                 <span class="title black-text">
-                                                                    {{ __('Descrition') }}
+                                                                    {{ __('Description') }}
                                                                 </span>
                                                                 <p>
                                                                     {{$articulationStage->present()->articulationStageDescription()}}

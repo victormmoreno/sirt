@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use Illuminate\Support\Facades\Auth;
 use App\Helpers\AuthRoleHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsersRequests\UserFormEditRequest;
@@ -25,6 +26,28 @@ class UserController extends Controller
     {
         $this->userRepository = $userRepository;
         $this->middleware('auth')->except('getCiudad');
+    }
+    
+    public function tomar_control(Request $request, $id)
+    {
+        if (request()->user()->cannot('tomar_control', User::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
+        session()->put('before_session', User::find($request->user()->id));
+        // RolesPermissions::setBeforeRole($request);
+        $user = User::find($id);
+        Auth::login($user);
+        RolesPermissions::changeRoleSession($request);
+        return redirect()->route('home');
+    }
+
+    public function dejar_control(Request $request)
+    {
+        Auth::login(session()->get('before_session'));
+        $request->session()->forget('before_session');
+        RolesPermissions::changeRoleSession($request);
+        return redirect()->route('home');
     }
 
     /**

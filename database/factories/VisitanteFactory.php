@@ -10,7 +10,7 @@ $factory->define(Visitante::class, function (Faker $faker) {
     return [
         'tipodocumento_id'    => TipoDocumento::all()->random()->id,
         'tipovisitante_id'    => TipoVisitante::all()->random()->id,
-        'documento'           => $faker->unique()->numberBetween($min = 1, $max = 9000000),
+        'documento'           => $faker->unique()->numberBetween($min = 10000, $max = 9000000),
         'nombres'             => $faker->firstName,
         'apellidos'           => $faker->lastName,
         'email'               => $faker->unique()->freeEmail,

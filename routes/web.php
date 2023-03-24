@@ -110,6 +110,8 @@ Route::group(
         Route::get('/{documento}/permisos', 'UserController@changeNodeAndRole')->name('usuario.usuarios.changenode')->where('documento', '[0-9]+');
         Route::put('/{documento}/permisos', 'UserController@updateNodeAndRole')->name('usuario.usuarios.updatenodo')->middleware('disablepreventback');
         Route::get('/usuarios/acceso/{documento}', 'UserController@access')->name('usuario.usuarios.acceso')->where('documento', '[0-9]+');
+        Route::get('/usuarios/tomar_control/{id}', 'UserController@tomar_control')->name('usuario.tomar.control');
+        Route::get('/usuarios/dejar_control', 'UserController@dejar_control')->name('usuario.dejar.control');
         Route::put('/{id}/update-account', 'UserController@updateAccountUser')->name('usuario.usuarios.updateaccount')->middleware('disablepreventback');
         Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'only' => ['show', 'edit']])->names([
             'update'  => 'usuario.usuarios.update',
@@ -571,11 +573,12 @@ Route::group(
     ],
     function () {
         Route::get('/', 'IngresoVisitanteController@index')->name('ingreso');
-        Route::get('/create', 'IngresoVisitanteController@create')->name('ingreso.create')->middleware('role_session:Ingreso');
-        Route::get('/consultarIngresosDeUnNodoTecnoparque/{id}', 'IngresoVisitanteController@datatableIngresosDeUnNodo')->name('ingreso.nodo');
-        Route::get('/{id}/edit', 'IngresoVisitanteController@edit')->name('ingreso.edit')->middleware('role_session:Ingreso');
-        Route::put('/{id}', 'IngresoVisitanteController@update')->name('ingreso.update')->middleware('role_session:Ingreso');
-        Route::post('/', 'IngresoVisitanteController@store')->name('ingreso.store')->middleware('role_session:Ingreso');
+        Route::get('/create', 'IngresoVisitanteController@create')->name('ingreso.create');
+        Route::get('/export', 'IngresoVisitanteController@export')->name('ingreso.export');
+        Route::get('/consultarIngresosDeUnNodoTecnoparque/{id}/{start_date}/{end_date}', 'IngresoVisitanteController@datatableIngresosDeUnNodo')->name('ingreso.nodo');
+        Route::get('/{id}/edit', 'IngresoVisitanteController@edit')->name('ingreso.edit');
+        Route::put('/{id}', 'IngresoVisitanteController@update')->name('ingreso.update');
+        Route::post('/', 'IngresoVisitanteController@store')->name('ingreso.store');
     }
 );
 /**
@@ -609,7 +612,7 @@ Route::group(
 Route::group(
     [
         'prefix'     => 'excel',
-        'middleware' => ['auth', 'role_session:Experto|Infocenter|Dinamizador|Activador|Ingreso|Talento'],
+        'middleware' => ['auth'],
     ],
     function () {
         // Rutas para la generación de excel del módulo de edts

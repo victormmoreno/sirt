@@ -39,6 +39,9 @@
                                             <div class="position-top-right p f-12 mail-date show-on-large hide-on-med-and-down">Miembro desde {{$user->present()->userCreatedAtFormat()}}</div>
                                         </div>
                                         <div class="right mailbox-buttons">
+                                            @can('tomar_control', $user)
+                                                <a href="{{route('usuario.tomar.control', $user->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Tomar control</a>
+                                            @endcan
                                             @can('access', $user)
                                                 <a href="{{route('usuario.usuarios.acceso', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar Acceso</a>
                                             @endcan

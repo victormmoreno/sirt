@@ -4,10 +4,9 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterEquiposTable extends Migration
+class AddDescpToVisitantesTable extends Migration
 {
-    public $tableName = 'equipos';
-
+    public $tableName = 'tiposvisitante';
     /**
      * Run the migrations.
      *
@@ -16,7 +15,7 @@ class AlterEquiposTable extends Migration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->string('codigo', 50)->default(0)->after('lineatecnologica_id');
+            $table->string('descripcion', 200)->nullable()->default(null)->after('nombre');
         });
     }
 
@@ -28,7 +27,7 @@ class AlterEquiposTable extends Migration
     public function down()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->dropColumn(['codigo']);
+            $table->dropColumn(['descripcion']);
         });
     }
 }

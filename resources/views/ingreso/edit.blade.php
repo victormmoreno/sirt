@@ -22,7 +22,7 @@
                 <form id="formIngresoVisitanteEdit" action="{{route('ingreso.update', $ingreso->id)}}" method="POST" onsubmit="return checkSubmit()">
                   {{ method_field('PUT') }}
                   {!! csrf_field() !!}
-                  @include('ingreso.ingreso.form', [
+                  @include('ingreso.form', [
                   'btnText' => 'Modificar'
                   ])
                 </form>

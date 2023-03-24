@@ -23,6 +23,10 @@ function consultarVisitanteTecnoparque() {
           $('#tipoPersona').val(response.visitante.tipovisitante);
           $('#contactoReg').val(response.visitante.contacto);
           $('#correoReg').val(response.visitante.email);
+          $("label[for='nombrePersona']").addClass('active', true);
+          $("label[for='tipoPersona']").addClass('active', true);
+          $("label[for='contactoReg']").addClass('active', true);
+          $("label[for='correoReg']").addClass('active', true);
           divRegistrarVisitante.hide();
           divVisitanteRegistrado.show();
         }

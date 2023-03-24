@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Excel;
 
 use App\Exports\Equipo\{EquipoToImport};
+use Excel;
 use App\Repositories\Repository\EquipoRepository;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Controller;
@@ -11,7 +12,6 @@ use Carbon\Carbon;
 use App\User;
 use App\Models\Equipo;
 use App\Imports\EquipoImport;
-use Excel;
 
 class EquipoController extends Controller
 {

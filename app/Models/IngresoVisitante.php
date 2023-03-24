@@ -16,9 +16,11 @@ class IngresoVisitante extends Model
   protected $fillable = [
     'visitante_id',
     'nodo_id',
+    'user_id',
     'servicio_id',
     'fecha_ingreso',
     'hora_salida',
+    'quien_autoriza',
     'descripcion'
   ];
 }
