@@ -61,7 +61,7 @@ class HomeController extends Controller
           break;
 
         case User::IsExperto():
-          return view('home.gestor');
+          return view('home.home');
           break;
 
         case User::IsDesarrollador():
