@@ -57,7 +57,7 @@ class IngresoVisitantePolicy
      **/
     public function export(User $user)
     {
-        if (Str::contains(session()->get('login_role'), [$user->IsIngreso(), $user->IsAdministrador(), $user->IsInfocenter()])) {
+        if (Str::contains(session()->get('login_role'), [$user->IsIngreso(), $user->IsAdministrador(), $user->IsInfocenter(), $user->IsDinamizador()])) {
             return true;
         }
         return false;

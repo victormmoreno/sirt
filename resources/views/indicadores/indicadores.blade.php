@@ -41,4 +41,10 @@
         @include('indicadores.componentes.ideas.download')
         </div>
     </li>
+    <li>
+        <div class="collapsible-header"><i class="material-icons">transit_enterexit</i>Ingreso de visitantes</div>
+        <div class="collapsible-body">
+        @include('indicadores.componentes.ingresos.download')
+        </div>
+    </li>
 </ul>

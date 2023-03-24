@@ -41,16 +41,16 @@ class VisitantesTableSeeder extends Seeder
      */
     public function run()
     {
-        //factory(Visitante::class, 10000)->create();
+        // factory(Visitante::class, 20000)->create();
         // factory(IngresoVisitante::class, 20000)->create()->each(function ($ingreso) {
         //     $ingreso->save(factory(IngresoVisitante::class)->make());
         // });
         // factory(IngresoVisitante::class, 5000)->create();
         // $faker = new Faker;
-        for ($i=0; $i < 1000; $i++) {
+        for ($i=0; $i < 30000; $i++) {
             IngresoVisitante::create([
                 'user_id' => 457,
-                'visitante_id' => rand(64456, 74455),
+                'visitante_id' => rand(34005, 54004),
                 'nodo_id' => Nodo::all()->random()->id,
                 'servicio_id' => Servicio::all()->random()->id,
                 'fecha_ingreso' => $this->faker->dateTimeInInterval('-7 week', '+7 week'),

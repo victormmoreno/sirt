@@ -8,7 +8,7 @@
             <th>Número de documento</th>
             <th>Tipo de visitante</th>
             <th>Persona que autoriza el ingreso</th>
-            <th>Área de destino</th>
+            <th>Actividad</th>
             <th>Hora de entrada</th>
             <th>Hora de salida</th>
             <th>Observaciones adicionales</th>

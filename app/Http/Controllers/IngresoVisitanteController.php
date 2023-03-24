@@ -180,7 +180,7 @@ class IngresoVisitanteController extends Controller
     public function export(Request $request, $extension = 'xlsx')
     {
         if(!request()->user()->can('export', IngresoVisitante::class)) {
-            alert('No autorizado', 'No puedes descargar información de las ideas de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
+            alert('No autorizado', 'No puedes descargar información de los ingresos de visitante', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
         $ingresos = $this->ingresoVisitanteRepository->consultarIngresosRepository()->where('nodos.id', $request->nodo)->whereBetween('fecha_ingreso', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59'])->get();

@@ -25,12 +25,12 @@
                   <div class="divider"></div>
                   <div class="row">
                     <div class="input-field col m2 l2 s2">
-                      <input id="txtstart_date" name="txtstart_date" type="date" value="{{Carbon\Carbon::now()->format('Y-m-d')}}">
-                      <label for="txtstart_date">Desde</label>
+                      <input id="txtstart_date_ingresos" name="txtstart_date_ingresos" type="date" value="{{Carbon\Carbon::now()->format('Y-m-d')}}">
+                      <label for="txtstart_date_ingresos">Desde</label>
                     </div>
                     <div class="input-field col m2 l2 s2">
-                      <input id="txtend_date" name="txtend_date" type="date" value="{{Carbon\Carbon::now()->format('Y-m-d')}}">
-                      <label for="txtend_date">Hasta</label>
+                      <input id="txtend_date_ingresos" name="txtend_date_ingresos" type="date" value="{{Carbon\Carbon::now()->format('Y-m-d')}}">
+                      <label for="txtend_date_ingresos">Hasta</label>
                     </div>
                     <div class="col s12 m6 l4 offset-m3 right">
                       <button class="waves-effect waves-grey bg-secondary-lighten white-text btn-flat right show-on-large hide-on-med-and-down m-l-xs" id="download_excel_visitas"><i class="material-icons left">cloud_download</i>Descargar</button>
@@ -54,30 +54,4 @@
     </div>
   </main>
 @endsection
-@push('script')
-<script>
-  consultarIngresosDeUnNodo({{request()->user()->getNodoUser()}});
-  $('#filter_ingresos').click(function() {
-    let nodo = {{request()->user()->getNodoUser()}};
-    if (nodo == null) {
-      nodo = $('#filter_nodo').val();
-    }
-    consultarIngresosDeUnNodo(nodo);
-  });
-  $('#download_excel_visitas').click(function(){
-    let nodo = "{{request()->user()->getNodoUser()}}";
-    let start_date = $('#txtstart_date').val();
-    let end_date = $('#txtend_date').val();
-    if (nodo == null) {
-      nodo = $('#filter_nodo').val();
-    }
-    let query = {
-      nodo: nodo,
-      start_date: start_date,
-      end_date: end_date
-    }
-    let url = host_url + "/ingreso/export?" + $.param(query)
-    window.location = url;
-});
-</script>
-@endpush
+@include('ingreso.functions')
