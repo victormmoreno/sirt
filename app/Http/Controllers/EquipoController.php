@@ -134,12 +134,12 @@ class EquipoController extends Controller
             if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
                 $nodo_id = $nodo;
             }
-            if (session()->get('login_role') == User::IsDinamizador()) {
-                $nodo_id = auth()->user()->dinamizador->nodo_id;
+            if (session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsExperto() || session()->get('login_role') == User::IsApoyoTecnico()) {
+                $nodo_id = request()->user()->getNodoUser();
             }
-            if (session()->get('login_role') == User::IsExperto()) {
-                $nodo_id = auth()->user()->gestor->nodo_id;
-            }
+            // if (session()->get('login_role') == User::IsExperto()) {
+            //     $nodo_id = auth()->user()->gestor->nodo_id;
+            // }
 
             if (session()->get('login_role') == User::IsExperto()) {
                 if(isset($lineatecnologica)){
@@ -148,11 +148,11 @@ class EquipoController extends Controller
                     $linea_id = auth()->user()->gestor->lineatecnologica_id;
                 }
             }
-            if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsDinamizador()) {
+            if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsApoyoTecnico()) {
                 $linea_id = $lineatecnologica;
             }
 
-            if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsDinamizador()) {
+            if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsApoyoTecnico()) {
                 $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
                 ->where('nodo_id', $nodo_id)
                 ->where('lineatecnologica_id', $linea_id)
@@ -343,6 +343,7 @@ class EquipoController extends Controller
             alert('No autorizado', 'No puedes destacar este equipo', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
+        // dd($equipo);
         $destacar = $this->getEquipoRepository()->destacar($equipo);
         return response()->json([
             'state' => $destacar['state'],
@@ -372,6 +373,9 @@ class EquipoController extends Controller
                 break;
             case User::IsDinamizador():
                 $nodo = auth()->user()->dinamizador->nodo_id;
+                $linea = null;
+            case User::IsApoyoTecnico():
+                $nodo = auth()->user()->apoyotecnico->nodo_id;
                 $linea = null;
                 break;
             case User::IsExperto():

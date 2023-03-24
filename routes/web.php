@@ -111,6 +111,7 @@ Route::group(
         Route::put('/{documento}/permisos', 'UserController@updateNodeAndRole')->name('usuario.usuarios.updatenodo')->middleware('disablepreventback');
         Route::get('/usuarios/acceso/{documento}', 'UserController@access')->name('usuario.usuarios.acceso')->where('documento', '[0-9]+');
         Route::get('/usuarios/tomar_control/{id}', 'UserController@tomar_control')->name('usuario.tomar.control');
+        Route::get('/usuarios/dejar_control', 'UserController@dejar_control')->name('usuario.dejar.control');
         Route::put('/{id}/update-account', 'UserController@updateAccountUser')->name('usuario.usuarios.updateaccount')->middleware('disablepreventback');
         Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'only' => ['show', 'edit']])->names([
             'update'  => 'usuario.usuarios.update',
@@ -611,7 +612,7 @@ Route::group(
 Route::group(
     [
         'prefix'     => 'excel',
-        'middleware' => ['auth', 'role_session:Experto|Infocenter|Dinamizador|Activador|Ingreso|Talento'],
+        'middleware' => ['auth'],
     ],
     function () {
         // Rutas para la generación de excel del módulo de edts

@@ -2,7 +2,7 @@
 <script>
   consultarIngresosDeUnNodo({{request()->user()->getNodoUser()}});
   $('#filter_ingresos').click(function() {
-    let nodo = {{request()->user()->getNodoUser()}};
+    let nodo = "{{request()->user()->getNodoUser()}}";
     if (nodo == null) {
       nodo = $('#filter_nodo_ingresos').val();
     }
@@ -12,9 +12,10 @@
     let nodo = "{{request()->user()->getNodoUser()}}";
     let start_date = $('#txtstart_date_ingresos').val();
     let end_date = $('#txtend_date_ingresos').val();
-    if (nodo == null) {
+    if (nodo == "") {
       nodo = $('#filter_nodo_ingresos').val();
     }
+    
     let query = {
       nodo: nodo,
       start_date: start_date,

@@ -92,6 +92,18 @@ class UserPolicy
     }
 
     /**
+     * Determina si el usuario puede dejar de tomar el control de otro usuario
+     *
+     * @param User $user
+     * @return bool
+     * @author dum
+     **/
+    public function dejar_control(User $user)
+    {
+        return (bool) session()->has('before_session');
+    }
+
+    /**
      * Determine if the given user can  view the users search
      * @return boolean
      */

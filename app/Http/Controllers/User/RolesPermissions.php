@@ -32,4 +32,23 @@ class RolesPermissions extends Controller
             'url'  => route('home'),
         ]);
     }
+
+    // public static function setBeforeRole(Request $request)
+    // {
+        // session()->put('before_session', $request->user());
+        // if ($request->ajax()) {
+        //     if (session()->has('login_role') && session()->get('login_role') == $request->get('role')) {
+        //         $value = session()->get('login_role');
+        //     } else {
+        //         session()->put('login_role', $request->get('role'));
+        //         $value = session()->get('login_role');
+        //     }
+        // } else {
+        //     $value = session()->get('login_role');
+        // }
+        // return response()->json([
+        //     'role' => $value,
+        //     'url'  => route('home'),
+        // ]);
+    // }
 }

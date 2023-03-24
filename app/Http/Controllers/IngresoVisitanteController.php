@@ -183,6 +183,7 @@ class IngresoVisitanteController extends Controller
             alert('No autorizado', 'No puedes descargar información de los ingresos de visitante', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
+        // dd($request->nodo);
         $ingresos = $this->ingresoVisitanteRepository->consultarIngresosRepository()->where('nodos.id', $request->nodo)->whereBetween('fecha_ingreso', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59'])->get();
         // dd($ingresos);
         // exit;
