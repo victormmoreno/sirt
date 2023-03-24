@@ -80,32 +80,23 @@ class IngresoVisitanteRepository
       $visitante = Visitante::where('documento', $request->txtdocumento)->first();
       if ($visitante == null) {
         $storeVisitante = $this->visitanteRepository->storeVisitanteRepository($request);
-        // dd($storeVisitante['visitante']->id);
-        $ingreso = IngresoVisitante::create([
-          'visitante_id' => $storeVisitante['visitante']->id,
-          'nodo_id' => auth()->user()->ingreso->nodo_id,
-          'servicio_id' => $request->txtservicio_id,
-          'fecha_ingreso' => $request->txtfecha_ingreso . " " . $request->txthora_entrada,
-          'hora_salida' => $request->txthora_salida,
-          'descripcion' => $request->txtdescripcion
-        ]);
-      } else {
-        $ingreso = IngresoVisitante::create([
-          'visitante_id' => $visitante->id,
-          'nodo_id' => auth()->user()->ingreso->nodo_id,
-          'servicio_id' => $request->txtservicio_id,
-          'fecha_ingreso' => $request->txtfecha_ingreso . " " . $request->txthora_entrada,
-          'hora_salida' => $request->txthora_salida,
-          'descripcion' => $request->txtdescripcion
-        ]);
-
+        $visitante = $storeVisitante['visitante'];
       }
-      // return array('store' => true, 'ingreso' => $ingreso);
+      $ingreso = IngresoVisitante::create([
+        'visitante_id' => $visitante->id,
+        'user_id' => request()->user()->id,
+        'nodo_id' => request()->user()->getNodoUser(),
+        'servicio_id' => $request->txtservicio_id,
+        'fecha_ingreso' => $request->txtfecha_ingreso . " " . $request->txthora_entrada,
+        'hora_salida' => $request->txthora_salida,
+        'quien_autoriza' => $request->txtautoriza,
+        'descripcion' => $request->txtdescripcion
+      ]);
       DB::commit();
       return array('store' => true, 'ingreso' => $ingreso);
     } catch (\Exception $e) {
       DB::rollback();
-      return array('store' => false, 'ingreso' => "");
+      return array('store' => false, 'ingreso' => null);
     }
 
   }
@@ -115,23 +106,30 @@ class IngresoVisitanteRepository
   * @param int $id Id del nodo
   * @return Collection
   */
-  public function consultarIngresosDeUnNodoRepository($id)
+  public function consultarIngresosRepository()
   {
     return IngresoVisitante::select('ingresos_visitantes.id',
     'servicios.nombre AS servicio',
     'visitantes.email',
     'hora_salida',
+    'quien_autoriza',
+    'visitantes.documento AS documento_visitante',
     'ingresos_visitantes.descripcion',
     'tiposvisitante.nombre AS tipovisitante',
     'fecha_ingreso')
-    ->selectRaw('concat(visitantes.documento, " - ", visitantes.nombres, " ", visitantes.apellidos) AS visitante')
+    ->selectRaw('CONCAT(visitantes.documento, " - ", visitantes.nombres, " ", visitantes.apellidos) AS visitante')
+    ->selectRaw('CONCAT(visitantes.nombres, " ", visitantes.apellidos) AS nombres_apellidos_visitante')
+    ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS quien_registra')
+    ->selectRaw('DATE_FORMAT(fecha_ingreso, "%Y-%m-%d") AS ingreso')
+    ->selectRaw('DATE_FORMAT(fecha_ingreso, "%Y") AS anho_ingreso')
+    ->selectRaw('DATE_FORMAT(fecha_ingreso, "%m") AS mes_ingreso')
+    ->selectRaw('DATE_FORMAT(fecha_ingreso, "%d") AS dia_ingreso')
+    ->selectRaw('DATE_FORMAT(fecha_ingreso, "%r") AS hora_ingreso')
     ->join('visitantes', 'visitantes.id', '=', 'ingresos_visitantes.visitante_id')
     ->join('servicios', 'servicios.id', '=', 'ingresos_visitantes.servicio_id')
     ->join('tiposvisitante', 'tiposvisitante.id', '=', 'visitantes.tipovisitante_id')
     ->join('nodos', 'nodos.id', '=', 'ingresos_visitantes.nodo_id')
-    ->where('nodos.id', $id)
-    ->whereYear('fecha_ingreso', Carbon::now()->isoFormat('YYYY'))
-    ->get();
+    ->join('users', 'users.id', '=', 'ingresos_visitantes.user_id');
   }
 
 }

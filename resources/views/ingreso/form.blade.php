@@ -13,7 +13,7 @@
   <h4 class="center">Registrar nuevo visitante</h4>
   <div class="divider"></div>
   <br />
-  @include('visitante.ingreso.form')
+  @include('visitante.form')
 </div>
 <div id="divVisitanteRegistrado" class="card-panel green lighten-5">
   <h4 class="center">Visitante Registrado</h4>
@@ -54,35 +54,40 @@
 <div class="row">
   <div class="input-field col s12 m6 l6">
     <select id="txtservicio_id" name="txtservicio_id" style="width: 100%;">
-      <option value="">Seleccione un Servicio</option>
+      <option value="">Seleccione a que viene</option>
       @forelse ($servicios as $id => $value)
         @if (isset($ingreso))
-          <option value="{{ $id }}" {{ $ingreso->servicio_id == $id ? 'selected': '' }}>{{$value}}</option>
+          <option value="{{ $value->id }}" {{ $ingreso->servicio_id == $value->id ? 'selected': '' }}>{{$value->nombre}} {{$value->descripcion != null ? '('.$value->descripcion.')' : ''}}</option>
         @else
-          <option value="{{$id}}">{{$value}}</option>
+          <option value="{{$value->id}}">{{$value->nombre}} {{$value->descripcion != null ? '('.$value->descripcion.')' : ''}}</option>
         @endif
       @empty
         <option value="">No hay información disponible</option>
       @endforelse
     </select>
-    <label for="txtservicio_id">Servicio <span class="red-text">*</span></label>
+    <label for="txtservicio_id">¿A qué viene? <span class="red-text">*</span></label>
     <small id="txtservicio_id-error" class="error red-text"></small>
   </div>
   <div class="input-field col s12 m6 l6">
     <input type="time" class="pickertime" id="txthora_salida" name="txthora_salida" value="{{ isset($ingreso) ? Carbon\Carbon::parse($ingreso->hora_salida)->isoFormat('hh:mm') : old('txthora_salida') }}">
-    <label for="txthora_salida" class="active">Hora Salida <span class="red-text">*</span></label>
+    <label for="txthora_salida" class="active">Hora Salida</label>
     <small id="txthora_salida-error" class="error red-text"></small>
   </div>
 </div>
 <div class="row">
-  <div class="input-field col s12 m12 l12">
-    <input type="text" id="txtdescripcion" name="txtdescripcion" length="200" maxlength="200" value="{{ isset($ingreso) ? $ingreso->descripcion : old('txtapellidos') }}">
-    <label for="txtdescripcion">Descripción</label>
+  <div class="input-field col s12 m6 l6">
+    <input type="text" id="txtautoriza" name="txtautoriza" length="200" maxlength="200" value="{{ isset($ingreso) ? $ingreso->quien_autoriza : old('txtautoriza') }}">
+    <label for="txtautoriza">¿Quién autoriza la entrada?</label>
+    <small id="txtautoriza-error" class="error red-text"></small>
+  </div>
+  <div class="input-field col s12 m6 l6">
+    <input type="text" id="txtdescripcion" name="txtdescripcion" length="200" maxlength="200" value="{{ isset($ingreso) ? $ingreso->descripcion : old('txtdescripcion') }}">
+    <label for="txtdescripcion">Descripción <span class="red-text">*</span></label>
     <small id="txtdescripcion-error" class="error red-text"></small>
   </div>
 </div>
 <div class="divider"></div>
 <center>
-  <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">{{ isset($btnText) ? $btnText == 'Modificar' ? 'done' : 'done_all' : '' }}</i>{{isset($btnText) ? $btnText : 'error'}}</button>
-  <a href="{{route('ingreso')}}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
+  <button type="submit" class="waves-effect btn bg-secondary center-aling"><i class="material-icons right">send</i>Guardar</button>
+  <a href="{{route('ingreso')}}" class="waves-effect btn bg-danger center-aling"><i class="material-icons left">backspace</i>Cancelar</a>
 </center>

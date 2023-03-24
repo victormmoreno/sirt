@@ -68,6 +68,7 @@
         </div>
     </main>
 @endsection
+@include('ingreso.functions')
 @push('script')
     <script>
       function consultarProyectosInscritosMes(e, rt) {

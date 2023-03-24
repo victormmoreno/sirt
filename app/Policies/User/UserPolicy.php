@@ -83,6 +83,27 @@ class UserPolicy
     }
 
     /**
+     * Determine whether the user can to show user
+     * @return boolean
+     */
+    public function tomar_control(User $user)
+    {
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsAdministrador()]);
+    }
+
+    /**
+     * Determina si el usuario puede dejar de tomar el control de otro usuario
+     *
+     * @param User $user
+     * @return bool
+     * @author dum
+     **/
+    public function dejar_control(User $user)
+    {
+        return (bool) session()->has('before_session');
+    }
+
+    /**
      * Determine if the given user can  view the users search
      * @return boolean
      */
