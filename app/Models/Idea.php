@@ -168,14 +168,16 @@ class Idea extends Model
         )
         ->selectRaw('concat(nombres_contacto, " ", apellidos_contacto) AS nombres_contacto')
         ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombres_talento')
+        ->selectRaw('concat(ug.nombres, " ", ug.apellidos) AS experto')
         ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
         ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
         ->join('gestores', 'gestores.id', '=', 'ideas.gestor_id')
+        ->join('users as ug', 'ug.id', '=', 'gestores.user_id')
         ->leftjoin('talentos', 'talentos.id', '=', 'ideas.talento_id')
         ->leftjoin('users', 'users.id', '=', 'talentos.user_id')
         ->where('nodos.id', $idnodo)
         ->where('estadosidea.nombre', EstadoIdea::IsAdmitido())
-        ->where('gestores.user_id', $idgestor);
+        ->experto($idgestor);
     }
 
     public function scopeConsultarIdeasConvocadasAComite($query, $id)
@@ -347,6 +349,14 @@ class Idea extends Model
     {
         if (!empty($nodo) && $nodo != null && $nodo != 'all') {
             return $query->whereIn('nodo_id', $nodo);
+        }
+        return $query;
+    }
+
+    public function scopeExperto($query, $experto)
+    {
+        if (!empty($experto) && $experto != null && $experto != 'all') {
+            return $query->where('gestores.user_id', $experto);
         }
         return $query;
     }
