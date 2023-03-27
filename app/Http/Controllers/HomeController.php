@@ -57,7 +57,8 @@ class HomeController extends Controller
           ->orderBy('users.created_at', 'desc')
           ->get();
           return view('home.home', [
-            'expertos' => $expertos
+            'expertos' => $expertos,
+            'ideas_sin_pbt' => Idea::ConsultarIdeasAprobadasEnComite(request()->user()->getNodoUser(), null)->get()->count()
           ]);
           break;
         //   if (session()->get('login_role') == User::IsExperto()) {
