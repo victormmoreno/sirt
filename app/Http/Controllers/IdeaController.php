@@ -706,13 +706,15 @@ class IdeaController extends Controller
     /**
      * Consultar ideas sin asignar
      *
-     * @param int $nodo Id del nodo
-     * @param int $user Id del usuario
+     * @param $nodo Id del nodo
+     * @param $user Id del usuario
      * @return Response\Json
      * @author dum
      **/
-    public function consultarIdeasSinRegistro(int $nodo, int $user = null)
+    public function consultarIdeasSinRegistro($nodo, $user = null)
     {
+        // dd(Idea::ConsultarIdeasAprobadasEnComite($nodo, $user)->dd());
+        $user = $user == "null" ? null : $user;
         return response()->json([
             'data' => [
                 'ideas' => Idea::ConsultarIdeasAprobadasEnComite($nodo, $user)->get()

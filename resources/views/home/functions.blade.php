@@ -1,8 +1,13 @@
 @push('script')
 <script>
-    @can('showAlertsForExperto', Illuminate\Database\Eloquent\Model::class)
+    @can('showDahsboardExperto', Illuminate\Database\Eloquent\Model::class)
         @if($ideas_sin_pbt > 0)
             consultarIdeasPendientes('{{request()->user()->getNodoUser()}}', '{{request()->user()->id}}');
+        @endif
+    @endcan
+    @can('showDahsboardDinamizador', Illuminate\Database\Eloquent\Model::class)
+        @if($ideas_sin_pbt > 0)
+            consultarIdeasPendientes('{{request()->user()->getNodoUser()}}', null);
         @endif
     @endcan
     function consultarIdeasPendientes(nodo, user) {
@@ -17,14 +22,13 @@
         $("#ideasSinProyecto_titulo").append("<span class='cyan-text text-darken-3'>Ideas sin registrar como proyecto</span>");
         strings = '<ul class="collection">';
             $.each(response.data.ideas, function(i, item) {
-                console.log(item);
                 strings += '<li class="collection-item">'
-                    +'<b class="title green-text">Idea</b>'
-                    +'<p>'+item.codigo_idea+' - '+item.nombre_proyecto+'</p>'
-                    +'<span class="title">Talento</span>'
-                    +'<p>'+item.nombres_talento+'</p>'
-                    +'<span class="title">Experto</span>'
-                    +'<p>'+item.experto+'</p>'
+                    +'<div class="row"><b class="title green-text">Idea</b>'
+                    +'<p>'+item.codigo_idea+' - '+item.nombre_proyecto+'</p></div>'
+                    +'<div class="row"><div class="col s12 m6 l6"><b class="title green-text">Talento</b>'
+                    +'<p>'+item.nombres_talento+'</p></div>'
+                    +'<div class="col s12 m6 l6"><b class="title green-text">Experto</b>'
+                    +'<p>'+item.experto+'</p></div></div>'
                 +'</li>';
             });
         strings += '</ul>';
