@@ -42,9 +42,17 @@ class ModelPolicy
         return false;
     }
 
-    public function showAlertsForExperto(User $user)
+    public function showDahsboardExperto(User $user)
     {
         if (session()->get('login_role') == $user->IsExperto()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function showDahsboardDinamizador(User $user)
+    {
+        if (session()->get('login_role') == $user->IsDinamizador()) {
             return true;
         }
         return false;
