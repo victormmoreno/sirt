@@ -106,6 +106,18 @@ class IdeaPolicy
     }
 
     /**
+     * Determina si un usuario puede buscar o no una idea de proyecto
+     *
+     * @param User $user
+     * @return bool
+     * @author dum
+     **/
+    public function search(User $user)
+    {
+        return (bool) !Str::contains(session()->get('login_role'), [$user->IsTalento(), $user->IsIngreso(), $user->IsApoyoTecnico()]);
+    }
+
+    /**
      * Determina quienes y en qué momento se puede inhabilitar una idea de proyecto
      *
      * @param User $user

@@ -315,6 +315,37 @@ class Idea extends Model
             ->orderBy('nombre_proyecto');
     }
 
+    /**
+     * Query para consultar ideas de proyecto
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function scopeConsultarIdeas($query, $field, $value, $nodo)
+    {
+        return $query->select(
+            'ideas.id AS id',
+            'ideas.codigo_idea',
+            'nombre_proyecto',
+            'tipo_idea',
+            'viene_convocatoria',
+            'convocatoria',
+            'ideas.talento_id'
+        )
+        ->selectRaw('concat(nombres_contacto, " ", apellidos_contacto) AS nombres_contacto')
+        ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombres_talento')
+        ->selectRaw('concat(ug.nombres, " ", ug.apellidos) AS experto')
+        ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
+        ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
+        ->leftJoin('gestores', 'gestores.id', '=', 'ideas.gestor_id')
+        ->leftJoin('users as ug', 'ug.id', '=', 'gestores.user_id')
+        ->leftjoin('talentos', 'talentos.id', '=', 'ideas.talento_id')
+        ->leftjoin('users', 'users.id', '=', 'talentos.user_id')
+        ->field($field, $value)
+        ->oneNodo($nodo);
+    }
+
     public function scopeCreatedAt($query, $created_at)
     {
         if (!empty($created_at) && $created_at != 'all' && $created_at != null) {
@@ -353,10 +384,26 @@ class Idea extends Model
         return $query;
     }
 
+    public function scopeOneNodo($query, $nodo)
+    {
+        if (!empty($nodo) && $nodo != null && $nodo != 'all') {
+            return $query->where('ideas.nodo_id', $nodo);
+        }
+        return $query;
+    }
+
     public function scopeExperto($query, $experto)
     {
         if (!empty($experto) && $experto != null && $experto != 'all') {
             return $query->where('gestores.user_id', $experto);
+        }
+        return $query;
+    }
+
+    public function scopeField($query, $field, $value)
+    {
+        if (!empty($field) && $field != null && $field != 'all' && !empty($value) && $value != null && $value != 'all') {
+            return $query->where($field, 'like', "%{$value}%");
         }
         return $query;
     }
