@@ -702,4 +702,21 @@ class IdeaController extends Controller
         ]);
 
     }
+
+    /**
+     * Consultar ideas sin asignar
+     *
+     * @param int $nodo Id del nodo
+     * @param int $user Id del usuario
+     * @return Response\Json
+     * @author dum
+     **/
+    public function consultarIdeasSinRegistro(int $nodo, int $user = null)
+    {
+        return response()->json([
+            'data' => [
+                'ideas' => Idea::ConsultarIdeasAprobadasEnComite($nodo, $user)->get()
+            ]
+        ]);
+    }
 }

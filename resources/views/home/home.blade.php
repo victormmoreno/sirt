@@ -23,15 +23,19 @@
                                     </div>
                                     </div>
                                 </div>
-                                <div class="col s12 m2 l2">
+                                <div class="col s12 m4 l4">
                                     <div class="row">
-                                        <div class="card stats-card red lighten-3">
+                                        <div class="card stats-card {{$ideas_sin_pbt != 0 ? 'red lighten-3' : 'green lighten-3'}}">
                                             <div class="card-content">
                                                 <span class="stats-counter">
-                                                    Tienes X ideas asignadas y que no has registrado como proyecto
+                                                    @if ($ideas_sin_pbt != 0)
+                                                        Tienes {{$ideas_sin_pbt}} ideas asignadas que aún no has registrado como proyecto.
+                                                        <a onclick="consultarIdeasPendientes('{{request()->user()->getNodoUser()}}', '{{request()->user()->id}}')" class="btn bg-info"><i class="material-icons">search</i></a>
+                                                    @else
+                                                        Estás al día con las ideas asignadas por el dinamizador.
+                                                    @endif
                                                 </span>
                                                 <br>
-                                                <a onclick="consultarIdeasDeProyectoEmprendedores_Proyecto_FaseInicio()" class="btn-info"><i class="material-icons">search</i></a>
                                             </div>
                                             <div class="progress stats-card-progress bg-secondary">
                                                 <div class="determinate"></div>
@@ -60,7 +64,7 @@
         </div>
     </div>
   </main>
-@include('proyectos.modals')
+@include('home.modals')
 @endsection
 @push('script')
     @if (session()->get('login_role') == App\User::IsExperto())
@@ -86,3 +90,4 @@
     </script>
     @endif
 @endpush
+@include('home.functions')

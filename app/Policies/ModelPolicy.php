@@ -42,6 +42,14 @@ class ModelPolicy
         return false;
     }
 
+    public function showAlertsForExperto(User $user)
+    {
+        if (session()->get('login_role') == $user->IsExperto()) {
+            return true;
+        }
+        return false;
+    }
+
     // /**
     //  * Determina si el usuario puede ver la gráfica que muestra los proyectos inscritos por un experto en el año actual
     //  *

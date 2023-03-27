@@ -6,6 +6,7 @@ use App\Models\Nodo;
 use App\Models\Dinamizador;
 use App\Models\Gestor;
 use App\Models\Talento;
+use App\Models\Idea;
 use App\User;
 use Illuminate\Support\Facades\Session;
 
@@ -59,9 +60,15 @@ class HomeController extends Controller
             'expertos' => $expertos
           ]);
           break;
-
+        //   if (session()->get('login_role') == User::IsExperto()) {
+        //     $ideas = );
+        // } else {
+        //     $ideas = Idea::ConsultarIdeasAprobadasEnComite($nodo, $id_experto)->get();
+        // }
         case User::IsExperto():
-          return view('home.home');
+          return view('home.home', [
+            'ideas_sin_pbt' => Idea::ConsultarIdeasAprobadasEnComite(request()->user()->getNodoUser(), request()->user()->id)->get()->count()
+          ]);
           break;
 
         case User::IsDesarrollador():
