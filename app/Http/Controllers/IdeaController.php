@@ -721,4 +721,42 @@ class IdeaController extends Controller
             ]
         ]);
     }
+
+    /**
+     * Formulario para buscar una idea de proyecto
+     *
+     * @return Response
+     * @author dum
+     **/
+    public function search()
+    {
+        if(!request()->user()->can('search', Idea::class)) {
+            alert('No autorizado', 'No tienes permisos para buscar ideas de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+        return view('ideas.search');
+    }
+
+    /**
+     * Busca una idea de proyecto según un criterio.
+     *
+     * @param Request $request
+     * @return Response
+     * @author dum
+     **/
+    public function search_idea(Request $request)
+    {
+        // $ideas = Idea::where('nit', 'like', '%'.$request->txtidea_search.'%')->get();
+        $ideas = $this->ideaRepository->consultarIdeasRepository($request);
+        $urls = [];
+        foreach ($ideas as $idea) {
+            // dd($idea->id);
+            $urls[] = route('idea.detalle', $idea->id);
+        }
+        return response()->json([
+            'ideas' => $ideas,
+            'urls' => $urls,
+            'state' => 'search'
+        ]);
+    }
 }

@@ -35,6 +35,11 @@
                                 <a href="{{ route('idea.create') }}" class="bg-secondary btn withe-text right"><i class="material-icons left">add</i> Nueva Idea de Proyecto</a>
                             </div>
                         @endcan
+                        @can('search', App\Models\Idea::class)
+                        <div class="col s12 m4 l4">
+                            <a href="{{ route('idea.buscar') }}" class="bg-secondary btn withe-text right"><i class="material-icons left">search</i>Buscar idea de proyecto</a>
+                        </div>
+                        @endcan
                     </div>
                     <div class="divider"></div>
                     @can('showFilters', App\Models\Idea::class)
@@ -85,7 +90,7 @@
                             @can('export', App\Models\Idea::class)
                             <div class="col s12 m6 l4 offset-m3 right">
                                 <button class="waves-effect waves-grey bg-secondary-lighten white-text btn-flat right show-on-large hide-on-med-and-down m-l-xs" id="download_excel"><i class="material-icons left">cloud_download</i>Descargar</button>
-                                <button class="waves-effect waves-grey bg-secondary white-text btn-flat right show-on-large hide-on-med-and-down m-l-xs" id="filter_idea"><i class="material-icons left">search</i>Buscar</button>
+                                <button class="waves-effect waves-grey bg-secondary white-text btn-flat right show-on-large hide-on-med-and-down m-l-xs" id="filter_idea"><i class="material-icons left">search</i>Filtrar</button>
                             </div>
                             @endcan
                         </div>
