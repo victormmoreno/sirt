@@ -90,8 +90,7 @@ class NodoPolicy
      */
     public function uploadFiles(User $user, Nodo $nodo)
     {
-        return (bool) $user->hasAnyRole([User::IsArticulador()])
-            && ( (
+        return (bool)  ( (
                     session()->has('login_role')
                     && (
                         session()->get('login_role') == User::IsAdministrador() ||

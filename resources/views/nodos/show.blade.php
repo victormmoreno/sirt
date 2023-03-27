@@ -1,6 +1,9 @@
 @extends('layouts.app')
 @section('meta-title', 'Tecnoparque nodo '. $nodo->entidad->present()->entidadName())
 @section('content')
+@php
+    $year = Carbon\Carbon::now()->year;
+@endphp
     <main class="mn-inner inner-active-sidebar">
         <div class="content">
             <div class="row no-m-t no-m-b m-r-lg m-l-lg">
@@ -55,7 +58,7 @@
                                             <small class="info-text">
                                                 <a href="{{route('nodo.upload-files', $nodo->entidad->slug)}}"
                                                    class="waves-effect waves-grey info-text btn-flat">
-                                                   <i class="fas fa-upload fa-lg"></i> Subir documentos
+                                                   <i class="fas fa-upload fa-lg"></i> Subir documentos ({{ $nodo->model()->whereYear('created_at',$year)->count() }})
                                                 </a>
                                             </small>
                                             @endcan

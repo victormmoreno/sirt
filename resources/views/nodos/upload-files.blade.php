@@ -1,6 +1,9 @@
 @extends('layouts.app')
 @section('meta-title', 'Tecnoparque nodo ' . $nodo->entidad->present()->entidadName())
 @section('content')
+    @php
+        $year = Carbon\Carbon::now()->year;
+    @endphp
     <main class="mn-inner inner-active-sidebar">
         <div class="content">
             <div class="row no-m-t no-m-b m-r-lg m-l-lg">
@@ -14,10 +17,12 @@
                     <ol class="breadcrumbs">
                         <li><a href="{{ route('home') }}">Inicio</a></li>
                         <li><a href="{{ route('nodo.index') }}">Nodos</a></li>
-                        <li class="active">Tecnoparque Nodo {{ $nodo->entidad->present()->entidadName() }}</li>
+                        <li><a href="{{route('nodo.show', $nodo->entidad->slug)}}">Tecnoparque Nodo {{$nodo->entidad->present()->entidadName()}}</a></li>
+                        <li class="active">Archivos</li>
                     </ol>
                 </div>
             </div>
+
             <div class="row no-m-t no-m-b">
                 <div class="col s12 m12 l12">
                     <div class="card mailbox-content">
@@ -29,6 +34,7 @@
                                             <div class="left">
                                                 <div class="left">
                                                     <span class="mailbox-title primary-text">
+
                                                         Tecnoparque nodo {{ $nodo->entidad->present()->entidadName() }} -
                                                         {{ $nodo->entidad->present()->entidadLugar() }}
                                                     </span>
@@ -64,7 +70,7 @@
                                                     <div class="card server-card card-transparent">
                                                         <div class="card-content">
                                                             <span
-                                                                class="card-title center primary-text m-t-lg">Evidencias</span>
+                                                                class="card-title center primary-text m-t-lg">Archivos</span>
                                                             <div class="row">
                                                                 <div class="col s12 m12 l12">
                                                                     <div class="row">
@@ -72,6 +78,20 @@
                                                                             id="node_upload_archives"></div>
                                                                     </div>
                                                                     <div class="divider"></div>
+                                                                    <div class="row">
+                                                                        <div class="input-field col s12 m3 l3">
+                                                                            <label class="active" for="filter_year_archive_node">Año <span class="red-text">*</span></label>
+                                                                            <select tabindex="-1" style="width: 100%"  name="filter_year_file_node" id="filter_year_file_node">
+                                                                                @for ($i=$year; $i >= 2022; $i--)
+                                                                                    <option @if($i==$year) selected @endif value="{{$i}}" >{{$i}}</option>
+                                                                                @endfor
+                                                                                <option value="all" >todos</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col s12 m6 l5 offset-m3 right">
+                                                                            <button class="waves-effect  waves-grey bg-secondary white-text btn-flat search-tabs-button right" id="filter_file_node"><i class="material-icons">search</i>{{__('Filter')}}</button>
+                                                                        </div>
+                                                                    </div>
                                                                     <table
                                                                         class="display responsive-table datatable-example dataTable"
                                                                         style="width: 100%" id="archives-nodes">
@@ -103,23 +123,58 @@
 @endsection
 @push('script')
     <script>
-        // datatableArchiveArticulationStart();
+        $(document).ready(function() {
+        let filter_year_file_node = $('#filter_year_file_node').val();
+        if( (filter_year_file_node =='' || filter_year_file_node == null)){
+            datatableArchiveNode(filter_year_file_node = null);
+        }else if(filter_year_file_node !=''){
+            datatableArchiveNode(filter_year_file_node);
+        }else{
+            $('#archives-nodes').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "pageLength": 10,
+                "lengthChange": false,
+            }).clear().draw();
+            }
+        });
+
+    $('#filter_file_node').click(function () {
+
+        let filter_year_file_node = $('#filter_year_file_node').val();
+        $('#archives-nodes').dataTable().fnDestroy();
+        if((filter_year_file_node == '' || filter_year_file_node == null)){
+            datatableArchiveNode(filter_year_file_node = null);
+        }else if((filter_year_file_node != '' || filter_year_file_node != null)){
+            datatableArchiveNode(filter_year_file_node);
+        }else{
+            $('#archives-nodes').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                "pageLength": 10,
+                "lengthChange": false,
+            }).clear().draw();
+        }
+    });
+
         var Dropzone = new Dropzone('#node_upload_archives', {
-            url: '{{ route('nodo.files.upload', [$nodo->slug]) }}',
+            url: '{{ route('nodo.files.upload', [$nodo->entidad->slug]) }}',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
             dictDefaultMessage: 'Arrastra los archivos aquí para subirlos.',
             params: {
                 type: "Nodo",
-                year: "2023"
+                year: '{{ $year }}'
             },
-            paramName: 'file'
+            paramName: 'nombreArchivo'
         });
 
         Dropzone.on('success', function (res) {
             $('#archives-nodes').dataTable().fnDestroy();
-            // datatableArchiveArticulationStart();
+            datatableArchiveNode();
             Swal.fire({
                 toast: true,
                 position: 'top-end',
@@ -145,6 +200,64 @@
 
         Dropzone.autoDiscover = false;
 
-
+        function datatableArchiveNode(filter_year){
+            $('#archives-nodes').DataTable({
+                language: {
+                    "decimal": "",
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar Entradas _MENU_",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+                lengthMenu: [
+                    [5, 10, 25,50, 100, -1],
+                    [5, 10,25, 50, 100, 'Todos'],
+                ],
+                "pageLength": 10,
+                "lengthChange": false,
+                processing: false,
+                serverSide: false,
+                order: false,
+                ajax:{
+                    url: "{{route('nodo.files', [$nodo->entidad->slug])}}",
+                    type: "get",
+                    data: {
+                        type: "Nodo",
+                        year: filter_year
+                        // filter_year_file: filter_year,
+                    }
+                },
+                columns: [
+                    {
+                        data: 'file',
+                        name: 'file',
+                        orderable: false,
+                    },
+                    {
+                        data: 'download',
+                        name: 'download',
+                        orderable: false,
+                    },
+                    {
+                        data: 'delete',
+                        name: 'delete',
+                        orderable: false,
+                    },
+                ]
+            });
+        }
     </script>
 @endpush
