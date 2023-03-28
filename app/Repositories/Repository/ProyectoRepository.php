@@ -254,6 +254,23 @@ class ProyectoRepository extends Repository
         ->asesor($experto);
     }
 
+    public function selectProyectosLimitePlaneacion($nodo, $experto)
+    {
+        $now = Carbon::now();
+        return $this->selectProyecto()->selectRaw('MAX(hist.created_at) AS aprobacion')
+        ->join('movimientos_actividades_users_roles as hist', 'hist.actividad_id', '=', 'actividades.id')
+        ->join('roles as r', 'r.id', '=', 'hist.role_id')
+        ->join('fases as fh', 'fh.id', '=', 'hist.fase_id')
+        ->join('movimientos as m', 'm.id', '=', 'hist.movimiento_id')
+        ->where('nodos.id', $nodo)
+        ->where("m.movimiento", Movimiento::IsAprobar())
+        ->where('r.name', User::IsDinamizador())
+        ->where('fh.nombre', Proyecto::IsInicio())
+        ->where('fases.nombre', Proyecto::IsPlaneacion())
+        ->whereRaw('DATEDIFF("'.$now.'", hist.created_at) > '.config('app.proyectos.duracion.planeacion'))
+        ->asesor($experto);
+    }
+ 
     /**
      * Consulta trls esperado entre fechas
      * @param string $field Trl que se va a consultar
@@ -1034,7 +1051,7 @@ class ProyectoRepository extends Repository
             $movimiento = null;
             $mensaje = null;
             $title = null;
-            $ruta = null;
+            $ruta = route('proyecto');
 
             $proyecto = Proyecto::findOrFail($id);
             $dinamizadorRepository = new DinamizadorRepository;
@@ -1110,7 +1127,7 @@ class ProyectoRepository extends Repository
                         ]);
                         // Crear el movimiento con el cierre del proyecto
                         $this->crearMovimiento($proyecto, 'Finalizado', 'Cerró', null);
-                        $ruta = route('proyecto.detalle', $id);
+                        // $ruta = route('proyecto.detalle', $id);
                         }
                     }
                 }
