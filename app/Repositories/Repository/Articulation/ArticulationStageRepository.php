@@ -48,7 +48,7 @@ class ArticulationStageRepository
     {
         return ArticulationStage::query()
             ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
-            ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+            ->leftJoin('entidades', 'entidades.id', '=', 'nodos.entidad_id')
 
             ->leftJoin('articulations', 'articulations.articulation_stage_id', '=', 'articulation_stages.id')
             ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')

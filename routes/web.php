@@ -645,8 +645,7 @@ Route::group(
         ->middleware('role_session:Activador')
         ->name('excel.excelnodo');
 
-        Route::get('/exportexcelfornodo/{nodo}', 'Excel\NodoController@exportQueryForNodo')
-        ->middleware('role_session:Activador|Dinamizador')
+        Route::get('/nodo/funcionarios/{nodo}', 'Excel\NodoController@exportQueryForNodo')
         ->name('excel.exportexcelfornodo');
 
         Route::post('/import_materiales', 'Excel\MaterialController@import')->name('import.materiales');

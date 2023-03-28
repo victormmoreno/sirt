@@ -13,7 +13,7 @@ class NodoShowExport extends FatherExport
     {
         $this->setQuery($query);
         $this->setCount($this->getQuery()->count() + 1);
-        $this->setRangeHeadingCell('A1:I1');
+        $this->setRangeHeadingCell('A1:H1');
 
     }
 
@@ -23,7 +23,7 @@ class NodoShowExport extends FatherExport
     public function view(): View
     {
         return view('exports.nodo.showExport', [
-            'nodos' => $this->getQuery(),
+            'users' => $this->getQuery(),
         ]);
     }
 
@@ -37,7 +37,6 @@ class NodoShowExport extends FatherExport
     {
         $columnPar   = $this->styleArrayColumnsPar();
         $columnImPar = $this->styleArrayColumnsImPar();
-
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 $this->setFilters($event);
@@ -55,7 +54,6 @@ class NodoShowExport extends FatherExport
     {
         return 'Nodos';
     }
-
     /**
      * Asigna un valor a $title
      * @param string $title
