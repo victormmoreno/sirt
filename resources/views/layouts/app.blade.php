@@ -26,7 +26,7 @@
         <meta property="og:description" content="@yield('meta-content', 'Tecnoparque Red Colombia')" />
         <meta property="og:url" content="{{config('app.url')}}" />
         <meta property="og:site_name" content="{{config('app.name')}}" />
-
+        @stack('style')
     </head>
     <body>
         <div class="mn-content fixed-sidebar" id="app">

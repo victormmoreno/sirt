@@ -167,7 +167,7 @@ class IdeaRepository
         }
     }
 
-    public function RepositoryDeProyecto()
+    public function consultarIdeasDeProyecto()
     {
         return Idea::with([
             'estadoIdea',
