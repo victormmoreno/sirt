@@ -7,19 +7,24 @@ use App\Models\Dinamizador;
 use App\Models\Gestor;
 use App\Models\Talento;
 use App\Models\Idea;
+use App\Models\Proyecto;
 use App\User;
 use Illuminate\Support\Facades\Session;
+use App\Repositories\Repository\ProyectoRepository;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
+  public $proyectoRepository;
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ProyectoRepository $proyectoRepository)
     {
         $this->middleware(['auth']);
+        $this->proyectoRepository = $proyectoRepository;
     }
 
     /**
@@ -29,6 +34,8 @@ class HomeController extends Controller
      */
     public function index()
     {
+      // $limite_inicio = Carbon::now()->subDays(config('app.proyectos.duracion.inicio'));
+      // dd($limite_inicio);
       switch ( Session::get('login_role') ) {
         case User::IsActivador() :
 
@@ -58,7 +65,8 @@ class HomeController extends Controller
           ->get();
           return view('home.home', [
             'expertos' => $expertos,
-            'ideas_sin_pbt' => Idea::ConsultarIdeasAprobadasEnComite(request()->user()->getNodoUser(), null)->get()->count()
+            'ideas_sin_pbt' => Idea::ConsultarIdeasAprobadasEnComite(request()->user()->getNodoUser(), null)->get()->count(),
+            'proyectos_limite_inicio' => $this->proyectoRepository->selectProyectosLimiteInicio(request()->user()->getNodoUser(), null)->count()
           ]);
           break;
         //   if (session()->get('login_role') == User::IsExperto()) {
@@ -68,7 +76,8 @@ class HomeController extends Controller
         // }
         case User::IsExperto():
           return view('home.home', [
-            'ideas_sin_pbt' => Idea::ConsultarIdeasAprobadasEnComite(request()->user()->getNodoUser(), request()->user()->id)->get()->count()
+            'ideas_sin_pbt' => Idea::ConsultarIdeasAprobadasEnComite(request()->user()->getNodoUser(), request()->user()->id)->get()->count(),
+            'proyectos_limite_inicio' => $this->proyectoRepository->selectProyectosLimiteInicio(request()->user()->getNodoUser(), request()->user()->gestor->id)->count()
           ]);
           break;
 
@@ -83,7 +92,6 @@ class HomeController extends Controller
           return view('home.home');
           break;
       }
-
 
         // $value = Session::get('login_web_59ba36addc2b2f9401580f014c7f58ea4e30989d');
          // session()->put('login_role', 'value');

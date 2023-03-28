@@ -231,7 +231,7 @@ class ProyectoRepository extends Repository
             'actividades.id AS actividad_id',
             'proyectos.asesor_id'
         )
-        ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
+        ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
         ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) as nombre_idea')
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
         ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
@@ -243,6 +243,15 @@ class ProyectoRepository extends Repository
         ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
         ->leftJoin('fases', 'fases.id', '=', 'proyectos.fase_id')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id');
+    }
+
+    public function selectProyectosLimiteInicio($nodo, $experto)
+    {
+        $now = Carbon::now();
+        return $this->selectProyecto()->where('nodos.id', $nodo)
+        ->where('fases.nombre', Proyecto::IsInicio())
+        ->whereRaw('DATEDIFF("'.$now.'", fecha_inicio) > '.config('app.proyectos.duracion.inicio'))
+        ->asesor($experto);
     }
 
     /**
