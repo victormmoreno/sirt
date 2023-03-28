@@ -14,12 +14,11 @@
     </div>
     <div class="col s12 m4 l4">
         <div class="row">
-            <div class="card stats-card {{$ideas_sin_pbt != 0 ? 'red lighten-3' : 'green lighten-3'}}">
+            <div class="card stats-card {{$ideas_sin_pbt != 0 ? 'red lighten-3' : 'green lighten-3'}}" onclick="consultarIdeasPendientes('{{request()->user()->getNodoUser()}}', '{{request()->user()->id}}')" style="cursor: pointer">
                 <div class="card-content">
                     <span class="stats-counter">
                         @if ($ideas_sin_pbt != 0)
                             Tienes {{$ideas_sin_pbt}} ideas asignadas que aún no has registrado como proyecto.
-                            <a onclick="consultarIdeasPendientes('{{request()->user()->getNodoUser()}}', '{{request()->user()->id}}')" class="btn bg-info"><i class="material-icons">search</i></a>
                         @else
                             Estás al día con las ideas asignadas por el dinamizador.
                         @endif
@@ -32,7 +31,21 @@
             </div>
         </div>
         <div class="row">
-
+            <div class="card stats-card {{$proyectos_limite_inicio != 0 ? 'orange lighten-3' : 'green lighten-3'}}" onclick="consultarProyectosInicio('{{request()->user()->getNodoUser()}}', '{{request()->user()->gestor->id}}')" style="cursor: pointer">
+                <div class="card-content">
+                    <span class="stats-counter">
+                        @if ($proyectos_limite_inicio != 0)
+                            Tienes {{$proyectos_limite_inicio}} proyectos atrasados en la fase de inicio (Máximo {{config('app.proyectos.duracion.inicio')}} días en esta fase).
+                        @else
+                            No tienes proyectos con mas de {{config('app.proyectos.duracion.inicio')}} días en la fase de inicio.
+                        @endif
+                    </span>
+                    <br>
+                </div>
+                <div class="progress stats-card-progress bg-secondary">
+                    <div class="determinate"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

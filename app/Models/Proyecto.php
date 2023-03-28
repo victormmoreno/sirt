@@ -304,6 +304,14 @@ class Proyecto extends Model
         return $query;
     }
 
+    public function scopeAsesor($query, $asesor)
+    {
+        if (!empty($asesor) && $asesor != null && $asesor != 'all') {
+            return $query->where('asesor_id', $asesor);
+        }
+        return $query;
+    }
+
     public function scopeStarEndDate($query, $year)
     {
         if (!empty($year) && $year != null && $year != 'all') {

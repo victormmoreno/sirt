@@ -11,6 +11,7 @@ use App\User;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Controllers\CostoController;
 use App\Policies\IndicadorPolicy;
+use Carbon\Carbon;
 
 class ProyectoController extends Controller
 {
@@ -1308,6 +1309,25 @@ class ProyectoController extends Controller
             })
             ->rawColumns(['codigo_proyecto','nombre','fase','show','add_proyecto'])->make(true);
 
+    }
+
+    /**
+     * Muestra los proyectos que llevan mucho tiempo en inicio sin cambiar de fase
+     *
+     * @param int $nodo
+     * @param int $experto
+     * @return Response
+     * @author dum
+     **/
+    public function proyectosLimiteInicio($nodo, $experto)
+    {
+        $limite_inicio = Carbon::now()->subDays(config('app.proyectos.duracion.inicio'));
+        $experto = $experto == "null" ? null : $experto;
+        return response()->json([
+            'data' => [
+                'proyectos' => $this->proyectoRepository->selectProyectosLimiteInicio($nodo, $experto, $limite_inicio)->get()
+            ]
+        ]);
     }
 
     /**
