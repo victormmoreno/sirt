@@ -62,7 +62,7 @@ class HomeController extends Controller
           ->role(User::IsExperto())
           ->nodoUser(User::IsExperto(), request()->user()->getNodoUser())
           ->stateDeletedAt('si')
-          ->orderBy('users.created_at', 'desc')
+          ->orderBy('users.nombres')
           ->get();
           return view('home.home', [
             'expertos' => $expertos,
