@@ -6,7 +6,7 @@ use App\Repositories\Repository\{ProyectoRepository, LineaRepository};
 use Illuminate\Support\Facades\{Session};
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Models\{Gestor, Nodo, Proyecto};
+use App\Models\{Gestor, Nodo, Proyecto, Fase};
 use App\User;
 use Carbon\Carbon;
 
@@ -477,14 +477,55 @@ class SeguimientoController extends Controller
     $Pabiertos = 0;
     $Pfinalizados = 0;
     // Proyectos
-    $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->where('g.id', $idgestor)->where('nodos.id', $idnodo)->get();
-    $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->where('g.id', $idgestor)->where('nodos.id', $idnodo)->get();
 
-    $agrupados = $this->agruparProyectos($Pabiertos, $Pfinalizados);
+    $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->select('entidades.nombre', 'fases.nombre as fase')->selectRaw('count(trl_esperado) as trl_esperado')->groupBy('entidades.nombre', 'fase')->where('nodos.id', $idnodo)->where('g.id', $idgestor)->get();
+    $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->where('g.id', $idgestor)->where('nodos.id', $idnodo)->get();
+    $agrupados = $this->retornarValoresDelSeguimientoPorFasesNoGroup($Pabiertos, $Pfinalizados);
+    // dd($agrupados);
     return response()->json([
       'datos' => $agrupados
     ]);
   }
+
+    /**
+   * Retorna un array con los valores del seguimiento por fase actual
+   * @param object $abiertos con los totales de proyectos activos
+   * @param object $cerrados con los totales de proyectos cerrados
+   * @return array
+   */
+  private function retornarValoresDelSeguimientoPorFasesNoGroup($abiertos, $cerrados) {
+    $datos = [];
+    // $temporal = $abiertos;
+    // $fases = Fase::all();
+    // foreach ($fases as $fase) {
+      $cnt_inicio = $abiertos->where('fase', 'Inicio')->first();
+      $cnt_planeacion = $abiertos->where('fase', 'Planeación')->first();
+      $cnt_ejecucion = $abiertos->where('fase', 'Ejecución')->first();
+      $cnt_cierre = $abiertos->where('fase', 'Cierre')->first();
+      $cnt_fin = $cerrados->where('fase', 'Finalizado')->first();
+      $cnt_suspendido = $cerrados->where('fase', 'Concluido sin finalizar')->first();
+
+      $cnt_inicio != null ? $cnt_inicio = $cnt_inicio->trl_esperado : $cnt_inicio = 0;
+      $cnt_planeacion != null ? $cnt_planeacion = $cnt_planeacion->trl_esperado : $cnt_planeacion = 0;
+      $cnt_ejecucion != null ? $cnt_ejecucion = $cnt_ejecucion->trl_esperado : $cnt_ejecucion = 0;
+      $cnt_cierre != null ? $cnt_cierre = $cnt_cierre->trl_esperado : $cnt_cierre = 0;
+      $cnt_fin != null ? $cnt_fin = $cnt_fin->cantidad : $cnt_fin = 0;
+      $cnt_suspendido != null ? $cnt_suspendido = $cnt_suspendido->cantidad : $cnt_suspendido = 0;
+
+      $datos = [
+        // 'nodo' => $row->first()->nombre,
+        'Inicio' => $cnt_inicio,
+        'Planeacion' => $cnt_planeacion,
+        'Ejecucion' => $cnt_ejecucion,
+        'Cierre' => $cnt_cierre,
+        'Finalizado' => $cnt_fin,
+        'Suspendido' => $cnt_suspendido,
+        'Total' => $cnt_inicio + $cnt_planeacion + $cnt_ejecucion + $cnt_cierre + $cnt_fin + $cnt_suspendido
+      ];
+    // }
+    return $datos;
+  }
+
 
   /**
    * Consulta el seguimiento de una línea de un nodo, por fases actuales
