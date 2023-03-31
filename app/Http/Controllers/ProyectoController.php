@@ -1331,6 +1331,25 @@ class ProyectoController extends Controller
     }
 
     /**
+     * Muestra los proyectos que llevan mucho tiempo en planeacion sin cambiar de fase
+     *
+     * @param int $nodo
+     * @param int $experto
+     * @return Response
+     * @author dum
+     **/
+    public function proyectosLimitePlaneacion($nodo, $experto)
+    {
+        $limite_inicio = Carbon::now()->subDays(config('app.proyectos.duracion.planeacion'));
+        $experto = $experto == "null" ? null : $experto;
+        return response()->json([
+            'data' => [
+                'proyectos' => $this->proyectoRepository->selectProyectosLimitePlaneacion($nodo, $experto, $limite_inicio)->groupBy('codigo_actividad')->get()
+            ]
+        ]);
+    }
+
+    /**
      * Asigna un valor a $proyectoRepository
      * @param object $proyectoRepository
      * @return void type
