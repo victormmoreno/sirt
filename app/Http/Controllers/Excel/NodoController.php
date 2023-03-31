@@ -100,7 +100,6 @@ class NodoController extends Controller
         }
 
         $users = User::query()
-
         ->leftJoin("tiposdocumentos", function($join){
             $join->on("tiposdocumentos.id", "=", "users.tipodocumento_id");
         })
@@ -210,10 +209,6 @@ class NodoController extends Controller
         ->orderBy("roles.name", "ASC")
         ->get();
 
-
-
-
-        return Excel::download(new NodoShowExport($users), 'Nodo' . '.xlsx');
-
+        return Excel::download(new NodoShowExport($users), "Tecnoparque {$node->entidad->nombre}" . '.xlsx');
     }
 }
