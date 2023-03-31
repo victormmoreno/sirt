@@ -68,7 +68,7 @@ class ArticulationStageListController extends Controller
                 ->status($request->filter_status_articulationStage)
                 ->year($request->filter_year_articulationStage)
                 ->interlocutorTalent($talent)
-                ->groupBy('articulation_code')
+                ->groupBy('articulation_stages.code')
                 ->orderBy('articulation_stages.updated_at', 'desc')
                 ->get();
         }

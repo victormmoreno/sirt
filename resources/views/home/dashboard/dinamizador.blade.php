@@ -36,5 +36,22 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="card stats-card {{$proyectos_limite_planeacion != 0 ? 'orange lighten-3' : 'green lighten-3'}}" style="cursor:pointer" onclick="consultarProyectosPlaneacion('{{request()->user()->getNodoUser()}}', 'null')">
+                <div class="card-content">
+                    <span class="stats-counter">
+                        @if ($proyectos_limite_planeacion != 0)
+                            Hay {{$proyectos_limite_planeacion}} proyectos atrasados en la fase de planeación en el nodo (Máximo {{config('app.proyectos.duracion.planeacion')}} días en esta fase).
+                        @else
+                            No hay proyectos con mas de {{config('app.proyectos.duracion.planeacion')}} días en la fase de planeación en el nodo.
+                        @endif
+                    </span>
+                    <br>
+                </div>
+                <div class="progress stats-card-progress bg-secondary">
+                    <div class="determinate"></div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
