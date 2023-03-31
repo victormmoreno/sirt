@@ -248,16 +248,17 @@ class ProyectoRepository extends Repository
     public function selectProyectosLimiteInicio($nodo, $experto)
     {
         $now = Carbon::now();
-        return $this->selectProyecto()->where('nodos.id', $nodo)
+        return $this->selectProyecto()->selectRaw('DATEDIFF("'.$now.'", fecha_inicio) as dias')->where('nodos.id', $nodo)
         ->where('fases.nombre', Proyecto::IsInicio())
         ->whereRaw('DATEDIFF("'.$now.'", fecha_inicio) > '.config('app.proyectos.duracion.inicio'))
+        ->orderBy('fecha_inicio')
         ->asesor($experto);
     }
 
     public function selectProyectosLimitePlaneacion($nodo, $experto)
     {
         $now = Carbon::now();
-        return $this->selectProyecto()->selectRaw('MAX(hist.created_at) AS aprobacion')
+        return $this->selectProyecto()->selectRaw('MAX(hist.created_at) AS aprobacion, DATEDIFF("'.$now.'", hist.created_at) AS dias')
         ->join('movimientos_actividades_users_roles as hist', 'hist.actividad_id', '=', 'actividades.id')
         ->join('roles as r', 'r.id', '=', 'hist.role_id')
         ->join('fases as fh', 'fh.id', '=', 'hist.fase_id')
@@ -268,6 +269,7 @@ class ProyectoRepository extends Repository
         ->where('fh.nombre', Proyecto::IsInicio())
         ->where('fases.nombre', Proyecto::IsPlaneacion())
         ->whereRaw('DATEDIFF("'.$now.'", hist.created_at) > '.config('app.proyectos.duracion.planeacion'))
+        ->orderBy('hist.created_at')
         ->asesor($experto);
     }
  
