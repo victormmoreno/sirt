@@ -355,7 +355,7 @@ class ProyectoRepository extends Repository
         ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
         ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-        ->whereIn('fases.nombre', ['Finalizado', 'Suspendido'])
+        ->whereIn('fases.nombre', ['Finalizado', 'Concluido sin finalizar'])
         ->groupBy('entidades.nombre', 'fase')
         ->whereYear('fecha_cierre', $year);
     }
@@ -1380,7 +1380,7 @@ class ProyectoRepository extends Repository
             $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->nodo_id)->get();
             $destinatarios = $dinamizadorRepository->getAllDinamizadorPorNodoArray($dinamizadores);
             Notification::send($dinamizadores, new ProyectoAprobarSuspendido($proyecto));
-            $this->crearMovimiento($proyecto, 'Suspendido', 'solicitó al dinamizador', null);
+            $this->crearMovimiento($proyecto, 'Concluido sin finalizar', 'solicitó al dinamizador', null);
             $movimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
             event(new ProyectoSuspenderWasRequested($proyecto, $movimiento, $destinatarios));
             DB::commit();
@@ -1516,7 +1516,7 @@ class ProyectoRepository extends Repository
         ->where(function ($q) use ($anho) {
             $q->where(function ($query) use ($anho) {
             $query->whereYear('actividades.fecha_cierre', '=', $anho)
-                ->whereIn('fases.nombre', ['Finalizado', 'Suspendido']);
+                ->whereIn('fases.nombre', ['Finalizado', 'Concluido sin finalizar']);
             })
             ->orWhere(function ($query) {
                 $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);

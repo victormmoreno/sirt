@@ -69,13 +69,13 @@
                     <td>{{ $proyecto->fase->nombre }}</td>
                     <td>{{ $proyecto->present()->proyectoFechaCierre() }}</td>
 
-                    @if ($proyecto->fase->nombre == 'Finalizado' || $proyecto->fase->nombre == 'Suspendido')
+                    @if ($proyecto->fase->nombre == 'Finalizado' || $proyecto->fase->nombre == 'Concluido sin finalizar')
                     <td>{{ $proyecto->articulacion_proyecto->actividad->fecha_cierre->isoFormat('YYYY') }}</td>
                     @else
                     <td>El proyecto no se ha cerrado</td>
                     @endif
 
-                    @if ($proyecto->fase->nombre == 'Finalizado' || $proyecto->fase->nombre == 'Suspendido')
+                    @if ($proyecto->fase->nombre == 'Finalizado' || $proyecto->fase->nombre == 'Concluido sin finalizar')
                     <td>{{ $proyecto->articulacion_proyecto->actividad->fecha_cierre->isoFormat('MM') }}</td>
                     @else
                     <td>El proyecto no se ha cerrado</td>

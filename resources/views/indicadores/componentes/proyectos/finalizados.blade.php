@@ -1,5 +1,5 @@
 <div class="row card card-panel teal lighten-5">
-    <h6>Para consultar los indicadores ÚNICAMENTE DE PROYECTOS FINALIZADOS Y SUSPENDIDOS, debes seleccionar un rango de fechas y luego presionar el botón de descarga.</h6>
+    <h6>Para consultar los indicadores ÚNICAMENTE DE PROYECTOS FINALIZADOS Y CONCLUIDOS SIN FINALIZAR, debes seleccionar un rango de fechas y luego presionar el botón de descarga.</h6>
     <h6>Recordar que se está mostrando la fase ACTUAL del proyecto.</h6>
     @can('showIndicadoresProyectoOptions', Illuminate\Database\Eloquent\Model::class)
         <div class="row">

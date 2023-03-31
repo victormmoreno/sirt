@@ -133,7 +133,7 @@ class ProyectoController extends Controller
                 $seguimiento = '<a class="btn bg-warning white-text m-b-xs" onclick="verHorasDeExpertosEnProyecto('.$data->id.')"><i class="material-icons">access_time</i></a>';
                 return $seguimiento;
             })->addColumn('proceso', function ($data) {
-                if ($data->nombre_fase == 'Finalizado' || $data->nombre_fase == 'Suspendido') {
+                if ($data->nombre_fase == 'Finalizado' || $data->nombre_fase == 'Concluido sin finalizar') {
                     $edit = '<a class="btn bg-secondary m-b-xs" href=' . route('proyecto.detalle', $data->id) . '><i class="material-icons">search</i></a>';
                 } else if ($data->nombre_fase == 'Inicio') {
                     $edit = '<a class="btn bg-secondary m-b-xs" href=' . route('proyecto.inicio', $data->id) . '><i class="material-icons">search</i></a>';
@@ -1088,7 +1088,7 @@ class ProyectoController extends Controller
                 'msg' => 'El proyecto ya se encuentra en la fase de ' . $fase_a_reversar
             ];
         } else {
-            if ($proyecto->fase->nombre == 'Suspendido') {
+            if ($proyecto->fase->nombre == 'Concluido sin finalizar') {
                 return [
                     'return' => true,
                     'msg' => 'ok'
