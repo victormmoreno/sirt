@@ -244,6 +244,7 @@ return [
         'NodoHelper'   => App\Helpers\NodoHelper::class,
 
     ],
+    'path_public' => env('PATH_PUBLIC', null),
     'technical_support' => [
         'title' => env('TEC_SUPP_TITLE', config('app.name')),
         'contact' => [
