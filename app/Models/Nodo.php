@@ -116,6 +116,11 @@ class Nodo extends Model
         return $this->hasMany(Material::class, 'nodo_id', 'id');
     }
 
+    public function model()
+    {
+        return $this->morphMany(ArchivoModel::class, 'model');
+    }
+
 
     /**
      * Devolver relacion entre proyectos y nodo

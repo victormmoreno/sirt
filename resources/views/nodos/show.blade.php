@@ -1,6 +1,9 @@
 @extends('layouts.app')
 @section('meta-title', 'Tecnoparque nodo '. $nodo->entidad->present()->entidadName())
 @section('content')
+@php
+    $year = Carbon\Carbon::now()->year;
+@endphp
     <main class="mn-inner inner-active-sidebar">
         <div class="content">
             <div class="row no-m-t no-m-b m-r-lg m-l-lg">
@@ -51,26 +54,27 @@
                                             </div>
                                         </div>
                                         <div class="right hide-on-med-and-down">
-                                            {{-- @can('inhabilitar', $nodo)
-                                                <small class="danger-text">
-                                                    <a class="waves-effect waves-danger btn-flat" onclick="inhabilitarFuncionarios(event, '{{route('nodo.inhabilitar', $nodo)}}')">
-                                                        <i class="fas fa-user-lock fa-lg"></i>Inhabilitar funcionarios
-                                                    </a>
-                                                </small>
-                                            @endcan --}}
+                                            @can('uploadFiles', $nodo)
+                                            <small class="info-text">
+                                                <a href="{{route('nodo.upload-files', $nodo->entidad->slug)}}"
+                                                   class="waves-effect waves-grey info-text btn-flat">
+                                                   <i class="fas fa-upload fa-lg"></i> Subir documentos ({{ $nodo->model()->whereYear('created_at',$year)->count() }})
+                                                </a>
+                                            </small>
+                                            @endcan
                                             @can('downloadOne', $nodo)
                                                 <small class="success-text">
-                                                    <a class="waves-effect waves-success btn-flat"
+                                                    <a class="waves-effect waves-grey  success-text btn-flat"
                                                        href="{{route('excel.exportexcelfornodo',$nodo->entidad->slug)}}">
-                                                        <i class="fas fa-file-excel fa-lg"></i>Exportar a Excel
+                                                        <i class="fas fa-file-excel fa-lg"></i> Exportar a Excel
                                                     </a>
                                                 </small>
                                             @endcan
                                             @can('edit', $nodo)
                                                 <small class="info-text">
                                                     <a href="{{route('nodo.edit', $nodo->entidad->slug)}}"
-                                                       class="waves-effect waves-info btn-flat">
-                                                        Cambiar Infomación
+                                                       class="waves-effect waves-warning btn-flat">
+                                                       <i class="fas fa-edit fa-lg"></i> Cambiar Infomación
                                                     </a>
                                                 </small>
                                             @endcan
@@ -176,7 +180,7 @@
                                                                                 <br/>
                                                                             </p>
                                                                             <a target="_blank" href="{{route("usuario.usuarios.show", $dinamizador->user->documento)}}" class="info">
-                                                                                Ver mas información del usuario. 
+                                                                                Ver mas información del usuario.
                                                                             </a>
 
                                                                         </li>
@@ -222,7 +226,7 @@
                                                                                 <br/>
                                                                             </p>
                                                                             <a target="_blank" href="{{route("usuario.usuarios.show", $infocenter->user->documento)}}" class="info">
-                                                                                Ver mas información del usuario. 
+                                                                                Ver mas información del usuario.
                                                                             </a>
                                                                         </li>
                                                                     @endif
@@ -272,7 +276,7 @@
                                                                                 <br/>
                                                                             </p>
                                                                             <a target="_blank" href="{{route("usuario.usuarios.show", $gestor->user->documento)}}" class="info">
-                                                                                Ver mas información del usuario. 
+                                                                                Ver mas información del usuario.
                                                                             </a>
                                                                         </li>
                                                                     </ul>
@@ -326,7 +330,7 @@
                                                                                 <br/>
                                                                             </p>
                                                                             <a target="_blank" href="{{route("usuario.usuarios.show", $articulador->user->documento)}}" class="info">
-                                                                                Ver mas información del usuario. 
+                                                                                Ver mas información del usuario.
                                                                             </a>
                                                                         </li>
                                                                     </ul>
@@ -381,7 +385,7 @@
                                                                                 <br/>
                                                                             </p>
                                                                             <a target="_blank" href="{{route("usuario.usuarios.show", $apoyotecnico->user->documento)}}" class="info">
-                                                                                Ver mas información del usuario. 
+                                                                                Ver mas información del usuario.
                                                                             </a>
                                                                         </li>
                                                                     </ul>

@@ -1,6 +1,7 @@
 <table>
     <thead>
     <tr>
+        <th>Nodo</th>
         <th>Tipo Documento</th>
         <th>Ciudad de Expedición Documento</th>
         <th>Número de Documento</th>
@@ -31,6 +32,9 @@
     @forelse($users as $user)
         <tr>
             <td>
+                {{isset($user->nodo) ? $user->nodo : __('No register')}}
+            </td>
+            <td>
                 {{isset($user->tipodocumento) ? $user->tipodocumento : __('No register')}}
             </td>
             <td>
@@ -43,7 +47,7 @@
                 {{isset($user->usuario) ? $user->usuario : __('No register')}}
             </td>
             <td>
-                {{isset($user->fechanacimiento) ? $user->fechanacimiento : __('No register')}}
+                {{isset($user->fechanacimiento) ? $user->fechanacimiento: __('No register')}}
             </td>
             <td>
                 {{isset($user->email) ? $user->email : __('No register')}}
@@ -100,7 +104,7 @@
                 {{isset($user->roles) ? $user->roles : __('No register')}}
             </td>
             <td>
-                {{$user->estado == \App\User::IsActive() && $user->deleted_at == null ? 'Habilitado' : 'Inhabilitado desde:'. $user->deleted_at}}
+                {{$user->estado == \App\User::IsActive() && $user->deleted_at == null ? 'Habilitado' : 'Inhabilitado desde:'}}
             </td>
         </tr>
     @empty

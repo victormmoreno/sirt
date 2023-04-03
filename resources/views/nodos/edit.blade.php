@@ -17,6 +17,7 @@
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">Inicio</a></li>
                     <li><a href="{{route('nodo.index')}}">Nodos</a></li>
+                    <li><a href="{{route('nodo.show', $nodo->entidad->slug)}}">Tecnoparque Nodo {{$nodo->entidad->present()->entidadName()}}</a></li>
                     <li class="active">Editar Nodo</li>
                 </ol>
             </div>
