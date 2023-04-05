@@ -552,13 +552,13 @@ class ArchivoController extends Controller
             $fileName = $archivo->max . '_' . $file->getClientOriginalName();
             $route = "";
             switch ($request->type){
-                case basename(\App\Models\ArticulationStage::class):
+                case "ArticulationStage":
                     $articulation = ArticulationStage::query()->findOrFail($id);
                     $node = sprintf("%02d", $articulation->node_id);
                     $year = Carbon::parse($articulation->start_date)->isoFormat('YYYY');
                     $route = "public/{$node}/{$year}/".Str::slug(__('articulation-stage'))."/{$articulation->present()->articulationStageCode()}";
                     break;
-                case basename(Articulation::class):
+                case "Articulation":
                     $articulation = Articulation::query()->findOrFail($id);
                     $node = sprintf("%02d", $articulation->articulationstage->node_id);
                     $year = Carbon::parse($articulation->articulationstage->start_date)->isoFormat('YYYY');
@@ -594,16 +594,16 @@ class ArchivoController extends Controller
      * @return Datatable
      * @author devjul
      */
-    public function datatableArchiveArticulationStage(Request $request,$id)
+    public function datatableArchiveArticulations(Request $request,$id)
     {
         if (request()->ajax()) {
             switch ($request->type){
-                case basename(\App\Models\ArticulationStage::class):
+                case "ArticulationStage":
                     $articulation = ArticulationStage::findOrFail($id);
                     $archive =  $articulation->archivomodel()->get();
                     return $this->datatableFilesArticulation($archive);
                     break;
-                case basename(\App\Models\Articulation::class):
+                case "Articulation":
                     $articulation = Articulation::findOrFail($id);
                     if(isset($request->phase)){
                         $archive =  $articulation->archivomodel()->whereHas('fase', function($query) use($request){

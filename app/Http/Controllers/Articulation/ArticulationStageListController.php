@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Articulation;
 
-use App\Models\Articulation;
 use App\Models\Nodo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -15,7 +14,7 @@ use App\Repositories\Repository\Articulation\ArticulationStageRepository;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
-use Barryvdh\DomPDF\Facade as PDF;
+
 
 class ArticulationStageListController extends Controller
 {
@@ -69,7 +68,7 @@ class ArticulationStageListController extends Controller
                 ->status($request->filter_status_articulationStage)
                 ->year($request->filter_year_articulationStage)
                 ->interlocutorTalent($talent)
-                ->groupBy('articulation_code')
+                ->groupBy('articulation_stages.code')
                 ->orderBy('articulation_stages.updated_at', 'desc')
                 ->get();
         }
@@ -386,50 +385,6 @@ class ArticulationStageListController extends Controller
 
     }
 
-    public function downloadCertificate(string $phase, $code){
-        $articulationStage = ArticulationStage::query()
-            ->select(
-                'articulation_stages.*', 'articulations.code as articulation_code',
-                'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
-                'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
-                'actividades.nombre as nombre_proyecto', 'interlocutor.documento', 'interlocutor.nombres',
-                'interlocutor.apellidos', 'interlocutor.email'
-            )
-            ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_type")
-            ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
-            ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-            ->leftJoin('articulations', 'articulations.articulation_stage_id', '=', 'articulation_stages.id')
-            ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')
-            ->leftJoin('articulationables', function($q) {
-                $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
-                $q->where('articulationables.articulationable_type', '=', 'App\Models\Proyecto');
-            })
-            ->leftJoin('proyectos', 'proyectos.id', '=', 'articulationables.articulationable_id')
-            ->leftJoin('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-            ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-            ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
-            ->where('articulation_stages.code',$code)->firstOrFail();
-        if (request()->user()->can('downloadCertificateStart', $articulationStage) && strtoupper($phase) == 'INICIO') {
-            $pdf = PDF::loadView('pdf.articulation.articulation-stage-start', compact('articulationStage'));
-            return $pdf->stream();
-        }else if(request()->user()->can('downloadCertificateEnd', $articulationStage) && strtoupper($phase) == 'CIERRE'){
-            $pdf = PDF::loadView('pdf.articulation.articulation-stage-end', compact('articulationStage'));
-            return $pdf->stream();
-        }
-        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
-        return redirect()->route('home');
-    }
-
-    public function evidences($code)
-    {
-        $articulationStage = ArticulationStage::query()->where('code',$code)->firstOrFail();
-        if (request()->user()->cannot('uploadEvidences', $articulationStage)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
-            return redirect()->route('home');
-        }
-        return view('articulation.articulation-stages-evidences', ['articulationStage' =>$articulationStage]);
-
-    }
 
     public function changeStatus($code)
     {

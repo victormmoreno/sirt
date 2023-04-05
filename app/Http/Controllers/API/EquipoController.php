@@ -15,7 +15,7 @@ class EquipoController extends ApiController
     {
         // if($request->expectsJson()){
             $equipos =  Equipo::query()
-                ->join('nodos', 'nodos.id', 'equipos.id')
+                ->join('nodos', 'nodos.id', 'equipos.nodo_id')
                 ->join('entidades', 'entidades.id', 'nodos.entidad_id')
                 ->join('lineastecnologicas', 'lineastecnologicas.id', 'equipos.lineatecnologica_id')
                 ->select('equipos.nombre', 'entidades.nombre as nodo', 'lineastecnologicas.nombre as linea')

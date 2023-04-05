@@ -45,15 +45,15 @@
             <td>{{ $proyecto->nombre_area_conocimiento == 'Otro' ? $proyecto->otro_areaconocimiento : 'No aplica' }}</td>
             <td>{{ $proyecto->fecha_inicio }}</td>
             <td>{{ $proyecto->nombre_fase }}</td>
-            <td>{{ $proyecto->nombre_fase == 'Suspendido' || $proyecto->nombre_fase == 'Finalizado' ? $proyecto->fecha_cierre : 'El proyecto no se ha cerrado' }}</td>
+            <td>{{ $proyecto->nombre_fase == 'Concluido sin finalizar' || $proyecto->nombre_fase == 'Finalizado' ? $proyecto->fecha_cierre : 'El proyecto no se ha cerrado' }}</td>
 
-            @if ($proyecto->nombre_fase == 'Finalizado' || $proyecto->nombre_fase == 'Suspendido')
+            @if ($proyecto->nombre_fase == 'Finalizado' || $proyecto->nombre_fase == 'Concluido sin finalizar')
                 <td>{{ $proyecto->anho }}</td>
             @else
                 <td>El proyecto no se ha cerrado</td>
             @endif
 
-            @if ($proyecto->nombre_fase == 'Finalizado' || $proyecto->nombre_fase == 'Suspendido')
+            @if ($proyecto->nombre_fase == 'Finalizado' || $proyecto->nombre_fase == 'Concluido sin finalizar')
                 <td>{{ $proyecto->mes }}</td>
             @else
                 <td>El proyecto no se ha cerrado</td>

@@ -6,7 +6,7 @@
         </div>
     </li>
     <li>
-        <div class="collapsible-header"><i class="material-icons">done</i>Generar indicadores de proyectos finalizados y suspendidos entre un rango de fechas</div>
+        <div class="collapsible-header"><i class="material-icons">done</i>Generar indicadores de proyectos finalizados y concluidos sin finalizar entre un rango de fechas</div>
         <div class="collapsible-body">
         @include('indicadores.componentes.proyectos.finalizados')
         </div>
@@ -39,6 +39,12 @@
         <div class="collapsible-header"><i class="material-icons">lightbulb</i>Ideas de tecnoparque</div>
         <div class="collapsible-body">
         @include('indicadores.componentes.ideas.download')
+        </div>
+    </li>
+    <li>
+        <div class="collapsible-header"><i class="material-icons">transit_enterexit</i>Ingreso de visitantes</div>
+        <div class="collapsible-body">
+        @include('indicadores.componentes.ingresos.download')
         </div>
     </li>
 </ul>

@@ -28,7 +28,7 @@
                     <div class="row">
                         <div class="col s12 m12 l12">
                             <span class="title primary-text">
-                                Esencial
+                                Información básica
                             </span>
                         </div>
                     </div>

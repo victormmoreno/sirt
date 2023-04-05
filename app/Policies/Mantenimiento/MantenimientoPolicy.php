@@ -64,7 +64,7 @@ class MantenimientoPolicy
     public function index(User $user)
     {
 
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador(), $user->IsExperto(), $user->IsActivador()]);
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsApoyoTecnico(), $user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador(), $user->IsExperto(), $user->IsActivador()]);
     }
 
     /**
@@ -75,7 +75,7 @@ class MantenimientoPolicy
      */
     public function create(User $user)
     {
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador()]);
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsApoyoTecnico(), $user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador()]);
     }
 
     /**
@@ -96,6 +96,9 @@ class MantenimientoPolicy
         if (session()->get('login_role') == $user->IsExperto() && $mantenimiento->equipo->nodo_id == $user->gestor->nodo_id) {
             return true;
         }
+        if (session()->get('login_role') == $user->IsApoyoTecnico() && $mantenimiento->equipo->nodo_id == request()->user()->apoyotecnico->nodo_id) {
+            return true;
+        }
         return false;
     }
 
@@ -112,6 +115,9 @@ class MantenimientoPolicy
             return true;
         }
         if (session()->get('login_role') == $user->IsDinamizador() && $mantenimiento->equipo->nodo_id == $user->dinamizador->nodo_id) {
+            return true;
+        }
+        if (session()->get('login_role') == $user->IsApoyoTecnico() && $mantenimiento->equipo->nodo_id == request()->user()->apoyotecnico->nodo_id) {
             return true;
         }
         // if (session()->get('login_role') == $user->IsExperto() && $mantenimiento->equipo->lineatecnologica_id == $user->gestor->lineatecnologica_id) {

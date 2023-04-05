@@ -106,6 +106,18 @@ class IdeaPolicy
     }
 
     /**
+     * Determina si un usuario puede buscar o no una idea de proyecto
+     *
+     * @param User $user
+     * @return bool
+     * @author dum
+     **/
+    public function search(User $user)
+    {
+        return (bool) !Str::contains(session()->get('login_role'), [$user->IsTalento(), $user->IsIngreso(), $user->IsApoyoTecnico()]);
+    }
+
+    /**
      * Determina quienes y en qué momento se puede inhabilitar una idea de proyecto
      *
      * @param User $user
@@ -206,6 +218,9 @@ class IdeaPolicy
     public function update(User $user, Idea $idea)
     {
         if ($idea->estadoIdea->nombre == EstadoIdea::IsRegistro() && session()->get('login_role') == $user->IsTalento() && $user->talento->id == $idea->talento_id) {
+            return true;
+        }
+        if ($idea->estadoIdea->nombre == EstadoIdea::IsRegistro() && Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsArticulador()]) && $user->getNodoUser() == $idea->nodo_id) {
             return true;
         }
         if (session()->get('login_role') == $user->IsAdministrador()) {

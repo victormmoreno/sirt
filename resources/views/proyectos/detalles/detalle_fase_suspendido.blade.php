@@ -56,7 +56,7 @@
                                 </div>
                                 <div class="divider mailbox-divider"></div>
                                 <div class="row">
-                                    @include('proyectos.archivos_table_fase', ['fase' => 'suspendido'])
+                                    @include('proyectos.archivos_table_fase', ['fase' => 'Concluido sin finalizar'])
                                 </div>
                             </div>
                         </div>

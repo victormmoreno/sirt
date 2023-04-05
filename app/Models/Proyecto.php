@@ -37,7 +37,7 @@ class Proyecto extends Model
     const IS_EJECUCION = 'Ejecución';
     const IS_CIERRE = 'Cierre';
     const IS_FINALIZADO = 'Finalizado';
-    const IS_SUSPENDIDO = 'Suspendido';
+    const IS_SUSPENDIDO = 'Concluido sin finalizar';
 
     /**
      * Constante para el campo trl_obtenido
@@ -343,6 +343,14 @@ class Proyecto extends Model
     {
         if (!empty($nodo) && $nodo != null && $nodo != 'all') {
             return $query->where('nodo_id', $nodo);
+        }
+        return $query;
+    }
+
+    public function scopeAsesor($query, $asesor)
+    {
+        if (!empty($asesor) && $asesor != null && $asesor != 'all') {
+            return $query->where('asesor_id', $asesor);
         }
         return $query;
     }

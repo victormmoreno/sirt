@@ -11,6 +11,7 @@ use App\User;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Controllers\CostoController;
 use App\Policies\IndicadorPolicy;
+use Carbon\Carbon;
 
 class ProyectoController extends Controller
 {
@@ -132,7 +133,7 @@ class ProyectoController extends Controller
                 $seguimiento = '<a class="btn bg-warning white-text m-b-xs" onclick="verHorasDeExpertosEnProyecto('.$data->id.')"><i class="material-icons">access_time</i></a>';
                 return $seguimiento;
             })->addColumn('proceso', function ($data) {
-                if ($data->nombre_fase == 'Finalizado' || $data->nombre_fase == 'Suspendido') {
+                if ($data->nombre_fase == 'Finalizado' || $data->nombre_fase == 'Concluido sin finalizar') {
                     $edit = '<a class="btn bg-secondary m-b-xs" href=' . route('proyecto.detalle', $data->id) . '><i class="material-icons">search</i></a>';
                 } else if ($data->nombre_fase == 'Inicio') {
                     $edit = '<a class="btn bg-secondary m-b-xs" href=' . route('proyecto.inicio', $data->id) . '><i class="material-icons">search</i></a>';
@@ -1087,7 +1088,7 @@ class ProyectoController extends Controller
                 'msg' => 'El proyecto ya se encuentra en la fase de ' . $fase_a_reversar
             ];
         } else {
-            if ($proyecto->fase->nombre == 'Suspendido') {
+            if ($proyecto->fase->nombre == 'Concluido sin finalizar') {
                 return [
                     'return' => true,
                     'msg' => 'ok'
@@ -1308,6 +1309,44 @@ class ProyectoController extends Controller
             })
             ->rawColumns(['codigo_proyecto','nombre','fase','show','add_proyecto'])->make(true);
 
+    }
+
+    /**
+     * Muestra los proyectos que llevan mucho tiempo en inicio sin cambiar de fase
+     *
+     * @param int $nodo
+     * @param int $experto
+     * @return Response
+     * @author dum
+     **/
+    public function proyectosLimiteInicio($nodo, $experto)
+    {
+        $limite_inicio = Carbon::now()->subDays(config('app.proyectos.duracion.inicio'));
+        $experto = $experto == "null" ? null : $experto;
+        return response()->json([
+            'data' => [
+                'proyectos' => $this->proyectoRepository->selectProyectosLimiteInicio($nodo, $experto, $limite_inicio)->get()
+            ]
+        ]);
+    }
+
+    /**
+     * Muestra los proyectos que llevan mucho tiempo en planeacion sin cambiar de fase
+     *
+     * @param int $nodo
+     * @param int $experto
+     * @return Response
+     * @author dum
+     **/
+    public function proyectosLimitePlaneacion($nodo, $experto)
+    {
+        $limite_inicio = Carbon::now()->subDays(config('app.proyectos.duracion.planeacion'));
+        $experto = $experto == "null" ? null : $experto;
+        return response()->json([
+            'data' => [
+                'proyectos' => $this->proyectoRepository->selectProyectosLimitePlaneacion($nodo, $experto, $limite_inicio)->groupBy('codigo_actividad')->get()
+            ]
+        ]);
     }
 
     /**

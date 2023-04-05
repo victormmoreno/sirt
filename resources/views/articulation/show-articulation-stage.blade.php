@@ -42,33 +42,40 @@
                                         </div>
                                         <div class="row">
                                             @include('articulation.options.articulation-stages-options-menu-left')
-
-                                            <div class="@canany(['showButtonAprobacion', 'requestApproval', 'changeTalent', 'update', 'downloadCertificateEnd', 'downloadCertificateStart', 'uploadEvidences', 'delete'], $articulationStage) col s12 m8 l9 @elsecanany(['create'], App\Models\Articulation::class) @if($articulationStage->status == \App\Models\ArticulationStage::STATUS_OPEN) col s12 m8 l9 @else col s12 m12 l12  @endif  @else col s12 m12 l12 @endcanany ">
+                                            <div class="@canany(['showButtonAprobacion', 'requestApproval', 'changeTalent', 'update', 'downloadCertificateEnd', 'downloadCertificateStart', 'delete'], $articulationStage) col s12 m8 l9 @elsecanany(['create'], App\Models\Articulation::class) @if($articulationStage->status == \App\Models\ArticulationStage::STATUS_OPEN) col s12 m8 l9 @else col s12 m12 l12  @endif  @else col s12 m12 l12 @endcanany ">
                                                 <div class="row">
-                                                    <div class="col s12 m6 l6">
+                                                    <div class="col s12 m12 l6">
                                                         <ul class="collection">
                                                             <li class="collection-item">
-                                                            <span class="title black-text">
-                                                                {{__('Code ArticulationStage')}}
-                                                            </span>
+                                                                <span class="title black-text">
+                                                                    {{__('Code ArticulationStage')}}
+                                                                </span>
                                                                 <p>
                                                                     {{$articulationStage->present()->articulationStageCode()}}
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item">
-                                                            <span class="title black-text">
-                                                                {{__('Name ArticulationStage')}}
-                                                            </span>
+                                                                <span class="title black-text">
+                                                                    {{__('Name ArticulationStage')}}
+                                                                </span>
                                                                 <p>
                                                                     {{$articulationStage->present()->articulationStageName()}}
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item">
-                                                            <span class="title black-text">
-                                                                {{ __('Start Date') }}
-                                                            </span>
+                                                                <span class="title black-text">
+                                                                    {{ __('Start Date') }}
+                                                                </span>
                                                                 <p>
                                                                     {{$articulationStage->present()->articulationStageStartDate()}}
+                                                                </p>
+                                                            </li>
+                                                            <li class="collection-item">
+                                                                <span class="title black-text">
+                                                                    {{ __('End Date') }}
+                                                                </span>
+                                                                <p>
+                                                                    {{$articulationStage->present()->articulationStageEndDate()}}
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item">
@@ -80,14 +87,14 @@
                                                                 </p>
                                                             </li>
                                                             @if(isset($articulationStage->articulation_type))
-                                                            <li class="collection-item">
-                                                                <span class="title black-text">
-                                                                    {{__('ArticulationStage Type')}}
-                                                                </span>
-                                                                <p>
-                                                                    {{$articulationStage->articulation_type}}
-                                                                </p>
-                                                            </li>
+                                                                <li class="collection-item">
+                                                                    <span class="title black-text">
+                                                                        {{__('ArticulationStage Type')}}
+                                                                    </span>
+                                                                    <p>
+                                                                        {{$articulationStage->articulation_type}}
+                                                                    </p>
+                                                                </li>
                                                             @endif
                                                             @if(isset($articulationStage->codigo_proyecto))
                                                             <li class="collection-item">
@@ -101,22 +108,30 @@
                                                             @endif
                                                         </ul>
                                                     </div>
-                                                    <div class="col s12 m6 l6">
+                                                    <div class="col s12 m12 l6">
                                                         <ul class="collection">
                                                             <li class="collection-item">
-                                                            <span class="title black-text">
-                                                                {{ __('Descrition') }}
-                                                            </span>
+                                                                <span class="title black-text">
+                                                                    {{ __('Description') }}
+                                                                </span>
                                                                 <p>
                                                                     {{$articulationStage->present()->articulationStageDescription()}}
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item">
-                                                            <span class="title black-text">
-                                                                {{ __('Scope') }}
-                                                            </span>
+                                                                <span class="title black-text">
+                                                                    {{ __('Scope') }}
+                                                                </span>
                                                                 <p>
                                                                     {{$articulationStage->present()->articulationStageScope()}}
+                                                                </p>
+                                                            </li>
+                                                            <li class="collection-item">
+                                                                <span class="title black-text">
+                                                                    {{ __('Expected Results') }}
+                                                                </span>
+                                                                <p>
+                                                                    {{$articulationStage->present()->articulationStageExpectedResults()}}
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item">
@@ -128,33 +143,17 @@
                                                                 </p>
                                                             </li>
                                                             <li class="collection-item">
-                                                            <span class="title black-text">
-                                                                {{ __('Created_by') }}
-                                                            </span>
+                                                                <span class="title black-text">
+                                                                    {{ __('Created_by') }}
+                                                                </span>
                                                                 <p>
                                                                     {{$articulationStage->created_by}}
                                                                 </p>
                                                             </li>
-
                                                         </ul>
                                                     </div>
                                                 </div>
-
-                                                <div class="divider"></div>
-                                                <table
-                                                    class="display responsive-table datatable-example dataTable"
-                                                    style="width: 100%"
-                                                    id="archivosArticulacion">
-                                                    <thead class="bg-primary white-text">
-                                                    <tr>
-                                                        <th>Archivo</th>
-                                                        <th style="width: 10%">Descargar</th>
-                                                    </tr>
-                                                    </thead>
-                                                </table>
                                             </div>
-
-
                                             <div class="col s12 m12 l12">
                                                 <span class="mailbox-title primary-text text-center">Articulaciones</span>
                                             </div>
@@ -189,12 +188,20 @@
                                                             <td>{{$articulation->present()->articulationEndDate()}}</td>
                                                             <td>{{$articulation->users_count}}</td>
                                                             <td>
+                                                                @if($articulation->present()->articulationPhase() != App\Models\Articulation::IsSuspendido())
                                                                 {{$articulation->progress}}% <br>
-                                                                <div class="progress stats-card-progress ">
-                                                                    <div
-                                                                        class="determinate {{$articulation->progress >= 0 && $articulation->progress <=25 ? 'red' : ($articulation->progress > 25 && $articulation->progress <= 50 ? 'yellow' : ($articulation->progress > 50 && $articulation->progress <= 75 ? 'orange' : 'green' ))}}"
-                                                                        style="width: {{$articulation->progress}}%"></div>
-                                                                </div>
+                                                                    <div class="progress stats-card-progress ">
+                                                                        <div
+                                                                            class="determinate {{$articulation->progress >= 0 && $articulation->progress <=25 ? 'red' : ($articulation->progress > 25 && $articulation->progress <= 50 ? 'yellow' : ($articulation->progress > 50 && $articulation->progress <= 75 ? 'orange' : 'green' ))}}"
+                                                                            style="width: {{$articulation->progress}}%"></div>
+                                                                    </div>
+                                                                @else
+                                                                    <div class="progress stats-card-progress ">
+                                                                        <div
+                                                                            class="determinate red"
+                                                                            style="width: {{$articulation->progress}}%"></div>
+                                                                    </div>
+                                                                @endif
                                                             </td>
                                                             <td>{{$articulation->present()->articulationPhase()}}</td>
                                                             <td><a class="btn bg-info white-text m-b-xs modal-trigger"
@@ -218,41 +225,4 @@
     </div>
 </main>
 @endsection
-@push('script')
-    <script>
-        datatableArchiveArticulationStage();
-
-        function datatableArchiveArticulationStage() {
-            $('#archivosArticulacion').DataTable({
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-                },
-                processing: true,
-                serverSide: true,
-                order: false,
-
-                "ajax": {
-                    "url": "{{route('articulation.files', [$articulationStage->id])}}",
-                    "type": "get",
-                    "data":{
-                        type: "{{ basename(\App\Models\ArticulationStage::class)}}"
-                    },
-                },
-                columns: [
-                    {
-                        data: 'file',
-                        name: 'file',
-                        orderable: false,
-                    },
-                    {
-                        data: 'download',
-                        name: 'download',
-                        orderable: false,
-                    },
-                ],
-            });
-        }
-
-    </script>
-@endpush
 

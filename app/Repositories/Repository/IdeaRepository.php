@@ -26,7 +26,7 @@ class IdeaRepository
         return Nodo::SelectNodo()->get();
     }
 
-    public function consultarIdeas()
+    public function Repository()
     {
         return Idea::where('tipo_idea', Idea::IsEmprendedor());
     }
@@ -826,5 +826,18 @@ class IdeaRepository
             },
             'nodo.infocenter'
         ])->select('id', 'nodo_id', 'apellidos_contacto', 'nombres_contacto', 'correo_contacto', 'nombre_proyecto', 'codigo_idea', 'viene_convocatoria', 'convocatoria')->get();
+    }
+
+    /**
+     * Consulta las ideas de proyecto
+     *
+     * @param Request $request
+     * @return Builder
+     * @author dum
+     **/
+    public function consultarIdeasRepository($request)
+    {
+        $ideas = Idea::consultarIdeas($request->txttype_search, $request->txtidea_search, request()->user()->getNodoUser())->get();
+        return $ideas;
     }
 }

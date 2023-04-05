@@ -19,7 +19,7 @@ class EquipoPolicy
      */
     public function view(User $user)
     {
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsExperto(), $user->IsAdministrador(), $user->IsInfocenter(), $user->IsActivador()]);
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsExperto(), $user->IsAdministrador(), $user->IsInfocenter(), $user->IsActivador(), $user->IsApoyoTecnico()]);
     }
 
     /**
@@ -30,7 +30,7 @@ class EquipoPolicy
      */
     public function create(User $user)
     {
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador()]);
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsApoyoTecnico(), $user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador()]);
     }
 
     /**
@@ -72,6 +72,9 @@ class EquipoPolicy
             return true;
         }
         if (session()->get('login_role') == $user->IsInfocenter() && $equipo->nodo_id == request()->user()->infocenter->nodo_id) {
+            return true;
+        }
+        if (session()->get('login_role') == $user->IsApoyoTecnico() && $equipo->nodo_id == request()->user()->apoyotecnico->nodo_id) {
             return true;
         }
         return false;
@@ -131,7 +134,7 @@ class EquipoPolicy
      **/
     public function showInputsForDinamizador(User $user)
     {
-        if (session()->get('login_role') == $user->IsDinamizador() || session()->get('login_role') == $user->IsInfocenter()) {
+        if (session()->get('login_role') == $user->IsDinamizador() || session()->get('login_role') == $user->IsInfocenter()  || session()->get('login_role') == $user->IsApoyoTecnico()) {
             return true;
         }
         return false;
@@ -165,7 +168,7 @@ class EquipoPolicy
      **/
     public function import(User $user)
     {
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador()]);
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador(), $user->IsApoyoTecnico()]);
     }
 
 }

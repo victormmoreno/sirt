@@ -771,7 +771,10 @@ class UsoInfraestructuraController extends Controller
                 ->join('lineastecnologicas', 'lineastecnologicas.id', 'gestores.lineatecnologica_id')
                 ->join('users', 'users.id', '=', 'gestores.user_id')
                 ->where('lineastecnologicas.id', $proyectoTalento->gestor_lineatecnologica_id)
+                ->where('gestores.nodo_id', $proyectoNodo)
                 ->where('users.id', '!=', $proyectoTalento->user_id)
+                ->where('users.estado', User::IsActive())
+                ->where('users.deleted_at', null)
                 ->get();
 
             $equipos = Equipo::where('lineatecnologica_id', $proyectoTalento->gestor_lineatecnologica_id)

@@ -10,7 +10,6 @@ use App\Repositories\Repository\LineaRepository;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Response;
 use Repositories\Repository\NodoRepository;
 use App\Exports\Equipo\EquipoExport;
@@ -18,6 +17,9 @@ use App\Exports\Equipo\EquipoExport;
 class EquipoController extends Controller
 {
 
+    public $equipoRepository;
+    public $lineaRepository;
+    public $nodoRepository;
     public function __construct(EquipoRepository $equipoRepository, LineaRepository $lineaRepository, NodoRepository $nodoRepository)
     {
         $this->setEquipoRepository($equipoRepository);
@@ -129,25 +131,28 @@ class EquipoController extends Controller
     public function getEquiposPorLinea($nodo, $lineatecnologica)
     {
         if (request()->ajax()) {
-
             if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
                 $nodo_id = $nodo;
             }
-            if (session()->get('login_role') == User::IsDinamizador()) {
-                $nodo_id = auth()->user()->dinamizador->nodo_id;
+            if (session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsExperto() || session()->get('login_role') == User::IsApoyoTecnico()) {
+                $nodo_id = request()->user()->getNodoUser();
             }
-            if (session()->get('login_role') == User::IsExperto()) {
-                $nodo_id = auth()->user()->gestor->nodo_id;
-            }
+            // if (session()->get('login_role') == User::IsExperto()) {
+            //     $nodo_id = auth()->user()->gestor->nodo_id;
+            // }
 
             if (session()->get('login_role') == User::IsExperto()) {
-                $linea_id = auth()->user()->gestor->lineatecnologica_id;
-            } 
-            if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsDinamizador()) {
+                if(isset($lineatecnologica)){
+                    $linea_id = $lineatecnologica;
+                }else{
+                    $linea_id = auth()->user()->gestor->lineatecnologica_id;
+                }
+            }
+            if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsApoyoTecnico()) {
                 $linea_id = $lineatecnologica;
             }
 
-            if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsDinamizador()) {
+            if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsApoyoTecnico()) {
                 $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
                 ->where('nodo_id', $nodo_id)
                 ->where('lineatecnologica_id', $linea_id)
@@ -159,7 +164,6 @@ class EquipoController extends Controller
                 ->where('lineatecnologica_id', $linea_id)
                 ->get();
             }
-
             return response()->json([
                 'equipos' => $equipos,
             ]);
@@ -262,6 +266,9 @@ class EquipoController extends Controller
         $nodos = $this->getNodoRepository()->getSelectNodo();
         $lineastecnologicas = $this->getLineaTecnologicaRepository()->getAllLineaNodo($equipo->nodo_id);
 
+        // $nodo               = auth()->user()->dinamizador->nodo->id;
+        // $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
+
         return view('equipo.edit', [
             'year'               => Carbon::now()->isoFormat('YYYY'),
             'lineastecnologicas' => $lineastecnologicas,
@@ -336,6 +343,7 @@ class EquipoController extends Controller
             alert('No autorizado', 'No puedes destacar este equipo', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
+        // dd($equipo);
         $destacar = $this->getEquipoRepository()->destacar($equipo);
         return response()->json([
             'state' => $destacar['state'],
@@ -351,6 +359,10 @@ class EquipoController extends Controller
         $this->authorize('view', Equipo::class);
 
         switch (\Session::get('login_role')) {
+            case User::IsAdministrador():
+                $nodo = $request->filter_nodo;
+                $linea = null;
+                break;
             case User::IsActivador():
                 $nodo = $request->filter_nodo;
                 $linea = null;
@@ -361,6 +373,9 @@ class EquipoController extends Controller
                 break;
             case User::IsDinamizador():
                 $nodo = auth()->user()->dinamizador->nodo_id;
+                $linea = null;
+            case User::IsApoyoTecnico():
+                $nodo = auth()->user()->apoyotecnico->nodo_id;
                 $linea = null;
                 break;
             case User::IsExperto():

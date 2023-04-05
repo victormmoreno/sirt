@@ -69,18 +69,18 @@ class ArticulationRepository extends Repository
     {
         $articulation = $accompaniment->articulations()->create([
             'code' => $this->generateCode('A'),
-            'name' => $request->name_articulation,
-            'description' => $request->description_articulation,
+            'name' => $request->name,
+            'description' => $request->description,
             'start_date' => $request->start_date,
             'expected_end_date' => $request->expected_date,
             'entity' => $request->name_entity,
             'contact_name' => $request->name_contact,
-            'email_entity' => $request->email,
-            'summon_name' => $request->call_name,
+            'email_entity' => $request->email_entity,
+            'summon_name' => $request->summon_name,
             'objective' => $request->objective,
             'phase_id' => Fase::where('nombre', Articulation::START_PHASE)->first()->id,
             'articulation_subtype_id' => $request->articulation_subtype,
-            'scope_id' => $request->scope_articulation,
+            'scope_id' => $request->scope,
             'created_by' => auth()->user()->id,
         ]);
         if ($request->filled('talents')) {
@@ -117,17 +117,17 @@ class ArticulationRepository extends Repository
     {
         try {
             $articulation->update([
-                'name' => $request->name_articulation,
-                'description' => $request->description_articulation,
+                'name' => $request->name,
+                'description' => $request->description,
                 'start_date' => $request->start_date,
                 'expected_end_date' => $request->expected_date,
                 'entity' => $request->name_entity,
                 'contact_name' => $request->name_contact,
-                'email_entity' => $request->email,
-                'summon_name' => $request->call_name,
+                'email_entity' => $request->email_entity,
+                'summon_name' => $request->summon_name,
                 'objective' => $request->objective,
                 'articulation_subtype_id' => $request->articulation_subtype,
-                'scope_id' => $request->scope_articulation
+                'scope_id' => $request->scope
             ]);
             if ($request->filled('talents')) {
                 $articulation->users()->sync($request->talents);
@@ -153,7 +153,7 @@ class ArticulationRepository extends Repository
      */
     public function updateClosing(Request $request, $articulation)
     {
-        //try {
+        try {
         $postulation = 0;
         $approval = 0;
         $justified_report = 0;
@@ -198,13 +198,13 @@ class ArticulationRepository extends Repository
             'message' => '',
             'isCompleted' => true,
         ];
-        /*} catch (\Exception $ex) {
+        } catch (\Exception $ex) {
             return  [
                 'data' => "",
                 'message' => $ex->getMessage(),
                 'isCompleted' => false,
             ];
-        }*/
+        }
     }
 
     /**
@@ -364,11 +364,7 @@ class ArticulationRepository extends Repository
             $movimiento = null;
             $mensaje = null;
             $title = null;
-            /*$asesores = User::InfoUserDatatable()
-                ->Join('user_nodo', 'user_nodo.user_id', '=', 'users.id')
-                ->role(User::IsArticulador())
-                ->where('users.deleted_at' ,'!=', null)
-                ->where('user_nodo.nodo_id', '=', $articulation->articulationstage->node_id)->get();*/
+
             $notificacion_act = ControlNotificaciones::find($request->control_notificacion_id);
 
             if ($request->decision == 'rechazado') {
@@ -378,15 +374,11 @@ class ArticulationRepository extends Repository
                 $movimiento = Movimiento::IsNoAprobar();
 
                 $articulation->createTraceability($movimiento,Session::get('login_role'),$comentario, $phase);
-
-                //$regMovimiento = $articulation->traceability()->get()->last();
-
-                //Notification::send($asesores, new ArticulationStageNoApproveEndorsement($articulation, $regMovimiento));
                 $notificacion_act->update(['estado' => $notificacion_act->IsRechazado()]);
 
             } else {
                 $title = 'Aprobación Exitosa!';
-                $mensaje = 'Se ha aprobado el aval de esta etapa de articulación';
+                $mensaje = 'Se ha aprobado el aval de esta fase de articulación';
                 $movimiento = Movimiento::IsAprobar();
                 $notificacion_act->update(['fecha_aceptacion' => Carbon::now(), 'estado' => $notificacion_act->IsAceptado()]);
                 $articulation->createTraceability($movimiento,Session::get('login_role'), $comentario, $phase);
@@ -429,12 +421,11 @@ class ArticulationRepository extends Repository
         ->selectRaw('count(articulations.id) AS cantidad, nodos.id AS nodo, MONTHNAME(articulations.end_date) AS mes')
         ->join('articulation_stages', 'articulation_stages.id', '=', 'articulations.articulation_stage_id')
         ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
-        //->join('users', 'users.id', '=', 'articulations.created_by')
         ->join('fases', 'fases.id', '=', 'articulations.phase_id')
         ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
         ->where(function($query) use ($field_date, $year)  {
             if(isset($field_date) && $field_date !=null) {
-                $query->where($field_date, $year);
+                $query->whereYear($field_date, $year);
             }
         })
         ->whereIn('fases.nombre', $phase)

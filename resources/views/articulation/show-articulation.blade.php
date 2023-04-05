@@ -73,6 +73,7 @@
 @endsection
 @push('script')
     <script>
+        datatableArchiveArticulationStart();
         datatableArchiveArticulationExecution();
         datatableArchiveArticulationClosing();
 
@@ -84,11 +85,12 @@
                 processing: true,
                 serverSide: true,
                 order: false,
+                "lengthChange": false,
                 "ajax": {
                     "url": "{{route('articulation.files', [$articulation->id])}}",
                     "type": "get",
                     "data":{
-                        type: "{{ basename(\App\Models\Articulation::class)}}",
+                        type: "Articulation",
                         phase: "Ejecución"
                     },
                 },
@@ -114,11 +116,12 @@
                 processing: true,
                 serverSide: true,
                 order: false,
+                "lengthChange": false,
                 "ajax": {
                     "url": "{{route('articulation.files', [$articulation->id])}}",
                     "type": "get",
                     "data":{
-                        type: "{{ basename(\App\Models\Articulation::class)}}",
+                        type: "Articulation",
                         phase: "Cierre"
                     },
                 },
@@ -136,6 +139,40 @@
                 ],
             });
         }
+
+        function datatableArchiveArticulationStart() {
+            $('#archivosArticulacion').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                order: false,
+                "lengthChange": false,
+                "ajax": {
+                    "url": "{{route('articulation.files', [$articulation->id])}}",
+                    "type": "get",
+                    "data":{
+                        type: "Articulation",
+                        phase: "Inicio"
+                    },
+                },
+                columns: [
+                    {
+                        data: 'file',
+                        name: 'file',
+                        orderable: false,
+                    },
+                    {
+                        data: 'download',
+                        name: 'download',
+                        orderable: false,
+                    },
+                ],
+            });
+        }
     </script>
 @endpush
+
+
 

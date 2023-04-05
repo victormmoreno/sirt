@@ -43,6 +43,12 @@
                     <clock>
                     </clock>
                 </li>
+                @can('dejar_control', App\User::class)
+                    <li class="hide-on-med-and-down">
+                        <a href="{{route('usuario.dejar.control')}}" class="btn light-green lighten-1 m-t-xs">Dejar de controlar</a>
+                    </li>
+                @endcan
+                    
             </ul>
             <ul class="dropdown-content notifications-dropdown" id="dropdown-logout">
                 <li class="notificatoins-dropdown-container">

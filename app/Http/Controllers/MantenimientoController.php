@@ -111,12 +111,12 @@ class MantenimientoController extends Controller
             if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
                 $nodo_id = $nodo;
             }
-            if (session()->get('login_role') == User::IsDinamizador()) {
-                $nodo_id = auth()->user()->dinamizador->nodo_id;
+            if (session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsExperto() || session()->get('login_role') == User::IsApoyoTecnico()) {
+                $nodo_id = request()->user()->getNodoUser();
             }
-            if (session()->get('login_role') == User::IsExperto()) {
-                $nodo_id = auth()->user()->gestor->nodo_id;
-            }
+            // if (session()->get('login_role') == User::IsExperto()) {
+            //     $nodo_id = auth()->user()->gestor->nodo_id;
+            // }
             
             $mantenimientos = $this->getMantenimientoRepository()->findInfoMantenimiento()
             ->whereHas('equipo.nodo', function($query) use ($nodo_id) {
@@ -124,7 +124,7 @@ class MantenimientoController extends Controller
             })->get();
             return datatables()->of($mantenimientos)
             ->addColumn('edit', function ($data) {
-                if (auth()->user()->can('edit', $data)) {
+                if (request()->user()->can('edit', $data)) {
                     $button = '<a href="' . route("mantenimiento.edit", $data->id) . '" class="btn bg-warning tooltipped m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Editar">
                     <i class="material-icons">edit</i>
                     </a>';
@@ -173,7 +173,7 @@ class MantenimientoController extends Controller
     {
         $this->authorize('create', EquipoMantenimiento::class);
         $nodos = $this->getNodoRepository()->getSelectNodo();
-        $nodo = session()->get('login_role') == User::IsAdministrador() ? $nodos->first()->id : auth()->user()->dinamizador->nodo->id;
+        $nodo = session()->get('login_role') == User::IsAdministrador() ? $nodos->first()->id : request()->user()->getNodoUser();
         $lineastecnologicas = $this->getLineaTecnologicaRepository()->getAllLineaNodo($nodo);
         
         return view('mantenimiento.create', [
@@ -238,7 +238,7 @@ class MantenimientoController extends Controller
         $mantenimiento = $this->getMantenimientoRepository()->findInfoMantenimiento()->findOrFail($id);
         $this->authorize('edit', $mantenimiento);
         $nodos = $this->getNodoRepository()->getSelectNodo();
-        $nodo = session()->get('login_role') == User::IsAdministrador() ? $nodos->first()->id : auth()->user()->dinamizador->nodo->id;
+        $nodo = session()->get('login_role') == User::IsAdministrador() ? $nodos->first()->id : request()->user()->getNodoUser();
         $lineastecnologicas = $this->getLineaTecnologicaRepository()->getAllLineaNodo($nodo);
         return view('mantenimiento.edit', [
             'year' =>  Carbon::now()->isoFormat('YYYY'),

@@ -51,7 +51,7 @@
         },
         dictDefaultMessage: 'Arrastra los archivos aquí para subirlos.',
         params: {
-        fase: 'Suspendido'
+        fase: 'Concluido sin finalizar'
         },
         paramName: 'nombreArchivo'
     });
@@ -111,7 +111,7 @@
             serverSide: true,
             order: false,
             ajax:{
-            url: "{{route('proyecto.files', [$proyecto->id, 'Suspendido'])}}",
+            url: "{{route('proyecto.files', [$proyecto->id, 'Concluido sin finalizar'])}}",
             type: "get",
             },
             columns: [

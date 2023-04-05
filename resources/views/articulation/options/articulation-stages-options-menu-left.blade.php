@@ -1,4 +1,4 @@
-@canany(['showButtonAprobacion', 'requestApproval', 'changeTalent', 'update', 'downloadCertificateEnd', 'downloadCertificateStart', 'uploadEvidences', 'delete'], $articulationStage)
+@canany(['showButtonAprobacion', 'requestApproval', 'changeTalent', 'update', 'downloadCertificateEnd', 'downloadCertificateStart',  'delete'], $articulationStage)
 <div class="collection with-header  col s12 m4 l3">
     <h5 href="!#" class="collection-header primary-text">Opciones</h5>
     @if (Route::currentRouteName() == 'articulation-stage.show')
@@ -56,7 +56,7 @@
         @endcan
         @can('changeTalent', $articulationStage)
             <a href="{{ route('articulation-stage.changeinterlocutor', $articulationStage) }}"
-               class="collection-item">
+                class="collection-item">
                 <i class="material-icons left">group</i>
                 Cambiar {{__('Interlocutory talent')}}
             </a>
@@ -75,29 +75,6 @@
             Cambiar estado
         </a>
         @endcan
-        @can('downloadCertificateEnd', $articulationStage)
-            <a target="_blank"
-                href="{{ route('articulation-stage.download-certificate', [ 'cierre',$articulationStage]) }}"
-                class="collection-item">
-                <i class="material-icons left">cloud_download</i>
-                Descargar acta cierre
-            </a>
-        @endcan
-        @can('downloadCertificateStart', $articulationStage)
-            <a target="_blank"
-               href="{{ route('articulation-stage.download-certificate', ['inicio',$articulationStage]) }}"
-               class="collection-item">
-                <i class="material-icons left">cloud_download</i>
-                Descargar acta inicio
-            </a>
-        @endcan
-        @can('uploadEvidences', $articulationStage)
-            <a href="{{ route('articulation-stage.evidences', [$articulationStage]) }}"
-               class="collection-item">
-                <i class="material-icons left">cloud_upload</i>
-                Cargar evidencias
-            </a>
-        @endcan
         @can('delete', $articulationStage)
             <a href="javascript:void(0)" class="collection-item"
                 onclick="articulationStage.destroyArticulationStage('{{$articulationStage->id}}')">
@@ -105,7 +82,6 @@
                 Eliminar {{__('articulation-stage')}}
             </a>
         @endcan
-
     @endif
 </div>
 @endcanany

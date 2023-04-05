@@ -8,21 +8,21 @@
         <div class="col s12 m12 l12">
           <h5>
             <a class="footer-text left-align" href="{{route('ingreso')}}">
-              <i class="material-icons arrow-l">arrow_back</i>
+              <i class="material-icons arrow-l left">arrow_back</i>
             </a> Ingresos 
           </h5>
           <div class="card">
             <div class="card-content">
               <div class="row">
                 <center>
-                  <span class="card-title center-align">Nuevo Ingreso Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}</span>
+                  <span class="card-title center-align">Nuevo ingreso Tecnoparque</span>
                 </center>
                 <div class="divider"></div>
                 <br/>
                 <form id="formIngresoVisitanteCreate" action="{{route('ingreso.store')}}" method="POST" onsubmit="return checkSubmit()">
                   {!! csrf_field() !!}
-                  @include('ingreso.ingreso.form', [
-                  'btnText' => 'Registrar'
+                  @include('ingreso.form', [
+                    'btnText' => 'Registrar'
                   ])
                 </form>
               </div>

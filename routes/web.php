@@ -110,6 +110,8 @@ Route::group(
         Route::get('/{documento}/permisos', 'UserController@changeNodeAndRole')->name('usuario.usuarios.changenode')->where('documento', '[0-9]+');
         Route::put('/{documento}/permisos', 'UserController@updateNodeAndRole')->name('usuario.usuarios.updatenodo')->middleware('disablepreventback');
         Route::get('/usuarios/acceso/{documento}', 'UserController@access')->name('usuario.usuarios.acceso')->where('documento', '[0-9]+');
+        Route::get('/usuarios/tomar_control/{id}', 'UserController@tomar_control')->name('usuario.tomar.control');
+        Route::get('/usuarios/dejar_control', 'UserController@dejar_control')->name('usuario.dejar.control');
         Route::put('/{id}/update-account', 'UserController@updateAccountUser')->name('usuario.usuarios.updateaccount')->middleware('disablepreventback');
         Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'only' => ['show', 'edit']])->names([
             'update'  => 'usuario.usuarios.update',
@@ -308,6 +310,8 @@ Route::group(
         Route::get('/show/{idea}', 'IdeaController@show')->name('idea.show');
         Route::get('/reasignar/{idea}', 'IdeaController@reasignar_nodo')->name('idea.reasignar.nodo')->middleware('role_session:Articulador');
         Route::get('/asignar/{idea}', 'IdeaController@asignar_experto')->name('idea.asignar')->middleware('role_session:Dinamizador');
+        Route::get('/sin-registro/{nodo}/{user}', 'IdeaController@consultarIdeasSinRegistro')->name('idea.sin-registrar');
+        Route::get('/buscar', 'IdeaController@search')->name('idea.buscar');
         Route::put('/asignar/{idea}', 'IdeaController@asignar')->name('idea.asignar.experto')->middleware('role_session:Dinamizador');
         Route::put('/update_nodo/{idea}', 'IdeaController@updateNodoIdea')->name('idea.update.nodo')->middleware('role_session:Articulador');
         Route::put('/aceptar_postulacion/{idea}', 'IdeaController@aceptarPostulacionIdea')->name('idea.aceptar.postulacion')->middleware('role_session:Articulador');
@@ -318,6 +322,7 @@ Route::group(
         Route::put('/inhabilitar_idea/{id}', 'IdeaController@inhabilitarIdea')->name('idea.inhabilitar');
         Route::put('/{idea}', 'IdeaController@update')->name('idea.update')->middleware(['auth', 'role_session:Talento']);
         Route::post('/', 'IdeaController@store')->name('idea.store')->middleware(['auth', 'role_session:Talento']);
+        Route::post('/buscar_ideas', 'IdeaController@search_idea')->name('idea.search.rq');
     }
 );
 
@@ -331,7 +336,7 @@ Route::group(
         Route::get('/', 'TallerController@index')->name('taller');
         Route::get('/consultarEntrenamientosPorNodo/{id}', 'TallerController@datatableEntrenamientosPorNodo');
         Route::get('/create', 'TallerController@create')->name('taller.create')->middleware('role_session:Articulador');
-        // Route::get('/{id}/edit', 'TallerController@edit')->name('taller.edit')->middleware('role_session:Infocenter');
+
         Route::get('/{id}', 'TallerController@details')->name('taller.details');
         Route::get('/inhabilitarEntrenamiento/{id}/{estado}', 'TallerController@inhabilitarEntrenamiento')->name('taller.inhabilitar')->middleware('role_session:Infocenter');
         Route::get('/{id}/evidencias', 'TallerController@evidencias')->name('taller.evidencias');
@@ -482,6 +487,8 @@ Route::group(
         Route::get('/certificacion_pbt/{id}', 'ProyectoController@carta_certificacion')->name('proyecto.certificacion')->middleware('role_session:Experto|Dinamizador|Activador');
         Route::get('/downloadFile/{id}', 'ArchivoController@downloadFileProyecto')->name('proyecto.files.download');
         Route::get('/reversar/{id}/{fase}', 'ProyectoController@updateReversar')->name('proyecto.reversar')->middleware('role_session:Dinamizador|Activador');
+        Route::get('/limite-inicio/{nodo}/{experto}', 'ProyectoController@proyectosLimiteInicio')->name('proyecto.limite.inicio');
+        Route::get('/limite-planeacion/{nodo}/{experto}', 'ProyectoController@proyectosLimitePlaneacion')->name('proyecto.limite.planeacion');
         Route::put('/suspendido/{id}', 'ProyectoController@updateSuspendido')->name('proyecto.update.suspendido')->middleware('role_session:Experto|Dinamizador');
         Route::put('/inicio/{id}', 'ProyectoController@updateInicio')->name('proyecto.update.inicio')->middleware('role_session:Experto');
 
@@ -571,11 +578,12 @@ Route::group(
     ],
     function () {
         Route::get('/', 'IngresoVisitanteController@index')->name('ingreso');
-        Route::get('/create', 'IngresoVisitanteController@create')->name('ingreso.create')->middleware('role_session:Ingreso');
-        Route::get('/consultarIngresosDeUnNodoTecnoparque/{id}', 'IngresoVisitanteController@datatableIngresosDeUnNodo')->name('ingreso.nodo');
-        Route::get('/{id}/edit', 'IngresoVisitanteController@edit')->name('ingreso.edit')->middleware('role_session:Ingreso');
-        Route::put('/{id}', 'IngresoVisitanteController@update')->name('ingreso.update')->middleware('role_session:Ingreso');
-        Route::post('/', 'IngresoVisitanteController@store')->name('ingreso.store')->middleware('role_session:Ingreso');
+        Route::get('/create', 'IngresoVisitanteController@create')->name('ingreso.create');
+        Route::get('/export', 'IngresoVisitanteController@export')->name('ingreso.export');
+        Route::get('/consultarIngresosDeUnNodoTecnoparque/{id}/{start_date}/{end_date}', 'IngresoVisitanteController@datatableIngresosDeUnNodo')->name('ingreso.nodo');
+        Route::get('/{id}/edit', 'IngresoVisitanteController@edit')->name('ingreso.edit');
+        Route::put('/{id}', 'IngresoVisitanteController@update')->name('ingreso.update');
+        Route::post('/', 'IngresoVisitanteController@store')->name('ingreso.store');
     }
 );
 /**
@@ -609,7 +617,7 @@ Route::group(
 Route::group(
     [
         'prefix'     => 'excel',
-        'middleware' => ['auth', 'role_session:Experto|Infocenter|Dinamizador|Activador|Ingreso|Talento'],
+        'middleware' => ['auth'],
     ],
     function () {
         // Rutas para la generación de excel del módulo de edts
@@ -833,15 +841,9 @@ Route::get('creditos', function () {
 
 Route::get('usuarios/filtro-talento/{documento}', 'User\UserController@filterTalento')->name('articulacion.usuario.talento.search');
 
-//     Route::get('/', 'NoticiasController@index')->name('noticias.index')->middleware('role_session:Activador');
-//     Route::get('/create', 'NoticiasController@create')->name('noticias.create');
-//     Route::post('/', 'NoticiasController@store')->name('noticias.store');
-//     Route::get('/{id}/edit', 'NoticiasController@edit')->name('noticias.edit')->middleware('role_session:Activador');
-//     Route::patch('/{id}', 'NoticiasController@update')->name('noticias.update')->middleware('role_session:Activador');
-//     Route::delete('/{id}', 'NoticiasController@destroy')->name('noticias.destroy');
 
 Route::get('articulaciones/downloadFile/{id}', 'ArchivoController@downloadFileArticulation')->name('articulation.files.download');
-Route::get('articulaciones/files/{id}/', 'ArchivoController@datatableArchiveArticulationStage')->name('articulation.files');
+Route::get('articulaciones/files/{id}/', 'ArchivoController@datatableArchiveArticulations')->name('articulation.files');
 Route::delete('articulaciones/{idFile}/files', 'ArchivoController@destroyFileArticulation')->name('articulation.files.destroy');
 Route::post('articulaciones/files/{id}', 'ArchivoController@uploadFileArticulacion')->name('articulation.files.upload');
 
@@ -875,13 +877,16 @@ Route::group(
 
 
         Route::get('/articulaciones/{code}/crear', 'ArticulationRegisterController@create')->name('articulations.create');
-        Route::get('/descargar/{phase}/{code}', 'ArticulationStageListController@downloadCertificate')->name('articulation-stage.download-certificate');
+
         Route::get('/solicitar-aprobacion/{id}/{fase}', 'ArticulationStageApprovalsController@requestApproval')->name('articulation-stage.request-approval');
+        Route::get('/descargar/{phase}/{code}', 'ArticulationListController@downloadCertificate')->name('articulations.download-certificate');
+        Route::get('/articulaciones/{code}/evidencias', 'ArticulationListController@evidences')->name('articulations.evidences');
         Route::get('/articulaciones/{code}/solicitar-aprobacion', 'ArticulationListController@requestApproval')->name('articulation.request-approval');
-        Route::get('/evidencias/{code}', 'ArticulationStageListController@evidences')->name('articulation-stage.evidences');
+
         Route::get('/articulaciones/{code}/{fase}', 'ArticulationListController@showPhase')->name('articulations.show.phase');
 
         Route::post('/articulaciones/{code}/crear', 'ArticulationRegisterController@store')->name('articulations.store');
+
 
         Route::get('/articulaciones/{code}', 'ArticulationListController@show')->name('articulations.show');
         Route::put('/articulaciones/{code}/editar', 'ArticulationRegisterController@update')->name('articulation.update');
