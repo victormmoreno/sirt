@@ -75,6 +75,7 @@ class ArticulationStageListController extends Controller
         return $this->datatablearticulationStages($articulationStages);
     }
 
+
     /**
      * method to download the list of articulation stages
      * @return \Illuminate\Http\Response
