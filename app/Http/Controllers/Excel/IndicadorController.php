@@ -85,14 +85,14 @@ class IndicadorController extends Controller
             $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
             })
             ->whereHas('fase', function ($query) {
-            $query->whereIn('nombre', ['Finalizado', 'Suspendido']);
+            $query->whereIn('nombre', ['Finalizado', 'Concluido sin finalizar']);
             })->get();
         } else {
             $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('articulacion_proyecto.actividad', function ($query) use ($fecha_inicio, $fecha_fin) {
             $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
             })
             ->whereHas('fase', function ($query) {
-            $query->whereIn('nombre', ['Finalizado', 'Suspendido']);
+            $query->whereIn('nombre', ['Finalizado', 'Concluido sin finalizar']);
             })->whereHas('nodo', function($query) use ($idnodo) {
             $query->where('id', $idnodo);
             })->get();
@@ -102,7 +102,7 @@ class IndicadorController extends Controller
             $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
         })
         ->whereHas('fase', function ($query) {
-            $query->whereIn('nombre', ['Finalizado', 'Suspendido']);
+            $query->whereIn('nombre', ['Finalizado', 'Concluido sin finalizar']);
         })->whereHas('nodo', function($query) {
             $query->where('id', auth()->user()->dinamizador->nodo_id);
         })->get();
@@ -111,7 +111,7 @@ class IndicadorController extends Controller
             $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
         })
         ->whereHas('fase', function ($query) {
-            $query->whereIn('nombre', ['Finalizado', 'Suspendido']);
+            $query->whereIn('nombre', ['Finalizado', 'Concluido sin finalizar']);
         })->whereHas('nodo', function($query) {
             $query->where('id', auth()->user()->infocenter->nodo_id);
         })->get();
@@ -120,7 +120,7 @@ class IndicadorController extends Controller
             $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
         })
         ->whereHas('fase', function ($query) {
-            $query->whereIn('nombre', ['Finalizado', 'Suspendido']);
+            $query->whereIn('nombre', ['Finalizado', 'Concluido sin finalizar']);
         })->whereHas('asesor', function($query) {
             $query->where('id', auth()->user()->gestor->id);
         })->get();

@@ -36,7 +36,7 @@ class Proyecto extends Model
     const IS_EJECUCION = 'Ejecución';
     const IS_CIERRE = 'Cierre';
     const IS_FINALIZADO = 'Finalizado';
-    const IS_SUSPENDIDO = 'Suspendido';
+    const IS_SUSPENDIDO = 'Concluido sin finalizar';
 
     /**
      * Constante para el campo trl_obtenido

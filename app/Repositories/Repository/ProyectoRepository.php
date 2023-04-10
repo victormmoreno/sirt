@@ -248,12 +248,31 @@ class ProyectoRepository extends Repository
     public function selectProyectosLimiteInicio($nodo, $experto)
     {
         $now = Carbon::now();
-        return $this->selectProyecto()->where('nodos.id', $nodo)
+        return $this->selectProyecto()->selectRaw('DATEDIFF("'.$now.'", fecha_inicio) as dias')->where('nodos.id', $nodo)
         ->where('fases.nombre', Proyecto::IsInicio())
         ->whereRaw('DATEDIFF("'.$now.'", fecha_inicio) > '.config('app.proyectos.duracion.inicio'))
+        ->orderBy('fecha_inicio')
         ->asesor($experto);
     }
 
+    public function selectProyectosLimitePlaneacion($nodo, $experto)
+    {
+        $now = Carbon::now();
+        return $this->selectProyecto()->selectRaw('MAX(hist.created_at) AS aprobacion, DATEDIFF("'.$now.'", hist.created_at) AS dias')
+        ->join('movimientos_actividades_users_roles as hist', 'hist.actividad_id', '=', 'actividades.id')
+        ->join('roles as r', 'r.id', '=', 'hist.role_id')
+        ->join('fases as fh', 'fh.id', '=', 'hist.fase_id')
+        ->join('movimientos as m', 'm.id', '=', 'hist.movimiento_id')
+        ->where('nodos.id', $nodo)
+        ->where("m.movimiento", Movimiento::IsAprobar())
+        ->where('r.name', User::IsDinamizador())
+        ->where('fh.nombre', Proyecto::IsInicio())
+        ->where('fases.nombre', Proyecto::IsPlaneacion())
+        ->whereRaw('DATEDIFF("'.$now.'", hist.created_at) > '.config('app.proyectos.duracion.planeacion'))
+        ->orderBy('hist.created_at')
+        ->asesor($experto);
+    }
+ 
     /**
      * Consulta trls esperado entre fechas
      * @param string $field Trl que se va a consultar
@@ -336,7 +355,7 @@ class ProyectoRepository extends Repository
         ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
         ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-        ->whereIn('fases.nombre', ['Finalizado', 'Suspendido'])
+        ->whereIn('fases.nombre', ['Finalizado', 'Concluido sin finalizar'])
         ->groupBy('entidades.nombre', 'fase')
         ->whereYear('fecha_cierre', $year);
     }
@@ -1034,7 +1053,7 @@ class ProyectoRepository extends Repository
             $movimiento = null;
             $mensaje = null;
             $title = null;
-            $ruta = null;
+            $ruta = route('proyecto');
 
             $proyecto = Proyecto::findOrFail($id);
             $dinamizadorRepository = new DinamizadorRepository;
@@ -1110,7 +1129,7 @@ class ProyectoRepository extends Repository
                         ]);
                         // Crear el movimiento con el cierre del proyecto
                         $this->crearMovimiento($proyecto, 'Finalizado', 'Cerró', null);
-                        $ruta = route('proyecto.detalle', $id);
+                        // $ruta = route('proyecto.detalle', $id);
                         }
                     }
                 }
@@ -1361,7 +1380,7 @@ class ProyectoRepository extends Repository
             $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->nodo_id)->get();
             $destinatarios = $dinamizadorRepository->getAllDinamizadorPorNodoArray($dinamizadores);
             Notification::send($dinamizadores, new ProyectoAprobarSuspendido($proyecto));
-            $this->crearMovimiento($proyecto, 'Suspendido', 'solicitó al dinamizador', null);
+            $this->crearMovimiento($proyecto, 'Concluido sin finalizar', 'solicitó al dinamizador', null);
             $movimiento = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get()->last();
             event(new ProyectoSuspenderWasRequested($proyecto, $movimiento, $destinatarios));
             DB::commit();
@@ -1497,7 +1516,7 @@ class ProyectoRepository extends Repository
         ->where(function ($q) use ($anho) {
             $q->where(function ($query) use ($anho) {
             $query->whereYear('actividades.fecha_cierre', '=', $anho)
-                ->whereIn('fases.nombre', ['Finalizado', 'Suspendido']);
+                ->whereIn('fases.nombre', ['Finalizado', 'Concluido sin finalizar']);
             })
             ->orWhere(function ($query) {
                 $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);

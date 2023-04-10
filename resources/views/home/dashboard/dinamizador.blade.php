@@ -36,5 +36,47 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="card stats-card {{$proyectos_limite_planeacion != 0 ? 'orange lighten-3' : 'green lighten-3'}}" style="cursor:pointer" onclick="consultarProyectosPlaneacion('{{request()->user()->getNodoUser()}}', 'null')">
+                <div class="card-content">
+                    <span class="stats-counter">
+                        @if ($proyectos_limite_planeacion != 0)
+                            Hay {{$proyectos_limite_planeacion}} proyectos atrasados en la fase de planeación en el nodo (Máximo {{config('app.proyectos.duracion.planeacion')}} días en esta fase).
+                        @else
+                            No hay proyectos con mas de {{config('app.proyectos.duracion.planeacion')}} días en la fase de planeación en el nodo.
+                        @endif
+                    </span>
+                    <br>
+                </div>
+                <div class="progress stats-card-progress bg-secondary">
+                    <div class="determinate"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div clas="col s12 m8 l8">
+        <div class="row">
+            <div class="col s12 m4 l4">
+                <div class="input-field col s12 m12 l12">
+                    <select id="txtgestor_id_actual" name="txtgestor_id_actual" style="width: 100%" tabindex="-1" onchange="consultarSeguimientoActualDeUnGestor(this.value)">
+                    <option value="">Seleccione el experto</option>
+                    @foreach($expertos as $id => $experto)
+                    <option value="{{$experto->gestor->id}}">{{$experto->nombres}} {{$experto->apellidos}}</option>
+                    @endforeach
+                    </select>
+                    <label for="txtgestor_id_actual">Experto</label>
+                </div>
+            </div>
+            <div class="col s12 m8 l8">
+                <div id="graficoSeguimientoPorGestorFases_column" class="green lighten-3"
+                    style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
+                    <div class="row card-panel">
+                    <h5 class="center">
+                        Para consultar el seguimiento de un experto, debes seleccionar un experto del nodo en la lista desplegable de los expertos.
+                    </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

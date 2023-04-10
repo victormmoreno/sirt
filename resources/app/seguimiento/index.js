@@ -127,7 +127,7 @@ function consultarSeguimientoActualDeUnGestor(gestor_id) {
     type: 'get',
     url: host_url + '/seguimiento/seguimientoActualDeUnGestor/'+gestor_id,
     success: function (data) {
-      graficoSeguimientoFases(data, graficosSeguimiento.gestor_fases);
+      graficoSeguimientoFasesNoGroup(data, graficosSeguimiento.gestor_fases);
     },
     error: function (xhr, textStatus, errorThrown) {
       alert("Error: " + errorThrown);
@@ -305,7 +305,7 @@ function graficoSeguimientoFases(data, name) {
     },
     xAxis: {
         title: {
-          text: 'Nodos'
+          text: 'Nodos/Expertos'
         },
         categories: nodos
     },
@@ -362,8 +362,73 @@ function graficoSeguimientoFases(data, name) {
       name: 'Finalizado',
       data: finalizado
     }, {
-      name: 'Suspendido',
+      name: 'Concluido sin finalizar',
       data: suspendido
     }]
 });
 }
+
+function graficoSeguimientoFasesNoGroup(data, name) {
+  Highcharts.chart(name, {
+    chart: {
+      type: 'column'
+    },
+    title: {
+      text: 'Proyectos actuales y finalizados en el año actual'
+    },
+    yAxis: {
+      title: {
+        text: 'Cantidad'
+      }
+    },
+    xAxis: {
+        type: 'category'
+    },
+    legend: {
+        enabled: false
+    },
+    tooltip: {
+      headerFormat: '<span style="font-size:11px">Cantidad</span><br>',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
+    },
+    series: [
+      {
+        colorByPoint: true,
+        dataLabels: {
+          enabled: true
+        },
+        data: [
+          {
+            name: "Proyectos en inicio",
+            y: data.datos.Inicio,
+          },
+          {
+            name: "Proyectos en planeación",
+            y: data.datos.Planeacion,
+          },
+          {
+            name: "Proyectos en ejecución",
+            y: data.datos.Ejecucion,
+          },
+          {
+            name: "Proyectos en cierre",
+            y: data.datos.Cierre,
+          },
+          {
+            name: "Proyectos finalizados",
+            y: data.datos.Finalizado,
+          },
+          {
+            name: "Proyectos suspendidos",
+            y: data.datos.Suspendido,
+          },
+          {
+            name: "Total de proyecto en el año actual",
+            y: data.datos.Total,
+          },
+        ]
+      }
+    ],
+  });
+}
+
