@@ -5,7 +5,7 @@
 /public/public
 /storage/*.key
 /vendor
-/public/documents/handbooks
+/public/documents/handbooks/
 .env
 .phpunit.result.cache
 Homestead.json
