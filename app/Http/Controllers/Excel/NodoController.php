@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Excel;
 
 use App\Exports\Nodo\NodoExport;
 use App\Models\Nodo;
-use App\Exports\Nodo\{NodoInfoExport};
+use App\User;
+use App\Exports\Nodo\{NodoShowExport};
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use Repositories\Repository\NodoRepository;
@@ -67,8 +68,6 @@ class NodoController extends Controller
 
     /**
      * Genera el excel de todos los nodos
-     *
-     * @author devjul
      * @return Response
      */
     public function exportQueryAllNodo()
@@ -87,24 +86,37 @@ class NodoController extends Controller
      * Genera el excel de todos los nodos
      *
      * @param string $id Id del nodo
-     * @param string $anho Año para realizar el filtro
      * @return Response
      */
     public function exportQueryForNodo($nodo)
     {
-        $query = $this->getNodoRepository()->findNodoForShow($nodo);
-        if(request()->user()->can('downloadOne', $query)) {
-            $queryLineas = $query->lineas;
-            $queryDinamizadores = $query->dinamizador->where('user.estado', 1)->where('user.deleted_at', null)->values()->all();
-            $queryInfocenters = $query->infocenter->where('user.estado', 1)->where('user.deleted_at', null)->values()->all();
-            $queryIngresos = $query->ingresos->where('user.estado', 1)->where('user.deleted_at', null)->values()->all();
-            $queryGestores = $query->gestores->where('user.estado', 1)->where('user.deleted_at', null)
-                ->values()
-                ->all();
-            return Excel::download(new NodoInfoExport($query, $queryDinamizadores, $queryGestores, $queryInfocenters, $queryIngresos, $queryLineas), 'Tecnoparque Nodo ' . $query->entidad->nombre . '.xlsx');
+        $node = $this->getNodoRepository()->findNodoForShow($nodo);
+        if(request()->user()->cannot('downloadOne', $node)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
         }
-        alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
-        return redirect()->back();
-
+        $users = User::query()
+        ->userQuery()
+        ->selectRaw("if(roles.name = 'dinamizador', entidaddinamizador.nombre, if(roles.name = 'experto', entidadexperto.nombre, if(roles.name = 'articulador', entidadusernodo.nombre, if(roles.name = 'apoyo técnico', entidadusernodo.nombre, if(roles.name = 'infocenter', entidadinfocenter.nombre, if(roles.name = 'ingreso', entidadingreso.nombre, 'No Aplica')))))) as nodo")
+        ->selectRaw("if(roles.name = 'experto', lineastecnologicas.nombre, 'No Aplica') as linea")
+        ->selectRaw('roles.name as role, users.documento, users.nombres, users.apellidos, users.email, if(users.telefono!=null,users.telefono, "No registra") as telefono, users.celular')
+        ->whereIn("roles.name", ['dinamizador', 'experto', 'articulador', 'apoyo técnico', 'infocenter','ingreso'])
+        ->where(function($query){
+            $query->where("users.estado", User::IsActive())
+            ->whereNull("users.deleted_at");
+        })
+        ->where(function($query) use($node){
+            if(isset($node)){
+                $query->where('nodoexperto.id', $node->id)
+                ->orWhere('nodoinfocenter.id', $node->id)
+                ->orWhere('nodoingreso.id', $node->id)
+                ->orWhere('user_nodo.nodo_id', $node->id);
+            }
+            $query;
+        })
+        ->groupBy("users.id", "linea")
+        ->orderBy("roles.name", "ASC")
+        ->get();
+        return Excel::download(new NodoShowExport($users), "Tecnoparque {$node->entidad->nombre}" . '.xlsx');
     }
 }

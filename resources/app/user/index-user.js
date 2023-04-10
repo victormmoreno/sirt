@@ -54,6 +54,10 @@ var UserIndex = {
             },
             columns: [
                 {
+                    data: 'nodo',
+                    name: 'nodo',
+                },
+                {
                     data: 'tipodocumento',
                     name: 'tipodocumento',
                 }, {

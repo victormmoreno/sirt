@@ -32,30 +32,6 @@ class NodoController extends Controller
         return view('indicadores.componentes.nodo_pagination', compact('nodos_g'))->render();
     }
 
-    // /**
-    //  * Inhabilita los funcionarios de un nodo
-    //  * 
-    //  * @param int $id Id del nodo
-    //  * @return Response
-    //  * @author dum
-    //  */
-    // public function inhabilitar_funcionarios($id)
-    // {
-    //     $nodo = Nodo::findOrFail($id);
-    //     if(!request()->user()->can('inhabilitar', Nodo::class)) {
-    //         alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
-    //         return redirect()->back();
-    //     }
-    //     $inhabilitar = $this->getNodoRepository()->inhabilitarFuncionarios($nodo);
-    //     if ($inhabilitar) {
-    //         alert('Inhabilitación exitósa', 'Los funcionarios del nodo ' . $nodo->entidad->nombre . ' se han inhabilitado', 'success')->showConfirmButton('Ok', '#3085d6');
-    //     } else {
-    //         alert('Inhabilitación errónea', 'Los funcionarios del nodo ' . $nodo->entidad->nombre . ' no se han inhabilitado, inténtalo nuevamente', 'error')->showConfirmButton('Ok', '#3085d6');
-    //     }
-    //     dd($nodo->entidad->slug);
-    //     // return redirect()->route('nodo.show', $nodo->slug);
-    // }
-
     /**
      * setter: Asigna un valor a $nodoRepository
      * @param object $nodoRepository
@@ -230,5 +206,23 @@ class NodoController extends Controller
             alert()->error('Modificación Erróneo.', 'El nodo no se ha modificado.');
         }
         return redirect()->route('nodo.index');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     * @param  string  $nodo
+     * @return \Illuminate\Http\Response
+     */
+    public function uploadFiles($nodo)
+    {
+        $nodo = $this->getNodoRepository()->findNodoForShow($nodo);
+        if(request()->user()->cannot('uploadFiles', $nodo))
+        {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
+        }
+        return view('nodos.upload-files', [
+            'nodo'              => $nodo
+        ]);
     }
 }
