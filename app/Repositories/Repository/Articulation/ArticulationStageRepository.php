@@ -50,13 +50,8 @@ class ArticulationStageRepository
             ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
             ->leftJoin('entidades', 'entidades.id', '=', 'nodos.entidad_id')
 
-            ->leftJoin('articulations', 'articulations.articulation_stage_id', '=', 'articulation_stages.id')
-            ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')
-            ->leftJoin('articulation_subtypes', 'articulation_subtypes.id', '=', 'articulations.articulation_subtype_id')
-            ->leftJoin('articulation_types', 'articulation_types.id', '=', 'articulation_subtypes.articulation_type_id')
-            ->leftJoin('articulation_scopes', 'articulation_scopes.id', '=', 'articulations.scope_id')
-            ->leftJoin('articulation_user', 'articulation_user.articulation_id', '=', 'articulations.id')
-            ->leftJoin('users as participants', 'participants.id', '=', 'articulation_user.user_id')
+
+
             ->join('articulationables', function($q) {
                 $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
             })
