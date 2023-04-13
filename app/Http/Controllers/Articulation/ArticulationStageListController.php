@@ -123,7 +123,6 @@ class ArticulationStageListController extends Controller
             ->get();
         }
         return (new articulationStageExport($articulationStages))->download(__('articulation-stage') .' - '. config('app.name') . ".{$extension}");
-
     }
 
 

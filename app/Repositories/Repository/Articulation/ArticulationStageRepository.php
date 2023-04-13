@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use App\Models\ArticulationStage;
 use App\Models\Proyecto;
-use App\Models\Fase;
 use App\Models\ArchivoModel;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +18,6 @@ use App\Models\ControlNotificaciones;
 use App\Notifications\Articulation\EndorsementStageArticulation;
 use App\Events\Articulation\AccompanyingApprovalRequest;
 use App\Notifications\Articulation\ArticulationStageNoApproveEndorsement;
-use Illuminate\Support\Str;
 
 
 class ArticulationStageRepository
@@ -49,9 +47,6 @@ class ArticulationStageRepository
         return ArticulationStage::query()
             ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
             ->leftJoin('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-
-
-
             ->join('articulationables', function($q) {
                 $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
             })
