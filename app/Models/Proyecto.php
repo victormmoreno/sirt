@@ -66,6 +66,7 @@ class Proyecto extends Model
      */
     protected $fillable = [
         // 'articulacion_proyecto_id',
+        'experto_id',
         'asesor_id',
         'nodo_id',
         'idea_id',
