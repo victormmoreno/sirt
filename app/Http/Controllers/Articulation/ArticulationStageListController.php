@@ -192,6 +192,8 @@ class ArticulationStageListController extends Controller
     private function datatableArticulationStages($articulationStages)
     {
         return datatables()->of($articulationStages)
+            // ->setRowClass('{{ $articulation_state_type == "Proyecto" ? "border-solid":"" }}')
+
             ->editColumn('node', function ($data) {
                 if($data->articulation_code){
                     return "<blockquote class='primary-text'>{$data->nodo}</blockquote>";
@@ -218,7 +220,7 @@ class ArticulationStageListController extends Controller
                     $articulationType = 'No registra';
                 }
                 return "
-                <tr class='group grey lighten-2'>
+                <tr  class='group grey z-depth-1 lighten-2'>
                     <th >
                         {$data->nodo}
                     </th>
