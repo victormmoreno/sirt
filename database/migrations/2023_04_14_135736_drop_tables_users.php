@@ -16,11 +16,10 @@ class DropTablesUsers extends Migration
         Schema::dropIfExists('contratistas');
         Schema::dropIfExists('articulacion_pbts');
         Schema::dropIfExists('nodo_tipoarticulacion');
-        Schema::dropIfExists('articulacion_pbt_talento');
+        Schema::dropIfExists('articulaciones_pbt_talento');
         Schema::dropIfExists('tipo_articulaciones');
         Schema::dropIfExists('infocenter');
         Schema::dropIfExists('dinamizador');
-        Schema::dropIfExists('gestores');
         Schema::dropIfExists('publicaciones');
         Schema::dropIfExists('contactosentidades');
         Schema::dropIfExists('noticias');

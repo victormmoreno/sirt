@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\{Dinamizador, Infocenter, Gestor, Talento};
+use App\Models\{Dinamizador, Infocenter, Gestor, Talento, Idea};
 use App\User;
 
 class AddUserToTablesSeeder extends Seeder
@@ -20,6 +20,17 @@ class AddUserToTablesSeeder extends Seeder
             $talentos = Talento::all();
             $infocenters = Infocenter::all();
             $dinamizadores = Dinamizador::all();
+            $ideas = Idea::whereNotNull('correo_contacto')->get();
+            foreach ($ideas as $key => $idea) {
+                if ($idea->talento_id == null) {
+                    $user_id =  User::where('email', $idea->correo_contacto)->first();
+                    if ($user_id != null) {
+                        $idea->update([
+                            'user_id' => $user_id->id
+                        ]);
+                    }
+                }
+            }
             foreach ($infocenters as $key => $infocenter) {
                 DB::table('user_nodo')->insert(
                     [
