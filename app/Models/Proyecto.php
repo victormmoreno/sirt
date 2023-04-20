@@ -202,8 +202,9 @@ class Proyecto extends Model
      */
     public function talentos()
     {
-        return $this->belongsToMany(Talento::class, 'proyecto_talento')
+        return $this->belongsToMany(User::class, 'proyecto_talento')
             ->withTimestamps()
+            ->withTrashed()
             ->withPivot('talento_lider');
     }
 
@@ -229,7 +230,7 @@ class Proyecto extends Model
      */
     public function asesor()
     {
-        return $this->belongsTo(Gestor::class, 'asesor_id', 'id');
+        return $this->belongsTo(User::class, 'experto_id', 'id');
     }
 
     /**
@@ -462,8 +463,8 @@ class Proyecto extends Model
     public static function habilitarTalentos($proyecto)
     {
         foreach ($proyecto->talentos as $value) {
-            $value->user()->withTrashed()->first()->restore();
-            $value->user()->withTrashed()->first()->update(['estado' => 1]);
+            $value->restore();
+            $value->update(['estado' => 1]);
         }
     }
 

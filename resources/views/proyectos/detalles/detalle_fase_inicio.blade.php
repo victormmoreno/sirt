@@ -175,8 +175,8 @@
                         <tr>
                         <td>{{$value->pivot->talento_lider == 1 ? 'SI' : 'NO'}}</td>
                         <td>
-                            <a target="_blank" href="{{route("usuario.usuarios.show", $value->user()->withTrashed()->first()->documento)}}" class="info-text">
-                                {{$value->user()->withTrashed()->first()->documento}} - {{$value->user()->withTrashed()->first()->nombres}} {{$value->user()->withTrashed()->first()->apellidos}}
+                            <a target="_blank" href="{{route("usuario.usuarios.show", $value->documento)}}" class="info-text">
+                                {{$value->documento}} - {{$value->nombres}} {{$value->apellidos}}
                             </a>
                         </td>
                         </tr>

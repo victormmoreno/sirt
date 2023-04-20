@@ -20,11 +20,6 @@ class ArchivoModel extends Model
         return $this->morphTo();
     }
 
-    public function model()
-    {
-        return $this->morphTo();
-    }
-
     public function fase()
     {
         return $this->belongsTo(Fase::class, 'fase_id', 'id');

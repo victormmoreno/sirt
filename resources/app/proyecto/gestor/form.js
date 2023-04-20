@@ -210,7 +210,7 @@ function prepararFilaEnLaTablaDeTalentos(ajax, isInterlocutor) {
         talentInterlocutor = "checked";
     }// El ajax.talento.id es el id del TALENTO, no del usuario
     let idTalento = ajax.talento.id;
-    let fila = '<tr class="selected" id=talentoAsociadoAProyecto' + idTalento + '>' + '<td><input type="radio" '+ talentInterlocutor +' class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.talento.documento + ' - ' + ajax.talento.talento + '</td>' + '<td><a class="waves-effect bg-danger btn" onclick="eliminarTalentoDeProyecto_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let fila = '<tr class="selected" id=talentoAsociadoAProyecto' + idTalento + '>' + '<td><input type="radio" '+ talentInterlocutor +' class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.talento.documento + ' - ' + ajax.talento.nombres + ' '+ ajax.talento.apellidos +'</td>' + '<td><a class="waves-effect bg-danger btn" onclick="eliminarTalentoDeProyecto_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
@@ -497,9 +497,9 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
             ideaProyectoAsociadaConExito(codigo, nombre);
 
             if(response.data.talento != null){
-
+                console.log(response.data);
                 addTalentoProyecto(response.data.talento.id, true);
-                addPersonaPropiedad(response.data.talento.user.id);
+                addPersonaPropiedad(response.data.talento.id);
             }
             if(response.data.sede != null){
                 addSedePropietaria(response.data.sede.id);

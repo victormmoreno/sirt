@@ -30,6 +30,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Presenters\UserPresenter;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -52,6 +53,7 @@ class User extends Authenticatable implements JWTSubject
     const IS_DESARROLLADOR  = "Desarrollador";
     const IS_ARTICULADOR     = "Articulador";
     const IS_APOYO_TECNICO     = "Apoyo Técnico";
+    const IS_USUARIO     = "Usuario";
 
     protected $appends = ['nombre_completo'];
 
@@ -187,6 +189,13 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(Etnia::class, 'etnia_id', 'id');
     }
 
+    public function proyecto_talento()
+    {
+        return $this->belongsToMany(Proyecto::class, 'proyecto_talento')
+            ->withTimestamps()
+            ->withPivot('talento_lider');
+    }
+
     //relaciones muchos a muchos
 
     public function movimientos()
@@ -264,6 +273,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(UserNodo::class, 'user_id', 'id')->where('role', User::IsApoyoTecnico());
     }
 
+    public function user_nodo()
+    {
+        return $this->hasOne(UserNodo::class, 'user_id', 'id')->where('role', session()->get('login_role'));
+    }
+
     public function dinamizador()
     {
         return $this->hasOne(Dinamizador::class, 'user_id', 'id');
@@ -329,12 +343,71 @@ class User extends Authenticatable implements JWTSubject
             ->Join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id');
     }
 
+    public function scopeSelectUser($query)
+    {
+        return $query->select(
+            'users.id',
+            'tiposdocumentos.nombre as tipodocumento',
+            'users.documento',
+            'users.email',
+            'users.direccion',
+            'users.celular',
+            'users.telefono',
+            'users.estado',
+            'users.fechanacimiento',
+            'users.nombres',
+            'users.apellidos',
+            'user_nodo.role'
+        )
+        ->selectRaw("CONCAT(users.nombres,' ',users.apellidos) as nombre_completo")
+        ->join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id');
+    }
+
+    public function scopeConsultarFuncionarios($query, $nodo, $role, $linea)
+    {
+        return $this->SelectUser()->FuncionarioJoin()->RoleFuncionario($role)->NodoFuncionario($nodo)->LineaNodo($linea);
+    }
+
+    public function scopeConsultarUsuarios($query)
+    {
+        return $query->select('users.documento', 'users.id')
+            ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS talento')
+            ->join('model_has_roles', function ($join) {
+                $join->on('users.id', '=', 'model_has_roles.model_id')
+                    ->where('model_has_roles.model_type', self::class);
+            })
+            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+            ->whereIn('roles.name', [self::IsUsuario(), self::IsTalento()]);
+    }
+
     public function scopeRole($query, $role)
     {
         if (!empty($role) && $role != null && $role != 'all') {
-            return $query->whereHas('roles', function ($subQuery) use ($role) {
-                $subQuery->where('name', $role);
-            });
+            return $query->where('roles.name', $role);
+        }
+        return $query;
+    }
+
+    public function scopeRoleFuncionario($query, $role)
+    {
+        if (!empty($role) && $role != null && $role != 'all') {
+            return $query->where('roles.name', $role)->where('role', $role);
+        }
+        return $query;
+    }
+
+    public function scopeNodoFuncionario($query, $nodo)
+    {
+        if (!empty($nodo) && $nodo != null && $nodo != 'all') {
+            return $query->where('user_nodo.nodo_id', $nodo);
+        }
+        return $query;
+    }
+
+    public function scopeLineaNodo($query, $linea)
+    {
+        if (!empty($linea) && $linea != null && $linea != 'all') {
+            return $query->where('user_nodo.linea_id', $linea);
         }
         return $query;
     }
@@ -643,6 +716,17 @@ class User extends Authenticatable implements JWTSubject
         return $query;
     }
 
+    public function scopeFuncionarioJoin($query)
+    {
+        return $query->join('model_has_roles', function ($join) {
+            $join->on('users.id', '=', 'model_has_roles.model_id')
+                ->where('model_has_roles.model_type', self::class);
+        })
+        ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+        ->join('user_nodo', 'user_nodo.user_id', '=', 'users.id');
+    }
+
+
     public function isUserActivador(): bool
     {
         return (bool) $this->hasRole(User::IsActivador());
@@ -694,23 +778,8 @@ class User extends Authenticatable implements JWTSubject
 
     public function getNodoUser()
     {
-        if (session()->get('login_role') == $this->IsDinamizador()) {
-            return $this->dinamizador->nodo_id;
-        }
-        if (session()->get('login_role') == $this->IsInfocenter()) {
-            return $this->infocenter->nodo_id;
-        }
-        if (session()->get('login_role') == $this->IsExperto()) {
-            return $this->gestor->nodo_id;
-        }
-        if (session()->get('login_role') == $this->IsArticulador()) {
-            return $this->articulador->nodo_id;
-        }
-        if (session()->get('login_role') == $this->IsApoyoTecnico()) {
-            return $this->apoyotecnico->nodo_id;
-        }
-        if (session()->get('login_role') == $this->IsIngreso()) {
-            return $this->ingreso->nodo_id;
+        if (Str::contains(session()->get('login_role'), [$this->IsApoyoTecnico(), $this->IsDinamizador(), $this->IsInfocenter(), $this->IsExperto(), $this->IsArticulador(), $this->IsIngreso()])) {
+            return $this->user_nodo->nodo_id;
         }
         return null;
     }

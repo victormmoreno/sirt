@@ -167,7 +167,7 @@ class ProyectoPolicy
             return false;
         if (session()->get('login_role') == $user->IsAdministrador())
             return true;
-        if (session()->get('login_role') == $user->IsDinamizador() && $proyecto->nodo_id == auth()->user()->dinamizador->nodo_id)
+        if (session()->get('login_role') == $user->IsDinamizador() && $proyecto->nodo_id == request()->user()->getNodoUser())
             return true;
         return false;
     }

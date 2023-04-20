@@ -214,7 +214,7 @@
                 @else
                 <td colspan="1" >NO</td>
                 @endif
-                <td colspan="5" >{{$talento->user->present()->userDocumento()}} - {{$talento->user->present()->userFullName()}}</td>
+                <td colspan="5" >{{$talento->present()->userDocumento()}} - {{$talento->present()->userFullName()}}</td>
             </tr>
             @empty
             <tr>

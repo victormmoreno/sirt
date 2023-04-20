@@ -127,7 +127,7 @@ class ProyectoRepository extends Repository
     {
         for ($i=0; $i < count($talentos_nuevos); $i++) {
             if ($talentos_nuevos[$i]['talento_lider'] == 1) {
-                return $talentos_nuevos[$i]['talento_id'];
+                return $talentos_nuevos[$i]['user_id'];
             }
         }
         return -1;
@@ -624,20 +624,17 @@ class ProyectoRepository extends Repository
      */
     public function proyectosDelTalento($id)
     {
-        return Proyecto::select('proyectos.id', 'sublineas.nombre as sublinea_nombre', 'actividades.codigo_actividad AS codigo_proyecto', 'actividades.nombre', 'fases.nombre AS nombre_fase', 'actividades.id AS actividad_id')
+        return Proyecto::select('proyectos.id', 'sublineas.nombre as sublinea_nombre', 'codigo_proyecto', 'proyectos.nombre', 'fases.nombre AS nombre_fase')
         ->selectRaw('concat(codigo_idea, " - ", nombre_proyecto) AS nombre_idea')
         ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
         ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
-        ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
-        ->join('users', 'users.id', '=', 'gestores.user_id')
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
         ->join('proyecto_talento', 'proyecto_talento.proyecto_id', '=', 'proyecto.id')
         ->join('talentos', 'talentos.id', '=', 'proyecto_talento.talento_id')
         ->join('users AS user_talento', 'user_talento.id', '=', 'talentos.user_id')
-        ->where('talentos.id', $id)
-        ->get();
+        ->where('user_talento.id', $id);
     }
 
     /**
@@ -651,9 +648,9 @@ class ProyectoRepository extends Repository
         $syncData = array();
         foreach ($request->get('talentos') as $id => $value) {
         if ($value == request()->get('radioTalentoLider')) {
-            $syncData[$id] = array('talento_lider' => 1, 'talento_id' => $value);
+            $syncData[$id] = array('talento_lider' => 1, 'user_id' => $value);
         } else {
-            $syncData[$id] = array('talento_lider' => 0, 'talento_id' => $value);
+            $syncData[$id] = array('talento_lider' => 0, 'user_id' => $value);
         }
         }
         return $syncData;
@@ -857,7 +854,7 @@ class ProyectoRepository extends Repository
 
 
         $proyecto->update([
-            'asesor_id' => $request->txtgestor_id
+            'experto_id' => $request->txtgestor_id
         ]);
 
         DB::commit();
@@ -1284,12 +1281,12 @@ class ProyectoRepository extends Repository
     public function configuracionNotificacionTalento($proyecto)
     {
         $talento_lider = $proyecto->getLeadTalent();
-        $destinatarios[] = $talento_lider->user->email;
+        $destinatarios[] = $talento_lider->email;
         if (Session::get('login_role') != User::IsTalento())
             $destinatarios[] = auth()->user()->email;
 
         return [
-            'receptor' => $talento_lider->user->id,
+            'receptor' => $talento_lider->id,
             'receptor_role' => User::IsTalento(),
             'tipo_movimiento' => Movimiento::IsSolicitarTalento(),
             'destinatarios' => $destinatarios
@@ -1298,10 +1295,11 @@ class ProyectoRepository extends Repository
 
     public function configuracionNotificacionDinamizador($proyecto)
     {
-        $dinamizadorRepository = new DinamizadorRepository;
+        // $dinamizadorRepository = new DinamizadorRepository;
         if (Session::get('login_role') != User::IsTalento())
             $destinatarios[] = auth()->user()->email;
-        $dinamizador = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->nodo_id)->get()->last();
+        $dinamizador = User::ConsultarFuncionarios($proyecto->nodo_id, User::IsDinamizador())->get()->last();
+        // $dinamizador = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->nodo_id)->get()->last();
         $destinatarios[] = $dinamizador->email;
         return [
             'receptor' => $dinamizador->id,
@@ -1451,13 +1449,12 @@ class ProyectoRepository extends Repository
             'economia_naranja',
             'fases.nombre AS nombre_fase',
             'proyectos.id',
-            'proyectos.asesor_id'
+            'proyectos.experto_id'
         )
         ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
         ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) as nombre_idea')
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
-        ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
-        ->join('users', 'users.id', '=', 'gestores.user_id')
+        ->join('users', 'users.id', '=', 'proyectos.experto_id')
         ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
         ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
         ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')

@@ -74,12 +74,12 @@ Route::group(
             'as'   => 'usuario.mytalentos',
         ]);
         Route::get('/talento/getTalentosDeTecnoparque', [
-            'uses' => 'TalentoController@datatableTalentosDeTecnoparque',
+            'uses' => 'UserController@datatableTalentosDeTecnoparque',
             'as'   => 'talento.tecnoparque',
         ]);
 
         Route::get('/talento/consultarTalentoPorId/{id}', [
-            'uses' => 'TalentoController@consultarUnTalentoPorId',
+            'uses' => 'UserController@consultarUnUsuarioPorId',
             'as'   => 'talento.tecnoparque.byid',
         ]);
 

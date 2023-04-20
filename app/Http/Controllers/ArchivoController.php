@@ -360,37 +360,45 @@ class ArchivoController extends Controller
      */
     public function uploadFileProyecto(Request $request, $id)
     {
-        if (request()->ajax()) {
-        $this->validate(request(), [
-            'nombreArchivo' => 'max:50000|mimes:jpeg,png,jpg,docx,doc,pdf,exe,xlsl,xlsx,xls,pptx,sldx,ppsx,exe,zip',
-        ],
-        [
-            'nombreArchivo.mimes' => 'El tipo de archivo no es permitido',
-            'nombreArchivo.max' => 'El tamaño del archivo no puede superar las 50MB'
-        ]);
-        $file = request()->file('nombreArchivo');
-        // La ruta con la se guardan los archivos de un proyecto es la siguiente:
-        // id_nodo/anho_de_la_fecha_de_inicio_del_proyecto/Proyectos/linea_tecnológica/id_gestor/id_del_proyecto/fase_del_archivo/max_id_archivo_proyecto_nombre_del_archivo.extension
-        $idArchivoModel = ArchivoModel::selectRaw('MAX(id+1) AS max')->get()->last();
-        $fileName = $idArchivoModel->max . '_' . $file->getClientOriginalName();
-        // Creando la ruta
-        $proyecto = Proyecto::findOrFail($id);
-        $route = "";
-        $nodo = sprintf("%02d", $proyecto->nodo_id);
-        $anho = Carbon::parse($proyecto->fecha_inicio)->isoFormat('YYYY');
-        $linea = $proyecto->sublinea->lineatecnologica_id;
-        $gestor = sprintf("%03d", $proyecto->asesor_id);
-        $idproyecto = $proyecto->id;
-        $fase = Fase::select('id', 'nombre')->where('nombre', $request->fase)->get()->last();
-        $fase_id = $fase->id;
-        $fase = $fase->nombre;
-        $route = 'public/' . $nodo . '/' . $anho . '/Proyectos' . '/' . $linea . '/' . $gestor . '/' . $idproyecto . '/' . $fase;
-        $fileUrl = $file->storeAs($route, $fileName);
-        $id = $proyecto->id;
-        $proyecto->archivos()->create([
-            'ruta' => Storage::url($fileUrl),
-            'fase_id' => $fase_id
-        ]);
+        try {
+            if (request()->ajax()) {
+            $this->validate(request(), [
+                'nombreArchivo' => 'max:50000|mimes:jpeg,png,jpg,docx,doc,pdf,exe,xlsl,xlsx,xls,pptx,sldx,ppsx,exe,zip',
+            ],
+            [
+                'nombreArchivo.mimes' => 'El tipo de archivo no es permitido',
+                'nombreArchivo.max' => 'El tamaño del archivo no puede superar las 50MB'
+            ]);
+            $file = request()->file('nombreArchivo');
+            // La ruta con la se guardan los archivos de un proyecto es la siguiente:
+            // id_nodo/anho_de_la_fecha_de_inicio_del_proyecto/Proyectos/linea_tecnológica/id_gestor/id_del_proyecto/fase_del_archivo/max_id_archivo_proyecto_nombre_del_archivo.extension
+            $idArchivoModel = ArchivoModel::selectRaw('MAX(id+1) AS max')->get()->last();
+            $fileName = $idArchivoModel->max . '_' . $file->getClientOriginalName();
+            // dd($fileName);
+            // Creando la ruta
+            $proyecto = Proyecto::findOrFail($id);
+            $route = "";
+            $nodo = sprintf("%02d", $proyecto->nodo_id);
+            $anho = Carbon::parse($proyecto->fecha_inicio)->isoFormat('YYYY');
+            $linea = $proyecto->sublinea->lineatecnologica_id;
+            $gestor = sprintf("%03d", $proyecto->experto_id);
+            $idproyecto = $proyecto->id;
+            $fase = Fase::select('id', 'nombre')->where('nombre', $request->fase)->get()->last();
+            $fase_id = $fase->id;
+            $fase = $fase->nombre;
+            $route = 'public/' . $nodo . '/' . $anho . '/Proyectos' . '/' . $linea . '/' . $gestor . '/' . $idproyecto . '/' . $fase;
+            $fileUrl = $file->storeAs($route, $fileName);
+            $id = $proyecto->id;
+            $proyecto->archivos()->create([
+                'ruta' => Storage::url($fileUrl),
+                'fase_id' => $fase_id
+            ]);
+            }
+            return true;
+        } catch (\Throwable $th) {
+            throw $th;
+            // dd($th);
+            return $th;
         }
     }
 
@@ -520,7 +528,6 @@ class ArchivoController extends Controller
     {
         if (request()->ajax()) {
             $proyecto = Proyecto::findOrFail($id);
-            // $archivosDeUnProyecto = $this->archivoRepository->consultarRutasArchivosDeUnaArticulacionProyecto($proyecto->articulacion_proyecto_id, $fase)->get();
             $archivosDeUnProyecto =  $proyecto->archivos()->whereHas('fase', function($query) use($fase) {
                 $query->where('nombre', $fase);
             })->get();

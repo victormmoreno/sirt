@@ -207,23 +207,25 @@ class ProyectoController extends Controller
      */
     public function datatableProyectosAnho(Request $request, $idnodo = null, $anho = null)
     {
-        $id = "";
-        if (session()->get('login_role') == User::IsDinamizador()) {
-            $id = auth()->user()->dinamizador->nodo_id;
-        } elseif (session()->get('login_role') == User::IsInfocenter()) {
-            $id = auth()->user()->infocenter->nodo_id;
+        $experto = "";
+        $nodo = "";
+        if (session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsInfocenter()) {
+            $experto = null;
+            $nodo = request()->user()->getNodoUser();
         } elseif (session()->get('login_role') == User::IsExperto()) {
-            $id = auth()->user()->gestor->id;
+            $experto = request()->user()->id;
+            $nodo = request()->user()->getNodoUser();
         } else {
-            $id = $idnodo;
+            $nodo = $idnodo;
+            $experto = null;
         }
 
         if (session()->get('login_role') == User::IsTalento()) {
-            $proyectos = $proyectos = $this->getProyectoRepository()->proyectosDelTalento(auth()->user()->talento->id);
+            $proyectos = $proyectos = $this->getProyectoRepository()->proyectosDelTalento(request()->user()->id)->get();
         } else if (session()->get('login_role') == User::IsExperto()) {
-            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('asesor_id', $id)->get();
+            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('experto', $experto)->where('nodos.id', $nodo)->get();
         } else {
-            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('nodos.id', $id)->get();
+            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('nodos.id', $nodo)->get();
         }
         return $this->datatableProyectos($request, $proyectos);
     }
@@ -486,7 +488,7 @@ class ProyectoController extends Controller
     {
         return view('proyectos.index', [
             'nodos' => Nodo::SelectNodo()->get(),
-            'gestores' => Gestor::ConsultarGestoresPorNodo(request()->user()->getNodoUser())->pluck('nombres_gestor', 'id')
+            'gestores' => User::ConsultarFuncionarios(request()->user()->getNodoUser(), User::IsExperto())->get()
         ]);
     }
 
@@ -643,6 +645,7 @@ class ProyectoController extends Controller
     public function inicio($id)
     {
         $proyecto = Proyecto::findOrFail($id);
+        // dd($proyecto->talentos);
         if(!request()->user()->can('detalle', $proyecto)) {
             alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
@@ -787,7 +790,9 @@ class ProyectoController extends Controller
             return back();
         }
         $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
-        $gestores = $this->getGestorRepository()->consultarGestoresPorLineaTecnologicaYNodoRepository($proyecto->sublinea->lineatecnologica_id, $proyecto->nodo_id)->pluck('nombre', 'id');
+        $gestores = User::ConsultarFuncionarios($proyecto->nodo_id, User::IsExperto(), $proyecto->sublinea->lineatecnologica_id)->get();
+        // dd($gestores);
+        // $gestores = $this->getGestorRepository()->consultarGestoresPorLineaTecnologicaYNodoRepository($proyecto->sublinea->lineatecnologica_id, $proyecto->nodo_id)->pluck('nombre', 'id');
         return view('proyectos.forms.cambiar_gestor', [
             'proyecto' => $proyecto,
             'historico' => $historico,

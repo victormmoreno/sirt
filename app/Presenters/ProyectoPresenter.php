@@ -57,13 +57,8 @@ class ProyectoPresenter extends Presenter
 
     public function proyectoFechaCierre()
     {
-<<<<<<< HEAD
-        if ($this->proyecto->fase->nombre == 'Suspendido' || $this->proyecto->fase->nombre == 'Finalizado') {
-            if ($this->proyecto->fecha_cierre == null) {
-=======
         if ($this->proyecto->fase->nombre == 'Concluido sin finalizar' || $this->proyecto->fase->nombre == 'Finalizado') {
             if ($this->proyecto->articulacion_proyecto->actividad->fecha_cierre == null) {
->>>>>>> 3a63e7ccf5f45a23cc15b1fe7fb520288f5fb547
                 return "No registra";
             } else {
                 return $this->proyecto->fecha_cierre->isoFormat('YYYY-MM-DD');
@@ -182,8 +177,8 @@ class ProyectoPresenter extends Presenter
 
     public function proyectoUserAsesor()
     {
-        if ($this->proyecto->has('asesor.user') && isset($this->proyecto->asesor->user)) {
-            return $this->proyecto->asesor->user->present()->userFullName();
+        if ($this->proyecto->has('asesor') && isset($this->proyecto->asesor)) {
+            return $this->proyecto->asesor->present()->userFullName();
         }
         return "No registra";
     }
@@ -395,7 +390,7 @@ class ProyectoPresenter extends Presenter
 
     public function talentoInterlocutor()
     {
-        return $this->proyecto->talentos()->wherePivot('talento_lider', '=', 1)->first()->user->present()->userFullName();
+        return $this->proyecto->talentos()->wherePivot('talento_lider', '=', 1)->first()->present()->userFullName();
     }
 
     public function proyectoCode()
