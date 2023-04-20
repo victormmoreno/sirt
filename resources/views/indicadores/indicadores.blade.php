@@ -30,6 +30,12 @@
         </div>
     </li>
     <li>
+        <div class="collapsible-header"><i class="material-icons">edit</i>Generar indicadores de articulaciones inscritas entre un rango de fechas</div>
+        <div class="collapsible-body">
+        @include('indicadores.componentes.articulaciones.inscritos')
+        </div>
+    </li>
+    <li>
         <div class="collapsible-header"><i class="material-icons">assignment</i>Metas de tecnoparque ({{__('Articulations')}})</div>
         <div class="collapsible-body">
         @include('indicadores.componentes.metas.metas-articulaciones')

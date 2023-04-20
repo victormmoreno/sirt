@@ -38,6 +38,29 @@ class ArticulationRepository extends Repository
         return $this->strError;
     }
 
+    public function getListArticulacions()
+    {
+        return Articulation::query()
+            ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')
+            ->leftJoin('articulation_scopes', 'articulation_scopes.id', '=', 'articulations.scope_id')
+            ->leftJoin('articulation_subtypes', 'articulation_subtypes.id', '=', 'articulations.articulation_subtype_id')
+            ->leftJoin('articulation_types', 'articulation_types.id', '=', 'articulation_subtypes.articulation_type_id')
+            ->join('articulation_stages', 'articulation_stages.id', 'articulations.articulation_stage_id')
+            ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
+            ->leftJoin('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+            ->join('articulationables', function($q) {
+                $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
+            })
+            ->leftJoin('proyectos', 'proyectos.id', '=', 'articulationables.articulationable_id')
+            ->leftJoin('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+            ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+            ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
+            ->leftJoin('users as createdby', 'createdby.id', '=', 'articulation_stages.created_by')
+            ->leftJoin('sedes', 'sedes.id', '=', 'articulationables.articulationable_id')
+            ->leftJoin('empresas', 'empresas.id', '=', 'sedes.empresa_id')
+            ->leftJoin('ideas', 'ideas.id', '=', 'articulationables.articulationable_id');
+    }
+
     /**
      * store
      * @param Request $request

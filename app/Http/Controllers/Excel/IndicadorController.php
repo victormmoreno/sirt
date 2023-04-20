@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Excel;
 
-use App\Exports\Indicadores\Indicadores2020Export;
+use App\Exports\Indicadores\{Indicadores2020Export, IndicadorArticulacionesExport};
 use App\Exports\Metas\MetasExport;
 use App\Exports\Idea\IdeasIndicadorExport;
-use App\Repositories\Repository\{IdeaRepository, ProyectoRepository};
+use App\Repositories\Repository\{IdeaRepository, ProyectoRepository, Articulation\ArticulationRepository};
 use Repositories\Repository\NodoRepository;
-use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Imports\MigracionMetasImport;
@@ -16,20 +15,21 @@ use App\Models\{Proyecto, Nodo};
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class IndicadorController extends Controller
 {
 
     private $proyectoRepository;
+    private $articulationRepostory;
     private $nodoRepository;
     private $ideaRepository;
     private $year_now;
 
-    public function __construct(ProyectoRepository $proyectoRepository, NodoRepository $nodoRepository, IdeaRepository $ideaRepository)
+    public function __construct(ProyectoRepository $proyectoRepository, ArticulationRepository $articulationRepostory, NodoRepository $nodoRepository, IdeaRepository $ideaRepository)
     {
         $this->setProyectoRepository($proyectoRepository);
+        $this->articulationRepostory = $articulationRepostory;
         $this->nodoRepository = $nodoRepository;
         $this->ideaRepository = $ideaRepository;
         $this->year_now = Carbon::now()->format('Y');
@@ -244,7 +244,7 @@ class IndicadorController extends Controller
     }
 
     public function downloadMetas(Request $request)
-    {   
+    {
         if ($request->txtnodo_metas_id[0] != 'all') {
             if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
                 $nodos = $request->txtnodo_metas_id;
@@ -306,6 +306,45 @@ class IndicadorController extends Controller
             }
         }
         return $metas;
+    }
+
+    public function exportIndicadorArticulacionesInscritas($idnodo, string $fecha_inicio, string $fecha_fin, string $hoja = null)
+    {
+        $query = null;
+
+        if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
+
+            $idnodo = $idnodo;
+
+        } else if (session()->get('login_role') == User::IsDinamizador()) {
+            $idnodo = auth()->user()->dinamizador->nodo_id;
+        } else if (session()->get('login_role') == User::IsInfocenter()) {
+            $idnodo = auth()->user()->infocenter->nodo_id;
+        } else {
+            $idnodo = auth()->user()->gestor->nodo_id;
+        }
+        $query = $this->articulationRepostory->getListArticulacions()
+                ->select(
+                    'articulation_stages.*', 'articulations.code as articulation_code',
+                    'articulations.id as articulation_id','articulations.start_date as articulation_start_date', 'articulations.end_date as articulation_end_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
+                    'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
+                    'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id'
+                )
+                ->selectRaw('year(articulations.start_date) as articulation_start_date_year, MONTHNAME(articulations.start_date) as articulation_start_date_month, year(articulations.end_date) as articulation_end_date_year, MONTHNAME(articulations.end_date) as articulation_end_date_month')
+                ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', if(articulationables.articulationable_type = 'App\\\Models\\\Sede', 'Empresa', if(articulationables.articulationable_type = 'App\\\Models\\\Idea', 'Idea', 'No registra'))) as articulation_state_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by, concat(empresas.nit, ' - ', empresas.nombre, ' - ', sedes.nombre_sede) as sede, concat(ideas.codigo_idea, ' - ', ideas.nombre_proyecto) as idea")
+                ->where(function($query) use ($idnodo){
+                    if(isset($idnodo) && $idnodo != 'all'){
+                        $query->where('articulation_stages.node_id', $idnodo);
+                    }
+                })
+                ->where(function($query) use ($fecha_inicio, $fecha_fin){
+                    if(isset($fecha_inicio) && isset($fecha_fin)){
+                        $query->whereBetween('articulations.start_date', [$fecha_inicio, $fecha_fin]);
+                    }
+                })
+                ->get();
+        // dd($query);
+        return Excel::download(new IndicadorArticulacionesExport($query, $hoja), "Indicador Articulaciones Inscritas {$fecha_inicio} a {$fecha_fin}.xlsx");
     }
 
     private function setProyectoRepository($proyectoRepository)

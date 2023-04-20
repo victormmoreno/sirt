@@ -42,6 +42,14 @@ class ModelPolicy
         return false;
     }
 
+    public function showIndicadoresArticulacionOptions(User $user)
+    {
+        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador()) {
+            return true;
+        }
+        return false;
+    }
+
     public function showDahsboardExperto(User $user)
     {
         if (session()->get('login_role') == $user->IsExperto()) {

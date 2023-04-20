@@ -10858,8 +10858,26 @@ function generarExcelConTodosLosIndicadoresInscritos() {
   } else {
     location.href = '/excel/export_proyectos_inscritos/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+hoja;
   }
-
 }
+
+function generarExcelIndicadoresArticulacionesInscritas() {
+    let nodo = $('#txtnodo_articulaciones_inscritas').val();
+    let hoja = $('#txthoja_articulaciones_inscritas').val();
+    let fecha_inicio = $('#txtfecha_inicio_articulaciones_inscritas').val();
+    let fecha_fin = $('#txtfecha_fin_articulaciones_inscritas').val();
+    if (!isset(nodo)) {
+        nodo = 0;
+    }
+    if (!isset(hoja)) {
+      hoja = 'all';
+    }
+
+    if (fecha_inicio > fecha_fin) {
+      Swal.fire('Error!', 'Seleccione un rango de fechas válido', 'error');
+    } else {
+      location.href = `/excel/export_articulaciones_inscritos/${nodo}/${fecha_inicio}/${fecha_fin}/${hoja}`;
+    }
+  }
 
 function selectAll(source, elementaName) {
   checkboxes = document.getElementsByClassName(elementaName);
@@ -10928,6 +10946,7 @@ function downloadIdeasIndicadores(e) {
       document.frmDescargarIdeas.submit();
   }
 }
+
 $('#txtcontenido').summernote({
   lang: 'es-ES',
   height: 300
