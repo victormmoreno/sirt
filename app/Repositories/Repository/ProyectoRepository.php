@@ -226,13 +226,13 @@ class ProyectoRepository extends Repository
             'economia_naranja',
             'fases.nombre AS nombre_fase',
             'proyectos.id',
-            'proyectos.asesor_id'
+            'proyectos.experto_id'
         )
         ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
         ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) as nombre_idea')
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
-        ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
-        ->join('users', 'users.id', '=', 'gestores.user_id')
+        // ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
+        ->join('users', 'users.id', '=', 'proyectos.experto_id')
         ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
         ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
         ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
@@ -336,7 +336,7 @@ class ProyectoRepository extends Repository
     {
         return Proyecto::select('fases.nombre AS fase', 'entidades.nombre')
         ->selectRaw('count(proyectos.id) as cantidad')
-        ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
+        ->join('users', 'users.id', '=', 'proyectos.experto_id')
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
         ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
@@ -379,7 +379,7 @@ class ProyectoRepository extends Repository
 
     public function proyectosSeguimientoAbiertos()
     {
-        return Proyecto::join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
+        return Proyecto::join('users', 'users.id', '=', 'proyectos.experto_id')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
         ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
@@ -631,9 +631,10 @@ class ProyectoRepository extends Repository
         ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
-        ->join('proyecto_talento', 'proyecto_talento.proyecto_id', '=', 'proyecto.id')
-        ->join('talentos', 'talentos.id', '=', 'proyecto_talento.talento_id')
-        ->join('users AS user_talento', 'user_talento.id', '=', 'talentos.user_id')
+        ->join('proyecto_talento', 'proyecto_talento.proyecto_id', '=', 'proyectos.id')
+        // ->join('talentos', 'talentos.id', '=', 'proyecto_talento.talento_id')
+        ->join('users AS user_talento', 'user_talento.id', '=', 'proyecto_talento.user_id')
+        ->join('users', 'users.id', '=', 'proyectos.experto_id')
         ->where('user_talento.id', $id);
     }
 
@@ -1004,6 +1005,22 @@ class ProyectoRepository extends Repository
     }
 
     /**
+     * Retornar los emails de los destinatarios en un array
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    private function returnEmailDestinatariosArray($users)
+    {
+        $array = array();
+        foreach ($users as $id => $user) {
+            $array[$id] = array('email' => $user->email);
+        }
+        return $array;
+    }
+
+    /**
      * Aprueba la fase según el rol y fase que se está aprobando
      *
      * @param $request
@@ -1019,14 +1036,14 @@ class ProyectoRepository extends Repository
             $mensaje = null;
             $title = null;
             $ruta = route('proyecto');
+            $destinatarios = array();
 
             $proyecto = Proyecto::findOrFail($id);
-            $dinamizadorRepository = new DinamizadorRepository;
-            $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->nodo_id)->get();
-            $destinatarios = $dinamizadorRepository->getAllDinamizadorPorNodoArray($dinamizadores);
-            array_push($destinatarios, ['email' => $proyecto->asesor->user->email]);
-            $talento_lider = $proyecto->talentos()->wherePivot('talento_lider', 1)->first();
-            $talento_lider = $talento_lider->user;
+            $dinamizadores = User::ConsultarFuncionarios($proyecto->nodo_id, User::IsDinamizador())->get();
+            $destinatarios = $this->returnEmailDestinatariosArray($dinamizadores);
+            array_push($destinatarios, ['email' => $proyecto->asesor->email]);
+            // $talento_lider = $proyecto->talentos()->wherePivot('talento_lider', 1)->first();
+            // $talento_lider = $talento_lider->user;
             $notificacion_act = ControlNotificaciones::find($request->control_notificacion_id);
             if ($notificacion_act->estado != $notificacion_act->IsPendiente()) {
                 return [
@@ -1047,7 +1064,7 @@ class ProyectoRepository extends Repository
                     // Envio de un correo informando porque no se aprobó el cambio de fase
                     event(new ProyectoWasntApproved($proyecto, $regMovimiento));
 
-                    Notification::send($proyecto->asesor->user, new ProyectoNoAprobarFase($proyecto, $regMovimiento));
+                    Notification::send($proyecto->asesor, new ProyectoNoAprobarFase($proyecto, $regMovimiento));
                     $notificacion_act->update(['estado' => $notificacion_act->IsRechazado()]);
 
                 } else {

@@ -17,6 +17,7 @@ class UserNodo extends Model
     protected $fillable = [
         'user_id',
         'nodo_id',
+        'linea_id',
         'role',
         'honorarios',
     ];
@@ -38,6 +39,11 @@ class UserNodo extends Model
     public function nodo()
     {
         return $this->belongsTo(Nodo::class, 'nodo_id', 'id');
+    }
+
+    public function linea()
+    {
+        return $this->belongsTo(LineaTecnologica::class, 'linea_id', 'id');
     }
 
     public function getHonorariosAttribute($honorarios)

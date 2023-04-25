@@ -106,7 +106,7 @@ class UsoInfraestructura extends Model
 
     public function usogestores()
     {
-        return $this->morphedByMany(User::class, 'asesorable', 'gestor_uso', 'usoinfraestructura_id')->withTimestamps()
+        return $this->belongsToMany(User::class, 'gestor_uso', 'usoinfraestructura_id', 'asesor_id')->withTimestamps()
         ->withPivot([
             'asesoria_directa',
             'asesoria_indirecta',

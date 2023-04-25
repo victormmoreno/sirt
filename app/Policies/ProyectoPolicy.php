@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\User;
 use App\Models\{Proyecto, ControlNotificaciones, Fase};
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Str;
 
 class ProyectoPolicy
 {
@@ -43,20 +44,14 @@ class ProyectoPolicy
     */
     public function detalle(User $user, Proyecto $proyecto)
     {
-        // if ($proyecto->present()->proyectoFase() == $proyecto->IsFinalizado() || $proyecto->present()->proyectoFase() == $proyecto->IsSuspendido())
-        //     return false;
-        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador())
+        if (Str::contains(session()->get('login_role'), [$user->IsActivador(), $user->IsAdministrador()]))
             return true;
         if (session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->user->id == auth()->user()->id)
             return true;
-        if (session()->get('login_role') == $user->IsDinamizador() && $proyecto->nodo_id == auth()->user()->dinamizador->nodo_id)
-            return true;
-        if (session()->get('login_role') == $user->IsInfocenter() && $proyecto->nodo_id == auth()->user()->infocenter->nodo_id)
-            return true;
-        if (session()->get('login_role') == $user->IsArticulador() && $proyecto->nodo_id == auth()->user()->articulador->nodo_id)
+        if (Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsArticulador()]) && $proyecto->nodo_id == request()->user()->getNodoUser())
             return true;
         if (session()->get('login_role') == $user->IsTalento()) {
-            $talento = $proyecto->talentos()->wherePivot('talento_id', auth()->user()->talento->id)->first();
+            $talento = $proyecto->talentos()->wherePivot('user_id', request()->user()->id)->first();
             if ($talento != null) {
                 return true;
             }
@@ -77,7 +72,7 @@ class ProyectoPolicy
         if ($proyecto->present()->proyectoFase() == $proyecto->IsFinalizado() || $proyecto->present()->proyectoFase() == $proyecto->IsSuspendido()) {
             if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador())
                 return true;
-            if (session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->user->id == auth()->user()->id)
+            if (session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->id == auth()->user()->id)
                 return true;
             if (session()->get('login_role') == $user->IsDinamizador() && $proyecto->nodo_id == auth()->user()->dinamizador->nodo_id)
                 return true;
@@ -86,7 +81,7 @@ class ProyectoPolicy
             if (session()->get('login_role') == $user->IsArticulador() && $proyecto->nodo_id == auth()->user()->articulador->nodo_id)
                 return true;
             if (session()->get('login_role') == $user->IsTalento()) {
-                $talento = $proyecto->talentos()->wherePivot('talento_id', auth()->user()->talento->id)->first();
+                $talento = $proyecto->talentos()->wherePivot('user_id', auth()->user()->id)->first();
                 if ($talento != null) {
                     return true;
                 }
@@ -379,7 +374,7 @@ class ProyectoPolicy
                     if (session()->get('login_role') == $user->IsAdministrador()) {
                         return true;
                     } else {
-                        if ($ult_notificacion->receptor->id == auth()->user()->id && $ult_notificacion->rol_receptor->name == session()->get('login_role')) {
+                        if ($ult_notificacion->receptor->id == request()->user()->id && $ult_notificacion->rol_receptor->name == session()->get('login_role')) {
                             return true;
                         }
                     }
@@ -410,8 +405,8 @@ class ProyectoPolicy
                     if (session()->get('login_role') == $user->IsAdministrador()) {
                         return true;
                     } else {
-                        if (session()->get('login_role') == $user->IsDinamizador() && $proyecto->nodo_id == auth()->user()->dinamizador->nodo_id) {
-                            if ($ult_notificacion->receptor->id == auth()->user()->id && $ult_notificacion->rol_receptor->name == session()->get('login_role')) {
+                        if (session()->get('login_role') == $user->IsDinamizador() && $proyecto->nodo_id == request()->user()->getNodoUser()) {
+                            if ($ult_notificacion->receptor->id == request()->user()->id && $ult_notificacion->rol_receptor->name == session()->get('login_role')) {
                                 return true;
                             }
                         } else {

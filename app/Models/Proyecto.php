@@ -352,7 +352,7 @@ class Proyecto extends Model
     public function scopeAsesor($query, $asesor)
     {
         if (!empty($asesor) && $asesor != null && $asesor != 'all') {
-            return $query->where('asesor_id', $asesor);
+            return $query->where('experto_id', $asesor);
         }
         return $query;
     }

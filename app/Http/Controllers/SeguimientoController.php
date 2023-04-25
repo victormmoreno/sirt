@@ -469,17 +469,18 @@ class SeguimientoController extends Controller
    **/
   public function seguimientoActualDelGestor(int $id)
   {
-    $gestor = Gestor::find($id);
-    $idgestor = $gestor->id;
-    $idnodo = $gestor->nodo_id;
+    $experto = User::find($id);
+    $idexperto = $experto->id;
+    // dd($experto->experto->nodo_id);
+    $idnodo = $experto->experto->nodo_id;
 
-    $datos = array();
+    // $datos = array();
     $Pabiertos = 0;
     $Pfinalizados = 0;
     // Proyectos
 
-    $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->select('entidades.nombre', 'fases.nombre as fase')->selectRaw('count(trl_esperado) as trl_esperado')->groupBy('entidades.nombre', 'fase')->where('nodos.id', $idnodo)->where('g.id', $idgestor)->get();
-    $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->where('g.id', $idgestor)->where('nodos.id', $idnodo)->get();
+    $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->select('entidades.nombre', 'fases.nombre as fase')->selectRaw('count(trl_esperado) as trl_esperado')->groupBy('entidades.nombre', 'fase')->where('nodos.id', $idnodo)->where('users.id', $idexperto)->get();
+    $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->where('users.id', $idexperto)->where('nodos.id', $idnodo)->get();
     $agrupados = $this->retornarValoresDelSeguimientoPorFasesNoGroup($Pabiertos, $Pfinalizados);
     // dd($agrupados);
     return response()->json([

@@ -2,7 +2,7 @@
 # Su idea fue postulada | Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.
 
 Señor(a)<br>
-<b>_{{$idea->talento->user->nombres }} {{$idea->talento->user->apellidos }}_</b><br>
+<b>_{{$idea->user->nombres }} {{$idea->user->apellidos }}_</b><br>
 Cordial Saludo.
 
 Ha recibido este mensaje porque hemos recibido la postulación de su idea, la cual fue asocida a Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.<br>

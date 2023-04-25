@@ -9,7 +9,7 @@ use App\Models\Sede;
 use App\Models\RutaModel;
 use App\Models\Comite;
 use App\Models\Talento;
-use App\Models\Gestor;
+use App\User;
 use App\Models\Entrenamiento;
 use App\Models\HistorialEntidad;
 use App\Models\UsoInfraestructura;
@@ -54,9 +54,9 @@ trait IdeaTrait
         return $this->belongsTo(EstadoIdea::class, 'estadoidea_id', 'id');
     }
 
-    public function gestor()
+    public function asesor()
     {
-        return $this->belongsTo(Gestor::class, 'gestor_id', 'id');
+        return $this->belongsTo(User::class, 'asesor_id', 'id');
     }
 
     public function sede()
@@ -64,9 +64,9 @@ trait IdeaTrait
         return $this->belongsTo(Sede::class, 'sede_id', 'id');
     }
 
-    public function talento()
+    public function user()
     {
-        return $this->belongsTo(Talento::class, 'talento_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function comites()

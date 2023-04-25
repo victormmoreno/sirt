@@ -18,7 +18,7 @@
             <option value="">Seleccione el nodo del experto</option>
             @if ($existe)
                 @forelse ($nodos as $id => $nodo)
-                <option value={{$id}} {{ $proyecto->asesor->nodo_id == $id ? 'selected' : '' }}>{{$nodo->nodos}}</option>
+                <option value={{$id}} {{ $proyecto->asesor->user_nodo->nodo_id == $id ? 'selected' : '' }}>{{$nodo->nodos}}</option>
                 @empty
                 <option value=""> No hay información disponible</option>
                 @endforelse
@@ -46,11 +46,11 @@
         <div class="row">
             <div class="input-field col s12 m6 l6">
                 <input disabled id="txtgestor" name="txtgestor"
-                    value="{{ $proyecto->asesor->user->nombres }} {{ $proyecto->asesor->user->apellidos }}" type="text">
+                    value="{{ $proyecto->asesor->nombres }} {{ $proyecto->asesor->apellidos }}" type="text">
                 <label for="txtgestor" class="">Experto</label>
             </div>
             <div class="input-field col s12 m6 l6">
-                <input disabled id="txtlinea" name="txtlinea" value="{{ $proyecto->asesor->lineatecnologica->nombre }}"
+                <input disabled id="txtlinea" name="txtlinea" value="{{ $proyecto->asesor->experto->linea->nombre }}"
                     type="text">
                 <label for="txtlinea" class="">Línea Tecnológica</label>
             </div>
@@ -404,7 +404,7 @@
                                                             @foreach ($proyecto->talentos as $key => $value)
                                                                 <tr id="talentoAsociadoAProyecto{{$value->id}}">
                                                                 <td><input type="radio" class="with-gap" {{$value->pivot->talento_lider == 1 ? 'checked' : ''}} name="radioTalentoLider" id="radioButton'{{$value->id}}'" value="{{$value->id}}"/><label for ="radioButton'{{$value->id}}'"></label></td>
-                                                                <td><input type="hidden" name="talentos[]" value="{{$value->id}}">{{$value->user()->withTrashed()->first()->documento}} - {{$value->user()->withTrashed()->first()->nombres}} {{$value->user()->withTrashed()->first()->apellidos}}</td>
+                                                                <td><input type="hidden" name="talentos[]" value="{{$value->id}}">{{$value->documento}} - {{$value->nombres}} {{$value->apellidos}}</td>
                                                                 @if ($proyecto->present()->proyectoFase() == 'Inicio')
                                                                 <td><a class="waves-effect bg-danger white-text btn" onclick="eliminarTalentoDeProyecto_FaseInicio({{$value->id}});"><i class="material-icons">delete_sweep</i></a></td>
                                                                 @endif

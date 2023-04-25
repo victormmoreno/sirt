@@ -176,8 +176,7 @@ class IdeaRepository
             'entrenamiento',
             'comites',
             'comites.estado',
-            'gestor',
-            'gestor.user' => function($query) {
+            'asesor' => function($query) {
                 $query->withTrashed();
             }]);
     }
@@ -594,7 +593,6 @@ class IdeaRepository
 
     public function enviarIdeaAlNodo($request, $idea)
     {
-        // exit();
         DB::beginTransaction();
         try {
             if ( !$idea->validarAcuerdoConfidencialidad() ) {
@@ -625,12 +623,7 @@ class IdeaRepository
             //Enviar correo al talento que inscribió la idea de proyecto
             event(new IdeaHasReceived($idea));
             // Busca los articuladores del nodo
-            $users = User::infoUserRole(['Articulador'], ['gestor', 'gestor.nodo'])->whereHas(
-                'gestor.nodo',
-                function ($query) use ($idea) {
-                    $query->where('id', $idea->nodo_id);
-                }
-            )->get();
+            $users = User::ConsultarFuncionarios($idea->nodo_id, User::IsArticulador())->get();
             // Envia un correo a los articuladores del nodo
             if (!$users->isEmpty()) {
                 Notification::send($users, new IdeaReceived($idea));

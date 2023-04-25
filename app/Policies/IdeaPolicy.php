@@ -87,7 +87,7 @@ class IdeaPolicy
      **/
     public function duplicar(User $user, Idea $idea)
     {
-        if (session()->get('login_role') == $user->IsTalento() && $user->talento->id == $idea->talento_id && ($idea->estadoIdea->nombre == $idea->estadoIdea->IsRechazadoComite() || $idea->estadoIdea->nombre == $idea->estadoIdea->IsPBT())) {
+        if (session()->get('login_role') == $user->IsTalento() && $user->id == $idea->user_id && ($idea->estadoIdea->nombre == $idea->estadoIdea->IsRechazadoComite() || $idea->estadoIdea->nombre == $idea->estadoIdea->IsPBT())) {
             return true;
         }
         if (session()->get('login_role') == $user->IsDinamizador() && $user->dinamizador->nodo_id == $idea->nodo_id) {
@@ -130,7 +130,7 @@ class IdeaPolicy
         if ($idea->estadoIdea->nombre == $idea->estadoIdea->IsInhabilitado()) {
             return false;
         }
-        if (session()->get('login_role') == $user->IsTalento() && $user->talento->id == $idea->talento_id) {
+        if (session()->get('login_role') == $user->IsTalento() && $user->id == $idea->user_id) {
             return true;
         }
         if (session()->get('login_role') == $user->IsDinamizador() && $user->dinamizador->nodo_id == $idea->nodo_id) {
@@ -159,7 +159,7 @@ class IdeaPolicy
     public function postularIdea(User $user, Idea $idea)
     {
         if ($idea->estadoIdea->nombre == $idea->estadoIdea->IsRegistro()) {
-            if (session()->get('login_role') == $user->IsTalento() && $user->talento->id == $idea->talento_id) {
+            if (session()->get('login_role') == $user->IsTalento() && $user->id == $idea->user_id) {
                 return true;
             }
             if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador()) {
@@ -217,7 +217,7 @@ class IdeaPolicy
      */
     public function update(User $user, Idea $idea)
     {
-        if ($idea->estadoIdea->nombre == EstadoIdea::IsRegistro() && session()->get('login_role') == $user->IsTalento() && $user->talento->id == $idea->talento_id) {
+        if ($idea->estadoIdea->nombre == EstadoIdea::IsRegistro() && session()->get('login_role') == $user->IsTalento() && $user->id == $idea->user_id) {
             return true;
         }
         if ($idea->estadoIdea->nombre == EstadoIdea::IsRegistro() && Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsArticulador()]) && $user->getNodoUser() == $idea->nodo_id) {
@@ -238,10 +238,10 @@ class IdeaPolicy
      */
     public function show(User $user, Idea $idea)
     {
-        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador()) {
+        if (Str::contains(session()->get('login_role'), [$user->IsAdministrador(), $user->IsActivador()])) {
             return true;
         }
-        if (session()->get('login_role') == $user->IsTalento() && $idea->talento_id == $user->talento->id) {
+        if (session()->get('login_role') == $user->IsTalento() && $idea->user_id == $user->id) {
             return true;
         }
         if ((Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsArticulador(), $user->IsExperto()])) && $idea->nodo_id == $user->getNodoUser()) {

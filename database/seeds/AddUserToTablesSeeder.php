@@ -63,7 +63,7 @@ class AddUserToTablesSeeder extends Seeder
                 ->update(['evaluador_id' => $gestor->user_id]);
 
                 DB::table('gestor_uso')
-                ->where('gestor_id', $gestor->user_id)
+                ->where('asesorable_id', $gestor->user_id)
                 ->update(['asesor_id' => $gestor->user_id]);
                 
                 DB::table('proyectos')

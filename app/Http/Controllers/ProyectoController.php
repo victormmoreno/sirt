@@ -39,6 +39,7 @@ class ProyectoController extends Controller
         }
         $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
         $costo = $this->costoController->costoProject($proyecto->id);
+        // dd($costo);
         return view('proyectos.detalles.detalle', [
             'proyecto' => $proyecto,
             'costo' => $costo,
@@ -554,9 +555,10 @@ class ProyectoController extends Controller
             alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
+        // dd($proyecto->asesor->experto);
         if ($proyecto->fase->nombre == Proyecto::IsInicio() || session()->get('login_role') == User::IsAdministrador()) {
             return view('proyectos.forms.views.form_inicio_view', [
-                'sublineas' => Sublinea::SubLineasDeUnaLinea($proyecto->asesor->lineatecnologica->id)->get()->pluck('nombre', 'id'),
+                'sublineas' => Sublinea::SubLineasDeUnaLinea($proyecto->sublinea->linea->id)->get()->pluck('nombre', 'id'),
                 'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
                 'proyecto' => $proyecto,
                 'nodos' => Nodo::SelectNodo()->get()
@@ -1191,7 +1193,7 @@ class ProyectoController extends Controller
                 'articulacion_proyecto.proyecto.nodo.entidad' => function ($query) {
                     $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
                 }
-            ])->where('codigo_actividad', $code)->first();
+            ])->where('codigo_proyecto', $code)->first();
 
 
             // $costo = $this->costoController->costosDeUnaActividad($actividad->id);
@@ -1218,12 +1220,12 @@ class ProyectoController extends Controller
                 $query->select('id', 'actividad_id');
             },
             'articulacion_proyecto.actividad'=> function($query){
-                $query->select('id', 'gestor_id', 'nodo_id', 'codigo_actividad', 'nombre', 'objetivo_general', 'fecha_inicio', 'fecha_cierre');
+                $query->select('id', 'gestor_id', 'nodo_id', 'codigo_proyecto', 'nombre', 'objetivo_general', 'fecha_inicio', 'fecha_cierre');
             },
             'articulacion_proyecto.talentos',
             'articulacion_proyecto.talentos.user',
         ])->whereHas('articulacion_proyecto.actividad', function ($subQuery) use ($value) {
-            $subQuery->where('codigo_actividad', $value);
+            $subQuery->where('codigo_proyecto', $value);
         })
         ->whereIn('fase_id', [Fase::IsFinalizado(), Fase::IsEjecucion(), Fase::IsCierre()])
         ->first();
@@ -1270,7 +1272,7 @@ class ProyectoController extends Controller
                     $query->select('id', 'actividad_id');
                 },
                 'articulacion_proyecto.actividad'=> function($query){
-                    $query->select('id', 'gestor_id', 'nodo_id', 'codigo_actividad', 'nombre', 'objetivo_general', 'fecha_inicio', 'fecha_cierre');
+                    $query->select('id', 'gestor_id', 'nodo_id', 'codigo_proyecto', 'nombre', 'objetivo_general', 'fecha_inicio', 'fecha_cierre');
                 }
             ])
             ->nodo($nodo)
@@ -1349,7 +1351,7 @@ class ProyectoController extends Controller
         $experto = $experto == "null" ? null : $experto;
         return response()->json([
             'data' => [
-                'proyectos' => $this->proyectoRepository->selectProyectosLimitePlaneacion($nodo, $experto, $limite_inicio)->groupBy('codigo_actividad')->get()
+                'proyectos' => $this->proyectoRepository->selectProyectosLimitePlaneacion($nodo, $experto, $limite_inicio)->groupBy('codigo_proyecto')->get()
             ]
         ]);
     }

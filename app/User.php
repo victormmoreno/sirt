@@ -258,10 +258,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(Eps::class, 'eps_id', 'id');
     }
 
-    public function gestor()
-    {
-        return $this->hasOne(Gestor::class, 'user_id', 'id');
-    }
+    // public function gestor()
+    // {
+    //     return $this->hasOne(Gestor::class, 'user_id', 'id');
+    // }
 
     public function articulador()
     {
@@ -273,6 +273,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(UserNodo::class, 'user_id', 'id')->where('role', User::IsApoyoTecnico());
     }
 
+    public function experto()
+    {
+        return $this->hasOne(UserNodo::class, 'user_id', 'id')->where('role', User::IsExperto());
+    }
+
     public function user_nodo()
     {
         return $this->hasOne(UserNodo::class, 'user_id', 'id')->where('role', session()->get('login_role'));
@@ -280,7 +285,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function dinamizador()
     {
-        return $this->hasOne(Dinamizador::class, 'user_id', 'id');
+        return $this->hasOne(UserNodo::class, 'user_id', 'id')->where('role', User::IsDinamizador());
     }
 
     public function contratista()
@@ -343,7 +348,7 @@ class User extends Authenticatable implements JWTSubject
             ->Join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id');
     }
 
-    public function scopeSelectUser($query)
+    public function scopeSelectUserFuncionario($query)
     {
         return $query->select(
             'users.id',
@@ -359,13 +364,14 @@ class User extends Authenticatable implements JWTSubject
             'users.apellidos',
             'user_nodo.role'
         )
-        ->selectRaw("CONCAT(users.nombres,' ',users.apellidos) as nombre_completo")
-        ->join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id');
+        ->selectRaw("CONCAT(users.nombres,' ',users.apellidos) as nombre_completo, GROUP_CONCAT(roles.name, ',') AS roles")
+        ->join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
+        ->groupBy('users.documento');
     }
 
-    public function scopeConsultarFuncionarios($query, $nodo, $role, $linea)
+    public function scopeConsultarFuncionarios($query, $nodo = null, $role = null, $linea = null)
     {
-        return $this->SelectUser()->FuncionarioJoin()->RoleFuncionario($role)->NodoFuncionario($nodo)->LineaNodo($linea);
+        return $this->SelectUserFuncionario()->FuncionarioJoin()->RoleFuncionario($role)->NodoFuncionario($nodo)->LineaNodo($linea);
     }
 
     public function scopeConsultarUsuarios($query)
@@ -391,7 +397,7 @@ class User extends Authenticatable implements JWTSubject
     public function scopeRoleFuncionario($query, $role)
     {
         if (!empty($role) && $role != null && $role != 'all') {
-            return $query->where('roles.name', $role)->where('role', $role);
+            return $query->where('roles.name', $role)->where('user_nodo.role', $role);
         }
         return $query;
     }
@@ -439,7 +445,7 @@ class User extends Authenticatable implements JWTSubject
                 });
             }
             if ($role == User::IsExperto()) {
-                return $query->whereHas('gestor.nodo', function ($subQuery) use ($nodo) {
+                return $query->whereHas('experto.nodo', function ($subQuery) use ($nodo) {
                     $subQuery->where('id', $nodo);
                 });
             }
@@ -529,10 +535,11 @@ class User extends Authenticatable implements JWTSubject
     {
         if ((!empty($roles) && !collect($roles)->contains('all') && (!collect($roles)->contains(User::IsTalento())) && !empty($nodos) &&  !collect($nodos)->contains('all'))) {
             if (collect($roles)->contains(User::IsDinamizador())) {
-                return $query->join('dinamizador', function ($join) {
-                    $join->on('users.id', '=', 'dinamizador.user_id');
+                return $query->join('user_nodo', function ($join) {
+                    $join->on('users.id', '=', 'user_nodo.user_id')
+                        ->where('user_nodo.role', User::IsDinamizador());
                 })->join('nodos', function ($join) use ($nodos) {
-                    $join->on('nodos.id', '=', 'dinamizador.nodo_id')
+                    $join->on('nodos.id', '=', 'user_nodo.nodo_id')
                         ->whereIn('nodos.id', $nodos);
                 });
             }
