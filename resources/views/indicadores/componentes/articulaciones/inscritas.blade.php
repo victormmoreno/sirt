@@ -13,10 +13,10 @@
                 <label for="txtnodo_articulaciones_inscritas" class="active">Seleccione el nodo</label>
             </div>
             <div class="input-field col s12 m6 l6">
-                <select class="js-states select2 browser-default" name="txthoja_articulaciones_inscritas" id="txthoja_nombre_inscritos" style="width: 100%">
+                <select class="js-states select2 browser-default" name="txthoja_articulaciones_inscritas" id="txthoja_articulaciones_inscritas" style="width: 100%">
                     <option value="articulaciones">Articulaciones</option>
-                    <option value="tal_ejecutores">Talentos ejecutores</option>
-                    <option value="tal_interlocutores">Talentos Interlocutores</option>
+                    <option value="talentos">Talentos</option>
+
                 </select>
                 <label for="txthoja_articulaciones_inscritas" class="active">Seleccione que información desea exportar</label>
             </div>

@@ -32,7 +32,19 @@
     <li>
         <div class="collapsible-header"><i class="material-icons">edit</i>Generar indicadores de articulaciones inscritas entre un rango de fechas</div>
         <div class="collapsible-body">
-        @include('indicadores.componentes.articulaciones.inscritos')
+        @include('indicadores.componentes.articulaciones.inscritas')
+        </div>
+    </li>
+    <li>
+        <div class="collapsible-header"><i class="material-icons">done</i>Generar indicadores de articulaciones finalizadas y concluidas sin finalizar entre un rango de fechas</div>
+        <div class="collapsible-body">
+        @include('indicadores.componentes.articulaciones.finalizadas')
+        </div>
+    </li>
+    <li>
+        <div class="collapsible-header"><i class="material-icons">play_arrow</i>Generar indicadores de proyectos activos</div>
+        <div class="collapsible-body">
+        @include('indicadores.componentes.articulaciones.activas')
         </div>
     </li>
     <li>

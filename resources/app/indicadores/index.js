@@ -102,6 +102,25 @@ function generarExcelConTodosLosIndicadoresFinalizados() {
   }
 }
 
+function generarExcelIndicadoresArticulacionesFinalizadas() {
+    let nodo = $('#txtnodo_articulaciones_finalizadas').val();
+    let hoja = $('#txthoja_articulaciones_finalizadas').val();
+    let fecha_inicio = $('#txtfecha_inicio_finalizadas').val();
+    let fecha_fin = $('#txtfecha_fin_finalizadas').val();
+
+    if (!isset(nodo)) {
+        nodo = 0;
+    }
+    if (!isset(hoja)) {
+        hoja = 'all';
+    }
+    if (fecha_inicio > fecha_fin) {
+        Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
+    } else {
+        location.href = `/excel/export_articulaciones_finalizadas/${nodo}/${fecha_inicio}/${fecha_fin}/${hoja}`;
+    }
+}
+
 function generarExcelConTodosLosIndicadoresInscritos() {
   let idnodo = $('#txtnodo_id_inscritos').val();
   let hoja = $('#txthoja_nombre_inscritos').val();
@@ -130,7 +149,7 @@ function generarExcelIndicadoresArticulacionesInscritas() {
         nodo = 0;
     }
     if (!isset(hoja)) {
-      hoja = 'all';
+        hoja = 'all';
     }
 
     if (fecha_inicio > fecha_fin) {

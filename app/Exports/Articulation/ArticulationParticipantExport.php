@@ -7,7 +7,7 @@ use App\Exports\FatherExport;
 use Maatwebsite\Excel\Events\{AfterSheet};
 use PhpOffice\PhpSpreadsheet\Style\Border;
 
-class ArticulacionExport extends FatherExport
+class ArticulationParticipantExport extends FatherExport
 {
     const rowRangeHeading = 'A1:AE1';
     public function __construct($query)
@@ -69,6 +69,6 @@ class ArticulacionExport extends FatherExport
      */
     public function title(): String
     {
-        return __('Articulations');
+        return "Talentos";
     }
 }
