@@ -4,7 +4,7 @@
     @can('showIndicadoresProyectoOptions', Illuminate\Database\Eloquent\Model::class)
         <div class="row">
             <div class="input-field col s12 m6 l6">
-                <select name="txtnodo_id_inscritos" id="txtnodo_id_inscritos" style="width: 100%">
+                <select class="js-states select2 browser-default"  name="txtnodo_id_inscritos" id="txtnodo_id_inscritos" style="width: 100%">
                 <option value="all">Todos</option>
                 @foreach($nodos as $nodo)
                     <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
@@ -34,7 +34,7 @@
             <label for="txtfecha_fin_inscritos">Inscritos hasta</label>
         </div>
         <div class="center input-field col s12 m6 l6">
-            <a onclick="generarExcelConTodosLosIndicadoresInscritos();" class="btn"><i class="material-icons left">file_download</i>Descargar</a>
+            <a onclick="generarExcelConTodosLosIndicadoresInscritos();" class="waves-effect waves-grey bg-secondary-lighten white-text btn-flat search-tabs-button m-l-xs"><i class="material-icons left">file_download</i>Descargar</a>
         </div>
     </div>
 </div>

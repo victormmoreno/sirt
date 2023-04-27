@@ -31,7 +31,7 @@
             <label for="txtfecha_fin_finalizadas">Finalizadas hasta</label>
         </div>
         <div class="center input-field col s12 m6 l6">
-            <a onclick="generarExcelIndicadoresArticulacionesFinalizadas();" class="btn"><i class="material-icons left">file_download</i>Descargar</a>
+            <a onclick="generarExcelIndicadoresArticulacionesFinalizadas();" class="waves-effect waves-grey bg-secondary-lighten white-text btn-flat search-tabs-button m-l-xs"><i class="material-icons left">file_download</i>Descargar</a>
         </div>
     </div>
 </div>

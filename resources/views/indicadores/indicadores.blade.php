@@ -42,7 +42,7 @@
         </div>
     </li>
     <li>
-        <div class="collapsible-header"><i class="material-icons">play_arrow</i>Generar indicadores de proyectos activos</div>
+        <div class="collapsible-header"><i class="material-icons">play_arrow</i>Generar indicadores de articulaciones activas</div>
         <div class="collapsible-body">
         @include('indicadores.componentes.articulaciones.activas')
         </div>

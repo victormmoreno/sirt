@@ -4,13 +4,13 @@
     @can('showIndicadoresProyectoOptions', Illuminate\Database\Eloquent\Model::class)
         <div class="row">
             <div class="input-field col s12 m6 l6">
-                <select name="txtnodo_id_actuales[]" id="txtnodo_id_actuales" style="width: 100%">
+                <select class="js-states select2 browser-default" name="txtnodo_id_actuales[]" id="txtnodo_id_actuales" style="width: 100%">
                     <option value="all">Todos</option>
-                @foreach($nodos as $nodo)
-                    <option value="{{$nodo->id}}">
-                        {{$nodo->nodos}}
-                    </option>
-                @endforeach
+                    @foreach($nodos as $nodo)
+                        <option value="{{$nodo->id}}">
+                            {{$nodo->nodos}}
+                        </option>
+                    @endforeach
                 </select>
                 <label for="txtnodo_id_actuales" class="active">Seleccione el nodo</label>
             </div>
@@ -26,7 +26,9 @@
             </div>
         </div>
     @endcan
-    <div class="center input-field col s12 m6 l6">
-        <a onclick="generarExcelConTodosLosIndicadoresActuales();" class="btn">Descargar<i class="material-icons left">file_download</i></a>
+    <div class="row">
+        <div class="center input-field col s12 m6 l6 offset-m3 offset-l3">
+            <a onclick="generarExcelConTodosLosIndicadoresActuales();" class="waves-effect waves-grey bg-secondary-lighten white-text btn-flat search-tabs-button m-l-xs">Descargar<i class="material-icons left">file_download</i></a>
+        </div>
     </div>
 </div>
