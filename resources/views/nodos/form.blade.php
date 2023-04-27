@@ -219,12 +219,12 @@
         <div class="col s12 center-align m-t-sm">
             <button type="submit"
                     class="waves-effect waves-light btn bg-secondary center-align">
-                <i class="material-icons left">send</i>
+                <i class="material-icons right">send</i>
                 {{isset($btnText) ? $btnText : 'Guardar'}}
             </button>
             <a href="{{route('nodo.index')}}"
                     class="modal-action modal-open waves-effect bg-danger btn center-align">
-                <i class="material-icons right">backspace</i>
+                <i class="material-icons left">backspace</i>
                 Regresar
             </a>
         </div>

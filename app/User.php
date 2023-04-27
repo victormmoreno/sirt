@@ -288,19 +288,14 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(UserNodo::class, 'user_id', 'id')->where('role', User::IsDinamizador());
     }
 
-    public function contratista()
-    {
-        return $this->hasOne(Contratista::class, 'user_id', 'id');
-    }
-
     public function infocenter()
     {
-        return $this->hasOne(Infocenter::class, 'user_id', 'id');
+        return $this->hasOne(UserNodo::class, 'user_id', 'id')->where('role', User::IsInfocenter());
     }
 
     public function ingreso()
     {
-        return $this->hasOne(Ingreso::class, 'user_id', 'id');
+        return $this->hasOne(UserNodo::class, 'user_id', 'id')->where('role', User::IsIngreso());
     }
 
     public function talento()
@@ -544,10 +539,11 @@ class User extends Authenticatable implements JWTSubject
                 });
             }
             if (collect($roles)->contains(User::IsExperto())) {
-                return $query->join('gestores', function ($join) {
-                    $join->on('users.id', '=', 'gestores.user_id');
+                return $query->join('user_nodo', function ($join) {
+                    $join->on('users.id', '=', 'user_nodo.user_id')
+                        ->where('user_nodo.role', User::IsExperto());
                 })->join('nodos', function ($join) use ($nodos) {
-                    $join->on('nodos.id', '=', 'gestores.nodo_id')
+                    $join->on('nodos.id', '=', 'user_nodo.nodo_id')
                         ->whereIn('nodos.id', $nodos);
                 });
             }
@@ -570,18 +566,20 @@ class User extends Authenticatable implements JWTSubject
                 });
             }
             if (collect($roles)->contains(User::IsInfocenter())) {
-                return $query->join('infocenter', function ($join) {
-                    $join->on('users.id', '=', 'infocenter.user_id');
+                return $query->join('user_nodo', function ($join) {
+                    $join->on('users.id', '=', 'user_nodo.user_id')
+                        ->where('user_nodo.role', User::IsInfocenter());
                 })->join('nodos', function ($join) use ($nodos) {
-                    $join->on('nodos.id', '=', 'infocenter.nodo_id')
+                    $join->on('nodos.id', '=', 'user_nodo.nodo_id')
                         ->whereIn('nodos.id', $nodos);
                 });
             }
             if (collect($roles)->contains(User::IsIngreso())) {
-                return $query->join('ingresos', function ($join) {
-                    $join->on('users.id', '=', 'ingresos.user_id');
+                return $query->join('user_nodo', function ($join) {
+                    $join->on('users.id', '=', 'user_nodo.user_id')
+                        ->where('user_nodo.role', User::IsIngreso());
                 })->join('nodos', function ($join) use ($nodos) {
-                    $join->on('nodos.id', '=', 'ingresos.nodo_id')
+                    $join->on('nodos.id', '=', 'user_nodo.nodo_id')
                         ->whereIn('nodos.id', $nodos);
                 });
             }
@@ -751,7 +749,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function isUserExperto(): bool
     {
-        return (bool) $this->hasRole(User::IsExperto()) && $this->gestor() != null;
+        return (bool) $this->hasRole(User::IsExperto()) && $this->experto() != null;
     }
 
     public function isUserArticulador(): bool

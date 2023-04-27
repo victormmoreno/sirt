@@ -489,9 +489,10 @@ Route::group(
         Route::get('/reversar/{id}/{fase}', 'ProyectoController@updateReversar')->name('proyecto.reversar')->middleware('role_session:Dinamizador|Activador');
         Route::get('/limite-inicio/{nodo}/{experto}', 'ProyectoController@proyectosLimiteInicio')->name('proyecto.limite.inicio');
         Route::get('/limite-planeacion/{nodo}/{experto}', 'ProyectoController@proyectosLimitePlaneacion')->name('proyecto.limite.planeacion');
+        // Route::get('/detalle/{code}', 'ProyectoController@detailActivityByCode')->name('proyecto.detalle.reducido');
+
         Route::put('/suspendido/{id}', 'ProyectoController@updateSuspendido')->name('proyecto.update.suspendido')->middleware('role_session:Experto|Dinamizador');
         Route::put('/inicio/{id}', 'ProyectoController@updateInicio')->name('proyecto.update.inicio')->middleware('role_session:Experto');
-
         Route::put('/gestionar_aprobacion/{id}', 'ProyectoController@gestionarAprobacion')->name('proyecto.aprobacion')->middleware('role_session:Dinamizador|Talento');
         Route::put('/planeacion/{id}', 'ProyectoController@updatePlaneacion')->name('proyecto.update.planeacion')->middleware('role_session:Experto');
 
@@ -511,15 +512,15 @@ Route::group(
 
 Route::get('actividades/filter-code/{value}', 'ProyectoController@filterByCode')->name('proyecto.filterbycode');
 
-Route::group(
-    [
-        'prefix'     => 'actividad',
-        'middleware' => ['auth', 'role_session:Articulador|Activador|Dinamizador|Experto|Talento|Infocenter'],
-    ],
-    function () {
-        Route::get('/detalle/{code}', 'ProyectoController@detailActivityByCode')->name('actividad.detalle');
-    }
-);
+// Route::group(
+//     [
+//         'prefix'     => 'actividad',
+//         'middleware' => ['auth', 'role_session:Articulador|Activador|Dinamizador|Experto|Talento|Infocenter'],
+//     ],
+//     function () {
+//         Route::get('/detalle/{code}', 'ProyectoController@detailActivityByCode')->name('actividad.detalle');
+//     }
+// );
 
 /**
  * Route group para el módulo de edt (Eventos de Divulgación Tecnológica)

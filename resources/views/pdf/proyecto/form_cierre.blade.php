@@ -198,7 +198,7 @@
                 <td colspan="5" class="centered"><b>Acta de Cierre<b></td>
             </tr>
             <tr>
-                <td colspan="5" class="centered"><b>ACTA No. {{ substr($proyecto->present()->proyectoCode(), -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b></td>
+                <td colspan="5" class="centered"><b>ACTA No. {{ $proyecto->id . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b></td>
             </tr>
         </table>
         <br>
@@ -259,7 +259,7 @@
                 @else
                 <td colspan="1" >NO</td>
                 @endif
-                <td colspan="5" >{{$talento->user->present()->userDocumento()}} - {{$talento->user->present()->userFullName()}}</td>
+                <td colspan="5" >{{$talento->present()->userDocumento()}} - {{$talento->present()->userFullName()}}</td>
             </tr>
             @empty
             <tr>

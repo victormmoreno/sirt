@@ -47,8 +47,8 @@ class MaterialController extends Controller
    * Importar los materiales de fomración a partir de un excel
    *
    * @param Request $request
-   * @return type
-   * @throws conditon
+   * @return Response
+   * @author dum
    **/
   public function import(Request $request)
   {

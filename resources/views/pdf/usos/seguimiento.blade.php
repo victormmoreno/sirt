@@ -22,7 +22,7 @@
             <tr>
                 <td colspan="6" class="centered">
                 @if ($tipo_actividad == 'proyecto')
-                    <b>ACTA No. {{ substr($data->codigo_proyecto, -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b>
+                    <b>ACTA No. {{ $data->id . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b>
                 @elseif($tipo_actividad == 'articulacion')
                     <b>ACTA No. {{ substr($data->code, -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b>
                 @else
@@ -83,10 +83,10 @@
                 </tr>
                 @forelse ($data->talentos as $value)
                     <tr>
-                        <td colspan="2">{{ $value->user->documento }}</td>
-                        <td colspan="2">{{ $value->user->nombres . ' ' . $value->user->nombres }}</td>
-                        <td colspan="2">{{ $value->user->email }}</td>
-                        <td colspan="2">{{ $value->user->celular }} - {{ $value->user->telefono }}</td>
+                        <td colspan="2">{{ $value->documento }}</td>
+                        <td colspan="2">{{ $value->nombres . ' ' . $value->nombres }}</td>
+                        <td colspan="2">{{ $value->email }}</td>
+                        <td colspan="2">{{ $value->celular }} - {{ $value->telefono }}</td>
                     </tr>
                 @empty
                     <tr>

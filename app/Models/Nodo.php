@@ -61,24 +61,24 @@ class Nodo extends Model
         return $this->hasMany(UserNodo::class, 'nodo_id', 'id')->where('role', User::IsApoyoTecnico());
     }
 
-    public function dinamizador()
+    public function dinamizadores()
     {
-        return $this->hasMany(Dinamizador::class, 'nodo_id', 'id');
+        return $this->hasMany(UserNodo::class, 'nodo_id', 'id')->where('role', User::IsDinamizador());
     }
 
-    public function gestores()
+    public function expertos()
     {
-        return $this->hasMany(Gestor::class, 'nodo_id', 'id');
+        return $this->hasMany(UserNodo::class, 'nodo_id', 'id')->where('role', User::IsExperto());
     }
 
-    public function infocenter()
+    public function infocenters()
     {
-        return $this->hasMany(Infocenter::class, 'nodo_id', 'id');
+        return $this->hasMany(UserNodo::class, 'nodo_id', 'id')->where('role', User::IsInfocenter());
     }
-
+    
     public function ingresos()
     {
-        return $this->hasMany(Ingreso::class, 'nodo_id', 'id');
+        return $this->hasMany(UserNodo::class, 'nodo_id', 'id')->where('role', User::IsIngreso());
     }
 
     public function centro()
@@ -89,11 +89,6 @@ class Nodo extends Model
     public function entidad()
     {
         return $this->belongsTo(Entidad::class, 'entidad_id', 'id');
-    }
-
-    public function contratista()
-    {
-        return $this->hasMany(Contratista::class, 'nodo_id', 'id');
     }
 
     public function ideas()
@@ -142,11 +137,6 @@ class Nodo extends Model
     {
         return $this->belongsToMany(LineaTecnologica::class, 'lineastecnologicas_nodos')
             ->withTimestamps();
-    }
-
-    public function contactosentidades()
-    {
-        return $this->hasMany(ContactoEntidad::class, 'nodo_id', 'id');
     }
 
     /**

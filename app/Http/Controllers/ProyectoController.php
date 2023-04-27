@@ -32,19 +32,42 @@ class ProyectoController extends Controller
 
     public function detalle(int $id)
     {
-        $proyecto = Proyecto::findOrFail($id);
-        if(!request()->user()->can('detalle_end', $proyecto)) {
-            alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte y/o que aún no han finalizado', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
+        if (request()->ajax()) {
+            $proyecto = Proyecto::with([
+                    'asesor',
+                    'talentos',
+                    'sedes',
+                    'sedes.empresa',
+                    'gruposinvestigacion',
+                    'gruposinvestigacion.entidad',
+                    'users_propietarios',
+                ])->where('id', $id)->get()->first();
+            if(!request()->user()->can('detalle', $proyecto)) {
+                alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'error')->showConfirmButton('Ok', '#3085d6');
+                return back();
+            }
+            return response()->json([
+                'data' => [
+                    'proyecto' => $proyecto,
+                    'total_usos' => $proyecto->usoinfraestructuras->count(),
+                    ]
+                ]);
+            } else {
+            $proyecto = Proyecto::findOrFail($id);
+            if(!request()->user()->can('detalle_end', $proyecto)) {
+                alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte y/o que aún no han finalizado', 'error')->showConfirmButton('Ok', '#3085d6');
+                return back();
+            }
+            $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
+            $costo = $this->costoController->costoProject($proyecto->id);
+            // dd($costo);
+            return view('proyectos.detalles.detalle', [
+                'proyecto' => $proyecto,
+                'costo' => $costo,
+                'historico' => $historico
+            ]);
+
         }
-        $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
-        $costo = $this->costoController->costoProject($proyecto->id);
-        // dd($costo);
-        return view('proyectos.detalles.detalle', [
-            'proyecto' => $proyecto,
-            'costo' => $costo,
-            'historico' => $historico
-        ]);
     }
 
     /**
@@ -120,7 +143,7 @@ class ProyectoController extends Controller
         // dd($request);
         return datatables()->of($proyectos)
             ->addColumn('info', function ($data) {
-                $button = "<a class=\"btn bg-info m-b-xs modal-trigger\" href=\"#!\" onclick=\"infoActividad.infoDetailActivityModal('$data->codigo_proyecto')\">
+                $button = "<a class=\"btn bg-info m-b-xs modal-trigger\" href=\"#!\" onclick=\"infoActividad.infoDetailActivityModal('$data->id')\">
                 <i class=\" material-icons\">info</i>
                 </a>";
                 return $button;
@@ -224,7 +247,7 @@ class ProyectoController extends Controller
         if (session()->get('login_role') == User::IsTalento()) {
             $proyectos = $proyectos = $this->getProyectoRepository()->proyectosDelTalento(request()->user()->id)->get();
         } else if (session()->get('login_role') == User::IsExperto()) {
-            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('experto', $experto)->where('nodos.id', $nodo)->get();
+            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('experto_id', $experto)->where('nodos.id', $nodo)->get();
         } else {
             $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('nodos.id', $nodo)->get();
         }
@@ -322,9 +345,9 @@ class ProyectoController extends Controller
         if (request()->ajax()) {
             $idgestor = $id;
             if (Session::get('login_role') == User::IsExperto()) {
-                $idgestor = auth()->user()->gestor->id;
+                $idgestor = request()->user()->id;
             }
-            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('gestores.id', $idgestor)->get();
+            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('experto_id', $idgestor)->get();
             return $this->datatableProyectos($request, $proyectos);
         }
     }
@@ -1155,59 +1178,59 @@ class ProyectoController extends Controller
      * metodo para consultar el detalle de una actividad (proyecto- articulacion)
      * @author devjul
      */
-    public function detailActivityByCode(string $code)
-    {
-        // if (request()->ajax()) {
-            $actividad =  Actividad::with([
-                'objetivos_especificos',
+    // public function detailActivityByCode(string $code)
+    // {
+    //     // if (request()->ajax()) {
+    //         $actividad =  Actividad::with([
+    //             'objetivos_especificos',
 
-                'articulacion_proyecto.proyecto.asesor.user' => function ($query) {
-                    $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
-                        ->orWhere('deleted_at', '!=', null);
-                },
-                'articulacion_proyecto.proyecto.asesor.user.gestor.lineatecnologica' => function ($query) {
-                    $query->select('id', 'abreviatura', 'nombre');
-                },
-                'articulacion_proyecto.proyecto',
+    //             'articulacion_proyecto.proyecto.asesor.user' => function ($query) {
+    //                 $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
+    //                     ->orWhere('deleted_at', '!=', null);
+    //             },
+    //             'articulacion_proyecto.proyecto.asesor.user.gestor.lineatecnologica' => function ($query) {
+    //                 $query->select('id', 'abreviatura', 'nombre');
+    //             },
+    //             'articulacion_proyecto.proyecto',
 
-                'articulacion_proyecto.talentos',
-                'articulacion_proyecto.talentos.user' => function ($query) {
-                    $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
-                        ->orWhere('deleted_at', '!=', null);
-                },
-                'articulacion_proyecto.proyecto.sedes',
-                'articulacion_proyecto.proyecto.sedes.empresa',
-                'articulacion_proyecto.proyecto.gruposinvestigacion',
-                'articulacion_proyecto.proyecto.gruposinvestigacion.entidad',
-                'articulacion_proyecto.proyecto.users_propietarios',
-                'articulacion_proyecto.proyecto',
-                'articulacion_proyecto.proyecto.areaconocimiento',
-                'articulacion_proyecto.proyecto.fase',
-                'articulacion_proyecto.proyecto.sublinea',
-                'articulacion_proyecto.proyecto.idea' => function ($query) {
-                    $query->select('id', 'nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'telefono_contacto', 'nombre_proyecto', 'codigo_idea');
-                },
-                'articulacion_proyecto.proyecto.nodo' => function ($query) {
-                    $query->select('id', 'entidad_id', 'direccion', 'telefono');
-                },
-                'articulacion_proyecto.proyecto.nodo.entidad' => function ($query) {
-                    $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
-                }
-            ])->where('codigo_proyecto', $code)->first();
+    //             'articulacion_proyecto.talentos',
+    //             'articulacion_proyecto.talentos.user' => function ($query) {
+    //                 $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
+    //                     ->orWhere('deleted_at', '!=', null);
+    //             },
+    //             'articulacion_proyecto.proyecto.sedes',
+    //             'articulacion_proyecto.proyecto.sedes.empresa',
+    //             'articulacion_proyecto.proyecto.gruposinvestigacion',
+    //             'articulacion_proyecto.proyecto.gruposinvestigacion.entidad',
+    //             'articulacion_proyecto.proyecto.users_propietarios',
+    //             'articulacion_proyecto.proyecto',
+    //             'articulacion_proyecto.proyecto.areaconocimiento',
+    //             'articulacion_proyecto.proyecto.fase',
+    //             'articulacion_proyecto.proyecto.sublinea',
+    //             'articulacion_proyecto.proyecto.idea' => function ($query) {
+    //                 $query->select('id', 'nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'telefono_contacto', 'nombre_proyecto', 'codigo_idea');
+    //             },
+    //             'articulacion_proyecto.proyecto.nodo' => function ($query) {
+    //                 $query->select('id', 'entidad_id', 'direccion', 'telefono');
+    //             },
+    //             'articulacion_proyecto.proyecto.nodo.entidad' => function ($query) {
+    //                 $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
+    //             }
+    //         ])->where('codigo_proyecto', $code)->first();
 
 
-            // $costo = $this->costoController->costosDeUnaActividad($actividad->id);
-            $costo = 0;
-            return response()->json([
-                'data' => [
-                    'actividad' => $actividad,
-                    'costo' => $costo,
-                    'total_usos' => $actividad->usoinfraestructuras->count(),
-                ]
-            ]);
-        // }
-        // return abort(Response::HTTP_FORBIDDEN);
-    }
+    //         // $costo = $this->costoController->costosDeUnaActividad($actividad->id);
+    //         $costo = 0;
+    //         return response()->json([
+    //             'data' => [
+    //                 'actividad' => $actividad,
+    //                 'costo' => $costo,
+    //                 'total_usos' => $actividad->usoinfraestructuras->count(),
+    //             ]
+    //         ]);
+    //     // }
+    //     // return abort(Response::HTTP_FORBIDDEN);
+    // }
 
     public function filterByCode($value)
     {

@@ -349,13 +349,13 @@ class SeguimientoController extends Controller
 
   public function seguimientoProyectosInscritosPorMes(int $id)
   {
-    $gestor = Gestor::find($id);
+    $gestor = User::find($id);
     $idgestor = $gestor->id;
-    $idnodo = $gestor->nodo_id;
+    $idnodo = $gestor->experto->nodo_id;
 
     $datos = array();
     // Proyectos
-    $datos = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->where('g.id', $idgestor)->where('nodos.id', $idnodo)->get();
+    $datos = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->where('users.id', $idgestor)->where('nodos.id', $idnodo)->get();
     $datos = $this->agruparDatosPorMeses($datos);
 
     return response()->json([

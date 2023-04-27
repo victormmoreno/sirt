@@ -25,7 +25,7 @@ class ProyectoPolicy
         if (session()->get('login_role') == $user->IsAdministrador()) {
             return true;
         }
-        if (session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->user->id == request()->user()->id) {
+        if (session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->id == request()->user()->id) {
             if ($proyecto->fase->nombre != $fase) {
                 return false;
             }
@@ -46,7 +46,7 @@ class ProyectoPolicy
     {
         if (Str::contains(session()->get('login_role'), [$user->IsActivador(), $user->IsAdministrador()]))
             return true;
-        if (session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->user->id == auth()->user()->id)
+        if (session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->id == auth()->user()->id)
             return true;
         if (Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsArticulador()]) && $proyecto->nodo_id == request()->user()->getNodoUser())
             return true;
@@ -100,7 +100,7 @@ class ProyectoPolicy
      **/
     public function delete_files(User $user, Proyecto $proyecto, string $fase)
     {
-        if ((session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->user->id == request()->user()->id)) {
+        if ((session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->id == request()->user()->id)) {
             if ($proyecto->fase->nombre == $fase || $proyecto->fase->nombre == $proyecto->IsFinalizado()) {
                 return true;
             } else {
@@ -124,7 +124,7 @@ class ProyectoPolicy
     {
         if (session()->get('login_role') == $user->IsAdministrador())
             return true;
-        if (session()->get('login_role') == $user->IsExperto() && $proyecto->asesor_id == auth()->user()->gestor->id)
+        if (session()->get('login_role') == $user->IsExperto() && $proyecto->experto_id == auth()->user()->id)
             return true;
         return false;
     }
@@ -143,7 +143,7 @@ class ProyectoPolicy
             return false;
         if (session()->get('login_role') == $user->IsAdministrador())
             return true;
-        if (session()->get('login_role') == $user->IsExperto() && $proyecto->asesor_id == auth()->user()->gestor->id)
+        if (session()->get('login_role') == $user->IsExperto() && $proyecto->experto_id == auth()->user()->id)
             return true;
         return false;
     }
@@ -216,7 +216,7 @@ class ProyectoPolicy
     {
         if ($proyecto->present()->proyectoFase() == $proyecto->IsFinalizado() || $proyecto->present()->proyectoFase() == $proyecto->IsSuspendido())
             return false;
-        if ((session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->user->id == auth()->user()->id) || session()->get('login_role') == $user->IsAdministrador())
+        if ((session()->get('login_role') == $user->IsExperto() && $proyecto->asesor->id == auth()->user()->id) || session()->get('login_role') == $user->IsAdministrador())
             return true;
         return false;
     }

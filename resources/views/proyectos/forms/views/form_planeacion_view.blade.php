@@ -21,7 +21,7 @@
                         <div class="center">
                             @if ($proyecto->present()->proyectoFase() == 'Planeación')
                             <button type="submit" class="waves-effect bg-secondary btn center-aling">
-                                <i class="material-icons left">send</i>
+                                <i class="material-icons right">send</i>
                                 Modificar
                             </button>
                             @endif

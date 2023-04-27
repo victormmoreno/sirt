@@ -17,7 +17,7 @@
         </div>
     </div>
     <div class="col s12 m4 l4">
-        <div class="card stats-card {{$proyectos_limite_inicio != 0 ? 'orange lighten-3' : 'green lighten-3'}}" onclick="consultarProyectosInicio('{{request()->user()->getNodoUser()}}', '{{request()->user()->gestor->id}}')" style="cursor: pointer">
+        <div class="card stats-card {{$proyectos_limite_inicio != 0 ? 'orange lighten-3' : 'green lighten-3'}}" onclick="consultarProyectosInicio('{{request()->user()->getNodoUser()}}', '{{request()->user()->id}}')" style="cursor: pointer">
             <div class="card-content">
                 <span class="stats-counter">
                     @if ($proyectos_limite_inicio != 0)
@@ -34,7 +34,7 @@
         </div>
     </div>
     <div class="col s12 m4 l4">
-        <div class="card stats-card {{$proyectos_limite_planeacion != 0 ? 'orange lighten-3' : 'green lighten-3'}}" onclick="consultarProyectosPlaneacion('{{request()->user()->getNodoUser()}}', '{{request()->user()->gestor->id}}')" style="cursor: pointer">
+        <div class="card stats-card {{$proyectos_limite_planeacion != 0 ? 'orange lighten-3' : 'green lighten-3'}}" onclick="consultarProyectosPlaneacion('{{request()->user()->getNodoUser()}}', '{{request()->user()->id}}')" style="cursor: pointer">
             <div class="card-content">
                 <span class="stats-counter">
                     @if ($proyectos_limite_planeacion != 0)

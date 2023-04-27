@@ -352,7 +352,7 @@ class ProyectoRepository extends Repository
     {
         $this->traducirMeses();
         return Proyecto::selectRaw('MONTH(fecha_inicio) AS mes, COUNT(proyectos.id) AS cantidad, DATE_FORMAT(fecha_inicio, "%M") AS nombre_mes')
-        ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
+        ->join('users', 'users.id', '=', 'proyectos.experto_id')
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
         ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')

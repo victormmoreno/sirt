@@ -9,8 +9,8 @@ class NodoHelper
 {
     public static function returnNodoUsuario()
     {
-        if (\Session::get('login_role') == User::IsExperto() && isset(auth()->user()->gestor->nodo_id)) {
-            return 'Experto nodo ' . Nodo::userNodo(auth()->user()->gestor->nodo_id)->first()->nombre;
+        if (\Session::get('login_role') == User::IsExperto() && isset(auth()->user()->experto->nodo_id)) {
+            return 'Experto nodo ' . Nodo::userNodo(auth()->user()->experto->nodo_id)->first()->nombre;
         } else if (\Session::get('login_role') == User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo_id)) {
             return User::IsDinamizador(). ' nodo ' . Nodo::userNodo(auth()->user()->dinamizador->nodo_id)->first()->nombre;
         } else if (\Session::get('login_role') == User::IsInfocenter() && isset(auth()->user()->infocenter->nodo_id)) {
@@ -34,8 +34,8 @@ class NodoHelper
     // Retorna únicamente el nombre del nodo al que pertenece el usuario
     public static function returnNameNodoUsuario()
     {
-        if (\Session::get('login_role') == User::IsExperto() && isset(auth()->user()->gestor->nodo_id)) {
-            return Nodo::userNodo(auth()->user()->gestor->nodo_id)->first()->nombre;
+        if (\Session::get('login_role') == User::IsExperto() && isset(auth()->user()->experto->nodo_id)) {
+            return Nodo::userNodo(auth()->user()->experto->nodo_id)->first()->nombre;
         } else if (\Session::get('login_role') == User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo_id)) {
             return Nodo::userNodo(auth()->user()->dinamizador->nodo_id)->first()->nombre;
         } else if (\Session::get('login_role') == User::IsInfocenter() && isset(auth()->user()->infocenter->nodo_id)) {
@@ -53,8 +53,8 @@ class NodoHelper
 
     public static function returnIdNodoUser()
     {
-        if (\Session::get('login_role') == User::IsExperto() && isset(auth()->user()->gestor->nodo_id)) {
-            return auth()->user()->gestor->nodo_id;
+        if (\Session::get('login_role') == User::IsExperto() && isset(auth()->user()->experto->nodo_id)) {
+            return auth()->user()->experto->nodo_id;
         } else if (\Session::get('login_role') == User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo_id)) {
             return auth()->user()->dinamizador->nodo_id;
         } else if (\Session::get('login_role') == User::IsInfocenter() && isset(auth()->user()->infocenter->nodo_id)) {

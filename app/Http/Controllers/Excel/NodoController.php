@@ -95,10 +95,10 @@ class NodoController extends Controller
         $query = $this->getNodoRepository()->findNodoForShow($nodo);
         if(request()->user()->can('downloadOne', $query)) {
             $queryLineas = $query->lineas;
-            $queryDinamizadores = $query->dinamizador->where('user.estado', 1)->where('user.deleted_at', null)->values()->all();
-            $queryInfocenters = $query->infocenter->where('user.estado', 1)->where('user.deleted_at', null)->values()->all();
+            $queryDinamizadores = $query->dinamizadores->where('user.estado', 1)->where('user.deleted_at', null)->values()->all();
+            $queryInfocenters = $query->infocenters->where('user.estado', 1)->where('user.deleted_at', null)->values()->all();
             $queryIngresos = $query->ingresos->where('user.estado', 1)->where('user.deleted_at', null)->values()->all();
-            $queryGestores = $query->gestores->where('user.estado', 1)->where('user.deleted_at', null)
+            $queryGestores = $query->expertos->where('user.estado', 1)->where('user.deleted_at', null)
                 ->values()
                 ->all();
             return Excel::download(new NodoInfoExport($query, $queryDinamizadores, $queryGestores, $queryInfocenters, $queryIngresos, $queryLineas), 'Tecnoparque Nodo ' . $query->entidad->nombre . '.xlsx');
