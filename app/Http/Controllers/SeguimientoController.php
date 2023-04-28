@@ -423,7 +423,7 @@ class SeguimientoController extends Controller
       $query = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->get();
     } else {
       $expertos = $this->retornarValorDeExpertos($request);
-      $query = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->whereIn('g.id', $expertos)->get();
+      $query = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->whereIn('users.id', $expertos)->get();
     }
 
     $datos = $this->agruparDatosPorMeses($query);
@@ -440,7 +440,7 @@ class SeguimientoController extends Controller
       $query = $this->getProyectoRepository()->proyectosCerradosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->get();
     } else {
       $expertos = $this->retornarValorDeExpertos($request);
-      $query = $this->getProyectoRepository()->proyectosCerradosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->whereIn('g.id', $expertos)->get();
+      $query = $this->getProyectoRepository()->proyectosCerradosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->whereIn('users.id', $expertos)->get();
     }
 
     $datos = $this->agruparDatosPorMeses($query);

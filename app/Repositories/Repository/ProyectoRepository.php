@@ -282,7 +282,7 @@ class ProyectoRepository extends Repository
         $this->traducirMeses();
         return Proyecto::select($field)
         ->selectRaw('count(proyectos.id) AS cantidad, nodos.id AS nodo, MONTHNAME(fecha_cierre) AS mes')
-        ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
+        ->join('users', 'users.id', '=', 'proyectos.experto_id')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
         ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
@@ -366,7 +366,7 @@ class ProyectoRepository extends Repository
     {
         $this->traducirMeses();
         return Proyecto::selectRaw('MONTH(fecha_cierre) AS mes, COUNT(proyectos.id) AS cantidad, DATE_FORMAT(fecha_cierre, "%M") AS nombre_mes')
-        ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
+        ->join('users', 'users.id', '=', 'proyectos.experto_id')
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
         ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
@@ -497,8 +497,7 @@ class ProyectoRepository extends Repository
         ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
         ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
-        ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
-        ->join('users', 'users.id', '=', 'gestores.user_id')
+        ->join('users', 'users.id', '=', 'proyectos.experto_id')
         ->join('propietarios', 'propietarios.proyecto_id', '=', 'proyectos.id')
         ->leftJoin('sedes', function($q) use ($sede) {$q->on('sedes.id', '=', 'propietarios.propietario_id')->where('propietarios.propietario_type', "$sede");})
         ->leftJoin('empresas', 'empresas.id', '=', 'sedes.empresa_id')

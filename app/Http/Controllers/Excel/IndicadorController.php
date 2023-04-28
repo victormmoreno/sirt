@@ -19,6 +19,7 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use MyCLabs\Enum\Enum;
 
 class IndicadorController extends Controller
 {
@@ -27,6 +28,7 @@ class IndicadorController extends Controller
     private $nodoRepository;
     private $ideaRepository;
     private $year_now;
+    private $type;
 
     public function __construct(ProyectoRepository $proyectoRepository, NodoRepository $nodoRepository, IdeaRepository $ideaRepository)
     {
@@ -131,7 +133,21 @@ class IndicadorController extends Controller
 
     public function exportIndicadoresProyectosInscritos(Request $request)
     {
-        $query = null;
+        try {
+            $this->type = 'inscritos';
+            $query = null;
+            $query = $this->retornarQueryAExportar($request);
+            return $this->generarExcel($request, $query);
+            // return Excel::download(new ProyectosExport($query->get()), 'Proyectos_'.$this->type.'_'.$request->fecha_inicio.'_a_'.$request->fecha_fin.'.xlsx');
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+
+        // exit;
+        // if ($request->hoja == 'proyectos') {
+        //     $query = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$request->fecha_inicio, $request->fecha_fin]);
+        //     return Excel::download(new ProyectosExport($query->get()), 'Proyectos_Inscritos_'.$request->fecha_inicio.'_a_'.$request->fecha_fin.'.xlsx');
+        // }
         // $idnodo, string $fecha_inicio, string $fecha_fin, string $hoja = null
         // dd($request->nodos);
         // $nodo_user = request()->user()->getNodoUser();
@@ -153,11 +169,7 @@ class IndicadorController extends Controller
         // return Excel::download(new Indicadores2020Export($request), 'Indicadores_Inscritos_'.$request->fecha_inicio.'_a_'.$request->fecha_fin.'.xlsx');
         // $query = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$request->fecha_inicio, $request->fecha_fin]);
         // return Excel::download(new ProyectosExport($query->get()), 'Proyectos_Inscritos_'.$request->fecha_inicio.'_a_'.$request->fecha_fin.'.xlsx');
-        if ($request->hoja == 'proyectos') {
-            $query = $this->retornarQueryAExportar($request);
-            $query = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$request->fecha_inicio, $request->fecha_fin]);
-            return Excel::download(new ProyectosExport($query->get()), 'Proyectos_Inscritos_'.$request->fecha_inicio.'_a_'.$request->fecha_fin.'.xlsx');
-        }
+
         // if ($request->hoja == 'tal_ejecutores') {
         //     $sheets[] = new TalentoUserExport($this->getQuery(), 'Ejecutores');
         // }
@@ -316,15 +328,91 @@ class IndicadorController extends Controller
     }
 
     /**
+     * Retorna el archivo excel sin generar
+     *
+     * @param $query Consulta que se generó
+     * @return Excel\Excel
+     * @author dum
+     **/
+    public function generarExcel($request, $query)
+    {
+        switch ($request->hoja) {
+            case 'proyectos':
+                return Excel::download(new ProyectosExport($query->get()), 'file.xlsx');
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+        return (new ProyectosExport($query->get()));
+        // return Excel::download(new ProyectosExport($query->get()), 'Proyectos_Inscritos_'.$request->fecha_inicio.'_a_'.$request->fecha_fin.'.xlsx');
+
+    }
+
+    /**
      * Retonar el query que se va a exportar según el caso
      *
      * @param Request $request
      * @return Builder
      * @author dum
      **/
-    public function FunctionName(Type $var = null)
+    private function retornarQueryAExportar(Request $request)
     {
-        # code...
+        
+        $query = null;
+        switch ($request->hoja) {
+            case 'proyectos':
+                return $this->consultarIndicadoresProyecto($request, $this->type);
+                break;
+            
+            default:
+                
+                break;
+        }
+    }
+
+    /**
+     * Retornar el query que se exportará 
+     *
+     * @param Request $request
+     * @param string $type El tipo de excel que se va a exportar
+     * @return type
+     * @throws conditon
+     **/
+    public function consultarIndicadoresProyecto(Request $request, $type)
+    {
+        if ($request->nodos[0] == 'all' || $request->nodos[0] == null) {
+            $query = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository();
+        } else {
+            $query = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->whereIn('nodos.id', $request->nodos);
+        }
+        switch ($type) {
+            case 'inscritos':
+                return $query->whereBetween('fecha_inicio', [$request->fecha_inicio, $request->fecha_fin]);
+                break;
+            case 'finalizados':
+            return $query->whereBetween('fecha_cierre', [$request->fecha_inicio, $request->fecha_fin])->whereIn('fases.nombre', [Proyecto::IsFinalizado(), Proyecto::IsSuspendido()]);
+                break;
+            case 'activos':
+            return $query->whereIn('fases.nombre', [Proyecto::IsInicio(), Proyecto::IsPlaneacion(), Proyecto::IsEjecucion(), Proyecto::IsCierre()]);
+                break;
+            case 'todos':
+                return $query->where(function($q) use ($request) {
+                    $q->whereBetween('fecha_cierre', [$request->fecha_inicio, $request->fecha_cierre])
+                    ->orWhere(function($query) use ($request) {
+                        $query->whereBetween('fecha_inicio', [$request->fecha_inicio, $request->fecha_cierre])
+                        ->orWhere('fase', function ($query) {
+                        $query->whereIn('fases.nombre', [Proyecto::IsInicio(), Proyecto::IsPlaneacion(), Proyecto::IsEjecucion(), Proyecto::IsCierre()]);
+                        });
+                    });
+                });
+                break;
+            
+            default:
+                
+                break;
+        }
     }
 
     private function setProyectoRepository($proyectoRepository)

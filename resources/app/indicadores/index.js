@@ -102,8 +102,8 @@ function generarExcelConTodosLosIndicadoresFinalizados() {
   }
 }
 
-function generarExcelConTodosLosIndicadoresInscritos() {
-  let idnodo = $('#txtnodo_id_inscritos').val();
+function generarExcelConTodosLosIndicadoresInscritos(e) {
+  let idnodo = $("#txtnodo_id_inscritos").val();
   let hoja = $('#txthoja_nombre_inscritos').val();
   let fecha_inicio = $('#txtfecha_inicio_inscritos').val();
   let fecha_fin = $('#txtfecha_fin_inscritos').val();
@@ -117,25 +117,41 @@ function generarExcelConTodosLosIndicadoresInscritos() {
   if (fecha_inicio > fecha_fin) {
     Swal.fire('Error!', 'Seleccione un rango de fechas válido', 'error');
   } else {
-    // e.preventDefault();
-    // $.ajax({
-    //   dataType: 'json',
-    //   type: 'get',
-    //   url: host_url + '/excel/export_proyectos_inscritos',
-    //   data: {
-    //     nodos: idnodo,
-    //     hoja: hoja,
-    //     fecha_inicio: fecha_inicio,
-    //     fecha_fin: fecha_fin
-    //   },
-    //   success: function (data) {
-    //     location.href = '/indicadores'
-    //   },
-    //   error: function (xhr, textStatus, errorThrown) {
-    //     alert("Error: " + errorThrown);
-    //   },
-    // })
-    location.href = '/excel/export_proyectos_inscritos/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+hoja;
+    e.preventDefault();
+    $.ajax({
+      type: 'get',
+      url: host_url + '/excel/export_proyectos_inscritos',
+      xhrFields:{
+        responseType: 'blob'
+      },
+      data: {
+        nodos: idnodo,
+        hoja: hoja,
+        fecha_inicio: fecha_inicio,
+        fecha_fin: fecha_fin
+      },
+      success: function (result, status, xhr) {
+        let disposition = xhr.getResponseHeader('content-disposition');
+        let matches = /"([^"]*)"/.exec(disposition);
+        let filename = (matches != null && matches[1] ? matches[1] : 'Proyecto_'+hoja+'_inscritos_'+fecha_inicio+'_'+fecha_fin+'.xlsx');
+
+        let blob = new Blob([result], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        });
+        let link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = filename;
+
+        document.body.appendChild(link);
+
+        link.click();
+        document.body.removeChild(link);
+      },
+      error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+      },
+    })
+    // location.href = '/excel/export_proyectos_inscritos/'+data;
   }
 
 }

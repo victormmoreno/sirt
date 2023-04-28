@@ -117,7 +117,7 @@ class EquipoController extends Controller
         }
 
         return view('equipo.index', [
-            'nodos' =>  Entidad::has('nodo')->with('nodo')->get()->pluck('nombre', 'nodo.id'),
+            'nodos' =>  Entidad::has('nodo')->with('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id'),
         ]);
     }
 
@@ -265,7 +265,6 @@ class EquipoController extends Controller
         }
         $nodos = $this->getNodoRepository()->getSelectNodo();
         $lineastecnologicas = $this->getLineaTecnologicaRepository()->getAllLineaNodo($equipo->nodo_id);
-
         // $nodo               = auth()->user()->dinamizador->nodo->id;
         // $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
 
