@@ -10820,6 +10820,18 @@ function generarExcelConTodosLosIndicadoresActuales() {
 
   location.href = '/excel/export_proyectos_actuales/'+idnodo+'/'+hoja;
 }
+function generarExcelIndicadoresArticulacionesActuales() {
+  let node = $('#txtnodo_articulaciones_activas').val();
+  let sheet = $('#txthoja_articulaciones_activas').val();
+  if (!isset(node)) {
+    node = 0;
+  }
+  if (!isset(sheet)) {
+    sheet = 'all';
+  }
+
+  location.href = `/excel/export_articulaciones_actuales/${node}/${sheet}`;
+}
 
 function generarExcelConTodosLosIndicadoresFinalizados() {
   let idnodo = $('#txtnodo_id_finalizados').val();

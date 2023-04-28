@@ -49,7 +49,7 @@ function consultarSeguimientoEsperado(e, url) {
   }
 }
 
-function generarExcelConTodosLosIndicadores() {
+function generarExcelConTodosLosIndicadoresProyectos() {
   let idnodo = $('#txtnodo_id').val();
   let hoja = $('#txthoja_nombre').val();
   let fecha_inicio = $('#txtfecha_inicio_todos').val();
@@ -65,9 +65,32 @@ function generarExcelConTodosLosIndicadores() {
   if (fecha_inicio > fecha_fin) {
     Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
   } else {
-    location.href = '/excel/export/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+hoja;
+    location.href = `/excel/export/${idnodo}/${fecha_inicio}/${fecha_fin}/${hoja}`;
   }
 }
+
+function generarExcelConTodosLosIndicadoresArticulaciones() {
+    let nodo = $('#txtnodo_articulacion').val();
+    let hoja = $('#txthoja_nombre').val();
+    let fecha_inicio = $('#txtfecha_inicio_todos').val();
+    let fecha_fin = $('#txtfecha_fin_todos').val();
+
+    if (!isset(nodo)) {
+        nodo = 0;
+    }
+    if (!isset(hoja)) {
+      hoja = 'all';
+    }
+
+    if (fecha_inicio > fecha_fin) {
+      Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
+    } else {
+      location.href = '/excel/export/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+hoja;
+    }
+  }
+
+
+
 
 function generarExcelConTodosLosIndicadoresActuales() {
   let idnodo = $('#txtnodo_id_actuales').val();
@@ -80,6 +103,18 @@ function generarExcelConTodosLosIndicadoresActuales() {
   }
 
   location.href = '/excel/export_proyectos_actuales/'+idnodo+'/'+hoja;
+}
+function generarExcelIndicadoresArticulacionesActuales() {
+  let node = $('#txtnodo_articulaciones_activas').val();
+  let sheet = $('#txthoja_articulaciones_activas').val();
+  if (!isset(node)) {
+    node = 0;
+  }
+  if (!isset(sheet)) {
+    sheet = 'all';
+  }
+
+  location.href = `/excel/export_articulaciones_actuales/${node}/${sheet}`;
 }
 
 function generarExcelConTodosLosIndicadoresFinalizados() {

@@ -11,7 +11,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Imports\MigracionMetasImport;
 use Illuminate\Http\Request;
-use App\Models\{Proyecto, Nodo};
+use App\Models\{Articulation, Proyecto, Nodo};
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
@@ -308,16 +308,14 @@ class IndicadorController extends Controller
         return $metas;
     }
 
-    public function exportIndicadorArticulacionesInscritas($idnodo, string $fecha_inicio, string $fecha_fin, string $hoja = null)
+    public function exportIndicadorArticulacionesInscritas($nodo, string $fecha_inicio, string $fecha_fin, string $hoja = null)
     {
-        if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
-            $idnodo = $idnodo;
-        } else if (session()->get('login_role') == User::IsDinamizador()) {
-            $idnodo = auth()->user()->dinamizador->nodo_id;
-        } else if (session()->get('login_role') == User::IsInfocenter()) {
-            $idnodo = auth()->user()->infocenter->nodo_id;
-        } else {
-            $idnodo = auth()->user()->gestor->nodo_id;
+        if (request()->ajax() && request()->user()->cannot('showIndicadoresArticulacions', Model::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
+        if(isset($nodo) && $nodo != 'all'){
+            $nodo = $this->checkRoleAuth($nodo);
         }
         $query = $this->articulationRepostory->getListArticulacions()
             ->select(
@@ -350,9 +348,9 @@ class IndicadorController extends Controller
             ->selectRaw("CASE WHEN articulations.postulation = 1  THEN if(articulations.approval = 0, articulations.report, 'No registra') ELSE 'No Aplica' END AS 'articulation_report'")
             ->selectRaw("CASE WHEN articulations.postulation = 0  THEN articulations.justification ELSE 'No Aplica' END AS 'articulation_justification'")
             ->selectRaw("GROUP_CONCAT(concat(participant.documento, ' - ', participant.nombres, ' ', participant.apellidos)) AS participants")
-            ->where(function($query) use ($idnodo){
-                if(isset($idnodo) && $idnodo != 'all'){
-                    $query->where('articulation_stages.node_id', $idnodo);
+            ->where(function($query) use ($nodo){
+                if(isset($nodo) && $nodo != 'all'){
+                    $query->where('articulation_stages.node_id', $nodo);
                 }
             })
             ->where(function($query) use ($fecha_inicio, $fecha_fin){
@@ -365,14 +363,12 @@ class IndicadorController extends Controller
 
     public function exportIndicadoresArticulacionesFinalizadas($nodo, string $fecha_inicio, string $fecha_fin, string $hoja = null)
     {
-        if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
-            $idnodo = $nodo;
-        } else if (session()->get('login_role') == User::IsDinamizador()) {
-            $idnodo = auth()->user()->dinamizador->nodo_id;
-        } else if (session()->get('login_role') == User::IsInfocenter()) {
-            $idnodo = auth()->user()->infocenter->nodo_id;
-        } else {
-            $idnodo = auth()->user()->gestor->nodo_id;
+        if (request()->ajax() && request()->user()->cannot('showIndicadoresArticulacions', Model::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
+        if(isset($nodo) && $nodo != 'all'){
+            $nodo = $this->checkRoleAuth($nodo);
         }
         $query = $this->articulationRepostory->getListArticulacions()
             ->select(
@@ -405,9 +401,9 @@ class IndicadorController extends Controller
             ->selectRaw("CASE WHEN articulations.postulation = 1  THEN if(articulations.approval = 0, articulations.report, 'No registra') ELSE 'No Aplica' END AS 'articulation_report'")
             ->selectRaw("CASE WHEN articulations.postulation = 0  THEN articulations.justification ELSE 'No Aplica' END AS 'articulation_justification'")
             ->selectRaw("GROUP_CONCAT(concat(participant.documento, ' - ', participant.nombres, ' ', participant.apellidos)) AS participants")
-            ->where(function($query) use ($idnodo){
-                if(isset($idnodo) && $idnodo != 'all'){
-                    $query->where('articulation_stages.node_id', $idnodo);
+            ->where(function($query) use ($nodo){
+                if(isset($nodo) && $nodo != 'all'){
+                    $query->where('articulation_stages.node_id', $nodo);
                 }
             })
             ->where(function($query) use ($fecha_inicio, $fecha_fin){
@@ -418,6 +414,55 @@ class IndicadorController extends Controller
         return Excel::download(new IndicadorArticulacionesExport($query, $hoja), "Indicadores_Articulaciones_Finalizadas_{$fecha_inicio}_a_{$fecha_fin}.xlsx");
     }
 
+    public function exportIndicadoresArticulacionesActivas($nodo, string $hoja = null)
+    {
+        if (request()->ajax() && request()->user()->cannot('showIndicadoresArticulacions', Model::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
+        if(isset($nodo) && $nodo != 'all'){
+            $nodo = $this->checkRoleAuth($nodo);
+        }
+        $query = $this->articulationRepostory->getListArticulacions()
+            ->select(
+                'articulation_stages.*', 'articulations.code as articulation_code',
+                'articulations.id as articulation_id',
+                'articulations.start_date as articulation_start_date', 'articulations.end_date as articulation_end_date',
+                'articulations.name as articulation_name','articulations.description as articulation_description',
+                'articulations.expected_end_date as articulation_expected_end_date',
+                'articulations.entity as articulation_entity',
+                'articulations.contact_name as articulation_contact_name',
+                'articulations.email_entity as articulation_email_entity',
+                'articulations.summon_name as articulation_summon_name',
+                'articulations.objective as articulation_objective',
+                'articulations.learned_lessons as articulation_learned_lessons',
+                'fases.nombre as articulation_phase',
+                'articulation_types.name as articulation_type',
+                'articulation_subtypes.name as articulation_subtype',
+                'articulation_scopes.name as articulation_scope',
+                'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
+                'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id',
+                'fasespro.nombre as fase_proyecto'
+            )
+            ->selectRaw('year(articulations.start_date) as articulation_start_date_year, MONTHNAME(articulations.start_date) as articulation_start_date_month, year(articulations.end_date) as articulation_end_date_year, MONTHNAME(articulations.end_date) as articulation_end_date_month')
+            ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', if(articulationables.articulationable_type = 'App\\\Models\\\Sede', 'Empresa', if(articulationables.articulationable_type = 'App\\\Models\\\Idea', 'Idea', 'No registra'))) as articulation_state_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by")
+            ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Sede',concat(empresas.nit, ' - ', empresas.nombre, ' - ', sedes.nombre_sede), if(articulationables.articulationable_type = 'App\\\Models\\\Idea', concat(ideas.codigo_idea, ' - ', ideas.nombre_proyecto), 'no registra')) as information_type_articulationable")
+            ->selectRaw("if(articulations.postulation=1, 'SI', 'NO') articulation_postulation")
+            ->selectRaw("CASE WHEN articulations.postulation = 1  THEN if(articulations.approval = 1, 'Aprobado', 'No Aprobado') ELSE 'No Aplica' END AS 'articulation_approval'")
+            ->selectRaw("CASE WHEN articulations.postulation = 1  THEN if(articulations.approval = 1, articulations.receive, 'No registra') ELSE 'No Aplica' END AS 'articulation_receive'")
+            ->selectRaw("CASE WHEN articulations.postulation = 1  THEN if(articulations.approval = 1, articulations.received_date, 'No registra') ELSE 'No Aplica' END AS 'articulation_received_date'")
+            ->selectRaw("CASE WHEN articulations.postulation = 1  THEN if(articulations.approval = 0, articulations.report, 'No registra') ELSE 'No Aplica' END AS 'articulation_report'")
+            ->selectRaw("CASE WHEN articulations.postulation = 0  THEN articulations.justification ELSE 'No Aplica' END AS 'articulation_justification'")
+            ->selectRaw("GROUP_CONCAT(concat(participant.documento, ' - ', participant.nombres, ' ', participant.apellidos)) AS participants")
+            ->where(function($query) use ($nodo){
+                if(isset($nodo) && $nodo != 'all'){
+                    $query->where('articulation_stages.node_id', $nodo);
+                }
+            })->whereIn('fases.nombre', [Articulation::IsInicio(), Articulation::IsEjecucion(), Articulation::IsCierre()]);
+
+        return Excel::download(new IndicadorArticulacionesExport($query, $hoja), 'Indicadores_Articulaciones_Activas.xlsx');
+    }
+
     private function setProyectoRepository($proyectoRepository)
     {
         $this->proyectoRepository = $proyectoRepository;
@@ -426,6 +471,41 @@ class IndicadorController extends Controller
     private function getProyectoRepository()
     {
         return $this->proyectoRepository;
+    }
+
+    /**
+     * method to validate the authenticated role
+     * @return void
+     */
+    private function checkRoleAuth($node)
+    {
+        switch (\Session::get('login_role')) {
+            case User::IsAdministrador():
+                $node = isset($node) ? $node : null;
+                break;
+            case User::IsActivador():
+                $node = isset($node) ? $node : null;
+                break;
+            case User::IsDinamizador():
+                $node = auth()->user()->dinamizador->nodo_id;
+                break;
+            case User::IsArticulador():
+                $node = auth()->user()->articulador->nodo_id;
+                break;
+            case User::IsExperto():
+                $node = auth()->user()->gestor->nodo_id;
+                break;
+            case User::IsInfocenter():
+                $node = auth()->user()->infocenter->nodo_id;
+                break;
+            case User::IsTalento():
+                $node = null;
+                break;
+            default:
+                $node = null;
+                break;
+        }
+        return $node;
     }
 
 }

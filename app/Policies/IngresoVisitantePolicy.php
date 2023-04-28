@@ -41,7 +41,7 @@ class IngresoVisitantePolicy
         if (session()->get('login_role') == $user->IsAdministrador()) {
             return true;
         }
-        
+
         if (Str::contains(session()->get('login_role'), [$user->IsIngreso()]) && $ingreso->nodo_id == $user->getNodoUser()) {
             return true;
         }
@@ -57,7 +57,7 @@ class IngresoVisitantePolicy
      **/
     public function export(User $user)
     {
-        if (Str::contains(session()->get('login_role'), [$user->IsIngreso(), $user->IsAdministrador(), $user->IsInfocenter(), $user->IsDinamizador()])) {
+        if (Str::contains(session()->get('login_role'), [$user->IsAdministrador(), $user->IsActivador(), $user->IsDinamizador(), $user->IsInfocenter(),  $user->IsIngreso()])) {
             return true;
         }
         return false;

@@ -31,7 +31,7 @@ class ModelPolicy
      **/
     public function index_indicadores(User $user)
     {
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsActivador(), $user->IsAdministrador(), $user->IsDinamizador(), $user->IsInfocenter(), $user->IsExperto()]);
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsActivador(), $user->IsAdministrador(), $user->IsDinamizador(), $user->IsInfocenter(), $user->IsArticulador(), $user->IsExperto()]);
     }
 
     public function showIndicadoresProyectoOptions(User $user)
@@ -42,6 +42,19 @@ class ModelPolicy
         return false;
     }
 
+    public function showIndicadoresProyectos(User $user)
+    {
+        return (bool)
+                    session()->has('login_role')
+                    && (
+                        (session()->get('login_role') == User::IsAdministrador() && $user->IsAdministrador() ) ||
+                        (session()->get('login_role') == User::IsActivador() && $user->IsActivador()) ||
+                        (session()->get('login_role') == User::IsDinamizador() && $user->IsDinamizador()) ||
+                        (session()->get('login_role') == User::IsExperto() && $user->IsExperto()) ||
+                        (session()->get('login_role') == User::IsInfocenter() && $user->IsInfocenter())
+                    );
+    }
+
     public function showIndicadoresArticulacionOptions(User $user)
     {
         if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador()) {
@@ -50,6 +63,18 @@ class ModelPolicy
         return false;
     }
 
+    public function showIndicadoresArticulacions(User $user)
+    {
+        return (bool)
+                    session()->has('login_role')
+                    && (
+                        (session()->get('login_role') == User::IsAdministrador() && $user->IsAdministrador()) ||
+                        (session()->get('login_role') == User::IsActivador() && $user->IsActivador()) ||
+                        (session()->get('login_role') == User::IsDinamizador() && $user->IsDinamizador()) ||
+                        (session()->get('login_role') == User::IsArticulador() && $user->IsArticulador()) ||
+                        (session()->get('login_role') == User::IsInfocenter() && $user->IsInfocenter())
+                    );
+    }
     public function showDahsboardExperto(User $user)
     {
         if (session()->get('login_role') == $user->IsExperto()) {

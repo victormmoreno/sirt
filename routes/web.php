@@ -671,7 +671,7 @@ Route::group(
         'middleware' => ['auth', 'role_session:Activador|Dinamizador|Experto',]
     ],
     function () {
-        Route::get('/', 'SeguimientoController@index')->name('seguimiento');
+        // Route::get('/', 'SeguimientoController@index')->name('seguimiento');
         Route::get('/seguimientoEsperadoDeUnGestor/{id}', 'SeguimientoController@seguimientoEsperadoDelGestor');
         Route::get('/seguimientoInscritosPorMesExperto/{id}', 'SeguimientoController@seguimientoProyectosInscritosPorMes');
         Route::get('/seguimientoProyectosInscritosPorMes', 'SeguimientoController@seguimientoProyectosInscritos');
@@ -693,7 +693,7 @@ Route::group(
 Route::group(
     [
         'prefix' => 'indicadores',
-        'middleware' => ['auth', 'role_session:Activador|Dinamizador|Experto|Infocenter']
+        'middleware' => ['auth', 'role_session:Administrador|Activador|Dinamizador|Experto|Articulador|Infocenter']
     ],
     function () {
         Route::get('/', 'IndicadorController@index')->name('indicadores');
@@ -782,7 +782,7 @@ Route::group([
 Route::group(
     [
         'prefix'     => 'excel',
-        'middleware' => ['auth', 'role_session:Experto|Infocenter|Dinamizador|Administrador|Ingreso|Talento'],
+        'middleware' => ['auth', 'role_session:Experto|Activador|Articulador|Infocenter|Dinamizador|Administrador|Ingreso|Talento'],
     ],
     function () {
         // Rutas para la generación de excel del módulo de edts
@@ -799,8 +799,9 @@ Route::group(
         Route::get('/export_proyectos_actuales/{idnodo}/{hoja}', 'Excel\IndicadorController@exportIndicadoresProyectosActuales')->name('indicador.proyectos.actuales.export.excel');
         Route::get('/export_trazabilidad/{idproyecto}', 'Excel\ProyectoController@exportTrazabilidadProyecto')->name('excel.proyecto.trazabilidad');
 
-        Route::get('/export_articulaciones_inscritos/{nodo}/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicadorArticulacionesInscritas')->name('indicador.articulaciones.inscritas.export.excel');
-        Route::get('/export_articulaciones_finalizadas/{nodo}/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicadoresArticulacionesFinalizadas')->name('indicador.articulaciones.finalizadas.export.excel');
+        Route::get('/export_articulaciones_actuales/{nodo}/{hoja}', 'Excel\IndicadorController@exportIndicadoresArticulacionesActivas')->name('indicador.proyectos.actuales.export.excel')->middleware('role_session:Administrador|Dinamizador|Activador|Articulador|Infocenter');
+        Route::get('/export_articulaciones_inscritos/{nodo}/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicadorArticulacionesInscritas')->name('indicador.articulaciones.inscritas.export.excel')->middleware('role_session:Administrador|Dinamizador|Activador|Articulador|Infocenter');
+        Route::get('/export_articulaciones_finalizadas/{nodo}/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicadoresArticulacionesFinalizadas')->name('indicador.articulaciones.finalizadas.export.excel')->middleware('role_session:Administrador|Dinamizador|Activador|Articulador|Infocenter');
         //Rutas para la generación de excel del módulo de nodo
         Route::get('/excelnodo', 'Excel\NodoController@exportQueryAllNodo')
             ->middleware('role_session:Administrador')
@@ -812,7 +813,11 @@ Route::group(
     }
 );
 
+Route::group(['prefix'     => 'excel'],
+    function () {
 
+    }
+);
 
 Route::get('/notificaciones', 'NotificationsController@index')
     ->name('notifications.index')
