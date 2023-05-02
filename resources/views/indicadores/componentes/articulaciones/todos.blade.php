@@ -3,20 +3,20 @@
     @can('showIndicadoresArticulacionOptions', Illuminate\Database\Eloquent\Model::class)
         <div class="row">
             <div class="input-field col s12 m6 l6">
-                <select class="js-states select2 browser-default" name="txtnodo_articulacion" id="txtnodo_articulacion" style="width: 100%">
+                <select class="js-states select2 browser-default" name="txtnodo_articulacion_todos" id="txtnodo_articulacion_todos" style="width: 100%">
                     <option value="all">Todos</option>
                     @foreach($nodos as $nodo)
                         <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
                     @endforeach
                 </select>
-                <label for="txtnodo_articulacion" class="active">Seleccione el Nodo</label>
+                <label for="txtnodo_articulacion_todos" class="active">Seleccione el Nodo</label>
             </div>
             <div class="input-field col s12 m6 l6">
-                <select class="js-states select2 browser-default" name="txthoja_articulacion" id="txthoja_articulacion" style="width: 100%">
+                <select class="js-states select2 browser-default" name="txthoja_articulacion_todos" id="txthoja_articulacion_todos" style="width: 100%">
                     <option value="articulaciones">Articulaciones</option>
                     <option value="talentos">Talentos</option>
                 </select>
-                <label for="txthoja_articulacion" class="active">Seleccione que información desea exportar</label>
+                <label for="txthoja_articulacion_todos" class="active">Seleccione que información desea exportar</label>
             </div>
         </div>
     @endcan
@@ -30,7 +30,7 @@
             <label for="txtfecha_fin_articulacion_todos">Fecha Fin</label>
         </div>
         <div class="center input-field col s12 m6 l6">
-            <a onclick="generarExcelConTodosLosIndicadoresProyectos();" class="waves-effect waves-grey bg-secondary-lighten white-text btn-flat search-tabs-button m-l-xs">Descargar<i class="material-icons left">file_download</i></a>
+            <a onclick="generarExcelConTodosLosIndicadoresArticulaciones();" class="waves-effect waves-grey bg-secondary-lighten white-text btn-flat search-tabs-button m-l-xs">Descargar<i class="material-icons left">file_download</i></a>
         </div>
     </div>
 </div>

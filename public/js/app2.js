@@ -8538,6 +8538,95 @@ function graficoSeguimientoFases(data, name) {
 });
 }
 
+function graficoSeguimientoArticulacionesFases(data, name) {
+    let nodos = [];
+    let inicio = [];
+    let planeacion = [];
+    let ejecucion = [];
+    let cierre = [];
+    let finalizado = [];
+    let suspendido = [];
+    data.datos.forEach(element => {
+      nodos.push(element.nodo);
+      inicio.push(element.inicio);
+      planeacion.push(element.planeacion);
+      ejecucion.push(element.ejecucion);
+      cierre.push(element.cierre);
+      finalizado.push(element.finalizado);
+      suspendido.push(element.suspendido);
+    });
+    Highcharts.chart(name, {
+      chart: {
+          type: 'column'
+      },
+      title: {
+          text: 'Proyectos actuales y finalizados en el año actual'
+      },
+      xAxis: {
+          title: {
+            text: 'Nodos/Expertos'
+          },
+          categories: nodos
+      },
+      yAxis: {
+          min: 0,
+          title: {
+              text: 'Cantidad de proyectos'
+          },
+          stackLabels: {
+              enabled: true,
+              style: {
+                  fontWeight: 'bold',
+                  color: ( // theme
+                      Highcharts.defaultOptions.title.style &&
+                      Highcharts.defaultOptions.title.style.color
+                  ) || 'gray',
+                  textOutline: 'none'
+              }
+          }
+      },
+      legend: {
+          align: 'left',
+          x: 70,
+          verticalAlign: 'top',
+          y: 20,
+          floating: true,
+          backgroundColor:
+              Highcharts.defaultOptions.legend.backgroundColor || 'white',
+          borderColor: '#CCC',
+          borderWidth: 1,
+          shadow: false
+      },
+      plotOptions: {
+          column: {
+              stacking: 'normal',
+              dataLabels: {
+                  enabled: true
+              }
+          }
+      },
+      series: [{
+          name: 'Inicio',
+          data: inicio
+      }, {
+          name: 'Planeación',
+          data: planeacion
+      }, {
+          name: 'Ejecución',
+          data: ejecucion
+      }, {
+        name: 'Cierre',
+        data: cierre
+      }, {
+        name: 'Finalizado',
+        data: finalizado
+      }, {
+        name: 'Concluido sin finalizar',
+        data: suspendido
+      }]
+  });
+  }
+
 function graficoSeguimientoFasesNoGroup(data, name) {
   Highcharts.chart(name, {
     chart: {
@@ -10753,7 +10842,6 @@ function sendListNodos(url, input) {
       nodos: nodosSend
     },
     url: url,
-    // success: function (data) { },
     error: function (xhr, textStatus, errorThrown) {
       alert("Error: " + errorThrown);
     },
@@ -10767,11 +10855,25 @@ function consultarSeguimientoDeUnNodoFases(e, url) {
       Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
       return false;
   } else {
-    let ajax = sendListNodos(url, input);
+        let ajax = sendListNodos(url, input);
       ajax.success(function (data) {
         graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
       });
   }
+};
+
+function consultarSeguimientoArticulacionesDeUnNodoxFases(e, url) {
+    e.preventDefault();
+    input = $("#nodo_articulacion_actual").val();
+    if (!validarSelect(input)) {
+        Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
+        return false;
+    } else {
+        let ajax = sendListNodos(url, input);
+        ajax.success(function (data) {
+            graficoSeguimientoArticulacionesFases(data, graficosSeguimiento.nodo_fases);
+        });
+    }
 };
 
 function consultarSeguimientoEsperado(e, url) {
@@ -10788,7 +10890,7 @@ function consultarSeguimientoEsperado(e, url) {
   }
 }
 
-function generarExcelConTodosLosIndicadores() {
+function generarExcelConTodosLosIndicadoresProyectos() {
   let idnodo = $('#txtnodo_id').val();
   let hoja = $('#txthoja_nombre').val();
   let fecha_inicio = $('#txtfecha_inicio_todos').val();
@@ -10804,8 +10906,28 @@ function generarExcelConTodosLosIndicadores() {
   if (fecha_inicio > fecha_fin) {
     Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
   } else {
-    location.href = '/excel/export/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+hoja;
+    location.href = `/excel/export/${idnodo}/${fecha_inicio}/${fecha_fin}/${hoja}`;
   }
+}
+
+function generarExcelConTodosLosIndicadoresArticulaciones() {
+    let nodo = $('#txtnodo_articulacion_todos').val();
+    let hoja = $('#txthoja_articulacion_todos').val();
+    let fecha_inicio = $('#txtfecha_inicio_articulacion_todos').val();
+    let fecha_fin = $('#txtfecha_fin_articulacion_todos').val();
+
+    if (!isset(nodo)) {
+        nodo = 0;
+    }
+    if (!isset(hoja)) {
+        hoja = 'all';
+    }
+
+    if (fecha_inicio > fecha_fin) {
+        Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
+    } else {
+        location.href = `/excel/export/${nodo}/articulaciones/${fecha_inicio}/${fecha_fin}/${hoja}`;
+    }
 }
 
 function generarExcelConTodosLosIndicadoresActuales() {
@@ -10817,9 +10939,9 @@ function generarExcelConTodosLosIndicadoresActuales() {
   if (!isset(hoja)) {
     hoja = 'all';
   }
-
-  location.href = '/excel/export_proyectos_actuales/'+idnodo+'/'+hoja;
+  location.href = `/excel/export_proyectos_actuales/${idnodo}/${hoja}`;
 }
+
 function generarExcelIndicadoresArticulacionesActuales() {
   let node = $('#txtnodo_articulaciones_activas').val();
   let sheet = $('#txthoja_articulaciones_activas').val();
@@ -10829,7 +10951,6 @@ function generarExcelIndicadoresArticulacionesActuales() {
   if (!isset(sheet)) {
     sheet = 'all';
   }
-
   location.href = `/excel/export_articulaciones_actuales/${node}/${sheet}`;
 }
 
@@ -10849,7 +10970,7 @@ function generarExcelConTodosLosIndicadoresFinalizados() {
   if (fecha_inicio > fecha_fin) {
     Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
   } else {
-    location.href = '/excel/export_proyectos_finalizados/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+hoja;
+    location.href = `/excel/export_proyectos_finalizados/${idnodo}/${fecha_inicio}/${fecha_fin}/${hoja}`;
   }
 }
 
@@ -10924,13 +11045,12 @@ function downloadMetas(e) {
       Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
       return false;
   } else {
-      // location.href = route + '/' + input;
       document.frmDescargarMetas.submit();
   }
 }
 
+
 function validarSelect(input) {
-  // input = $(input).val();
   if (input == null) {
     return false;
   }

@@ -111,10 +111,10 @@ class SeguimientoController extends Controller
       $nodo_str = $nodo->nombre;
       $cnt_trl6 = $trl6->where('nombre', $nodo_str)->first();
       $cnt_trl7_8 = $trl7_8->where('nombre', $nodo_str)->first();
-      
+
       $cnt_trl6 != null ? $cnt_trl6 = $cnt_trl6->trl_esperado : $cnt_trl6 = 0;
       $cnt_trl7_8 != null ? $cnt_trl7_8 = $cnt_trl7_8->trl_esperado : $cnt_trl7_8 = 0;
-      
+
       $datos[] = [
         'nodo' => $nodo_str,
         'trl6' => $cnt_trl6,
@@ -306,7 +306,6 @@ class SeguimientoController extends Controller
    **/
   public function seguimientoDelNodoFases(Request $request)
   {
-    // dd($request->nodos);
     if ($request->nodos[0] != 'all') {
         if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
             $nodos = $request->nodos;
@@ -558,6 +557,8 @@ class SeguimientoController extends Controller
       'datos' => $datos
     ]);
   }
+
+
 
   /**
    * Asigna un valor a $proyectoRepository

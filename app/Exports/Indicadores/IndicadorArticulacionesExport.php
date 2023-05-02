@@ -42,10 +42,6 @@ class IndicadorArticulacionesExport implements WithMultipleSheets
                 );
             }
             if ($this->hoja == 'talentos') {
-
-                // $this->getQuery()
-                //     ->groupBy('participant.id')
-                //     ->dd();
                 $sheets[] = new ArticulationParticipantExport(
                     $this->getQuery()
                     ->groupBy('participant.id')

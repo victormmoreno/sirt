@@ -648,6 +648,8 @@ Route::group(
         Route::get('/export_materiales', 'Excel\MaterialController@download')->name('download.materiales');
         Route::get('/export_equipos', 'Excel\EquipoController@download')->name('download.equipos');
 
+        Route::get('/export/{nodo}/articulaciones/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicatorArticulations')->name('indicador.export.excel');
+
         //Rutas para la generación de excel del módulo de nodo
         Route::get('/excelnodo', 'Excel\NodoController@exportQueryAllNodo')
         ->middleware('role_session:Activador')
@@ -684,6 +686,8 @@ Route::group(
         Route::get('/seguimientoDeTecnoparqueFases', 'SeguimientoController@seguimientoDeTecnoparqueFases')->middleware('role_session:Dinamizador|Activador');
         Route::get('/seguimientoActualDeUnGestor/{id}', 'SeguimientoController@seguimientoActualDelGestor');
         Route::get('/seguimientoActualDeUnaLinea/{id}/{nodo}', 'SeguimientoController@seguimientoActualDeLaLinea');
+
+
     }
 );
 
@@ -813,11 +817,6 @@ Route::group(
     }
 );
 
-Route::group(['prefix'     => 'excel'],
-    function () {
-
-    }
-);
 
 Route::get('/notificaciones', 'NotificationsController@index')
     ->name('notifications.index')

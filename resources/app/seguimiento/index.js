@@ -368,6 +368,7 @@ function graficoSeguimientoFases(data, name) {
 });
 }
 
+
 function graficoSeguimientoFasesNoGroup(data, name) {
   Highcharts.chart(name, {
     chart: {

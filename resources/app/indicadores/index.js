@@ -14,7 +14,6 @@ function sendListNodos(url, input) {
       nodos: nodosSend
     },
     url: url,
-    // success: function (data) { },
     error: function (xhr, textStatus, errorThrown) {
       alert("Error: " + errorThrown);
     },
@@ -28,7 +27,7 @@ function consultarSeguimientoDeUnNodoFases(e, url) {
       Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
       return false;
   } else {
-    let ajax = sendListNodos(url, input);
+        let ajax = sendListNodos(url, input);
       ajax.success(function (data) {
         graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
       });
@@ -70,27 +69,24 @@ function generarExcelConTodosLosIndicadoresProyectos() {
 }
 
 function generarExcelConTodosLosIndicadoresArticulaciones() {
-    let nodo = $('#txtnodo_articulacion').val();
-    let hoja = $('#txthoja_nombre').val();
-    let fecha_inicio = $('#txtfecha_inicio_todos').val();
-    let fecha_fin = $('#txtfecha_fin_todos').val();
+    let nodo = $('#txtnodo_articulacion_todos').val();
+    let hoja = $('#txthoja_articulacion_todos').val();
+    let fecha_inicio = $('#txtfecha_inicio_articulacion_todos').val();
+    let fecha_fin = $('#txtfecha_fin_articulacion_todos').val();
 
     if (!isset(nodo)) {
         nodo = 0;
     }
     if (!isset(hoja)) {
-      hoja = 'all';
+        hoja = 'all';
     }
 
     if (fecha_inicio > fecha_fin) {
-      Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
+        Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
     } else {
-      location.href = '/excel/export/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+hoja;
+        location.href = `/excel/export/${nodo}/articulaciones/${fecha_inicio}/${fecha_fin}/${hoja}`;
     }
-  }
-
-
-
+}
 
 function generarExcelConTodosLosIndicadoresActuales() {
   let idnodo = $('#txtnodo_id_actuales').val();
@@ -101,9 +97,9 @@ function generarExcelConTodosLosIndicadoresActuales() {
   if (!isset(hoja)) {
     hoja = 'all';
   }
-
-  location.href = '/excel/export_proyectos_actuales/'+idnodo+'/'+hoja;
+  location.href = `/excel/export_proyectos_actuales/${idnodo}/${hoja}`;
 }
+
 function generarExcelIndicadoresArticulacionesActuales() {
   let node = $('#txtnodo_articulaciones_activas').val();
   let sheet = $('#txthoja_articulaciones_activas').val();
@@ -113,7 +109,6 @@ function generarExcelIndicadoresArticulacionesActuales() {
   if (!isset(sheet)) {
     sheet = 'all';
   }
-
   location.href = `/excel/export_articulaciones_actuales/${node}/${sheet}`;
 }
 
@@ -133,7 +128,7 @@ function generarExcelConTodosLosIndicadoresFinalizados() {
   if (fecha_inicio > fecha_fin) {
     Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
   } else {
-    location.href = '/excel/export_proyectos_finalizados/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+hoja;
+    location.href = `/excel/export_proyectos_finalizados/${idnodo}/${fecha_inicio}/${fecha_fin}/${hoja}`;
   }
 }
 
@@ -208,13 +203,12 @@ function downloadMetas(e) {
       Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
       return false;
   } else {
-      // location.href = route + '/' + input;
       document.frmDescargarMetas.submit();
   }
 }
 
+
 function validarSelect(input) {
-  // input = $(input).val();
   if (input == null) {
     return false;
   }
