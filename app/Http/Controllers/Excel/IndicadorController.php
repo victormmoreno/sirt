@@ -389,11 +389,15 @@ class IndicadorController extends Controller
                 if(isset($nodo) && $nodo != 'all'){
                     $query->where('articulation_stages.node_id', $nodo);
                 }
+
             })
             ->where(function($query) use ($fecha_inicio, $fecha_fin){
                 if(isset($fecha_inicio) && isset($fecha_fin)){
-                    $query->whereBetween('articulations.end_date', [$fecha_inicio, $fecha_fin])
-                    ->orWhereBetween('articulations.start_date', [$fecha_inicio, $fecha_fin]);
+                    $query->whereBetween('articulations.start_date', [$fecha_inicio, $fecha_fin])
+                    ->orWhereBetween('articulations.end_date', [$fecha_inicio, $fecha_fin])
+                    ->orWhere(function($query){
+                        $query->whereIn('fases.nombre', [Articulation::IsInicio(), Articulation::IsEjecucion(), Articulation::IsCierre()]);
+                    });
                 }
             });
         return Excel::download(new IndicadorArticulacionesExport($query, $hoja), "Indicadores_Articulaciones_{$fecha_inicio}_a_{$fecha_fin}.xlsx");

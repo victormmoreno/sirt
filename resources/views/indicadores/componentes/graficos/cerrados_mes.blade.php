@@ -33,7 +33,7 @@
     <div id="graficoSeguimientoCerradosPorMes_column" class="green lighten-3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
         <div class="row card-panel">
             <h5 class="center">
-                Para consultar el seguimiento de proyectos del inscritos, debes pulsar el botón de <b>Consultar</b>
+                Para consultar el seguimiento de proyectos cerrados, debes pulsar el botón de <b>Generar gráfico</b>
             </h5>
         </div>
     </div>

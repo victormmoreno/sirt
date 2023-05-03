@@ -687,6 +687,9 @@ Route::group(
         Route::get('/seguimientoActualDeUnGestor/{id}', 'SeguimientoController@seguimientoActualDelGestor');
         Route::get('/seguimientoActualDeUnaLinea/{id}/{nodo}', 'SeguimientoController@seguimientoActualDeLaLinea');
 
+        Route::get('/seguimientoArticulacionesCerradasPorMes', 'SeguimientoController@seguimientoArticulacionesCerradas');
+        Route::get('/seguimientoArticulacionesInscritasPorMes', 'SeguimientoController@seguimientoArticulacionesInscritas');
+        Route::get('/seguimientoArticulacionDeUnNodoFases', 'SeguimientoController@seguimientoArticulacionesDelNodoFases')->middleware('role_session:Activador|Dinamizador|Articulador');
 
     }
 );

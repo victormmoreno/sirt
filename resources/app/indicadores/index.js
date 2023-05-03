@@ -1,23 +1,23 @@
 function isset(variable) {
-  if(typeof(variable) != "undefined" && variable !== null) {
-    return true;
-  }
-  return false;
+    if(typeof(variable) != "undefined" && variable !== null) {
+        return true;
+    }
+    return false;
 }
 
 function sendListNodos(url, input) {
-  let nodosSend = input;
-  return $.ajax({
-    dataType: 'json',
-    type: 'get',
-    data: {
-      nodos: nodosSend
-    },
-    url: url,
-    error: function (xhr, textStatus, errorThrown) {
-      alert("Error: " + errorThrown);
-    },
-  });
+    let nodosSend = input;
+    return $.ajax({
+        dataType: 'json',
+        type: 'get',
+        data: {
+        nodos: nodosSend
+        },
+        url: url,
+        error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+        },
+    });
 };
 
 function consultarSeguimientoDeUnNodoFases(e, url) {
@@ -33,6 +33,21 @@ function consultarSeguimientoDeUnNodoFases(e, url) {
       });
   }
 };
+
+function consultarSeguimientoArticulacionDeUnNodoFases(e, url) {
+    e.preventDefault();
+    input = $("#nodo_articulacion_actual").val();
+    if (!validarSelect(input)) {
+        Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
+        return false;
+    } else {
+        let ajax = sendListNodos(url, input);
+        ajax.success(function (data) {
+            console.log(data);
+            graficoSeguimientoArticulacionesFases(data, graficosArticulacionSeguimiento.nodo_fases);
+        });
+    }
+  };
 
 function consultarSeguimientoEsperado(e, url) {
   e.preventDefault();

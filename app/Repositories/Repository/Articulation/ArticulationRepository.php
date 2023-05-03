@@ -487,4 +487,56 @@ class ArticulationRepository extends Repository
         ->whereIn('fases.nombre', $phase);
     }
 
+    public function seguimientoArticulacionesAbiertas()
+    {
+        return Articulation::query()
+        ->join('articulation_stages', 'articulation_stages.id', '=', 'articulations.articulation_stage_id')
+        ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
+        ->join('fases', 'fases.id', '=', 'articulations.phase_id')
+        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+        ->whereIn('fases.nombre', [Articulation::IsInicio(), Articulation::IsEjecucion(), Articulation::IsCierre()]);
+    }
+
+    public function seguimientoArticulacionesCerradas($year)
+    {
+        return Articulation::query()
+        ->select('fases.nombre AS fase', 'entidades.nombre as nodo')
+        ->selectRaw('count(articulations.id) AS cantidad')
+        ->join('articulation_stages', 'articulation_stages.id', '=', 'articulations.articulation_stage_id')
+        ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
+        ->join('fases', 'fases.id', '=', 'articulations.phase_id')
+        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+        ->whereIn('fases.nombre', [Articulation::IsFinalizado(), 'Concluido sin finalizar'])
+        ->groupBy('entidades.nombre', 'fase')
+        ->whereYear('articulations.end_date', $year);
+    }
+
+    public function articulacionesInscritasPorMes($year)
+    {
+        $this->traducirMeses();
+        return Articulation::query()
+        ->selectRaw('MONTH(articulations.start_date) AS mes, COUNT(articulations.id) AS cantidad, DATE_FORMAT(articulations.start_date, "%M") AS nombre_mes')
+        ->join('articulation_stages', 'articulation_stages.id', '=', 'articulations.articulation_stage_id')
+        ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
+        ->join('fases', 'fases.id', '=', 'articulations.phase_id')
+        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+        ->whereYear('articulations.start_date', $year)
+        ->groupBy("mes", "nombre_mes")
+        ->orderBy("mes");
+    }
+
+    public function articulacionesCerradasPorMes($year)
+    {
+        $this->traducirMeses();
+        return Articulation::query()
+        ->selectRaw('MONTH(articulations.end_date) AS mes, COUNT(articulations.id) AS cantidad, DATE_FORMAT(articulations.end_date, "%M") AS nombre_mes')
+        ->join('articulation_stages', 'articulation_stages.id', '=', 'articulations.articulation_stage_id')
+        ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
+        ->join('fases', 'fases.id', '=', 'articulations.phase_id')
+        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+        ->whereYear('articulations.end_date', $year)
+        ->whereIn('fases.nombre', [Articulation::IsFinalizado()])
+        ->groupBy("mes", "nombre_mes")
+        ->orderBy("mes");
+    }
 }

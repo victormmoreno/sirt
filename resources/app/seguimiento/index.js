@@ -1,17 +1,30 @@
 var graficosSeguimiento = {
-  gestor: 'graficoSeguimientoEsperadoPorGestorDeUnNodo_column',
-  nodo_esperado: 'graficoSeguimientoDeUnNodo_column',
-  tecnoparque_esperado: 'graficoSeguimientoTecnoparque_column',
-  nodo_fases: 'graficoSeguimientoDeUnNodoFases_column',
-  tecnoparque_fases: 'graficoSeguimientoTecnoparqueFases_column',
-  gestor_fases: 'graficoSeguimientoPorGestorFases_column',
-  linea_esperado: 'graficoSeguimientoEsperadoPorLineaDeUnNodo_column',
-  linea_actual: 'graficoSeguimientoActualPorLineaDeUnNodo_column',
-  inscritos_mes: 'graficoSeguimientoInscritosPorMes_column'
+    gestor: 'graficoSeguimientoEsperadoPorGestorDeUnNodo_column',
+    nodo_esperado: 'graficoSeguimientoDeUnNodo_column',
+    tecnoparque_esperado: 'graficoSeguimientoTecnoparque_column',
+    nodo_fases: 'graficoSeguimientoDeUnNodoFases_column',
+    tecnoparque_fases: 'graficoSeguimientoTecnoparqueFases_column',
+    gestor_fases: 'graficoSeguimientoPorGestorFases_column',
+    linea_esperado: 'graficoSeguimientoEsperadoPorLineaDeUnNodo_column',
+    linea_actual: 'graficoSeguimientoActualPorLineaDeUnNodo_column',
+    inscritos_mes: 'graficoSeguimientoInscritosPorMes_column'
 };
 
+let graficosArticulacionSeguimiento = {
+    // gestor: 'graficoSeguimientoEsperadoPorGestorDeUnNodo_column',
+    // nodo_esperado: 'graficoSeguimientoArticulacionDeUnNodoFases_column',
+    // tecnoparque_esperado: 'graficoSeguimientoTecnoparque_column',
+    nodo_fases: 'graficoSeguimientoArticulacionDeUnNodoFases_column',
+    // tecnoparque_fases: 'graficoSeguimientoTecnoparqueFases_column',
+    // gestor_fases: 'graficoSeguimientoPorGestorFases_column',
+    // linea_esperado: 'graficoSeguimientoEsperadoPorLineaDeUnNodo_column',
+    // linea_actual: 'graficoSeguimientoActualPorLineaDeUnNodo_column',
+    inscritos_mes: 'graficoSeguimientoArticulacionesInscritasPorMes_column'
+};
+
+
 function alertaLineaNoValido() {
-  Swal.fire('Advertencia!', 'Seleccione una línea tecnológica', 'warning');
+    Swal.fire('Advertencia!', 'Seleccione una línea tecnológica', 'warning');
 };
 
 function alertaGestorNoValido() {
@@ -234,49 +247,98 @@ function graficoSeguimientoEsperado(data, name) {
 }
 
 function graficoSeguimientoPorMes(data, name) {
-  Highcharts.chart(name, {
-    title: {
-      text: 'Proyectos inscritos por mes en el año actual'
-    },
-    subtitle: {
-      text: 'Cuando el mes no aparece es porque el valor es cero(0)'
-    },
-    yAxis: {
-      title: {
-        text: 'Cantidad de proyectos'
-      }
-    },
-    xAxis: {
-      categories: data.datos.meses,
-      accessibility: {
-        rangeDescription: 'Mes'
-      }
-    },
-    legend: {
-      layout: 'vertical',
-      align: 'right',
-      verticalAlign: 'middle'
-    },
-    series: [{
-      name: 'Proyectos inscritos',
-      data: data.datos.cantidades
-    }],
-
-    responsive: {
-      rules: [{
-        condition: {
-          maxWidth: 500
+    Highcharts.chart(name, {
+        title: {
+        text: 'Proyectos inscritos por mes en el año actual'
         },
-        chartOptions: {
-          legend: {
-            layout: 'horizontal',
-            align: 'center',
-            verticalAlign: 'bottom'
-          }
+        subtitle: {
+        text: 'Cuando el mes no aparece es porque el valor es cero(0)'
+        },
+        yAxis: {
+        title: {
+            text: 'Cantidad de proyectos'
         }
-      }]
-    }
-  });
+        },
+        xAxis: {
+        categories: data.datos.meses,
+        accessibility: {
+            rangeDescription: 'Mes'
+        }
+        },
+        legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+        },
+        series: [{
+        name: 'Proyectos inscritos',
+        data: data.datos.cantidades
+        }],
+
+        responsive: {
+        rules: [{
+            condition: {
+            maxWidth: 500
+            },
+            chartOptions: {
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom'
+            }
+            }
+        }]
+        }
+    });
+}
+
+function graficoSeguimientoArticulacionesPorMes(data, name) {
+    Highcharts.chart(name, {
+        title: {
+            text: 'Articulaciones inscritas por mes en el año actual'
+        },
+        subtitle: {
+            text: 'Cuando el mes no aparece es porque el valor es cero(0)'
+        },
+        yAxis: {
+            title: {
+                text: 'Cantidad de articulaciones'
+            }
+        },
+        xAxis: {
+            title: {
+                text: 'Mes'
+            },
+            categories: data.datos.meses,
+            accessibility: {
+                rangeDescription: 'Mes'
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle'
+        },
+        series: [{
+            name: 'Articulaciones inscritas',
+            data: data.datos.cantidades
+        }],
+
+        responsive: {
+        rules: [{
+            condition: {
+            maxWidth: 500
+            },
+            chartOptions: {
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom'
+            }
+            }
+        }]
+        }
+    });
 }
 
 function graficoSeguimientoFases(data, name) {
@@ -366,6 +428,90 @@ function graficoSeguimientoFases(data, name) {
       data: suspendido
     }]
 });
+}
+
+function graficoSeguimientoArticulacionesFases(data, name) {
+    let nodos = [];
+    let inicio = [];
+    let ejecucion = [];
+    let cierre = [];
+    let finalizado = [];
+    let suspendido = [];
+    data.datos.forEach(element => {
+        nodos.push(element.nodo);
+        inicio.push(element.inicio);
+        ejecucion.push(element.ejecucion);
+        cierre.push(element.cierre);
+        finalizado.push(element.finalizado);
+        suspendido.push(element.suspendido);
+    });
+    Highcharts.chart(name, {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Articulaciones actuales y finalizadas en el año actual'
+        },
+        xAxis: {
+            title: {
+                text: 'Nodos'
+            },
+            categories: nodos
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Cantidad de Articulaciones'
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: ( // theme
+                        Highcharts.defaultOptions.title.style &&
+                        Highcharts.defaultOptions.title.style.color
+                    ) || 'gray',
+                    textOutline: 'none'
+                }
+            }
+        },
+        legend: {
+            align: 'left',
+            x: 70,
+            verticalAlign: 'top',
+            y: 20,
+            floating: true,
+            backgroundColor:
+                Highcharts.defaultOptions.legend.backgroundColor || 'white',
+            borderColor: '#CCC',
+            borderWidth: 1,
+            shadow: false
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        series: [{
+            name: 'Inicio',
+            data: inicio
+        },  {
+            name: 'Ejecución',
+            data: ejecucion
+        }, {
+            name: 'Cierre',
+            data: cierre
+        }, {
+            name: 'Finalizado',
+            data: finalizado
+        }, {
+            name: 'Concluido sin finalizar',
+            data: suspendido
+        }]
+    });
 }
 
 
