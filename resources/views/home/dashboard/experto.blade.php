@@ -38,9 +38,9 @@
             <div class="card-content">
                 <span class="stats-counter">
                     @if ($proyectos_limite_planeacion != 0)
-                        Tienes {{$proyectos_limite_planeacion}} proyectos atrasados en la fase de planeación (Máximo {{config('app.proyectos.duracion.inicio')}} días en esta fase).
+                        Tienes {{$proyectos_limite_planeacion}} proyectos atrasados en la fase de planeación (Máximo {{config('app.proyectos.duracion.planeacion')}} días en esta fase).
                     @else
-                        No tienes proyectos con mas de {{config('app.proyectos.duracion.planeacion')}} días en la fase de inicio.
+                        No tienes proyectos con mas de {{config('app.proyectos.duracion.planeacion')}} días en la fase de planeación.
                     @endif
                 </span>
                 <br>

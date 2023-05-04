@@ -272,7 +272,7 @@ class ProyectoRepository extends Repository
         ->orderBy('hist.created_at')
         ->asesor($experto);
     }
- 
+
     /**
      * Consulta trls esperado entre fechas
      * @param string $field Trl que se va a consultar

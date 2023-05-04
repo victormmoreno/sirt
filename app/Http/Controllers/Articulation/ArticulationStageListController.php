@@ -14,6 +14,7 @@ use App\Repositories\Repository\Articulation\ArticulationStageRepository;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Model;
 
 
 class ArticulationStageListController extends Controller
@@ -57,6 +58,11 @@ class ArticulationStageListController extends Controller
         $articulationStages = [];
         if (isset($request->filter_status_articulationStage) || isset($request->filter_year_articulationStage)) {
             $articulationStages = $this->articulationStageRepository->getListArticulacionStagesWithArticulations()
+            ->leftJoin('articulations', 'articulations.articulation_stage_id', '=', 'articulation_stages.id')
+            ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')
+            ->leftJoin('articulation_scopes', 'articulation_scopes.id', '=', 'articulations.scope_id')
+            ->leftJoin('articulation_subtypes', 'articulation_subtypes.id', '=', 'articulations.articulation_subtype_id')
+            ->leftJoin('articulation_types', 'articulation_types.id', '=', 'articulation_subtypes.articulation_type_id')
             ->select(
                 'articulation_stages.*', 'articulations.code as articulation_code',
                 'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
@@ -64,11 +70,11 @@ class ArticulationStageListController extends Controller
                 'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id'
             )
             ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', if(articulationables.articulationable_type = 'App\\\Models\\\Sede', 'Empresa', if(articulationables.articulationable_type = 'App\\\Models\\\Idea', 'Idea', 'No registra'))) as articulation_state_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by, concat(empresas.nit, ' - ', empresas.nombre, ' - ', sedes.nombre_sede) as sede, concat(ideas.codigo_idea, ' - ', ideas.nombre_proyecto) as idea")
+
                 ->node($node)
                 ->status($request->filter_status_articulationStage)
                 ->year($request->filter_year_articulationStage)
                 ->interlocutorTalent($talent)
-                ->groupBy('articulation_stages.code')
                 ->orderBy('articulation_stages.updated_at', 'desc')
                 ->get();
         }
@@ -91,6 +97,13 @@ class ArticulationStageListController extends Controller
         $articulationStages = [];
         if (isset($request->filter_status_articulationStage)) {
             $articulationStages = $this->articulationStageRepository->getListArticulacionStagesWithArticulations()
+            ->rightJoin('articulations', 'articulations.articulation_stage_id', '=', 'articulation_stages.id')
+            ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')
+            ->leftJoin('articulation_scopes', 'articulation_scopes.id', '=', 'articulations.scope_id')
+            ->leftJoin('articulation_user', 'articulation_user.articulation_id', '=', 'articulations.id')
+            ->leftJoin('users as participants', 'participants.id', '=', 'articulation_user.user_id')
+            ->leftJoin('articulation_subtypes', 'articulation_subtypes.id', '=', 'articulations.articulation_subtype_id')
+            ->leftJoin('articulation_types', 'articulation_types.id', '=', 'articulation_subtypes.articulation_type_id')
             ->select(
                 'articulation_stages.*', 'articulations.code as articulation_code',
                 'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
@@ -98,6 +111,7 @@ class ArticulationStageListController extends Controller
                 'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id', 'interlocutor.documento', 'interlocutor.nombres',
                 'interlocutor.apellidos', 'interlocutor.email', 'articulation_subtypes.name as articulation_subtype', 'articulation_types.name as articulation_type', 'articulation_scopes.name as scope'
             )
+
             ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_state_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by, GROUP_CONCAT(DISTINCT CONCAT(participants.documento, ' - ', participants.nombres, ' ', participants.apellidos)  SEPARATOR ';') as participants")
             ->node($node)
             ->status($request->filter_status_articulationStage)
@@ -108,7 +122,6 @@ class ArticulationStageListController extends Controller
             ->get();
         }
         return (new articulationStageExport($articulationStages))->download(__('articulation-stage') .' - '. config('app.name') . ".{$extension}");
-
     }
 
 
@@ -180,6 +193,8 @@ class ArticulationStageListController extends Controller
     private function datatableArticulationStages($articulationStages)
     {
         return datatables()->of($articulationStages)
+            // ->setRowClass('{{ $articulation_state_type == "Proyecto" ? "border-solid":"" }}')
+
             ->editColumn('node', function ($data) {
                 if($data->articulation_code){
                     return "<blockquote class='primary-text'>{$data->nodo}</blockquote>";
@@ -206,7 +221,7 @@ class ArticulationStageListController extends Controller
                     $articulationType = 'No registra';
                 }
                 return "
-                <tr class='group grey lighten-2'>
+                <tr  class='group grey z-depth-1 lighten-2'>
                     <th >
                         {$data->nodo}
                     </th>
