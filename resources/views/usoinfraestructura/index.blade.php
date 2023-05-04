@@ -116,3 +116,5 @@
 </main>
 
 @endsection
+@push('script')
+@endpush

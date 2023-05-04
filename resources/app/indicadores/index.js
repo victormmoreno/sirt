@@ -1,24 +1,23 @@
 function isset(variable) {
-  if(typeof(variable) != "undefined" && variable !== null) {
-    return true;
-  }
-  return false;
+    if(typeof(variable) != "undefined" && variable !== null) {
+        return true;
+    }
+    return false;
 }
 
 function sendListNodos(url, input) {
-  let nodosSend = input;
-  return $.ajax({
-    dataType: 'json',
-    type: 'get',
-    data: {
-      nodos: nodosSend
-    },
-    url: url,
-    // success: function (data) { },
-    error: function (xhr, textStatus, errorThrown) {
-      alert("Error: " + errorThrown);
-    },
-  });
+    let nodosSend = input;
+    return $.ajax({
+        dataType: 'json',
+        type: 'get',
+        data: {
+        nodos: nodosSend
+        },
+        url: url,
+        error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+        },
+    });
 };
 
 function consultarSeguimientoDeUnNodoFases(e, url) {
@@ -28,12 +27,27 @@ function consultarSeguimientoDeUnNodoFases(e, url) {
       Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
       return false;
   } else {
-    let ajax = sendListNodos(url, input);
+        let ajax = sendListNodos(url, input);
       ajax.success(function (data) {
         graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
       });
   }
 };
+
+function consultarSeguimientoArticulacionDeUnNodoFases(e, url) {
+    e.preventDefault();
+    input = $("#nodo_articulacion_actual").val();
+    if (!validarSelect(input)) {
+        Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
+        return false;
+    } else {
+        let ajax = sendListNodos(url, input);
+        ajax.success(function (data) {
+            console.log(data);
+            graficoSeguimientoArticulacionesFases(data, graficosArticulacionSeguimiento.nodo_fases);
+        });
+    }
+  };
 
 function consultarSeguimientoEsperado(e, url) {
   e.preventDefault();
@@ -49,7 +63,7 @@ function consultarSeguimientoEsperado(e, url) {
   }
 }
 
-function generarExcelConTodosLosIndicadores() {
+function generarExcelConTodosLosIndicadoresProyectos() {
   let idnodo = $('#txtnodo_id').val();
   let hoja = $('#txthoja_nombre').val();
   let fecha_inicio = $('#txtfecha_inicio_todos').val();
@@ -65,8 +79,28 @@ function generarExcelConTodosLosIndicadores() {
   if (fecha_inicio > fecha_fin) {
     Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
   } else {
-    location.href = '/excel/export/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+hoja;
+    location.href = `/excel/export/${idnodo}/${fecha_inicio}/${fecha_fin}/${hoja}`;
   }
+}
+
+function generarExcelConTodosLosIndicadoresArticulaciones() {
+    let nodo = $('#txtnodo_articulacion_todos').val();
+    let hoja = $('#txthoja_articulacion_todos').val();
+    let fecha_inicio = $('#txtfecha_inicio_articulacion_todos').val();
+    let fecha_fin = $('#txtfecha_fin_articulacion_todos').val();
+
+    if (!isset(nodo)) {
+        nodo = 0;
+    }
+    if (!isset(hoja)) {
+        hoja = 'all';
+    }
+
+    if (fecha_inicio > fecha_fin) {
+        Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
+    } else {
+        location.href = `/excel/export/${nodo}/articulaciones/${fecha_inicio}/${fecha_fin}/${hoja}`;
+    }
 }
 
 function generarExcelConTodosLosIndicadoresActuales() {
@@ -78,8 +112,19 @@ function generarExcelConTodosLosIndicadoresActuales() {
   if (!isset(hoja)) {
     hoja = 'all';
   }
+  location.href = `/excel/export_proyectos_actuales/${idnodo}/${hoja}`;
+}
 
-  location.href = '/excel/export_proyectos_actuales/'+idnodo+'/'+hoja;
+function generarExcelIndicadoresArticulacionesActuales() {
+  let node = $('#txtnodo_articulaciones_activas').val();
+  let sheet = $('#txthoja_articulaciones_activas').val();
+  if (!isset(node)) {
+    node = 0;
+  }
+  if (!isset(sheet)) {
+    sheet = 'all';
+  }
+  location.href = `/excel/export_articulaciones_actuales/${node}/${sheet}`;
 }
 
 function generarExcelConTodosLosIndicadoresFinalizados() {
@@ -98,8 +143,27 @@ function generarExcelConTodosLosIndicadoresFinalizados() {
   if (fecha_inicio > fecha_fin) {
     Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
   } else {
-    location.href = '/excel/export_proyectos_finalizados/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+hoja;
+    location.href = `/excel/export_proyectos_finalizados/${idnodo}/${fecha_inicio}/${fecha_fin}/${hoja}`;
   }
+}
+
+function generarExcelIndicadoresArticulacionesFinalizadas() {
+    let nodo = $('#txtnodo_articulaciones_finalizadas').val();
+    let hoja = $('#txthoja_articulaciones_finalizadas').val();
+    let fecha_inicio = $('#txtfecha_inicio_finalizadas').val();
+    let fecha_fin = $('#txtfecha_fin_finalizadas').val();
+
+    if (!isset(nodo)) {
+        nodo = 0;
+    }
+    if (!isset(hoja)) {
+        hoja = 'all';
+    }
+    if (fecha_inicio > fecha_fin) {
+        Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
+    } else {
+        location.href = `/excel/export_articulaciones_finalizadas/${nodo}/${fecha_inicio}/${fecha_fin}/${hoja}`;
+    }
 }
 
 function generarExcelConTodosLosIndicadoresInscritos() {
@@ -119,8 +183,26 @@ function generarExcelConTodosLosIndicadoresInscritos() {
   } else {
     location.href = '/excel/export_proyectos_inscritos/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+hoja;
   }
-
 }
+
+function generarExcelIndicadoresArticulacionesInscritas() {
+    let nodo = $('#txtnodo_articulaciones_inscritas').val();
+    let hoja = $('#txthoja_articulaciones_inscritas').val();
+    let fecha_inicio = $('#txtfecha_inicio_articulaciones_inscritas').val();
+    let fecha_fin = $('#txtfecha_fin_articulaciones_inscritas').val();
+    if (!isset(nodo)) {
+        nodo = 0;
+    }
+    if (!isset(hoja)) {
+        hoja = 'all';
+    }
+
+    if (fecha_inicio > fecha_fin) {
+      Swal.fire('Error!', 'Seleccione un rango de fechas válido', 'error');
+    } else {
+      location.href = `/excel/export_articulaciones_inscritos/${nodo}/${fecha_inicio}/${fecha_fin}/${hoja}`;
+    }
+  }
 
 function selectAll(source, elementaName) {
   checkboxes = document.getElementsByClassName(elementaName);
@@ -136,13 +218,12 @@ function downloadMetas(e) {
       Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
       return false;
   } else {
-      // location.href = route + '/' + input;
       document.frmDescargarMetas.submit();
   }
 }
 
+
 function validarSelect(input) {
-  // input = $(input).val();
   if (input == null) {
     return false;
   }

@@ -4,31 +4,17 @@ namespace App\Exports\Articulation;
 
 use Illuminate\Contracts\View\View;
 use App\Exports\FatherExport;
-use Maatwebsite\Excel\Events\AfterSheet;
-use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Events\{AfterSheet};
 use PhpOffice\PhpSpreadsheet\Style\Border;
 
-class articulationStageExport extends FatherExport
+class ArticulationParticipantExport extends FatherExport
 {
-    use Exportable;
-
-    const rowRangeHeading = 'A1:Q1';
-
+    const rowRangeHeading = 'A1:AE1';
     public function __construct($query)
     {
         $this->setQuery($query);
         $this->setCount($this->getQuery()->count() + 1);
-        $this->setRangeHeadingCell(Self::rowRangeHeading);
-    }
-
-    /**
-     * @abstract
-     */
-    public function view(): View
-    {
-        return view('exports.articulations.index', [
-            'articulationStages' => $this->getQuery()
-        ]);
+        $this->setRangeHeadingCell(self::rowRangeHeading);
     }
 
     /**
@@ -67,13 +53,22 @@ class articulationStageExport extends FatherExport
 
 
     /**
+     * @abstract
+     */
+    public function view(): View
+    {
+        return view('exports.articulations.articulations', [
+            'articulations' => $this->getQuery()
+        ]);
+    }
+
+    /**
      * Asigna el nombre para la hoja de excel
      * @return string
      * @abstract
      */
     public function title(): String
     {
-        return __('articulation-stage');
+        return "Talentos";
     }
-
 }

@@ -121,13 +121,6 @@
         </ul>
     </div>
 </li>
-{{--
-<li class="no-padding {{setActiveRoute('seguimiento')}}">
-    <a href="{{route('seguimiento')}}" class="{{setActiveRouteActivePage('seguimiento')}}" rel="canonical" title="Seguimiento">
-        <i class="material-icons {{setActiveRouteActiveIcon('seguimiento')}}">search</i>Seguimiento
-    </a>
-</li>--}}
-
 <li class="no-padding {{setActiveRoute('usoinfraestructura')}}">
     <a class="waves-effect waves-grey {{setActiveRouteActivePage('usoinfraestructura')}}" href="{{route('usoinfraestructura.index')}}" rel="canonical" title="Asesorias y usos">
         <i class="material-icons {{setActiveRouteActiveIcon('usoinfraestructura')}}">domain</i>Asesorias y usos

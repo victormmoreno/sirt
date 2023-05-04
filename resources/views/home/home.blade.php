@@ -2,7 +2,7 @@
 @section('meta-title','Inicio')
 @section('content')
   <main class="mn-inner inner-active-sidebar">
-    <div class="middle-content">
+    <div class="">
         <div class="row no-m-t no-m-b">
             <div class="col s12 m12 l12">
                 <div class="card card-transparent">
