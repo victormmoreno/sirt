@@ -181,7 +181,7 @@ class UserPresenter extends Presenter
 
     public function userGestorNombreNodo()
     {
-        return $this->user->has('gestor.nodo.entidad') ? "Tecnoparque Nodo {$this->user->gestor->nodo->entidad->nombre}" : $this->message('No Registra');
+        return $this->user->has('experto.nodo.entidad') ? "Tecnoparque Nodo {$this->user->experto->nodo->entidad->nombre}" : $this->message('No Registra');
     }
 
     public function userArticuladorNodoName()
@@ -204,12 +204,12 @@ class UserPresenter extends Presenter
 
     public function userGestorNombreLinea()
     {
-        return $this->user->has('gestor.lineatecnologica') ? $this->user->gestor->lineatecnologica->nombre : $this->message('No Registra');
+        return $this->user->has('experto.linea') ? $this->user->experto->linea->nombre : $this->message('No Registra');
     }
 
     public function userGestorHonorarios()
     {
-        return $this->user->has('gestor') ? "$ " . number_format($this->user->gestor->honorarios, 0) : $this->message('No Registra');
+        return $this->user->has('experto') ? "$ " . number_format($this->user->experto->honorarios, 0) : $this->message('No Registra');
     }
 
     public function userInfocenterNombreNodo()

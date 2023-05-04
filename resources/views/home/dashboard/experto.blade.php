@@ -17,7 +17,7 @@
         </div>
     </div>
     <div class="col s12 m4 l4">
-        <div class="card stats-card {{$proyectos_limite_inicio != 0 ? 'orange lighten-3' : 'green lighten-3'}}" onclick="consultarProyectosInicio('{{request()->user()->getNodoUser()}}', '{{request()->user()->gestor->id}}')" style="cursor: pointer">
+        <div class="card stats-card {{$proyectos_limite_inicio != 0 ? 'orange lighten-3' : 'green lighten-3'}}" onclick="consultarProyectosInicio('{{request()->user()->getNodoUser()}}', '{{request()->user()->id}}')" style="cursor: pointer">
             <div class="card-content">
                 <span class="stats-counter">
                     @if ($proyectos_limite_inicio != 0)
@@ -34,6 +34,7 @@
         </div>
     </div>
     <div class="col s12 m4 l4">
+<<<<<<< HEAD
         <div class="card stats-card {{$proyectos_limite_planeacion != 0 ? 'orange lighten-3' : 'green lighten-3'}}" onclick="consultarProyectosPlaneacion('{{request()->user()->getNodoUser()}}', '{{request()->user()->gestor->id}}')" style="cursor: pointer">
             <div class="card-content">
                 <span class="stats-counter">
@@ -41,6 +42,15 @@
                         Tienes {{$proyectos_limite_planeacion}} proyectos atrasados en la fase de planeación (Máximo {{config('app.proyectos.duracion.planeacion')}} días en esta fase).
                     @else
                         No tienes proyectos con mas de {{config('app.proyectos.duracion.planeacion')}} días en la fase de planeación.
+=======
+        <div class="card stats-card {{$proyectos_limite_planeacion != 0 ? 'orange lighten-3' : 'green lighten-3'}}" onclick="consultarProyectosPlaneacion('{{request()->user()->getNodoUser()}}', '{{request()->user()->id}}')" style="cursor: pointer">
+            <div class="card-content">
+                <span class="stats-counter">
+                    @if ($proyectos_limite_planeacion != 0)
+                        Tienes {{$proyectos_limite_planeacion}} proyectos atrasados en la fase de planeación (Máximo {{config('app.proyectos.duracion.inicio')}} días en esta fase).
+                    @else
+                        No tienes proyectos con mas de {{config('app.proyectos.duracion.planeacion')}} días en la fase de inicio.
+>>>>>>> cd22d62aa3c084e95cc32a263a4c30263d6cfc61
                     @endif
                 </span>
                 <br>
@@ -82,4 +92,8 @@
         </div>
         </div>
     </div>
+<<<<<<< HEAD
 </div>
+=======
+</div>
+>>>>>>> cd22d62aa3c084e95cc32a263a4c30263d6cfc61

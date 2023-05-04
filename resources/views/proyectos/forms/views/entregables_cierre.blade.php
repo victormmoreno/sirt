@@ -22,8 +22,8 @@
                     @include('proyectos.archivos_table_fase', ['fase' => 'cierre'])
                     </div>
                     <div class="center">
-                        <button type="submit" class="waves-effect bg-secondary btn center-aling"><i class="material-icons left">send</i>Modificar</button>
-                        <a href="{{ route('proyecto.cierre', $proyecto->id) }}" class="waves-effect bg-danger btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
+                        <button type="submit" class="waves-effect bg-secondary btn center-aling"><i class="material-icons right">send</i>Modificar</button>
+                        <a href="{{ route('proyecto.cierre', $proyecto->id) }}" class="waves-effect bg-danger btn center-aling"><i class="material-icons left">backspace</i>Cancelar</a>
                     </div>
                 </form>
                 </div>

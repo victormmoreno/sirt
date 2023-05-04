@@ -99,7 +99,7 @@
             <td>
                 {{$gestor->user->present()->userOcupacionesNames()}}
             </td>
-            <td>{{ isset($gestor) ? $gestor->lineatecnologica->abreviatura : ''}} - {{ isset($gestor) ? $gestor->lineatecnologica->nombre : 'No registra'}}</td>
+            <td>{{ isset($gestor) ? $gestor->linea->abreviatura : ''}} - {{ isset($gestor) ? $gestor->linea->nombre : 'No registra'}}</td>
             <td>$ {{isset($gestor->honorarios) ? number_format($gestor->honorarios) : 0}}</td>
             <td>
                 {{ $gestor->user->present()->userRolesNames()}}

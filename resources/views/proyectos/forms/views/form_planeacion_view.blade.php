@@ -21,12 +21,12 @@
                         <div class="center">
                             @if ($proyecto->present()->proyectoFase() == 'Planeación')
                             <button type="submit" class="waves-effect bg-secondary btn center-aling">
-                                <i class="material-icons left">send</i>
+                                <i class="material-icons right">send</i>
                                 Modificar
                             </button>
                             @endif
                             <a href="{{route('proyecto.planeacion', $proyecto->id)}}" class="waves-effect bg-danger btn center-aling">
-                                <i class="material-icons right">backspace</i>Cancelar
+                                <i class="material-icons left">backspace</i>Cancelar
                             </a>
                         </div>
                     </form>

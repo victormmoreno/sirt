@@ -263,14 +263,14 @@ var infoActividad = {
             $.ajax({
                 dataType:'json',
                 type:'get',
-                url: host_url + '/actividad/detalle/'+code
+                url: host_url + '/proyecto/detalle/'+code
             }).done(function (response) {
                 $("#actividad_titulo").empty();
                 $("#detalleActividad").empty();
-                $("#actividad_titulo").append("<span class='primary-text'>"+response.data.actividad.codigo_actividad +' - '+ response.data.actividad.nombre+" </span><br>");
-                if(response.data.actividad.articulacion_proyecto.proyecto !== null){
+                $("#actividad_titulo").append("<span class='primary-text'>"+response.data.proyecto.codigo_proyecto +' - '+ response.data.proyecto.nombre+" </span><br>");
+                if(response.data.proyecto !== null){
                     infoActividad.openIsProyect(response);
-                }else if(response.data.actividad.articulacion_proyecto.articulacion !== null){
+                }else if(response.data.articulacion !== null){
                     infoActividad.openIsArticulacion(response);
                 }
                 $('#info_actividad_modal').openModal();
@@ -282,15 +282,15 @@ var infoActividad = {
             <table class="striped centered">
                 <TR>
                     <TH class="secondary-text" width="25%">Código Proyecto</TH>
-                    <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.codigo_actividad)}</TD>
+                    <TD width="25%">${infoActividad.showInfoNull(response.data.proyecto.codigo_proyecto)}</TD>
                     <TH class="secondary-text" width="25%" >Nombre Proyecto</TH>
-                    <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.nombre)}</TD>
+                    <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.proyecto.nombre)}</TD>
                 </TR>
                 <TR>
                     <TH class="secondary-text" width="25%">Experto</TH>
-                    <TD width="25%">${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.proyecto.asesor.user.documento)} - ${response.data.actividad.articulacion_proyecto.proyecto.asesor.user.nombres} ${response.data.actividad.articulacion_proyecto.proyecto.asesor.user.apellidos}</TD>
+                    <TD width="25%">${infoActividad.showInfoNull(response.data.proyecto.asesor.documento)} - ${response.data.proyecto.asesor.nombres} ${response.data.proyecto.asesor.apellidos}</TD>
                     <TH class="secondary-text" width="25%">Correo Electrónico</TH>
-                    <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.actividad.articulacion_proyecto.proyecto.asesor.user.email)}</TD>
+                    <TD width="25%" COLSPAN=3>${infoActividad.showInfoNull(response.data.proyecto.asesor.email)}</TD>
                 </TR>
             </table>
             <div class="right">
@@ -358,10 +358,10 @@ var infoActividad = {
                         </div>
                     </div>
                 </div>`);
-            infoActividad.showTalentos(response.data.actividad.articulacion_proyecto.talentos);
-            infoActividad.showPropiedadIntelectualEmpresas(response.data.actividad.articulacion_proyecto.proyecto.sedes);
-            infoActividad.showPropiedadIntelectualTalentos(response.data.actividad.articulacion_proyecto.proyecto.users_propietarios);
-            infoActividad.showPropiedadIntelectualGrupo(response.data.actividad.articulacion_proyecto.proyecto.gruposinvestigacion);
+            infoActividad.showTalentos(response.data.proyecto.talentos);
+            infoActividad.showPropiedadIntelectualEmpresas(response.data.proyecto.sedes);
+            infoActividad.showPropiedadIntelectualTalentos(response.data.proyecto.users_propietarios);
+            infoActividad.showPropiedadIntelectualGrupo(response.data.proyecto.gruposinvestigacion);
     },
     openIsArticulacion: function(response){
         $("#detalleActividad").append(`
@@ -452,10 +452,10 @@ var infoActividad = {
             fila = data.map(function(el){
                 return `<tr class="selected">
                             <td> ${infoActividad.validateDataIsBoolean(el.pivot.talento_lider)}</td>
-                            <td>${infoActividad.showInfoNull(el.user.documento)} - ${infoActividad.showInfoNull(el.user.nombres)} ${infoActividad.showInfoNull(el.user.apellidos)}</td>
-                            <td>${infoActividad.showInfoNull(el.user.email)}</td>
-                            <td>${infoActividad.showInfoNull(el.user.telefono)}</td>
-                            <td>${infoActividad.showInfoNull(el.user.celular)}</td>
+                            <td>${infoActividad.showInfoNull(el.documento)} - ${infoActividad.showInfoNull(el.nombres)} ${infoActividad.showInfoNull(el.apellidos)}</td>
+                            <td>${infoActividad.showInfoNull(el.email)}</td>
+                            <td>${infoActividad.showInfoNull(el.telefono)}</td>
+                            <td>${infoActividad.showInfoNull(el.celular)}</td>
                         </tr>`;
             });
 

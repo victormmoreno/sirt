@@ -164,15 +164,11 @@ class NodoRepository
             'centro.entidad.ciudad.departamento',
             'centro.regional',
             'lineas',
-            'dinamizador',
-            'dinamizador.user',
-            'infocenter',
-            'infocenter.user',
-            'gestores',
-            'gestores.user',
-            'gestores.lineatecnologica',
+            'dinamizadores',
+            'infocenters',
+            'expertos',
+            'expertos.linea',
             'ingresos',
-            'ingresos.user',
         ]);
     }
 

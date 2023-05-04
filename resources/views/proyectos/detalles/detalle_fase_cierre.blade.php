@@ -8,7 +8,7 @@
                             Código del Proyecto
                         </span>
                         <p>
-                            {{$proyecto->articulacion_proyecto->actividad->present()->actividadCode()}}
+                            {{$proyecto->present()->proyectoCode()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -16,7 +16,7 @@
                             Nombre del Proyecto
                         </span>
                         <p>
-                            {{$proyecto->articulacion_proyecto->actividad->present()->actividadName()}}
+                            {{$proyecto->present()->proyectoName()}}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -96,7 +96,7 @@
                         <span class="title black-text text-darken-3">
                             Primer objetivo específico
                         </span>
-                        @if ($proyecto->has('articulacion_proyecto.actividad') && isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[0]->objetivo))
+                        @if (isset($proyecto->objetivos_especificos[0]->objetivo))
                         <p>
                             {{$proyecto->present()->proyectoPrimerObjetivo()}}
                         </p>
@@ -104,7 +104,7 @@
                             ¿Se cumplió?
                         </span>
                         <p>
-                            {{$proyecto->articulacion_proyecto->actividad->present()->isActividadCumplioPrimerObjetivo()}}
+                            {{$proyecto->present()->isProyectoCumplioPrimerObjetivo()}}
                         </p>
                         @else
                         <p>
@@ -116,7 +116,7 @@
                         <span class="title black-text text-darken-3">
                             Segundo objetivo específico
                         </span>
-                        @if ($proyecto->has('articulacion_proyecto.actividad') && isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[1]->objetivo))
+                        @if (isset($proyecto->objetivos_especificos[1]->objetivo))
                         <p>
                             {{$proyecto->present()->proyectoSegundoObjetivo()}}
                         </p>
@@ -124,7 +124,7 @@
                             ¿Se cumplió?
                         </span>
                         <p>
-                            {{$proyecto->articulacion_proyecto->actividad->present()->isActividadCumplioSegundoObjetivo()}}
+                            {{$proyecto->present()->isProyectoCumplioSegundoObjetivo()}}
                         </p>
                         @else
                         <p>
@@ -136,7 +136,7 @@
                         <span class="title black-text text-darken-3">
                             Tercer objetivo específico
                         </span>
-                        @if ($proyecto->has('articulacion_proyecto.actividad') && isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[2]->objetivo))
+                        @if (isset($proyecto->objetivos_especificos[2]->objetivo))
                         <p>
                             {{$proyecto->present()->proyectoTercerObjetivo()}}
                         </p>
@@ -144,7 +144,7 @@
                             ¿Se cumplió?
                         </span>
                         <p>
-                            {{$proyecto->articulacion_proyecto->actividad->present()->isActividadCumplioTercerObjetivo()}}
+                            {{$proyecto->present()->isProyectoCumplioTercerObjetivo()}}
                         </p>
                         @else
                         <p>
@@ -156,7 +156,7 @@
                         <span class="title black-text text-darken-3">
                             Cuarto objetivo específico
                         </span>
-                        @if ($proyecto->has('articulacion_proyecto.actividad') && isset($proyecto->articulacion_proyecto->actividad->objetivos_especificos[3]->objetivo))
+                        @if (isset($proyecto->objetivos_especificos[3]->objetivo))
                         <p>
                             {{$proyecto->present()->proyectoCuartoObjetivo()}}
                         </p>
@@ -164,7 +164,7 @@
                             ¿Se cumplió?
                         </span>
                         <p>
-                            {{$proyecto->articulacion_proyecto->actividad->present()->isActividadCumplioCuartoObjetivo()}}
+                            {{$proyecto->present()->isProyectoCumplioCuartoObjetivo()}}
                         </p>
                         @else
                         <p>
@@ -235,7 +235,7 @@
     </div>
     <div class="col s6 m3 l3">
         <p class="p-v-xs">
-            <input type="checkbox" disabled {{ $proyecto->articulacion_proyecto->actividad->present()->isActividadFormularioFinal() == 1 ? 'checked' : '' }} id="txtformulario_final" name="txtformulario_final" value="1">
+            <input type="checkbox" disabled {{ $proyecto->formulario_final == 1 ? 'checked' : '' }} id="txtformulario_final" name="txtformulario_final" value="1">
             <label for="txtformulario_final">Acta de Cierre.</label>
         </p>
     </div>

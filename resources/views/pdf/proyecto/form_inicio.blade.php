@@ -144,18 +144,18 @@
                 <td colspan="5" class="centered"><b>Acta de Inicio<b></td>
             </tr>
             <tr>
-                <td colspan="5" class="centered"><b>ACTA No. {{ substr($proyecto->articulacion_proyecto->actividad->present()->actividadCode(), -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b></td>
+                <td colspan="5" class="centered"><b>ACTA No. {{ substr($proyecto->present()->proyectoCode(), -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b></td>
             </tr>
         </table>
         <br>
         <table class="bordered">
             <tr>
-                <td  scope="row" colspan="6"><b>TÍTULO DE PROYECTO: {{$proyecto->articulacion_proyecto->actividad->present()->actividadName()}}</b></td>
+                <td  scope="row" colspan="6"><b>TÍTULO DE PROYECTO: {{$proyecto->present()->proyectoName()}}</b></td>
             </tr>
             <tr>
                 <td colspan="1" scope="row">Nodo: <b>{{$proyecto->present()->proyectoNode()}}</b></td>
-                <td colspan="2">Fecha: <b>{{$proyecto->articulacion_proyecto->actividad->present()->startDate()}}</b></td>
-                <td colspan="3">Código del Proyecto: <b>{{$proyecto->articulacion_proyecto->actividad->present()->actividadCode()}}</b></td>
+                <td colspan="2">Fecha: <b>{{$proyecto->present()->proyectoFechaInicio()}}</b></td>
+                <td colspan="3">Código del Proyecto: <b>{{$proyecto->present()->proyectoCode()}}</b></td>
             </tr>
             <tr class="tr-striped">
                 <td colspan="6" ><b>DATOS DEL PROYECTO<b></td>
@@ -207,14 +207,14 @@
                 <td colspan="1"><b> Interlocutor</b></td>
                 <td colspan="5"><b>Talento</b></td>
             </tr>
-            @forelse ($proyecto->articulacion_proyecto->talentos as $talento)
+            @forelse ($proyecto->talentos as $talento)
             <tr>
                 @if($talento->pivot->talento_lider == 1)
                     <td colspan="1" >SI</td>
                 @else
                 <td colspan="1" >NO</td>
                 @endif
-                <td colspan="5" >{{$talento->user->present()->userDocumento()}} - {{$talento->user->present()->userFullName()}}</td>
+                <td colspan="5" >{{$talento->present()->userDocumento()}} - {{$talento->present()->userFullName()}}</td>
             </tr>
             @empty
             <tr>

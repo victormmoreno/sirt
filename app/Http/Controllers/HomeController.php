@@ -58,17 +58,12 @@ class HomeController extends Controller
             ]);
         case User::IsDinamizador():
           // dd($this->proyectoRepository->selectProyectosLimitePlaneacion(request()->user()->getNodoUser(), null)->groupBy('codigo_actividad')->get()->count());
-          $expertos = User::with(['gestor'])
-          ->role(User::IsExperto())
-          ->nodoUser(User::IsExperto(), request()->user()->getNodoUser())
-          ->stateDeletedAt('si')
-          ->orderBy('users.nombres')
-          ->get();
+          $expertos = User::ConsultarFuncionarios(request()->user()->getNodoUser(), User::IsExperto())->get();
           return view('home.home', [
             'expertos' => $expertos,
             'ideas_sin_pbt' => Idea::ConsultarIdeasAprobadasEnComite(request()->user()->getNodoUser(), null)->get()->count(),
             'proyectos_limite_inicio' => $this->proyectoRepository->selectProyectosLimiteInicio(request()->user()->getNodoUser(), null)->count(),
-            'proyectos_limite_planeacion' => $this->proyectoRepository->selectProyectosLimitePlaneacion(request()->user()->getNodoUser(), null)->groupBy('codigo_actividad')->get()->count()
+            'proyectos_limite_planeacion' => $this->proyectoRepository->selectProyectosLimitePlaneacion(request()->user()->getNodoUser(), null)->groupBy('codigo_proyecto')->get()->count()
           ]);
           break;
         //   if (session()->get('login_role') == User::IsExperto()) {
@@ -79,8 +74,8 @@ class HomeController extends Controller
         case User::IsExperto():
           return view('home.home', [
             'ideas_sin_pbt' => Idea::ConsultarIdeasAprobadasEnComite(request()->user()->getNodoUser(), request()->user()->id)->get()->count(),
-            'proyectos_limite_inicio' => $this->proyectoRepository->selectProyectosLimiteInicio(request()->user()->getNodoUser(), request()->user()->gestor->id)->count(),
-            'proyectos_limite_planeacion' => $this->proyectoRepository->selectProyectosLimitePlaneacion(request()->user()->getNodoUser(), request()->user()->gestor->id)->groupBy('codigo_actividad')->get()->count()
+            'proyectos_limite_inicio' => $this->proyectoRepository->selectProyectosLimiteInicio(request()->user()->getNodoUser(), request()->user()->id)->count(),
+            'proyectos_limite_planeacion' => $this->proyectoRepository->selectProyectosLimitePlaneacion(request()->user()->getNodoUser(), request()->user()->id)->groupBy('codigo_proyecto')->get()->count()
           ]);
           break;
 

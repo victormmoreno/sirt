@@ -160,7 +160,7 @@
                                                                     class="secondary-text"><b>{{App\User::IsDinamizador()}} </b></span>
                                                             </div>
                                                             <ul class="collection">
-                                                                @forelse($nodo->dinamizador as $dinamizador)
+                                                                @forelse($nodo->dinamizadores as $dinamizador)
                                                                     @if(isset($dinamizador->user) && $dinamizador->user->hasRole(App\User::IsDinamizador()) && $dinamizador->user->estado == App\User::IsActive() &&  $dinamizador->user->deleted_at == null)
                                                                         <li class="collection-item">
                                                                     <span class="title">
@@ -206,7 +206,7 @@
                                                                 </span>
                                                             </div>
                                                             <ul class="collection">
-                                                                @forelse($nodo->infocenter as $infocenter)
+                                                                @forelse($nodo->infocenters as $infocenter)
                                                                     @if(isset($infocenter->user) && $infocenter->user->hasRole(App\User::IsInfocenter()) && $infocenter->user->estado == App\User::IsActive() &&  $infocenter->user->deleted_at == null)
                                                                         <li class="collection-item">
                                                                             <span class="title">
@@ -251,7 +251,7 @@
                                                                 class="secondary-text"><b>Expertos</b></span>
                                                         </div>
                                                         <div class="divider mailbox-divider"></div>
-                                                        @forelse($nodo->gestores as $gestor)
+                                                        @forelse($nodo->expertos as $gestor)
                                                             @if(isset($gestor->user) && $gestor->user->hasRole(App\User::IsExperto()) && $gestor->user->estado == App\User::IsActive() &&  $gestor->user->deleted_at == null)
                                                                 <div class="col s12 m12 l6">
                                                                     <ul class="collection">
@@ -408,57 +408,61 @@
                                                             </div>
                                                         @endforelse
                                                     </div>
-                                                    {{-- <div class="row">
-                                                        <div class="col s12 m12 l12">
-                                                            <div class="center">
-                                                                <span
-                                                                    class="secondary-text"><b>Ingreso</b></span>
-                                                            </div>
-                                                            <div class="divider mailbox-divider">
-                                                            </div>
-                                                            @forelse($nodo->ingresos as $ingreso)
+                                                    <div class="row">
+                                                        <div class="center">
+                                                            <span
+                                                                class="secondary-text"><b>{{App\User::IsIngreso()}}</b></span>
+                                                        </div>
+                                                        <div class="divider mailbox-divider">
+                                                        </div>
+                                                        @forelse($nodo->ingresos as $ingreso)
+                                                            @if(isset($ingreso->user) && $ingreso->user->hasRole(App\User::IsIngreso()) && $ingreso->user->estado == App\User::IsActive() &&  $ingreso->user->deleted_at == null)
                                                                 <div class="col s12 m12 l6">
-                                                                    @if(isset($ingreso->user) && $ingreso->user->hasRole(App\User::IsIngreso()) && $ingreso->user->estado == App\User::IsActive() &&  $ingreso->user->deleted_at == null)
-                                                                        <ul class="collection">
-                                                                            <li class="collection-item">
+                                                                    <ul class="collection">
+                                                                        <li class="collection-item">
                                                                             <span class="title">
                                                                                 {{$ingreso->user->present()->userFullName()}}
                                                                             </span>
-                                                                                <p>
-                                                                                    <b class="secondary-text">Número
-                                                                                        documento:</b> {{$ingreso->user->present()->userDocumento()}}
-                                                                                    <br/>
-                                                                                    <b class="secondary-text">Correo
-                                                                                        Electrónco:</b> {{$ingreso->user->present()->userEmail()}}
-                                                                                    <br/>
-                                                                                    <b class="secondary-text">Teléfono:</b> {{$ingreso->user->present()->userTelefono()}}
-                                                                                    <br/>
-                                                                                    <b class="secondary-text">Celular: </b>
-                                                                                    {{$ingreso->user->present()->userCelular()}}
-                                                                                    <br/>
-                                                                                </p>
-                                                                            </li>
-                                                                        </ul>
-                                                                    @endif
-                                                                </div>
-                                                            @empty
-                                                                <div class="col s12 m12 l6">
-                                                                    <ul class="collection">
-                                                                        <div class="center">
-                                                                            <i class="large material-icons center">
-                                                                                block
-                                                                            </i>
-                                                                            <p class="center-align">Tecnoparque
-                                                                                Nodo {{$nodo->entidad->present()->entidadName()}}
-                                                                                no cuenta con un
-                                                                                usuario {{App\User::IsIngreso()}}
-                                                                                aún</p>
-                                                                        </div>
+                                                                            <p>
+                                                                                <b class="secondary-text">Número
+                                                                                    documento:</b> {{$ingreso->user->present()->userDocumento()}}
+                                                                                <br/>
+                                                                                <b class="secondary-text">Correo
+                                                                                    Electrónco:</b> {{$ingreso->user->present()->userEmail()}}
+                                                                                <br/>
+                                                                                <b class="secondary-text">Teléfono:</b> {{$ingreso->user->present()->userTelefono()}}
+                                                                                <br/>
+                                                                                <b class="secondary-text">Celular: </b>
+                                                                                {{$ingreso->user->present()->userCelular()}}
+                                                                                <br/>
+                                                                                <b class="secondary-text">Roles: </b>
+                                                                                {{$ingreso->user->present()->userRolesNames()}}
+                                                                                <br/>
+                                                                            </p>
+                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $ingreso->user->documento)}}" class="info">
+                                                                                Ver mas información del usuario. 
+                                                                            </a>
+                                                                        </li>
                                                                     </ul>
                                                                 </div>
-                                                            @endforelse
-                                                        </div>
-                                                    </div> --}}
+                                                            @endif
+                                                        @empty
+                                                            <div class="col s12 m12 l6">
+                                                                <ul class="collection">
+                                                                    <div class="center">
+                                                                        <i class="large material-icons center">
+                                                                            block
+                                                                        </i>
+                                                                        <p class="center-align">Tecnoparque
+                                                                            Nodo {{$nodo->entidad->present()->entidadName()}}
+                                                                            no cuenta con
+                                                                            un {{App\User::IsIngreso()}}
+                                                                            aún</p>
+                                                                    </div>
+                                                                </ul>
+                                                            </div>
+                                                        @endforelse
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

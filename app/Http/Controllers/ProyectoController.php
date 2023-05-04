@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{AreaConocimiento, Centro, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, Actividad, Fase, Gestor};
+use App\Models\{AreaConocimiento, Centro, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, Actividad, Fase, Gestor, ArchivoArticulacionProyecto};
 use App\Repositories\Repository\{EmpresaRepository, ProyectoRepository, UserRepository\GestorRepository};
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use App\Http\Requests\{ProyectoFaseInicioFormRequest, ProyectoFaseCierreFormRequest};
@@ -32,18 +32,42 @@ class ProyectoController extends Controller
 
     public function detalle(int $id)
     {
-        $proyecto = Proyecto::findOrFail($id);
-        if(!request()->user()->can('detalle_end', $proyecto)) {
-            alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte y/o que aún no han finalizado', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
+        if (request()->ajax()) {
+            $proyecto = Proyecto::with([
+                    'asesor',
+                    'talentos',
+                    'sedes',
+                    'sedes.empresa',
+                    'gruposinvestigacion',
+                    'gruposinvestigacion.entidad',
+                    'users_propietarios',
+                ])->where('id', $id)->get()->first();
+            if(!request()->user()->can('detalle', $proyecto)) {
+                alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'error')->showConfirmButton('Ok', '#3085d6');
+                return back();
+            }
+            return response()->json([
+                'data' => [
+                    'proyecto' => $proyecto,
+                    'total_usos' => $proyecto->usoinfraestructuras->count(),
+                    ]
+                ]);
+            } else {
+            $proyecto = Proyecto::findOrFail($id);
+            if(!request()->user()->can('detalle_end', $proyecto)) {
+                alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte y/o que aún no han finalizado', 'error')->showConfirmButton('Ok', '#3085d6');
+                return back();
+            }
+            $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
+            $costo = $this->costoController->costoProject($proyecto->id);
+            // dd($costo);
+            return view('proyectos.detalles.detalle', [
+                'proyecto' => $proyecto,
+                'costo' => $costo,
+                'historico' => $historico
+            ]);
+
         }
-        $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
-        $costo = $this->costoController->costoProject($proyecto->id);
-        return view('proyectos.detalles.detalle', [
-            'proyecto' => $proyecto,
-            'costo' => $costo,
-            'historico' => $historico
-        ]);
     }
 
     /**
@@ -60,7 +84,7 @@ class ProyectoController extends Controller
             alert('No autorizado', 'No tienes permisos para cambiar los talentos que desarrollan este proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+        $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
         return view('proyectos.forms.form_cambio_talentos', [
             'proyecto' => $proyecto,
             'historico' => $historico
@@ -119,7 +143,7 @@ class ProyectoController extends Controller
         // dd($request);
         return datatables()->of($proyectos)
             ->addColumn('info', function ($data) {
-                $button = "<a class=\"btn bg-info m-b-xs modal-trigger\" href=\"#!\" onclick=\"infoActividad.infoDetailActivityModal('$data->codigo_proyecto')\">
+                $button = "<a class=\"btn bg-info m-b-xs modal-trigger\" href=\"#!\" onclick=\"infoActividad.infoDetailActivityModal('$data->id')\">
                 <i class=\" material-icons\">info</i>
                 </a>";
                 return $button;
@@ -127,7 +151,7 @@ class ProyectoController extends Controller
                 $seguimiento = '<a class="btn green lighten-1 m-b-xs" href=' . route('pdf.actividad.usos', [$data->id, 'proyecto']) . ' target="_blank"><i class="far fa-file-pdf"></i></a>';
                 return $seguimiento;
             })->addColumn('download_trazabilidad', function ($data) {
-                $seguimiento = '<a class="btn bg-success white-text m-b-xs" href=' . route('excel.proyecto.trazabilidad', $data->actividad_id) . '  target="_blank"><i class="far fa-file-excel"></i></a>';
+                $seguimiento = '<a class="btn bg-success white-text m-b-xs" href=' . route('excel.proyecto.trazabilidad', $data->id) . '  target="_blank"><i class="far fa-file-excel"></i></a>';
                 return $seguimiento;
             })->addColumn('ver_horas', function ($data) {
                 $seguimiento = '<a class="btn bg-warning white-text m-b-xs" onclick="verHorasDeExpertosEnProyecto('.$data->id.')"><i class="material-icons">access_time</i></a>';
@@ -207,23 +231,25 @@ class ProyectoController extends Controller
      */
     public function datatableProyectosAnho(Request $request, $idnodo = null, $anho = null)
     {
-        $id = "";
-        if (session()->get('login_role') == User::IsDinamizador()) {
-            $id = auth()->user()->dinamizador->nodo_id;
-        } elseif (session()->get('login_role') == User::IsInfocenter()) {
-            $id = auth()->user()->infocenter->nodo_id;
+        $experto = "";
+        $nodo = "";
+        if (session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsInfocenter()) {
+            $experto = null;
+            $nodo = request()->user()->getNodoUser();
         } elseif (session()->get('login_role') == User::IsExperto()) {
-            $id = auth()->user()->gestor->id;
+            $experto = request()->user()->id;
+            $nodo = request()->user()->getNodoUser();
         } else {
-            $id = $idnodo;
+            $nodo = $idnodo;
+            $experto = null;
         }
 
         if (session()->get('login_role') == User::IsTalento()) {
-            $proyectos = $proyectos = $this->getProyectoRepository()->proyectosDelTalento(auth()->user()->talento->id);
+            $proyectos = $proyectos = $this->getProyectoRepository()->proyectosDelTalento(request()->user()->id)->get();
         } else if (session()->get('login_role') == User::IsExperto()) {
-            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('asesor_id', $id)->get();
+            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('experto_id', $experto)->where('nodos.id', $nodo)->get();
         } else {
-            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('nodos.id', $id)->get();
+            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('nodos.id', $nodo)->get();
         }
         return $this->datatableProyectos($request, $proyectos);
     }
@@ -319,9 +345,9 @@ class ProyectoController extends Controller
         if (request()->ajax()) {
             $idgestor = $id;
             if (Session::get('login_role') == User::IsExperto()) {
-                $idgestor = auth()->user()->gestor->id;
+                $idgestor = request()->user()->id;
             }
-            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('gestores.id', $idgestor)->get();
+            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('experto_id', $idgestor)->get();
             return $this->datatableProyectos($request, $proyectos);
         }
     }
@@ -486,7 +512,7 @@ class ProyectoController extends Controller
     {
         return view('proyectos.index', [
             'nodos' => Nodo::SelectNodo()->get(),
-            'gestores' => Gestor::ConsultarGestoresPorNodo(request()->user()->getNodoUser())->pluck('nombres_gestor', 'id')
+            'gestores' => User::ConsultarFuncionarios(request()->user()->getNodoUser(), User::IsExperto())->get()
         ]);
     }
 
@@ -552,9 +578,10 @@ class ProyectoController extends Controller
             alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
+        // dd($proyecto->asesor->experto);
         if ($proyecto->fase->nombre == Proyecto::IsInicio() || session()->get('login_role') == User::IsAdministrador()) {
             return view('proyectos.forms.views.form_inicio_view', [
-                'sublineas' => Sublinea::SubLineasDeUnaLinea($proyecto->asesor->lineatecnologica->id)->get()->pluck('nombre', 'id'),
+                'sublineas' => Sublinea::SubLineasDeUnaLinea($proyecto->sublinea->linea->id)->get()->pluck('nombre', 'id'),
                 'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
                 'proyecto' => $proyecto,
                 'nodos' => Nodo::SelectNodo()->get()
@@ -643,11 +670,12 @@ class ProyectoController extends Controller
     public function inicio($id)
     {
         $proyecto = Proyecto::findOrFail($id);
+        // dd($proyecto->talentos);
         if(!request()->user()->can('detalle', $proyecto)) {
             alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+        $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
         $ult_notificacion = $this->proyectoRepository->retornarUltimaNotificacionPendiente($proyecto);
         $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
         return view('proyectos.fases.fase_inicio', [
@@ -665,7 +693,7 @@ class ProyectoController extends Controller
             alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+        $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
         $ult_notificacion = $this->proyectoRepository->retornarUltimaNotificacionPendiente($proyecto);
         $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
 
@@ -695,7 +723,7 @@ class ProyectoController extends Controller
             alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+        $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
         $ult_notificacion = $this->proyectoRepository->retornarUltimaNotificacionPendiente($proyecto);
         $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
 
@@ -732,7 +760,7 @@ class ProyectoController extends Controller
             alert('No autorizado', 'El proyecto se encuentra en la fase de ' . $proyecto->fase->nombre . '!', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         } else {
-            $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+            $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
             $costo = $this->costoController->costoProject($proyecto->id);
             $ult_notificacion = $this->proyectoRepository->retornarUltimaNotificacionPendiente($proyecto);
             $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
@@ -760,7 +788,7 @@ class ProyectoController extends Controller
             alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
+        $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
         $ult_notificacion = $proyecto->notificaciones()->where('fase_id',  Fase::where('nombre', $proyecto->IsSuspendido())->first()->id)->whereNull('fecha_aceptacion')->get()->last();
         $rol_destinatario = $this->proyectoRepository->verificarDestinatarioNotificacion($ult_notificacion);
         return view('proyectos.fases.fase_suspendido', [
@@ -786,8 +814,10 @@ class ProyectoController extends Controller
             alert('No autorizado', 'No puedes cambiar el experto de un proyecto de otro nodo!', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        $historico = Actividad::consultarHistoricoActividad($proyecto->articulacion_proyecto->actividad->id)->get();
-        $gestores = $this->getGestorRepository()->consultarGestoresPorLineaTecnologicaYNodoRepository($proyecto->sublinea->lineatecnologica_id, $proyecto->nodo_id)->pluck('nombre', 'id');
+        $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
+        $gestores = User::ConsultarFuncionarios($proyecto->nodo_id, User::IsExperto(), $proyecto->sublinea->lineatecnologica_id)->get();
+        // dd($gestores);
+        // $gestores = $this->getGestorRepository()->consultarGestoresPorLineaTecnologicaYNodoRepository($proyecto->sublinea->lineatecnologica_id, $proyecto->nodo_id)->pluck('nombre', 'id');
         return view('proyectos.forms.cambiar_gestor', [
             'proyecto' => $proyecto,
             'historico' => $historico,
@@ -1148,59 +1178,59 @@ class ProyectoController extends Controller
      * metodo para consultar el detalle de una actividad (proyecto- articulacion)
      * @author devjul
      */
-    public function detailActivityByCode(string $code)
-    {
-        // if (request()->ajax()) {
-            $actividad =  Actividad::with([
-                'objetivos_especificos',
+    // public function detailActivityByCode(string $code)
+    // {
+    //     // if (request()->ajax()) {
+    //         $actividad =  Actividad::with([
+    //             'objetivos_especificos',
 
-                'articulacion_proyecto.proyecto.asesor.user' => function ($query) {
-                    $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
-                        ->orWhere('deleted_at', '!=', null);
-                },
-                'articulacion_proyecto.proyecto.asesor.user.gestor.lineatecnologica' => function ($query) {
-                    $query->select('id', 'abreviatura', 'nombre');
-                },
-                'articulacion_proyecto.proyecto',
+    //             'articulacion_proyecto.proyecto.asesor.user' => function ($query) {
+    //                 $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
+    //                     ->orWhere('deleted_at', '!=', null);
+    //             },
+    //             'articulacion_proyecto.proyecto.asesor.user.gestor.lineatecnologica' => function ($query) {
+    //                 $query->select('id', 'abreviatura', 'nombre');
+    //             },
+    //             'articulacion_proyecto.proyecto',
 
-                'articulacion_proyecto.talentos',
-                'articulacion_proyecto.talentos.user' => function ($query) {
-                    $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
-                        ->orWhere('deleted_at', '!=', null);
-                },
-                'articulacion_proyecto.proyecto.sedes',
-                'articulacion_proyecto.proyecto.sedes.empresa',
-                'articulacion_proyecto.proyecto.gruposinvestigacion',
-                'articulacion_proyecto.proyecto.gruposinvestigacion.entidad',
-                'articulacion_proyecto.proyecto.users_propietarios',
-                'articulacion_proyecto.proyecto',
-                'articulacion_proyecto.proyecto.areaconocimiento',
-                'articulacion_proyecto.proyecto.fase',
-                'articulacion_proyecto.proyecto.sublinea',
-                'articulacion_proyecto.proyecto.idea' => function ($query) {
-                    $query->select('id', 'nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'telefono_contacto', 'nombre_proyecto', 'codigo_idea');
-                },
-                'articulacion_proyecto.proyecto.nodo' => function ($query) {
-                    $query->select('id', 'entidad_id', 'direccion', 'telefono');
-                },
-                'articulacion_proyecto.proyecto.nodo.entidad' => function ($query) {
-                    $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
-                }
-            ])->where('codigo_actividad', $code)->first();
+    //             'articulacion_proyecto.talentos',
+    //             'articulacion_proyecto.talentos.user' => function ($query) {
+    //                 $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
+    //                     ->orWhere('deleted_at', '!=', null);
+    //             },
+    //             'articulacion_proyecto.proyecto.sedes',
+    //             'articulacion_proyecto.proyecto.sedes.empresa',
+    //             'articulacion_proyecto.proyecto.gruposinvestigacion',
+    //             'articulacion_proyecto.proyecto.gruposinvestigacion.entidad',
+    //             'articulacion_proyecto.proyecto.users_propietarios',
+    //             'articulacion_proyecto.proyecto',
+    //             'articulacion_proyecto.proyecto.areaconocimiento',
+    //             'articulacion_proyecto.proyecto.fase',
+    //             'articulacion_proyecto.proyecto.sublinea',
+    //             'articulacion_proyecto.proyecto.idea' => function ($query) {
+    //                 $query->select('id', 'nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'telefono_contacto', 'nombre_proyecto', 'codigo_idea');
+    //             },
+    //             'articulacion_proyecto.proyecto.nodo' => function ($query) {
+    //                 $query->select('id', 'entidad_id', 'direccion', 'telefono');
+    //             },
+    //             'articulacion_proyecto.proyecto.nodo.entidad' => function ($query) {
+    //                 $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
+    //             }
+    //         ])->where('codigo_proyecto', $code)->first();
 
 
-            // $costo = $this->costoController->costosDeUnaActividad($actividad->id);
-            $costo = 0;
-            return response()->json([
-                'data' => [
-                    'actividad' => $actividad,
-                    'costo' => $costo,
-                    'total_usos' => $actividad->usoinfraestructuras->count(),
-                ]
-            ]);
-        // }
-        // return abort(Response::HTTP_FORBIDDEN);
-    }
+    //         // $costo = $this->costoController->costosDeUnaActividad($actividad->id);
+    //         $costo = 0;
+    //         return response()->json([
+    //             'data' => [
+    //                 'actividad' => $actividad,
+    //                 'costo' => $costo,
+    //                 'total_usos' => $actividad->usoinfraestructuras->count(),
+    //             ]
+    //         ]);
+    //     // }
+    //     // return abort(Response::HTTP_FORBIDDEN);
+    // }
 
     public function filterByCode($value)
     {
@@ -1213,12 +1243,12 @@ class ProyectoController extends Controller
                 $query->select('id', 'actividad_id');
             },
             'articulacion_proyecto.actividad'=> function($query){
-                $query->select('id', 'gestor_id', 'nodo_id', 'codigo_actividad', 'nombre', 'objetivo_general', 'fecha_inicio', 'fecha_cierre');
+                $query->select('id', 'gestor_id', 'nodo_id', 'codigo_proyecto', 'nombre', 'objetivo_general', 'fecha_inicio', 'fecha_cierre');
             },
             'articulacion_proyecto.talentos',
             'articulacion_proyecto.talentos.user',
         ])->whereHas('articulacion_proyecto.actividad', function ($subQuery) use ($value) {
-            $subQuery->where('codigo_actividad', $value);
+            $subQuery->where('codigo_proyecto', $value);
         })
         ->whereIn('fase_id', [Fase::IsFinalizado(), Fase::IsEjecucion(), Fase::IsCierre()])
         ->first();
@@ -1265,7 +1295,7 @@ class ProyectoController extends Controller
                     $query->select('id', 'actividad_id');
                 },
                 'articulacion_proyecto.actividad'=> function($query){
-                    $query->select('id', 'gestor_id', 'nodo_id', 'codigo_actividad', 'nombre', 'objetivo_general', 'fecha_inicio', 'fecha_cierre');
+                    $query->select('id', 'gestor_id', 'nodo_id', 'codigo_proyecto', 'nombre', 'objetivo_general', 'fecha_inicio', 'fecha_cierre');
                 }
             ])
             ->nodo($nodo)
@@ -1344,7 +1374,7 @@ class ProyectoController extends Controller
         $experto = $experto == "null" ? null : $experto;
         return response()->json([
             'data' => [
-                'proyectos' => $this->proyectoRepository->selectProyectosLimitePlaneacion($nodo, $experto, $limite_inicio)->groupBy('codigo_actividad')->get()
+                'proyectos' => $this->proyectoRepository->selectProyectosLimitePlaneacion($nodo, $experto, $limite_inicio)->groupBy('codigo_proyecto')->get()
             ]
         ]);
     }

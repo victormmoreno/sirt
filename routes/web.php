@@ -81,12 +81,12 @@ Route::group(
             'as'   => 'usuario.mytalentos',
         ]);
         Route::get('/talento/getTalentosDeTecnoparque', [
-            'uses' => 'TalentoController@datatableTalentosDeTecnoparque',
+            'uses' => 'UserController@datatableTalentosDeTecnoparque',
             'as'   => 'talento.tecnoparque',
         ]);
 
         Route::get('/talento/consultarTalentoPorId/{id}', [
-            'uses' => 'TalentoController@consultarUnTalentoPorId',
+            'uses' => 'UserController@consultarUnUsuarioPorId',
             'as'   => 'talento.tecnoparque.byid',
         ]);
 
@@ -496,9 +496,10 @@ Route::group(
         Route::get('/reversar/{id}/{fase}', 'ProyectoController@updateReversar')->name('proyecto.reversar')->middleware('role_session:Dinamizador|Activador');
         Route::get('/limite-inicio/{nodo}/{experto}', 'ProyectoController@proyectosLimiteInicio')->name('proyecto.limite.inicio');
         Route::get('/limite-planeacion/{nodo}/{experto}', 'ProyectoController@proyectosLimitePlaneacion')->name('proyecto.limite.planeacion');
+        // Route::get('/detalle/{code}', 'ProyectoController@detailActivityByCode')->name('proyecto.detalle.reducido');
+
         Route::put('/suspendido/{id}', 'ProyectoController@updateSuspendido')->name('proyecto.update.suspendido')->middleware('role_session:Experto|Dinamizador');
         Route::put('/inicio/{id}', 'ProyectoController@updateInicio')->name('proyecto.update.inicio')->middleware('role_session:Experto');
-
         Route::put('/gestionar_aprobacion/{id}', 'ProyectoController@gestionarAprobacion')->name('proyecto.aprobacion')->middleware('role_session:Dinamizador|Talento');
         Route::put('/planeacion/{id}', 'ProyectoController@updatePlaneacion')->name('proyecto.update.planeacion')->middleware('role_session:Experto');
 
@@ -518,15 +519,15 @@ Route::group(
 
 Route::get('actividades/filter-code/{value}', 'ProyectoController@filterByCode')->name('proyecto.filterbycode');
 
-Route::group(
-    [
-        'prefix'     => 'actividad',
-        'middleware' => ['auth', 'role_session:Articulador|Activador|Dinamizador|Experto|Talento|Infocenter'],
-    ],
-    function () {
-        Route::get('/detalle/{code}', 'ProyectoController@detailActivityByCode')->name('actividad.detalle');
-    }
-);
+// Route::group(
+//     [
+//         'prefix'     => 'actividad',
+//         'middleware' => ['auth', 'role_session:Articulador|Activador|Dinamizador|Experto|Talento|Infocenter'],
+//     ],
+//     function () {
+//         Route::get('/detalle/{code}', 'ProyectoController@detailActivityByCode')->name('actividad.detalle');
+//     }
+// );
 
 /**
  * Route group para el módulo de edt (Eventos de Divulgación Tecnológica)
@@ -641,7 +642,7 @@ Route::group(
         Route::get('/export/downloadMetas', 'Excel\IndicadorController@downloadMetas')->name('indicador.export.metas');
         Route::get('/export/downloadIdeas', 'Excel\IndicadorController@downloadIdeas')->name('indicador.export.ideas');
         Route::get('/export_proyectos_finalizados/{idnodo}/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicadoresProyectosFinalizados')->name('indicador.proyectos.finalizados.export.excel');
-        Route::get('/export_proyectos_inscritos/{idnodo}/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicadoresProyectosInscritos')->name('indicador.proyectos.inscritos.export.excel')->middleware('role_session:Experto|Infocenter|Dinamizador|Activador');
+        Route::get('/export_proyectos_inscritos', 'Excel\IndicadorController@exportIndicadoresProyectosInscritos')->name('indicador.proyectos.inscritos.export.excel')->middleware('role_session:Experto|Infocenter|Dinamizador|Activador');
         Route::get('/export_proyectos_actuales/{idnodo}/{hoja}', 'Excel\IndicadorController@exportIndicadoresProyectosActuales')->name('indicador.proyectos.actuales.export.excel');
         Route::get('/export_trazabilidad/{idproyecto}', 'Excel\ProyectoController@exportTrazabilidadProyecto')->name('excel.proyecto.trazabilidad');
         Route::get('/import_metas_form', 'IndicadorController@form_import_metas')->name('indicadores.form.metas')->middleware('role_session:Activador');
@@ -772,7 +773,6 @@ Route::group([
 ], function () {
     Route::get('/', 'MigracionController@index')->name('migracion.index');
     Route::post('/importar', 'MigracionController@import')->name('migracion.proyectos.store');
-    Route::get('/articulaciones', 'MigracionController@migrateArticulations')->name('migracion.migrate-articulations');
 });
 
     //-------------------------------- Route group para el módulo de exportar
@@ -793,9 +793,33 @@ Route::group([
 // Route::group(
 //     [
 //         'prefix'     => 'excel',
-//         'middleware' => ['auth', 'role_session:Experto|Activador|Articulador|Infocenter|Dinamizador|Administrador|Ingreso|Talento'],
+//         'middleware' => ['auth', 'role_session:Experto|Infocenter|Dinamizador|Administrador|Ingreso|Talento'],
 //     ],
 //     function () {
+//         // Rutas para la generación de excel del módulo de edts
+//         Route::get('/excelDeUnaEdt/{id}', 'Excel\EdtController@edtsPorId')->name('edt.excel.unica')->middleware('role_session:Experto|Dinamizador|Administrador|Infocenter');
+//         Route::get('/excelEdtsDeUnNodo/{id}', 'Excel\EdtController@edtsDeUnNodo')->name('edt.excel.nodo')->middleware('role_session:Dinamizador|Administrador');
+//         Route::get('/excelEdtsFinalizadasPorFechaYNodo/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\EdtController@edtPorFechaCierreYNodo')->name('edt.excel.nodo.fecha')->middleware('role_session:Dinamizador|Administrador');
+//         Route::get('/excelEdtsFinalizadasPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\EdtController@edtPorFechaCierreYGestor')->name('edt.excel.gestor.fecha')->middleware('role_session:Experto|Dinamizador|Administrador');
+//         Route::get('/excelEdtsFinalizadasPorLineaNodoYFecha/{idnodo}/{idlinea}/{fecha_inicio}/{fecha_fin}', 'Excel\EdtController@edtPorFechaCierreLineaYNodo')->name('edt.excel.nodo.linea.fecha')->middleware('role_session:Dinamizador|Administrador');
+
+
+//         Route::get('/export/{idnodo}/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicadores2020')->name('indicador.export.excel');
+//         Route::get('/export_proyectos_finalizados/{idnodo}/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicadoresProyectosFinalizados')->name('indicador.proyectos.finalizados.export.excel');
+//         Route::get('/export_proyectos_inscritos/{idnodo}/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicadoresProyectosInscritos')->name('indicador.proyectos.inscritos.export.excel');
+//         Route::get('/export_proyectos_actuales/{idnodo}/{hoja}', 'Excel\IndicadorController@exportIndicadoresProyectosActuales')->name('indicador.proyectos.actuales.export.excel');
+//         Route::get('/export_trazabilidad/{idproyecto}', 'Excel\ProyectoController@exportTrazabilidadProyecto')->name('excel.proyecto.trazabilidad');
+
+//         //Rutas para la generación de excel del módulo de nodo
+//         Route::get('/excelnodo', 'Excel\NodoController@exportQueryAllNodo')
+//             ->middleware('role_session:Administrador')
+//             ->name('excel.excelnodo');
+
+//         Route::get('/exportexcelfornodo/{nodo}', 'Excel\NodoController@exportQueryForNodo')
+//             ->middleware('role_session:Administrador|Dinamizador')
+//             ->name('excel.exportexcelfornodo');
+//     }
+// );
 
 //         // Rutas para la generación de excel del módulo de edts
 //         Route::get('/excelDeUnaEdt/{id}', 'Excel\EdtController@edtsPorId')->name('edt.excel.unica')->middleware('role_session:Experto|Dinamizador|Administrador|Infocenter');

@@ -413,21 +413,22 @@ class SeguimientoController extends Controller
         ]);
     }
 
-    public function seguimientoProyectosInscritosPorMes(int $id)
-    {
-        $gestor = Gestor::find($id);
-        $idgestor = $gestor->id;
-        $idnodo = $gestor->nodo_id;
+  public function seguimientoProyectosInscritosPorMes(int $id)
+  {
+    $gestor = User::find($id);
+    $idgestor = $gestor->id;
+    $idnodo = $gestor->experto->nodo_id;
 
-        $datos = array();
-        // Proyectos
-        $datos = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->where('g.id', $idgestor)->where('nodos.id', $idnodo)->get();
-        $datos = $this->agruparDatosPorMeses($datos);
+    $datos = array();
+    // Proyectos
+    $datos = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->where('users.id', $idgestor)->where('nodos.id', $idnodo)->get();
+    $datos = $this->agruparDatosPorMeses($datos);
 
-        return response()->json([
-            'datos' => $datos
-        ]);
-    }
+    return response()->json([
+      'datos' => $datos
+    ]);
+  }
+
 
     /**
    * Retorna el valor de los nodos de los que se consultarán el seguimiento
@@ -486,16 +487,19 @@ class SeguimientoController extends Controller
     {
         $nodos = $this->retornarValorDeNodos($request);
         if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
-            $query = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->get();
+        $query = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->get();
         } else {
-            $expertos = $this->retornarValorDeExpertos($request);
-            $query = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->whereIn('g.id', $expertos)->get();
+        $expertos = $this->retornarValorDeExpertos($request);
+        $query = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->whereIn('users.id', $expertos)->get();
         }
+
         $datos = $this->agruparDatosPorMeses($query);
+
         return response()->json([
-            'datos' => $datos
+        'datos' => $datos
         ]);
     }
+
 
     public function seguimientoArticulacionesInscritas(Request $request)
     {
@@ -518,16 +522,19 @@ class SeguimientoController extends Controller
     {
         $nodos = $this->retornarValorDeNodos($request);
         if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
-            $query = $this->getProyectoRepository()->proyectosCerradosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->get();
+        $query = $this->getProyectoRepository()->proyectosCerradosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->get();
         } else {
-            $expertos = $this->retornarValorDeExpertos($request);
-            $query = $this->getProyectoRepository()->proyectosCerradosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->whereIn('g.id', $expertos)->get();
+        $expertos = $this->retornarValorDeExpertos($request);
+        $query = $this->getProyectoRepository()->proyectosCerradosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->whereIn('users.id', $expertos)->get();
         }
+
         $datos = $this->agruparDatosPorMeses($query);
+
         return response()->json([
-            'datos' => $datos
+        'datos' => $datos
         ]);
     }
+
 
     public function seguimientoArticulacionesCerradas(Request $request)
     {
@@ -563,20 +570,25 @@ class SeguimientoController extends Controller
      **/
     public function seguimientoActualDelGestor(int $id)
     {
-        $gestor = Gestor::find($id);
-        $idgestor = $gestor->id;
-        $idnodo = $gestor->nodo_id;
-        $datos = array();
+        $experto = User::find($id);
+        $idexperto = $experto->id;
+        // dd($experto->experto->nodo_id);
+        $idnodo = $experto->experto->nodo_id;
+
+        // $datos = array();
         $Pabiertos = 0;
         $Pfinalizados = 0;
         // Proyectos
-        $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->select('entidades.nombre', 'fases.nombre as fase')->selectRaw('count(trl_esperado) as trl_esperado')->groupBy('entidades.nombre', 'fase')->where('nodos.id', $idnodo)->where('g.id', $idgestor)->get();
-        $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->where('g.id', $idgestor)->where('nodos.id', $idnodo)->get();
+
+        $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->select('entidades.nombre', 'fases.nombre as fase')->selectRaw('count(trl_esperado) as trl_esperado')->groupBy('entidades.nombre', 'fase')->where('nodos.id', $idnodo)->where('users.id', $idexperto)->get();
+        $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->where('users.id', $idexperto)->where('nodos.id', $idnodo)->get();
         $agrupados = $this->retornarValoresDelSeguimientoPorFasesNoGroup($Pabiertos, $Pfinalizados);
+        // dd($agrupados);
         return response()->json([
-            'datos' => $agrupados
+        'datos' => $agrupados
         ]);
     }
+
 
     /**
    * Retorna un array con los valores del seguimiento por fase actual

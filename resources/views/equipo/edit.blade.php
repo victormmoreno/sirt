@@ -1,12 +1,11 @@
 @extends('layouts.app')
 @section('meta-title', 'Equipos ' . 'Tecnoparque Nodo ' . \NodoHelper::returnNameNodoUsuario())
 @section('content')
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
-      	<div class="row no-m-t no-m-b">
+      	<div class="row">
         	<div class="col s12 m12 l12">
-        		<div class="row">
+        		<div class="row no-m-t no-m-b m-r-lg m-l-lg">
                     <h5 class="left left-align primary-text">
                         <a href="{{route('equipo.index')}}">
                               <i class="material-icons arrow-l left primary-text">arrow_back</i>
@@ -40,7 +39,7 @@
                                     </p>
                                 </div>
                             @else
-                    			<form  action="{{route('equipo.update',$equipo->id)}}" method="POST" onsubmit="return checkSubmit()">
+                    			<form action="{{route('equipo.update',$equipo->id)}}" method="POST" onsubmit="return checkSubmit()">
     			                  	{!! method_field('PUT')!!}
     			                  	@include('equipo.form', [
     			                  	'btnText' => 'Modificar'

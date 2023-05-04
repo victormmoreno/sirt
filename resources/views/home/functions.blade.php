@@ -1,7 +1,7 @@
 @push('script')
 <script>
     @can('showDahsboardExperto', Illuminate\Database\Eloquent\Model::class)
-    consultarSeguimientoActualDeUnGestor('{{request()->user()->gestor->id}}');
+    consultarSeguimientoActualDeUnGestor('{{request()->user()->id}}');
         @if($ideas_sin_pbt > 0)
             consultarIdeasPendientes('{{request()->user()->getNodoUser()}}', '{{request()->user()->id}}');
         @endif

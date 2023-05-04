@@ -49,6 +49,7 @@ class CostoController extends Controller
     {
         $proyect = Proyecto::find($id);
         $usos = $proyect->usoinfraestructuras;
+        // dd($usos);
         // Costos en pesos
         $costosEquipos = $this->calcularCostosDeEquipos($usos);
         $costosAsesorias = $this->calcularCostosDeAsesorias($usos);

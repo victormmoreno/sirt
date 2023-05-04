@@ -351,7 +351,7 @@ class IdeaController extends Controller
     public function datatableFiltros(Request $request)
     {
         if (session()->get('login_role') == request()->user()->IsTalento()) {
-            $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('talento_id', auth()->user()->talento->id)
+            $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('user_id', request()->user()->id)
             ->whereHas('estadoIdea',
             function ($query){
                 $query->whereNotIn('nombre', [EstadoIdea::IsRechazadoArticulador()]);

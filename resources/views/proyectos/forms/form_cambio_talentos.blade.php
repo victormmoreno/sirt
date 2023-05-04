@@ -26,11 +26,11 @@
                 <div class="divider"></div>
                 <center>
                   <button type="submit" class="waves-effect waves-light btn bg-secondary center-align">
-                    <i class="material-icons left">send</i>
+                    <i class="material-icons right">send</i>
                     Guardar
                   </button>
                   <a href="{{ route('proyecto.inicio', $proyecto->id) }}" class="waves-effect waves-light btn bg-danger center-align">
-                    <i class="material-icons right">backspace</i>Cancelar
+                    <i class="material-icons left">backspace</i>Cancelar
                   </a>
                 </center>
               </form>

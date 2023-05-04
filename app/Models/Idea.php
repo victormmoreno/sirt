@@ -164,17 +164,14 @@ class Idea extends Model
             'tipo_idea',
             'viene_convocatoria',
             'convocatoria',
-            'ideas.talento_id'
+            'ideas.user_id'
         )
-        ->selectRaw('concat(nombres_contacto, " ", apellidos_contacto) AS nombres_contacto')
         ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombres_talento')
         ->selectRaw('concat(ug.nombres, " ", ug.apellidos) AS experto')
         ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
         ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
-        ->join('gestores', 'gestores.id', '=', 'ideas.gestor_id')
-        ->join('users as ug', 'ug.id', '=', 'gestores.user_id')
-        ->leftjoin('talentos', 'talentos.id', '=', 'ideas.talento_id')
-        ->leftjoin('users', 'users.id', '=', 'talentos.user_id')
+        ->join('users as ug', 'ug.id', '=', 'ideas.asesor_id')
+        ->leftjoin('users', 'users.id', '=', 'ideas.user_id')
         ->where('nodos.id', $idnodo)
         ->where('estadosidea.nombre', EstadoIdea::IsAdmitido())
         ->experto($idgestor);
@@ -395,7 +392,7 @@ class Idea extends Model
     public function scopeExperto($query, $experto)
     {
         if (!empty($experto) && $experto != null && $experto != 'all') {
-            return $query->where('gestores.user_id', $experto);
+            return $query->where('asesor_id', $experto);
         }
         return $query;
     }

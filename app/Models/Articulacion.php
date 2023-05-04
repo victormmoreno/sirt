@@ -32,7 +32,17 @@ class Articulacion extends Model
         'acuerdos',
         'alcance_articulacion',
         'siguientes_investigaciones',
-        'fase_id'
+        'fase_id',
+        'codigo_articulacion',
+        'nombre',
+        'fecha_inicio',
+        'fecha_cierre',
+        'objetivo_general',
+        'conclusiones',
+        'formulario_inicio',
+        'cronograma',
+        'seguimiento',
+        'formulario_final'
     ];
 
     public function productos()
