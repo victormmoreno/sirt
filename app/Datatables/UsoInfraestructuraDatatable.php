@@ -13,8 +13,13 @@ class UsoInfraestructuraDatatable
     {
         return datatables()->of($usoinfraestructura)
             ->editColumn('fecha', function ($data) {
-                return optional($data->fecha)->format('d-m-Y');
+                // return [
+                //     'display' => e($data->fecha->format('d-m-Y')),
+                //     'timestamp' => $data->fecha->timestamp
+                // ];
+                return $data->fecha->format('Y-m-d');
             })
+
             ->editColumn('actividad', function ($data) {
                 return $data->nombre;
             })
@@ -36,7 +41,11 @@ class UsoInfraestructuraDatatable
             ->addColumn('detail', function ($data) {
                 return '<a class="btn tooltipped bg-info m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="' . route("usoinfraestructura.show", $data->id) . '" ><i class="material-icons">visibility</i></a>';
             })
+            // ->filterColumn('fecha', function ($query, $keyword) {
+            //     $query->whereRaw("DATE_FORMAT(fecha,'%m-%d-%Y') LIKE ?", ["%$keyword%"]);
+            // })
             ->rawColumns(['fecha','tipo_asesoria', 'actividad', 'gestorEncargado', 'fase', 'asesoria_directa', 'asesoria_indirecta', 'detail'])
+
             ->make(true);
     }
 

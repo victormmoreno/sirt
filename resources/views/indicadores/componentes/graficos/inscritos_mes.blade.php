@@ -12,7 +12,7 @@
             <label for="txtnodo_select_inscritos_mes">Seleccione el nodo</label>
         </div>
     @endif
-    @if (session()->get('login_role') == App\User::IsDinamizador())
+    @if (session()->get('login_role') == App\User::IsDinamizador() || session()->get('login_role') == App\User::IsInfocenter() )
         <div class="input-field col s12 m6 l6">
             <select multiple name="txtexperto_inscritos[]" id="txtexperto_inscritos" style="width: 100%">
                 <option value="all" selected>Todos</option>

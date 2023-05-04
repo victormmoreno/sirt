@@ -162,37 +162,37 @@ class SeguimientoController extends Controller
     return array('trl6' => $trl6, 'trl7_8' => $trl7_8, 'trl8' => $trl8, 'total' => $total);
   }
 
-  /**
-   * Retorna un array con los valores del seguimiento
-   * @param array $trlsEsperados Valor entero de agrupacion de proyectos por trls esperados
-   * @return array
-   * @author dum
-   */
-  private function retornarValoresDelSeguimientoEsperados($trlsEsperados)
-  {
-    $datos = array();
-    $datos['Activos'] = $trlsEsperados['total'];
-    $datos['Esperado6'] = $trlsEsperados['trl6'];
-    $datos['Esperado7_8'] = $trlsEsperados['trl7_8'];
-    return $datos;
-  }
+    /**
+     * Retorna un array con los valores del seguimiento
+     * @param array $trlsEsperados Valor entero de agrupacion de proyectos por trls esperados
+     * @return array
+     * @author dum
+     */
+    private function retornarValoresDelSeguimientoEsperados($trlsEsperados)
+    {
+        $datos = array();
+        $datos['Activos'] = $trlsEsperados['total'];
+        $datos['Esperado6'] = $trlsEsperados['trl6'];
+        $datos['Esperado7_8'] = $trlsEsperados['trl7_8'];
+        return $datos;
+    }
 
-  /**
-   * Retorna un array con los valores del seguimiento por fase actual
-   * @param array $abiertos Array con los totales de proyectos activos
-   * @param array $cerrados Array con los totales de proyectos cerrados
-   * @return array
-   */
-  private function retornarValoresDelSeguimientoPorFases($abiertos, $cerrados) {
-    $datos = array();
-    $datos['Inicio'] = $abiertos['inicio'];
-    $datos['Planeacion'] = $abiertos['planeacion'];
-    $datos['Ejecucion'] = $abiertos['ejecucion'];
-    $datos['Cierre'] = $abiertos['cierre'];
-    $datos['Finalizado'] = $cerrados['finalizado'];
-    $datos['Suspendido'] = $cerrados['suspendido'];
-    return $datos;
-  }
+    /**
+     * Retorna un array con los valores del seguimiento por fase actual
+     * @param array $abiertos Array con los totales de proyectos activos
+     * @param array $cerrados Array con los totales de proyectos cerrados
+     * @return array
+     */
+    private function retornarValoresDelSeguimientoPorFases($abiertos, $cerrados) {
+        $datos = array();
+        $datos['Inicio'] = $abiertos['inicio'];
+        $datos['Planeacion'] = $abiertos['planeacion'];
+        $datos['Ejecucion'] = $abiertos['ejecucion'];
+        $datos['Cierre'] = $abiertos['cierre'];
+        $datos['Finalizado'] = $cerrados['finalizado'];
+        $datos['Suspendido'] = $cerrados['suspendido'];
+        return $datos;
+    }
 
     /**
      * Consulta el seguimiento de una línea de un nodo
@@ -333,6 +333,10 @@ class SeguimientoController extends Controller
    **/
     public function seguimientoArticulacionesDelNodoFases(Request $request)
     {
+        if (request()->ajax() && request()->user()->cannot('showIndicadoresArticulacions', Model::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         if ($request->nodos[0] != 'all') {
             if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
                 $nodos = $request->nodos;
@@ -495,6 +499,10 @@ class SeguimientoController extends Controller
 
     public function seguimientoArticulacionesInscritas(Request $request)
     {
+        if (request()->ajax() && request()->user()->cannot('showIndicadoresArticulacions', Model::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $nodos = $this->retornarValorDeNodos($request);
 
         $query = $this->articulationRepository->articulacionesInscritasPorMes(Carbon::now()->isoFormat('YYYY'))
@@ -523,9 +531,13 @@ class SeguimientoController extends Controller
 
     public function seguimientoArticulacionesCerradas(Request $request)
     {
+        if (request()->ajax() && request()->user()->cannot('showIndicadoresArticulacions', Model::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $nodos = $this->retornarValorDeNodos($request);
         $query = $this->articulationRepository->articulacionesCerradasPorMes(Carbon::now()->isoFormat('YYYY'))
-        ->whereIn('nodos.id', $nodos)->get();
+            ->whereIn('nodos.id', $nodos)->get();
         $datos = $this->agruparDatosPorMeses($query);
         return response()->json([
             'datos' => $datos

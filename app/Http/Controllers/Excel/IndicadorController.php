@@ -32,7 +32,7 @@ class IndicadorController extends Controller
         $this->articulationRepostory = $articulationRepostory;
         $this->nodoRepository = $nodoRepository;
         $this->ideaRepository = $ideaRepository;
-        $this->year_now = Carbon::now()->subYears(1)->format('Y');
+        $this->year_now = Carbon::now()->format('Y');
     }
 
     /**

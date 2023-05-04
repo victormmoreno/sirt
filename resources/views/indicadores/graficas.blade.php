@@ -1,4 +1,5 @@
 <ul class="collapsible">
+    @can('showIndicadoresProyectos', Illuminate\Database\Eloquent\Model::class)
     <li>
         <div class="collapsible-header">Proyectos activos (TRL esperado) de tecnoparque</div>
         <div class="collapsible-body">
@@ -23,6 +24,8 @@
             @include('indicadores.componentes.graficos.cerrados_mes')
         </div>
     </li>
+    @endcan
+    @can('showIndicadoresArticulacions', Illuminate\Database\Eloquent\Model::class)
     <li>
         <div class="collapsible-header">Fase actual de Articulaciones de tecnoparque</div>
         <div class="collapsible-body">
@@ -41,4 +44,5 @@
             @include('indicadores.componentes.graficos.articulaciones_cerradas_mes')
         </div>
     </li>
+    @endcan
 </ul>
