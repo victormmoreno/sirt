@@ -13,11 +13,7 @@ class UsoInfraestructuraDatatable
     {
         return datatables()->of($usoinfraestructura)
             ->editColumn('fecha', function ($data) {
-                // return [
-                //     'display' => e($data->fecha->format('d-m-Y')),
-                //     'timestamp' => $data->fecha->timestamp
-                // ];
-                return $data->fecha->format('Y-m-d');
+                return optional($data->fecha)->format('Y-m-d');
             })
 
             ->editColumn('actividad', function ($data) {
