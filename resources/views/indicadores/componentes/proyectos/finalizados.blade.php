@@ -4,7 +4,7 @@
     @can('showIndicadoresProyectoOptions', Illuminate\Database\Eloquent\Model::class)
         <div class="row">
             <div class="input-field col s12 m6 l6">
-                <select class="js-states select2 browser-default" name="txtnodo_id_finalizados" id="txtnodo_id_finalizados" style="width: 100%">
+                <select multiple name="txtnodo_id_finalizados[]" id="txtnodo_id_finalizados" style="width: 100%">
                     <option value="all">Todos</option>
                 @foreach($nodos as $nodo)
                     <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
@@ -34,7 +34,7 @@
             <label for="txtfecha_fin_cerrados">Finalizados hasta</label>
         </div>
         <div class="center input-field col s12 m6 l6">
-            <a onclick="generarExcelConTodosLosIndicadoresFinalizados();" class="btn"><i class="material-icons left">file_download</i>Descargar</a>
+            <a onclick="generarExcelConTodosLosIndicadoresFinalizados(event);" class="btn"><i class="material-icons left">file_download</i>Descargar</a>
         </div>
     </div>
 </div>

@@ -10784,12 +10784,11 @@ function consultarSeguimientoEsperado(e, url) {
   }
 }
 
-function generarExcelConTodosLosIndicadores() {
+function generarExcelConTodosLosIndicadores(e) {
   let idnodo = $('#txtnodo_id').val();
   let hoja = $('#txthoja_nombre').val();
   let fecha_inicio = $('#txtfecha_inicio_todos').val();
   let fecha_fin = $('#txtfecha_fin_todos').val();
-
   if (!isset(idnodo)) {
     idnodo = 0;
   }
@@ -10798,13 +10797,47 @@ function generarExcelConTodosLosIndicadores() {
   }
 
   if (fecha_inicio > fecha_fin) {
-    Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
+    Swal.fire('Error!', 'Seleccione un rango de fechas válido', 'error');
   } else {
-    location.href = '/excel/export/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+hoja;
+    e.preventDefault();
+    $.ajax({
+      type: 'get',
+      url: host_url + '/excel/export_proyectos_indicadores',
+      xhrFields:{
+        responseType: 'blob'
+      },
+      data: {
+        nodos: idnodo,
+        hoja: hoja,
+        fecha_inicio: fecha_inicio,
+        fecha_fin: fecha_fin,
+        type: 'todos'
+      },
+      success: function (result, status, xhr) {
+        let disposition = xhr.getResponseHeader('content-disposition');
+        let matches = /"([^"]*)"/.exec(disposition);
+        let filename = (matches != null && matches[1] ? matches[1] : 'Proyecto_'+hoja+'_finalizados_'+fecha_inicio+'_'+fecha_fin+'.xlsx');
+
+        let blob = new Blob([result], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        });
+        let link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = filename;
+
+        document.body.appendChild(link);
+
+        link.click();
+        document.body.removeChild(link);
+      },
+      error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+      },
+    })
   }
 }
 
-function generarExcelConTodosLosIndicadoresActuales() {
+function generarExcelConTodosLosIndicadoresActuales(e) {
   let idnodo = $('#txtnodo_id_actuales').val();
   let hoja = $('#txthoja_nombre_actuales').val();
   if (!isset(idnodo)) {
@@ -10814,27 +10847,95 @@ function generarExcelConTodosLosIndicadoresActuales() {
     hoja = 'all';
   }
 
-  location.href = '/excel/export_proyectos_actuales/'+idnodo+'/'+hoja;
+  e.preventDefault();
+  $.ajax({
+    type: 'get',
+    url: host_url + '/excel/export_proyectos_indicadores',
+    xhrFields:{
+      responseType: 'blob'
+    },
+    data: {
+      nodos: idnodo,
+      hoja: hoja,
+      fecha_inicio: null,
+      fecha_fin: null,
+      type: 'activos'
+    },
+    success: function (result, status, xhr) {
+      let disposition = xhr.getResponseHeader('content-disposition');
+      let matches = /"([^"]*)"/.exec(disposition);
+      let filename = (matches != null && matches[1] ? matches[1] : 'Proyecto_'+hoja+'_activos_.xlsx');
+
+      let blob = new Blob([result], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      });
+      let link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = filename;
+
+      document.body.appendChild(link);
+
+      link.click();
+      document.body.removeChild(link);
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      alert("Error: " + errorThrown);
+    },
+  })
 }
 
-function generarExcelConTodosLosIndicadoresFinalizados() {
+function generarExcelConTodosLosIndicadoresFinalizados(e) {
   let idnodo = $('#txtnodo_id_finalizados').val();
   let hoja = $('#txthoja_nombre_finalizados').val();
   let fecha_inicio = $('#txtfecha_inicio_cerrados').val();
   let fecha_fin = $('#txtfecha_fin_cerrados').val();
-
   if (!isset(idnodo)) {
-  idnodo = 0;
+    idnodo = 0;
   }
   if (!isset(hoja)) {
-  hoja = 'all';
+    hoja = 'all';
   }
 
   if (fecha_inicio > fecha_fin) {
-    Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
+    Swal.fire('Error!', 'Seleccione un rango de fechas válido', 'error');
   } else {
-    location.href = '/excel/export_proyectos_finalizados/'+idnodo+'/'+fecha_inicio+'/'+fecha_fin+'/'+hoja;
+    e.preventDefault();
+    $.ajax({
+      type: 'get',
+      url: host_url + '/excel/export_proyectos_indicadores',
+      xhrFields:{
+        responseType: 'blob'
+      },
+      data: {
+        nodos: idnodo,
+        hoja: hoja,
+        fecha_inicio: fecha_inicio,
+        fecha_fin: fecha_fin,
+        type: 'finalizados'
+      },
+      success: function (result, status, xhr) {
+        let disposition = xhr.getResponseHeader('content-disposition');
+        let matches = /"([^"]*)"/.exec(disposition);
+        let filename = (matches != null && matches[1] ? matches[1] : 'Proyecto_'+hoja+'_finalizados_'+fecha_inicio+'_'+fecha_fin+'.xlsx');
+
+        let blob = new Blob([result], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        });
+        let link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = filename;
+
+        document.body.appendChild(link);
+
+        link.click();
+        document.body.removeChild(link);
+      },
+      error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+      },
+    })
   }
+
 }
 
 function generarExcelConTodosLosIndicadoresInscritos(e) {
@@ -10855,7 +10956,7 @@ function generarExcelConTodosLosIndicadoresInscritos(e) {
     e.preventDefault();
     $.ajax({
       type: 'get',
-      url: host_url + '/excel/export_proyectos_inscritos',
+      url: host_url + '/excel/export_proyectos_indicadores',
       xhrFields:{
         responseType: 'blob'
       },
@@ -10863,7 +10964,8 @@ function generarExcelConTodosLosIndicadoresInscritos(e) {
         nodos: idnodo,
         hoja: hoja,
         fecha_inicio: fecha_inicio,
-        fecha_fin: fecha_fin
+        fecha_fin: fecha_fin,
+        type: 'inscritos'
       },
       success: function (result, status, xhr) {
         let disposition = xhr.getResponseHeader('content-disposition');
@@ -10886,7 +10988,6 @@ function generarExcelConTodosLosIndicadoresInscritos(e) {
         alert("Error: " + errorThrown);
       },
     })
-    // location.href = '/excel/export_proyectos_inscritos/'+data;
   }
 
 }

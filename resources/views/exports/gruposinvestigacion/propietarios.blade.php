@@ -13,20 +13,18 @@
     </tr>
     </thead>
     <tbody>
-        @foreach($proyectos as $proyecto)
-            @foreach ($proyecto->gruposinvestigacion as $grupo)
-                <tr>
-                    <td>{{ $proyecto->present()->proyectoCode() }}</td>
-                    <td>{{ $proyecto->present()->proyectoNode() }}</td>
-                    <td>{{ $grupo->codigo_grupo }}</td>
-                    <td>{{ $grupo->entidad->nombre }}</td>
-                    <td>{{ $grupo->present()->grupoTipo() }}</td>
-                    <td>{{ $grupo->institucion }}</td>
-                    <td>{{ $grupo->clasificacioncolciencias->nombre }}</td>
-                    <td>{{ $grupo->entidad->email_entidad }}</td>
-                    <td>{{ $grupo->entidad->ciudad->nombre }}</td>
-                </tr>
-            @endforeach
+        @foreach($grupos as $grupo)
+        <tr>
+            <td>{{ $grupo->codigo_proyecto }}</td>
+            <td>{{ $grupo->nombre_nodo }}</td>
+            <td>{{ $grupo->codigo_grupo }}</td>
+            <td>{{ $grupo->nombre_grupo }}</td>
+            <td>{{ $grupo->tipogrupo }}</td>
+            <td>{{ $grupo->institucion_grupo }}</td>
+            <td>{{ $grupo->nombre_clasificacion }}</td>
+            <td>{{ $grupo->email_grupo }}</td>
+            <td>{{ $grupo->ciudad_grupo }}</td>
+        </tr>
         @endforeach
     </tbody>
 </table>

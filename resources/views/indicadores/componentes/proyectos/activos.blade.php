@@ -4,7 +4,7 @@
     @can('showIndicadoresProyectoOptions', Illuminate\Database\Eloquent\Model::class)
         <div class="row">
             <div class="input-field col s12 m6 l6">
-                <select name="txtnodo_id_actuales[]" id="txtnodo_id_actuales" style="width: 100%">
+                <select multiple name="txtnodo_id_actuales[]" id="txtnodo_id_actuales" style="width: 100%">
                     <option value="all">Todos</option>
                 @foreach($nodos as $nodo)
                     <option value="{{$nodo->id}}">
@@ -27,6 +27,6 @@
         </div>
     @endcan
     <div class="center input-field col s12 m6 l6">
-        <a onclick="generarExcelConTodosLosIndicadoresActuales();" class="btn">Descargar<i class="material-icons left">file_download</i></a>
+        <a onclick="generarExcelConTodosLosIndicadoresActuales(event);" class="btn">Descargar<i class="material-icons left">file_download</i></a>
     </div>
 </div>

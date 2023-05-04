@@ -32,16 +32,9 @@ class TalentoUserExport extends FatherExport
     */
     public function view(): View
     {
-        if ($this->getTitle() == 'Ejecutores') {
-            return view('exports.users.talento.index', [
-                'proyectos' => $this->getQuery()
-            ]);
-        } else {
-            return view('exports.users.talento.propietarios', [
-                'proyectos' => $this->getQuery()
-            ]);
-        }
-
+        return view('exports.users.talento.proyectos', [
+            'users' => $this->getQuery()
+        ]);
     }
 
     /**

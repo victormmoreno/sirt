@@ -462,11 +462,37 @@ class ProyectoRepository extends Repository
         ]);
     }
 
-    public function proyectosIndicadoresSeparados_Repository()
+    /**
+     * Consulta de indicadores
+     * 
+     * @return Builder
+     * @author dum
+     **/
+    public function indicadoresProyectos()
     {
         $sede = Sede::class;
         $user = User::class;
         $grupo = GrupoInvestigacion::class;
+        return $this->proyectosIndicadoresSeparados_Repository()->selectRaw('GROUP_CONCAT(empresas.nit, " - ", empresas.nombre, ";") AS empresas')
+        ->selectRaw('GROUP_CONCAT(up.nombres, " ",up.apellidos,";") AS personas')
+        ->selectRaw('GROUP_CONCAT(gruposinvestigacion.codigo_grupo, " ", eg.nombre, ";") AS grupos')
+        ->join('propietarios', 'propietarios.proyecto_id', '=', 'proyectos.id')
+        ->leftJoin('sedes', function($q) use ($sede) {$q->on('sedes.id', '=', 'propietarios.propietario_id')->where('propietarios.propietario_type', "$sede");})
+        ->leftJoin('empresas', 'empresas.id', '=', 'sedes.empresa_id')
+        ->leftJoin('users AS up', function($q) use ($user) {$q->on('up.id', '=', 'propietarios.propietario_id')->where('propietarios.propietario_type', "$user");})
+        ->leftJoin('gruposinvestigacion', function($q) use ($grupo) {$q->on('gruposinvestigacion.id', '=', 'propietarios.propietario_id')->where('propietarios.propietario_type', "$grupo");})
+        ->leftJoin('entidades AS eg', 'eg.id', '=', 'gruposinvestigacion.entidad_id')
+        ->groupBy('proyectos.id');
+    }
+
+    /**
+     * Retornar el query de proyectos
+     * 
+     * @return Builder
+     * @author dum
+     */
+    public function proyectosIndicadoresSeparados_Repository()
+    {
         return Proyecto::select(
             'entidades.nombre AS nombre_nodo', 'lineastecnologicas.nombre AS nombre_linea', 'sublineas.nombre AS nombre_sublinea',
             'ideas.codigo_idea', 'ideas.nombre_proyecto AS nombre_idea', 'codigo_proyecto',
@@ -487,9 +513,6 @@ class ProyectoRepository extends Repository
         ->selectRaw('IF(fases.nombre = "'.Proyecto::IsFinalizado().'", IF(diri_ar_emp = 0, "No", "Si"), "El proyecto no se ha cerrado") AS diri_ar_emp')
         ->selectRaw('DATE_FORMAT(fecha_cierre, "%Y") AS anho')
         ->selectRaw('DATE_FORMAT(fecha_cierre, "%m") AS mes')
-        ->selectRaw('GROUP_CONCAT(empresas.nit, " - ", empresas.nombre, ";") AS empresas')
-        ->selectRaw('GROUP_CONCAT(up.nombres, " ",up.apellidos,";") AS personas')
-        ->selectRaw('GROUP_CONCAT(gruposinvestigacion.codigo_grupo, " ", eg.nombre, ";") AS grupos')
         ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
         ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
         ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
@@ -498,14 +521,101 @@ class ProyectoRepository extends Repository
         ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
         ->join('users', 'users.id', '=', 'proyectos.experto_id')
-        ->join('propietarios', 'propietarios.proyecto_id', '=', 'proyectos.id')
-        ->leftJoin('sedes', function($q) use ($sede) {$q->on('sedes.id', '=', 'propietarios.propietario_id')->where('propietarios.propietario_type', "$sede");})
-        ->leftJoin('empresas', 'empresas.id', '=', 'sedes.empresa_id')
-        ->leftJoin('users AS up', function($q) use ($user) {$q->on('up.id', '=', 'propietarios.propietario_id')->where('propietarios.propietario_type', "$user");})
-        ->leftJoin('gruposinvestigacion', function($q) use ($grupo) {$q->on('gruposinvestigacion.id', '=', 'propietarios.propietario_id')->where('propietarios.propietario_type', "$grupo");})
-        ->leftJoin('entidades AS eg', 'eg.id', '=', 'gruposinvestigacion.entidad_id')
-        ->groupBy('proyectos.id')
         ->orderBy('entidades.nombre');
+    }
+
+    /**
+     * Retornar el query para mostrar las empresas asociadas a proyectos
+     * 
+     * @return Builder
+     * @author dum
+     **/
+    public function indicadoresEmpresas()
+    {
+        $sede = Sede::class;
+        return $this->proyectosIndicadoresSeparados_Repository()->selectRaw('nit, codigo_ciiu, empresas.nombre AS nombre_empresa, fecha_creacion, sectores.nombre AS nombre_sector,
+            sedes.direccion AS direccion_empresa, empresas.email AS email_empresa, tamanhos_empresas.nombre AS tamanho_empresa,
+            tipos_empresas.nombre AS tipo_empresa, fecha_creacion, concat(ciudades.nombre, " - ", departamentos.nombre) AS ciudad_empresa')
+        ->join('propietarios', 'propietarios.proyecto_id', '=', 'proyectos.id')
+        ->join('sedes', function($q) use ($sede) {$q->on('sedes.id', '=', 'propietarios.propietario_id')->where('propietarios.propietario_type', "$sede");})
+        ->join('empresas', 'empresas.id', '=', 'sedes.empresa_id')
+        ->leftJoin('ciudades', 'ciudades.id', '=', 'sedes.ciudad_id')
+        ->leftJoin('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
+        ->leftJoin('sectores', 'sectores.id', '=', 'empresas.sector_id')
+        ->leftJoin('tamanhos_empresas', 'tamanhos_empresas.id', '=', 'empresas.tamanhoempresa_id')
+        ->leftJoin('tipos_empresas', 'tipos_empresas.id', '=', 'empresas.tipoempresa_id');
+    }
+
+    /**
+     * Retornar el query para mostrar los grupos de investigación asociadas a proyectos
+     * 
+     * @return Builder
+     * @author dum
+     **/
+    public function indicadoresGrupos()
+    {
+        $grupo = GrupoInvestigacion::class;
+        return $this->proyectosIndicadoresSeparados_Repository()->selectRaw('
+            codigo_grupo, eg.nombre AS nombre_grupo, IF(tipogrupo=1,"SENA","Externo") AS tipogrupo, gruposinvestigacion.institucion AS institucion_grupo, clasificacionescolciencias.nombre AS nombre_clasificacion,
+            eg.email_entidad AS email_grupo, concat(cg.nombre, " - ", dg.nombre) AS ciudad_grupo
+        ')
+        ->join('propietarios', 'propietarios.proyecto_id', '=', 'proyectos.id')
+        ->join('gruposinvestigacion', function($q) use ($grupo) {$q->on('gruposinvestigacion.id', '=', 'propietarios.propietario_id')->where('propietarios.propietario_type', "$grupo");})
+        ->join('entidades AS eg', 'eg.id', '=', 'gruposinvestigacion.entidad_id')
+        ->join('clasificacionescolciencias', 'clasificacionescolciencias.id', '=', 'gruposinvestigacion.clasificacioncolciencias_id')
+        ->join('ciudades AS cg', 'cg.id', '=', 'eg.ciudad_id')
+        ->join('departamentos AS dg', 'dg.id', '=', 'cg.departamento_id');
+    }
+
+    /**
+     * Retornar el query para mostrar las personas dueñas de la propiedad intelectual asociadas a proyectos
+     * 
+     * @return Builder
+     * @author dum
+     **/
+    public function indicadoresUsers()
+    {
+        $user = User::class;
+        return $this->proyectosIndicadoresSeparados_Repository()->selectRaw('
+            up.documento, up.nombres, up.apellidos, up.email, up.celular, up.telefono, gruposanguineos.nombre AS nombre_gruposanguineo, up.estrato,
+            IF(up.genero=0,"Femenino",IF(up.genero=1,"Masculino","No binario")) as genero, concat(cr.nombre, " - ", dr.nombre) AS ciudad_residencia, up.direccion,
+            up.barrio, up.fechanacimiento, eps.nombre AS nombre_eps, IF(eps.nombre="Otra",up.otra_eps,"No aplica") AS otra_eps, etnias.nombre AS etnia,
+            IF(up.grado_discapacidad=1,"Si","No") AS grado_discapacidad, IF(up.grado_discapacidad=1,up.descripcion_grado_discapacidad,"No aplica") AS descripcion_grado_discapacidad,
+            IF(up.mujerCabezaFamilia=1,"Si","No") AS mujerCabezaFamilia, IF(up.desplazadoPorViolencia=1,"Si","No") AS desplazadoPorViolencia, up.institucion,
+            up.titulo_obtenido, up.fecha_terminacion
+        ')
+        ->join('propietarios', 'propietarios.proyecto_id', '=', 'proyectos.id')
+        ->join('users AS up', function($q) use ($user) {$q->on('up.id', '=', 'propietarios.propietario_id')->where('propietarios.propietario_type', "$user");})
+        ->leftjoin('gruposanguineos', 'gruposanguineos.id', '=', 'up.gruposanguineo_id')
+        ->leftjoin('ciudades AS cr', 'cr.id', '=', 'up.ciudad_id')
+        ->leftjoin('departamentos AS dr', 'dr.id', '=', 'cr.departamento_id')
+        ->leftjoin('eps', 'eps.id', '=', 'up.eps_id')
+        ->leftjoin('etnias', 'etnias.id', '=', 'up.etnia_id');
+    }
+
+    /**
+     * Retornar el query para mostrar los talentos ejectuores asociados a proyectos
+     * 
+     * @return Builder
+     * @author dum
+     **/
+    public function indicadoresUsersEjecutores()
+    {
+        return $this->proyectosIndicadoresSeparados_Repository()->selectRaw('
+            ue.documento, ue.nombres, ue.apellidos, ue.email, ue.celular, ue.telefono, gruposanguineos.nombre AS nombre_gruposanguineo, ue.estrato,
+            IF(ue.genero=0,"Femenino",IF(ue.genero=1,"Masculino","No binario")) as genero, concat(cr.nombre, " - ", dr.nombre) AS ciudad_residencia, ue.direccion,
+            ue.barrio, ue.fechanacimiento, eps.nombre AS nombre_eps, IF(eps.nombre="Otra",ue.otra_eps,"No aplica") AS otra_eps, etnias.nombre AS etnia,
+            IF(ue.grado_discapacidad=1,"Si","No") AS grado_discapacidad, IF(ue.grado_discapacidad=1,ue.descripcion_grado_discapacidad,"No aplica") AS descripcion_grado_discapacidad,
+            IF(ue.mujerCabezaFamilia=1,"Si","No") AS mujerCabezaFamilia, IF(ue.desplazadoPorViolencia=1,"Si","No") AS desplazadoPorViolencia, ue.institucion,
+            ue.titulo_obtenido, ue.fecha_terminacion
+        ')
+        ->join('proyecto_talento', 'proyecto_talento.proyecto_id', '=', 'proyectos.id')
+        ->join('users AS ue', 'ue.id', '=', 'proyecto_talento.user_id')
+        ->leftjoin('gruposanguineos', 'gruposanguineos.id', '=', 'ue.gruposanguineo_id')
+        ->leftjoin('ciudades AS cr', 'cr.id', '=', 'ue.ciudad_id')
+        ->leftjoin('departamentos AS dr', 'dr.id', '=', 'cr.departamento_id')
+        ->leftjoin('eps', 'eps.id', '=', 'ue.eps_id')
+        ->leftjoin('etnias', 'etnias.id', '=', 'ue.etnia_id');
     }
 
 

@@ -6,6 +6,9 @@ use App\Exports\Indicadores\Indicadores2020Export;
 use App\Exports\Metas\MetasExport;
 use App\Exports\Idea\IdeasIndicadorExport;
 use App\Exports\Proyectos\{ProyectosExport};
+use App\Exports\Empresas\EmpresasExport;
+use App\Exports\GruposInvestigacion\GruposExport;
+use App\Exports\User\Talento\TalentoUserExport;
 use App\Repositories\Repository\{IdeaRepository, ProyectoRepository};
 use Repositories\Repository\NodoRepository;
 use Illuminate\Support\Facades\Session;
@@ -38,190 +41,16 @@ class IndicadorController extends Controller
         $this->year_now = Carbon::now()->format('Y');
     }
 
-    /**
-     * Genera excel con el detalle de los proyectos de tecnoparque
-     * @param int $idnodo Id del nodo
-     * @param string $fecha_inicio Primera fecha para relizar el filtro
-     * @param string $fecha_fin Segunda fecha para realizar el filtro
-     * @return Response
-     * @author dum
-     */
-    public function exportIndicadores2020($idnodo, string $fecha_inicio, string $fecha_fin, string $hoja = null)
-    {
-        $query = null;
-
-        if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
-
-        if ($idnodo == 'all') {
-            $query = $this->getProyectoRepository()->proyectosIndicadores_Repository($fecha_inicio, $fecha_fin)->get();
-        } else {
-            $query = $this->getProyectoRepository()->proyectosIndicadores_Repository($fecha_inicio, $fecha_fin)->whereHas('nodo', function($query) use ($idnodo) {
-            $query->where('id', $idnodo);
-            })->get();
-        }
-        } else if (session()->get('login_role') == User::IsDinamizador()) {
-            $query = $this->getProyectoRepository()->proyectosIndicadores_Repository($fecha_inicio, $fecha_fin)->whereHas('nodo', function($query) {
-                $query->where('id', auth()->user()->dinamizador->nodo_id);
-            })->get();
-        } else if (session()->get('login_role') == User::IsInfocenter()) {
-            $query = $this->getProyectoRepository()->proyectosIndicadores_Repository($fecha_inicio, $fecha_fin)->whereHas('nodo', function($query) {
-                $query->where('id', auth()->user()->infocenter->nodo_id);
-            })->get();
-        } else {
-            $query = $this->getProyectoRepository()->proyectosIndicadores_Repository($fecha_inicio, $fecha_fin)->whereHas('asesor', function($query) {
-                $query->where('id', auth()->user()->gestor->id);
-            })->get();
-
-        }
-        return Excel::download(new Indicadores2020Export($query, $hoja), 'Indicadores_'.$fecha_inicio.'_a_'.$fecha_fin.'.xlsx');
-    }
-
-
-    public function exportIndicadoresProyectosFinalizados($idnodo, string $fecha_inicio, string $fecha_fin, string $hoja = null)
-    {
-        $query = null;
-
-        if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
-
-        if ($idnodo == 'all') {
-            $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('articulacion_proyecto.actividad', function ($query) use ($fecha_inicio, $fecha_fin) {
-            $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
-            })
-            ->whereHas('fase', function ($query) {
-            $query->whereIn('nombre', ['Finalizado', 'Concluido sin finalizar']);
-            })->get();
-        } else {
-            $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('articulacion_proyecto.actividad', function ($query) use ($fecha_inicio, $fecha_fin) {
-            $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
-            })
-            ->whereHas('fase', function ($query) {
-            $query->whereIn('nombre', ['Finalizado', 'Concluido sin finalizar']);
-            })->whereHas('nodo', function($query) use ($idnodo) {
-            $query->where('id', $idnodo);
-            })->get();
-        }
-        } else if (session()->get('login_role') == User::IsDinamizador()) {
-        $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('articulacion_proyecto.actividad', function ($query) use ($fecha_inicio, $fecha_fin) {
-            $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
-        })
-        ->whereHas('fase', function ($query) {
-            $query->whereIn('nombre', ['Finalizado', 'Concluido sin finalizar']);
-        })->whereHas('nodo', function($query) {
-            $query->where('id', auth()->user()->dinamizador->nodo_id);
-        })->get();
-        } else if (session()->get('login_role') == User::IsInfocenter()) {
-        $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('articulacion_proyecto.actividad', function ($query) use ($fecha_inicio, $fecha_fin) {
-            $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
-        })
-        ->whereHas('fase', function ($query) {
-            $query->whereIn('nombre', ['Finalizado', 'Concluido sin finalizar']);
-        })->whereHas('nodo', function($query) {
-            $query->where('id', auth()->user()->infocenter->nodo_id);
-        })->get();
-        } else {
-        $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('articulacion_proyecto.actividad', function ($query) use ($fecha_inicio, $fecha_fin) {
-            $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
-        })
-        ->whereHas('fase', function ($query) {
-            $query->whereIn('nombre', ['Finalizado', 'Concluido sin finalizar']);
-        })->whereHas('asesor', function($query) {
-            $query->where('id', auth()->user()->gestor->id);
-        })->get();
-        }
-        return Excel::download(new Indicadores2020Export($query, $hoja), 'Indicadores_Finalizados_'.$fecha_inicio.'_a_'.$fecha_fin.'.xlsx');
-    }
-
-    public function exportIndicadoresProyectosInscritos(Request $request)
+    public function exportIndicadoresProyectos(Request $request)
     {
         try {
-            $this->type = 'inscritos';
+            $this->type = $request->type;
             $query = null;
             $query = $this->retornarQueryAExportar($request);
             return $this->generarExcel($request, $query);
-            // return Excel::download(new ProyectosExport($query->get()), 'Proyectos_'.$this->type.'_'.$request->fecha_inicio.'_a_'.$request->fecha_fin.'.xlsx');
         } catch (\Throwable $th) {
             throw $th;
         }
-
-        // exit;
-        // if ($request->hoja == 'proyectos') {
-        //     $query = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$request->fecha_inicio, $request->fecha_fin]);
-        //     return Excel::download(new ProyectosExport($query->get()), 'Proyectos_Inscritos_'.$request->fecha_inicio.'_a_'.$request->fecha_fin.'.xlsx');
-        // }
-        // $idnodo, string $fecha_inicio, string $fecha_fin, string $hoja = null
-        // dd($request->nodos);
-        // $nodo_user = request()->user()->getNodoUser();
-        // if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
-        //     if ($idnodo == 'all') {
-        //         $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
-        //     } else {
-        //         $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])->where('proyectos.nodo_id', $idnodo);
-        //     }
-        // } else if (session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsInfocenter()) {
-        //     $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])->where('proyectos.nodo_id', $nodo_user);
-        // } else {
-        //     $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin])->where('id', auth()->user()->gestor->id);
-        // }
-        // return (new Indicadores2020Export)->download('items.xlsx');
-        // return app()->make(Indicadores2020Export::class)->download('items.xlsx');
-        // $exporter = new Indicadores2020Export();
-        // return $exporter->download();
-        // return Excel::download(new Indicadores2020Export($request), 'Indicadores_Inscritos_'.$request->fecha_inicio.'_a_'.$request->fecha_fin.'.xlsx');
-        // $query = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->whereBetween('fecha_inicio', [$request->fecha_inicio, $request->fecha_fin]);
-        // return Excel::download(new ProyectosExport($query->get()), 'Proyectos_Inscritos_'.$request->fecha_inicio.'_a_'.$request->fecha_fin.'.xlsx');
-
-        // if ($request->hoja == 'tal_ejecutores') {
-        //     $sheets[] = new TalentoUserExport($this->getQuery(), 'Ejecutores');
-        // }
-        // if ($request->hoja == 'empresas_duenhas') {
-        //     $sheets[] = new EmpresasExport($this->getQuery(), 'propietarias');
-        // }
-        // if ($request->hoja == 'grupos_duenhos') {
-        //     $sheets[] = new GruposExport($this->getQuery(), 'propietarios');
-        // }
-        // if ($request->hoja == 'personas_duenhas') {
-        //     $sheets[] = new TalentoUserExport($this->getQuery(), 'Propietarios');
-        // }
-        // return Excel::download(new Indicadores2020Export($request), 'Indicadores_Inscritos_'.$request->fecha_inicio.'_a_'.$request->fecha_fin.'.xlsx');
-    }
-
-    public function exportIndicadoresProyectosActuales($idnodo, string $hoja = null)
-    {
-        $query = null;
-
-        if (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador()) {
-
-        if ($idnodo == 'all') {
-            $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('fase', function ($query) {
-            $query->whereIn('nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
-            })->get();
-        } else {
-            $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('fase', function ($query) {
-            $query->whereIn('nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
-            })->whereHas('nodo', function($query) use ($idnodo) {
-            $query->where('id', $idnodo);
-            })->get();
-        }
-        } else if (session()->get('login_role') == User::IsDinamizador()) {
-        $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('fase', function ($query) {
-            $query->whereIn('nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
-        })->whereHas('nodo', function($query) {
-            $query->where('id', auth()->user()->dinamizador->nodo_id);
-        })->get();
-        } else if (session()->get('login_role') == User::IsInfocenter()) {
-        $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('fase', function ($query) {
-            $query->whereIn('nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
-        })->whereHas('nodo', function($query) {
-            $query->where('id', auth()->user()->infocenter->nodo_id);
-        })->get();
-        } else {
-        $query = $this->getProyectoRepository()->proyectosIndicadoresSeparados_Repository()->whereHas('fase', function ($query) {
-            $query->whereIn('nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
-        })->whereHas('asesor', function($query) {
-            $query->where('id', auth()->user()->gestor->id);
-        })->get();
-        }
-        return Excel::download(new Indicadores2020Export($query, $hoja), 'Indicadores_Actuales.xlsx');
     }
 
     public function importIndicadoresAll(Request $request)
@@ -340,54 +169,36 @@ class IndicadorController extends Controller
             case 'proyectos':
                 return Excel::download(new ProyectosExport($query->get()), 'file.xlsx');
                 break;
+            case 'empresas_duenhas':
+                return Excel::download(new EmpresasExport($query->get(), 'propetarias'), 'file.xlsx');
+                break;
+            case 'grupos_duenhos':
+                return Excel::download(new GruposExport($query->get(), 'propetarios'), 'file.xlsx');
+                break;
+            case 'personas_duenhas':
+                return Excel::download(new TalentoUserExport($query->get(), 'Propetarios'), 'file.xlsx');
+                break;
+            case 'tal_ejecutores':
+                return Excel::download(new TalentoUserExport($query->get(), 'Ejecutores'), 'file.xlsx');
+                break;
             
             default:
                 # code...
                 break;
         }
-        return (new ProyectosExport($query->get()));
-        // return Excel::download(new ProyectosExport($query->get()), 'Proyectos_Inscritos_'.$request->fecha_inicio.'_a_'.$request->fecha_fin.'.xlsx');
-
     }
 
     /**
-     * Retonar el query que se va a exportar según el caso
+     * Retonar las condiciones del query según el tipo de indicador que se va a exportar
      *
      * @param Request $request
+     * @param $query Query
      * @return Builder
      * @author dum
      **/
-    private function retornarQueryAExportar(Request $request)
+    public function agregarCondicionales($request, $query)
     {
-        
-        $query = null;
-        switch ($request->hoja) {
-            case 'proyectos':
-                return $this->consultarIndicadoresProyecto($request, $this->type);
-                break;
-            
-            default:
-                
-                break;
-        }
-    }
-
-    /**
-     * Retornar el query que se exportará 
-     *
-     * @param Request $request
-     * @param string $type El tipo de excel que se va a exportar
-     * @return type
-     * @throws conditon
-     **/
-    public function consultarIndicadoresProyecto(Request $request, $type)
-    {
-        if ($request->nodos[0] == 'all' || $request->nodos[0] == null) {
-            $query = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository();
-        } else {
-            $query = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->whereIn('nodos.id', $request->nodos);
-        }
-        switch ($type) {
+        switch ($this->type) {
             case 'inscritos':
                 return $query->whereBetween('fecha_inicio', [$request->fecha_inicio, $request->fecha_fin]);
                 break;
@@ -402,9 +213,7 @@ class IndicadorController extends Controller
                     $q->whereBetween('fecha_cierre', [$request->fecha_inicio, $request->fecha_cierre])
                     ->orWhere(function($query) use ($request) {
                         $query->whereBetween('fecha_inicio', [$request->fecha_inicio, $request->fecha_cierre])
-                        ->orWhere('fase', function ($query) {
-                        $query->whereIn('fases.nombre', [Proyecto::IsInicio(), Proyecto::IsPlaneacion(), Proyecto::IsEjecucion(), Proyecto::IsCierre()]);
-                        });
+                        ->orWhereIn('fases.nombre', [Proyecto::IsInicio(), Proyecto::IsPlaneacion(), Proyecto::IsEjecucion(), Proyecto::IsCierre()]);
                     });
                 });
                 break;
@@ -412,6 +221,124 @@ class IndicadorController extends Controller
             default:
                 
                 break;
+        }
+    }
+
+    /**
+     * Retonar el query que se va a exportar según el caso
+     *
+     * @param Request $request
+     * @return Builder
+     * @author dum
+     **/
+    private function retornarQueryAExportar(Request $request)
+    {
+        $query = null;
+        switch ($request->hoja) {
+            case 'proyectos':
+                $query = $this->consultarIndicadoresProyecto($request);
+                break;
+            case 'empresas_duenhas':
+                $query = $this->consultarIndicadoresEmpresas($request);
+                break;
+            case 'grupos_duenhos':
+                $query = $this->consultarIndicadoresGrupos($request);
+                break;
+            case 'personas_duenhas':
+                $query = $this->consultarIndicadoresUsers($request);
+                break;
+            case 'tal_ejecutores':
+                $query = $this->consultarIndicadoresUsersEjecutores($request);
+                break;
+            
+            default:
+                
+                break;
+        }
+        return $this->agregarCondicionales($request, $query);
+    }
+
+    /**
+     * Retornar el query de empresas que se exportará 
+     *
+     * @param Request $request
+     * @return \Builder
+     * @author dum
+     **/
+    public function consultarIndicadoresEmpresas(Request $request)
+    {
+        if ($request->nodos[0] == 'all' || $request->nodos[0] == null) {
+            return $this->proyectoRepository->indicadoresEmpresas();
+        } else {
+            return $this->proyectoRepository->indicadoresEmpresas()->whereIn('nodos.id', $request->nodos);
+        }
+    }
+
+    /**
+     * Retornar el query de los usuarios/talentos ejecutores de oriyecti que se exportará 
+     *
+     * @param Request $request
+     * @return Builder
+     * @author dum
+     **/
+    public function consultarIndicadoresUsersEjecutores(Request $request)
+    {
+        if ($request->nodos[0] == 'all' || $request->nodos[0] == null) {
+            return $this->proyectoRepository->indicadoresUsersEjecutores();
+        } else {
+            return $this->proyectoRepository->indicadoresUsersEjecutores()->whereIn('nodos.id', $request->nodos);
+        }
+        // return $query;
+    }
+
+    /**
+     * Retornar el query de los usuarios dueños que se exportará 
+     *
+     * @param Request $request
+     * @return Builder
+     * @author dum
+     **/
+    public function consultarIndicadoresUsers(Request $request)
+    {
+        if ($request->nodos[0] == 'all' || $request->nodos[0] == null) {
+            return $this->proyectoRepository->indicadoresUsers();
+        } else {
+            return $this->proyectoRepository->indicadoresUsers()->whereIn('nodos.id', $request->nodos);
+        }
+        // return $query;
+    }
+
+    /**
+     * Retornar el query de grpos de investigación que se exportará 
+     *
+     * @param Request $request
+     * @return Builder
+     * @author dum
+     **/
+    public function consultarIndicadoresGrupos(Request $request)
+    {
+        if ($request->nodos[0] == 'all' || $request->nodos[0] == null) {
+            return $this->proyectoRepository->indicadoresGrupos();
+        } else {
+            return $this->proyectoRepository->indicadoresGrupos()->whereIn('nodos.id', $request->nodos);
+        }
+        // return $query;
+    }
+
+    /**
+     * Retornar el query de proyectos que se exportará 
+     *
+     * @param Request $request
+     * @param string $type El tipo de excel que se va a exportar
+     * @return type
+     * @throws conditon
+     **/
+    public function consultarIndicadoresProyecto(Request $request)
+    {
+        if ($request->nodos[0] == 'all' || $request->nodos[0] == null) {
+            return $this->proyectoRepository->indicadoresProyectos();
+        } else {
+            return $this->proyectoRepository->indicadoresProyectos()->whereIn('nodos.id', $request->nodos);
         }
     }
 
