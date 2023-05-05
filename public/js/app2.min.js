@@ -8757,7 +8757,7 @@ function graficoSeguimientoFasesNoGroup(data, name) {
             y: data.datos.Finalizado,
           },
           {
-            name: "Proyectos suspendidos",
+            name: "Proyectos concluidos sin finalizar",
             y: data.datos.Suspendido,
           },
           {

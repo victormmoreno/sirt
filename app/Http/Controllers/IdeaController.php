@@ -645,6 +645,12 @@ class IdeaController extends Controller
         ]);
     }
 
+    public function export_registradas($nodo, $desde, $hasta)
+    {
+        $ideas = Idea::with(['estadoIdea'])->where('ideas.nodo_id', $nodo)->whereBetween('ideas.created_at', [$desde, $hasta])->orderBy('created_at', 'desc')->get();
+        return (new IdeasExport($ideas))->download("Ideas - " . config('app.name') . ".xlsx");
+    }
+
     public function export(Request $request, $extension = 'xlsx')
     {
         if(!request()->user()->can('export', Idea::class)) {
@@ -718,6 +724,27 @@ class IdeaController extends Controller
         return response()->json([
             'data' => [
                 'ideas' => Idea::ConsultarIdeasAprobadasEnComite($nodo, $user)->get()
+            ]
+        ]);
+    }
+
+    /**
+     * Consultar ideas registradas entre un rango de fechas
+     *
+     * @param $nodo Id del nodo
+     * @param $desde Fecha desde
+     * @param $hasta Fecha hasta
+     * @return Response\Json
+     * @author dum
+     **/
+    public function consultar_ideas_registradas($nodo, $desde, $hasta)
+    {
+        // dd(Idea::ConsultarIdeasAprobadasEnComite($nodo, $user)->dd());
+        $nodo = $nodo == "null" ? null : $nodo;
+        return response()->json([
+            'data' => [
+                'ideas' => Idea::with(['estadoIdea'])->where('ideas.nodo_id', $nodo)->whereBetween('ideas.created_at', [$desde, $hasta])->orderBy('created_at', 'desc')->get()
+                // 'ideas' => Idea::ConsultarIdeasRegistradas($nodo, $desde, $hasta)->get()
             ]
         ]);
     }

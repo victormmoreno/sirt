@@ -1,11 +1,15 @@
+@php
+    $now = Carbon\Carbon::now();
+    $yearNow = $now->year;
+    $monthNow = $now->month;
+@endphp
 <div class="row">
-    <div class="col s12 m4 l4">
+    <div class="col s12 m3 l3">
         <div class="card stats-card {{$ideas_sin_pbt != 0 ? 'red lighten-3' : 'green lighten-3'}}" style="cursor:pointer" onclick="consultarIdeasPendientes('{{request()->user()->getNodoUser()}}', 'null')">
             <div class="card-content">
                 <span class="stats-counter">
                     @if ($ideas_sin_pbt != 0)
                         Hay {{$ideas_sin_pbt}} ideas asignadas que aún no se han registrado como proyecto en el nodo.
-                        {{-- <a  class="btn bg-info"><i class="material-icons">search</i></a> --}}
                     @else
                         El nodo está al día con la ideas asignadas por el dinamizador.
                     @endif
@@ -17,7 +21,31 @@
             </div>
         </div>
     </div>
-    <div class="col s12 m4 l4">
+    <div class="col s12 m3 l3">
+        <div class="card stats-card blue lighten-3">
+            <div class="card-content">
+                <b>¿Cuántas ideas se han registrado?</b>
+                <div class="row">
+                    <div class="input-field col s12 m6 l6">
+                        <input type="text" id="txtideas_desde" name="txtideas_desde" onchange="consultarIdeasRegistradas()" class="datepicker picker__input black-text" value="{{Carbon\Carbon::create($yearNow, $monthNow, 1)->toDateString() }}">
+                        <label for="txtideas_desde" class="black-text">Desde</label>
+                    </div>
+                    <div class="input-field col s12 m6 l6 black-text">
+                        <input type="text" id="txtideas_hasta" name="txtideas_hasta" onchange="consultarIdeasRegistradas()" class="datepicker picker__input black-text" value="{{Carbon\Carbon::now()->toDateString()}}">
+                        <label for="txtideas_hasta" class="black-text">Hasta</label>
+                    </div>
+                </div>
+                <span class="stats-counter center">
+                    Ideas registradas: <b id="ideas_registradas_count" style="cursor:pointer" class="green-text lighten-3" onclick="downloadRegistradas(event)">##</b>
+                </span>
+                <br>
+            </div>
+            <div class="progress stats-card-progress bg-secondary">
+                <div class="determinate"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col s12 m3 l3">
         <div class="card stats-card {{$proyectos_limite_inicio != 0 ? 'orange lighten-3' : 'green lighten-3'}}" style="cursor:pointer" onclick="consultarProyectosInicio('{{request()->user()->getNodoUser()}}', 'null')">
             <div class="card-content">
                 <span class="stats-counter">
@@ -35,7 +63,7 @@
             </div>
         </div>
     </div>
-    <div class="col s12 m4 l4">
+    <div class="col s12 m3 l3">
         <div class="card stats-card {{$proyectos_limite_planeacion != 0 ? 'orange lighten-3' : 'green lighten-3'}}" style="cursor:pointer" onclick="consultarProyectosPlaneacion('{{request()->user()->getNodoUser()}}', 'null')">
             <div class="card-content">
                 <span class="stats-counter">
