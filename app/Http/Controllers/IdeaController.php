@@ -117,27 +117,6 @@ class IdeaController extends Controller
      * @return Response
      * @author dum
      **/
-    public function asignar_experto(int $id)
-    {
-        $idea = Idea::find($id);
-        // dd($idea->nodo_id);
-        if(!request()->user()->can('asignar', $idea)) {
-            alert('No autorizado', 'No tienes permisos para asignar esta idea de proyecto a un experto', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
-        return view('ideas.asignar', [
-            'idea' => $idea,
-            'gestores' => $this->gestorRepository->getAllGestoresPorNodo($idea->nodo_id)->selectRaw('gestores.id as gestor_id, CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) AS nombres_gestor')->get()
-        ]);
-    }
-
-    /**
-     * Formulario para asginar la idea de proyecto a un experto
-     *
-     * @param int $id Id de la idea de proyecto
-     * @return Response
-     * @author dum
-     **/
     public function asignar(Request $request)
     {
         $idea = Idea::find($request->idea);
@@ -439,7 +418,7 @@ class IdeaController extends Controller
 
     public function datatableIdeasTalento(Request $request)
     {
-        $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('talento_id', auth()->user()->talento->id)
+        $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('user_id', auth()->user()->id)
         ->whereHas('estadoIdea',
         function ($query){
             $query->whereNotIn('nombre', [EstadoIdea::IsRechazadoArticulador()]);
@@ -453,30 +432,30 @@ class IdeaController extends Controller
         ->editColumn('estado', function ($data) {
             return $data->estadoIdea->nombre;
         })->editColumn('persona', function ($data) {
-            if (isset($data->talento->user->nombres)) {
-                return "{$data->talento->user->nombres} {$data->talento->user->apellidos}";
+            if (isset($data->user->nombres)) {
+                return "{$data->user->nombres} {$data->user->apellidos}";
             } else {
                 return "{$data->nombres_contacto} {$data->apellidos_contacto}";
             }
         })->editColumn('created_at', function ($data) {
             return isset($data->created_at) ? $data->created_at->isoFormat('DD/MM/YYYY') : 'No Registra';
         })->editColumn('correo_contacto', function ($data) {
-            if (isset($data->talento->user->email)) {
-                return "{$data->talento->user->email}";
+            if (isset($data->user->email)) {
+                return "{$data->user->email}";
             } else {
                 return "{$data->correo_contacto}";
             }
         })->editColumn('telefono_contacto', function ($data) {
-            if (isset($data->talento->user->celular)) {
-                return "{$data->talento->user->celular}";
+            if (isset($data->user->celular)) {
+                return "{$data->user->celular}";
             } else {
                 return "{$data->telefono_contacto}";
             }
         })->editColumn('estado', function ($data) {
             return $data->estadoIdea->nombre;
         })->editColumn('nombre_talento', function ($data) {
-            if (isset($data->talento->user->nombres)) {
-                return $data->talento->user->nombres . " " . $data->talento->user->apellidos;
+            if (isset($data->user->nombres)) {
+                return $data->user->nombres . " " . $data->user->apellidos;
             } else {
                 return "{$data->nombres_contacto} {$data->apellidos_contacto}";
             }
@@ -680,13 +659,13 @@ class IdeaController extends Controller
                 $query->select('id', 'nombre', 'nit');
             }
         ])->where('id', $id)->first();
-        $talento = null;
+        $user = null;
         $sede = null;
 
 
-        if($idea->has('talento.user') &&isset($idea->talento->user))
+        if($idea->has('user') &&isset($idea->user))
         {
-            $talento = $idea->talento;
+            $user = $idea->user;
         }
         if($idea->has('sede.empresa') && isset($idea->sede->empresa))
         {
@@ -696,7 +675,7 @@ class IdeaController extends Controller
         return response()->json([
             'data' => [
                 'idea' => $idea,
-                'talento' => $talento,
+                'talento' => $user,
                 'sede' => $sede,
             ],
         ]);

@@ -183,7 +183,7 @@ class IndicadorController extends Controller
                 break;
             
             default:
-                # code...
+                abort('404');
                 break;
         }
     }

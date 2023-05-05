@@ -32,7 +32,11 @@ class Idea extends Model
      * @var array
      */
     protected $fillable = [
+        'asesor_id',
+        'user_id',
+        'sede_id',
         'nodo_id',
+        'estadoidea_id',
         'nombres_contacto',
         'apellidos_contacto',
         'correo_contacto',
@@ -41,7 +45,6 @@ class Idea extends Model
         'codigo_idea',
         'aprendiz_sena',
         'pregunta1',
-        'sede_id',
         'pregunta2',
         'pregunta3',
         'descripcion',
@@ -52,9 +55,6 @@ class Idea extends Model
         'aval_empresa',
         'empresa',
         'tipo_idea',
-        'estadoidea_id',
-        'gestor_id',
-        'talento_id',
         'producto_parecido',
         'si_producto_parecido',
         'reemplaza',
@@ -328,16 +328,16 @@ class Idea extends Model
             'tipo_idea',
             'viene_convocatoria',
             'convocatoria',
-            'ideas.talento_id'
+            'ideas.user_id'
         )
         ->selectRaw('concat(nombres_contacto, " ", apellidos_contacto) AS nombres_contacto')
         ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombres_talento')
         ->selectRaw('concat(ug.nombres, " ", ug.apellidos) AS experto')
         ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
         ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
-        ->leftJoin('gestores', 'gestores.id', '=', 'ideas.gestor_id')
+        ->leftJoin('gestores', 'gestores.id', '=', 'ideas.asesor_id')
         ->leftJoin('users as ug', 'ug.id', '=', 'gestores.user_id')
-        ->leftjoin('talentos', 'talentos.id', '=', 'ideas.talento_id')
+        ->leftjoin('talentos', 'talentos.id', '=', 'ideas.user_id')
         ->leftjoin('users', 'users.id', '=', 'talentos.user_id')
         ->field($field, $value)
         ->oneNodo($nodo);

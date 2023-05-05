@@ -4,7 +4,7 @@
         <div class="row">
             <div class="input-field col s12 m6 l6">
                 <select multiple name="txtnodo_id[]" id="txtnodo_id" style="width: 100%">
-                    <option value="all">Todos</option>
+                    <option value="all" selected>Todos</option>
                 @foreach($nodos as $nodo)
                     <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
                 @endforeach

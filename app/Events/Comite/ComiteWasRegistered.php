@@ -16,18 +16,16 @@ class ComiteWasRegistered
     public $datosIdea;
     public $emailSession;
     public $pdf;
-    public $extensiones;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($datosIdea, $pdf, $extensiones)
+    public function __construct($datosIdea, $pdf)
     {
         $this->datosIdea = $datosIdea;
         $this->pdf = $pdf;
-        $this->extensiones = $extensiones;
         $this->emailSession = auth()->user()->email;
     }
 

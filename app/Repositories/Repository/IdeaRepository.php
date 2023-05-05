@@ -460,8 +460,8 @@ class IdeaRepository
             DB::rollBack();
             return [
                 'state' => false,
-                'msg' => 'La idea no se ha inhabilitado!',
-                'title' => 'Inhabilitación errónea!',
+                'msg' => $th->getMessage(),
+                'title' => 'La idea no se ha inhabilitado!',
                 'type' => 'error'
             ];
         }
@@ -520,6 +520,7 @@ class IdeaRepository
         try {
             $comite_idea = $idea->comites()->wherePivot('comite_id', $comite)->first()->pivot;
             $duplicado = $idea->replicate();
+            $duplicado->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsAdmitido())->first()->id;
             $duplicado->codigo_idea = $this->generarCodigoIdeaDuplicado($idea);
             $duplicado->save();
             $this->duplicarIdeaComite($comite, $comite_idea, $duplicado);
@@ -531,11 +532,11 @@ class IdeaRepository
                 'title' => 'Duplicación exitosa!',
                 'type' => 'success'
             ];
-        } catch (\Throwable $th) {
+        } catch (\Exception $ex) {
             DB::rollBack();
             return [
                 'state' => false,
-                'msg' => 'La idea no se ha derivado!',
+                'msg' => $ex->getMessage(),
                 'title' => 'Duplicación errónea!',
                 'type' => 'error'
             ];
@@ -556,16 +557,10 @@ class IdeaRepository
         try {
             $duplicado = $idea->replicate();
             $duplicado->codigo_idea = $this->generarCodigoIdeaDuplicado($idea);
-            // if ($duplicado->estadoIdea->nombre == $duplicado->estadoIdea->IsAdmitido() || $duplicado->estadoIdea->nombre == $duplicado->estadoIdea->IsPBT()) {
-            //     // $duplicado->gestor_id = null;
-            //     $duplicado->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsAdmitido())->first()->id;
-            // } else {
-            // }
             $duplicado->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsRegistro())->first()->id;
-            $duplicado->gestor_id = null;
+            $duplicado->asesor_id = null;
 
             $duplicado->push();
-            // $duplicado->push();
             $idea->registrarHistorialIdea(Movimiento::IsDuplicar(), Session::get('login_role'), null, 'con el código de idea ' . $duplicado->codigo_idea);
             if ($idea->rutamodel != null) {
                 $duplicado->rutamodel()->create([
@@ -584,8 +579,8 @@ class IdeaRepository
             DB::rollBack();
             return [
                 'state' => false,
-                'msg' => 'La idea no se ha duplicado!',
-                'title' => 'Duplicación errónea!',
+                'msg' => $th->getMessage(),
+                'title' => 'La idea no se ha duplicado!',
                 'type' => 'error'
             ];
         }
@@ -638,11 +633,11 @@ class IdeaRepository
                 'idea' => $idea
             ];
 
-        } catch (\Throwable $th) {
+        } catch (\Exception $ex) {
             DB::rollBack();
             return [
                 'state' => false,
-                'msg' => 'La idea no se ha postulado al nodo!',
+                'msg' => $ex->getMessage(),
                 'title' => 'Postulación errónea!',
                 'type' => 'error',
                 'idea' => null

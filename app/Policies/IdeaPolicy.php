@@ -20,10 +20,7 @@ class IdeaPolicy
      **/
     public function create(User $user)
     {
-        if (session()->get('login_role') == $user->IsTalento()) {
-            return true;
-        }
-        return false;
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsTalento(), $user->IsUsuario()]);
     }
 
     /**
@@ -49,7 +46,7 @@ class IdeaPolicy
     public function asignar(User $user, Idea $idea)
     {
         if (session()->get('login_role') == $user->IsAdministrador() || (session()->get('login_role') == $user->IsDinamizador() && $user->dinamizador->nodo_id == $idea->nodo_id)) {
-            if ($idea->estadoIdea->nombre == $idea->estadoIdea->IsAdmitido() && $idea->gestor_id == null) {
+            if ($idea->estadoIdea->nombre == $idea->estadoIdea->IsAdmitido() && $idea->asesor_id == null) {
                 return true;
             }
         }
@@ -87,7 +84,8 @@ class IdeaPolicy
      **/
     public function duplicar(User $user, Idea $idea)
     {
-        if (session()->get('login_role') == $user->IsTalento() && $user->id == $idea->user_id && ($idea->estadoIdea->nombre == $idea->estadoIdea->IsRechazadoComite() || $idea->estadoIdea->nombre == $idea->estadoIdea->IsPBT())) {
+        
+        if (Str::contains(session()->get('login_role'), [$user->IsTalento(), $user->IsUsuario()]) && $user->id == $idea->user_id && ($idea->estadoIdea->nombre == $idea->estadoIdea->IsRechazadoComite() || $idea->estadoIdea->nombre == $idea->estadoIdea->IsPBT())) {
             return true;
         }
         if (session()->get('login_role') == $user->IsDinamizador() && $user->dinamizador->nodo_id == $idea->nodo_id) {
@@ -130,16 +128,10 @@ class IdeaPolicy
         if ($idea->estadoIdea->nombre == $idea->estadoIdea->IsInhabilitado()) {
             return false;
         }
-        if (session()->get('login_role') == $user->IsTalento() && $user->id == $idea->user_id) {
+        if (Str::contains(session()->get('login_role'), [$user->IsTalento(), $user->IsUsuario()]) && $user->id == $idea->user_id) {
             return true;
         }
-        if (session()->get('login_role') == $user->IsDinamizador() && $user->dinamizador->nodo_id == $idea->nodo_id) {
-            return true;
-        }
-        if (session()->get('login_role') == $user->IsArticulador() && $user->articulador->nodo_id == $idea->nodo_id) {
-            return true;
-        }
-        if (session()->get('login_role') == $user->IsInfocenter() && $user->infocenter->nodo_id == $idea->nodo_id) {
+        if (Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsArticulador(), $user->IsInfocenter()]) && $idea->nodo_id == $user->getNodoUser() ) {
             return true;
         }
         if (session()->get('login_role') == $user->IsAdministrador()) {
@@ -159,7 +151,7 @@ class IdeaPolicy
     public function postularIdea(User $user, Idea $idea)
     {
         if ($idea->estadoIdea->nombre == $idea->estadoIdea->IsRegistro()) {
-            if (session()->get('login_role') == $user->IsTalento() && $user->id == $idea->user_id) {
+            if (Str::contains(session()->get('login_role'), [$user->IsTalento(), $user->IsUsuario()]) && $user->id == $idea->user_id) {
                 return true;
             }
             if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador()) {
@@ -193,7 +185,7 @@ class IdeaPolicy
      */
     public function index(User $user)
     {
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsTalento(), $user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador(), $user->IsActivador(), $user->IsExperto(), $user->IsArticulador()]);
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsUsuario(), $user->IsTalento(), $user->IsDinamizador(), $user->IsInfocenter(), $user->IsAdministrador(), $user->IsActivador(), $user->IsExperto(), $user->IsArticulador()]);
     }
 
     /**
@@ -217,7 +209,7 @@ class IdeaPolicy
      */
     public function update(User $user, Idea $idea)
     {
-        if ($idea->estadoIdea->nombre == EstadoIdea::IsRegistro() && session()->get('login_role') == $user->IsTalento() && $user->id == $idea->user_id) {
+        if ($idea->estadoIdea->nombre == EstadoIdea::IsRegistro() && Str::contains(session()->get('login_role'), [$user->IsTalento(), $user->IsUsuario()]) && $user->id == $idea->user_id) {
             return true;
         }
         if ($idea->estadoIdea->nombre == EstadoIdea::IsRegistro() && Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsArticulador()]) && $user->getNodoUser() == $idea->nodo_id) {
@@ -241,7 +233,7 @@ class IdeaPolicy
         if (Str::contains(session()->get('login_role'), [$user->IsAdministrador(), $user->IsActivador()])) {
             return true;
         }
-        if (session()->get('login_role') == $user->IsTalento() && $idea->user_id == $user->id) {
+        if (Str::contains(session()->get('login_role'), [$user->IsTalento(), $user->IsUsuario()]) && $idea->user_id == $user->id) {
             return true;
         }
         if ((Str::contains(session()->get('login_role'), [$user->IsDinamizador(), $user->IsInfocenter(), $user->IsArticulador(), $user->IsExperto()])) && $idea->nodo_id == $user->getNodoUser()) {

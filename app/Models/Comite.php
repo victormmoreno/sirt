@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\ArchivoComite;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class Comite extends Model
 {
@@ -90,9 +91,9 @@ class Comite extends Model
         ->withPivot(['id', 'hora', 'admitido', 'asistencia', 'observaciones', 'direccion', 'notificado']);
     }
 
-    public function gestores()
+    public function evaluadores()
     {
-        return $this->belongsToMany(Gestor::class, 'comite_gestor')
+        return $this->belongsToMany(User::class, 'comite_gestor', 'comite_id', 'evaluador_id')
         ->withTimestamps()
         ->withPivot(['hora_inicio', 'hora_fin']);
     }

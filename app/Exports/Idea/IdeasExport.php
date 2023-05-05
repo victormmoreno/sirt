@@ -6,8 +6,9 @@ use App\Exports\FatherExport;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Events\{AfterSheet};
 use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 
-class IdeasExport extends FatherExport
+class IdeasExport extends FatherExport implements WithColumnWidths
 {
     use Exportable;
 
@@ -41,6 +42,19 @@ class IdeasExport extends FatherExport
                 // $this->styledCells($event);
                 $this->setFilters($event);
             },
+        ];
+    }
+
+    public function columnWidths(): array
+    {
+        return [
+            'C' => 45,
+            'I' => 45,
+            'J' => 45,
+            'K' => 45,
+            'L' => 45,
+            'M' => 45,
+            'N' => 45
         ];
     }
 

@@ -20,16 +20,16 @@ class IdeaWasRegisteredInComite
 
     /**
      * Handle the event.
-     * $event->datosIdea->gestor->user->email
+     * $event->datosIdea->asesor->email
      * @param  ComiteWasRegistered  $event
      * @return void
      */
     public function handle(ComiteWasRegistered $event)
     {
         if ($event->datosIdea->gestor != null) {
-            Mail::to([$event->datosIdea->talento->user->email, $event->emailSession, $event->datosIdea->gestor->user->email])->send(new SendEmailIdeaComite($event->datosIdea, $event->pdf, $event->extensiones));
+            Mail::to([$event->datosIdea->user->email, $event->emailSession, $event->datosIdea->asesor->email])->send(new SendEmailIdeaComite($event->datosIdea, $event->pdf));
         } else {
-            Mail::to([$event->datosIdea->talento->user->email, $event->emailSession])->send(new SendEmailIdeaComite($event->datosIdea, $event->pdf, $event->extensiones));
+            Mail::to([$event->datosIdea->user->email, $event->emailSession])->send(new SendEmailIdeaComite($event->datosIdea, $event->pdf));
         }
     }
 }

@@ -363,18 +363,22 @@ class ComiteController extends Controller
    */
   public function notificar_resultadoController(int $id, int $idComite)
   {
-    $result = $this->getComiteRepository()->notificar_resultados($id, $idComite);
     $idea = Idea::findOrFail($id);
+    $comite = Comite::findOrFail($idComite);
+    if(!request()->user()->can('notificar_resultado', [$comite, $idea])) {
+      alert('No autorizado', 'No tienes permisos para notificar el resultado de esta idea', 'error')->showConfirmButton('Ok', '#3085d6');
+      return back();
+  }
+    $result = $this->getComiteRepository()->notificar_resultados($id, $idComite);
     if ($result) {
-      // alert()->success('Notificación Exitosa!','Se ha enviado un mensaje a la dirección: '.$idea->correo_contacto.' con los resultados del comité.')->showConfirmButton('Ok', '#3085d6');
       return response()->json([
         'state' => 'notifica',
-        'idea' => $idea->talento->user->email
+        'idea' => $idea->user->email
         ]);
     } else {
       return response()->json([
         'state' => 'no_notifica',
-        'idea' => $idea->talento->user->email
+        'idea' => $idea->user->email
       ]);
     }
   }

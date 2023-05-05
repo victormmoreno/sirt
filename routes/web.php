@@ -309,7 +309,6 @@ Route::group(
         Route::get('/derivar_idea/{id}/{comite}', 'IdeaController@deviarIdea')->name('idea.derivar')->middleware('role_session:Dinamizador');
         Route::get('/show/{idea}', 'IdeaController@show')->name('idea.show');
         Route::get('/reasignar/{idea}', 'IdeaController@reasignar_nodo')->name('idea.reasignar.nodo')->middleware('role_session:Articulador');
-        Route::get('/asignar/{idea}', 'IdeaController@asignar_experto')->name('idea.asignar')->middleware('role_session:Dinamizador');
         Route::get('/sin-registro/{nodo}/{user}', 'IdeaController@consultarIdeasSinRegistro')->name('idea.sin-registrar');
         Route::get('/buscar', 'IdeaController@search')->name('idea.buscar');
         Route::put('/asignar/{idea}', 'IdeaController@asignar')->name('idea.asignar.experto')->middleware('role_session:Dinamizador');

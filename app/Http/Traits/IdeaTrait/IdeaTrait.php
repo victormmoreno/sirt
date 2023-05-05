@@ -8,7 +8,6 @@ use App\Models\Proyecto;
 use App\Models\Sede;
 use App\Models\RutaModel;
 use App\Models\Comite;
-use App\Models\Talento;
 use App\User;
 use App\Models\Entrenamiento;
 use App\Models\HistorialEntidad;

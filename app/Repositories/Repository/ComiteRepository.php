@@ -156,20 +156,15 @@ class ComiteRepository
         DB::beginTransaction();
         try {
             DB::statement("SET SESSION wait_timeout = 300");
-            $extensiones = "";
             $comite = Comite::findOrFail($idComite);
             $idea = $comite->ideas()->wherePivot('idea_id', $id)->first();
-            $infocenters = $idea->nodo->infocenter;
             $idea->registrarHistorialIdea(Movimiento::IsNotificar(), Session::get('login_role'), null, 'el resultado de la idea de proyecto inscrita en el comité ' . $comite->codigo);
-            foreach ($infocenters as $key => $value) {
-                $extensiones = $extensiones . $value->extension . ", ";
-            }
             if ($idea->pivot->admitido == 1) {
                 $pdf = PdfComiteController::printPDF($idea, $comite);
             } else {
-                $pdf = PdfComiteController::printPDFNoAceptado($idea, $comite, $extensiones);
+                $pdf = PdfComiteController::printPDFNoAceptado($idea, $comite);
             }
-            event(new ComiteWasRegistered($idea, $pdf, $extensiones));
+            event(new ComiteWasRegistered($idea, $pdf));
             DB::commit();
             return true;
         } catch (\Throwable $th) {
