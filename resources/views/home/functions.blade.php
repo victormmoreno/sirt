@@ -7,10 +7,35 @@
         @endif
     @endcan
     @can('showDahsboardDinamizador', Illuminate\Database\Eloquent\Model::class)
+        consultarIdeasRegistradas();
         @if($ideas_sin_pbt > 0)
             consultarIdeasPendientes('{{request()->user()->getNodoUser()}}', null);
         @endif
     @endcan
+    function downloadRegistradas() {
+        let desde = $('#txtideas_desde').val();
+        let hasta = $('#txtideas_hasta').val();
+        let nodo = '{{request()->user()->getNodoUser()}}';
+        location.href = "/idea/export_registradas/"+nodo+'/'+desde+'/'+hasta;
+    }
+    function consultarIdeasRegistradas() {
+        let desde = $('#txtideas_desde').val();
+        let hasta = $('#txtideas_hasta').val();
+        let nodo = '{{request()->user()->getNodoUser()}}';
+        $.ajax({
+        dataType:'json',
+        type:'get',
+        url: host_url + "/idea/registradas/"+nodo+"/"+desde+"/"+hasta,
+        success: function (response) {
+            let strings = "";
+            $("#ideas_registradas_count").empty();
+            $("#ideas_registradas_count").append(response.data.ideas.length);
+        },
+        error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+        }
+    })
+    }
     function consultarIdeasPendientes(nodo, user) {
     $.ajax({
         dataType:'json',
