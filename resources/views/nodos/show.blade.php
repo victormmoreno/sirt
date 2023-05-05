@@ -179,7 +179,7 @@
                                                                                 {{$dinamizador->user->present()->userCelular()}}
                                                                                 <br/>
                                                                             </p>
-                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $dinamizador->user->documento)}}" class="info">
+                                                                            <a target="_blank" href="{{route("usuarios.show", $dinamizador->user->documento)}}" class="info">
                                                                                 Ver mas información del usuario.
                                                                             </a>
 
@@ -225,7 +225,7 @@
                                                                                 {{$infocenter->user->present()->userCelular()}}
                                                                                 <br/>
                                                                             </p>
-                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $infocenter->user->documento)}}" class="info">
+                                                                            <a target="_blank" href="{{route("usuarios.show", $infocenter->user->documento)}}" class="info">
                                                                                 Ver mas información del usuario.
                                                                             </a>
                                                                         </li>
@@ -275,7 +275,7 @@
                                                                                 {{$gestor->user->present()->userRolesNames()}}
                                                                                 <br/>
                                                                             </p>
-                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $gestor->user->documento)}}" class="info">
+                                                                            <a target="_blank" href="{{route("usuarios.show", $gestor->user->documento)}}" class="info">
                                                                                 Ver mas información del usuario.
                                                                             </a>
                                                                         </li>
@@ -329,7 +329,7 @@
                                                                                 {{$articulador->user->present()->userRolesNames()}}
                                                                                 <br/>
                                                                             </p>
-                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $articulador->user->documento)}}" class="info">
+                                                                            <a target="_blank" href="{{route("usuarios.show", $articulador->user->documento)}}" class="info">
                                                                                 Ver mas información del usuario.
                                                                             </a>
                                                                         </li>
@@ -384,7 +384,7 @@
                                                                                 {{$apoyotecnico->user->present()->userRolesNames()}}
                                                                                 <br/>
                                                                             </p>
-                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $apoyotecnico->user->documento)}}" class="info">
+                                                                            <a target="_blank" href="{{route("usuarios.show", $apoyotecnico->user->documento)}}" class="info">
                                                                                 Ver mas información del usuario.
                                                                             </a>
                                                                         </li>
@@ -439,8 +439,8 @@
                                                                                 {{$ingreso->user->present()->userRolesNames()}}
                                                                                 <br/>
                                                                             </p>
-                                                                            <a target="_blank" href="{{route("usuario.usuarios.show", $ingreso->user->documento)}}" class="info">
-                                                                                Ver mas información del usuario. 
+                                                                            <a target="_blank" href="{{route("usuarios.show", $ingreso->user->documento)}}" class="info">
+                                                                                Ver mas información del usuario.
                                                                             </a>
                                                                         </li>
                                                                     </ul>

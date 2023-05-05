@@ -43,7 +43,7 @@
                                                 <a href="{{route('usuario.tomar.control', $user->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Tomar control</a>
                                             @endcan
                                             @can('access', $user)
-                                                <a href="{{route('usuario.usuarios.acceso', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar Acceso</a>
+                                                <a href="{{route('usuarios.acceso', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar Acceso</a>
                                             @endcan
                                             @can('generatePassword', $user)
                                                 <a href="{{route('user.newpassword', $user->present()->userDocumento())}}" class="waves-effect waves-grey btn-flat m-t-xs">Generar nueva contraseña</a>

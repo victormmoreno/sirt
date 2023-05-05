@@ -1,59 +1,18 @@
 <?php
 
-use App\Models\ControlNotificaciones;
-use App\Models\Movimiento;
-use App\Notifications\Articulation\ArticulationStageNoApproveEndorsement;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Session;
-
-/*DB::listen(function ($query) {
-    echo "<pre>{$query->sql}</pre>";
-    echo "<pre>{$query->time}</pre>";
-});*/
-
-/*Route::get('email', function () {
-    return new App\Mail\Support\AutomaticMessageSent(App\Models\Support::first());
-});*/
 Route::get('/', function () {
-    return view('spa');
+    return view('welcome');
 })->name('/');
 
 Route::get('politica-de-confidencialidad', function () {
     return view('seguridad.terminos');
 })->name('terminos');
 
-// Authentication Routes...
-Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('login', 'Auth\LoginController@login');
-Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
-// Registration Routes...
-Route::get('usuario/confirm/{documento}', 'Auth\RegisterController@showConfirmContratorInformationForm')->name('user.contractor.confirm.request');
-Route::put('usuario/confirm/{documento}', 'Auth\RegisterController@confirmContratorInformation')->name('user.contractor.confirm');
-Route::get('registro', 'Auth\RegisterController@showRegistrationForm')->name('registro');
-Route::post('registro', 'Auth\RegisterController@register')->name('register.request');
 
-// Password Reset Routes...
-Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
-
-//verificar usuario no registrado
-Route::post('user/verify', 'Auth\UnregisteredUserVerificationController@verificationUser')->name('user.verify');
-
-//Change Email Routes...
-Route::get('email/reset', 'Auth\ChangeEmailController@showEmailChangeRequestForm')->name('email.request');
-Route::post('email/send', 'Auth\ChangeEmailController@sendEmailChange')->name('email.send');
-
-Route::post('cambiar-role', 'User\RolesPermissions@changeRoleSession')
-    ->name('user.changerole')
-    ->middleware('disablepreventback');
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('disablepreventback');
 
-// Route::get('/nodo/inhabilitar_funcionarios/{nodo}', 'Nodo\NodoController@inhabilitar_funcionarios')->name('nodo.inhabilitar');
 
 Route::get('nodo/files/{nodo}', 'ArchivoController@datatableArchivesNodes')->name('nodo.files');
 Route::post('nodo/files/{nodo}', 'ArchivoController@uploadFileNode')->name('nodo.files.upload');
@@ -68,67 +27,7 @@ Route::get('usuario/{documento}/password/reset', 'User\UserController@generatePa
 Route::get('usuario/getciudad/{departamento?}', 'User\UserController@getCiudad');
 Route::get('usuario/export', 'User\UserController@export')->name('usuario.export');
 Route::get('usuario/export-talentos', 'User\UserController@exportMyTalentos')->name('usuario.export.talentos');
-Route::group(
-    [
-        'prefix'     => 'usuario',
-        'namespace'  => 'User',
-        'middleware' => 'disablepreventback',
-    ],
-    function () {
 
-        Route::get('/mistalentos', [
-            'uses' => 'UserController@talentsList',
-            'as'   => 'usuario.mytalentos',
-        ]);
-        Route::get('/talento/getTalentosDeTecnoparque', [
-            'uses' => 'UserController@datatableTalentosDeTecnoparque',
-            'as'   => 'talento.tecnoparque',
-        ]);
-
-        Route::get('/talento/consultarTalentoPorId/{id}', [
-            'uses' => 'UserController@consultarUnUsuarioPorId',
-            'as'   => 'talento.tecnoparque.byid',
-        ]);
-
-        Route::get('consultarUserPorId/{id}', 'UserController@findUserById');
-
-        Route::get('/', [
-            'uses' => 'UserController@index',
-            'as'   => 'usuario.index',
-        ]);
-        Route::put('/updateacceso/{documento}', 'UserController@updateAccess')->name('usuario.usuarios.updateacceso')->middleware('disablepreventback');
-        Route::get('/talento/getEdadTalento/{id}', 'TalentoController@getEdad');
-
-
-        Route::get('/usuarios/crear/{documento?}', 'UserController@create')->name('usuario.usuarios.create')->where('documento', '[0-9]+');
-
-        Route::get('/usuarios/gestores/nodo/{id}', [
-            'uses' => 'UserController@gestoresByNodo',
-            'as'   => 'usuario.gestores.nodo',
-        ]);
-
-        Route::post('/usuarios/consultarusuario', [
-            'uses' => 'UserController@querySearchUser',
-            'as'   => 'usuario.buscarusuario',
-        ])->where('documento', '[0-9]+');
-
-
-        Route::get('/usuarios', 'UserController@userSearch')->name('usuario.search');
-        Route::get('/{documento}/permisos', 'UserController@changeNodeAndRole')->name('usuario.usuarios.changenode')->where('documento', '[0-9]+');
-        Route::put('/{documento}/permisos', 'UserController@updateNodeAndRole')->name('usuario.usuarios.updatenodo')->middleware('disablepreventback');
-        Route::get('/usuarios/acceso/{documento}', 'UserController@access')->name('usuario.usuarios.acceso')->where('documento', '[0-9]+');
-        Route::get('/usuarios/tomar_control/{id}', 'UserController@tomar_control')->name('usuario.tomar.control');
-        Route::get('/usuarios/dejar_control', 'UserController@dejar_control')->name('usuario.dejar.control');
-        Route::put('/{id}/update-account', 'UserController@updateAccountUser')->name('usuario.usuarios.updateaccount')->middleware('disablepreventback');
-        Route::resource('usuarios', 'UserController', ['as' => 'usuario', 'only' => ['show', 'edit']])->names([
-            'update'  => 'usuario.usuarios.update',
-            'show'    => 'usuario.usuarios.show',
-            'edit'    => 'usuario.usuarios.edit',
-        ])->parameters([
-            'usuarios' => 'id',
-        ]);
-    }
-);
 
 //costos administrativos
 Route::get('costos-administrativos/costoadministrativo/{nodo}', 'CostoAdministrativoController@getCostoAdministrativoPorNodo')->name('costoadministrativo.costosadministrativosfornodo');
@@ -635,9 +534,7 @@ Route::group(
         Route::get('/excelEdtsFinalizadasPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\EdtController@edtPorFechaCierreYGestor')->name('edt.excel.gestor.fecha')->middleware('role_session:Experto|Dinamizador|Activador');
         Route::get('/excelEdtsFinalizadasPorLineaNodoYFecha/{idnodo}/{idlinea}/{fecha_inicio}/{fecha_fin}', 'Excel\EdtController@edtPorFechaCierreLineaYNodo')->name('edt.excel.nodo.linea.fecha')->middleware('role_session:Dinamizador|Activador');
         // Ruta para la generación de excel del módulo de articulaciones
-        Route::get('/excelArticulacionDeUnGestor/{id}', 'Excel\ArticulacionController@articulacionesDeUnGestor')->name('articulacion.excel.gestor');
-        Route::get('/excelDeUnaArticulacion/{id}', 'Excel\ArticulacionController@articulacionPorId')->name('articulacion.excel.unica');
-        Route::get('/excelArticulacionDeUnNodo/{id}', 'Excel\ArticulacionController@articulacionesDeUnNodo')->name('articulacion.excel.nodo')->middleware('role_session:Dinamizador|Activador');
+
         Route::get('/export/{idnodo}/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicadores2020')->name('indicador.export.excel');
         Route::get('/export/downloadMetas', 'Excel\IndicadorController@downloadMetas')->name('indicador.export.metas');
         Route::get('/export/downloadIdeas', 'Excel\IndicadorController@downloadIdeas')->name('indicador.export.ideas');
@@ -743,8 +640,6 @@ Route::group(
         Route::get('/noadmitido', 'PdfComiteController@printPDFNoAceptado')->name('print.noadmitido');
         Route::get('/usos_actividad/{id}/{tipo_actividad}', 'UsoInfraestructuraController@downloadPDFUsosInfraestructura')->name('pdf.actividad.usos');
         Route::get('/inicio_proyecto/{id}', 'PdfProyectoController@printFormularioAcuerdoDeInicio')->name('pdf.proyecto.inicio')->middleware('role_session:Experto');
-        Route::get('/inicio_articulacion/{id}', 'PdfArticulacionController@printFormularioInicio')->name('pdf.articulacion.inicio');
-        Route::get('/cierre_articulacion/{id}', 'PdfArticulacionController@printFormularioCierre')->name('pdf.articulacion.cierre');
         Route::get('/cierre/{id}', 'PdfProyectoController@printFormularioCierre')->name('pdf.proyecto.cierre')->middleware('role_session:Experto');
         Route::get('/categorizacion/{id}', 'PdfProyectoController@printActaCatergorizacion')->name('pdf.proyecto.acta.inicio')->middleware('role_session:Activador|Dinamizador|Experto');
         Route::post('/carta_certificacion/{id}', 'PdfProyectoController@printCartaCertificacionPbt')->name('pdf.proyecto.certificacion');
@@ -785,7 +680,7 @@ Route::group([
     // Route::post('/importar', 'MigracionController@import')->name('migracion.proyectos.store')->middleware('role_session:Desarrollador');
 });
 
-/*=====  End of rutas para las funcionalidades de los usuarios  ======*/
+
 
 /**
  * Route group para la generación de excel
@@ -880,7 +775,7 @@ Route::get('creditos', function () {
     return view('configuracion.creditos');
 })->name('creditos');
 
-Route::get('usuarios/filtro-talento/{documento}', 'User\UserController@filterTalento')->name('articulacion.usuario.talento.search');
+
 
 
 Route::get('articulaciones/downloadFile/{id}', 'ArchivoController@downloadFileArticulation')->name('articulation.files.download');

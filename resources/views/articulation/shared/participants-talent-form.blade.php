@@ -55,7 +55,7 @@
                             </div>
                             <div class="card-action">
                                 <a target="_blank" class="waves-effect waves-red btn-flat m-b-xs primary-text"
-                                    href="{{route('usuario.usuarios.show',$user->documento)}}"><i
+                                    href="{{route('usuarios.show',$user->documento)}}"><i
                                         class="material-icons left"> link</i>Ver más</a>
                                 <a onclick="filter_articulations.deleteTalent({{$user->id}});"
                                     class="waves-effect waves-red btn-flat m-b-xs danger-text"><i

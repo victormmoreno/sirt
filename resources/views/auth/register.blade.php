@@ -1,7 +1,7 @@
-@extends('spa.layouts.app')
+@extends('layouts.guest')
 @section('meta-title', 'Registro para usuarios nuevos')
 @section('meta-content', 'Registro para usuarios nuevos')
-@section('content-spa')
+@section('content')
     <main class="mn-inner inner-active-sidebar no-padding">
         <div class="section white">
             <div class="container">

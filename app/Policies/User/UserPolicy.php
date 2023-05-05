@@ -88,7 +88,7 @@ class UserPolicy
      */
     public function tomar_control(User $user)
     {
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsAdministrador()]);
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsAdministrador()]) && $user->id != auth()->user()->id;
     }
 
     /**

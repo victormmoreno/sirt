@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
-use Illuminate\Support\Facades\Auth;
+
 use App\Helpers\AuthRoleHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsersRequests\UserFormEditRequest;
@@ -27,27 +27,6 @@ class UserController extends Controller
     {
         $this->userRepository = $userRepository;
         $this->middleware('auth')->except('getCiudad');
-    }
-
-    public function tomar_control(Request $request, $id)
-    {
-        if (request()->user()->cannot('tomar_control', User::class)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
-            return redirect()->route('home');
-        }
-        session()->put('before_session', User::find($request->user()->id));
-        $user = User::find($id);
-        Auth::login($user);
-        RolesPermissions::changeRoleSession($request);
-        return redirect()->route('home');
-    }
-
-    public function dejar_control(Request $request)
-    {
-        Auth::login(session()->get('before_session'));
-        $request->session()->forget('before_session');
-        RolesPermissions::changeRoleSession($request);
-        return redirect()->route('home');
     }
 
     /**
@@ -314,7 +293,7 @@ class UserController extends Controller
             'roles' => $user->getRoleNames()->implode(', '),
             'message' => 'el usuario ya existe en nuestros registros',
             'status' => Response::HTTP_OK,
-            'url' => route('usuario.usuarios.show', $user->documento),
+            'url' => route('usuarios.show', $user->documento),
         ], Response::HTTP_OK);
     }
 
@@ -415,7 +394,7 @@ class UserController extends Controller
                 return response()->json([
                     'state' => 'success',
                     'message' => 'El Usuario ha sido modificado satisfactoriamente',
-                    'url' => route('usuario.usuarios.show', $userUpdate->documento),
+                    'url' => route('usuarios.show', $userUpdate->documento),
                     'user' => $userUpdate,
                 ]);
 
@@ -431,7 +410,7 @@ class UserController extends Controller
             return response()->json([
                 'state' => 'success',
                 'message' => 'El Usuario ha sido modificado satisfactoriamente',
-                'url' => route('usuario.usuarios.show', $userUpdate->documento),
+                'url' => route('usuarios.show', $userUpdate->documento),
                 'user' => $userUpdate,
             ]);
         }
@@ -487,7 +466,7 @@ class UserController extends Controller
                 return response()->json([
                     'state' => 'success',
                     'message' => 'La cuenta del usuario ha sido actualizada exitosamente.',
-                    'url' => route('usuario.usuarios.show', $userUpdate->documento),
+                    'url' => route('usuarios.show', $userUpdate->documento),
                     'user' => $userUpdate,
                 ]);
             } else {

@@ -10,7 +10,7 @@
             <div class="left left-align">
                 <h5 class="left-align primary-text">
                     <a class="footer-text left-align"
-                        href="{{route('usuario.usuarios.show', $user->present()->userDocumento())}}">
+                        href="{{route('usuarios.show', $user->present()->userDocumento())}}">
                         <i class="material-icons left">arrow_back</i>
                     </a>Usuarios
                 </h5>
@@ -19,7 +19,7 @@
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">Inicio</a></li>
                     <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
-                    <li><a href="{{route('usuario.usuarios.show', $user->documento)}}">{{$user->documento}}</a></li>
+                    <li><a href="{{route('usuarios.show', $user->documento)}}">{{$user->documento}}</a></li>
                     <li class="active">Cambiar permisos</li>
                 </ol>
             </div>

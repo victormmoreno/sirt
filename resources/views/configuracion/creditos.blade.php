@@ -1,8 +1,8 @@
-@extends('spa.layouts.app')
+@extends('layouts.guest')
 
 @section('meta-title', 'Créditos')
 @section('meta-content', 'Créditos')
-@section('content-spa')
+@section('content')
 <main class="mn-inner no-p">
     <div class="bg-primary-lighten">
         <div class="container">

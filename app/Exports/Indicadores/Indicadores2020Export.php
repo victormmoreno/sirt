@@ -9,7 +9,6 @@ use App\Exports\Empresas\{EmpresasExport};
 use App\Exports\GruposInvestigacion\{GruposExport};
 use App\Repositories\Repository\{EmpresaRepository, GrupoInvestigacionRepository, ProyectoRepository};
 use App\Exports\User\Talento\TalentoUserExport;
-use App\Repositories\Repository\UserRepository\TalentoRepository;
 
 class Indicadores2020Export implements WithMultipleSheets
 {
@@ -17,7 +16,6 @@ class Indicadores2020Export implements WithMultipleSheets
     private $hoja;
     private $request;
     private $proyectoRepository;
-    private $talentoRepository;
     private $empresaRepository;
     private $grupoRepository;
 
@@ -26,7 +24,6 @@ class Indicadores2020Export implements WithMultipleSheets
         $this->request = $request;
         $this->hoja = $request->hoja;
         $this->proyectoRepository = new ProyectoRepository;
-        $this->talentoRepository = new TalentoRepository;
         $this->empresaRepository = new EmpresaRepository;
         $this->grupoRepository = new GrupoInvestigacionRepository;
     }

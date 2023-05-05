@@ -134,7 +134,7 @@
                         </div>
                         @can('show',$user)
                         <div class="card-action">
-                            <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="{{route('usuario.usuarios.show',$user->documento)}}"><i class="material-icons left"> link</i>Ver más</a>
+                            <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="{{route('usuarios.show',$user->documento)}}"><i class="material-icons left"> link</i>Ver más</a>
                         </div>
                         @endcan
                     </div>

@@ -10,7 +10,7 @@ class UserDatatable
     {
         return datatables()->of($users)
             ->addColumn('detail', function ($data) {
-                $button = '<a href="' . route("usuario.usuarios.show", $data->documento) . '" class="btn tooltipped bg-info m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Detalles"><i class="material-icons">visibility</i></a>';
+                $button = '<a href="' . route("usuarios.show", $data->documento) . '" class="btn tooltipped bg-info m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Detalles"><i class="material-icons">visibility</i></a>';
                 return $button;
             })
             ->editColumn('nodo', function ($data) {

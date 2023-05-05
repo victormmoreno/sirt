@@ -256,10 +256,6 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(Eps::class, 'eps_id', 'id');
     }
 
-    // public function gestor()
-    // {
-    //     return $this->hasOne(Gestor::class, 'user_id', 'id');
-    // }
 
     public function articulador()
     {

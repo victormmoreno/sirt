@@ -13,8 +13,8 @@
             <div class="right right-align show-on-large hide-on-med-and-down">
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">Inicio</a></li>
-                    <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
-                    <li><a href="{{route('usuario.usuarios.show', $user->documento)}}">{{$user->documento}}</a></li>
+                    <li><a href="{{route('usuarios.index')}}">Usuarios</a></li>
+                    <li><a href="{{route('usuarios.show', $user->documento)}}">{{$user->documento}}</a></li>
                     <li class="active">Confirmar funcionario</li>
                 </ol>
             </div>
