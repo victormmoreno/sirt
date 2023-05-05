@@ -57,10 +57,11 @@ public function index()
     $activos = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->select('nodo_id')->selectRaw('count(id) as cantidad')->whereHas('fase', function ($query) {
     $query->whereIn('nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
     })->whereIn('nodo_id', $nodos)->groupBy('nodo_id')->get();
-    $articulations_start = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsInicio()])->whereIn('nodos.id', $nodos)->get();
-    $articulations_execution = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsEjecucion()])->whereIn('nodos.id', $nodos)->get();
-    $articulations_closing = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsCierre()])->whereIn('nodos.id', $nodos)->get();
-    $articulations_finish = $this->articulationRepository->articulationsForPhase('fases.nombre', 'articulations.end_date', $year_now, [Articulation::IsFinalizado()])->whereIn('nodos.id', $nodos)->get();
+    $articulations_start = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsInicio()])->whereIn('nodos.id', $nodos)
+    ->groupBy('nodos.id')->get();
+    $articulations_execution = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsEjecucion()])->whereIn('nodos.id', $nodos)->groupBy('nodos.id')->get();
+    $articulations_closing = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsCierre()])->whereIn('nodos.id', $nodos)->groupBy('nodos.id')->get();
+    $articulations_finish = $this->articulationRepository->articulationsForPhase('fases.nombre', 'articulations.end_date', $year_now, [Articulation::IsFinalizado()])->whereIn('nodos.id', $nodos)->groupBy('nodos.id')->get();
 
     $metasProyectos = $this->retornarTodasLasMetasArray($metas, $pbts_trl6, $pbts_trl7_8, $activos);
     $metasArticulaciones = $this->retornarTodasLasMetasArticulacionArray($metas, ['start' => $articulations_start, 'execution' => $articulations_execution, 'closing' => $articulations_closing, 'finish' => $articulations_finish]);
@@ -86,19 +87,19 @@ public function index()
                 } else {
                     $meta['trl6_obtenido'] = $cantidad_trl6->cantidad;
                 }
-    
+
                 if ($cantidad_trl7_8 == null) {
                     $meta['trl7_8_obtenido'] = 0;
                 } else {
                     $meta['trl7_8_obtenido'] = $cantidad_trl7_8->cantidad;
                 }
-    
+
                 if ($cantidad_activos == null) {
                     $meta['activos'] = 0;
                 } else {
                     $meta['activos'] = $cantidad_activos->cantidad;
                 }
-    
+
                 $meta['progreso_total_proyectos'] = round(100*($meta->trl7_8_obtenido+$meta->trl6_obtenido)/($meta->trl6+$meta->trl7_trl8), 2);
             }
         }

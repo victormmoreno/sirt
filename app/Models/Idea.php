@@ -180,6 +180,28 @@ class Idea extends Model
         ->experto($idgestor);
     }
 
+    public function scopeConsultarIdeasRegistradas($query, $idnodo, $desde, $hasta)
+    {
+        return $query->select(
+            'ideas.id AS consecutivo',
+            'ideas.codigo_idea',
+            'nombre_proyecto',
+            'tipo_idea',
+            'viene_convocatoria',
+            'convocatoria',
+            'ideas.talento_id'
+        )
+        ->selectRaw('concat(nombres_contacto, " ", apellidos_contacto) AS nombres_contacto')
+        ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombres_talento')
+        ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
+        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+        ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
+        ->leftjoin('talentos', 'talentos.id', '=', 'ideas.talento_id')
+        ->leftjoin('users', 'users.id', '=', 'talentos.user_id')
+        ->where('nodos.id', $idnodo)
+        ->whereBetween('ideas.created_at', [$desde, $hasta]);
+    }
+
     public function scopeConsultarIdeasConvocadasAComite($query, $id)
     {
         return $query->select(

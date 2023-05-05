@@ -18,6 +18,7 @@ use App\Http\Requests\UsersRequests\ConfirmUserRequest;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\User\NodeChanged;
 
+
 class UserController extends Controller
 {
     public $userRepository;
@@ -27,7 +28,7 @@ class UserController extends Controller
         $this->userRepository = $userRepository;
         $this->middleware('auth')->except('getCiudad');
     }
-    
+
     public function tomar_control(Request $request, $id)
     {
         if (request()->user()->cannot('tomar_control', User::class)) {
@@ -35,7 +36,6 @@ class UserController extends Controller
             return redirect()->route('home');
         }
         session()->put('before_session', User::find($request->user()->id));
-        // RolesPermissions::setBeforeRole($request);
         $user = User::find($id);
         Auth::login($user);
         RolesPermissions::changeRoleSession($request);
@@ -61,21 +61,15 @@ class UserController extends Controller
             return redirect()->route('home');
         }
         $node = AuthRoleHelper::checkRoleAuth(['node' => $request->filter_nodo])['node'];
-
-
         if (request()->ajax()) {
             $users = [];
             if (($request->filled('filter_nodo') || $request->filter_nodo == null) && ($request->filled('filter_role') || $request->filter_role == null) && $request->filled('filter_state') && ($request->filled('filter_year') || $request->filter_year == null)) {
                 $users = User::query()
                     ->select('users.id', 'tiposdocumentos.nombre as tipodocumento', 'users.documento', 'users.email', 'users.celular', 'users.ultimo_login', 'users.estado', 'users.deleted_at')
                     ->selectRaw('concat(users.nombres, " ",users.apellidos) as usuario, GROUP_CONCAT(roles.name SEPARATOR ", ") as roles')
-                    ->leftJoin('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
-                    ->join('model_has_roles', function ($join) {
-                        $join->on('users.id', '=', 'model_has_roles.model_id')
-                            ->where('model_has_roles.model_type', User::class);
-                    })
-                    ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
-                    ->nodoUserQuery($request->filter_role, $node)
+                    ->selectRaw("if(roles.name = 'dinamizador', entidaddinamizador.nombre, if(roles.name = 'experto', entidadexperto.nombre, if(roles.name = 'articulador', entidadusernodo.nombre, if(roles.name = 'apoyo técnico', entidadusernodo.nombre, if(roles.name = 'infocenter', entidadinfocenter.nombre, if(roles.name = 'ingreso', entidadingreso.nombre, 'No Aplica')))))) as nodo")
+                    ->userQuery()
+                    ->nodeQuery($request->filter_role, $node)
                     ->roleQuery($request->filter_role)
                     ->stateDeletedAt($request->filter_state)
                     ->groupBy('users.id')
@@ -185,12 +179,7 @@ class UserController extends Controller
             $users = User::query()
                 ->select('users.id', 'tiposdocumentos.nombre as tipodocumento', 'users.fechanacimiento', 'users.documento', 'users.email', 'users.celular', 'users.telefono', 'users.genero', 'gruposanguineos.nombre as grupo_sanguineo', 'users.estrato', 'users.direccion', 'etnias.nombre as etnia', 'users.grado_discapacidad', 'users.descripcion_grado_discapacidad', 'eps.nombre as eps', 'users.otra_eps', 'users.institucion', 'users.titulo_obtenido', 'users.fecha_terminacion', 'users.ultimo_login', 'users.estado', 'users.deleted_at')
                 ->selectRaw('concat(users.nombres, " ",users.apellidos) as usuario, concat(expedition_city.nombre, " (",expedition_depart.nombre,")") as expedicion, concat(residency_city.nombre, " (",residency_depart.nombre,")") as residencia, GROUP_CONCAT(DISTINCT roles.name SEPARATOR ", ") as roles, GROUP_CONCAT(DISTINCT ocupaciones.nombre SEPARATOR ", ") as ocupaciones')
-                ->leftJoin('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
-                ->join('model_has_roles', function ($join) {
-                    $join->on('users.id', '=', 'model_has_roles.model_id')
-                        ->where('model_has_roles.model_type', User::class);
-                })
-                ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+                ->selectRaw("if(roles.name = 'dinamizador', entidaddinamizador.nombre, if(roles.name = 'experto', entidadexperto.nombre, if(roles.name = 'articulador', entidadusernodo.nombre, if(roles.name = 'apoyo técnico', entidadusernodo.nombre, if(roles.name = 'infocenter', entidadinfocenter.nombre, if(roles.name = 'ingreso', entidadingreso.nombre, 'No Aplica')))))) as nodo")
                 ->leftJoin('ciudades as expedition_city', 'expedition_city.id', '=', 'users.ciudad_expedicion_id')
                 ->leftJoin('departamentos as expedition_depart', 'expedition_depart.id', '=', 'expedition_city.departamento_id')
                 ->leftJoin('gruposanguineos', 'gruposanguineos.id', '=', 'users.gruposanguineo_id')
@@ -200,12 +189,13 @@ class UserController extends Controller
                 ->leftJoin('eps', 'eps.id', '=', 'users.eps_id')
                 ->leftJoin('ocupaciones_users', 'ocupaciones_users.user_id', '=', 'users.id')
                 ->leftJoin('ocupaciones', 'ocupaciones.id', '=', 'ocupaciones_users.ocupacion_id')
-                ->nodoUserQuery($request->filter_role, $node)
+                ->userQuery()
+                ->nodeQuery($request->filter_role, $node)
                 ->roleQuery($request->filter_role)
                 ->stateDeletedAt($request->filter_state)
                 ->groupBy('users.id')
                 ->orderBy('users.created_at', 'desc')
-                ->get();
+                    ->get();
         }
         return (new UserExport($request, $users))->download("Usuarios - " . config('app.name') . ".{$extension}");
     }

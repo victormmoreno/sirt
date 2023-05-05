@@ -13,6 +13,9 @@ class UserDatatable
                 $button = '<a href="' . route("usuario.usuarios.show", $data->documento) . '" class="btn tooltipped bg-info m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Detalles"><i class="material-icons">visibility</i></a>';
                 return $button;
             })
+            ->editColumn('nodo', function ($data) {
+                return $data->nodo;
+            })
             ->editColumn('tipodocumento', function ($data) {
                 return $data->tipodocumento;
             })
@@ -23,6 +26,7 @@ class UserDatatable
                 return !empty($data->celular) ? $data->celular : __('No register');
             })
             ->editColumn('roles', function ($data) {
+
                 return !empty($data->roles) ? $data->roles : __('No register');
             })
             ->editColumn('login', function ($data) {
