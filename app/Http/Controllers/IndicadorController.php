@@ -46,7 +46,6 @@ public function index()
     ->role(User::IsExperto())
     ->nodoUser(User::IsExperto(), request()->user()->getNodoUser())
     ->stateDeletedAt('si')
-    // ->yearActividad(User::IsExperto(), $request->filter_year, $nodo)
     ->orderBy('users.created_at', 'desc')
     ->get();
     $nodos = [request()->user()->getNodoUser()];

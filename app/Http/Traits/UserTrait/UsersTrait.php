@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 trait UsersTrait
 {
 
+
     public function getRouteKeyName()
     {
         return 'documento'; // db column name
@@ -99,10 +100,6 @@ trait UsersTrait
         return self::IS_PROVEEDOR;
     }
 
-    /*==========================================
-    =            mutadores eloquent            =
-    ==========================================*/
-
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = Hash::make($password);
@@ -189,49 +186,25 @@ trait UsersTrait
         return trim($documento);
     }
 
-    /*=====  End of mutadores eloquent  ======*/
 
-    /*================================================================
-    =            metodo para generar contraseña aleatoria            =
-    ================================================================*/
     public static function generatePasswordRamdom()
     {
         return str_random(12);
     }
-
-    /*=====  End of metodo para generar contraseña aleatoria  ======*/
-
-    /*==================================================================
-    =            metodo para generar token activacion users            =
-    ==================================================================*/
 
     public function generateToken()
     {
         $this->token()->create([
             'token' => str_random(60),
         ]);
-
         return $this;
-
     }
-
-    /*=====  End of metodo para generar token activacion users  ======*/
-    /*=================================================================
-    =            ejemplo para preguntar por fechas futuras            =
-    =================================================================*/
 
     public function isUpdated()
     {
         return !is_null($this->updated_at) && $this->updated_at < today();
     }
 
-    /*=====  End of ejemplo para preguntar por fechas futuras  ======*/
-
-    /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
-     *
-     * @return mixed
-     */
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -245,10 +218,6 @@ trait UsersTrait
     {
         return [];
     }
-
-    /*=================================================================
-    =            metodo para activar la cuenta del usuario            =
-    =================================================================*/
 
     public function activate()
     {
@@ -266,15 +235,8 @@ trait UsersTrait
         $this->notify(new ResetPasswordNotification($token));
     }
 
-    /*===============================================================================
-    =            metodo para retornar el nombre de todas las ocupaciones            =
-    ===============================================================================*/
-
     public function getOcupacionesNames(): Collection
     {
         return $this->ocupaciones->pluck('nombre');
     }
-
-    /*=====  End of metodo para retornar el nombre de todas las ocupaciones  ======*/
-
 }

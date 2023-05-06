@@ -30,7 +30,7 @@ class EquipoRepository
         $nodo = sprintf("%02d", $request->user()->getNodoUser() == null ? $request->txtnodo_id : $request->user()->getNodoUser());
         $linea = sprintf("%02d", $request->user()->getLineaUser() == null ? $request->txtlineatecnologica : $request->user()->getLineaUser());
         $id = sprintf("%06d", Equipo::selectRaw('MAX(id+1) AS max')->get()->last()->max);
-        $codigo = $prefix . $anho . '-' . $nodo . $linea . '-' . $id; 
+        $codigo = "{$prefix}{$anho}-{$nodo}{$linea}{$id}";
         return $codigo;
     }
 
@@ -135,7 +135,7 @@ class EquipoRepository
 
     /**
      * Retorna el id del nodo
-     * 
+     *
      * @param Request $request
      * @author dum
      */
@@ -157,7 +157,7 @@ class EquipoRepository
 
     /**
      * Retorna el id de la linea tecnológica
-     * 
+     *
      * @author dum
      */
     public function getLineaRole()
