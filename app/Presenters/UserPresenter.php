@@ -246,29 +246,6 @@ class UserPresenter extends Presenter
         return $this->message('Información no disponible');
     }
 
-    public function userTipoTalento()
-    {
-        if ($this->user->has('talento.tipotalento') && isset($this->user->talento->tipotalento)) {
-            if (
-                $this->user->talento->tipotalento->nombre == TipoTalento::IS_APRENDIZ_SENA_CON_APOYO ||
-                $this->user->talento->tipotalento->nombre == TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO
-            ) {
-                return $this->regionalTalento() . ' - ' . $this->centroFormacionTalento() . ' - ' . $this->programaFormacionTalento();
-            } elseif ($this->user->talento->tipotalento->nombre == TipoTalento::IS_EGRESADO_SENA) {
-                return $this->regionalTalento() . ' - ' . $this->centroFormacionTalento() . ' - ' . $this->programaFormacionTalento() . ' - ' . $this->tipoFormacionTalento();
-            } elseif ($this->user->talento->tipotalento->nombre == TipoTalento::IS_FUNCIONARIO_SENA) {
-                return $this->regionalTalento() . ' - ' . $this->centroFormacionTalento() . ' - ' . $this->dependencia();
-            } elseif ($this->user->talento->tipotalento->nombre == TipoTalento::IS_INSTRUCTOR_SENA) {
-                return $this->regionalTalento() . ' - ' . $this->centroFormacionTalento();
-            } elseif ($this->user->talento->tipotalento->nombre == TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) {
-                return $this->tipoEstudio() . ' - ' . $this->universidad() . ' - ' . $this->carreraUniversitaria();
-            } elseif ($this->user->talento->tipotalento->nombre == TipoTalento::IS_FUNCIONARIO_EMPRESA) {
-                return $this->empresaTalento();
-            }
-            return $this->message('No Registra');
-        }
-        return $this->message('No Registra');
-    }
 
     public function regionalTalento()
     {
@@ -287,13 +264,7 @@ class UserPresenter extends Presenter
         return $this->message('No Registra');
     }
 
-    public function programaFormacionTalento()
-    {
-        if ($this->user->has('talento') && isset($this->user->talento->programa_formacion) && $this->user->talento->programa_formacion != null) {
-            return $this->user->talento->programa_formacion;
-        }
-        return $this->message('No Registra');
-    }
+
 
     public function tipoFormacionTalento()
     {
@@ -343,21 +314,6 @@ class UserPresenter extends Presenter
         return $this->message('No Registra');
     }
 
-    public function tipoContratista()
-    {
-        if ($this->user->has('contratista') && isset($this->user->contratista->tipo_contratista) && $this->user->contratista->tipo_contratista == 0) {
-            return "Contratista";
-        }else{
-            return "Planta";
-        }
-    }
-
-    public function nodoContratista()
-    {
-        if ($this->user->has('contratista') && isset($this->user->contratista->nodo)) {
-            return $this->user->contratista->nodo->entidad->nombre;
-        }
-    }
 
     public function userChangeAccess(): bool
     {

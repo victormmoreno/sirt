@@ -6,7 +6,7 @@ $(document)
   });
 })
 .ajaxStop(function () {
-  $loading.closeModal();
+    $loading.closeModal();
 });
 
 function printErroresFormulario(data) {

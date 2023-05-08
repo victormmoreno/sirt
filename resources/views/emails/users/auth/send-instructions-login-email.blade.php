@@ -11,11 +11,6 @@ Te damos la bienvenida a la {{config('app.name')}}.
 
 Hemos enviado este correo para informarte las instrucciones a seguir para completar el registro de tu usuario en el aplicativo.
 
-Estas haciendo una solicitud para Tecnoparque Nodo {{$user->contratista->nodo->entidad->nombre}}.
-
-Ahora debes esperar a que el administrador del aplicativo o el dinamizador de Nodo {{$user->contratista->nodo->entidad->nombre}} valide tus datos y active tu cuenta para acceder.
-
-Estas son tu credenciales, con la cual podrás ingresar a la plataforma {{config('app.name')}}, una vez te activen tu cuenta.
 @component('mail::panel')
     <h1 class="tittle">🔐 Credenciales Inicio de Sesión</h1>
 @endcomponent

@@ -14,7 +14,6 @@ use App\Datatables\UserDatatable;
 use Illuminate\Support\{Facades\Validator};
 use Illuminate\Http\Response;
 use App\Exports\User\UserExport;
-use App\Http\Requests\UsersRequests\ConfirmUserRequest;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\User\NodeChanged;
 
@@ -367,7 +366,7 @@ class UserController extends Controller
             alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
         }
-        $req = new ConfirmUserRequest;
+        $req = new Request;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
             return response()->json([

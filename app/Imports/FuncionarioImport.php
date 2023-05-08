@@ -108,7 +108,7 @@ class FuncionarioImport implements ToCollection, WithHeadingRow
                         // en caso de que el correo no se encuentra registrado
                         $user = $this->registrarUser($row, $queryTipoDocumento, $queryGradoEscolaridad, $queryGrupoSanguineo, $queryEps, $ocupaciones[1]);
                         $user->ocupaciones()->sync($ocupaciones[0], false);
-                        $this->registerFuncionario($user, $row);
+
                     } else {
                         return $this->validaciones->errorValidacionCorreo($row['correo'], $key, $user_email->documento, $this->hoja);
                     }
@@ -119,11 +119,7 @@ class FuncionarioImport implements ToCollection, WithHeadingRow
                         // Cambia la información actual
                         $this->updateUser($user, $row, $queryTipoDocumento, $queryGradoEscolaridad, $queryGrupoSanguineo, $queryEps, $ocupaciones[1]);
                         $user->ocupaciones()->sync($ocupaciones[0], true);
-                        if ($user->contratista == null) {
-                            $this->registerFuncionario($user, $row);
-                        } else {
-                            $this->updateFuncionario( $user, $row);
-                        }
+
                     } else {
                         // No permite actualizar la información porque el correo se encuentra asociado a otra persona
                         return $this->validaciones->errorValidacionCorreo($row['correo'], $key, $user->documento, $this->hoja);
@@ -173,21 +169,6 @@ class FuncionarioImport implements ToCollection, WithHeadingRow
         return [$ocupaciones_foraneas, $otra_ocupacion];
     }
 
-    private function updateFuncionario($user, $rows)
-    {
-        return $user->contratista()->update([
-            "nodo_id" => $this->nodo,
-            "tipo_contratista" => $rows['tipo_vinculacion'] == "Planta" ? 0 : ($rows['tipo_vinculacion'] == "Contratista" ? 1 : 1 ),
-        ]);
-    }
-
-    private function registerFuncionario($user, $rows)
-    {
-        return $user->contratista()->create([
-            "nodo_id" => $this->nodo,
-            "tipo_contratista" => $rows['tipo_vinculacion'] == "Planta" ? 0 : ($rows['tipo_vinculacion'] == "Contratista" ? 1 : 1 ),
-        ]);
-    }
     private function registrarUser($row, $tipo_documento, $grado_escolaridad, $grupo_sanguineo, $eps, $otra_ocupacion)
     {
         $ciudad_expedicion = Ciudad::where('nombre', str_slug($row['ciudad_expedicion'], '_'))->first();

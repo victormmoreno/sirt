@@ -3,19 +3,18 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
-use App\Models\LineaTecnologica;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\{Hash, Notification, Validator};
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\{Contratista, TipoTalento, TipoFormacion, TipoEstudio, Etnia, Eps, Ocupacion, Talento, Entidad};
+use App\Models\{ TipoTalento, TipoFormacion, TipoEstudio, Etnia, Eps, Ocupacion, Talento, Entidad};
 use App\Repositories\Repository\UserRepository\UserRepository;
-use App\Http\Requests\UsersRequests\{UserFormRequest, ConfirmUserRequest};
+use App\Http\Requests\UsersRequests\{UserFormRequest};
 use Illuminate\Support\Facades\DB;
 use App\Events\User\UserWasRegistered;
 use App\Repositories\Repository\UserRepository\DinamizadorRepository;
-use App\Notifications\User\{NewContractor, RoleAssignedOfficer};
+use App\Notifications\User\{ RoleAssignedOfficer};
 class RegisterController extends Controller
 {
     use RegistersUsers;
@@ -72,12 +71,9 @@ class RegisterController extends Controller
         } else {
             $user = $this->store($request);
             if ($user != null) {
-                $message = "";
-                if($request->input('txttipousuario') == 'talento'){
-                    $message = "Bienvenido(a) {$user->nombres} {$user->apellidos} a " . config('app.name').", ahora puedes acceder a registrar tu idea.";
-                }else{
-                    $message = "Bienvenido(a) {$user->nombres} {$user->apellidos} a " . config('app.name') . ", ahora debes esperar a que validemos tu información.";
-                }
+
+                $message = "Bienvenido(a) {$user->nombres} {$user->apellidos} a " . config('app.name') . ", ahora debes esperar a que validemos tu información.";
+
                 return response()->json([
                     'state'   => 'success',
                     'message' => $message,
@@ -102,24 +98,14 @@ class RegisterController extends Controller
             $user = $this->createUser($request, $password);
             $user->ocupaciones()->sync($request->get('txtocupaciones'));
 
-            if ($request->filled('txttipousuario') && $request->input('txttipousuario') == 'talento') {
-                $this->storeTalento($request, $user);
-                $this->assignRoleUser($user, config('laravelpermission.roles.roleTalento'));
-            }
-            if ($request->filled('txttipousuario') && $request->input('txttipousuario') == 'contratista') {
-                Contratista::create([
-                    "user_id"   => $user->id,
-                    "nodo_id"   => $request->input('txtnodo'),
-                    "tipo_contratista"   => $request->input('txttipocontratista') == "contratista" ?  1 : $request['txttipocontratista'] = 0, //1 contratista. 0 planta
-                ]);
 
-                $dinamizadorRepository = new DinamizadorRepository;
-                $dinamizador = $dinamizadorRepository->getAllDinamizadoresPorNodo($request->input('txtnodo'))->first();
 
-                if($dinamizador != null){
-                    Notification::send($dinamizador, new NewContractor($user, $dinamizador));
-                }
-            }
+
+
+                // $dinamizadorRepository = new DinamizadorRepository;
+                // $dinamizador = $dinamizadorRepository->getAllDinamizadoresPorNodo($request->input('txtnodo'))->first();
+
+
             if($user != null){
                 $message = "Credenciales de ingreso a " . config('app.name');
                 event(new UserWasRegistered($user, $password, $message));
@@ -157,7 +143,6 @@ class RegisterController extends Controller
             "mujerCabezaFamilia"   => $request->input('txtmadrecabezafamilia'),
             "desplazadoPorViolencia" => $request->input('txtdesplazadoporviolencia'),
             "otra_eps"             => $request->input('txteps') == Eps::where('nombre', Eps::OTRA_EPS)->first()->id ? $request->input('txtotraeps') : null,
-            "estado"               => $this->stateUser($request),
             "institucion"          => $request->input('txtinstitucion'),
             "titulo_obtenido"      => $request->get('txttitulo'),
             "fecha_terminacion"    => $request->get('txtfechaterminacion'),
@@ -167,54 +152,6 @@ class RegisterController extends Controller
         ]);
     }
 
-    protected function storeTalento($request, $user)
-    {
-        $entidad = null;
-        if (
-            $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)->first()->id ||
-            $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_CON_APOYO)->first()->id
-        ) {
-            $entidad = $request->input('txtcentroformacion_aprendiz') ?: $this->getIdNoAplicaEntidad();
-        } else if (
-            $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_EGRESADO_SENA)->first()->id
-        ) {
-            $entidad = $request->input('txtcentroformacion_egresado') ?: $this->getIdNoAplicaEntidad();
-        } else if (
-            $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_FUNCIONARIO_SENA)->first()->id
-        ) {
-            $entidad = $request->input('txtcentroformacion_funcionarioSena') ?: $this->getIdNoAplicaEntidad();
-        } else if (
-            $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_INSTRUCTOR_SENA)->first()->id
-        ) {
-            $entidad = $request->input('txtcentroformacion_instructorSena') ?: $this->getIdNoAplicaEntidad();
-        } else {
-            $entidad = $this->getIdNoAplicaEntidad();
-        }
-        return Talento::create([
-            "user_id"               => $user->id,
-            "tipo_talento_id"       => $request->input('txttipotalento'),
-            "entidad_id"            => $entidad,
-            "programa_formacion"    => $this->programaFormacion($request),
-
-            "tipo_formacion_id"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_EGRESADO_SENA) ?
-                $request->input('txttipoformacion') : null,
-            "tipo_estudio_id"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
-                $request->input('txttipoestudio') : null,
-            "dependencia"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_SENA) ?
-                $request->input('txtdependencia') : null,
-            "universidad"           => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
-                $request->input('txtuniversidad') : null,
-            "carrera_universitaria" => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
-                $request->input('txtcarrera') : null,
-            "empresa"               => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_EMPRESA) ?
-                $request->input('txtempresa') : null,
-        ]);
-    }
-
-    protected function getIdNoAplicaEntidad()
-    {
-        return Entidad::where('nombre', 'No Aplica')->first()->id;
-    }
 
     /**
      * Get the guard to be used during registration.
@@ -226,62 +163,12 @@ class RegisterController extends Controller
         return Auth::guard();
     }
 
-    private function assignRoleUser($user, $role)
-    {
-        return $user->assignRole($role);
-    }
-
-    private function stateUser($request){
-
-        if ($request->filled('txttipousuario') && $request->input('txttipousuario') == 'talento') {
-            return User::IsActive();
-        }
-        return User::IsInactive();
-    }
-
-    public function getIdTipoTalentoForNombre(string $tipotalento)
-    {
-        return TipoTalento::where('nombre', $tipotalento)->first()->id;
-    }
-
-    protected function programaFormacion($request){
-        if($request->get('txtprogramaformacion') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_APRENDIZ_SENA_CON_APOYO) || $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)){
-            return $request->input('txtprogramaformacion_aprendiz');
-        }else if($request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_EGRESADO_SENA)){
-            $request->input('txtprogramaformacion_egresado');
-        }else{
-            return null;
-        }
-    }
-
-    public function showConfirmContratorInformationForm(int $documento)
-    {
-        $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
-        if (request()->user()->cannot('confirmContratorInformation', $user)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
-            return redirect()->route('home');
-        }
-        return view('auth.confirm-contractor-information', [
-            'user' => $user,
-            'roles' => $this->userRepository->getAllRoles(),
-            'nodos'             => $this->userRepository->getAllNodo(),
-            'tipotalentos' => TipoTalento::pluck('nombre', 'id'),
-            'regionales'        => $this->userRepository->getAllRegionales(),
-            'tipoformaciones' => TipoFormacion::pluck('nombre', 'id'),
-            'tipoestudios' => TipoEstudio::pluck('nombre', 'id'),
-            'lineas' => LineaTecnologica::pluck('nombre', 'id'),
-        ]);
-    }
 
     public function confirmContratorInformation(Request $request, int $documento)
     {
         $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
 
-        if (request()->user()->cannot('confirmContratorInformation', $user)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
-            return redirect()->route('home');
-        }
-        $req = new ConfirmUserRequest;
+        $req = new Request;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
             return response()->json([

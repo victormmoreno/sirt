@@ -251,24 +251,7 @@ class UserPolicy
             );
     }
 
-    public function confirmContratorInformation(User $authUser, User $user)
-    {
-        return (bool)
-            ($authUser->documento != $user->documento) &&
-            session()->has('login_role') &&
-            (
-                session()->get('login_role') == User::IsAdministrador() ||
-                (session()->get('login_role') == User::IsActivador()) ||
 
-                (
-                    session()->get('login_role') == User::IsDinamizador() &&
-                    (
-                        (isset($authUser->dinamizador) && $authUser->dinamizador->nodo_id == $user->contratista->nodo_id)
-                    )
-                )
-                && count($user->roles) <= 0 and $user->estado == User::IsInactive()
-            );
-    }
     /**
      * Determine whether the user can view the activities
      * @return boolean

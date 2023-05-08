@@ -19,6 +19,7 @@ mix.minify('public/js/app.js')
 mix.styles([
 		'resources/assets/plugins/materialize/css/materialize.css',
 		'resources/assets/plugins/materialize/css/material-icons.css',
+		'resources/assets/plugins/material-preloader/css/materialPreloader.min.css',
 		'resources/assets/plugins/font-awesome/css/all.css',
 		'resources/assets/plugins/datatables/css/jquery.dataTables.min.css',
 		'resources/assets/plugins/select2/css/select2.css',
@@ -37,6 +38,7 @@ mix.minify('public/css/libs.css')
 mix.scripts([
 		'resources/assets/plugins/jquery/dist/jquery.js',
 		'resources/assets/plugins/materialize/js/materialize.min.js',
+		'resources/assets/plugins/material-preloader/js/materialPreloader.min.js',
 		'resources/assets/plugins/jquery-blockui/jquery.blockui.js',
 		'resources/assets/plugins/jquery-steps/jquery.steps.min.js',
         'resources/assets/plugins/jquery-validation/jquery.validate.js',

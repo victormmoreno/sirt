@@ -75,7 +75,7 @@ class Nodo extends Model
     {
         return $this->hasMany(UserNodo::class, 'nodo_id', 'id')->where('role', User::IsInfocenter());
     }
-    
+
     public function ingresos()
     {
         return $this->hasMany(UserNodo::class, 'nodo_id', 'id')->where('role', User::IsIngreso());

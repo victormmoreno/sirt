@@ -267,27 +267,13 @@
                                                                 </div>
                                                             </div>
                                                         @endif
-                                                        @if($user->isUserTalento())
-                                                            <span
-                                                                class="secondary-text">Información {{App\User::IsTalento()}}</span>
-                                                            <div class="server-load row">
-                                                                <div class="server-stat col s12 m6 l6">
-                                                                    <p>{{$user->present()->userNombreTipoTalento()}}</p>
-                                                                    <span>Tipo {{App\User::IsTalento()}}</span>
-                                                                </div>
-                                                                <div class="server-stat col s12 m6 l6">
-                                                                    <p>{{$user->present()->userTipoTalento()}}</p>
-                                                                    <span>Otra información {{App\User::IsTalento()}}</span>
-                                                                </div>
-                                                            </div>
 
-                                                        @endif
                                                     </div>
                                                     <div class="divider mailbox-divider">
                                                     </div>
                                                     <div class="right">
                                                         <a class="waves-effect waves-teal darken-2 btn-flat m-t-xs"
-                                                           href="{{route('perfil.edit')}}">
+                                                            href="{{route('perfil.edit')}}">
                                                             Cambiar Información Personal
                                                         </a>
                                                     </div>

@@ -26,7 +26,7 @@
         <meta property="og:url" content="{{config('app.url')}}" />
         <meta property="og:site_name" content="{{config('app.name')}}" />
     </head>
-    <body class="signin-page">
+    <body class="signin-page loaded">
         @if(session()->has('info'))
             <div class="card teal lighten-4">
                 <div class="row">
@@ -42,6 +42,7 @@
             </div>
         @endif
         @yield('content-auth')
+        <div class="left-sidebar-hover"></div>
         <script>
             const host_url = "{{config('app.url')}}";
         </script>

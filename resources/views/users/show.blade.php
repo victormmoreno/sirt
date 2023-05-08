@@ -260,19 +260,6 @@
                                                     </div>
                                                 </div>
                                             @endif
-                                            @if($user->isUserTalento())
-                                                <span class="secondary-text">Información {{App\User::IsTalento()}}</span>
-                                                <div class="server-load row">
-                                                    <div class="server-stat col s12 m6 l6">
-                                                        <p>{{$user->present()->userNombreTipoTalento()}}</p>
-                                                        <span>Tipo {{App\User::IsTalento()}}</span>
-                                                    </div>
-                                                    <div class="server-stat col s12 m6 l6">
-                                                        <p>{{$user->present()->userTipoTalento()}}</p>
-                                                        <span>Otra información {{App\User::IsTalento()}}</span>
-                                                    </div>
-                                                </div>
-                                            @endif
                                             @if($user->isUserArticulador())
                                             <span class="secondary-text">Información {{App\User::IsArticulador()}}</span>
                                                 <div class="server-load row">
