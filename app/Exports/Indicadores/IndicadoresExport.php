@@ -2,93 +2,42 @@
 
 namespace App\Exports\Indicadores;
 
-use Maatwebsite\Excel\Concerns\{FromArray, WithCustomStartCell, ShouldAutoSize, WithEvents};
 use PhpOffice\PhpSpreadsheet\Style\{Border, Fill};
-use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Maatwebsite\Excel\Events\{AfterSheet};
-use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use App\Exports\Proyectos\{ProyectosExport};
+use App\Exports\Empresas\{EmpresasExport};
+use App\Exports\GruposInvestigacion\{GruposExport};
+use App\Exports\User\Talento\TalentoUserExport;
+
 // use App\Exports\FatherExport;
 
-class IndicadoresExport implements FromArray, WithCustomStartCell, ShouldAutoSize, WithEvents
+class IndicadoresExport implements WithMultipleSheets
 {
 
-    protected $datos;
-    private $count;
-    private $rangeHeadingCell;
-    private $rangeBodyCell;
+    private $queries;
+    private $hoja;
 
-    public function __construct(array $datos)
+    public function __construct($queries, $hoja) {
+        $this->queries = $queries;
+        $this->hoja = $hoja;
+    }
+
+    /**
+     * @return array
+     */
+    public function sheets(): array
     {
-        $this->datos = $datos;
-        $this->count = 52;
-        $this->rangeHeadingCell = 'A4:B4';
-        $this->rangeBodyCell = 'A5:B52';
+        $sheets = [];
+        if ($this->hoja == 'all') {
+            $sheets[] = new ProyectosExport($this->queries['proyectos']->get());
+            $sheets[] = new TalentoUserExport($this->queries['talentos_ejecutores']->get(), 'Ejecutores');
+            $sheets[] = new EmpresasExport($this->queries['empresas_duenhas']->get(), 'propietarias');
+            $sheets[] = new GruposExport($this->queries['grupos_duenhos']->get(), 'propietarios');
+            $sheets[] = new TalentoUserExport($this->queries['personas_duenhas']->get(), 'Propietarios');
+        } else {
+            abort('404');
+        }
+        return $sheets;
     }
 
-    public function array(): array
-    {
-        return $this->datos;
-    }
-
-    private function styleArrayColumnsPar(){
-        return [
-        'fill' => [
-            'fillType' => Fill::FILL_SOLID,
-            'color' => ['rgb' => 'C6E0B4'],
-        ],
-        ];
-    }
-
-    protected function styleArrayColumnsImPar(){
-        return [
-        'fill' => [
-            'fillType' => Fill::FILL_SOLID,
-            'color' => ['rgb' => 'B4C6E7'],
-        ],
-        ];
-    }
-
-    public function registerEvents(): array
-    {
-        $columnPar = $this->styleArrayColumnsPar();
-        $columnImPar = $this->styleArrayColumnsImPar();
-        return [
-        AfterSheet::class => function(AfterSheet $event) {
-            $this->setCellsValues($event);
-            $this->styledCells($event);
-        },
-        ];
-    }
-
-    private function styleArray() {
-        return [
-        'borders' => [
-            'allBorders' => [
-            'borderStyle' => Border::BORDER_THIN,
-            'color' => ['argb' => '000000'],
-            ],
-        ],
-        ];
-    }
-
-    private function setCellsValues(AfterSheet $event)
-    {
-        $event->sheet->setCellValue('A4', 'Indicador');
-        $event->sheet->setCellValue('B4', 'Total');
-    }
-
-    private function styledCells($event)
-    {
-        $event->sheet->getStyle($this->rangeHeadingCell)->applyFromArray($this->styleArray())->getFont()->setSize(14)->setBold(1);
-        $event->sheet->getStyle($this->rangeBodyCell)->applyFromArray($this->styleArray());
-
-        $event->sheet->getStyle('A4:A'.$this->count)->applyFromArray($this->styleArrayColumnsPar());
-        $event->sheet->getStyle('B4:B'.$this->count)->applyFromArray($this->styleArrayColumnsImPar());
-    }
-
-    public function startCell(): string
-    {
-        return 'A5';
-    }
 }

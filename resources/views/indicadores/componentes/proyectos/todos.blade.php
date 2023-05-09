@@ -33,7 +33,7 @@
             <label for="txtfecha_fin_todos">Fecha Fin</label>
         </div>
         <div class="center input-field col s12 m6 l6">
-            <a onclick="generarExcelConTodosLosIndicadores(event);" class="btn"><i class="material-icons">file_download</i></a>
+            <a onclick="generarExcelConTodosLosIndicadores(event, {{request()->user()->getNodoUser()}});" class="waves-effect waves-grey bg-secondary-lighten white-text btn-flat search-tabs-button m-l-xs"><i class="material-icons">file_download</i></a>
         </div>
     </div>
 </div>

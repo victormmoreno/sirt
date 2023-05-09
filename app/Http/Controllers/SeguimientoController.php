@@ -396,22 +396,17 @@ class SeguimientoController extends Controller
    **/
   private function retornarValorDeExpertos($request)
   {
-    $expertos_temp = User::with(['gestor'])
-    ->role(User::IsExperto())
-    ->nodoUser(User::IsExperto(), request()->user()->getNodoUser())
-    ->stateDeletedAt('si')
-    ->orderBy('users.created_at', 'desc')
-    ->get();
+    $expertos_temp = User::ConsultarFuncionarios(request()->user()->getNodoUser(), User::IsExperto())->get();;
     if (Str::contains(session()->get('login_role'), [User::IsDinamizador(), User::IsInfocenter()])) {
       if ($request->expertos[0] == 'all') {
         foreach ($expertos_temp as $experto) {
-            $expertos[] = $experto->gestor->id;
+            $expertos[] = $experto->id;
         }
       } else {
         $expertos = $request->expertos;
       }
     } else {
-      $expertos = [request()->user()->gestor->id];
+      $expertos = [request()->user()->id];
     }
     return $expertos;
   }

@@ -221,7 +221,7 @@
                                                 </ul>
                                                 <ul class="collapsible" data-collapsible="accordion">
                                                     <li>
-                                                        <div class="collapsible-header"><h5>Proyectos a la empresa</h5></div>
+                                                        <div class="collapsible-header"><h5>Proyectos asociados a la empresa</h5></div>
                                                         <div class="collapsible-body">
                                                             <ul class="collection">
                                                             @foreach ($empresa->sedes as $sede)

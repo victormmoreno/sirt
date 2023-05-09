@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Excel;
 
-use App\Exports\Indicadores\Indicadores2020Export;
+use App\Exports\Indicadores\IndicadoresExport;
 use App\Exports\Metas\MetasExport;
 use App\Exports\Idea\IdeasIndicadorExport;
 use App\Exports\Proyectos\{ProyectosExport};
@@ -181,6 +181,9 @@ class IndicadorController extends Controller
             case 'tal_ejecutores':
                 return Excel::download(new TalentoUserExport($query->get(), 'Ejecutores'), 'file.xlsx');
                 break;
+            case 'all':
+                return Excel::download(new IndicadoresExport($query, $request->hoja), 'file.xlsx');
+                break;
             
             default:
                 abort('404');
@@ -250,6 +253,15 @@ class IndicadorController extends Controller
             case 'tal_ejecutores':
                 $query = $this->consultarIndicadoresUsersEjecutores($request);
                 break;
+            case 'all':
+                return [
+                    'proyectos' => $this->agregarCondicionales($request, $this->consultarIndicadoresProyecto($request)),
+                    'talentos_ejecutores' => $this->agregarCondicionales($request, $this->consultarIndicadoresUsersEjecutores($request)),
+                    'empresas_duenhas' => $this->agregarCondicionales($request, $this->consultarIndicadoresEmpresas($request)),
+                    'grupos_duenhos' => $this->agregarCondicionales($request, $this->consultarIndicadoresGrupos($request)),
+                    'personas_duenhas' => $this->agregarCondicionales($request, $this->consultarIndicadoresUsers($request))
+                ];
+                break;
             
             default:
                 
@@ -267,10 +279,10 @@ class IndicadorController extends Controller
      **/
     public function consultarIndicadoresEmpresas(Request $request)
     {
-        if ($request->nodos[0] == 'all' || $request->nodos[0] == null) {
+        if ($request->nodos[0] == 'all' || $request->nodos[0] == null || $request->nodos[0] == 0) {
             return $this->proyectoRepository->indicadoresEmpresas();
         } else {
-            return $this->proyectoRepository->indicadoresEmpresas()->whereIn('nodos.id', $request->nodos);
+            return $this->proyectoRepository->indicadoresEmpresas()->whereIn('nodos.id', is_array($request->nodos) ? $request->nodos : [$request->nodos]);
         }
     }
 
@@ -283,10 +295,10 @@ class IndicadorController extends Controller
      **/
     public function consultarIndicadoresUsersEjecutores(Request $request)
     {
-        if ($request->nodos[0] == 'all' || $request->nodos[0] == null) {
+        if ($request->nodos[0] == 'all' || $request->nodos[0] == null || $request->nodos[0] == 0) {
             return $this->proyectoRepository->indicadoresUsersEjecutores();
         } else {
-            return $this->proyectoRepository->indicadoresUsersEjecutores()->whereIn('nodos.id', $request->nodos);
+            return $this->proyectoRepository->indicadoresUsersEjecutores()->whereIn('nodos.id', is_array($request->nodos) ? $request->nodos : [$request->nodos]);
         }
         // return $query;
     }
@@ -300,10 +312,10 @@ class IndicadorController extends Controller
      **/
     public function consultarIndicadoresUsers(Request $request)
     {
-        if ($request->nodos[0] == 'all' || $request->nodos[0] == null) {
+        if ($request->nodos[0] == 'all' || $request->nodos[0] == null || $request->nodos[0] == 0) {
             return $this->proyectoRepository->indicadoresUsers();
         } else {
-            return $this->proyectoRepository->indicadoresUsers()->whereIn('nodos.id', $request->nodos);
+            return $this->proyectoRepository->indicadoresUsers()->whereIn('nodos.id', is_array($request->nodos) ? $request->nodos : [$request->nodos]);
         }
         // return $query;
     }
@@ -317,10 +329,10 @@ class IndicadorController extends Controller
      **/
     public function consultarIndicadoresGrupos(Request $request)
     {
-        if ($request->nodos[0] == 'all' || $request->nodos[0] == null) {
+        if ($request->nodos[0] == 'all' || $request->nodos[0] == null || $request->nodos[0] == 0) {
             return $this->proyectoRepository->indicadoresGrupos();
         } else {
-            return $this->proyectoRepository->indicadoresGrupos()->whereIn('nodos.id', $request->nodos);
+            return $this->proyectoRepository->indicadoresGrupos()->whereIn('nodos.id', is_array($request->nodos) ? $request->nodos : [$request->nodos]);
         }
         // return $query;
     }
@@ -335,10 +347,10 @@ class IndicadorController extends Controller
      **/
     public function consultarIndicadoresProyecto(Request $request)
     {
-        if ($request->nodos[0] == 'all' || $request->nodos[0] == null) {
+        if ($request->nodos[0] == 'all' || $request->nodos[0] == null || $request->nodos[0] == 0) {
             return $this->proyectoRepository->indicadoresProyectos();
         } else {
-            return $this->proyectoRepository->indicadoresProyectos()->whereIn('nodos.id', $request->nodos);
+            return $this->proyectoRepository->indicadoresProyectos()->whereIn('nodos.id', is_array($request->nodos) ? $request->nodos : [$request->nodos]);
         }
     }
 

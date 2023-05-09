@@ -4,6 +4,7 @@ function consultarDetallesDeUnaCharlaInformativa(id) {
     type: 'get',
     url: host_url + '/charla/consultarDetallesDeUnaCharlaInformativa/'+id,
     success: function (data) {
+      console.log(data);
       $("#modalDetalleDeUnaCharlaInformativa_titulo").empty();
       $("#modalDetalleDeUnaCharlaInformativa_detalle_charla").empty();
       $("#modalDetalleDeUnaCharlaInformativa_titulo").append("<span class='cyan-text text-darken-3'>Datos de la Charla Informativa </span><br>");

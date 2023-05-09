@@ -7147,6 +7147,7 @@ function consultarDetallesDeUnaCharlaInformativa(id) {
     type: 'get',
     url: host_url + '/charla/consultarDetallesDeUnaCharlaInformativa/'+id,
     success: function (data) {
+      console.log(data);
       $("#modalDetalleDeUnaCharlaInformativa_titulo").empty();
       $("#modalDetalleDeUnaCharlaInformativa_detalle_charla").empty();
       $("#modalDetalleDeUnaCharlaInformativa_titulo").append("<span class='cyan-text text-darken-3'>Datos de la Charla Informativa </span><br>");
@@ -10784,13 +10785,13 @@ function consultarSeguimientoEsperado(e, url) {
   }
 }
 
-function generarExcelConTodosLosIndicadores(e) {
+function generarExcelConTodosLosIndicadores(e, nodo) {
   let idnodo = $('#txtnodo_id').val();
   let hoja = $('#txthoja_nombre').val();
   let fecha_inicio = $('#txtfecha_inicio_todos').val();
   let fecha_fin = $('#txtfecha_fin_todos').val();
   if (!isset(idnodo)) {
-    idnodo = 0;
+    idnodo = nodo;
   }
   if (!isset(hoja)) {
     hoja = 'all';
@@ -10837,11 +10838,11 @@ function generarExcelConTodosLosIndicadores(e) {
   }
 }
 
-function generarExcelConTodosLosIndicadoresActuales(e) {
+function generarExcelConTodosLosIndicadoresActuales(e, nodo) {
   let idnodo = $('#txtnodo_id_actuales').val();
   let hoja = $('#txthoja_nombre_actuales').val();
   if (!isset(idnodo)) {
-    idnodo = 0;
+    idnodo = nodo;
   }
   if (!isset(hoja)) {
     hoja = 'all';
@@ -10884,13 +10885,13 @@ function generarExcelConTodosLosIndicadoresActuales(e) {
   })
 }
 
-function generarExcelConTodosLosIndicadoresFinalizados(e) {
+function generarExcelConTodosLosIndicadoresFinalizados(e, nodo) {
   let idnodo = $('#txtnodo_id_finalizados').val();
   let hoja = $('#txthoja_nombre_finalizados').val();
   let fecha_inicio = $('#txtfecha_inicio_cerrados').val();
   let fecha_fin = $('#txtfecha_fin_cerrados').val();
   if (!isset(idnodo)) {
-    idnodo = 0;
+    idnodo = nodo;
   }
   if (!isset(hoja)) {
     hoja = 'all';
@@ -10938,13 +10939,13 @@ function generarExcelConTodosLosIndicadoresFinalizados(e) {
 
 }
 
-function generarExcelConTodosLosIndicadoresInscritos(e) {
+function generarExcelConTodosLosIndicadoresInscritos(e, nodo) {
   let idnodo = $("#txtnodo_id_inscritos").val();
   let hoja = $('#txthoja_nombre_inscritos').val();
   let fecha_inicio = $('#txtfecha_inicio_inscritos').val();
   let fecha_fin = $('#txtfecha_fin_inscritos').val();
   if (!isset(idnodo)) {
-    idnodo = 0;
+    idnodo = nodo;
   }
   if (!isset(hoja)) {
     hoja = 'all';

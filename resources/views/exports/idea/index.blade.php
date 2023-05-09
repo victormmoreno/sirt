@@ -23,9 +23,6 @@
                 Teléfono / Celular
             </th>
             <th>
-                ¿Es aprendiz SENA?
-            </th>
-            <th>
                 ¿En qué estado se encuentra su propuesta?
             </th>
             <th>
@@ -95,9 +92,6 @@
                 @else
                     No hay información disponible
                 @endif
-            </td>
-            <td>
-                {{$idea->aprendiz_sena == 1 ? 'Si': 'No'}}
             </td>
             <td>
                 {{App\Models\Idea::preguntaUno($idea->pregunta1)}}

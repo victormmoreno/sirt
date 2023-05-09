@@ -17,7 +17,7 @@
             <select multiple name="txtexperto_cerrados[]" id="txtexperto_cerrados" style="width: 100%">
                 <option value="all" selected>Todos</option>
                 @foreach($expertos as $experto)
-                    <option value="{{$experto->gestor->id}}">{{$experto->documento}} - {{$experto->nombres}} {{$experto->apellidos}}</option>
+                    <option value="{{$experto->id}}">{{$experto->documento}} - {{$experto->nombres}} {{$experto->apellidos}}</option>
                 @endforeach
             </select>
             <label for="txtexperto_cerrados">Seleccione el experto</label>

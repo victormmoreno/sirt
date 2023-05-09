@@ -299,6 +299,7 @@ Route::group(
         Route::get('/', 'IdeaController@index')->name('idea.index');
         Route::get('/datatable_filtros', 'IdeaController@datatableFiltros')->name('idea.datatable.filtros')->middleware('role_session:Talento|Articulador|Infocenter|Dinamizador|Activador|Experto');
         Route::get('/export', 'IdeaController@export')->name('idea.export');
+        Route::get('/export_registradas/{nodo}/{desde}/{hasta}', 'IdeaController@export_registradas')->name('idea.export.registradas');
         // Route::get('/datatableIdeasDeTalentos', 'IdeaController@datatableIdeasTalento')->name('idea.datatable.talento')->middleware('role_session:Talento');
         // Route::get('/datatableIdeasEnviadasDeTalentos', 'IdeaController@datatableIdeasTalento')->name('idea.datatable.talento')->middleware('role_session:Talento');
         Route::get('/{id}/editar', 'IdeaController@edit')->name('idea.edit')->middleware(['auth', 'role_session:Talento']);
@@ -310,6 +311,7 @@ Route::group(
         Route::get('/show/{idea}', 'IdeaController@show')->name('idea.show');
         Route::get('/reasignar/{idea}', 'IdeaController@reasignar_nodo')->name('idea.reasignar.nodo')->middleware('role_session:Articulador');
         Route::get('/sin-registro/{nodo}/{user}', 'IdeaController@consultarIdeasSinRegistro')->name('idea.sin-registrar');
+        Route::get('/registradas/{nodo}/{desde}/{hasta}', 'IdeaController@consultar_ideas_registradas')->name('idea.registradas');
         Route::get('/buscar', 'IdeaController@search')->name('idea.buscar');
         Route::put('/asignar/{idea}', 'IdeaController@asignar')->name('idea.asignar.experto')->middleware('role_session:Dinamizador');
         Route::put('/update_nodo/{idea}', 'IdeaController@updateNodoIdea')->name('idea.update.nodo')->middleware('role_session:Articulador');
@@ -554,7 +556,7 @@ Route::group(
 Route::group(
     [
         'prefix'     => 'charla',
-        'middleware' => ['auth', 'role_session:Infocenter|Dinamizador|Activador|Articulador'],
+        'middleware' => ['auth'],
     ],
     function () {
         Route::get('/', 'CharlaInformativaController@index')->name('charla');

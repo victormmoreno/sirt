@@ -20,10 +20,7 @@ class CharlaInformativaPolicy
     */
     public function create(User $user)
     {
-        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsInfocenter() || session()->get('login_role') == $user->IsArticulador()) {
-            return true;
-        }
-        return false;
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsInfocenter(), $user->IsArticulador(), $user->IsAdministrador()]);
     }
 
     /** 
@@ -70,7 +67,7 @@ class CharlaInformativaPolicy
         if (session()->get('login_role') == $user->IsAdministrador()) {
             return true;
         }
-        if ( Str::contains(session()->get('login_role'), [$user->IsInfocenter(), $user->IsArticulador()]) && $charla->nodo_id == request()->user()->getNodoUser() ) {
+        if ( Str::contains(session()->get('login_role'), [$user->IsInfocenter(), $user->IsArticulador(), $user->IsDinamizador()]) && $charla->nodo_id == request()->user()->getNodoUser() ) {
             return true;
         }
         return false;

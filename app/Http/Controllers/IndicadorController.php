@@ -42,13 +42,7 @@ public function index()
         $nodos[] = $nodo['id'];
     }
     } else {
-    $expertos = User::with(['gestor'])
-    ->role(User::IsExperto())
-    ->nodoUser(User::IsExperto(), request()->user()->getNodoUser())
-    ->stateDeletedAt('si')
-    // ->yearActividad(User::IsExperto(), $request->filter_year, $nodo)
-    ->orderBy('users.created_at', 'desc')
-    ->get();
+    $expertos = User::ConsultarFuncionarios(request()->user()->getNodoUser(), User::IsExperto())->get();
     $nodos = [request()->user()->getNodoUser()];
     }
     $metas = $this->nodoRepository->consultarMetasDeTecnoparque($nodos)->where('anho', $year_now)->get();

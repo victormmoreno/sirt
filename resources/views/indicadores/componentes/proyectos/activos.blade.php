@@ -27,6 +27,6 @@
         </div>
     @endcan
     <div class="center input-field col s12 m6 l6">
-        <a onclick="generarExcelConTodosLosIndicadoresActuales(event);" class="btn">Descargar<i class="material-icons left">file_download</i></a>
+        <a onclick="generarExcelConTodosLosIndicadoresActuales(event, {{request()->user()->getNodoUser()}});" class="waves-effect waves-grey bg-secondary-lighten white-text btn-flat search-tabs-button m-l-xs">Descargar<i class="material-icons left">file_download</i></a>
     </div>
 </div>
