@@ -25,7 +25,7 @@ class UserController extends Controller
     public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
-        $this->middleware('auth')->except('getCiudad');
+        $this->middleware('auth');
     }
 
     /**
@@ -531,17 +531,6 @@ class UserController extends Controller
         ]);
     }
 
-    public function getCiudad($departamento = '1')
-    {
-        if (request()->ajax()) {
-            return response()->json([
-                'ciudades' => $this->userRepository->getAllCiudadDepartamento($departamento),
-            ]);
-        } else {
-            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
-            return redirect()->route('home');
-        }
-    }
 
     public function gestoresByNodo($nodo = null)
     {

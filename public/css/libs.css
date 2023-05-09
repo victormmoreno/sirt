@@ -16680,7 +16680,7 @@ input[type=text]:focus:not([readonly])+label, input[type=password]:focus:not([re
 }
 
 .input-field label.error {
-    color: var(--error);
+    color: var(--danger);
     position: static;
     top: 0.8rem;
     left: 0.75rem;

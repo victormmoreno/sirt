@@ -615,7 +615,7 @@
                 $.ajax({
                     dataType:'json',
                     type:'get',
-                    url: host_url + '/usuario/getciudad/'+id
+                    url: `${host_url}/help/getciudades/${id}`
                 }).done(function(response){
                     $('#txtciudadexpedicion').empty();
                     $('#txtciudadexpedicion').append('<option value="">Seleccione la Ciudad</option>')
@@ -637,7 +637,7 @@
                 $.ajax({
                     dataType:'json',
                     type:'get',
-                    url: host_url + '/usuario/getciudad/'+id
+                    url: `${host_url}/help/getciudades/${id}`
                 }).done(function(response){
                     $('#txtciudad').empty();
                     $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')

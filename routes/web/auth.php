@@ -7,7 +7,6 @@ Route::post('login', 'Auth\LoginController@login');
 Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
 // Registration Routes...
-Route::put('usuario/confirm/{documento}', 'Auth\RegisterController@confirmContratorInformation')->name('user.contractor.confirm');
 Route::get('registro', 'Auth\RegisterController@showRegistrationForm')->name('registro');
 Route::post('registro', 'Auth\RegisterController@register')->name('register.request');
 

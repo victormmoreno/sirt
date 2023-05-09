@@ -4,17 +4,15 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\{Hash, Notification, Validator};
+use Illuminate\Support\Facades\{Notification, Validator};
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\{ TipoTalento, TipoFormacion, TipoEstudio, Etnia, Eps, Ocupacion, Talento, Entidad};
+use App\Models\{ TipoTalento, TipoFormacion, TipoEstudio, Etnia, Eps, Ocupacion};
 use App\Repositories\Repository\UserRepository\UserRepository;
 use App\Http\Requests\UsersRequests\{UserFormRequest};
 use Illuminate\Support\Facades\DB;
 use App\Events\User\UserWasRegistered;
-use App\Repositories\Repository\UserRepository\DinamizadorRepository;
-use App\Notifications\User\{ RoleAssignedOfficer};
 class RegisterController extends Controller
 {
     use RegistersUsers;
@@ -28,7 +26,6 @@ class RegisterController extends Controller
 
     public function __construct(UserRepository $userRepository)
     {
-        $this->middleware('auth')->only(['confirmContratorInformation', 'showConfirmContratorInformationForm']);
         $this->userRepository = $userRepository;
     }
 
@@ -46,11 +43,6 @@ class RegisterController extends Controller
             'eps'                 => $this->userRepository->getAllEpsActivas(),
             'departamentos'     => $this->userRepository->getAllDepartamentos(),
             'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-            'nodos'             => $this->userRepository->getAllNodoPrueba(),
-            'regionales'        => $this->userRepository->getAllRegionales(),
-            'tipotalentos' => TipoTalento::pluck('nombre', 'id'),
-            'tipoformaciones' => TipoFormacion::pluck('nombre', 'id'),
-            'tipoestudios' => TipoEstudio::pluck('nombre', 'id'),
         ]);
     }
 
@@ -97,14 +89,6 @@ class RegisterController extends Controller
             $password = User::generatePasswordRamdom();
             $user = $this->createUser($request, $password);
             $user->ocupaciones()->sync($request->get('txtocupaciones'));
-
-
-
-
-
-                // $dinamizadorRepository = new DinamizadorRepository;
-                // $dinamizador = $dinamizadorRepository->getAllDinamizadoresPorNodo($request->input('txtnodo'))->first();
-
 
             if($user != null){
                 $message = "Credenciales de ingreso a " . config('app.name');
@@ -163,38 +147,4 @@ class RegisterController extends Controller
         return Auth::guard();
     }
 
-
-    public function confirmContratorInformation(Request $request, int $documento)
-    {
-        $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
-
-        $req = new Request;
-        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-        if ($validator->fails()) {
-            return response()->json([
-                'state'   => 'error_form',
-                'fail'   => true,
-                'errors' => $validator->errors(),
-            ]);
-        } else {
-            if ($user != null) {
-                $userUpdate = $this->userRepository->UpdateUserConfirm($request, $user);
-                if($userUpdate != null){
-                    Notification::send($userUpdate, new RoleAssignedOfficer($userUpdate));
-                }
-                return response()->json([
-                    'state'   => 'success',
-                    'message' => 'El Usuario ha sido modificado satisfactoriamente',
-                    'url' => route('usuario.index'),
-                    'user' => $userUpdate,
-                ]);
-            } else {
-                return response()->json([
-                    'state'   => 'error',
-                    'message' => 'El Usuario no se ha modificado',
-                    'url' => false
-                ]);
-            }
-        }
-    }
 }

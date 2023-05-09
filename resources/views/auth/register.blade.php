@@ -27,24 +27,22 @@
                                 <div class="col m6 vertical-line">
                                     <h5 class="center-align primary-text">Información Documento Identidad</h5>
                                     <div class="row">
-                                        <div class="input-field col s12 m12 l6">
-                                            <select name="tipodocumento" style="width: 100%" tabindex="-1">
+                                        <div class="input-field col m6 s12">
+                                            <select name="tipo_documento" style="width: 100%" tabindex="-1">
                                                 <option value="">Seleccione tipo documento</option>
-                                                @foreach ($tiposdocumentos as $value)
-                                                    @if (isset($user->tipoDocumento->id))
-                                                        <option value="{{ $value->id }}"
-                                                            {{ old('tipodocumento', $user->tipoDocumento->id) == $value->id ? 'selected' : '' }}>
-                                                            {{ $value->nombre }}</option>
+                                                @foreach($tiposdocumentos as $value)
+                                                    @if(isset($user->tipoDocumento->id))
+                                                        <option
+                                                            value="{{$value->id}}" {{old('tipo_documento',$user->tipoDocumento->id) ==$value->id ? 'selected':''}}>{{$value->nombre}}</option>
                                                     @else
-                                                        <option value="{{ $value->id }}"
-                                                            {{ old('tipodocumento') == $value->id ? 'selected' : '' }}>
-                                                            {{ $value->nombre }}</option>
+                                                        <option
+                                                            value="{{$value->id}}" {{old('tipo_documento') == $value->id  ? 'selected':''}}>{{$value->nombre}}</option>
                                                     @endif
                                                 @endforeach
                                             </select>
-                                            <label for="tipodocumento">Tipo Documento <span
+                                            <label for="tipo_documento">Tipo Documento <span
                                                     class="red-text">*</span></label>
-                                            <small id="tipodocumento-error" class="error red-text"></small>
+                                            <small id="tipo_documento-error" class="error red-text"></small>
                                         </div>
                                         <div class="input-field col s12 m12 l6">
                                             <input id="documento" name="documento" type="text"
@@ -205,17 +203,15 @@
                                     <div class="row">
                                         <div class="input-field col s12 m6 l6">
                                             <select id="estrato" name="estrato" style="width: 100%"
-                                                tabindex="-1">
+                                                    tabindex="-1">
                                                 <option value="">Seleccione estrato</option>
-                                                @for ($i = 1; $i <= 6; $i++)
-                                                    @if (isset($user->estrato))
-                                                        <option value="{{ $i }}"
-                                                            {{ old('estrato', $user->estrato) == $i ? 'selected' : '' }}>
-                                                            {{ $i }}</option>
+                                                @for($i =1; $i <= 6; $i++)
+                                                    @if(isset($user->estrato))
+                                                        <option
+                                                            value="{{ $i }}" {{old('estrato',$user->estrato) == $i ? 'selected':''}}>{{$i}}</option>
                                                     @else
-                                                        <option value="{{ $i }}"
-                                                            {{ old('estrato') == $i ? 'selected' : '' }}>
-                                                            {{ $i }}</option>
+                                                        <option
+                                                            value="{{ $i }}" {{old('estrato') == $i ? 'selected':''}}>{{$i}}</option>
                                                     @endif
                                                 @endfor
                                             </select>
@@ -297,12 +293,12 @@
                                             <small id="gradodiscapacidad-error" class="error red-text"></small>
                                         </div>
                                         <div class="input-field col s12 m6 l6 gradodiscapacidad" style="display:none">
-                                            <input class="validate" id="txtdiscapacidad" name="txtdiscapacidad"
+                                            <input class="validate" id="discapacidad" name="discapacidad"
                                                 type="text"
-                                                value="{{ isset($user->otra_eps) ? $user->descripcion_grado_discapacidad : old('txtdiscapacidad') }}">
-                                            <label for="txtdiscapacidad" class="active">¿Cúal? <span
+                                                value="{{ isset($user->otra_eps) ? $user->descripcion_grado_discapacidad : old('discapacidad') }}">
+                                            <label for="discapacidad" class="active">¿Cúal? <span
                                                     class="red-text">*</span></label>
-                                            <small id="txtdiscapacidad-error" class="error red-text"></small>
+                                            <small id="discapacidad-error" class="error red-text"></small>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -384,49 +380,47 @@
                                         <h5 class="center-align primary-text">Último estudio</h5>
                                         <div class="row">
                                             <div class="input-field col s12 m6 l6">
-                                                <input class="validate" id="txtinstitucion" name="txtinstitucion"
+                                                <input class="validate" id="institucion" name="institucion"
                                                     type="text"
-                                                    value="{{ isset($user->institucion) ? $user->institucion : old('txtinstitucion') }}">
-                                                <label for="txtinstitucion">Institución <span
+                                                    value="{{ isset($user->institucion) ? $user->institucion : old('institucion') }}">
+                                                <label for="institucion">Institución <span
                                                         class="red-text">*</span></label>
-                                                <small id="txtinstitucion-error" class="error red-text"></small>
+                                                <small id="institucion-error" class="error red-text"></small>
                                             </div>
                                             <div class="input-field col s12 m6 l6 ">
-                                                <select class="" id="txtgrado_escolaridad"
-                                                    name="txtgrado_escolaridad" style="width: 100%" tabindex="-1">
+                                                <select class="" id="gradoescolaridad"  name="gradoescolaridad" style="width: 100%" tabindex="-1">
                                                     <option value="">Seleccione grado de escolaridad</option>
-                                                    @foreach ($gradosescolaridad as $value)
-                                                        @if (isset($user->gradoescolaridad_id))
-                                                            <option value="{{ $value->id }}"
-                                                                {{ old('txtgrado_escolaridad', $user->gradoescolaridad_id) == $value->id ? 'selected' : '' }}>
-                                                                {{ $value->nombre }}</option>
+                                                    @foreach($gradosescolaridad as $value)
+                                                        @if(isset($user->gradoescolaridad_id))
+                                                            <option
+                                                                value="{{$value->id}}" {{old('gradoescolaridad',$user->gradoescolaridad_id) ==$value->id ? 'selected':''}}>{{$value->nombre}}</option>
                                                         @else
-                                                            <option value="{{ $value->id }}"
-                                                                {{ old('txtgrado_escolaridad') == $value->id ? 'selected' : '' }}>
-                                                                {{ $value->nombre }}</option>
+                                                            <option
+                                                                value="{{$value->id}}" {{old('gradoescolaridad') ==$value->id ? 'selected':''}}>{{$value->nombre}}</option>
                                                         @endif
                                                     @endforeach
                                                 </select>
-                                                <label for="txtgrado_escolaridad">Grado Escolaridad <span
+                                                <label for="gradoescolaridad">Grado Escolaridad <span
                                                         class="red-text">*</span></label>
-                                                <small id="txtgrado_escolaridad-error" class="error red-text"></small>
+                                                <small id="gradoescolaridad-error"
+                                                       class="error red-text"></small>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="input-field col s12 m6 l6">
-                                                <input class="validate" id="txttitulo" name="txttitulo" type="text"
-                                                    value="{{ isset($user->titulo_obtenido) ? $user->titulo_obtenido : old('txttitulo') }}">
-                                                <label for="txttitulo">Titulo Obtenido <span
+                                                <input class="validate" id="titulo" name="titulo" type="text"
+                                                    value="{{ isset($user->titulo_obtenido) ? $user->titulo_obtenido : old('titulo') }}">
+                                                <label for="titulo">Titulo Obtenido <span
                                                         class="red-text">*</span></label>
-                                                <small id="txttitulo-error" class="error red-text"></small>
+                                                <small id="titulo-error" class="error red-text"></small>
                                             </div>
                                             <div class="input-field col s12 m6 l6">
-                                                <input class="validate datepicker" id="txtfechaterminacion"
-                                                    name="txtfechaterminacion" type="text"
-                                                    value="{{ isset($user->fecha_terminacion) ? $user->fecha_terminacion->toDateString() : old('txtfechaterminacion') }}">
-                                                <label for="txtfechaterminacion">Fecha Terminación <span
+                                                <input class="validate datepicker" id="fechaterminacion"
+                                                    name="fechaterminacion" type="text"
+                                                    value="{{ isset($user->fecha_terminacion) ? $user->fecha_terminacion->toDateString() : old('fechaterminacion') }}">
+                                                <label for="fechaterminacion">Fecha Terminación <span
                                                         class="red-text">*</span></label>
-                                                <small id="txtfechaterminacion-error" class="error red-text"></small>
+                                                <small id="fechaterminacion-error" class="error red-text"></small>
                                             </div>
                                         </div>
                                     </div>
@@ -437,34 +431,34 @@
                                                 <div class="row">
                                                     <div class="input-field col s12 m8 l8 offset-l3 m-3">
                                                         <select class="js-states browser-default  selectMultipe"
-                                                            id="txtocupaciones" name="txtocupaciones[]"
+                                                            id="ocupaciones" name="ocupaciones[]"
                                                             style="width: 100%" tabindex="-1" multiple
                                                             onchange="user.getOtraOcupacion(this)">
                                                             @foreach ($ocupaciones as $id => $nombre)
                                                                 @if (isset($user))
                                                                     <option value="{{ $id }}"
-                                                                        {{ collect(old('txtocupaciones', $user->ocupaciones->pluck('id')))->contains($id) ? 'selected' : '' }}>
+                                                                        {{ collect(old('ocupaciones', $user->ocupaciones->pluck('id')))->contains($id) ? 'selected' : '' }}>
                                                                         {{ $nombre }}</option>
                                                                 @else
                                                                     <option
-                                                                        {{ collect(old('txtocupaciones'))->contains($id) ? 'selected' : '' }}
+                                                                        {{ collect(old('ocupaciones'))->contains($id) ? 'selected' : '' }}
                                                                         value="{{ $id }}">{{ $nombre }}
                                                                     </option>
                                                                 @endif
                                                             @endforeach
                                                         </select>
-                                                        <label for="txtocupaciones" class="active">Ocupación <span
+                                                        <label for="ocupaciones" class="active">Ocupación <span
                                                                 class="red-text">*</span></label>
-                                                        <small id="txtocupaciones-error" class="error red-text"></small>
+                                                        <small id="ocupaciones-error" class="error red-text"></small>
                                                     </div>
                                                     <div class="input-field col s12 m8 l8 offset-l3 m-3"
                                                         id="otraocupacion">
-                                                        <input class="validate" id="txtotra_ocupacion"
-                                                            name="txtotra_ocupacion" type="text"
-                                                            value="{{ isset($user->otra_ocupacion) ? $user->otra_ocupacion : old('txtotra_ocupacion') }}">
-                                                        <label for="txtotra_ocupacion" class="active">¿Cuál? <span
+                                                        <input class="validate" id="otra_ocupacion"
+                                                            name="otra_ocupacion" type="text"
+                                                            value="{{ isset($user->otra_ocupacion) ? $user->otra_ocupacion : old('otra_ocupacion') }}">
+                                                        <label for="otra_ocupacion" class="active">¿Cuál? <span
                                                                 class="red-text">*</span></label>
-                                                        <small id="txtotra_ocupacion-error"
+                                                        <small id="otra_ocupacion-error"
                                                             class="error red-text"></small>
                                                     </div>
                                                 </div>
@@ -477,15 +471,15 @@
                                 <div class="col s12 center-align m-t-sm">
                                     <div class="col-md-6 offset-md-4">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="txtremember"
-                                                id="txtremember" {{ old('txtremember') ? 'checked' : '' }}>
-                                            <label class="form-check-label black-text text-black" for="txtremember">
+                                            <input class="form-check-input" type="checkbox" name="remember"
+                                                id="remember" {{ old('remember') ? 'checked' : '' }}>
+                                            <label class="form-check-label black-text text-black" for="remember">
                                                 Acepto los <a class="m-t-sm secondary-text center-align"
                                                     href="{{ route('terminos') }}" target="_blank">términos de uso y
                                                     política de confidencialidad de los datos.</a>
                                             </label>
                                         </div>
-                                        <small id="txtremember-error" class="error red-text"></small>
+                                        <small id="remember-error" class="error red-text"></small>
                                     </div>
                                 </div>
                             </div>
@@ -516,7 +510,7 @@
                 <small>Ingrese los siguientes datos para confirmar que su usuario será realmente nuevo</small>
                 <div class="row">
                     <div class="input-field col m12 s12 l12">
-                        <select name="document_type" style="width: 100%" tabindex="-1">
+                        <select name="document_type" id="document_type" style="width: 100%" tabindex="-1">
                             <option value="">Seleccione tipo documento</option>
                             @foreach ($tiposdocumentos as $value)
                                 <option value="{{ $value->id }}"
@@ -545,24 +539,23 @@
     </div>
 @endsection
 @push('script')
-    <script>
-        $(document).ready(function() {
-            $('#modalvalidationuser').openModal({
-                opacity: 0.7,
-                in_duration: 350,
-                out_duration: 250,
-                ready: undefined,
-                complete: undefined,
-                dismissible: false,
-                starting_top: '10%',
-                ending_top: '10%'
-            });
-            user.getOtraOcupacion();
-            user.checkedTypeUser();
-            tipoTalento.getSelectTipoTalento();
-            $('.selectMultipe').select2({
-                language: "es",
-            });
-        });
+<script>
+    $(document).ready(function() {
+    $('#modalvalidationuser').openModal({
+        opacity: 0.7,
+        in_duration: 350,
+        out_duration: 250,
+        ready: undefined,
+        complete: undefined,
+        dismissible: false,
+        starting_top: '10%',
+        ending_top: '10%'
+    });
+    user.getOtraOcupacion();
+    $('.selectMultipe').select2({
+        language: "es",
+    });
+
+});
     </script>
 @endpush

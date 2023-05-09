@@ -24,7 +24,7 @@ Route::get('/nodo/fetch_data', 'Nodo\NodoController@nodo_pagination');
 Route::resource('nodo', 'Nodo\NodoController')->middleware(['disablepreventback', 'role_session:Administrador|Activador|Dinamizador|Infocenter|Experto']);
 
 Route::get('usuario/{documento}/password/reset', 'User\UserController@generatePassword')->name('user.newpassword')->middleware('disablepreventback');
-Route::get('usuario/getciudad/{departamento?}', 'User\UserController@getCiudad');
+
 Route::get('usuario/export', 'User\UserController@export')->name('usuario.export');
 Route::get('usuario/export-talentos', 'User\UserController@exportMyTalentos')->name('usuario.export.talentos');
 
