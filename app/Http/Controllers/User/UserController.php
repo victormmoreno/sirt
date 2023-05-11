@@ -125,7 +125,6 @@ class UserController extends Controller
                             ->where('model_has_roles.model_type', User::class);
                     })
                     ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
-                    ->activitiesTalentsQuery(User::IsTalento(), $request->filter_year, auth()->user()->gestor->nodo_id)
                     ->role(User::IsTalento())
                     ->stateDeletedAt($request->filter_state)
                     ->groupBy('users.id')

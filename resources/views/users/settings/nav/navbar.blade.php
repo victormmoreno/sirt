@@ -11,7 +11,7 @@
             </a>
         </li>
         <li>
-            <a href="{{{route('perfil.cuenta')}}}">
+            <a href="{{{route('perfil.account')}}}">
                 Cambiar Contraseña
             </a>
         </li>

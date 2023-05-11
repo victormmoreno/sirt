@@ -24,17 +24,23 @@ Route::post('user/verify', 'Auth\UnregisteredUserVerificationController@verifica
 Route::get('email/reset', 'Auth\ChangeEmailController@showEmailChangeRequestForm')->name('email.request');
 Route::post('email/send', 'Auth\ChangeEmailController@sendEmailChange')->name('email.send');
 
-Route::post('cambiar-role', 'User\RolesPermissions@changeRoleSession')
-    ->name('user.changerole')
-    ->middleware('disablepreventback');
+Route::post('cambiar-role', 'User\RolesPermissions@changeRoleSession')->name('user.changerole')->middleware('disablepreventback');
 
 //profile
-Route::get('perfil/actividades', 'User\ProfileController@activities')->name('perfil.actividades')->middleware('disablepreventback');
-Route::get('certificado', 'User\ProfileController@downloadCertificatedPlataform')->name('certificado');
-Route::get('perfil/cuenta', 'User\ProfileController@account')->name('perfil.cuenta')->middleware('disablepreventback');
-Route::get('perfil', 'User\ProfileController@index')->name('perfil.index')->middleware('disablepreventback');
-Route::get('perfil/roles', 'User\ProfileController@roles')->name('perfil.roles')->middleware('disablepreventback');
-Route::put('perfil/contraseña', 'User\ProfileController@updatePassword')->name('perfil.contraseña')->middleware('disablepreventback');
-Route::get('perfil/password/reset', 'User\ProfileController@passwordReset')->name('perfil.password.reset')->middleware('disablepreventback');
-Route::get('perfil/editar', 'User\ProfileController@editAccount')->name('perfil.edit')->middleware('disablepreventback');
+Route::group(
+    [
+        'prefix'     => 'perfil',
+        'middleware' => 'disablepreventback',
+        'namespace'  => 'User'
+    ],
+    function () {
+        Route::get('certificado', 'ProfileController@downloadCertificatedPlataform')->name('certificado');
+        Route::get('cuenta', 'ProfileController@account')->name('perfil.account');
+        Route::get('perfil', 'ProfileController@index')->name('perfil.index');
+        Route::get('roles', 'ProfileController@roles')->name('perfil.roles');
+        Route::put('password', 'ProfileController@updatePassword')->name('perfil.password');
+        Route::get('password/reset', 'ProfileController@passwordReset')->name('perfil.password.reset');
+        Route::get('editar', 'ProfileController@editAccount')->name('perfil.edit');
+});
+
 Route::resource('perfil', 'User\ProfileController', ['only' => ['update', 'destroy']])->middleware('disablepreventback');

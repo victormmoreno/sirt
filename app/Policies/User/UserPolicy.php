@@ -250,15 +250,4 @@ class UserPolicy
                 )
             );
     }
-
-
-    /**
-     * Determine whether the user can view the activities
-     * @return boolean
-     */
-    public function viewActivities(User $authUser, User $user)
-    {
-        return (bool) $authUser->id == $user->id && (session()->get('login_role') == User::IsExperto() || session()->get('login_role') == User::IsTalento());
-    }
-
 }

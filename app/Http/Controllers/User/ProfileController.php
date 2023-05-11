@@ -160,28 +160,4 @@ class ProfileController extends Controller
         $pdf->setEncryption($user->documento);
         return $pdf->download("certificado  " . config('app.name') . $extennsion);
     }
-
-    public function activities()
-    {
-        $user = User::withTrashed()->find(auth()->user()->id);
-        if (request()->user()->cannot('viewActivities', $user)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
-            return redirect()->route('home');
-        }
-        if (\Session::get('login_role') == User::IsTalento()) {
-            $actividades = $user->talento->articulacionproyecto()
-                ->with([
-                    'actividad' => function ($query) {
-                        $query->orderBy('fecha_inicio', 'DESC');
-                    }
-                ])->paginate(10);
-        }
-        if (\Session::get('login_role') == User::IsExperto()) {
-
-            $actividades = $user->gestor->actividades()
-                ->with(['articulacion_proyecto.proyecto'])
-                ->orderBy('fecha_inicio', 'DESC')->paginate(10);
-        }
-        return view('users.profile.actividad', ['user' => $user, 'actividades' => $actividades]);
-    }
 }

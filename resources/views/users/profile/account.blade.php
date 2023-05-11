@@ -40,7 +40,7 @@
                                             <div class="divider mailbox-divider">
                                             </div>
                                             <div class="mailbox-text">
-                                                <form action="{{ route('perfil.contraseña')}}" method="POST" onsubmit="return checkSubmit()">
+                                                <form action="{{ route('perfil.password')}}" method="POST" onsubmit="return checkSubmit()">
                                                     {!! csrf_field() !!}
                                                     {!! method_field('PUT')!!}
                                                     <div class="row">

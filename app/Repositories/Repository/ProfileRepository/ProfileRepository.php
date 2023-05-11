@@ -4,6 +4,7 @@ namespace App\Repositories\Repository\ProfileRepository;
 
 use App\Models\Eps;
 use App\Models\Ocupacion;
+use App\User;
 
 class ProfileRepository
 {
@@ -46,18 +47,13 @@ class ProfileRepository
         return $user;
     }
 
-    /*=====  End of metodo para actualizar el perfil del ususario  ======*/
 
-    /*=====================================================================
-    =            metodo para actualizar la constraseña del usuario            =
-    =====================================================================*/
-    public function updatePassword($request, $user)
+    public function updatePassword($request, User $user): User
     {
         $user->update([
             "password" => $request->input('txtnewpassword'),
         ]);
         return $user;
     }
-    /*=====  End of metodo para actualizar la constraseña del usuario  ======*/
 
 }

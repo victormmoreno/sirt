@@ -61,7 +61,7 @@ class RegisterController extends Controller
             ]);
         } else {
             $user = $this->store($request);
-            $user->assignRole(User::IsUsuario());
+
             if ($user != null) {
                 $message = "Bienvenido(a) {$user->nombres} {$user->apellidos} a " . config('app.name');
                 return response()->json([
@@ -86,6 +86,7 @@ class RegisterController extends Controller
         try {
             $password = User::generatePasswordRamdom();
             $user = $this->createUser($request, $password);
+            $user->assignRole(User::IsUsuario());
             if($user != null){
                 $message = "Credenciales de ingreso a " . config('app.name');
                 event(new UserWasRegistered($user, $password, $message));
@@ -98,7 +99,7 @@ class RegisterController extends Controller
         }
     }
 
-    private function createUser($request, $password)
+    private function createUser($request, $password): User
     {
         $user =  User::create([
             "tipodocumento_id"     => $request->input('tipo_documento'),
@@ -142,5 +143,4 @@ class RegisterController extends Controller
     {
         return Auth::guard();
     }
-
 }

@@ -7,11 +7,7 @@ use App\Models\{
     Centro,
     Ciudad,
     Departamento,
-    Dinamizador,
-    Entidad,
     Eps,
-    Gestor,
-    TipoTalento,
     GradoEscolaridad,
     GrupoSanguineo,
     Infocenter,
@@ -19,7 +15,6 @@ use App\Models\{
     Nodo,
     Ocupacion,
     Regional,
-    Talento,
     TipoDocumento,
     UserNodo
 };
@@ -27,6 +22,7 @@ use App\Events\User\UserHasNewPasswordGenerated;
 use App\User;
 use Cache;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Session;
 use Spatie\Permission\Models\Role;
@@ -87,41 +83,39 @@ class UserRepository
         return Ocupacion::allOcupaciones()->pluck('nombre', 'id');
     }
 
-    public function findById($id)
+    public function findById($id): User
     {
-        return User::with(
-            [
-                'tipodocumento' => function ($query) {
-                    $query->select('id', 'nombre');
-                },
-                'roles'         => function ($query) {
-                    $query->select('id', 'name');
-                },
-                'ocupaciones',
-                'eps',
-                'gradoescolaridad',
-                'gruposanguineo',
-                'ciudad',
-                'ciudad.departamento',
-                'ciudadexpedicion.departamento',
-                'dinamizador',
-                'dinamizador.nodo',
-                'dinamizador.nodo.entidad',
-                'gestor',
-                'gestor.nodo',
-                'gestor.nodo.entidad',
-                'gestor.nodo.centro',
-                'gestor.nodo.centro.regional',
-                'gestor.nodo.centro.entidad',
-                'gestor.lineatecnologica',
-                'infocenter',
-                'infocenter.nodo',
-                'infocenter.nodo.entidad',
-                'talento',
-                'talento.entidad',
-                'ingreso.nodo.entidad',
-            ]
-        )->findOrFail($id);
+        // return User::with(
+        //     [
+        //         'tipodocumento' => function ($query) {
+        //             $query->select('id', 'nombre');
+        //         },
+        //         'roles'         => function ($query) {
+        //             $query->select('id', 'name');
+        //         },
+        //         'ocupaciones',
+        //         'eps',
+        //         'gradoescolaridad',
+        //         'gruposanguineo',
+        //         'ciudad',
+        //         'ciudad.departamento',
+        //         'ciudadexpedicion.departamento',
+        //         'dinamizador',
+        //         'dinamizador.nodo',
+        //         'dinamizador.nodo.entidad',
+        //         'experto',
+        //         'experto.nodo',
+        //         'experto.nodo.entidad',
+        //         'experto.nodo.centro',
+        //         'experto.nodo.centro.regional',
+        //         'experto.nodo.centro.entidad',
+        //         'experto.lineatecnologica',
+        //         'infocenter',
+        //         'infocenter.nodo',
+        //         'infocenter.nodo.entidad',
+        //         'ingreso.nodo.entidad',
+        //     ]
+        // )->findOrFail($id);
     }
 
     public function findUserByDocument($document)
@@ -144,19 +138,16 @@ class UserRepository
                 'dinamizador',
                 'dinamizador.nodo',
                 'dinamizador.nodo.entidad',
-                'gestor',
-                'gestor.nodo',
-                'gestor.nodo.entidad',
-                'gestor.nodo.centro',
-                'gestor.nodo.centro.regional',
-                'gestor.nodo.centro.entidad',
-                'gestor.lineatecnologica',
+                'experto',
+                'experto.nodo',
+                'experto.nodo.entidad',
+                'experto.nodo.centro',
+                'experto.nodo.centro.regional',
+                'experto.nodo.centro.entidad',
+                'experto.lineatecnologica',
                 'infocenter',
                 'infocenter.nodo',
                 'infocenter.nodo.entidad',
-                'talento',
-
-                'talento.entidad',
                 'ingreso.nodo.entidad',
             ]
         )->withTrashed()->where('documento', $document);
@@ -644,7 +635,7 @@ class UserRepository
         if (
             $request->filled('txtnodogestor') && is_array($role) && collect($request->role)->contains(User::IsExperto())
         ) {
-            Gestor::updateOrCreate(
+            Model::updateOrCreate(
                 ['user_id' => $userUpdated->id],
                 [
                     'nodo_id' => $request->input('txtnodogestor'),
@@ -732,21 +723,16 @@ class UserRepository
                 'dinamizador.nodo.entidad',
                 'articulador',
                 'apoyotecnico',
-                'gestor',
-                'gestor.nodo',
-                'gestor.nodo.entidad',
-                'gestor.nodo.centro',
-                'gestor.nodo.centro.regional',
-                'gestor.nodo.centro.entidad',
-                'gestor.lineatecnologica',
+                'experto',
+                'experto.nodo',
+                'experto.nodo.entidad',
+                'experto.nodo.centro',
+                'experto.nodo.centro.regional',
+                'experto.nodo.centro.entidad',
+                'experto.lineatecnologica',
                 'infocenter',
                 'infocenter.nodo',
                 'infocenter.nodo.entidad',
-                'talento',
-                'talento.entidad',
-                'talento.tipotalento',
-                'talento.tipoformacion',
-                'talento.tipoestudio',
                 'ingreso.nodo.entidad',
             ]
         )->withTrashed();
@@ -818,7 +804,7 @@ class UserRepository
             ($user->isUserActivador()) ||
             ($user->has('articulador') && isset($user->articulador)) ||
             ($user->has('apoyotecnico') && isset($user->apoyotecnico)) ||
-            ($user->has('gestor') && isset($user->gestor)) ||
+            ($user->has('experto') && isset($user->experto)) ||
             ($user->has('infocenter') && isset($user->infocenter)) ||
             ($user->has('ingreso') && isset($user->ingreso)) ||
             ($user->has('talento') && isset($user->talento))
