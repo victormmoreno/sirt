@@ -164,7 +164,9 @@ class UserRepository
 
     public function account($id)
     {
-        return User::with(['tipodocumento', 'grupoSanguineo', 'eps', 'ciudad', 'ciudad.departamento', 'ocupaciones', 'gradoescolaridad', 'talento', 'dinamizador', 'roles', 'dinamizador.nodo', 'dinamizador.nodo.entidad', 'gestor.nodo', 'gestor.nodo.entidad', 'gestor.lineatecnologica', 'infocenter', 'infocenter.nodo', 'infocenter.nodo.entidad'])->withTrashed()->where('id', $id)->firstOrFail();
+        return User::query()
+            ->withTrashed()
+            ->where('users.id', $id)->firstOrFail();
     }
 
     public function getAllRoles()

@@ -4,14 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\{Notification, Validator};
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\{ TipoTalento, TipoFormacion, TipoEstudio, Etnia, Eps, Ocupacion};
+use Illuminate\Support\Facades\{Auth, DB};
+use App\Models\{Etnia, Eps, Ocupacion};
 use App\Repositories\Repository\UserRepository\UserRepository;
-use App\Http\Requests\UsersRequests\{UserFormRequest};
-use Illuminate\Support\Facades\DB;
+use App\Http\Requests\UsersRequests\UserFormRequest;
 use App\Events\User\UserWasRegistered;
 class RegisterController extends Controller
 {
@@ -36,11 +35,11 @@ class RegisterController extends Controller
     public function showRegistrationForm()
     {
         return view('auth.register', [
-            'etnias' => Etnia::pluck('nombre', 'id'),
+            'etnias'            => Etnia::pluck('nombre', 'id'),
             'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
             'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
             'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
-            'eps'                 => $this->userRepository->getAllEpsActivas(),
+            'eps'               => $this->userRepository->getAllEpsActivas(),
             'departamentos'     => $this->userRepository->getAllDepartamentos(),
             'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
         ]);
@@ -62,10 +61,9 @@ class RegisterController extends Controller
             ]);
         } else {
             $user = $this->store($request);
+            $user->assignRole(User::IsUsuario());
             if ($user != null) {
-
-                $message = "Bienvenido(a) {$user->nombres} {$user->apellidos} a " . config('app.name') . ", ahora debes esperar a que validemos tu información.";
-
+                $message = "Bienvenido(a) {$user->nombres} {$user->apellidos} a " . config('app.name');
                 return response()->json([
                     'state'   => 'success',
                     'message' => $message,
@@ -88,8 +86,6 @@ class RegisterController extends Controller
         try {
             $password = User::generatePasswordRamdom();
             $user = $this->createUser($request, $password);
-            $user->ocupaciones()->sync($request->get('txtocupaciones'));
-
             if($user != null){
                 $message = "Credenciales de ingreso a " . config('app.name');
                 event(new UserWasRegistered($user, $password, $message));
@@ -104,39 +100,39 @@ class RegisterController extends Controller
 
     private function createUser($request, $password)
     {
-        return User::create([
-            "tipodocumento_id"     => $request->input('txttipo_documento'),
-            "gradoescolaridad_id"  => $request->input('txtgrado_escolaridad'),
-            "gruposanguineo_id"    => $request->input('txtgruposanguineo'),
-            "eps_id"               => $request->input('txteps'),
-            "ciudad_id"            => $request->input('txtciudad'),
-            "ciudad_expedicion_id" => $request->input('txtciudadexpedicion'),
-            "nombres"              => $request->input('txtnombres'),
-            "apellidos"            => $request->input('txtapellidos'),
-            "documento"            => $request->input('txtdocumento'),
-            "email"                => $request->input('txtemail'),
-            "barrio"               => $request->input('txtbarrio'),
-            "direccion"            => $request->input('txtdireccion'),
-            "etnia_id"               => $request->input('txtetnias'),
-            "grado_discapacidad"    => $request->input('txtgrado_discapacidad'),
-            "descripcion_grado_discapacidad"    => $request->input('txtdiscapacidad'),
-            "celular"              => $request->input('txtcelular'),
-            "telefono"             => $request->input('txttelefono'),
-            "fechanacimiento"      => $request->input('txtfecha_nacimiento'),
-            "genero"               => $request->input('txtgenero'),
-            "mujerCabezaFamilia"   => $request->input('txtmadrecabezafamilia'),
-            "desplazadoPorViolencia" => $request->input('txtdesplazadoporviolencia'),
-            "otra_eps"             => $request->input('txteps') == Eps::where('nombre', Eps::OTRA_EPS)->first()->id ? $request->input('txtotraeps') : null,
-            "institucion"          => $request->input('txtinstitucion'),
-            "titulo_obtenido"      => $request->get('txttitulo'),
-            "fecha_terminacion"    => $request->get('txtfechaterminacion'),
+        $user =  User::create([
+            "tipodocumento_id"     => $request->input('tipo_documento'),
+            "documento"            => $request->input('documento'),
+            "ciudad_expedicion_id" => $request->input('ciudadexpedicion'),
+            "email"                => $request->input('email'),
+            "telefono"             => $request->input('telefono'),
+            "celular"              => $request->input('celular'),
+            "ciudad_id"            => $request->input('ciudad'),
+            "barrio"               => $request->input('barrio'),
+            "direccion"            => $request->input('direccion'),
+            "nombres"              => $request->input('nombres'),
+            "apellidos"            => $request->input('apellidos'),
+            "fechanacimiento"      => $request->input('fechanacimiento'),
+            "gruposanguineo_id"    => $request->input('gruposanguineo'),
+            "estrato"              => $request->input('estrato'),
+            "etnia_id"             => $request->input('etnia'),
+            "eps_id"               => $request->input('eps'),
+            "otra_eps"             => $request->input('eps') == Eps::where('nombre', Eps::OTRA_EPS)->first()->id ? $request->input('otraeps') : null,
+            "grado_discapacidad"   => $request->input('gradodiscapacidad'),
+            "descripcion_grado_discapacidad"    => $request->input('discapacidad'),
+            "mujerCabezaFamilia"   => $request->input('madrecabezafamilia'),
+            "desplazadoPorViolencia" => $request->input('desplazadoporviolencia'),
+            "genero"               => $request->input('genero'),
+            "institucion"          => $request->input('institucion'),
+            "gradoescolaridad_id"  => $request->input('gradoescolaridad'),
+            "titulo_obtenido"      => $request->get('titulo'),
+            "fecha_terminacion"    => $request->get('fechaterminacion'),
             "password"             => $password,
-            "estrato"              => $request->input('txtestrato'),
-            "otra_ocupacion"       => collect($request->input('txtocupaciones'))->contains(Ocupacion::where('nombre', Ocupacion::IsOtraOcupacion())->first()->id) ? $request->input('txtotra_ocupacion') : null,
+            "otra_ocupacion"       => collect($request->input('ocupaciones'))->contains(Ocupacion::where('nombre', Ocupacion::IsOtraOcupacion())->first()->id) ? $request->input('otra_ocupacion') : null,
         ]);
+        $user->ocupaciones()->sync($request->get('ocupaciones'));
+        return $user;
     }
-
-
     /**
      * Get the guard to be used during registration.
      *

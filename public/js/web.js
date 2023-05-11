@@ -52,8 +52,7 @@ $(document).on('submit', 'form#formValidateCredentials', function (event) {
 
 const user = {
     getCiudadExpedicion: function() {
-        let id;
-        id = $("#departamentoexpedicion").val();
+        let id = $("#departamentoexpedicion").val();
         $.ajax({
             dataType: "json",
             type: "get",
@@ -69,8 +68,7 @@ const user = {
         });
     },
     getOtraEsp: function(ideps) {
-        let id = $(ideps).val();
-        if (id == 42) {
+        if ($(ideps).val() == 42) {
             $(".otraeps").removeAttr("style");
         } else {
             $(".otraeps").attr("style", "display:none");
@@ -97,8 +95,7 @@ const user = {
         });
     },
     getGradoDiscapacidad(gradodiscapacidad) {
-        let grado = $(gradodiscapacidad).val();
-        if (grado == 1) {
+        if ($(gradodiscapacidad).val() == 1) {
             $(".gradodiscapacidad").removeAttr("style");
         } else {
             $(".gradodiscapacidad").attr("style", "display:none");
@@ -106,7 +103,6 @@ const user = {
     },
     getOtraOcupacion: function(idocupacion) {
         $("#otraocupacion").hide();
-        let id = $(idocupacion).val();
         let nombre = $("#ocupaciones option:selected").text();
         let resultado = nombre.match(/[A-Z][a-z]+/g);
         $("#otraocupacion").hide();
@@ -118,29 +114,9 @@ const user = {
     }
 };
 
-$('button[type="reset"]').click(function() {
-    this.form.reset();
-    $("#document").empty();
-    $("#ocupaciones").val();
-    $("#document_type").val();
-    $("#modalvalidationuser").openModal({
-        opacity: 0.7,
-        in_duration: 350,
-        out_duration: 250,
-        ready: undefined,
-        complete: undefined,
-        dismissible: false,
-        starting_top: "10%",
-        ending_top: "10%"
-    });
-    return false;
-});
 
 $('button[type="reset"]').click(function() {
     this.form.reset();
-    $("#document").empty();
-    $("#ocupaciones").val();
-    $("#document_type").val();
     $("#modalvalidationuser").openModal({
         opacity: 0.7,
         in_duration: 350,
@@ -159,9 +135,9 @@ $('button[type="reset"]').click(function() {
 $(document).on("submit", "form#formRegisterUser", function(event) {
     $('button[type="submit"]').attr("disabled", "disabled");
     event.preventDefault();
-    var form = $(this);
-    var data = new FormData($(this)[0]);
-    var url = form.attr("action");
+    let form = $(this);
+    let data = new FormData($(this)[0]);
+    let url = form.attr("action");
     $.ajax({
         type: form.attr("method"),
         url: url,
@@ -200,10 +176,7 @@ $(document).on("submit", "form#formRegisterUser", function(event) {
                     confirmButtonText: "Ok",
                     backdrop: true,
                     allowOutsideClick: false,
-                    footer:
-                        '<p class="red-text">Hemos enviado un correo electrónico  a ' +
-                        data.user.email +
-                        " con las credenciales de ingreso a la plataforma.</p>"
+                    footer: `<p class="red-text">Hemos enviado un correo electrónico a ${data.user.email}" con las credenciales de ingreso al sistema.</p>`
                 }).then(result => {
                     if (result.isConfirmed) {
                         setTimeout(function() {

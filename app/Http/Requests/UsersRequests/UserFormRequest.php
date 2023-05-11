@@ -3,7 +3,6 @@
 namespace App\Http\Requests\UsersRequests;
 
 use App\Models\Ocupacion;
-use App\Models\{TipoTalento};
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use \App\Models\Eps;
@@ -11,7 +10,6 @@ use App\User;
 
 class UserFormRequest extends FormRequest
 {
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -29,7 +27,6 @@ class UserFormRequest extends FormRequest
      */
     public function rules()
     {
-
         return [
             'tipo_documento'         => 'required',
             'documento'              => 'required|digits_between:6,11|numeric|unique:users,documento,' . request()->route('id'),
@@ -50,25 +47,24 @@ class UserFormRequest extends FormRequest
             'etnia'                  => 'required',
             'eps'                    => 'required',
             'otraeps'                => Rule::requiredIf(request()->eps == Eps::where('nombre', Eps::OTRA_EPS)->first()->id) . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',
-            'gradodiscapacidad'    => 'required',
-            'discapacidad'          =>  Rule::requiredIf(request()->gradodiscapacidad == 1 || request()->gradodiscapacidad == '1') . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',
-            'madrecabezafamilia'                => 'required',
-            'desplazadoporviolencia'                => 'required',
-            'genero' => 'required|'.Rule::in([User::IS_MASCULINO, User::IS_FEMENINO, User:: IS_NO_BINARIO]),
-
-            'txtocupaciones'            => 'required',
-            'txtgrado_escolaridad'      => 'required',
-            'txtinstitucion'            => 'required|min:1|max:100|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
-            'txttitulo'                 => 'required|min:1|max:200|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
-            'txtfechaterminacion'       => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
-
-            'txtotra_ocupacion'         => Rule::requiredIf(collect(request()->txtocupaciones)->contains(Ocupacion::where('nombre', Ocupacion::IsOtraOcupacion())->first()->id)) . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable'
+            'gradodiscapacidad'      => 'required',
+            'discapacidad'           =>  Rule::requiredIf(request()->gradodiscapacidad == 1 || request()->gradodiscapacidad == '1') . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',
+            'madrecabezafamilia'     => 'required',
+            'desplazadoporviolencia' => 'required',
+            'genero'                 => 'required|'.Rule::in([User::IS_MASCULINO, User::IS_FEMENINO, User:: IS_NO_BINARIO]),
+            'institucion'            => 'required|min:1|max:100|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+            'gradoescolaridad'       => 'required',
+            'titulo'                 => 'required|min:1|max:200|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
+            'fechaterminacion'       => 'required|date|date_format:Y-m-d|before_or_equal:' . date('Y-m-d'),
+            'ocupaciones'            => 'required',
+            'otra_ocupacion'         => Rule::requiredIf(collect(request()->ocupaciones)->contains(Ocupacion::where('nombre', Ocupacion::IsOtraOcupacion())->first()->id)) . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',
+            'remember'               => 'required'
         ];
     }
 
     public function messages()
     {
-        return $messages = [
+        return [
             'tipo_documento.required'          => 'El tipo documento es obligatorio.',
             'documento.required'               => 'El número de documento es obligatorio.',
             'documento.digits_between'         => 'El número de documento debe tener entre 6 y 11 digitos',
@@ -120,23 +116,22 @@ class UserFormRequest extends FormRequest
             'madrecabezafamilia.required'      => 'El campo es obligatorio.',
             'desplazadoporviolencia.required'  => 'El campo es obligatorio.',
             'genero.required'                  => 'El género es obligatorio.',
-
-            'txttipoestudio.required'          => 'El tipo de estudio es obligatorio.',
-            'txttipoformacion.required'        => 'El tipo de formación es obligatorio.',
-            'txtgrado_escolaridad.required'       => 'El grado de escolaridad es obligatorio.',
-
-            'txtdependencia.required'                 => 'Por favor digite cual dependencia',
-            'txtdependencia.min'                      => 'La dependencia debe ser minimo 1 caracter',
-            'txtdependencia.max'                      => 'La dependencia debe ser minimo 45 caracteres',
-            'txtdependencia.regex'                    => 'El formato del campo La dependencia eso es incorrecto',
-
-            'txtnodo.required'         => 'El nodo es obligatorio.',
-
-            'txtotra_ocupacion.required'          => 'La otra ocupación es obligatoria.',
-            'txtotra_ocupacion.regex'             => 'Sólo se permiten caracteres alfabeticos',
-
-            'txtocupaciones.required'             => 'seleccione al menos una ocupación',
-            'txtremember.required' => 'Acepta los términos de uso.'
+            'institucion.required'             => 'La institución es obligatoria.',
+            'institucion.min'                  => 'La institución  debe ser minimo 1 caracter',
+            'institucion.max'                  => 'La institución  debe ser minimo 100 caracteres',
+            'institucion.regex'                => 'El formato del campo institución es incorrecto',
+            'gradoescolaridad.required'        => 'El grado de escolaridad es obligatorio.',
+            'titulo.required'                  => 'El titulo es obligatorio.',
+            'titulo.min'                       => 'El titulo  debe ser minimo 1 caracter',
+            'titulo.max'                       => 'El titulo  debe ser minimo 200 caracteres',
+            'titulo.regex'                     => 'El formato del campo titulo es incorrecto',
+            'fechaterminacion.required'        => 'La fecha de terminación es obligatoria.',
+            'fechaterminacion.date'            => 'La fecha de terminación no es una fecha válida.',
+            'fechaterminacion.before_or_equal' => 'La fecha de terminación  debe ser una fecha anterior o igual a la fecha de hoy',
+            'ocupaciones.required'             => 'seleccione al menos una ocupación',
+            'otra_ocupacion.required'          => 'La otra ocupación es obligatoria.',
+            'otra_ocupacion.regex'             => 'Sólo se permiten caracteres alfabeticos',
+            'remember.required'                => 'Acepta los términos de uso.',
         ];
     }
 

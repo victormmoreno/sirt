@@ -57,7 +57,6 @@ class RouteServiceProvider extends ServiceProvider
             ->group(function(){
                 require base_path('routes/web/auth.php');
                 require base_path('routes/web.php');
-
                 require base_path('routes/web/projects.php');
             });
 
@@ -81,7 +80,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapWebUsersRoutes()
     {
         Route::middleware('web')
-             ->namespace($this->namespaceUser)
-             ->group(base_path('routes/web/users.php'));
+            ->namespace($this->namespaceUser)
+            ->group(base_path('routes/web/users.php'));
     }
 }

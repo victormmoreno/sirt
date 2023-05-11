@@ -53,3 +53,5 @@ Route::group(
 );
 
 Route::get('usuarios/filtro-talento/{documento}', 'UserController@filterTalento')->name('articulacion.usuario.talento.search');
+
+

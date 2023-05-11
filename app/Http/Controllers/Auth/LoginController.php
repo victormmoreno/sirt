@@ -108,7 +108,7 @@ class LoginController extends Controller
     {
         $request['estado'] = true;
         return $request->only($this->username(), $this->password(), 'estado');
-    
+
     }
 
     private function password()

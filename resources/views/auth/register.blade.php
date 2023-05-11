@@ -402,8 +402,7 @@
                                                 </select>
                                                 <label for="gradoescolaridad">Grado Escolaridad <span
                                                         class="red-text">*</span></label>
-                                                <small id="gradoescolaridad-error"
-                                                       class="error red-text"></small>
+                                                <small id="gradoescolaridad-error" class="error red-text"></small>
                                             </div>
                                         </div>
                                         <div class="row">
