@@ -9,35 +9,6 @@ use App\User;
 class EmpresaRepository
 {
 
-    /**
-     * Consulta las empresas asociadas a proyectos, articulaciones y edts
-     * @param string $fecha_inicio Primera fecha para realizar el filtro
-     * @param string $fecha_fin Segunda fecha para realizar el filtro
-     * @return Builder
-     * @author dum
-     */
-    public function consultarEmpresasAsociadosAServicios($fecha_inicio, $fecha_fin)
-    {
-        return Empresa::select('nit',
-            'entidades.nombre',
-            'codigo_actividad')
-            ->join('entidades', 'entidades.id', '=', 'empresas.entidad_id')
-            ->join('articulacion_proyecto', 'articulacion_proyecto.entidad_id', '=', 'entidades.id')
-            ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-            ->join('proyectos', 'proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
-            ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
-            ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
-            ->where('entidades.nombre', '!=', 'No Aplica')
-            ->where(function($q) use ($fecha_inicio, $fecha_fin) {
-            $q->where(function($query) use ($fecha_inicio, $fecha_fin) {
-                $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
-            })
-            ->orWhere(function($query) use ($fecha_inicio, $fecha_fin) {
-                $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
-            });
-        });
-    }
-
     // Modifica los datos de una empresa
     public function update($request, $empresa)
     {

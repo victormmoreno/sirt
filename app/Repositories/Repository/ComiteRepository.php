@@ -363,18 +363,6 @@ class ComiteRepository
             ->get();
     }
 
-    //-- Consulta un comité en una fecha
-    public function consultarComitePorNodoYFecha($id, $fecha)
-    {
-        return Comite::select('comites.id', 'fechacomite', 'codigo')
-            ->join('comite_idea', 'comite_idea.comite_id', '=', 'comites.id')
-            ->join('ideas', 'ideas.id', '=', 'comite_idea.idea_id')
-            ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
-            ->where('fechacomite', $fecha)
-            ->where('nodos.id', $id)
-            ->get();
-    }
-
     /**
      * Genera un código al csibt
      * @param $request Datos del formulario

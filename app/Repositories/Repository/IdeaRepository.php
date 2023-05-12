@@ -30,11 +30,6 @@ class IdeaRepository
     {
         return Idea::where('tipo_idea', Idea::IsEmprendedor());
     }
-    
-    public function getSelectNodoPrueba()
-    {
-        return Nodo::selectNodo()->where('entidades.nombre', '!=', Nodo::NODO_PRUEBA)->get();
-    }
 
     public function asginarIdeaExperto($request, $idea)
     {
@@ -789,26 +784,6 @@ class IdeaRepository
     public function findByid($id)
     {
         return Idea::find($id);
-    }
-
-
-    public function getIdeaWithRelations($idea)
-    {
-        return $idea->with([
-            'nodo' => function ($query) {
-                $query->select('id', 'direccion', 'entidad_id');
-            },
-            'nodo.entidad' => function ($query) {
-                $query->select('id', 'nombre', 'ciudad_id');
-            },
-            'nodo.entidad.ciudad' => function ($query) {
-                $query->select('id', 'nombre', 'departamento_id');
-            },
-            'nodo.entidad.ciudad.departamento' => function ($query) {
-                $query->select('id', 'nombre');
-            },
-            'nodo.infocenter'
-        ])->select('id', 'nodo_id', 'apellidos_contacto', 'nombres_contacto', 'correo_contacto', 'nombre_proyecto', 'codigo_idea', 'viene_convocatoria', 'convocatoria')->get();
     }
 
     /**

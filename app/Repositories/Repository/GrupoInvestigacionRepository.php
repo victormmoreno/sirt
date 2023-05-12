@@ -57,57 +57,6 @@ class GrupoInvestigacionRepository
         });
     }
 
-    /**
-     * Consulta los grupos de investigacion y los proyectos y articulaciones a los qu eestá asociados
-     * @param string $fecha_inicio Primera fecha para realizar el filtro
-     * @param string $fecha_fin Segunda fecha para realizar el filtro
-     * @return Builder
-     * @author dum
-     */
-    public function consultarGruposInvestigacionAsociadosAServicios($fecha_inicio, $fecha_fin)
-    {
-        return GrupoInvestigacion::select('entidades.nombre',
-        'gruposinvestigacion.codigo_grupo',
-        'codigo_actividad',
-        'institucion')
-        ->join('entidades', 'entidades.id', '=', 'gruposinvestigacion.entidad_id')
-        ->join('articulacion_proyecto', 'articulacion_proyecto.entidad_id', '=', 'entidades.id')
-        ->join('proyectos', 'proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
-        ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-        ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
-        ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
-        ->where('entidades.nombre', '!=', 'No Aplica')
-        ->where(function($q) use ($fecha_inicio, $fecha_fin) {
-            $q->where(function($query) use ($fecha_inicio, $fecha_fin) {
-                $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
-            })
-            ->orWhere(function($query) use ($fecha_inicio, $fecha_fin) {
-                $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_fin]);
-            });
-        });
-    }
-
-    // Consulta los detalles de una empresa
-    public function consultarDetalleDeUnGrupoDeInvestigacion($id)
-    {
-        return GrupoInvestigacion::select(
-            'codigo_grupo',
-            'entidades.nombre AS nombre_grupo',
-            'email_entidad AS correo_grupo',
-            'institucion',
-            'clasificacionescolciencias.nombre AS nombre_clasificacion'
-        )
-        ->selectRaw('CONCAT(ciudades.nombre, " - ", departamentos.nombre) AS ciudad')
-        ->selectRaw('IF(tipogrupo = 0, "Externo", "Interno") AS tipogrupo')
-        ->join('entidades', 'entidades.id', '=', 'gruposinvestigacion.entidad_id')
-        ->join('ciudades', 'ciudades.id', '=', 'entidades.ciudad_id')
-        ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
-        ->join('clasificacionescolciencias', 'clasificacionescolciencias.id', '=', 'gruposinvestigacion.clasificacioncolciencias_id')
-        ->where('gruposinvestigacion.id', $id)
-        ->get()
-        ->last();
-    }
-
     // Modifica los datos de un grupo de investigación
     public function update($request, $grupo)
     {

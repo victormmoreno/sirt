@@ -321,26 +321,6 @@ class Proyecto extends Model
         return $this->morphMany(UsoInfraestructura::class, 'asesorable');
     }
 
-    /**
-     * Define an inverse one-to-one or many relationship between projects and articulacion_proyecto
-     * @author dum
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function articulacion_proyecto()
-    {
-        return $this->belongsTo(ArticulacionProyecto::class, 'articulacion_proyecto_id', 'id');
-    }
-
-    public function scopeEstadoOfProjects($query, array $relations, array $estado = [])
-    {
-        return $query->with($relations)->whereHas(
-            'estadoproyecto',
-            function ($query) use ($estado) {
-                $query->whereIn('nombre', $estado);
-            }
-        );
-    }
-
     public function scopeNodo($query, $nodo)
     {
         if (!empty($nodo) && $nodo != null && $nodo != 'all') {
@@ -422,19 +402,6 @@ class Proyecto extends Model
     public function getLeadTalent()
     {
         return $this->talentos()->wherePivot('talento_lider', 1)->first();
-    }
-
-
-    public function consultarNotificaciones()
-    {
-        return $this->with([
-                'notificaciones',
-                'notificaciones.fase',
-                'notificaciones.remitente',
-                'notificaciones.receptor',
-                'notificaciones.rol_receptor',
-                'notificaciones.rol_remitente'
-            ]);
     }
 
     /**

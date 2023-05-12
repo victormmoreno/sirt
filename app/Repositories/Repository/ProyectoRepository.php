@@ -5,12 +5,11 @@ namespace App\Repositories\Repository;
 
 use App\Models\{Proyecto, Entidad, Fase, ControlNotificaciones, Movimiento, Role, Idea, EstadoIdea, Sede, GrupoInvestigacion};
 use Illuminate\Support\Facades\{DB, Notification, Storage, Session};
-use App\Notifications\Proyecto\{ProyectoCierreAprobado, ProyectoAprobarFase, ProyectoAprobarSuspendido, ProyectoSuspendidoAprobado, ProyectoNoAprobarFase};
+use App\Notifications\Proyecto\{ProyectoAprobarFase, ProyectoAprobarSuspendido, ProyectoSuspendidoAprobado, ProyectoNoAprobarFase};
 use Carbon\Carbon;
 use App\Events\Proyecto\{ProyectoWasntApproved, ProyectoWasApproved, ProyectoApproveWasRequested, ProyectoSuspenderWasRequested};
 use App\User;
 use App\Repositories\Repository\UserRepository\DinamizadorRepository;
-use Illuminate\Support\Arr;
 use App\Repositories\Repository\Repository;
 
 class ProyectoRepository extends Repository
@@ -43,60 +42,6 @@ class ProyectoRepository extends Repository
     {
         return $this->ideaRepository;
     }
-
-    /**
-     * Método que retorna el directorio de los archivos que tiene un proyecto en el servidor
-     * @param int $id Id de la articulacion_proyecto
-     * @return mixed
-     * @author dum
-     */
-    // private function returnDirectoryProyectoFiles($id)
-    // {
-    //     // consulta los archivos de un proyecto (registro de la base de datos)
-    //     $tempo = ArchivoArticulacionProyecto::where('articulacion_proyecto_id', $id)->first();
-
-    //     if ($tempo == null) {
-    //         return false;
-    //     } else {
-    //     // Función para dividir la cadena en un array (Partiendolos con el delimitador /)
-    //     $route = preg_split("~/~", $tempo->ruta, 9);
-    //     // Extrae el último elemento del array
-    //     array_pop($route);
-    //     // Une el array en un string, dicho string se separa por /
-    //     $route = implode("/", $route);
-    //     // Reemplaza storage por public en la routa
-    //     $route = str_replace('storage', 'public', $route);
-    //     return $route;
-    //     }
-    // }
-
-    // public function horasAsesoriaPorExperto(int $id)
-    // {
-    //     $horas_exp = null;
-    //     $proyecto = Proyecto::find($id);
-    //     $asesorias = $proyecto->asesorias;
-    //     foreach ($asesorias as $key => $asesoria) {
-    //         echo $asesoria->usogestores->sum('pivot.asesoria_directa') . '<br>';
-    //         // foreach ($asesoria->usogestores as $key => $horas) {
-    //         //     $horas_exp[] = $horas->pivot->asesoria_directa;
-    //         // }
-    //         // echo $asesoria->usogestores->asesoria_indirecta . '<br>';
-    //     }
-    //     return $proyecto;
-    // }
-
-    // public function horasAsesoriaPorExperto($id)
-    // {
-    //     $proyecto = Proyecto::find($id);
-    //     foreach ($proyecto->asesorias as $key => $asesoria) {
-    //         foreach ($asesoria->usogestores as $key => $value) {
-    //             echo $value->sum('pivot.asesoria_directa') . '<br>';
-
-    //         }
-    //     }
-    //     exit;
-    //     // dd($proyecto->asesorias->pivot);
-    // }
 
     /**
      * Verifica que el nuevo talento interlocutor, sea diferente al actual
@@ -293,40 +238,6 @@ class ProyectoRepository extends Repository
     }
 
     /**
-     * Consulta cantidad de proyectos por fechas de cierre
-     * @param string $fase Estado del proyecto que se quiere buscar
-     * @param string $fecha_inicio Primera fecha oara realizar el filtro
-     * @param string $fecha_fin Segunda fecha para realizar el filtro
-     * @return Builder
-     * @author dum
-     */
-    public function consultarProyectoCerradosEntreFecha(string $fase, string $fecha_inicio, string $fecha_fin)
-    {
-        return Proyecto::selectRaw('count(proyectos.id) as cantidad')
-        ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
-        ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
-        ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
-        ->where('fases.nombre', $fase)
-        ->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_fin]);
-    }
-
-    /**
-     * Consulta cantidad de proyecto por fase
-     * @param string $fase Fase que se va a filtrar
-     * @return Builder
-     * @author dum
-     **/
-    public function consultarProyectosFase()
-    {
-        return Proyecto::selectRaw('count(proyectos.id) as cantidad')
-        ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
-        ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
-        ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
-        ->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre'])
-        ->groupBy('fases.nombre');
-    }
-
-    /**
      * Consulta cantidad de proyecto por fase
      * @param string $fase Fase que se va a filtrar
      * @return Builder
@@ -386,80 +297,6 @@ class ProyectoRepository extends Repository
         ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
         ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
         ->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
-    }
-
-    public function proyectosSeguimientoPorTrl()
-    {
-        return Proyecto::select('fases.nombre AS fase', 'entidades.nombre')
-        ->selectRaw('count(trl_esperado) as trl_esperado')
-        ->join('gestores AS g', 'g.id', '=', 'proyectos.asesor_id')
-        ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
-        ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
-        ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
-        ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
-        ->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
-    }
-
-    public function proyectosIndicadores_Repository(string $fecha_inicio, string $fecha_cierre)
-    {
-        return Proyecto::with([
-            'users_propietarios',
-            'gruposinvestigacion',
-            'gruposinvestigacion.clasificacioncolciencias',
-            'gruposinvestigacion.entidad',
-            'sedes',
-            'sedes.empresa',
-            'sedes.empresa.tamanhoempresa',
-            'sedes.empresa.tipoempresa',
-            'sedes.empresa',
-            'sublinea',
-            'sublinea.linea',
-            'areaconocimiento',
-            'fase',
-            'talentos',
-            'talentos.user' => function($query) {
-                $query->withTrashed();
-            },
-            'talentos.user.grupoSanguineo',
-            'talentos.user.eps',
-            'talentos.user.etnia',
-            'talentos.user.gradoescolaridad',
-            'talentos.user.ciudad',
-            'talentos.user.ciudad.departamento',
-            'asesor',
-            'asesor.user'=> function($query) {
-                $query->withTrashed();
-            },
-            'nodo',
-            'nodo.entidad',
-            'fase',
-            'idea',
-            ])->where(function($q) use ($fecha_inicio, $fecha_cierre) {
-            $q->whereHas('articulacion_proyecto.actividad', function($query) use ($fecha_inicio, $fecha_cierre) {
-                $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre]);
-            })
-            ->orWhere(function($query) use ($fecha_inicio, $fecha_cierre) {
-                $query->whereHas('articulacion_proyecto.actividad', function($query) use ($fecha_inicio, $fecha_cierre) {
-                $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
-                })
-                ->orWhereHas('fase', function ($query) {
-                $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
-                });
-            });
-            });
-    }
-
-    public function asesoriasDeProyecto()
-    {
-        return Proyecto::with([
-            'asesorias',
-            'asesor',
-            'asesor.user',
-            'nodo',
-            'nodo.entidad',
-            'talentos',
-            'talentos.user',
-        ]);
     }
 
     /**
@@ -616,112 +453,6 @@ class ProyectoRepository extends Repository
         ->leftjoin('departamentos AS dr', 'dr.id', '=', 'cr.departamento_id')
         ->leftjoin('eps', 'eps.id', '=', 'ue.eps_id')
         ->leftjoin('etnias', 'etnias.id', '=', 'ue.etnia_id');
-    }
-
-
-    /**
-     * Consulta la cantidad de proyectos que se finalizaron por mes de un nodo
-     *
-     * @param int $id Id del nodo
-     * @return Collection
-     * @author dum
-     */
-    public function proyectosFinalizadosPorMesDeUnNodo_Repository($id)
-    {
-        $this->traducirMeses();
-        return Proyecto::selectRaw('count(proyectos.id) AS cantidad')
-        ->selectRaw('MONTH(fecha_cierre) AS meses')
-        ->selectRaw('CONCAT(UPPER(LEFT(date_format(fecha_cierre, "%M"), 1)), LOWER(SUBSTRING(date_format(fecha_cierre, "%M"), 2))) AS mes')
-        ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
-        ->where('nodos.id', $id)
-        ->groupBy('meses', 'mes')
-        ->orderBy('meses');
-    }
-
-    // /**
-    //  * Consulta los proyectos
-    //  * @param string $fecha_inicio
-    //  * @param string $fecha_cierre
-    //  * @return Builder
-    //  * @author dum
-    //  */
-    // public function consultarProyectos_Repository(string $fecha_inicio = '', string $fecha_cierre = '')
-    // {
-    //     return Proyecto::select(
-    //     'entidades.nombre AS nodo',
-    //     'actividades.codigo_actividad',
-    //     'actividades.nombre',
-    //     'lineastecnologicas.nombre AS nombre_linea',
-    //     'sublineas.nombre AS nombre_sublinea',
-    //     'areasconocimiento.nombre AS nombre_areaconocimiento',
-    //     'fecha_inicio',
-    //     'fases.nombre AS nombre_fase'
-    //     )
-    //     ->selectRaw('GROUP_CONCAT(propietarios.propietario_type SEPARATOR ",") AS propietarios')
-    //     ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) AS nombre_idea')
-    //     ->selectRaw('concat(users.documento, " - ", users.nombres, " ", users.apellidos) AS gestor')
-    //     ->selectRaw('IF(trl_esperado = '.Proyecto::IsTrl6Esperado().', "TRL 6", "TRL 7 - TRL 8") AS trl_esperado')
-    //     ->selectRaw('IF(fases.nombre = "Finalizado", IF(trl_obtenido = 0, "TRL 6", IF(trl_obtenido = 1, "TRL 7", "TRL 8")), "El proyecto no se ha cerrado") AS trl_obtenido')
-    //     ->selectRaw('IF(fases.nombre = "Finalizado" || fases.nombre = "Suspendido", fecha_cierre, "El proyecto no se ha cerrado") AS fecha_cierre')
-    //     ->selectRaw('IF(areasconocimiento.nombre = "Otro", otro_areaconocimiento, "No aplica") AS otro_areaconocimiento')
-    //     ->selectRaw('IF(fabrica_productividad = 0, "No", "Si") AS fabrica_productividad')
-    //     ->selectRaw('IF(reci_ar_emp = 0, "No", "Si") AS reci_ar_emp')
-    //     ->selectRaw('IF(economia_naranja = 0, "No", "Si") AS economia_naranja')
-    //     ->selectRaw('IF(economia_naranja = 0, "No aplica", tipo_economianaranja) AS tipo_economianaranja')
-    //     ->selectRaw('IF(dirigido_discapacitados = 0, "No", "Si") AS dirigido_discapacitados')
-    //     ->selectRaw('IF(dirigido_discapacitados = 0, "No aplica", tipo_discapacitados) AS tipo_discapacitados')
-    //     ->selectRaw('IF(art_cti = 0, "No", "Si") AS art_cti')
-    //     ->selectRaw('IF(art_cti = 0, "No aplica", nom_act_cti) AS nom_act_cti')
-    //     ->selectRaw('IF(fases.nombre = "Cierre", IF(diri_ar_emp = 0, "No", "Si"), "El proyecto no se ha cerrado") AS diri_ar_emp')
-    //     ->selectRaw('DATE_FORMAT(fecha_cierre, "%Y") AS anho')
-    //     ->selectRaw('DATE_FORMAT(fecha_cierre, "%m") AS mes')
-    //     ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-    //     ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-    //     ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
-    //     ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-    //     ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
-    //     ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
-    //     ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
-    //     ->join('areasconocimiento', 'areasconocimiento.id', '=', 'proyectos.areaconocimiento_id')
-    //     ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
-    //     ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
-    //     ->join('users', 'users.id', '=', 'gestores.user_id')
-    //     ->leftJoin('propietarios', 'propietarios.proyecto_id', '=', 'proyectos.id')
-    //     ->where(function($q) use ($fecha_inicio, $fecha_cierre) {
-    //         $q->where(function($query) use ($fecha_inicio, $fecha_cierre) {
-    //         $query->whereBetween('fecha_cierre', [$fecha_inicio, $fecha_cierre]);
-    //         })
-    //         ->orWhere(function($query) use ($fecha_inicio, $fecha_cierre) {
-    //         $query->where(function($query) use ($fecha_inicio, $fecha_cierre) {
-    //         $query->whereBetween('fecha_inicio', [$fecha_inicio, $fecha_cierre]);
-    //         $query->orWhere(function ($query) {
-    //             $query->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
-    //         });
-    //         });
-    //         });
-    //     })
-    //     ->groupBy('codigo_actividad', 'actividades.nombre')
-    //     ->orderBy('entidades.nombre');
-    // }
-
-    /**
-     * Consulta el talento líder de un proyecto
-     * @param int $id Id del proyecto
-     * @return Collection
-     * @author dum
-     */
-    public function consultarTalentoLiderDeUnProyecto($id)
-    {
-        return Proyecto::select('users.documento', 'tiposdocumentos.nombre AS nombre_documento', 'fechanacimiento')
-        ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombre_talento')
-        ->selectRaw('concat(ciudades.nombre, " - ", departamentos.nombre) AS ciudad_expedicion')
-        ->join('proyecto_talento', 'proyecto_talento.proyecto_id', '=', 'proyecto.id')
-        ->join('talentos', 'talentos.id', '=', 'proyecto_talento.talento_id')
-        ->join('users', 'users.id', '=', 'talentos.user_id')
-        ->join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
-        ->join('ciudades', 'ciudades.id', '=', 'users.ciudad_expedicion_id')
-        ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
-        ->where('proyectos.id', $id);
     }
 
     /**
@@ -1054,27 +785,6 @@ class ProyectoRepository extends Repository
             DB::commit();
             return true;
         } catch (\Exception $e) {
-            DB::rollback();
-            return false;
-        }
-    }
-
-    public function setPostCierreProyectoRepository(int $id)
-    {
-        DB::beginTransaction();
-        try {
-            $proyecto = Proyecto::findOrFail($id);
-
-            $proyecto->movimientos()->attach(Movimiento::where('movimiento', 'Aprobó')->first(), [
-                'actividad_id' => $proyecto->id,
-                'user_id' => auth()->user()->id,
-                'fase_id' => Fase::where('nombre', 'Ejecución')->first()->id,
-                'role_id' => Role::where('name', session()->get('login_role'))->first()->id
-            ]);
-
-            DB::commit();
-            return true;
-        } catch (\Throwable $th) {
             DB::rollback();
             return false;
         }
@@ -1436,19 +1146,6 @@ class ProyectoRepository extends Repository
     }
 
     /**
-     * Consulta las notificaciones generadas para la fase actual de un proyecto
-     */
-    public function consultarNotificaciones($proyecto)
-    {
-        return $proyecto->with(['notificaciones', 'notificaciones.fase'])->whereHas(
-        'notificaciones.fase',
-            function ($query) use ($proyecto) {
-                $query->where('nombre', $proyecto->fase->nombre);
-            }
-        );
-    }
-
-    /**
      * Notifica al dinamizador para que apruebe el proyecto en la fase de suspendido
      *
      * @param int $id Id del proyecto
@@ -1472,30 +1169,6 @@ class ProyectoRepository extends Repository
         } catch (\Throwable $th) {
             DB::rollBack();
             return false;
-        }
-    }
-    /**
-     * Cambia el estado de aprobacion_dinamizador, para permitirle al gestor cerrar el proyecto
-     */
-    public function updateAprobacionDinamizador(int $id)
-    {
-        DB::beginTransaction();
-        try {
-        $proyecto = Proyecto::findOrFail($id);
-
-        $proyecto->movimientos()->attach(Movimiento::where('movimiento', 'Aprobó')->first(), [
-            'actividad_id' => $proyecto->id,
-            'user_id' => auth()->user()->id,
-            'fase_id' => Fase::where('nombre', 'Cierre')->first()->id,
-            'role_id' => Role::where('name', session()->get('login_role'))->first()->id
-        ]);
-
-        Notification::send(User::find($proyecto->asesor->user->id), new ProyectoCierreAprobado($proyecto));
-        DB::commit();
-        return true;
-        } catch (\Throwable $th) {
-        DB::rollback();
-        return false;
         }
     }
 
@@ -1740,24 +1413,6 @@ class ProyectoRepository extends Repository
     public function retornarUltimaNotificacionPendiente($proyecto)
     {
         return $proyecto->notificaciones()->where('fase_id',  $proyecto->fase_id)->where('estado', ControlNotificaciones::IsPendiente())->get()->last();
-    }
-
-    /*========================================================================
-    =            metodo para consultar los proyectos de un ususario gestor talento         =
-    ========================================================================*/
-    public function getProjectsForUser(array $relations, array $estado = [])
-    {
-        return Proyecto::estadoOfProjects($relations, $estado);
-    }
-
-    public function getProjectsActivesByUser(array $relations, array $fase = [])
-    {
-        return Proyecto::with($relations)->whereHas(
-            'fase',
-            function ($query) use ($fase) {
-                $query->whereIn('nombre', $fase);
-            }
-        );
     }
 
     public function getProjectsForFaseById(array $relations, array $fase = [])

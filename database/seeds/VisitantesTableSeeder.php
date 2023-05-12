@@ -41,12 +41,6 @@ class VisitantesTableSeeder extends Seeder
      */
     public function run()
     {
-        // factory(Visitante::class, 20000)->create();
-        // factory(IngresoVisitante::class, 20000)->create()->each(function ($ingreso) {
-        //     $ingreso->save(factory(IngresoVisitante::class)->make());
-        // });
-        // factory(IngresoVisitante::class, 5000)->create();
-        // $faker = new Faker;
         for ($i=0; $i < 30000; $i++) {
             IngresoVisitante::create([
                 'user_id' => 457,
