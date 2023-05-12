@@ -2,9 +2,9 @@
 # Su idea ha sido aceptada para presentarse al comité de ideas | Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.
 
 
-@if(isset($idea->talento->user))
+@if(isset($idea->user))
 Señor(a)<br>
-<b>_{{$idea->talento->user->nombres }} {{$idea->talento->user->apellidos }}_</b><br>
+<b>_{{$idea->user->nombres }} {{$idea->user->apellidos }}_</b><br>
 @endif
 Cordial Saludo.
 

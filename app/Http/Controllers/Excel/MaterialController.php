@@ -38,9 +38,9 @@ class MaterialController extends Controller
     if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsActivador()) {
         $materiales = $this->materialRepository->consultar()->get();
     } else {
-        $materiales = $this->materialRepository->consultar()->where('n.id', request()->user()->getNodoUser())->get();
+        $materiales = $this->materialRepository->consultar()->where('n.id', request()->user()->getNodoUser())->linea(request()->user()->getLineaUser())->get();
     }
-    return Excel::download(new MaterialesExport($materiales), 'Materiales de formación.xlsx');
+    return \Excel::download(new MaterialesExport($materiales), 'Materiales de formación.xlsx');
   }
 
   /**

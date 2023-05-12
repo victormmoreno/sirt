@@ -184,13 +184,13 @@ class Material extends Model
      * @return array
      * @author devjul
      */
-    public function scopeMaterialesForLineaTecnologica($query, $lineatecnologica)
+    public function scopeLinea($query, $lineatecnologica)
     {
 
-        $query->whereHas('lineatecnologica', function ($query) use ($lineatecnologica) {
-            $query->where('id', $lineatecnologica);
-        });
-
+        if (!empty($lineatecnologica) && $lineatecnologica != null && $lineatecnologica != 'all') {
+            return $query->where('lineatecnologica_id', $lineatecnologica);
+        }
+        return $query;
     }
 
 }

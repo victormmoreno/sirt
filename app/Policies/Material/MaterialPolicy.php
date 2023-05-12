@@ -21,7 +21,7 @@ class MaterialPolicy
             return true;
         }
 
-        if (session()->get('login_role') == $user->IsExperto() && $material->lineatecnologica_id == $user->gestor->lineatecnologica_id) {
+        if (session()->get('login_role') == $user->IsExperto() && $material->lineatecnologica_id == $user->experto->linea_id) {
             return true;
         }
         return false;
@@ -173,7 +173,7 @@ class MaterialPolicy
         if (session()->get('login_role') == $user->IsDinamizador() && $material->nodo_id == $user->dinamizador->nodo_id) {
             return true;
         }
-        if (session()->get('login_role') == $user->IsExperto() && $material->lineatecnologica_id == $user->gestor->lineatecnologica_id && $material->nodo_id == $user->gestor->nodo_id) {
+        if (session()->get('login_role') == $user->IsExperto() && $material->lineatecnologica_id == $user->experto->linea_id && $material->nodo_id == $user->experto->nodo_id) {
             return true;
         }
         return false;
@@ -191,7 +191,7 @@ class MaterialPolicy
     {
         return (bool) (session()->get('login_role') == $user->IsAdministrador()) ||
         (session()->get('login_role') == $user->IsDinamizador() && $material->nodo->id == $user->dinamizador->nodo->id) || 
-        (session()->get('login_role') == $user->IsExperto() && $material->lineatecnologica->id == $user->gestor->lineatecnologica->id && $material->nodo->id == $user->gestor->nodo->id);
+        (session()->get('login_role') == $user->IsExperto() && $material->lineatecnologica->id == $user->experto->linea_id && $material->nodo->id == $user->experto->nodo->id);
     }
 
     /**
@@ -203,7 +203,7 @@ class MaterialPolicy
      */
     public function update(User $user, $material)
     {
-        return (bool) $user->hasAnyRole([$user->IsDinamizador(), $user->IsExperto()]) && (session()->get('login_role') == $user->IsDinamizador() && $material->nodo->id == $user->dinamizador->nodo->id) || (session()->get('login_role') == $user->IsExperto() && $material->lineatecnologica->id == $user->gestor->lineatecnologica->id && $material->nodo->id == $user->gestor->nodo->id);
+        return (bool) $user->hasAnyRole([$user->IsDinamizador(), $user->IsExperto()]) && (session()->get('login_role') == $user->IsDinamizador() && $material->nodo->id == $user->dinamizador->nodo->id) || (session()->get('login_role') == $user->IsExperto() && $material->lineatecnologica->id == $user->experto->lineatecnologica->id && $material->nodo->id == $user->experto->nodo->id);
     }
 
     /**
@@ -217,6 +217,6 @@ class MaterialPolicy
     {
         return (bool) (session()->get('login_role') == $user->IsAdministrador()) ||
         (session()->get('login_role') == $user->IsDinamizador() && $material->nodo->id == $user->dinamizador->nodo->id) || 
-        (session()->get('login_role') == $user->IsExperto() && $material->lineatecnologica->id == $user->gestor->lineatecnologica->id && $material->nodo->id == $user->gestor->nodo->id);
+        (session()->get('login_role') == $user->IsExperto() && $material->lineatecnologica->id == $user->experto->linea_id && $material->nodo->id == $user->experto->nodo_id);
     }
 }

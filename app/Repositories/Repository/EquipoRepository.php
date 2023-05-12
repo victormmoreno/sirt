@@ -149,7 +149,7 @@ class EquipoRepository
             $nodo = auth()->user()->dinamizador->nodo_id;
         }
         if (session()->get('login_role') == User::IsExperto()) {
-            $nodo = auth()->user()->gestor->nodo_id;
+            $nodo = auth()->user()->experto->nodo_id;
         }
 
         return $nodo;
@@ -164,7 +164,7 @@ class EquipoRepository
     {
         $linea = null;
         if (session()->get('login_role') == User::IsExperto()) {
-            $linea = auth()->user()->gestor->lineatecnologica_id;
+            $linea = auth()->user()->experto->linea_id;
         }
         return $linea;
     }

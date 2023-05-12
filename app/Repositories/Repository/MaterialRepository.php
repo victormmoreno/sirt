@@ -146,7 +146,7 @@ class MaterialRepository
 
         $nodo = Nodo::find($this->findNodoBySession());
 
-        $lineaAuth = session()->has('login_role') && session()->get('login_role') == User::IsExperto() ? auth()->user()->gestor->lineatecnologica_id : $request->input('txtlineatecnologica');
+        $lineaAuth = session()->has('login_role') && session()->get('login_role') == User::IsExperto() ? auth()->user()->experto->linea_id : $request->input('txtlineatecnologica');
 
         $tecnoparque = sprintf("%02d", $nodo->id);
 
@@ -169,7 +169,7 @@ class MaterialRepository
         if (session()->has('login_role') && session()->get('login_role') == User::IsDinamizador()) {
             return auth()->user()->dinamizador->nodo_id;
         }elseif(session()->has('login_role') && session()->get('login_role') == User::IsExperto()){
-            return auth()->user()->gestor->nodo_id;
+            return auth()->user()->experto->nodo_id;
         } else {
             return request()->txtnodo_id;
         }
@@ -187,7 +187,7 @@ class MaterialRepository
     {
 
         $nodo = Nodo::find($this->findNodoBySession());
-        $lineaAuth = session()->has('login_role') && session()->get('login_role') == User::IsExperto() ? auth()->user()->gestor->lineatecnologica_id : $request->input('txtlineatecnologica');
+        $lineaAuth = session()->has('login_role') && session()->get('login_role') == User::IsExperto() ? auth()->user()->experto->linea_id : $request->input('txtlineatecnologica');
         // dd($nodo->lineas);
 
         return $nodo->lineas->find($lineaAuth)->id;

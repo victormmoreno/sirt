@@ -3,12 +3,13 @@
 namespace App\Repositories\Repository;
 
 use App\Repositories\Repository\UserRepository\DinamizadorRepository;
-use App\Models\{Comite, EstadoIdea, EstadoComite, Idea, Movimiento, Gestor};
+use App\Models\{Comite, EstadoIdea, EstadoComite, Idea, Movimiento};
 use App\Events\Comite\{AgendamientoWasRegistered, ComiteWasRegistered, GestoresWereRegistered};
 use Illuminate\Support\Facades\{DB, Notification, Session};
 use App\Notifications\Comite\ComiteRealizado;
 use App\Http\Controllers\PDF\PdfComiteController;
 use Carbon\Carbon;
+use App\User;
 use Illuminate\Support\Arr;
 
 class ComiteRepository
@@ -51,8 +52,8 @@ class ComiteRepository
     private function getEmailGestoresDelComite(Comite $comite)
     {
         $emails = array(0 => auth()->user()->email);
-        foreach ($comite->gestores as $key => $gestor) {
-            $emails[$key+1] = $gestor->user->email;
+        foreach ($comite->evaluadores as $key => $gestor) {
+            $emails[$key+1] = $gestor->email;
         }
         return $emails;
     }
@@ -69,13 +70,6 @@ class ComiteRepository
     {
         
         DB::beginTransaction();
-        // $comite = Comite::findOrFail($id);
-
-        // foreach ($comite->ideas as $key => $value) {
-        //     $this->aumentar_contador_notificado($value->pivot);
-        //     event(new AgendamientoWasRegistered($value, $comite));
-        // }
-        // DB::rollBack();
         try {
             $comite = Comite::findOrFail($id);
 
@@ -132,8 +126,7 @@ class ComiteRepository
         DB::beginTransaction();
         try {
             $comite = Comite::findOrFail($id);
-            $dinamizadorRepository = new DinamizadorRepository;
-            $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($comite->ideas()->first()->nodo_id)->get();
+            $dinamizadores = User::ConsultarFuncionarios(request()->user()->getNodoUser(), User::IsDinamizador())->get();
             $infocenter = auth()->user()->nombres . " " . auth()->user()->apellidos;
             Notification::send($dinamizadores, new ComiteRealizado($comite, $infocenter));
             DB::commit();
@@ -194,7 +187,7 @@ class ComiteRepository
             $syncGestores = $this->arraySyncGestoresAgendamiento($request);
             $this->registrarHistorialIdeasComite($comite, Movimiento::IsRegistrar(), 'cambio', $syncIdeas);
             $comite->ideas()->sync($syncIdeas, true);
-            $comite->gestores()->sync($syncGestores, true);
+            $comite->evaluadores()->sync($syncGestores, true);
             $comite->ideas()->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsProgramado())->first()->id]);
             DB::commit();
             return true;
@@ -255,6 +248,7 @@ class ComiteRepository
     {
         DB::beginTransaction();
         try {
+            DB::commit();
             $comite = Comite::findOrFail($id);
             $comite->update(['estado_comite_id' => EstadoComite::where('nombre', 'Proyectos asignados')->first()->id]);
             $this->asignarIdeasAGestores($comite, $request);
@@ -262,7 +256,6 @@ class ComiteRepository
             $this->registrarHistorialIdeasComite($comite, Movimiento::IsCalificar(), 'asignación', null, $request);
             // Registrar el historial del comité
             $comite->registrarHistorialComite(Movimiento::IsAsignar(), Session::get('login_role'), null, 'las ideas de proyecto a los expertos.');
-            DB::commit();
             return true;
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -281,7 +274,7 @@ class ComiteRepository
     {
         foreach ($comite->ideas as $key => $value) {
             if ($value->pivot->admitido == 1) {
-                $value->update(['gestor_id' => $request->txtgestores[$key]]);
+                $value->update(['asesor_id' => $request->txtgestores[$key]]);
             }
         }
     }
@@ -299,32 +292,8 @@ class ComiteRepository
         foreach ($comite->ideas as $key => $value) {
             $estado_idea = EstadoIdea::where('nombre', $request->get('txtestadoidea')[$key])->first();
             $value->update(['estadoidea_id' => $estado_idea->id]);
-            // if ($estado_idea->nombre == EstadoIdea::IsRechazadoComite()) {
-            //     $this->espejoIdeasRechazadasComite($value);
-            // }
         }
     }
-
-    /**
-     *
-     * Espejo cuando la idea se rechaza por parte del comité
-     *
-     * @param Idea $idea
-     * @return void
-     * @author dum
-     **/
-    // private function espejoIdeasRechazadasComite($idea)
-    // {
-    //     $espejo = $idea->replicate();
-    //     $espejo->codigo_idea = $this->getIdeaRepository()->generarCodigoIdea($idea->nodo_id);
-    //     $espejo->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsRegistro())->first()->id;
-    //     $espejo->push();
-    //     if ($idea->rutamodel != null) {
-    //         $espejo->rutamodel()->create([
-    //             'ruta' => $idea->rutamodel->ruta,
-    //         ]);
-    //     }
-    // }
 
     /**
      * Cambia el valor de los campos de la tabla pivot comite_idea
@@ -440,7 +409,7 @@ class ComiteRepository
                 'estado_comite_id' => EstadoComite::where('nombre', 'Programado')->first()->id
             ]);
             $comite->ideas()->sync($syncIdeas, false);
-            $comite->gestores()->sync($syncGestores, false);
+            $comite->evaluadores()->sync($syncGestores, false);
             $comite->ideas()->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsProgramado())->first()->id]);
             $this->registrarHistorialIdeasComite($comite, Movimiento::IsRegistrar(), 'registro');
             $comite->registrarHistorialComite(Movimiento::IsRegistrar(), Session::get('login_role'), null, 'el comité de ideas programado para el día ' . $comite->fechacomite->isoFormat('DD/MM/YYYY'));
@@ -501,8 +470,8 @@ class ComiteRepository
 
                 foreach ($comite->ideas as $key => $idea) {
                     if ($idea->pivot->admitido == 1) {
-                        $idea->update(['gestor_id' => $request->txtgestores[$key]]);
-                        $idea->registrarHistorialIdea(Movimiento::IsAsignar(), Session::get('login_role'), null, $idea->gestor->user->nombres . ' ' . $idea->gestor->user->apellidos);
+                        $idea->update(['asesor_id' => $request->txtgestores[$key]]);
+                        $idea->registrarHistorialIdea(Movimiento::IsAsignar(), Session::get('login_role'), null, $idea->asesor->nombres . ' ' . $idea->asesor->apellidos);
                     }
                 }
 
@@ -526,10 +495,10 @@ class ComiteRepository
     {
         DB::beginTransaction();
         try {
-            $gestor = Gestor::find($request->txtgestor_id);
-            $idea->registrarHistorialIdea(Movimiento::IsCambiar(), Session::get('login_role'), null, $idea->gestor->user->nombres . ' ' . $idea->gestor->user->apellidos . ' a ' . $gestor->user->nombres . ' ' . $gestor->user->apellidos);
+            $gestor = User::find($request->txtgestor_id);
+            $idea->registrarHistorialIdea(Movimiento::IsCambiar(), Session::get('login_role'), null, $idea->asesor->nombres . ' ' . $idea->asesor->apellidos . ' a ' . $gestor->nombres . ' ' . $gestor->apellidos);
             $idea->update([
-                'gestor_id' => $request->txtgestor_id
+                'asesor_id' => $request->txtgestor_id
             ]);
             DB::commit();
             return true;
@@ -564,7 +533,7 @@ class ComiteRepository
     {
         $syncData = array();
         foreach ($request->get('gestores') as $id => $value) {
-            $syncData[$id] = array('hora_inicio' => $request->horas_inicio[$id], 'hora_fin' => $request->horas_fin[$id], 'gestor_id' => $value);
+            $syncData[$id] = array('hora_inicio' => $request->horas_inicio[$id], 'hora_fin' => $request->horas_fin[$id], 'evaluador_id' => $value);
         }
         return $syncData;
     }

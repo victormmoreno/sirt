@@ -47,7 +47,7 @@ class EquipoPolicy
         if (session()->get('login_role') == $user->IsDinamizador() && $equipo->nodo_id == request()->user()->dinamizador->nodo_id) {
             return true;
         }
-        if (session()->get('login_role') == $user->IsExperto() && $equipo->nodo_id == request()->user()->gestor->nodo_id && $equipo->lineatecnologica_id == request()->user()->gestor->lineatecnologica_id) {
+        if (session()->get('login_role') == $user->IsExperto() && $equipo->nodo_id == request()->user()->experto->nodo_id && $equipo->lineatecnologica_id == request()->user()->experto->linea_id) {
             return true;
         }
         if (session()->get('login_role') == $user->IsInfocenter() && $equipo->nodo_id == request()->user()->infocenter->nodo_id) {

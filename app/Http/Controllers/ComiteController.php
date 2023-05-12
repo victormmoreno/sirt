@@ -49,7 +49,7 @@ class ComiteController extends Controller
       alert()->warning('Error!','No tienes permisos para para asignar las ideas de este comité a los expertos.')->showConfirmButton('Ok', '#3085d6');
       return back(); 
     }
-    $gestores = $this->getGestorRepository()->getAllGestoresPorNodo($comite->ideas()->first()->nodo_id)->get();
+    $gestores = User::ConsultarFuncionarios(request()->user()->getNodoUser(), User::IsExperto())->get();
     return view('comite.asignar_ideas', [
       'comite' => $comite,
       'gestores' => $gestores
@@ -154,7 +154,7 @@ class ComiteController extends Controller
       return back();
     }
     $ideas = Idea::ConsultarIdeasConvocadasAComite( request()->user()->getNodoUser() )->get();
-    $gestores = $this->getGestorRepository()->getAllGestoresPorNodo( request()->user()->getNodoUser() )->get();
+    $gestores = User::ConsultarFuncionarios(request()->user()->getNodoUser(), User::IsExperto())->get();
     return view('comite.create', [
       'ideas' => $ideas,
       'gestores' => $gestores
@@ -174,7 +174,7 @@ class ComiteController extends Controller
       alert('No autorizado', 'No tienes permisos para cambiar al asignación de experto de esta idea', 'error')->showConfirmButton('Ok', '#3085d6');
       return back();
     }
-    $gestores = $this->getGestorRepository()->getAllGestoresPorNodo($idea->nodo_id)->get();
+    $gestores = User::ConsultarFuncionarios(request()->user()->getNodoUser(), User::IsExperto())->get();
     return view('comite.update_gestor', [
     'idea' => $idea,
     'comite' => $comite,
@@ -421,7 +421,7 @@ class ComiteController extends Controller
     $csibt = Comite::findOrFail($id);
     $idideas = $this->getIdIdeasDelComiteArray($csibt);
     $ideas = Idea::ConsultarIdeasConvocadasAComite( $csibt->ideas()->first()->nodo_id )->orWhereIn('ideas.id', $idideas)->get();
-    $gestores = $this->getGestorRepository()->getAllGestoresPorNodo( $csibt->ideas()->first()->nodo_id )->get();
+    $gestores = User::ConsultarFuncionarios(request()->user()->getNodoUser(), User::IsExperto())->get();
     return view('comite.edit_agendamiento', [
       'ideas' => $ideas,
       'comite' => $csibt,

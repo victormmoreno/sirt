@@ -2,7 +2,7 @@
 # Se le ha convocado para presentarse en un taller de fortalecimiento | Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.
 
 Señor(a)<br>
-<b>_{{$idea->talento->user->nombres }} {{$idea->talento->user->apellidos }}_</b><br>
+<b>_{{$idea->user->nombres }} {{$idea->user->apellidos }}_</b><br>
 Cordial Saludo.
 
 <p align="justify">El tecnoparque <b>{{$idea->nodo->entidad->nombre}}</b> le ha convocado a un taller de fortalecimiento.</p>
@@ -36,11 +36,7 @@ se le ha convocado a un taller de fortalecimiento. <br>
     </center>
 @endcomponent
 
-@if( $idea->nodo->infocenter->isEmpty())
-Para más información puede ocudir a las instalaciones de 🏬 <strong>Tecnoparque nodo {{$idea->nodo->entidad->nombre}}</strong> ubicado en {{$idea->nodo->direccion}} en {{$idea->nodo->entidad->ciudad->nombre}} ({{$idea->nodo->entidad->ciudad->departamento->nombre}}).
-@else
-Para más información puede contactarse al telefono ☎️  <b>{{ $idea->nodo->telefono}}</b> ext <b><pre>{{ collect($idea->nodo->infocenter)->last()->extension}}</pre></b>, o ocudir a las instalaciones de 🏬 <strong>Tecnoparque nodo {{$idea->nodo->entidad->nombre}}</strong>  ubicado en {{$idea->nodo->direccion}} en {{$idea->nodo->entidad->ciudad->nombre}} ({{$idea->nodo->entidad->ciudad->departamento->nombre}}).
-@endif
+Para más información puede contactarse al telefono ☎️  <b>{{ $idea->nodo->telefono}}</b> ext <b>{{ $idea->nodo->extension}}</b>, o ocudir a las instalaciones de 🏬 <strong>Tecnoparque nodo {{$idea->nodo->entidad->nombre}}</strong>  ubicado en {{$idea->nodo->direccion}} en {{$idea->nodo->entidad->ciudad->nombre}} ({{$idea->nodo->entidad->ciudad->departamento->nombre}}).
 
 
 Gracias,<br>

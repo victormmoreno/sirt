@@ -12,7 +12,7 @@
   </center>
   <p>
     Señor(a) <br>
-    <b>{{ $idea->talento->user->nombres }} {{ $idea->talento->user->apellidos }}</b><br>
+    <b>{{ $idea->user->nombres }} {{ $idea->user->apellidos }}</b><br>
     Cordial Saludo
   </p>
   <p style="text-align: justify">
@@ -52,5 +52,3 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>
-{{-- {{$nombre_proyecto}}
-{{$correo_contacto }} --}}

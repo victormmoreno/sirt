@@ -138,14 +138,14 @@ class EquipoController extends Controller
                 $nodo_id = request()->user()->getNodoUser();
             }
             // if (session()->get('login_role') == User::IsExperto()) {
-            //     $nodo_id = auth()->user()->gestor->nodo_id;
+            //     $nodo_id = auth()->user()->experto->nodo_id;
             // }
 
             if (session()->get('login_role') == User::IsExperto()) {
                 if(isset($lineatecnologica)){
                     $linea_id = $lineatecnologica;
                 }else{
-                    $linea_id = auth()->user()->gestor->lineatecnologica_id;
+                    $linea_id = auth()->user()->experto->linea_id;
                 }
             }
             if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsApoyoTecnico()) {
@@ -378,8 +378,8 @@ class EquipoController extends Controller
                 $linea = null;
                 break;
             case User::IsExperto():
-                $nodo = auth()->user()->gestor->nodo_id;
-                $linea = auth()->user()->gestor->lineatecnologica_id;
+                $nodo = auth()->user()->experto->nodo_id;
+                $linea = auth()->user()->experto->linea_id;
                 break;
             default:
                 return abort('403');

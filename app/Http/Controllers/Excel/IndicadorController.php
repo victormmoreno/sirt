@@ -85,7 +85,7 @@ class IndicadorController extends Controller
         })->whereIn('nodo_id', $nodos)
         ->orderBy('nodo_id');
         if (session()->get('login_role') == User::IsExperto()) {
-            $ideas = $ideas->where('ideas.gestor_id', request()->user()->gestor->id);
+            $ideas = $ideas->where('ideas.asesor_id', request()->user()->id);
         }
         $ideas = $ideas->get();
         return Excel::download(new IdeasIndicadorExport($ideas), 'Ideas.xlsx');
@@ -279,11 +279,11 @@ class IndicadorController extends Controller
      **/
     public function consultarIndicadoresEmpresas(Request $request)
     {
-        if ($request->nodos[0] == 'all' || $request->nodos[0] == null || $request->nodos[0] == 0) {
-            return $this->proyectoRepository->indicadoresEmpresas();
-        } else {
-            return $this->proyectoRepository->indicadoresEmpresas()->whereIn('nodos.id', is_array($request->nodos) ? $request->nodos : [$request->nodos]);
-        }
+        $query = null;
+        $query = $this->proyectoRepository->indicadoresEmpresas();
+        $query = $this->nodos($request, $query);
+        $query = $this->experto($query);
+        return $query;
     }
 
     /**
@@ -295,12 +295,11 @@ class IndicadorController extends Controller
      **/
     public function consultarIndicadoresUsersEjecutores(Request $request)
     {
-        if ($request->nodos[0] == 'all' || $request->nodos[0] == null || $request->nodos[0] == 0) {
-            return $this->proyectoRepository->indicadoresUsersEjecutores();
-        } else {
-            return $this->proyectoRepository->indicadoresUsersEjecutores()->whereIn('nodos.id', is_array($request->nodos) ? $request->nodos : [$request->nodos]);
-        }
-        // return $query;
+        $query = null;
+        $query = $this->proyectoRepository->indicadoresUsersEjecutores();
+        $query = $this->nodos($request, $query);
+        $query = $this->experto($query);
+        return $query;
     }
 
     /**
@@ -312,12 +311,11 @@ class IndicadorController extends Controller
      **/
     public function consultarIndicadoresUsers(Request $request)
     {
-        if ($request->nodos[0] == 'all' || $request->nodos[0] == null || $request->nodos[0] == 0) {
-            return $this->proyectoRepository->indicadoresUsers();
-        } else {
-            return $this->proyectoRepository->indicadoresUsers()->whereIn('nodos.id', is_array($request->nodos) ? $request->nodos : [$request->nodos]);
-        }
-        // return $query;
+        $query = null;
+        $query = $this->proyectoRepository->indicadoresUsers();
+        $query = $this->nodos($request, $query);
+        $query = $this->experto($query);
+        return $query;
     }
 
     /**
@@ -329,12 +327,11 @@ class IndicadorController extends Controller
      **/
     public function consultarIndicadoresGrupos(Request $request)
     {
-        if ($request->nodos[0] == 'all' || $request->nodos[0] == null || $request->nodos[0] == 0) {
-            return $this->proyectoRepository->indicadoresGrupos();
-        } else {
-            return $this->proyectoRepository->indicadoresGrupos()->whereIn('nodos.id', is_array($request->nodos) ? $request->nodos : [$request->nodos]);
-        }
-        // return $query;
+        $query = null;
+        $query = $this->proyectoRepository->indicadoresGrupos();
+        $query = $this->nodos($request, $query);
+        $query = $this->experto($query);
+        return $query;
     }
 
     /**
@@ -347,10 +344,40 @@ class IndicadorController extends Controller
      **/
     public function consultarIndicadoresProyecto(Request $request)
     {
-        if ($request->nodos[0] == 'all' || $request->nodos[0] == null || $request->nodos[0] == 0) {
-            return $this->proyectoRepository->indicadoresProyectos();
-        } else {
-            return $this->proyectoRepository->indicadoresProyectos()->whereIn('nodos.id', is_array($request->nodos) ? $request->nodos : [$request->nodos]);
+        $query = null;
+        $query = $this->proyectoRepository->indicadoresProyectos();
+        $query = $this->nodos($request, $query);
+        $query = $this->experto($query);
+        return $query;
+    }
+
+    /**
+     * Retorna la condición para los expertos de los que se generarán los indicadores
+     *
+     * @param Request $request
+     * @param Builder $query
+     * @return Builder
+     * @author dum
+     **/
+    public function experto($query)
+    {
+        if (session()->get('login_role') == User::IsExperto()) {
+            return $query->where('proyectos.experto_id', request()->user()->id);
+        }
+    }
+
+    /**
+     * Retornar la condicion para los nodos de los que se generarán los indicadores
+     *
+     * @param Request $request
+     * @param Builder $query
+     * @return Builder
+     * @author dum
+     **/
+    private function nodos($request, $query)
+    {
+        if ($request->nodos[0] != 'all' || $request->nodos[0] != null || $request->nodos[0] != 0) {
+            return $query->whereIn('nodos.id', is_array($request->nodos) ? $request->nodos : [$request->nodos]);
         }
     }
 

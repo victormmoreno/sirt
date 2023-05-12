@@ -792,7 +792,7 @@ class User extends Authenticatable implements JWTSubject
     public function getLineaUser()
     {
         if (session()->get('login_role') == $this->IsExperto()) {
-            return $this->gestor->lineatecnologica_id;
+            return $this->experto->linea_id;
         }
         return false;
     }

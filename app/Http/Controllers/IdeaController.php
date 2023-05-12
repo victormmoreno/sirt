@@ -435,7 +435,7 @@ class IdeaController extends Controller
             if (isset($data->user->nombres)) {
                 return "{$data->user->nombres} {$data->user->apellidos}";
             } else {
-                return "{$data->nombres_contacto} {$data->apellidos_contacto}";
+                return "No hay información disponible";
             }
         })->editColumn('created_at', function ($data) {
             return isset($data->created_at) ? $data->created_at->isoFormat('DD/MM/YYYY') : 'No Registra';
@@ -443,13 +443,13 @@ class IdeaController extends Controller
             if (isset($data->user->email)) {
                 return "{$data->user->email}";
             } else {
-                return "{$data->correo_contacto}";
+                return "No hay información disponible";
             }
         })->editColumn('telefono_contacto', function ($data) {
             if (isset($data->user->celular)) {
                 return "{$data->user->celular}";
             } else {
-                return "{$data->telefono_contacto}";
+                return "No hay información disponible";
             }
         })->editColumn('estado', function ($data) {
             return $data->estadoIdea->nombre;
@@ -457,7 +457,7 @@ class IdeaController extends Controller
             if (isset($data->user->nombres)) {
                 return $data->user->nombres . " " . $data->user->apellidos;
             } else {
-                return "{$data->nombres_contacto} {$data->apellidos_contacto}";
+                return "No hay información disponible";
             }
         })->editColumn('nodo', function ($data) {
             return $data->nodo->entidad->nombre;

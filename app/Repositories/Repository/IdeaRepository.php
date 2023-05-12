@@ -114,18 +114,13 @@ class IdeaRepository
         DB::beginTransaction();
         try {
             $idea->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsConvocado())->first()->id]);
-            $infocenters = User::infoUserRole(['Infocenter'], ['infocenter', 'infocenter.nodo'])->whereHas(
-                'infocenter.nodo',
-                function ($query) use ($idea) {
-                    $query->where('id', $idea->nodo_id);
-                }
-            )->get();
+            $infocenters = User::ConsultarFuncionarios($idea->nodo_id, User::IsInfocenter())->get();
             $emails_infocenter = array();
             foreach ($infocenters as $key => $infocenter) {
                 $emails_infocenter[$key+1] = $infocenter->email;
             }
             event(new IdeasWasAccepted($idea, $infocenters, $request->txtobservacionesAceptacion));
-
+    
             if (!$infocenters->isEmpty()) {
                 Notification::send($infocenters, new IdeaAceptadaParaComite($idea, auth()->user()));
             }
@@ -340,7 +335,7 @@ class IdeaRepository
                 "codigo_idea" => $codigo_idea,
                 "tipo_idea" => Idea::IsEmprendedor(),
                 "estadoidea_id" => EstadoIdea::where('nombre', '=', EstadoIdea::IsRegistro())->first()->id,
-                "talento_id" => auth()->user()->talento->id,
+                "user_id" => auth()->user()->id,
                 "sede_id" => $sede_id,
                 "acuerdo_no_confidencialidad" => $valoresCondicionales['acuerdo_no_confidencialidad'],
                 "fecha_acuerdo_no_confidencialidad" => $valoresCondicionales['fecha_acuerdo_no_confidencialidad'],

@@ -93,7 +93,7 @@ class MantenimientoPolicy
         if (session()->get('login_role') == $user->IsDinamizador() && $mantenimiento->equipo->nodo_id == $user->dinamizador->nodo_id) {
             return true;
         }
-        if (session()->get('login_role') == $user->IsExperto() && $mantenimiento->equipo->nodo_id == $user->gestor->nodo_id) {
+        if (session()->get('login_role') == $user->IsExperto() && $mantenimiento->equipo->nodo_id == $user->experto->nodo_id) {
             return true;
         }
         if (session()->get('login_role') == $user->IsApoyoTecnico() && $mantenimiento->equipo->nodo_id == request()->user()->apoyotecnico->nodo_id) {

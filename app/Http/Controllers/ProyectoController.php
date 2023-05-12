@@ -264,7 +264,7 @@ class ProyectoController extends Controller
     public function proyectosCostos(string $anho)
     {
         if (Session::get('login_role') == User::IsExperto()) {
-            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('gestores.id', auth()->user()->gestor->id)->get();
+            $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('experto_id', auth()->user()->id)->get();
         } else {
 
             $proyectos = $this->getProyectoRepository()->ConsultarProyectosPorAnho($anho)->where('nodos.id', auth()->user()->dinamizador->nodo_id)->get();
@@ -359,7 +359,7 @@ class ProyectoController extends Controller
         // exit;
         // dd($nodo);
         if (session()->get('login_role') == User::IsExperto()) {
-            $ideas = Idea::ConsultarIdeasAprobadasEnComite(auth()->user()->gestor->nodo_id, auth()->user()->gestor->user_id)->get();
+            $ideas = Idea::ConsultarIdeasAprobadasEnComite(auth()->user()->experto->nodo_id, auth()->user()->id)->get();
         } else {
             $ideas = Idea::ConsultarIdeasAprobadasEnComite($nodo, $id_experto)->get();
         }
@@ -385,7 +385,7 @@ class ProyectoController extends Controller
     public function datatableIdeasConEmpresasGrupo()
     {
         if (request()->ajax()) {
-            $ideas = Idea::ConsultarIdeasConEmpresasGrupos(auth()->user()->gestor->nodo_id)->get();
+            $ideas = Idea::ConsultarIdeasConEmpresasGrupos(auth()->user()->experto->nodo_id)->get();
             return datatables()->of($ideas)
                 ->addColumn('checkbox', function ($data) {
                     $checkbox = '<a class="btn blue" onclick="asociarIdeaDeProyectoAProyecto(' . $data->consecutivo . ', \'' . $data->nombre_proyecto . '\', \'' . $data->codigo_idea . '\')">
@@ -528,7 +528,7 @@ class ProyectoController extends Controller
             return back();
         }
         if (session()->get('login_role') == User::IsExperto()) {
-            $sublineas = Sublinea::SubLineasDeUnaLinea(auth()->user()->gestor->lineatecnologica->id)->get()->pluck('nombre', 'id');
+            $sublineas = Sublinea::SubLineasDeUnaLinea(auth()->user()->experto->linea_id)->get()->pluck('nombre', 'id');
         } else {
             $sublineas = null;
         }
