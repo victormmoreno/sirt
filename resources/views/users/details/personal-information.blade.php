@@ -108,11 +108,11 @@
                 <span>Institución</span>
             </div>
             <div class="server-stat col s6 m4 l3">
-                <p>{{$user->present()->userGradoEscolaridad()}}</p>
+                <p>{{$user->gradoescolaridad}}</p>
                 <span>Grado Escolaridad</span>
             </div>
             <div class="server-stat col s6 m8 l6">
-                <p>{{$user->ocupaciones}}</p>
+                <p>{{$user->ocupacions}}</p>
                 <span>Ocupaciones</span>
             </div>
             <div class="server-stat col s6 m8 l6">

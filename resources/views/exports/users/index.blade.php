@@ -35,7 +35,7 @@
                 {{isset($user->nodo) ? $user->nodo : __('No register')}}
             </td>
             <td>
-                {{isset($user->tipodocumento) ? $user->tipodocumento : __('No register')}}
+                {{isset($user->tipodocumento_name) ? $user->tipodocumento_name : __('No register')}}
             </td>
             <td>
                 {{isset($user->expedicion) ? $user->expedicion : __('No register')}}
@@ -98,7 +98,7 @@
                 {{isset($user->fecha_terminacion) ? $user->fecha_terminacion : __('No register')}}
             </td>
             <td>
-                {{isset($user->ocupaciones) ? $user->ocupaciones : __('No register')}}
+                {{isset($user->ocupacions) ? $user->ocupacions : __('No register')}}
             </td>
             <td>
                 {{isset($user->roles) ? $user->roles : __('No register')}}

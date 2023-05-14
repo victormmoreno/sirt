@@ -35,7 +35,7 @@ class RegisterController extends Controller
     public function showRegistrationForm()
     {
         return view('auth.register', [
-            'etnias'            => Etnia::pluck('nombre', 'id'),
+            'etnias'            => $this->userRepository->getAllEtnias(),
             'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
             'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
             'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),

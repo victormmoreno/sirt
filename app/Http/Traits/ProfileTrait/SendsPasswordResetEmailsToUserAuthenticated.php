@@ -9,7 +9,7 @@ trait SendsPasswordResetEmailsToUserAuthenticated
 
     public function passwordReset()
     {
-        $this->authorize('updatePassword', $this->getAuthUserFindById());
+        $this->authorize('updatePassword', $this->getAuthUserFindByIdEloquent());
         $user = auth()->user()->only('email');
 
 
@@ -68,9 +68,9 @@ trait SendsPasswordResetEmailsToUserAuthenticated
         return Password::broker();
     }
 
-    private function getAuthUserFindById()
+    private function getAuthUserFindByIdEloquent()
     {
-        return $this->userRepository->findById(auth()->user()->id)->firstOrFail();
+        return $this->userRepository->findByIdEloquent(auth()->user()->id)->firstOrFail();
     }
 
 }

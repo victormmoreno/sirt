@@ -15,17 +15,17 @@ $(document).on('submit', 'form#formEditUser', function (event) {
         dataType: 'json',
         processData: false,
         success: function (data) {
-    
+
           $('button[type="submit"]').removeAttr('disabled');
           $('button[type="submit"]').prop("disabled", false);
           $('.error').hide();
           if (data.fail) {
-  
+
             for (control in data.errors) {
               $('#' + control + '-error').html(data.errors[control]);
               $('#' + control + '-error').show();
             }
-  
+
             EditUser.printErroresFormulario(data);
           }
           if (data.state == 'error') {
@@ -54,7 +54,7 @@ $(document).on('submit', 'form#formEditUser', function (event) {
             }, 1000);
           }
         },
-        
+
       });
 });
 

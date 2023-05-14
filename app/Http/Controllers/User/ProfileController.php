@@ -7,10 +7,9 @@ use App\Http\Requests\ProfileRequest\{ChangePasswordRequest, ProfileFormRequest}
 use App\Http\Traits\ProfileTrait\SendsPasswordResetEmailsToUserAuthenticated;
 use App\Repositories\Repository\{ProfileRepository\ProfileRepository, UserRepository\UserRepository};
 use App\User;
-use App\Models\Etnia;
 use Illuminate\Http\Request;
 use Illuminate\Support\{Facades\Validator};
-use Barryvdh\DomPDF\Facade as PDF;
+
 
 class ProfileController extends Controller
 {
@@ -33,8 +32,7 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        $authUser = $this->getAuthUserFindById();
-        // dd($authUser);
+        $authUser = $this->userRepository->findByIdBuilder(auth()->user()->id)->firstOrFail();
         if (request()->user()->cannot('viewProfile', $authUser)) {
             alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
@@ -44,7 +42,7 @@ class ProfileController extends Controller
 
     public function roles()
     {
-        $authUser = $this->getAuthUserFindById();
+        $authUser =  User::query()->with(['roles'])->where('users.id', auth()->user()->id)->firstOrFail();
         if (request()->user()->cannot('viewProfile', $authUser)) {
             alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
@@ -57,7 +55,7 @@ class ProfileController extends Controller
 
     public function account()
     {
-        $authUser = $this->getAuthUserFindById();
+        $authUser = User::query()->with(['roles'])->where('users.id', auth()->user()->id)->firstOrFail();
         if (request()->user()->cannot('viewProfile', $authUser)) {
             alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
@@ -75,21 +73,20 @@ class ProfileController extends Controller
      */
     public function editAccount()
     {
-        $authUser = $this->getAuthUserFindById();
+        $authUser = User::with(['roles'])->where('users.id', auth()->user()->id)->firstOrFail();;
         if (request()->user()->cannot('viewProfile', $authUser)) {
             alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
         }
         return view('users.profile.edit', [
             'user'              => $authUser,
-            'etnias' => Etnia::pluck('nombre', 'id'),
+            'etnias'            => $this->userRepository->getAllEtnias(),
             'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
             'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
             'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
             'eps'               => $this->userRepository->getAllEpsActivas(),
             'departamentos'     => $this->userRepository->getAllDepartamentos(),
-            'ocupaciones'       => $this->userRepository->getAllOcupaciones(),
-            'view' => 'edit'
+            'ocupaciones'       => $this->userRepository->getAllOcupaciones()
         ]);
     }
 
@@ -136,7 +133,7 @@ class ProfileController extends Controller
 
     public function updatePassword(ChangePasswordRequest $request)
     {
-        $authUser = $this->getAuthUserFindById();
+        $authUser = $this->getAuthUserFindByIdEloquent();
         if (request()->user()->cannot('updatePassword', $authUser)) {
             alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
@@ -149,16 +146,13 @@ class ProfileController extends Controller
         return redirect()->back()->with('error', 'error al actualizar tu contraseña, intentalo de nuevo');
     }
 
-    public function downloadCertificatedPlataform($extennsion = '.pdf', $orientacion = 'portrait')
+    public function downloadCertificatedPlataform($extension = '.pdf', $orientacion = 'portrait')
     {
-        $user = User::withTrashed()->where('documento', auth()->user()->documento)->firstOrFail();
+        $user = $this->getAuthUserFindByIdEloquent();
         if (request()->user()->cannot('downloadCertificatedPlataform', $user)) {
             alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
         }
-        $pdf = PDF::loadView('pdf.certificado-plataforma.certificado', compact('user'));
-        $pdf->setPaper(strtolower('LETTER'),  $orientacion = 'landscape');
-        $pdf->setEncryption($user->documento);
-        return $pdf->download("certificado  " . config('app.name') . $extennsion);
+        return $this->profileRepostory->downloadCertificated($user, $extension, $orientacion);
     }
 }

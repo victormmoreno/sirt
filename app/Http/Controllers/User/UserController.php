@@ -145,7 +145,7 @@ class UserController extends Controller
      */
     public function show($documento)
     {
-        $user = $this->userRepository->findUserByDocument($documento)->firstOrFail();
+        $user = $this->userRepository->findUserByDocumentBuilder($documento)->firstOrFail();
 
         if(request()->user()->cannot('show', $user))
         {

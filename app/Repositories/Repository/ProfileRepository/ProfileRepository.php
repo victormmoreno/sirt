@@ -5,13 +5,10 @@ namespace App\Repositories\Repository\ProfileRepository;
 use App\Models\Eps;
 use App\Models\Ocupacion;
 use App\User;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class ProfileRepository
 {
-    /*=====================================================================
-    =            metodo para actualizar el perfil del ususario            =
-    =====================================================================*/
-
     public function Update($request, $user)
     {
         $user->update([
@@ -41,19 +38,26 @@ class ProfileRepository
             "estrato"              => $request->input('txtestrato'),
             "otra_ocupacion"       => collect($request->input('txtocupaciones'))->contains(Ocupacion::where('nombre', Ocupacion::IsOtraOcupacion())->first()->id) ? $request->input('txtotra_ocupacion') : null,
         ]);
-
         $user->ocupaciones()->sync($request->get('txtocupaciones'));
-
         return $user;
     }
-
 
     public function updatePassword($request, User $user): User
     {
         $user->update([
-            "password" => $request->input('txtnewpassword'),
+            "password" => $request->input('newpassword'),
         ]);
         return $user;
     }
 
+    public function downloadCertificated($user,  $extension = '.pdf', $orientacion = 'portrait'){
+        try{
+            $pdf = PDF::loadView('pdf.certificado-plataforma.certificado', compact('user'));
+            $pdf->setPaper(strtolower('LETTER'),  $orientacion = 'landscape');
+            $pdf->setEncryption($user->documento);
+            return $pdf->download("certificado  " . config('app.name') . $extension);
+        }catch(\Exception $e){
+            return $e->getMessage();
+        }
+    }
 }

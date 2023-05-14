@@ -47,11 +47,9 @@ class UserPolicy
      * @author julian londono
      * @return boolean
      */
-    public function downloadCertificatedPlataform(User $user)
+    public function downloadCertificatedPlataform(User $authUser, User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsTalento()]) &&
-            session()->has('login_role')
-            && (session()->get('login_role') == User::IsTalento());
+        return (bool) $authUser->id == $user->id;
     }
 
     /**

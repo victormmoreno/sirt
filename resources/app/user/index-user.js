@@ -73,8 +73,8 @@ const UserIndex = {
                     data: 'celular',
                     name: 'celular',
                 },  {
-                    data: 'roles',
-                    name: 'roles'
+                    data: 'rols',
+                    name: 'rols'
                 }, {
                     data: 'login',
                     name: 'login',
@@ -124,8 +124,8 @@ const UserIndex = {
                     data: 'celular',
                     name: 'celular',
                 },  {
-                    data: 'roles',
-                    name: 'roles'
+                    data: 'rols',
+                    name: 'rols'
                 }, {
                     data: 'login',
                     name: 'login',

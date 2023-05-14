@@ -7,7 +7,7 @@
             {{$user->nombres.' '.$user->apellidos}}
         </span>
         <span class="mailbox-author">
-            {{$user->roles}}
+            {{$user->getRoleNames()->implode(', ')}}
             <br>
                 Miembro desde {{isset($user->created_at) ? $user->created_at->isoFormat('LL') : ': No Registra'}}
                 <br>

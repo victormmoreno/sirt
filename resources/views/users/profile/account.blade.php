@@ -76,18 +76,16 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-
                                                             @endif
-
                                                             <div class="row">
                                                                 <div class="input-field col s12 m6 l6 offset-l3 m3">
                                                                     <i class="material-icons prefix">
                                                                         lock_open
                                                                     </i>
-                                                                    <input class="validate" id="txtpassword" name="txtpassword" type="password"  value="{{ old('txtpassword')}}">
-                                                                    <label for="txtpassword">Contraseña actual <span class="red-text">*</span></label>
-                                                                    @error('txtpassword')
-                                                                        <label id="txtpassword-error" class="error" for="txtpassword">{{ $message }}</label>
+                                                                    <input class="validate" id="password" name="password" type="password"  value="{{ old('password')}}">
+                                                                    <label for="password">Contraseña actual <span class="red-text">*</span></label>
+                                                                    @error('password')
+                                                                        <label id="password-error" class="error" for="password">{{ $message }}</label>
                                                                     @enderror
                                                                     <div class="center-align">
                                                                         <small class="black-text">Debe proporcionar su contraseña actual para poder cambiarla.</small>
@@ -99,10 +97,10 @@
                                                                     <i class="material-icons prefix">
                                                                         lock
                                                                     </i>
-                                                                    <input class="validate" id="txtnewpassword" name="txtnewpassword" type="password">
-                                                                    <label for="txtnewpassword">Nueva contraseña <span class="red-text">*</span></label>
-                                                                    @error('txtnewpassword')
-                                                                        <label id="txtnewpassword-error" class="error" for="txtnewpassword">{{ $message }}</label>
+                                                                    <input class="validate" id="newpassword" name="newpassword" type="password">
+                                                                    <label for="newpassword">Nueva contraseña <span class="red-text">*</span></label>
+                                                                    @error('newpassword')
+                                                                        <label id="newpassword-error" class="error" for="newpassword">{{ $message }}</label>
                                                                     @enderror
                                                                 </div>
                                                             </div>
@@ -111,8 +109,8 @@
                                                                     <i class="material-icons prefix">
                                                                         lock
                                                                     </i>
-                                                                    <input class="validate" id="txtnewpassword-confirm" name="txtnewpassword_confirmation" type="password" >
-                                                                    <label for="txtnewpassword-confirm">Confirmar contraseña <span class="red-text">*</span></label>
+                                                                    <input class="validate" id="newpassword-confirm" name="newpassword_confirmation" type="password" >
+                                                                    <label for="newpassword-confirm">Confirmar contraseña <span class="red-text">*</span></label>
 
                                                                 </div>
                                                             </div>

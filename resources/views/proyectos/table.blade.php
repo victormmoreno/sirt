@@ -1,5 +1,5 @@
 <table id="tblProyectos_Master" class="display responsive-table datatable-example dataTable" style="width: 100%">
-  <thead>
+  <thead class="bg-primary white-text">
     <tr>
       <th>Código de Proyecto</th>
       <th>Experto</th>

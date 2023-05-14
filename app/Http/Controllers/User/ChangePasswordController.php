@@ -22,7 +22,7 @@ class ChangePasswordController extends Controller
 
     public function generatePassword(int $document)
     {
-        $user = $this->userRepository->findUserByDocument($document);
+        $user = $this->userRepository->findUserByDocumentEloquent($document);
         if (request()->user()->cannot('generatePassword', $user)) {
             alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');

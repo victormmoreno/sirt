@@ -27,13 +27,30 @@
                                             <div class="row">
                                                 @include('users.profile.nav.nav-profile')
                                             </div>
-
                                         </div>
                                         <div class="col s12 m7 l9">
                                             @include('users.profile.nav.navbar')
                                             <div class="mailbox-view">
                                                 <div class="mailbox-view-header">
-                                                    @include('users.profile.nav.header')
+                                                    <div class="left">
+                                                        <div class="left">
+                                                            {!!$user->present()->userProfileUserImage()!!}
+                                                        </div>
+                                                        <div class="left">
+                                                            <span class="mailbox-title secondary-text">
+                                                                {{$user->nombres.' '.$user->apellidos}}
+                                                            </span>
+                                                            <span class="mailbox-author">
+                                                                {{$user->rols}}
+                                                                <br>
+                                                                    Miembro desde {{isset($user->created_at) ? $user->created_at->isoFormat('LL') : ': No Registra'}}
+                                                                    <br>
+                                                                @if(isset($user->fechanacimiento))
+                                                                {{$user->fechanacimiento->age}} años
+                                                                @endif
+                                                            </span>
+                                                        </div>
+                                                    </div>
                                                     <div class="right mailbox-buttons">
                                                     <span class="mailbox-title primary-text">
                                                         <p class="center">
@@ -53,13 +70,14 @@
                                                                             Cambiar Información
                                                                         </a>
                                                                     </li>
-                                                                    <li class="divider">
-                                                                    </li>
-                                                                        <li>
+                                                                    <li class="divider"></li>
+                                                                    @can('downloadCertificatedPlataform', $user)
+                                                                    <li>
                                                                         <a href="{{route('certificado')}}" target="_blank">
                                                                             Obtener certificado de registro en el sistema
                                                                         </a>
                                                                     </li>
+                                                                    @endcan
                                                                 </ul>
                                                             </div>
                                                         </p>

@@ -328,7 +328,7 @@ class User extends Authenticatable implements JWTSubject
             ->role($role);
     }
 
-    public function scopeInfoUser($query)
+    public function scopeInfoUserBuilder($query)
     {
         return $query
         ->join('model_has_roles', function ($join) {
@@ -601,10 +601,29 @@ class User extends Authenticatable implements JWTSubject
 
     public function getNodoUser()
     {
-        if (Str::contains(session()->get('login_role'), [$this->IsApoyoTecnico(), $this->IsDinamizador(), $this->IsInfocenter(), $this->IsExperto(), $this->IsArticulador(), $this->IsIngreso()])) {
-            return $this->user_nodo->nodo_id;
+        switch(session()->get('login_role')){
+            case $this->IsDinamizador():
+                return $this->dinamizador->nodo_id;
+            break;
+            case $this->IsExperto():
+                return $this->experto->nodo_id;
+            break;
+            case $this->IsArticulador():
+                return $this->articulador->nodo_id;
+            break;
+            case $this->IsInfocenter():
+                return $this->infocenter->nodo_id;
+            break;
+            case $this->IsApoyoTecnico():
+                return $this->apoyotecnico->nodo_id;
+            break;
+            case $this->IsIngreso():
+                return $this->ingreso->nodo_id;
+            break;
+            default:
+                return null;
+                break;
         }
-        return null;
     }
 
     public function getLineaUser()

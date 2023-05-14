@@ -28,8 +28,6 @@ class StrongPassword implements Rule
         $uppercase    = preg_match('@[A-Z]@', $value);
         $lowercase    = preg_match('@[a-z]@', $value);
         $number       = preg_match('@[0-9]@', $value);
-        // $specialChars = preg_match('@[^\w]@', $value);
-
         return $uppercase && $lowercase && $number;
     }
 

@@ -8,6 +8,7 @@ use App\Models\{
     Ciudad,
     Departamento,
     Eps,
+    Etnia,
     GradoEscolaridad,
     GrupoSanguineo,
     Infocenter,
@@ -22,7 +23,6 @@ use App\Events\User\UserHasNewPasswordGenerated;
 use App\User;
 use Cache;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Session;
 use Spatie\Permission\Models\Role;
@@ -64,6 +64,11 @@ class UserRepository
         return GrupoSanguineo::allGrupoSanguineos('gruposanguineos.nombre')->get();
     }
 
+    public function getAllEtnias()
+    {
+        return Etnia::pluck('nombre', 'id');
+    }
+
     public function getAllEpsActivas()
     {
         return Eps::allEps(Eps::IsActive(), 'eps.nombre')->get();
@@ -83,12 +88,19 @@ class UserRepository
         return Ocupacion::allOcupaciones()->pluck('nombre', 'id');
     }
 
-    public function findById($id)
+    public function findByIdEloquent($id)
     {
         return User::query()
-        ->infoUser()
+            ->withTrashed()
+            ->where('users.id', $id);
+    }
+
+    public function findByIdBuilder($id)
+    {
+        return User::query()
+        ->infoUserBuilder()
         ->select('users.id', 'tiposdocumentos.nombre as tipodocumento',
-        'gradosescolaridad.nombre as gradosescolaridad',
+        'gradosescolaridad.nombre as gradoescolaridad',
         'gruposanguineos.nombre as gruposanguineo',
         'eps.nombre as eps', 'etnias.nombre as etnia',
         'ciudad_residencia.nombre as ciudad_residencia',
@@ -108,18 +120,25 @@ class UserRepository
         ->selectRaw('if(users.grado_discapacidad = 1, "SI", "NO") as grado_discapacidad')
         ->selectRaw('if(users.grado_discapacidad = 1, users.descripcion_grado_discapacidad, "No Aplica") as descripcion_grado_discapacidad')
         ->selectRaw('if(users.estado = 1, "Habilidado", "Inhabilitado") as estado')
-        ->selectRaw('GROUP_CONCAT(DISTINCT roles.name SEPARATOR ";") as roles')
-        ->selectRaw('GROUP_CONCAT(DISTINCT ocupaciones.nombre SEPARATOR ";") as ocupaciones')
+        ->selectRaw('GROUP_CONCAT(DISTINCT roles.name SEPARATOR "; ") as rols')
+        ->selectRaw('GROUP_CONCAT(DISTINCT ocupaciones.nombre SEPARATOR "; ") as ocupacions')
         ->withTrashed()
         ->where('users.id', $id);
     }
 
-    public function findUserByDocument($document)
+    public function findUserByDocumentEloquent($document)
     {
         return User::query()
-        ->infoUser()
+        ->withTrashed()
+        ->where('users.documento', $document);
+    }
+
+    public function findUserByDocumentBuilder($document)
+    {
+        return User::query()
+        ->infoUserBuilder()
         ->select('users.id', 'tiposdocumentos.nombre as tipodocumento',
-        'gradosescolaridad.nombre as gradosescolaridad',
+        'gradosescolaridad.nombre as gradoescolaridad',
         'gruposanguineos.nombre as gruposanguineo',
         'eps.nombre as eps', 'etnias.nombre as etnia',
         'ciudad_residencia.nombre as ciudad_residencia',
@@ -139,8 +158,8 @@ class UserRepository
         ->selectRaw('if(users.grado_discapacidad = 1, "SI", "NO") as grado_discapacidad')
         ->selectRaw('if(users.grado_discapacidad = 1, users.descripcion_grado_discapacidad, "No Aplica") as descripcion_grado_discapacidad')
         ->selectRaw('if(users.estado = 1, "Habilidado", "Inhabilitado") as estado')
-        ->selectRaw('GROUP_CONCAT(DISTINCT roles.name SEPARATOR ";") as roles')
-        ->selectRaw('GROUP_CONCAT(DISTINCT ocupaciones.nombre SEPARATOR ";") as ocupaciones')
+        ->selectRaw('GROUP_CONCAT(DISTINCT roles.name SEPARATOR "; ") as rols')
+        ->selectRaw('GROUP_CONCAT(DISTINCT ocupaciones.nombre SEPARATOR "; ") as ocupaciones')
         ->withTrashed()
         ->where('users.documento', $document);
     }

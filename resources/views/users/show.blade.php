@@ -33,7 +33,7 @@
                                         <div class="left">
                                             <p class="m-t-lg flow-text secondary-text">{{$user->present()->userFullName()}}</p>
                                             <span class="mailbox-title">{{$user->present()->userYearOld()}}</span>
-                                            @foreach(explode(';', $user->roles) as $role)
+                                            @foreach(explode(';', $user->rols) as $role)
                                                 <div class="chip m-t-sm blue-grey white-text"> {{$role}}</div>
                                             @endforeach
                                             <div class="position-top-right p f-12 mail-date show-on-large hide-on-med-and-down">Miembro desde {{$user->present()->userCreatedAtFormat()}}</div>
