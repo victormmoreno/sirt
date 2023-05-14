@@ -34,7 +34,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="{{{route('usuario.mytalentos')}}}">
+                                            <a href="{{{route('usuario.talents')}}}">
                                                 Mis talentos
                                             </a>
                                         </li>

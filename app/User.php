@@ -305,6 +305,7 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(ActivationToken::class);
     }
 
+
     public function usoinfraestructuras()
     {
             return $this->morphToMany(UsoInfraestructura::class, 'asesorable', 'gestor_uso', 'usoinfraestructura_id')->withTimestamps()
@@ -326,6 +327,30 @@ class User extends Authenticatable implements JWTSubject
         return $query->with($relations)
             ->role($role);
     }
+
+    public function scopeInfoUser($query)
+    {
+        return $query
+        ->join('model_has_roles', function ($join) {
+            $join->on('users.id', '=', 'model_has_roles.model_id')
+                ->where('model_has_roles.model_type', self::class);
+        })
+        ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+        ->join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
+        ->join('gradosescolaridad', 'gradosescolaridad.id', '=', 'users.gradoescolaridad_id')
+        ->join('gruposanguineos', 'gruposanguineos.id', '=', 'users.gruposanguineo_id')
+        ->leftjoin('eps', 'eps.id', '=', 'users.eps_id')
+        ->leftjoin('etnias', 'etnias.id', '=', 'users.etnia_id')
+        ->join('ciudades as ciudad_residencia', 'ciudad_residencia.id', '=', 'users.ciudad_id')
+        ->join('departamentos as departamento_residencia', 'departamento_residencia.id', '=', 'ciudad_residencia.departamento_id')
+        ->join('ciudades as ciudad_expedicion', 'ciudad_expedicion.id', '=', 'users.ciudad_expedicion_id')
+        ->join('departamentos as departamento_expedicion', 'departamento_expedicion.id', '=', 'ciudad_expedicion.departamento_id')
+        ->leftjoin('ocupaciones_users', 'ocupaciones_users.user_id', '=', 'users.id')
+        ->leftjoin('ocupaciones', 'ocupaciones.id', '=', 'ocupaciones_users.ocupacion_id')
+        ->leftJoin('user_nodo', 'user_nodo.user_id', '=', 'users.id');
+    }
+
+
 
     public function scopeInfoUserDatatable($query)
     {
@@ -432,7 +457,57 @@ class User extends Authenticatable implements JWTSubject
         return $query;
     }
 
-    public function scopeNodoUserQuery($query, $roles, $nodos)
+    public function scopeUserQuery($query)
+    {
+        $query->join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
+        ->join('model_has_roles', function ($join) {
+            $join->on('users.id', '=', 'model_has_roles.model_id')
+                ->where('model_has_roles.model_type', User::class);
+        })
+        ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+        ->leftJoin('user_nodo', function ($join) {
+            $join->on('users.id', '=', 'user_nodo.user_id');
+        })->leftJoin('nodos', function ($join) {
+            $join->on('nodos.id', '=', 'user_nodo.nodo_id');
+        })->leftJoin('entidades', function ($join) {
+            $join->on('entidades.id', '=', 'nodos.entidad_id');
+        });
+    }
+
+    public function scopeNodeQuery($query, $roles, $nodos)
+    {
+        return $query->where(function($query) use($roles, $nodos){
+            if(collect($roles)->contains('all') && !isset($nodos)){
+                return $query;
+            }
+
+            // if(!collect($roles)->contains('all') && isset($nodos)){
+            //     return $query->OrWhereIn('user_nodo.nodo_id', $nodos);
+            // }
+            if( isset($roles) &&
+                (collect($roles)->contains(User::IsActivador()) ||
+                collect($roles)->contains(User::IsAdministrador()) ||
+                collect($roles)->contains(User::IsDesarrollador()) ||
+                collect($roles)->contains(User::IsUsuario()) ||
+                collect($roles)->contains(User::IsTalento()))
+            ){
+                return $query;
+            }
+            if(isset($nodos)){
+                if(collect($roles)->contains('all') || collect($nodos)->contains('all')){
+                    return $query;
+                }
+                return $query->OrWhereIn('user_nodo.nodo_id', $nodos);
+            }
+            return $query;
+
+        });
+    }
+
+
+
+
+    public function scopeNodoUserQuery($query, $roles = null, $nodos = null)
     {
         if ((!empty($roles) && !collect($roles)->contains('all') && (!collect($roles)->contains(User::IsTalento())) && !empty($nodos) &&  !collect($nodos)->contains('all'))) {
             if (collect($roles)->contains(User::IsDinamizador())) {
@@ -489,7 +564,9 @@ class User extends Authenticatable implements JWTSubject
                         ->whereIn('nodos.id', $nodos);
                 });
             }
-            return $query;
+            return $query->leftJoin('user_nodo', function ($join) {
+                $join->on('users.id', '=', 'user_nodo.user_id');;
+            });
         }
         return $query;
     }
@@ -520,54 +597,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
 
-    public function isUserActivador(): bool
-    {
-        return (bool) $this->hasRole(User::IsActivador());
-    }
 
-    public function isUserAdministrador(): bool
-    {
-        return (bool) $this->hasRole(User::IsAdministrador());
-    }
-
-    public function isUserDinamizador(): bool
-    {
-        return (bool) $this->hasRole(User::IsDinamizador()) && $this->dinamizador() != null;
-    }
-
-    public function isUserExperto(): bool
-    {
-        return (bool) $this->hasRole(User::IsExperto()) && $this->experto() != null;
-    }
-
-    public function isUserArticulador(): bool
-    {
-        return (bool) $this->hasRole(User::IsArticulador()) && $this->articulador() != null;
-    }
-
-    public function isUserApoyoTecnico(): bool
-    {
-        return (bool) $this->hasRole(User::IsApoyoTecnico()) && $this->apoyotecnico() != null;
-    }
-
-    public function isUserIngreso(): bool
-    {
-        return (bool) $this->hasRole(User::IsIngreso()) && $this->ingreso() != null;
-    }
-    public function isUserInfocenter(): bool
-    {
-        return (bool) $this->hasRole(User::IsInfocenter()) && $this->infocenter() != null;
-    }
-
-    public function isUserTalento(): bool
-    {
-        return (bool) $this->hasRole(User::IsTalento()) && $this->talento() != null;
-    }
-
-    public function isAuthUser(): bool
-    {
-        return (bool) $this->documento == \Auth::user()->documento;
-    }
 
     public function getNodoUser()
     {

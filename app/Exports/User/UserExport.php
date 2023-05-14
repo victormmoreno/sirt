@@ -69,7 +69,6 @@ class UserExport extends FatherExport
      * Asigna el nombre para la hoja de excel
      * @return string
      * @abstract
-     * @author dum
      */
     public function title(): String
     {

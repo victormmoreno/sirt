@@ -100,6 +100,55 @@ trait UsersTrait
         return self::IS_PROVEEDOR;
     }
 
+    public function isUserActivador(): bool
+    {
+        return (bool) $this->hasRole(self::IsActivador());
+    }
+
+    public function isUserAdministrador(): bool
+    {
+        return (bool) $this->hasRole(self::IsAdministrador());
+    }
+
+    public function isUserDinamizador(): bool
+    {
+        return (bool) $this->hasRole(self::IsDinamizador()) && $this->dinamizador() != null;
+    }
+
+    public function isUserExperto(): bool
+    {
+        return (bool) $this->hasRole(self::IsExperto()) && $this->experto() != null;
+    }
+
+    public function isUserArticulador(): bool
+    {
+        return (bool) $this->hasRole(self::IsArticulador()) && $this->articulador() != null;
+    }
+
+    public function isUserApoyoTecnico(): bool
+    {
+        return (bool) $this->hasRole(self::IsApoyoTecnico()) && $this->apoyotecnico() != null;
+    }
+
+    public function isUserIngreso(): bool
+    {
+        return (bool) $this->hasRole(self::IsIngreso()) && $this->ingreso() != null;
+    }
+    public function isUserInfocenter(): bool
+    {
+        return (bool) $this->hasRole(self::IsInfocenter()) && $this->infocenter() != null;
+    }
+
+    public function isUserTalento(): bool
+    {
+        return (bool) $this->hasRole(self::IsTalento()) && $this->talento() != null;
+    }
+
+    public function isAuthUser(): bool
+    {
+        return (bool) $this->documento == \Auth::user()->documento;
+    }
+
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = Hash::make($password);

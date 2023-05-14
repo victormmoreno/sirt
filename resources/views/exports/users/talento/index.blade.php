@@ -115,7 +115,7 @@
                     <td>{{ $talento->user->present()->userInstitucion() }}</td>
                     <td>{{ $talento->user->present()->userTituloObtenido() }}</td>
                     <td>{{ $talento->user->present()->userFechaTerminacion() }}</td>
-                    <td>{{ $talento->user->present()->userNombreTipoTalento() }}</td>
+                    <td></td>
                 </tr>
             @endforeach
         @endforeach

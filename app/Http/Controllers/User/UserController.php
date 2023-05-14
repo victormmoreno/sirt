@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use App\Datatables\UserDatatable;
 use Illuminate\Support\{Facades\Validator};
 use Illuminate\Http\Response;
-use App\Exports\User\UserExport;
+
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\User\NodeChanged;
 
@@ -44,8 +44,8 @@ class UserController extends Controller
             if (($request->filled('filter_nodo') || $request->filter_nodo == null) && ($request->filled('filter_role') || $request->filter_role == null) && $request->filled('filter_state') && ($request->filled('filter_year') || $request->filter_year == null)) {
                 $users = User::query()
                     ->select('users.id', 'tiposdocumentos.nombre as tipodocumento', 'users.documento', 'users.email', 'users.celular', 'users.ultimo_login', 'users.estado', 'users.deleted_at')
-                    ->selectRaw('concat(users.nombres, " ",users.apellidos) as usuario, GROUP_CONCAT(roles.name SEPARATOR ", ") as roles')
-                    ->selectRaw("if(roles.name = 'dinamizador', entidaddinamizador.nombre, if(roles.name = 'experto', entidadexperto.nombre, if(roles.name = 'articulador', entidadusernodo.nombre, if(roles.name = 'apoyo técnico', entidadusernodo.nombre, if(roles.name = 'infocenter', entidadinfocenter.nombre, if(roles.name = 'ingreso', entidadingreso.nombre, 'No Aplica')))))) as nodo")
+                    ->selectRaw('concat(users.nombres, " ",users.apellidos) as usuario, GROUP_CONCAT(distinct roles.name SEPARATOR ", ") as roles')
+                    ->selectRaw("if(roles.name = 'Dinamizador', entidades.nombre , if(roles.name = 'Experto', entidades.nombre, if(roles.name = 'Articulador', entidades.nombre, if(roles.name = 'Infocenter', entidades.nombre, if(roles.name = 'Apoyo Tecnico', entidades.nombre, if(roles.name = 'Ingreso', entidades.nombre, 'RTC')))))) as nodo")
                     ->userQuery()
                     ->nodeQuery($request->filter_role, $node)
                     ->roleQuery($request->filter_role)
@@ -101,8 +101,6 @@ class UserController extends Controller
         }
     }
 
-
-
     /**
      * Display the list resources (talents).
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|Response|\Illuminate\View\View
@@ -138,44 +136,7 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * export the list resources
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|Response|\Illuminate\View\View
-     */
-    public function export(Request $request, $extension = 'xlsx')
-    {
-        ini_set('memory_limit', '-1');
-        set_time_limit('3000000');
-        if (request()->user()->cannot('export', User::class)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
-            return redirect()->route('home');
-        }
-        $node = AuthRoleHelper::checkRoleAuth(['node' => $request->filter_nodo])['node'];
-        $users = [];
-        if (($request->filled('filter_nodo') || $request->filter_nodo == null) && ($request->filled('filter_role') || $request->filter_role == null) && $request->filled('filter_state') && ($request->filled('filter_year') || $request->filter_year == null)) {
-            $users = User::query()
-                ->select('users.id', 'tiposdocumentos.nombre as tipodocumento', 'users.fechanacimiento', 'users.documento', 'users.email', 'users.celular', 'users.telefono', 'users.genero', 'gruposanguineos.nombre as grupo_sanguineo', 'users.estrato', 'users.direccion', 'etnias.nombre as etnia', 'users.grado_discapacidad', 'users.descripcion_grado_discapacidad', 'eps.nombre as eps', 'users.otra_eps', 'users.institucion', 'users.titulo_obtenido', 'users.fecha_terminacion', 'users.ultimo_login', 'users.estado', 'users.deleted_at')
-                ->selectRaw('concat(users.nombres, " ",users.apellidos) as usuario, concat(expedition_city.nombre, " (",expedition_depart.nombre,")") as expedicion, concat(residency_city.nombre, " (",residency_depart.nombre,")") as residencia, GROUP_CONCAT(DISTINCT roles.name SEPARATOR ", ") as roles, GROUP_CONCAT(DISTINCT ocupaciones.nombre SEPARATOR ", ") as ocupaciones')
-                ->selectRaw("if(roles.name = 'dinamizador', entidaddinamizador.nombre, if(roles.name = 'experto', entidadexperto.nombre, if(roles.name = 'articulador', entidadusernodo.nombre, if(roles.name = 'apoyo técnico', entidadusernodo.nombre, if(roles.name = 'infocenter', entidadinfocenter.nombre, if(roles.name = 'ingreso', entidadingreso.nombre, 'No Aplica')))))) as nodo")
-                ->leftJoin('ciudades as expedition_city', 'expedition_city.id', '=', 'users.ciudad_expedicion_id')
-                ->leftJoin('departamentos as expedition_depart', 'expedition_depart.id', '=', 'expedition_city.departamento_id')
-                ->leftJoin('gruposanguineos', 'gruposanguineos.id', '=', 'users.gruposanguineo_id')
-                ->leftJoin('ciudades as residency_city', 'residency_city.id', '=', 'users.ciudad_id')
-                ->leftJoin('departamentos as residency_depart', 'residency_depart.id', '=', 'residency_city.departamento_id')
-                ->leftJoin('etnias', 'etnias.id', '=', 'users.etnia_id')
-                ->leftJoin('eps', 'eps.id', '=', 'users.eps_id')
-                ->leftJoin('ocupaciones_users', 'ocupaciones_users.user_id', '=', 'users.id')
-                ->leftJoin('ocupaciones', 'ocupaciones.id', '=', 'ocupaciones_users.ocupacion_id')
-                ->userQuery()
-                ->nodeQuery($request->filter_role, $node)
-                ->roleQuery($request->filter_role)
-                ->stateDeletedAt($request->filter_state)
-                ->groupBy('users.id')
-                ->orderBy('users.created_at', 'desc')
-                    ->get();
-        }
-        return (new UserExport($request, $users))->download("Usuarios - " . config('app.name') . ".{$extension}");
-    }
+
 
     /**
      * Display the specified resource.
@@ -184,7 +145,8 @@ class UserController extends Controller
      */
     public function show($documento)
     {
-        $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
+        $user = $this->userRepository->findUserByDocument($documento)->firstOrFail();
+
         if(request()->user()->cannot('show', $user))
         {
             alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
@@ -291,7 +253,7 @@ class UserController extends Controller
             'roles' => $user->getRoleNames()->implode(', '),
             'message' => 'el usuario ya existe en nuestros registros',
             'status' => Response::HTTP_OK,
-            'url' => route('usuarios.show', $user->documento),
+            'url' => route('usuario.show', $user->documento),
         ], Response::HTTP_OK);
     }
 
@@ -392,7 +354,7 @@ class UserController extends Controller
                 return response()->json([
                     'state' => 'success',
                     'message' => 'El Usuario ha sido modificado satisfactoriamente',
-                    'url' => route('usuarios.show', $userUpdate->documento),
+                    'url' => route('usuario.show', $userUpdate->documento),
                     'user' => $userUpdate,
                 ]);
 
@@ -408,7 +370,7 @@ class UserController extends Controller
             return response()->json([
                 'state' => 'success',
                 'message' => 'El Usuario ha sido modificado satisfactoriamente',
-                'url' => route('usuarios.show', $userUpdate->documento),
+                'url' => route('usuario.show', $userUpdate->documento),
                 'user' => $userUpdate,
             ]);
         }
@@ -464,7 +426,7 @@ class UserController extends Controller
                 return response()->json([
                     'state' => 'success',
                     'message' => 'La cuenta del usuario ha sido actualizada exitosamente.',
-                    'url' => route('usuarios.show', $userUpdate->documento),
+                    'url' => route('usuario.show', $userUpdate->documento),
                     'user' => $userUpdate,
                 ]);
             } else {
@@ -475,17 +437,6 @@ class UserController extends Controller
                 ]);
             }
         }
-    }
-
-
-    public function generatePassword(int $document)
-    {
-        $user = User::withTrashed()->where('documento', $document)->firstOrFail();
-        if (request()->user()->cannot('generatePassword', $user)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
-            return redirect()->route('home');
-        }
-        return $this->userRepository->generateNewPasswordToUser($user);
     }
 
     /**
@@ -529,7 +480,6 @@ class UserController extends Controller
             'user' => User::withTrashed()->with(['gestor', 'gestor.lineatecnologica'])->where('id', $id)->first(),
         ]);
     }
-
 
     public function gestoresByNodo($nodo = null)
     {

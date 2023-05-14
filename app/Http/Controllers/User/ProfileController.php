@@ -33,17 +33,18 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        $authUser = $this->getAuthUserAccount();
+        $authUser = $this->getAuthUserFindById();
+        // dd($authUser);
         if (request()->user()->cannot('viewProfile', $authUser)) {
             alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
         }
-        return view('users.profile.profile', ['user' => $authUser]);
+        return view('users.profile.index', ['user' => $authUser]);
     }
 
     public function roles()
     {
-        $authUser = $this->getAuthUserAccount();
+        $authUser = $this->getAuthUserFindById();
         if (request()->user()->cannot('viewProfile', $authUser)) {
             alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
@@ -56,7 +57,7 @@ class ProfileController extends Controller
 
     public function account()
     {
-        $authUser = $this->getAuthUserAccount();
+        $authUser = $this->getAuthUserFindById();
         if (request()->user()->cannot('viewProfile', $authUser)) {
             alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
@@ -74,7 +75,7 @@ class ProfileController extends Controller
      */
     public function editAccount()
     {
-        $authUser = $this->getAuthUserAccount();
+        $authUser = $this->getAuthUserFindById();
         if (request()->user()->cannot('viewProfile', $authUser)) {
             alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');

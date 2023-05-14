@@ -11,23 +11,23 @@ $(document).on('submit', 'form#formSearchUser', function (event) {
             'Error',
             'Por favor selecciona una opción',
             'error'
-          );
+        );
     }else if(type == 1 && (search == null || search == '' || !patronDocumento.test(search))){
         Swal.fire(
             'Error',
             'Por favor ingrese un número de documento válido',
             'error'
-          );
+        );
     }else if(type == 2 && (search == null || search == '' || !patronEmail.test(search))){
         Swal.fire(
             'Error',
             'Por favor ingrese un correo electrónico válido',
             'error'
-          );
+        );
     }else{
-        var form = $(this);
+        let form = $(this);
         let data = new FormData($(this)[0]);
-        var url = form.attr("action");
+        let url = form.attr("action");
         $.ajax({
             type: form.attr('method'),
             url: url,

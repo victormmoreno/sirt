@@ -2292,23 +2292,23 @@ $(document).on('submit', 'form#formSearchUser', function (event) {
             'Error',
             'Por favor selecciona una opción',
             'error'
-          );
+        );
     }else if(type == 1 && (search == null || search == '' || !patronDocumento.test(search))){
         Swal.fire(
             'Error',
             'Por favor ingrese un número de documento válido',
             'error'
-          );
+        );
     }else if(type == 2 && (search == null || search == '' || !patronEmail.test(search))){
         Swal.fire(
             'Error',
             'Por favor ingrese un correo electrónico válido',
             'error'
-          );
+        );
     }else{
-        var form = $(this);
+        let form = $(this);
         let data = new FormData($(this)[0]);
-        var url = form.attr("action");
+        let url = form.attr("action");
         $.ajax({
             type: form.attr('method'),
             url: url,
@@ -2731,9 +2731,9 @@ $(document).ready(function() {
     }
 });
 
-var UserIndex = {
+const UserIndex = {
     fillDatatatablesUsers(filter_nodo ,filter_role, filter_state, filter_year){
-        var datatable = $('#users_data_table').DataTable({
+        let datatable = $('#users_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
@@ -2743,7 +2743,7 @@ var UserIndex = {
             responsive: true,
             "order": [[ 1, "desc" ]],
             ajax:{
-                url: host_url + "/usuario",
+                url: `${host_url}/usuarios`,
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -2791,7 +2791,7 @@ var UserIndex = {
         });
     },
     fillDatatatablesTalentos(filter_year,filter_state){
-        var datatable = $('#mytalento_data_table').DataTable({
+        let datatable = $('#mytalento_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
@@ -2800,7 +2800,7 @@ var UserIndex = {
             serverSide: true,
             "order": [[ 1, "desc" ]],
             ajax:{
-                url: host_url + "/usuario/mistalentos",
+                url: `${host_url}/usuarios/mistalentos`,
                 type: "get",
                 data: {
                     filter_year: filter_year,
@@ -2843,19 +2843,13 @@ var UserIndex = {
 }
 
 $('#filter_user').click(function(){
-
     let filter_role = $('#filter_rol').val();
     let filter_nodo = $('#filter_nodo').val();
     let filter_state = $('#filter_state').val();
     let filter_year = $('#filter_year').val();
-
-
     $('#users_data_table').dataTable().fnDestroy();
-
-
     if((filter_nodo != '' || filter_nodo != null) && filter_role !='' && filter_state != '' && filter_year !=''){
         UserIndex.fillDatatatablesUsers(filter_nodo , filter_role, filter_state, filter_year);
-        //idea.fill_datatatables_ideas(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
     }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && filter_role !='' && filter_state != '' && filter_year !=''){
         UserIndex.fillDatatatablesUsers(filter_nodo = null , filter_role, filter_state, filter_year);
     }else{
@@ -2865,9 +2859,7 @@ $('#filter_user').click(function(){
             },
             "lengthChange": false
         }).clear().draw();
-
     }
-
 });
 
 $('#filter_talentos').click(function(){
@@ -2891,14 +2883,14 @@ $('#download_users').click(function(){
     let filter_nodo = $('#filter_nodo').val();
     let filter_state = $('#filter_state').val();
     let filter_year = $('#filter_year').val();
-    var query = {
+    let query = {
         filter_nodo: filter_nodo,
         filter_role: filter_role,
         filter_state: filter_state,
         filter_year: filter_year,
     }
 
-    var url = host_url + "/usuario/export?" + $.param(query)
+    let url = `${host_url}/usuarios/export?${$.param(query)}`
     window.location = url;
 });
 

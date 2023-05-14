@@ -169,64 +169,6 @@ class UserPresenter extends Presenter
         return isset($this->user->fechanacimiento) ? optional($this->user->fechanacimiento)->age . ' años' : '';
     }
 
-    public function userDinamizadorNombreNodo()
-    {
-        return $this->user->has('dinamizador.nodo.entidad') ? "Tecnoparque Nodo {$this->user->dinamizador->nodo->entidad->nombre}" : $this->message('No Registra');
-    }
-
-    public function userDinamizadorDireccionNodo()
-    {
-        return $this->user->has('dinamizador.nodo') ? $this->user->dinamizador->nodo->direccion : $this->message('No Registra');
-    }
-
-    public function userGestorNombreNodo()
-    {
-        return $this->user->has('experto.nodo.entidad') ? "Tecnoparque Nodo {$this->user->experto->nodo->entidad->nombre}" : $this->message('No Registra');
-    }
-
-    public function userArticuladorNodoName()
-    {
-        return isset($this->user->articulador->nodo) && $this->user->has('articulador.nodo.entidad') ? "Tecnoparque Nodo {$this->user->articulador->nodo->entidad->nombre}" : $this->message('No Registra');
-    }
-    public function userArticuladorHonorarios()
-    {
-        return $this->user->has('articulador') ? "{$this->user->articulador->honorarios}" : $this->message('No Registra');
-    }
-    public function userApoyoTecnicoNodoName()
-    {
-        return $this->user->has('apoyotecnico.nodo.entidad') ? "Tecnoparque Nodo {$this->user->apoyotecnico->nodo->entidad->nombre}" : $this->message('No Registra');
-    }
-
-    public function userApoyoTecnicoHonorarios()
-    {
-        return $this->user->has('apoyotecnico') ? "{$this->user->apoyotecnico->honorarios}" : $this->message('No Registra');
-    }
-
-    public function userGestorNombreLinea()
-    {
-        return $this->user->has('experto.linea') ? $this->user->experto->linea->nombre : $this->message('No Registra');
-    }
-
-    public function userGestorHonorarios()
-    {
-        return $this->user->has('experto') ? "$ " . number_format($this->user->experto->honorarios, 0) : $this->message('No Registra');
-    }
-
-    public function userInfocenterNombreNodo()
-    {
-        return $this->user->has('infocenter.nodo.entidad') ? "Tecnoparque Nodo {$this->user->infocenter->nodo->entidad->nombre}" : $this->message('No Registra');
-    }
-
-    public function userInfocenterExtension()
-    {
-        return $this->user->has('infocenter') ? $this->user->infocenter->extension : $this->message('No Registra');
-    }
-
-    public function userIngresoNombreNodo()
-    {
-        return isset($this->user->ingreso) && $this->user->has('ingreso.nodo.entidad') ? "Tecnoparque Nodo {$this->user->ingreso->nodo->entidad->nombre}" : $this->message('No Registra');
-    }
-
     public function userProfileUserImage()
     {
         if ($this->user->genero == User::IsMasculino()) {
@@ -246,75 +188,6 @@ class UserPresenter extends Presenter
         return $this->message('Información no disponible');
     }
 
-
-    public function regionalTalento()
-    {
-        if ($this->user->has('talento.entidad.centro.regional') && isset($this->user->talento->entidad->centro->regional->nombre)) {
-            return $this->user->talento->entidad->centro->regional->nombre;
-        }
-        return $this->message('No Registra');
-    }
-
-    public function centroFormacionTalento()
-    {
-        if ($this->user->has('talento.entidad') && isset($this->user->talento->entidad)) {
-            return $this->user->talento->entidad->nombre;
-        }
-
-        return $this->message('No Registra');
-    }
-
-
-
-    public function tipoFormacionTalento()
-    {
-        if ($this->user->talento->tipoformacion != null) {
-            return $this->user->talento->tipoformacion->nombre;
-        }
-        return $this->message('No Registra');
-    }
-
-    public function dependencia()
-    {
-        if ($this->user->has('talento') && isset($this->user->talento->dependencia) && $this->user->talento->dependencia != null) {
-            return $this->user->talento->dependencia;
-        }
-        return $this->message('No Registra');
-    }
-
-    public function tipoEstudio()
-    {
-        if ($this->user->talento->tipoestudio != null) {
-            return $this->user->talento->tipoestudio->nombre;
-        }
-        return $this->message('No Registra');
-    }
-
-    public function universidad()
-    {
-        if ($this->user->has('talento') && isset($this->user->talento->universidad) && $this->user->talento->universidad != null) {
-            return $this->user->talento->universidad;
-        }
-        return $this->message('No Registra');
-    }
-
-    public function carreraUniversitaria()
-    {
-        if ($this->user->has('talento') && isset($this->user->talento->carrera_univeritaria) && $this->user->talento->carrera_univeritaria != null) {
-            return $this->user->talento->carrera_univeritaria;
-        }
-        return $this->message('No Registra');
-    }
-
-    public function empresaTalento()
-    {
-        if ($this->user->has('talento') && isset($this->user->talento->empresa) && $this->user->talento->empresa != null) {
-            return $this->user->talento->empresa;
-        }
-        return $this->message('No Registra');
-    }
-
-
     public function userChangeAccess(): bool
     {
         return $this->user->hasAnyRole([
@@ -326,38 +199,35 @@ class UserPresenter extends Presenter
             User::IsIngreso(),
             User::IsDesarrollador(),
             User::IsExperto(),
-            User::IsApoyoTecnico()
+            User::IsApoyoTecnico(),
+            User::IsUsuario()
         ]) ? true : false;
     }
 
     public function userNode()
     {
         if($this->user->has('dinamizador') && isset($this->user->dinamizador->nodo)){
-            return $this->user->present()->userDinamizadorNombreNodo();
+            return;
         }
 
-        if($this->user->has('gestor') && isset($this->user->gestor->nodo)){
-            return $this->user->present()->userGestorNombreNodo();
+        if($this->user->has('experto') && isset($this->user->experto->nodo)){
+            return;
         }
 
         if($this->user->has('articulador') && isset($this->user->articulador->nodo)){
-            return $this->user->present()->userArticuladorNodoName();
+            return;
         }
 
         if($this->user->has('infocenter') && isset($this->user->infocenter->nodo)){
-            return $this->user->present()->userInfocenterNombreNodo();
+            return;
         }
 
         if($this->user->has('apoyotecnico') && isset($this->user->apoyotecnico->nodo)){
-            return $this->user->present()->userApoyoTecnicoNodoName();
+            return;
         }
 
         if($this->user->has('ingreso') && isset($this->user->ingreso->nodo)){
-            return $this->user->present()->userIngresoNombreNodo();
-        }
-
-        if ($this->user->has('talento') && isset($this->user->talento)) {
-            return "No Aplica";
+            return;
         }
 
     }

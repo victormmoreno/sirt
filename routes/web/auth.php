@@ -17,10 +17,15 @@ Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm
 Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
 
 
+
 //verificar usuario no registrado
 Route::post('user/verify', 'Auth\UnregisteredUserVerificationController@verificationUser')->name('user.verify');
 
+//change password routes...
+Route::get('password/{documento}/reset', 'User\ChangePasswordController@generatePassword')->name('password.generate')->middleware('disablepreventback');
+
 //Change Email Routes...
+
 Route::get('email/reset', 'Auth\ChangeEmailController@showEmailChangeRequestForm')->name('email.request');
 Route::post('email/send', 'Auth\ChangeEmailController@sendEmailChange')->name('email.send');
 
@@ -36,11 +41,11 @@ Route::group(
     function () {
         Route::get('certificado', 'ProfileController@downloadCertificatedPlataform')->name('certificado');
         Route::get('cuenta', 'ProfileController@account')->name('perfil.account');
-        Route::get('perfil', 'ProfileController@index')->name('perfil.index');
+
         Route::get('roles', 'ProfileController@roles')->name('perfil.roles');
         Route::put('password', 'ProfileController@updatePassword')->name('perfil.password');
         Route::get('password/reset', 'ProfileController@passwordReset')->name('perfil.password.reset');
         Route::get('editar', 'ProfileController@editAccount')->name('perfil.edit');
 });
 
-Route::resource('perfil', 'User\ProfileController', ['only' => ['update', 'destroy']])->middleware('disablepreventback');
+Route::resource('perfil', 'User\ProfileController', ['only' => ['index','update', 'destroy']])->middleware('disablepreventback');

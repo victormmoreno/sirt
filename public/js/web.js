@@ -176,7 +176,7 @@ $(document).on("submit", "form#formRegisterUser", function(event) {
                     confirmButtonText: "Ok",
                     backdrop: true,
                     allowOutsideClick: false,
-                    footer: `<p class="red-text">Hemos enviado un correo electrónico a ${data.user.email}" con las credenciales de ingreso al sistema.</p>`
+                    footer: `<p class="red-text">Hemos enviado un correo electrónico a ${data.user.email} con las credenciales de ingreso al sistema.</p>`
                 }).then(result => {
                     if (result.isConfirmed) {
                         setTimeout(function() {

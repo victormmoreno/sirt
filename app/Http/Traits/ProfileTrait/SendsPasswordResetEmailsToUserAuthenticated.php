@@ -7,13 +7,9 @@ use Illuminate\Support\Facades\Password;
 trait SendsPasswordResetEmailsToUserAuthenticated
 {
 
-    /*=================================================
-    =            metodo para reset pasword            =
-    =================================================*/
-
     public function passwordReset()
     {
-        $this->authorize('updatePassword', $this->getAuthUserAccount());
+        $this->authorize('updatePassword', $this->getAuthUserFindById());
         $user = auth()->user()->only('email');
 
 
@@ -72,14 +68,9 @@ trait SendsPasswordResetEmailsToUserAuthenticated
         return Password::broker();
     }
 
-    private function getAuthUserAccount()
-    {
-        return $this->userRepository->account(auth()->user()->id);
-    }
-
     private function getAuthUserFindById()
     {
-        return $this->userRepository->findById(auth()->user()->id);
+        return $this->userRepository->findById(auth()->user()->id)->firstOrFail();
     }
 
 }

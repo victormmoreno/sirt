@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\{Dinamizador, Infocenter, Gestor, Talento, Idea};
+use App\Models\{Dinamizador, Infocenter, Gestor, Talento, Idea, Ingreso};
 use App\User;
 
 class AddUserToTablesSeeder extends Seeder
@@ -18,6 +18,7 @@ class AddUserToTablesSeeder extends Seeder
             // $ideas = Idea::all();
             $gestores = Gestor::all();
             $talentos = Talento::all();
+            $ingresos = Ingreso::all();
             $infocenters = Infocenter::all();
             $dinamizadores = Dinamizador::all();
             $ideas = Idea::whereNotNull('correo_contacto')->get();
@@ -31,10 +32,23 @@ class AddUserToTablesSeeder extends Seeder
                     }
                 }
             }
+
+            foreach ($ingresos as $key => $ingreso) {
+                DB::table('user_nodo')->insert(
+                    [
+                        'user_id' => $ingreso->user_id,
+                        'nodo_id' => $ingreso->nodo_id,
+                        'role' => User::IsIngreso(),
+                        'honorarios' => 0,
+                        'created_at' => $ingreso->created_at,
+                        'updated_at' => $ingreso->updated_at
+                    ]
+                );
+            }
             foreach ($infocenters as $key => $infocenter) {
                 DB::table('user_nodo')->insert(
                     [
-                        'user_id' => $infocenter->user_id, 
+                        'user_id' => $infocenter->user_id,
                         'nodo_id' => $infocenter->nodo_id,
                         'role' => User::IsInfocenter(),
                         'honorarios' => 0,
@@ -47,7 +61,7 @@ class AddUserToTablesSeeder extends Seeder
             foreach ($dinamizadores as $key => $dinanizador) {
                 DB::table('user_nodo')->insert(
                     [
-                        'user_id' => $dinanizador->user_id, 
+                        'user_id' => $dinanizador->user_id,
                         'nodo_id' => $dinanizador->nodo_id,
                         'role' => User::IsDinamizador(),
                         'honorarios' => 0,
@@ -65,18 +79,18 @@ class AddUserToTablesSeeder extends Seeder
                 DB::table('gestor_uso')
                 ->where('asesorable_id', $gestor->user_id)
                 ->update(['asesor_id' => $gestor->user_id]);
-                
+
                 DB::table('proyectos')
                 ->where('asesor_id', $gestor->id)
                 ->update(['experto_id' => $gestor->user_id]);
-                
+
                 DB::table('ideas')
                 ->where('gestor_id', $gestor->id)
                 ->update(['asesor_id' => $gestor->user_id]);
-                
+
                 DB::table('user_nodo')->insert(
                     [
-                        'user_id' => $gestor->user_id, 
+                        'user_id' => $gestor->user_id,
                         'nodo_id' => $gestor->nodo_id,
                         'role' => User::IsExperto(),
                         'honorarios' => $gestor->honorarios,
