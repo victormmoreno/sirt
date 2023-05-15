@@ -57,8 +57,8 @@ class ArticulationRepository extends Repository
             'articulation_types.name as articulation_type',
             'articulation_subtypes.name as articulation_subtype',
             'articulation_scopes.name as articulation_scope',
-            'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
-            'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id',
+            'entidades.nombre as nodo', 'proyectos.codigo_proyecto',
+            'proyectos.nombre as nombre_proyecto', 'proyectos.id as proyecto_id',
             'fasespro.nombre as fase_proyecto'
         )
         ->selectRaw('year(articulations.start_date) as articulation_start_date_year, MONTHNAME(articulations.start_date) as articulation_start_date_month, year(articulations.end_date) as articulation_end_date_year, MONTHNAME(articulations.end_date) as articulation_end_date_month')
@@ -83,8 +83,6 @@ class ArticulationRepository extends Repository
             })
             ->leftJoin('proyectos', 'proyectos.id', '=', 'articulationables.articulationable_id')
             ->leftJoin('fases as fasespro', 'fasespro.id', '=', 'proyectos.fase_id')
-            ->leftJoin('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-            ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
             ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
             ->leftJoin('users as createdby', 'createdby.id', '=', 'articulation_stages.created_by')
             ->leftJoin('sedes', 'sedes.id', '=', 'articulationables.articulationable_id')

@@ -66,8 +66,8 @@ class ArticulationStageListController extends Controller
             ->select(
                 'articulation_stages.*', 'articulations.code as articulation_code',
                 'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
-                'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
-                'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id'
+                'entidades.nombre as nodo', 'proyectos.codigo_proyecto as codigo_proyecto',
+                'proyectos.nombre as nombre_proyecto', 'proyectos.id as proyecto_id'
             )
             ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', if(articulationables.articulationable_type = 'App\\\Models\\\Sede', 'Empresa', if(articulationables.articulationable_type = 'App\\\Models\\\Idea', 'Idea', 'No registra'))) as articulation_state_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by, concat(empresas.nit, ' - ', empresas.nombre, ' - ', sedes.nombre_sede) as sede, concat(ideas.codigo_idea, ' - ', ideas.nombre_proyecto) as idea")
 
@@ -107,8 +107,8 @@ class ArticulationStageListController extends Controller
             ->select(
                 'articulation_stages.*', 'articulations.code as articulation_code',
                 'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
-                'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
-                'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id', 'interlocutor.documento', 'interlocutor.nombres',
+                'entidades.nombre as nodo', 'proyectos.codigo_proyecto as codigo_proyecto',
+                'proyectos.nombre as nombre_proyecto', 'proyectos.id as proyecto_id', 'interlocutor.documento', 'interlocutor.nombres',
                 'interlocutor.apellidos', 'interlocutor.email', 'articulation_subtypes.name as articulation_subtype', 'articulation_types.name as articulation_type', 'articulation_scopes.name as scope'
             )
 
@@ -193,8 +193,6 @@ class ArticulationStageListController extends Controller
     private function datatableArticulationStages($articulationStages)
     {
         return datatables()->of($articulationStages)
-            // ->setRowClass('{{ $articulation_state_type == "Proyecto" ? "border-solid":"" }}')
-
             ->editColumn('node', function ($data) {
                 if($data->articulation_code){
                     return "<blockquote class='primary-text'>{$data->nodo}</blockquote>";
@@ -316,8 +314,8 @@ class ArticulationStageListController extends Controller
             ->select(
                 'articulation_stages.*', 'articulations.code as articulation_code',
                 'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase', 'fases.id as fase_id',
-                'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
-                'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id', 'interlocutor.documento', 'interlocutor.nombres',
+                'entidades.nombre as nodo', 'proyectos.codigo_proyecto',
+                'proyectos.nombre as nombre_proyecto', 'proyectos.id as proyecto_id', 'interlocutor.documento', 'interlocutor.nombres',
                 'interlocutor.apellidos', 'interlocutor.email'
             )
             ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', if(articulationables.articulationable_type = 'App\\\Models\\\Sede', 'Empresa', if(articulationables.articulationable_type = 'App\\\Models\\\Idea', 'Idea', 'No registra'))) as articulation_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by")
@@ -329,8 +327,6 @@ class ArticulationStageListController extends Controller
                 $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
             })
             ->leftJoin('proyectos', 'proyectos.id', '=', 'articulationables.articulationable_id')
-            ->leftJoin('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-            ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
             ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
             ->leftJoin('users as createdby', 'createdby.id', '=', 'articulation_stages.created_by')
             ->groupBy('articulation_code')
