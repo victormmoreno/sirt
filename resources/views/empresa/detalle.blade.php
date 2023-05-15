@@ -245,7 +245,7 @@
                                                                                         Proyecto
                                                                                     </span>
                                                                                     <br>
-                                                                                    <a href="{{$proyecto->fase->nombre == 'Finalizado' || $proyecto->fase->nombre == 'Concluido sin finalizar' ? route('proyecto.detalle', $proyecto->id) : route('proyecto.inicio', $proyecto->id)}}" target="_blank">
+                                                                                    <a href="{{$proyecto->fase->nombre == 'Finalizado' || $proyecto->fase->nombre == 'Cancelado' ? route('proyecto.detalle', $proyecto->id) : route('proyecto.inicio', $proyecto->id)}}" target="_blank">
                                                                                         {{$proyecto->present()->proyectoCode()}} - {{$proyecto->present()->proyectoName()}}
                                                                                     </a>
                                                                                     - <b class="secondary-text">{{$proyecto->fase->nombre}}</b>

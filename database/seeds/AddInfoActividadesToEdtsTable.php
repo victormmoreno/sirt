@@ -15,19 +15,26 @@ class AddInfoActividadesToEdtsTable extends Seeder
     {
         DB::beginTransaction();
         try {
-            $edts = Edt::all();
+            $edts = Edt::select(
+                'edts.id', 'actividades.codigo_actividad', 'actividades.nombre', 'actividades.fecha_inicio', 'actividades.fecha_cierre',
+                'actividades.objetivo_general', 'actividades.conclusiones', 'actividades.formulario_inicio', 'actividades.cronograma', 
+                'actividades.seguimiento', 'actividades.formulario_final'
+            )
+            ->join('actividades', 'actividades.id', '=', 'edts.actividad_id')
+            ->get();
             foreach ($edts as $key => $edt) {
-                $codigo_edt = $edt->actividad->codigo_actividad;
-                $nombre = $edt->actividad->nombre;
-                $fecha_inicio = $edt->actividad->fecha_inicio;
-                $fecha_cierre = $edt->actividad->fecha_cierre;
-                $objetivo_general = $edt->actividad->objetivo_general;
-                $conclusiones = $edt->actividad->conclusiones;
-                $formulario_inicio = $edt->actividad->formulario_inicio;
-                $cronograma = $edt->actividad->cronograma;
-                $seguimiento = $edt->actividad->seguimiento;
-                $formulario_final = $edt->actividad->formulario_final;
-                $edt->update([
+                $codigo_edt = $edt->codigo_actividad;
+                $nombre = $edt->nombre;
+                $fecha_inicio = $edt->fecha_inicio;
+                $fecha_cierre = $edt->fecha_cierre;
+                $objetivo_general = $edt->objetivo_general;
+                $conclusiones = $edt->conclusiones;
+                $formulario_inicio = $edt->formulario_inicio;
+                $cronograma = $edt->cronograma;
+                $seguimiento = $edt->seguimiento;
+                $formulario_final = $edt->formulario_final;
+                DB::table('edts')
+                ->where('id', $edt->id)->update([
                     'codigo_edt' => $codigo_edt,
                     'nombre' => $nombre,
                     'fecha_inicio' => $fecha_inicio,

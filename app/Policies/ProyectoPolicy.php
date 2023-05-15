@@ -398,7 +398,7 @@ class ProyectoPolicy
      **/
     public function aprobar_suspendido(User $user, Proyecto $proyecto)
     {
-        $ult_notificacion = $proyecto->notificaciones()->where('fase_id',  Fase::where('nombre', 'Concluido sin finalizar')->first()->id)->where('estado', ControlNotificaciones::IsPendiente())->get()->last();
+        $ult_notificacion = $proyecto->notificaciones()->where('fase_id',  Fase::where('nombre', 'Cancelado')->first()->id)->where('estado', ControlNotificaciones::IsPendiente())->get()->last();
         if ($ult_notificacion != null) {
             if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsDinamizador()) {
                 if ($ult_notificacion->estado == $ult_notificacion->IsPendiente()) {

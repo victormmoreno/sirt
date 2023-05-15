@@ -362,7 +362,7 @@ function graficoSeguimientoFases(data, name) {
       name: 'Finalizado',
       data: finalizado
     }, {
-      name: 'Concluido sin finalizar',
+      name: 'Cancelado',
       data: suspendido
     }]
 });

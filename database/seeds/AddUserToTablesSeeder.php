@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\{Dinamizador, Infocenter, Gestor, Talento, Idea};
+use App\Models\{Dinamizador, Infocenter, Gestor, Talento, Idea, UsoInfraestructura};
 use App\User;
 
 class AddUserToTablesSeeder extends Seeder
@@ -15,12 +15,15 @@ class AddUserToTablesSeeder extends Seeder
     {
         DB::beginTransaction();
         try {
-            // $ideas = Idea::all();
-            $gestores = Gestor::all();
-            $talentos = Talento::all();
-            $infocenters = Infocenter::all();
-            $dinamizadores = Dinamizador::all();
+            $gestores = DB::table('gestores')->select('*')->get();
+            $talentos = DB::table('talentos')->select('*')->get();
+            $infocenters = DB::table('infocenter')->select('*')->get();
+            $dinamizadores = DB::table('dinamizador')->select('*')->get();
             $ideas = Idea::whereNotNull('correo_contacto')->get();
+            $gestor_uso = DB::table('gestor_uso')->select('*')->get();
+            foreach ($gestor_uso as $key => $uso) {
+                DB::table('gestor_uso')->where('id', $uso->id)->update(['asesor_id' => $uso->asesorable_id]);
+            }
             foreach ($ideas as $key => $idea) {
                 if ($idea->talento_id == null) {
                     $user_id =  User::where('email', $idea->correo_contacto)->first();
@@ -61,10 +64,6 @@ class AddUserToTablesSeeder extends Seeder
                 DB::table('comite_gestor')
                 ->where('gestor_id', $gestor->id)
                 ->update(['evaluador_id' => $gestor->user_id]);
-
-                DB::table('gestor_uso')
-                ->where('asesorable_id', $gestor->user_id)
-                ->update(['asesor_id' => $gestor->user_id]);
                 
                 DB::table('proyectos')
                 ->where('asesor_id', $gestor->id)

@@ -20,7 +20,7 @@ class DeleteUsersOfTables extends Migration
                 DB::statement('ALTER TABLE ideas DROP INDEX fk_ideas_gestores1_idx;');
                 DB::statement('ALTER TABLE ideas DROP FOREIGN KEY fk_talentos_ideas1_idx;');
                 DB::statement('ALTER TABLE ideas DROP INDEX fk_talentos_ideas1_idx;');
-                $table->dropColumn(['gestor_id', 'talento_id', 'nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'telefono_contacto']);
+                $table->dropColumn(['gestor_id', 'talento_id', 'nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'telefono_contacto', 'aprendiz_sena']);
             });
             Schema::table('comite_gestor', function (Blueprint $table) {
                 DB::statement('ALTER TABLE comite_gestor DROP FOREIGN KEY fk_comites_gestor1_idx;');

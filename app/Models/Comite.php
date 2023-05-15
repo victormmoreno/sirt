@@ -95,6 +95,7 @@ class Comite extends Model
     {
         return $this->belongsToMany(User::class, 'comite_gestor', 'comite_id', 'evaluador_id')
         ->withTimestamps()
+        ->withTrashed()
         ->withPivot(['hora_inicio', 'hora_fin']);
     }
 }

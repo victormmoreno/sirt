@@ -72,7 +72,7 @@ class SeguimientoController extends Controller
       $cnt_ejecucion = $Pabiertos->where('nombre', $row->first()->nombre)->where('fase', 'Ejecución')->first();
       $cnt_cierre = $Pabiertos->where('nombre', $row->first()->nombre)->where('fase', 'Cierre')->first();
       $cnt_fin = $Pfinalizados->where('nombre', $row->first()->nombre)->where('fase', 'Finalizado')->first();
-      $cnt_suspendido = $Pfinalizados->where('nombre', $row->first()->nombre)->where('fase', 'Concluido sin finalizar')->first();
+      $cnt_suspendido = $Pfinalizados->where('nombre', $row->first()->nombre)->where('fase', 'Cancelado')->first();
 
       $cnt_inicio != null ? $cnt_inicio = $cnt_inicio->trl_esperado : $cnt_inicio = 0;
       $cnt_planeacion != null ? $cnt_planeacion = $cnt_planeacion->trl_esperado : $cnt_planeacion = 0;
@@ -499,7 +499,7 @@ class SeguimientoController extends Controller
       $cnt_ejecucion = $abiertos->where('fase', 'Ejecución')->first();
       $cnt_cierre = $abiertos->where('fase', 'Cierre')->first();
       $cnt_fin = $cerrados->where('fase', 'Finalizado')->first();
-      $cnt_suspendido = $cerrados->where('fase', 'Concluido sin finalizar')->first();
+      $cnt_suspendido = $cerrados->where('fase', 'Cancelado')->first();
 
       $cnt_inicio != null ? $cnt_inicio = $cnt_inicio->trl_esperado : $cnt_inicio = 0;
       $cnt_planeacion != null ? $cnt_planeacion = $cnt_planeacion->trl_esperado : $cnt_planeacion = 0;
