@@ -21,7 +21,7 @@
         style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
         <div class="row card-panel">
         <h5 class="center">
-            Para consultar el seguimiento de un nodo, debes seleccionar un nodo en la lista desplegable de los nodos y luego presionar el botón de "Consultar".
+            Para consultar el seguimiento de un nodo, debes seleccionar un nodo en la lista desplegable de los nodos y luego presionar el botón de "Generar gráfico".
         </h5>
         </div>
     </div>

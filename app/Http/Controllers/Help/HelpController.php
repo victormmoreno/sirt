@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Help;
 use App\Http\Controllers\Controller;
 use App\Repositories\Repository\Help\HelpRepository;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\File;
 use App\User;
 
 class HelpController extends Controller
@@ -13,7 +14,7 @@ class HelpController extends Controller
 
     public function __construct(HelpRepository $helpRepostory)
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except('getCiudad');
         $this->helpRepostory = $helpRepostory;
     }
 
@@ -41,7 +42,6 @@ class HelpController extends Controller
         }else{
             $path =   public_path(). "\documents\handbooks\\". $this->base_sesion();
         }
-
         if(!$this->downloadFile($path)){
             return redirect()->back();
         }
@@ -49,12 +49,12 @@ class HelpController extends Controller
 
     protected function downloadFile($src)
     {
-        if(is_file($src)){
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        if(File::isFile($src)){
+            $finfo =  finfo_open(FILEINFO_MIME_TYPE);
             $content_type = finfo_file($finfo, $src);
             finfo_close($finfo);
-            $file_name = basename($src) . PHP_EOL;
-            $size = filesize($src);
+            $file_name = File::basename($src) . PHP_EOL;
+            $size = File::size($src);
             header("Content-Type: $content_type");
             header("Content-Disposition: attachment; filename=$file_name");
             header("Content-Transfer-Encoding: binary");
@@ -68,11 +68,14 @@ class HelpController extends Controller
     protected function base_sesion()
     {
         switch (Session::get('login_role')) {
+            case User::IsAdministrador():
+                return "Manual_Usuario_Administrador.pdf";
+                break;
             case User::IsActivador():
                 return "Manual_Usuario_Administrador.pdf";
                 break;
             case User::IsApoyoTecnico():
-                return "Manual_Usuario_Apoyo_tecnico";
+                return "Manual_Usuario_Apoyo_tecnico.pdf";
                 break;
             case User::IsArticulador():
                 return "Manual_Usuario_Articulador.pdf";
@@ -94,7 +97,4 @@ class HelpController extends Controller
                 break;
         }
     }
-
-
-
 }

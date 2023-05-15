@@ -26,31 +26,30 @@ class ChangePasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'txtpassword'    => 'required|min:8|max:100|current_password',
-            'txtnewpassword' => ['required', 'confirmed', 'min:8', 'max:100', new StrongPassword],
+            'password'    => 'required|min:8|max:100|current_password',
+            'newpassword' => ['required', 'confirmed', 'min:8', 'max:100', new StrongPassword],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'txtpassword.required'         => 'La contraseña es obligatoria.',
-            'txtpassword.min'              => 'La contraseña debe ser minimo 8 caracteres',
-            'txtemail.max'                 => 'La contraseña debe ser máximo 100 caracteres',
-            'txtpassword.current_password' => 'La contraseña ingresada no coincide con nuestros registros',
-
-            'txtnewpassword.confirmed'     => 'Las nuevas contraseñas ingresadas no coiniciden.',
-            'txtnewpassword.required'      => 'La nueva contraseña es obligatoria.',
-            'txtnewpassword.min'           => 'La contraseña debe ser minimo 8 caracteres',
-            'txtnewpassword.max'           => 'La contraseñ debe ser máximo 100 caracteres',
+            'password.required'         => 'La contraseña es obligatoria.',
+            'password.min'              => 'La contraseña debe ser minimo 8 caracteres',
+            'password.max'              => 'La contraseña debe ser máximo 100 caracteres',
+            'password.current_password' => 'La contraseña ingresada no coincide con nuestros registros',
+            'newpassword.confirmed'  => 'Las nuevas contraseñas ingresadas no coiniciden.',
+            'newpassword.required'   => 'La nueva contraseña es obligatoria.',
+            'newpassword.min'        => 'La contraseña debe ser minimo 8 caracteres',
+            'newpassword.max'        => 'La contraseñ debe ser máximo 100 caracteres',
         ];
     }
 
     public function attributes(): array
     {
         return [
-            'txtpassword'    => 'contraseña',
-            'txtnewpassword' => 'nueva contraseña',
+            'password'    => 'contraseña',
+            'newpassword' => 'nueva contraseña',
         ];
     }
 
@@ -61,7 +60,7 @@ class ChangePasswordRequest extends FormRequest
      */
     public function sanitize(): array
     {
-        return $this->only('txtnewpassword');
+        return $this->only('newpassword');
     }
 
     /**
@@ -72,14 +71,11 @@ class ChangePasswordRequest extends FormRequest
      */
     public function withValidator($validator)
     {
-
         $validator->after(function ($validator) {
-            if (Hash::check($this->txtnewpassword, $this->user()->password)) {
-                $validator->errors()->add('txtnewpassword', 'Esta contraseña ya fue ingresada anteriormente.');
+            if (Hash::check($this->newpassword, $this->user()->password)) {
+                $validator->errors()->add('newpassword', 'Esta contraseña ya fue ingresada anteriormente.');
             }
         });
-
         return;
     }
-
 }

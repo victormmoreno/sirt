@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 //     EdtRepository,
 //     CharlaInformativaRepository};
 use Illuminate\Support\Str;
-use App\Models\{Fase, Proyecto, ArchivoArticulacionProyecto, Articulation, RutaModel, ArticulationStage, ArchivoModel, Entrenamiento, Entrenamienton};
+use App\Models\{Fase, Proyecto, ArchivoArticulacionProyecto, Articulation, RutaModel, ArticulationStage, ArchivoModel, Entrenamiento, Entrenamienton, Nodo};
 use App\Repositories\Repository\{Articulation\ArticulationStageRepository, ArchivoRepository, ProyectoRepository, EntrenamientoRepository, EdtRepository, CharlaInformativaRepository};
 use Illuminate\Support\Facades\{Storage, Session};
 use App\User;
@@ -592,7 +592,6 @@ class ArchivoController extends Controller
      * @param int $id id de la articulacion
      * @param string $fase nombre de la fase
      * @return Datatable
-     * @author devjul
      */
     public function datatableArchiveArticulations(Request $request,$id)
     {
@@ -618,8 +617,113 @@ class ArchivoController extends Controller
                     return $this->datatableFilesArticulation([]);
                     break;
             }
-
         }
+    }
+
+    // Descarga el archivo de la articulación
+    public function downloadFileNode($idFile)
+    {
+        try {
+            $archivo = ArchivoModel::select('id', 'ruta')->where('id', $idFile)->first();
+            $path = str_replace('storage', 'public', $archivo->ruta);
+            return Storage::response($path);
+        } catch (\Exception $e) {
+            return abort(404, $e->getMessage());
+        }
+    }
+
+    /**
+     * Subida de un arcivo al servidor
+     * @param Request
+     * @param string $node nodo
+     * @return void
+     */
+    public function uploadFileNode(Request $request, $node)
+    {
+
+        if (request()->ajax()) {
+            $this->validate($request, [
+                'nombreArchivo' => 'max:50000|mimes:jpeg,png,jpg,docx,doc,pdf,exe,xlsl,xlsx,xls,pptx,sldx,ppsx,exe,zip',
+            ],
+                [
+                    'nombreArchivo.mimes' => 'El tipo de archivo no es permitido',
+                    'nombreArchivo.max' => 'El tamaño del archivo no puede superar las 50MB'
+                ]);
+
+            $file = request()->file('nombreArchivo');
+
+            $archivo = ArchivoModel::selectRaw('MAX(id+1) AS max')->get()->last();
+            $fileName = $archivo->max . '_' . $file->getClientOriginalName();
+            $route = "";
+
+            switch ($request->type){
+                case "Nodo":
+                    $node = Nodo::query()->findOrFailNodo($node);
+                    $nodeid = sprintf("%02d", $node->id);
+                    $year = Carbon::now()->isoFormat('YYYY');
+                    $route = "public/{$nodeid}/{$year}/nodos";
+                    break;
+                default:
+                    return;
+                    break;
+            }
+            $fileUrl = $file->storeAs($route, $fileName);
+            $node->model()->create([
+                'ruta' => Storage::url($fileUrl)
+            ]);
+        }
+    }
+
+    /**
+     * Muestra la datatable de los arcivos de un nodo
+     * @param int $id id de la articulacion
+     * @param string $fase nombre de la fase
+     * @return Datatable
+     * @author devjul
+     */
+    public function datatableArchivesNodes(Request $request, $node)
+    {
+        if (request()->ajax()) {
+            switch ($request->type){
+                case "Nodo":
+                    $node= Nodo::query()->findOrFailNodo($node);
+                    if(isset($request->year) && $request->year != 'all'){
+                        $archive = $node->model()->whereYear('created_at', $request->year)->get();
+                    }else{
+                        $archive =  $node->model()->get();
+                    }
+
+                    return $this->datatableFilesNode($archive);
+                    break;
+                default:
+                    return $this->datatableFilesNode([]);
+                    break;
+            }
+        }
+    }
+
+
+    private function datatableFilesNode($query)
+    {
+        return datatables()->of($query)
+            ->addColumn('download', function ($data) {
+                return "<a target='_blank' href='".route('nodo.files.download', $data->id)."' class='btn blue darken-4 m-b-xs'>
+                                <i class='material-icons'>file_download</i>
+                            </a>";
+            })->addColumn('delete', function ($data) {
+                $delete = '<form method="POST" action="' . route('nodo.files.destroy', [$data->id]) . '">
+            ' . method_field('DELETE') . '' .  csrf_field() . '
+            <button class="btn red darken-4 m-b-xs">
+            <i class="material-icons">delete_forever</i>
+            </button>
+            </form>';
+                return $delete;
+            })->addColumn('file', function ($data) {
+                $file = '
+            <i class="material-icons">insert_drive_file</i> ' . basename(url($data->ruta) ) . '
+            ';
+                return $file;
+            })->rawColumns(['download', 'delete', 'file'])->make(true);
     }
 
     /**
@@ -654,7 +758,6 @@ class ArchivoController extends Controller
     /**
      * @param int $idFile Id del archivo artilacion
      * @return Response
-     * @author Victor Manuel Moreno Vega
      */
     public function destroyFileArticulation($idFile)
     {
@@ -665,4 +768,15 @@ class ArchivoController extends Controller
         toast('El Archivo se ha eliminado con éxito!','success')->autoClose(2000)->position('top-end');
         return back();
     }
+
+    public function destroyFileNode($idFile)
+    {
+        $file = ArchivoModel::find($idFile);
+        $file->delete();
+        $filePath = str_replace('storage', 'public', $file->ruta);
+        Storage::delete($filePath);
+        toast('El Archivo se ha eliminado con éxito!','success')->autoClose(2000)->position('top-end');
+        return back();
+    }
+
 }

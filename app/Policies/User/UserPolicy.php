@@ -47,11 +47,9 @@ class UserPolicy
      * @author julian londono
      * @return boolean
      */
-    public function downloadCertificatedPlataform(User $user)
+    public function downloadCertificatedPlataform(User $authUser, User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsTalento()]) &&
-            session()->has('login_role')
-            && (session()->get('login_role') == User::IsTalento());
+        return (bool) $authUser->id == $user->id;
     }
 
     /**
@@ -88,7 +86,7 @@ class UserPolicy
      */
     public function tomar_control(User $user)
     {
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsAdministrador()]);
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsAdministrador()]) && $user->id != auth()->user()->id;
     }
 
     /**
@@ -250,32 +248,4 @@ class UserPolicy
                 )
             );
     }
-
-    public function confirmContratorInformation(User $authUser, User $user)
-    {
-        return (bool)
-            ($authUser->documento != $user->documento) &&
-            session()->has('login_role') &&
-            (
-                session()->get('login_role') == User::IsAdministrador() ||
-                (session()->get('login_role') == User::IsActivador()) ||
-
-                (
-                    session()->get('login_role') == User::IsDinamizador() &&
-                    (
-                        (isset($authUser->dinamizador) && $authUser->dinamizador->nodo_id == $user->contratista->nodo_id)
-                    )
-                )
-                && count($user->roles) <= 0 and $user->estado == User::IsInactive()
-            );
-    }
-    /**
-     * Determine whether the user can view the activities
-     * @return boolean
-     */
-    public function viewActivities(User $authUser, User $user)
-    {
-        return (bool) $authUser->id == $user->id && (session()->get('login_role') == User::IsExperto() || session()->get('login_role') == User::IsTalento());
-    }
-
 }

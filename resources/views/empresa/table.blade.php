@@ -1,5 +1,5 @@
 <table style="width: 100%" id="empresasDeTecnoparque_table" class="display responsive-table datatable-example dataTable">
-  <thead>
+  <thead class="bg-primary white-text">
     <tr>
       <th>Nit</th>
       <th>Nombre de la Empresa</th>

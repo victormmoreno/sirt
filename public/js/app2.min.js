@@ -2292,23 +2292,23 @@ $(document).on('submit', 'form#formSearchUser', function (event) {
             'Error',
             'Por favor selecciona una opción',
             'error'
-          );
+        );
     }else if(type == 1 && (search == null || search == '' || !patronDocumento.test(search))){
         Swal.fire(
             'Error',
             'Por favor ingrese un número de documento válido',
             'error'
-          );
+        );
     }else if(type == 2 && (search == null || search == '' || !patronEmail.test(search))){
         Swal.fire(
             'Error',
             'Por favor ingrese un correo electrónico válido',
             'error'
-          );
+        );
     }else{
-        var form = $(this);
+        let form = $(this);
         let data = new FormData($(this)[0]);
-        var url = form.attr("action");
+        let url = form.attr("action");
         $.ajax({
             type: form.attr('method'),
             url: url,
@@ -2410,68 +2410,8 @@ var userSearch = {
     }
 }
 
-
-var user = {
-    getCiudadExpedicion:function(){
-        let id;
-        id = $('#txtdepartamentoexpedicion').val();
-        $.ajax({
-          dataType:'json',
-          type:'get',
-          url: host_url + '/usuario/getciudad/'+id
-        }).done(function(response){
-          $('#txtciudadexpedicion').empty();
-        //   $('#txtciudadexpedicion').append('<option value="">Seleccione la Ciudad</option>')
-          $.each(response.ciudades, function(i, e) {
-            $('#txtciudadexpedicion').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
-          });
-          $('#txtciudadexpedicion').material_select();
-        });
-      },
-
-      getOtraEsp:function (ideps) {
-        let id = $(ideps).val();
-        let nombre = $("#txteps option:selected").text();
-      
-        if (id == 42) {
-            // $('.otraeps').css("display:block");
-            $('.otraeps').removeAttr("style");
-             
-        }else{
-            $('.otraeps').attr("style","display:none");
-        }
-    },
-    getCiudad:function(){
-        let id;
-        id = $('#txtdepartamento').val();
-        $.ajax({
-          dataType:'json',
-          type:'get',
-          url: host_url + '/usuario/getciudad/'+id
-        }).done(function(response){
-          $('#txtciudad').empty();
-          $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')
-          $.each(response.ciudades, function(i, e) {
-            $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
-          })
-          
-          $('#txtciudad').material_select();
-        });
-    },
-    getGradoDiscapacidad(gradodiscapacidad){
-        let grado = $(gradodiscapacidad).val();
-        if (grado == 1) {
-            $('.gradodiscapacidad').removeAttr("style");
-             
-        }else{
-            $('.gradodiscapacidad').attr("style","display:none");
-        }
-    }
-}
-
-
 $(document).ready(function() {
-    $('#txtocupaciones').select2({
+    $('#ocupaciones').select2({
         language: "es",
         isMultiple: true
     });
@@ -2482,7 +2422,7 @@ var estudios = {
     getOtraOcupacion:function (idocupacion) {
         $('#otraocupacion').hide();
         let id = $(idocupacion).val();
-        let nombre = $("#txtocupaciones option:selected").text();
+        let nombre = $("#otra_ocupacion option:selected").text();
         let resultado = nombre.match(/[A-Z][a-z]+/g);
         $('#otraocupacion').hide();
         if (resultado != null) {
@@ -2493,198 +2433,15 @@ var estudios = {
     }
 }
 
+
 $(document).ready(function() {
-    // $(".aprendizSena").hide();
     tipoTalento.getSelectTipoTalento();
 });
 
 var tipoTalento = {
     getSelectTipoTalento:function (tipotal) {
-        let valor = $(tipotal).val();
-        let nombreTipoTalento = $("#txttipotalento option:selected").text();
-        
-        if(valor == 1 || valor == 2){
 
-            tipoTalento.showAprendizSena();
-        }
-        else if(valor == 3){
-            tipoTalento.showEgresadoSena();
-        }
-        else if(valor == 4){
-            tipoTalento.showInstructorSena();
-        }
-        else if(valor == 5){
-            tipoTalento.showFuncionarioSena();
-        }
-        else if(valor == 6){
-            tipoTalento.showPropietarioEmpresa();
-        }
-        else if(valor == 7){
-            tipoTalento.showEmprendedor();
-        }
-        else if(valor == 8){
-            tipoTalento.showUniversitario();
-        }
-        else if(valor == 9){
-            tipoTalento.showFuncionarioEmpresa();
-        }
-        else{
-            tipoTalento.ShowSelectTipoTalento();
-        }
-    },
 
-    showAprendizSena: function(){
-        tipoTalento.hideSelectTipoTalento();
-        tipoTalento.hideEgresadoSena();
-        tipoTalento.hideInstructorSena();
-        tipoTalento.hideFuncionarioSena();
-        tipoTalento.hidePropietarioEmpresa();
-        tipoTalento.hideEmprendedor();
-        tipoTalento.hideUniversitario();
-        tipoTalento.hideFuncionarioEmpresa();
-        $(".aprendizSena").css("display", "block");
-        $(".aprendizSena").show();
-
-    },
-    showEgresadoSena: function(){
-        tipoTalento.hideSelectTipoTalento();
-        tipoTalento.hideAprendizSena();
-        tipoTalento.hideInstructorSena();
-        tipoTalento.hideFuncionarioSena();
-        tipoTalento.hidePropietarioEmpresa();
-        tipoTalento.hideEmprendedor();
-        tipoTalento.hideUniversitario();
-        tipoTalento.hideFuncionarioEmpresa();
-        $(".egresadoSena").show();
-
-    },
-    showInstructorSena: function(){
-        tipoTalento.hideSelectTipoTalento();
-        tipoTalento.hideAprendizSena();
-        tipoTalento.hideEgresadoSena();
-        tipoTalento.hideFuncionarioSena();
-        tipoTalento.hideFuncionarioSena();
-        tipoTalento.hidePropietarioEmpresa();
-        tipoTalento.hideEmprendedor();
-        tipoTalento.hideUniversitario();
-        tipoTalento.hideFuncionarioEmpresa();
-        $(".instructorSena").css("display", "block");
-
-    },
-    showFuncionarioSena: function(){
-        tipoTalento.hideSelectTipoTalento();
-        tipoTalento.hideAprendizSena();
-        tipoTalento.hideEgresadoSena();
-        tipoTalento.hideInstructorSena();
-        tipoTalento.hideFuncionarioSena();
-        tipoTalento.hidePropietarioEmpresa();
-        tipoTalento.hideEmprendedor();
-        tipoTalento.hideUniversitario();
-        tipoTalento.hideFuncionarioEmpresa();
-        $(".funcionarioSena").css("display", "block");
-
-    },
-    showPropietarioEmpresa: function (){
-        tipoTalento.hideSelectTipoTalento();
-        tipoTalento.hideAprendizSena();
-        tipoTalento.hideEgresadoSena();
-        tipoTalento.hideInstructorSena();
-        tipoTalento.hideFuncionarioSena();
-        tipoTalento.hideUniversitario();
-        tipoTalento.hideFuncionarioEmpresa();
-
-        $('.otherUser').empty();
-        $('.otherUser').append(`<div class="valign-wrapper" >
-            <h5> Seleccionaste Propietario empresa</h5>
-        </div>`);
-    },
-    showEmprendedor: function (){
-        tipoTalento.hideSelectTipoTalento();
-        tipoTalento.hideAprendizSena();
-        tipoTalento.hideEgresadoSena();
-        tipoTalento.hideInstructorSena();
-        tipoTalento.hideFuncionarioSena();
-        tipoTalento.hideUniversitario();
-        tipoTalento.hideFuncionarioEmpresa();
-        $('.otherUser').empty();
-        $('.otherUser').append(`<div class="valign-wrapper" >
-            <h5> Seleccionaste Emprendedor</h5>
-        </div>`);
-    },
-
-    showUniversitario: function(){
-        tipoTalento.hideSelectTipoTalento();
-        tipoTalento.hideAprendizSena();
-        tipoTalento.hideEgresadoSena();
-        tipoTalento.hideInstructorSena();
-        tipoTalento.hideFuncionarioSena();
-        tipoTalento.hidePropietarioEmpresa();
-        tipoTalento.hideEmprendedor();
-        tipoTalento.hideFuncionarioEmpresa();
-        $(".universitario").css("display", "block");
-
-    },
-    showFuncionarioEmpresa: function(){
-        tipoTalento.hideSelectTipoTalento();
-        tipoTalento.hideAprendizSena();
-        tipoTalento.hideEgresadoSena();
-        tipoTalento.hideInstructorSena();
-        tipoTalento.hideFuncionarioSena();
-        tipoTalento.hidePropietarioEmpresa();
-        tipoTalento.hideUniversitario();
-        tipoTalento.hideEmprendedor();
-        $(".funcionarioEmpresa").css("display", "block");
-
-    },
-
-    hideAprendizSena: function(){
-        // $(".aprendizSena").css("display", "none");
-        $(".aprendizSena").hide();
-
-    },
-    hideEgresadoSena: function(){
-        // $(".egresadoSena").css("display", "none");
-        $(".egresadoSena").hide();
-
-    },
-    hideInstructorSena: function(){
-        $(".instructorSena").css("display", "none");
-
-    },
-    hideFuncionarioSena: function(){
-        $(".funcionarioSena").css("display", "none");
-
-    },
-    hideSelectTipoTalento: function(){
-        $(".selecttipotalento").css("display", "none");
-    },
-    hidePropietarioEmpresa: function(){
-
-        $(".otherUser").css("display", "none");
-    },
-    hideUniversitario: function(){
-
-        $(".universitario").css("display", "none");
-    },
-    hideFuncionarioEmpresa: function(){
-
-        $(".funcionarioEmpresa").css("display", "none");
-    },
-
-    hideEmprendedor: function(){
-
-        $(".otherUser").css("display", "none");
-    },
-    ShowSelectTipoTalento: function(){
-        tipoTalento.hideAprendizSena();
-        tipoTalento.hideEgresadoSena();
-        tipoTalento.hideEmprendedor();
-        tipoTalento.hideUniversitario();
-        tipoTalento.hideFuncionarioEmpresa();
-        tipoTalento.hideFuncionarioSena();
-        tipoTalento.hideInstructorSena();
-        tipoTalento.hidePropietarioEmpresa();
-        $(".selecttipotalento").css("display", "block");
     },
     getCentroFormacionAprendiz:function (){
         let regional = $('#txtregional_aprendiz').val();
@@ -2697,147 +2454,13 @@ var tipoTalento = {
             $('#txtcentroformacion_aprendiz').append('<option value="">Seleccione el centro de formación</option>')
             $.each(response.centros, function(id, nombre) {
                 $('#txtcentroformacion_aprendiz').append('<option  value="'+id+'">'+nombre+'</option>');
-
-
                 $('#txtcentroformacion_aprendiz').material_select();
-
-            });
-        });
-    },
-    getCentroFormacionEgresadoSena:function (){
-        let regional = $('#txtregional_egresado').val();
-        $.ajax({
-            dataType:'json',
-            type:'get',
-            url: host_url + '/centro-formacion/getcentrosregional/'+regional
-        }).done(function(response){
-            $('#txtcentroformacion_egresado').empty();
-            $('#txtcentroformacion_egresado').append('<option value="">Seleccione el centro de formación</option>')
-            $.each(response.centros, function(id, nombre) {
-                $('#txtcentroformacion_egresado').append('<option  value="'+id+'">'+nombre+'</option>');
-
-
-                $('#txtcentroformacion_egresado').material_select();
-
-            });
-        });
-    },
-    getCentroFormacionFuncionarioSena:function (){
-        let regional = $('#txtregional_funcionarioSena').val();
-        $.ajax({
-            dataType:'json',
-            type:'get',
-            url: host_url + '/centro-formacion/getcentrosregional/'+regional
-        }).done(function(response){
-            $('#txtcentroformacion_funcionarioSena').empty();
-            $('#txtcentroformacion_funcionarioSena').append('<option value="">Seleccione el centro de formación</option>')
-            $.each(response.centros, function(id, nombre) {
-                $('#txtcentroformacion_funcionarioSena').append('<option  value="'+id+'">'+nombre+'</option>');
-
-
-                $('#txtcentroformacion_funcionarioSena').material_select();
-
-            });
-        });
-    },
-    getCentroFormacionInstructorSena:function (){
-        let regional = $('#txtregional_instructorSena').val();
-        $.ajax({
-            dataType:'json',
-            type:'get',
-            url: host_url + '/centro-formacion/getcentrosregional/'+regional
-        }).done(function(response){
-            $('#txtcentroformacion_instructorSena').empty();
-            $('#txtcentroformacion_instructorSena').append('<option value="">Seleccione el centro de formación</option>')
-            $.each(response.centros, function(id, nombre) {
-                $('#txtcentroformacion_instructorSena').append('<option  value="'+id+'">'+nombre+'</option>');
-
-
-                $('#txtcentroformacion_instructorSena').material_select();
-
             });
         });
     },
 }
 
 
-$(document).on('submit', 'form#formRegisterUser', function (event) {
-
-    $('button[type="submit"]').attr('disabled', 'disabled');
-    event.preventDefault();
-    var form = $(this);
-    var data = new FormData($(this)[0]);
-    var url = form.attr("action");
-    $.ajax({
-      type: form.attr('method'),
-      url: url,
-      data: data,
-      cache: false,
-      contentType: false,
-      dataType: 'json',
-      processData: false,
-      success: function (data) {
-        $('button[type="submit"]').prop("disabled", false);
-        $('.error').hide();
-        if (data.fail) {
-            
-          for (control in data.errors) {
-            $('#' + control + '-error').html(data.errors[control]);
-            $('#' + control + '-error').show();
-          }
-
-          createUser.printErroresFormulario(data);
-        }
-        if (data.state == 'error' && data.url == false) {
-          Swal.fire({
-            title: 'El Usuario no se ha registrado, por favor inténtalo de nuevo',
-            type: 'warning',
-            showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Ok'
-          })
-        }
-        if (data.state == 'success' && data.url != false) {
-          Swal.fire({
-            title: 'Registro Exitoso',
-            text: `El Usuario `+data.user.nombres+ ` ` +data.user.apellidos+`  ha sido creado satisfactoriamente`,
-            type: 'success',
-            showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Ok',
-            footer: '<p class="red-text">Hemos enviado un correo electrónico al  usuario ' + data.user.nombres + ' '+ data.user.apellidos+ ' con las credenciales de ingreso a la plataforma.</p>'
-          });
-          setTimeout(function(){
-            window.location.href = data.url;
-          }, 1000);
-        }
-      },
-      // error: function (xhr, textStatus, errorThrown) {
-      //   alert("Error: " + errorThrown);
-      // }
-    });
-  });
-
-var createUser = {
-    printErroresFormulario: function (data){
-        if (data.state == 'error_form') {
-            let errores = "";
-            for (control in data.errors) {
-                errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
-                $('#' + control + '-error').html(data.errors[control]);
-                $('#' + control + '-error').show();
-            }
-            Swal.fire({
-                title: 'Advertencia!',
-                html: 'Estas ingresando mal los datos.' + errores,
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'Ok'
-            });
-        }
-    }
-}  
 
 $(document).on('submit', 'form#formEditUser', function (event) {
     $('button[type="submit"]').attr('disabled', 'disabled');
@@ -2855,17 +2478,17 @@ $(document).on('submit', 'form#formEditUser', function (event) {
         dataType: 'json',
         processData: false,
         success: function (data) {
-    
+
           $('button[type="submit"]').removeAttr('disabled');
           $('button[type="submit"]').prop("disabled", false);
           $('.error').hide();
           if (data.fail) {
-  
+
             for (control in data.errors) {
               $('#' + control + '-error').html(data.errors[control]);
               $('#' + control + '-error').show();
             }
-  
+
             EditUser.printErroresFormulario(data);
           }
           if (data.state == 'error') {
@@ -2894,7 +2517,7 @@ $(document).on('submit', 'form#formEditUser', function (event) {
             }, 1000);
           }
         },
-        
+
       });
 });
 
@@ -3108,9 +2731,9 @@ $(document).ready(function() {
     }
 });
 
-var UserIndex = {
+const UserIndex = {
     fillDatatatablesUsers(filter_nodo ,filter_role, filter_state, filter_year){
-        var datatable = $('#users_data_table').DataTable({
+        let datatable = $('#users_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
@@ -3120,7 +2743,7 @@ var UserIndex = {
             responsive: true,
             "order": [[ 1, "desc" ]],
             ajax:{
-                url: host_url + "/usuario",
+                url: `${host_url}/usuarios`,
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -3130,6 +2753,10 @@ var UserIndex = {
                 }
             },
             columns: [
+                {
+                    data: 'nodo',
+                    name: 'nodo',
+                },
                 {
                     data: 'tipodocumento',
                     name: 'tipodocumento',
@@ -3146,8 +2773,8 @@ var UserIndex = {
                     data: 'celular',
                     name: 'celular',
                 },  {
-                    data: 'roles',
-                    name: 'roles'
+                    data: 'rols',
+                    name: 'rols'
                 }, {
                     data: 'login',
                     name: 'login',
@@ -3164,7 +2791,7 @@ var UserIndex = {
         });
     },
     fillDatatatablesTalentos(filter_year,filter_state){
-        var datatable = $('#mytalento_data_table').DataTable({
+        let datatable = $('#mytalento_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
@@ -3173,7 +2800,7 @@ var UserIndex = {
             serverSide: true,
             "order": [[ 1, "desc" ]],
             ajax:{
-                url: host_url + "/usuario/mistalentos",
+                url: `${host_url}/usuarios/mistalentos`,
                 type: "get",
                 data: {
                     filter_year: filter_year,
@@ -3197,8 +2824,8 @@ var UserIndex = {
                     data: 'celular',
                     name: 'celular',
                 },  {
-                    data: 'roles',
-                    name: 'roles'
+                    data: 'rols',
+                    name: 'rols'
                 }, {
                     data: 'login',
                     name: 'login',
@@ -3216,19 +2843,13 @@ var UserIndex = {
 }
 
 $('#filter_user').click(function(){
-
     let filter_role = $('#filter_rol').val();
     let filter_nodo = $('#filter_nodo').val();
     let filter_state = $('#filter_state').val();
     let filter_year = $('#filter_year').val();
-
-
     $('#users_data_table').dataTable().fnDestroy();
-
-
     if((filter_nodo != '' || filter_nodo != null) && filter_role !='' && filter_state != '' && filter_year !=''){
         UserIndex.fillDatatatablesUsers(filter_nodo , filter_role, filter_state, filter_year);
-        //idea.fill_datatatables_ideas(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
     }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && filter_role !='' && filter_state != '' && filter_year !=''){
         UserIndex.fillDatatatablesUsers(filter_nodo = null , filter_role, filter_state, filter_year);
     }else{
@@ -3238,9 +2859,7 @@ $('#filter_user').click(function(){
             },
             "lengthChange": false
         }).clear().draw();
-
     }
-
 });
 
 $('#filter_talentos').click(function(){
@@ -3264,14 +2883,14 @@ $('#download_users').click(function(){
     let filter_nodo = $('#filter_nodo').val();
     let filter_state = $('#filter_state').val();
     let filter_year = $('#filter_year').val();
-    var query = {
+    let query = {
         filter_nodo: filter_nodo,
         filter_role: filter_role,
         filter_state: filter_state,
         filter_year: filter_year,
     }
 
-    var url = host_url + "/usuario/export?" + $.param(query)
+    let url = `${host_url}/usuarios/export?${$.param(query)}`
     window.location = url;
 });
 
@@ -6757,6 +6376,10 @@ $(document).ready(function() {
 
 });
 
+// var $ = require('jquery');
+// var DataTable = require('datatables.net');
+// require('datatables.net-plugins/dataRender/datetime.js');
+
 var usoinfraestructuraIndex = {
     fillDatatatablesUsosInfraestructura: function(filter_nodo, filter_module, filter_year){
         var datatable = $('#usoinfraestructa_data_table').DataTable({
@@ -6776,12 +6399,29 @@ var usoinfraestructuraIndex = {
                     filter_year: filter_year
                 }
             },
+            columnDefs: [ {
+                targets: 0,
+                // render: datatable.render.moment( 'DD-MM-YYYY' )
+                type: "date"
+            } ],
+
             columns: [
+                // {
+                //     type: "date",
+                //     data: 'fecha',
+                //     name: 'fecha',
+                //     width: '10%'
+                // },
                 {
                     data: 'fecha',
-                    name: 'fecha',
-                    width: '10%'
-                }, {
+                    type: 'date',
+                    // render: {
+                    //     _: 'display',
+                    //     sort: 'timestamp'
+                    // }
+                },
+
+                {
                     data: 'gestorEncargado',
                     name: 'gestorEncargado',
                     width: '20%',
@@ -8166,19 +7806,32 @@ function consultarArticulacionesDeUnaLineaDelNodoPorFechas_stacked(bandera) {
 }
 
 var graficosSeguimiento = {
-  gestor: 'graficoSeguimientoEsperadoPorGestorDeUnNodo_column',
-  nodo_esperado: 'graficoSeguimientoDeUnNodo_column',
-  tecnoparque_esperado: 'graficoSeguimientoTecnoparque_column',
-  nodo_fases: 'graficoSeguimientoDeUnNodoFases_column',
-  tecnoparque_fases: 'graficoSeguimientoTecnoparqueFases_column',
-  gestor_fases: 'graficoSeguimientoPorGestorFases_column',
-  linea_esperado: 'graficoSeguimientoEsperadoPorLineaDeUnNodo_column',
-  linea_actual: 'graficoSeguimientoActualPorLineaDeUnNodo_column',
-  inscritos_mes: 'graficoSeguimientoInscritosPorMes_column'
+    gestor: 'graficoSeguimientoEsperadoPorGestorDeUnNodo_column',
+    nodo_esperado: 'graficoSeguimientoDeUnNodo_column',
+    tecnoparque_esperado: 'graficoSeguimientoTecnoparque_column',
+    nodo_fases: 'graficoSeguimientoDeUnNodoFases_column',
+    tecnoparque_fases: 'graficoSeguimientoTecnoparqueFases_column',
+    gestor_fases: 'graficoSeguimientoPorGestorFases_column',
+    linea_esperado: 'graficoSeguimientoEsperadoPorLineaDeUnNodo_column',
+    linea_actual: 'graficoSeguimientoActualPorLineaDeUnNodo_column',
+    inscritos_mes: 'graficoSeguimientoInscritosPorMes_column'
 };
 
+let graficosArticulacionSeguimiento = {
+    // gestor: 'graficoSeguimientoEsperadoPorGestorDeUnNodo_column',
+    // nodo_esperado: 'graficoSeguimientoArticulacionDeUnNodoFases_column',
+    // tecnoparque_esperado: 'graficoSeguimientoTecnoparque_column',
+    nodo_fases: 'graficoSeguimientoArticulacionDeUnNodoFases_column',
+    // tecnoparque_fases: 'graficoSeguimientoTecnoparqueFases_column',
+    // gestor_fases: 'graficoSeguimientoPorGestorFases_column',
+    // linea_esperado: 'graficoSeguimientoEsperadoPorLineaDeUnNodo_column',
+    // linea_actual: 'graficoSeguimientoActualPorLineaDeUnNodo_column',
+    inscritos_mes: 'graficoSeguimientoArticulacionesInscritasPorMes_column'
+};
+
+
 function alertaLineaNoValido() {
-  Swal.fire('Advertencia!', 'Seleccione una línea tecnológica', 'warning');
+    Swal.fire('Advertencia!', 'Seleccione una línea tecnológica', 'warning');
 };
 
 function alertaGestorNoValido() {
@@ -8401,49 +8054,98 @@ function graficoSeguimientoEsperado(data, name) {
 }
 
 function graficoSeguimientoPorMes(data, name) {
-  Highcharts.chart(name, {
-    title: {
-      text: 'Proyectos inscritos por mes en el año actual'
-    },
-    subtitle: {
-      text: 'Cuando el mes no aparece es porque el valor es cero(0)'
-    },
-    yAxis: {
-      title: {
-        text: 'Cantidad de proyectos'
-      }
-    },
-    xAxis: {
-      categories: data.datos.meses,
-      accessibility: {
-        rangeDescription: 'Mes'
-      }
-    },
-    legend: {
-      layout: 'vertical',
-      align: 'right',
-      verticalAlign: 'middle'
-    },
-    series: [{
-      name: 'Proyectos inscritos',
-      data: data.datos.cantidades
-    }],
-
-    responsive: {
-      rules: [{
-        condition: {
-          maxWidth: 500
+    Highcharts.chart(name, {
+        title: {
+        text: 'Proyectos inscritos por mes en el año actual'
         },
-        chartOptions: {
-          legend: {
-            layout: 'horizontal',
-            align: 'center',
-            verticalAlign: 'bottom'
-          }
+        subtitle: {
+        text: 'Cuando el mes no aparece es porque el valor es cero(0)'
+        },
+        yAxis: {
+        title: {
+            text: 'Cantidad de proyectos'
         }
-      }]
-    }
-  });
+        },
+        xAxis: {
+        categories: data.datos.meses,
+        accessibility: {
+            rangeDescription: 'Mes'
+        }
+        },
+        legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+        },
+        series: [{
+        name: 'Proyectos inscritos',
+        data: data.datos.cantidades
+        }],
+
+        responsive: {
+        rules: [{
+            condition: {
+            maxWidth: 500
+            },
+            chartOptions: {
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom'
+            }
+            }
+        }]
+        }
+    });
+}
+
+function graficoSeguimientoArticulacionesPorMes(data, name) {
+    Highcharts.chart(name, {
+        title: {
+            text: 'Articulaciones inscritas por mes en el año actual'
+        },
+        subtitle: {
+            text: 'Cuando el mes no aparece es porque el valor es cero(0)'
+        },
+        yAxis: {
+            title: {
+                text: 'Cantidad de articulaciones'
+            }
+        },
+        xAxis: {
+            title: {
+                text: 'Mes'
+            },
+            categories: data.datos.meses,
+            accessibility: {
+                rangeDescription: 'Mes'
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle'
+        },
+        series: [{
+            name: 'Articulaciones inscritas',
+            data: data.datos.cantidades
+        }],
+
+        responsive: {
+        rules: [{
+            condition: {
+            maxWidth: 500
+            },
+            chartOptions: {
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom'
+            }
+            }
+        }]
+        }
+    });
 }
 
 function graficoSeguimientoFases(data, name) {
@@ -8534,6 +8236,91 @@ function graficoSeguimientoFases(data, name) {
     }]
 });
 }
+
+function graficoSeguimientoArticulacionesFases(data, name) {
+    let nodos = [];
+    let inicio = [];
+    let ejecucion = [];
+    let cierre = [];
+    let finalizado = [];
+    let suspendido = [];
+    data.datos.forEach(element => {
+        nodos.push(element.nodo);
+        inicio.push(element.inicio);
+        ejecucion.push(element.ejecucion);
+        cierre.push(element.cierre);
+        finalizado.push(element.finalizado);
+        suspendido.push(element.suspendido);
+    });
+    Highcharts.chart(name, {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Articulaciones actuales y finalizadas en el año actual'
+        },
+        xAxis: {
+            title: {
+                text: 'Nodos'
+            },
+            categories: nodos
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Cantidad de Articulaciones'
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: ( // theme
+                        Highcharts.defaultOptions.title.style &&
+                        Highcharts.defaultOptions.title.style.color
+                    ) || 'gray',
+                    textOutline: 'none'
+                }
+            }
+        },
+        legend: {
+            align: 'left',
+            x: 70,
+            verticalAlign: 'top',
+            y: 20,
+            floating: true,
+            backgroundColor:
+                Highcharts.defaultOptions.legend.backgroundColor || 'white',
+            borderColor: '#CCC',
+            borderWidth: 1,
+            shadow: false
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        series: [{
+            name: 'Inicio',
+            data: inicio
+        },  {
+            name: 'Ejecución',
+            data: ejecucion
+        }, {
+            name: 'Cierre',
+            data: cierre
+        }, {
+            name: 'Finalizado',
+            data: finalizado
+        }, {
+            name: 'Concluido sin finalizar',
+            data: suspendido
+        }]
+    });
+}
+
 
 function graficoSeguimientoFasesNoGroup(data, name) {
   Highcharts.chart(name, {
@@ -10735,26 +10522,25 @@ $("#formArticualtionSubtype").on('submit', function(e){
 });
 
 function isset(variable) {
-  if(typeof(variable) != "undefined" && variable !== null) {
-    return true;
-  }
-  return false;
+    if(typeof(variable) != "undefined" && variable !== null) {
+        return true;
+    }
+    return false;
 }
 
 function sendListNodos(url, input) {
-  let nodosSend = input;
-  return $.ajax({
-    dataType: 'json',
-    type: 'get',
-    data: {
-      nodos: nodosSend
-    },
-    url: url,
-    // success: function (data) { },
-    error: function (xhr, textStatus, errorThrown) {
-      alert("Error: " + errorThrown);
-    },
-  });
+    let nodosSend = input;
+    return $.ajax({
+        dataType: 'json',
+        type: 'get',
+        data: {
+        nodos: nodosSend
+        },
+        url: url,
+        error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+        },
+    });
 };
 
 function consultarSeguimientoDeUnNodoFases(e, url) {
@@ -10764,12 +10550,27 @@ function consultarSeguimientoDeUnNodoFases(e, url) {
       Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
       return false;
   } else {
-    let ajax = sendListNodos(url, input);
+        let ajax = sendListNodos(url, input);
       ajax.success(function (data) {
         graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
       });
   }
 };
+
+function consultarSeguimientoArticulacionDeUnNodoFases(e, url) {
+    e.preventDefault();
+    input = $("#nodo_articulacion_actual").val();
+    if (!validarSelect(input)) {
+        Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
+        return false;
+    } else {
+        let ajax = sendListNodos(url, input);
+        ajax.success(function (data) {
+            console.log(data);
+            graficoSeguimientoArticulacionesFases(data, graficosArticulacionSeguimiento.nodo_fases);
+        });
+    }
+  };
 
 function consultarSeguimientoEsperado(e, url) {
   e.preventDefault();
@@ -10785,7 +10586,11 @@ function consultarSeguimientoEsperado(e, url) {
   }
 }
 
+<<<<<<< HEAD
 function generarExcelConTodosLosIndicadores(e, nodo) {
+=======
+function generarExcelConTodosLosIndicadoresProyectos() {
+>>>>>>> 6dd4bd58dc3a113eb93637d275c8f1b427fadc72
   let idnodo = $('#txtnodo_id').val();
   let hoja = $('#txthoja_nombre').val();
   let fecha_inicio = $('#txtfecha_inicio_todos').val();
@@ -10800,6 +10605,7 @@ function generarExcelConTodosLosIndicadores(e, nodo) {
   if (fecha_inicio > fecha_fin) {
     Swal.fire('Error!', 'Seleccione un rango de fechas válido', 'error');
   } else {
+<<<<<<< HEAD
     e.preventDefault();
     $.ajax({
       type: 'get',
@@ -10839,6 +10645,33 @@ function generarExcelConTodosLosIndicadores(e, nodo) {
 }
 
 function generarExcelConTodosLosIndicadoresActuales(e, nodo) {
+=======
+    location.href = `/excel/export/${idnodo}/${fecha_inicio}/${fecha_fin}/${hoja}`;
+  }
+}
+
+function generarExcelConTodosLosIndicadoresArticulaciones() {
+    let nodo = $('#txtnodo_articulacion_todos').val();
+    let hoja = $('#txthoja_articulacion_todos').val();
+    let fecha_inicio = $('#txtfecha_inicio_articulacion_todos').val();
+    let fecha_fin = $('#txtfecha_fin_articulacion_todos').val();
+
+    if (!isset(nodo)) {
+        nodo = 0;
+    }
+    if (!isset(hoja)) {
+        hoja = 'all';
+    }
+
+    if (fecha_inicio > fecha_fin) {
+        Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
+    } else {
+        location.href = `/excel/export/${nodo}/articulaciones/${fecha_inicio}/${fecha_fin}/${hoja}`;
+    }
+}
+
+function generarExcelConTodosLosIndicadoresActuales() {
+>>>>>>> 6dd4bd58dc3a113eb93637d275c8f1b427fadc72
   let idnodo = $('#txtnodo_id_actuales').val();
   let hoja = $('#txthoja_nombre_actuales').val();
   if (!isset(idnodo)) {
@@ -10847,7 +10680,10 @@ function generarExcelConTodosLosIndicadoresActuales(e, nodo) {
   if (!isset(hoja)) {
     hoja = 'all';
   }
+  location.href = `/excel/export_proyectos_actuales/${idnodo}/${hoja}`;
+}
 
+<<<<<<< HEAD
   e.preventDefault();
   $.ajax({
     type: 'get',
@@ -10883,6 +10719,18 @@ function generarExcelConTodosLosIndicadoresActuales(e, nodo) {
       alert("Error: " + errorThrown);
     },
   })
+=======
+function generarExcelIndicadoresArticulacionesActuales() {
+  let node = $('#txtnodo_articulaciones_activas').val();
+  let sheet = $('#txthoja_articulaciones_activas').val();
+  if (!isset(node)) {
+    node = 0;
+  }
+  if (!isset(sheet)) {
+    sheet = 'all';
+  }
+  location.href = `/excel/export_articulaciones_actuales/${node}/${sheet}`;
+>>>>>>> 6dd4bd58dc3a113eb93637d275c8f1b427fadc72
 }
 
 function generarExcelConTodosLosIndicadoresFinalizados(e, nodo) {
@@ -10900,6 +10748,7 @@ function generarExcelConTodosLosIndicadoresFinalizados(e, nodo) {
   if (fecha_inicio > fecha_fin) {
     Swal.fire('Error!', 'Seleccione un rango de fechas válido', 'error');
   } else {
+<<<<<<< HEAD
     e.preventDefault();
     $.ajax({
       type: 'get',
@@ -10935,12 +10784,39 @@ function generarExcelConTodosLosIndicadoresFinalizados(e, nodo) {
         alert("Error: " + errorThrown);
       },
     })
+=======
+    location.href = `/excel/export_proyectos_finalizados/${idnodo}/${fecha_inicio}/${fecha_fin}/${hoja}`;
+>>>>>>> 6dd4bd58dc3a113eb93637d275c8f1b427fadc72
   }
 
 }
 
+<<<<<<< HEAD
 function generarExcelConTodosLosIndicadoresInscritos(e, nodo) {
   let idnodo = $("#txtnodo_id_inscritos").val();
+=======
+function generarExcelIndicadoresArticulacionesFinalizadas() {
+    let nodo = $('#txtnodo_articulaciones_finalizadas').val();
+    let hoja = $('#txthoja_articulaciones_finalizadas').val();
+    let fecha_inicio = $('#txtfecha_inicio_finalizadas').val();
+    let fecha_fin = $('#txtfecha_fin_finalizadas').val();
+
+    if (!isset(nodo)) {
+        nodo = 0;
+    }
+    if (!isset(hoja)) {
+        hoja = 'all';
+    }
+    if (fecha_inicio > fecha_fin) {
+        Swal.fire('Error!', 'Seleccione fechas válidas', 'error');
+    } else {
+        location.href = `/excel/export_articulaciones_finalizadas/${nodo}/${fecha_inicio}/${fecha_fin}/${hoja}`;
+    }
+}
+
+function generarExcelConTodosLosIndicadoresInscritos(e) {
+  let idnodo = $('#txtnodo_id_inscritos').val();
+>>>>>>> 6dd4bd58dc3a113eb93637d275c8f1b427fadc72
   let hoja = $('#txthoja_nombre_inscritos').val();
   let fecha_inicio = $('#txtfecha_inicio_inscritos').val();
   let fecha_fin = $('#txtfecha_fin_inscritos').val();
@@ -10990,8 +10866,26 @@ function generarExcelConTodosLosIndicadoresInscritos(e, nodo) {
       },
     })
   }
-
 }
+
+function generarExcelIndicadoresArticulacionesInscritas() {
+    let nodo = $('#txtnodo_articulaciones_inscritas').val();
+    let hoja = $('#txthoja_articulaciones_inscritas').val();
+    let fecha_inicio = $('#txtfecha_inicio_articulaciones_inscritas').val();
+    let fecha_fin = $('#txtfecha_fin_articulaciones_inscritas').val();
+    if (!isset(nodo)) {
+        nodo = 0;
+    }
+    if (!isset(hoja)) {
+        hoja = 'all';
+    }
+
+    if (fecha_inicio > fecha_fin) {
+      Swal.fire('Error!', 'Seleccione un rango de fechas válido', 'error');
+    } else {
+      location.href = `/excel/export_articulaciones_inscritos/${nodo}/${fecha_inicio}/${fecha_fin}/${hoja}`;
+    }
+  }
 
 function selectAll(source, elementaName) {
   checkboxes = document.getElementsByClassName(elementaName);
@@ -11007,13 +10901,12 @@ function downloadMetas(e) {
       Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
       return false;
   } else {
-      // location.href = route + '/' + input;
       document.frmDescargarMetas.submit();
   }
 }
 
+
 function validarSelect(input) {
-  // input = $(input).val();
   if (input == null) {
     return false;
   }
@@ -11060,6 +10953,7 @@ function downloadIdeasIndicadores(e) {
       document.frmDescargarIdeas.submit();
   }
 }
+
 $('#txtcontenido').summernote({
   lang: 'es-ES',
   height: 300

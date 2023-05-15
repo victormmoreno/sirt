@@ -1,8 +1,8 @@
-@extends('spa.layouts.app')
+@extends('layouts.guest')
 
 @section('meta-title', 'Políticas de confidencialidad')
 @section('meta-content', 'Políticas de confidencialidad')
-@section('content-spa')
+@section('content')
 <main class="mn-inner inner-active-sidebar no-padding">
 	<div class="section white">
 		<div class="container">

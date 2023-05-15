@@ -1,7 +1,5 @@
 @extends('layouts.app')
-
 @section('meta-title', 'Usuarios')
-
 @section('content')
 @php
   $year = Carbon\Carbon::now()->year;
@@ -36,7 +34,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="{{{route('usuario.mytalentos')}}}">
+                                            <a href="{{{route('usuario.talents')}}}">
                                                 Mis talentos
                                             </a>
                                         </li>
@@ -77,8 +75,7 @@
                                     </select>
                                 </div>
                                 <div class="col s12 m6 l4 offset-m3 right">
-                                <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_talentos"><i class="material-icons">cloud_download</i>Descargar</button>
-                                    <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_talentos"><i class="material-icons">search</i>Filtrar</button>
+                                    <button class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right" id="filter_talentos"><i class="material-icons">search</i>Filtrar</button>
                                 </div>
                             </div>
                             <table id="mytalento_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
@@ -102,7 +99,7 @@
                 </div>
                 <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
                     <a href="{{route('usuario.search')}}"  class="btn tooltipped btn-floating btn-large darken-1 white-text" data-position="left" data-delay="50" data-tooltip="Nuevo Usuario">
-                         <i class="material-icons">add_circle</i>
+                        <i class="material-icons">add_circle</i>
                     </a>
                 </div>
             </div>

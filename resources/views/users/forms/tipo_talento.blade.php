@@ -6,20 +6,6 @@
             </div>
         </div>
         <div class="row">
-            <div class="input-field col s12 m4 l4 ">
-                <select class="js-states browser-default select2 select2-hidden-accessible" id="txttipotalento" name="txttipotalento" style="width: 100%" tabindex="-1" onchange="tipoTalento.getSelectTipoTalento(this)">
-                    <option value="">Seleccione tipo de talento</option>
-                    @foreach($tipotalentos as $id => $nombre)
-                        @if(isset($user->talento->tipotalento->id))
-                        <option value="{{$id}}" {{old('txttipotalento',$user->talento->tipotalento->id) ==$id ? 'selected':''}}>{{$nombre}}</option>
-                        @else
-                            <option value="{{$id}}" {{old('txttipotalento') ==$id ? 'selected':''}}>{{$nombre}}</option>
-                        @endif
-                    @endforeach
-                </select>
-                <label for="txttipotalento" class="active">Tipo Talento <span class="red-text">*</span></label>
-                <small id="txttipotalento-error"  class="error red-text"></small>
-            </div>
             <div class="input-field col s12 m8 l8" >
                 <div class="row">
                     <div class="input-field col s12 m12 l12 valign-wrapper selecttipotalento" style="display:block">
@@ -47,12 +33,6 @@
                         </select>
                         <label for="txtcentroformacion_aprendiz" class="active">Centro de formación <span class="red-text">*</span></label>
                         <small id="txtcentroformacion_aprendiz-error"  class="error red-text"></small>
-                    </div>
-                    <div class="input-field col s12 m12 l12 ">
-
-                        <input class="validate" id="txtprogramaformacion_aprendiz" name="txtprogramaformacion_aprendiz" type="text"  value="{{ isset($user->talento->programa_formacion) ? $user->talento->programa_formacion : old('txtprogramaformacion_aprendiz')}}" >
-                        <label for="txtprogramaformacion_aprendiz">Programa de Formación <span class="red-text">*</span></label>
-                        <small id="txtprogramaformacion_aprendiz-error"  class="error red-text"></small>
                     </div>
                 </div>
                 <div class="row egresadoSena" style="display:none">
@@ -85,12 +65,6 @@
                         </select>
                         <label for="txtcentroformacion_egresado" class="active">Centro de formación <span class="red-text">*</span></label>
                         <small id="txtcentroformacion_egresado-error"  class="error red-text"></small>
-                    </div>
-                    <div class="input-field col s12 m12 l12 ">
-
-                        <input class="validate" id="txtprogramaformacion_egresado" name="txtprogramaformacion_egresado" type="text"  value="{{ isset($user->talento->programa_formacion) ? $user->talento->programa_formacion : old('txtprogramaformacion_egresado')}}" {{session()->get('login_role') == App\User::IsAdministrador() || session()->get('login_role') == App\User::IsDinamizador()  ? 'readonly' : ''}}>
-                        <label for="txtprogramaformacion_egresado">Programa de Formación <span class="red-text">*</span></label>
-                        <small id="txtprogramaformacion_egresado-error"  class="error red-text"></small>
                     </div>
                     <div class="input-field col s12 m12 l12 ">
                         <select class="" id="txttipoformacion" name="txttipoformacion" style="width: 100%" tabindex="-1" >

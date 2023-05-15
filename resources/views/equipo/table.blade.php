@@ -1,6 +1,6 @@
 @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsExperto()))
 <table class="display responsive-table" id="equipo_data_table">
-    <thead>
+    <thead class="bg-primary white-text">
         <th width="15%">Linea Tecnológica</th>
         <th width="15%">Equipo</th>
         <th width="15%">Referencia</th>
@@ -16,7 +16,7 @@
 </table>
 @else
 <table class="display responsive-table" id="equipo_actions_data_table" style="width: 100%">
-    <thead>
+    <thead class="bg-primary white-text">
         <th width="15%">Linea Tecnológica</th>
         <th width="15%">Equipo</th>
         <th width="15%">Referencia</th>
@@ -28,7 +28,6 @@
         <th width="15%">Destacar equipo</th>
         <th width="15%">Editar</th>
         <th width="15%">Cambiar estado</th>
-        {{-- <th width="15%">Eliminar</th> --}}
     </thead>
 </table>
 @endif

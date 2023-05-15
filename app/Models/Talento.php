@@ -109,3 +109,4 @@ class Talento extends Model
         $this->attributes['empresa'] = ucwords(mb_strtolower(trim($empresa), 'UTF-8'));
     }
 }
+

@@ -24,11 +24,8 @@
                             <div class="col s12 m12 l12">
                                 <div class="primary-text">
                                     <div class="mailbox-view-header">
-                                        <div class="left">
+                                        <div class="center-align">
                                             <h1 class="card-title center-align text-2xl no-m">Migraciones de base de datos</h1>
-                                        </div>
-                                        <div class="right mailbox-buttons">
-                                            <a href="{{route('migracion.migrate-articulations')}}" class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right">Ejecutar migración articulaciones 2023</a>
                                         </div>
                                     </div>
                                 </div>

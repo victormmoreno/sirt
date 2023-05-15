@@ -78,19 +78,19 @@ public function index()
                 } else {
                     $meta['trl6_obtenido'] = $cantidad_trl6->cantidad;
                 }
-    
+
                 if ($cantidad_trl7_8 == null) {
                     $meta['trl7_8_obtenido'] = 0;
                 } else {
                     $meta['trl7_8_obtenido'] = $cantidad_trl7_8->cantidad;
                 }
-    
+
                 if ($cantidad_activos == null) {
                     $meta['activos'] = 0;
                 } else {
                     $meta['activos'] = $cantidad_activos->cantidad;
                 }
-    
+
                 $meta['progreso_total_proyectos'] = round(100*($meta->trl7_8_obtenido+$meta->trl6_obtenido)/($meta->trl6+$meta->trl7_trl8), 2);
             }
         }

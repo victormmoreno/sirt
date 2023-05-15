@@ -1,6 +1,6 @@
 @if (session()->get('login_role') != App\User::IsTalento())
     <table id="ideas_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
-        <thead>
+        <thead class="bg-primary white-text">
         <tr>
             <th>Nodo de registro</th>
             <th>Código de la Idea</th>
@@ -19,7 +19,7 @@
     </table>
 @else
     <table id="ideas_talento" class="display responsive-table datatable-example dataTable" style="width: 100%">
-        <thead>
+        <thead class="bg-primary white-text">
         <tr>
             <th>Código de la Idea</th>
             <th>Nodo donde se presenta</th>

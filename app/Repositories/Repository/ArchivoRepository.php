@@ -107,33 +107,9 @@ class ArchivoRepository
     public function storeFileArticulacionProyecto($id, $fase, $fileUrl)
     {
         return ArchivoArticulacionProyecto::create([
-        'articulacion_proyecto_id' => $id,
-        'fase_id' => $fase,
-        'ruta' => $fileUrl,
+            'articulacion_proyecto_id' => $id,
+            'fase_id' => $fase,
+            'ruta' => $fileUrl,
         ]);
     }
-
-    /**
-     * Consuta los archivos de una articulacion_proyecto
-     * @param int $id Id de la articulacion_proyecto
-     * @param string $fase Nombre de la fase
-     * @return Collection
-     * @author dum
-     */
-    public function consultRutasArchivosDeUnaArticulacionPbt($id, $fase = null)
-    {
-        if($fase == null){
-            return ArchivoArticulacionProyecto::select('ruta', 'archivos_articulacion_proyecto.id', 'fases.nombre AS fase')
-            ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'archivos_articulacion_proyecto.articulacion_proyecto_id')
-            ->join('fases', 'fases.id', '=', 'archivos_articulacion_proyecto.fase_id')
-            ->where('articulacion_proyecto.id', $id);
-        }else{
-            return ArchivoArticulacionProyecto::select('ruta', 'archivos_articulacion_proyecto.id', 'fases.nombre AS fase')
-            ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'archivos_articulacion_proyecto.articulacion_proyecto_id')
-            ->join('fases', 'fases.id', '=', 'archivos_articulacion_proyecto.fase_id')
-            ->where('articulacion_proyecto.id', $id)
-            ->where('fases.nombre', $fase);
-        }
-    }
-
 }

@@ -10,7 +10,7 @@ class NodoHelper
     public static function returnNodoUsuario()
     {
         if (\Session::get('login_role') == User::IsExperto() && isset(auth()->user()->experto->nodo_id)) {
-            return 'Experto nodo ' . Nodo::userNodo(auth()->user()->experto->nodo_id)->first()->nombre;
+            return User::IsExperto(). ' nodo ' . Nodo::userNodo(auth()->user()->experto->nodo_id)->first()->nombre;
         } else if (\Session::get('login_role') == User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo_id)) {
             return User::IsDinamizador(). ' nodo ' . Nodo::userNodo(auth()->user()->dinamizador->nodo_id)->first()->nombre;
         } else if (\Session::get('login_role') == User::IsInfocenter() && isset(auth()->user()->infocenter->nodo_id)) {
@@ -20,18 +20,19 @@ class NodoHelper
         } else if (\Session::get('login_role') == User::IsArticulador() && isset(auth()->user()->articulador->nodo_id)) {
             return User::IsArticulador().' nodo ' . Nodo::userNodo(auth()->user()->articulador->nodo_id)->first()->nombre;
         }else if (\Session::get('login_role') == User::IsApoyoTecnico() && isset(auth()->user()->apoyotecnico->nodo_id)) {
-            return User::IsApoyoTecnico(). ' del nodo ' . Nodo::userNodo(auth()->user()->apoyotecnico->nodo_id)->first()->nombre;
+            return User::IsApoyoTecnico(). ' nodo ' . Nodo::userNodo(auth()->user()->apoyotecnico->nodo_id)->first()->nombre;
         } else if (\Session::get('login_role') == User::IsAdministrador()) {
             return User::IsAdministrador();
         } else if (\Session::get('login_role') == User::IsActivador()) {
             return User::IsActivador();
+        }else if (\Session::get('login_role') == User::IsUsuario()) {
+            return User::IsUsuario();
         }
         else {
             return 'No hay información disponible.';
         }
     }
 
-    // Retorna únicamente el nombre del nodo al que pertenece el usuario
     public static function returnNameNodoUsuario()
     {
         if (\Session::get('login_role') == User::IsExperto() && isset(auth()->user()->experto->nodo_id)) {
