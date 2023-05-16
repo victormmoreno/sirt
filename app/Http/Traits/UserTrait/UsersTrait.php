@@ -235,7 +235,6 @@ trait UsersTrait
         return trim($documento);
     }
 
-
     public static function generatePasswordRamdom()
     {
         return str_random(12);

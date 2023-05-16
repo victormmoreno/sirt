@@ -24,7 +24,6 @@ use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Presenters\UserPresenter;
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -126,6 +125,7 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $casts = [
         'tipodocumento_id'     => 'integer',
+        'tipo_usuario'         => 'array',
         'gradoescolaridad_id'  => 'integer',
         'gruposanguineo_id'    => 'integer',
         'eps_id'               => 'integer',
@@ -137,6 +137,8 @@ class User extends Authenticatable implements JWTSubject
         'estado'               => 'boolean',
         'email_verified_at'    => 'datetime',
         'fechanacimiento'      => 'date:Y-m-d',
+        'fechanacimiento'      => 'date:Y-m-d',
+
     ];
 
     /**

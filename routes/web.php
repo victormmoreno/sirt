@@ -2,6 +2,8 @@
 
 Route::get('/', function () {
     return view('welcome');
+    // $user = App\User::firstOrFail();
+    // dd($user->tipo_usuario);
 })->name('/');
 
 Route::get('politica-de-confidencialidad', function () {
