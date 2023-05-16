@@ -5,7 +5,7 @@ namespace App\Http\Requests\UsersRequests;
 use App\Models\Ocupacion;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use \App\Models\Eps;
+use App\Models\Eps;
 use App\User;
 
 class UserFormRequest extends FormRequest

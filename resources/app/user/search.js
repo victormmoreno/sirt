@@ -37,12 +37,11 @@ $(document).on('submit', 'form#formSearchUser', function (event) {
             dataType: 'json',
             contentType: false,
             processData: false,
-            success: function (data) {
+            success: function (response) {
                 $('button[type="submit"]').removeAttr('disabled');
                 $('.error').hide();
                 $('#response-alert').empty();
-
-                if (data.fail) {
+                if (response.fail) {
                     Swal.fire({
                         title: 'Registro Erróneo',
                         html: "Estas ingresando mal los datos. " + errores,
@@ -52,58 +51,42 @@ $(document).on('submit', 'form#formSearchUser', function (event) {
                         confirmButtonText: 'Ok'
                     });
                 }
-
-                if(data.status == 202){
-                    if(type == 1){
-                        $('#response-alert').append(`
-                            <div class="mailbox-list">
-                                <ul>
-                                    <li>
-                                        <a class="mail-active">
-                                            <h4 class="center-align">no se encontraron resultados</h4>
-                                            <a class="primary-text center-align" href="`+data.url+`">Registrar nuevo usuario</a>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        `);
-                    }else{
-                        $('#response-alert').append(`
-                            <div class="mailbox-list">
-                                <ul>
-                                    <li>
-                                        <a class="mail-active">
-                                            <h4 class="center-align">no se encontraron resultados</h4>
-                                            <a target="_blank" class="primary-text center-align" href="`+data.url+`">Registrar nuevo usuario</a>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        `);
-                    }
-
-                }else if(data.status == 200){
+                if (response.users.length == 0) {
                     $('#response-alert').append(`
-                    <div class="mailbox-list">
-                        <ul>
-                            <li >
-                                <a href="`+data.url+`" class="mail-active">
-
-                                    <h5 class="mail-author">`+data.user.documento+` - `+data.user.nombres +` `+ data.user.apellidos+`</h5>
-                                    <h4 class="mail-title">`+data.roles+`</h4>
-                                    <p class="hide-on-small-and-down mail-text">Miembro desde `+userSearch.userCreated(data.user.created_at)+`</p>
-                                    <div class="position-top-right p f-12 mail-date"> Acceso al sistema: `+ userSearch.state(data.user.estado) +`</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    `);
+                        <div class="mailbox-list">
+                            <ul>
+                                <li>
+                                    <a class="mail-active">
+                                        <h4 class="center-align">no se encontraron resultados</h4>
+                                        <a class="primary-text center-align" href="`+data.url+`">Registrar nuevo usuario</a>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>`);
+                }else{
+                    if(response.status == 200){
+                        $.each( response.users, function( key, user ) {
+                            let route = response.urls[key];
+                            $('#response-alert').append(`
+                            <div class="mailbox-list">
+                                <ul>
+                                    <li>
+                                        <a href="`+route+`" class="mail-active">
+                                            <h5 class="mail-author">`+user.documento+` - `+user.nombres +` `+ user.apellidos+`</h5>
+                                            <p class="hide-on-small-and-down mail-text">Miembro desde `+userSearch.userCreated(user.created_at)+`</p>
+                                            <div class="position-top-right p f-12 mail-date"> Acceso al sistema: `+ userSearch.state(user.estado) +`</div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>`);
+                        });
+                    }
                 }
             }
         });
     }
 });
-var userSearch = {
+const userSearch = {
     state: function (state){
         if(state){
             return 'Si';

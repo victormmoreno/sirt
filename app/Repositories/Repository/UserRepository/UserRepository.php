@@ -4,7 +4,6 @@ namespace App\Repositories\Repository\UserRepository;
 
 use App\Models\{
     ActivationToken,
-    Centro,
     Ciudad,
     Departamento,
     Eps,
@@ -17,7 +16,10 @@ use App\Models\{
     Ocupacion,
     Regional,
     TipoDocumento,
-    UserNodo
+    TipoTalento,
+    TipoFormacion,
+    TipoEstudio,
+    LineaTecnologica
 };
 use App\Events\User\UserHasNewPasswordGenerated;
 use App\User;
@@ -69,9 +71,25 @@ class UserRepository
         return Etnia::pluck('nombre', 'id');
     }
 
+    public function getAllOcupaciones()
+    {
+        return Ocupacion::allOcupaciones()->pluck('nombre', 'id');
+    }
+
+
     public function getAllEpsActivas()
     {
         return Eps::allEps(Eps::IsActive(), 'eps.nombre')->get();
+    }
+
+    public function getAllTipoTalento()
+    {
+        return TipoTalento::pluck('nombre', 'id');
+    }
+
+    public function getAllTipoEstudios()
+    {
+        return TipoEstudio::pluck('nombre', 'id');
     }
 
     public function activationToken($user)
@@ -83,10 +101,6 @@ class UserRepository
         ]);
     }
 
-    public function getAllOcupaciones()
-    {
-        return Ocupacion::allOcupaciones()->pluck('nombre', 'id');
-    }
 
     public function findByIdEloquent($id)
     {
@@ -124,6 +138,13 @@ class UserRepository
         ->selectRaw('GROUP_CONCAT(DISTINCT ocupaciones.nombre SEPARATOR "; ") as ocupacions')
         ->withTrashed()
         ->where('users.id', $id);
+    }
+
+    public function querySearchUser($field, $sentence, string $value)
+    {
+        return User::query()
+        ->withTrashed()
+        ->where($field, $sentence, $value);
     }
 
     public function findUserByDocumentEloquent($document)
@@ -208,6 +229,15 @@ class UserRepository
     public function getAllLineaNodo($nodo)
     {
         return Nodo::allLineasPorNodo($nodo);
+    }
+
+    public function getAllLineas()
+    {
+        return LineaTecnologica::pluck('nombre', 'id');
+    }
+    public function getAllTipoFormaciones()
+    {
+        return TipoFormacion::pluck('nombre', 'id');
     }
 
     public function getAllRegionales()
@@ -301,22 +331,6 @@ class UserRepository
     {
         Session::flush();
         Cache::flush();
-    }
-
-    public function UpdateUserConfirm($request, $user)
-    {
-        DB::beginTransaction();
-        try {
-            $userUpdate = $this->SyncInfoRolesUser($request, $user);
-            $userUpdate->update([
-                'estado' => User::IsActive(),
-            ]);
-            DB::commit();
-            return $userUpdate;
-        } catch (\Exception $e) {
-            DB::rollback();
-            return false;
-        }
     }
 
     private function SyncInfoRolesUser($request, $userUpdated)

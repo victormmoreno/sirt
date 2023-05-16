@@ -6,15 +6,13 @@ namespace App\Http\Controllers\User;
 use App\Helpers\AuthRoleHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsersRequests\UserFormEditRequest;
-use App\Models\{Etnia, Nodo, TipoTalento, TipoFormacion, TipoEstudio, LineaTecnologica, Entidad};
+use App\Models\{Etnia, Nodo};
 use App\Repositories\Repository\{UserRepository\UserRepository, ProfileRepository\ProfileRepository};
 use App\User;
 use Illuminate\Http\Request;
 use App\Datatables\UserDatatable;
 use Illuminate\Support\{Facades\Validator};
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Notification;
-use App\Notifications\User\NodeChanged;
 
 
 class UserController extends Controller
@@ -159,105 +157,7 @@ class UserController extends Controller
         return $this->userRepository->updateAccessAUser($request, $user);
     }
 
-    /**
-     * todo
-     * Display the view for to search specified resource (user).
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|Response|\Illuminate\View\View
-     */
-    public function userSearch()
-    {
-        if (request()->user()->cannot('search', User::class)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
-            return redirect()->route('home');
-        }
-        return view('users.search');
-    }
 
-
-    /**
-     * todo
-     * Search specified resource (user).
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|Response|\Illuminate\View\View
-     */
-    public function querySearchUser(Request $request)
-    {
-        if (!request()->ajax() || request()->user()->cannot('search', User::class)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
-            return redirect()->route('home');
-        }
-        if ($request->input('txttype_search') == 1) {
-            $validator = Validator::make($request->all(), [
-                'txtsearch_user' => 'required|digits_between:6,11|numeric',
-                'txttype_search' => 'required|in:1',
-            ]);
-            if ($validator->fails()) {
-                return response()->json([
-                    'fail' => true,
-                    'errors' => $validator->errors(),
-                ]);
-            }
-            $user = User::withTrashed()->where('documento', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
-        } else if ($request->input('txttype_search') == 2) {
-            $validator = Validator::make($request->all(), [
-                'txtsearch_user' => 'required|email',
-                'txttype_search' => 'required|in:2',
-            ]);
-            if ($validator->fails()) {
-                return response()->json([
-                    'fail' => true,
-                    'errors' => $validator->errors(),
-                ]);
-            }
-            $user = User::withTrashed()->where('email', 'LIKE', "%" . $request->input('txtsearch_user') . "%")->first();
-        }
-        if ($user == null) {
-            return response()->json([
-                'data' => null,
-                'status' => Response::HTTP_ACCEPTED,
-                'message' => 'el usuario no existe en nuestros registros',
-                'url' => route('registro'),
-            ], Response::HTTP_ACCEPTED);
-        }
-        return response()->json([
-            'user' => $user,
-            'roles' => $user->getRoleNames()->implode(', '),
-            'message' => 'el usuario ya existe en nuestros registros',
-            'status' => Response::HTTP_OK,
-            'url' => route('usuario.show', $user->documento),
-        ], Response::HTTP_OK);
-    }
-
-    /**
-     * todo
-     * Display the view for to update node and roles to specified resource (user).
-     * @param int $documento
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|Response|\Illuminate\View\View
-     */
-    public function changeNodeAndRole($document)
-    {
-        $user = User::withTrashed()->where('documento', $document)->firstOrFail();
-        if (request()->user()->cannot('updateNodeAndRole', $user)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
-            return redirect()->route('home');
-        }
-        return view('users.permissions', [
-            'user' => $user,
-            'roles' => $this->userRepository->getAllRoles(),
-            'nodos' => $this->userRepository->getAllNodo(),
-            'tipotalentos' => TipoTalento::pluck('nombre', 'id'),
-            'regionales' => $this->userRepository->getAllRegionales(),
-            'tipoformaciones' => TipoFormacion::pluck('nombre', 'id'),
-            'tipoestudios' => TipoEstudio::pluck('nombre', 'id'),
-            'lineas' => LineaTecnologica::pluck('nombre', 'id')
-        ]);
-    }
-    /**todo */
-    public function consultarUnUsuarioPorId($id)
-    {
-        return response()->json([
-            'talento' => User::findOrFail($id),
-        ]);
-    }
 
     /**todo */
     public function datatableTalentosDeTecnoparque()
@@ -286,67 +186,6 @@ class UserController extends Controller
         abort('404');
     }
 
-    /**
-     * todo
-     * Update node and roles to specified resource (user).
-     * @param int $documento
-     * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|Response|\Illuminate\View\View
-     */
-    public function updateNodeAndRole(Request $request, int $documento)
-    {
-        $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
-        if (request()->user()->cannot('updateNodeAndRole', $user)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
-            return redirect()->route('home');
-        }
-        $req = new Request;
-        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-        if ($validator->fails()) {
-            return response()->json([
-                'state' => 'error_form',
-                'fail' => true,
-                'errors' => $validator->errors(),
-            ]);
-        } else {
-            if (($user->isUserExperto()) && ($user->gestor->nodo_id != $request->input('txtnodogestor') || $user->gestor->lineatecnologica_id != $request->input('txtlinea'))) {
-                $projects = $user->gestor->proyectos()->proyectosGestor();
-                $removeRole = array_diff(collect($user->getRoleNames())->toArray(), $request->input('role'));
-                if ($projects->count() > 0 || ($removeRole != null && collect($removeRole)->contains(User::IsExperto()))) {
-                    return response()->json([
-                        'state' => 'error',
-                        'message' => "No se puede cambiar de nodo, actualmente el experto tiene {$projects->count()} atividades sin finalizar, para ello debe asignarlas a otro experto del nodo",
-                        'url' => false,
-                        'activities' => $projects,
-                        'count' => $projects->count()
-                    ]);
-                }
-                $userUpdate = $this->userRepository->UpdateUserConfirm($request, $user);
-                Notification::send($userUpdate, new NodeChanged($userUpdate));
-                return response()->json([
-                    'state' => 'success',
-                    'message' => 'El Usuario ha sido modificado satisfactoriamente',
-                    'url' => route('usuario.show', $userUpdate->documento),
-                    'user' => $userUpdate,
-                ]);
-
-            }
-            $userUpdate = $this->userRepository->UpdateUserConfirm($request, $user);
-            if (($user->isUserDinamizador() && isset($user->dinamizador) && ($user->dinamizador->nodo_id != $request->input('txtnododinamizador')))
-                || ($user->isUserInfocenter() && isset($user->infocenter) && ($user->infocenter->nodo_id != $request->input('txtnodoinfocenter')))
-                || ($user->isUserIngreso() && isset($user->ingreso) && ($user->ingreso->nodo_id != $request->input('txtnodoingreso')))
-                || ($user->isUserApoyoTecnico() && isset($user->apoyotecnico) && ($user->apoyotecnico->nodo_id != $request->input('txtnodouser')))
-            ) {
-                Notification::send($userUpdate, new NodeChanged($userUpdate));
-            }
-            return response()->json([
-                'state' => 'success',
-                'message' => 'El Usuario ha sido modificado satisfactoriamente',
-                'url' => route('usuario.show', $userUpdate->documento),
-                'user' => $userUpdate,
-            ]);
-        }
-    }
 
     /**todo */
     public function edit($document)
