@@ -46,7 +46,7 @@
                                         <div class="divider mailbox-divider">
                                         </div>
                                         <div class="mailbox-text">
-                                            <form action="{{ route('usuario.usuarios.updateaccount',$user->id)}}"
+                                            <form action="{{ route('usuario.updateaccount',$user->id)}}"
                                                   id="formEditUser" method="POST" onsubmit="return checkSubmit()">
                                                 {!! csrf_field() !!}
                                                 {!! method_field('PUT')!!}

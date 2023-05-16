@@ -46,7 +46,7 @@
                                     </div>
                                     <div class="divider mailbox-divider"></div>
                                     <div class="mailbox-text">
-                                        <form id="FormChangeNodo" action="{{ route('usuario.usuarios.updatenodo', $user->documento)}}" method="POST" onsubmit="return checkSubmit()">
+                                        <form id="FormChangeNodo" action="{{ route('usuario.updatenodo', $user->documento)}}" method="POST" onsubmit="return checkSubmit()">
                                             {!! csrf_field() !!}
                                             {!! method_field('PUT')!!}
                                             <div class="row">

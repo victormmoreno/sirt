@@ -13,7 +13,6 @@ use Illuminate\Http\Request;
 use App\Datatables\UserDatatable;
 use Illuminate\Support\{Facades\Validator};
 use Illuminate\Http\Response;
-
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\User\NodeChanged;
 
@@ -53,7 +52,6 @@ class UserController extends Controller
                     ->groupBy('users.id')
                     ->orderBy('users.created_at', 'desc')
                     ->get();
-
             }
             return $usersDatatables->datatableUsers($users);
         }
@@ -71,25 +69,32 @@ class UserController extends Controller
                 ]);
                 break;
             case User::IsDinamizador():
-                $role = [User::IsExperto(), User::IsArticulador(), User::IsInfocenter(), User::IsTalento(), User::IsIngreso(), User::IsApoyoTecnico()];
+                $role = [User::IsExperto(),
+                        User::IsArticulador(),
+                        User::IsInfocenter(),
+                        User::IsIngreso(),
+                        User::IsApoyoTecnico(),
+                        User::IsTalento(),
+                        User::IsUsuario()
+                        ];
                 return view('users.index', [
                     'roles' => $this->userRepository->getRoleWhereInRole($role),
                 ]);
                 break;
             case User::IsArticulador():
-                $role = [User::IsTalento()];
+                $role = [User::IsUsuario(), User::IsTalento()];
                 return view('users.index', [
                     'roles' => $this->userRepository->getRoleWhereInRole($role),
                 ]);
                 break;
             case User::IsExperto():
-                $role = [User::IsTalento()];
+                $role = [User::IsUsuario(), User::IsTalento()];
                 return view('users.index', [
                     'roles' => $this->userRepository->getRoleWhereInRole($role),
                 ]);
                 break;
             case User::IsInfocenter():
-                $role = [User::IsExperto(), User::IsArticulador(), User::IsInfocenter(), User::IsTalento(), User::IsIngreso(), User::IsApoyoTecnico()];
+                $role = [User::IsExperto(), User::IsArticulador(), User::IsInfocenter(), User::IsTalento(), User::IsIngreso(), User::IsApoyoTecnico(), User::IsUsuario()];
                 return view('users.index', [
                     'roles' => $this->userRepository->getRoleWhereInRole($role),
                 ]);
@@ -102,43 +107,6 @@ class UserController extends Controller
     }
 
     /**
-     * Display the list resources (talents).
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|Response|\Illuminate\View\View
-     */
-    public function talentsList(Request $request, UserDatatable $usersDatatables)
-    {
-        if (request()->user()->cannot('talentsList', User::class)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
-            return redirect()->route('home');
-        }
-        if (request()->ajax()) {
-            $users = [];
-            if (($request->filled('filter_year') || $request->filter_year != null || $request->filter_year != 'all')) {
-                $users = User::query()
-                    ->select('users.id', 'tiposdocumentos.nombre as tipodocumento', 'users.documento', 'users.email', 'users.celular', 'users.ultimo_login', 'users.estado', 'users.deleted_at')
-                    ->selectRaw('concat(users.nombres, " ",users.apellidos) as usuario, GROUP_CONCAT(DISTINCT roles.name SEPARATOR ", ") as roles')
-                    ->leftJoin('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
-                    ->join('model_has_roles', function ($join) {
-                        $join->on('users.id', '=', 'model_has_roles.model_id')
-                            ->where('model_has_roles.model_type', User::class);
-                    })
-                    ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
-                    ->role(User::IsTalento())
-                    ->stateDeletedAt($request->filter_state)
-                    ->groupBy('users.id')
-                    ->orderBy('users.created_at', 'desc')
-                    ->get();
-            }
-            return $usersDatatables->datatableUsers($users);
-        }
-        return view('users.talents', [
-            'roles' => $this->userRepository->getRoleWhereInRole([User::IsTalento()]),
-        ]);
-    }
-
-
-
-    /**
      * Display the specified resource.
      * @param int $documento
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|Response|\Illuminate\View\View
@@ -146,7 +114,6 @@ class UserController extends Controller
     public function show($documento)
     {
         $user = $this->userRepository->findUserByDocumentBuilder($documento)->firstOrFail();
-
         if(request()->user()->cannot('show', $user))
         {
             alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
@@ -193,6 +160,7 @@ class UserController extends Controller
     }
 
     /**
+     * todo
      * Display the view for to search specified resource (user).
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|Response|\Illuminate\View\View
      */
@@ -205,7 +173,9 @@ class UserController extends Controller
         return view('users.search');
     }
 
+
     /**
+     * todo
      * Search specified resource (user).
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|Response|\Illuminate\View\View
      */
@@ -258,6 +228,7 @@ class UserController extends Controller
     }
 
     /**
+     * todo
      * Display the view for to update node and roles to specified resource (user).
      * @param int $documento
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|Response|\Illuminate\View\View
@@ -280,7 +251,7 @@ class UserController extends Controller
             'lineas' => LineaTecnologica::pluck('nombre', 'id')
         ]);
     }
-
+    /**todo */
     public function consultarUnUsuarioPorId($id)
     {
         return response()->json([
@@ -288,6 +259,7 @@ class UserController extends Controller
         ]);
     }
 
+    /**todo */
     public function datatableTalentosDeTecnoparque()
     {
         if (request()->ajax()) {
@@ -315,6 +287,7 @@ class UserController extends Controller
     }
 
     /**
+     * todo
      * Update node and roles to specified resource (user).
      * @param int $documento
      * @param Request $request
@@ -339,7 +312,6 @@ class UserController extends Controller
             if (($user->isUserExperto()) && ($user->gestor->nodo_id != $request->input('txtnodogestor') || $user->gestor->lineatecnologica_id != $request->input('txtlinea'))) {
                 $projects = $user->gestor->proyectos()->proyectosGestor();
                 $removeRole = array_diff(collect($user->getRoleNames())->toArray(), $request->input('role'));
-
                 if ($projects->count() > 0 || ($removeRole != null && collect($removeRole)->contains(User::IsExperto()))) {
                     return response()->json([
                         'state' => 'error',
@@ -376,6 +348,7 @@ class UserController extends Controller
         }
     }
 
+    /**todo */
     public function edit($document)
     {
         $user = User::withTrashed()->where('documento', $document)->firstOrFail();
@@ -410,10 +383,8 @@ class UserController extends Controller
             alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
         }
-
         $req = new UserFormEditRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-
         if ($validator->fails()) {
             return response()->json([
                 'state' => 'error_form',
@@ -441,7 +412,7 @@ class UserController extends Controller
 
     /**
      * Display the specified resource of talents.
-     *
+     * todo
      * @param int $id
      * @return \Illuminate\Http\Response
      */
@@ -473,14 +444,14 @@ class UserController extends Controller
         }
         return view('users.show', ['user' => $user]);
     }
-
+    /** todo */
     public function findUserById(int $id)
     {
         return response()->json([
             'user' => User::withTrashed()->with(['gestor', 'gestor.lineatecnologica'])->where('id', $id)->first(),
         ]);
     }
-
+    /** todo */
     public function gestoresByNodo($nodo = null)
     {
         $gestores = User::select('gestores.id', 'users.id AS user_id')
@@ -490,7 +461,6 @@ class UserController extends Controller
             ->where('gestores.nodo_id', $nodo)
             ->withTrashed()
             ->get();
-
         return response()->json([
             'gestores' => $gestores
         ]);

@@ -7,11 +7,6 @@ Route::group(
         'middleware' => 'disablepreventback',
     ],
     function () {
-
-        Route::get('/mistalentos', [
-            'uses' => 'UserController@talentsList',
-            'as'   => 'usuario.talents',
-        ]);
         Route::get('/talento/getTalentosDeTecnoparque', [
             'uses' => 'UserController@datatableTalentosDeTecnoparque',
             'as'   => 'talento.tecnoparque',
@@ -39,12 +34,12 @@ Route::group(
 
 
         Route::get('/search', 'UserController@userSearch')->name('usuario.search');
-        Route::get('/{documento}/permisos', 'UserController@changeNodeAndRole')->name('usuario.usuarios.changenode')->where('documento', '[0-9]+');
-        Route::put('/{documento}/permisos', 'UserController@updateNodeAndRole')->name('usuario.usuarios.updatenodo')->middleware('disablepreventback');
-        Route::get('/{documento}/acceso', 'UserController@access')->name('usuarios.acceso')->where('documento', '[0-9]+');
-        Route::get('{id}/tomar-control', 'RolesPermissions@tomar_control')->name('usuario.tomar.control');
+        Route::get('/{documento}/permisos', 'UserController@changeNodeAndRole')->name('usuario.changenode')->where('documento', '[0-9]+');
+        Route::put('/{documento}/permisos', 'UserController@updateNodeAndRole')->name('usuario.updatenodo')->middleware('disablepreventback');
+        Route::get('/{documento}/acceso', 'UserController@access')->name('usuario.acceso')->where('documento', '[0-9]+');
+        Route::get('/{id}/tomar-control', 'RolesPermissions@tomar_control')->name('usuario.tomar.control');
         Route::get('/dejar-control', 'RolesPermissions@dejar_control')->name('usuario.dejar.control');
-        Route::put('/{id}/update-account', 'UserController@updateAccountUser')->name('usuario.usuarios.updateaccount')->middleware('disablepreventback');
+        Route::put('/{id}/update-account', 'UserController@updateAccountUser')->name('usuario.updateaccount')->middleware('disablepreventback');
     }
 );
 

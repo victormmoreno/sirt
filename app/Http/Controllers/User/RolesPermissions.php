@@ -42,6 +42,7 @@ class RolesPermissions extends Controller
             return redirect()->route('home');
         }
         session()->put('before_session', User::find($request->user()->id));
+        // RolesPermissions::setBeforeRole($request);
         $user = User::find($id);
         Auth::login($user);
         RolesPermissions::changeRoleSession($request);
@@ -55,4 +56,5 @@ class RolesPermissions extends Controller
         RolesPermissions::changeRoleSession($request);
         return redirect()->route('home');
     }
+
 }

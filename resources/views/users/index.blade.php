@@ -25,7 +25,6 @@
                     <div class="card-content">
                         <div class="row no-m-t no-m-b">
                             <div class="col s12 m12 l12">
-                                @can('talentsList', \App\User::class)
                                 <div class="mailbox-options">
                                     <ul>
                                         <li>
@@ -33,14 +32,8 @@
                                                 Todos los talentos
                                             </a>
                                         </li>
-                                        <li>
-                                            <a href="{{{route('usuario.talents')}}}">
-                                                Mis talentos
-                                            </a>
-                                        </li>
                                     </ul>
                                 </div>
-                                @endcan
                                 <div class="mailbox-view">
                                     <div class="mailbox-view-header">
                                         <span class="card-title primary-text">

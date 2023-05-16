@@ -4,7 +4,6 @@ namespace App\Policies\User;
 
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Spatie\Permission\Models\Role;
 use Illuminate\Support\Str;
 
 
@@ -68,7 +67,7 @@ class UserPolicy
      */
     public function index(User $user)
     {
-        return (bool)! Str::contains(session()->get('login_role'), [$user->IsApoyoTecnico(), $user->IsIngreso(), $user->IsTalento()]);
+        return (bool)! Str::contains(session()->get('login_role'), [$user->IsApoyoTecnico(), $user->IsIngreso(), $user->IsTalento(), $user->IsUsuario()]);
     }
 
     /**
@@ -77,7 +76,7 @@ class UserPolicy
      */
     public function show(User $authUser, $user)
     {
-        return (bool)! Str::contains(session()->get('login_role'), [$user->IsApoyoTecnico(), $user->IsIngreso(), $user->IsTalento()]);
+        return (bool)! Str::contains(session()->get('login_role'), [$user->IsApoyoTecnico(), $user->IsIngreso(), $user->IsTalento(), $user->IsUsuario()]);
     }
 
     /**
@@ -86,8 +85,9 @@ class UserPolicy
      */
     public function tomar_control(User $user)
     {
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsAdministrador()]) && $user->id != auth()->user()->id;
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsAdministrador()]);
     }
+
 
     /**
      * Determina si el usuario puede dejar de tomar el control de otro usuario
@@ -101,13 +101,14 @@ class UserPolicy
         return (bool) session()->has('before_session');
     }
 
+
     /**
      * Determine if the given user can  view the users search
      * @return boolean
      */
     public function search(User $user)
     {
-        return (bool)! Str::contains(session()->get('login_role'), [$user->IsApoyoTecnico(), $user->IsIngreso(), $user->IsTalento()]);
+        return (bool)! Str::contains(session()->get('login_role'), [$user->IsApoyoTecnico(), $user->IsIngreso(), $user->IsTalento(), $user->IsUsuario()]);
     }
 
     /**
@@ -123,30 +124,6 @@ class UserPolicy
             );
     }
 
-    /**
-     * Determine if the given user can  view talents list
-     * @return bool
-     */
-    public function talentsList(User $user)
-    {
-        return (bool) $user->hasAnyRole([User::IsExperto()])
-            && session()->has('login_role')
-            && (
-                session()->get('login_role') == User::IsExperto()
-            );
-    }
-
-
-
-    /**
-     * Determine whether the user can create new user
-     * @author julian londono
-     * @return boolean
-     */
-    public function create(User $user)
-    {
-        return (bool) collect($user->getRoleNames())->contains(User::IsAdministrador()) && session()->get('login_role') == User::IsAdministrador() || collect($user->getRoleNames())->contains(User::IsDinamizador()) && session()->get('login_role') == User::IsDinamizador() || collect($user->getRoleNames())->contains(User::IsExperto()) && session()->get('login_role') == User::IsExperto();
-    }
 
     /**
      * Determine whether the user can update to one user

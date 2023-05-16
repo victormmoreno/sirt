@@ -43,7 +43,7 @@
                                                 <a href="{{route('usuario.tomar.control', $user->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Tomar control</a>
                                             @endcan
                                             @can('access', $user)
-                                                <a href="{{route('usuarios.acceso', $user->documento)}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar Acceso</a>
+                                                <a href="{{route('usuario.acceso', $user->documento)}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar Acceso</a>
                                             @endcan
                                             @can('generatePassword', $user)
                                                 <a href="{{route('password.generate', $user->documento)}}" class="waves-effect waves-grey btn-flat m-t-xs">Generar nueva contraseña</a>
@@ -56,7 +56,7 @@
                                                 @endcan
                                                 @can('updateNodeAndRole',$user)
                                                     <li class="divider"></li>
-                                                    <li><a  href="{{route('usuario.usuarios.changenode', $user->documento)}}">Cambiar Roles y Nodos</a></li>
+                                                    <li><a  href="{{route('usuario.changenode', $user->documento)}}">Cambiar Roles y Nodos</a></li>
                                                 @endcan
                                             </ul>
                                             @endcanany

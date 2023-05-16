@@ -17,18 +17,6 @@ $(document).ready(function() {
             "lengthChange": false
         }).clear().draw();
     }
-
-    $('#mytalento_data_table').dataTable().fnDestroy();
-    if(filter_state != '' && filter_year !=''){
-        UserIndex.fillDatatatablesTalentos(filter_year, filter_state);
-    }else{
-        $('#mytalento_data_table').DataTable({
-            language: {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            "lengthChange": false
-        }).clear().draw();
-    }
 });
 
 const UserIndex = {
@@ -89,56 +77,6 @@ const UserIndex = {
                 },
             ],
         });
-    },
-    fillDatatatablesTalentos(filter_year,filter_state){
-        let datatable = $('#mytalento_data_table').DataTable({
-            language: {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            "lengthChange": false,
-            processing: true,
-            serverSide: true,
-            "order": [[ 1, "desc" ]],
-            ajax:{
-                url: `${host_url}/usuarios/mistalentos`,
-                type: "get",
-                data: {
-                    filter_year: filter_year,
-                    filter_state: filter_state
-                }
-            },
-            columns: [
-                {
-                    data: 'tipodocumento',
-                    name: 'tipodocumento',
-                }, {
-                    data: 'documento',
-                    name: 'documento',
-                }, {
-                    data: 'nombrecompleto',
-                    name: 'nombrecompleto',
-                }, {
-                    data: 'email',
-                    name: 'email',
-                }, {
-                    data: 'celular',
-                    name: 'celular',
-                },  {
-                    data: 'rols',
-                    name: 'rols'
-                }, {
-                    data: 'login',
-                    name: 'login',
-                }, {
-                    data: 'state',
-                    name: 'state',
-                }, {
-                    data: 'detail',
-                    name: 'detail',
-                    orderable: false,
-                },
-            ],
-        });
     }
 }
 
@@ -162,22 +100,6 @@ $('#filter_user').click(function(){
     }
 });
 
-$('#filter_talentos').click(function(){
-    let filter_state = $('#filter_state').val();
-    let filter_year = $('#filter_year').val();
-    $('#mytalento_data_table').dataTable().fnDestroy();
-    if(filter_state != '' && filter_year !=''){
-        UserIndex.fillDatatatablesTalentos(filter_year, filter_state);
-    }else{
-        $('#mytalento_data_table').DataTable({
-            language: {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            "lengthChange": false
-        }).clear().draw();
-    }
-});
-
 $('#download_users').click(function(){
     let filter_role = $('#filter_rol').val();
     let filter_nodo = $('#filter_nodo').val();
@@ -189,7 +111,6 @@ $('#download_users').click(function(){
         filter_state: filter_state,
         filter_year: filter_year,
     }
-
     let url = `${host_url}/usuarios/export?${$.param(query)}`
     window.location = url;
 });
