@@ -15,10 +15,6 @@ use App\Models\UsoInfraestructura;
 
 trait IdeaTrait
 {
-
-    /*===============================================================
-    =            metodos para conocer los tipos de ideas            =
-    ===============================================================*/
     public static function IsEmprendedor()
     {
         return self::IS_EMPRENDEDOR;
@@ -38,7 +34,6 @@ trait IdeaTrait
     {
         return $this->morphMany(HistorialEntidad::class, 'model');
     }
-
 
     /**
      * Relación a la tabla de proyectos
@@ -141,11 +136,6 @@ trait IdeaTrait
         return ucfirst(trim($alcance));
     }
 
-    /*=====  End of asesores eloquent  ======*/
-
-    /*========================================
-  =            mutador eloquent            =
-  ========================================*/
     public function setNombresContactoAttribute($nombres_contacto)
     {
         $this->attributes['nombres_contacto'] = ucfirst(trim($nombres_contacto));
@@ -185,7 +175,6 @@ trait IdeaTrait
     {
         $this->attributes['alcance'] = ucfirst(trim($alcance));
     }
-    /*=====  End of mutador eloquent  ======*/
 
     //metodo para retorar el valor string de la primera preunta de registro de ideas
     public static function preguntaUno(int $question)
@@ -251,7 +240,6 @@ trait IdeaTrait
     //metodo para retorar el valor string de la tercera preunta de registro de ideas
     public static function preguntaTres(int $question)
     {
-
         switch ($question) {
             case 1:
                 return "Tecnologías Virtuales: desarrollo de software para diferentes dispositivos, animaciones 2D y 3D, creación de contenidos para aplicaciones, animaciones y videojuegos.";

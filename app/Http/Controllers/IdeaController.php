@@ -27,7 +27,7 @@ class IdeaController extends Controller
 
     /**
      * Retorna los ids de los nodos en un array
-     * 
+     *
      * @param $request
      * @param bool $bandera Indica si se seleccionaron todos los nodos
      * @return array
@@ -49,7 +49,7 @@ class IdeaController extends Controller
 
     /**
      * Verifica que se haya seleccionado la opción de "Todos" en el select de nodos
-     * 
+     *
      * @param $request
      * @return bool
      * @author dum
@@ -65,10 +65,10 @@ class IdeaController extends Controller
         }
         return false;
     }
-    
+
     /**
      * Retorna el id del nodo para realizar consultas sobre las ideas de proyeco
-     * 
+     *
      * @param $request
      * @return mixed
      * @author dum
@@ -85,9 +85,6 @@ class IdeaController extends Controller
         return $nodo;
     }
 
-    /*========================================================================================================
-    =            metodo para mostrar el registro de ideas en la pagina principal de la aplicacion            =
-    ========================================================================================================*/
     /**
      * Display a create of the resource.
      * @author devjul
@@ -706,7 +703,7 @@ class IdeaController extends Controller
             ]
         ]);
     }
-    
+
     /**
      * Consultar ideas registradas entre un rango de fechas
      *

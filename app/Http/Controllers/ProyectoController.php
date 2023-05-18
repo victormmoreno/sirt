@@ -129,7 +129,6 @@ class ProyectoController extends Controller
         return response()->json([
             'horas' => $horas
         ]);
-        // dd($proyecto->articulacion_proyecto->actividad->usoinfraestructuras->usogestores);
     }
 
     /**
@@ -1157,10 +1156,6 @@ class ProyectoController extends Controller
         ];
     }
 
-    /*===============================================
-  =========================
-  =            metodo para consultar los proyectos en ejecucion de un experto            =
-  ========================================================================*/
 
     public function projectsForGestor($id)
     {
@@ -1171,66 +1166,6 @@ class ProyectoController extends Controller
             'projects' => $projects,
         ]);
     }
-
-    /*=====  End of metodo para consultar los proyectos en ejecucion de un experto  ======*/
-
-    /**
-     * metodo para consultar el detalle de una actividad (proyecto- articulacion)
-     * @author devjul
-     */
-    // public function detailActivityByCode(string $code)
-    // {
-    //     // if (request()->ajax()) {
-    //         $actividad =  Actividad::with([
-    //             'objetivos_especificos',
-
-    //             'articulacion_proyecto.proyecto.asesor.user' => function ($query) {
-    //                 $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
-    //                     ->orWhere('deleted_at', '!=', null);
-    //             },
-    //             'articulacion_proyecto.proyecto.asesor.user.gestor.lineatecnologica' => function ($query) {
-    //                 $query->select('id', 'abreviatura', 'nombre');
-    //             },
-    //             'articulacion_proyecto.proyecto',
-
-    //             'articulacion_proyecto.talentos',
-    //             'articulacion_proyecto.talentos.user' => function ($query) {
-    //                 $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
-    //                     ->orWhere('deleted_at', '!=', null);
-    //             },
-    //             'articulacion_proyecto.proyecto.sedes',
-    //             'articulacion_proyecto.proyecto.sedes.empresa',
-    //             'articulacion_proyecto.proyecto.gruposinvestigacion',
-    //             'articulacion_proyecto.proyecto.gruposinvestigacion.entidad',
-    //             'articulacion_proyecto.proyecto.users_propietarios',
-    //             'articulacion_proyecto.proyecto',
-    //             'articulacion_proyecto.proyecto.areaconocimiento',
-    //             'articulacion_proyecto.proyecto.fase',
-    //             'articulacion_proyecto.proyecto.sublinea',
-    //             'articulacion_proyecto.proyecto.idea' => function ($query) {
-    //                 $query->select('id', 'nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'telefono_contacto', 'nombre_proyecto', 'codigo_idea');
-    //             },
-    //             'articulacion_proyecto.proyecto.nodo' => function ($query) {
-    //                 $query->select('id', 'entidad_id', 'direccion', 'telefono');
-    //             },
-    //             'articulacion_proyecto.proyecto.nodo.entidad' => function ($query) {
-    //                 $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
-    //             }
-    //         ])->where('codigo_proyecto', $code)->first();
-
-
-    //         // $costo = $this->costoController->costosDeUnaActividad($actividad->id);
-    //         $costo = 0;
-    //         return response()->json([
-    //             'data' => [
-    //                 'actividad' => $actividad,
-    //                 'costo' => $costo,
-    //                 'total_usos' => $actividad->usoinfraestructuras->count(),
-    //             ]
-    //         ]);
-    //     // }
-    //     // return abort(Response::HTTP_FORBIDDEN);
-    // }
 
     public function filterByCode($value)
     {

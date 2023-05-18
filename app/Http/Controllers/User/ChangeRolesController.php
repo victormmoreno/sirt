@@ -28,7 +28,7 @@ class ChangeRolesController extends Controller
     public function  showRolesForm($document)
     {
         $user = $this->userRepository->findUserByDocumentEloquent($document)->firstOrFail();
-        if (request()->user()->cannot('updateNodeAndRole', $user)) {
+        if (request()->user()->cannot('updateRoles', $user)) {
             alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
         }
@@ -54,7 +54,7 @@ class ChangeRolesController extends Controller
     public function updateRoles(Request $request, int $documento)
     {
         $user = User::withTrashed()->where('documento', $documento)->firstOrFail();
-        if (request()->user()->cannot('updateNodeAndRole', $user)) {
+        if (request()->user()->cannot('updateRoles', $user)) {
             alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
         }

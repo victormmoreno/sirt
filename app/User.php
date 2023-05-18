@@ -324,6 +324,7 @@ class User extends Authenticatable implements JWTSubject
             ->withTimestamps();
     }
 
+
     public function scopeInfoUserRole($query, array $role = [], array $relations = [])
     {
         return $query->with($relations)

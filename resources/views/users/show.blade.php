@@ -48,13 +48,13 @@
                                             @can('generatePassword', $user)
                                                 <a href="{{route('password.generate', $user->documento)}}" class="waves-effect waves-grey btn-flat m-t-xs">Generar nueva contraseña</a>
                                             @endcan
-                                            @canany(['update','updateNodeAndRole'], $user)
+                                            @canany(['update','updateRoles'], $user)
                                             <a class='dropdown-button btn waves-effect secondary-text btn-flat m-t-xs' href='#' data-activates='dropdown-actions'>Cambiar información</a>
                                             <ul id='dropdown-actions' class='dropdown-content'>
                                                 @can('update',$user)
                                                     <li><a href="{{route('usuario.edit', $user->documento)}}">Cambiar Información personal</a></li>
                                                 @endcan
-                                                @can('updateNodeAndRole',$user)
+                                                @can('updateRoles',$user)
                                                     <li class="divider"></li>
                                                     <li><a  href="{{route('usuario.changenode', $user->documento)}}">Cambiar Roles y Nodos</a></li>
                                                 @endcan

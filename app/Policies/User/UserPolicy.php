@@ -108,7 +108,7 @@ class UserPolicy
      */
     public function search(User $user)
     {
-        return (bool)! Str::contains(session()->get('login_role'), [$user->IsApoyoTecnico(), $user->IsIngreso(), $user->IsTalento(), $user->IsUsuario()]);
+        return (bool)! Str::contains(session()->get('login_role'), [$user->IsDesarrollador(),$user->IsApoyoTecnico(), $user->IsIngreso(), $user->IsTalento(), $user->IsUsuario()]);
     }
 
     /**
@@ -190,20 +190,20 @@ class UserPolicy
      * Determine whether the user can update node and role
      * @return boolean
      */
-    public function updateNodeAndRole(User $authUser, User $user): bool
+    public function updateRoles(User $authUser, User $user): bool
     {
-        return (bool)
-        ($authUser->documento != $user->documento) &&
-            session()->has('login_role') &&
-            (
-                session()->get('login_role') == User::IsAdministrador() ||
-                (session()->get('login_role') == User::IsActivador() && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDesarrollador()])) ||
-                (session()->get('login_role') == User::IsDinamizador() && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDesarrollador(), User::IsDinamizador()])) ||
-                (
-                    (session()->get('login_role') == User::IsExperto() || session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsInfocenter())
-                    && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(),User::IsDesarrollador(), User::IsDinamizador(),User::IsExperto(), User::IsArticulador(), User::IsApoyoTecnico(), User::IsInfocenter(), User::IsIngreso()])
-                )
-            );
+        return (bool) false;
+        // ($authUser->documento != $user->documento) &&
+        //     session()->has('login_role') &&
+        //     (
+        //         session()->get('login_role') == User::IsAdministrador() ||
+        //         (session()->get('login_role') == User::IsActivador() && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDesarrollador()])) ||
+        //         (session()->get('login_role') == User::IsDinamizador() && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDesarrollador(), User::IsDinamizador()])) ||
+        //         (
+        //             (session()->get('login_role') == User::IsExperto() || session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsInfocenter())
+        //             && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(),User::IsDesarrollador(), User::IsDinamizador(),User::IsExperto(), User::IsArticulador(), User::IsApoyoTecnico(), User::IsInfocenter(), User::IsIngreso()])
+        //         )
+        //     );
     }
 
     /**

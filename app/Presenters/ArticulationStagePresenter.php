@@ -117,7 +117,7 @@ class ArticulationStagePresenter extends Presenter
         ){
             return $this->articulationStage->projects->map(function ($item) {
                 if(isset($item)){
-                    return $item->articulacion_proyecto->actividad->codigo_actividad . ' - '.  $item->articulacion_proyecto->actividad->nombre;
+                    return $item->codigo_proyecto . ' - '.  $item->nombre;
                 }
                 return "No registra";
             })->implode(',');
@@ -168,7 +168,7 @@ class ArticulationStagePresenter extends Presenter
         ){
             return $this->articulationStage->projects->map(function ($item) {
                 if(isset($item)){
-                    return $item->articulacion_proyecto->actividad->objetivo_general;
+                    return $item->objetivo_general;
                 }
             })->implode(',');
         }
@@ -184,7 +184,7 @@ class ArticulationStagePresenter extends Presenter
         ){
             return $this->articulationStage->projects->map(function ($item) {
                 if(isset($item)){
-                    return optional($item->articulacion_proyecto->actividad->fecha_cierre)->isoFormat('DD/MM/YYYY');
+                    return optional($item->fecha_cierre)->isoFormat('DD/MM/YYYY');
                 }
             })->implode(',');
         }

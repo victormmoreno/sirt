@@ -37,11 +37,7 @@ class Talento extends Model
     }
 
     // Relacion muchos a muchos con uso de infraestructura
-    public function usoinfraestructuras()
-    {
-        return $this->belongsToMany(UsoInfraestructura::class, 'uso_talentos')
-            ->withTimestamps();
-    }
+
 
     public function user()
     {

@@ -75,7 +75,7 @@
                                                             <b>{{$usoinfraestructura->present()->faseActividad()}}</b>
                                                         </p>
                                                     </div>
-                                                    @if(isset($usoinfraestructura->asesorable->articulacion_proyecto->actividad) && $usoinfraestructura->asesorable->articulacion_proyecto->actividad != null)
+                                                    @if(isset($usoinfraestructura->asesorable->codigo_proyecto) && $usoinfraestructura->asesorable->codigo_proyecto != null)
                                                     <div class="col s12 m6 l3">
                                                         <p>
                                                             <span class="primary-text">Sublinea:</span><br>

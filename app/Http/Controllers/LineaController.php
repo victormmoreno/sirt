@@ -6,7 +6,6 @@ use App\Http\Requests\LineaFormRequest;
 use App\Models\LineaTecnologica;
 use App\Datatables\LineaTecnologicaDatatable;
 use App\Repositories\Repository\LineaRepository;
-use App\User;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class LineaController extends Controller
@@ -15,7 +14,6 @@ class LineaController extends Controller
 
     public function __construct(LineaRepository $lineaRepository)
     {
-
         $this->middleware([
             'auth',
             'role_session:Administrador|Activador|Dinamizador|Experto|Talento',
@@ -44,10 +42,6 @@ class LineaController extends Controller
         return $this->lineaRepository;
     }
 
-    /*=====================================================================
-    =            metodo API para consultar las lineas por nodo            =
-    =====================================================================*/
-
     public function getAllLineasForNodo($nodo = '1')
     {
         if (request()->ajax()) {
@@ -58,8 +52,6 @@ class LineaController extends Controller
             abort('403');
         }
     }
-
-    /*=====  End of metodo API para consultar las lineas por nodo  ======*/
 
     /**
      * Display a listing of the resource.
@@ -96,9 +88,7 @@ class LineaController extends Controller
     public function store(LineaFormRequest $request)
     {
         $this->authorize('store', LineaTecnologica::class);
-
         $linea = $this->getLineaRepository()->store($request);
-
         if ($linea != null) {
             Alert::success('Registro Exitoso', "La Linea {$linea->nombre} ha sido creado satisfactoriamente.", "success");
         } else {
@@ -116,9 +106,7 @@ class LineaController extends Controller
     public function show($linea)
     {
         $linea = $this->getLineaRepository()->findLineaForShow($linea);
-
         $this->authorize('show', $linea);
-
         return view('lineas.show', ['linea' => $linea]);
     }
 
@@ -131,7 +119,6 @@ class LineaController extends Controller
     public function edit($linea)
     {
         $linea = LineaTecnologica::with(['nodos'])->findOrFailLinea($linea);
-
         $this->authorize('edit', $linea);
         return view('lineas.edit', [
             'linea' => $linea,

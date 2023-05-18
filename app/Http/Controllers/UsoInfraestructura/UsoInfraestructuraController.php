@@ -7,7 +7,6 @@ use App\Http\Requests\UsoInfraestructura\UsoInfraestructuraFormRequest;
 use App\Models\{Articulation,
     Idea,
     UsoInfraestructura,
-    Actividad,
     Talento,
     Proyecto,
     Nodo,
@@ -150,7 +149,6 @@ class UsoInfraestructuraController extends Controller
      */
     public function index(Request $request, UsoInfraestructuraDatatable $usoDatatable)
     {
-
         if (request()->user()->cannot('index',UsoInfraestructura::class)) {
             alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
@@ -878,15 +876,15 @@ class UsoInfraestructuraController extends Controller
 
             return datatables()->of($projects)
                 ->addColumn('checkbox', function ($data) {
-                    $checkbox = '<a class="btn cyan m-b-xs" onclick="asociarProyectoAUsoInfraestructura(' . $data->id . ', \'' . $data->articulacion_proyecto->actividad->codigo_actividad . '\', \'' . $this->reemplezarComillas($data->articulacion_proyecto->actividad->nombre) . '\')">
+                    $checkbox = '<a class="btn cyan m-b-xs" onclick="asociarProyectoAUsoInfraestructura(' . $data->id . ', \'' . $data->codigo_proyecto . '\', \'' . $this->reemplezarComillas($data->nombre) . '\')">
                         <i class="material-icons">done_all</i>
                     </a>';
                     return $checkbox;
                 })->editColumn('codigo_actividad', function ($data) {
-                    return $data->articulacion_proyecto->actividad->codigo_actividad;
+                    return $data->codigo_proyecto;
                 })
                 ->editColumn('nombre', function ($data) {
-                    return $data->articulacion_proyecto->actividad->nombre;
+                    return $data->nombre;
                 })
                 ->editColumn('fase', function ($data) {
                     return $data->present()->proyectoFase();

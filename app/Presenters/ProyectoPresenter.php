@@ -58,7 +58,7 @@ class ProyectoPresenter extends Presenter
     public function proyectoFechaCierre()
     {
         if ($this->proyecto->fase->nombre == 'Cancelado' || $this->proyecto->fase->nombre == 'Finalizado') {
-            if ($this->proyecto->articulacion_proyecto->actividad->fecha_cierre == null) {
+            if ($this->proyecto->fecha_cierre == null) {
                 return "No registra";
             } else {
                 return $this->proyecto->fecha_cierre->isoFormat('YYYY-MM-DD');

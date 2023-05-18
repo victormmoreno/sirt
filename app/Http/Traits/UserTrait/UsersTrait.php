@@ -276,8 +276,6 @@ trait UsersTrait
         $this->token->delete();
     }
 
-    /*=====  End of metodo para activar la cuenta del usuario  ======*/
-
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPasswordNotification($token));

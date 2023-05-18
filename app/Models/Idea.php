@@ -119,9 +119,6 @@ class Idea extends Model
         return false;
     }
 
-    /*=====  End of metodos para conocer los tipos de ideas  ======*/
-
-
     public function scopeConsultarIdeasAprobadasEnComite($query, $idnodo, $idgestor)
     {
         return $query->select(
