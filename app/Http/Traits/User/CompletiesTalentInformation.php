@@ -3,8 +3,6 @@
 namespace App\Http\Traits\User;
 
 use Illuminate\Http\Request;
-use Illuminate\Auth\Events\Verified;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\RedirectsUsers;
 use App\Events\User\CompletedTalentInformation;
 

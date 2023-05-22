@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Traits\IdeaTrait;
+namespace App\Http\Traits\Idea;
 
 use App\Models\EstadoIdea;
 use App\Models\Nodo;

@@ -147,6 +147,6 @@
             alert("Error: " + errorThrown);
         }
     })
-    } 
+    }
 </script>
 @endpush

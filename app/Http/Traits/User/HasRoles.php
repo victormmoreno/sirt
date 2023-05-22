@@ -3,6 +3,7 @@
 namespace App\Http\Traits\User;
 
 use Spatie\Permission\Traits\HasRoles as HasRolesPackage;
+use App\Models\UserNodo;
 use App\User;
 
 trait HasRoles
@@ -38,8 +39,6 @@ trait HasRoles
     {
         return $this->hasOne(UserNodo::class, 'user_id', 'id')->where('role', User::IsIngreso());
     }
-
-
 
     public static function IsAdministrador()
     {
@@ -165,5 +164,23 @@ trait HasRoles
     {
         return $query->with($relations)
             ->role($role);
+    }
+
+    public function scopeRoleQuery($query, $roles)
+    {
+        if (isset($roles) && (!collect($roles)->contains('all'))) {
+            return $query->roleIn($roles);
+        }
+        return $query;
+    }
+
+    public function scopeRoleIn($query, $role)
+    {
+        if (!empty($role) && $role != null && $role != 'all') {
+            return $query->whereHas('roles', function ($subQuery) use ($role) {
+                $subQuery->whereIn('name', $role);
+            });
+        }
+        return $query;
     }
 }

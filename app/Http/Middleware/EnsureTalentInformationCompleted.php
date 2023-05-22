@@ -18,15 +18,18 @@ class EnsureTalentInformationCompleted
      */
     public function handle($request, Closure $next, $redirectToRoute = null, $role = null)
     {
+        // dd($request->user()->getQuantityArticulations());
         if (! $request->user() ||
             (
                 $request->user() instanceof MustCompleteTalentInformation &&
                 ($request->user()->isUserTalento() || $request->user()->isUserConvencional()) &&
-                ! $request->user()->hasCompletedTalentInformation()
+                ! $request->user()->hasCompletedTalentInformation() &&
+                ( !$request->user()->getQuantityProjects() > 0 || !$request->user()->getQuantityArticulations() > 0)
             )) {
             return $request->expectsJson()
                     ? abort(403, 'No has completado la información de talento.')
                     : Redirect::guest(URL::route($redirectToRoute ?: 'informationtalent.notice'));
+
         }
 
         return $next($request);

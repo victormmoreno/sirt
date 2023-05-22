@@ -8,12 +8,13 @@ use App\Http\Traits\ProfileTrait\SendsPasswordResetEmailsToUserAuthenticated;
 use App\Repositories\Repository\{ProfileRepository\ProfileRepository, UserRepository\UserRepository};
 use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\{Facades\Validator};
+use Illuminate\Support\Facades\Validator;
+use App\Http\Traits\User\Profilable;
 
 
 class ProfileController extends Controller
 {
-    use SendsPasswordResetEmailsToUserAuthenticated;
+    use Profilable, SendsPasswordResetEmailsToUserAuthenticated;
 
     public $userRepository;
     public $profileRepostory;
@@ -23,71 +24,6 @@ class ProfileController extends Controller
         $this->middleware(['auth']);
         $this->userRepository   = $userRepository;
         $this->profileRepostory = $profileRepostory;
-    }
-
-    /**
-     * Show a resource for the profile.
-     *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
-     */
-    public function index()
-    {
-        $authUser = $this->userRepository->findByIdBuilder(auth()->user()->id)->firstOrFail();
-        if (request()->user()->cannot('viewProfile', $authUser)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
-            return redirect()->route('home');
-        }
-        return view('users.profile.index', ['user' => $authUser]);
-    }
-
-    public function roles()
-    {
-        $authUser =  User::query()->with(['roles'])->where('users.id', auth()->user()->id)->firstOrFail();
-        if (request()->user()->cannot('viewProfile', $authUser)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
-            return redirect()->route('home');
-        }
-        return view('users.profile.roles', [
-            'user'  => $authUser,
-            'roles' => $this->userRepository->getAllRoles(),
-        ]);
-    }
-
-    public function account()
-    {
-        $authUser = User::query()->with(['roles'])->where('users.id', auth()->user()->id)->firstOrFail();
-        if (request()->user()->cannot('viewProfile', $authUser)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
-            return redirect()->route('home');
-        }
-        return view('users.profile.account', [
-            'user' => $authUser,
-        ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function editAccount()
-    {
-        $authUser = User::with(['roles'])->where('users.id', auth()->user()->id)->firstOrFail();;
-        if (request()->user()->cannot('viewProfile', $authUser)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
-            return redirect()->route('home');
-        }
-        return view('users.profile.edit', [
-            'user'              => $authUser,
-            'etnias'            => $this->userRepository->getAllEtnias(),
-            'tiposdocumentos'   => $this->userRepository->getAllTipoDocumento(),
-            'gradosescolaridad' => $this->userRepository->getSelectAllGradosEscolaridad(),
-            'gruposanguineos'   => $this->userRepository->getAllGrupoSanguineos(),
-            'eps'               => $this->userRepository->getAllEpsActivas(),
-            'departamentos'     => $this->userRepository->getAllDepartamentos(),
-            'ocupaciones'       => $this->userRepository->getAllOcupaciones()
-        ]);
     }
 
     /**
@@ -144,15 +80,5 @@ class ProfileController extends Controller
             return redirect()->route('login')->withSuccess('Contraseña modificada, ya puedes iniciar sesión');
         }
         return redirect()->back()->with('error', 'error al actualizar tu contraseña, intentalo de nuevo');
-    }
-
-    public function downloadCertificatedPlataform($extension = '.pdf', $orientacion = 'portrait')
-    {
-        $user = $this->getAuthUserFindByIdEloquent();
-        if (request()->user()->cannot('downloadCertificatedPlataform', $user)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
-            return redirect()->route('home');
-        }
-        return $this->profileRepostory->downloadCertificated($user, $extension, $orientacion);
     }
 }

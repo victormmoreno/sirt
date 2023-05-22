@@ -1,9 +1,17 @@
 <?php
 
-namespace App\Http\Traits\OcupacionTrait;
+namespace App\Http\Traits\Ocupacion;
+
+use App\Models\Ocupacion;
 
 trait OcupacionTrait
 {
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'ocupaciones_users')
+            ->withTimestamps();
+    }
+
     public function scopeAllOcupaciones($query)
     {
         return $query->with('users')->orderby('nombre');
@@ -21,6 +29,6 @@ trait OcupacionTrait
 
     public static function IsOtraOcupacion()
     {
-        return self::IS_OTRA_OCUPACION;
+        return Ocupacion::IS_OTRA_OCUPACION;
     }
 }

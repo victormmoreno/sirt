@@ -3,32 +3,13 @@
 namespace App;
 
 use App\Http\Traits\User\UsersTrait;
-use App\Models\{
-    ActivationToken,
-    Ciudad,
-    Eps,
-    Etnia,
-    GradoEscolaridad,
-    GrupoSanguineo,
-    Ocupacion,
-    Proyecto,
-    Role,
-    Movimiento,
-    TipoDocumento,
-    ControlNotificaciones
-};
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Presenters\UserPresenter;
 use App\Http\Traits\User\{HasRoles, HasAcessorsMutators};
 use App\Http\Traits\User\MustCompleteTalentInformation;
 use App\Contracts\User\MustCompleteTalentInformation as CompleteTalentInformationContract;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable implements JWTSubject, CompleteTalentInformationContract
 {
@@ -147,160 +128,6 @@ class User extends Authenticatable implements JWTSubject, CompleteTalentInformat
         'informacion_talento'  => 'array',
     ];
 
-    /**
-     * Define a one-to-many relationship between users and control_notificaciones for notificaciones_remitidas.
-     * @return HasMany
-     */
-    public function notificaciones_remitidas(): HasMany
-    {
-        return $this->hasMany(ControlNotificaciones::class, 'remitente_id', 'id');
-    }
-
-    /**
-     * Define a one-to-many relationship between users and control_notificaciones for notificaciones_recibidas.
-     * @return HasMany
-     */
-    public function notificaciones_recibidas(): HasMany
-    {
-        return $this->hasMany(ControlNotificaciones::class, 'receptor_id', 'id');
-    }
-    /**
-     * Define a polymorphic many-to-many relationship between users and projects.
-     * @return MorphToMany
-     */
-    public function proyectos(): MorphToMany
-    {
-        return $this->morphToMany(Proyecto::class, 'propietario')->withTimestamps();
-    }
-
-    /**
-     * Define a one-to-many relationship between users and proyectos.
-     * @return HasMany
-     */
-    public function asesoredts(): HasMany
-    {
-        return $this->hasMany(Edt::class, 'asesor_id', 'id');
-    }
-
-    /**
-     * Define a one-to-many relationship between users and articulaciones.
-     * @return HasMany
-     */
-    public function asesorarticulaciones(): HasMany
-    {
-        return $this->hasMany(\App\Models\Articulacion::class, 'asesor_id', 'id');
-    }
-
-    /**
-     * Define an inverse one-to-one or many relationship between users and etnias.
-     * @return BelongsTo
-     */
-    public function etnia(): BelongsTo
-    {
-        return $this->belongsTo(Etnia::class, 'etnia_id', 'id');
-    }
-
-    /**
-     * Define a many-to-many relationship between users and proyectos.
-     * @return BelongsToMany
-     */
-    public function proyecto_talento() : BelongsToMany
-    {
-        return $this->belongsToMany(Proyecto::class, 'proyecto_talento')
-            ->withTimestamps()
-            ->withPivot('talento_lider');
-    }
-
-    /**
-     * Define a many-to-many relationship between users and movimientos.
-     * @return BelongsToMany
-     */
-    public function movimientos()
-    {
-        return $this->belongsToMany(Movimiento::class, 'movimientos_actividades_users_roles')
-            ->withTimestamps();
-    }
-    /**
-     * Define a many-to-many relationship between users and roles and movimientos.
-     * @return BelongsToMany
-     */
-    public function roles_movimientos(): BelongsToMany
-    {
-        return $this->belongsToMany(Role::class, 'movimientos_actividades_users_roles')
-            ->withTimestamps();
-    }
-
-    public function fases_movimientos()
-    {
-        return $this->belongsToMany(Fase::class, 'movimientos_actividades_users_roles')
-            ->withTimestamps();
-    }
-
-    public function actividades_movimientos()
-    {
-        return $this->belongsToMany(Actividad::class, 'movimientos_actividades_users_roles')
-            ->withTimestamps();
-    }
-
-    public function ocupaciones()
-    {
-        return $this->belongsToMany(Ocupacion::class, 'ocupaciones_users')
-            ->withTimestamps();
-    }
-
-    public function ciudad()
-    {
-        return $this->belongsTo(Ciudad::class, 'ciudad_id', 'id');
-    }
-
-    public function ciudadexpedicion()
-    {
-        return $this->belongsTo(Ciudad::class, 'ciudad_expedicion_id', 'id');
-    }
-
-    public function gradoEscolaridad()
-    {
-        return $this->belongsTo(GradoEscolaridad::class, 'gradoescolaridad_id', 'id');
-    }
-
-    public function tipoDocumento()
-    {
-        return $this->belongsTo(TipoDocumento::class, 'tipodocumento_id', 'id');
-    }
-
-    public function grupoSanguineo()
-    {
-        return $this->belongsTo(GrupoSanguineo::class, 'gruposanguineo_id', 'id');
-    }
-
-    public function eps()
-    {
-        return $this->belongsTo(Eps::class, 'eps_id', 'id');
-    }
-
-    public function token()
-    {
-        return $this->hasOne(ActivationToken::class);
-    }
-
-
-    public function usoinfraestructuras()
-    {
-            return $this->morphToMany(UsoInfraestructura::class, 'asesorable', 'gestor_uso', 'usoinfraestructura_id')->withTimestamps()
-            ->withPivot([
-                'asesoria_directa',
-                'asesoria_indirecta',
-                'costo_asesoria',
-            ]);
-    }
-
-    public function usoinfraestructura_talento()
-    {
-        return $this->belongsToMany(UsoInfraestructura::class, 'uso_talentos')
-            ->withTimestamps();
-    }
-
-
     public function scopeInfoUserBuilder($query)
     {
         return $query
@@ -322,8 +149,6 @@ class User extends Authenticatable implements JWTSubject, CompleteTalentInformat
         ->leftjoin('ocupaciones', 'ocupaciones.id', '=', 'ocupaciones_users.ocupacion_id')
         ->leftJoin('user_nodo', 'user_nodo.user_id', '=', 'users.id');
     }
-
-
 
     public function scopeInfoUserDatatable($query)
     {
@@ -380,7 +205,6 @@ class User extends Authenticatable implements JWTSubject, CompleteTalentInformat
             ->whereIn('roles.name', [self::IsUsuario(), self::IsTalento()]);
     }
 
-
     public function scopeNodoFuncionario($query, $nodo)
     {
         if (!empty($nodo) && $nodo != null && $nodo != 'all') {
@@ -393,24 +217,6 @@ class User extends Authenticatable implements JWTSubject, CompleteTalentInformat
     {
         if (!empty($linea) && $linea != null && $linea != 'all') {
             return $query->where('user_nodo.linea_id', $linea);
-        }
-        return $query;
-    }
-
-    public function scopeRoleIn($query, $role)
-    {
-        if (!empty($role) && $role != null && $role != 'all') {
-            return $query->whereHas('roles', function ($subQuery) use ($role) {
-                $subQuery->whereIn('name', $role);
-            });
-        }
-        return $query;
-    }
-
-    public function scopeRoleQuery($query, $roles)
-    {
-        if (isset($roles) && (!collect($roles)->contains('all'))) {
-            return $query->roleIn($roles);
         }
         return $query;
     }
@@ -458,85 +264,6 @@ class User extends Authenticatable implements JWTSubject, CompleteTalentInformat
         });
     }
 
-    public function scopeNodoUserQuery($query, $roles = null, $nodos = null)
-    {
-        if ((!empty($roles) && !collect($roles)->contains('all') && (!collect($roles)->contains(User::IsTalento())) && !empty($nodos) &&  !collect($nodos)->contains('all'))) {
-            if (collect($roles)->contains(User::IsDinamizador())) {
-                return $query->join('user_nodo', function ($join) {
-                    $join->on('users.id', '=', 'user_nodo.user_id')
-                        ->where('user_nodo.role', User::IsDinamizador());
-                })->join('nodos', function ($join) use ($nodos) {
-                    $join->on('nodos.id', '=', 'user_nodo.nodo_id')
-                        ->whereIn('nodos.id', $nodos);
-                });
-            }
-            if (collect($roles)->contains(User::IsExperto())) {
-                return $query->join('user_nodo', function ($join) {
-                    $join->on('users.id', '=', 'user_nodo.user_id')
-                        ->where('user_nodo.role', User::IsExperto());
-                })->join('nodos', function ($join) use ($nodos) {
-                    $join->on('nodos.id', '=', 'user_nodo.nodo_id')
-                        ->whereIn('nodos.id', $nodos);
-                });
-            }
-            if (collect($roles)->contains(User::IsArticulador())) {
-                return $query->join('user_nodo', function ($join) {
-                    $join->on('users.id', '=', 'user_nodo.user_id')
-                        ->where('user_nodo.role', User::IsArticulador());
-                })->join('nodos', function ($join) use ($nodos) {
-                    $join->on('nodos.id', '=', 'user_nodo.nodo_id')
-                        ->whereIn('nodos.id', $nodos);
-                });
-            }
-            if (collect($roles)->contains(User::IsApoyoTecnico())) {
-                return $query->join('user_nodo', function ($join) {
-                    $join->on('users.id', '=', 'user_nodo.user_id')
-                        ->where('user_nodo.role', User::IsApoyoTecnico());
-                })->join('nodos', function ($join) use ($nodos) {
-                    $join->on('nodos.id', '=', 'user_nodo.nodo_id')
-                        ->whereIn('nodos.id', $nodos);
-                });
-            }
-            if (collect($roles)->contains(User::IsInfocenter())) {
-                return $query->join('user_nodo', function ($join) {
-                    $join->on('users.id', '=', 'user_nodo.user_id')
-                        ->where('user_nodo.role', User::IsInfocenter());
-                })->join('nodos', function ($join) use ($nodos) {
-                    $join->on('nodos.id', '=', 'user_nodo.nodo_id')
-                        ->whereIn('nodos.id', $nodos);
-                });
-            }
-            if (collect($roles)->contains(User::IsIngreso())) {
-                return $query->join('user_nodo', function ($join) {
-                    $join->on('users.id', '=', 'user_nodo.user_id')
-                        ->where('user_nodo.role', User::IsIngreso());
-                })->join('nodos', function ($join) use ($nodos) {
-                    $join->on('nodos.id', '=', 'user_nodo.nodo_id')
-                        ->whereIn('nodos.id', $nodos);
-                });
-            }
-            return $query->leftJoin('user_nodo', function ($join) {
-                $join->on('users.id', '=', 'user_nodo.user_id');;
-            });
-        }
-        return $query;
-    }
-
-    public function scopeStateDeletedAt($query, $state)
-    {
-        if (!empty($state) && $state != null && $state != 'all') {
-            if ($state == 'si') {
-                $state = User::IsActive();
-                return $query->where('users.estado', $state);
-            } else {
-                $state = User::IsInactive();
-                return $query->where('users.estado', $state)->onlyTrashed();
-            }
-        }
-        return $query->withTrashed();
-    }
-
-
     public function scopeFuncionarioJoin($query)
     {
         return $query->join('model_has_roles', function ($join) {
@@ -546,9 +273,6 @@ class User extends Authenticatable implements JWTSubject, CompleteTalentInformat
         ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
         ->join('user_nodo', 'user_nodo.user_id', '=', 'users.id');
     }
-
-
-
 
     public function getNodoUser()
     {
@@ -591,10 +315,5 @@ class User extends Authenticatable implements JWTSubject, CompleteTalentInformat
             $value->user()->withTrashed()->first()->restore();
             $value->user()->withTrashed()->first()->update(['estado' => self::IsActive()]);
         }
-    }
-
-    public function present()
-    {
-        return new UserPresenter($this);
     }
 }
