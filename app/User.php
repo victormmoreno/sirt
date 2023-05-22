@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Http\Traits\UserTrait\UsersTrait;
+use App\Http\Traits\User\UsersTrait;
 use App\Models\{
     ActivationToken,
     Ciudad,
@@ -15,24 +15,30 @@ use App\Models\{
     Role,
     Movimiento,
     TipoDocumento,
-    ControlNotificaciones,
-    UserNodo
+    ControlNotificaciones
 };
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Presenters\UserPresenter;
+use App\Http\Traits\User\{HasRoles, HasAcessorsMutators};
+use App\Http\Traits\User\MustCompleteTalentInformation;
+use App\Contracts\User\MustCompleteTalentInformation as CompleteTalentInformationContract;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject, CompleteTalentInformationContract
 {
 
-    use  SoftDeletes, Notifiable, HasRoles,  UsersTrait;
+    use SoftDeletes,
+        Notifiable,
+        HasRoles,
+        HasAcessorsMutators,
+        UsersTrait,
+        MustCompleteTalentInformation;
 
     /**
      * definition of constants to reference roles
@@ -50,7 +56,6 @@ class User extends Authenticatable implements JWTSubject
     const IS_INFOCENTER     = "Infocenter";
     const IS_TALENTO        = "Talento";
     const IS_INGRESO        = "Ingreso";
-    const IS_PROVEEDOR      = "Proveedor";
     const IS_DESARROLLADOR  = "Desarrollador";
     const IS_ARTICULADOR    = "Articulador";
     const IS_APOYO_TECNICO  = "Apoyo Técnico";
@@ -70,7 +75,8 @@ class User extends Authenticatable implements JWTSubject
         'ultimo_login',
         'fechanacimiento',
         'fecha_terminacion',
-        'deleted_at'
+        'informacion_talento_completed_at',
+        'deleted_at',
     ];
 
     public $items = null;
@@ -109,6 +115,7 @@ class User extends Authenticatable implements JWTSubject
         'etnia_id',
         'grado_discapacidad',
         'descripcion_grado_discapacidad',
+        'informacion_talento'
     ];
 
     /**
@@ -125,7 +132,6 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $casts = [
         'tipodocumento_id'     => 'integer',
-        'tipo_usuario'         => 'array',
         'gradoescolaridad_id'  => 'integer',
         'gruposanguineo_id'    => 'integer',
         'eps_id'               => 'integer',
@@ -138,7 +144,7 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at'    => 'datetime',
         'fechanacimiento'      => 'date:Y-m-d',
         'fechanacimiento'      => 'date:Y-m-d',
-
+        'informacion_talento'  => 'array',
     ];
 
     /**
@@ -272,36 +278,6 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(Eps::class, 'eps_id', 'id');
     }
 
-    public function articulador()
-    {
-        return $this->hasOne(UserNodo::class, 'user_id', 'id')->where('role', User::IsArticulador());
-    }
-
-    public function apoyotecnico()
-    {
-        return $this->hasOne(UserNodo::class, 'user_id', 'id')->where('role', User::IsApoyoTecnico());
-    }
-
-    public function experto()
-    {
-        return $this->hasOne(UserNodo::class, 'user_id', 'id')->where('role', self::IsExperto());
-    }
-
-    public function dinamizador()
-    {
-        return $this->hasOne(UserNodo::class, 'user_id', 'id')->where('role', User::IsDinamizador());
-    }
-
-    public function infocenter()
-    {
-        return $this->hasOne(UserNodo::class, 'user_id', 'id')->where('role', User::IsInfocenter());
-    }
-
-    public function ingreso()
-    {
-        return $this->hasOne(UserNodo::class, 'user_id', 'id')->where('role', User::IsIngreso());
-    }
-
     public function token()
     {
         return $this->hasOne(ActivationToken::class);
@@ -324,12 +300,6 @@ class User extends Authenticatable implements JWTSubject
             ->withTimestamps();
     }
 
-
-    public function scopeInfoUserRole($query, array $role = [], array $relations = [])
-    {
-        return $query->with($relations)
-            ->role($role);
-    }
 
     public function scopeInfoUserBuilder($query)
     {
@@ -410,21 +380,6 @@ class User extends Authenticatable implements JWTSubject
             ->whereIn('roles.name', [self::IsUsuario(), self::IsTalento()]);
     }
 
-    public function scopeRole($query, $role)
-    {
-        if (!empty($role) && $role != null && $role != 'all') {
-            return $query->where('roles.name', $role);
-        }
-        return $query;
-    }
-
-    public function scopeRoleFuncionario($query, $role)
-    {
-        if (!empty($role) && $role != null && $role != 'all') {
-            return $query->where('roles.name', $role)->where('user_nodo.role', $role);
-        }
-        return $query;
-    }
 
     public function scopeNodoFuncionario($query, $nodo)
     {
@@ -483,10 +438,6 @@ class User extends Authenticatable implements JWTSubject
             if(collect($roles)->contains('all') && !isset($nodos)){
                 return $query;
             }
-
-            // if(!collect($roles)->contains('all') && isset($nodos)){
-            //     return $query->OrWhereIn('user_nodo.nodo_id', $nodos);
-            // }
             if( isset($roles) &&
                 (collect($roles)->contains(User::IsActivador()) ||
                 collect($roles)->contains(User::IsAdministrador()) ||
@@ -506,9 +457,6 @@ class User extends Authenticatable implements JWTSubject
 
         });
     }
-
-
-
 
     public function scopeNodoUserQuery($query, $roles = null, $nodos = null)
     {

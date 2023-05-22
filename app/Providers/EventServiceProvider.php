@@ -21,6 +21,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\User\UserHasNewPasswordGenerated' => [
             'App\Listeners\User\SendEmailNewPasswordGenerated',
         ],
+        'App\Events\User\CompletedTalentInformation' => [
+            'App\Listeners\User\SendEmailCompletationInformationTalentNotification',
+        ],
         'Illuminate\Auth\Events\Login'      => [
             'App\Listeners\User\Auth\LogSuccessfulLogin',
         ],

@@ -20,7 +20,7 @@ class ProfileController extends Controller
 
     public function __construct(UserRepository $userRepository, ProfileRepository $profileRepostory)
     {
-        $this->middleware(['auth', 'check_profile']);
+        $this->middleware(['auth']);
         $this->userRepository   = $userRepository;
         $this->profileRepostory = $profileRepostory;
     }

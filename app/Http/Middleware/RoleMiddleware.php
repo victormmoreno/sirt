@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Middleware\Ourmiddleware\Role;
+namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Exceptions\UnauthorizedException;
+use App\User;
 
 class RoleMiddleware
 {
@@ -20,7 +21,7 @@ class RoleMiddleware
         if (Auth::guest()) {
             throw UnauthorizedException::notLoggedIn();
         }
-        if (session()->get('login_role') == 'Administrador') {
+        if (session()->get('login_role') == User::IsAdministrador()) {
             return $next($request);
         }
         $roles = is_array($role) ? $role : explode('|', $role);

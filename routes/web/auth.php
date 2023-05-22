@@ -16,10 +16,12 @@ Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail'
 Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
 Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
 
-
+Route::get('user/complete-talent-information', 'User\CompletationInformationTalentController@show')->name('informationtalent.notice');
+Route::get('user/complete', 'User\CompletationInformationTalentController@complete')->name('informationtalent.complete');
 
 //verificar usuario no registrado
 Route::post('user/verify', 'Auth\UnregisteredUserVerificationController@verificationUser')->name('user.verify');
+
 
 //change password routes...
 Route::get('password/{documento}/reset', 'User\ChangePasswordController@generatePassword')->name('password.generate')->middleware('disablepreventback');

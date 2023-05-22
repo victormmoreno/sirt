@@ -63,9 +63,9 @@ class Kernel extends HttpKernel
         'role'               => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'permission'         => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
-        'role_session'       => \App\Http\Middleware\Ourmiddleware\Role\RoleMiddleware::class,
-        'disablepreventback' => \App\Http\Middleware\Auth\Logout\DisablePreventBack::class,
-        'check_profile'      => \App\Http\Middleware\User\Profile\CheckForProfile::class,
+        'role_session'       => \App\Http\Middleware\RoleMiddleware::class,
+        'disablepreventback' => \App\Http\Middleware\DisablePreventBack::class,
+        'talent_information_completed' => \App\Http\Middleware\EnsureTalentInformationCompleted::class
     ];
 
     /**

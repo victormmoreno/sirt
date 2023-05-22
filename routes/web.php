@@ -13,7 +13,7 @@ Route::get('politica-de-confidencialidad', function () {
 
 
 
-Route::get('/home', 'HomeController@index')->name('home')->middleware('disablepreventback');
+Route::get('/home', 'HomeController@index')->name('home')->middleware(['disablepreventback', 'talent_information_completed']);
 
 
 Route::get('nodo/files/{nodo}', 'ArchivoController@datatableArchivesNodes')->name('nodo.files');
