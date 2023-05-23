@@ -22,6 +22,8 @@ class AddUserToTablesSeeder extends Seeder
             $dinamizadores = DB::table('dinamizador')->select('*')->get();
             $ideas = Idea::whereNotNull('correo_contacto')->get();
             $gestor_uso = DB::table('gestor_uso')->select('*')->get();
+
+
             foreach ($gestor_uso as $key => $uso) {
                 DB::table('gestor_uso')->where('id', $uso->id)->update(['asesor_id' => $uso->asesorable_id]);
             }
@@ -78,7 +80,7 @@ class AddUserToTablesSeeder extends Seeder
                 DB::table('comite_gestor')
                 ->where('gestor_id', $gestor->id)
                 ->update(['evaluador_id' => $gestor->user_id]);
-                
+
                 DB::table('proyectos')
                 ->where('asesor_id', $gestor->id)
                 ->update(['experto_id' => $gestor->user_id]);
@@ -99,7 +101,27 @@ class AddUserToTablesSeeder extends Seeder
                     ]
                 );
             }
+            // $talents = DB::table('talentos')
+            //             ->join('users', 'users.id', '=', 'talentos.user_id')
+            //             ->leftJoin('tipo_formacion','tipo_formacion.id', '=', 'talentos.tipo_formacion_id')
+            //             ->get();
+            // $request = new Illuminate\Http\Request;
+
+            // foreach ($talents as $talents) {
+            //     $user = App\User::where('id', $talento->user_id)->first();
+            //     $request->merge([
+            //         'tipo_talento' => 'funcionario_sena',
+            //         'regional' => 1,
+            //         'centro_formacion' => 2,
+            //         'programa_formacion' => 'Adsi',
+            //         'tipo_formacion' => 1
+            //     ]);
+            //     $user->saveInformationTalent($request);
+            // }
+
+
             foreach ($talentos as $key3 => $talento) {
+
                 DB::table('uso_talentos')
                 ->where('talento_id', $talento->id)
                 ->update(['user_id' => $talento->user_id]);
@@ -112,6 +134,8 @@ class AddUserToTablesSeeder extends Seeder
                 ->where('talento_id', $talento->id)
                 ->update(['user_id' => $talento->user_id]);
             }
+
+
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();

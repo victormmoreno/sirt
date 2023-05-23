@@ -3,6 +3,8 @@
 namespace App\Http\Traits\User;
 
 use App\Notifications\User\CompleteTalentInformation;
+use App\Values\TalentStorageValues;
+use Illuminate\Http\Request;
 
 trait MustCompleteTalentInformation
 {
@@ -31,13 +33,18 @@ trait MustCompleteTalentInformation
     /**
      * save information talent.
      *
-     * @return void
      */
-    public function saveInformationTalent()
+    public function saveInformationTalent(Request $request = null)
     {
-        if(! is_null($this->informacion_talento))
+        if(!is_null($request) && isset($request->tipo_talento) && is_null($this->informacion_talento_completed_at) &&  is_null($this->informacion_talento))
         {
+            $talentStorageClass = TalentStorageValues::TALENTTYPE[$request->tipo_talento];
 
+            $structures =  (new $talentStorageClass)->buildStorageRecord($request);
+
+            $this->update(['informacion_talento' => $structures]);
+
+            $this->markInformationTalentAsCompleted();
         }
     }
 

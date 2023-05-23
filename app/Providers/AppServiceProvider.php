@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use App\Contracts\User\TalentStorage;
 
 class AppServiceProvider extends ServiceProvider
 {
