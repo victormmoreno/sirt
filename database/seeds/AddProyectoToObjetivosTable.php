@@ -12,12 +12,16 @@ class AddProyectoToObjetivosTable extends Seeder
      */
     public function run()
     {
-        $proyectos = Proyecto::all();
+        $proyectos = Proyecto::select(
+            'proyectos.id', 'actividades.id AS actividad_id', 'articulacion_proyecto.id as articulacion_proyecto_id'
+        )
+        ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+        ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+        ->get();
         foreach ($proyectos as $key1 => $proyecto) {
-            $id = $proyecto->id;
             DB::table('objetivos_especificos')
-            ->where('actividad_id', $proyecto->articulacion_proyecto->actividad->id)
-            ->update(['proyecto_id' => $id]);
+            ->where('actividad_id', $proyecto->actividad_id)
+            ->update(['proyecto_id' => $proyecto->id]);
         }
     }
 }

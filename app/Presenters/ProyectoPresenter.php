@@ -42,7 +42,7 @@ class ProyectoPresenter extends Presenter
 
     public function proyectoRutaActual()
     {
-        if ($this->proyecto->fase->nombre == 'Finalizado' || $this->proyecto->fase->nombre == 'Concluido sin finalizar') {
+        if ($this->proyecto->fase->nombre == 'Finalizado' || $this->proyecto->fase->nombre == 'Cancelado') {
             return route('proyecto.detalle', $this->proyecto->id);
         } else if ($this->proyecto->fase->nombre == 'Inicio') {
             return route('proyecto.inicio', $this->proyecto->id);
@@ -57,7 +57,7 @@ class ProyectoPresenter extends Presenter
 
     public function proyectoFechaCierre()
     {
-        if ($this->proyecto->fase->nombre == 'Concluido sin finalizar' || $this->proyecto->fase->nombre == 'Finalizado') {
+        if ($this->proyecto->fase->nombre == 'Cancelado' || $this->proyecto->fase->nombre == 'Finalizado') {
             if ($this->proyecto->articulacion_proyecto->actividad->fecha_cierre == null) {
                 return "No registra";
             } else {

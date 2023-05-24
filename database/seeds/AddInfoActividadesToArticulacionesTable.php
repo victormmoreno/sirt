@@ -15,20 +15,27 @@ class AddInfoActividadesToArticulacionesTable extends Seeder
     {
         DB::beginTransaction();
         try {
-            $articulaciones = Articulacion::all();
+            $articulaciones = Articulacion::select(
+                'articulaciones.id', 'codigo_actividad', 'actividades.nombre', 'actividades.fecha_inicio', 'actividades.fecha_cierre', 'actividades.objetivo_general', 'actividades.conclusiones',
+                'actividades.formulario_inicio', 'actividades.cronograma', 'actividades.seguimiento', 'actividades.formulario_final', 'articulacion_proyecto.entidad_id'
+            )
+            ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'articulaciones.articulacion_proyecto_id')
+            ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+            ->get();
             foreach ($articulaciones as $key => $articulacion) {
-                $codigo_articulacion = $articulacion->articulacion_proyecto->actividad->codigo_actividad;
-                $nombre = $articulacion->articulacion_proyecto->actividad->nombre;
-                $fecha_inicio = $articulacion->articulacion_proyecto->actividad->fecha_inicio;
-                $fecha_cierre = $articulacion->articulacion_proyecto->actividad->fecha_cierre;
-                $objetivo_general = $articulacion->articulacion_proyecto->actividad->objetivo_general;
-                $conclusiones = $articulacion->articulacion_proyecto->actividad->conclusiones;
-                $formulario_inicio = $articulacion->articulacion_proyecto->actividad->formulario_inicio;
-                $cronograma = $articulacion->articulacion_proyecto->actividad->cronograma;
-                $seguimiento = $articulacion->articulacion_proyecto->actividad->seguimiento;
-                $formulario_final = $articulacion->articulacion_proyecto->actividad->formulario_final;
-                $entidad_id = $articulacion->articulacion_proyecto->entidad_id;
-                $articulacion->update([
+                $codigo_articulacion = $articulacion->codigo_actividad;
+                $nombre = $articulacion->nombre;
+                $fecha_inicio = $articulacion->fecha_inicio;
+                $fecha_cierre = $articulacion->fecha_cierre;
+                $objetivo_general = $articulacion->objetivo_general;
+                $conclusiones = $articulacion->conclusiones;
+                $formulario_inicio = $articulacion->formulario_inicio;
+                $cronograma = $articulacion->cronograma;
+                $seguimiento = $articulacion->seguimiento;
+                $formulario_final = $articulacion->formulario_final;
+                $entidad_id = $articulacion->entidad_id;
+                DB::table('articulaciones')
+                ->where('id', $articulacion->id)->update([
                     'codigo_articulacion' => $codigo_articulacion,
                     'entidad_id' => $entidad_id,
                     'nombre' => $nombre,

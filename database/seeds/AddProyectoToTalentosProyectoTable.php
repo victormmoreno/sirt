@@ -12,17 +12,17 @@ class AddProyectoToTalentosProyectoTable extends Seeder
      */
     public function run()
     {
-        $proyectos = Proyecto::all();
-        foreach ($proyectos as $key1 => $proyecto) {
-            $id = $proyecto->id;
-            foreach ($proyecto->articulacion_proyecto->talentos as $key => $talento) {
+        $articulacion_proyecto_talento = DB::table('articulacion_proyecto_talento')->select('*')->get();
+        foreach ($articulacion_proyecto_talento as $key => $talento) {
+            $proyecto = Proyecto::select('proyectos.id')->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')->where('articulacion_proyecto_id', $talento->articulacion_proyecto_id)->first();
+            if ($proyecto != null) {
                 DB::table('proyecto_talento')->insert(
                     [
-                        'proyecto_id' => $id, 
-                        'talento_id' => $talento->id,
-                        'talento_lider' => $talento->pivot->talento_lider,
-                        'created_at' => $talento->pivot->created_at,
-                        'updated_at' => $talento->pivot->updated_at
+                        'proyecto_id' => $proyecto->id, 
+                        'talento_id' => $talento->talento_id,
+                        'talento_lider' => $talento->talento_lider,
+                        'created_at' => $talento->created_at,
+                        'updated_at' => $talento->updated_at
                     ]
                 );
             }

@@ -362,7 +362,7 @@ function graficoSeguimientoFases(data, name) {
       name: 'Finalizado',
       data: finalizado
     }, {
-      name: 'Concluido sin finalizar',
+      name: 'Cancelado',
       data: suspendido
     }]
 });
@@ -419,7 +419,7 @@ function graficoSeguimientoFasesNoGroup(data, name) {
             y: data.datos.Finalizado,
           },
           {
-            name: "Proyectos concluidos sin finalizar",
+            name: "Proyectos cancelados",
             y: data.datos.Suspendido,
           },
           {

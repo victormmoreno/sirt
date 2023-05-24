@@ -364,6 +364,7 @@ class IndicadorController extends Controller
         if (session()->get('login_role') == User::IsExperto()) {
             return $query->where('proyectos.experto_id', request()->user()->id);
         }
+        return $query;
     }
 
     /**
@@ -379,6 +380,7 @@ class IndicadorController extends Controller
         if ($request->nodos[0] != 'all' || $request->nodos[0] != null || $request->nodos[0] != 0) {
             return $query->whereIn('nodos.id', is_array($request->nodos) ? $request->nodos : [$request->nodos]);
         }
+        return $query;
     }
 
     private function setProyectoRepository($proyectoRepository)

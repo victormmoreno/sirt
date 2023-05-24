@@ -15,19 +15,26 @@ class AddInfoActividadesToProyectosTable extends Seeder
     {
         DB::beginTransaction();
         try {
-            $proyectos = Proyecto::all();
+            $proyectos = Proyecto::select(
+                'proyectos.id', 'actividades.codigo_actividad', 'actividades.nombre', 'actividades.fecha_inicio', 'actividades.fecha_cierre',
+                'actividades.objetivo_general', 'actividades.conclusiones', 'actividades.formulario_inicio', 'actividades.cronograma', 
+                'actividades.seguimiento', 'actividades.formulario_final'
+            )
+            ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
+            ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
+            ->get();
             foreach ($proyectos as $key => $proyecto) {
-                $codigo_proyecto = $proyecto->articulacion_proyecto->actividad->codigo_actividad;
-                $nombre = $proyecto->articulacion_proyecto->actividad->nombre;
-                $fecha_inicio = $proyecto->articulacion_proyecto->actividad->fecha_inicio;
-                $fecha_cierre = $proyecto->articulacion_proyecto->actividad->fecha_cierre;
-                $objetivo_general = $proyecto->articulacion_proyecto->actividad->objetivo_general;
-                $conclusiones = $proyecto->articulacion_proyecto->actividad->conclusiones;
-                $formulario_inicio = $proyecto->articulacion_proyecto->actividad->formulario_inicio;
-                $cronograma = $proyecto->articulacion_proyecto->actividad->cronograma;
-                $seguimiento = $proyecto->articulacion_proyecto->actividad->seguimiento;
-                $formulario_final = $proyecto->articulacion_proyecto->actividad->formulario_final;
-                $proyecto->update([
+                $codigo_proyecto = $proyecto->codigo_actividad;
+                $nombre = $proyecto->nombre;
+                $fecha_inicio = $proyecto->fecha_inicio;
+                $fecha_cierre = $proyecto->fecha_cierre;
+                $objetivo_general = $proyecto->objetivo_general;
+                $conclusiones = $proyecto->conclusiones;
+                $formulario_inicio = $proyecto->formulario_inicio;
+                $cronograma = $proyecto->cronograma;
+                $seguimiento = $proyecto->seguimiento;
+                $formulario_final = $proyecto->formulario_final;
+                DB::table('proyectos')->where('id', $proyecto->id)->update([
                     'codigo_proyecto' => $codigo_proyecto,
                     'nombre' => $nombre,
                     'fecha_inicio' => $fecha_inicio,

@@ -54,13 +54,13 @@
             <td>{{ $proyecto->nombre_fase }}</td>
             <td>{{ $proyecto->fecha_cierre }}</td>
 
-            @if ($proyecto->nombre_fase == 'Finalizado' || $proyecto->nombre_fase == 'Concluido sin finalizar')
+            @if ($proyecto->nombre_fase == 'Finalizado' || $proyecto->nombre_fase == 'Cancelado')
                 <td>{{ $proyecto->anho }}</td>
             @else
                 <td>El proyecto no se ha cerrado</td>
             @endif
 
-            @if ($proyecto->nombre_fase == 'Finalizado' || $proyecto->nombre_fase == 'Concluido sin finalizar')
+            @if ($proyecto->nombre_fase == 'Finalizado' || $proyecto->nombre_fase == 'Cancelado')
                 <td>{{ $proyecto->mes }}</td>
             @else
                 <td>El proyecto no se ha cerrado</td>

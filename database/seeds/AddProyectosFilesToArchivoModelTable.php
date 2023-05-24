@@ -31,7 +31,6 @@ class AddProyectosFilesToArchivoModelTable extends Seeder
                         ]
                     );
                 }
-                // DB::table('archivos_articulacion_proyecto')->where('articulacion_proyecto_id', $proyecto->articulacion_proyecto->id)->delete();
             }
             DB::commit();
         } catch (\Throwable $th) {
