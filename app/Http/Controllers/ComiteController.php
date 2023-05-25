@@ -421,7 +421,7 @@ class ComiteController extends Controller
     $csibt = Comite::findOrFail($id);
     $idideas = $this->getIdIdeasDelComiteArray($csibt);
     $ideas = Idea::ConsultarIdeasConvocadasAComite( $csibt->ideas()->first()->nodo_id )->orWhereIn('ideas.id', $idideas)->get();
-    $gestores = User::ConsultarFuncionarios(request()->user()->getNodoUser(), User::IsExperto())->get();
+    $gestores = User::ConsultarFuncionarios($csibt->ideas()->first()->nodo_id, User::IsExperto())->get();
     return view('comite.edit_agendamiento', [
       'ideas' => $ideas,
       'comite' => $csibt,

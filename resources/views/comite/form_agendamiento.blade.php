@@ -70,8 +70,8 @@
                                 </div>
                                 <div class="input-field col s12 m6 l6">
                                     <i class="material-icons prefix">access_time</i>
-                                    <input id="txthoraidea" type="text" class="pickertime" name="txthoraidea">
-                                    <label for="txthoraidea">Hora <span class="red-text">*</span></label>
+                                    <label for="txthoraidea" class="active">Hora <span class="red-text">*</span></label>
+                                    <input id="txthoraidea" type="time" name="txthoraidea">
                                 </div>
                             </div>
                             <div class="row">
@@ -164,17 +164,17 @@
                                     </td>
                                     <td>
                                         @if (isset($gexistente[$gestor->id]))
-                                        <input value="{{$gexistente[$gestor->id]['inicio']}}" id="txthorainiciogestor-{{$gestor->id}}" type="text" class="pickertime black-text" name="horas_inicio[]" placeholder="Desde">
+                                        <input value="{{$gexistente[$gestor->id]['inicio']}}" id="txthorainiciogestor-{{$gestor->id}}" type="time" name="horas_inicio[]" placeholder="Desde">
                                         @else
-                                        <input disabled id="txthorainiciogestor-{{$gestor->id}}" type="text" class="pickertime black-text" name="horas_inicio[]" placeholder="Desde">
+                                        <input disabled id="txthorainiciogestor-{{$gestor->id}}" type="time" name="horas_inicio[]" placeholder="Desde">
                                         @endif
                                         <small id="txthorainiciogestor-{{$gestor->id}}-error" class="error red-text"></small>
                                     </td>
                                     <td>
                                         @if (isset($gexistente[$gestor->id]))
-                                        <input value="{{$gexistente[$gestor->id]['fin']}}" id="txthorafingestor-{{$gestor->id}}" type="text" class="pickertime text-black" name="horas_fin[]" placeholder="Hasta">
+                                        <input value="{{$gexistente[$gestor->id]['fin']}}" id="txthorafingestor-{{$gestor->id}}" type="time" name="horas_fin[]" placeholder="Hasta">
                                         @else
-                                        <input disabled id="txthorafingestor-{{$gestor->id}}" type="text" class="pickertime text-black" name="horas_fin[]" placeholder="Hasta">
+                                        <input disabled id="txthorafingestor-{{$gestor->id}}" type="time" name="horas_fin[]" placeholder="Hasta">
                                         @endif
                                         <small id="txthorafingestor-{{$gestor->id}}-error" class="error red-text"></small>
                                     </td>
@@ -190,11 +190,11 @@
                                         </p>
                                     </td>
                                     <td>
-                                        <input disabled id="txthorainiciogestor-{{$gestor->id}}" type="text" class="pickertime black-text" name="horas_inicio[]" placeholder="Desde">
+                                        <input disabled id="txthorainiciogestor-{{$gestor->id}}" type="time" name="horas_inicio[]" placeholder="Desde">
                                         <small id="txthorainiciogestor-{{$gestor->id}}-error" class="error red-text"></small>
                                     </td>
                                     <td>
-                                        <input disabled id="txthorafingestor-{{$gestor->id}}" type="text" class="pickertime text-black" name="horas_fin[]" placeholder="Hasta">
+                                        <input disabled id="txthorafingestor-{{$gestor->id}}" type="time" name="horas_fin[]" placeholder="Hasta">
                                         <small id="txthorafingestor-{{$gestor->id}}-error" class="error red-text"></small>
                                     </td>
                                 </tr>
