@@ -174,7 +174,7 @@ class ComiteController extends Controller
       alert('No autorizado', 'No tienes permisos para cambiar al asignación de experto de esta idea', 'error')->showConfirmButton('Ok', '#3085d6');
       return back();
     }
-    $gestores = User::ConsultarFuncionarios(request()->user()->getNodoUser(), User::IsExperto())->get();
+    $gestores = User::ConsultarFuncionarios($comite->ideas()->first()->nodo_id, User::IsExperto())->get();
     return view('comite.update_gestor', [
     'idea' => $idea,
     'comite' => $comite,

@@ -89,11 +89,11 @@
                             </td>
                             <td>
                                 @if ($value->pivot->admitido == 1)
-                                <a href="javascript:void(0)" onclick="confirmacionDuplicidad( event, '{{route('idea.derivar', [$value->id, $comite->id])}}' )">
+                                <a href="javascript:void(0)" onclick="confirmacionDuplicidad( event, '{{route('idea.derivar', [$value->id, $comite->id, 2])}}' )">
                                     <div class="card-panel green lighten-3 black-text center">
                                         Duplicar idea de proyecto.
-                                        </div>
-                                    </a>
+                                    </div>
+                                </a>
                                 @else
                                     <a href="javascript:void(0)">
                                         <div class="card-panel grey black-text center">

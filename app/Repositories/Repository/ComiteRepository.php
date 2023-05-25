@@ -484,7 +484,11 @@ class ComiteRepository
         DB::beginTransaction();
         try {
             $gestor = User::find($request->txtgestor_id);
-            $idea->registrarHistorialIdea(Movimiento::IsCambiar(), Session::get('login_role'), null, $idea->asesor->nombres . ' ' . $idea->asesor->apellidos . ' a ' . $gestor->nombres . ' ' . $gestor->apellidos);
+            if (isset($idea->asesor)) {
+                $idea->registrarHistorialIdea(Movimiento::IsCambiar(), Session::get('login_role'), null, $idea->asesor->nombres . ' ' . $idea->asesor->apellidos . ' a ' . $gestor->nombres . ' ' . $gestor->apellidos);
+            } else {
+                $idea->registrarHistorialIdea(Movimiento::IsAsignar(), Session::get('login_role'), null, $gestor->nombres . ' ' . $gestor->apellidos);
+            }
             $idea->update([
                 'asesor_id' => $request->txtgestor_id
             ]);
