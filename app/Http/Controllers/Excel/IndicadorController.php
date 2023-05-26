@@ -377,7 +377,7 @@ class IndicadorController extends Controller
      **/
     private function nodos($request, $query)
     {
-        if ($request->nodos[0] != 'all' || $request->nodos[0] != null || $request->nodos[0] != 0) {
+        if ($request->nodos[0] != 'all' && $request->nodos[0] != null && $request->nodos[0] != 0) {
             return $query->whereIn('nodos.id', is_array($request->nodos) ? $request->nodos : [$request->nodos]);
         }
         return $query;

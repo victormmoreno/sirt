@@ -134,7 +134,8 @@ class ComiteController extends Controller
       alert('No autorizado', 'No tienes permisos para cargar información de este comité', 'error')->showConfirmButton('Ok', '#3085d6');
       return back();
     }
-    !isset($request['ev_correos']) ? $request['ev_correos'] = 0 : $request['ev_correos'] = 1;
+    !isset($request['ev_acta']) ? $request['ev_acta'] = 0 : $request['ev_acta'] = 1;
+    !isset($request['ev_formato']) ? $request['ev_formato'] = 0 : $request['ev_formato'] = 1;
     !isset($request['ev_listado']) ? $request['ev_listado'] = 0 : $request['ev_listado'] = 1;
     !isset($request['ev_otros']) ? $request['ev_otros'] = 0 : $request['ev_otros'] = 1;
     $evidenciasComite = $this->getComiteRepository()->updateEvidenciasComite($request, $id);

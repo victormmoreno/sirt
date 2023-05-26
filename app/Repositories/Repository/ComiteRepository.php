@@ -535,9 +535,10 @@ class ComiteRepository
     {
         return Comite::where('id', $idComite)
             ->update([
-                "correos" => $request['ev_correos'],
+                "acta" => $request['ev_acta'],
+                "formato_evaluacion" => $request['ev_formato'],
                 "listado_asistencia" => $request['ev_listado'],
-                "otros" => $request['ev_otros'],
+                "otros" => $request['ev_otros']
             ]);
     }
 }

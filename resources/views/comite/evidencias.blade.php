@@ -44,19 +44,25 @@
                   <div class="divider"></div>
                   <div class="row">
                     <h5>Evidencias del CSIBT</h5>
-                    <div class="col s12 m4 l4">
+                    <div class="col s12 m3 l3">
                       <p class="p-v-xs">
-                        <input type="checkbox" name="ev_correos" {{ $comite->correos == 0 ? '' : 'checked' }} id="ev_correos" value="1">
-                        <label for="ev_correos">Correos</label>
+                        <input type="checkbox" name="ev_acta" {{ $comite->acta == 0 ? '' : 'checked' }} id="ev_acta" value="1">
+                        <label for="ev_acta">Acta de comité</label>
                       </p>
                     </div>
-                    <div class="col s6 m4 l4">
+                    <div class="col s12 m3 l3">
+                      <p class="p-v-xs">
+                        <input type="checkbox" name="ev_formato" {{ $comite->formato_evaluacion == 0 ? '' : 'checked' }} id="ev_formato" value="1">
+                        <label for="ev_formato">Formato de evaluación</label>
+                      </p>
+                    </div>
+                    <div class="col s6 m3 l3">
                       <p class="p-v-xs">
                         <input type="checkbox" name="ev_listado" {{ $comite->listado_asistencia == 0 ? '' : 'checked' }} id="ev_listado" value="1">
                         <label for="ev_listado">Listado de Asistencia</label>
                       </p>
                     </div>
-                    <div class="col s6 m4 l4">
+                    <div class="col s6 m3 l3">
                       <p class="p-v-xs">
                         <input type="checkbox" name="ev_otros" {{ $comite->otros == 0 ? '' : 'checked' }} id="ev_otros" value="1">
                         <label for="ev_otros">Otros</label>

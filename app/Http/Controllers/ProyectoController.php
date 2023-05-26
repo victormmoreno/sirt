@@ -1016,10 +1016,10 @@ class ProyectoController extends Controller
         }
         $update = $this->getProyectoRepository()->updateAprobacionSuspendido($id, $request);
         if ($update) {
-            Alert::success('Modificación Exitosa!', 'La fase de suspendido del proyecto se aprobó!')->showConfirmButton('Ok', '#3085d6');
+            Alert::success('Modificación Exitosa!', 'La fase de cancelado del proyecto se aprobó!')->showConfirmButton('Ok', '#3085d6');
             return redirect('proyecto');
         } else {
-            Alert::error('Modificación Errónea!', 'La fase de suspendido del proyecto no se aprobó!')->showConfirmButton('Ok', '#3085d6');
+            Alert::error('Modificación Errónea!', 'La fase de cancelado del proyecto no se aprobó!')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
     }
