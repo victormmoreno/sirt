@@ -1,7 +1,7 @@
 <div class="row card card-panel teal lighten-5">
     <div class="row">
-        <h6>Para consultar los indicadores ÚNICAMENTE DE ARTICULACIONES INSCRITAS, debes seleccionar un rango de fechas y luego presionar el botón de descarga.</h6>
-        <h6 class="mb-2 mt-2">Recordar que se está mostrando la fase ACTUAL de la Articulación.</h6>
+        <h6 class="font-bold">Para consultar los indicadores ÚNICAMENTE DE ARTICULACIONES INSCRITAS, debes seleccionar un rango de fechas y luego presionar el botón de descarga.</h6>
+        <h6 class="mb-2 mt-2 font-bold">Recordar que se está mostrando la fase ACTUAL de la Articulación.</h6>
     </div>
     @can('showIndicadoresArticulacionOptions', Illuminate\Database\Eloquent\Model::class)
         <div class="row mb-2">

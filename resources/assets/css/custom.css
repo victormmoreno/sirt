@@ -169,9 +169,6 @@ p {
 .gap-x-2{
     column-gap: 0.5rem;
 }
-.font-bold{
-    font-weight: 700;
-}
 .jvectormap-legend-title {
     font-size: 12px;
 }
@@ -652,5 +649,7 @@ h5.breadcrumbs-header {
 .waves-color-demo .collection-item {
     height: 57px;
 }
+
+
 
 

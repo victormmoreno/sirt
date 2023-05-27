@@ -12,6 +12,7 @@ use App\Exports\GruposInvestigacion\GruposExport;
 use App\Exports\User\Talento\TalentoUserExport;
 use App\Repositories\Repository\{IdeaRepository, ProyectoRepository};
 use Repositories\Repository\NodoRepository;
+use App\Repositories\Repository\Articulation\ArticulationRepository;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Imports\MigracionMetasImport;
@@ -21,7 +22,6 @@ use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Str;
-use MyCLabs\Enum\Enum;
 
 class IndicadorController extends Controller
 {
@@ -280,7 +280,7 @@ class IndicadorController extends Controller
             case 'all':
                 return Excel::download(new IndicadoresExport($query, $request->hoja), 'file.xlsx');
                 break;
-            
+
             default:
                 abort('404');
                 break;
@@ -316,9 +316,9 @@ class IndicadorController extends Controller
                     });
                 });
                 break;
-            
+
             default:
-                
+
                 break;
         }
     }
@@ -367,7 +367,7 @@ class IndicadorController extends Controller
     }
 
     /**
-     * Retornar el query de empresas que se exportará 
+     * Retornar el query de empresas que se exportará
      *
      * @param Request $request
      * @return \Builder
@@ -383,7 +383,7 @@ class IndicadorController extends Controller
     }
 
     /**
-     * Retornar el query de los usuarios/talentos ejecutores de oriyecti que se exportará 
+     * Retornar el query de los usuarios/talentos ejecutores de oriyecti que se exportará
      *
      * @param Request $request
      * @return Builder
@@ -399,7 +399,7 @@ class IndicadorController extends Controller
     }
 
     /**
-     * Retornar el query de los usuarios dueños que se exportará 
+     * Retornar el query de los usuarios dueños que se exportará
      *
      * @param Request $request
      * @return Builder
@@ -415,7 +415,7 @@ class IndicadorController extends Controller
     }
 
     /**
-     * Retornar el query de grpos de investigación que se exportará 
+     * Retornar el query de grpos de investigación que se exportará
      *
      * @param Request $request
      * @return Builder
@@ -431,7 +431,7 @@ class IndicadorController extends Controller
     }
 
     /**
-     * Retornar el query de proyectos que se exportará 
+     * Retornar el query de proyectos que se exportará
      *
      * @param Request $request
      * @param string $type El tipo de excel que se va a exportar
@@ -460,6 +460,7 @@ class IndicadorController extends Controller
         if (session()->get('login_role') == User::IsExperto()) {
             return $query->where('proyectos.experto_id', request()->user()->id);
         }
+        return $query;
     }
 
     /**
@@ -475,6 +476,7 @@ class IndicadorController extends Controller
         if ($request->nodos[0] != 'all' || $request->nodos[0] != null || $request->nodos[0] != 0) {
             return $query->whereIn('nodos.id', is_array($request->nodos) ? $request->nodos : [$request->nodos]);
         }
+        return $query;
     }
 
     private function setProyectoRepository($proyectoRepository)
