@@ -40,7 +40,10 @@ trait MustCompleteTalentInformation
         {
             $talentStorageClass = TalentStorageValues::TALENTTYPE[$request->tipo_talento];
 
-            $structures =  (new $talentStorageClass)->buildStorageRecord($request);
+            $structures =  [
+                'talento' => (new $talentStorageClass)->buildStorageRecord($request)
+            ];
+
 
             $this->update(['informacion_talento' => $structures]);
 

@@ -6,34 +6,34 @@ Route::get('/', function () {
                         ->select(
                             'users.id as user_id', 'users.documento','users.nombres','users.apellidos', 'users.email',
                             'tipo_talentos.nombre as tipo_talento', 'entidades.nombre as entidad',
-                            'tipo_formacion.nombre as tipo_formacion', 'tipo_estudio.nombre as tipo_estudio',
+                            'centros.id as centro_id',
+                            'regionales.nombre as regional', 'regionales.id as regional_id',
+                            'tipo_formacion.nombre as tipo_formacion', 'tipo_formacion.id as tipo_formacion_id',
+                            'tipo_estudio.nombre as tipo_estudio','tipo_estudio.id as tipo_estudio_id',
                             'talentos.universidad', 'talentos.programa_formacion', 'talentos.carrera_universitaria',
                             'talentos.empresa', 'talentos.dependencia'
                             )
                         ->join('users', 'users.id', '=', 'talentos.user_id')
-                        ->join('model_has_roles', function ($join) {
-                            $join->on('users.id', '=', 'model_has_roles.model_id')
-                                ->where('model_has_roles.model_type', App\User::class);
-                        })
-                        ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+                        // ->join('model_has_roles', function ($join) {
+                        //     $join->on('users.id', '=', 'model_has_roles.model_id')
+                        //         ->where('model_has_roles.model_type', App\User::class);
+                        // })
+                        // ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
                         ->leftJoin('tipo_formacion','tipo_formacion.id', '=', 'talentos.tipo_formacion_id')
-                        ->leftJoin('tipo_talentos','tipo_talentos.id', '=', 'talentos.tipo_talento_id')
+                        ->join('tipo_talentos','tipo_talentos.id', '=', 'talentos.tipo_talento_id')
                         ->leftJoin('entidades','entidades.id', '=', 'talentos.entidad_id')
+
+                        ->leftJoin('centros','centros.entidad_id', '=', 'entidades.id')
+                        ->leftJoin('regionales','regionales.id', '=', 'centros.regional_id')
                         ->leftJoin('tipo_estudio','tipo_estudio.id', '=', 'talentos.tipo_estudio_id')
-                        ->where('roles.name', App\User::IsTalento())
-                        ->groupBy('users.id')
-                        ->first();
-    dd($talents);
-    // $user = App\User::where('documento', '1036662432')->first();
-    // $request = new Illuminate\Http\Request;
-    // $request->merge([
-    //     'tipo_talento' => 'funcionario_sena',
-    //     'regional' => 1,
-    //     'centro_formacion' => 2,
-    //     'programa_formacion' => 'Adsi',
-    //     'tipo_formacion' => 1
-    // ]);
-    // dd($user->saveInformationTalent($request));
+                        // ->where('roles.name', App\User::IsTalento())
+                        // ->where('users.id', 59)
+                        // ->groupBy('users.id')
+                        ->orderBy('users.documento')
+                        ->take(163)
+                        ->get();
+                        dd($talents);
+
 })->name('/');
 
 Route::get('politica-de-confidencialidad', function () {

@@ -5,8 +5,6 @@ use Illuminate\Database\Seeder;
 
 class OcupacionesTableSeeder extends Seeder
 {
-
-
     /**
      * Run the database seeds.
      *
@@ -17,19 +15,14 @@ class OcupacionesTableSeeder extends Seeder
         Ocupacion::create([
             'nombre' => 'Otra',
         ]);
-
         Ocupacion::create([
             'nombre' => 'Estudiante',
         ]);
-
         Ocupacion::create([
             'nombre' => 'Independiente',
         ]);
-
         Ocupacion::create([
             'nombre' => 'Empleado',
         ]);
-
-        // factory(Ocupacion::class, 20)->create();
     }
 }

@@ -523,5 +523,4 @@ class IndicadorController extends Controller
         }
         return $node;
     }
-
 }
