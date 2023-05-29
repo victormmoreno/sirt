@@ -220,7 +220,7 @@ class UserPolicy
                 (session()->get('login_role') == User::IsActivador() && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDesarrollador()])) ||
                 (session()->get('login_role') == User::IsDinamizador() && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDesarrollador(), User::IsDinamizador()])) ||
                 (
-                    (session()->get('login_role') == User::IsExperto() || session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsInfocenter())
+                    (session()->get('login_role') == User::IsInfocenter())
                     && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(),User::IsDesarrollador(), User::IsDinamizador(),User::IsExperto(), User::IsArticulador(), User::IsApoyoTecnico(), User::IsInfocenter(), User::IsIngreso()])
                 )
             );
