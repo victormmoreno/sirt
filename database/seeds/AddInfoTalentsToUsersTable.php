@@ -26,11 +26,6 @@ class AddInfoTalentsToUsersTable extends Seeder
                             'talentos.empresa', 'talentos.dependencia'
                             )
                         ->join('users', 'users.id', '=', 'talentos.user_id')
-                        // ->join('model_has_roles', function ($join) {
-                        //     $join->on('users.id', '=', 'model_has_roles.model_id')
-                        //         ->where('model_has_roles.model_type', App\User::class);
-                        // })
-                        // ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
                         ->leftJoin('tipo_formacion','tipo_formacion.id', '=', 'talentos.tipo_formacion_id')
                         ->join('tipo_talentos','tipo_talentos.id', '=', 'talentos.tipo_talento_id')
                         ->leftJoin('entidades','entidades.id', '=', 'talentos.entidad_id')
@@ -38,8 +33,6 @@ class AddInfoTalentsToUsersTable extends Seeder
                         ->leftJoin('centros','centros.entidad_id', '=', 'entidades.id')
                         ->leftJoin('regionales','regionales.id', '=', 'centros.regional_id')
                         ->leftJoin('tipo_estudio','tipo_estudio.id', '=', 'talentos.tipo_estudio_id')
-                        // ->where('roles.name', App\User::IsTalento())
-                        // ->where('users.id', 59)
                         ->orderBy('users.documento')
                         ->get();
                         $request = new Request;
@@ -48,7 +41,7 @@ class AddInfoTalentsToUsersTable extends Seeder
                             if(isset($user ) && isset($talent->tipo_talento)){
                                 if($talent->tipo_talento == \App\Models\TipoTalento::IS_APRENDIZ_SENA_CON_APOYO){
                                     $request->merge([
-                                        'tipo_talento' => 'aprendiz_con_apoyo',
+                                        'tipo_talento' => 'aprendiz_sena_con_apoyo_de_sostenimiento',
                                         'regional' => $talent->regional_id,
                                         'centro_formacion' => $talent->centro_id,
                                         'programa_formacion' => $talent->programa_formacion,
@@ -56,7 +49,7 @@ class AddInfoTalentsToUsersTable extends Seeder
                                 }
                                 else if($talent->tipo_talento == \App\Models\TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO){
                                     $request->merge([
-                                        'tipo_talento' => 'aprendiz_sin_apoyo',
+                                        'tipo_talento' => 'aprendiz_sena_sin_apoyo_de_sostenimiento',
                                         'regional' => $talent->regional_id,
                                         'centro_formacion' => $talent->centro_id,
                                         'programa_formacion' => $talent->programa_formacion
@@ -87,7 +80,7 @@ class AddInfoTalentsToUsersTable extends Seeder
                                 }
                                 else if($talent->tipo_talento == \App\Models\TipoTalento::IS_FUNCIONARIO_EMPRESA){
                                     $request->merge([
-                                        'tipo_talento' => 'funcionario_empresa',
+                                        'tipo_talento' => 'funcionario_de_empresa',
                                         'empresa' => $talent->empresa
                                     ]);
                                 }
@@ -113,7 +106,7 @@ class AddInfoTalentsToUsersTable extends Seeder
                                     ]);
                                 }
                                 $user->saveInformationTalent($request);
-                                echo "{$key}: usuario {$talent->documento} {$talent->nombres} {$talent->apellidos} actualizado \n";
+                                // echo "{$key}: usuario {$talent->documento} {$talent->nombres} {$talent->apellidos} actualizado \n";
                             }
 
                         }

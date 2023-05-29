@@ -26,4 +26,9 @@ class ApprenticeWithoutContratStorage implements TalentStorage
             'programa_formacion' => isset($request->programa_formacion) ? $request->programa_formacion : null,
         ];
     }
+
+    public function buildResponse(array $data)
+    {
+        return "Tipo Talento: ".$data['talento']['tipo_talento']."<br>"."  Regional: ". $data['talento']['regional']."<br>"."  Centro de Formación: ". $data['talento']['centro_formacion']."<br>"."  Programa de Formación: ". $data['talento']['programa_formacion'];
+    }
 }

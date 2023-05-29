@@ -15,4 +15,9 @@ class CorporateOfficerStorage implements TalentStorage
             'empresa' => isset($request->empresa) ? $request->empresa : null
         ];
     }
+
+    public function buildResponse(array $data)
+    {
+        return "Tipo Talento: ".$data['talento']['tipo_talento']."<br>"."  Empresa: ". (!is_null($data['talento']['empresa']) ? $data['talento']['empresa'] : 'No registra');
+    }
 }

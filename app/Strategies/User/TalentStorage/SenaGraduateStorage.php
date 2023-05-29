@@ -30,4 +30,9 @@ class SenaGraduateStorage implements TalentStorage
             'tipo_formacion' => isset($tipo_formacion) ? $tipo_formacion->nombre : null,
         ];
     }
+
+    public function buildResponse(array $data)
+    {
+        return "Tipo Talento: ".$data['talento']['tipo_talento']."<br>"."  Regional: ". $data['talento']['regional']."<br>"."  Centro de Formación: ". $data['talento']['centro_formacion']."<br>"."  Programa de Formación: ". $data['talento']['programa_formacion']."<br>"."  Tipo formacion: ". $data['talento']['tipo_formacion'];
+    }
 }

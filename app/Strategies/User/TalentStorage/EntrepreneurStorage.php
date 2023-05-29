@@ -13,4 +13,9 @@ class EntrepreneurStorage implements TalentStorage
             'tipo_talento' => TipoTalento::IS_EMPRENDEDOR
         ];
     }
+
+    public function buildResponse(array $data)
+    {
+        return "Tipo Talento: ".$data['talento']['tipo_talento'];
+    }
 }

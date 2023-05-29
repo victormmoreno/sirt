@@ -37,5 +37,18 @@ interface MustCompleteTalentInformation
      * @return void
      */
     public function getEmailForCompletation();
+    /**
+     * Get the information talent.
+     *
+     * @return void
+     */
+    public function getInformationTalentBuilder();
+
+    /**
+     * Get the information talent.
+     *
+     * @return void
+     */
+    public function getInformationTalentEloquent();
 
 }

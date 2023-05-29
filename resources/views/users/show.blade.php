@@ -40,7 +40,7 @@
                                         </div>
                                         <div class="right mailbox-buttons">
                                             @can('tomar_control', $user)
-                                                <a href="{{route('usuario.tomar.control', $user->id)}}" class="waves-effect waves-grey btn-flat m-t-xs">Tomar control</a>
+                                                <a href="{{route('usuario.tomar.control', $user->documento)}}" class="waves-effect waves-grey btn-flat m-t-xs">Tomar control</a>
                                             @endcan
                                             @can('access', $user)
                                                 <a href="{{route('usuario.acceso', $user->documento)}}" class="waves-effect waves-grey btn-flat m-t-xs">Cambiar Acceso</a>

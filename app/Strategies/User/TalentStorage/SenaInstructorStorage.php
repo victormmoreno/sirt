@@ -23,4 +23,9 @@ class SenaInstructorStorage implements TalentStorage
             'centro_formacion' => isset($centro_formacion->entidad) ? $centro_formacion->entidad->nombre : null,
         ];
     }
+
+    public function buildResponse(array $data)
+    {
+        return "Tipo Talento: ".$data['talento']['tipo_talento']."<br>"."  Regional: ". $data['talento']['regional']."<br>"."  Centro de Formación: ". $data['talento']['centro_formacion'];
+    }
 }

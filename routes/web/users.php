@@ -28,7 +28,7 @@ Route::group(
         Route::get('/{documento}/permisos', 'ChangeRolesController@showRolesForm')->name('usuario.changenode')->where('documento', '[0-9]+');
         Route::put('/{documento}/permisos', 'ChangeRolesController@updateRoles')->name('usuario.updatenodo')->middleware('disablepreventback');
         Route::get('/{documento}/acceso', 'UserController@access')->name('usuario.acceso')->where('documento', '[0-9]+');
-        Route::get('/{id}/tomar-control', 'RolesPermissions@tomar_control')->name('usuario.tomar.control');
+        Route::get('/{documento}/tomar-control', 'RolesPermissions@tomar_control')->name('usuario.tomar.control');
         Route::get('/dejar-control', 'RolesPermissions@dejar_control')->name('usuario.dejar.control');
         Route::put('/{id}/update-account', 'UserController@updateAccountUser')->name('usuario.updateaccount')->middleware('disablepreventback');
     }

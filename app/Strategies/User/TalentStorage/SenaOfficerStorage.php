@@ -25,4 +25,9 @@ class SenaOfficerStorage implements TalentStorage
             'dependencia' => isset($request->dependencia) ? $request->dependencia : null,
         ];
     }
+
+    public function buildResponse(array $data)
+    {
+        return "Tipo Talento: ".$data['talento']['tipo_talento']."<br>"."  Regional: ". $data['talento']['regional']."<br>"."  Centro de Formación: ". $data['talento']['centro_formacion']."<br>"."  Dependencia: ". $data['talento']['dependencia'];
+    }
 }

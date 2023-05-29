@@ -21,4 +21,9 @@ class UniversityStudentStorage implements TalentStorage
             'carrera' => isset($request->carrera) ? $request->carrera : null,
         ];
     }
+
+    public function buildResponse(array $data)
+    {
+        return "Tipo Talento: ".$data['talento']['tipo_talento']."<br>"."  Tipo Estudio: ".$data['talento']['tipo_estudio']."<br>"."  Universidad: ".$data['talento']['universidad']."<br>"."  Nombre carrera: ".$data['talento']['carrera'];
+    }
 }

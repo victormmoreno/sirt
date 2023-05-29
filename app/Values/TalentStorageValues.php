@@ -16,12 +16,12 @@ use App\Strategies\User\TalentStorage\UniversityStudentStorage;
 final  class TalentStorageValues
 {
     const TALENTTYPE = [
-        'aprendiz_con_apoyo' => ApprenticeWithContratStorage::class,
-        'aprendiz_sin_apoyo' => ApprenticeWithoutContratStorage::class,
+        'aprendiz_sena_con_apoyo_de_sostenimiento' => ApprenticeWithContratStorage::class,
+        'aprendiz_sena_sin_apoyo_de_sostenimiento' => ApprenticeWithoutContratStorage::class,
         'egresado_sena' => SenaGraduateStorage::class,
         'emprendedor' => EntrepreneurStorage::class,
         'estudiante_universitario' => UniversityStudentStorage::class,
-        'funcionario_empresa' => CorporateOfficerStorage::class,
+        'funcionario_de_empresa' => CorporateOfficerStorage::class,
         'funcionario_sena' => SenaOfficerStorage::class,
         'instructor_sena' => SenaInstructorStorage::class,
         'propietario_empresa' => CorporateOwnerStorage::class,

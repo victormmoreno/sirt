@@ -5,6 +5,7 @@ namespace App\Http\Traits\User;
 use App\Notifications\User\CompleteTalentInformation;
 use App\Values\TalentStorageValues;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 trait MustCompleteTalentInformation
 {
@@ -69,5 +70,23 @@ trait MustCompleteTalentInformation
     public function getEmailForCompletation()
     {
         return $this->email;
+    }
+
+
+
+    public function getInformationTalentBuilder()
+    {
+        if(isset($this->informacion_talento["talento"])){
+            $talentType = Str::snake(Str::lower($this->informacion_talento["talento"]["tipo_talento"]));
+            $talentStorageClass = TalentStorageValues::TALENTTYPE[$talentType];
+            return (new $talentStorageClass)->buildResponse($this->informacion_talento);
+        }
+    }
+
+    public function getInformationTalentEloquent()
+    {
+        // if(isset($this->informacion_talento["talento"])){
+            return $this->informacion_talento;
+        // }
     }
 }
