@@ -181,10 +181,10 @@ class ArticulationMigrationSeeder extends Seeder
                             'model_id' => $articulationStage->id,
                             'model_type'=> ArticulationStage::class
                         ]);
-                        var_dump("el archivo {$i->ruta} en la fase {$i->fase_id} se guardará en la articulacion padre {$articulationStage->code}");
+                        //var_dump("el archivo {$i->ruta} en la fase {$i->fase_id} se guardará en la articulacion padre {$articulationStage->code}");
 
                     }else{
-                        var_dump(" ojo con el archivo {$i->ruta} de la fase {$i->fase_id} en la padre");
+                        //var_dump(" ojo con el archivo {$i->ruta} de la fase {$i->fase_id} en la padre");
                     }
                 }else{
                     if($item->codigo == $articulation->code){
@@ -192,10 +192,10 @@ class ArticulationMigrationSeeder extends Seeder
                             'model_id' => $articulation->id,
                             'model_type'=> \App\Models\Articulation::class
                         ]);
-                        var_dump("el archivo {$i->ruta} en la fase {$i->fase_id} se guardará en la articulacion hija {$articulationStage->code}");
+                        //var_dump("el archivo {$i->ruta} en la fase {$i->fase_id} se guardará en la articulacion hija {$articulationStage->code}");
 
                     }else{
-                        var_dump(" ojo con el archivo {$i->ruta} de la fase {$i->fase_id} en la hija");
+                        //var_dump(" ojo con el archivo {$i->ruta} de la fase {$i->fase_id} en la hija");
                     }
                 }
             });
