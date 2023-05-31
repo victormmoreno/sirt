@@ -247,16 +247,20 @@ class UsoInfraestructuraRepository
         $anioActual          = Carbon::now()->year;
         foreach ($request->get('equipo') as $id => $value) {
             $equipo = Equipo::with(['equiposmantenimientos', 'lineatecnologica', 'nodo'])->where('id', $value)->first();
-
-            if (($anioActual - $equipo->anio_compra) < $equipo->vida_util) {
-                if ($equipo->vida_util == 0 || $equipo->horas_uso_anio == 0 || $equipo->costo_adquisicion == 0) {
-                    $depreciacionEquipo[$id] = 0;
-                } else {
-                    $depreciacionEquipo[$id] = ($equipo->costo_adquisicion / $equipo->vida_util / $equipo->horas_uso_anio) * (double) $request->get('tiempouso')[$id];
-                }
+            if ($equipo->vida_util == 0 || $equipo->horas_uso_anio == 0 || $equipo->costo_adquisicion == 0) {
+                        $depreciacionEquipo[$id] = 0;
             } else {
-                $depreciacionEquipo[$id] = 0;
+                $depreciacionEquipo[$id] = ($equipo->costo_adquisicion  / $equipo->horas_uso_anio) * (double) $request->get('tiempouso')[$id];
             }
+            // if (($anioActual - $equipo->anio_compra) < $equipo->vida_util) {
+            //     if ($equipo->vida_util == 0 || $equipo->horas_uso_anio == 0 || $equipo->costo_adquisicion == 0) {
+            //         $depreciacionEquipo[$id] = 0;
+            //     } else {
+            //         $depreciacionEquipo[$id] = ($equipo->costo_adquisicion / $equipo->vida_util / $equipo->horas_uso_anio) * (double) $request->get('tiempouso')[$id];
+            //     }
+            // } else {
+            //     $depreciacionEquipo[$id] = 0;
+            // }
             //llamado de metodo para calcular el costo de Mantenimiento de equipo
 
             $equiposmantenimiento = EquipoMantenimiento::where('equipo_id', $value)->where('ultimo_anio_mantenimiento', $anioActual)->first();
