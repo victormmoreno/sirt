@@ -55,11 +55,14 @@ class RouteServiceProvider extends ServiceProvider
             ->namespace($this->namespace)
             ->group(function(){
                 require base_path('routes/web/auth.php');
-                require base_path('routes/web/users.php');
+                require base_path('routes/web/user.php');
+                require base_path('routes/web/notification.php');
+                require base_path('routes/web/node.php');
                 require base_path('routes/web.php');
-                require base_path('routes/web/projects.php');
-                require base_path('routes/web/articulations.php');
-                require base_path('routes/web/indicators.php');
+                require base_path('routes/web/project.php');
+                require base_path('routes/web/articulation.php');
+                require base_path('routes/web/asesories.php');
+                require base_path('routes/web/indicator.php');
             });
 
     }

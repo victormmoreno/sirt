@@ -4,27 +4,15 @@ Route::get('/', function () {
     return view('welcome');
 })->name('/');
 
+Route::get('creditos', function () {
+    return view('configuracion.creditos');
+})->name('creditos');
+
 Route::get('politica-de-confidencialidad', function () {
     return view('seguridad.terminos');
 })->name('terminos');
 
-
-
-
 Route::get('/home', 'HomeController@index')->name('home')->middleware(['disablepreventback', 'talent_information_completed']);
-
-
-Route::get('nodo/files/{nodo}', 'ArchivoController@datatableArchivesNodes')->name('nodo.files');
-Route::post('nodo/files/{nodo}', 'ArchivoController@uploadFileNode')->name('nodo.files.upload');
-Route::get('nodo/{nodo}/cargar-archivos',  'Nodo\NodoController@uploadFiles')->name('nodo.upload-files');
-Route::get('nodo/downloadFile/{id}', 'ArchivoController@downloadFileNode')->name('nodo.files.download');
-
-Route::delete('nodo/{idFile}/files', 'ArchivoController@destroyFileNode')->name('nodo.files.destroy');
-Route::get('/nodo/fetch_data', 'Nodo\NodoController@nodo_pagination');
-Route::resource('nodo', 'Nodo\NodoController')->middleware(['disablepreventback', 'role_session:Administrador|Activador|Dinamizador|Infocenter|Experto']);
-
-
-
 
 
 
@@ -119,55 +107,6 @@ Route::resource('mantenimientos', 'MantenimientoController', [
         'mantenimientos' => 'id',
     ]);
 
-//uso infraestrucutra
-Route::get('usoinfraestructura/export', 'UsoInfraestructura\UsoInfraestructuraController@export')->name('usoinfraestructura.export');
-
-Route::group([
-    'namespace'  => 'UsoInfraestructura',
-    'middleware' => 'disablepreventback',
-], function () {
-
-    Route::resource('usoinfraestructura', 'UsoInfraestructuraController', ['as' => 'usoinfraestructura'])->names([
-        'create'  => 'usoinfraestructura.create',
-        'update'  => 'usoinfraestructura.update',
-        'edit'    => 'usoinfraestructura.edit',
-        'destroy' => 'usoinfraestructura.destroy',
-        'show'    => 'usoinfraestructura.show',
-        'index'   => 'usoinfraestructura.index',
-        'store'   => 'usoinfraestructura.store',
-    ])->parameters([
-        'usoinfraestructura' => 'id',
-    ]);
-
-    //consultas que se utlizan para el uso de infraestructura
-
-
-    Route::get('usoinfraestructura/talentosporproyecto/{id}', 'UsoInfraestructuraController@talentosPorProyecto')->name('usoinfraestructura.talentosporproyecto');
-
-    Route::get('usoinfraestructura/articulacionesforuser', 'UsoInfraestructuraController@articulacionesForUser')
-        ->name('usoinfraestructura.articulacionesforuser');
-
-    Route::get('usoinfraestructura/ideasfornode', 'UsoInfraestructuraController@ideasForNode')
-    ->name('usoinfraestructura.ideasfornode');
-
-    Route::get('usoinfraestructura/idea/{id}', 'UsoInfraestructuraController@infoidea')
-        ->name('usoinfraestructura.idea');
-
-    Route::get('usoinfraestructura/talentosporarticulacion/{id}', 'UsoInfraestructuraController@talentosPorArticulacion')
-        ->name('usoinfraestructura.talentosporarticulacion');
-
-
-    Route::get('usoinfraestructura/projectsforuser', 'UsoInfraestructuraController@projectsForUser')
-        ->name('usoinfraestructura.projectsforuser');
-    Route::get('usoinfraestructura/projectsforuser/{id}', 'UsoInfraestructuraController@projectsByUser')
-        ->name('usoinfraestructura.projectsforuser.projects');
-
-    Route::get('usoinfraestructura/actividades/{anio}', 'UsoInfraestructuraController@activitiesByAnio')
-        ->name('usoinfraestructura.actividadesanio');
-
-    Route::delete('usoinfraestructura/{id}', 'UsoInfraestructuraController@destroy')
-        ->name('usoinfraestructura.destroy');
-});
 
 //centros de formación
 Route::get('centro-formacion/getcentrosregional/{regional}', 'CentroController@getAllCentrosForRegional')->name('centro.getcentrosregional');
@@ -316,7 +255,6 @@ Route::group(
     }
 );
 
-//-------------------Route group para el módulo de Comité
 Route::group(
     [
         'prefix'     => 'grupo',
@@ -484,9 +422,7 @@ Route::group(
         Route::get('/excelEdtsFinalizadasPorGestorYFecha/{id}/{fecha_inicio}/{fecha_fin}', 'Excel\EdtController@edtPorFechaCierreYGestor')->name('edt.excel.gestor.fecha')->middleware('role_session:Experto|Dinamizador|Activador');
         Route::get('/excelEdtsFinalizadasPorLineaNodoYFecha/{idnodo}/{idlinea}/{fecha_inicio}/{fecha_fin}', 'Excel\EdtController@edtPorFechaCierreLineaYNodo')->name('edt.excel.nodo.linea.fecha')->middleware('role_session:Dinamizador|Activador');
         // Ruta para la generación de excel del módulo de articulaciones
-        Route::get('/excelArticulacionDeUnGestor/{id}', 'Excel\ArticulacionController@articulacionesDeUnGestor')->name('articulacion.excel.gestor');
-        Route::get('/excelDeUnaArticulacion/{id}', 'Excel\ArticulacionController@articulacionPorId')->name('articulacion.excel.unica');
-        Route::get('/excelArticulacionDeUnNodo/{id}', 'Excel\ArticulacionController@articulacionesDeUnNodo')->name('articulacion.excel.nodo')->middleware('role_session:Dinamizador|Activador');
+
         Route::get('/export/downloadMetas', 'Excel\IndicadorController@downloadMetas')->name('indicador.export.metas');
         Route::get('/export/downloadIdeas', 'Excel\IndicadorController@downloadIdeas')->name('indicador.export.ideas');
         Route::get('/export_proyectos_indicadores', 'Excel\IndicadorController@exportIndicadoresProyectos')->name('indicador.proyectos.export.excel')->middleware('role_session:Experto|Infocenter|Dinamizador|Activador');
@@ -620,16 +556,6 @@ Route::group([
 });
 
 
-Route::get('/notificaciones', 'NotificationsController@index')
-    ->name('notifications.index')
-    ->middleware('disablepreventback');
-Route::patch('/notificaciones/{notification}', 'NotificationsController@read')
-    ->name('notifications.read')
-    ->middleware('disablepreventback');
-Route::delete('/notificaciones/{notification}', 'NotificationsController@destroy')
-    ->name('notifications.destroy')
-    ->middleware('disablepreventback');;
-
 Route::group([
     'middleware' => 'disablepreventback',
 ], function () {
@@ -649,9 +575,7 @@ Route::group([
 
 Route::resource('sublineas', 'SublineaController', ['except' => ['show', 'destroy']])->middleware('disablepreventback');
 
-Route::get('creditos', function () {
-    return view('configuracion.creditos');
-})->name('creditos');
+
 
 
 

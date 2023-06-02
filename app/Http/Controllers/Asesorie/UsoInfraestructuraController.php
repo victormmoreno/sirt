@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\UsoInfraestructura;
+namespace App\Http\Controllers\Asesorie;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UsoInfraestructura\UsoInfraestructuraFormRequest;
