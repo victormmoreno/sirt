@@ -68,17 +68,9 @@ class ChangeRolesController extends Controller
             ]);
         } else {
             if (($user->isUserExperto()) && ($user->gestor->nodo_id != $request->input('txtnodogestor') || $user->gestor->lineatecnologica_id != $request->input('txtlinea'))) {
-                $projects = $user->gestor->proyectos()->proyectosGestor();
+
                 $removeRole = array_diff(collect($user->getRoleNames())->toArray(), $request->input('role'));
-                if ($projects->count() > 0 || ($removeRole != null && collect($removeRole)->contains(User::IsExperto()))) {
-                    return response()->json([
-                        'state' => 'error',
-                        'message' => "No se puede cambiar de nodo, actualmente el experto tiene {$projects->count()} atividades sin finalizar, para ello debe asignarlas a otro experto del nodo",
-                        'url' => false,
-                        'activities' => $projects,
-                        'count' => $projects->count()
-                    ]);
-                }
+
                 // return response()->json([
                 //     'state' => 'success',
                 //     'message' => 'El Usuario ha sido modificado satisfactoriamente',

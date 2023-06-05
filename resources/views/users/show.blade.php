@@ -56,7 +56,7 @@
                                                 @endcan
                                                 @can('updateRoles',$user)
                                                     <li class="divider"></li>
-                                                    <li><a  href="{{route('usuario.changenode', $user->documento)}}">Cambiar Roles y Nodos</a></li>
+                                                    <li><a  href="{{route('usuario.change-role-node', $user->documento)}}">Cambiar Roles y Nodos</a></li>
                                                 @endcan
                                             </ul>
                                             @endcanany

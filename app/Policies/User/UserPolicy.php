@@ -192,18 +192,18 @@ class UserPolicy
      */
     public function updateRoles(User $authUser, User $user): bool
     {
-        return (bool) false;
-        // ($authUser->documento != $user->documento) &&
-        //     session()->has('login_role') &&
-        //     (
-        //         session()->get('login_role') == User::IsAdministrador() ||
-        //         (session()->get('login_role') == User::IsActivador() && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDesarrollador()])) ||
-        //         (session()->get('login_role') == User::IsDinamizador() && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDesarrollador(), User::IsDinamizador()])) ||
-        //         (
-        //             (session()->get('login_role') == User::IsExperto() || session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsInfocenter())
-        //             && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(),User::IsDesarrollador(), User::IsDinamizador(),User::IsExperto(), User::IsArticulador(), User::IsApoyoTecnico(), User::IsInfocenter(), User::IsIngreso()])
-        //         )
-        //     );
+        return (bool)
+        ($authUser->documento != $user->documento) &&
+            session()->has('login_role') &&
+            (
+                session()->get('login_role') == User::IsAdministrador() ||
+                (session()->get('login_role') == User::IsActivador() && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDesarrollador()])) ||
+                (session()->get('login_role') == User::IsDinamizador() && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDesarrollador(), User::IsDinamizador()])) ||
+                (
+                    (session()->get('login_role') == User::IsExperto() || session()->get('login_role') == User::IsArticulador() || session()->get('login_role') == User::IsInfocenter())
+                    && !$user->hasAnyRole([User::IsAdministrador(), User::IsActivador(),User::IsDesarrollador(), User::IsDinamizador(),User::IsExperto(), User::IsArticulador(), User::IsApoyoTecnico(), User::IsInfocenter(), User::IsIngreso()])
+                )
+            );
     }
 
     /**

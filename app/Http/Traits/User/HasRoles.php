@@ -139,6 +139,15 @@ trait HasRoles
         return (bool) $this->hasRole(self::IsTalento());
     }
 
+    public function isUserFuncionario(): bool
+    {
+        return (bool) $this->hasAnyRole([
+            self::IsActivador(), self::IsDinamizador(), self::IsExperto(),
+            self::IsArticulador(), self::IsApoyoTecnico(), self::IsInfocenter(),
+            self::IsIngreso()
+        ]);
+    }
+
     public function isUserConvencional(): bool
     {
         return (bool) $this->hasRole(self::IsUsuario());

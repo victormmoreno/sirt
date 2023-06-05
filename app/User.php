@@ -9,9 +9,12 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Http\Traits\User\{HasRoles, HasAcessorsMutators};
 use App\Http\Traits\User\MustCompleteTalentInformation;
+use App\Http\Traits\User\MustCompleteOfficerInformation;
 use App\Contracts\User\MustCompleteTalentInformation as CompleteTalentInformationContract;
+use App\Contracts\User\MustCompleteOfficerInformation as CompleteOfficerInformationContract;
 
-class User extends Authenticatable implements JWTSubject, CompleteTalentInformationContract
+class User extends Authenticatable implements JWTSubject,
+    CompleteTalentInformationContract, CompleteOfficerInformationContract
 {
 
     use SoftDeletes,
@@ -19,7 +22,8 @@ class User extends Authenticatable implements JWTSubject, CompleteTalentInformat
         HasRoles,
         HasAcessorsMutators,
         UsersTrait,
-        MustCompleteTalentInformation;
+        MustCompleteTalentInformation,
+        MustCompleteOfficerInformation;
 
     /**
      * definition of constants to reference roles

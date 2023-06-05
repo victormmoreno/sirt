@@ -18,7 +18,6 @@ class EnsureTalentInformationCompleted
      */
     public function handle($request, Closure $next, $redirectToRoute = null, $role = null)
     {
-        // dd($request->user()->getQuantityArticulations());
         if (! $request->user() ||
             (
                 $request->user() instanceof MustCompleteTalentInformation &&
@@ -31,7 +30,6 @@ class EnsureTalentInformationCompleted
                     : Redirect::guest(URL::route($redirectToRoute ?: 'informationtalent.notice'));
 
         }
-
         return $next($request);
     }
 }
