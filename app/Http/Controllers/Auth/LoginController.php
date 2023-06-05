@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Cache;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Http\Request;
 use Session;
 
@@ -24,21 +25,43 @@ class LoginController extends Controller
 
     public $maxAttempts  = 3;
     public $decayMinutes = 3;
+
+    /**
+     * The user we last attempted to retrieve.
+     *
+     * @var \Illuminate\Contracts\Auth\Authenticatable
+     */
+    protected $lastAttempted;
     /**
      * Where to redirect users after login.
      *
      * @var string
      */
     protected $redirectTo = '/home';
+
     /**
-     * Create a new controller instance.
+     * The user provider implementation.
      *
+     * @var \Illuminate\Contracts\Auth\UserProvider
+     */
+    protected $provider;
+
+
+    /**
+     * Create a new authentication guard.
+     *
+     * @param  string  $name
+     * @param  \Illuminate\Contracts\Auth\UserProvider  $provider
+     * @param  \Illuminate\Contracts\Session\Session  $session
+     * @param  \Symfony\Component\HttpFoundation\Request|null  $request
      * @return void
      */
-    public function __construct()
+    public function __construct(UserProvider $provider)
     {
+        $this->provider = $provider;
         $this->middleware('guest')->except('logout');
     }
+
 
     /**
      * Handle a login request to the application.
@@ -78,6 +101,50 @@ class LoginController extends Controller
 
         return $this->sendFailedLoginResponse($request);
     }
+
+    /**
+     * Attempt to log the user into the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    protected function attemptLogin(Request $request)
+    {
+        dd($this->provider->retrieveByCredentials($this->credentials($request)));
+        return $this->guard()->attempt(
+            $this->credentials($request), $request->filled('remember')
+        );
+    }
+
+    // /**
+    //  * Attempt to authenticate a user using the given credentials.
+    //  *
+    //  * @param  array  $credentials
+    //  * @param  bool   $remember
+    //  * @return bool
+    //  */
+    // public function attempt(array $credentials = [], $remember = false)
+    // {
+    //     $this->fireAttemptEvent($credentials, $remember);
+
+    //     $this->lastAttempted = $user = $this->provider->retrieveByCredentials($credentials);
+
+    //     // If an implementation of UserInterface was returned, we'll ask the provider
+    //     // to validate the user against the given credentials, and if they are in
+    //     // fact valid we'll log the users into the application and return true.
+    //     if ($this->hasValidCredentials($user, $credentials)) {
+    //         $this->login($user, $remember);
+
+    //         return true;
+    //     }
+
+    //     // If the authentication attempt fails we will fire an event so that the user
+    //     // may be notified of any suspicious attempts to access their account from
+    //     // an unrecognized user. A developer may listen to this event as needed.
+    //     $this->fireFailedEvent($user, $credentials);
+
+    //     return false;
+    // }
 
     /**
      * Validate the user login request.

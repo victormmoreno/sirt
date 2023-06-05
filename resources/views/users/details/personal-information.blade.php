@@ -127,7 +127,7 @@
         <span class="card-title primary-text center">Otros datos</span>
         <br>
         {!!$user->getInformationTalentBuilder()!!}
-        {{-- {{var_dump($user->informacion_talento)}} --}}
+        {{-- {{var_dump($user->informacion_user)}} --}}
         {{-- @if($user->isUserDinamizador())
             <span class="primary-text">Información Dinamizador</span>
             <div class="server-load row">

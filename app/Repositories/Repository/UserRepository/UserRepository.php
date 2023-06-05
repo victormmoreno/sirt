@@ -171,7 +171,7 @@ class UserRepository
         'users.telefono','users.fechanacimiento', 'users.otra_eps',
         'users.institucion', 'users.titulo_obtenido', 'users.fecha_terminacion',
         'users.ultimo_login', 'users.estrato', 'users.otra_ocupacion',
-        'users.created_at', 'users.deleted_at', 'users.informacion_talento'
+        'users.created_at', 'users.deleted_at', 'users.informacion_user'
         )
         ->selectRaw('if(users.genero = 1, "Masculino", if(users.genero = 0, "Femenino", "No binario")) as nombre_genero')
         ->selectRaw('if(users.mujerCabezaFamilia = 1, "SI", "NO") as mujer_cabeza_familia')

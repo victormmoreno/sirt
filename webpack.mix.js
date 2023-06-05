@@ -83,7 +83,6 @@ mix.scripts([
     'resources/app/grupoinvestigacion/index.js',
     'resources/app/user/search.js',
     'resources/app/user/estudio.js',
-    'resources/app/user/tipotalento.js',
     'resources/app/user/edit.js',
     'resources/app/user/change-node-user.js',
     'resources/app/user/index-user.js',

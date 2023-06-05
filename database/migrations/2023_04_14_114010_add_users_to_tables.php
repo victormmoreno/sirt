@@ -77,8 +77,8 @@ class AddUsersToTables extends Migration
         });
 
         Schema::table('users', function (Blueprint $table) {
-            $table->longText('informacion_talento')->nullable()->after('otra_ocupacion');
-            $table->timestamp('informacion_talento_completed_at')->nullable()->after('informacion_talento');
+            $table->longText('informacion_user')->nullable()->after('otra_ocupacion');
+            $table->timestamp('informacion_user_completed_at')->nullable()->after('informacion_user');
         });
     }
 

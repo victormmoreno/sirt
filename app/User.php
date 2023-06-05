@@ -56,7 +56,7 @@ class User extends Authenticatable implements JWTSubject, CompleteTalentInformat
         'ultimo_login',
         'fechanacimiento',
         'fecha_terminacion',
-        'informacion_talento_completed_at',
+        'informacion_user_completed_at',
         'deleted_at',
     ];
 
@@ -96,7 +96,7 @@ class User extends Authenticatable implements JWTSubject, CompleteTalentInformat
         'etnia_id',
         'grado_discapacidad',
         'descripcion_grado_discapacidad',
-        'informacion_talento'
+        'informacion_user'
     ];
 
     /**
@@ -125,7 +125,7 @@ class User extends Authenticatable implements JWTSubject, CompleteTalentInformat
         'email_verified_at'    => 'datetime',
         'fechanacimiento'      => 'date:Y-m-d',
         'fechanacimiento'      => 'date:Y-m-d',
-        'informacion_talento'  => 'array',
+        'informacion_user'  => 'array',
     ];
 
     public function scopeInfoUserBuilder($query)

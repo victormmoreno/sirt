@@ -5,6 +5,7 @@ namespace App\Http\Traits\User;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RedirectsUsers;
 use App\Events\User\CompletedTalentInformation;
+use App\Models\TipoTalento;
 
 trait CompletiesTalentInformation
 {
@@ -20,7 +21,9 @@ trait CompletiesTalentInformation
     {
         return $request->user()->hasCompletedTalentInformation()
                         ? redirect($this->redirectPath())
-                        : view('users.complete-talent-information');
+                        : view('users.complete-talent-information', [
+                            'talents_type' => TipoTalento::pluck('nombre', 'id')
+                        ]);
     }
 
     /**

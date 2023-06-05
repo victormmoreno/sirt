@@ -16,7 +16,7 @@ trait MustCompleteTalentInformation
      */
     public function hasCompletedTalentInformation()
     {
-        return ! is_null($this->informacion_talento_completed_at) && ! is_null($this->informacion_talento);
+        return ! is_null($this->informacion_user_completed_at) && ! is_null($this->informacion_user);
     }
 
     /**
@@ -27,7 +27,7 @@ trait MustCompleteTalentInformation
     public function markInformationTalentAsCompleted()
     {
         return $this->forceFill([
-            'informacion_talento_completed_at' => $this->freshTimestamp(),
+            'informacion_user_completed_at' => $this->freshTimestamp(),
         ])->save();
     }
 
@@ -37,7 +37,7 @@ trait MustCompleteTalentInformation
      */
     public function saveInformationTalent(Request $request = null)
     {
-        if(!is_null($request) && isset($request->tipo_talento) && is_null($this->informacion_talento_completed_at) &&  is_null($this->informacion_talento))
+        if(!is_null($request) && isset($request->tipo_talento) && is_null($this->informacion_user_completed_at) &&  is_null($this->informacion_user))
         {
             $talentStorageClass = TalentStorageValues::TALENTTYPE[$request->tipo_talento];
 
@@ -46,7 +46,7 @@ trait MustCompleteTalentInformation
             ];
 
 
-            $this->update(['informacion_talento' => $structures]);
+            $this->update(['informacion_user' => $structures]);
 
             $this->markInformationTalentAsCompleted();
         }
@@ -76,17 +76,17 @@ trait MustCompleteTalentInformation
 
     public function getInformationTalentBuilder()
     {
-        if(isset($this->informacion_talento["talento"])){
-            $talentType = Str::snake(Str::lower($this->informacion_talento["talento"]["tipo_talento"]));
+        if(isset($this->informacion_user["talento"])){
+            $talentType = Str::snake(Str::lower($this->informacion_user["talento"]["tipo_talento"]));
             $talentStorageClass = TalentStorageValues::TALENTTYPE[$talentType];
-            return (new $talentStorageClass)->buildResponse($this->informacion_talento);
+            return (new $talentStorageClass)->buildResponse($this->informacion_user);
         }
     }
 
     public function getInformationTalentEloquent()
     {
-        // if(isset($this->informacion_talento["talento"])){
-            return $this->informacion_talento;
+        // if(isset($this->informacion_user["talento"])){
+            return $this->informacion_user;
         // }
     }
 }
