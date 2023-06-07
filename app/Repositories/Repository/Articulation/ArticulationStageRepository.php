@@ -67,8 +67,15 @@ class ArticulationStageRepository
     {
         DB::beginTransaction();
         try {
+
             $articulationStage = $this->storeArticulationStage($request);
             $this->validateArticulationStageType($request, $articulationStage);
+            $user = \App\User::where('id', $request->talent)->first();
+            if(!is_null($user) && $user->IsUsuario())
+            {
+                $user->syncRoles(config('laravelpermission.roles.roleTalento'));
+                $user->sendEmailToCompleteTalentInformation();
+            }
             DB::commit();
             return [
                 'state' => true,

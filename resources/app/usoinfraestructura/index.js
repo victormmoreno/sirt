@@ -103,7 +103,7 @@ var usoinfraestructuraIndex = {
         }else{
             $.ajax({
                 type: 'GET',
-                url: host_url + '/usuario/usuarios/gestores/nodo/'+ nodo,
+                url: `${host_url}/usuarios/gestores/nodo/${nodo}`,
                 contentType: false,
                 dataType: 'json',
                 processData: false,

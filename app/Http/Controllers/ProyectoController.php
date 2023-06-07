@@ -1168,29 +1168,34 @@ class ProyectoController extends Controller
 
     public function filterByCode($value)
     {
+        if(request()->ajax()){
+            $proyecto = Proyecto::select('proyectos.id', 'fase_id', 'idea_id', 'codigo_proyecto', 'nombre', 'objetivo_general', 'fecha_inicio', 'fecha_cierre')
+            ->with([
+                'fase',
+                'talentos' => function($query){
+                    $query->select('users.id', 'documento', 'nombres', 'apellidos', 'email', 'estado', 'users.created_at');
+                }
+            ])->where('codigo_proyecto', $value)
+            ->whereIn('fase_id', [Fase::IsFinalizado(), Fase::IsEjecucion(), Fase::IsCierre()])
+            ->first();
 
-        $proyecto = Proyecto::select('id','idea_id','fase_id','alcance_proyecto')
-        ->with([
-            'idea',
-            'fase'
-        ])->where('codigo_proyecto', $value)
-        ->whereIn('fase_id', [Fase::IsFinalizado(), Fase::IsEjecucion(), Fase::IsCierre()])
-        ->first();
-
-        if($proyecto != null){
+            if($proyecto != null){
+                return response()->json([
+                    'data' => [
+                        'proyecto' => $proyecto,
+                        'status_code' => Response::HTTP_OK
+                    ]
+                ]);
+            }
             return response()->json([
                 'data' => [
-                    'proyecto' => $proyecto,
-                    'status_code' => Response::HTTP_OK
+                    'proyecto' => null,
+                    'status_code' => Response::HTTP_NOT_FOUND,
                 ]
             ]);
         }
-        return response()->json([
-            'data' => [
-                'proyecto' => null,
-                'status_code' => Response::HTTP_NOT_FOUND,
-            ]
-        ]);
+        return abort(403);
+
     }
 
     public function datatableProyectosFinalizados(Request $request)

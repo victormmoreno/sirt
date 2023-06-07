@@ -246,7 +246,7 @@ function pintarTalentoEnTabla_Fase_Inicio(id, isInterlocutor) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: host_url + '/usuario/talento/consultarTalentoPorId/' + id
+        url: `${host_url}/usuarios/talento/consultarTalentoPorId/${id}`
     }).done(function (ajax) {
 
         let fila = prepararFilaEnLaTablaDeTalentos(ajax, isInterlocutor);
@@ -260,7 +260,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual(id) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: host_url + '/usuario/talento/consultarTalentoPorId/' + id
+        url: `${host_url}/usuarios/talento/consultarTalentoPorId/${id}`
     }).done(function (ajax) {
         let fila = prepararFilaEnLaTablaDePropietarios_Users(ajax);
         $('#propiedadIntelectual_Personas').append(fila);
@@ -273,7 +273,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Sede(sede_id)
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url : host_url + '/empresa/ajaxDetalleDeUnaSede/'+sede_id,
+        url : `${host_url}/empresa/ajaxDetalleDeUnaSede/${sede_id}`,
         success: function (response) {
           Swal.fire({
             toast: true,
@@ -629,9 +629,8 @@ function consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table(tableName, fie
         },
         processing: true,
         serverSide: true,
-        // order: false,
         ajax: {
-            url: host_url + "/usuario/talento/getTalentosDeTecnoparque/",
+            url: `${host_url}/usuarios/talento/getTalentosDeTecnoparque/`,
             type: "get"
         },
         columns: [
@@ -723,7 +722,7 @@ function consultarExpertosDeUnNodo(nodo_id) {
     $.ajax({
         dataType:'json',
         type:'get',
-        url: host_url + "/usuario/usuarios/gestores/nodo/"+nodo_id
+        url: `${host_url}/usuarios/gestores/nodo/${nodo_id}`
       }).done(function(response){
           $("#txtexperto_id_proyecto").empty();
           $('#txtexperto_id_proyecto').append('<option value="">Seleccione el experto</option>');

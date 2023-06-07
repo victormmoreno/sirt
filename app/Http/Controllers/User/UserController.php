@@ -258,8 +258,6 @@ class UserController extends Controller
     public function filterTalento($documento)
     {
         $user = User::withTrashed()
-            ->with(['talento'])
-            ->role(User::IsTalento())
             ->where('documento', $documento)
             ->first();
 

@@ -101,6 +101,7 @@ class ArticulationRepository extends Repository
     {
         try {
             $accompaniment = $this->storeArticulation($request, $accompaniment);
+
             return [
                 'data' => $accompaniment,
                 'message' => '',
@@ -138,7 +139,15 @@ class ArticulationRepository extends Repository
             'created_by' => auth()->user()->id,
         ]);
         if ($request->filled('talents')) {
+
             $articulation->users()->sync($request->talents);
+            $articulation->users->map(function($user){
+                if(!is_null($user) && $user->IsUsuario())
+                {
+                    $user->syncRoles(config('laravelpermission.roles.roleTalento'));
+                    //$user->sendEmailToCompleteTalentInformation();
+                }
+            });
         }
         return $articulation;
     }

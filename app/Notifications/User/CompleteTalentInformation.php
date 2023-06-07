@@ -44,13 +44,7 @@ class CompleteTalentInformation extends Notification
      */
     public function toMail($notifiable)
     {
-        // $verificationUrl = $this->verificationUrl($notifiable);
-        $url = route('home');
-        // if (static::$toMailCallback) {
-        //     return call_user_func(static::$toMailCallback, $notifiable, $verificationUrl);
-        // }
-
-        return $this->buildMailMessage($url);
+        return $this->buildMailMessage(route('login'));
     }
 
     /**
@@ -59,11 +53,17 @@ class CompleteTalentInformation extends Notification
      */
     protected function buildMailMessage($url)
     {
+        // return (new MailMessage)
+        //     ->subject(Lang::get('Complete Talent Information'))
+        //     ->line(Lang::get('Please click the button below to verify your email address.'))
+        //     ->action(Lang::get('Complete Talent Information'), $url)
+        //     ->line(Lang::get('If you did not create an account, no further action is required.'));
+
         return (new MailMessage)
-            ->subject(Lang::get('Complete Talent Information'))
-            ->line(Lang::get('Please click the button below to verify your email address.'))
-            ->action(Lang::get('Complete Talent Information'), $url)
-            ->line(Lang::get('If you did not create an account, no further action is required.'));
+        ->subject('Complete la información solicitada.')
+        ->line('Haga clic en el botón de abajo para completar la información requerida')
+        ->action('Completar información', $url)
+        ->line('Recuerde que esto es importante para seguir disfrutando de los servicios de la Red Tecnoparque Colombia');
     }
 
     /**
