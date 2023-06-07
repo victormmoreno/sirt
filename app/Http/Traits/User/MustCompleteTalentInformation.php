@@ -37,15 +37,13 @@ trait MustCompleteTalentInformation
      */
     public function saveInformationTalent(Request $request = null)
     {
-        if(!is_null($request) && isset($request->tipo_talento) && is_null($this->informacion_user_completed_at) &&  is_null($this->informacion_user))
+        if(!is_null($request) && isset($request->tipo_talento))
         {
             $talentStorageClass = TalentStorageValues::TALENTTYPE[$request->tipo_talento];
 
             $structures =  [
                 'talento' => (new $talentStorageClass)->buildStorageRecord($request)
             ];
-
-
             $this->update(['informacion_user' => $structures]);
 
             $this->markInformationTalentAsCompleted();
@@ -85,8 +83,8 @@ trait MustCompleteTalentInformation
 
     public function getInformationTalentEloquent()
     {
-        // if(isset($this->informacion_user["talento"])){
+        if(isset($this->informacion_user)){
             return $this->informacion_user;
-        // }
+        }
     }
 }

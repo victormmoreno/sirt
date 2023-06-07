@@ -2,10 +2,15 @@
 
 namespace App\Http\Traits\User;
 
-use App\Notifications\User\CompleteTalentInformation;
-use App\Values\OfficerStorageValues;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Notifications\User\CompleteTalentInformation;
+use App\Values\OfficerStorageValues;
+use App\Models\UserNodo;
+use App\Models\Contrato;
+use App\User;
+
+
 
 trait MustCompleteOfficerInformation
 {
@@ -80,5 +85,98 @@ trait MustCompleteOfficerInformation
     public function getInformationOfficerEloquent()
     {
         return;
+    }
+
+    /**
+    * Get the user's user activator contract.
+    */
+    public function activadorContrato()
+    {
+        return $this->hasManyThrough(
+            Contrato::class,
+            UserNodo::class,
+            'user_id',
+            'user_nodo_id'
+        )->where('role', User::IsActivador());
+    }
+
+    /**
+    * Get the user's user articulator contract.
+    */
+    public function articuladorContrato()
+    {
+        return $this->hasManyThrough(
+            Contrato::class,
+            UserNodo::class,
+            'user_id',
+            'user_nodo_id'
+        )->where('role', User::IsArticulador());
+    }
+
+    /**
+    * Get the user's user tecnical support contract.
+    */
+    public function apoyoTecnicoContrato()
+    {
+        return $this->hasManyThrough(
+            Contrato::class,
+            UserNodo::class,
+            'user_id',
+            'user_nodo_id'
+        )->where('role', User::IsApoyoTecnico());
+    }
+
+    /**
+    * Get the user's user dynamizator contract.
+    */
+    public function dinamizadorContrato()
+    {
+        return $this->hasManyThrough(
+            Contrato::class,
+            UserNodo::class,
+            'user_id',
+            'user_nodo_id'
+        )->where('role', User::IsDinamizador());
+    }
+
+    /**
+    * Get the user's user expert contract.
+    */
+    public function expertoContrato()
+    {
+        return $this->hasManyThrough(
+            Contrato::class,
+            UserNodo::class,
+            'user_id',
+            'user_nodo_id'
+        )->where('role', User::IsExperto());
+    }
+
+
+    /**
+    * Get the user's user infocenter contract.
+    */
+    public function infocenterContrato()
+    {
+        return $this->hasManyThrough(
+            Contrato::class,
+            UserNodo::class,
+            'user_id',
+            'user_nodo_id'
+        )->where('role', User::IsInfocenter());
+    }
+
+
+    /**
+    * Get the user's user expert contract.
+    */
+    public function ingresoContrato()
+    {
+        return $this->hasManyThrough(
+            Contrato::class,
+            UserNodo::class,
+            'user_id',
+            'user_nodo_id'
+        )->where('role', User::IsIngreso());
     }
 }

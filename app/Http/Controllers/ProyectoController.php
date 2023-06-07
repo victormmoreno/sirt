@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{AreaConocimiento, Centro, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, Actividad, Fase, Gestor, ArchivoArticulacionProyecto};
+use App\Models\{AreaConocimiento, Centro, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, Fase};
 use App\Repositories\Repository\{EmpresaRepository, ProyectoRepository, UserRepository\GestorRepository};
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use App\Http\Requests\{ProyectoFaseInicioFormRequest, ProyectoFaseCierreFormRequest};
@@ -10,7 +10,6 @@ use Illuminate\Http\{Request, Response};
 use App\User;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Controllers\CostoController;
-use App\Policies\IndicadorPolicy;
 use Carbon\Carbon;
 
 class ProyectoController extends Controller
@@ -1170,21 +1169,11 @@ class ProyectoController extends Controller
     public function filterByCode($value)
     {
 
-        $proyecto = Proyecto::select('id','idea_id','fase_id','articulacion_proyecto_id','alcance_proyecto')
+        $proyecto = Proyecto::select('id','idea_id','fase_id','alcance_proyecto')
         ->with([
             'idea',
-            'fase',
-            'articulacion_proyecto' => function($query){
-                $query->select('id', 'actividad_id');
-            },
-            'articulacion_proyecto.actividad'=> function($query){
-                $query->select('id', 'gestor_id', 'nodo_id', 'codigo_proyecto', 'nombre', 'objetivo_general', 'fecha_inicio', 'fecha_cierre');
-            },
-            'articulacion_proyecto.talentos',
-            'articulacion_proyecto.talentos.user',
-        ])->whereHas('articulacion_proyecto.actividad', function ($subQuery) use ($value) {
-            $subQuery->where('codigo_proyecto', $value);
-        })
+            'fase'
+        ])->where('codigo_proyecto', $value)
         ->whereIn('fase_id', [Fase::IsFinalizado(), Fase::IsEjecucion(), Fase::IsCierre()])
         ->first();
 
@@ -1223,15 +1212,9 @@ class ProyectoController extends Controller
         $proyectos = [];
 
         if (isset($request->filter_year_pro)) {
-            $proyectos = Proyecto::select('id','idea_id','fase_id','articulacion_proyecto_id','alcance_proyecto')
+            $proyectos = Proyecto::select('id','idea_id','fase_id','codigo_proyecto','nombre','alcance_proyecto')
             ->with([
                 'fase',
-                'articulacion_proyecto' => function($query){
-                    $query->select('id', 'actividad_id');
-                },
-                'articulacion_proyecto.actividad'=> function($query){
-                    $query->select('id', 'gestor_id', 'nodo_id', 'codigo_proyecto', 'nombre', 'objetivo_general', 'fecha_inicio', 'fecha_cierre');
-                }
             ])
             ->nodo($nodo)
             ->starEndDate($request->filter_year_pro)
@@ -1247,22 +1230,22 @@ class ProyectoController extends Controller
         return datatables()->of($proyectos  )
             ->addColumn('add_proyecto', function ($data) {
                     $checkbox = '';
-                    if (isset($data->articulacion_proyecto->actividad)) {
-                        $checkbox = '<a class="btn bg-info" onclick="articulationStage.addProjectToArticulacion(\'' .($data->articulacion_proyecto->actividad->codigo_actividad) . '\')">
+                    if (isset($data->codigo_proyecto)) {
+                        $checkbox = '<a class="btn bg-info" onclick="articulationStage.addProjectToArticulacion(\'' .($data->codigo_proyecto) . '\')">
                                         <i class="material-icons">done</i>
                                     </a>';
                     }
                     return $checkbox;
             })
             ->editColumn('codigo_proyecto', function ($data) {
-                if (isset($data->articulacion_proyecto->actividad)) {
-                    return  $data->articulacion_proyecto->actividad->present()->actividadCode();
+                if (isset($data->codigo_proyecto)) {
+                    return  $data->codigo_proyecto;
                 }
                 return "No registra";
             })
             ->editColumn('nombre', function ($data) {
-                if (isset($data->articulacion_proyecto->actividad)) {
-                    return  $data->articulacion_proyecto->actividad->present()->actividadName();
+                if (isset($data->nombre)) {
+                    return  $data->nombre;
                 }
                 return "No registra";
             })

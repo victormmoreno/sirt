@@ -340,9 +340,7 @@ class Proyecto extends Model
     public function scopeStarEndDate($query, $year)
     {
         if (!empty($year) && $year != null && $year != 'all') {
-            return $query->whereHas('articulacion_proyecto.actividad', function ($subQuery) use ($year) {
-                $subQuery->whereYear('fecha_inicio', $year)->orWhereYear('fecha_cierre', $year);
-            });
+            return $query->whereYear('fecha_inicio', $year)->orWhereYear('fecha_cierre', $year);
         }
         return $query;
     }

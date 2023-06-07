@@ -20,7 +20,7 @@ class SenaGraduateStorage implements TalentStorage
             $centro_formacion = Centro::with('entidad')->where('id', $request->centro_formacion)->first();
         }
         if(isset($request->tipo_formacion)){
-            $tipo_formacion = TipoFormacion::where('id', $request->centro_formacion)->first();
+            $tipo_formacion = TipoFormacion::where('id', $request->tipo_formacion)->first();
         }
         return [
             'tipo_talento' => TipoTalento::IS_EGRESADO_SENA,

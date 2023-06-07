@@ -35773,31 +35773,31 @@ $( document ).ready(function() {
 var $loading = $('#loadingModal');
 $(document)
 .ajaxStart(function () {
-  $loading.openModal({
-    dismissible:false,
-  });
+    $loading.openModal({
+        dismissible:false,
+    });
 })
 .ajaxStop(function () {
     $loading.closeModal();
 });
 
 function printErroresFormulario(data) {
-  if (data.state == 'error_form') {
-      let errores = "";
-      for (control in data.errors) {
-          errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
-          $('#' + control + '-error').html(data.errors[control]);
-          $('#' + control + '-error').show();
-      }
-      Swal.fire({
-          title: 'Advertencia!',
-          html: 'Estas ingresando mal los datos.' + errores,
-          type: 'error',
-          showCancelButton: false,
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok'
-      });
-  }
+    if (data.state == 'error_form') {
+        let errores = "";
+        for (control in data.errors) {
+            errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
+            $('#' + control + '-error').html(data.errors[control]);
+            $('#' + control + '-error').show();
+        }
+        Swal.fire({
+            title: 'Advertencia!',
+            html: 'Estas ingresando mal los datos.' + errores,
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+        });
+    }
 }
 
 function printErrorsForm(data) {
@@ -35820,137 +35820,117 @@ function printErrorsForm(data) {
 }
 
 function formatMoney(amount, decimalCount = 2, decimal = ",", thousands = ".") {
-  try {
-    decimalCount = Math.abs(decimalCount);
-    decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+    try {
+        decimalCount = Math.abs(decimalCount);
+        decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
 
-    const negativeSign = amount < 0 ? "-" : "";
+        const negativeSign = amount < 0 ? "-" : "";
 
-    let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
-    let j = (i.length > 3) ? i.length % 3 : 0;
+        let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
+        let j = (i.length > 3) ? i.length % 3 : 0;
 
-    return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
-  } catch (e) {
-  }
+        return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
+    } catch (e) {
+    }
 };
 
 $('.swal2-select').remove();
 
 Highcharts.setOptions({
     lang: {
-      downloadJPEG: 'Descargar como imagen JPEG',
-      downloadCSV: 'Descargar como CSV',
-      downloadPNG: 'Descargar como imagen PNG',
-      downloadPDF: 'Descargar como PDF',
-      downloadSVG: 'Descargar como SVG',
-      downloadXLS: 'Descargar como XLS',
-      loading: 'Cargando...',
-      printChart: 'Imprimir',
-      openInCloud: 'Abrir en la nube de Highcharts',
-      viewData: 'Ver datos en tabla',
-      viewFullscreen: 'Ver en pantalla completa'
-  },
+        downloadJPEG: 'Descargar como imagen JPEG',
+        downloadCSV: 'Descargar como CSV',
+        downloadPNG: 'Descargar como imagen PNG',
+        downloadPDF: 'Descargar como PDF',
+        downloadSVG: 'Descargar como SVG',
+        downloadXLS: 'Descargar como XLS',
+        loading: 'Cargando...',
+        printChart: 'Imprimir',
+        openInCloud: 'Abrir en la nube de Highcharts',
+        viewData: 'Ver datos en tabla',
+        viewFullscreen: 'Ver en pantalla completa'
+    },
 });
 
+const configbootstrapMaterialDatePickerMaxDate = {
+    time:false,
+    date:true,
+    shortTime:true,
+    format: 'YYYY-MM-DD',
+    maxDate: new Date,
+    language: 'es',
+    weekStart : 1,
+    cancelText : 'Cancelar',
+    okText: 'Guardar'
+};
+
+const configbootstrapMaterialDatePickerMinDate = {
+    time:false,
+    date:true,
+    year:true,
+    format: 'YYYY-MM-DD',
+    minDate : new Date(),
+    language: 'es',
+    weekStart : 1,
+    cancelText : 'Cancelar',
+    okText: 'Guardar'
+};
+
+const configbootstrapMaterialDatePickerRangeDate = {
+    monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio','Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+    monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+    weekStart: 0,
+    time:false,
+    date:true,
+    year:true,
+    format: 'YYYY-MM-DD',
+    today: 'Hoy',
+    clear: 'Limpiar',
+    close: 'Cerrar',
+    okText: 'Guardar',
+    clearText: 'Limpiar',
+    cancelText: 'Cancelar',
+};
+
 $(document).ready(function() {
+    // datatables
     $('.dataTables_length select').addClass('browser-default');
+    // select2
     $('.select2').select2({
-      language: "es"
+        language: "es"
     });
     $('.select2Tags').select2({
         tags: true,
         language: "es"
     });
-    $('.datepicker').bootstrapMaterialDatePicker({
-      time:false,
-      date:true,
-      // year:true,
-      shortTime:true,
-      format: 'YYYY-MM-DD',
-      maxDate: new Date,
-      language: 'es',
-      weekStart : 1, cancelText : 'Cancelar',
-      okText: 'Guardar'
+    // bootstrapMaterialDatePicker
+    $('.datepicker').bootstrapMaterialDatePicker(configbootstrapMaterialDatePickerMaxDate);
+
+    $('.datepicker-min-date').bootstrapMaterialDatePicker(configbootstrapMaterialDatePickerMinDate);
+    // bootstrapMaterialDatePickerRangeDate
+    $('.date-end').bootstrapMaterialDatePicker(configbootstrapMaterialDatePickerRangeDate);
+
+    $('.date-start').bootstrapMaterialDatePicker(configbootstrapMaterialDatePickerRangeDate).on('change', function(e, date) {
+        $('.date-end').bootstrapMaterialDatePicker('setMinDate', date);
     });
 
-    $('.datepicker-min-date').bootstrapMaterialDatePicker({
-        time:false,
-        date:true,
-        year:true,
-        format: 'YYYY-MM-DD',
-        minDate : new Date(),
-        language: 'es',
-        weekStart : 1, cancelText : 'Cancelar',
-        okText: 'Guardar'
-    });
-    // $('.datepicker').pickadate({
-    //     selectMonths: true,
-    //     selectYears: 60,
-    //     // Título dos botões de navegação
-    //     labelMonthNext: 'Próximo Mes',
-    //     labelMonthPrev: 'Mes anterior',
-    //     // Título dos seletores de mês e ano
-    //     labelMonthSelect: 'Selecione Mes',
-    //     labelYearSelect: 'Selecione Año',
-    //     // Meses e dias da semana
-    //     monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-    //     monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-    //     weekdaysFull: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-    //     weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-    //     // Letras da semana
-    //     weekdaysLetter: ['D', 'L', 'M', 'Mi', 'J', 'V', 'S'],
-    //     //Botões
-    //     today: 'Hoy',
-    //     clear: 'Limpiar',
-    //     close: 'Cerrar',
-    //     // max: new Date(((new Date()).getFullYear()), 12, 31),
-    //     // min: -10,
-    //     max: true,
-    //     // Formato da data que aparece no input
-    //     format: 'yyyy-mm-dd',
-    //     // format: 'dddd, dd mmm, yyyy',
-    //     // formatSubmit: 'yyyy/mm/dd',
-    //     // hiddenPrefix: 'prefix__',
-    //     // hiddenSuffix: '__suffix',
-    //     // disable: [
-    //     //   1, 7
-    //     // ],
-    //     onClose: function() {
-    //         $(document.activeElement).blur()
-    //     }
-    // });
+    // pickadate
     $('.atepic').pickadate({
         selectMonths: true,
         selectYears: 60,
-        // Título dos botões de navegação
         labelMonthNext: 'Próximo Mes',
         labelMonthPrev: 'Mes anterior',
-        // Título dos seletores de mês e ano
         labelMonthSelect: 'Selecione Mes',
         labelYearSelect: 'Selecione Año',
-        // Meses e dias da semana
         monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
         monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
         weekdaysFull: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
         weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-        // Letras da semana
         weekdaysLetter: ['D', 'L', 'M', 'Mi', 'J', 'V', 'S'],
-        //Botões
         today: 'Hoy',
         clear: 'Limpiar',
         close: 'Cerrar',
-        //   max: new Date(((new Date()).getFullYear()), 12, 31),
-        // min: -10,
-        // max: true,
-        // Formato da data que aparece no input
         format: 'yyyy-mm-dd',
-        // format: 'dddd, dd mmm, yyyy',
-        // formatSubmit: 'yyyy/mm/dd',
-        // hiddenPrefix: 'prefix__',
-        // hiddenSuffix: '__suffix',
-        // disable: [
-        //   1, 7
-        // ],
         onClose: function() {
             $(document.activeElement).blur()
         }
