@@ -192,4 +192,12 @@ trait HasRoles
         }
         return $query;
     }
+
+    public function changeOneRoleToAnother(string $role)
+    {
+        if(isset($role) && !is_null($this) && $this->IsUsuario())
+        {
+            $this->syncRoles($role);
+        }
+    }
 }

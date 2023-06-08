@@ -142,11 +142,7 @@ class ArticulationRepository extends Repository
 
             $articulation->users()->sync($request->talents);
             $articulation->users->map(function($user){
-                if(!is_null($user) && $user->IsUsuario())
-                {
-                    $user->syncRoles(config('laravelpermission.roles.roleTalento'));
-                    //$user->sendEmailToCompleteTalentInformation();
-                }
+                $user->changeOneRoleToAnother(config('laravelpermission.roles.roleTalento'));
             });
         }
         return $articulation;

@@ -73,8 +73,7 @@ class ArticulationStageRepository
             $user = \App\User::where('id', $request->talent)->first();
             if(!is_null($user) && $user->IsUsuario())
             {
-                $user->syncRoles(config('laravelpermission.roles.roleTalento'));
-                $user->sendEmailToCompleteTalentInformation();
+                $user->changeOneRoleToAnother(config('laravelpermission.roles.roleTalento'));
             }
             DB::commit();
             return [

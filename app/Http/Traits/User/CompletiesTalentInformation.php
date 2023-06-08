@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RedirectsUsers;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\UsersRequests\CompletiesTalentInformationRequest;
+use App\Http\Controllers\User\RolesPermissions;
 use Illuminate\Http\JsonResponse;
 use App\Events\User\CompletedTalentInformation;
 use App\Models\TipoTalento;
@@ -66,6 +67,10 @@ trait CompletiesTalentInformation
             $request = $this->buildMergeRequest($request);
 
             $request->user()->saveInformationTalent($request);
+            $request->merge([
+                'role' => \App\User::IsTalento()
+            ]);
+            RolesPermissions::changeRoleSession($request);
             return response()->json([
                 'data' => [
                     'fail'   => false,
