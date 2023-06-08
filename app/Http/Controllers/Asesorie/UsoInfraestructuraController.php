@@ -232,7 +232,7 @@ class UsoInfraestructuraController extends Controller
                 $model = $request->filter_module;
                 break;
             case User::IsExperto():
-                $node = auth()->user()->gestor->nodo_id;
+                $node = auth()->user()->experto->nodo_id;
                 $user = auth()->user()->id;
                 $model = class_basename(Proyecto::class);
                 break;
