@@ -48,7 +48,7 @@
                                         </div>
                                         <div class="divider mailbox-divider"></div>
                                         <div class="mailbox-text">
-                                            <form id="FormChangeNodo"
+                                            <form id="form-update-role-nodo"
                                                 action="{{ route('usuario.update-role-node', $user->documento) }}" method="POST"
                                                 onsubmit="return checkSubmit()">
                                                 {!! csrf_field() !!}
@@ -89,30 +89,7 @@
                                                                     <div class="card-content">
                                                                         <span class="card-title grey-text text-darken-4 center-align">Información contractual {{ App\User::IsActivador() }}</span>
                                                                         <div class="row">
-                                                                            <div class="input-field col s12 m12 l12">
-                                                                                <input id="activator_code_contract" name="activator_code_contract" type="text" value="{{ isset($user->activadorContrato[0]) && collect($user->roles)->contains('name', App\User::IsActivador()) ? $user->activadorContrato[0]->codigo : old('activator_code_contract') }}">
-                                                                                <label for="activator_code_contract">Código
-                                                                                    <span class="red-text">*</span>
-                                                                                </label>
-                                                                                <small id="activator_code_contract-error" class="error red-text"></small>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="input-field col s12 m4 l4">
-                                                                                <input id="activator_start_date_contract" name="activator_start_date_contract" type="text" value="{{ isset($user->activadorContrato[0]) && collect($user->roles)->contains('name', App\User::IsActivador()) ? $user->activadorContrato[0]->fecha_inicio : old('activator_start_date_contract') }}">
-                                                                                <label for="activator_start_date_contract">Fecha inicio del contrato
-                                                                                    <span class="red-text">*</span>
-                                                                                </label>
-                                                                                <small id="activator_start_date_contract-error" class="error red-text"></small>
-                                                                            </div>
-                                                                            <div class="input-field col s12 m4 l4">
-                                                                                <input id="activator_end_date_contract" name="activator_end_date_contract" type="text" value="{{ isset($user->activadorContrato[0]) && collect($user->roles)->contains('name', App\User::IsActivador()) ? $user->activadorContrato[0]->fecha_finalizacion : old('activator_end_date_contract') }}">
-                                                                                <label for="activator_end_date_contract">Fecha finalización del contrato
-                                                                                    <span class="red-text">*</span>
-                                                                                </label>
-                                                                                <small id="activator_end_date_contract-error" class="error red-text"></small>
-                                                                            </div>
-                                                                            <div class="input-field col s12 m4 l4">
+                                                                            <div class="input-field col s12 m6 l6">
                                                                                 <select class="js-states browser-default select2 select2-hidden-accessible"
                                                                                     id="activator_type_relationship"
                                                                                     name="activator_type_relationship"
@@ -126,6 +103,30 @@
                                                                                 </label>
                                                                                 <small id="activator_type_relationship-error" class="error red-text"></small>
                                                                             </div>
+                                                                            <div class="input-field col s12 m6 l6">
+                                                                                <input id="activator_code_contract" name="activator_code_contract" type="text" value="{{ isset($user->activadorContrato[0]) && collect($user->roles)->contains('name', App\User::IsActivador()) ? $user->activadorContrato[0]->codigo : old('activator_code_contract') }}">
+                                                                                <label for="activator_code_contract">Código
+                                                                                    <span class="red-text">*</span>
+                                                                                </label>
+                                                                                <small id="activator_code_contract-error" class="error red-text"></small>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="input-field col s12 m6 l6">
+                                                                                <input id="activator_start_date_contract" name="activator_start_date_contract" type="text" value="{{ isset($user->activadorContrato[0]) && collect($user->roles)->contains('name', App\User::IsActivador()) ? $user->activadorContrato[0]->fecha_inicio : old('activator_start_date_contract') }}">
+                                                                                <label for="activator_start_date_contract">Fecha inicio del contrato
+                                                                                    <span class="red-text">*</span>
+                                                                                </label>
+                                                                                <small id="activator_start_date_contract-error" class="error red-text"></small>
+                                                                            </div>
+                                                                            <div class="input-field col s12 m6 l6">
+                                                                                <input id="activator_end_date_contract" name="activator_end_date_contract" type="text" value="{{ isset($user->activadorContrato[0]) && collect($user->roles)->contains('name', App\User::IsActivador()) ? $user->activadorContrato[0]->fecha_finalizacion : old('activator_end_date_contract') }}">
+                                                                                <label for="activator_end_date_contract">Fecha finalización del contrato
+                                                                                    <span class="red-text">*</span>
+                                                                                </label>
+                                                                                <small id="activator_end_date_contract-error" class="error red-text"></small>
+                                                                            </div>
+
                                                                         </div>
                                                                         <div class="row">
                                                                             <div class="input-field col s12 m6 l6">
@@ -192,6 +193,22 @@
                                                                                 <small id="dynamizer_node-error" class="error red-text"></small>
                                                                             </div>
                                                                             <div class="input-field col s12 m6 l6">
+                                                                                <select class="js-states browser-default select2 select2-hidden-accessible"
+                                                                                    id="dynamizer_type_relationship"
+                                                                                    name="dynamizer_type_relationship"
+                                                                                    style="width: 100%; display: none" tabindex="-1">
+                                                                                    <option value="">Seleccione tipo de vinculación</option>
+                                                                                    <option value="0" {{ isset($user->dinamizadorContrato[0]) && $user->dinamizadorContrato[0]->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsDinamizador()) ? 'selected' : '' }}>Contratista</option>
+                                                                                    <option value="1" {{ isset($user->dinamizadorContrato[0]) && $user->dinamizadorContrato[0]->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsDinamizador()) ? 'selected' : '' }}>Planta</option>
+                                                                                </select>
+                                                                                <label for="dynamizer_type_relationship" class="active">Tipo Vinculación
+                                                                                    <span class="red-text">*</span>
+                                                                                </label>
+                                                                                <small id="dynamizer_type_relationship-error" class="error red-text"></small>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="input-field col s12 m4 l4">
                                                                                 <input id="dynamizer_code_contract" name="dynamizer_code_contract" type="text" value="{{ isset($user->dinamizadorContrato[0]) && collect($user->roles)->contains('name', App\User::IsDinamizador()) ? $user->dinamizadorContrato[0]->codigo : old('dynamizer_code_contract') }}"
                                                                                 {{ (isset($user->dinamizadorContrato[0]) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->dinamizador->nodo->id) && $user->dinamizador->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
                                                                                 <label for="dynamizer_code_contract">Código
@@ -199,8 +216,6 @@
                                                                                 </label>
                                                                                 <small id="dynamizer_code_contract-error" class="error red-text"></small>
                                                                             </div>
-                                                                        </div>
-                                                                        <div class="row">
                                                                             <div class="input-field col s12 m4 l4">
                                                                                 <input id="dynamizer_start_date_contract" name="dynamizer_start_date_contract" type="text" value="{{ isset($user->dinamizadorContrato[0]) && collect($user->roles)->contains('name', App\User::IsDinamizador()) ? $user->dinamizadorContrato[0]->fecha_inicio : old('dynamizer_start_date_contract') }}"
                                                                                 {{ (isset($user->dinamizadorContrato[0]) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->dinamizador->nodo->id) && $user->dinamizador->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
@@ -216,20 +231,6 @@
                                                                                     <span class="red-text">*</span>
                                                                                 </label>
                                                                                 <small id="dynamizer_end_date_contract-error" class="error red-text"></small>
-                                                                            </div>
-                                                                            <div class="input-field col s12 m4 l4">
-                                                                                <select class="js-states browser-default select2 select2-hidden-accessible"
-                                                                                    id="dynamizer_type_relationship"
-                                                                                    name="dynamizer_type_relationship"
-                                                                                    style="width: 100%; display: none" tabindex="-1">
-                                                                                    <option value="">Seleccione tipo de vinculación</option>
-                                                                                    <option value="0" {{ isset($user->dinamizadorContrato[0]) && $user->dinamizadorContrato[0]->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsDinamizador()) ? 'selected' : '' }}>Contratista</option>
-                                                                                    <option value="1" {{ isset($user->dinamizadorContrato[0]) && $user->dinamizadorContrato[0]->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsDinamizador()) ? 'selected' : '' }}>Planta</option>
-                                                                                </select>
-                                                                                <label for="dynamizer_type_relationship" class="active">Tipo Vinculación
-                                                                                    <span class="red-text">*</span>
-                                                                                </label>
-                                                                                <small id="dynamizer_type_relationship-error" class="error red-text"></small>
                                                                             </div>
                                                                         </div>
                                                                         <div class="row">
