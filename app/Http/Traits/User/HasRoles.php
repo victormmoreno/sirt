@@ -40,6 +40,11 @@ trait HasRoles
         return $this->hasOne(UserNodo::class, 'user_id', 'id')->where('role', User::IsIngreso());
     }
 
+    public function activador()
+    {
+        return $this->hasOne(UserNodo::class, 'user_id', 'id')->where('role', User::IsActivador());
+    }
+
     public static function IsAdministrador()
     {
         return User::IS_ADMINISTRADOR;

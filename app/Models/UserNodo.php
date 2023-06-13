@@ -20,6 +20,7 @@ class UserNodo extends Model
         'nodo_id',
         'linea_id',
         'role',
+        'vinculacion',
         'honorarios',
     ];
 
@@ -45,6 +46,11 @@ class UserNodo extends Model
     public function linea()
     {
         return $this->belongsTo(LineaTecnologica::class, 'linea_id', 'id');
+    }
+
+    public function contratos()
+    {
+        return $this->hasMany(Contrato::class, 'user_nodo_id', 'id');
     }
 
     public function getHonorariosAttribute($honorarios)

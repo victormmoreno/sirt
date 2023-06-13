@@ -22,8 +22,7 @@ class CreateContratosTable extends Migration
             $table->string('codigo', 45);
             $table->date('fecha_inicio');
             $table->date('fecha_finalizacion')->nullable();
-            $table->double('valor_contrato', 10, 2)->nullable();
-            $table->tinyInteger('vinculacion')->default('0');
+            $table->double('valor_contrato', 20, 2)->nullable()->default(0);
             $table->double('honorarios', 9, 2)->nullable();
             $table->timestamps();
 

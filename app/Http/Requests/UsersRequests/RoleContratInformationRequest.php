@@ -49,7 +49,7 @@ class RoleContratInformationRequest extends FormRequest
             'activator_fees_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsActivador()) &&
                     request()->activator_type_relationship == 0
-                ) . '|numeric|lte:expert_contract_value_contract|min:0|max:999.999.999|nullable',
+                ) . '|numeric|lte:activator_contract_value_contract|min:0|max:999.999.999|nullable',
             'dynamizer_node'        => Rule::requiredIf(
                         collect(request()->role)->contains(User::IsDinamizador())
                     ) . '|nullable',

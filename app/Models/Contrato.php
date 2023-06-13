@@ -21,7 +21,6 @@ class Contrato extends Model
         'fecha_inicio',
         'fecha_finalizacion',
         'valor_contrato',
-        'vinculacion',
         'honorarios'
     ];
 
@@ -31,7 +30,7 @@ class Contrato extends Model
      * @var array
      */
     protected $casts = [
-        'honorarios' => 'float',
+
     ];
 
     public function nodo()

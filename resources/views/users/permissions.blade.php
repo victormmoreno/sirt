@@ -95,8 +95,8 @@
                                                                                     name="activator_type_relationship"
                                                                                     style="width: 100%; display: none" tabindex="-1">
                                                                                         <option value="">Seleccione tipo de vinculación</option>
-                                                                                        <option value="0" {{ isset($user->activadorContrato[0]) && $user->activadorContrato[0]->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsActivador()) ? 'selected' : '' }}>Contratista</option>
-                                                                                        <option value="1" {{ isset($user->activadorContrato[0]) && $user->activadorContrato[0]->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsActivador()) ? 'selected' : '' }}>Planta</option>
+                                                                                        <option value="0" {{ isset($user->activador) && $user->activador->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsActivador()) ? 'selected' : '' }}>Contratista</option>
+                                                                                        <option value="1" {{ isset($user->activador) && $user->activador->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsActivador()) ? 'selected' : '' }}>Planta</option>
                                                                                 </select>
                                                                                 <label for="activator_type_relationship" class="active">Tipo Vinculación
                                                                                     <span class="red-text">*</span>
@@ -198,8 +198,8 @@
                                                                                     name="dynamizer_type_relationship"
                                                                                     style="width: 100%; display: none" tabindex="-1">
                                                                                     <option value="">Seleccione tipo de vinculación</option>
-                                                                                    <option value="0" {{ isset($user->dinamizadorContrato[0]) && $user->dinamizadorContrato[0]->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsDinamizador()) ? 'selected' : '' }}>Contratista</option>
-                                                                                    <option value="1" {{ isset($user->dinamizadorContrato[0]) && $user->dinamizadorContrato[0]->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsDinamizador()) ? 'selected' : '' }}>Planta</option>
+                                                                                    <option value="0" {{ isset($user->dinamizador) && $user->dinamizador->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsDinamizador()) ? 'selected' : '' }}>Contratista</option>
+                                                                                    <option value="1" {{ isset($user->dinamizador) && $user->dinamizador->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsDinamizador()) ? 'selected' : '' }}>Planta</option>
                                                                                 </select>
                                                                                 <label for="dynamizer_type_relationship" class="active">Tipo Vinculación
                                                                                     <span class="red-text">*</span>
@@ -324,8 +324,8 @@
                                                                                     name="expert_type_relationship"
                                                                                     style="width: 100%; display: none" tabindex="-1">
                                                                                         <option value="">Seleccione tipo de vinculación</option>
-                                                                                        <option value="0" {{ isset($user->expertoContrato[0]) && $user->expertoContrato[0]->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsExperto()) ? 'selected' : '' }}>Contratista</option>
-                                                                                        <option value="1" {{ isset($user->expertoContrato[0]) && $user->expertoContrato[0]->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsExperto()) ? 'selected' : '' }}>Planta</option>
+                                                                                        <option value="0" {{ isset($user->experto) && $user->experto->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsExperto()) ? 'selected' : '' }}>Contratista</option>
+                                                                                        <option value="1" {{ isset($user->experto) && $user->experto->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsExperto()) ? 'selected' : '' }}>Planta</option>
                                                                                 </select>
                                                                                 <label for="expert_type_relationship" class="active">Tipo Vinculación
                                                                                     <span class="red-text">*</span>
@@ -439,8 +439,8 @@
                                                                                     name="articulator_type_relationship"
                                                                                     style="width: 100%; display: none" tabindex="-1">
                                                                                         <option value="">Seleccione tipo de vinculación</option>
-                                                                                        <option value="0" {{ isset($user->articuladorContrato[0]) && $user->articuladorContrato[0]->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsArticulador()) ? 'selected' : '' }}>Contratista</option>
-                                                                                        <option value="1" {{ isset($user->articuladorContrato[0]) && $user->articuladorContrato[0]->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsArticulador()) ? 'selected' : '' }}>Planta</option>
+                                                                                        <option value="0" {{ isset($user->articulador) && $user->articulador->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsArticulador()) ? 'selected' : '' }}>Contratista</option>
+                                                                                        <option value="1" {{ isset($user->articulador) && $user->articulador->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsArticulador()) ? 'selected' : '' }}>Planta</option>
                                                                                 </select>
                                                                                 <label for="articulator_type_relationship" class="active">Tipo Vinculación
                                                                                     <span class="red-text">*</span>
@@ -551,8 +551,8 @@
                                                                                     name="infocenter_type_relationship"
                                                                                     style="width: 100%; display: none" tabindex="-1">
                                                                                         <option value="">Seleccione tipo de vinculación</option>
-                                                                                        <option value="0" {{ isset($user->infocenterContrato[0]) && $user->infocenterContrato[0]->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? 'selected' : '' }}>Contratista</option>
-                                                                                        <option value="1" {{ isset($user->infocenterContrato[0]) && $user->infocenterContrato[0]->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? 'selected' : '' }}>Planta</option>
+                                                                                        <option value="0" {{ isset($user->infocenter) && $user->infocenter->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? 'selected' : '' }}>Contratista</option>
+                                                                                        <option value="1" {{ isset($user->infocenter) && $user->infocenter->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? 'selected' : '' }}>Planta</option>
                                                                                 </select>
                                                                                 <label for="infocenter_type_relationship" class="active">Tipo Vinculación
                                                                                     <span class="red-text">*</span>
@@ -683,8 +683,8 @@
                                                                                     name="technical_support_type_relationship"
                                                                                     style="width: 100%; display: none" tabindex="-1">
                                                                                         <option value="">Seleccione tipo de vinculación</option>
-                                                                                        <option value="0" {{ isset($user->apoyotecnicoContrato[0]) && $user->apoyotecnicoContrato[0]->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsApoyoTecnico()) ? 'selected' : '' }}>Contratista</option>
-                                                                                        <option value="1" {{ isset($user->apoyotecnicoContrato[0]) && $user->apoyotecnicoContrato[0]->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsApoyoTecnico()) ? 'selected' : '' }}>Planta</option>
+                                                                                        <option value="0" {{ isset($user->apoyotecnico) && $user->apoyotecnico->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsApoyoTecnico()) ? 'selected' : '' }}>Contratista</option>
+                                                                                        <option value="1" {{ isset($user->apoyotecnico) && $user->apoyotecnico->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsApoyoTecnico()) ? 'selected' : '' }}>Planta</option>
                                                                                 </select>
                                                                                 <label for="technical_support_type_relationship" class="active">Tipo Vinculación
                                                                                     <span class="red-text">*</span>
@@ -694,7 +694,7 @@
                                                                         </div>
                                                                         <div class="row">
                                                                             <div class="input-field col s12 m4 l4">
-                                                                                <input id="technical_support_code_contract" name="technical_support_code_contract" type="text" value="{{ isset($user->apoyotecnicoContrato[0]) && collect($user->roles)->contains('name', App\User::IsApoyoTecnico()) ? $user->apoyotecnicoContrato[0]->codigo : old('technical_support_code_contract') }}"
+                                                                                <input id="technical_support_code_contract" name="technical_support_code_contract" type="text" value="{{ isset($user->apoyotecnico) && collect($user->roles)->contains('name', App\User::IsApoyoTecnico()) ? $user->apoyotecnicoContrato[0]->codigo : old('technical_support_code_contract') }}"
                                                                                 {{ (isset($user->apoyotecnicoContrato[0]) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->apoyotecnico->nodo->id) && $user->apoyotecnico->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
                                                                                 <label for="technical_support_code_contract">Código
                                                                                     <span class="red-text">*</span>
@@ -795,8 +795,8 @@
                                                                                     name="income_type_relationship"
                                                                                     style="width: 100%; display: none" tabindex="-1">
                                                                                         <option value="">Seleccione tipo de vinculación</option>
-                                                                                        <option value="0" {{ isset($user->ingresoContrato[0]) && $user->ingresoContrato[0]->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsIngreso()) ? 'selected' : '' }}>Contratista</option>
-                                                                                        <option value="1" {{ isset($user->ingresoContrato[0]) && $user->ingresoContrato[0]->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsIngreso()) ? 'selected' : '' }}>Planta</option>
+                                                                                        <option value="0" {{ isset($user->ingreso) && $user->ingreso->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsIngreso()) ? 'selected' : '' }}>Contratista</option>
+                                                                                        <option value="1" {{ isset($user->ingreso) && $user->ingreso->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsIngreso()) ? 'selected' : '' }}>Planta</option>
                                                                                 </select>
                                                                                 <label for="income_type_relationship" class="active">Tipo Vinculación
                                                                                     <span class="red-text">*</span>

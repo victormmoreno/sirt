@@ -9,7 +9,7 @@ use App\Values\OfficerStorageValues;
 use App\Models\UserNodo;
 use App\Models\Contrato;
 use App\User;
-
+use App\Strategies\User\OfficerStorage\ActivatorOfficerStorage;
 
 
 trait MustCompleteOfficerInformation
@@ -42,24 +42,23 @@ trait MustCompleteOfficerInformation
      */
     public function saveInformationOfficer(Request $request = null)
     {
-        if(
-            !is_null($request) &&
-            isset($request->roles)
-            // is_null($this->informacion_user_completed_at)
-            )
-        {
-            $officeStorageClass = OfficerStorageValues::OFFICER[$request->role];
+        // if(
+        //     !is_null($request) &&
+        //     isset($request->roles)
+        //     // is_null($this->informacion_user_completed_at)
+        //     )
+        // {
 
 
-            return (new $officeStorageClass)->buildStorageRecord($request);
+        //     $officeStorageClass = OfficerStorageValues::OFFICER[$request->role];
 
 
+        //     return (new $officeStorageClass)->buildStorageRecord($request);
 
+        //     $this->update(['informacion_user' => $structures]);
 
-            // $this->update(['informacion_user' => $structures]);
-
-            // $this->markInformationOfficerAsCompleted();
-        }
+        //     $this->markInformationOfficerAsCompleted();
+        // }
     }
 
     /**

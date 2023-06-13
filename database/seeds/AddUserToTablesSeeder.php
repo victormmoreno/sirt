@@ -44,6 +44,7 @@ class AddUserToTablesSeeder extends Seeder
                         'user_id' => $ingreso->user_id,
                         'nodo_id' => $ingreso->nodo_id,
                         'role' => User::IsIngreso(),
+                        'vinculacion' => 0,
                         'honorarios' => 0,
                         'created_at' => $ingreso->created_at,
                         'updated_at' => $ingreso->updated_at
@@ -56,6 +57,7 @@ class AddUserToTablesSeeder extends Seeder
                         'user_id' => $infocenter->user_id,
                         'nodo_id' => $infocenter->nodo_id,
                         'role' => User::IsInfocenter(),
+                        'vinculacion' => 0,
                         'honorarios' => 0,
                         'created_at' => $infocenter->created_at,
                         'updated_at' => $infocenter->updated_at
@@ -69,6 +71,7 @@ class AddUserToTablesSeeder extends Seeder
                         'user_id' => $dinanizador->user_id,
                         'nodo_id' => $dinanizador->nodo_id,
                         'role' => User::IsDinamizador(),
+                        'vinculacion' => 0,
                         'honorarios' => 0,
                         'created_at' => $dinanizador->created_at,
                         'updated_at' => $dinanizador->updated_at
@@ -94,6 +97,7 @@ class AddUserToTablesSeeder extends Seeder
                         'user_id' => $gestor->user_id,
                         'nodo_id' => $gestor->nodo_id,
                         'role' => User::IsExperto(),
+                        'vinculacion' => 0,
                         'honorarios' => $gestor->honorarios,
                         'linea_id' => $gestor->lineatecnologica_id,
                         'created_at' => $gestor->created_at,
@@ -101,23 +105,6 @@ class AddUserToTablesSeeder extends Seeder
                     ]
                 );
             }
-            // $talents = DB::table('talentos')
-            //             ->join('users', 'users.id', '=', 'talentos.user_id')
-            //             ->leftJoin('tipo_formacion','tipo_formacion.id', '=', 'talentos.tipo_formacion_id')
-            //             ->get();
-            // $request = new Illuminate\Http\Request;
-
-            // foreach ($talents as $talents) {
-            //     $user = App\User::where('id', $talento->user_id)->first();
-            //     $request->merge([
-            //         'tipo_talento' => 'funcionario_sena',
-            //         'regional' => 1,
-            //         'centro_formacion' => 2,
-            //         'programa_formacion' => 'Adsi',
-            //         'tipo_formacion' => 1
-            //     ]);
-            //     $user->saveInformationTalent($request);
-            // }
 
 
             foreach ($talentos as $key3 => $talento) {
