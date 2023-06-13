@@ -7,6 +7,7 @@ use App\Repositories\Repository\UserRepository\UserRepository;
 use App\Http\Requests\UsersRequests\RoleContratInformationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Strategies\User\OfficerStorage\ActivatorOfficerStorage;
 
 
 class ChangeRolesController extends Controller
@@ -51,8 +52,13 @@ class ChangeRolesController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|Response|\Illuminate\View\View
      */
-    public function updateRoles(Request $request, int $documento)
+    public function updateRoles(Request $request, int $document)
     {
+        $user = $this->userRepository->findUserByDocumentEloquent($document)->firstOrFail();
+        if (request()->user()->cannot('updateRoles', $user)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
         $req = new RoleContratInformationRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {
@@ -64,11 +70,49 @@ class ChangeRolesController extends Controller
             ]);
         } else {
             return response()->json([
-                'data' => $request->all(),
-                'document' => $documento
+                'data' => [
+                    'fail'   => true,
+                    'errors' => $this->saveRoleContract($request,$user ),
+                ]
             ]);
         }
 
+    }
+
+    protected function saveRoleContract(Request $request, $user )
+    {
+        $roles = is_array($request->role) ? $request->role : explode(', ', $request->role);
+        $roles = collect($roles)
+            ->flatten()
+            ->map(function ($role) use($request, $user) {
+                if (empty($role)) {
+                    return false;
+                }
+                if($role == \App\User::IsActivador()){
+                    // return $user->activatorContractCurrentYear;
+                    // $request->merge();
+                    $infoContract =  (new ActivatorOfficerStorage)->buildStorageRecord($request);
+                    $user->activatorContractCurrentYear()->updateOrCreate(
+                        // ['user_nodo_id' => $parent_id],
+                        [
+                            'codigo' =>  $infoContract['codigo'],
+                            'fecha_inicio' => $infoContract['fecha_inicio'],
+                            'fecha_finalizacion' => $infoContract['fecha_finalizacion'],
+                            'valor_contrato' => $infoContract['valor_contrato'],
+                            'vinculacion' => $infoContract['vinculacion'],
+                            'honorarios' => $infoContract['honorarios']
+                        ]
+                    );
+                    return $user->activatorContractCurrentYear;
+                }
+                return $role;
+            })->filter(function ($role) {
+                // if($role == \App\User::IsActivador()){
+                //     return "Julian";
+                // }
+                return $role;
+            });
+        return $roles;
     }
 
 }

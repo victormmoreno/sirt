@@ -11,12 +11,13 @@ class ActivatorOfficerStorage implements OfficerStorage
     public function buildStorageRecord(Request $request)
     {
         return [
-            'codigo' => $request->codigo,
-            'fecha_inicio' => $request->fecha_inicio,
-            'fecha_finalizacion' => $request->fecha_finalizacion,
-            'valor_contrato' => $request->valor_contrato,
-            'vinculacion' => $request->vinculacion,
-            'honorarios' => $request->honorarios,
+            'vinculacion' => $request->activator_type_relationship,
+            'codigo' => $request->activator_code_contract,
+            'fecha_inicio' => $request->activator_start_date_contract,
+            'fecha_finalizacion' => $request->activator_end_date_contract,
+            'valor_contrato' => $request->activator_contract_value_contract,
+
+            'honorarios' => $request->activator_fees_contract,
             // 'vigencia'
         ];
     }

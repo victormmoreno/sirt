@@ -319,6 +319,22 @@
                                                                                 <small id="expert_line-error" class="error red-text"></small>
                                                                             </div>
                                                                             <div class="input-field col s12 m4 l4">
+                                                                                <select class="js-states browser-default select2 select2-hidden-accessible"
+                                                                                    id="expert_type_relationship"
+                                                                                    name="expert_type_relationship"
+                                                                                    style="width: 100%; display: none" tabindex="-1">
+                                                                                        <option value="">Seleccione tipo de vinculación</option>
+                                                                                        <option value="0" {{ isset($user->expertoContrato[0]) && $user->expertoContrato[0]->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsExperto()) ? 'selected' : '' }}>Contratista</option>
+                                                                                        <option value="1" {{ isset($user->expertoContrato[0]) && $user->expertoContrato[0]->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsExperto()) ? 'selected' : '' }}>Planta</option>
+                                                                                </select>
+                                                                                <label for="expert_type_relationship" class="active">Tipo Vinculación
+                                                                                    <span class="red-text">*</span>
+                                                                                </label>
+                                                                                <small id="expert_type_relationship-error" class="error red-text"></small>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="input-field col s12 m4 l4">
                                                                                 <input id="expert_code_contract" name="expert_code_contract" type="text" value="{{ isset($user->expertoContrato[0]) && collect($user->roles)->contains('name', App\User::IsExperto()) ? $user->expertoContrato[0]->codigo : old('expert_code_contract') }}"
                                                                                 {{ (isset($user->expertoContrato[0]) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->dinamizador->nodo->id) && $user->dinamizador->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
                                                                                 <label for="expert_code_contract">Código
@@ -326,8 +342,6 @@
                                                                                 </label>
                                                                                 <small id="expert_code_contract-error" class="error red-text"></small>
                                                                             </div>
-                                                                        </div>
-                                                                        <div class="row">
                                                                             <div class="input-field col s12 m4 l4">
                                                                                 <input id="expert_start_date_contract" name="expert_start_date_contract" type="text" value="{{ isset($user->expertoContrato[0]) && collect($user->roles)->contains('name', App\User::IsExperto()) ? $user->expertoContrato[0]->fecha_inicio : old('expert_start_date_contract') }}"
                                                                                 {{ (isset($user->expertoContrato[0]) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->experto->nodo->id) && $user->experto->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
@@ -343,20 +357,6 @@
                                                                                     <span class="red-text">*</span>
                                                                                 </label>
                                                                                 <small id="expert_end_date_contract-error" class="error red-text"></small>
-                                                                            </div>
-                                                                            <div class="input-field col s12 m4 l4">
-                                                                                <select class="js-states browser-default select2 select2-hidden-accessible"
-                                                                                    id="expert_type_relationship"
-                                                                                    name="expert_type_relationship"
-                                                                                    style="width: 100%; display: none" tabindex="-1">
-                                                                                        <option value="">Seleccione tipo de vinculación</option>
-                                                                                        <option value="0" {{ isset($user->expertoContrato[0]) && $user->expertoContrato[0]->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsExperto()) ? 'selected' : '' }}>Contratista</option>
-                                                                                        <option value="1" {{ isset($user->expertoContrato[0]) && $user->expertoContrato[0]->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsExperto()) ? 'selected' : '' }}>Planta</option>
-                                                                                </select>
-                                                                                <label for="expert_type_relationship" class="active">Tipo Vinculación
-                                                                                    <span class="red-text">*</span>
-                                                                                </label>
-                                                                                <small id="expert_type_relationship-error" class="error red-text"></small>
                                                                             </div>
                                                                         </div>
                                                                         <div class="row">
@@ -434,6 +434,22 @@
                                                                                 <small id="articulator_node-error" class="error red-text"></small>
                                                                             </div>
                                                                             <div class="input-field col s12 m6 l6">
+                                                                                <select class="js-states browser-default select2 select2-hidden-accessible"
+                                                                                    id="articulator_type_relationship"
+                                                                                    name="articulator_type_relationship"
+                                                                                    style="width: 100%; display: none" tabindex="-1">
+                                                                                        <option value="">Seleccione tipo de vinculación</option>
+                                                                                        <option value="0" {{ isset($user->articuladorContrato[0]) && $user->articuladorContrato[0]->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsArticulador()) ? 'selected' : '' }}>Contratista</option>
+                                                                                        <option value="1" {{ isset($user->articuladorContrato[0]) && $user->articuladorContrato[0]->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsArticulador()) ? 'selected' : '' }}>Planta</option>
+                                                                                </select>
+                                                                                <label for="articulator_type_relationship" class="active">Tipo Vinculación
+                                                                                    <span class="red-text">*</span>
+                                                                                </label>
+                                                                                <small id="articulator_type_relationship-error" class="error red-text"></small>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="input-field col s12 m4 l4">
                                                                                 <input id="articulator_code_contract" name="articulator_code_contract" type="text" value="{{ isset($user->articuladorContrato[0]) && collect($user->roles)->contains('name', App\User::IsArticulador()) ? $user->articuladorContrato[0]->codigo : old('articulator_code_contract') }}"
                                                                                 {{ (isset($user->articuladorContrato[0]) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->dinamizador->nodo->id) && $user->dinamizador->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
                                                                                 <label for="articulator_code_contract">Código
@@ -441,8 +457,6 @@
                                                                                 </label>
                                                                                 <small id="articulator_code_contract-error" class="error red-text"></small>
                                                                             </div>
-                                                                        </div>
-                                                                        <div class="row">
                                                                             <div class="input-field col s12 m4 l4">
                                                                                 <input id="articulator_start_date_contract" name="articulator_start_date_contract" type="text" value="{{ isset($user->articuladorContrato[0]) && collect($user->roles)->contains('name', App\User::IsArticulador()) ? $user->articuladorContrato[0]->fecha_inicio : old('articulator_start_date_contract') }}"
                                                                                 {{ (isset($user->articuladorContrato[0]) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->articulador->nodo->id) && $user->articulador->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
@@ -458,20 +472,6 @@
                                                                                     <span class="red-text">*</span>
                                                                                 </label>
                                                                                 <small id="articulator_end_date_contract-error" class="error red-text"></small>
-                                                                            </div>
-                                                                            <div class="input-field col s12 m4 l4">
-                                                                                <select class="js-states browser-default select2 select2-hidden-accessible"
-                                                                                    id="articulator_type_relationship"
-                                                                                    name="articulator_type_relationship"
-                                                                                    style="width: 100%; display: none" tabindex="-1">
-                                                                                        <option value="">Seleccione tipo de vinculación</option>
-                                                                                        <option value="0" {{ isset($user->articuladorContrato[0]) && $user->articuladorContrato[0]->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsArticulador()) ? 'selected' : '' }}>Contratista</option>
-                                                                                        <option value="1" {{ isset($user->articuladorContrato[0]) && $user->articuladorContrato[0]->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsArticulador()) ? 'selected' : '' }}>Planta</option>
-                                                                                </select>
-                                                                                <label for="articulator_type_relationship" class="active">Tipo Vinculación
-                                                                                    <span class="red-text">*</span>
-                                                                                </label>
-                                                                                <small id="articulator_type_relationship-error" class="error red-text"></small>
                                                                             </div>
                                                                         </div>
                                                                         <div class="row">
@@ -546,6 +546,22 @@
                                                                                 <small id="infocenter_node-error" class="error red-text"></small>
                                                                             </div>
                                                                             <div class="input-field col s12 m6 l6">
+                                                                                <select class="js-states browser-default select2 select2-hidden-accessible"
+                                                                                    id="infocenter_type_relationship"
+                                                                                    name="infocenter_type_relationship"
+                                                                                    style="width: 100%; display: none" tabindex="-1">
+                                                                                        <option value="">Seleccione tipo de vinculación</option>
+                                                                                        <option value="0" {{ isset($user->infocenterContrato[0]) && $user->infocenterContrato[0]->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? 'selected' : '' }}>Contratista</option>
+                                                                                        <option value="1" {{ isset($user->infocenterContrato[0]) && $user->infocenterContrato[0]->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? 'selected' : '' }}>Planta</option>
+                                                                                </select>
+                                                                                <label for="infocenter_type_relationship" class="active">Tipo Vinculación
+                                                                                    <span class="red-text">*</span>
+                                                                                </label>
+                                                                                <small id="infocenter_type_relationship-error" class="error red-text"></small>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="input-field col s12 m4 l4">
                                                                                 <input id="infocenter_code_contract" name="infocenter_code_contract" type="text" value="{{ isset($user->infocenterContrato[0]) && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? $user->infocenterContrato[0]->codigo : old('infocenter_code_contract') }}"
                                                                                 {{ (isset($user->infocenterContrato[0]) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->dinamizador->nodo->id) && $user->dinamizador->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
                                                                                 <label for="infocenter_code_contract">Código
@@ -553,8 +569,6 @@
                                                                                 </label>
                                                                                 <small id="infocenter_code_contract-error" class="error red-text"></small>
                                                                             </div>
-                                                                        </div>
-                                                                        <div class="row">
                                                                             <div class="input-field col s12 m4 l4">
                                                                                 <input id="infocenter_start_date_contract" name="infocenter_start_date_contract" type="text" value="{{ isset($user->infocenterContrato[0]) && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? $user->infocenterContrato[0]->fecha_inicio : old('infocenter_start_date_contract') }}"
                                                                                 {{ (isset($user->infocenterContrato[0]) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->articulador->nodo->id) && $user->articulador->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
@@ -570,20 +584,6 @@
                                                                                     <span class="red-text">*</span>
                                                                                 </label>
                                                                                 <small id="infocenter_end_date_contract-error" class="error red-text"></small>
-                                                                            </div>
-                                                                            <div class="input-field col s12 m4 l4">
-                                                                                <select class="js-states browser-default select2 select2-hidden-accessible"
-                                                                                    id="infocenter_type_relationship"
-                                                                                    name="infocenter_type_relationship"
-                                                                                    style="width: 100%; display: none" tabindex="-1">
-                                                                                        <option value="">Seleccione tipo de vinculación</option>
-                                                                                        <option value="0" {{ isset($user->infocenterContrato[0]) && $user->infocenterContrato[0]->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? 'selected' : '' }}>Contratista</option>
-                                                                                        <option value="1" {{ isset($user->infocenterContrato[0]) && $user->infocenterContrato[0]->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? 'selected' : '' }}>Planta</option>
-                                                                                </select>
-                                                                                <label for="infocenter_type_relationship" class="active">Tipo Vinculación
-                                                                                    <span class="red-text">*</span>
-                                                                                </label>
-                                                                                <small id="infocenter_type_relationship-error" class="error red-text"></small>
                                                                             </div>
                                                                         </div>
                                                                         <div class="row">
@@ -678,6 +678,22 @@
                                                                                 <small id="technical_support_line-error" class="error red-text"></small>
                                                                             </div>
                                                                             <div class="input-field col s12 m4 l4">
+                                                                                <select class="js-states browser-default select2 select2-hidden-accessible"
+                                                                                    id="technical_support_type_relationship"
+                                                                                    name="technical_support_type_relationship"
+                                                                                    style="width: 100%; display: none" tabindex="-1">
+                                                                                        <option value="">Seleccione tipo de vinculación</option>
+                                                                                        <option value="0" {{ isset($user->apoyotecnicoContrato[0]) && $user->apoyotecnicoContrato[0]->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsApoyoTecnico()) ? 'selected' : '' }}>Contratista</option>
+                                                                                        <option value="1" {{ isset($user->apoyotecnicoContrato[0]) && $user->apoyotecnicoContrato[0]->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsApoyoTecnico()) ? 'selected' : '' }}>Planta</option>
+                                                                                </select>
+                                                                                <label for="technical_support_type_relationship" class="active">Tipo Vinculación
+                                                                                    <span class="red-text">*</span>
+                                                                                </label>
+                                                                                <small id="technical_support_type_relationship-error" class="error red-text"></small>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="input-field col s12 m4 l4">
                                                                                 <input id="technical_support_code_contract" name="technical_support_code_contract" type="text" value="{{ isset($user->apoyotecnicoContrato[0]) && collect($user->roles)->contains('name', App\User::IsApoyoTecnico()) ? $user->apoyotecnicoContrato[0]->codigo : old('technical_support_code_contract') }}"
                                                                                 {{ (isset($user->apoyotecnicoContrato[0]) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->apoyotecnico->nodo->id) && $user->apoyotecnico->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
                                                                                 <label for="technical_support_code_contract">Código
@@ -685,8 +701,6 @@
                                                                                 </label>
                                                                                 <small id="technical_support_code_contract-error" class="error red-text"></small>
                                                                             </div>
-                                                                        </div>
-                                                                        <div class="row">
                                                                             <div class="input-field col s12 m4 l4">
                                                                                 <input id="technical_support_start_date_contract" name="technical_support_start_date_contract" type="text" value="{{ isset($user->apoyotecnicoContrato[0]) && collect($user->roles)->contains('name', App\User::IsApoyoTecnico()) ? $user->apoyotecnicoContrato[0]->fecha_inicio : old('technical_support_start_date_contract') }}"
                                                                                 {{ (isset($user->apoyotecnicoContrato[0]) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->apoyotecnico->nodo->id) && $user->apoyotecnico->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
@@ -702,20 +716,6 @@
                                                                                     <span class="red-text">*</span>
                                                                                 </label>
                                                                                 <small id="technical_support_end_date_contract-error" class="error red-text"></small>
-                                                                            </div>
-                                                                            <div class="input-field col s12 m4 l4">
-                                                                                <select class="js-states browser-default select2 select2-hidden-accessible"
-                                                                                    id="technical_support_type_relationship"
-                                                                                    name="technical_support_type_relationship"
-                                                                                    style="width: 100%; display: none" tabindex="-1">
-                                                                                        <option value="">Seleccione tipo de vinculación</option>
-                                                                                        <option value="0" {{ isset($user->apoyotecnicoContrato[0]) && $user->apoyotecnicoContrato[0]->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsApoyoTecnico()) ? 'selected' : '' }}>Contratista</option>
-                                                                                        <option value="1" {{ isset($user->apoyotecnicoContrato[0]) && $user->apoyotecnicoContrato[0]->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsApoyoTecnico()) ? 'selected' : '' }}>Planta</option>
-                                                                                </select>
-                                                                                <label for="technical_support_type_relationship" class="active">Tipo Vinculación
-                                                                                    <span class="red-text">*</span>
-                                                                                </label>
-                                                                                <small id="technical_support_type_relationship-error" class="error red-text"></small>
                                                                             </div>
                                                                         </div>
                                                                         <div class="row">
@@ -790,6 +790,22 @@
                                                                                 <small id="income_node-error" class="error red-text"></small>
                                                                             </div>
                                                                             <div class="input-field col s12 m6 l6">
+                                                                                <select class="js-states browser-default select2 select2-hidden-accessible"
+                                                                                    id="income_type_relationship"
+                                                                                    name="income_type_relationship"
+                                                                                    style="width: 100%; display: none" tabindex="-1">
+                                                                                        <option value="">Seleccione tipo de vinculación</option>
+                                                                                        <option value="0" {{ isset($user->ingresoContrato[0]) && $user->ingresoContrato[0]->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsIngreso()) ? 'selected' : '' }}>Contratista</option>
+                                                                                        <option value="1" {{ isset($user->ingresoContrato[0]) && $user->ingresoContrato[0]->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsIngreso()) ? 'selected' : '' }}>Planta</option>
+                                                                                </select>
+                                                                                <label for="income_type_relationship" class="active">Tipo Vinculación
+                                                                                    <span class="red-text">*</span>
+                                                                                </label>
+                                                                                <small id="income_type_relationship-error" class="error red-text"></small>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="input-field col s12 m4 l4">
                                                                                 <input id="income_code_contract" name="income_code_contract" type="text" value="{{ isset($user->ingresoContrato[0]) && collect($user->roles)->contains('name', App\User::IsIngreso()) ? $user->ingresoContrato[0]->codigo : old('income_code_contract') }}"
                                                                                 {{ (isset($user->ingresoContrato[0]) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->ingreso->nodo->id) && $user->ingreso->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
                                                                                 <label for="income_code_contract">Código
@@ -797,8 +813,6 @@
                                                                                 </label>
                                                                                 <small id="income_code_contract-error" class="error red-text"></small>
                                                                             </div>
-                                                                        </div>
-                                                                        <div class="row">
                                                                             <div class="input-field col s12 m4 l4">
                                                                                 <input id="income_start_date_contract" name="income_start_date_contract" type="text" value="{{ isset($user->ingresoContrato[0]) && collect($user->roles)->contains('name', App\User::IsIngreso()) ? $user->ingresoContrato[0]->fecha_inicio : old('income_start_date_contract') }}"
                                                                                 {{ (isset($user->ingresoContrato[0]) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->ingreso->nodo->id) && $user->ingreso->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
@@ -814,20 +828,6 @@
                                                                                     <span class="red-text">*</span>
                                                                                 </label>
                                                                                 <small id="income_end_date_contract-error" class="error red-text"></small>
-                                                                            </div>
-                                                                            <div class="input-field col s12 m4 l4">
-                                                                                <select class="js-states browser-default select2 select2-hidden-accessible"
-                                                                                    id="income_type_relationship"
-                                                                                    name="income_type_relationship"
-                                                                                    style="width: 100%; display: none" tabindex="-1">
-                                                                                        <option value="">Seleccione tipo de vinculación</option>
-                                                                                        <option value="0" {{ isset($user->ingresoContrato[0]) && $user->ingresoContrato[0]->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsIngreso()) ? 'selected' : '' }}>Contratista</option>
-                                                                                        <option value="1" {{ isset($user->ingresoContrato[0]) && $user->ingresoContrato[0]->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsIngreso()) ? 'selected' : '' }}>Planta</option>
-                                                                                </select>
-                                                                                <label for="income_type_relationship" class="active">Tipo Vinculación
-                                                                                    <span class="red-text">*</span>
-                                                                                </label>
-                                                                                <small id="income_type_relationship-error" class="error red-text"></small>
                                                                             </div>
                                                                         </div>
                                                                         <div class="row">

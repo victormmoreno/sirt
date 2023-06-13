@@ -100,6 +100,18 @@ trait MustCompleteOfficerInformation
         )->where('role', User::IsActivador());
     }
 
+    public function activatorContractCurrentYear()
+    {
+        return $this->hasOneThrough(
+            Contrato::class,
+            UserNodo::class,
+            'user_id',
+            'user_nodo_id'
+        )->where('role', User::IsActivador())
+        ->whereYear('contratos.fecha_inicio', \Carbon\Carbon::now()->year);
+    }
+
+
     /**
     * Get the user's user articulator contract.
     */

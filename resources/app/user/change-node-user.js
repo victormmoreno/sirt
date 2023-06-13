@@ -91,8 +91,9 @@ $(document).on('submit', 'form#form-update-role-nodo', function (event) {
         dataType: 'json',
         processData: false,
         success: function (response) {
+            $('button[type="submit"]').removeAttr('disabled');
             console.log(response)
-            // $('button[type="submit"]').removeAttr('disabled');
+
             // $('.error').hide();
             // // printErrorsForm(response.data);
             // if(!response.data.fail){
@@ -102,6 +103,7 @@ $(document).on('submit', 'form#form-update-role-nodo', function (event) {
             // }
         },
         error: function (xhr, textStatus, errorThrown) {
+            $('button[type="submit"]').removeAttr('disabled');
             alert("Error: " + errorThrown);
         }
     });
