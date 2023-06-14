@@ -5,59 +5,52 @@ namespace App\Strategies\User\OfficerStorage;
 use Illuminate\Http\Request;
 use App\Contracts\User\OfficerStorage;
 use App\Models\Nodo;
-use App\Models\LineaTecnologica;
 use App\User;
 use Carbon\Carbon;
 
-
-
-class ExpertOfficerStorage implements OfficerStorage
+class IncomeOfficerStorage implements OfficerStorage
 {
     public function buildStorageRecord(Request $request)
     {
-        if(isset($request->expert_node)){
-            $node = Nodo::find($request->expert_node);
-        }
-        if(isset($request->expert_line)){
-            $line = LineaTecnologica::where('id', $request->expert_line)->first();
+        if(isset($request->income_node)){
+            $node = Nodo::find($request->income_node);
         }
         return [
-            'linea' => isset($line) ? $line->id : null,
             'nodo' => isset($node) ? $node->id : null,
-            'vinculacion' => $request->expert_type_relationship,
-            'codigo' => $request->expert_code_contract,
-            'fecha_inicio' => $request->expert_start_date_contract,
-            'fecha_finalizacion' => $request->expert_end_date_contract,
-            'valor_contrato' => $request->expert_contract_value_contract,
-            'honorarios' => $request->expert_fees_contract,
+            'vinculacion' => $request->income_type_relationship,
+            'codigo' => $request->income_code_contract,
+            'fecha_inicio' => $request->income_start_date_contract,
+            'fecha_finalizacion' => $request->income_end_date_contract,
+            'valor_contrato' => $request->income_contract_value_contract,
+            'honorarios' => $request->income_fees_contract,
         ];
     }
 
     public function save(Request $request, User $user)
     {
         $infoContract = $this->buildStorageRecord($request);
-        $user->experto()->updateOrCreate(
-            ['role' => User::IsExperto()],
+        $user->ingreso()->updateOrCreate(
+            ['role' => User::IsIngreso()],
             [
-                'linea_id' => $infoContract['linea'],
+                'linea_id' => null,
                 'nodo_id' =>  $infoContract['nodo'],
                 'vinculacion' => $infoContract['vinculacion'],
                 'honorarios' =>  $infoContract['honorarios'],
             ]
         );
 
-        if($request->expert_type_relationship == 0 && isset($user->experto)){
+        if($request->income_type_relationship == 0 && isset($user->ingreso)){
 
-            if(isset($user->experto->contratos) && $user->experto->contratos->count() ){
-                $currentContract = $user->experto->contratos()
+            if(isset($user->ingreso->contratos) && $user->ingreso->contratos->count() ){
+                $currentContract = $user->ingreso->contratos()
                 ->whereYear('created_at', Carbon::now()->year)->get()->last();
                 if(!is_null($currentContract) || isset($currentContract)){
                     $currentContract->update($this->propertiesArray($infoContract));
                 }else{
-                    $user->experto->contratos()->create($this->propertiesArray($infoContract));
+                    $user->ingreso->contratos()->create($this->propertiesArray($infoContract));
                 }
             }else{
-                $user->experto->contratos()->create($this->propertiesArray($infoContract));
+                $user->ingreso->contratos()->create($this->propertiesArray($infoContract));
             }
         }
     }

@@ -2649,13 +2649,32 @@ $(document).on('submit', 'form#form-update-role-nodo', function (event) {
             $('button[type="submit"]').removeAttr('disabled');
             console.log(response)
 
-            // $('.error').hide();
-            // // printErrorsForm(response.data);
-            // if(!response.data.fail){
-            //     setTimeout(function () {
-            //         window.location.href = response.data.url;
-            //     }, 1500);
-            // }
+            $('.error').hide();
+            printErrorsForm(response.data);
+            if(!response.data.fail){
+
+                Swal.fire({
+                    title: 'Modifciación Exitosa',
+                    text: `Cuenta de usuario actualizada exitosamente.`,
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok'
+                });
+
+                setTimeout(function () {
+                    window.location.href = response.data.url;
+                }, 1000);
+            }else{
+                Swal.fire({
+                    title: 'Modifciación Errónea',
+                    text: `Cuenta de usuario no actualizada, por favor intente nuevamente.`,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok'
+                });
+            }
         },
         error: function (xhr, textStatus, errorThrown) {
             $('button[type="submit"]').removeAttr('disabled');
@@ -2663,6 +2682,17 @@ $(document).on('submit', 'form#form-update-role-nodo', function (event) {
         }
     });
 });
+
+function printErrorsForm(data) {
+    if (data.fail) {
+        let errores = "";
+        for (control in data.errors) {
+            errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
+            $('#' + control + '-error').html(data.errors[control]);
+            $('#' + control + '-error').show();
+        }
+    }
+}
 
 $(document).ready(function() {
     let filter_role = $('#filter_rol').val();

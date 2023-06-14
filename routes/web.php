@@ -3,19 +3,9 @@
 use Illuminate\Http\Request;
 
 Route::get('/', function (Request $request) {
-    // $user = \App\User::first();
-    // $request->merge([
-    //     'role' => 'activador',
-    //     'node_id' => 1,
-    //     'codigo' => 'COD-10011',
-    //     'fecha_inicio' => '2023-01-01',
-    //     'fecha_finalizacion' => '2023-12-30',
-    //     'valor_contrato' => 2000000,
-    //     'vinculacion' => 0,
-    //     'honorarios' => 2000000,
-    // ]);
 
-    // dd($user->saveInformationOfficer($request));
+
+
     return view('welcome');
 })->name('/');
 

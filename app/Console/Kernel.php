@@ -3,9 +3,10 @@
 namespace App\Console;
 
 use App\Console\Commands\DeleteNotifications;
+use App\Console\Commands\DisableOfficialsCommand;
 use App\Console\Commands\QueueWorkCronJons;
 use App\Console\Commands\RetryingFailedJobs;
-use App\Console\Commands\CostoAdministrativo\CreateCostoAdministrativoForYear;
+use App\Console\Commands\CreateCostoAdministrativoForYear;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -17,6 +18,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        DisableOfficialsCommand::class,
         DeleteNotifications::class,
         QueueWorkCronJons::class,
         CreateCostoAdministrativoForYear::class,
@@ -31,8 +33,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('officials:disabled')
+                    ->daily();
         $schedule->command('costoadministrativo:create')
-            ->yearly()->monthlyOn(1, '01:00');
+                    ->yearly()
+                    ->monthlyOn(1, '01:00');
         $schedule->command('task:deletenotifications')->daily();
         $schedule->command('queuework:jobs')->everyMinute();
         $schedule->command('queuework:retry')->everyMinute();

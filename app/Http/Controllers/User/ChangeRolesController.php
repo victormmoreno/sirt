@@ -10,7 +10,12 @@ use Illuminate\Support\Facades\Validator;
 use App\Strategies\User\OfficerStorage\ActivatorOfficerStorage;
 use App\Strategies\User\OfficerStorage\DynamizerOfficerStorage;
 use App\Strategies\User\OfficerStorage\ExpertOfficerStorage;
+use App\Strategies\User\OfficerStorage\ArticulatorOfficerStorage;
+use App\Strategies\User\OfficerStorage\TechnicalSupportOfficerStorage;
+use App\Strategies\User\OfficerStorage\InfocenterOfficerStorage;
+use App\Strategies\User\OfficerStorage\IncomeOfficerStorage;
 use App\User;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class ChangeRolesController extends Controller
@@ -72,12 +77,24 @@ class ChangeRolesController extends Controller
                 ]
             ]);
         } else {
-            return response()->json([
-                'data' => [
-                    'fail'   => true,
-                    'errors' => $this->saveRoleContract($request,$user),
-                ]
-            ]);
+            $response = $this->saveRoleContract($request,$user);
+            if($response){
+                return response()->json([
+                    'data' => [
+                        'fail'   => false,
+                        'url' => route('usuario.show', $user->documento),
+                        'errors' => [],
+                    ],
+                ]);
+            }else{
+                return response()->json([
+                    'data' => [
+                        'fail'   => false,
+                        'errors' => [],
+                    ]
+                ]);
+            }
+
         }
 
     }
@@ -85,7 +102,9 @@ class ChangeRolesController extends Controller
     protected function saveRoleContract(Request $request, $user )
     {
         $roles = is_array($request->role) ? $request->role : explode(', ', $request->role);
-        $roles = collect($roles)
+        DB::beginTransaction();
+        try {
+            $roles = collect($roles)
             ->flatten()
             ->map(function ($role) use($request, $user) {
                 if (empty($role)) {
@@ -102,6 +121,22 @@ class ChangeRolesController extends Controller
                 if($role == User::IsExperto())
                 {
                     return (new ExpertOfficerStorage)->save($request, $user);
+                }
+                if($role == User::IsArticulador())
+                {
+                    return (new ArticulatorOfficerStorage)->save($request, $user);
+                }
+                if($role == User::IsApoyoTecnico())
+                {
+                    return (new TechnicalSupportOfficerStorage)->save($request, $user);
+                }
+                if($role == User::IsInfocenter())
+                {
+                    return (new InfocenterOfficerStorage)->save($request, $user);
+                }
+                if($role == User::IsIngreso())
+                {
+                    return (new IncomeOfficerStorage)->save($request, $user);
                 }
                 if($role == User::IsTalento())
                 {
@@ -178,7 +213,12 @@ class ChangeRolesController extends Controller
                 return $role;
             });
             $user->syncRoles($request->role);
-        // return $roles;
-    }
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollback();
+            return false;
+        }
+        }
 
 }

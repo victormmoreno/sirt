@@ -49,7 +49,7 @@ class RoleContratInformationRequest extends FormRequest
             'activator_fees_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsActivador()) &&
                     request()->activator_type_relationship == 0
-                ) . '|numeric|lte:activator_contract_value_contract|min:0|max:999.999.999|nullable',
+                ) . '|numeric|min:0|max:999.999.999|nullable',
             'dynamizer_node'        => Rule::requiredIf(
                         collect(request()->role)->contains(User::IsDinamizador())
                     ) . '|nullable',
@@ -75,7 +75,7 @@ class RoleContratInformationRequest extends FormRequest
             'dynamizer_fees_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsDinamizador()) &&
                     request()->dynamizer_type_relationship == 0
-                ) . '|numeric|lte:dynamizer_contract_value_contract|min:0|max:999.999.999|nullable',
+                ) . '|numeric|min:0|max:999.999.999|nullable',
             'expert_node'        => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsExperto())
             ) . '|nullable',
@@ -104,7 +104,7 @@ class RoleContratInformationRequest extends FormRequest
             'expert_fees_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsExperto()) &&
                     request()->expert_type_relationship == 0
-                ) . '|numeric|lte:expert_contract_value_contract|min:0|max:999.999.999|nullable',
+                ) . '|numeric|min:0|max:999.999.999|nullable',
             'articulator_node'        => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsArticulador())
             ) . '|nullable',
@@ -130,7 +130,7 @@ class RoleContratInformationRequest extends FormRequest
             'articulator_fees_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsArticulador()) &&
                     request()->articulator_type_relationship == 0
-                ) . '|numeric|lte:articulator_contract_value_contract|min:0|max:999.999.999|nullable',
+                ) . '|numeric|min:0|max:999.999.999|nullable',
             'infocenter_node'        => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsInfocenter())
             ) . '|nullable',
@@ -156,7 +156,7 @@ class RoleContratInformationRequest extends FormRequest
             'infocenter_fees_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsInfocenter()) &&
                     request()->infocenter_type_relationship == 0
-                ) . '|numeric|lte:infocenter_contract_value_contract|min:0|max:999.999.999|nullable',
+                ) . '|numeric|min:0|max:999.999.999|nullable',
             'technical_support_node'        => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsApoyoTecnico())
             ) . '|nullable',
@@ -185,7 +185,7 @@ class RoleContratInformationRequest extends FormRequest
             'technical_support_fees_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsApoyoTecnico()) &&
                     request()->technical_support_type_relationship == 0
-                ) . '|numeric|lte:technical_support_contract_value_contract|min:0|max:999.999.999|nullable',
+                ) . '|numeric|min:0|max:999.999.999|nullable',
             'income_node'        => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsIngreso())
             ) . '|nullable',
@@ -211,7 +211,7 @@ class RoleContratInformationRequest extends FormRequest
             'income_fees_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsIngreso()) &&
                     request()->income_type_relationship == 0
-                ) . '|numeric|lte:income_contract_value_contract|min:0|max:999.999.999|nullable',
+                ) . '|numeric|min:0|max:999.999.999|nullable',
 
 
             'talent_type'            => Rule::requiredIf(
