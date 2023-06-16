@@ -104,7 +104,7 @@
                                                                             </div>
                                                                             <div class="input-field col s12 m6 l6 activator-field">
                                                                                 <input id="activator_code_contract" name="activator_code_contract" type="text" value="{{ isset($user->activadorContrato) && collect($user->activadorContrato)->isNotEmpty() && collect($user->roles)->contains('name', App\User::IsActivador()) ? collect($user->activadorContrato)->last()->codigo : old('activator_code_contract') }}">
-                                                                                <label for="activator_code_contract">Código
+                                                                                <label for="activator_code_contract">Número de contrato
                                                                                     <span class="red-text">*</span>
                                                                                 </label>
                                                                                 <small id="activator_code_contract-error" class="error red-text"></small>
@@ -344,7 +344,7 @@
                                                                             <div class="input-field col s12 m4 l4 expert-field">
                                                                                 <input id="expert_code_contract" name="expert_code_contract" type="text" value="{{ isset($user->expertoContrato) && collect($user->expertoContrato)->isNotEmpty() && collect($user->roles)->contains('name', App\User::IsExperto()) ? collect($user->expertoContrato)->last()->codigo : old('expert_code_contract') }}"
                                                                                 {{ (isset($user->expertoContrato) && collect($user->expertoContrato)->isNotEmpty() && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->dinamizador->nodo->id) && $user->dinamizador->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
-                                                                                <label for="expert_code_contract">Código
+                                                                                <label for="expert_code_contract">Número de contrato
                                                                                     <span class="red-text">*</span>
                                                                                 </label>
                                                                                 <small id="expert_code_contract-error" class="error red-text"></small>
@@ -458,7 +458,7 @@
                                                                             <div class="input-field col s12 m4 l4 articulator-field">
                                                                                 <input id="articulator_code_contract" name="articulator_code_contract" type="text" value="{{ isset($user->articuladorContrato[0]) && collect($user->roles)->contains('name', App\User::IsArticulador()) ? $user->articuladorContrato[0]->codigo : old('articulator_code_contract') }}"
                                                                                 {{ (isset($user->articuladorContrato[0]) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->dinamizador->nodo->id) && $user->dinamizador->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
-                                                                                <label for="articulator_code_contract">Código
+                                                                                <label for="articulator_code_contract">Número de contrato
                                                                                     <span class="red-text">*</span>
                                                                                 </label>
                                                                                 <small id="articulator_code_contract-error" class="error red-text"></small>
@@ -569,7 +569,7 @@
                                                                             <div class="input-field col s12 m4 l4 infocenter-field">
                                                                                 <input id="infocenter_code_contract" name="infocenter_code_contract" type="text" value="{{ isset($user->infocenterContrato[0]) && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? $user->infocenterContrato[0]->codigo : old('infocenter_code_contract') }}"
                                                                                 {{ (isset($user->infocenterContrato[0]) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->dinamizador->nodo->id) && $user->dinamizador->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
-                                                                                <label for="infocenter_code_contract">Código
+                                                                                <label for="infocenter_code_contract">Número de contrato
                                                                                     <span class="red-text">*</span>
                                                                                 </label>
                                                                                 <small id="infocenter_code_contract-error" class="error red-text"></small>
@@ -700,7 +700,7 @@
                                                                             <div class="input-field col s12 m4 l4 technical_support-field">
                                                                                 <input id="technical_support_code_contract" name="technical_support_code_contract" type="text" value="{{ isset($user->apoyotecnico) && collect($user->roles)->contains('name', App\User::IsApoyoTecnico()) ? $user->apoyotecnicoContrato[0]->codigo : old('technical_support_code_contract') }}"
                                                                                 {{ (isset($user->apoyotecnicoContrato[0]) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->apoyotecnico->nodo->id) && $user->apoyotecnico->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
-                                                                                <label for="technical_support_code_contract">Código
+                                                                                <label for="technical_support_code_contract">Número de contrato
                                                                                     <span class="red-text">*</span>
                                                                                 </label>
                                                                                 <small id="technical_support_code_contract-error" class="error red-text"></small>
@@ -811,7 +811,7 @@
                                                                             <div class="input-field col s12 m4 l4 income-field">
                                                                                 <input id="income_code_contract" name="income_code_contract" type="text" value="{{ isset($user->ingresoContrato[0]) && collect($user->roles)->contains('name', App\User::IsIngreso()) ? $user->ingresoContrato[0]->codigo : old('income_code_contract') }}"
                                                                                 {{ (isset($user->ingresoContrato[0]) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->ingreso->nodo->id) && $user->ingreso->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
-                                                                                <label for="income_code_contract">Código
+                                                                                <label for="income_code_contract">Número de contrato
                                                                                     <span class="red-text">*</span>
                                                                                 </label>
                                                                                 <small id="income_code_contract-error" class="error red-text"></small>

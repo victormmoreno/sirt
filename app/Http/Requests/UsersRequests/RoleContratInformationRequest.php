@@ -27,9 +27,7 @@ class RoleContratInformationRequest extends FormRequest
     {
         return [
             'role'            => 'required',
-            'activator_type_relationship'        => Rule::requiredIf(
-                collect(request()->role)->contains(User::IsActivador())
-                ) . '|nullable',
+            'activator_type_relationship' => Rule::in([0, 1]).'|required|nullable',
             'activator_code_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsActivador()) &&
                     request()->activator_type_relationship == 0
@@ -47,9 +45,9 @@ class RoleContratInformationRequest extends FormRequest
                     request()->activator_type_relationship == 0
                 ) . '|numeric|min:0|max:999.999.999|nullable',
             'activator_fees_contract' => Rule::requiredIf(
-                collect(request()->role)->contains(User::IsActivador()) &&
-                    request()->activator_type_relationship == 0
-                ) . '|numeric|min:0|max:999.999.999|nullable',
+                collect(request()->role)->contains(User::IsActivador())
+                && request()->activator_type_relationship == 0
+            ).'|required|numeric|min:0|max:999.999.999',
             'dynamizer_node'        => Rule::requiredIf(
                         collect(request()->role)->contains(User::IsDinamizador())
                     ) . '|nullable',
@@ -73,9 +71,9 @@ class RoleContratInformationRequest extends FormRequest
                     request()->dynamizer_type_relationship == 0
                 ) . '|numeric|min:0|max:999.999.999|nullable',
             'dynamizer_fees_contract' => Rule::requiredIf(
-                collect(request()->role)->contains(User::IsDinamizador()) &&
-                    request()->dynamizer_type_relationship == 0
-                ) . '|numeric|min:0|max:999.999.999|nullable',
+                collect(request()->role)->contains(User::IsDinamizador())
+                && request()->activator_type_relationship == 0
+            ).'|required|numeric|min:0|max:999.999.999',
             'expert_node'        => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsExperto())
             ) . '|nullable',
