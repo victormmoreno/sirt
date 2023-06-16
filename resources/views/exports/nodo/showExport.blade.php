@@ -4,7 +4,7 @@
             <th>Nodo</th>
             <th>Rol / Linea</th>
             <th>Número de documento</th>
-            <th>Consultor / Experto</th>
+            <th>Funcionario</th>
             <th>Correo</th>
             <th>Telefono</th>
             <th>Celular</th>
@@ -14,9 +14,9 @@
         @foreach($users as $user)
             <tr>
                 <td>{{ $user->nodo }}</td>
-                <td>{{ $user->role }} / {{ $user->linea }}</td>
+                <td>{{ $user->roles }} / {{ $user->linea }}</td>
                 <td>{{ $user->documento }}</td>
-                <td>{{ $user->nombres }} {{ $user->apellidos }}</td>
+                <td>{{ $user->usuario }}</td>
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->telefono }}</td>
                 <td>{{ $user->celular }}</td>

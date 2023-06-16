@@ -268,19 +268,19 @@ class UsoInfraestructura extends Model
                         if((session()->has('login_role') && session()->get('login_role') == User::IsTalento())){
                             return $query->where('talents.id', $asesor);
                         }
-                        return $query->where('gestor_uso.asesorable_id', $asesor);
+                        return $query->where('gestor_uso.asesor_id', $asesor);
                         break;
                     case class_basename(Articulation::class):
                         if((session()->has('login_role') && session()->get('login_role') == User::IsTalento())){
                             return $query->where('talents.id', $asesor);
                         }
-                        return $query->where('gestor_uso.asesorable_id', $asesor);
+                        return $query->where('gestor_uso.asesor_id', $asesor);
                         break;
                     case class_basename(Idea::class):
                         if((session()->has('login_role') && session()->get('login_role') == User::IsTalento())){
                             return $query->where('talents.id', $asesor);
                         }
-                        return $query->where('gestor_uso.asesorable_id', $asesor);
+                        return $query->where('gestor_uso.asesor_id', $asesor);
                         break;
                     default:
                         return $query;

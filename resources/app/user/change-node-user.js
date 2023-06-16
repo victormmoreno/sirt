@@ -92,8 +92,6 @@ $(document).on('submit', 'form#form-update-role-nodo', function (event) {
         processData: false,
         success: function (response) {
             $('button[type="submit"]').removeAttr('disabled');
-            console.log(response)
-
             $('.error').hide();
             printErrorsForm(response.data);
             if(!response.data.fail){

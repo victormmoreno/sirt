@@ -209,7 +209,7 @@
                                                                             <div class="input-field col s12 m4 l4 dynamizer-field">
                                                                                 <input id="dynamizer_code_contract" name="dynamizer_code_contract" type="text" value="{{ isset($user->dinamizadorContrato) && collect($user->dinamizadorContrato)->isNotEmpty() && collect($user->roles)->contains('name', App\User::IsDinamizador()) ? collect($user->dinamizadorContrato)->last()->codigo : old('dynamizer_code_contract') }}"
                                                                                 {{ (isset($user->dinamizadorContrato) && collect($user->dinamizadorContrato)->isNotEmpty() && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->dinamizador->nodo->id) && $user->dinamizador->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
-                                                                                <label for="dynamizer_code_contract">Código
+                                                                                <label for="dynamizer_code_contract">Número de contrato
                                                                                     <span class="red-text">*</span>
                                                                                 </label>
                                                                                 <small id="dynamizer_code_contract-error" class="error red-text"></small>

@@ -510,7 +510,6 @@ $(document).ready(function() {
 
 $('#filter_idea').click(function () {
     let filter_nodo = $('#filter_nodo').val();
-    // console.log(filter_nodo);
     let filter_year = $('#filter_year_ideas').val();
     let filter_state = $('#filter_state').val();
     let filter_vieneconvocatoria = $('#filter_vieneconvocatoria').val();
@@ -2647,8 +2646,6 @@ $(document).on('submit', 'form#form-update-role-nodo', function (event) {
         processData: false,
         success: function (response) {
             $('button[type="submit"]').removeAttr('disabled');
-            console.log(response)
-
             $('.error').hide();
             printErrorsForm(response.data);
             if(!response.data.fail){
@@ -4251,8 +4248,6 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Grupo(id) {
 
 // Valida que el talento no se encuentre asociado al proyecto
 function noRepeat(id) {
-    // console.log('fff');
-    // let retorno = true;
     let a = document.getElementsByName("talentos[]");
     for (x = 0; x < a.length; x ++) {
         if (a[x].value == id) {
@@ -4439,7 +4434,6 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
             ideaProyectoAsociadaConExito(codigo, nombre);
 
             if(response.data.talento != null){
-                console.log(response.data);
                 addTalentoProyecto(response.data.talento.id, true);
                 addPersonaPropiedad(response.data.talento.id);
             }
@@ -4692,7 +4686,6 @@ function consultarSublineas(linea) {
         type:'get',
         url: host_url + "/proyecto/sublineas_of/"+linea
     }).done(function (response) {
-          console.log(response);
         printSublineas(response);
     });
 }
@@ -6703,7 +6696,6 @@ function consultarDetallesDeUnaCharlaInformativa(id) {
     type: 'get',
     url: host_url + '/charla/consultarDetallesDeUnaCharlaInformativa/'+id,
     success: function (data) {
-      console.log(data);
       $("#modalDetalleDeUnaCharlaInformativa_titulo").empty();
       $("#modalDetalleDeUnaCharlaInformativa_detalle_charla").empty();
       $("#modalDetalleDeUnaCharlaInformativa_titulo").append("<span class='cyan-text text-darken-3'>Datos de la Charla Informativa </span><br>");
@@ -9008,7 +9000,6 @@ const articulationStage = {
                         "_token": token,
                     },
                     success: function (data){
-                        console.log(data);
                         if(!data.fail){
                             Swal.fire(
                                 'Actialización exitosa!',

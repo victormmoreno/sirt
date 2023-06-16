@@ -97,24 +97,28 @@ class NodoController extends Controller
         }
         $users = User::query()
         ->userQuery()
-        ->selectRaw("if(roles.name = 'dinamizador', entidaddinamizador.nombre, if(roles.name = 'experto', entidadexperto.nombre, if(roles.name = 'articulador', entidadusernodo.nombre, if(roles.name = 'apoyo técnico', entidadusernodo.nombre, if(roles.name = 'infocenter', entidadinfocenter.nombre, if(roles.name = 'ingreso', entidadingreso.nombre, 'No Aplica')))))) as nodo")
-        ->selectRaw("if(roles.name = 'experto', lineastecnologicas.nombre, 'No Aplica') as linea")
-        ->selectRaw('roles.name as role, users.documento, users.nombres, users.apellidos, users.email, if(users.telefono!=null,users.telefono, "No registra") as telefono, users.celular')
-        ->whereIn("roles.name", ['dinamizador', 'experto', 'articulador', 'apoyo técnico', 'infocenter','ingreso'])
+        ->leftJoin('contratos', function ($join) {
+            $join->on('contratos.user_nodo_id', '=', 'user_nodo.id');
+        })
+        ->leftJoin('lineastecnologicas', function ($join) {
+            $join->on('lineastecnologicas.id', '=', 'user_nodo.linea_id');
+        })
+        ->select('users.id', 'tiposdocumentos.nombre as tipodocumento', 'users.documento', 'users.email', 'users.celular', 'users.telefono', 'users.ultimo_login', 'users.estado', 'users.deleted_at', 'lineastecnologicas.nombre as linea')
+        ->selectRaw('concat(users.nombres, " ",users.apellidos) as usuario, GROUP_CONCAT(distinct roles.name SEPARATOR ", ") as roles')
+        ->selectRaw("if(roles.name = 'Dinamizador', entidades.nombre , if(roles.name = 'Experto', entidades.nombre, if(roles.name = 'Articulador', entidades.nombre, if(roles.name = 'Infocenter', entidades.nombre, if(roles.name = 'Apoyo Tecnico', entidades.nombre, if(roles.name = 'Ingreso', entidades.nombre, 'RTC')))))) as nodo")
+        ->selectRaw("contratos.codigo")
+
         ->where(function($query){
             $query->where("users.estado", User::IsActive())
             ->whereNull("users.deleted_at");
         })
         ->where(function($query) use($node){
             if(isset($node)){
-                $query->where('nodoexperto.id', $node->id)
-                ->orWhere('nodoinfocenter.id', $node->id)
-                ->orWhere('nodoingreso.id', $node->id)
-                ->orWhere('user_nodo.nodo_id', $node->id);
+                $query->where('user_nodo.nodo_id', $node->id);
             }
             $query;
         })
-        ->groupBy("users.id", "linea")
+        ->groupBy('users.documento')
         ->orderBy("roles.name", "ASC")
         ->get();
         return Excel::download(new NodoShowExport($users), "Tecnoparque {$node->entidad->nombre}" . '.xlsx');

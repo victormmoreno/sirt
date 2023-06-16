@@ -27,7 +27,9 @@ class RoleContratInformationRequest extends FormRequest
     {
         return [
             'role'            => 'required',
-            'activator_type_relationship' => Rule::in([0, 1]).'|required|nullable',
+            'activator_type_relationship' => Rule::requiredIf(
+                collect(request()->role)->contains(User::IsActivador())
+                ) . '|in:0,1|nullable',
             'activator_code_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsActivador()) &&
                     request()->activator_type_relationship == 0
@@ -47,13 +49,13 @@ class RoleContratInformationRequest extends FormRequest
             'activator_fees_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsActivador())
                 && request()->activator_type_relationship == 0
-            ).'|required|numeric|min:0|max:999.999.999',
+            ).'|numeric|min:0|max:999.999.999|nullable',
             'dynamizer_node'        => Rule::requiredIf(
                         collect(request()->role)->contains(User::IsDinamizador())
                     ) . '|nullable',
             'dynamizer_type_relationship'        => Rule::requiredIf(
                     collect(request()->role)->contains(User::IsDinamizador())
-                    ) . '|nullable',
+                    ) .'|in:0,1|nullable',
             'dynamizer_code_contract' => Rule::requiredIf(
                     collect(request()->role)->contains(User::IsDinamizador()) &&
                         request()->dynamizer_type_relationship == 0
@@ -73,7 +75,7 @@ class RoleContratInformationRequest extends FormRequest
             'dynamizer_fees_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsDinamizador())
                 && request()->activator_type_relationship == 0
-            ).'|required|numeric|min:0|max:999.999.999',
+            ).'|numeric|min:0|max:999.999.999|nullable',
             'expert_node'        => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsExperto())
             ) . '|nullable',
@@ -82,7 +84,7 @@ class RoleContratInformationRequest extends FormRequest
             ) . '|nullable',
             'expert_type_relationship'        => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsExperto())
-                ) . '|nullable',
+                ) . '|in:0,1|nullable',
             'expert_code_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsExperto()) &&
                     request()->expert_type_relationship == 0
@@ -108,7 +110,7 @@ class RoleContratInformationRequest extends FormRequest
             ) . '|nullable',
             'articulator_type_relationship'        => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsArticulador())
-                ) . '|nullable',
+                ) . '|in:0,1|nullable',
             'articulator_code_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsArticulador()) &&
                     request()->articulator_type_relationship == 0
@@ -134,7 +136,7 @@ class RoleContratInformationRequest extends FormRequest
             ) . '|nullable',
             'infocenter_type_relationship'        => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsInfocenter())
-                ) . '|nullable',
+                ) . '|in:0,1|nullable',
             'infocenter_code_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsInfocenter()) &&
                     request()->infocenter_type_relationship == 0
@@ -189,7 +191,7 @@ class RoleContratInformationRequest extends FormRequest
             ) . '|nullable',
             'income_type_relationship'        => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsIngreso())
-                ) . '|nullable',
+                ) . '|in:0,1|nullable',
             'income_code_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsIngreso()) &&
                     request()->income_type_relationship == 0

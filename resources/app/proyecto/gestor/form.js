@@ -309,8 +309,6 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Grupo(id) {
 
 // Valida que el talento no se encuentre asociado al proyecto
 function noRepeat(id) {
-    // console.log('fff');
-    // let retorno = true;
     let a = document.getElementsByName("talentos[]");
     for (x = 0; x < a.length; x ++) {
         if (a[x].value == id) {
@@ -497,7 +495,6 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
             ideaProyectoAsociadaConExito(codigo, nombre);
 
             if(response.data.talento != null){
-                console.log(response.data);
                 addTalentoProyecto(response.data.talento.id, true);
                 addPersonaPropiedad(response.data.talento.id);
             }
@@ -750,7 +747,6 @@ function consultarSublineas(linea) {
         type:'get',
         url: host_url + "/proyecto/sublineas_of/"+linea
     }).done(function (response) {
-          console.log(response);
         printSublineas(response);
     });
 }

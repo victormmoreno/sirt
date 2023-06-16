@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class LineaTecnologica extends Model
 {
@@ -51,9 +52,14 @@ class LineaTecnologica extends Model
             ->withTimestamps();
     }
 
-    public function gestores()
+    public function expertos()
     {
-        return $this->hasMany(Gestor::class, 'lineatecnologica_id', 'id');
+        return $this->hasMany(UserNodo::class, 'linea_id', 'id')->where('role', User::IsExperto());
+    }
+
+    public function apoyostecnicos()
+    {
+        return $this->hasMany(UserNodo::class, 'linea_id', 'id')->where('role', User::IsApoyoTecnico());
     }
 
     public function equipos()

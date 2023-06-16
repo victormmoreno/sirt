@@ -500,7 +500,6 @@ const articulationStage = {
                         "_token": token,
                     },
                     success: function (data){
-                        console.log(data);
                         if(!data.fail){
                             Swal.fire(
                                 'Actialización exitosa!',
