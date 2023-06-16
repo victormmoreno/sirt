@@ -42,7 +42,6 @@ class AdviceAndUseOfPolymorphicInfrastructure extends Seeder
 
     protected function asesorableId($model){
         return $model->id;
-        // return null;
     }
 
     protected function asesorableIdUser($model){

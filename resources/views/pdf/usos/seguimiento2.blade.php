@@ -222,7 +222,7 @@
                 @elseif($tipo_actividad == 'articulacion')
                     <td colspan="2">{{$data->present()->articulacionCode()}}</td>
                     <td colspan="3">{{$data->present()->articulacionName() }}</td>
-                    <td colspan="3">{{$data->present()->articulacionPbtUserAsesor() }}</td>
+                    <td colspan="3"></td>
                 @else
                     <td colspan="8">No Registra</td>
                 @endif
@@ -354,7 +354,7 @@
                     <td colspan="8" ><b>Certificación<b></td>
                 </tr>
                 <tr>
-                    <td colspan="4" >{{$data->present()->articulacionPbtUserAsesor()}} - Articulador</td>
+                    <td colspan="4" > - Articulador</td>
                     <td colspan="4" ></td>
                 </tr>
                 <tr>

@@ -31,11 +31,11 @@ class ProyectosExport extends FatherExport implements WithColumnWidths
     //     $label      = [new DataSeriesValues('String', 'Worksheet!$A$2', null, 1)];
     //     $categories = [new DataSeriesValues('String', 'Worksheet!$A$2:$D$2', null, 4)];
     //     $values     = [new DataSeriesValues('Number', 'Worksheet!$B$2:$D$5', null, 4)];
-    
+
     //     $series = new DataSeries(DataSeries::TYPE_PIECHART, DataSeries::GROUPING_STANDARD,
     //         range(0, \count($values) - 1), $label, $categories, $values);
     //     $plot   = new PlotArea(null, [$series]);
-    
+
     //     $legend = new Legend();
     //     $chart  = new Charts('chart name', new Title('chart title'), $legend, $plot);
     //     $chart->setTopLeftPosition('F12');

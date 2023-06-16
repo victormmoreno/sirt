@@ -19,7 +19,7 @@ class AddUsersToTables extends Migration
             ->references('id')->on('users')
             ->onDelete('no action')
             ->onUpdate('no action');
-            
+
             $table->unsignedInteger('user_id')->nullable()->after('id');
             $table->foreign('user_id')
             ->references('id')->on('users')
@@ -41,7 +41,7 @@ class AddUsersToTables extends Migration
             ->references('id')->on('users')
             ->onDelete('no action')
             ->onUpdate('no action');
-            
+
         });
 
         Schema::table('gestor_uso', function (Blueprint $table) {
@@ -77,7 +77,8 @@ class AddUsersToTables extends Migration
         });
 
         Schema::table('users', function (Blueprint $table) {
-            $table->longText('tipo_usuario')->nullable()->after('id');
+            $table->longText('informacion_user')->nullable()->after('otra_ocupacion');
+            $table->timestamp('informacion_user_completed_at')->nullable()->after('informacion_user');
         });
     }
 

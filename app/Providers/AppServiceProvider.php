@@ -2,14 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Queue;
-use Illuminate\Queue\Events\JobFailed;
-use Illuminate\Support\Facades\Mail;
-use Carbon\Carbon;
+use App\Contracts\User\TalentStorage;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
     {
         if (app()->environment() == 'production') {
             $this->app->bind('path.public', function () {
-                return '/home/gestionred/public_html';
+                return config('app.path_public');
             });
         }
     }
@@ -43,22 +39,5 @@ class AppServiceProvider extends ServiceProvider
             'create' => 'crear',
             'edit'   => 'editar',
         ]);
-
-        // Queue::failing(function (JobFailed $event) {
-        //     // $event->connectionName
-        //     // $event->job
-        //     // $event->exception
-        //     $data['jobName'] = $event->job->getName();
-        //     $data['jsonEncodedData'] = json_encode($event->job->payload());
-        //     $data['exception'] = $event->exception;
-        //     // Add current timestring
-        //     $data['timeString'] = Carbon::now()->toDayDateTimeString();
-
-        //     Mail::send(['text' => 'emails.alert.queueFailing'], $data, function ($msg) {
-        //         $msg->to(config('mail.support.address'))
-        //             ->from(config('mail.from.address'))
-        //             ->subject('Error en cola de trabajo');
-        //     });
-        // });
     }
 }

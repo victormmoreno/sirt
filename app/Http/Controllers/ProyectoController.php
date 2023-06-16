@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{AreaConocimiento, Centro, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, Actividad, Fase, Gestor, ArchivoArticulacionProyecto};
+use App\Models\{AreaConocimiento, Centro, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, Fase};
 use App\Repositories\Repository\{EmpresaRepository, ProyectoRepository, UserRepository\GestorRepository};
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use App\Http\Requests\{ProyectoFaseInicioFormRequest, ProyectoFaseCierreFormRequest};
@@ -10,7 +10,6 @@ use Illuminate\Http\{Request, Response};
 use App\User;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Controllers\CostoController;
-use App\Policies\IndicadorPolicy;
 use Carbon\Carbon;
 
 class ProyectoController extends Controller
@@ -129,7 +128,6 @@ class ProyectoController extends Controller
         return response()->json([
             'horas' => $horas
         ]);
-        // dd($proyecto->articulacion_proyecto->actividad->usoinfraestructuras->usogestores);
     }
 
     /**
@@ -1157,10 +1155,6 @@ class ProyectoController extends Controller
         ];
     }
 
-    /*===============================================
-  =========================
-  =            metodo para consultar los proyectos en ejecucion de un experto            =
-  ========================================================================*/
 
     public function projectsForGestor($id)
     {
@@ -1172,101 +1166,36 @@ class ProyectoController extends Controller
         ]);
     }
 
-    /*=====  End of metodo para consultar los proyectos en ejecucion de un experto  ======*/
-
-    /**
-     * metodo para consultar el detalle de una actividad (proyecto- articulacion)
-     * @author devjul
-     */
-    // public function detailActivityByCode(string $code)
-    // {
-    //     // if (request()->ajax()) {
-    //         $actividad =  Actividad::with([
-    //             'objetivos_especificos',
-
-    //             'articulacion_proyecto.proyecto.asesor.user' => function ($query) {
-    //                 $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
-    //                     ->orWhere('deleted_at', '!=', null);
-    //             },
-    //             'articulacion_proyecto.proyecto.asesor.user.gestor.lineatecnologica' => function ($query) {
-    //                 $query->select('id', 'abreviatura', 'nombre');
-    //             },
-    //             'articulacion_proyecto.proyecto',
-
-    //             'articulacion_proyecto.talentos',
-    //             'articulacion_proyecto.talentos.user' => function ($query) {
-    //                 $query->select('id', 'documento', 'nombres', 'apellidos', 'email', 'telefono', 'celular')->where('deleted_at', null)
-    //                     ->orWhere('deleted_at', '!=', null);
-    //             },
-    //             'articulacion_proyecto.proyecto.sedes',
-    //             'articulacion_proyecto.proyecto.sedes.empresa',
-    //             'articulacion_proyecto.proyecto.gruposinvestigacion',
-    //             'articulacion_proyecto.proyecto.gruposinvestigacion.entidad',
-    //             'articulacion_proyecto.proyecto.users_propietarios',
-    //             'articulacion_proyecto.proyecto',
-    //             'articulacion_proyecto.proyecto.areaconocimiento',
-    //             'articulacion_proyecto.proyecto.fase',
-    //             'articulacion_proyecto.proyecto.sublinea',
-    //             'articulacion_proyecto.proyecto.idea' => function ($query) {
-    //                 $query->select('id', 'nombres_contacto', 'apellidos_contacto', 'correo_contacto', 'telefono_contacto', 'nombre_proyecto', 'codigo_idea');
-    //             },
-    //             'articulacion_proyecto.proyecto.nodo' => function ($query) {
-    //                 $query->select('id', 'entidad_id', 'direccion', 'telefono');
-    //             },
-    //             'articulacion_proyecto.proyecto.nodo.entidad' => function ($query) {
-    //                 $query->select('id', 'ciudad_id', 'nombre', 'email_entidad');
-    //             }
-    //         ])->where('codigo_proyecto', $code)->first();
-
-
-    //         // $costo = $this->costoController->costosDeUnaActividad($actividad->id);
-    //         $costo = 0;
-    //         return response()->json([
-    //             'data' => [
-    //                 'actividad' => $actividad,
-    //                 'costo' => $costo,
-    //                 'total_usos' => $actividad->usoinfraestructuras->count(),
-    //             ]
-    //         ]);
-    //     // }
-    //     // return abort(Response::HTTP_FORBIDDEN);
-    // }
-
     public function filterByCode($value)
     {
+        if(request()->ajax()){
+            $proyecto = Proyecto::select('proyectos.id', 'fase_id', 'idea_id', 'codigo_proyecto', 'nombre', 'objetivo_general', 'fecha_inicio', 'fecha_cierre')
+            ->with([
+                'fase',
+                'talentos' => function($query){
+                    $query->select('users.id', 'documento', 'nombres', 'apellidos', 'email', 'estado', 'users.created_at');
+                }
+            ])->where('codigo_proyecto', $value)
+            ->whereIn('fase_id', [Fase::IsFinalizado(), Fase::IsEjecucion(), Fase::IsCierre()])
+            ->first();
 
-        $proyecto = Proyecto::select('id','idea_id','fase_id','articulacion_proyecto_id','alcance_proyecto')
-        ->with([
-            'idea',
-            'fase',
-            'articulacion_proyecto' => function($query){
-                $query->select('id', 'actividad_id');
-            },
-            'articulacion_proyecto.actividad'=> function($query){
-                $query->select('id', 'gestor_id', 'nodo_id', 'codigo_proyecto', 'nombre', 'objetivo_general', 'fecha_inicio', 'fecha_cierre');
-            },
-            'articulacion_proyecto.talentos',
-            'articulacion_proyecto.talentos.user',
-        ])->whereHas('articulacion_proyecto.actividad', function ($subQuery) use ($value) {
-            $subQuery->where('codigo_proyecto', $value);
-        })
-        ->whereIn('fase_id', [Fase::IsFinalizado(), Fase::IsEjecucion(), Fase::IsCierre()])
-        ->first();
-
-        if($proyecto != null){
+            if($proyecto != null){
+                return response()->json([
+                    'data' => [
+                        'proyecto' => $proyecto,
+                        'status_code' => Response::HTTP_OK
+                    ]
+                ]);
+            }
             return response()->json([
                 'data' => [
-                    'proyecto' => $proyecto,
-                    'status_code' => Response::HTTP_OK
+                    'proyecto' => null,
+                    'status_code' => Response::HTTP_NOT_FOUND,
                 ]
             ]);
         }
-        return response()->json([
-            'data' => [
-                'proyecto' => null,
-                'status_code' => Response::HTTP_NOT_FOUND,
-            ]
-        ]);
+        return abort(403);
+
     }
 
     public function datatableProyectosFinalizados(Request $request)
@@ -1288,15 +1217,9 @@ class ProyectoController extends Controller
         $proyectos = [];
 
         if (isset($request->filter_year_pro)) {
-            $proyectos = Proyecto::select('id','idea_id','fase_id','articulacion_proyecto_id','alcance_proyecto')
+            $proyectos = Proyecto::select('id','idea_id','fase_id','codigo_proyecto','nombre','alcance_proyecto')
             ->with([
                 'fase',
-                'articulacion_proyecto' => function($query){
-                    $query->select('id', 'actividad_id');
-                },
-                'articulacion_proyecto.actividad'=> function($query){
-                    $query->select('id', 'gestor_id', 'nodo_id', 'codigo_proyecto', 'nombre', 'objetivo_general', 'fecha_inicio', 'fecha_cierre');
-                }
             ])
             ->nodo($nodo)
             ->starEndDate($request->filter_year_pro)
@@ -1312,22 +1235,22 @@ class ProyectoController extends Controller
         return datatables()->of($proyectos  )
             ->addColumn('add_proyecto', function ($data) {
                     $checkbox = '';
-                    if (isset($data->articulacion_proyecto->actividad)) {
-                        $checkbox = '<a class="btn bg-info" onclick="articulationStage.addProjectToArticulacion(\'' .($data->articulacion_proyecto->actividad->codigo_actividad) . '\')">
+                    if (isset($data->codigo_proyecto)) {
+                        $checkbox = '<a class="btn bg-info" onclick="articulationStage.addProjectToArticulacion(\'' .($data->codigo_proyecto) . '\')">
                                         <i class="material-icons">done</i>
                                     </a>';
                     }
                     return $checkbox;
             })
             ->editColumn('codigo_proyecto', function ($data) {
-                if (isset($data->articulacion_proyecto->actividad)) {
-                    return  $data->articulacion_proyecto->actividad->present()->actividadCode();
+                if (isset($data->codigo_proyecto)) {
+                    return  $data->codigo_proyecto;
                 }
                 return "No registra";
             })
             ->editColumn('nombre', function ($data) {
-                if (isset($data->articulacion_proyecto->actividad)) {
-                    return  $data->articulacion_proyecto->actividad->present()->actividadName();
+                if (isset($data->nombre)) {
+                    return  $data->nombre;
                 }
                 return "No registra";
             })

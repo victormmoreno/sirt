@@ -150,42 +150,42 @@ const articulationStage = {
             $.ajax({
                 dataType: 'json',
                 type: 'get',
-                url: '/actividades/filter-code/' + filter_code_project
+                url: `/actividades/filter-code/${filter_code_project}`
             }).done(function (response) {
                 if(response.data.status_code == 200){
                     articulationStage.emptyResult('result-talents');
-                    let activity = response.data.proyecto.articulacion_proyecto.actividad;
-                    let data = response.data;
+                    let project = response.data.proyecto;
+
                     $('.result-projects').append(`
                         <div class="card card-transparent p f-12 m-t-lg">
                             <div class="card-content">
-                                <span class="card-title p f-12">${activity.codigo_actividad} ${activity.nombre}</span>
-                                <div class="position-top-right p f-12 mail-date hide-on-med-and-down">${articulationStage.formatDate(activity.fecha_cierre)}</div>
-                                <p>${activity.objetivo_general}</p>
+                                <span class="card-title p f-12">${project.codigo_proyecto} ${project.nombre}</span>
+                                <div class="position-top-right p f-12 mail-date hide-on-med-and-down">${articulationStage.formatDate(project.fecha_cierre)}</div>
+                                <p>${project.objetivo_general}</p>
                                 <div class="input-field col m12 s12">
-                                    <input type="hidden" name="projects" id="projects" style="display:none" value="${response.data.proyecto.id}"/>
+                                    <input type="hidden" name="projects" id="projects" style="display:none" value="${project.id}"/>
                                 </div>
                             </div>
                             <div class="card-action">
-                                <a class="waves-effect waves-red btn-flat m-b-xs primary-text" target="_blank" href="/proyecto/detalle/${data.proyecto.id}"><i class="material-icons left">link</i>Ver más</a>
+                                <a class="waves-effect waves-red btn-flat m-b-xs primary-text" target="_blank" href="/proyecto/detalle/${project.id}"><i class="material-icons left">link</i>Ver más</a>
                             </div>
                         </div>`
                     );
-                    if (data.proyecto.articulacion_proyecto.talentos.length != 0) {
-                        $.each(data.proyecto.articulacion_proyecto.talentos, function(e, talento) {
-                            if(talento.pivot.talento_lider == 1){
+                    if (project.talentos.length != 0) {
+                        $.each(project.talentos, function(e, user) {
+                            if(user.pivot.talento_lider == 1){
                                 $('.result-talents').append(`
                                     <div class="card card-transparent p f-12 m-t-lg">
                                         <div class="card-content">
-                                            <span class="card-title p f-12">${talento.user.documento} - ${talento.user.nombres} ${talento.user.apellidos}</span>
+                                            <span class="card-title p f-12">${user.documento} - ${user.nombres} ${user.apellidos}</span>
                                             <div class="input-field col m12 s12">
-                                                <input type="hidden" name="talent" id="talent" style="display:none" value="${talento.user.id}"/>
+                                                <input type="hidden" name="talent" id="talent" style="display:none" value="${user.id}"/>
                                             </div>
-                                            <div class="position-top-right p f-12 mail-date hide-on-med-and-down">  Acceso al sistema: ${userSearch.state(talento.user.estado)}</div>
-                                            <p class="hide-on-med-and-down"> Miembro desde ${articulationStage.formatDate(talento.user.created_at)}</p>
+                                            <div class="position-top-right p f-12 mail-date hide-on-med-and-down">  Acceso al sistema: ${userSearch.state(user.estado)}</div>
+                                            <p class="hide-on-med-and-down"> Miembro desde ${articulationStage.formatDate(user.created_at)}</p>
                                         </div>
                                         <div class="card-action">
-                                            <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuario/usuarios/${talento.user.documento}"><i class="material-icons left">link</i>Ver más</a>
+                                            <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuario/usuarios/${user.documento}"><i class="material-icons left">link</i>Ver más</a>
                                         </div>
                                     </div>`
                                 );
@@ -276,7 +276,7 @@ const articulationStage = {
             $.ajax({
                 dataType: 'json',
                 type: 'get',
-                url: '/usuarios/filtro-talento/' + document
+                url: `${host_url}/usuarios/filtro-talento/${document}`
             }).done(function (response) {
                 if(response.data.status_code == 200){
                     let user = response.data.user;
@@ -293,7 +293,7 @@ const articulationStage = {
                                 </div>
                             </div>
                             <div class="card-action">
-                                <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuario/usuarios/`+user.documento+ `"><i class="material-icons left"> link</i>Ver más</a>
+                                <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuarios/`+user.documento+ `"><i class="material-icons left"> link</i>Ver más</a>
                             </div>
                         </div>
                     `);
@@ -316,7 +316,7 @@ const articulationStage = {
             processing: true,
             serverSide: true,
             ajax: {
-                url: "/usuario/talento/getTalentosDeTecnoparque",
+                url: `${host_url}/usuarios/talento/getTalentosDeTecnoparque/`,
                 type: "get"
             },
             columns: [
@@ -370,7 +370,7 @@ const articulationStage = {
         $.ajax({
             dataType: 'json',
             type: 'get',
-            url: '/usuario/talento/consultarTalentoPorId/' + id
+            url: `${host_url}/usuarios/talento/consultarTalentoPorId/${id}`
         }).done(function (response) {
             if(response != null){
                 articulationStage.searchUser(response.talento.documento);
@@ -500,7 +500,6 @@ const articulationStage = {
                         "_token": token,
                     },
                     success: function (data){
-                        console.log(data);
                         if(!data.fail){
                             Swal.fire(
                                 'Actialización exitosa!',

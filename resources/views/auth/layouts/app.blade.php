@@ -9,7 +9,6 @@
         <link href="{{config('app.url')}}" rel="canonical"/>
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/web.png') }}">
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
         <meta name="theme-color" content="#39A900" />
         <meta name="title" content="@yield('meta-title',   config('app.name') )" />
         <meta name="abstract" content="@yield('meta-title',   config('app.name') )" />
@@ -27,7 +26,7 @@
         <meta property="og:url" content="{{config('app.url')}}" />
         <meta property="og:site_name" content="{{config('app.name')}}" />
     </head>
-    <body class="signin-page">
+    <body class="signin-page loaded">
         @if(session()->has('info'))
             <div class="card teal lighten-4">
                 <div class="row">
@@ -43,6 +42,7 @@
             </div>
         @endif
         @yield('content-auth')
+        <div class="left-sidebar-hover"></div>
         <script>
             const host_url = "{{config('app.url')}}";
         </script>

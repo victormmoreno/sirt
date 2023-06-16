@@ -25,7 +25,6 @@
                     <div class="card-content">
                         <div class="row no-m-t no-m-b">
                             <div class="col s12 m12 l12">
-                                @can('talentsList', \App\User::class)
                                 <div class="mailbox-options">
                                     <ul>
                                         <li>
@@ -33,14 +32,8 @@
                                                 Todos los talentos
                                             </a>
                                         </li>
-                                        <li>
-                                            <a href="{{{route('usuario.mytalentos')}}}">
-                                                Mis talentos
-                                            </a>
-                                        </li>
                                     </ul>
                                 </div>
-                                @endcan
                                 <div class="mailbox-view">
                                     <div class="mailbox-view-header">
                                         <span class="card-title primary-text">
@@ -97,13 +90,14 @@
                                     </select>
                                 </div>
                                 <div class="col s12 m12 l4 offset-m3 right">
-                                    <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="download_users"><i class="material-icons">cloud_download</i>Descargar</button>
-                                    <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_user"><i class="material-icons">search</i>Filtrar</button>
+                                    <button class="waves-effect waves-grey bg-secondary-lighten  white-text btn-flat search-tabs-button right m-l-xs" id="download_users"><i class="material-icons">cloud_download</i>Descargar</button>
+                                    <button class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right m-l-xs" id="filter_user"><i class="material-icons">search</i>Filtrar</button>
                                 </div>
                             </div>
                             <table id="users_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">
                             <thead class="bg-primary white-text bordered">
                                 <tr>
+                                    <th>Nodo</th>
                                     <th>Tipo Documento</th>
                                     <th>Documento</th>
                                     <th>Usuario</th>

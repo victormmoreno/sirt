@@ -158,7 +158,7 @@
                 <div class="input-field col s12 m12 l12">
                     <i class="material-icons prefix">library_books</i>
                     @if(isset($usoinfraestructura->asesorable_type) && ($usoinfraestructura->asesorable_type == App\Models\Proyecto::class))
-                        <input id="txtactividad" name="txtactividad"  type="text" value="{{ isset($usoinfraestructura->asesorable->articulacion_proyecto->actividad->codigo_actividad) ? $usoinfraestructura->asesorable->articulacion_proyecto->actividad->codigo_actividad :  old('txtactividad')}} - {{ isset($usoinfraestructura->asesorable->articulacion_proyecto->actividad->nombre) ? $usoinfraestructura->asesorable->articulacion_proyecto->actividad->nombre : old('txtactividad')}}" readonly />
+                        <input id="txtactividad" name="txtactividad"  type="text" value="{{ isset($usoinfraestructura->asesorable->codigo_proyecto) ? $usoinfraestructura->asesorable->codigo_proyecto :  old('txtactividad')}} - {{ isset($usoinfraestructura->asesorable->nombre) ? $usoinfraestructura->asesorable->nombre : old('txtactividad')}}" readonly />
                         <label for="txtactividad">Proyecto</label>
                     @elseif(isset($usoinfraestructura->asesorable_type) && ($usoinfraestructura->asesorable_type == \App\Models\Articulation::class))
                         <input id="txtactividad" name="txtactividad"  type="text" value="{{ isset($usoinfraestructura->asesorable->code) ? $usoinfraestructura->asesorable->code :  old('txtactividad')}} - {{ isset($usoinfraestructura->asesorable->name) ? $usoinfraestructura->asesorable->name : old('txtactividad')}}" readonly />

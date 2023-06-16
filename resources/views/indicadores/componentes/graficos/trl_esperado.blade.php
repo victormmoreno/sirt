@@ -20,8 +20,7 @@
     <div id="graficoSeguimientoDeUnNodo_column" class="green lighten-3" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto">
         <div class="row card-panel">
         <h5 class="center">
-            Para consultar el seguimiento de proyectos del nodo, debes pulsar el botón de <button onclick="consultarSeguimientoEsperado(event, '/seguimiento/seguimientoEsperado/')"
-            class="btn">Consultar</button>
+            Para consultar el seguimiento de proyectos del nodo, debes pulsar el botón de "Generar gráfico"
         </h5>
         </div>
     </div>

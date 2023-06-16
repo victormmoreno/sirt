@@ -75,7 +75,7 @@ class Nodo extends Model
     {
         return $this->hasMany(UserNodo::class, 'nodo_id', 'id')->where('role', User::IsInfocenter());
     }
-    
+
     public function ingresos()
     {
         return $this->hasMany(UserNodo::class, 'nodo_id', 'id')->where('role', User::IsIngreso());
@@ -109,6 +109,11 @@ class Nodo extends Model
     public function materiales()
     {
         return $this->hasMany(Material::class, 'nodo_id', 'id');
+    }
+
+    public function model()
+    {
+        return $this->morphMany(ArchivoModel::class, 'model');
     }
 
 

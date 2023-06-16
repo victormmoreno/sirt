@@ -20,7 +20,7 @@ class UsoInfraestructuraPresenter extends Presenter
             $this->uso->whereHasMorph(
                 'asesorable',
                 \App\Models\Proyecto::class
-            ) && isset($this->uso->asesorable->articulacion_proyecto)
+            ) && isset($this->uso->asesorable->codigo_proyecto)
         ){
             return  "Proyecto";
         }
@@ -69,7 +69,7 @@ class UsoInfraestructuraPresenter extends Presenter
             $this->uso->whereHasMorph(
                 'asesorable',
                 [ \App\Models\Proyecto::class]
-            ) && isset($this->uso->asesorable->articulacion_proyecto)
+            ) && isset($this->uso->asesorable->nombre_proyecto)
         ){
             return $this->uso->asesorable->nodo->entidad->nombre;
         }
@@ -98,7 +98,7 @@ class UsoInfraestructuraPresenter extends Presenter
             $this->uso->whereHasMorph(
                 'asesorable',
                 [ \App\Models\Proyecto::class]
-            ) && isset($this->uso->asesorable->articulacion_proyecto)
+            ) && isset($this->uso->asesorable->codigo_proyecto)
         ){
             return $this->uso->asesorable->asesor->lineatecnologica->nombre;
         }
@@ -111,7 +111,7 @@ class UsoInfraestructuraPresenter extends Presenter
             $this->uso->whereHasMorph(
                 'asesorable',
                 [ \App\Models\Proyecto::class]
-            ) && (isset($this->uso->asesorable->asesor->user) && isset($this->uso->asesorable->articulacion_proyecto))
+            ) && (isset($this->uso->asesorable->asesor->user) && isset($this->uso->asesorable->codigo_proyecto))
         ){
             return $this->uso->asesorable->asesor->user->present()->userFullName();
         }else if(
@@ -154,9 +154,9 @@ class UsoInfraestructuraPresenter extends Presenter
             $this->uso->whereHasMorph(
                 'asesorable',
                 [ \App\Models\Proyecto::class]
-            ) && isset($this->uso->asesorable->articulacion_proyecto)
+            ) && isset($this->uso->asesorable->codigo_proyecto)
         ){
-            return "{$this->uso->asesorable->articulacion_proyecto->actividad->codigo_actividad} - {$this->uso->asesorable->articulacion_proyecto->actividad->nombre}";
+            return "{$this->uso->asesorable->codigo_proyecto} - {$this->uso->asesorable->nombre}";
         }else if(
             $this->uso->whereHasMorph(
                 'asesorable',
@@ -167,8 +167,8 @@ class UsoInfraestructuraPresenter extends Presenter
         }else if(
             $this->uso->whereHasMorph(
                 'asesorable',
-                [ \App\Models\Articulation::class]
-            ) && isset($this->uso->asesorable)
+                [\App\Models\Articulation::class]
+            ) && isset($this->uso->asesorable->code)
         ){
             return "{$this->uso->asesorable->present()->articulationCode()} - {$this->uso->asesorable->present()->articulationName()}";
         }
@@ -181,9 +181,9 @@ class UsoInfraestructuraPresenter extends Presenter
             $this->uso->whereHasMorph(
                 'asesorable',
                 [ \App\Models\Proyecto::class]
-            ) && isset($this->uso->asesorable->articulacion_proyecto)
+            ) && isset($this->uso->asesorable->codigo_proyecto)
         ){
-            return "{$this->uso->asesorable->articulacion_proyecto->actividad->fecha_inicio->isoformat('LL')}";
+            return "{$this->uso->asesorable->fecha_inicio->isoformat('LL')}";
         }else if(
             $this->uso->whereHasMorph(
                 'asesorable',

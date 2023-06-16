@@ -7,14 +7,6 @@ use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use App\Imports\MigracionProyectosImport;
 use App\Models\Nodo;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Models\Articulacion;
-use App\Models\ArticulacionPbt;
-use App\Models\ArticulationStage;
-use App\Models\Proyecto;
-use App\User;
-use App\Models\Sede;
-use Illuminate\Support\Facades\Storage;
-use Artisan;
 
 class MigracionController extends Controller
 {
@@ -50,20 +42,5 @@ class MigracionController extends Controller
         }
         session()->put('errorMigracion', null);
         return back();
-    }
-
-
-
-    public function migrateArticulations()
-    {
-        // Artisan::call('db:seed --class=ArticulationMigrationSeeder');
-        // Artisan::output();
-        try{
-            $seeder = new \ArticulationMigrationSeeder();
-            $seeder->run();
-        }catch(\Exception $e){
-            echo $e->getMessage();
-        }
-
     }
 }

@@ -34,7 +34,6 @@ return [
         ['name' => CostosAdministrativosTableSeeder::class, 'callable' => true],
         ['name' => UsersTableSeeder::class, 'callable' => true],
         ['name' => VisitantesTableSeeder::class, 'callable' => true],
-        ['name' => AlcanceArticulacion::class, 'callable' => true],
-
+        ['name' => AlcanceArticulacionTableSeeder::class, 'callable' => true],
     ],
 ];

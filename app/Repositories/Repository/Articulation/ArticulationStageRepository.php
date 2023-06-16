@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use App\Models\ArticulationStage;
 use App\Models\Proyecto;
-use App\Models\Fase;
 use App\Models\ArchivoModel;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +18,6 @@ use App\Models\ControlNotificaciones;
 use App\Notifications\Articulation\EndorsementStageArticulation;
 use App\Events\Articulation\AccompanyingApprovalRequest;
 use App\Notifications\Articulation\ArticulationStageNoApproveEndorsement;
-use Illuminate\Support\Str;
 
 
 class ArticulationStageRepository
@@ -48,21 +46,11 @@ class ArticulationStageRepository
     {
         return ArticulationStage::query()
             ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
-            ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-
-            ->leftJoin('articulations', 'articulations.articulation_stage_id', '=', 'articulation_stages.id')
-            ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')
-            ->leftJoin('articulation_subtypes', 'articulation_subtypes.id', '=', 'articulations.articulation_subtype_id')
-            ->leftJoin('articulation_types', 'articulation_types.id', '=', 'articulation_subtypes.articulation_type_id')
-            ->leftJoin('articulation_scopes', 'articulation_scopes.id', '=', 'articulations.scope_id')
-            ->leftJoin('articulation_user', 'articulation_user.articulation_id', '=', 'articulations.id')
-            ->leftJoin('users as participants', 'participants.id', '=', 'articulation_user.user_id')
+            ->leftJoin('entidades', 'entidades.id', '=', 'nodos.entidad_id')
             ->join('articulationables', function($q) {
                 $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
             })
             ->leftJoin('proyectos', 'proyectos.id', '=', 'articulationables.articulationable_id')
-            ->leftJoin('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-            ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
             ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
             ->leftJoin('users as createdby', 'createdby.id', '=', 'articulation_stages.created_by')
             ->leftJoin('sedes', 'sedes.id', '=', 'articulationables.articulationable_id')
@@ -79,8 +67,14 @@ class ArticulationStageRepository
     {
         DB::beginTransaction();
         try {
+
             $articulationStage = $this->storeArticulationStage($request);
             $this->validateArticulationStageType($request, $articulationStage);
+            $user = \App\User::where('id', $request->talent)->first();
+            if(!is_null($user) && $user->IsUsuario())
+            {
+                $user->changeOneRoleToAnother(config('laravelpermission.roles.roleTalento'));
+            }
             DB::commit();
             return [
                 'state' => true,

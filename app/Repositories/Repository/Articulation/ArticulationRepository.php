@@ -38,6 +38,60 @@ class ArticulationRepository extends Repository
         return $this->strError;
     }
 
+    public function getListArticulacions()
+    {
+        return Articulation::query()
+        ->select(
+            'articulation_stages.*', 'articulations.code as articulation_code',
+            'articulations.id as articulation_id',
+            'articulations.start_date as articulation_start_date', 'articulations.end_date as articulation_end_date',
+            'articulations.name as articulation_name','articulations.description as articulation_description',
+            'articulations.expected_end_date as articulation_expected_end_date',
+            'articulations.entity as articulation_entity',
+            'articulations.contact_name as articulation_contact_name',
+            'articulations.email_entity as articulation_email_entity',
+            'articulations.summon_name as articulation_summon_name',
+            'articulations.objective as articulation_objective',
+            'articulations.learned_lessons as articulation_learned_lessons',
+            'fases.nombre as articulation_phase',
+            'articulation_types.name as articulation_type',
+            'articulation_subtypes.name as articulation_subtype',
+            'articulation_scopes.name as articulation_scope',
+            'entidades.nombre as nodo', 'proyectos.codigo_proyecto',
+            'proyectos.nombre as nombre_proyecto', 'proyectos.id as proyecto_id',
+            'fasespro.nombre as fase_proyecto'
+        )
+        ->selectRaw('year(articulations.start_date) as articulation_start_date_year, MONTHNAME(articulations.start_date) as articulation_start_date_month, year(articulations.end_date) as articulation_end_date_year, MONTHNAME(articulations.end_date) as articulation_end_date_month')
+        ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', if(articulationables.articulationable_type = 'App\\\Models\\\Sede', 'Empresa', if(articulationables.articulationable_type = 'App\\\Models\\\Idea', 'Idea', 'No registra'))) as articulation_state_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by")
+        ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Sede',concat(empresas.nit, ' - ', empresas.nombre, ' - ', sedes.nombre_sede), if(articulationables.articulationable_type = 'App\\\Models\\\Idea', concat(ideas.codigo_idea, ' - ', ideas.nombre_proyecto), 'no registra')) as information_type_articulationable")
+        ->selectRaw("if(articulations.postulation=1, 'SI', 'NO') articulation_postulation")
+        ->selectRaw("CASE WHEN articulations.postulation = 1  THEN if(articulations.approval = 1, 'Aprobado', 'No Aprobado') ELSE 'No Aplica' END AS 'articulation_approval'")
+        ->selectRaw("CASE WHEN articulations.postulation = 1  THEN if(articulations.approval = 1, articulations.receive, 'No registra') ELSE 'No Aplica' END AS 'articulation_receive'")
+        ->selectRaw("CASE WHEN articulations.postulation = 1  THEN if(articulations.approval = 1, articulations.received_date, 'No registra') ELSE 'No Aplica' END AS 'articulation_received_date'")
+        ->selectRaw("CASE WHEN articulations.postulation = 1  THEN if(articulations.approval = 0, articulations.report, 'No registra') ELSE 'No Aplica' END AS 'articulation_report'")
+        ->selectRaw("CASE WHEN articulations.postulation = 0  THEN articulations.justification ELSE 'No Aplica' END AS 'articulation_justification'")
+        ->selectRaw("GROUP_CONCAT(concat(participant.documento, ' - ', participant.nombres, ' ', participant.apellidos)) AS participants")
+            ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')
+            ->leftJoin('articulation_scopes', 'articulation_scopes.id', '=', 'articulations.scope_id')
+            ->leftJoin('articulation_subtypes', 'articulation_subtypes.id', '=', 'articulations.articulation_subtype_id')
+            ->leftJoin('articulation_types', 'articulation_types.id', '=', 'articulation_subtypes.articulation_type_id')
+            ->join('articulation_stages', 'articulation_stages.id', 'articulations.articulation_stage_id')
+            ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
+            ->leftJoin('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+            ->leftJoin('articulationables', function($q) {
+                $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
+            })
+            ->leftJoin('proyectos', 'proyectos.id', '=', 'articulationables.articulationable_id')
+            ->leftJoin('fases as fasespro', 'fasespro.id', '=', 'proyectos.fase_id')
+            ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
+            ->leftJoin('users as createdby', 'createdby.id', '=', 'articulation_stages.created_by')
+            ->leftJoin('sedes', 'sedes.id', '=', 'articulationables.articulationable_id')
+            ->leftJoin('empresas', 'empresas.id', '=', 'sedes.empresa_id')
+            ->leftJoin('ideas', 'ideas.id', '=', 'articulationables.articulationable_id')
+            ->leftJoin('articulation_user', 'articulation_user.articulation_id', '=', 'articulations.id')
+            ->leftJoin('users as participant', 'participant.id', '=', 'articulation_user.user_id');
+    }
+
     /**
      * store
      * @param Request $request
@@ -47,6 +101,7 @@ class ArticulationRepository extends Repository
     {
         try {
             $accompaniment = $this->storeArticulation($request, $accompaniment);
+
             return [
                 'data' => $accompaniment,
                 'message' => '',
@@ -84,7 +139,11 @@ class ArticulationRepository extends Repository
             'created_by' => auth()->user()->id,
         ]);
         if ($request->filled('talents')) {
+
             $articulation->users()->sync($request->talents);
+            $articulation->users->map(function($user){
+                $user->changeOneRoleToAnother(config('laravelpermission.roles.roleTalento'));
+            });
         }
         return $articulation;
     }
@@ -428,7 +487,59 @@ class ArticulationRepository extends Repository
                 $query->whereYear($field_date, $year);
             }
         })
-        ->whereIn('fases.nombre', $phase)
-        ->groupBy('nodos.id');
+        ->whereIn('fases.nombre', $phase);
+    }
+
+    public function seguimientoArticulacionesAbiertas()
+    {
+        return Articulation::query()
+        ->join('articulation_stages', 'articulation_stages.id', '=', 'articulations.articulation_stage_id')
+        ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
+        ->join('fases', 'fases.id', '=', 'articulations.phase_id')
+        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+        ->whereIn('fases.nombre', [Articulation::IsInicio(), Articulation::IsEjecucion(), Articulation::IsCierre()]);
+    }
+
+    public function seguimientoArticulacionesCerradas($year)
+    {
+        return Articulation::query()
+        ->select('fases.nombre AS fase', 'entidades.nombre as nodo')
+        ->selectRaw('count(articulations.id) AS cantidad')
+        ->join('articulation_stages', 'articulation_stages.id', '=', 'articulations.articulation_stage_id')
+        ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
+        ->join('fases', 'fases.id', '=', 'articulations.phase_id')
+        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+        ->whereIn('fases.nombre', [Articulation::IsFinalizado(), 'Concluido sin finalizar'])
+        ->groupBy('entidades.nombre', 'fase')
+        ->whereYear('articulations.end_date', $year);
+    }
+
+    public function articulacionesInscritasPorMes($year)
+    {
+        $this->traducirMeses();
+        return Articulation::query()
+        ->selectRaw('MONTH(articulations.start_date) AS mes, COUNT(articulations.id) AS cantidad, DATE_FORMAT(articulations.start_date, "%M") AS nombre_mes')
+        ->join('articulation_stages', 'articulation_stages.id', '=', 'articulations.articulation_stage_id')
+        ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
+        ->join('fases', 'fases.id', '=', 'articulations.phase_id')
+        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+        ->whereYear('articulations.start_date', $year)
+        ->groupBy("mes", "nombre_mes")
+        ->orderBy("mes");
+    }
+
+    public function articulacionesCerradasPorMes($year)
+    {
+        $this->traducirMeses();
+        return Articulation::query()
+        ->selectRaw('MONTH(articulations.end_date) AS mes, COUNT(articulations.id) AS cantidad, DATE_FORMAT(articulations.end_date, "%M") AS nombre_mes')
+        ->join('articulation_stages', 'articulation_stages.id', '=', 'articulations.articulation_stage_id')
+        ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
+        ->join('fases', 'fases.id', '=', 'articulations.phase_id')
+        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+        ->whereYear('articulations.end_date', $year)
+        ->whereIn('fases.nombre', [Articulation::IsFinalizado()])
+        ->groupBy("mes", "nombre_mes")
+        ->orderBy("mes");
     }
 }

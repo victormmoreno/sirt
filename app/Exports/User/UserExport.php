@@ -2,56 +2,76 @@
 
 namespace App\Exports\User;
 
-use Maatwebsite\Excel\Concerns\WithMultipleSheets;
-use Maatwebsite\Excel\Concerns\Exportable;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\SerializesModels;
-use App\User;
-use App\Exports\User\UserSheetExport;
-use App\Exports\User\DinamizadorSheetExport;
-use App\Exports\User\GestorSheetExport;
-use App\Exports\User\InfocenterSheetExport;
-use App\Exports\User\TalentoSheetExport;
-use App\Exports\User\IngresoSheetExport;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Events\AfterSheet;
+use Illuminate\Contracts\View\View;
+use App\Exports\FatherExport;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 
-class UserExport implements WithMultipleSheets
+
+class UserExport extends FatherExport
 {
-    use Exportable, SerializesModels;
-
+    use Queueable,Exportable, SerializesModels;
     private $request;
     private $query;
+    const rowRangeHeading = 'A1:Y1';
 
     public function __construct($request, $query)
     {
         $this->request = $request;
         $this->query = $query;
+        $this->setCount($this->query->count() + 1);
+        $this->setRangeHeadingCell(Self::rowRangeHeading);
     }
 
     /**
+     * Método para aplicar estilos al archivo excel después de que se genera la hoja de excel
      * @return array
+     * @abstract
      */
-    public function sheets(): array
+    public function registerEvents(): array
     {
-        $sheets = [];
-        if ($this->request->filled('filter_role') && $this->request->filter_role == User::IsDinamizador()) {
-            $sheets[] = new DinamizadorSheetExport($this->request, $this->query);
-        } else if ($this->request->filled('filter_role') && $this->request->filter_role == User::IsExperto()) {
-            $sheets[] = new GestorSheetExport($this->request, $this->query);
-        } else if ($this->request->filled('filter_role') && $this->request->filter_role == User::IsInfocenter()) {
-            $sheets[] = new InfocenterSheetExport($this->request, $this->query);
-        } else if ($this->request->filled('filter_role') && $this->request->filter_role == User::IsTalento()) {
-            $sheets[] = new TalentoSheetExport($this->request, $this->query);
-        } else if ($this->request->filled('filter_role') && $this->request->filter_role == User::IsIngreso()) {
-            $sheets[] = new IngresoSheetExport($this->request, $this->query);
-        } else {
-            $sheets[] = new UserSheetExport($this->request, $this->query);
-        }
-        return $sheets;
+        return [
+            AfterSheet::class => function (AfterSheet $event){
+                $this->setFilters($event);
+                $cellRange ="A1:{$event->sheet->getHighestColumn()}{$event->sheet->getHighestRow()}";
+                $event->sheet->getStyle($cellRange)->applyFromArray([
+                        'borders' => [
+                            'allBorders' => [
+                                'borderStyle' => Border::BORDER_THIN,
+                                'color' => ['argb' => '000000'],
+                            ],
+                        ],
+                    ])->getAlignment()->setWrapText(true);
+                $event->sheet->getDelegate()->getStyle(Self::rowRangeHeading)
+                    ->getFont()
+                    ->setBold(true);
+                $event->sheet->getDelegate()->getStyle(Self::rowRangeHeading)
+                    ->getAlignment()
+                    ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            },
+        ];
     }
 
-    public function failed(Throwable $exception): void
+    /**
+     * @abstract
+     */
+    public function view(): View
     {
-        alert()->error($exception->message())->toToast()->autoClose(10000);
+        return view('exports.users.index', [
+            'users' => $this->query,
+        ]);
+    }
+
+    /**
+     * Asigna el nombre para la hoja de excel
+     * @return string
+     * @abstract
+     */
+    public function title(): String
+    {
+        return "Usuarios";
     }
 }

@@ -1,37 +1,36 @@
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 {!! csrf_field() !!}
 @php
     $existe = isset($comite) ? true : false;
-    $gexistente = array();
+    $gexistente = [];
 @endphp
-@if($errors->any())
-<div class="card red lighten-3">
-    <div class="row">
-        <div class="col s12 m12">
-            <div class="card-content white-text">
-                <p><i class="material-icons left"> info_outline</i> Los datos marcados
-                    con * son obligatorios</p>
+@if ($errors->any())
+    <div class="card red lighten-3">
+        <div class="row">
+            <div class="col s12 m12">
+                <div class="card-content white-text">
+                    <p><i class="material-icons left"> info_outline</i> Los datos marcados
+                        con * son obligatorios</p>
+                </div>
             </div>
         </div>
     </div>
-</div>
 @endif
 <center>
-    <span class="card-title center-align">Datos del Comité</span> <i
-        class="Small material-icons prefix">account_circle </i>
+    <span class="card-title center-align">Datos del Comité</span> <i class="Small material-icons prefix">account_circle
+    </i>
 </center>
 <div class="divider"></div>
 <div class="row">
     <div class="input-field col s12 m6 l6">
         <i class="material-icons prefix">location_city</i>
-        <input id="txtnombrenodo" type="text"
-            value="{{ \NodoHelper::returnNameNodoUsuario() }}" name="txtnombrenodo"
+        <input id="txtnombrenodo" type="text" value="{{ \NodoHelper::returnNameNodoUsuario() }}" name="txtnombrenodo"
             disabled>
         <label for="txtnombrenodo">Nodo <span class="red-text">*</span></label>
     </div>
     <div class="input-field col s12 m6 l6">
         <i class="material-icons prefix">date_range</i>
-        <input id="txtfechacomite_create" type="text" name="txtfechacomite_create" class="atepic" value="{{ $existe ? $comite->fechacomite->isoFormat('YYYY-MM-DD') : Carbon\Carbon::now()->toDateString()}}">
+        <input id="txtfechacomite_create" type="text" name="txtfechacomite_create" class="atepic"
+            value="{{ $existe ? $comite->fechacomite->isoFormat('YYYY-MM-DD') : Carbon\Carbon::now()->toDateString() }}">
         <label for="txtfechacomite_create" class="active">Fecha del Comité <span class="red-text">*</span></label>
         <small id="txtfechacomite_create-error" class="error red-text"></small>
     </div>
@@ -46,27 +45,32 @@
         <div class="card-content">
             <h5>
                 <span class="red-text text-darken-2">
-                    Para registrar las ideas en el comité dar click en el botón <a class="btn-floating waves-effect waves-light red">
-                    <i class="material-icons">add</i></a>
+                    Para registrar las ideas en el comité dar click en el botón <a
+                        class="btn-floating waves-effect waves-light red">
+                        <i class="material-icons">add</i></a>
                 </span>
             </h5>
             <p>Si desea agregar mas ideas de proyecto por favor seleccione..</p>
             <ul class="collapsible collapsible-accordion" data-collapsible="accordion">
                 <li>
                     <div class="collapsible-header active blue-grey lighten-1">
-                        <i class="material-icons">lightbulb</i>Seleccione las ideas de proyecto que se presentarán en el comité
+                        <i class="material-icons">lightbulb</i>Seleccione las ideas de proyecto que se presentarán en el
+                        comité
                     </div>
                     <div class="collapsible-body">
                         <div class="card-content">
                             <div class="row">
                                 <div class="input-field col s12 m6 l6">
-                                    <select id="txtideaproyecto" class="js-states browser-default select2" style="width: 100%;" name="txtideaproyecto">
-                                        <option value="0">Seleccione las ideas de proyecto que se presentarán en el comité</option>
+                                    <select id="txtideaproyecto" class="js-states browser-default select2"
+                                        style="width: 100%;" name="txtideaproyecto">
+                                        <option value="0">Seleccione las ideas de proyecto que se presentarán en el
+                                            comité</option>
                                         @foreach ($ideas as $key => $value)
-                                        <option value="{{$value['id']}}">{{$value['nombre_idea']}}</option>
+                                            <option value="{{ $value['id'] }}">{{ $value['nombre_idea'] }}</option>
                                         @endforeach
                                     </select>
-                                    <label for="#txtideaproyecto" class="active">Ideas de Proyecto <span class="red-text">*</span></label>
+                                    <label for="#txtideaproyecto" class="active">Ideas de Proyecto <span
+                                            class="red-text">*</span></label>
                                 </div>
                                 <div class="input-field col s12 m6 l6">
                                     <i class="material-icons prefix">access_time</i>
@@ -77,11 +81,14 @@
                             <div class="row">
                                 <div class="input-field col s12 m12 l12">
                                     <textarea name="txtdireccion" class="materialize-textarea" length="500" maxlength="500" id="txtdireccion"></textarea>
-                                    <label for="txtdireccion">Dirección donde se realizará el comité <span class="red-text">*</span></label>
+                                    <label for="txtdireccion">Dirección donde se realizará el comité <span
+                                            class="red-text">*</span></label>
                                 </div>
                             </div>
                             <center>
-                                <a onclick="addIdeaComite()" class="indigo lighten-2 btn-large" data-position="bottom" data-delay="50" data-tooltip="Agregar la idea de proyecto seleccionada al comité"><i class="material-icons left">add</i>Agregar</a>
+                                <a onclick="addIdeaComite()" class="indigo lighten-2 btn-large" data-position="bottom"
+                                    data-delay="50" data-tooltip="Agregar la idea de proyecto seleccionada al comité"><i
+                                        class="material-icons left">add</i>Agregar</a>
                             </center>
                             <div class="card-content">
                                 <table class="responsive-table" style="width: 100%">
@@ -96,11 +103,19 @@
                                     <tbody id="tblIdeasComiteCreate">
                                         @if ($existe)
                                             @foreach ($comite->ideas as $key => $value)
-                                                <tr class="selected" id="ideaAsociadaAgendamiento{{$value->id}}">
-                                                    <td><input type="hidden" name="ideas[]" value="{{$value->id}}">{{$value->nombre_proyecto}}</td>
-                                                    <td><input type="hidden" name="horas[]" value="{{$value->pivot->hora}}">{{$value->pivot->hora}}</td>
-                                                    <td><input type="hidden" name="direcciones[]" value="{{$value->pivot->direccion}}">{{$value->pivot->direccion}}</td>
-                                                    <td><a class="waves-effect bg-danger white-text btn" onclick="eliminarIdeaDelAgendamiento('{{$value->id}}')"><i class="material-icons">delete_sweep</i></a></td>
+                                                <tr class="selected" id="ideaAsociadaAgendamiento{{ $value->id }}">
+                                                    <td><input type="hidden" name="ideas[]"
+                                                            value="{{ $value->id }}">{{ $value->nombre_proyecto }}
+                                                    </td>
+                                                    <td><input type="hidden" name="horas[]"
+                                                            value="{{ $value->pivot->hora }}">{{ $value->pivot->hora }}
+                                                    </td>
+                                                    <td><input type="hidden" name="direcciones[]"
+                                                            value="{{ $value->pivot->direccion }}">{{ $value->pivot->direccion }}
+                                                    </td>
+                                                    <td><a class="waves-effect bg-danger white-text btn"
+                                                            onclick="eliminarIdeaDelAgendamiento('{{ $value->id }}')"><i
+                                                                class="material-icons">delete_sweep</i></a></td>
                                                 </tr>
                                             @endforeach
                                         @endif
@@ -126,7 +141,8 @@
                 <span class="red-text text-darken-2">
                     Para registrar los expertos en el comité dar click en el botón
                     <input class="filled-in" type="checkbox" name="testing" disabled id="testing">
-                    <label for="testing">Nombre del experto</label> y posteriormente asignar horas de entrada y salida del comité
+                    <label for="testing">Nombre del experto</label> y posteriormente asignar horas de entrada y salida
+                    del comité
                 </span>
             </h5>
             <div class="row">
@@ -146,7 +162,7 @@
                                         if ($gcomite->id == $gestor->id) {
                                             $gexistente[$gestor->id] = [
                                                 'inicio' => $gcomite->pivot->hora_inicio,
-                                                'fin' => $gcomite->pivot->hora_fin
+                                                'fin' => $gcomite->pivot->hora_fin,
                                             ];
                                         }
                                     @endphp
@@ -209,7 +225,9 @@
 <div class="divider"></div>
 <div class="row">
     <center>
-        <button type="submit" class="waves-effect waves-light btn bg-secondary center-align"><i class="material-icons right">send</i>Guardar</button>
-        <a href="{{route('csibt')}}" class="waves-effect bg-danger btn center-align"><i class="material-icons left">backspace</i>Cancelar</a>
+        <button type="submit" class="waves-effect waves-light btn bg-secondary center-align"><i
+                class="material-icons right">send</i>Guardar</button>
+        <a href="{{ route('csibt') }}" class="waves-effect bg-danger btn center-align"><i
+                class="material-icons left">backspace</i>Cancelar</a>
     </center>
 </div>

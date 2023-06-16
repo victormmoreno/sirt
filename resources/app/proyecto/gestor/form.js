@@ -246,7 +246,7 @@ function pintarTalentoEnTabla_Fase_Inicio(id, isInterlocutor) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: host_url + '/usuario/talento/consultarTalentoPorId/' + id
+        url: `${host_url}/usuarios/talento/consultarTalentoPorId/${id}`
     }).done(function (ajax) {
 
         let fila = prepararFilaEnLaTablaDeTalentos(ajax, isInterlocutor);
@@ -260,7 +260,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual(id) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: host_url + '/usuario/talento/consultarTalentoPorId/' + id
+        url: `${host_url}/usuarios/talento/consultarTalentoPorId/${id}`
     }).done(function (ajax) {
         let fila = prepararFilaEnLaTablaDePropietarios_Users(ajax);
         $('#propiedadIntelectual_Personas').append(fila);
@@ -273,7 +273,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Sede(sede_id)
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url : host_url + '/empresa/ajaxDetalleDeUnaSede/'+sede_id,
+        url : `${host_url}/empresa/ajaxDetalleDeUnaSede/${sede_id}`,
         success: function (response) {
           Swal.fire({
             toast: true,
@@ -309,8 +309,6 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Grupo(id) {
 
 // Valida que el talento no se encuentre asociado al proyecto
 function noRepeat(id) {
-    // console.log('fff');
-    // let retorno = true;
     let a = document.getElementsByName("talentos[]");
     for (x = 0; x < a.length; x ++) {
         if (a[x].value == id) {
@@ -497,7 +495,6 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
             ideaProyectoAsociadaConExito(codigo, nombre);
 
             if(response.data.talento != null){
-                console.log(response.data);
                 addTalentoProyecto(response.data.talento.id, true);
                 addPersonaPropiedad(response.data.talento.id);
             }
@@ -629,9 +626,8 @@ function consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table(tableName, fie
         },
         processing: true,
         serverSide: true,
-        // order: false,
         ajax: {
-            url: host_url + "/usuario/talento/getTalentosDeTecnoparque/",
+            url: `${host_url}/usuarios/talento/getTalentosDeTecnoparque/`,
             type: "get"
         },
         columns: [
@@ -723,7 +719,7 @@ function consultarExpertosDeUnNodo(nodo_id) {
     $.ajax({
         dataType:'json',
         type:'get',
-        url: host_url + "/usuario/usuarios/gestores/nodo/"+nodo_id
+        url: `${host_url}/usuarios/gestores/nodo/${nodo_id}`
       }).done(function(response){
           $("#txtexperto_id_proyecto").empty();
           $('#txtexperto_id_proyecto').append('<option value="">Seleccione el experto</option>');
@@ -751,7 +747,6 @@ function consultarSublineas(linea) {
         type:'get',
         url: host_url + "/proyecto/sublineas_of/"+linea
     }).done(function (response) {
-          console.log(response);
         printSublineas(response);
     });
 }

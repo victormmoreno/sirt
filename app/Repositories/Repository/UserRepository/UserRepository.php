@@ -4,14 +4,10 @@ namespace App\Repositories\Repository\UserRepository;
 
 use App\Models\{
     ActivationToken,
-    Centro,
     Ciudad,
     Departamento,
-    Dinamizador,
-    Entidad,
     Eps,
-    Gestor,
-    TipoTalento,
+    Etnia,
     GradoEscolaridad,
     GrupoSanguineo,
     Infocenter,
@@ -19,9 +15,11 @@ use App\Models\{
     Nodo,
     Ocupacion,
     Regional,
-    Talento,
     TipoDocumento,
-    UserNodo
+    TipoTalento,
+    TipoFormacion,
+    TipoEstudio,
+    LineaTecnologica
 };
 use App\Events\User\UserHasNewPasswordGenerated;
 use App\User;
@@ -68,9 +66,30 @@ class UserRepository
         return GrupoSanguineo::allGrupoSanguineos('gruposanguineos.nombre')->get();
     }
 
+    public function getAllEtnias()
+    {
+        return Etnia::pluck('nombre', 'id');
+    }
+
+    public function getAllOcupaciones()
+    {
+        return Ocupacion::allOcupaciones()->pluck('nombre', 'id');
+    }
+
+
     public function getAllEpsActivas()
     {
         return Eps::allEps(Eps::IsActive(), 'eps.nombre')->get();
+    }
+
+    public function getAllTipoTalento()
+    {
+        return TipoTalento::pluck('nombre', 'id');
+    }
+
+    public function getAllTipoEstudios()
+    {
+        return TipoEstudio::pluck('nombre', 'id');
     }
 
     public function activationToken($user)
@@ -82,89 +101,104 @@ class UserRepository
         ]);
     }
 
-    public function getAllOcupaciones()
+
+    public function findByIdEloquent($id)
     {
-        return Ocupacion::allOcupaciones()->pluck('nombre', 'id');
+        return User::query()
+            ->withTrashed()
+            ->where('users.id', $id);
     }
 
-    public function findById($id)
+    public function findByIdBuilder($id)
     {
-        return User::with(
-            [
-                'tipodocumento' => function ($query) {
-                    $query->select('id', 'nombre');
-                },
-                'roles'         => function ($query) {
-                    $query->select('id', 'name');
-                },
-                'ocupaciones',
-                'eps',
-                'gradoescolaridad',
-                'gruposanguineo',
-                'ciudad',
-                'ciudad.departamento',
-                'ciudadexpedicion.departamento',
-                'dinamizador',
-                'dinamizador.nodo',
-                'dinamizador.nodo.entidad',
-                'gestor',
-                'gestor.nodo',
-                'gestor.nodo.entidad',
-                'gestor.nodo.centro',
-                'gestor.nodo.centro.regional',
-                'gestor.nodo.centro.entidad',
-                'gestor.lineatecnologica',
-                'infocenter',
-                'infocenter.nodo',
-                'infocenter.nodo.entidad',
-                'talento',
-                'talento.entidad',
-                'ingreso.nodo.entidad',
-            ]
-        )->findOrFail($id);
+        return User::query()
+        ->infoUserBuilder()
+        ->select('users.id', 'tiposdocumentos.nombre as tipodocumento',
+        'gradosescolaridad.nombre as gradoescolaridad',
+        'gruposanguineos.nombre as gruposanguineo',
+        'eps.nombre as eps', 'etnias.nombre as etnia',
+        'ciudad_residencia.nombre as ciudad_residencia',
+        'departamento_residencia.nombre as departamento_residencia',
+        'ciudad_expedicion.nombre as ciudad_expedicion',
+        'departamento_expedicion.nombre as departamento_expedicion',
+        'users.documento','users.nombres', 'users.apellidos',
+        'users.email','users.barrio','users.direccion','users.celular',
+        'users.telefono','users.fechanacimiento', 'users.otra_eps',
+        'users.institucion', 'users.titulo_obtenido', 'users.fecha_terminacion',
+        'users.ultimo_login', 'users.estrato', 'users.otra_ocupacion',
+        'users.informacion_user', 'users.informacion_user_completed_at',
+        'users.created_at', 'users.deleted_at',
+        )
+        ->selectRaw('if(users.genero = 1, "Masculino", if(users.genero = 0, "Femenino", "No binario")) as nombre_genero')
+        ->selectRaw('if(users.mujerCabezaFamilia = 1, "SI", "NO") as mujer_cabeza_familia')
+        ->selectRaw('if(users.desplazadoPorViolencia = 1, "SI", "NO") as desplazado_violencia')
+        ->selectRaw('if(users.grado_discapacidad = 1, "SI", "NO") as grado_discapacidad')
+        ->selectRaw('if(users.grado_discapacidad = 1, users.descripcion_grado_discapacidad, "No Aplica") as descripcion_grado_discapacidad')
+        ->selectRaw('if(users.estado = 1, "Habilidado", "Inhabilitado") as estado')
+        ->selectRaw('GROUP_CONCAT(DISTINCT roles.name SEPARATOR "; ") as rols')
+        ->selectRaw('GROUP_CONCAT(DISTINCT ocupaciones.nombre SEPARATOR "; ") as ocupacions')
+        ->withTrashed()
+        ->where('users.id', $id);
     }
 
-    public function findUserByDocument($document)
+    public function querySearchUser($field, $sentence, string $value)
     {
-        return User::with(
-            [
-                'tipodocumento' => function ($query) {
-                    $query->select('id', 'nombre');
-                },
-                'roles'         => function ($query) {
-                    $query->select('id', 'name');
-                },
-                'ocupaciones',
-                'eps',
-                'gradoescolaridad',
-                'gruposanguineo',
-                'ciudad',
-                'ciudad.departamento',
-                'ciudadexpedicion.departamento',
-                'dinamizador',
-                'dinamizador.nodo',
-                'dinamizador.nodo.entidad',
-                'gestor',
-                'gestor.nodo',
-                'gestor.nodo.entidad',
-                'gestor.nodo.centro',
-                'gestor.nodo.centro.regional',
-                'gestor.nodo.centro.entidad',
-                'gestor.lineatecnologica',
-                'infocenter',
-                'infocenter.nodo',
-                'infocenter.nodo.entidad',
-                'talento',
-
-                'talento.entidad',
-                'ingreso.nodo.entidad',
-            ]
-        )->withTrashed()->where('documento', $document);
+        return User::query()
+        ->withTrashed()
+        ->where($field, $sentence, $value);
     }
 
-    public function account($id)
+    public function findUserByDocumentEloquent($document)
     {
-        return User::with(['tipodocumento', 'grupoSanguineo', 'eps', 'ciudad', 'ciudad.departamento', 'ocupaciones', 'gradoescolaridad', 'talento', 'dinamizador', 'roles', 'dinamizador.nodo', 'dinamizador.nodo.entidad', 'gestor.nodo', 'gestor.nodo.entidad', 'gestor.lineatecnologica', 'infocenter', 'infocenter.nodo', 'infocenter.nodo.entidad'])->withTrashed()->where('id', $id)->firstOrFail();
+        return User::query()
+        ->withTrashed()
+        ->where('users.documento', $document);
+    }
+
+    public function findUserByDocumentBuilder($document)
+    {
+        return User::query()
+        ->infoUserBuilder()
+        ->select('users.id', 'tiposdocumentos.nombre as tipodocumento',
+        'gradosescolaridad.nombre as gradoescolaridad',
+        'gruposanguineos.nombre as gruposanguineo',
+        'eps.nombre as eps', 'etnias.nombre as etnia',
+        'ciudad_residencia.nombre as ciudad_residencia',
+        'departamento_residencia.nombre as departamento_residencia',
+        'ciudad_expedicion.nombre as ciudad_expedicion',
+        'departamento_expedicion.nombre as departamento_expedicion',
+        'users.documento','users.nombres', 'users.apellidos',
+        'users.email','users.barrio','users.direccion','users.celular',
+        'users.telefono','users.fechanacimiento', 'users.otra_eps',
+        'users.institucion', 'users.titulo_obtenido', 'users.fecha_terminacion',
+        'users.ultimo_login', 'users.estrato', 'users.otra_ocupacion',
+        'users.created_at', 'users.deleted_at', 'users.informacion_user'
+        )
+        ->selectRaw('if(users.genero = 1, "Masculino", if(users.genero = 0, "Femenino", "No binario")) as nombre_genero')
+        ->selectRaw('if(users.mujerCabezaFamilia = 1, "SI", "NO") as mujer_cabeza_familia')
+        ->selectRaw('if(users.desplazadoPorViolencia = 1, "SI", "NO") as desplazado_violencia')
+        ->selectRaw('if(users.grado_discapacidad = 1, "SI", "NO") as grado_discapacidad')
+        ->selectRaw('if(users.grado_discapacidad = 1, users.descripcion_grado_discapacidad, "No Aplica") as descripcion_grado_discapacidad')
+        ->selectRaw('if(users.estado = 1, "Habilidado", "Inhabilitado") as estado')
+        ->selectRaw('GROUP_CONCAT(DISTINCT roles.name SEPARATOR "; ") as rols')
+        ->selectRaw('GROUP_CONCAT(DISTINCT ocupaciones.nombre SEPARATOR "; ") as ocupaciones')
+        ->withTrashed()
+        ->where('users.documento', $document);
+    }
+
+    public function Store($request, $password)
+    {
+        DB::beginTransaction();
+        try {
+            $user = $this->storeUser($request, $password);
+            $user->ocupaciones()->sync($request->get('txtocupaciones'));
+            $this->SyncInfoRolesUser($request, $user);
+            DB::commit();
+            return $user;
+        } catch (\Exception $e) {
+            DB::rollback();
+            return false;
+        }
     }
 
     public function getAllRoles()
@@ -198,24 +232,18 @@ class UserRepository
         return Nodo::allLineasPorNodo($nodo);
     }
 
+    public function getAllLineas()
+    {
+        return LineaTecnologica::pluck('nombre', 'id');
+    }
+    public function getAllTipoFormaciones()
+    {
+        return TipoFormacion::pluck('nombre', 'id');
+    }
+
     public function getAllRegionales()
     {
         return Regional::allRegionales()->pluck('nombre', 'id');
-    }
-
-    public function Store($request, $password)
-    {
-        DB::beginTransaction();
-        try {
-            $user = $this->storeUser($request, $password);
-            $user->ocupaciones()->sync($request->get('txtocupaciones'));
-            $this->SyncInfoRolesUser($request, $user);
-            DB::commit();
-            return $user;
-        } catch (\Exception $e) {
-            DB::rollback();
-            return false;
-        }
     }
 
     private function storeUser($request, $password)
@@ -251,71 +279,6 @@ class UserRepository
         ]);
     }
 
-    private function assignRoleUser($user, $role)
-    {
-        return $user->assignRole($role);
-    }
-
-    protected function updateOrCreateTalento($request, $user)
-    {
-        $entidad = null;
-        if (
-            $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)->first()->id ||
-            $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_CON_APOYO)->first()->id
-        ) {
-            $entidad = $request->input('txtcentroformacion_aprendiz') ?: $this->getIdNoAplicaEntidad();
-        } else if (
-            $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_EGRESADO_SENA)->first()->id
-        ) {
-            $entidad = $request->input('txtcentroformacion_egresado') ?: $this->getIdNoAplicaEntidad();
-        } else if (
-            $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_FUNCIONARIO_SENA)->first()->id
-        ) {
-            $entidad = $request->input('txtcentroformacion_funcionarioSena') ?: $this->getIdNoAplicaEntidad();
-        } else if (
-            $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_INSTRUCTOR_SENA)->first()->id
-        ) {
-            $entidad = $request->input('txtcentroformacion_instructorSena') ?: $this->getIdNoAplicaEntidad();
-        } else {
-            $entidad = $this->getIdNoAplicaEntidad();
-        }
-        return Talento::updateOrCreate(
-            ['user_id' => $user->id],[
-            "tipo_talento_id"       => $request->input('txttipotalento'),
-            "entidad_id"            => $entidad,
-
-            "programa_formacion"    => $request->get('txtprogramaformacion') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_APRENDIZ_SENA_CON_APOYO) ? $request->input('txtprogramaformacion_aprendiz') :
-                (
-                    $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO) ? $request->input('txtprogramaformacion_aprendiz') :
-                    (
-                        $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_EGRESADO_SENA) ? $request->input('txtprogramaformacion_egresado') : null
-                    )
-                ),
-            "tipo_formacion_id"     => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_EGRESADO_SENA) ? $request->input('txttipoformacion') : null,
-            "tipo_estudio_id"       => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ? $request->input('txttipoestudio') : null,
-            "dependencia"           => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_SENA) ? $request->input('txtdependencia') : null,
-            "universidad"           => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ? $request->input('txtuniversidad') : null,
-            "carrera_universitaria" => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ? $request->input('txtcarrera') : null,
-            "empresa"               => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_EMPRESA) ? $request->input('txtempresa') : null,
-        ]);
-    }
-
-    private function getIdGrupoInvesitgacion($request)
-    {
-        return Entidad::select('entidades.id')->join('gruposinvestigacion', 'gruposinvestigacion.entidad_id', 'entidades.id')
-            ->where('entidades.nombre', $request->get('txtgrupoinvestigacion'))
-            ->first()->id;
-    }
-
-    protected function getIdNoAplicaEntidad()
-    {
-        return Entidad::where('nombre', 'No Aplica')->first()->id;
-    }
-
-    public function getIdTipoTalentoForNombre(string $tipotalento)
-    {
-        return TipoTalento::where('nombre', $tipotalento)->first()->id;
-    }
 
     public function Update($request, $user)
     {
@@ -328,20 +291,6 @@ class UserRepository
             return $userUpdate;
         } catch (\Exception $e) {
             DB::rollback();
-            return false;
-        }
-    }
-
-
-    /**
-     * metodo para comprobar comprobar que el no exista en array
-     **/
-    private function notExistRoleInArray($request, $userUpdated, $role)
-    {
-        if ($request->filled('role')) {
-            if (!collect($userUpdated->getRoleNames())->contains($role)) {
-                return true;
-            }
             return false;
         }
     }
@@ -379,293 +328,20 @@ class UserRepository
         return $user;
     }
 
-    public function updateTalento($request, $userUpdated)
-    {
-        $entidad = null;
-        if (
-            $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)->first()->id ||
-            $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_APRENDIZ_SENA_CON_APOYO)->first()->id
-        ) {
-            $entidad = $request->input('txtcentroformacion_aprendiz') ?: $this->getIdNoAplicaEntidad();
-        } else if (
-            $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_EGRESADO_SENA)->first()->id
-        ) {
-            $entidad = $request->input('txtcentroformacion_egresado') ?: $this->getIdNoAplicaEntidad();
-        } else if (
-            $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_FUNCIONARIO_SENA)->first()->id
-        ) {
-            $entidad = $request->input('txtcentroformacion_funcionarioSena') ?: $this->getIdNoAplicaEntidad();
-        } else if (
-            $request->get('txttipotalento') == TipoTalento::where('nombre', TipoTalento::IS_INSTRUCTOR_SENA)->first()->id
-        ) {
-            $entidad = $request->input('txtcentroformacion_instructorSena') ?: $this->getIdNoAplicaEntidad();
-        } else {
-            $entidad = $this->getIdNoAplicaEntidad();
-        }
-        if (
-            $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_APRENDIZ_SENA_CON_APOYO) ||
-            $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_APRENDIZ_SENA_SIN_APOYO)
-        ) {
-            $programa = $request->input('txtprogramaformacion_aprendiz');
-        } elseif ($request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_EGRESADO_SENA)) {
-            $programa = $request->input('txtprogramaformacion_egresado');
-        } else {
-            $programa = 'No Aplica';
-        }
-        return Talento::find($userUpdated->talento->id)->update([
-            "tipo_talento_id"       => $request->input('txttipotalento'),
-            "entidad_id"            => $entidad,
-
-            "programa_formacion"    =>  $programa,
-
-            "tipo_formacion_id"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_EGRESADO_SENA) ?
-                $request->input('txttipoformacion') : null,
-
-            "tipo_estudio_id"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
-                $request->input('txttipoestudio') : null,
-            "dependencia"    => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_SENA) ?
-                $request->input('txtdependencia') : null,
-            "universidad"           => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
-                $request->input('txtuniversidad') : null,
-            "carrera_universitaria" => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_ESTUDIANTE_UNIVERSITARIO) ?
-                $request->input('txtcarrera') : null,
-            "empresa"               => $request->get('txttipotalento') == $this->getIdTipoTalentoForNombre(TipoTalento::IS_FUNCIONARIO_EMPRESA) ?
-                $request->input('txtempresa') : null,
-        ]);
-    }
-
-    private function getIdEntidadCentro(int $centro)
-    {
-        return Centro::select('entidades.id')
-            ->join('entidades', 'entidades.id', '=', 'centros.entidad_id')
-            ->where('centros.id', $centro)
-            ->get()
-            ->last()->id;
-    }
-
     public function destroySessionUser()
     {
         Session::flush();
         Cache::flush();
     }
 
-    public function getAllUsersForRole(string $role)
-    {
-        return User::InfoUserDatatable()
-            ->role($role)
-            ->orderby('users.created_at', 'desc')
-            ->get();
-    }
-
-    public function getAllUsersForDatatables()
-    {
-        return User::InfoUserDatatable()->with(['roles' => function ($query) {
-            $query->select('name');
-        }])
-        ->orderby('users.created_at', 'desc')
-        ->get();
-    }
-
-    public function userInfoWithRelations(array $role = [], array $relations = [])
-    {
-        return User::infoUserRole($role, $relations);
-    }
-
-    public function getUsersTalentosByProject($nodo = null, $user = null, $anio = null)
-    {
-        if ($user != null && session()->get('login_role') == User::IsExperto()) {
-            if ($nodo == null) {
-                return $this->getInfoUsersTalentosWithProjects($anio)
-                    ->where('gestores.id', $user);
-            }
-            $nodo = auth()->user()->gestor->nodo_id;
-            return $this->getInfoUsersTalentosWithProjects($anio)
-                ->where('nodos.id', $nodo)
-                ->where('gestores.id', $user);
-        } else if ($user == null && session()->get('login_role') == User::IsExperto()) {
-            $user = auth()->user()->gestor->id;
-            if ($nodo == null) {
-                $this->getInfoUsersTalentosWithProjects($anio);
-            }
-            $nodo = auth()->user()->gestor->nodo_id;
-            return $this->getInfoUsersTalentosWithProjects($anio)
-                ->where('nodos.id', $nodo)
-                ->where('gestores.id', $user);
-        } else if ($user == null && session()->get('login_role') == User::IsDinamizador()) {
-
-            if ($nodo == null) {
-                $this->getInfoUsersTalentosWithProjects($anio);
-            }
-            $nodo = auth()->user()->dinamizador->nodo_id;
-            return $this->getInfoUsersTalentosWithProjects($anio)
-                ->where('nodos.id', $nodo);
-        } else if ($user != null && session()->get('login_role') == User::IsDinamizador()) {
-            if ($nodo == null) {
-                $this->getInfoUsersTalentosWithProjects($anio)
-                    ->where('gestores.id', $user);
-            }
-            $nodo = auth()->user()->dinamizador->nodo_id;
-            return $this->getInfoUsersTalentosWithProjects($anio)
-                ->where('nodos.id', $nodo)
-                ->where('gestores.id', $user);
-        } else if ($user == null && session()->get('login_role') == User::IsActivador()) {
-            if ($nodo == null) {
-                $this->getInfoUsersTalentosWithProjects($anio);
-            }
-            return $this->getInfoUsersTalentosWithProjects($anio)
-                ->where('nodos.id', $nodo);
-        } else if ($user == null && session()->get('login_role') == User::IsInfocenter()) {
-            if ($nodo == null) {
-                $this->getInfoUsersTalentosWithProjects($anio);
-            }
-            $nodo = auth()->user()->infocenter->nodo_id;
-            return $this->getInfoUsersTalentosWithProjects($anio)
-                ->where('nodos.id', $nodo);
-        } else if ($user != null && session()->get('login_role') == User::IsInfocenter()) {
-            if ($nodo == null) {
-                $this->getInfoUsersTalentosWithProjects($anio)
-                    ->where('gestores.id', $user);
-            }
-            $nodo = auth()->user()->infocenter->nodo_id;
-            return $this->getInfoUsersTalentosWithProjects($anio)
-                ->where('nodos.id', $nodo)
-                ->where('gestores.id', $user);
-        }
-    }
-
-    private function getInfoUsersTalentosWithProjects($anio = null)
-    {
-        if ($anio == null) {
-            return User::select(
-                'users.id',
-                'tiposdocumentos.nombre as tipodocumento',
-                'users.documento',
-                'users.email',
-                'users.direccion',
-                'users.celular',
-                'users.telefono',
-                'users.barrio',
-                'users.estado',
-                'users.genero',
-                'users.institucion',
-                'users.titulo_obtenido',
-                'users.fecha_terminacion',
-                'users.estrato',
-                'users.otra_eps',
-                'users.otra_ocupacion',
-                'users.grado_discapacidad',
-                'users.descripcion_grado_discapacidad',
-                'users.fechanacimiento',
-                'tipo_talentos.nombre as tipotalento',
-                'etnias.nombre as etnia',
-                'gruposanguineos.nombre as grupo_sanguineo',
-                'gradosescolaridad.nombre as grado_escolaridad',
-                'eps.nombre as eps'
-            )
-                ->selectRaw("CONCAT(users.nombres,' ',users.apellidos) as nombre")
-                ->selectRaw("CONCAT(ciudades.nombre,' - ',departamentos.nombre) as residencia")
-                ->join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
-                ->join('ciudades', 'ciudades.id', '=', 'users.ciudad_id')
-                ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
-                ->join('gruposanguineos', 'gruposanguineos.id', 'users.gruposanguineo_id')
-                ->join('gradosescolaridad', 'gradosescolaridad.id', 'users.gradoescolaridad_id')
-                ->join('talentos', 'talentos.user_id', '=', 'users.id')
-                ->join('eps', 'eps.id', 'users.eps_id')
-                ->join('tipo_talentos', 'tipo_talentos.id', '=', 'talentos.tipo_talento_id')
-                ->leftjoin('etnias', 'etnias.id', 'users.etnia_id')
-                ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.talento_id', '=', 'talentos.id')
-                ->join('articulacion_proyecto', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
-                ->join('proyectos', 'proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
-                ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-                ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
-                ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
-                ->groupBy('users.documento');
-        }
-        return User::select(
-            'users.id',
-            'tiposdocumentos.nombre as tipodocumento',
-            'users.documento',
-            'users.email',
-            'users.direccion',
-            'users.celular',
-            'users.telefono',
-            'users.barrio',
-            'users.estado',
-            'users.genero',
-            'users.institucion',
-            'users.titulo_obtenido',
-            'users.fecha_terminacion',
-            'users.estrato',
-            'users.otra_eps',
-            'users.otra_ocupacion',
-            'users.grado_discapacidad',
-            'users.descripcion_grado_discapacidad',
-            'users.fechanacimiento',
-            'tipo_talentos.nombre as tipotalento',
-            'etnias.nombre as etnia',
-            'gruposanguineos.nombre as grupo_sanguineo',
-            'gradosescolaridad.nombre as grado_escolaridad',
-            'eps.nombre as eps'
-        )
-            ->selectRaw("CONCAT(users.nombres,' ',users.apellidos) as nombre")
-            ->selectRaw("CONCAT(ciudades.nombre,' - ',departamentos.nombre) as residencia")
-            ->join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
-            ->join('ciudades', 'ciudades.id', '=', 'users.ciudad_id')
-            ->join('departamentos', 'departamentos.id', '=', 'ciudades.departamento_id')
-            ->join('gruposanguineos', 'gruposanguineos.id', 'users.gruposanguineo_id')
-            ->join('gradosescolaridad', 'gradosescolaridad.id', 'users.gradoescolaridad_id')
-            ->join('talentos', 'talentos.user_id', '=', 'users.id')
-            ->join('eps', 'eps.id', 'users.eps_id')
-            ->join('tipo_talentos', 'tipo_talentos.id', '=', 'talentos.tipo_talento_id')
-            ->leftjoin('etnias', 'etnias.id', 'users.etnia_id')
-            ->join('articulacion_proyecto_talento', 'articulacion_proyecto_talento.talento_id', '=', 'talentos.id')
-            ->join('articulacion_proyecto', 'articulacion_proyecto_talento.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
-            ->join('proyectos', 'proyectos.articulacion_proyecto_id', '=', 'articulacion_proyecto.id')
-            ->join('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
-            ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
-            ->join('nodos', 'nodos.id', '=', 'proyectos.nodo_id')
-            ->where(function ($q) use ($anio) {
-                $q->where(function ($query) use ($anio) {
-                    $query->whereYear('fecha_cierre', $anio);
-                })
-                    ->orWhere(function ($query) use ($anio) {
-                        $query->whereYear('fecha_inicio', $anio);
-                    });
-            })
-            ->orderBy('nombres');
-    }
-
-    public function UpdateUserConfirm($request, $user)
-    {
-        // DB::beginTransaction();
-        // try {
-            $userUpdate = $this->SyncInfoRolesUser($request, $user);
-            $userUpdate->update([
-                'estado' => User::IsActive(),
-            ]);
-            DB::commit();
-            return $userUpdate;
-        // } catch (\Exception $e) {
-        //     DB::rollback();
-        //     return false;
-        // }
-    }
-
     private function SyncInfoRolesUser($request, $userUpdated)
     {
         $newRole = array_diff($request->input('role'), collect($userUpdated->getRoleNames())->toArray());
 
-        $this->UpdateOrCreateRoleApoyoTecnico($request, $userUpdated, $newRole);
 
-        $this->UpdateOrCreateRoleArticulador($request, $userUpdated, $newRole);
-
-        $this->UpdateOrCreateRoleDinamizador($request, $userUpdated, $newRole, User::IsDinamizador());
-
-        $this->UpdateOrCreateRoleExpert($request, $userUpdated, $newRole);
 
         $this->UpdateOrCreateRoleInfocenter($request, $userUpdated, $newRole);
 
-        $this->UpdateOrCreateRoleTalent($request, $userUpdated, $newRole);
 
         $this->UpdateOrCreateRoleIngreso($request, $userUpdated, $newRole);
 
@@ -673,128 +349,6 @@ class UserRepository
         return $userUpdated;
     }
 
-    public function getArticuladorForNode($node)
-    {
-        return User::select('users.id')
-            ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS articulador')
-            ->join('user_nodo', 'user_nodo.user_id', '=', 'users.id')
-            ->join('nodos', 'nodos.id', '=', 'user_nodo.nodo_id')
-            ->role(User::IsArticulador())
-            ->where('nodos.id', $node);
-    }
-
-    /**
-     * assign information to new dinamizador
-     * @return void
-     */
-    private function UpdateOrCreateRoleDinamizador($request, User $userUpdated, array $newRole, $role)
-    {
-        $userdinamizador = $this->queryDinamizadoresByNodo($request);
-
-        if ($newRole != null
-            && collect($request->role)->contains(User::IsDinamizador())
-        ) {
-            if ($userdinamizador !== null && $userdinamizador->count() >= Dinamizador::cantidadDinamizadoresPermitidosPornodo()) {
-                $userdinamizador->each(function ($item) use($role) {
-                    if ($item->hasRole($role) && $item->roles->count() == 1) {
-                        $item->update([
-                            'estado' => User::IsInactive(),
-                        ]);
-                    }
-                    $item->dinamizador->delete();
-                    $item->talento()->updateOrCreate([
-                        'tipo_talento_id' => $this->getIdTipoTalentoForNombre(TipoTalento::IS_EMPRENDEDOR)
-                    ]);
-                    $item->syncRoles(config('laravelpermission.roles.roleTalento'));
-                });
-                Dinamizador::updateOrCreate(
-                    ['user_id' => $userUpdated->id],
-                    [
-                    "nodo_id" => $request->input('txtnododinamizador')
-                ]);
-            } else {
-                Dinamizador::updateOrCreate(
-                    ['user_id' => $userUpdated->id],
-                    [
-                        "nodo_id" => $request->input('txtnododinamizador')
-                        ]);
-            }
-        }
-    }
-
-    /**
-     * returns all the dynamizers of a node
-     * @return
-     */
-    protected function queryDinamizadoresByNodo($request)
-    {
-        if ($request->filled('txtnododinamizador')) {
-            return User::whereHas('dinamizador.nodo', function ($query) use ($request) {
-                $query->where('id', $request->txtnododinamizador);
-            })->get();
-        }
-        return null;
-    }
-
-    /**
-     * assign information to new user apoyo tecnico
-     * @return void
-     */
-    private function UpdateOrCreateRoleApoyoTecnico($request, $userUpdated, $role)
-    {
-        if ($request->filled('txtnodouser') && collect($request->role)->contains(User::IsApoyoTecnico())) {
-            UserNodo::updateOrCreate(
-                [
-                    'user_id' => $userUpdated->id,
-                    'role' => User::IsApoyoTecnico()
-                ],
-                [
-                    'nodo_id' => $request->input('txtnodouser'),
-                    'honorarios' => $request->input('txthonorariouser')
-                ]
-            );
-        }
-    }
-
-    /**
-     * assign information to new user articulador
-     * @return
-     */
-    private function UpdateOrCreateRoleArticulador($request, $userUpdated, $role)
-    {
-        if ($request->filled('txtnodoarticulador') && collect($request->role)->contains(User::IsArticulador())) {
-            UserNodo::updateOrCreate(
-                [
-                    'user_id' => $userUpdated->id,
-                    'role' => User::IsArticulador()
-                ],
-                [
-                    'nodo_id' => $request->input('txtnodoarticulador'),
-                    'honorarios' => $request->input('txthonorarioarticulador')
-                ]
-            );
-        }
-    }
-
-    /**
-     * assign information to new experto
-     * @return void
-     */
-    private function UpdateOrCreateRoleExpert($request, User $userUpdated, array $role)
-    {
-        if (
-            $request->filled('txtnodogestor') && is_array($role) && collect($request->role)->contains(User::IsExperto())
-        ) {
-            Gestor::updateOrCreate(
-                ['user_id' => $userUpdated->id],
-                [
-                    'nodo_id' => $request->input('txtnodogestor'),
-                    'lineatecnologica_id' => $request->input('txtlinea'),
-                    'honorarios' => $request->input('txthonorario')
-                ]
-            );
-        }
-    }
     /**
      * assign information to new infocenter
      * @return
@@ -812,17 +366,7 @@ class UserRepository
         }
     }
 
-    /**
-     * assign information to new talent
-     * @return
-     */
-    private function UpdateOrCreateRoleTalent($request, User $userUpdated, array $role)
-    {
-        if ($role != null && collect($request->role)->contains(User::IsTalento())
-        ) {
-            $this->updateOrCreateTalento($request, $userUpdated);
-        }
-    }
+
 
     /**
      * assign information to new ingreso
@@ -874,21 +418,16 @@ class UserRepository
                 'dinamizador.nodo.entidad',
                 'articulador',
                 'apoyotecnico',
-                'gestor',
-                'gestor.nodo',
-                'gestor.nodo.entidad',
-                'gestor.nodo.centro',
-                'gestor.nodo.centro.regional',
-                'gestor.nodo.centro.entidad',
-                'gestor.lineatecnologica',
+                'experto',
+                'experto.nodo',
+                'experto.nodo.entidad',
+                'experto.nodo.centro',
+                'experto.nodo.centro.regional',
+                'experto.nodo.centro.entidad',
+                'experto.lineatecnologica',
                 'infocenter',
                 'infocenter.nodo',
                 'infocenter.nodo.entidad',
-                'talento',
-                'talento.entidad',
-                'talento.tipotalento',
-                'talento.tipoformacion',
-                'talento.tipoestudio',
                 'ingreso.nodo.entidad',
             ]
         )->withTrashed();
@@ -960,7 +499,7 @@ class UserRepository
             ($user->isUserActivador()) ||
             ($user->has('articulador') && isset($user->articulador)) ||
             ($user->has('apoyotecnico') && isset($user->apoyotecnico)) ||
-            ($user->has('gestor') && isset($user->gestor)) ||
+            ($user->has('experto') && isset($user->experto)) ||
             ($user->has('infocenter') && isset($user->infocenter)) ||
             ($user->has('ingreso') && isset($user->ingreso)) ||
             ($user->has('talento') && isset($user->talento))

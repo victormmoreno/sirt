@@ -1,8 +1,8 @@
-@extends('spa.layouts.app')
+@extends('layouts.guest')
 
 @section('meta-title', 'Créditos')
 @section('meta-content', 'Créditos')
-@section('content-spa')
+@section('content')
 <main class="mn-inner no-p">
     <div class="bg-primary-lighten">
         <div class="container">
@@ -13,7 +13,6 @@
                             <div class="row">
                                 <div class="col s12 m6 l12 m12  center-align">
                                     <img class="responsive-img" style="width: 100%; height: 500px;" src="{{asset('img/logo-tecnoparque-white.svg')}}" alt="logo Red Tecnoparque Colombia" title="Red Tecnoparque Colombia" />
-                                    <img class="responsive-img" style="width: 100%; height: 500px;" src="{{asset('img/Inicio.jpg')}}" alt="RED TECNOPARQUE COLOMBIA" title="RED TECNOPARQUE COLOMBIA" />
                                 </div>
                             </div>
                         </div>

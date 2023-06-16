@@ -2,8 +2,6 @@
 
 /* @var $factory \Illuminate\Database\Eloquent\Factory */
 
-
-
 use App\Models\LineaTecnologica;
 use Faker\Generator as Faker;
 

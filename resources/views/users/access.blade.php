@@ -6,7 +6,7 @@
         <div class="row no-m-t no-m-b m-r-lg m-l-lg">
             <div class="left left-align">
                 <h5 class="left-align primary-text">
-                    <a class="footer-text left-align" href="{{route('usuario.usuarios.show', $user->present()->userDocumento())}}">
+                    <a class="footer-text left-align" href="{{route('usuario.show', $user->present()->userDocumento())}}">
                         <i class="material-icons left">arrow_back</i>
                     </a>Usuarios | Acceso
                 </h5>
@@ -15,7 +15,7 @@
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">Inicio</a></li>
                     <li><a href="{{route('usuario.index')}}">Usuarios</a></li>
-                    <li><a href="{{route('usuario.usuarios.show', $user->documento)}}">{{$user->documento}}</a></li>
+                    <li><a href="{{route('usuario.show', $user->documento)}}">{{$user->documento}}</a></li>
                     <li class="active">Acceso</li>
                 </ol>
             </div>
@@ -42,7 +42,7 @@
                                             <div class="divider mailbox-divider">
                                             </div>
                                             <div class="mailbox-text">
-                                                <form action="{{ route('usuario.usuarios.updateacceso', $user->documento)}}" method="POST" onsubmit="return checkSubmit()">
+                                                <form action="{{ route('usuario.access', $user->documento)}}" method="POST" onsubmit="return checkSubmit()">
                                                     {!! csrf_field() !!}
                                                     {{ method_field('PUT') }}
                                                     <div class="row">

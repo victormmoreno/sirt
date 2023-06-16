@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use App\Http\Traits\IdeaTrait\IdeaTrait;
+use App\Http\Traits\Idea\IdeaTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 use App\Models\EstadoIdea;
 use App\Presenters\IdeaPresenter;
 
@@ -118,9 +117,6 @@ class Idea extends Model
         }
         return false;
     }
-
-    /*=====  End of metodos para conocer los tipos de ideas  ======*/
-
 
     public function scopeConsultarIdeasAprobadasEnComite($query, $idnodo, $idgestor)
     {

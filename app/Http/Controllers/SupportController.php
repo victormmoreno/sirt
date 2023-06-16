@@ -26,7 +26,7 @@ class SupportController extends Controller
     public function index(Request $request)
     {
         if (request()->ajax()) {
-            return $this->supportRepository->filterSupports($request);;
+            return $this->supportRepository->filterSupports($request);
         }
         return view('supports.index');
     }

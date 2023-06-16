@@ -28,7 +28,7 @@
         <meta property="og:site_name" content="{{config('app.name')}}" />
         @stack('style')
     </head>
-    <body>
+    <body class="loaded">
         <div class="mn-content fixed-sidebar" id="app">
             @include('layouts.nav')
             @yield('content')

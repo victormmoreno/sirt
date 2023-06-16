@@ -91,7 +91,7 @@ class ArticulationStageRegisterController extends Controller
         $articulationStage = ArticulationStage::query()
             ->with([
                 'createdBy',
-                'projects.articulacion_proyecto.actividad',
+                'projects',
                 'interlocutor'
             ])->where('code',$code)->firstOrFail();
         if (request()->user()->cannot('update', $articulationStage))

@@ -21,6 +21,10 @@ $(document).ready(function() {
 
 });
 
+// var $ = require('jquery');
+// var DataTable = require('datatables.net');
+// require('datatables.net-plugins/dataRender/datetime.js');
+
 var usoinfraestructuraIndex = {
     fillDatatatablesUsosInfraestructura: function(filter_nodo, filter_module, filter_year){
         var datatable = $('#usoinfraestructa_data_table').DataTable({
@@ -40,12 +44,29 @@ var usoinfraestructuraIndex = {
                     filter_year: filter_year
                 }
             },
+            columnDefs: [ {
+                targets: 0,
+                // render: datatable.render.moment( 'DD-MM-YYYY' )
+                type: "date"
+            } ],
+
             columns: [
+                // {
+                //     type: "date",
+                //     data: 'fecha',
+                //     name: 'fecha',
+                //     width: '10%'
+                // },
                 {
                     data: 'fecha',
-                    name: 'fecha',
-                    width: '10%'
-                }, {
+                    type: 'date',
+                    // render: {
+                    //     _: 'display',
+                    //     sort: 'timestamp'
+                    // }
+                },
+
+                {
                     data: 'gestorEncargado',
                     name: 'gestorEncargado',
                     width: '20%',
@@ -82,7 +103,7 @@ var usoinfraestructuraIndex = {
         }else{
             $.ajax({
                 type: 'GET',
-                url: host_url + '/usuario/usuarios/gestores/nodo/'+ nodo,
+                url: `${host_url}/usuarios/gestores/nodo/${nodo}`,
                 contentType: false,
                 dataType: 'json',
                 processData: false,

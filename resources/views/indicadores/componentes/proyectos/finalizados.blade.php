@@ -10,7 +10,7 @@
                     <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
                 @endforeach
                 </select>
-                <label for="txtnodo_id_finalizados" class="active">Seleccione el nodo</label>
+                <label for="txtnodo_id_finalizados">Seleccione el nodo</label>
             </div>
             <div class="input-field col s12 m6 l6">
                 <select class="js-states select2 browser-default" name="txthoja_nombre_finalizados" id="txthoja_nombre_finalizados" style="width: 100%">

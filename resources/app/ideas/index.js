@@ -25,7 +25,6 @@ $(document).ready(function() {
 
 $('#filter_idea').click(function () {
     let filter_nodo = $('#filter_nodo').val();
-    // console.log(filter_nodo);
     let filter_year = $('#filter_year_ideas').val();
     let filter_state = $('#filter_state').val();
     let filter_vieneconvocatoria = $('#filter_vieneconvocatoria').val();

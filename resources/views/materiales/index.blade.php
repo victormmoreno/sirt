@@ -46,7 +46,7 @@
                         @endcan
                         <br>
                         <table class="display responsive-table" id="materiales_table"  style="width: 100%">
-                            <thead>
+                            <thead class="bg-primary white-text">
                                 <th width="15%">Fecha Compra</th>
                                 <th width="20%">Linea Tecnológica</th>
                                 <th width="20%">Código de Material</th>

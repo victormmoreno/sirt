@@ -47,17 +47,8 @@
                                                     <ul class="collection">
                                                         @forelse($user->roles as $role)
                                                             <li class="collection-item avatar">
-                                                                <i class="material-icons circle bg-primary">
-                                                                    beenhere
-                                                                </i>
-                                                                <span class="title">
-                                                                        {{$role->name}}
-                                                                    </span>
-                                                                <p>
-                                                                    @if($role->permissions->count())
-                                                                        <small>{{$role->permissions->pluck('name')->implode(', ')}}</small>
-                                                                    @endif
-                                                                </p>
+                                                                <i class="material-icons circle bg-primary">beenhere</i>
+                                                                <span class="title">{{$role->name}}</span>
                                                             </li>
                                                         @empty
                                                             <div class="center">

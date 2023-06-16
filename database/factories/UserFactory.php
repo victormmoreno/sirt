@@ -8,21 +8,9 @@ use Carbon\Carbon;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 
-/*
-|--------------------------------------------------------------------------
-| Model Factories
-|--------------------------------------------------------------------------
-|
-| This directory should contain each of the model factory definitions for
-| your application. Factories provide a convenient way to generate new
-| model instances for testing / seeding your application's database.
-|
- */
-
 $factory->define(User::class, function (Faker $faker) {
 
     return [
-
         'tipodocumento_id'    => TipoDocumento::all()->random()->id,
         'gradoescolaridad_id' => GradoEscolaridad::all()->random()->id,
         'gruposanguineo_id'   => GrupoSanguineo::all()->random()->id,
@@ -52,6 +40,5 @@ $factory->define(User::class, function (Faker $faker) {
         'password'            => 'tecnoparque',
         'estrato'             => $faker->randomElement([1, 2, 3, 4, 5, 6]),
         'deleted_at'         => $estado == User::IsActive() ? null : Carbon::now(),
-
     ];
 });

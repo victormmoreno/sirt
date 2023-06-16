@@ -99,7 +99,7 @@ class UsoInfraestructura extends Model
 
     public function usotalentos()
     {
-        return $this->belongsToMany(Talento::class, 'uso_talentos', 'usoinfraestructura_id', 'talento_id')
+        return $this->belongsToMany(Talento::class, 'uso_talentos', 'usoinfraestructura_id', 'user_id')
             ->withTimestamps();
     }
 
@@ -200,7 +200,7 @@ class UsoInfraestructura extends Model
                 case class_basename(Proyecto::class):
                     return $query
                     ->select('usoinfraestructuras.id', 'usoinfraestructuras.fecha as fecha', 'entidades.nombre as nodo')
-                        ->selectRaw("faseproyecto.nombre as fase, concat(actividades.codigo_actividad, ' - ', actividades.nombre) as nombre, if(usoinfraestructuras.asesorable_type='App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as tipo_asesoria,
+                        ->selectRaw("faseproyecto.nombre as fase, concat(proyectos.codigo_proyecto, ' - ', proyectos.nombre) as nombre, if(usoinfraestructuras.asesorable_type='App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as tipo_asesoria,
                         GROUP_CONCAT(DISTINCT CONCAT(asesores.documento, ' - ', asesores.nombres, ' ', asesores.apellidos) SEPARATOR ';') as asesores,
                         GROUP_CONCAT(DISTINCT CONCAT(talents.documento, ' - ', talents.nombres, ' ', talents.apellidos) SEPARATOR ';') as talentos,
                         GROUP_CONCAT(DISTINCT CONCAT(equipos.referencia, ' - ', equipos.nombre) SEPARATOR ';') as equipos,
@@ -268,19 +268,19 @@ class UsoInfraestructura extends Model
                         if((session()->has('login_role') && session()->get('login_role') == User::IsTalento())){
                             return $query->where('talents.id', $asesor);
                         }
-                        return $query->where('gestor_uso.asesorable_id', $asesor);
+                        return $query->where('gestor_uso.asesor_id', $asesor);
                         break;
                     case class_basename(Articulation::class):
                         if((session()->has('login_role') && session()->get('login_role') == User::IsTalento())){
                             return $query->where('talents.id', $asesor);
                         }
-                        return $query->where('gestor_uso.asesorable_id', $asesor);
+                        return $query->where('gestor_uso.asesor_id', $asesor);
                         break;
                     case class_basename(Idea::class):
                         if((session()->has('login_role') && session()->get('login_role') == User::IsTalento())){
                             return $query->where('talents.id', $asesor);
                         }
-                        return $query->where('gestor_uso.asesorable_id', $asesor);
+                        return $query->where('gestor_uso.asesor_id', $asesor);
                         break;
                     default:
                         return $query;
@@ -299,22 +299,15 @@ class UsoInfraestructura extends Model
                     ->where('usoinfraestructuras.asesorable_type', Proyecto::class);
             })->leftJoin('fases as faseproyecto', function ($join) {
                 $join->on('faseproyecto.id', '=', 'proyectos.fase_id');
-            })->join('articulacion_proyecto', function ($join) {
-                $join->on('articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id');
-            })->join('actividades', function ($join)  {
-                $join->on('actividades.id', '=', 'articulacion_proyecto.actividad_id');
             })->leftJoin('gestor_uso', function ($join) {
-                $join->on('gestor_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id')
-                    ->where('gestor_uso.asesorable_type', User::class);
+                $join->on('gestor_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id');
             })
             ->leftJoin('users as asesores', function ($join) {
-                $join->on('asesores.id', '=', 'gestor_uso.asesorable_id');
+                $join->on('asesores.id', '=', 'gestor_uso.asesor_id');
             })->leftJoin('uso_talentos', function ($join) {
                 $join->on('uso_talentos.usoinfraestructura_id', '=', 'usoinfraestructuras.id');
-            })->leftJoin('talentos', function ($join) {
-                $join->on('talentos.id', '=', 'uso_talentos.talento_id');
             })->leftJoin('users as talents', function ($join) {
-                $join->on('talents.id', '=', 'talentos.user_id');
+                $join->on('talents.id', '=', 'uso_talentos.user_id');
             })->join('nodos', function ($join) {
                 $join->on('nodos.id', '=', 'proyectos.nodo_id');
             })
@@ -343,20 +336,18 @@ class UsoInfraestructura extends Model
             ->join('articulation_stages', function ($join) {
                 $join->on('articulation_stages.id', '=', 'articulations.articulation_stage_id');
             })->join('gestor_uso', function ($join) {
-                $join->on('gestor_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id')
-                    ->where('gestor_uso.asesorable_type', User::class);
+                $join->on('gestor_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id');
             })
             ->leftJoin('users as asesores', function ($join) {
-                $join->on('asesores.id', '=', 'gestor_uso.asesorable_id');
+                $join->on('asesores.id', '=', 'gestor_uso.asesor_id');
             })->leftJoin('uso_talentos', function ($join) {
                 $join->on('uso_talentos.usoinfraestructura_id', '=', 'usoinfraestructuras.id');
-            })->leftJoin('talentos', function ($join) {
-                $join->on('talentos.id', '=', 'uso_talentos.talento_id');
             })->leftJoin('users as talents', function ($join) {
-                $join->on('talents.id', '=', 'talentos.user_id');
+                $join->on('talents.id', '=', 'uso_talentos.user_id');
             })->join('nodos', function ($join) {
                 $join->on('nodos.id', '=', 'articulation_stages.node_id');
-            })->join('entidades', function ($join) {
+            })
+            ->leftJoin('entidades', function ($join) {
                 $join->on('entidades.id', '=', 'nodos.entidad_id');
             })->leftJoin('equipo_uso', function ($join) {
                 $join->on('equipo_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id');
@@ -376,17 +367,14 @@ class UsoInfraestructura extends Model
             })->leftJoin('estadosidea as estadosidea', function ($join) {
                 $join->on('estadosidea.id', '=', 'ideas.estadoidea_id');
             })->join('gestor_uso', function ($join) {
-                $join->on('gestor_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id')
-                    ->where('gestor_uso.asesorable_type', User::class);
+                $join->on('gestor_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id');
             })
             ->leftJoin('users as asesores', function ($join) {
-                $join->on('asesores.id', '=', 'gestor_uso.asesorable_id');
+                $join->on('asesores.id', '=', 'gestor_uso.asesor_id');
             })->leftJoin('uso_talentos', function ($join) {
                 $join->on('uso_talentos.usoinfraestructura_id', '=', 'usoinfraestructuras.id');
-            })->leftJoin('talentos', function ($join) {
-                $join->on('talentos.id', '=', 'uso_talentos.talento_id');
             })->leftJoin('users as talents', function ($join) {
-                $join->on('talents.id', '=', 'talentos.user_id');
+                $join->on('talents.id', '=', 'uso_talentos.user_id');
             })->join('nodos', function ($join) {
                 $join->on('nodos.id', '=', 'ideas.nodo_id');
             })

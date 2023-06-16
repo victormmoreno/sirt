@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Excel;
 
 use App\Exports\Indicadores\IndicadoresExport;
+use App\Exports\Indicadores\IndicadorArticulacionesExport;
 use App\Exports\Metas\MetasExport;
 use App\Exports\Idea\IdeasIndicadorExport;
 use App\Exports\Proyectos\{ProyectosExport};
@@ -11,31 +12,31 @@ use App\Exports\GruposInvestigacion\GruposExport;
 use App\Exports\User\Talento\TalentoUserExport;
 use App\Repositories\Repository\{IdeaRepository, ProyectoRepository};
 use Repositories\Repository\NodoRepository;
-use Illuminate\Support\Facades\Session;
+use App\Repositories\Repository\Articulation\ArticulationRepository;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Imports\MigracionMetasImport;
 use Illuminate\Http\Request;
-use App\Models\{Proyecto, Nodo};
+use App\Models\{Articulation, Proyecto, Nodo};
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use MyCLabs\Enum\Enum;
 
 class IndicadorController extends Controller
 {
 
     private $proyectoRepository;
+    private $articulationRepostory;
     private $nodoRepository;
     private $ideaRepository;
     private $year_now;
     private $type;
 
-    public function __construct(ProyectoRepository $proyectoRepository, NodoRepository $nodoRepository, IdeaRepository $ideaRepository)
+    public function __construct(ProyectoRepository $proyectoRepository, ArticulationRepository $articulationRepostory, NodoRepository $nodoRepository, IdeaRepository $ideaRepository)
     {
         $this->setProyectoRepository($proyectoRepository);
+        $this->articulationRepostory = $articulationRepostory;
         $this->nodoRepository = $nodoRepository;
         $this->ideaRepository = $ideaRepository;
         $this->year_now = Carbon::now()->format('Y');
@@ -92,7 +93,7 @@ class IndicadorController extends Controller
     }
 
     public function downloadMetas(Request $request)
-    {   
+    {
         if ($request->txtnodo_metas_id[0] != 'all') {
             if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
                 $nodos = $request->txtnodo_metas_id;
@@ -120,6 +121,7 @@ class IndicadorController extends Controller
         $metas = $this->retornarTodasLasMetasToExcel($metas, $pbts_trl6, $pbts_trl7_8, $activos);
         return Excel::download(new MetasExport($metas), 'Metas.xlsx');
     }
+
 
     private function pushValueToCollect($progreso_mes, $meta, $mes, $key) {
         if ($progreso_mes->count() == 0) {
@@ -157,6 +159,100 @@ class IndicadorController extends Controller
         return $metas;
     }
 
+    public function exportIndicadorArticulacionesInscritas($nodo, string $fecha_inicio, string $fecha_fin, string $hoja = null)
+    {
+        if (request()->ajax() && request()->user()->cannot('showIndicadoresArticulacions', Model::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
+        if(isset($nodo) && $nodo != 'all'){
+            $nodo = $this->checkRoleAuth($nodo);
+        }
+        $query = $this->articulationRepostory->getListArticulacions()
+            ->where(function($query) use ($nodo){
+                if(isset($nodo) && $nodo != 'all'){
+                    $query->where('articulation_stages.node_id', $nodo);
+                }
+            })
+            ->where(function($query) use ($fecha_inicio, $fecha_fin){
+                if(isset($fecha_inicio) && isset($fecha_fin)){
+                    $query->whereBetween('articulations.start_date', [$fecha_inicio, $fecha_fin]);
+                }
+            });
+        return Excel::download(new IndicadorArticulacionesExport($query, $hoja), "Indicador Articulaciones Inscritas {$fecha_inicio} a {$fecha_fin}.xlsx");
+    }
+
+    public function exportIndicadoresArticulacionesFinalizadas($nodo, string $fecha_inicio, string $fecha_fin, string $hoja = null)
+    {
+        if (request()->ajax() && request()->user()->cannot('showIndicadoresArticulacions', Model::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
+        if(isset($nodo) && $nodo != 'all'){
+            $nodo = $this->checkRoleAuth($nodo);
+        }
+        $query = $this->articulationRepostory->getListArticulacions()
+            ->where(function($query) use ($nodo){
+                if(isset($nodo) && $nodo != 'all'){
+                    $query->where('articulation_stages.node_id', $nodo);
+                }
+            })
+            ->where(function($query) use ($fecha_inicio, $fecha_fin){
+                if(isset($fecha_inicio) && isset($fecha_fin)){
+                    $query->whereBetween('articulations.end_date', [$fecha_inicio, $fecha_fin]);
+                }
+            })->whereIn('fases.nombre', ['Finalizado', 'Concluido sin finalizar']);
+        return Excel::download(new IndicadorArticulacionesExport($query, $hoja), "Indicadores_Articulaciones_Finalizadas_{$fecha_inicio}_a_{$fecha_fin}.xlsx");
+    }
+
+    public function exportIndicadoresArticulacionesActivas($nodo, string $hoja = null)
+    {
+        if (request()->ajax() && request()->user()->cannot('showIndicadoresArticulacions', Model::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
+        if(isset($nodo) && $nodo != 'all'){
+            $nodo = $this->checkRoleAuth($nodo);
+        }
+        $query = $this->articulationRepostory->getListArticulacions()
+            ->where(function($query) use ($nodo){
+                if(isset($nodo) && $nodo != 'all'){
+                    $query->where('articulation_stages.node_id', $nodo);
+                }
+            })->whereIn('fases.nombre', [Articulation::IsInicio(), Articulation::IsEjecucion(), Articulation::IsCierre()]);
+
+        return Excel::download(new IndicadorArticulacionesExport($query, $hoja), 'Indicadores_Articulaciones_Activas.xlsx');
+    }
+
+    public function exportIndicatorArticulations($nodo, string $fecha_inicio, string $fecha_fin, string $hoja = null)
+    {
+        if (request()->ajax() && request()->user()->cannot('showIndicadoresArticulacions', Model::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->route('home');
+        }
+        if(isset($nodo) && $nodo != 'all'){
+            $nodo = $this->checkRoleAuth($nodo);
+        }
+        $query = $this->articulationRepostory->getListArticulacions()
+            ->where(function($query) use ($nodo){
+                if(isset($nodo) && $nodo != 'all'){
+                    $query->where('articulation_stages.node_id', $nodo);
+                }
+
+            })
+            ->where(function($query) use ($fecha_inicio, $fecha_fin){
+                if(isset($fecha_inicio) && isset($fecha_fin)){
+                    $query->whereBetween('articulations.start_date', [$fecha_inicio, $fecha_fin])
+                    ->orWhereBetween('articulations.end_date', [$fecha_inicio, $fecha_fin])
+                    ->orWhere(function($query){
+                        $query->whereIn('fases.nombre', [Articulation::IsInicio(), Articulation::IsEjecucion(), Articulation::IsCierre()]);
+                    });
+                }
+            });
+        return Excel::download(new IndicadorArticulacionesExport($query, $hoja), "Indicadores_Articulaciones_{$fecha_inicio}_a_{$fecha_fin}.xlsx");
+    }
+
+
     /**
      * Retorna el archivo excel sin generar
      *
@@ -185,7 +281,7 @@ class IndicadorController extends Controller
             case 'all':
                 return Excel::download(new IndicadoresExport($query, $request->hoja), 'file.xlsx');
                 break;
-            
+
             default:
                 abort('404');
                 break;
@@ -221,9 +317,9 @@ class IndicadorController extends Controller
                     });
                 });
                 break;
-            
+
             default:
-                
+
                 break;
         }
     }
@@ -263,16 +359,16 @@ class IndicadorController extends Controller
                     'personas_duenhas' => $this->agregarCondicionales($request, $this->consultarIndicadoresUsers($request))
                 ];
                 break;
-            
+
             default:
-                
+
                 break;
         }
         return $this->agregarCondicionales($request, $query);
     }
 
     /**
-     * Retornar el query de empresas que se exportará 
+     * Retornar el query de empresas que se exportará
      *
      * @param Request $request
      * @return \Builder
@@ -288,7 +384,7 @@ class IndicadorController extends Controller
     }
 
     /**
-     * Retornar el query de los usuarios/talentos ejecutores de oriyecti que se exportará 
+     * Retornar el query de los usuarios/talentos ejecutores de oriyecti que se exportará
      *
      * @param Request $request
      * @return Builder
@@ -304,7 +400,7 @@ class IndicadorController extends Controller
     }
 
     /**
-     * Retornar el query de los usuarios dueños que se exportará 
+     * Retornar el query de los usuarios dueños que se exportará
      *
      * @param Request $request
      * @return Builder
@@ -320,7 +416,7 @@ class IndicadorController extends Controller
     }
 
     /**
-     * Retornar el query de grpos de investigación que se exportará 
+     * Retornar el query de grpos de investigación que se exportará
      *
      * @param Request $request
      * @return Builder
@@ -336,7 +432,7 @@ class IndicadorController extends Controller
     }
 
     /**
-     * Retornar el query de proyectos que se exportará 
+     * Retornar el query de proyectos que se exportará
      *
      * @param Request $request
      * @param string $type El tipo de excel que se va a exportar
@@ -394,4 +490,38 @@ class IndicadorController extends Controller
         return $this->proyectoRepository;
     }
 
+    /**
+     * method to validate the authenticated role
+     * @return void
+     */
+    private function checkRoleAuth($node)
+    {
+        switch (\Session::get('login_role')) {
+            case User::IsAdministrador():
+                $node = isset($node) ? $node : null;
+                break;
+            case User::IsActivador():
+                $node = isset($node) ? $node : null;
+                break;
+            case User::IsDinamizador():
+                $node = auth()->user()->dinamizador->nodo_id;
+                break;
+            case User::IsArticulador():
+                $node = auth()->user()->articulador->nodo_id;
+                break;
+            case User::IsExperto():
+                $node = auth()->user()->gestor->nodo_id;
+                break;
+            case User::IsInfocenter():
+                $node = auth()->user()->infocenter->nodo_id;
+                break;
+            case User::IsTalento():
+                $node = null;
+                break;
+            default:
+                $node = null;
+                break;
+        }
+        return $node;
+    }
 }

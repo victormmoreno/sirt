@@ -510,7 +510,6 @@ $(document).ready(function() {
 
 $('#filter_idea').click(function () {
     let filter_nodo = $('#filter_nodo').val();
-    // console.log(filter_nodo);
     let filter_year = $('#filter_year_ideas').val();
     let filter_state = $('#filter_state').val();
     let filter_vieneconvocatoria = $('#filter_vieneconvocatoria').val();
@@ -2292,23 +2291,23 @@ $(document).on('submit', 'form#formSearchUser', function (event) {
             'Error',
             'Por favor selecciona una opción',
             'error'
-          );
+        );
     }else if(type == 1 && (search == null || search == '' || !patronDocumento.test(search))){
         Swal.fire(
             'Error',
             'Por favor ingrese un número de documento válido',
             'error'
-          );
+        );
     }else if(type == 2 && (search == null || search == '' || !patronEmail.test(search))){
         Swal.fire(
             'Error',
             'Por favor ingrese un correo electrónico válido',
             'error'
-          );
+        );
     }else{
-        var form = $(this);
+        let form = $(this);
         let data = new FormData($(this)[0]);
-        var url = form.attr("action");
+        let url = form.attr("action");
         $.ajax({
             type: form.attr('method'),
             url: url,
@@ -2318,12 +2317,11 @@ $(document).on('submit', 'form#formSearchUser', function (event) {
             dataType: 'json',
             contentType: false,
             processData: false,
-            success: function (data) {
+            success: function (response) {
                 $('button[type="submit"]').removeAttr('disabled');
                 $('.error').hide();
                 $('#response-alert').empty();
-
-                if (data.fail) {
+                if (response.fail) {
                     Swal.fire({
                         title: 'Registro Erróneo',
                         html: "Estas ingresando mal los datos. " + errores,
@@ -2333,58 +2331,42 @@ $(document).on('submit', 'form#formSearchUser', function (event) {
                         confirmButtonText: 'Ok'
                     });
                 }
-
-                if(data.status == 202){
-                    if(type == 1){
-                        $('#response-alert').append(`
-                            <div class="mailbox-list">
-                                <ul>
-                                    <li>
-                                        <a class="mail-active">
-                                            <h4 class="center-align">no se encontraron resultados</h4>
-                                            <a class="primary-text center-align" href="`+data.url+`">Registrar nuevo usuario</a>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        `);
-                    }else{
-                        $('#response-alert').append(`
-                            <div class="mailbox-list">
-                                <ul>
-                                    <li>
-                                        <a class="mail-active">
-                                            <h4 class="center-align">no se encontraron resultados</h4>
-                                            <a target="_blank" class="primary-text center-align" href="`+data.url+`">Registrar nuevo usuario</a>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        `);
-                    }
-
-                }else if(data.status == 200){
+                if (response.users.length == 0) {
                     $('#response-alert').append(`
-                    <div class="mailbox-list">
-                        <ul>
-                            <li >
-                                <a href="`+data.url+`" class="mail-active">
-
-                                    <h5 class="mail-author">`+data.user.documento+` - `+data.user.nombres +` `+ data.user.apellidos+`</h5>
-                                    <h4 class="mail-title">`+data.roles+`</h4>
-                                    <p class="hide-on-small-and-down mail-text">Miembro desde `+userSearch.userCreated(data.user.created_at)+`</p>
-                                    <div class="position-top-right p f-12 mail-date"> Acceso al sistema: `+ userSearch.state(data.user.estado) +`</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    `);
+                        <div class="mailbox-list">
+                            <ul>
+                                <li>
+                                    <a class="mail-active">
+                                        <h4 class="center-align">no se encontraron resultados</h4>
+                                        <a class="primary-text center-align" href="`+data.url+`">Registrar nuevo usuario</a>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>`);
+                }else{
+                    if(response.status == 200){
+                        $.each( response.users, function( key, user ) {
+                            let route = response.urls[key];
+                            $('#response-alert').append(`
+                            <div class="mailbox-list">
+                                <ul>
+                                    <li>
+                                        <a href="`+route+`" class="mail-active">
+                                            <h5 class="mail-author">`+user.documento+` - `+user.nombres +` `+ user.apellidos+`</h5>
+                                            <p class="hide-on-small-and-down mail-text">Miembro desde `+userSearch.userCreated(user.created_at)+`</p>
+                                            <div class="position-top-right p f-12 mail-date"> Acceso al sistema: `+ userSearch.state(user.estado) +`</div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>`);
+                        });
+                    }
                 }
             }
         });
     }
 });
-var userSearch = {
+const userSearch = {
     state: function (state){
         if(state){
             return 'Si';
@@ -2410,68 +2392,8 @@ var userSearch = {
     }
 }
 
-
-var user = {
-    getCiudadExpedicion:function(){
-        let id;
-        id = $('#txtdepartamentoexpedicion').val();
-        $.ajax({
-          dataType:'json',
-          type:'get',
-          url: host_url + '/usuario/getciudad/'+id
-        }).done(function(response){
-          $('#txtciudadexpedicion').empty();
-        //   $('#txtciudadexpedicion').append('<option value="">Seleccione la Ciudad</option>')
-          $.each(response.ciudades, function(i, e) {
-            $('#txtciudadexpedicion').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
-          });
-          $('#txtciudadexpedicion').material_select();
-        });
-      },
-
-      getOtraEsp:function (ideps) {
-        let id = $(ideps).val();
-        let nombre = $("#txteps option:selected").text();
-      
-        if (id == 42) {
-            // $('.otraeps').css("display:block");
-            $('.otraeps').removeAttr("style");
-             
-        }else{
-            $('.otraeps').attr("style","display:none");
-        }
-    },
-    getCiudad:function(){
-        let id;
-        id = $('#txtdepartamento').val();
-        $.ajax({
-          dataType:'json',
-          type:'get',
-          url: host_url + '/usuario/getciudad/'+id
-        }).done(function(response){
-          $('#txtciudad').empty();
-          $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')
-          $.each(response.ciudades, function(i, e) {
-            $('#txtciudad').append('<option  value="'+e.id+'">'+e.nombre+'</option>');
-          })
-          
-          $('#txtciudad').material_select();
-        });
-    },
-    getGradoDiscapacidad(gradodiscapacidad){
-        let grado = $(gradodiscapacidad).val();
-        if (grado == 1) {
-            $('.gradodiscapacidad').removeAttr("style");
-             
-        }else{
-            $('.gradodiscapacidad').attr("style","display:none");
-        }
-    }
-}
-
-
 $(document).ready(function() {
-    $('#txtocupaciones').select2({
+    $('#ocupaciones').select2({
         language: "es",
         isMultiple: true
     });
@@ -2482,7 +2404,7 @@ var estudios = {
     getOtraOcupacion:function (idocupacion) {
         $('#otraocupacion').hide();
         let id = $(idocupacion).val();
-        let nombre = $("#txtocupaciones option:selected").text();
+        let nombre = $("#otra_ocupacion option:selected").text();
         let resultado = nombre.match(/[A-Z][a-z]+/g);
         $('#otraocupacion').hide();
         if (resultado != null) {
@@ -2493,351 +2415,6 @@ var estudios = {
     }
 }
 
-$(document).ready(function() {
-    // $(".aprendizSena").hide();
-    tipoTalento.getSelectTipoTalento();
-});
-
-var tipoTalento = {
-    getSelectTipoTalento:function (tipotal) {
-        let valor = $(tipotal).val();
-        let nombreTipoTalento = $("#txttipotalento option:selected").text();
-        
-        if(valor == 1 || valor == 2){
-
-            tipoTalento.showAprendizSena();
-        }
-        else if(valor == 3){
-            tipoTalento.showEgresadoSena();
-        }
-        else if(valor == 4){
-            tipoTalento.showInstructorSena();
-        }
-        else if(valor == 5){
-            tipoTalento.showFuncionarioSena();
-        }
-        else if(valor == 6){
-            tipoTalento.showPropietarioEmpresa();
-        }
-        else if(valor == 7){
-            tipoTalento.showEmprendedor();
-        }
-        else if(valor == 8){
-            tipoTalento.showUniversitario();
-        }
-        else if(valor == 9){
-            tipoTalento.showFuncionarioEmpresa();
-        }
-        else{
-            tipoTalento.ShowSelectTipoTalento();
-        }
-    },
-
-    showAprendizSena: function(){
-        tipoTalento.hideSelectTipoTalento();
-        tipoTalento.hideEgresadoSena();
-        tipoTalento.hideInstructorSena();
-        tipoTalento.hideFuncionarioSena();
-        tipoTalento.hidePropietarioEmpresa();
-        tipoTalento.hideEmprendedor();
-        tipoTalento.hideUniversitario();
-        tipoTalento.hideFuncionarioEmpresa();
-        $(".aprendizSena").css("display", "block");
-        $(".aprendizSena").show();
-
-    },
-    showEgresadoSena: function(){
-        tipoTalento.hideSelectTipoTalento();
-        tipoTalento.hideAprendizSena();
-        tipoTalento.hideInstructorSena();
-        tipoTalento.hideFuncionarioSena();
-        tipoTalento.hidePropietarioEmpresa();
-        tipoTalento.hideEmprendedor();
-        tipoTalento.hideUniversitario();
-        tipoTalento.hideFuncionarioEmpresa();
-        $(".egresadoSena").show();
-
-    },
-    showInstructorSena: function(){
-        tipoTalento.hideSelectTipoTalento();
-        tipoTalento.hideAprendizSena();
-        tipoTalento.hideEgresadoSena();
-        tipoTalento.hideFuncionarioSena();
-        tipoTalento.hideFuncionarioSena();
-        tipoTalento.hidePropietarioEmpresa();
-        tipoTalento.hideEmprendedor();
-        tipoTalento.hideUniversitario();
-        tipoTalento.hideFuncionarioEmpresa();
-        $(".instructorSena").css("display", "block");
-
-    },
-    showFuncionarioSena: function(){
-        tipoTalento.hideSelectTipoTalento();
-        tipoTalento.hideAprendizSena();
-        tipoTalento.hideEgresadoSena();
-        tipoTalento.hideInstructorSena();
-        tipoTalento.hideFuncionarioSena();
-        tipoTalento.hidePropietarioEmpresa();
-        tipoTalento.hideEmprendedor();
-        tipoTalento.hideUniversitario();
-        tipoTalento.hideFuncionarioEmpresa();
-        $(".funcionarioSena").css("display", "block");
-
-    },
-    showPropietarioEmpresa: function (){
-        tipoTalento.hideSelectTipoTalento();
-        tipoTalento.hideAprendizSena();
-        tipoTalento.hideEgresadoSena();
-        tipoTalento.hideInstructorSena();
-        tipoTalento.hideFuncionarioSena();
-        tipoTalento.hideUniversitario();
-        tipoTalento.hideFuncionarioEmpresa();
-
-        $('.otherUser').empty();
-        $('.otherUser').append(`<div class="valign-wrapper" >
-            <h5> Seleccionaste Propietario empresa</h5>
-        </div>`);
-    },
-    showEmprendedor: function (){
-        tipoTalento.hideSelectTipoTalento();
-        tipoTalento.hideAprendizSena();
-        tipoTalento.hideEgresadoSena();
-        tipoTalento.hideInstructorSena();
-        tipoTalento.hideFuncionarioSena();
-        tipoTalento.hideUniversitario();
-        tipoTalento.hideFuncionarioEmpresa();
-        $('.otherUser').empty();
-        $('.otherUser').append(`<div class="valign-wrapper" >
-            <h5> Seleccionaste Emprendedor</h5>
-        </div>`);
-    },
-
-    showUniversitario: function(){
-        tipoTalento.hideSelectTipoTalento();
-        tipoTalento.hideAprendizSena();
-        tipoTalento.hideEgresadoSena();
-        tipoTalento.hideInstructorSena();
-        tipoTalento.hideFuncionarioSena();
-        tipoTalento.hidePropietarioEmpresa();
-        tipoTalento.hideEmprendedor();
-        tipoTalento.hideFuncionarioEmpresa();
-        $(".universitario").css("display", "block");
-
-    },
-    showFuncionarioEmpresa: function(){
-        tipoTalento.hideSelectTipoTalento();
-        tipoTalento.hideAprendizSena();
-        tipoTalento.hideEgresadoSena();
-        tipoTalento.hideInstructorSena();
-        tipoTalento.hideFuncionarioSena();
-        tipoTalento.hidePropietarioEmpresa();
-        tipoTalento.hideUniversitario();
-        tipoTalento.hideEmprendedor();
-        $(".funcionarioEmpresa").css("display", "block");
-
-    },
-
-    hideAprendizSena: function(){
-        // $(".aprendizSena").css("display", "none");
-        $(".aprendizSena").hide();
-
-    },
-    hideEgresadoSena: function(){
-        // $(".egresadoSena").css("display", "none");
-        $(".egresadoSena").hide();
-
-    },
-    hideInstructorSena: function(){
-        $(".instructorSena").css("display", "none");
-
-    },
-    hideFuncionarioSena: function(){
-        $(".funcionarioSena").css("display", "none");
-
-    },
-    hideSelectTipoTalento: function(){
-        $(".selecttipotalento").css("display", "none");
-    },
-    hidePropietarioEmpresa: function(){
-
-        $(".otherUser").css("display", "none");
-    },
-    hideUniversitario: function(){
-
-        $(".universitario").css("display", "none");
-    },
-    hideFuncionarioEmpresa: function(){
-
-        $(".funcionarioEmpresa").css("display", "none");
-    },
-
-    hideEmprendedor: function(){
-
-        $(".otherUser").css("display", "none");
-    },
-    ShowSelectTipoTalento: function(){
-        tipoTalento.hideAprendizSena();
-        tipoTalento.hideEgresadoSena();
-        tipoTalento.hideEmprendedor();
-        tipoTalento.hideUniversitario();
-        tipoTalento.hideFuncionarioEmpresa();
-        tipoTalento.hideFuncionarioSena();
-        tipoTalento.hideInstructorSena();
-        tipoTalento.hidePropietarioEmpresa();
-        $(".selecttipotalento").css("display", "block");
-    },
-    getCentroFormacionAprendiz:function (){
-        let regional = $('#txtregional_aprendiz').val();
-        $.ajax({
-            dataType:'json',
-            type:'get',
-            url: host_url + '/centro-formacion/getcentrosregional/'+regional
-        }).done(function(response){
-            $('#txtcentroformacion_aprendiz').empty();
-            $('#txtcentroformacion_aprendiz').append('<option value="">Seleccione el centro de formación</option>')
-            $.each(response.centros, function(id, nombre) {
-                $('#txtcentroformacion_aprendiz').append('<option  value="'+id+'">'+nombre+'</option>');
-
-
-                $('#txtcentroformacion_aprendiz').material_select();
-
-            });
-        });
-    },
-    getCentroFormacionEgresadoSena:function (){
-        let regional = $('#txtregional_egresado').val();
-        $.ajax({
-            dataType:'json',
-            type:'get',
-            url: host_url + '/centro-formacion/getcentrosregional/'+regional
-        }).done(function(response){
-            $('#txtcentroformacion_egresado').empty();
-            $('#txtcentroformacion_egresado').append('<option value="">Seleccione el centro de formación</option>')
-            $.each(response.centros, function(id, nombre) {
-                $('#txtcentroformacion_egresado').append('<option  value="'+id+'">'+nombre+'</option>');
-
-
-                $('#txtcentroformacion_egresado').material_select();
-
-            });
-        });
-    },
-    getCentroFormacionFuncionarioSena:function (){
-        let regional = $('#txtregional_funcionarioSena').val();
-        $.ajax({
-            dataType:'json',
-            type:'get',
-            url: host_url + '/centro-formacion/getcentrosregional/'+regional
-        }).done(function(response){
-            $('#txtcentroformacion_funcionarioSena').empty();
-            $('#txtcentroformacion_funcionarioSena').append('<option value="">Seleccione el centro de formación</option>')
-            $.each(response.centros, function(id, nombre) {
-                $('#txtcentroformacion_funcionarioSena').append('<option  value="'+id+'">'+nombre+'</option>');
-
-
-                $('#txtcentroformacion_funcionarioSena').material_select();
-
-            });
-        });
-    },
-    getCentroFormacionInstructorSena:function (){
-        let regional = $('#txtregional_instructorSena').val();
-        $.ajax({
-            dataType:'json',
-            type:'get',
-            url: host_url + '/centro-formacion/getcentrosregional/'+regional
-        }).done(function(response){
-            $('#txtcentroformacion_instructorSena').empty();
-            $('#txtcentroformacion_instructorSena').append('<option value="">Seleccione el centro de formación</option>')
-            $.each(response.centros, function(id, nombre) {
-                $('#txtcentroformacion_instructorSena').append('<option  value="'+id+'">'+nombre+'</option>');
-
-
-                $('#txtcentroformacion_instructorSena').material_select();
-
-            });
-        });
-    },
-}
-
-
-$(document).on('submit', 'form#formRegisterUser', function (event) {
-
-    $('button[type="submit"]').attr('disabled', 'disabled');
-    event.preventDefault();
-    var form = $(this);
-    var data = new FormData($(this)[0]);
-    var url = form.attr("action");
-    $.ajax({
-      type: form.attr('method'),
-      url: url,
-      data: data,
-      cache: false,
-      contentType: false,
-      dataType: 'json',
-      processData: false,
-      success: function (data) {
-        $('button[type="submit"]').prop("disabled", false);
-        $('.error').hide();
-        if (data.fail) {
-            
-          for (control in data.errors) {
-            $('#' + control + '-error').html(data.errors[control]);
-            $('#' + control + '-error').show();
-          }
-
-          createUser.printErroresFormulario(data);
-        }
-        if (data.state == 'error' && data.url == false) {
-          Swal.fire({
-            title: 'El Usuario no se ha registrado, por favor inténtalo de nuevo',
-            type: 'warning',
-            showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Ok'
-          })
-        }
-        if (data.state == 'success' && data.url != false) {
-          Swal.fire({
-            title: 'Registro Exitoso',
-            text: `El Usuario `+data.user.nombres+ ` ` +data.user.apellidos+`  ha sido creado satisfactoriamente`,
-            type: 'success',
-            showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Ok',
-            footer: '<p class="red-text">Hemos enviado un correo electrónico al  usuario ' + data.user.nombres + ' '+ data.user.apellidos+ ' con las credenciales de ingreso a la plataforma.</p>'
-          });
-          setTimeout(function(){
-            window.location.href = data.url;
-          }, 1000);
-        }
-      },
-      // error: function (xhr, textStatus, errorThrown) {
-      //   alert("Error: " + errorThrown);
-      // }
-    });
-  });
-
-var createUser = {
-    printErroresFormulario: function (data){
-        if (data.state == 'error_form') {
-            let errores = "";
-            for (control in data.errors) {
-                errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
-                $('#' + control + '-error').html(data.errors[control]);
-                $('#' + control + '-error').show();
-            }
-            Swal.fire({
-                title: 'Advertencia!',
-                html: 'Estas ingresando mal los datos.' + errores,
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'Ok'
-            });
-        }
-    }
-}  
 
 $(document).on('submit', 'form#formEditUser', function (event) {
     $('button[type="submit"]').attr('disabled', 'disabled');
@@ -2855,17 +2432,17 @@ $(document).on('submit', 'form#formEditUser', function (event) {
         dataType: 'json',
         processData: false,
         success: function (data) {
-    
+
           $('button[type="submit"]').removeAttr('disabled');
           $('button[type="submit"]').prop("disabled", false);
           $('.error').hide();
           if (data.fail) {
-  
+
             for (control in data.errors) {
               $('#' + control + '-error').html(data.errors[control]);
               $('#' + control + '-error').show();
             }
-  
+
             EditUser.printErroresFormulario(data);
           }
           if (data.state == 'error') {
@@ -2894,7 +2471,7 @@ $(document).on('submit', 'form#formEditUser', function (event) {
             }, 1000);
           }
         },
-        
+
       });
 });
 
@@ -2975,34 +2552,90 @@ $(document).on('submit', 'form#FormConfirmUser', function (event) {
 });
 
 
+// $(document).on('submit', 'form#form-update-role-nodo', function (event) {
+//     $('button[type="submit"]').attr('disabled', 'disabled');
+//     event.preventDefault();
+//     var form = $(this);
+//     var data = new FormData($(this)[0]);
+//     var url = form.attr("action");
+//     $.ajax({
+//         type: form.attr('method'),
+//         url: url,
+//         data: data,
+//         cache: false,
+//         contentType: false,
+//         dataType: 'json',
+//         processData: false,
+//         success: function (data) {
 
-var changeNode = {
-    printErroresFormulario: function (data){
-        if (data.state == 'error_form') {
-            let errores = "";
-            for (control in data.errors) {
-                errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
-                $('#' + control + '-error').html(data.errors[control]);
-                $('#' + control + '-error').show();
-            }
-            Swal.fire({
-                title: 'Advertencia!',
-                html: 'Estas ingresando mal los datos.' + errores,
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'Ok'
-            });
-        }
-    },
-}
+//             $('button[type="submit"]').removeAttr('disabled');
+//             $('button[type="submit"]').prop("disabled", false);
+//             $('.error').hide();
+//             if (data.fail) {
+//                 for (control in data.errors) {
+//                     $('#' + control + '-error').html(data.errors[control]);
+//                     $('#' + control + '-error').show();
+//                 }
+//             }
+//             if (data.state == 'error' && data.url == false)
+//             {
+//                 Swal.fire({
+//                     title: 'El Usuario no se ha modificado, por favor inténtalo de nuevo',
+//                     text: "Recuerde que si lo elimina no lo podrá recuperar.",
+//                     type: 'warning',
+//                     text: data.message,
+//                     showCancelButton: true,
+//                     confirmButtonColor: '#3085d6',
+//                     cancelButtonColor: '#d33',
+//                     confirmButtonText: 'ok',
+//                     cancelButtonText: 'Ver actividades sin finalzar',
+//                 }).then((result) => {
+//                     if (result.value) {
 
-$(document).on('submit', 'form#FormChangeNodo', function (event) {
-    $('button[type="submit"]').attr('disabled', 'disabled');
+//                     }else if ( result.dismiss === Swal.DismissReason.cancel ) {
+//                         let activitiesFinalizar ="";
+//                         $.each( data.activities, function( key, val ) {
+//                             activitiesFinalizar += '</br><b> ' + key + ' - ' + val + ' </b> ';
+//                         });
+//                         Swal.fire({
+//                             title: 'actividades sin finalzar',
+//                             html: activitiesFinalizar,
+//                             type: 'info',
+//                             showCancelButton: false,
+//                             confirmButtonColor: '#3085d6',
+//                             confirmButtonText: 'Ok'
+//                         });
+
+//                     }
+//                 })
+//             }
+//             if (data.state == 'success' && data.url != false) {
+//                 Swal.fire({
+//                     title: 'Modifciación Exitosa',
+//                     text: `El Usuario `+data.user.nombres+ ` ` +data.user.apellidos+`  ha sido modificado satisfactoriamente`,
+//                     type: 'success',
+//                     showCancelButton: false,
+//                     confirmButtonColor: '#3085d6',
+//                     confirmButtonText: 'Ok'
+//                 });
+//                 setTimeout(function(){
+//                     window.location.href = data.url;
+//                 }, 1000);
+//             }
+//         },
+//         error: function (xhr, textStatus, errorThrown) {
+//             alert("Error: " + errorThrown);
+//         },
+//     });
+// });
+
+$(document).on('submit', 'form#form-update-role-nodo', function (event) {
+    // $('button[type="submit"]').attr('disabled', 'disabled');
     event.preventDefault();
-    var form = $(this);
-    var data = new FormData($(this)[0]);
-    var url = form.attr("action");
+    let form = $(this);
+    let data = new FormData($(this)[0]);
+    let url = form.attr("action");
+
     $.ajax({
         type: form.attr('method'),
         url: url,
@@ -3011,69 +2644,52 @@ $(document).on('submit', 'form#FormChangeNodo', function (event) {
         contentType: false,
         dataType: 'json',
         processData: false,
-        success: function (data) {
-
+        success: function (response) {
             $('button[type="submit"]').removeAttr('disabled');
-            $('button[type="submit"]').prop("disabled", false);
             $('.error').hide();
-            if (data.fail) {
-                for (control in data.errors) {
-                    $('#' + control + '-error').html(data.errors[control]);
-                    $('#' + control + '-error').show();
-                }
-                changeNode.printErroresFormulario(data);
-            }
-            if (data.state == 'error' && data.url == false)
-            {
-                Swal.fire({
-                    title: 'El Usuario no se ha modificado, por favor inténtalo de nuevo',
-                    text: "Recuerde que si lo elimina no lo podrá recuperar.",
-                    type: 'warning',
-                    text: data.message,
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'ok',
-                    cancelButtonText: 'Ver actividades sin finalzar',
-                }).then((result) => {
-                    if (result.value) {
+            printErrorsForm(response.data);
+            if(!response.data.fail){
 
-                    }else if ( result.dismiss === Swal.DismissReason.cancel ) {
-                        let activitiesFinalizar ="";
-                        $.each( data.activities, function( key, val ) {
-                            activitiesFinalizar += '</br><b> ' + key + ' - ' + val + ' </b> ';
-                        });
-                        Swal.fire({
-                            title: 'actividades sin finalzar',
-                            html: activitiesFinalizar,
-                            type: 'info',
-                            showCancelButton: false,
-                            confirmButtonColor: '#3085d6',
-                            confirmButtonText: 'Ok'
-                        });
-
-                    }
-                })
-            }
-            if (data.state == 'success' && data.url != false) {
                 Swal.fire({
                     title: 'Modifciación Exitosa',
-                    text: `El Usuario `+data.user.nombres+ ` ` +data.user.apellidos+`  ha sido modificado satisfactoriamente`,
+                    text: `Cuenta de usuario actualizada exitosamente.`,
                     type: 'success',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok'
                 });
-                setTimeout(function(){
-                    window.location.href = data.url;
+
+                setTimeout(function () {
+                    window.location.href = response.data.url;
                 }, 1000);
+            }else{
+                Swal.fire({
+                    title: 'Modifciación Errónea',
+                    text: `Cuenta de usuario no actualizada, por favor intente nuevamente.`,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Ok'
+                });
             }
         },
         error: function (xhr, textStatus, errorThrown) {
+            $('button[type="submit"]').removeAttr('disabled');
             alert("Error: " + errorThrown);
-        },
+        }
     });
 });
+
+function printErrorsForm(data) {
+    if (data.fail) {
+        let errores = "";
+        for (control in data.errors) {
+            errores += ' </br><b> - ' + data.errors[control] + ' </b> ';
+            $('#' + control + '-error').html(data.errors[control]);
+            $('#' + control + '-error').show();
+        }
+    }
+}
 
 $(document).ready(function() {
     let filter_role = $('#filter_rol').val();
@@ -3094,23 +2710,11 @@ $(document).ready(function() {
             "lengthChange": false
         }).clear().draw();
     }
-
-    $('#mytalento_data_table').dataTable().fnDestroy();
-    if(filter_state != '' && filter_year !=''){
-        UserIndex.fillDatatatablesTalentos(filter_year, filter_state);
-    }else{
-        $('#mytalento_data_table').DataTable({
-            language: {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            "lengthChange": false
-        }).clear().draw();
-    }
 });
 
-var UserIndex = {
+const UserIndex = {
     fillDatatatablesUsers(filter_nodo ,filter_role, filter_state, filter_year){
-        var datatable = $('#users_data_table').DataTable({
+        let datatable = $('#users_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
@@ -3120,7 +2724,7 @@ var UserIndex = {
             responsive: true,
             "order": [[ 1, "desc" ]],
             ajax:{
-                url: host_url + "/usuario",
+                url: `${host_url}/usuarios`,
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -3130,6 +2734,10 @@ var UserIndex = {
                 }
             },
             columns: [
+                {
+                    data: 'nodo',
+                    name: 'nodo',
+                },
                 {
                     data: 'tipodocumento',
                     name: 'tipodocumento',
@@ -3146,8 +2754,8 @@ var UserIndex = {
                     data: 'celular',
                     name: 'celular',
                 },  {
-                    data: 'roles',
-                    name: 'roles'
+                    data: 'rols',
+                    name: 'rols'
                 }, {
                     data: 'login',
                     name: 'login',
@@ -3162,95 +2770,21 @@ var UserIndex = {
                 },
             ],
         });
-    },
-    fillDatatatablesTalentos(filter_year,filter_state){
-        var datatable = $('#mytalento_data_table').DataTable({
-            language: {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            "lengthChange": false,
-            processing: true,
-            serverSide: true,
-            "order": [[ 1, "desc" ]],
-            ajax:{
-                url: host_url + "/usuario/mistalentos",
-                type: "get",
-                data: {
-                    filter_year: filter_year,
-                    filter_state: filter_state
-                }
-            },
-            columns: [
-                {
-                    data: 'tipodocumento',
-                    name: 'tipodocumento',
-                }, {
-                    data: 'documento',
-                    name: 'documento',
-                }, {
-                    data: 'nombrecompleto',
-                    name: 'nombrecompleto',
-                }, {
-                    data: 'email',
-                    name: 'email',
-                }, {
-                    data: 'celular',
-                    name: 'celular',
-                },  {
-                    data: 'roles',
-                    name: 'roles'
-                }, {
-                    data: 'login',
-                    name: 'login',
-                }, {
-                    data: 'state',
-                    name: 'state',
-                }, {
-                    data: 'detail',
-                    name: 'detail',
-                    orderable: false,
-                },
-            ],
-        });
     }
 }
 
 $('#filter_user').click(function(){
-
     let filter_role = $('#filter_rol').val();
     let filter_nodo = $('#filter_nodo').val();
     let filter_state = $('#filter_state').val();
     let filter_year = $('#filter_year').val();
-
-
     $('#users_data_table').dataTable().fnDestroy();
-
-
     if((filter_nodo != '' || filter_nodo != null) && filter_role !='' && filter_state != '' && filter_year !=''){
         UserIndex.fillDatatatablesUsers(filter_nodo , filter_role, filter_state, filter_year);
-        //idea.fill_datatatables_ideas(filter_nodo = null,filter_year, filter_state, filter_vieneconvocatoria, filter_convocatoria = null);
     }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && filter_role !='' && filter_state != '' && filter_year !=''){
         UserIndex.fillDatatatablesUsers(filter_nodo = null , filter_role, filter_state, filter_year);
     }else{
         $('#users_data_table').DataTable({
-            language: {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            "lengthChange": false
-        }).clear().draw();
-
-    }
-
-});
-
-$('#filter_talentos').click(function(){
-    let filter_state = $('#filter_state').val();
-    let filter_year = $('#filter_year').val();
-    $('#mytalento_data_table').dataTable().fnDestroy();
-    if(filter_state != '' && filter_year !=''){
-        UserIndex.fillDatatatablesTalentos(filter_year, filter_state);
-    }else{
-        $('#mytalento_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
@@ -3264,14 +2798,13 @@ $('#download_users').click(function(){
     let filter_nodo = $('#filter_nodo').val();
     let filter_state = $('#filter_state').val();
     let filter_year = $('#filter_year').val();
-    var query = {
+    let query = {
         filter_nodo: filter_nodo,
         filter_role: filter_role,
         filter_state: filter_state,
         filter_year: filter_year,
     }
-
-    var url = host_url + "/usuario/export?" + $.param(query)
+    let url = `${host_url}/usuarios/export?${$.param(query)}`
     window.location = url;
 });
 
@@ -4652,7 +4185,7 @@ function pintarTalentoEnTabla_Fase_Inicio(id, isInterlocutor) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: host_url + '/usuario/talento/consultarTalentoPorId/' + id
+        url: `${host_url}/usuarios/talento/consultarTalentoPorId/${id}`
     }).done(function (ajax) {
 
         let fila = prepararFilaEnLaTablaDeTalentos(ajax, isInterlocutor);
@@ -4666,7 +4199,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual(id) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: host_url + '/usuario/talento/consultarTalentoPorId/' + id
+        url: `${host_url}/usuarios/talento/consultarTalentoPorId/${id}`
     }).done(function (ajax) {
         let fila = prepararFilaEnLaTablaDePropietarios_Users(ajax);
         $('#propiedadIntelectual_Personas').append(fila);
@@ -4679,7 +4212,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Sede(sede_id)
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url : host_url + '/empresa/ajaxDetalleDeUnaSede/'+sede_id,
+        url : `${host_url}/empresa/ajaxDetalleDeUnaSede/${sede_id}`,
         success: function (response) {
           Swal.fire({
             toast: true,
@@ -4715,8 +4248,6 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Grupo(id) {
 
 // Valida que el talento no se encuentre asociado al proyecto
 function noRepeat(id) {
-    // console.log('fff');
-    // let retorno = true;
     let a = document.getElementsByName("talentos[]");
     for (x = 0; x < a.length; x ++) {
         if (a[x].value == id) {
@@ -4903,7 +4434,6 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
             ideaProyectoAsociadaConExito(codigo, nombre);
 
             if(response.data.talento != null){
-                console.log(response.data);
                 addTalentoProyecto(response.data.talento.id, true);
                 addPersonaPropiedad(response.data.talento.id);
             }
@@ -5035,9 +4565,8 @@ function consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table(tableName, fie
         },
         processing: true,
         serverSide: true,
-        // order: false,
         ajax: {
-            url: host_url + "/usuario/talento/getTalentosDeTecnoparque/",
+            url: `${host_url}/usuarios/talento/getTalentosDeTecnoparque/`,
             type: "get"
         },
         columns: [
@@ -5129,7 +4658,7 @@ function consultarExpertosDeUnNodo(nodo_id) {
     $.ajax({
         dataType:'json',
         type:'get',
-        url: host_url + "/usuario/usuarios/gestores/nodo/"+nodo_id
+        url: `${host_url}/usuarios/gestores/nodo/${nodo_id}`
       }).done(function(response){
           $("#txtexperto_id_proyecto").empty();
           $('#txtexperto_id_proyecto').append('<option value="">Seleccione el experto</option>');
@@ -5157,7 +4686,6 @@ function consultarSublineas(linea) {
         type:'get',
         url: host_url + "/proyecto/sublineas_of/"+linea
     }).done(function (response) {
-          console.log(response);
         printSublineas(response);
     });
 }
@@ -6757,6 +6285,10 @@ $(document).ready(function() {
 
 });
 
+// var $ = require('jquery');
+// var DataTable = require('datatables.net');
+// require('datatables.net-plugins/dataRender/datetime.js');
+
 var usoinfraestructuraIndex = {
     fillDatatatablesUsosInfraestructura: function(filter_nodo, filter_module, filter_year){
         var datatable = $('#usoinfraestructa_data_table').DataTable({
@@ -6776,12 +6308,29 @@ var usoinfraestructuraIndex = {
                     filter_year: filter_year
                 }
             },
+            columnDefs: [ {
+                targets: 0,
+                // render: datatable.render.moment( 'DD-MM-YYYY' )
+                type: "date"
+            } ],
+
             columns: [
+                // {
+                //     type: "date",
+                //     data: 'fecha',
+                //     name: 'fecha',
+                //     width: '10%'
+                // },
                 {
                     data: 'fecha',
-                    name: 'fecha',
-                    width: '10%'
-                }, {
+                    type: 'date',
+                    // render: {
+                    //     _: 'display',
+                    //     sort: 'timestamp'
+                    // }
+                },
+
+                {
                     data: 'gestorEncargado',
                     name: 'gestorEncargado',
                     width: '20%',
@@ -6818,7 +6367,7 @@ var usoinfraestructuraIndex = {
         }else{
             $.ajax({
                 type: 'GET',
-                url: host_url + '/usuario/usuarios/gestores/nodo/'+ nodo,
+                url: `${host_url}/usuarios/gestores/nodo/${nodo}`,
                 contentType: false,
                 dataType: 'json',
                 processData: false,
@@ -7147,7 +6696,6 @@ function consultarDetallesDeUnaCharlaInformativa(id) {
     type: 'get',
     url: host_url + '/charla/consultarDetallesDeUnaCharlaInformativa/'+id,
     success: function (data) {
-      console.log(data);
       $("#modalDetalleDeUnaCharlaInformativa_titulo").empty();
       $("#modalDetalleDeUnaCharlaInformativa_detalle_charla").empty();
       $("#modalDetalleDeUnaCharlaInformativa_titulo").append("<span class='cyan-text text-darken-3'>Datos de la Charla Informativa </span><br>");
@@ -8166,19 +7714,32 @@ function consultarArticulacionesDeUnaLineaDelNodoPorFechas_stacked(bandera) {
 }
 
 var graficosSeguimiento = {
-  gestor: 'graficoSeguimientoEsperadoPorGestorDeUnNodo_column',
-  nodo_esperado: 'graficoSeguimientoDeUnNodo_column',
-  tecnoparque_esperado: 'graficoSeguimientoTecnoparque_column',
-  nodo_fases: 'graficoSeguimientoDeUnNodoFases_column',
-  tecnoparque_fases: 'graficoSeguimientoTecnoparqueFases_column',
-  gestor_fases: 'graficoSeguimientoPorGestorFases_column',
-  linea_esperado: 'graficoSeguimientoEsperadoPorLineaDeUnNodo_column',
-  linea_actual: 'graficoSeguimientoActualPorLineaDeUnNodo_column',
-  inscritos_mes: 'graficoSeguimientoInscritosPorMes_column'
+    gestor: 'graficoSeguimientoEsperadoPorGestorDeUnNodo_column',
+    nodo_esperado: 'graficoSeguimientoDeUnNodo_column',
+    tecnoparque_esperado: 'graficoSeguimientoTecnoparque_column',
+    nodo_fases: 'graficoSeguimientoDeUnNodoFases_column',
+    tecnoparque_fases: 'graficoSeguimientoTecnoparqueFases_column',
+    gestor_fases: 'graficoSeguimientoPorGestorFases_column',
+    linea_esperado: 'graficoSeguimientoEsperadoPorLineaDeUnNodo_column',
+    linea_actual: 'graficoSeguimientoActualPorLineaDeUnNodo_column',
+    inscritos_mes: 'graficoSeguimientoInscritosPorMes_column'
 };
 
+let graficosArticulacionSeguimiento = {
+    // gestor: 'graficoSeguimientoEsperadoPorGestorDeUnNodo_column',
+    // nodo_esperado: 'graficoSeguimientoArticulacionDeUnNodoFases_column',
+    // tecnoparque_esperado: 'graficoSeguimientoTecnoparque_column',
+    nodo_fases: 'graficoSeguimientoArticulacionDeUnNodoFases_column',
+    // tecnoparque_fases: 'graficoSeguimientoTecnoparqueFases_column',
+    // gestor_fases: 'graficoSeguimientoPorGestorFases_column',
+    // linea_esperado: 'graficoSeguimientoEsperadoPorLineaDeUnNodo_column',
+    // linea_actual: 'graficoSeguimientoActualPorLineaDeUnNodo_column',
+    inscritos_mes: 'graficoSeguimientoArticulacionesInscritasPorMes_column'
+};
+
+
 function alertaLineaNoValido() {
-  Swal.fire('Advertencia!', 'Seleccione una línea tecnológica', 'warning');
+    Swal.fire('Advertencia!', 'Seleccione una línea tecnológica', 'warning');
 };
 
 function alertaGestorNoValido() {
@@ -8401,49 +7962,98 @@ function graficoSeguimientoEsperado(data, name) {
 }
 
 function graficoSeguimientoPorMes(data, name) {
-  Highcharts.chart(name, {
-    title: {
-      text: 'Proyectos inscritos por mes en el año actual'
-    },
-    subtitle: {
-      text: 'Cuando el mes no aparece es porque el valor es cero(0)'
-    },
-    yAxis: {
-      title: {
-        text: 'Cantidad de proyectos'
-      }
-    },
-    xAxis: {
-      categories: data.datos.meses,
-      accessibility: {
-        rangeDescription: 'Mes'
-      }
-    },
-    legend: {
-      layout: 'vertical',
-      align: 'right',
-      verticalAlign: 'middle'
-    },
-    series: [{
-      name: 'Proyectos inscritos',
-      data: data.datos.cantidades
-    }],
-
-    responsive: {
-      rules: [{
-        condition: {
-          maxWidth: 500
+    Highcharts.chart(name, {
+        title: {
+        text: 'Proyectos inscritos por mes en el año actual'
         },
-        chartOptions: {
-          legend: {
-            layout: 'horizontal',
-            align: 'center',
-            verticalAlign: 'bottom'
-          }
+        subtitle: {
+        text: 'Cuando el mes no aparece es porque el valor es cero(0)'
+        },
+        yAxis: {
+        title: {
+            text: 'Cantidad de proyectos'
         }
-      }]
-    }
-  });
+        },
+        xAxis: {
+        categories: data.datos.meses,
+        accessibility: {
+            rangeDescription: 'Mes'
+        }
+        },
+        legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+        },
+        series: [{
+        name: 'Proyectos inscritos',
+        data: data.datos.cantidades
+        }],
+
+        responsive: {
+        rules: [{
+            condition: {
+            maxWidth: 500
+            },
+            chartOptions: {
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom'
+            }
+            }
+        }]
+        }
+    });
+}
+
+function graficoSeguimientoArticulacionesPorMes(data, name) {
+    Highcharts.chart(name, {
+        title: {
+            text: 'Articulaciones inscritas por mes en el año actual'
+        },
+        subtitle: {
+            text: 'Cuando el mes no aparece es porque el valor es cero(0)'
+        },
+        yAxis: {
+            title: {
+                text: 'Cantidad de articulaciones'
+            }
+        },
+        xAxis: {
+            title: {
+                text: 'Mes'
+            },
+            categories: data.datos.meses,
+            accessibility: {
+                rangeDescription: 'Mes'
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle'
+        },
+        series: [{
+            name: 'Articulaciones inscritas',
+            data: data.datos.cantidades
+        }],
+
+        responsive: {
+        rules: [{
+            condition: {
+            maxWidth: 500
+            },
+            chartOptions: {
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom'
+            }
+            }
+        }]
+        }
+    });
 }
 
 function graficoSeguimientoFases(data, name) {
@@ -8534,6 +8144,91 @@ function graficoSeguimientoFases(data, name) {
     }]
 });
 }
+
+function graficoSeguimientoArticulacionesFases(data, name) {
+    let nodos = [];
+    let inicio = [];
+    let ejecucion = [];
+    let cierre = [];
+    let finalizado = [];
+    let suspendido = [];
+    data.datos.forEach(element => {
+        nodos.push(element.nodo);
+        inicio.push(element.inicio);
+        ejecucion.push(element.ejecucion);
+        cierre.push(element.cierre);
+        finalizado.push(element.finalizado);
+        suspendido.push(element.suspendido);
+    });
+    Highcharts.chart(name, {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Articulaciones actuales y finalizadas en el año actual'
+        },
+        xAxis: {
+            title: {
+                text: 'Nodos'
+            },
+            categories: nodos
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Cantidad de Articulaciones'
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: ( // theme
+                        Highcharts.defaultOptions.title.style &&
+                        Highcharts.defaultOptions.title.style.color
+                    ) || 'gray',
+                    textOutline: 'none'
+                }
+            }
+        },
+        legend: {
+            align: 'left',
+            x: 70,
+            verticalAlign: 'top',
+            y: 20,
+            floating: true,
+            backgroundColor:
+                Highcharts.defaultOptions.legend.backgroundColor || 'white',
+            borderColor: '#CCC',
+            borderWidth: 1,
+            shadow: false
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        series: [{
+            name: 'Inicio',
+            data: inicio
+        },  {
+            name: 'Ejecución',
+            data: ejecucion
+        }, {
+            name: 'Cierre',
+            data: cierre
+        }, {
+            name: 'Finalizado',
+            data: finalizado
+        }, {
+            name: 'Concluido sin finalizar',
+            data: suspendido
+        }]
+    });
+}
+
 
 function graficoSeguimientoFasesNoGroup(data, name) {
   Highcharts.chart(name, {
@@ -8955,42 +8650,42 @@ const articulationStage = {
             $.ajax({
                 dataType: 'json',
                 type: 'get',
-                url: '/actividades/filter-code/' + filter_code_project
+                url: `/actividades/filter-code/${filter_code_project}`
             }).done(function (response) {
                 if(response.data.status_code == 200){
                     articulationStage.emptyResult('result-talents');
-                    let activity = response.data.proyecto.articulacion_proyecto.actividad;
-                    let data = response.data;
+                    let project = response.data.proyecto;
+
                     $('.result-projects').append(`
                         <div class="card card-transparent p f-12 m-t-lg">
                             <div class="card-content">
-                                <span class="card-title p f-12">${activity.codigo_actividad} ${activity.nombre}</span>
-                                <div class="position-top-right p f-12 mail-date hide-on-med-and-down">${articulationStage.formatDate(activity.fecha_cierre)}</div>
-                                <p>${activity.objetivo_general}</p>
+                                <span class="card-title p f-12">${project.codigo_proyecto} ${project.nombre}</span>
+                                <div class="position-top-right p f-12 mail-date hide-on-med-and-down">${articulationStage.formatDate(project.fecha_cierre)}</div>
+                                <p>${project.objetivo_general}</p>
                                 <div class="input-field col m12 s12">
-                                    <input type="hidden" name="projects" id="projects" style="display:none" value="${response.data.proyecto.id}"/>
+                                    <input type="hidden" name="projects" id="projects" style="display:none" value="${project.id}"/>
                                 </div>
                             </div>
                             <div class="card-action">
-                                <a class="waves-effect waves-red btn-flat m-b-xs primary-text" target="_blank" href="/proyecto/detalle/${data.proyecto.id}"><i class="material-icons left">link</i>Ver más</a>
+                                <a class="waves-effect waves-red btn-flat m-b-xs primary-text" target="_blank" href="/proyecto/detalle/${project.id}"><i class="material-icons left">link</i>Ver más</a>
                             </div>
                         </div>`
                     );
-                    if (data.proyecto.articulacion_proyecto.talentos.length != 0) {
-                        $.each(data.proyecto.articulacion_proyecto.talentos, function(e, talento) {
-                            if(talento.pivot.talento_lider == 1){
+                    if (project.talentos.length != 0) {
+                        $.each(project.talentos, function(e, user) {
+                            if(user.pivot.talento_lider == 1){
                                 $('.result-talents').append(`
                                     <div class="card card-transparent p f-12 m-t-lg">
                                         <div class="card-content">
-                                            <span class="card-title p f-12">${talento.user.documento} - ${talento.user.nombres} ${talento.user.apellidos}</span>
+                                            <span class="card-title p f-12">${user.documento} - ${user.nombres} ${user.apellidos}</span>
                                             <div class="input-field col m12 s12">
-                                                <input type="hidden" name="talent" id="talent" style="display:none" value="${talento.user.id}"/>
+                                                <input type="hidden" name="talent" id="talent" style="display:none" value="${user.id}"/>
                                             </div>
-                                            <div class="position-top-right p f-12 mail-date hide-on-med-and-down">  Acceso al sistema: ${userSearch.state(talento.user.estado)}</div>
-                                            <p class="hide-on-med-and-down"> Miembro desde ${articulationStage.formatDate(talento.user.created_at)}</p>
+                                            <div class="position-top-right p f-12 mail-date hide-on-med-and-down">  Acceso al sistema: ${userSearch.state(user.estado)}</div>
+                                            <p class="hide-on-med-and-down"> Miembro desde ${articulationStage.formatDate(user.created_at)}</p>
                                         </div>
                                         <div class="card-action">
-                                            <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuario/usuarios/${talento.user.documento}"><i class="material-icons left">link</i>Ver más</a>
+                                            <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuario/usuarios/${user.documento}"><i class="material-icons left">link</i>Ver más</a>
                                         </div>
                                     </div>`
                                 );
@@ -9081,7 +8776,7 @@ const articulationStage = {
             $.ajax({
                 dataType: 'json',
                 type: 'get',
-                url: '/usuarios/filtro-talento/' + document
+                url: `${host_url}/usuarios/filtro-talento/${document}`
             }).done(function (response) {
                 if(response.data.status_code == 200){
                     let user = response.data.user;
@@ -9098,7 +8793,7 @@ const articulationStage = {
                                 </div>
                             </div>
                             <div class="card-action">
-                                <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuario/usuarios/`+user.documento+ `"><i class="material-icons left"> link</i>Ver más</a>
+                                <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuarios/`+user.documento+ `"><i class="material-icons left"> link</i>Ver más</a>
                             </div>
                         </div>
                     `);
@@ -9121,7 +8816,7 @@ const articulationStage = {
             processing: true,
             serverSide: true,
             ajax: {
-                url: "/usuario/talento/getTalentosDeTecnoparque",
+                url: `${host_url}/usuarios/talento/getTalentosDeTecnoparque/`,
                 type: "get"
             },
             columns: [
@@ -9175,7 +8870,7 @@ const articulationStage = {
         $.ajax({
             dataType: 'json',
             type: 'get',
-            url: '/usuario/talento/consultarTalentoPorId/' + id
+            url: `${host_url}/usuarios/talento/consultarTalentoPorId/${id}`
         }).done(function (response) {
             if(response != null){
                 articulationStage.searchUser(response.talento.documento);
@@ -9305,7 +9000,6 @@ const articulationStage = {
                         "_token": token,
                     },
                     success: function (data){
-                        console.log(data);
                         if(!data.fail){
                             Swal.fire(
                                 'Actialización exitosa!',
@@ -10028,7 +9722,7 @@ const filter_articulations = {
             $.ajax({
                 dataType: 'json',
                 type: 'get',
-                url: '/usuarios/filtro-talento/' + document
+                url: `${host_url}/usuarios/filtro-talento/${document}`
             }).done(function (response) {
                 if(response.data.status_code == 200){
                     let user = response.data.user;
@@ -10041,7 +9735,7 @@ const filter_articulations = {
                                     <div class="mailbox-text p f-12 hide-on-med-and-down">Miembro desde ${filter_articulations.formatDate(user.created_at)}</div>
                                 </div>
                                 <div class="card-action">
-                                <a class="waves-effect waves-red btn-flat m-b-xs primary-text" onclick="filter_articulations.addTalentToArticulation(${user.talento.id});" class="primary-text">Agregar</a>
+                                <a class="waves-effect waves-red btn-flat m-b-xs primary-text" onclick="filter_articulations.addTalentToArticulation(${user.id});" class="primary-text">Agregar</a>
                                 </div>
                             </div>
                         </div>
@@ -10116,7 +9810,7 @@ const filter_articulations = {
         $.ajax({
             dataType: 'json',
             type: 'get',
-            url: '/usuario/talento/consultarTalentoPorId/' + id
+            url: `${host_url}/usuarios/talento/consultarTalentoPorId/${id}`
         }).done(function (response) {
             let fila = filter_articulations.prepareTableRowTalent(response);
             $('.alert-response-talents').append(fila);
@@ -10126,7 +9820,7 @@ const filter_articulations = {
         $.ajax({
             dataType: 'json',
             type: 'get',
-            url: '/usuario/talento/consultarTalentoPorId/' + id
+            url: `${host_url}/usuarios/talento/consultarTalentoPorId/${id}`
         }).done(function (response) {
             let fila = filter_articulations.prepareTableRowTalent(response);
             $('.alert-response-talents').append(fila);
@@ -10134,16 +9828,16 @@ const filter_articulations = {
     },
     prepareTableRowTalent: function(response) {
         let data = response;
-        let fila =`<div class="row card-talent`+data.talento.user_id+`">
+        let fila =`<div class="row card-talent`+data.talento.id+`">
                         <div class="col s12 m12 l12">
                             <div class="card card-panel server-card">
                                 <div class="card-content">
-                                    <span class="card-title">${data.talento.documento} - ${data.talento.talento}</span>
-                                    <input type="hidden" id="talents" name="talents[]" value="${data.talento.user_id}"/>
+                                    <span class="card-title">${data.talento.documento} - ${data.talento.nombres} ${data.talento.apellidos}</span>
+                                    <input type="hidden" id="talents" name="talents[]" value="${data.talento.id}"/>
                                 </div>
                                 <div class="card-action">
-                                    <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuario/usuarios/${data.talento.documento}"><i class="material-icons left"> link</i>Ver más</a>
-                                    <a onclick="filter_articulations.deleteTalent( ${data.talento.user_id});" class="waves-effect waves-red btn-flat m-b-xs red-text"><i class="material-icons left"> delete_sweep</i>Eliminar</a>
+                                    <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuarios/${data.talento.documento}"><i class="material-icons left"> link</i>Ver más</a>
+                                    <a onclick="filter_articulations.deleteTalent(${data.talento.id});" class="waves-effect waves-red btn-flat m-b-xs red-text"><i class="material-icons left"> delete_sweep</i>Eliminar</a>
                                 </div>
                             </div>
                         </div>
@@ -10170,7 +9864,7 @@ const filter_articulations = {
             processing: true,
             serverSide: true,
             ajax: {
-                url: "/usuario/talento/getTalentosDeTecnoparque/",
+                url: `${host_url}/usuarios/talento/getTalentosDeTecnoparque/`,
                 type: "get"
             },
             columns: [
@@ -10735,331 +10429,332 @@ $("#formArticualtionSubtype").on('submit', function(e){
 });
 
 function isset(variable) {
-  if(typeof(variable) != "undefined" && variable !== null) {
-    return true;
-  }
-  return false;
-}
-
-function sendListNodos(url, input) {
-  let nodosSend = input;
-  return $.ajax({
-    dataType: 'json',
-    type: 'get',
-    data: {
-      nodos: nodosSend
-    },
-    url: url,
-    // success: function (data) { },
-    error: function (xhr, textStatus, errorThrown) {
-      alert("Error: " + errorThrown);
-    },
-  });
-};
-
-function consultarSeguimientoDeUnNodoFases(e, url) {
-  e.preventDefault();
-  input = $("#txtnodo_select_actual").val();
-  if (!validarSelect(input)) {
-      Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
-      return false;
-  } else {
-    let ajax = sendListNodos(url, input);
-      ajax.success(function (data) {
-        graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
-      });
-  }
-};
-
-function consultarSeguimientoEsperado(e, url) {
-  e.preventDefault();
-  input = $("#txtnodo_select_list").val();
-  if (!validarSelect(input)) {
-      Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
-      return false;
-  } else {
-    let ajax = sendListNodos(url, input);
-      ajax.success(function (data) {
-        graficoSeguimientoEsperado(data, graficosSeguimiento.nodo_esperado);
-      });
-  }
-}
-
-function generarExcelConTodosLosIndicadores(e, nodo) {
-  let idnodo = $('#txtnodo_id').val();
-  let hoja = $('#txthoja_nombre').val();
-  let fecha_inicio = $('#txtfecha_inicio_todos').val();
-  let fecha_fin = $('#txtfecha_fin_todos').val();
-  if (!isset(idnodo)) {
-    idnodo = nodo;
-  }
-  if (!isset(hoja)) {
-    hoja = 'all';
-  }
-
-  if (fecha_inicio > fecha_fin) {
-    Swal.fire('Error!', 'Seleccione un rango de fechas válido', 'error');
-  } else {
-    e.preventDefault();
-    $.ajax({
-      type: 'get',
-      url: host_url + '/excel/export_proyectos_indicadores',
-      xhrFields:{
-        responseType: 'blob'
-      },
-      data: {
-        nodos: idnodo,
-        hoja: hoja,
-        fecha_inicio: fecha_inicio,
-        fecha_fin: fecha_fin,
-        type: 'todos'
-      },
-      success: function (result, status, xhr) {
-        let disposition = xhr.getResponseHeader('content-disposition');
-        let matches = /"([^"]*)"/.exec(disposition);
-        let filename = (matches != null && matches[1] ? matches[1] : 'Proyecto_'+hoja+'_finalizados_'+fecha_inicio+'_'+fecha_fin+'.xlsx');
-
-        let blob = new Blob([result], {
-            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        });
-        let link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
-        link.download = filename;
-
-        document.body.appendChild(link);
-
-        link.click();
-        document.body.removeChild(link);
-      },
-      error: function (xhr, textStatus, errorThrown) {
-        alert("Error: " + errorThrown);
-      },
-    })
-  }
-}
-
-function generarExcelConTodosLosIndicadoresActuales(e, nodo) {
-  let idnodo = $('#txtnodo_id_actuales').val();
-  let hoja = $('#txthoja_nombre_actuales').val();
-  if (!isset(idnodo)) {
-    idnodo = nodo;
-  }
-  if (!isset(hoja)) {
-    hoja = 'all';
-  }
-
-  e.preventDefault();
-  $.ajax({
-    type: 'get',
-    url: host_url + '/excel/export_proyectos_indicadores',
-    xhrFields:{
-      responseType: 'blob'
-    },
-    data: {
-      nodos: idnodo,
-      hoja: hoja,
-      fecha_inicio: null,
-      fecha_fin: null,
-      type: 'activos'
-    },
-    success: function (result, status, xhr) {
-      let disposition = xhr.getResponseHeader('content-disposition');
-      let matches = /"([^"]*)"/.exec(disposition);
-      let filename = (matches != null && matches[1] ? matches[1] : 'Proyecto_'+hoja+'_activos_.xlsx');
-
-      let blob = new Blob([result], {
-          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      });
-      let link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = filename;
-
-      document.body.appendChild(link);
-
-      link.click();
-      document.body.removeChild(link);
-    },
-    error: function (xhr, textStatus, errorThrown) {
-      alert("Error: " + errorThrown);
-    },
-  })
-}
-
-function generarExcelConTodosLosIndicadoresFinalizados(e, nodo) {
-  let idnodo = $('#txtnodo_id_finalizados').val();
-  let hoja = $('#txthoja_nombre_finalizados').val();
-  let fecha_inicio = $('#txtfecha_inicio_cerrados').val();
-  let fecha_fin = $('#txtfecha_fin_cerrados').val();
-  if (!isset(idnodo)) {
-    idnodo = nodo;
-  }
-  if (!isset(hoja)) {
-    hoja = 'all';
-  }
-
-  if (fecha_inicio > fecha_fin) {
-    Swal.fire('Error!', 'Seleccione un rango de fechas válido', 'error');
-  } else {
-    e.preventDefault();
-    $.ajax({
-      type: 'get',
-      url: host_url + '/excel/export_proyectos_indicadores',
-      xhrFields:{
-        responseType: 'blob'
-      },
-      data: {
-        nodos: idnodo,
-        hoja: hoja,
-        fecha_inicio: fecha_inicio,
-        fecha_fin: fecha_fin,
-        type: 'finalizados'
-      },
-      success: function (result, status, xhr) {
-        let disposition = xhr.getResponseHeader('content-disposition');
-        let matches = /"([^"]*)"/.exec(disposition);
-        let filename = (matches != null && matches[1] ? matches[1] : 'Proyecto_'+hoja+'_finalizados_'+fecha_inicio+'_'+fecha_fin+'.xlsx');
-
-        let blob = new Blob([result], {
-            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        });
-        let link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
-        link.download = filename;
-
-        document.body.appendChild(link);
-
-        link.click();
-        document.body.removeChild(link);
-      },
-      error: function (xhr, textStatus, errorThrown) {
-        alert("Error: " + errorThrown);
-      },
-    })
-  }
-
-}
-
-function generarExcelConTodosLosIndicadoresInscritos(e, nodo) {
-  let idnodo = $("#txtnodo_id_inscritos").val();
-  let hoja = $('#txthoja_nombre_inscritos').val();
-  let fecha_inicio = $('#txtfecha_inicio_inscritos').val();
-  let fecha_fin = $('#txtfecha_fin_inscritos').val();
-  if (!isset(idnodo)) {
-    idnodo = nodo;
-  }
-  if (!isset(hoja)) {
-    hoja = 'all';
-  }
-
-  if (fecha_inicio > fecha_fin) {
-    Swal.fire('Error!', 'Seleccione un rango de fechas válido', 'error');
-  } else {
-    e.preventDefault();
-    $.ajax({
-      type: 'get',
-      url: host_url + '/excel/export_proyectos_indicadores',
-      xhrFields:{
-        responseType: 'blob'
-      },
-      data: {
-        nodos: idnodo,
-        hoja: hoja,
-        fecha_inicio: fecha_inicio,
-        fecha_fin: fecha_fin,
-        type: 'inscritos'
-      },
-      success: function (result, status, xhr) {
-        let disposition = xhr.getResponseHeader('content-disposition');
-        let matches = /"([^"]*)"/.exec(disposition);
-        let filename = (matches != null && matches[1] ? matches[1] : 'Proyecto_'+hoja+'_inscritos_'+fecha_inicio+'_'+fecha_fin+'.xlsx');
-
-        let blob = new Blob([result], {
-            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        });
-        let link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
-        link.download = filename;
-
-        document.body.appendChild(link);
-
-        link.click();
-        document.body.removeChild(link);
-      },
-      error: function (xhr, textStatus, errorThrown) {
-        alert("Error: " + errorThrown);
-      },
-    })
-  }
-
-}
-
-function selectAll(source, elementaName) {
-  checkboxes = document.getElementsByClassName(elementaName);
-  for(var i=0, n=checkboxes.length;i<n;i++) {
-    checkboxes[i].checked = source.checked;
-  }
-}
-
-function downloadMetas(e) {
-  e.preventDefault();
-  input = $("#txtnodo_metas_id").val();
-  if (!validarSelect(input)) {
-      Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
-      return false;
-  } else {
-      // location.href = route + '/' + input;
-      document.frmDescargarMetas.submit();
-  }
-}
-
-function validarSelect(input) {
-  // input = $(input).val();
-  if (input == null) {
+    if(typeof(variable) != "undefined" && variable !== null) {
+      return true;
+    }
     return false;
   }
-  return true;
-}
 
-function verificarChecks(source, padre) {
-  clase = source.classList[0];
-  checkboxes = document.getElementsByClassName(clase);
-  padre = document.getElementById(padre);
-  state = false;
-  for(var i=0, n= checkboxes.length; i< n;i++) {
-    if (checkboxes[i].checked) {
-      state = true;
-      break;
-    }
-  }
-  for(var i=0, n= checkboxes.length; i< n;i++) {
-    if (!checkboxes[i].checked) {
-      state = false;
-      break;
-    }
-  }
-  padre.checked = state;
-}
+  function sendListNodos(url, input) {
+    let nodosSend = input;
+    return $.ajax({
+      dataType: 'json',
+      type: 'get',
+      data: {
+        nodos: nodosSend
+      },
+      url: url,
+      // success: function (data) { },
+      error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+      },
+    });
+  };
 
-function validarChecks(elementaName) {
-  checkboxes = document.getElementsByClassName(elementaName);
-  for(var i=0, n=checkboxes.length;i<n;i++) {
-      if (checkboxes[i].checked == false) {
+  function consultarSeguimientoDeUnNodoFases(e, url) {
+    e.preventDefault();
+    input = $("#txtnodo_select_actual").val();
+    if (!validarSelect(input)) {
+        Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
         return false;
-      }
+    } else {
+      let ajax = sendListNodos(url, input);
+        ajax.success(function (data) {
+          graficoSeguimientoFases(data, graficosSeguimiento.nodo_fases);
+        });
+    }
+  };
+
+  function consultarSeguimientoEsperado(e, url) {
+    e.preventDefault();
+    input = $("#txtnodo_select_list").val();
+    if (!validarSelect(input)) {
+        Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
+        return false;
+    } else {
+      let ajax = sendListNodos(url, input);
+        ajax.success(function (data) {
+          graficoSeguimientoEsperado(data, graficosSeguimiento.nodo_esperado);
+        });
+    }
+  }
+
+  function generarExcelConTodosLosIndicadores(e, nodo) {
+    let idnodo = $('#txtnodo_id').val();
+    let hoja = $('#txthoja_nombre').val();
+    let fecha_inicio = $('#txtfecha_inicio_todos').val();
+    let fecha_fin = $('#txtfecha_fin_todos').val();
+    if (!isset(idnodo)) {
+      idnodo = nodo;
+    }
+    if (!isset(hoja)) {
+      hoja = 'all';
+    }
+
+    if (fecha_inicio > fecha_fin) {
+      Swal.fire('Error!', 'Seleccione un rango de fechas válido', 'error');
+    } else {
+      e.preventDefault();
+      $.ajax({
+        type: 'get',
+        url: host_url + '/excel/export_proyectos_indicadores',
+        xhrFields:{
+          responseType: 'blob'
+        },
+        data: {
+          nodos: idnodo,
+          hoja: hoja,
+          fecha_inicio: fecha_inicio,
+          fecha_fin: fecha_fin,
+          type: 'todos'
+        },
+        success: function (result, status, xhr) {
+          let disposition = xhr.getResponseHeader('content-disposition');
+          let matches = /"([^"]*)"/.exec(disposition);
+          let filename = (matches != null && matches[1] ? matches[1] : 'Proyecto_'+hoja+'_finalizados_'+fecha_inicio+'_'+fecha_fin+'.xlsx');
+
+          let blob = new Blob([result], {
+              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+          });
+          let link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = filename;
+
+          document.body.appendChild(link);
+
+          link.click();
+          document.body.removeChild(link);
+        },
+        error: function (xhr, textStatus, errorThrown) {
+          alert("Error: " + errorThrown);
+        },
+      })
+    }
+  }
+
+  function generarExcelConTodosLosIndicadoresActuales(e, nodo) {
+    let idnodo = $('#txtnodo_id_actuales').val();
+    let hoja = $('#txthoja_nombre_actuales').val();
+    if (!isset(idnodo)) {
+      idnodo = nodo;
+    }
+    if (!isset(hoja)) {
+      hoja = 'all';
+    }
+
+    e.preventDefault();
+    $.ajax({
+      type: 'get',
+      url: host_url + '/excel/export_proyectos_indicadores',
+      xhrFields:{
+        responseType: 'blob'
+      },
+      data: {
+        nodos: idnodo,
+        hoja: hoja,
+        fecha_inicio: null,
+        fecha_fin: null,
+        type: 'activos'
+      },
+      success: function (result, status, xhr) {
+        let disposition = xhr.getResponseHeader('content-disposition');
+        let matches = /"([^"]*)"/.exec(disposition);
+        let filename = (matches != null && matches[1] ? matches[1] : 'Proyecto_'+hoja+'_activos_.xlsx');
+
+        let blob = new Blob([result], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        });
+        let link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = filename;
+
+        document.body.appendChild(link);
+
+        link.click();
+        document.body.removeChild(link);
+      },
+      error: function (xhr, textStatus, errorThrown) {
+        alert("Error: " + errorThrown);
+      },
+    })
+  }
+
+  function generarExcelConTodosLosIndicadoresFinalizados(e, nodo) {
+    let idnodo = $('#txtnodo_id_finalizados').val();
+    let hoja = $('#txthoja_nombre_finalizados').val();
+    let fecha_inicio = $('#txtfecha_inicio_cerrados').val();
+    let fecha_fin = $('#txtfecha_fin_cerrados').val();
+    if (!isset(idnodo)) {
+      idnodo = nodo;
+    }
+    if (!isset(hoja)) {
+      hoja = 'all';
+    }
+
+    if (fecha_inicio > fecha_fin) {
+      Swal.fire('Error!', 'Seleccione un rango de fechas válido', 'error');
+    } else {
+      e.preventDefault();
+      $.ajax({
+        type: 'get',
+        url: host_url + '/excel/export_proyectos_indicadores',
+        xhrFields:{
+          responseType: 'blob'
+        },
+        data: {
+          nodos: idnodo,
+          hoja: hoja,
+          fecha_inicio: fecha_inicio,
+          fecha_fin: fecha_fin,
+          type: 'finalizados'
+        },
+        success: function (result, status, xhr) {
+          let disposition = xhr.getResponseHeader('content-disposition');
+          let matches = /"([^"]*)"/.exec(disposition);
+          let filename = (matches != null && matches[1] ? matches[1] : 'Proyecto_'+hoja+'_finalizados_'+fecha_inicio+'_'+fecha_fin+'.xlsx');
+
+          let blob = new Blob([result], {
+              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+          });
+          let link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = filename;
+
+          document.body.appendChild(link);
+
+          link.click();
+          document.body.removeChild(link);
+        },
+        error: function (xhr, textStatus, errorThrown) {
+          alert("Error: " + errorThrown);
+        },
+      })
+    }
+
+  }
+
+  function generarExcelConTodosLosIndicadoresInscritos(e, nodo) {
+    let idnodo = $("#txtnodo_id_inscritos").val();
+    let hoja = $('#txthoja_nombre_inscritos').val();
+    let fecha_inicio = $('#txtfecha_inicio_inscritos').val();
+    let fecha_fin = $('#txtfecha_fin_inscritos').val();
+    if (!isset(idnodo)) {
+      idnodo = nodo;
+    }
+    if (!isset(hoja)) {
+      hoja = 'all';
+    }
+
+    if (fecha_inicio > fecha_fin) {
+      Swal.fire('Error!', 'Seleccione un rango de fechas válido', 'error');
+    } else {
+      e.preventDefault();
+      $.ajax({
+        type: 'get',
+        url: host_url + '/excel/export_proyectos_indicadores',
+        xhrFields:{
+          responseType: 'blob'
+        },
+        data: {
+          nodos: idnodo,
+          hoja: hoja,
+          fecha_inicio: fecha_inicio,
+          fecha_fin: fecha_fin,
+          type: 'inscritos'
+        },
+        success: function (result, status, xhr) {
+          let disposition = xhr.getResponseHeader('content-disposition');
+          let matches = /"([^"]*)"/.exec(disposition);
+          let filename = (matches != null && matches[1] ? matches[1] : 'Proyecto_'+hoja+'_inscritos_'+fecha_inicio+'_'+fecha_fin+'.xlsx');
+
+          let blob = new Blob([result], {
+              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+          });
+          let link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = filename;
+
+          document.body.appendChild(link);
+
+          link.click();
+          document.body.removeChild(link);
+        },
+        error: function (xhr, textStatus, errorThrown) {
+          alert("Error: " + errorThrown);
+        },
+      })
+    }
+
+  }
+
+  function selectAll(source, elementaName) {
+    checkboxes = document.getElementsByClassName(elementaName);
+    for(var i=0, n=checkboxes.length;i<n;i++) {
+      checkboxes[i].checked = source.checked;
+    }
+  }
+
+  function downloadMetas(e) {
+    e.preventDefault();
+    input = $("#txtnodo_metas_id").val();
+    if (!validarSelect(input)) {
+        Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
+        return false;
+    } else {
+        // location.href = route + '/' + input;
+        document.frmDescargarMetas.submit();
+    }
+  }
+
+  function validarSelect(input) {
+    // input = $(input).val();
+    if (input == null) {
+      return false;
     }
     return true;
-}
-
-function downloadIdeasIndicadores(e) {
-  e.preventDefault();
-  input = $("#txtnodo_ideas_download").val();
-  if (!validarSelect(input)) {
-      Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
-      return false;
-  } else {
-      document.frmDescargarIdeas.submit();
   }
-}
+
+  function verificarChecks(source, padre) {
+    clase = source.classList[0];
+    checkboxes = document.getElementsByClassName(clase);
+    padre = document.getElementById(padre);
+    state = false;
+    for(var i=0, n= checkboxes.length; i< n;i++) {
+      if (checkboxes[i].checked) {
+        state = true;
+        break;
+      }
+    }
+    for(var i=0, n= checkboxes.length; i< n;i++) {
+      if (!checkboxes[i].checked) {
+        state = false;
+        break;
+      }
+    }
+    padre.checked = state;
+  }
+
+  function validarChecks(elementaName) {
+    checkboxes = document.getElementsByClassName(elementaName);
+    for(var i=0, n=checkboxes.length;i<n;i++) {
+        if (checkboxes[i].checked == false) {
+          return false;
+        }
+      }
+      return true;
+  }
+
+  function downloadIdeasIndicadores(e) {
+    e.preventDefault();
+    input = $("#txtnodo_ideas_download").val();
+    if (!validarSelect(input)) {
+        Swal.fire('Error!', 'Debe seleccionar por lo menos un nodo', 'warning');
+        return false;
+    } else {
+        document.frmDescargarIdeas.submit();
+    }
+  }
+
 $('#txtcontenido').summernote({
   lang: 'es-ES',
   height: 300

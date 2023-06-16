@@ -12,6 +12,5 @@ $factory->define(Regional::class, function (Faker $faker) {
         'codigo_regional' => $faker->unique()->randomNumber($nbDigits = NULL, $strict = false),
         'direccion' =>  $faker->streetAddress,
         'telefono' => $faker->numerify('######'),
-
     ];
 });

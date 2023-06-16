@@ -55,7 +55,7 @@ class MakeViewCommand extends Command
         $this->info("File {$path} created.");
     }
 
-     /**
+    /**
      * Get the view full path.
      *
      * @param string $view

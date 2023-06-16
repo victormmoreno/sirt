@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 class LineaTecnologica extends Model
 {
@@ -40,10 +41,6 @@ class LineaTecnologica extends Model
         'slug'        => 'string',
     ];
 
-    /*===========================================================================
-    =            relaciones elquent            =
-    ===========================================================================*/
-
     public function sublineas()
     {
         return $this->hasMany(Sublinea::class, 'lineatecnologica_id', 'id');
@@ -55,11 +52,16 @@ class LineaTecnologica extends Model
             ->withTimestamps();
     }
 
-    public function gestores()
+    public function expertos()
     {
-        return $this->hasMany(Gestor::class, 'lineatecnologica_id', 'id');
+        return $this->hasMany(UserNodo::class, 'linea_id', 'id')->where('role', User::IsExperto());
     }
-    
+
+    public function apoyostecnicos()
+    {
+        return $this->hasMany(UserNodo::class, 'linea_id', 'id')->where('role', User::IsApoyoTecnico());
+    }
+
     public function equipos()
     {
         return $this->hasMany(Equipo::class, 'lineatecnologica_id', 'id');
@@ -70,67 +72,35 @@ class LineaTecnologica extends Model
         return $this->hasMany(Material::class, 'lineatecnologica_id', 'id');
     }
 
-    /*=====  End of relaciones elquent  ======*/
-
     public function setSlugAttribute($nombre)
     {
         $this->attributes['slug'] = str_slug($nombre, '-');
     }
-
-    /*===========================================================================
-    =            mutador para tranformar la abreviatura a mayusculas            =
-    ===========================================================================*/
 
     public function setAbreviaturaAttribute($abreviatura)
     {
         $this->attributes['abreviatura'] = strtoupper($abreviatura);
     }
 
-    /*=====  End of mutador para tranformar la abreviatura a mayusculas  ======*/
-
-    /*====================================================================================================
-    =            mutador para tranformar el nombre a minusculas y la primera letra mayusculas            =
-    ====================================================================================================*/
-
     public function setNombreAttribute($nombre)
     {
         $this->attributes['nombre'] = ucwords(mb_strtolower(trim($nombre), 'UTF-8'));
     }
-
-    /*=====  End of mutador para tranformar el nombre a minusculas y la primera letra mayusculas  ======*/
-
-    /*====================================================================================================
-    =            mutador para tranformar la descripcion a minusculas y la primera letra a myuscaulas            =
-    ====================================================================================================*/
 
     public function setDescripcionAttribute($descripcion)
     {
         $this->attributes['descripcion'] = ucwords(mb_strtolower(trim($descripcion), 'UTF-8'));
     }
 
-    /*=====  End of mutador para tranformar la descripcion a minusculas y la primera letra a myuscaulas  ======*/
-
-    /*===============================================================
-    =            scope para seleccionar todas las lineas            =
-    ===============================================================*/
-
     public function scopeAllLineas($query)
     {
         return $query->paginate(7);
     }
 
-    /*=====  End of scope para seleccionar todas las lineas  ======*/
-
-    /*================================================================
-    =            scope para consultar las lineas por nodo            =
-    ================================================================*/
-
     public function scopeAllLineasForNodo($query, $nodo)
     {
         return $query->with(['nodos'])->find($nodo);
     }
-
-    /*=====  End of scope para consultar las lineas por nodo  ======*/
 
     /**
      * consultar primera linea tecnologica en la base de datos.
