@@ -16,7 +16,13 @@ class AddVinculacionUserNodoTable extends Migration
     {
         Schema::table($this->tableName, function (Blueprint $table) {
             $table->tinyInteger('vinculacion')->default('0')->after('role');
-            //DB::statement('ALTER TABLE `user` MODIFY `user_id` INTEGER UNSIGNED NULL;')
+            DB::statement('ALTER TABLE user_nodo MODIFY COLUMN nodo_id int null');
+        });
+
+
+        Schema::table('contratos', function (Blueprint $table) {
+            $table->dropColumn(['vinculacion']);
+            DB::statement('ALTER TABLE contratos MODIFY COLUMN valor_contrato DOUBLE(20,2);');
         });
     }
 
