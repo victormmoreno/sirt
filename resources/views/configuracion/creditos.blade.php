@@ -49,12 +49,12 @@
                                             </div>
                                             <div>
                                                 <span  class="title">
-                                                    <strong class="primary-text">Lugar de Investigación:</strong> Tecnoparque Nodo Medellín Piso 7
+                                                    <strong class="primary-text">Lugar de Investigación:</strong> Tecnoparque Medellín Piso 7
                                                 </span>
                                             </div>
                                             <div>
                                                 <span class="title">
-                                                    <strong class="primary-text">Desarrollo web:</strong> Tecnoparque Nodo Medellín Piso 7
+                                                    <strong class="primary-text">Desarrollo web:</strong> Tecnoparque Medellín Piso 7
                                                 </span>
                                             </div>
                                             <br>
@@ -157,7 +157,7 @@
                                         <div class="col s12 m8 l8 offset-l2 offset-m2  center-align">
                                             <div>
                                                 <p class="justify-text">A Servicio nacional de Aprendizaje SENA, al Sistema de Investigación, Desarrollo tecnológico e Innovación SENNOVA, por la financiación y ejecución del proyecto: Plataforma para la gestión de procesos internos de la RED TECNOPARQUE COLOMBIA que sirve en la gestión de proyectos de base tecnológica de la Red a nivel Nacional.</p><br>
-                                                <p class="justify-text">A Tecnoparque Nodo Medellín por los recursos e información que puso a nuestra disposición el espacio para llevar a cabo las reuniones, desarrollo y funcionamiento del aplicativo y a las diferentes personas directamente implicadas que nos entregaron información valiosa para el desarrollo del proyecto.</p>
+                                                <p class="justify-text">A Tecnoparque Medellín por los recursos e información que puso a nuestra disposición el espacio para llevar a cabo las reuniones, desarrollo y funcionamiento del aplicativo y a las diferentes personas directamente implicadas que nos entregaron información valiosa para el desarrollo del proyecto.</p>
                                             </div>
                                         </div>
                                     </div>

@@ -5,7 +5,7 @@
             <input type="hidden" value="{{$idea}}" name="txtidea_id">
             @csrf
             <i class="material-icons left">assignment_turned_in</i>
-            Postular proyecto al nodo {{$idea->nodo->entidad->nombre}}.
+            Postular proyecto a tecnoparque {{$idea->nodo->entidad->nombre}}.
         </form>
     </a>
 @endcan

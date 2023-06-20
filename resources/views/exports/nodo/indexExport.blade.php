@@ -16,7 +16,7 @@
             <tr>
             <td>{{ $nodo->centro->regional->nombre }}</td>
             <td>{{ $nodo->centro->entidad->nombre }}</td>
-            <td>Tecnoparque Nodo {{ $nodo->entidad->nombre }}</td>
+            <td>Tecnoparque {{ $nodo->entidad->nombre }}</td>
             <td>{{ $nodo->direccion }}</td>
             <td>{{ $nodo->entidad->ciudad->nombre }} ({{$nodo->entidad->ciudad->departamento->nombre}})</td>
             <td>{{ $nodo->entidad->email_entidad }}</td>

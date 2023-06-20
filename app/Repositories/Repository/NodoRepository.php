@@ -13,7 +13,7 @@ class NodoRepository
     public function getAlltNodo()
     {
 
-        return Nodo::select('entidades.id', DB::raw("CONCAT('Tecnoparque Nodo ',entidades.nombre) as nodos"), "nodos.direccion", DB::raw("CONCAT(centros.codigo_centro,' -  ',ent.nombre) as centro"), DB::raw("CONCAT(ciudades.nombre,' (',departamentos.nombre,') ') as ubicacion"), 'entidades.slug')
+        return Nodo::select('entidades.id', DB::raw("CONCAT('Tecnoparque ',entidades.nombre) as nodos"), "nodos.direccion", DB::raw("CONCAT(centros.codigo_centro,' -  ',ent.nombre) as centro"), DB::raw("CONCAT(ciudades.nombre,' (',departamentos.nombre,') ') as ubicacion"), 'entidades.slug')
             ->join('centros', 'centros.id', '=', 'nodos.centro_id')
             ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
             ->join('entidades as ent', 'ent.id', '=', 'centros.entidad_id')

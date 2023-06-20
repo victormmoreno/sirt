@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\{AreaConocimiento, Centro, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, Fase};
-use App\Repositories\Repository\{EmpresaRepository, ProyectoRepository, UserRepository\GestorRepository};
+use App\Repositories\Repository\{EmpresaRepository, ProyectoRepository};
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use App\Http\Requests\{ProyectoFaseInicioFormRequest, ProyectoFaseCierreFormRequest};
 use Illuminate\Http\{Request, Response};
@@ -17,14 +17,12 @@ class ProyectoController extends Controller
 
     private $empresaRepository;
     private $proyectoRepository;
-    private $gestorRepository;
     private $costoController;
 
-    public function __construct(CostoController $costoController, EmpresaRepository $empresaRepository, ProyectoRepository $proyectoRepository, GestorRepository $gestorRepository)
+    public function __construct(CostoController $costoController, EmpresaRepository $empresaRepository, ProyectoRepository $proyectoRepository)
     {
         $this->setEmpresaRepository($empresaRepository);
         $this->setProyectoRepository($proyectoRepository);
-        $this->setGestorRepository($gestorRepository);
         $this->costoController = $costoController;
         $this->middleware(['auth']);
     }
@@ -557,7 +555,7 @@ class ProyectoController extends Controller
             if ($result['state']) {
                 return response()->json(['state' => 'registro', 'url' => route('proyecto.inicio', $result['id'])]);
             } else {
-                return response()->json(['state' => 'no_registro']);
+                return response()->json(['state' => 'no_registro', 'ex' => $result['ex']->getMessage()]);
             }
         }
     }
@@ -814,8 +812,6 @@ class ProyectoController extends Controller
         }
         $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
         $gestores = User::ConsultarFuncionarios($proyecto->nodo_id, User::IsExperto(), $proyecto->sublinea->lineatecnologica_id)->get();
-        // dd($gestores);
-        // $gestores = $this->getGestorRepository()->consultarGestoresPorLineaTecnologicaYNodoRepository($proyecto->sublinea->lineatecnologica_id, $proyecto->nodo_id)->pluck('nombre', 'id');
         return view('proyectos.forms.cambiar_gestor', [
             'proyecto' => $proyecto,
             'historico' => $historico,
@@ -1342,27 +1338,6 @@ class ProyectoController extends Controller
     private function getEmpresaRepository()
     {
         return $this->empresaRepository;
-    }
-
-    /**
-     * Asigna un valor a $gestorRepository
-     * @param object $gestorRepository
-     * @return void
-     * @author dum
-     */
-    private function setGestorRepository($gestorRepository)
-    {
-        $this->gestorRepository = $gestorRepository;
-    }
-
-    /**
-     * Retorna el valor de $gestorRepository
-     * @return object
-     * @author dum
-     */
-    private function getGestorRepository()
-    {
-        return $this->gestorRepository;
     }
 
 }

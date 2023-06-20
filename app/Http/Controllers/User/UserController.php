@@ -285,19 +285,13 @@ class UserController extends Controller
     public function findUserById(int $id)
     {
         return response()->json([
-            'user' => User::withTrashed()->with(['gestor', 'gestor.lineatecnologica'])->where('id', $id)->first(),
+            'user' => User::with(['experto', 'experto.linea'])->findOrFail($id),
         ]);
     }
     /** todo */
     public function gestoresByNodo($nodo = null)
     {
-        $gestores = User::select('gestores.id', 'users.id AS user_id')
-            ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) as nombre')
-            ->join('gestores', 'gestores.user_id', 'users.id')
-            ->role(User::IsExperto())
-            ->where('gestores.nodo_id', $nodo)
-            ->withTrashed()
-            ->get();
+        $gestores = User::ConsultarFuncionarios($nodo, User::IsExperto())->get();
         return response()->json([
             'gestores' => $gestores
         ]);

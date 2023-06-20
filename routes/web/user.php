@@ -17,7 +17,7 @@ Route::group(
             'as'   => 'talento.tecnoparque.byid',
         ]);
         /** todo */
-        Route::get('consultarUserPorId/{id}', 'UserController@findUserById');
+        Route::get('/consultarUserPorId/{id}', 'UserController@findUserById');
         Route::put('{documento}/acceso', 'UserController@updateAccess')->name('usuario.access')->middleware('disablepreventback');
         Route::get('/gestores/nodo/{id}', ['uses' => 'UserController@gestoresByNodo','as'   => 'usuario.gestores.nodo']);
         Route::get('/search', 'SearchUserController@userSearch')->name('usuario.search');

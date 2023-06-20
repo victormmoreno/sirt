@@ -1,5 +1,5 @@
 @component('mail::message')
-# Programación para el Comité de Selección de Ideas | Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.
+# Programación para el Comité de Selección de Ideas | Tecnoparque {{$idea->nodo->entidad->nombre}}.
 
 Señor(a)<br>
 @if(isset($idea->user))
@@ -31,7 +31,7 @@ impacto y equipo de trabajo. También se contara con un espacio de cinco minutos
 
 @endcomponent
 
-Para más información puede contactarse al telefono ☎️  <b>{{ $idea->nodo->telefono }}</b> ext <b>{{ $idea->nodo->extension }}</b>, o ocudir a las instalaciones de 🏬 <strong>Tecnoparque nodo {{$idea->nodo->entidad->nombre}}</strong>  ubicado en {{$idea->nodo->direccion}} en {{$idea->nodo->entidad->ciudad->nombre}} ({{$idea->nodo->entidad->ciudad->departamento->nombre}}).
+Para más información puede contactarse al telefono ☎️  <b>{{ $idea->nodo->telefono }}</b> ext <b>{{ $idea->nodo->extension }}</b>, o ocudir a las instalaciones de 🏬 <strong>Tecnoparque {{$idea->nodo->entidad->nombre}}</strong>  ubicado en {{$idea->nodo->direccion}} en {{$idea->nodo->entidad->ciudad->nombre}} ({{$idea->nodo->entidad->ciudad->departamento->nombre}}).
 
 Gracias,<br>
 <strong>_{{config('mail.from.name')}}_</strong> <br>

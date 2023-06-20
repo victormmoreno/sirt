@@ -656,11 +656,8 @@ class IdeaController extends Controller
 
     public function show($id)
     {
-        $idea = Idea::select('id', 'codigo_idea','nombre_proyecto','objetivo', 'alcance',  'talento_id', 'sede_id')->with([
-            'talento' => function($query){
-                $query->select('id', 'user_id');
-            },
-            'talento.user' => function($query){
+        $idea = Idea::select('id', 'codigo_idea','nombre_proyecto','objetivo', 'alcance',  'user_id', 'sede_id')->with([
+            'user' => function($query){
                 $query->select('id','documento', 'nombres', 'apellidos', 'email', 'celular');
             },
             'sede' => function($query){

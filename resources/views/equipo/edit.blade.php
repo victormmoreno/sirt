@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'Equipos ' . 'Tecnoparque Nodo ' . \NodoHelper::returnNameNodoUsuario())
+@section('meta-title', 'Equipos ' . 'Tecnoparque ' . \NodoHelper::returnNameNodoUsuario())
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
@@ -24,7 +24,7 @@
               			<div class="row">
                             <div class="col s12 m12 l12">
                                 <div class="center-align primary-text">
-                                    <span class="card-title center-align">Editar Equipo <b> Tecnoparque nodo {{$equipo->nodo->entidad->nombre}} 
+                                    <span class="card-title center-align">Editar Equipo <b> Tecnoparque {{$equipo->nodo->entidad->nombre}} 
                                 </div>
                             </div>
                 			<div class="divider"></div>

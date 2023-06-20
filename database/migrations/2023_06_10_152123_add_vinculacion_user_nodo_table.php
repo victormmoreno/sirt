@@ -21,7 +21,6 @@ class AddVinculacionUserNodoTable extends Migration
 
 
         Schema::table('contratos', function (Blueprint $table) {
-            $table->dropColumn(['vinculacion']);
             DB::statement('ALTER TABLE contratos MODIFY COLUMN valor_contrato DOUBLE(20,2);');
         });
     }

@@ -172,13 +172,13 @@ class Nodo extends Model
 
     public function scopeSelectNodo($query)
     {
-        return $query->select('nodos.id', DB::raw("CONCAT('Tecnoparque Nodo ',entidades.nombre) as nodos"))
+        return $query->select('nodos.id', DB::raw("CONCAT('Tecnoparque ',entidades.nombre) as nodos"))
             ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
             ->orderBy('entidades.nombre');
     }
     public function scopeListNodos($query)
     {
-        return $query->select(DB::raw('concat("Tecnoparque nodo ", nombre) AS nombre'), 'id')
+        return $query->select(DB::raw('concat("Tecnoparque ", nombre) AS nombre'), 'id')
             ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id');
     }
 
@@ -196,7 +196,7 @@ class Nodo extends Model
 
     public function scopeNodoUserAthenticated($query, $nodo)
     {
-        return $query->select('nodos.id', DB::raw('concat("Tecnoparque nodo ", entidades.nombre) AS nombre'))
+        return $query->select('nodos.id', DB::raw('concat("Tecnoparque ", entidades.nombre) AS nombre'))
             ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
             ->where('nodos.id', '=', $nodo);
     }

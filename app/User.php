@@ -189,6 +189,7 @@ class User extends Authenticatable implements JWTSubject,
         )
         ->selectRaw("CONCAT(users.nombres,' ',users.apellidos) as nombre_completo, GROUP_CONCAT(roles.name, ',') AS roles")
         ->join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
+        ->orderBy('users.nombres', 'asc')
         ->groupBy('users.documento');
     }
 

@@ -62,7 +62,7 @@
                     <div class="row">
                         <div class="input-field col s12 m4 l4">
                             <input class="validate" id="txtnombre" name="txtnombre" type="text" placeholder="Digite el nombre del nodo" value="{{ isset($nodo->entidad->nombre) ? $nodo->entidad->nombre : old('txtnombre')}}"/>
-                            <label for="txtnombre">Tecnoparque Nodo <span class="red-text">*</span></label>
+                            <label for="txtnombre">Tecnoparque <span class="red-text">*</span></label>
                             <small class="text-align helper-text green-text text-darken-1" data-error="wrong" data-success="right">Por favor solo ingrese el nombre del nodo. Ejemplo (Medellin)</small>
                             @error('txtnombre')
                                 <label id="txtnombre-error" class="error" for="txtnombre">{{ $message }}</label>

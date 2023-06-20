@@ -724,7 +724,7 @@ function consultarExpertosDeUnNodo(nodo_id) {
           $("#txtexperto_id_proyecto").empty();
           $('#txtexperto_id_proyecto').append('<option value="">Seleccione el experto</option>');
           $.each(response.gestores, function(i, e) {
-            $('#txtexperto_id_proyecto').append('<option  value="'+e.user_id+'">'+e.nombre+'</option>');
+            $('#txtexperto_id_proyecto').append('<option  value="'+e.id+'">'+e.nombre_completo+'</option>');
           })
           $('#txtexperto_id_proyecto').material_select();
     });
@@ -734,10 +734,10 @@ function consultarInformacionExperto(user) {
     $.ajax({
         dataType:'json',
         type:'get',
-        url: host_url + "/usuario/consultarUserPorId/"+user
+        url: host_url + "/usuarios/consultarUserPorId/"+user
       }).done(function(response){
           printLinea(response);
-          consultarSublineas(response.user.gestor.lineatecnologica.id);
+          consultarSublineas(response.user.experto.linea.id);
     });
 }
 
@@ -761,5 +761,5 @@ function printSublineas(response) {
 }
 
 function printLinea(response) {
-    $('#txtlinea').val(response.user.gestor.lineatecnologica.nombre);
+    $('#txtlinea').val(response.user.experto.linea.nombre);
 }

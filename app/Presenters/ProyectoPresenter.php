@@ -170,7 +170,7 @@ class ProyectoPresenter extends Presenter
     public function proyectoNode()
     {
         if ($this->proyecto->has('nodo.entidad') && isset($this->proyecto->nodo->entidad)) {
-            return "Tecnoparque Nodo {$this->proyecto->nodo->entidad->nombre}";
+            return "Tecnoparque {$this->proyecto->nodo->entidad->nombre}";
         }
         return "No registra";
     }
