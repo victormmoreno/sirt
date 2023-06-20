@@ -17,7 +17,7 @@
                                 <div class="right mailbox-buttons">
                                     <span class="mailbox-title">
                                         <p class="center secondary-text">
-                                            Información de Proyecto en la fase de suspendido -
+                                            Información de Proyecto en la fase de cancelado -
                                             {{$proyecto->present()->proyectoName()}}
                                         </p>
                                         <br />

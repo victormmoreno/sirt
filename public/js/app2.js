@@ -1486,36 +1486,36 @@ function addGestorComite2(value) {
     }
 }
 
-$('#txthoraidea').bootstrapMaterialDatePicker({
-    time:true,
-    date:false,
-    shortTime:true,
-    format: 'HH:mm',
-    // minDate : new Date(),
-    language: 'es',
-    weekStart : 1, cancelText : 'Cancelar',
-    okText: 'Guardar'
-});
+// $('#txthoraidea').bootstrapMaterialDatePicker({
+//     time:true,
+//     date:false,
+//     shortTime:true,
+//     format: 'HH:mm',
+//     // minDate : new Date(),
+//     language: 'es',
+//     weekStart : 1, cancelText : 'Cancelar',
+//     okText: 'Guardar'
+// });
 
-$('input[name*="horas_fin"]').bootstrapMaterialDatePicker({
-    time:true,
-    date:false,
-    shortTime:true,
-    format: 'HH:mm',
-    language: 'es',
-    weekStart : 1, cancelText : 'Cancelar',
-    okText: 'Guardar'
-});
+// $('input[name*="horas_fin"]').bootstrapMaterialDatePicker({
+//     time:true,
+//     date:false,
+//     shortTime:true,
+//     format: 'HH:mm',
+//     language: 'es',
+//     weekStart : 1, cancelText : 'Cancelar',
+//     okText: 'Guardar'
+// });
 
-$('input[name*="horas_inicio"]').bootstrapMaterialDatePicker({
-    time:true,
-    date:false,
-    shortTime: true,
-    format: 'HH:mm',
-    language: 'es',
-    weekStart : 1, cancelText : 'Cancelar',
-    okText: 'Guardar'
- });
+// $('input[name*="horas_inicio"]').bootstrapMaterialDatePicker({
+//     time:true,
+//     date:false,
+//     shortTime: true,
+//     format: 'HH:mm',
+//     language: 'es',
+//     weekStart : 1, cancelText : 'Cancelar',
+//     okText: 'Guardar'
+//  });
 
 $('#txthorafingestor').bootstrapMaterialDatePicker({
     time:true,
@@ -8281,7 +8281,7 @@ function graficoSeguimientoFasesNoGroup(data, name) {
             y: data.datos.Finalizado,
           },
           {
-            name: "Proyectos concluidos sin finalizar",
+            name: "Proyectos cancelados",
             y: data.datos.Suspendido,
           },
           {

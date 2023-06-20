@@ -127,15 +127,20 @@ class Idea extends Model
             'tipo_idea',
             'viene_convocatoria',
             'convocatoria',
+            'c.fechacomite',
             'ideas.user_id'
         )
+        ->selectRaw('DATEDIFF(now(), fechacomite) as dias')
         ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombres_talento')
         ->selectRaw('concat(ug.nombres, " ", ug.apellidos) AS experto')
         ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
         ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
         ->join('users as ug', 'ug.id', '=', 'ideas.asesor_id')
+        ->join('comite_idea AS ci', 'ci.idea_id', '=', 'ideas.id')
+        ->join('comites AS c', 'c.id', '=', 'ci.comite_id')
         ->leftjoin('users', 'users.id', '=', 'ideas.user_id')
         ->where('nodos.id', $idnodo)
+        ->where('ci.admitido', 1)
         ->where('estadosidea.nombre', EstadoIdea::IsAdmitido())
         ->experto($idgestor);
     }

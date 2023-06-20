@@ -106,7 +106,7 @@ class IndicadorController extends Controller
                 $nodos[] = $nodo->id;
             }
         }
-        $metas = $this->nodoRepository->consultarMetasDeTecnoparque($nodos)->whereYear('anho', Carbon::now()->format('Y'))->get();
+        $metas = $this->nodoRepository->consultarMetasDeTecnoparque($nodos)->where('anho', Carbon::now()->format('Y'))->get();
         $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $this->year_now, [Proyecto::IsTrl6Obtenido()])
         ->whereIn('nodos.id', $nodos)
         ->groupBy('mes')
@@ -115,9 +115,9 @@ class IndicadorController extends Controller
         ->whereIn('nodos.id', $nodos)
         ->groupBy('mes')
         ->get();
-        $activos = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->select('nodo_id')->selectRaw('count(id) as cantidad')->whereHas('fase', function ($query) {
-            $query->whereIn('nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
-        })->groupBy('nodo_id')->get();
+        $activos = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->select('proyectos.nodo_id')->selectRaw('count(proyectos.id) as cantidad')
+        ->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre'])
+        ->groupBy('proyectos.nodo_id')->get();
         $metas = $this->retornarTodasLasMetasToExcel($metas, $pbts_trl6, $pbts_trl7_8, $activos);
         return Excel::download(new MetasExport($metas), 'Metas.xlsx');
     }
@@ -155,6 +155,7 @@ class IndicadorController extends Controller
               $meta['activos'] = $cantidad_activos->cantidad;
             }
         }
+        
         return $metas;
     }
 
@@ -473,7 +474,7 @@ class IndicadorController extends Controller
      **/
     private function nodos($request, $query)
     {
-        if ($request->nodos[0] != 'all' || $request->nodos[0] != null || $request->nodos[0] != 0) {
+        if ($request->nodos[0] != 'all' && $request->nodos[0] != null && $request->nodos[0] != 0) {
             return $query->whereIn('nodos.id', is_array($request->nodos) ? $request->nodos : [$request->nodos]);
         }
         return $query;

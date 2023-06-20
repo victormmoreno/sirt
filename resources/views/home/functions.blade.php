@@ -54,12 +54,14 @@
             } else {
                 $.each(response.data.ideas, function(i, item) {
                     strings += '<li class="collection-item">'
-                        +'<div class="row"><b class="title green-text">Idea</b>'
+                        +'<div class="row"><div class="col s12 m3 l3"><b class="title green-text">Idea</b>'
                         +'<p>'+item.codigo_idea+' - '+item.nombre_proyecto+'</p></div>'
-                        +'<div class="row"><div class="col s12 m6 l6"><b class="title green-text">Talento</b>'
+                        +'<div class="col s12 m3 l3"><b class="title green-text">Talento</b>'
                         +'<p>'+item.nombres_talento+'</p></div>'
-                        +'<div class="col s12 m6 l6"><b class="title green-text">Experto</b>'
-                        +'<p>'+item.experto+'</p></div></div>'
+                        +'<div class="col s12 m3 l3"><b class="title green-text">Experto</b>'
+                        +'<p>'+item.experto+'</p></div>'
+                        +'<div class="col s12 m3 l3"><b class="title green-text">Fecha del comité</b>'
+                        +'<p>'+item.fechacomite+' ('+item.dias+' días)</p></div></div>'
                     +'</li>';
                 });
             }

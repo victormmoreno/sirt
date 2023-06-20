@@ -151,6 +151,17 @@
                                                                             @endif
                                                                         </div>
                                                                     </div>
+                                                                    @can('derivar_idea', [$comite, $value])
+                                                                        <div class="row">
+                                                                            <div class="col s12 m12 l12">
+                                                                                <a href="javascript:void(0)" onclick="confirmacionDuplicidad( event, '{{route('idea.derivar', [$value->id, $comite->id, 1])}}' )">
+                                                                                    <div class="card-panel green lighten-3 black-text center">
+                                                                                        Duplicar idea de proyecto.
+                                                                                    </div>
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endcan
                                                                 </div>
                                                             </li>
                                                         @endcan

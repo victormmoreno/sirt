@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\{Dinamizador, Infocenter, Gestor, Talento, Idea, UsoInfraestructura, Ingreso};
+use App\Models\{Idea};
 use App\User;
 
 class AddUserToTablesSeeder extends Seeder
@@ -22,8 +22,6 @@ class AddUserToTablesSeeder extends Seeder
             $dinamizadores = DB::table('dinamizador')->select('*')->get();
             $ideas = Idea::whereNotNull('correo_contacto')->get();
             $gestor_uso = DB::table('gestor_uso')->select('*')->get();
-
-
             foreach ($gestor_uso as $key => $uso) {
                 DB::table('gestor_uso')->where('id', $uso->id)->update(['asesor_id' => $uso->asesorable_id]);
             }
@@ -83,7 +81,7 @@ class AddUserToTablesSeeder extends Seeder
                 DB::table('comite_gestor')
                 ->where('gestor_id', $gestor->id)
                 ->update(['evaluador_id' => $gestor->user_id]);
-
+                
                 DB::table('proyectos')
                 ->where('asesor_id', $gestor->id)
                 ->update(['experto_id' => $gestor->user_id]);

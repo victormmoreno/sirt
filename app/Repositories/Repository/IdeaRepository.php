@@ -511,6 +511,7 @@ class IdeaRepository
             $comite_idea = $idea->comites()->wherePivot('comite_id', $comite)->first()->pivot;
             $duplicado = $idea->replicate();
             $duplicado->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsAdmitido())->first()->id;
+            $duplicado->asesor_id = null;
             $duplicado->codigo_idea = $this->generarCodigoIdeaDuplicado($idea);
             $duplicado->save();
             $this->duplicarIdeaComite($comite, $comite_idea, $duplicado);
@@ -520,6 +521,7 @@ class IdeaRepository
                 'state' => true,
                 'msg' => 'La idea se ha derivado exitosamente!',
                 'title' => 'Duplicación exitosa!',
+                'idea' => $duplicado,
                 'type' => 'success'
             ];
         } catch (\Exception $ex) {
@@ -528,6 +530,7 @@ class IdeaRepository
                 'state' => false,
                 'msg' => $ex->getMessage(),
                 'title' => 'Duplicación errónea!',
+                'idea' => null,
                 'type' => 'error'
             ];
         }

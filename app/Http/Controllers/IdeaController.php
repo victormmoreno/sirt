@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\{EmpresaFormRequest, IdeaFormRequest};
-use App\Models\{Departamento, EstadoIdea, Idea, Entidad, Sector, TamanhoEmpresa, TipoEmpresa, Nodo};
-use App\Repositories\Repository\{IdeaRepository, EmpresaRepository, UserRepository\GestorRepository, ComiteRepository};
+use App\Models\{Departamento, EstadoIdea, Idea, Comite, Entidad, Sector, TamanhoEmpresa, TipoEmpresa, Nodo};
+use App\Repositories\Repository\{IdeaRepository, EmpresaRepository};
 use App\User;
 use Illuminate\Support\Facades\{Session, Validator};
 use Illuminate\Http\Request;
@@ -15,13 +15,11 @@ class IdeaController extends Controller
 {
     public $ideaRepository;
     public $empresaRepository;
-    public $gestorRepository;
 
-    public function __construct(IdeaRepository $ideaRepository, EmpresaRepository $empresaRepository, GestorRepository $gestorRepository)
+    public function __construct(IdeaRepository $ideaRepository, EmpresaRepository $empresaRepository)
     {
         $this->ideaRepository = $ideaRepository;
         $this->empresaRepository = $empresaRepository;
-        $this->gestorRepository = $gestorRepository;
         $this->middleware('auth');
     }
 
@@ -354,15 +352,25 @@ class IdeaController extends Controller
      *
      * @param int $id Id de la idea de proyecto
      * @param int $comite Id del comité
+     * @param $bandera Pra saber si se duplicará antes o despues de asignar la idea
      * @return Response
      * @author dum
      **/
-    public function deviarIdea($id, $comite)
+    public function deviarIdea($id, $comite, $bandera = null)
     {
         $idea = $this->ideaRepository->findByid($id);
+        $comite_model = Comite::findOrFail($comite);
+        if(!request()->user()->can('derivar_idea', [$comite_model, $idea])) {
+            alert('No autorizado', 'No tienes permisos para duplicar idea de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
         $resultado = $this->ideaRepository->derivarIdea($idea, $comite);
-        alert($resultado['title'], $resultado['msg'], $resultado['type'])->showConfirmButton('Ok', '#3085d6');;
-        return back();
+        alert($resultado['title'], $resultado['msg'], $resultado['type'])->showConfirmButton('Ok', '#3085d6');
+        if ($bandera != 1) {
+            return back();
+        } else {
+            return redirect()->route('comite.cambiar.asignacion', ['idea' => $resultado['idea']->id, 'comite' => $comite]);
+        }
     }
 
     /**

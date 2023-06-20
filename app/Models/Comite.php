@@ -25,6 +25,8 @@ class Comite extends Model
         'codigo',
         'fechacomite',
         'observaciones',
+        'acta',
+        'formato_evaluacion',
         'estado_comite_id'
     ];
 
