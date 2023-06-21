@@ -396,7 +396,7 @@ class ArchivoController extends Controller
     }
 
     /**
-     * @param int $idFile Id del archivo de la tabla archivos_articulacion_proyecto
+     * @param int $idFile Id del archivo
      * @return Response
      * @author Victor Manuel Moreno Vega
      */

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\{ComiteAgendamientoFormRequest, ComiteRealizarFormRequest, ComiteAsignarFormRequest};
-use App\Repositories\Repository\{ComiteRepository, UserRepository\GestorRepository};
+use App\Repositories\Repository\{ComiteRepository};
 use App\Models\{Nodo, Idea, Comite, EstadoIdea, Gestor};
 use Illuminate\Support\Facades\{Session, Validator};
 Use App\User;
@@ -15,10 +15,9 @@ class ComiteController extends Controller
   private $comiteRepository;
   private $gestorRepository;
 
-  public function __construct(ComiteRepository $comiteRepository, GestorRepository $gestorRepository)
+  public function __construct(ComiteRepository $comiteRepository)
   {
     $this->setComiteRepository($comiteRepository);
-    $this->setGestorRepository($gestorRepository);
     $this->middleware('auth');
   }
 
@@ -49,7 +48,7 @@ class ComiteController extends Controller
       alert()->warning('Error!','No tienes permisos para para asignar las ideas de este comité a los expertos.')->showConfirmButton('Ok', '#3085d6');
       return back(); 
     }
-    $gestores = User::ConsultarFuncionarios(request()->user()->getNodoUser(), User::IsExperto())->get();
+    $gestores = User::ConsultarFuncionarios($comite->ideas->first()->nodo_id, User::IsExperto())->get();
     return view('comite.asignar_ideas', [
       'comite' => $comite,
       'gestores' => $gestores
@@ -453,26 +452,4 @@ class ComiteController extends Controller
     return $this->comiteRepository;
   }
 
-  /**
-   * Asigna un valor a $gestorRepository
-   *
-   * @param GestorRepository
-   * @return void
-   * @author dum
-   */
-  private function setGestorRepository(GestorRepository $gestorRepository)
-  {
-    $this->gestorRepository =  $gestorRepository;
-  }
-
-  /**
-   * Retorna el valor de $gestorRepository
-   *
-   * @return GestorRepository
-   * @author dum
-   */
-  private function getGestorRepository()
-  {
-    return $this->gestorRepository;
-  }
 }

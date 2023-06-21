@@ -353,17 +353,6 @@ class Proyecto extends Model
         return $query;
     }
 
-    public function scopeProyectosGestor($query)
-    {
-        return $query->with(['articulacion_proyecto.actividad'])
-            ->where(function($subquery){
-                $subquery->where('fase_id', Fase::IsInicio())
-                ->orwhere('fase_id', Fase::IsPlaneacion())
-                ->orwhere('fase_id', Fase::IsEjecucion());
-            })->get()
-            ->pluck('articulacion_proyecto.actividad.nombre','articulacion_proyecto.actividad.codigo_actividad' );
-    }
-
     /**
      * Registra el control de una notificación de un proyecto
      *

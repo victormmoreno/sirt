@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\User;
-use App\Models\ArchivoArticulacionProyecto;
+use App\Models\ArchivoModel;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ArchivoProyecto
@@ -17,13 +17,13 @@ class ArchivoProyecto
      * @param  \App\ArchivoArticulacionProyecto  $archivoArticulacionProyecto
      * @return mixed
      */
-    public function delete(User $user, ArchivoArticulacionProyecto $archivoArticulacionProyecto)
+    public function delete(User $user, ArchivoModel $archivoArticulacionProyecto)
     {
         if (session()->get('login_role') == $user->IsAdministrador()) {
             return true;
         }
         if (session()->get('login_role') == $user->IsExperto()) {
-            if ($archivoArticulacionProyecto->articulacion_proyecto->proyecto->asesor->id == auth()->user()->gestor->id) {
+            if ($archivoArticulacionProyecto->proyecto->asesor->id == auth()->user()->gestor->id) {
                 return true;
             } else {
                 return false;

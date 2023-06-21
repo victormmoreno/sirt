@@ -251,24 +251,6 @@ class ProyectoPresenter extends Presenter
         return "No registra";
     }
 
-    public function isAprobacionDinamizadorEjecucion()
-    {
-        if ($this->proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 1)
-        {
-            return 1;
-        }
-        return 0;
-    }
-
-    public function isAprobacionDinamizadorSuspender()
-    {
-        if ($this->proyecto->articulacion_proyecto->aprobacion_dinamizador_suspender == 1)
-        {
-            return 1;
-        }
-        return 0;
-    }
-
     public function proyectoAreaConocimiento()
     {
         if ($this->proyecto->has('areaconocimiento') && isset($this->proyecto->areaconocimiento)) {

@@ -47,6 +47,7 @@ class DropActividadesTable extends Migration
         Schema::dropIfExists('actividades');
         Schema::dropIfExists('gestores');
         DB::statement('DELETE FROM movimientos_actividades_users_roles WHERE proyecto_id IS NULL;');
+        DB::statement('UPDATE fases SET nombre = "Cancelado" WHERE nombre = "Concluido sin finalizar";');
     }
 
     /**

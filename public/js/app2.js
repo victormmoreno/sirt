@@ -269,7 +269,7 @@ function consultarEntrenamientosPorNodo(nodo) {
     },
     columns: [
       {
-        title: 'Código del Entrenamiento',
+        title: 'Código del taller',
         data: 'codigo_entrenamiento',
         name: 'codigo_entrenamiento',
       },
@@ -8223,7 +8223,7 @@ function graficoSeguimientoArticulacionesFases(data, name) {
             name: 'Finalizado',
             data: finalizado
         }, {
-            name: 'Concluido sin finalizar',
+            name: 'Cancelado',
             data: suspendido
         }]
     });

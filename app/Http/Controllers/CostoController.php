@@ -16,21 +16,6 @@ class CostoController extends Controller
     public function index()
     {
         $projects = Proyecto::select('codigo_proyecto', 'nombre', 'id')->asesor(session()->get('login_role') == User::IsExperto() ? request()->user()->id : null)->nodo(request()->user()->getNodoUser())->get();
-        // switch (Session::get('login_role')) {
-        //     case User::IsArticulador():
-        //         abort('403');
-        //         break;
-        //     case User::IsExperto():
-        //         $projects = Proyecto::where('asesor_id', auth()->user()->gestor->id)->get()->pluck('proyecto', 'id');
-        //         break;
-        //     case User::IsDinamizador():
-        //         $projects = Proyecto::with(['articulacion_proyecto.actividad'])->where('nodo_id', auth()->user()->dinamizador->nodo_id)->get()->pluck('articulacion_proyecto.actividad.nombre', 'id');
-        //         break;
-
-        //     default:
-        //         abort('403');
-        //         break;
-        // }
 
         return view('costos.index', [
             'projects' => $projects,

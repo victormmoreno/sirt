@@ -167,7 +167,7 @@
             </li>
             <li class="collection-item">
                 En caso de que la idea de proyecto, no se haya inscrito como una idea y por tanto no haber pasado por
-                entrenamientos y CSIBT, el/la Infocenter del nodo deberá registrarla desde su cuenta como
+                taller de fortalecimiento y CSIBT, el/la Infocenter del nodo deberá registrarla desde su cuenta como
                 una idea de proyecto con empresa o grupo de investigación según el caso.
             </li>
             <li class="collection-item">

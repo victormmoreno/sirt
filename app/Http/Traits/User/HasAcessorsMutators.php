@@ -14,17 +14,17 @@ trait HasAcessorsMutators
 
     public function setNombresAttribute($nombres)
     {
-        $this->attributes['nombres'] = ucwords(mb_strtolower(trim($nombres), 'UTF-8'));
+        $this->attributes['nombres'] = ucwords(mb_strtolower(trim($nombres)));
     }
 
     public function setApellidosAttribute($apellidos)
     {
-        $this->attributes['apellidos'] = ucwords(mb_strtolower(trim($apellidos), 'UTF-8'));
+        $this->attributes['apellidos'] = ucwords(mb_strtolower(trim($apellidos)));
     }
 
     public function setEmailAttribute($email)
     {
-        $this->attributes['email'] = mb_strtolower(trim($email), 'UTF-8');
+        $this->attributes['email'] = mb_strtolower(trim($email));
     }
 
     public function setPasswordAttribute($password)
@@ -34,12 +34,12 @@ trait HasAcessorsMutators
 
     public function setBarrioAttribute($barrio)
     {
-        $this->attributes['barrio'] = ucwords(mb_strtolower(trim($barrio), 'UTF-8'));
+        $this->attributes['barrio'] = ucwords(mb_strtolower(trim($barrio)));
     }
 
     public function setDireccionAttribute($direccion)
     {
-        $this->attributes['direccion'] = ucwords(mb_strtolower(trim($direccion), 'UTF-8'));
+        $this->attributes['direccion'] = ucwords(mb_strtolower(trim($direccion)));
     }
 
     public function setCelularAttribute($celular)
@@ -59,17 +59,17 @@ trait HasAcessorsMutators
 
     public function setOtraEpsAttribute($otra_eps)
     {
-        $this->attributes['otra_eps'] = ucwords(mb_strtolower(trim($otra_eps), 'UTF-8'));
+        $this->attributes['otra_eps'] = ucwords(mb_strtolower(trim($otra_eps)));
     }
 
     public function setInstitucionAttribute($institucion)
     {
-        $this->attributes['institucion'] = ucwords(mb_strtolower(trim($institucion), 'UTF-8'));
+        $this->attributes['institucion'] = ucwords(mb_strtolower(trim($institucion)));
     }
 
     public function setTituloObtenidoAttribute($titulo_obtenido)
     {
-        $this->attributes['titulo_obtenido'] = ucwords(mb_strtolower(trim($titulo_obtenido), 'UTF-8'));
+        $this->attributes['titulo_obtenido'] = ucwords(mb_strtolower(trim($titulo_obtenido)));
     }
 
     public function setFechaTerminacionAttribute($fecha_terminacion)
@@ -79,12 +79,12 @@ trait HasAcessorsMutators
 
     public function setOtraOcupacionAttribute($otra_ocupacion)
     {
-        $this->attributes['otra_ocupacion'] = ucwords(mb_strtolower(trim($otra_ocupacion), 'UTF-8'));
+        $this->attributes['otra_ocupacion'] = ucwords(mb_strtolower(trim($otra_ocupacion)));
     }
 
     public function getNombreCompletoAttribute()
     {
-        return ucwords(mb_strtolower($this->nombres), 'UTF-8') . ' ' . ucwords(mb_strtolower($this->apellidos), 'UTF-8');
+        return ucwords(mb_strtolower($this->nombres)) . ' ' . ucwords(mb_strtolower($this->apellidos));
     }
 
     public function getDocumentoAttribute($documento)

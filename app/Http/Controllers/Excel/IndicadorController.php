@@ -201,7 +201,7 @@ class IndicadorController extends Controller
                 if(isset($fecha_inicio) && isset($fecha_fin)){
                     $query->whereBetween('articulations.end_date', [$fecha_inicio, $fecha_fin]);
                 }
-            })->whereIn('fases.nombre', ['Finalizado', 'Concluido sin finalizar']);
+            })->whereIn('fases.nombre', ['Finalizado', 'Cancelado']);
         return Excel::download(new IndicadorArticulacionesExport($query, $hoja), "Indicadores_Articulaciones_Finalizadas_{$fecha_inicio}_a_{$fecha_fin}.xlsx");
     }
 

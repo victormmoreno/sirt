@@ -826,8 +826,8 @@ class ProyectoRepository extends Repository
     /**
      * Retornar los emails de los destinatarios en un array
      *
-     * @param Type $var Description
-     * @return type
+     * @param $users
+     * @return array
      * @throws conditon
      **/
     private function returnEmailDestinatariosArray($users)
