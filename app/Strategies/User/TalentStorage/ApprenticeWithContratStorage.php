@@ -29,6 +29,24 @@ class ApprenticeWithContratStorage implements TalentStorage
 
     public function buildResponse(array $data)
     {
-        return "Tipo Talento: ".$data['talento']['tipo_talento']."<br>"."  Regional: ". $data['talento']['regional']."<br>"."  Centro de Formación: ". $data['talento']['centro_formacion']."<br>"."  Programa de Formación: ". $data['talento']['programa_formacion'];
+        return "<span class='card-title primary-text center'>Información Talento</span>
+                <div class='server-load row'>
+                    <div class='server-stat col s6 m6 l6'>
+                        <p>".$data['talento']['tipo_talento']."</p>
+                        <span>Tipo Talento</span>
+                    </div>
+                    <div class='server-stat col s6 m6 l6'>
+                        <p>".$data['talento']['regional']." / ".$data['talento']['centro_formacion']."</p>
+                        <span>Regional / Centro de Formación</span>
+                    </div>
+
+                </div>
+                <div class='server-load row'>
+                    <div class='server-stat col s6 m4 l6'>
+                        <p>".$data['talento']['programa_formacion']."</p>
+                        <span>Programa de Formación</span>
+                    </div>
+                </div>";
+
     }
 }

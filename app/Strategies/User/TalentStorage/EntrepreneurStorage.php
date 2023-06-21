@@ -16,6 +16,11 @@ class EntrepreneurStorage implements TalentStorage
 
     public function buildResponse(array $data)
     {
-        return "Tipo Talento: ".$data['talento']['tipo_talento'];
+        return "<div class='server-load row'>
+                    <div class='server-stat col s6 m4 l3'>
+                        <p>".$data['talento']['tipo_talento']."</p>
+                        <span>Tipo Talento</span>
+                    </div>
+                </div>";
     }
 }

@@ -3,7 +3,8 @@
 namespace App\Presenters;
 
 use App\User;
-use App\Models\{Eps, TipoTalento};
+use App\Models\Eps;
+use App\Strategies\User\OfficerStorage\ActivatorOfficerStorage;
 
 class UserPresenter extends Presenter
 {
@@ -180,14 +181,6 @@ class UserPresenter extends Presenter
         }
     }
 
-    public function userNombreTipoTalento()
-    {
-        if (isset($this->user->talento->tipotalento) && $this->user->has('talento.tipotalento')) {
-            return $this->user->talento->tipotalento->nombre;
-        }
-        return $this->message('Información no disponible');
-    }
-
     public function userChangeAccess(): bool
     {
         return $this->user->hasAnyRole([
@@ -204,31 +197,33 @@ class UserPresenter extends Presenter
         ]) ? true : false;
     }
 
-    public function userNode()
+    public function official()
     {
-        if($this->user->has('dinamizador') && isset($this->user->dinamizador->nodo)){
-            return;
+
+
+        if($this->user->has('activadorContratoLatest') && isset($this->user->activadorContratoLatest)){
+            return (new ActivatorOfficerStorage)->buildResponse($this->user->activadorContratoLatest);
         }
 
-        if($this->user->has('experto') && isset($this->user->experto->nodo)){
-            return;
+        if($this->user->has('activador') && isset($this->user->activador)){
+            return (new ActivatorOfficerStorage)->buildResponse($this->user->activador);
         }
 
-        if($this->user->has('articulador') && isset($this->user->articulador->nodo)){
-            return;
-        }
+        // if($this->user->has('articulador') && isset($this->user->articulador->nodo)){
+        //     return;
+        // }
 
-        if($this->user->has('infocenter') && isset($this->user->infocenter->nodo)){
-            return;
-        }
+        // if($this->user->has('infocenter') && isset($this->user->infocenter->nodo)){
+        //     return;
+        // }
 
-        if($this->user->has('apoyotecnico') && isset($this->user->apoyotecnico->nodo)){
-            return;
-        }
+        // if($this->user->has('apoyotecnico') && isset($this->user->apoyotecnico->nodo)){
+        //     return;
+        // }
 
-        if($this->user->has('ingreso') && isset($this->user->ingreso->nodo)){
-            return;
-        }
+        // if($this->user->has('ingreso') && isset($this->user->ingreso->nodo)){
+        //     return;
+        // }
 
     }
 }

@@ -33,6 +33,12 @@ class SenaGraduateStorage implements TalentStorage
 
     public function buildResponse(array $data)
     {
+        return "<div class='server-load row'>
+                    <div class='server-stat col s6 m4 l3'>
+                        <p>".$data['talento']['tipo_talento']."</p>
+                        <span>Tipo Talento</span>
+                    </div>
+                </div>";
         return "Tipo Talento: ".$data['talento']['tipo_talento']."<br>"."  Regional: ". $data['talento']['regional']."<br>"."  Centro de Formación: ". $data['talento']['centro_formacion']."<br>"."  Programa de Formación: ". $data['talento']['programa_formacion']."<br>"."  Tipo formacion: ". $data['talento']['tipo_formacion'];
     }
 }

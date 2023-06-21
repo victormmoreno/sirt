@@ -16718,7 +16718,7 @@ input[type=text]:focus:not([readonly])+label, input[type=password]:focus:not([re
 }
 
 .switch label input[type=checkbox]:checked+.lever {
-    background-color: var(----primary-lighten);
+    background-color: var(--primary-lighten);
 }
 
 .switch label input[type=checkbox]:checked+.lever:after {

@@ -42,23 +42,7 @@ trait MustCompleteOfficerInformation
      */
     public function saveInformationOfficer(Request $request = null)
     {
-        // if(
-        //     !is_null($request) &&
-        //     isset($request->roles)
-        //     // is_null($this->informacion_user_completed_at)
-        //     )
-        // {
 
-
-        //     $officeStorageClass = OfficerStorageValues::OFFICER[$request->role];
-
-
-        //     return (new $officeStorageClass)->buildStorageRecord($request);
-
-        //     $this->update(['informacion_user' => $structures]);
-
-        //     $this->markInformationOfficerAsCompleted();
-        // }
     }
 
     /**
@@ -74,11 +58,17 @@ trait MustCompleteOfficerInformation
 
     public function getInformationOfficerBuilder()
     {
-        // if(isset($this->informacion_user["talento"])){
-        //     $talentType = Str::snake(Str::lower($this->informacion_user["talento"]["tipo_talento"]));
-        //     $talentStorageClass = OfficerStorageValues::OFFICER[$talentType];
-        //     return (new $talentStorageClass)->buildResponse($this->informacion_user);
-        // }
+
+        if(isset($this->activador)){
+            $response =  (new ActivatorOfficerStorage)->buildResponse($this->activador);
+        }
+        if(isset($this->activadorContratoLatest)){
+            $response =  (new ActivatorOfficerStorage)->buildResponse($this->activadorContratoLatest);
+        }
+        if(isset($this->dinamizador)){
+            $response =  "Dinamizador";
+        }
+
     }
 
     public function getInformationOfficerEloquent()
@@ -99,7 +89,7 @@ trait MustCompleteOfficerInformation
         )->where('role', User::IsActivador());
     }
 
-    public function activatorContractCurrentYear()
+    public function activadorContratoLatest()
     {
         return $this->hasOneThrough(
             Contrato::class,
@@ -107,9 +97,9 @@ trait MustCompleteOfficerInformation
             'user_id',
             'user_nodo_id'
         )->where('role', User::IsActivador())
-        ->whereYear('contratos.fecha_inicio', \Carbon\Carbon::now()->year);
+        ->latest('contratos.fecha_inicio')
+        ->latest('contratos.created_at');
     }
-
 
     /**
     * Get the user's user articulator contract.
@@ -123,6 +113,22 @@ trait MustCompleteOfficerInformation
             'user_nodo_id'
         )->where('role', User::IsArticulador());
     }
+    public function articuladorContratoMax()
+    {
+        return $this->hasManyThrough(
+            Contrato::class,
+            UserNodo::class,
+            'user_id',
+            'user_nodo_id'
+        )->where('role', User::IsArticulador())
+        ->selectRaw('entidades.nombre as nodo, contratos.codigo, max(fecha_inicio) as fecha_inicio, contratos.fecha_finalizacion, contratos.valor_contrato, contratos.honorarios')
+        ->join('nodos', 'nodos.id', '=', 'user_nodo.nodo_id')
+        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+        ->groupBy('user_id');
+    }
+
+
+
 
     /**
     * Get the user's user tecnical support contract.
@@ -135,6 +141,18 @@ trait MustCompleteOfficerInformation
             'user_id',
             'user_nodo_id'
         )->where('role', User::IsApoyoTecnico());
+    }
+    public function apoyoTecnicoContratoMax()
+    {
+        return $this->hasManyThrough(
+            Contrato::class,
+            UserNodo::class,
+            'user_id',
+            'user_nodo_id'
+        )->where('role', User::IsApoyoTecnico())
+        ->selectRaw('contratos.codigo, max(fecha_inicio) as fecha_inicio, contratos.fecha_finalizacion, contratos.valor_contrato, contratos.honorarios')
+
+        ->groupBy('user_id');
     }
 
     /**
