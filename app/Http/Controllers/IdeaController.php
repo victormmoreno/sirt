@@ -366,10 +366,15 @@ class IdeaController extends Controller
         }
         $resultado = $this->ideaRepository->derivarIdea($idea, $comite);
         alert($resultado['title'], $resultado['msg'], $resultado['type'])->showConfirmButton('Ok', '#3085d6');
-        if ($bandera != 1) {
-            return back();
+        if ($resultado['state']) {
+            if ($bandera != 1) {
+                return back();
+            } else {
+                return redirect()->route('comite.cambiar.asignacion', ['idea' => $resultado['idea']->id, 'comite' => $comite]);
+            }
         } else {
-            return redirect()->route('comite.cambiar.asignacion', ['idea' => $resultado['idea']->id, 'comite' => $comite]);
+            alert('Error', 'No se ha podido realizar esta acción: '. $resultado['msg'], 'error');
+            return back();
         }
     }
 

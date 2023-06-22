@@ -146,9 +146,9 @@ class ProyectoController extends Controller
             })->addColumn('download_seguimiento', function ($data) {
                 $seguimiento = '<a class="btn green lighten-1 m-b-xs" href=' . route('pdf.actividad.usos', [$data->id, 'proyecto']) . ' target="_blank"><i class="far fa-file-pdf"></i></a>';
                 return $seguimiento;
-            })->addColumn('download_trazabilidad', function ($data) {
-                $seguimiento = '<a class="btn bg-success white-text m-b-xs" href=' . route('excel.proyecto.trazabilidad', $data->id) . '  target="_blank"><i class="far fa-file-excel"></i></a>';
-                return $seguimiento;
+            // })->addColumn('download_trazabilidad', function ($data) {
+            //     $seguimiento = '<a class="btn bg-success white-text m-b-xs" href=' . route('excel.proyecto.trazabilidad', $data->id) . '  target="_blank"><i class="far fa-file-excel"></i></a>';
+            //     return $seguimiento;
             })->addColumn('ver_horas', function ($data) {
                 $seguimiento = '<a class="btn bg-warning white-text m-b-xs" onclick="verHorasDeExpertosEnProyecto('.$data->id.')"><i class="material-icons">access_time</i></a>';
                 return $seguimiento;
@@ -207,7 +207,7 @@ class ProyectoController extends Controller
                         return false;
                     });
                 }
-            })->rawColumns(['info', 'details', 'proceso', 'download_seguimiento', 'download_trazabilidad', 'ver_horas'])->make(true);
+            })->rawColumns(['info', 'details', 'proceso', 'download_seguimiento', 'ver_horas'])->make(true);
     }
 
     public function carta_certificacion($id)
