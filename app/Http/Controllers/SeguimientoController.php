@@ -460,14 +460,14 @@ class SeguimientoController extends Controller
     {
         $nodos = $this->retornarValorDeNodos($request);
         if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
-        $query = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->get();
+            $query = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->get();
         } else {
-        $expertos = $this->retornarValorDeExpertos($request);
-        $query = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->whereIn('users.id', $expertos)->get();
+            $expertos = $this->retornarValorDeExpertos($request);
+            $query = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->whereIn('users.id', $expertos)->get();
         }
+        // dd($query);
 
         $datos = $this->agruparDatosPorMeses($query);
-
         return response()->json([
         'datos' => $datos
         ]);
