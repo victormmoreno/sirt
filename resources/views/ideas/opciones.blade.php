@@ -30,7 +30,7 @@
 </a>
 @endcan
 @can('update', $idea)
-    <a href="{{route('idea.edit', $idea->id)}}" class="collection-item">
+    <a href="{{route('idea.edit', $idea)}}" class="collection-item">
         <i class="material-icons left">edit</i>
         Cambiar información de la idea.
     </a>

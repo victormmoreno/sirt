@@ -138,7 +138,7 @@ Route::group(
         Route::get('/datatable_filtros', 'IdeaController@datatableFiltros')->name('idea.datatable.filtros')->middleware('role_session:Talento|Articulador|Infocenter|Dinamizador|Activador|Experto');
         Route::get('/export', 'IdeaController@export')->name('idea.export');
         Route::get('/export_registradas/{nodo}/{desde}/{hasta}', 'IdeaController@export_registradas')->name('idea.export.registradas');
-        Route::get('/{id}/editar', 'IdeaController@edit')->name('idea.edit')->middleware(['auth', 'role_session:Talento']);
+        Route::get('/{id}/editar', 'IdeaController@edit')->name('idea.edit');
         Route::get('/detallesIdea/{id}', 'IdeaController@detallesIdeas')->name('idea.det');
         Route::get('/modalIdeas/{id}', 'IdeaController@abrirModalIdeas')->name('idea.modal');
         Route::get('/{id}', 'IdeaController@detalle')->name('idea.detalle');
@@ -156,8 +156,8 @@ Route::group(
         Route::put('/enviar_nodo/{id}', 'IdeaController@enviarIdeaAlNodo')->name('idea.enviar')->middleware('role_session:Talento');
         Route::put('/duplicar_idea/{id}', 'IdeaController@duplicarIdea')->name('idea.duplicar');
         Route::put('/inhabilitar_idea/{id}', 'IdeaController@inhabilitarIdea')->name('idea.inhabilitar');
-        Route::put('/{idea}', 'IdeaController@update')->name('idea.update')->middleware(['auth', 'role_session:Talento']);
-        Route::post('/', 'IdeaController@store')->name('idea.store')->middleware(['auth', 'role_session:Talento']);
+        Route::put('/{idea}', 'IdeaController@update')->name('idea.update');
+        Route::post('/', 'IdeaController@store')->name('idea.store');
         Route::post('/buscar_ideas', 'IdeaController@search_idea')->name('idea.search.rq');
     }
 );

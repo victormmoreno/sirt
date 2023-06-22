@@ -549,7 +549,6 @@ class IdeaController extends Controller
             alert('No autorizado', 'No tienes permisos para cambiar la información de esta idea de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-
         if ($request->input('txtidea_empresa') == 1) {
             // Idea con empresa
             $empresa = $this->empresaRepository->consultarEmpresaParams($request->input('txtnit'), 'nit')->first();
@@ -576,6 +575,15 @@ class IdeaController extends Controller
         if ($request->input('txtopcionRegistro') == "guardar") {
             $result = $this->ideaRepository->Update($request, $idea);
         } else {
+            if(!request()->user()->can('postularIdea', $idea)) {
+                alert('No autorizado', 'No tienes permisos para postular esta idea de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
+                return response()->json([
+                    'state' => 'no_update',
+                    'title' => 'No autorizado',
+                    'msg' => 'No tienes permisos para postular esta idea de proyecto',
+                    'type' =>'error'
+                ]);
+            }
             $result = $this->ideaRepository->updateAndPostular($request, $idea);
         }
         if ($result['state']) {

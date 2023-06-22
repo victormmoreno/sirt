@@ -230,7 +230,7 @@ class Proyecto extends Model
      */
     public function asesor()
     {
-        return $this->belongsTo(User::class, 'experto_id', 'id');
+        return $this->belongsTo(User::class, 'experto_id', 'id')->withTrashed();
     }
 
     /**
