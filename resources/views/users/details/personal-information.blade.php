@@ -112,7 +112,7 @@
                 <span>Grado Escolaridad</span>
             </div>
             <div class="server-stat col s6 m8 l6">
-                <p>{{$user->ocupacions}}</p>
+                <p>{{$user->ocupaciones}}</p>
                 <span>Ocupaciones</span>
             </div>
             <div class="server-stat col s6 m8 l6">
@@ -126,73 +126,7 @@
         </div>
         <span class="card-title primary-text center">Otros datos</span>
         <br>
-        {!!$user->getInformationTalentBuilder()!!}
         {!!$user->getInformationOfficerBuilder()!!}
-
-        {{-- {{var_dump($user->informacion_user)}} --}}
-        {{-- @if($user->isUserDinamizador())
-            <span class="primary-text">Información Dinamizador</span>
-            <div class="server-load row">
-                <div class="server-stat col s12 m6 l6">
-                    <p></p>
-                    <span>Nodo</span>
-                </div>
-            </div>
-        @endif --}}
-
-        {{-- @if($user->isUserExperto() || $user->isUserArticulador())
-            @if($user->isUserExperto())
-                <span
-                    class="secondary-text">Información {{App\User::IsExperto()}}</span>
-            @else
-                <span
-                    class="secondary-text">Información {{App\User::IsArticulador()}}</span>
-            @endif
-            <div class="server-load row">
-                @if($user->isUserExperto())
-                    <div class="server-stat col s12 m4 l4">
-                        <p></p>
-                        <span>Linea</span>
-                    </div>
-
-                    <div class="server-stat col s12 m4 l4">
-                        <p></p>
-                        <span>Honorario</span>
-                    </div>
-                @else
-                    <div class="server-stat col s12 m4 l4">
-                        <p></p>
-                        <span>Nodo</span>
-                    </div>
-                @endif
-            </div>
-        @endif
-        @if($user->isUserInfocenter())
-
-            <span
-                class="secondary-text">Información {{App\User::IsInfocenter()}}</span>
-            <div class="server-load row">
-                <div class="server-stat col s12 m6 l6">
-                    <p></p>
-                    <span>Nodo</span>
-                </div>
-                <div class="server-stat col s12 m6 l6">
-                    <p></p>
-                    <span>Extensión</span>
-                </div>
-            </div>
-        @endif
-        @if($user->isUserIngreso())
-            <span
-                class="secondary-text">Información {{App\User::IsIngreso()}}</span>
-            <div class="server-load row">
-                <div class="server-stat col s12 m6 l6">
-                    <p></p>
-                    <span>Nodo</span>
-                </div>
-            </div>
-        @endif --}}
-
+        {!!$user->getInformationTalentBuilder()!!}
     </div>
-
 </div>

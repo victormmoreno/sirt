@@ -8,6 +8,11 @@ use App\Models\Contrato;
 use App\User;
 use App\Strategies\User\OfficerStorage\ActivatorOfficerStorage;
 use App\Strategies\User\OfficerStorage\DynamizerOfficerStorage;
+use App\Strategies\User\OfficerStorage\ExpertOfficerStorage;
+use App\Strategies\User\OfficerStorage\ArticulatorOfficerStorage;
+use App\Strategies\User\OfficerStorage\InfocenterOfficerStorage;
+use App\Strategies\User\OfficerStorage\TechnicalSupportOfficerStorage;
+use App\Strategies\User\OfficerStorage\IncomeOfficerStorage;
 use Carbon\Carbon;
 
 
@@ -57,7 +62,6 @@ trait MustCompleteOfficerInformation
 
     public function getInformationOfficerBuilder()
     {
-        // dd($this->activador);
         $response = "";
          if($this->isUserActivador() && isset($this->activador) && $this->activador->vinculacion == 0 && isset($this->activadorContratoLatest)){
             $response .=  (new ActivatorOfficerStorage)->buildResponse($this->activadorContratoLatest);
@@ -68,14 +72,40 @@ trait MustCompleteOfficerInformation
         if($this->isUserDinamizador() && isset($this->dinamizador) && $this->dinamizador->vinculacion == 0  && isset($this->dinamizadorContratoLatest)){
             $response .=  (new DynamizerOfficerStorage)->buildResponse($this->dinamizadorContratoLatest);
         }
-        else if($this->isUserDinamizador() && isset($this->dinamizador) && isset($this->dinamizador) && $this->dinamizador->vinculacion == 1){
+        else if($this->isUserDinamizador() && isset($this->dinamizador) && $this->dinamizador->vinculacion == 1){
             $response .=  (new DynamizerOfficerStorage)->buildResponse($this->dinamizador);
         }
-        if($this->isUserExperto() && isset($this->experto)){
-            $response .=  "Experto";
+        if($this->isUserExperto() && isset($this->experto) && $this->experto->vinculacion == 0  && isset($this->expertoContratoLatest)){
+            $response .=  (new ExpertOfficerStorage)->buildResponse($this->expertoContratoLatest);
+        }
+        else if($this->isUserExperto() && isset($this->experto) && $this->experto->vinculacion == 1){
+            $response .=  (new ExpertOfficerStorage)->buildResponse($this->experto);
+        }
+        if($this->isUserArticulador() && isset($this->articulador) && $this->articulador->vinculacion == 0  && isset($this->articuladorContratoLatest)){
+            $response .=  (new ArticulatorOfficerStorage)->buildResponse($this->articuladorContratoLatest);
+        }
+        else if($this->isUserArticulador() && isset($this->articulador) && $this->articulador->vinculacion == 1){
+            $response .=  (new ArticulatorOfficerStorage)->buildResponse($this->articulador);
+        }
+        if($this->isUserInfocenter() && isset($this->infocenter) && $this->infocenter->vinculacion == 0  && isset($this->infocenterContratoLatest)){
+            $response .=  (new InfocenterOfficerStorage)->buildResponse($this->infocenterContratoLatest);
+        }
+        else if($this->isUserInfocenter() && isset($this->infocenter) && $this->infocenter->vinculacion == 1){
+            $response .=  (new InfocenterOfficerStorage)->buildResponse($this->infocenter);
+        }
+        if($this->isUserApoyoTecnico() && isset($this->apoyotecnico) && $this->apoyotecnico->vinculacion == 0  && isset($this->apoyoTecnicoContratoLatest)){
+            $response .=  (new TechnicalSupportOfficerStorage)->buildResponse($this->apoyoTecnicoContratoLatest);
+        }
+        else if($this->isUserApoyoTecnico() && isset($this->apoyotecnico) && $this->apoyotecnico->vinculacion == 1){
+            $response .=  (new TechnicalSupportOfficerStorage)->buildResponse($this->apoyotecnico);
+        }
+        if($this->isUserIngreso() && isset($this->ingreso) && $this->ingreso->vinculacion == 0  && isset($this->ingresoContratoLatest)){
+            $response .=  (new IncomeOfficerStorage)->buildResponse($this->ingresoContratoLatest);
+        }
+        else if($this->isUserIngreso() && isset($this->ingreso) && $this->ingreso->vinculacion == 1){
+            $response .=  (new IncomeOfficerStorage)->buildResponse($this->ingreso);
         }
         return $response;
-
     }
 
     public function getInformationOfficerEloquent()
@@ -130,9 +160,12 @@ trait MustCompleteOfficerInformation
             'user_id',
             'user_nodo_id'
         )->where('role', User::IsArticulador())
+        ->whereYear('fecha_inicio', Carbon::now()->year)
         ->latest('contratos.fecha_inicio')
+        ->latest('contratos.fecha_finalizacion')
         ->latest('contratos.created_at');
     }
+
 
 
 
@@ -149,17 +182,19 @@ trait MustCompleteOfficerInformation
             'user_nodo_id'
         )->where('role', User::IsApoyoTecnico());
     }
-    public function apoyoTecnicoContratoMax()
+
+    public function apoyoTecnicoContratoLatest()
     {
-        return $this->hasManyThrough(
+        return $this->hasOneThrough(
             Contrato::class,
             UserNodo::class,
             'user_id',
             'user_nodo_id'
         )->where('role', User::IsApoyoTecnico())
-        ->selectRaw('contratos.codigo, max(fecha_inicio) as fecha_inicio, contratos.fecha_finalizacion, contratos.valor_contrato, contratos.honorarios')
-
-        ->groupBy('user_id');
+        ->whereYear('fecha_inicio', Carbon::now()->year)
+        ->latest('contratos.fecha_inicio')
+        ->latest('contratos.fecha_finalizacion')
+        ->latest('contratos.created_at');
     }
 
     /**
@@ -202,6 +237,20 @@ trait MustCompleteOfficerInformation
         )->where('role', User::IsExperto());
     }
 
+    public function expertoContratoLatest()
+    {
+        return $this->hasOneThrough(
+            Contrato::class,
+            UserNodo::class,
+            'user_id',
+            'user_nodo_id'
+        )->where('role', User::IsExperto())
+        ->whereYear('fecha_inicio', Carbon::now()->year)
+        ->latest('contratos.fecha_inicio')
+        ->latest('contratos.fecha_finalizacion')
+        ->latest('contratos.created_at');
+    }
+
 
     /**
     * Get the user's user infocenter contract.
@@ -216,6 +265,20 @@ trait MustCompleteOfficerInformation
         )->where('role', User::IsInfocenter());
     }
 
+    public function infocenterContratoLatest()
+    {
+        return $this->hasOneThrough(
+            Contrato::class,
+            UserNodo::class,
+            'user_id',
+            'user_nodo_id'
+        )->where('role', User::IsInfocenter())
+        ->whereYear('fecha_inicio', Carbon::now()->year)
+        ->latest('contratos.fecha_inicio')
+        ->latest('contratos.fecha_finalizacion')
+        ->latest('contratos.created_at');
+    }
+
 
     /**
     * Get the user's user expert contract.
@@ -228,5 +291,19 @@ trait MustCompleteOfficerInformation
             'user_id',
             'user_nodo_id'
         )->where('role', User::IsIngreso());
+    }
+
+    public function ingresoContratoLatest()
+    {
+        return $this->hasOneThrough(
+            Contrato::class,
+            UserNodo::class,
+            'user_id',
+            'user_nodo_id'
+        )->where('role', User::IsIngreso())
+        ->whereYear('fecha_inicio', Carbon::now()->year)
+        ->latest('contratos.fecha_inicio')
+        ->latest('contratos.fecha_finalizacion')
+        ->latest('contratos.created_at');
     }
 }

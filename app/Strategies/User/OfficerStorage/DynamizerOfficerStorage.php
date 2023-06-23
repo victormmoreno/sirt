@@ -45,7 +45,11 @@ class DynamizerOfficerStorage implements OfficerStorage
 
             if(isset($user->dinamizador->contratos) && $user->dinamizador->contratos->count() ){
                 $currentContract = $user->dinamizador->contratos()
-                ->whereYear('created_at', Carbon::now()->year)->get()->last();
+                ->where('codigo' ,$request->dynamizer_code_contract)
+                ->whereYear('fecha_inicio', Carbon::now()->year)
+                ->latest('contratos.fecha_inicio')
+                ->latest('contratos.fecha_finalizacion')
+                ->get()->last();
                 if(!is_null($currentContract) || isset($currentContract)){
                     $currentContract->update($this->propertiesArray($infoContract));
                 }else{
@@ -84,7 +88,7 @@ class DynamizerOfficerStorage implements OfficerStorage
                         <span>Tipo de vinculación</span>
                     </div>
                     <div class='server-stat col s6 m4 l4'>
-                        <p>{$data->honorarios}</p>
+                        <p>$ ".number_format($data->honorarios, 2)."</p>
                         <span>Honorarios mensulaes</span>
                     </div>
                 </div>";
@@ -112,11 +116,11 @@ class DynamizerOfficerStorage implements OfficerStorage
                     <span>Fecha finalizacion contrato</span>
                 </div>
                 <div class='server-stat col s6 m6 l3'>
-                    <p>{$data->valor_contrato}</p>
+                    <p>$ ".number_format($data->valor_contrato, 2)."</p>
                     <span>Valor del contrato</span>
                 </div>
                 <div class='server-stat col s6 m4 l3'>
-                    <p>{$data->honorarios}</p>
+                    <p>$ ".number_format($data->honorarios, 2)."</p>
                     <span>Honorarios mensulaes</span>
                 </div>
             </div>

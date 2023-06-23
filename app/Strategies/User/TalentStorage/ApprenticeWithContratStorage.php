@@ -17,7 +17,7 @@ class ApprenticeWithContratStorage implements TalentStorage
             $regional = Regional::find($request->regional);
         }
         if(isset($request->centro_formacion)){
-            $centro_formacion = Centro::with('entidad')->where('id', $request->centro_formacion)->first();
+            $centro_formacion = Centro::has('entidad')->where('id', $request->centro_formacion)->first();
         }
         return [
             'tipo_talento' => TipoTalento::IS_APRENDIZ_SENA_CON_APOYO,
@@ -36,13 +36,16 @@ class ApprenticeWithContratStorage implements TalentStorage
                         <span>Tipo Talento</span>
                     </div>
                     <div class='server-stat col s6 m6 l6'>
-                        <p>".$data['talento']['regional']." / ".$data['talento']['centro_formacion']."</p>
-                        <span>Regional / Centro de Formación</span>
+                        <p>".$data['talento']['regional']."</p>
+                        <span>Regional</span>
                     </div>
-
                 </div>
                 <div class='server-load row'>
-                    <div class='server-stat col s6 m4 l6'>
+                <div class='server-stat col s6 m6 l6'>
+                        <p>".$data['talento']['centro_formacion']."</p>
+                        <span>Centro de Formación</span>
+                    </div>
+                    <div class='server-stat col s6 m6 l6'>
                         <p>".$data['talento']['programa_formacion']."</p>
                         <span>Programa de Formación</span>
                     </div>

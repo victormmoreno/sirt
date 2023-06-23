@@ -79,37 +79,35 @@ class   ActivatorOfficerStorage implements OfficerStorage
                         <span>Tipo de vinculación</span>
                     </div>
                     <div class='server-stat col s6 m4 l6'>
-                        <p>{$data->honorarios}</p>
+                        <p>$ ".number_format($data->honorarios, 2)."</p>
                         <span>Honorarios mensulaes</span>
                     </div>
                 </div>";
         }else if($data instanceof Contrato){
             $reponse .= "<span class='card-title primary-text center'>Información Activador</span>
             <div class='server-load row'>
-                <div class='server-stat col s6 m6 l6'>
+                <div class='server-stat col s6 m6 l4'>
                     <p> ".($data->vinculacion == 0 ? 'Contratista' : 'Planta')."</p>
                     <span>Tipo de vinculación</span>
                 </div>
-                <div class='server-stat col s6 m6 l6'>
+                <div class='server-stat col s6 m6 l4'>
                     <p>{$data->codigo}</p>
                     <span>Número de contrato</span>
                 </div>
-                <div class='server-stat col s6 m6 l6'>
+                <div class='server-stat col s6 m6 l4'>
                     <p>{$data->fecha_inicio}</p>
                     <span>Fecha inicio contrato</span>
                 </div>
-                <div class='server-stat col s6 m6 l6'>
+                <div class='server-stat col s6 m6 l4'>
                     <p>{$data->fecha_finalizacion}</p>
                     <span>Fecha finalizacion contrato</span>
                 </div>
-            </div>
-            <div class='server-load row'>
-                <div class='server-stat col s6 m4 l6'>
-                    <p>{$data->valor_contrato}</p>
+                <div class='server-stat col s6 m4 l4'>
+                    <p>$ ". number_format($data->valor_contrato, 2)."</p>
                     <span>Valor del contrato</span>
                 </div>
-                <div class='server-stat col s6 m4 l6'>
-                    <p>{$data->honorarios}</p>
+                <div class='server-stat col s6 m4 l4'>
+                    <p>$ ".number_format($data->honorarios, 2)."</p>
                     <span>Honorarios mensulaes</span>
                 </div>
             </div>";

@@ -15,7 +15,7 @@ class SenaInstructorStorage implements TalentStorage
             $regional = Regional::find($request->regional);
         }
         if(isset($request->centro_formacion)){
-            $centro_formacion = Centro::with('entidad')->where('id', $request->centro_formacion)->first();
+            $centro_formacion = Centro::has('entidad')->where('id', $request->centro_formacion)->first();
         }
         return [
             'tipo_talento' => TipoTalento::IS_INSTRUCTOR_SENA,
@@ -27,12 +27,19 @@ class SenaInstructorStorage implements TalentStorage
     public function buildResponse(array $data)
     {
         return "<span class='card-title primary-text center'>Información Talento</span>
-                <div class='server-load row'>
-                    <div class='server-stat col s6 m4 l3'>
-                        <p>".$data['talento']['tipo_talento']."</p>
-                        <span>Tipo Talento</span>
-                    </div>
-                </div>";
-        return "Tipo Talento: ".$data['talento']['tipo_talento']."<br>"."  Regional: ". $data['talento']['regional']."<br>"."  Centro de Formación: ". $data['talento']['centro_formacion'];
+        <div class='server-load row'>
+            <div class='server-stat col s6 m6 l4'>
+                <p>".$data['talento']['tipo_talento']."</p>
+                <span>Tipo Talento</span>
+            </div>
+            <div class='server-stat col s6 m6 l4'>
+                <p>".$data['talento']['regional']."</p>
+                <span>Regional</span>
+            </div>
+            <div class='server-stat col s6 m6 l4'>
+                <p>".$data['talento']['centro_formacion']."</p>
+                <span>Centro de Formación</span>
+            </div>
+        </div>";
     }
 }
