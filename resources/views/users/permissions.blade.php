@@ -1321,15 +1321,12 @@
                         $('#training_center').empty();
                         $('#training_center').append('<option value="">Seleccione el centro de formación</option>')
                         $.each(response.centros, function(id, nombre) {
-
                                 @if (isset($user->informacion_user['talento']['centro_formacion']))
                                     const selected =  String("{{$user->informacion_user['talento']['centro_formacion']}}") == String(nombre) ? 'selected' : '';
                                     $('#training_center').append(`<option ${selected} value="${id}" >${nombre}</option>`);
                                 @else
                                     $('#training_center').append(`<option value="${id}" >${nombre}</option>`);
                                 @endif
-
-
                         });
                         $('#training_center').material_select();
                     });

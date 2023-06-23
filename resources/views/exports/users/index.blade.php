@@ -3,7 +3,7 @@
     <tr>
         <th>Nodo</th>
         <th>Tipo Documento</th>
-        <th>Ciudad de Expedición Documento</th>
+        <th>Lugar Expedición Documento </th>
         <th>Número de Documento</th>
         <th>Nombre Completo</th>
         <th>Fecha de Nacimiento</th>
@@ -26,6 +26,41 @@
         <th>Ocupaciones</th>
         <th>Roles</th>
         <th>Acceso sistema</th>
+        <th>Informacion Activador</th>
+    </tr>
+    <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th>Tipo Vinculación</th>
+        <th>Número de contrato</th>
+        <th>Fecha inicio contrato</th>
+        <th>Fecha finalizacion contrato</th>
+        <th>Fecha finalizacion contrato</th>
+        <th>Valor del contrato</th>
+        <th>Honorarios mensulaes</th>
     </tr>
     </thead>
     <tbody>
@@ -35,7 +70,7 @@
                 {{isset($user->nodo) ? $user->nodo : __('No register')}}
             </td>
             <td>
-                {{isset($user->tipodocumento_name) ? $user->tipodocumento_name : __('No register')}}
+                {{isset($user->tipodocumento) ? $user->tipodocumento : __('No register')}}
             </td>
             <td>
                 {{isset($user->expedicion) ? $user->expedicion : __('No register')}}
