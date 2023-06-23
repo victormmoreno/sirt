@@ -5,6 +5,8 @@ namespace App\Strategies\User\OfficerStorage;
 use Illuminate\Http\Request;
 use App\Contracts\User\OfficerStorage;
 use App\Models\Nodo;
+use App\Models\Contrato;
+use App\Models\UserNodo;
 use App\User;
 use Carbon\Carbon;
 
@@ -67,8 +69,62 @@ class DynamizerOfficerStorage implements OfficerStorage
         ];
     }
 
-    public function buildResponse(array $data)
+    public function buildResponse($data)
     {
+        $reponse = "";
+        if($data instanceof UserNodo){
+            $reponse .= "<span class='card-title primary-text center'>Información Dinamizador</span>
+                <div class='server-load row'>
+                    <div class='server-stat col s6 m6 l4'>
+                        <p> {$data->nodo->entidad->nombre}</p>
+                        <span>Nodo</span>
+                    </div>
+                    <div class='server-stat col s6 m6 l4'>
+                        <p> ".($data->vinculacion == 0 ? 'Contratista' : 'Planta')."</p>
+                        <span>Tipo de vinculación</span>
+                    </div>
+                    <div class='server-stat col s6 m4 l4'>
+                        <p>{$data->honorarios}</p>
+                        <span>Honorarios mensulaes</span>
+                    </div>
+                </div>";
+        }else if($data instanceof Contrato){
+            $reponse .= "<span class='card-title primary-text center'>Información Dinamizador</span>
+            <div class='server-load row'>
+                <div class='server-stat col s6 m6 l3'>
+                    <p> {$data->dinamizador->nodo->entidad->nombre}</p>
+                    <span>Nodo</span>
+                </div>
+                <div class='server-stat col s6 m6 l3'>
+                    <p> ".($data->vinculacion == 0 ? 'Contratista' : 'Planta')."</p>
+                    <span>Tipo de vinculación</span>
+                </div>
+                <div class='server-stat col s6 m6 l3'>
+                    <p>{$data->codigo}</p>
+                    <span>Número de contrato</span>
+                </div>
+                <div class='server-stat col s6 m6 l3'>
+                    <p>{$data->fecha_inicio}</p>
+                    <span>Fecha inicio contrato</span>
+                </div>
+                <div class='server-stat col s6 m6 l3'>
+                    <p>{$data->fecha_finalizacion}</p>
+                    <span>Fecha finalizacion contrato</span>
+                </div>
+                <div class='server-stat col s6 m6 l3'>
+                    <p>{$data->valor_contrato}</p>
+                    <span>Valor del contrato</span>
+                </div>
+                <div class='server-stat col s6 m4 l3'>
+                    <p>{$data->honorarios}</p>
+                    <span>Honorarios mensulaes</span>
+                </div>
+            </div>
+            <div class='server-load row'>
 
+            </div>";
+        }
+
+        return $reponse;
     }
 }

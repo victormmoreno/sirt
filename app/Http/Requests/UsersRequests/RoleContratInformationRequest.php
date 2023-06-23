@@ -21,10 +21,11 @@ class RoleContratInformationRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array
+    //  * @return array
      */
-    public function rules(): array
+    public function rules()
     {
+        // dd(request()->value());
         return [
             'role'            => 'required',
             'activator_type_relationship' => Rule::requiredIf(

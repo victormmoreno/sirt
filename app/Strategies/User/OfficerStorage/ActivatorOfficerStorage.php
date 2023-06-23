@@ -8,9 +8,8 @@ use App\Models\Contrato;
 use App\Models\UserNodo;
 use App\User;
 use Carbon\Carbon;
-use Illuminate\Support\Collection;
 
-class ActivatorOfficerStorage implements OfficerStorage
+class   ActivatorOfficerStorage implements OfficerStorage
 {
 
     public function buildStorageRecord(Request $request)
@@ -42,7 +41,11 @@ class ActivatorOfficerStorage implements OfficerStorage
 
             if(isset($user->activador->contratos) && $user->activador->contratos->count() ){
                 $currentContract = $user->activador->contratos()
-                ->whereYear('created_at', Carbon::now()->year)->get()->last();
+                ->where('codigo' ,$request->activator_code_contract)
+                ->whereYear('fecha_inicio', Carbon::now()->year)
+                ->latest('contratos.fecha_inicio')
+                ->latest('contratos.fecha_finalizacion')
+                ->get()->last();
                 if(!is_null($currentContract) || isset($currentContract)){
                     $currentContract->update($this->propertiesArray($infoContract));
                 }else{
@@ -65,12 +68,23 @@ class ActivatorOfficerStorage implements OfficerStorage
         ];
     }
 
-    public function buildResponse($data)
+    public function buildResponse($data): String
     {
-        // dd($data);
-        // return $data;
-        if($data instanceof Contrato){
-            return "<span class='card-title primary-text center'>Información Activador</span>
+        $reponse = "";
+        if($data instanceof UserNodo){
+            $reponse .= "<span class='card-title primary-text center'>Información Activador</span>
+                <div class='server-load row'>
+                    <div class='server-stat col s6 m6 l6'>
+                        <p> ".($data->vinculacion == 0 ? 'Contratista' : 'Planta')."</p>
+                        <span>Tipo de vinculación</span>
+                    </div>
+                    <div class='server-stat col s6 m4 l6'>
+                        <p>{$data->honorarios}</p>
+                        <span>Honorarios mensulaes</span>
+                    </div>
+                </div>";
+        }else if($data instanceof Contrato){
+            $reponse .= "<span class='card-title primary-text center'>Información Activador</span>
             <div class='server-load row'>
                 <div class='server-stat col s6 m6 l6'>
                     <p> ".($data->vinculacion == 0 ? 'Contratista' : 'Planta')."</p>
@@ -88,7 +102,6 @@ class ActivatorOfficerStorage implements OfficerStorage
                     <p>{$data->fecha_finalizacion}</p>
                     <span>Fecha finalizacion contrato</span>
                 </div>
-
             </div>
             <div class='server-load row'>
                 <div class='server-stat col s6 m4 l6'>
@@ -101,27 +114,7 @@ class ActivatorOfficerStorage implements OfficerStorage
                 </div>
             </div>";
         }
-        if($data instanceof UserNodo){
-                return "<span class='card-title primary-text center'>Información Activador</span>
-                <div class='server-load row'>
-                    <div class='server-stat col s6 m6 l6'>
-                        <p> ".($data->vinculacion == 0 ? 'Contratista' : 'Planta')."</p>
-                        <span>Tipo de vinculación</span>
-                    </div>
-                    <div class='server-stat col s6 m4 l6'>
-                        <p>{$data->honorarios}</p>
-                        <span>Honorarios mensulaes</span>
-                    </div>
-                </div>";
-            }
-        // dd($data);
 
-
-        // if($data instanceof Collection){
-        //     return $data;
-        // }else{
-        //     return 'no';
-        // }
-
+        return $reponse;
     }
 }

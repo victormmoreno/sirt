@@ -3,13 +3,12 @@
 namespace App\Http\Traits\User;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use App\Notifications\User\CompleteTalentInformation;
-use App\Values\OfficerStorageValues;
 use App\Models\UserNodo;
 use App\Models\Contrato;
 use App\User;
 use App\Strategies\User\OfficerStorage\ActivatorOfficerStorage;
+use App\Strategies\User\OfficerStorage\DynamizerOfficerStorage;
+use Carbon\Carbon;
 
 
 trait MustCompleteOfficerInformation
@@ -58,16 +57,24 @@ trait MustCompleteOfficerInformation
 
     public function getInformationOfficerBuilder()
     {
-
-        if(isset($this->activador)){
-            $response =  (new ActivatorOfficerStorage)->buildResponse($this->activador);
+        // dd($this->activador);
+        $response = "";
+         if($this->isUserActivador() && isset($this->activador) && $this->activador->vinculacion == 0 && isset($this->activadorContratoLatest)){
+            $response .=  (new ActivatorOfficerStorage)->buildResponse($this->activadorContratoLatest);
         }
-        if(isset($this->activadorContratoLatest)){
-            $response =  (new ActivatorOfficerStorage)->buildResponse($this->activadorContratoLatest);
+        else if($this->isUserActivador() && isset($this->activador) && $this->activador->vinculacion == 1){
+            $response .=  (new ActivatorOfficerStorage)->buildResponse($this->activador);
         }
-        if(isset($this->dinamizador)){
-            $response =  "Dinamizador";
+        if($this->isUserDinamizador() && isset($this->dinamizador) && $this->dinamizador->vinculacion == 0  && isset($this->dinamizadorContratoLatest)){
+            $response .=  (new DynamizerOfficerStorage)->buildResponse($this->dinamizadorContratoLatest);
         }
+        else if($this->isUserDinamizador() && isset($this->dinamizador) && isset($this->dinamizador) && $this->dinamizador->vinculacion == 1){
+            $response .=  (new DynamizerOfficerStorage)->buildResponse($this->dinamizador);
+        }
+        if($this->isUserExperto() && isset($this->experto)){
+            $response .=  "Experto";
+        }
+        return $response;
 
     }
 
@@ -97,7 +104,9 @@ trait MustCompleteOfficerInformation
             'user_id',
             'user_nodo_id'
         )->where('role', User::IsActivador())
+        ->whereYear('fecha_inicio', Carbon::now()->year)
         ->latest('contratos.fecha_inicio')
+        ->latest('contratos.fecha_finalizacion')
         ->latest('contratos.created_at');
     }
 
@@ -113,18 +122,16 @@ trait MustCompleteOfficerInformation
             'user_nodo_id'
         )->where('role', User::IsArticulador());
     }
-    public function articuladorContratoMax()
+    public function articuladorContratoLatest()
     {
-        return $this->hasManyThrough(
+        return $this->hasOneThrough(
             Contrato::class,
             UserNodo::class,
             'user_id',
             'user_nodo_id'
         )->where('role', User::IsArticulador())
-        ->selectRaw('entidades.nombre as nodo, contratos.codigo, max(fecha_inicio) as fecha_inicio, contratos.fecha_finalizacion, contratos.valor_contrato, contratos.honorarios')
-        ->join('nodos', 'nodos.id', '=', 'user_nodo.nodo_id')
-        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-        ->groupBy('user_id');
+        ->latest('contratos.fecha_inicio')
+        ->latest('contratos.created_at');
     }
 
 
@@ -166,6 +173,20 @@ trait MustCompleteOfficerInformation
             'user_id',
             'user_nodo_id'
         )->where('role', User::IsDinamizador());
+    }
+
+    public function dinamizadorContratoLatest()
+    {
+        return $this->hasOneThrough(
+            Contrato::class,
+            UserNodo::class,
+            'user_id',
+            'user_nodo_id'
+        )->where('role', User::IsDinamizador())
+        ->whereYear('fecha_inicio', Carbon::now()->year)
+        ->latest('contratos.fecha_inicio')
+        ->latest('contratos.fecha_finalizacion')
+        ->latest('contratos.created_at');
     }
 
     /**
