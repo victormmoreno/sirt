@@ -13,7 +13,8 @@ trait Profilable
      */
     public function index()
     {
-        $authUser = $this->userRepository->findByIdBuilder(auth()->user()->id)->firstOrFail();
+        $authUser = $this->userRepository->findUserByDocumentBuilder(auth()->user()->documento)->firstOrFail();
+        // dd(auth()->user()->activador);
         if (request()->user()->cannot('viewProfile', $authUser)) {
             alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');

@@ -5,6 +5,7 @@
 @section('meta-keywords', 'Reestablecer Contraseña')
 
 @section('content-auth')
+<div class="mn-content valign-wrapper" id="app">
 <main class="mn-inner container">
     <div class="valign">
         <div class="row">
@@ -27,7 +28,7 @@
                             </div>
                         </span>
                         <div class="row">
-                            <form   method="POST" action="{{ route('password.update') }}" onsubmit="return checkSubmit()">
+                            <form  method="POST" action="{{ route('password.update') }}" onsubmit="return checkSubmit()">
                             @csrf
                             <input type="hidden" name="token" value="{{ $token }}">
                             <div class="input-field col s12">
@@ -77,4 +78,5 @@
         </div>
     </div>
 </main>
+</div>
 @endsection

@@ -28,7 +28,5 @@ class CompletationInformationTalentController extends Controller
     {
         $this->middleware('auth');
         $this->userRepository = $userRepository;
-        //$this->middleware('signed')->only('complete'); //complete
-        // $this->middleware('throttle:6,1')->only('verify', 'resend');
     }
 }

@@ -7,9 +7,6 @@ use Illuminate\Foundation\Auth\RedirectsUsers;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\UsersRequests\CompletiesTalentInformationRequest;
 use App\Http\Controllers\User\RolesPermissions;
-use Illuminate\Http\JsonResponse;
-use App\Events\User\CompletedTalentInformation;
-use App\Models\TipoTalento;
 
 trait CompletiesTalentInformation
 {
@@ -25,15 +22,15 @@ trait CompletiesTalentInformation
     {
         $user = $this->userRepository->findUserByDocumentEloquent($request->user()->documento)->firstOrFail();
         return $request->user()->hasCompletedTalentInformation()
-                        ? redirect($this->redirectPath())
-                        : view('users.complete-talent-information', [
-                            'user'            => $user,
-                            'tipotalentos'    => $this->userRepository->getAllTipoTalento(),
-                            'regionales'      => $this->userRepository->getAllRegionales(),
-                            'tipoformaciones' => $this->userRepository->getAllTipoFormaciones(),
-                            'tipoestudios'    => $this->userRepository->getAllTipoEstudios(),
-                            'lineas'          => $this->userRepository->getAllLineas()
-                        ]);
+                ? redirect($this->redirectPath())
+                : view('users.complete-talent-information', [
+                    'user'            => $user,
+                    'tipotalentos'    => $this->userRepository->getAllTipoTalento(),
+                    'regionales'      => $this->userRepository->getAllRegionales(),
+                    'tipoformaciones' => $this->userRepository->getAllTipoFormaciones(),
+                    'tipoestudios'    => $this->userRepository->getAllTipoEstudios(),
+                    'lineas'          => $this->userRepository->getAllLineas()
+                ]);
     }
 
     /**

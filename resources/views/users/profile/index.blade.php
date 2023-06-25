@@ -63,7 +63,6 @@
                                                                     </i>
                                                                     Más Información
                                                                 </a>
-                                                                <!-- Dropdown Structure -->
                                                                 <ul class="dropdown-content" id="more">
                                                                     <li>
                                                                         <a href="{{route('perfil.edit')}}">
@@ -89,11 +88,9 @@
                                                         {{$user->genero}}
                                                     </small>
                                                 </div>
-                                                <div class="divider mailbox-divider">
-                                                </div>
+                                                <div class="divider mailbox-divider"></div>
                                                 @include('users.details.personal-information')
-                                                <div class="divider mailbox-divider">
-                                                </div>
+                                                <div class="divider mailbox-divider"></div>
                                                 <div class="right">
                                                     <a class="waves-effect waves-teal darken-2 btn-flat m-t-xs"
                                                         href="{{route('perfil.edit')}}">

@@ -3,6 +3,7 @@ namespace App\Contracts\User;
 
 interface MustCompleteOfficerInformation
 {
+
     /**
      * Determine if the user has completed information Officer.
      *
@@ -24,12 +25,6 @@ interface MustCompleteOfficerInformation
      */
     public function saveInformationOfficer();
 
-    /**
-     * Send the email information Officer notification.
-     *
-     * @return void
-     */
-    public function sendEmailToCompleteOfficerInformation();
 
     /**
      * Get the email address that should be used for completation information Officer.
@@ -44,11 +39,32 @@ interface MustCompleteOfficerInformation
      */
     public function getInformationOfficerBuilder();
 
-    /**
-     * Get the information Officer.
-     *
-     * @return void
-     */
-    public function getInformationOfficerEloquent();
 
+    public function activadorContrato();
+
+    public function activadorContratoLatest();
+
+    public function articuladorContrato();
+
+    public function articuladorContratoLatest();
+
+    public function apoyoTecnicoContrato();
+
+    public function apoyoTecnicoContratoLatest();
+
+    public function dinamizadorContrato();
+
+    public function dinamizadorContratoLatest();
+
+    public function expertoContrato();
+
+    public function expertoContratoLatest();
+
+    public function infocenterContrato();
+
+    public function infocenterContratoLatest();
+
+    public function ingresoContrato();
+
+    public function ingresoContratoLatest();
 }

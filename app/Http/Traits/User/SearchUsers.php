@@ -64,8 +64,6 @@ trait SearchUsers
 
     public function consultarUnUsuarioPorId($id)
     {
-        return response()->json([
-            'talento' => User::findOrFail($id),
-        ]);
+        return response()->json(['talento' => User::findOrFail($id)]);
     }
 }

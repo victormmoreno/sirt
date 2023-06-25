@@ -46,24 +46,121 @@ trait MustCompleteOfficerInformation
      */
     public function saveInformationOfficer(Request $request = null)
     {
-
+        $roles = is_array($request->role) ? $request->role : explode(', ', $request->role);
+        $roles = collect($roles)
+            ->flatten()
+            ->map(function ($role) use($request) {
+                if (empty($role)) {
+                    return false;
+                }
+                if($role == User::IsActivador())
+                {
+                    return (new ActivatorOfficerStorage)->save($request, $this);
+                }
+                if($role == User::IsDinamizador())
+                {
+                    return (new DynamizerOfficerStorage)->save($request, $this);
+                }
+                if($role == User::IsExperto())
+                {
+                    return (new ExpertOfficerStorage)->save($request, $this);
+                }
+                if($role == User::IsArticulador())
+                {
+                    return (new ArticulatorOfficerStorage)->save($request, $this);
+                }
+                if($role == User::IsApoyoTecnico())
+                {
+                    return (new TechnicalSupportOfficerStorage)->save($request, $this);
+                }
+                if($role == User::IsInfocenter())
+                {
+                    return (new InfocenterOfficerStorage)->save($request, $this);
+                }
+                if($role == User::IsIngreso())
+                {
+                    return (new IncomeOfficerStorage)->save($request, $this);
+                }
+                if($role == User::IsTalento())
+                {
+                    if($request->talent_type == 1){
+                        $request->merge([
+                            'tipo_talento' => 'aprendiz_sena_con_apoyo_de_sostenimiento',
+                            'regional' => $request->regional,
+                            'centro_formacion' => $request->training_center,
+                            'programa_formacion' => $request->training_program,
+                        ]);
+                    }
+                    else if($request->talent_type == 2){
+                        $request->merge([
+                            'tipo_talento' => 'aprendiz_sena_sin_apoyo_de_sostenimiento',
+                            'regional' => $request->regional,
+                            'centro_formacion' => $request->training_center,
+                            'programa_formacion' => $request->training_program
+                        ]);
+                    }
+                    else if($request->talent_type  == 3){
+                        $request->merge([
+                            'tipo_talento' => 'egresado_sena',
+                            'regional' => $request->regional,
+                            'centro_formacion' => $request->training_center,
+                            'programa_formacion' => $request->training_program,
+                            'tipo_formacion' => $request->formation_type,
+                        ]);
+                    }
+                    else if($request->talent_type == 7)
+                    {
+                        $request->merge([
+                            'tipo_talento' => 'emprendedor'
+                        ]);
+                    }
+                    else if($request->talent_type == 8){
+                        $request->merge([
+                            'tipo_talento' => 'estudiante_universitario',
+                            'tipo_estudio' => $request->study_type,
+                            'universidad' => $request->university,
+                            'carrera' => $request->career,
+                        ]);
+                    }
+                    else if($request->talent_type == 9){
+                        $request->merge([
+                            'tipo_talento' => 'funcionario_de_empresa',
+                            'empresa' => $request->company
+                        ]);
+                    }
+                    else if($request->talent_type == 5){
+                        $request->merge([
+                            'tipo_talento' => 'funcionario_sena',
+                            'regional' => $request->regional,
+                            'centro_formacion' => $request->training_center,
+                            'dependencia' => $request->dependency
+                        ]);
+                    }
+                    else if($request->talent_type == 4){
+                        $request->merge([
+                            'tipo_talento' => 'instructor_sena',
+                            'regional' => $request->regional,
+                            'centro_formacion' => $request->training_center,
+                        ]);
+                    }
+                    else if($request->talent_type == 6){
+                        $request->merge([
+                            'tipo_talento' => 'propietario_empresa',
+                            'empresa' => $request->company
+                        ]);
+                    }
+                    return $this->saveInformationTalent($request);
+                }
+                return $role;
+            })->filter(function ($role) {return $role;});
+            $this->syncRoles($request->role);
+            $this->markInformationOfficerAsCompleted();
     }
-
-    /**
-     * Send the email information officer notification.
-     *
-     * @return void
-     */
-    public function sendEmailToCompleteOfficerInformation()
-    {
-        return;// $this->notify(new CompleteOfficerInformation);
-    }
-
 
     public function getInformationOfficerBuilder()
     {
         $response = "";
-         if($this->isUserActivador() && isset($this->activador) && $this->activador->vinculacion == 0 && isset($this->activadorContratoLatest)){
+        if($this->isUserActivador() && isset($this->activador) && $this->activador->vinculacion == 0 && isset($this->activadorContratoLatest)){
             $response .=  (new ActivatorOfficerStorage)->buildResponse($this->activadorContratoLatest);
         }
         else if($this->isUserActivador() && isset($this->activador) && $this->activador->vinculacion == 1){
@@ -106,11 +203,6 @@ trait MustCompleteOfficerInformation
             $response .=  (new IncomeOfficerStorage)->buildResponse($this->ingreso);
         }
         return $response;
-    }
-
-    public function getInformationOfficerEloquent()
-    {
-        return;
     }
 
     /**
@@ -165,10 +257,6 @@ trait MustCompleteOfficerInformation
         ->latest('contratos.fecha_finalizacion')
         ->latest('contratos.created_at');
     }
-
-
-
-
 
     /**
     * Get the user's user tecnical support contract.
