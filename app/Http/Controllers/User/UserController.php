@@ -67,20 +67,21 @@ class UserController extends Controller
                 ]);
                 break;
             case User::IsDinamizador():
-                $role = [User::IsExperto(),
-                        User::IsArticulador(),
-                        User::IsInfocenter(),
-                        User::IsIngreso(),
-                        User::IsApoyoTecnico(),
-                        User::IsTalento(),
-                        User::IsUsuario()
+                $role = [
+                            User::IsExperto(),
+                            User::IsArticulador(),
+                            User::IsInfocenter(),
+                            User::IsIngreso(),
+                            User::IsApoyoTecnico(),
+                            User::IsTalento(),
+                            User::IsUsuario()
                         ];
                 return view('users.index', [
                     'roles' => $this->userRepository->getRoleWhereInRole($role),
                 ]);
                 break;
             case User::IsArticulador():
-                $role = [User::IsUsuario(), User::IsTalento()];
+                $role = [User::IsExperto(), User::IsUsuario(), User::IsTalento()];
                 return view('users.index', [
                     'roles' => $this->userRepository->getRoleWhereInRole($role),
                 ]);
@@ -157,15 +158,13 @@ class UserController extends Controller
         return $this->userRepository->updateAccessAUser($request, $user);
     }
 
-
-
-    /**todo */
-    public function datatableTalentosDeTecnoparque()
+    public function getCustomersDatatableFormat()
     {
         if (request()->ajax()) {
-            $talentos = User::ConsultarUsuarios()
+            $talents = User::ConsultarUsuarios()
                 ->get();
-            return datatables()->of($talentos)->addColumn('add_proyecto', function ($data) {
+            return datatables()->of($talents)
+                ->addColumn('add_proyecto', function ($data) {
                     $add = '<a onclick="addTalentoProyecto(' . $data->id . ')" class="btn bg-info white-text m-b-xs"><i class="material-icons">done</i></a>';
                     return $add;
                 })->addColumn('add_propiedad', function ($data) {
@@ -176,7 +175,6 @@ class UserController extends Controller
                     $add = '<a onclick="articulationStage.addInterlocutorTalentArticulacion(' . $data->id . ')" class="btn bg-info white-text m-b-xs"><i class="material-icons">done</i></a>';
                     return $add;
                 })
-
                 ->addColumn('add_talents_articulation', function ($data) {
                     $add = '<a onclick="filter_articulations.addTalentToArticulation(' . $data->id . ')" class="btn bg-info white-text m-b-xs"><i class="material-icons">done</i></a>';
                     return $add;
@@ -186,8 +184,6 @@ class UserController extends Controller
         abort('404');
     }
 
-
-    /**todo */
     public function edit($document)
     {
         $user = User::withTrashed()->where('documento', $document)->firstOrFail();
@@ -247,59 +243,5 @@ class UserController extends Controller
                 ]);
             }
         }
-    }
-
-    /**
-     * Display the specified resource of talents.
-     * todo
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function filterTalento($documento)
-    {
-        $user = User::withTrashed()
-            ->where('documento', $documento)
-            ->first();
-
-        if (request()->ajax()) {
-
-            if ($user != null) {
-                return response()->json([
-                    'data' => [
-                        'user' => $user,
-                        'status_code' => Response::HTTP_OK
-                    ]
-                ], Response::HTTP_OK);
-            }
-
-            return response()->json([
-                'data' => [
-                    'user' => null,
-                    'status_code' => Response::HTTP_NOT_FOUND,
-                ]
-            ]);
-        }
-        return view('users.show', ['user' => $user]);
-    }
-    /** todo */
-    public function findUserById(int $id)
-    {
-        return response()->json([
-            'user' => User::withTrashed()->with(['gestor', 'gestor.lineatecnologica'])->where('id', $id)->first(),
-        ]);
-    }
-    /** todo */
-    public function gestoresByNodo($nodo = null)
-    {
-        $gestores = User::select('gestores.id', 'users.id AS user_id')
-            ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) as nombre')
-            ->join('gestores', 'gestores.user_id', 'users.id')
-            ->role(User::IsExperto())
-            ->where('gestores.nodo_id', $nodo)
-            ->withTrashed()
-            ->get();
-        return response()->json([
-            'gestores' => $gestores
-        ]);
     }
 }

@@ -310,7 +310,7 @@
                                                                                 <select class="js-states browser-default select2"
                                                                                     id="expert_line" name="expert_line"
                                                                                     style="width: 100%" tabindex="-1">
-                                                                                    @if(isset($user->experto->linea->id) && session()->get('login_role') == App\User::IsExperto() && collect($user->roles)->contains('name',App\User::IsExperto()))
+                                                                                    @if(isset($user->experto->linea->id)  && session()->get('login_role') == App\User::IsExperto() && collect($user->roles)->contains('name',App\User::IsExperto()))
                                                                                     <option value="{{$user->experto->linea->id}}" selected>{{$user->experto->linea->nombre}}</option>
                                                                                     @else
                                                                                         @foreach($lineas as $id => $linea)
@@ -330,9 +330,19 @@
                                                                                 <select class="js-states browser-default select2 select2-hidden-accessible"
                                                                                     id="expert_type_relationship"
                                                                                     name="expert_type_relationship"
+
                                                                                     style="width: 100%; display: none" tabindex="-1">
-                                                                                        <option value="0" {{ isset($user->experto) && $user->experto->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsExperto()) ? 'selected' : '' }}>Contratista</option>
-                                                                                        <option value="1" {{ isset($user->experto) && $user->experto->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsExperto()) ? 'selected' : '' }}>Planta</option>
+                                                                                    {{-- @if(
+                                                                                        session()->has('login_role') &&
+                                                                                        session()->get('login_role') == App\User::IsDinamizador() &&
+                                                                                        isset(auth()->user()->dinamizador->nodo->id) &&
+                                                                                        isset($user->experto->vinculacion)
+                                                                                        )
+                                                                                        <option value="{{ isset($user->experto) && $user->experto->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsExperto()) ? 1 : 0 }}" {{ isset($user->experto) && $user->experto->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsExperto()) ? 'selected' : '' }}>{{ isset($user->experto) && $user->experto->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsExperto()) ? 'Planta' : 'Contratista' }}</option>
+                                                                                    @else --}}
+                                                                                    <option value="0" {{ isset($user->experto) && $user->experto->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsExperto()) ? 'selected' : '' }}>Contratista</option>
+                                                                                    <option value="1" {{ isset($user->experto) && $user->experto->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsExperto()) ? 'selected' : '' }}>Planta</option>
+                                                                                    {{-- @endif --}}
                                                                                 </select>
                                                                                 <label for="expert_type_relationship" class="active">Tipo Vinculación
                                                                                     <span class="red-text">*</span>
@@ -366,6 +376,7 @@
                                                                                 <small id="expert_end_date_contract-error" class="error red-text"></small>
                                                                             </div>
                                                                         </div>
+
                                                                         <div class="row">
                                                                             <div class="input-field col s12 m6 l6 expert-field">
                                                                                 <input id="expert_contract_value_contract" name="expert_contract_value_contract" type="text" value="{{ isset($user->expertoContratoLatest)  && collect($user->roles)->contains('name', App\User::IsExperto()) ? $user->expertoContratoLatest->valor_contrato : old('expert_contract_value_contract') }}"
@@ -567,8 +578,8 @@
                                                                         </div>
                                                                         <div class="row">
                                                                             <div class="input-field col s12 m4 l4 infocenter-field">
-                                                                                <input id="infocenter_code_contract" name="infocenter_code_contract" type="text" value="{{ isset($user->infocenterContratoLatest) && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? $user->infocenterContratoLatest->codigo : old('infocenter_code_contract') }}"
-                                                                                {{ (isset($user->infocenterContratoLatest) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->dinamizador->nodo->id) && $user->dinamizador->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
+                                                                                <input id="infocenter_code_contract" name="infocenter_code_contract" type="text" value="{{ isset($user->infocenterContratoLatest) && collect($user->roles)->contains('name', App\User::IsInfocenter())   ? $user->infocenterContratoLatest->codigo : old('infocenter_code_contract') }}"
+                                                                                {{ isset($user->infocenterContratoLatest) && session()->get('login_role') == App\User::IsExperto() || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->dinamizador->nodo->id) && $user->dinamizador->nodo->id != auth()->user()->dinamizador->nodo->id) && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? 'readonly' : '' }}>
                                                                                 <label for="infocenter_code_contract">Número de contrato
                                                                                     <span class="red-text">*</span>
                                                                                 </label>
@@ -576,15 +587,15 @@
                                                                             </div>
                                                                             <div class="input-field col s12 m4 l4 infocenter-field">
                                                                                 <input id="infocenter_start_date_contract" name="infocenter_start_date_contract" type="text" value="{{ isset($user->infocenterContratoLatest) && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? $user->infocenterContratoLatest->fecha_inicio : old('infocenter_start_date_contract') }}"
-                                                                                {{ (isset($user->infocenterContratoLatest) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->articulador->nodo->id) && $user->articulador->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
+                                                                                {{ (isset($user->infocenterContratoLatest) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->articulador->nodo->id) && $user->articulador->nodo->id != auth()->user()->dinamizador->nodo->id) && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? 'readonly' : '' }}>
                                                                                 <label for="infocenter_start_date_contract">Fecha inicio del contrato
                                                                                     <span class="red-text">*</span>
                                                                                 </label>
                                                                                 <small id="infocenter_start_date_contract-error" class="error red-text"></small>
                                                                             </div>
                                                                             <div class="input-field col s12 m4 l4 infocenter-field">
-                                                                                <input id="infocenter_end_date_contract" name="infocenter_end_date_contract" type="text" value="{{ isset($user->infocenterContratoLatest) && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? $user->infocenterContratoLatest->fecha_finalizacion : old('infocenter_end_date_contract') }}"
-                                                                                {{ (isset($user->infocenterContratoLatest) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->articulador->nodo->id) && $user->articulador->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
+                                                                                <input id="infocenter_end_date_contract" name="infocenter_end_date_contract" type="text" value="{{ isset($user->infocenterContratoLatest) ? $user->infocenterContratoLatest->fecha_finalizacion && collect($user->roles)->contains('name', App\User::IsInfocenter()) : old('infocenter_end_date_contract') }}"
+                                                                                {{ (isset($user->infocenterContratoLatest) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->articulador->nodo->id) && $user->articulador->nodo->id != auth()->user()->dinamizador->nodo->id) && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? 'readonly' : '' }}>
                                                                                 <label for="infocenter_end_date_contract">Fecha finalización del contrato
                                                                                     <span class="red-text">*</span>
                                                                                 </label>
@@ -594,7 +605,7 @@
                                                                         <div class="row">
                                                                             <div class="input-field col s12 m6 l6 infocenter-field">
                                                                                 <input id="infocenter_contract_value_contract" name="infocenter_contract_value_contract" type="text" value="{{ isset($user->infocenterContratoLatest) && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? $user->infocenterContratoLatest->valor_contrato : old('infocenter_contract_value_contract') }}"
-                                                                                {{ (isset($user->infocenterContratoLatest) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->articulador->nodo->id) && $user->articulador->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
+                                                                                {{ (isset($user->infocenterContratoLatest) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->articulador->nodo->id) && $user->articulador->nodo->id != auth()->user()->dinamizador->nodo->id) && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? 'readonly' : '' }}>
                                                                                 <label for="infocenter_contract_value_contract">Valor contrato
                                                                                     <span class="red-text">*</span>
                                                                                 </label>
@@ -602,7 +613,7 @@
                                                                             </div>
                                                                             <div class="input-field col s12 m6 l6 infocenter-planta">
                                                                                 <input id="infocenter_fees_contract" name="infocenter_fees_contract" type="text" value="{{ isset($user->infocenter) && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? $user->infocenter->honorarios : old('infocenter_fees_contract') }}"
-                                                                                {{ (isset($user->infocenter) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->articulador->nodo->id) && $user->articulador->nodo->id != auth()->user()->dinamizador->nodo->id) ? 'readonly' : '' }}>
+                                                                                {{ (isset($user->infocenter) && session()->get('login_role') == App\User::IsExperto()) || (session()->get('login_role') == App\User::IsDinamizador() && isset(auth()->user()->dinamizador->nodo->id) && isset($user->articulador->nodo->id) && $user->articulador->nodo->id != auth()->user()->dinamizador->nodo->id) && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? 'readonly' : '' }}>
                                                                                 <label for="infocenter_fees_contract">Honorarios mensuales
                                                                                     <span class="red-text">*</span>
                                                                                 </label>

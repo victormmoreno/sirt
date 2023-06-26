@@ -845,11 +845,7 @@ class UsoInfraestructuraController extends Controller
                 ->where('materiales.nodo_id', $articulacionNodo)
                 ->get();
 
-            $talentos = $articulacion->users()->with([
-                'talento'=> function($query){
-                    $query->select('id', 'user_id');
-                }
-            ])->get();
+            $talentos = $articulacion->users()->get();
 
             return response()->json([
                 'articulacion'       => $articulacion,
@@ -914,12 +910,12 @@ class UsoInfraestructuraController extends Controller
                     ->pluck('nombre', 'id');
 
             } elseif ((!empty($anio) && $anio != null && $anio == 'all')) {
-                $activities =  Actividad::select('id')
-                    ->selectRaw('CONCAT(codigo_actividad, " - ", nombre) as nombre')
-                    ->whereHas('gestor', function ($query) use ($gestor) {
-                        $query->where('id', $gestor);
-                    })
-                    ->pluck('nombre', 'id');
+                // $activities =  Actividad::select('id')
+                //     ->selectRaw('CONCAT(codigo_actividad, " - ", nombre) as nombre')
+                //     ->whereHas( function ($query) use ($gestor) {
+                //         $query->where('id', $gestor);
+                //     })
+                //     ->pluck('nombre', 'id');
             }
         } elseif (Session::get('login_role') == User::IsTalento()) {
             $user = auth()->user()->id;

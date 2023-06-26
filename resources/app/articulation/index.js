@@ -316,7 +316,7 @@ const articulationStage = {
             processing: true,
             serverSide: true,
             ajax: {
-                url: `${host_url}/usuarios/talento/getTalentosDeTecnoparque/`,
+                url: `${host_url}/usuarios/clientes`,
                 type: "get"
             },
             columns: [
@@ -370,7 +370,7 @@ const articulationStage = {
         $.ajax({
             dataType: 'json',
             type: 'get',
-            url: `${host_url}/usuarios/talento/consultarTalentoPorId/${id}`
+            url: `${host_url}/usuarios/cliente/${id}`
         }).done(function (response) {
             if(response != null){
                 articulationStage.searchUser(response.talento.documento);

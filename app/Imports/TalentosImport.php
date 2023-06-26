@@ -145,9 +145,7 @@ class TalentosImport implements ToCollection, WithHeadingRow
                         // Cambia la información actual
                         $this->updateUser($user, $row, $queryTipoDocumento, $queryGradoEscolaridad, $queryGrupoSanguineo, $queryEps, $ocupaciones[1]);
                         $user->ocupaciones()->sync($ocupaciones[0], true);
-                        if ($user->talento == null) {
-                            $this->registrarTalento($row['programa_formacion'], $user, $queryTipoTalento, $tipo_formacion_id, $datos_universidad, $entidad_id, $dependencia, $empresa);
-                        }
+
                     } else {
                         // No permite actualizar la información porque el correo se encuentra asociado a otra persona
                         return $this->validaciones->errorValidacionCorreo($row['correo'], $key, $user->documento, $this->hoja);

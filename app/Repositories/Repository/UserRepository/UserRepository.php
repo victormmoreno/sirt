@@ -502,7 +502,8 @@ class UserRepository
             ($user->has('experto') && isset($user->experto)) ||
             ($user->has('infocenter') && isset($user->infocenter)) ||
             ($user->has('ingreso') && isset($user->ingreso)) ||
-            ($user->has('talento') && isset($user->talento))
+            ($user->IsUserTalento()) ||
+            ($user->isUserConvencional())
         ){
             if ($request->get('txtestado') == 'on') {
                 $user->update(['estado' => 0]);

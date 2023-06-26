@@ -94,16 +94,15 @@ var usoinfraestructuraIndex = {
             ],
         });
     },
-    queryGestoresByNodo: function(){
+    queryExpertsByNodo: function(){
         let nodo = $('#filter_nodo').val();
-
         if (nodo == null || nodo == '' || nodo == 'all' || nodo == undefined){
             $('#filter_gestor').empty();
             $('#filter_gestor').append('<option value="" selected>Seleccione un experto</option>');
         }else{
             $.ajax({
                 type: 'GET',
-                url: `${host_url}/usuarios/gestores/nodo/${nodo}`,
+                url: `${host_url}/usuarios/expertos/nodo/${nodo}`,
                 contentType: false,
                 dataType: 'json',
                 processData: false,

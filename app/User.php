@@ -263,6 +263,7 @@ class User extends Authenticatable implements JWTSubject,
                 }
                 return $query->OrWhereIn('user_nodo.nodo_id', $nodos);
             }
+
             return $query;
 
         });

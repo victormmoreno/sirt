@@ -76,16 +76,17 @@ class UserPolicy
      */
     public function show(User $authUser, $user)
     {
-        return (bool)! Str::contains(session()->get('login_role'), [$user->IsApoyoTecnico(), $user->IsIngreso(), $user->IsTalento(), $user->IsUsuario()]);
+        return (bool)! Str::contains(session()->get('login_role'), [$user->IsDesarrollador(),$user->IsApoyoTecnico(), $user->IsIngreso(), $user->IsTalento(), $user->IsUsuario()]);
     }
 
     /**
      * Determine whether the user can to show user
      * @return boolean
      */
-    public function tomar_control(User $user)
+    public function tomar_control(User $authUser, User $user)
     {
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsAdministrador()]);
+        return (bool) Str::contains(session()->get('login_role'), [$authUser->IsAdministrador()])
+            && $authUser->documento != $user->documento;
     }
 
 
