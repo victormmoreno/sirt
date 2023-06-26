@@ -71,7 +71,7 @@ class ArticulationStageRepository
             $articulationStage = $this->storeArticulationStage($request);
             $this->validateArticulationStageType($request, $articulationStage);
             $user = \App\User::where('id', $request->talent)->first();
-            if(!is_null($user) && $user->IsUsuario())
+            if(!is_null($user) && $user->isUserConvencional())
             {
                 $user->changeOneRoleToAnother(config('laravelpermission.roles.roleTalento'));
             }

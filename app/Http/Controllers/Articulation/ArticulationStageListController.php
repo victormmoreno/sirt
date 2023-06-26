@@ -14,7 +14,6 @@ use App\Repositories\Repository\Articulation\ArticulationStageRepository;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Eloquent\Model;
 
 
 class ArticulationStageListController extends Controller

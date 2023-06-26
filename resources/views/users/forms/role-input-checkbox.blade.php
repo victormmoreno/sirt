@@ -31,7 +31,16 @@
                 @if (isset($user))
                     <input type="checkbox" name="role[]"
                         {{ collect(old('role', $user->roles->pluck('name')))->contains($name) ? 'checked' : '' }}
-                        {{ $name == App\User::IsAdministrador() ? 'onclick=this.checked=!this.checked;' : ($name == App\User::IsActivador() ? 'onclick=this.checked=!this.checked;' : ($name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked;' : ($name == App\User::IsDesarrollador() ? 'onclick=this.checked=!this.checked;' : ''))) }}
+                        {{ $name == App\User::IsAdministrador() ? 'onclick=this.checked=!this.checked;' : ($name == App\User::IsActivador() ? 'onclick=this.checked=!this.checked;' : ($name == App\User::IsDinamizador() ? 'onclick=this.checked=!this.checked;' : ($name == App\User::IsDesarrollador() ? 'onclick=this.checked=!this.checked;' :
+                        (isset($user->experto->nodo->id) && isset(auth()->user()->dinamizador->nodo_id) && $user->experto->nodo->id != auth()->user()->dinamizador->nodo_id && collect($user->roles)->contains('name', App\User::IsExperto()) && $name == App\User::IsExperto() ? 'onclick=this.checked=!this.checked;':
+                            (isset($user->articulador->nodo_id) && isset(auth()->user()->dinamizador->nodo_id) && $user->articulador->nodo_id != auth()->user()->dinamizador->nodo_id && collect($user->roles)->contains('name', App\User::IsArticulador()) && $name == App\User::IsArticulador() ? 'onclick=this.checked=!this.checked;':
+                                (isset($user->infocenter->nodo_id) && isset(auth()->user()->dinamizador->nodo_id) && $user->infocenter->nodo_id != auth()->user()->dinamizador->nodo_id && collect($user->roles)->contains('name', App\User::IsInfocenter()) && $name == App\User::IsInfocenter() ? 'onclick=this.checked=!this.checked;':
+                                    (isset($user->apoyotecnico->nodo_id) && isset(auth()->user()->dinamizador->nodo_id) && $user->apoyotecnico->nodo_id != auth()->user()->dinamizador->nodo_id && collect($user->roles)->contains('name', App\User::IsApoyoTecnico()) && $name == App\User::IsApoyoTecnico() ? 'onclick=this.checked=!this.checked;':
+                                        (isset($user->ingreso->nodo_id) && isset(auth()->user()->dinamizador->nodo_id) && $user->ingreso->nodo_id != auth()->user()->dinamizador->nodo_id && collect($user->roles)->contains('name', App\User::IsIngreso()) && $name == App\User::IsIngreso() ? 'onclick=this.checked=!this.checked;': '')
+                                    )
+                                )
+                            )
+                        )))) }}
                         value="{{ $name }}" id="test-{{ $name }}" onchange="roles.getRoleSeleted(this)">
                 @else
                     <input type="checkbox" name="role[]" {{ collect(old('role'))->contains($name) ? 'checked' : '' }}

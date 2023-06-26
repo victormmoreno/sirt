@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\{AreaConocimiento, Centro, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, Fase};
-use App\Repositories\Repository\{EmpresaRepository, ProyectoRepository, UserRepository\GestorRepository};
+use App\Repositories\Repository\{EmpresaRepository, ProyectoRepository};
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use App\Http\Requests\{ProyectoFaseInicioFormRequest, ProyectoFaseCierreFormRequest};
 use Illuminate\Http\{Request, Response};
@@ -20,11 +20,10 @@ class ProyectoController extends Controller
     private $gestorRepository;
     private $costoController;
 
-    public function __construct(CostoController $costoController, EmpresaRepository $empresaRepository, ProyectoRepository $proyectoRepository, GestorRepository $gestorRepository)
+    public function __construct(CostoController $costoController, EmpresaRepository $empresaRepository, ProyectoRepository $proyectoRepository)
     {
         $this->setEmpresaRepository($empresaRepository);
         $this->setProyectoRepository($proyectoRepository);
-        $this->setGestorRepository($gestorRepository);
         $this->costoController = $costoController;
         $this->middleware(['auth']);
     }
@@ -1343,26 +1342,4 @@ class ProyectoController extends Controller
     {
         return $this->empresaRepository;
     }
-
-    /**
-     * Asigna un valor a $gestorRepository
-     * @param object $gestorRepository
-     * @return void
-     * @author dum
-     */
-    private function setGestorRepository($gestorRepository)
-    {
-        $this->gestorRepository = $gestorRepository;
-    }
-
-    /**
-     * Retorna el valor de $gestorRepository
-     * @return object
-     * @author dum
-     */
-    private function getGestorRepository()
-    {
-        return $this->gestorRepository;
-    }
-
 }

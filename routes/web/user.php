@@ -38,7 +38,7 @@ Route::group(
     }
 );
 
-Route::get('usuarios/filtro-talento/{documento}', 'SearchUserController@findUserByDocument')->name('usuario.talento.search');
+Route::get('usuarios/filtro-talento/{documento}', 'User\SearchUserController@findUserByDocument')->name('usuario.talento.search');
 Route::resource('usuarios', 'User\UserController', ['as' => 'usuario', 'only' => ['index','show', 'edit']])->names([
             'index'   => 'usuario.index',
             'update'  => 'usuario.update',

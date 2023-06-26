@@ -80,7 +80,7 @@ class ChangeRolesController extends Controller
             }else{
                 return response()->json([
                     'data' => [
-                        'fail'   => false,
+                        'fail'   => true,
                         'errors' => [],
                     ]
                 ]);
