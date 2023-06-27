@@ -1,3 +1,8 @@
+<li class="no-padding {{setActiveRoute('nodo')}}">
+    <a class="waves-effect waves-grey {{setActiveRouteActivePage('nodo')}}" href="{{route('nodo.index')}}" rel="canonical" title="Nodo">
+        <i class="material-icons {{ setActiveRouteActiveIcon('nodo') }}">location_city</i>Nodo
+    </a>
+</li>
 <li class="no-padding {{setActiveRoute('idea')}}">
     <a href="{{route('idea.index')}} " class="{{setActiveRouteActivePage('idea')}}" rel="canonical" title="Ideas">
         <i class="material-icons {{setActiveRouteActiveIcon('idea')}}">lightbulb</i>Ideas

@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use Repositories\Repository\NodoRepository;
 
-class NodoController extends Controller
+class NodoExportController extends Controller
 {
     private $query;
     private $nodoRepository;
@@ -97,27 +97,29 @@ class NodoController extends Controller
         }
         $users = User::query()
         ->userQuery()
-        ->leftJoin('contratos', function ($join) {
-            $join->on('contratos.user_nodo_id', '=', 'user_nodo.id');
-        })
         ->leftJoin('lineastecnologicas', function ($join) {
             $join->on('lineastecnologicas.id', '=', 'user_nodo.linea_id');
         })
-        ->select('users.id', 'tiposdocumentos.nombre as tipodocumento', 'users.documento', 'users.email', 'users.celular', 'users.telefono', 'users.ultimo_login', 'users.estado', 'users.deleted_at', 'lineastecnologicas.nombre as linea')
-        ->selectRaw('concat(users.nombres, " ",users.apellidos) as usuario, GROUP_CONCAT(distinct roles.name SEPARATOR ", ") as roles')
-        ->selectRaw("if(roles.name = 'Dinamizador', entidades.nombre , if(roles.name = 'Experto', entidades.nombre, if(roles.name = 'Articulador', entidades.nombre, if(roles.name = 'Infocenter', entidades.nombre, if(roles.name = 'Apoyo Tecnico', entidades.nombre, if(roles.name = 'Ingreso', entidades.nombre, 'RTC')))))) as nodo")
-        ->selectRaw("contratos.codigo")
-
+        ->select('users.id', 'tiposdocumentos.nombre as tipodocumento',
+        'users.documento','users.nombres', 'users.apellidos',
+        'users.email','users.celular',
+        'users.telefono','users.fechanacimiento',
+        'users.created_at', 'users.deleted_at',
+        'entidades.nombre as nodo', 'lineastecnologicas.nombre as linea',
+        'user_nodo.honorarios')
+        ->selectRaw('if(users.genero = 1, "Masculino", if(users.genero = 0, "Femenino", "No binario")) as nombre_genero')
+        ->selectRaw('if(users.estado = 1, "Habilidado", "Inhabilitado") as estado')
+        ->selectRaw('GROUP_CONCAT(DISTINCT roles.name SEPARATOR "; ") as roles')
+        ->selectRaw('if(user_nodo.vinculacion = 0, "Contratista", "Planta") as vinculacion')
         ->where(function($query){
             $query->where("users.estado", User::IsActive())
             ->whereNull("users.deleted_at");
         })
-        ->where(function($query) use($node){
-            if(isset($node)){
-                $query->where('user_nodo.nodo_id', $node->id);
-            }
-            $query;
+        ->where(function($query){
+            $query->whereIn('roles.name', [User::IsDinamizador(), User::IsExperto(), User::IsArticulador(), User::IsInfocenter(), User::IsApoyoTecnico()])
+                    ->whereIn('user_nodo.role', [User::IsDinamizador(), User::IsExperto(), User::IsArticulador(), User::IsInfocenter(), User::IsApoyoTecnico()]);
         })
+        ->nodoFuncionario($node->id)
         ->groupBy('users.documento')
         ->orderBy("roles.name", "ASC")
         ->get();

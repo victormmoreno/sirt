@@ -414,13 +414,7 @@ Route::group(
 
         Route::get('/export/{nodo}/articulaciones/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicatorArticulations')->name('indicador.export.excel');
 
-        //Rutas para la generación de excel del módulo de nodo
-        Route::get('/excelnodo', 'Excel\NodoController@exportQueryAllNodo')
-        ->middleware('role_session:Activador')
-        ->name('excel.excelnodo');
 
-        Route::get('/nodo/funcionarios/{nodo}', 'Excel\NodoController@exportQueryForNodo')
-        ->name('excel.exportexcelfornodo');
 
         Route::post('/import_materiales', 'Excel\MaterialController@import')->name('import.materiales');
         Route::post('/import_equipos', 'Excel\EquipoController@import')->name('import.equipos');

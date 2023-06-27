@@ -95,7 +95,6 @@
                                                                 <a href="{{route("lineas.show", $value->slug)}}" target="_blank" class="info tooltipped" data-position="bottom" data-tooltip="Ver más información">
                                                                     <i class="material-icons right">info</i>
                                                                 </a>
-
                                                             </li>
                                                         @empty
                                                             <div class="center">
@@ -147,7 +146,6 @@
                                                 <div class="col s12 m8 l9">
                                                     <div class="center">
                                                     <span class="mailbox-title primary-text">
-
                                                         <i class="material-icons fas fa-user-friends"></i>
                                                         Equipo humano Tecnoparque Nodo {{$nodo->entidad->present()->entidadName()}}
                                                     </span>
@@ -182,7 +180,6 @@
                                                                             <a target="_blank" href="{{route("usuario.show", $dinamizador->user->documento)}}" class="info">
                                                                                 Ver mas información del usuario.
                                                                             </a>
-
                                                                         </li>
                                                                     @endif
                                                                 @empty
