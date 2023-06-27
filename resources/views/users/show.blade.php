@@ -28,7 +28,13 @@
                                 <div class="mailbox-view">
                                     <div class="mailbox-view-header">
                                         <div class="left mailbox-buttons">
-                                            {!!$user->present()->userProfileUserImage()!!}
+                                            @if ($user->nombre_genero == 'Masculino')
+                                                <img alt="{{$user->nombres}}" class="circle mailbox-profile-image z-depth-1" src="{{ asset('img/profile-image-masculine.png') }}"></img>
+                                            @elseif ($user->nombre_genero == 'Femenino')
+                                                <img alt="{{$user->nombres}}" class="circle mailbox-profile-image z-depth-1" src="{{asset('img/profile-image-female.png')}}"></img>
+                                            @else
+                                                <img alt="{{$user->nombres}}"  class="circle mailbox-profile-image z-depth-1" src="{{asset('img/profile-img-default.png')}}"></img>
+                                            @endif
                                         </div>
                                         <div class="left">
                                             <p class="m-t-lg flow-text secondary-text">{{$user->present()->userFullName()}}</p>

@@ -45,7 +45,7 @@
                 <span>Etnia</span>
             </div>
             <div class="server-stat col s6 m4 l3">
-                <p>{{$user->telefono}} </p>
+                <p>{{ !empty($user->telefono) ? $user->telefono :'No registra' }} </p>
                 <span>Telefóno</span>
             </div>
             <div class="server-stat col s6 m4 l3">
@@ -96,8 +96,9 @@
                 <p>{{$user->desplazado_violencia}}</p>
                 <span>¿Desplazado(a) por violencia?</span>
             </div>
+
             <div class="server-stat col s6 m4 l3">
-                <p>{{$user->present()->userGenero()}}</p>
+                <p>{{$user->nombre_genero}}</p>
                 <span>Genero</span>
             </div>
         </div>

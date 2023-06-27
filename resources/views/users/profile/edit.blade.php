@@ -212,41 +212,31 @@
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="input-field col m6 s12">
-                                                                        <select class="validate" id="txtgrado_discapacidad"
-                                                                                name="txtgrado_discapacidad"
-                                                                                style="width: 100%" tabindex="-1"
-                                                                                onchange="user.getGradoDiscapacidad(this)">
-                                                                            @if(isset($user->grado_discapacidad))
-                                                                                <option
-                                                                                    {{$user->grado_discapacidad == 0 ?'selected' : ''}} value="0">
-                                                                                    NO
-                                                                                </option>
-                                                                                <option
-                                                                                    {{$user->grado_discapacidad == 1 ?'selected' : ''}} value="1">
-                                                                                    SI
-                                                                                </option>
-                                                                            @else
-                                                                                <option value="0">NO</option>
-                                                                                <option value="1">SI</option>
-                                                                            @endif
-
-                                                                        </select>
-                                                                        <label for="txtgrado_discapacidad">Algún grado
-                                                                            de discapacidad <span
-                                                                                class="red-text">*</span></label>
-                                                                        <small id="txtgrado_discapacidad-error"
-                                                                               class="error red-text"></small>
+                                                                        <select class="initialized" id="txtgrado_discapacidad"
+                                                                        name="txtgrado_discapacidad" style="width: 100%" tabindex="-1"
+                                                                        onchange="user.getGradoDiscapacidad(this)">
+                                                                        @if (isset($user->grado_discapacidad))
+                                                                            <option {{ $user->grado_discapacidad == 0 ? 'selected' : '' }}
+                                                                                value="0">
+                                                                                NO
+                                                                            </option>
+                                                                            <option {{ $user->grado_discapacidad == 1 ? 'selected' : '' }}
+                                                                                value="1">
+                                                                                SI
+                                                                            </option>
+                                                                        @else
+                                                                            <option value="0">NO</option>
+                                                                            <option value="1">SI</option>
+                                                                        @endif
+                                                                    </select>
+                                                                        <label for="txtgrado_discapacidad">Algún grado de discapacidad <span class="red-text">*</span></label>
+                                                                        <small id="txtgrado_discapacidad-error" class="error red-text"></small>
                                                                     </div>
-                                                                    <div
-                                                                        class="input-field col s12 m6 l6 gradodiscapacidad"
-                                                                        style="display:none">
-                                                                        <input class="validate" id="txtdiscapacidad"
-                                                                               name="txtdiscapacidad" type="text"
-                                                                               value="{{ isset($user->otra_eps) ? $user->descripcion_grado_discapacidad : old('txtdiscapacidad')}}">
-                                                                        <label for="txtdiscapacidad" class="active">¿Cúal?
-                                                                            <span class="red-text">*</span></label>
-                                                                        <small id="txtdiscapacidad-error"
-                                                                               class="error red-text"></small>
+                                                                    <div class="input-field col s12 m6 l6 gradodiscapacidad" style="display:none">
+                                                                        <input class="validate" id="txtdiscapacidad" name="txtdiscapacidad" type="text"
+                                                                            value="{{ isset($user->otra_eps) ? $user->descripcion_grado_discapacidad : old('txtdiscapacidad')}}">
+                                                                        <label for="txtdiscapacidad" class="active">¿Cúal?<span class="red-text">*</span></label>
+                                                                        <small id="txtdiscapacidad-error"class="error red-text"></small>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -682,22 +672,16 @@
                     $('#txtciudad').material_select();
                 });
             },
-
             getOtraEsp: function (ideps) {
                 let id = $(ideps).val();
                 let nombre = $("#txteps option:selected").text();
 
                 if (nombre != '{{App\Models\Eps::OTRA_EPS }}') {
-
                     $(".otraeps").css("display", "none");
-
-
                 } else {
-
                     $(".otraeps").css("display", "block");
                 }
             },
-
             getGradoDiscapacidad() {
                 let discapacidad = $('#txtgrado_discapacidad').val();
                 if (discapacidad == 1) {
