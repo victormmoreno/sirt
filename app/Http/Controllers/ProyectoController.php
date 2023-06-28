@@ -58,13 +58,11 @@ class ProyectoController extends Controller
             }
             $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
             $costo = $this->costoController->costoProject($proyecto->id);
-            // dd($costo);
             return view('proyectos.detalles.detalle', [
                 'proyecto' => $proyecto,
                 'costo' => $costo,
                 'historico' => $historico
             ]);
-
         }
     }
 
@@ -667,7 +665,6 @@ class ProyectoController extends Controller
     public function inicio($id)
     {
         $proyecto = Proyecto::findOrFail($id);
-        // dd($proyecto->talentos);
         if(!request()->user()->can('detalle', $proyecto)) {
             alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();

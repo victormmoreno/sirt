@@ -97,6 +97,7 @@ trait SearchUsers
     public function findUserByDocument($documento)
     {
         $user = User::withTrashed()
+            ->ConsultarUsuarios()
             ->where('documento', $documento)
             ->first();
         if (request()->ajax()) {

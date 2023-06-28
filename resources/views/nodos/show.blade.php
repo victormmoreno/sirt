@@ -177,9 +177,11 @@
                                                                                 {{$dinamizador->user->present()->userCelular()}}
                                                                                 <br/>
                                                                             </p>
+                                                                            @can('show',$dinamizador->user)
                                                                             <a target="_blank" href="{{route("usuario.show", $dinamizador->user->documento)}}" class="info">
                                                                                 Ver mas información del usuario.
                                                                             </a>
+                                                                            @endcan
                                                                         </li>
                                                                     @endif
                                                                 @empty
@@ -222,9 +224,11 @@
                                                                                 {{$infocenter->user->present()->userCelular()}}
                                                                                 <br/>
                                                                             </p>
+                                                                            @can('show',$infocenter->user)
                                                                             <a target="_blank" href="{{route("usuario.show", $infocenter->user->documento)}}" class="info">
                                                                                 Ver mas información del usuario.
                                                                             </a>
+                                                                            @endcan
                                                                         </li>
                                                                     @endif
                                                                 @empty
@@ -248,33 +252,35 @@
                                                                 class="secondary-text"><b>Expertos</b></span>
                                                         </div>
                                                         <div class="divider mailbox-divider"></div>
-                                                        @forelse($nodo->expertos as $gestor)
-                                                            @if(isset($gestor->user) && $gestor->user->hasRole(App\User::IsExperto()) && $gestor->user->estado == App\User::IsActive() &&  $gestor->user->deleted_at == null)
+                                                        @forelse($nodo->expertos as $experto)
+                                                            @if(isset($experto->user) && $experto->user->hasRole(App\User::IsExperto()) && $experto->user->estado == App\User::IsActive() &&  $experto->user->deleted_at == null)
                                                                 <div class="col s12 m12 l6">
                                                                     <ul class="collection">
                                                                         <li class="collection-item">
                                                                     <span class="title">
-                                                                        {{$gestor->user->present()->userFullName()}}
+                                                                        {{$experto->user->present()->userFullName()}}
                                                                     </span>
                                                                             <p>
                                                                                 <b class="secondary-text">Número
-                                                                                    documento:</b> {{$gestor->user->present()->userDocumento()}}
+                                                                                    documento:</b> {{$experto->user->present()->userDocumento()}}
                                                                                 <br/>
                                                                                 <b class="secondary-text">Correo
-                                                                                    Electrónco:</b> {{$gestor->user->present()->userEmail()}}
+                                                                                    Electrónco:</b> {{$experto->user->present()->userEmail()}}
                                                                                 <br/>
-                                                                                <b class="secondary-text">Teléfono:</b> {{$gestor->user->present()->userTelefono()}}
+                                                                                <b class="secondary-text">Teléfono:</b> {{$experto->user->present()->userTelefono()}}
                                                                                 <br/>
                                                                                 <b class="secondary-text">Celular: </b>
-                                                                                {{$gestor->user->present()->userCelular()}}
+                                                                                {{$experto->user->present()->userCelular()}}
                                                                                 <br/>
                                                                                 <b class="secondary-text">Roles: </b>
-                                                                                {{$gestor->user->present()->userRolesNames()}}
+                                                                                {{$experto->user->present()->userRolesNames()}}
                                                                                 <br/>
                                                                             </p>
-                                                                            <a target="_blank" href="{{route("usuario.show", $gestor->user->documento)}}" class="info">
+                                                                            @can('show',$experto->user)
+                                                                            <a target="_blank" href="{{route("usuario.show", $experto->user->documento)}}" class="info">
                                                                                 Ver mas información del usuario.
                                                                             </a>
+                                                                            @endcan
                                                                         </li>
                                                                     </ul>
                                                                 </div>
@@ -326,9 +332,11 @@
                                                                                 {{$articulador->user->present()->userRolesNames()}}
                                                                                 <br/>
                                                                             </p>
+                                                                            @can('show',$articulador->user)
                                                                             <a target="_blank" href="{{route("usuario.show", $articulador->user->documento)}}" class="info">
                                                                                 Ver mas información del usuario.
                                                                             </a>
+                                                                            @endcan
                                                                         </li>
                                                                     </ul>
                                                                 </div>
@@ -381,9 +389,11 @@
                                                                                 {{$apoyotecnico->user->present()->userRolesNames()}}
                                                                                 <br/>
                                                                             </p>
+                                                                            @can('show',$apoyotecnico->user)
                                                                             <a target="_blank" href="{{route("usuario.show", $apoyotecnico->user->documento)}}" class="info">
                                                                                 Ver mas información del usuario.
                                                                             </a>
+                                                                            @endcan
                                                                         </li>
                                                                     </ul>
                                                                 </div>
@@ -436,9 +446,11 @@
                                                                                 {{$ingreso->user->present()->userRolesNames()}}
                                                                                 <br/>
                                                                             </p>
+                                                                            @can('show',$ingreso->user)
                                                                             <a target="_blank" href="{{route("usuario.show", $ingreso->user->documento)}}" class="info">
                                                                                 Ver mas información del usuario.
                                                                             </a>
+                                                                            @endcan
                                                                         </li>
                                                                     </ul>
                                                                 </div>

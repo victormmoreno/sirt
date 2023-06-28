@@ -28,7 +28,7 @@
                             </div>
                             <div class="col s12 m4 l4 ">
                                 @can('create', App\Models\ArticulationType::class)
-                                <a  href="{{route('tipoarticulaciones.create')}}" class="m-r-lg waves-effect bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nueva {{__('articulation-type')}}</a>
+                                <a  href="{{route('tipoarticulaciones.create')}}" class="waves-effect bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nueva {{__('articulation-type')}}</a>
                                 @endcan
                             </div>
                         </div>
@@ -43,7 +43,7 @@
                                 </select>
                             </div>
                             <div class="col s12 m6 l4 offset-m3 right">
-                                <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_type_art"><i class="material-icons">search</i>Buscar</button>
+                                <button class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right" id="filter_type_art"><i class="material-icons">search</i>Filtrar</button>
                             </div>
                         </div>
                         <table id="type_art_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">

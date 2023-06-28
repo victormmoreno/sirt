@@ -140,15 +140,15 @@ class User extends Authenticatable implements JWTSubject,
                 ->where('model_has_roles.model_type', self::class);
         })
         ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
-        ->join('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
-        ->join('gradosescolaridad', 'gradosescolaridad.id', '=', 'users.gradoescolaridad_id')
-        ->join('gruposanguineos', 'gruposanguineos.id', '=', 'users.gruposanguineo_id')
+        ->leftjoin('tiposdocumentos', 'tiposdocumentos.id', '=', 'users.tipodocumento_id')
+        ->leftjoin('gradosescolaridad', 'gradosescolaridad.id', '=', 'users.gradoescolaridad_id')
+        ->leftjoin('gruposanguineos', 'gruposanguineos.id', '=', 'users.gruposanguineo_id')
         ->leftjoin('eps', 'eps.id', '=', 'users.eps_id')
         ->leftjoin('etnias', 'etnias.id', '=', 'users.etnia_id')
-        ->join('ciudades as ciudad_residencia', 'ciudad_residencia.id', '=', 'users.ciudad_id')
-        ->join('departamentos as departamento_residencia', 'departamento_residencia.id', '=', 'ciudad_residencia.departamento_id')
-        ->join('ciudades as ciudad_expedicion', 'ciudad_expedicion.id', '=', 'users.ciudad_expedicion_id')
-        ->join('departamentos as departamento_expedicion', 'departamento_expedicion.id', '=', 'ciudad_expedicion.departamento_id')
+        ->leftjoin('ciudades as ciudad_residencia', 'ciudad_residencia.id', '=', 'users.ciudad_id')
+        ->leftjoin('departamentos as departamento_residencia', 'departamento_residencia.id', '=', 'ciudad_residencia.departamento_id')
+        ->leftjoin('ciudades as ciudad_expedicion', 'ciudad_expedicion.id', '=', 'users.ciudad_expedicion_id')
+        ->leftjoin('departamentos as departamento_expedicion', 'departamento_expedicion.id', '=', 'ciudad_expedicion.departamento_id')
         ->leftjoin('ocupaciones_users', 'ocupaciones_users.user_id', '=', 'users.id')
         ->leftjoin('ocupaciones', 'ocupaciones.id', '=', 'ocupaciones_users.ocupacion_id')
         ->leftJoin('user_nodo', 'user_nodo.user_id', '=', 'users.id');
@@ -200,7 +200,7 @@ class User extends Authenticatable implements JWTSubject,
 
     public function scopeConsultarUsuarios($query)
     {
-        return $query->select('users.documento', 'users.id')
+        return $query->select('users.documento', 'users.id', 'users.nombres', 'users.apellidos')
             ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS talento')
             ->join('model_has_roles', function ($join) {
                 $join->on('users.id', '=', 'model_has_roles.model_id')

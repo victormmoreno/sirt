@@ -47,7 +47,7 @@ class ArticulationTypeRepository
             }
         })
         ->addColumn('show', function ($data) {
-            return '<a class="btn bg-secondary m-b-xs modal-trigger" href='.route('tipoarticulaciones.show', $data).'>
+            return '<a class="btn tooltipped bg-info m-b-xs modal-trigger" href='.route('tipoarticulaciones.show', $data).'>
                         <i class="material-icons">search</i>
                     </a>';
         })
