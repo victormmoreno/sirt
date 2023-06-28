@@ -18,6 +18,8 @@ class AddVinculacionUserNodoTable extends Migration
             $table->tinyInteger('vinculacion')->default('0')->after('role');
             DB::statement('ALTER TABLE user_nodo MODIFY COLUMN nodo_id int null');
             DB::statement('ALTER TABLE user_nodo MODIFY COLUMN honorarios DOUBLE(15,2);');
+            DB::statement('ALTER TABLE articulations MODIFY COLUMN start_date TIMESTAMP NULL;');
+            DB::statement('ALTER TABLE articulation_stages MODIFY COLUMN start_date TIMESTAMP NULL;');
         });
 
 
