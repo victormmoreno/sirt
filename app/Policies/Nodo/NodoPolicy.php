@@ -35,7 +35,17 @@ class NodoPolicy
     public function index(User $user)
     {
 
-        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDinamizador(), User::IsExperto(), User::IsInfocenter()]);
+        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDinamizador(), User::IsExperto(),User::IsArticulador(), User::IsInfocenter(), User::IsApoyoTecnico()])
+            && session()->has('login_role')
+            && (
+                session()->get('login_role') == User::IsAdministrador() ||
+                session()->get('login_role') == User::IsActivador() ||
+                session()->get('login_role') == User::IsDinamizador() ||
+                session()->get('login_role') == User::IsExperto() ||
+                session()->get('login_role') == User::IsArticulador() ||
+                session()->get('login_role') == User::IsInfocenter() ||
+                session()->get('login_role') == User::IsApoyoTecnico()
+            );
     }
 
     /**
@@ -46,7 +56,12 @@ class NodoPolicy
      */
     public function create(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador()]);
+        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador()])
+        && session()->has('login_role')
+        && (
+            session()->get('login_role') == User::IsAdministrador() ||
+            session()->get('login_role') == User::IsActivador()
+        );
     }
 
     /**
@@ -57,7 +72,12 @@ class NodoPolicy
      */
     public function show(User $user,  Nodo $nodo)
     {
-        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador()]);
+        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador()])
+        && session()->has('login_role')
+        && (
+            session()->get('login_role') == User::IsAdministrador() ||
+            session()->get('login_role') == User::IsActivador()
+        );
     }
 
     /**
@@ -68,7 +88,12 @@ class NodoPolicy
      */
     public function edit(User $user, Nodo $nodo)
     {
-        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador()]);
+        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador()])
+        && session()->has('login_role')
+        && (
+            session()->get('login_role') == User::IsAdministrador() ||
+            session()->get('login_role') == User::IsActivador()
+        );
     }
 
     /**
@@ -79,7 +104,12 @@ class NodoPolicy
      */
     public function downloadAll(User $user)
     {
-        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador()]) && session()->has('login_role') && (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador());
+        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador()])
+        && session()->has('login_role')
+        && (
+            session()->get('login_role') == User::IsAdministrador() ||
+            session()->get('login_role') == User::IsActivador()
+        );
     }
 
     /**

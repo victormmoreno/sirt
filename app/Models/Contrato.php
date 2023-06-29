@@ -52,4 +52,24 @@ class Contrato extends Model
     {
         return $this->belongsTo(UserNodo::class, 'user_nodo_id', 'id')->where('role', User::IsExperto());
     }
+
+    public function articulador()
+    {
+        return $this->belongsTo(UserNodo::class, 'user_nodo_id', 'id')->where('role', User::IsArticulador());
+    }
+
+    public function infocenter()
+    {
+        return $this->belongsTo(UserNodo::class, 'user_nodo_id', 'id')->where('role', User::IsInfocenter());
+    }
+
+    public function ingreso()
+    {
+        return $this->belongsTo(UserNodo::class, 'user_nodo_id', 'id')->where('role', User::IsIngreso());
+    }
+
+    public function apoyotecnico()
+    {
+        return $this->belongsTo(UserNodo::class, 'user_nodo_id', 'id')->where('role', User::IsApoyoTecnico());
+    }
 }

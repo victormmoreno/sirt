@@ -37,12 +37,13 @@ class RolesPermissions extends Controller
 
     public function tomar_control(Request $request, $documento)
     {
-        if (request()->user()->cannot('tomar_control', User::class)) {
+        $user = User::where('documento', $documento)->firstOrFail();
+        if (request()->user()->cannot('tomar_control', $user)) {
             alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
         }
         session()->put('before_session', User::where('documento', $request->user()->documento)->first());
-        $user = User::where('documento', $documento)->firstOrFail();
+
         Auth::login($user);
         RolesPermissions::changeRoleSession($request);
         return redirect()->route('home');
@@ -55,5 +56,4 @@ class RolesPermissions extends Controller
         RolesPermissions::changeRoleSession($request);
         return redirect()->route('home');
     }
-
 }

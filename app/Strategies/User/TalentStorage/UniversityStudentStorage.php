@@ -24,6 +24,24 @@ class UniversityStudentStorage implements TalentStorage
 
     public function buildResponse(array $data)
     {
-        return "Tipo Talento: ".$data['talento']['tipo_talento']."<br>"."  Tipo Estudio: ".$data['talento']['tipo_estudio']."<br>"."  Universidad: ".$data['talento']['universidad']."<br>"."  Nombre carrera: ".$data['talento']['carrera'];
+        return "<span class='card-title primary-text center'>Información Talento</span>
+                <div class='server-load row'>
+                    <div class='server-stat col s6 m6 l6'>
+                        <p>".$data['talento']['tipo_talento']."</p>
+                        <span>Tipo Talento</span>
+                    </div>
+                    <div class='server-stat col s6 m6 l6'>
+                        <p>".$data['talento']['tipo_estudio']."</p>
+                        <span>Tipo Estudio</span>
+                    </div>
+                    <div class='server-stat col s6 m6 l6'>
+                        <p>".$data['talento']['universidad']."</p>
+                        <span>Universidad</span>
+                    </div>
+                    <div class='server-stat col s6 m6 l6'>
+                        <p>".$data['talento']['carrera']."</p>
+                        <span>Nombre carrera</span>
+                    </div>
+                </div>";
     }
 }

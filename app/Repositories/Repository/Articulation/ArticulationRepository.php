@@ -396,10 +396,9 @@ class ArticulationRepository extends Repository
 
     public function settingsNotificationDynamizer($articulation)
     {
-        $dinamizadorRepository = new DinamizadorRepository;
         if (Session::get('login_role') != User::IsTalento())
             $destinatarios[] = auth()->user()->email;
-        $dinamizador = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulation->articulationstage->node_id)->get()->last();
+        $dinamizador = User::ConsultarFuncionarios($articulation->nodo_id, User::IsDinamizador())->get()->last();
         $destinatarios[] = $dinamizador->email;
         return [
             'receptor' => $dinamizador->id,

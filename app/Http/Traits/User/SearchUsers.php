@@ -62,10 +62,61 @@ trait SearchUsers
         ], Response::HTTP_OK);
     }
 
-    public function consultarUnUsuarioPorId($id)
+    public function findCustomerById($id)
+    {
+        return response()->json(['talento' => User::findOrFail($id)]);
+    }
+
+    public function findOfficialById(int $id)
     {
         return response()->json([
-            'talento' => User::findOrFail($id),
+            'user' => User::withTrashed()->where('id', $id)->first(),
         ]);
+    }
+
+    public function findExpertsByNodo($nodo = null)
+    {
+        $experts = User::select('users.id')
+            ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) as nombre')
+            ->join('user_nodo', 'user_nodo.user_id', 'users.id')
+            ->role(User::IsExperto())
+            ->where('user_nodo.nodo_id', $nodo)
+            ->withTrashed()
+            ->get();
+        return response()->json([
+            'experts' => $experts
+        ]);
+    }
+
+    /**
+     * Display the specified resource of talents.
+     * todo
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function findUserByDocument($documento)
+    {
+        $user = User::withTrashed()
+            ->ConsultarUsuarios()
+            ->where('documento', $documento)
+            ->first();
+        if (request()->ajax()) {
+            if ($user != null) {
+                return response()->json([
+                    'data' => [
+                        'user' => $user,
+                        'status_code' => Response::HTTP_OK
+                    ]
+                ], Response::HTTP_OK);
+            }
+            return response()->json([
+                'data' => [
+                    'user' => null,
+                    'status_code' => Response::HTTP_NOT_FOUND,
+                ]
+            ]);
+        }
+        alert()->warning(__('Sorry, you are not authorized to access the page') . ' ' . request()->path())->toToast()->autoClose(10000);
+        return redirect()->route('home');
     }
 }

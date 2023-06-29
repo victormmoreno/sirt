@@ -242,7 +242,7 @@
                 @include('layouts.navrole.dinamizador')
             @break
             @case(App\User::IsExperto())
-                @include('layouts.navrole.gestor')
+                @include('layouts.navrole.experto')
             @break
             @case(App\User::IsArticulador())
                 @include('layouts.navrole.articulador')

@@ -246,7 +246,7 @@ function pintarTalentoEnTabla_Fase_Inicio(id, isInterlocutor) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: `${host_url}/usuarios/talento/consultarTalentoPorId/${id}`
+        url: `${host_url}/usuarios/${id}`
     }).done(function (ajax) {
 
         let fila = prepararFilaEnLaTablaDeTalentos(ajax, isInterlocutor);
@@ -260,7 +260,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual(id) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: `${host_url}/usuarios/talento/consultarTalentoPorId/${id}`
+        url: `${host_url}/usuarios/${id}`
     }).done(function (ajax) {
         let fila = prepararFilaEnLaTablaDePropietarios_Users(ajax);
         $('#propiedadIntelectual_Personas').append(fila);
@@ -627,7 +627,7 @@ function consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table(tableName, fie
         processing: true,
         serverSide: true,
         ajax: {
-            url: `${host_url}/usuarios/talento/getTalentosDeTecnoparque/`,
+            url: `${host_url}/usuarios/`,
             type: "get"
         },
         columns: [
@@ -719,7 +719,7 @@ function consultarExpertosDeUnNodo(nodo_id) {
     $.ajax({
         dataType:'json',
         type:'get',
-        url: `${host_url}/usuarios/gestores/nodo/${nodo_id}`
+        url: `${host_url}/usuarios/expertos/nodo/${nodo_id}`
       }).done(function(response){
           $("#txtexperto_id_proyecto").empty();
           $('#txtexperto_id_proyecto').append('<option value="">Seleccione el experto</option>');
@@ -734,10 +734,10 @@ function consultarInformacionExperto(user) {
     $.ajax({
         dataType:'json',
         type:'get',
-        url: host_url + "/usuarios/consultarUserPorId/"+user
+        url: `${host_url}/usuarios/funcionario/${user}`
       }).done(function(response){
-          printLinea(response);
-          consultarSublineas(response.user.experto.linea.id);
+          //printLinea(response);
+          //consultarSublineas(response.user.gestor.lineatecnologica.id);
     });
 }
 
@@ -761,5 +761,9 @@ function printSublineas(response) {
 }
 
 function printLinea(response) {
+<<<<<<< HEAD
     $('#txtlinea').val(response.user.experto.linea.nombre);
+=======
+    //$('#txtlinea').val(response.user.gestor.lineatecnologica.nombre);
+>>>>>>> bda543303133137733987c04c94cd1705361b4eb
 }

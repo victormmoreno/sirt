@@ -168,7 +168,10 @@ trait HasRoles
 
     public function scopeRoleFuncionario($query, $role)
     {
-        if (!empty($role) && $role != null && $role != 'all') {
+        if(!empty($role) && $role != null && $role != 'all' && is_array($role)){
+            return $query->whereIn('roles.name', $role)->whereIn('user_nodo.role', $role);
+        }
+        else if (!empty($role) && $role != null && $role != 'all') {
             return $query->where('roles.name', $role)->where('user_nodo.role', $role);
         }
         return $query;

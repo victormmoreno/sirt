@@ -1,26 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-
-Route::get('/', function (Request $request) {
-
-
-
-    return view('welcome');
-})->name('/');
-
-Route::get('creditos', function () {
-    return view('configuracion.creditos');
-})->name('creditos');
-
-Route::get('politica-de-confidencialidad', function () {
-    return view('seguridad.terminos');
-})->name('terminos');
-
-Route::get('/home', 'HomeController@index')->name('home')->middleware(['disablepreventback', 'talent_information_completed']);
-
-
-
 //costos administrativos
 Route::get('costos-administrativos/costoadministrativo/{nodo}', 'CostoAdministrativoController@getCostoAdministrativoPorNodo')->name('costoadministrativo.costosadministrativosfornodo');
 
@@ -37,9 +16,9 @@ Route::resource('costos-administrativos', 'CostoAdministrativoController', [
 ])->names([
     'index'   => 'costoadministrativo.index',
 ])
-    ->parameters([
-        'costos_administrativo' => 'id',
-    ]);
+->parameters([
+    'costos_administrativo' => 'id',
+]);
 Route::get('costos-administrativos/edit/{id}/{nodo}', 'CostoAdministrativoController@edit')->name('costoadministrativo.edit')->middleware('role_session:Dinamizador|Activador');
 Route::put('costos-administrativos/update/{id}/{nodo}', 'CostoAdministrativoController@update')->name('costoadministrativo.update')->middleware('role_session:Dinamizador|Activador');
 
@@ -436,13 +415,7 @@ Route::group(
 
         Route::get('/export/{nodo}/articulaciones/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicatorArticulations')->name('indicador.export.excel');
 
-        //Rutas para la generación de excel del módulo de nodo
-        Route::get('/excelnodo', 'Excel\NodoController@exportQueryAllNodo')
-        ->middleware('role_session:Activador')
-        ->name('excel.excelnodo');
 
-        Route::get('/nodo/funcionarios/{nodo}', 'Excel\NodoController@exportQueryForNodo')
-        ->name('excel.exportexcelfornodo');
 
         Route::post('/import_materiales', 'Excel\MaterialController@import')->name('import.materiales');
         Route::post('/import_equipos', 'Excel\EquipoController@import')->name('import.equipos');

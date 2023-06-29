@@ -3,7 +3,7 @@
     <tr>
         <th>Nodo</th>
         <th>Tipo Documento</th>
-        <th>Ciudad de Expedición Documento</th>
+        <th>Lugar Expedición Documento </th>
         <th>Número de Documento</th>
         <th>Nombre Completo</th>
         <th>Fecha de Nacimiento</th>
@@ -35,7 +35,7 @@
                 {{isset($user->nodo) ? $user->nodo : __('No register')}}
             </td>
             <td>
-                {{isset($user->tipodocumento_name) ? $user->tipodocumento_name : __('No register')}}
+                {{isset($user->tipodocumento) ? $user->tipodocumento : __('No register')}}
             </td>
             <td>
                 {{isset($user->expedicion) ? $user->expedicion : __('No register')}}
@@ -47,7 +47,7 @@
                 {{isset($user->usuario) ? $user->usuario : __('No register')}}
             </td>
             <td>
-                {{isset($user->fechanacimiento) ? $user->fechanacimiento: __('No register')}}
+                {{isset($user->fechanacimiento) ? $user->fechanacimiento->isoFormat('DD/MM/YYYY'): __('No register')}}
             </td>
             <td>
                 {{isset($user->email) ? $user->email : __('No register')}}
@@ -82,11 +82,12 @@
             <td>
                 {{isset($user->eps) ? $user->eps : __('No register')}}
             </td>
-            <td>
-                {{isset($user->eps) ? $user->eps : __('No register')}}
-            </td>
+
             <td>
                 {{isset($user->otra_eps) ? $user->otra_eps : __('No register')}}
+            </td>
+            <td>
+                {{isset($user->grado_escolaridad) ? $user->grado_escolaridad : __('No register')}}
             </td>
             <td>
                 {{isset($user->institucion) ? $user->institucion : __('No register')}}
@@ -95,10 +96,10 @@
                 {{isset($user->titulo_obtenido) ? $user->titulo_obtenido : __('No register')}}
             </td>
             <td>
-                {{isset($user->fecha_terminacion) ? $user->fecha_terminacion : __('No register')}}
+                {{isset($user->fecha_terminacion) ? $user->fecha_terminacion->isoFormat('DD/MM/YYYY') : __('No register')}}
             </td>
             <td>
-                {{isset($user->ocupacions) ? $user->ocupacions : __('No register')}}
+                {{isset($user->ocupaciones) ? $user->ocupaciones : __('No register')}}
             </td>
             <td>
                 {{isset($user->roles) ? $user->roles : __('No register')}}

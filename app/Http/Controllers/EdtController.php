@@ -14,15 +14,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 class EdtController extends Controller
 {
 
-    /**
-     * Un objeto la clase EntidadRepository
-     * @var object
-     */
-    private $entidadRepository;
-    /**
-     * Objeto de la clase EdtRepository
-     * @var object
-     */
+
     private $edtRepository;
     /**
      * Objeto de la clase GestorRepository
@@ -30,11 +22,9 @@ class EdtController extends Controller
     * @var object
     */
     private $gestorRepository;
-    public function __construct(GestorRepository $gestorRepository, EntidadRepository $entidadRepository, EdtRepository $edtRepository)
+    public function __construct(EdtRepository $edtRepository)
     {
-        $this->entidadRepository = $entidadRepository;
         $this->edtRepository = $edtRepository;
-        $this->gestorRepository = $gestorRepository;
         $this->middleware('auth');
     }
 

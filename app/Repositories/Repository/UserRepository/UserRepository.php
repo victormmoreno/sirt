@@ -127,7 +127,7 @@ class UserRepository
         'users.institucion', 'users.titulo_obtenido', 'users.fecha_terminacion',
         'users.ultimo_login', 'users.estrato', 'users.otra_ocupacion',
         'users.informacion_user', 'users.informacion_user_completed_at',
-        'users.created_at', 'users.deleted_at',
+        'users.created_at', 'users.deleted_at'
         )
         ->selectRaw('if(users.genero = 1, "Masculino", if(users.genero = 0, "Femenino", "No binario")) as nombre_genero')
         ->selectRaw('if(users.mujerCabezaFamilia = 1, "SI", "NO") as mujer_cabeza_familia')
@@ -502,7 +502,8 @@ class UserRepository
             ($user->has('experto') && isset($user->experto)) ||
             ($user->has('infocenter') && isset($user->infocenter)) ||
             ($user->has('ingreso') && isset($user->ingreso)) ||
-            ($user->has('talento') && isset($user->talento))
+            ($user->IsUserTalento()) ||
+            ($user->isUserConvencional())
         ){
             if ($request->get('txtestado') == 'on') {
                 $user->update(['estado' => 0]);

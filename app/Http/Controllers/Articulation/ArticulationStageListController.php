@@ -14,7 +14,6 @@ use App\Repositories\Repository\Articulation\ArticulationStageRepository;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Eloquent\Model;
 
 
 class ArticulationStageListController extends Controller
@@ -70,13 +69,12 @@ class ArticulationStageListController extends Controller
                 'proyectos.nombre as nombre_proyecto', 'proyectos.id as proyecto_id'
             )
             ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', if(articulationables.articulationable_type = 'App\\\Models\\\Sede', 'Empresa', if(articulationables.articulationable_type = 'App\\\Models\\\Idea', 'Idea', 'No registra'))) as articulation_state_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by, concat(empresas.nit, ' - ', empresas.nombre, ' - ', sedes.nombre_sede) as sede, concat(ideas.codigo_idea, ' - ', ideas.nombre_proyecto) as idea")
-
-                ->node($node)
-                ->status($request->filter_status_articulationStage)
-                ->year($request->filter_year_articulationStage)
-                ->interlocutorTalent($talent)
-                ->orderBy('articulation_stages.updated_at', 'desc')
-                ->get();
+            ->node($node)
+            ->status($request->filter_status_articulationStage)
+            ->year($request->filter_year_articulationStage)
+            ->interlocutorTalent($talent)
+            ->orderBy('articulation_stages.updated_at', 'desc')
+            ->get();
         }
         return $this->datatablearticulationStages($articulationStages);
     }
@@ -205,7 +203,6 @@ class ArticulationStageListController extends Controller
                             <b>".Str::limit("{$data->articulation_name}", 40, '...')."</b>
                         </p>";
                 }
-
             })
             ->editColumn('articulationstate_name', function ($data) {
                 $articulationType = '';
@@ -259,7 +256,7 @@ class ArticulationStageListController extends Controller
             })
             ->editColumn('starDate', function ($data) {
                 if($data->articulation_start_date){
-                    return Carbon::parse($data->articulation_start_date)->isoFormat('DD/MM/YYYY');
+                    return Carbon::parse($data->articulation_start_date)->isoFormat('YYYY/MM/DD');
                 }
             })->addColumn('show', function ($data) {
                 if(isset($data->articulation_id)){
@@ -396,7 +393,6 @@ class ArticulationStageListController extends Controller
 
 
     }
-
 
     public function changeStatus($code)
     {

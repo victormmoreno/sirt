@@ -7,19 +7,19 @@ Route::group(
         'middleware' => 'disablepreventback',
     ],
     function () {
-        Route::get('/talento/getTalentosDeTecnoparque', [
-            'uses' => 'UserController@datatableTalentosDeTecnoparque',
-            'as'   => 'talento.tecnoparque',
+        /** route for get talentos and users in datatable */
+        Route::get('/clientes', [
+            'uses' => 'UserController@getCustomersDatatableFormat',
+            'as'   => 'clientes',
         ]);
+        /** route for get users by id */
+        Route::get('/cliente/{id}', [
+            'uses' => 'SearchUserController@findCustomerById',
+            'as'   => 'user',
+        ]);
+        /** route for get users officers by id */
+        Route::get('/funcionario/{id}', 'SearchUserController@findOfficialById');
 
-        Route::get('/talento/consultarTalentoPorId/{id}', [
-            'uses' => 'SearchUserController@consultarUnUsuarioPorId',
-            'as'   => 'talento.tecnoparque.byid',
-        ]);
-        /** todo */
-        Route::get('/consultarUserPorId/{id}', 'UserController@findUserById');
-        Route::put('{documento}/acceso', 'UserController@updateAccess')->name('usuario.access')->middleware('disablepreventback');
-        Route::get('/gestores/nodo/{id}', ['uses' => 'UserController@gestoresByNodo','as'   => 'usuario.gestores.nodo']);
         Route::get('/search', 'SearchUserController@userSearch')->name('usuario.search');
         Route::post('/search-user', [
             'uses' => 'SearchUserController@querySearchUser',
@@ -27,14 +27,18 @@ Route::group(
         ])->where('documento', '[0-9]+');
         Route::get('/{documento}/permisos', 'ChangeRolesController@showRolesForm')->name('usuario.change-role-node')->where('documento', '[0-9]+');
         Route::put('/{documento}/permisos', 'ChangeRolesController@updateRoles')->name('usuario.update-role-node')->middleware('disablepreventback');
-        Route::get('/{documento}/acceso', 'UserController@access')->name('usuario.acceso')->where('documento', '[0-9]+');
         Route::get('/{documento}/tomar-control', 'RolesPermissions@tomar_control')->name('usuario.tomar.control');
         Route::get('/dejar-control', 'RolesPermissions@dejar_control')->name('usuario.dejar.control');
+
+        Route::get('/expertos/nodo/{id}', ['uses' => 'SearchUserController@findExpertsByNodo','as'   => 'usuario.gestores.nodo']);
+        Route::get('/{documento}/acceso', 'UserController@access')->name('usuario.acceso')->where('documento', '[0-9]+');
         Route::put('/{id}/update-account', 'UserController@updateAccountUser')->name('usuario.updateaccount')->middleware('disablepreventback');
+        Route::put('{documento}/acceso', 'UserController@updateAccess')->name('usuario.access')->middleware('disablepreventback');
+
     }
 );
-/**todo */
-Route::get('usuarios/filtro-talento/{documento}', 'User\UserController@filterTalento')->name('usuario.talento.search');
+
+Route::get('usuarios/filtro-talento/{documento}', 'User\SearchUserController@findUserByDocument')->name('usuario.talento.search');
 Route::resource('usuarios', 'User\UserController', ['as' => 'usuario', 'only' => ['index','show', 'edit']])->names([
             'index'   => 'usuario.index',
             'update'  => 'usuario.update',

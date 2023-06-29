@@ -34,7 +34,13 @@
                                                 <div class="mailbox-view-header">
                                                     <div class="left">
                                                         <div class="left">
-                                                            {!!$user->present()->userProfileUserImage()!!}
+                                                            @if ($user->nombre_genero == 'Masculino')
+                                                                <img alt="{{$user->nombres}}" class="circle mailbox-profile-image z-depth-1" src="{{ asset('img/profile-image-masculine.png') }}"></img>
+                                                            @elseif ($user->nombre_genero == 'Femenino')
+                                                                <img alt="{{$user->nombres}}" class="circle mailbox-profile-image z-depth-1" src="{{asset('img/profile-image-female.png')}}"></img>
+                                                            @else
+                                                                <img alt="{{$user->nombres}}"  class="circle mailbox-profile-image z-depth-1" src="{{asset('img/profile-img-default.png')}}"></img>
+                                                            @endif
                                                         </div>
                                                         <div class="left">
                                                             <span class="mailbox-title secondary-text">
@@ -63,7 +69,6 @@
                                                                     </i>
                                                                     Más Información
                                                                 </a>
-                                                                <!-- Dropdown Structure -->
                                                                 <ul class="dropdown-content" id="more">
                                                                     <li>
                                                                         <a href="{{route('perfil.edit')}}">
@@ -86,14 +91,12 @@
                                                 </div>
                                                 <div class="right">
                                                     <small>
-                                                        {{$user->genero}}
+                                                        {{$user->nombre_genero}}
                                                     </small>
                                                 </div>
-                                                <div class="divider mailbox-divider">
-                                                </div>
+                                                <div class="divider mailbox-divider"></div>
                                                 @include('users.details.personal-information')
-                                                <div class="divider mailbox-divider">
-                                                </div>
+                                                <div class="divider mailbox-divider"></div>
                                                 <div class="right">
                                                     <a class="waves-effect waves-teal darken-2 btn-flat m-t-xs"
                                                         href="{{route('perfil.edit')}}">

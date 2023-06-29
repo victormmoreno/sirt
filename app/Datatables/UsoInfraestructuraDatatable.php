@@ -31,7 +31,7 @@ class UsoInfraestructuraDatatable
             ->editColumn('asesoria_indirecta', function ($data) {
                 return $data->asesoria_indirecta;
             })
-            ->addColumn('gestorEncargado', function ($data) {
+            ->addColumn('expertoEncargado', function ($data) {
                 return $data->asesores;
             })
             ->addColumn('detail', function ($data) {
@@ -40,7 +40,7 @@ class UsoInfraestructuraDatatable
             // ->filterColumn('fecha', function ($query, $keyword) {
             //     $query->whereRaw("DATE_FORMAT(fecha,'%m-%d-%Y') LIKE ?", ["%$keyword%"]);
             // })
-            ->rawColumns(['fecha','tipo_asesoria', 'actividad', 'gestorEncargado', 'fase', 'asesoria_directa', 'asesoria_indirecta', 'detail'])
+            ->rawColumns(['fecha','tipo_asesoria', 'actividad', 'expertoEncargado', 'fase', 'asesoria_directa', 'asesoria_indirecta', 'detail'])
 
             ->make(true);
     }
@@ -66,14 +66,14 @@ class UsoInfraestructuraDatatable
             ->editColumn('asesoria_indirecta', function ($data) {
                 return $data->present()->asesoriaIndirecta();
             })
-            ->addColumn('gestorEncargado', function ($data) {
+            ->addColumn('expertoEncargado', function ($data) {
                 return $data->present()->asesor();
             })
             ->addColumn('detail', function ($data) {
                 $button = '<a class="btn tooltipped green-complement  m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="' . route("usoinfraestructura.show", $data->id) . '" ><i class="material-icons">visibility</i></a>';
                 return $button;
             })
-            ->rawColumns(['fecha','tipo_asesoria', 'actividad', 'gestorEncargado', 'fase', 'asesoria_directa', 'asesoria_indirecta', 'detail'])
+            ->rawColumns(['fecha','tipo_asesoria', 'actividad', 'expertoEncargado', 'fase', 'asesoria_directa', 'asesoria_indirecta', 'detail'])
             ->make(true);
     }
 }

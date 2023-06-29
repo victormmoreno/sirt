@@ -2338,7 +2338,6 @@ $(document).on('submit', 'form#formSearchUser', function (event) {
                                 <li>
                                     <a class="mail-active">
                                         <h4 class="center-align">no se encontraron resultados</h4>
-                                        <a class="primary-text center-align" href="`+data.url+`">Registrar nuevo usuario</a>
                                     </a>
                                 </li>
                             </ul>
@@ -4185,7 +4184,7 @@ function pintarTalentoEnTabla_Fase_Inicio(id, isInterlocutor) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: `${host_url}/usuarios/talento/consultarTalentoPorId/${id}`
+        url: `${host_url}/usuarios/${id}`
     }).done(function (ajax) {
 
         let fila = prepararFilaEnLaTablaDeTalentos(ajax, isInterlocutor);
@@ -4199,7 +4198,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual(id) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: `${host_url}/usuarios/talento/consultarTalentoPorId/${id}`
+        url: `${host_url}/usuarios/${id}`
     }).done(function (ajax) {
         let fila = prepararFilaEnLaTablaDePropietarios_Users(ajax);
         $('#propiedadIntelectual_Personas').append(fila);
@@ -4566,7 +4565,7 @@ function consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table(tableName, fie
         processing: true,
         serverSide: true,
         ajax: {
-            url: `${host_url}/usuarios/talento/getTalentosDeTecnoparque/`,
+            url: `${host_url}/usuarios/`,
             type: "get"
         },
         columns: [
@@ -4658,7 +4657,7 @@ function consultarExpertosDeUnNodo(nodo_id) {
     $.ajax({
         dataType:'json',
         type:'get',
-        url: `${host_url}/usuarios/gestores/nodo/${nodo_id}`
+        url: `${host_url}/usuarios/expertos/nodo/${nodo_id}`
       }).done(function(response){
           $("#txtexperto_id_proyecto").empty();
           $('#txtexperto_id_proyecto').append('<option value="">Seleccione el experto</option>');
@@ -4673,10 +4672,10 @@ function consultarInformacionExperto(user) {
     $.ajax({
         dataType:'json',
         type:'get',
-        url: host_url + "/usuarios/consultarUserPorId/"+user
+        url: `${host_url}/usuarios/funcionario/${user}`
       }).done(function(response){
-          printLinea(response);
-          consultarSublineas(response.user.experto.linea.id);
+          //printLinea(response);
+          //consultarSublineas(response.user.gestor.lineatecnologica.id);
     });
 }
 
@@ -4700,7 +4699,11 @@ function printSublineas(response) {
 }
 
 function printLinea(response) {
+<<<<<<< HEAD
     $('#txtlinea').val(response.user.experto.linea.nombre);
+=======
+    //$('#txtlinea').val(response.user.gestor.lineatecnologica.nombre);
+>>>>>>> bda543303133137733987c04c94cd1705361b4eb
 }
 
 // Enviar formulario para modificar el proyecto en fase de cierre
@@ -6358,16 +6361,15 @@ var usoinfraestructuraIndex = {
             ],
         });
     },
-    queryGestoresByNodo: function(){
+    queryExpertsByNodo: function(){
         let nodo = $('#filter_nodo').val();
-
         if (nodo == null || nodo == '' || nodo == 'all' || nodo == undefined){
             $('#filter_gestor').empty();
             $('#filter_gestor').append('<option value="" selected>Seleccione un experto</option>');
         }else{
             $.ajax({
                 type: 'GET',
-                url: `${host_url}/usuarios/gestores/nodo/${nodo}`,
+                url: `${host_url}/usuarios/expertos/nodo/${nodo}`,
                 contentType: false,
                 dataType: 'json',
                 processData: false,
@@ -8685,7 +8687,7 @@ const articulationStage = {
                                             <p class="hide-on-med-and-down"> Miembro desde ${articulationStage.formatDate(user.created_at)}</p>
                                         </div>
                                         <div class="card-action">
-                                            <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuario/usuarios/${user.documento}"><i class="material-icons left">link</i>Ver más</a>
+                                            <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuarios/${user.documento}"><i class="material-icons left">link</i>Ver más</a>
                                         </div>
                                     </div>`
                                 );
@@ -8710,6 +8712,7 @@ const articulationStage = {
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
+            "lengthChange": false,
             processing: true,
             serverSide: true,
             ajax: {
@@ -8813,10 +8816,11 @@ const articulationStage = {
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
+            "lengthChange": false,
             processing: true,
             serverSide: true,
             ajax: {
-                url: `${host_url}/usuarios/talento/getTalentosDeTecnoparque/`,
+                url: `${host_url}/usuarios/clientes`,
                 type: "get"
             },
             columns: [
@@ -8870,7 +8874,7 @@ const articulationStage = {
         $.ajax({
             dataType: 'json',
             type: 'get',
-            url: `${host_url}/usuarios/talento/consultarTalentoPorId/${id}`
+            url: `${host_url}/usuarios/cliente/${id}`
         }).done(function (response) {
             if(response != null){
                 articulationStage.searchUser(response.talento.documento);
@@ -9810,7 +9814,7 @@ const filter_articulations = {
         $.ajax({
             dataType: 'json',
             type: 'get',
-            url: `${host_url}/usuarios/talento/consultarTalentoPorId/${id}`
+            url: `${host_url}/usuarios/cliente/${id}`
         }).done(function (response) {
             let fila = filter_articulations.prepareTableRowTalent(response);
             $('.alert-response-talents').append(fila);
@@ -9820,7 +9824,7 @@ const filter_articulations = {
         $.ajax({
             dataType: 'json',
             type: 'get',
-            url: `${host_url}/usuarios/talento/consultarTalentoPorId/${id}`
+            url: `${host_url}/usuarios/cliente/${id}`
         }).done(function (response) {
             let fila = filter_articulations.prepareTableRowTalent(response);
             $('.alert-response-talents').append(fila);
@@ -9861,10 +9865,11 @@ const filter_articulations = {
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
+            "lengthChange": false,
             processing: true,
             serverSide: true,
             ajax: {
-                url: `${host_url}/usuarios/talento/getTalentosDeTecnoparque/`,
+                url: `${host_url}/usuarios/clientes`,
                 type: "get"
             },
             columns: [

@@ -73,19 +73,19 @@ class ArticulationStagePresenter extends Presenter
 
     public function articulationStageCreatedDate()
     {
-        return optional($this->articulationStage->created_at)->isoFormat('DD/MM/YYYY');
+        return optional($this->articulationStage->created_at)->isoFormat('YYYY/MM/DD');
     }
 
 
     public function articulationStageStartDate()
     {
-        return optional($this->articulationStage->start_date)->isoFormat('DD/MM/YYYY');
+        return optional($this->articulationStage->start_date)->isoFormat('YYYY/MM/DD');
     }
 
     public function articulationStageEndDate()
     {
         if($this->articulationStage->status == ArticulationStage::STATUS_OPEN && isset($this->articulationStage->end_date)){
-            return optional($this->articulationStage->end_date)->isoFormat('DD/MM/YYYY');
+            return optional($this->articulationStage->end_date)->isoFormat('YYYY/MM/DD');
         }
         return "No aplica";
 

@@ -17,7 +17,7 @@ class SenaGraduateStorage implements TalentStorage
             $regional = Regional::find($request->regional);
         }
         if(isset($request->centro_formacion)){
-            $centro_formacion = Centro::with('entidad')->where('id', $request->centro_formacion)->first();
+            $centro_formacion = Centro::has('entidad')->where('id', $request->centro_formacion)->first();
         }
         if(isset($request->tipo_formacion)){
             $tipo_formacion = TipoFormacion::where('id', $request->tipo_formacion)->first();
@@ -33,6 +33,30 @@ class SenaGraduateStorage implements TalentStorage
 
     public function buildResponse(array $data)
     {
-        return "Tipo Talento: ".$data['talento']['tipo_talento']."<br>"."  Regional: ". $data['talento']['regional']."<br>"."  Centro de Formación: ". $data['talento']['centro_formacion']."<br>"."  Programa de Formación: ". $data['talento']['programa_formacion']."<br>"."  Tipo formacion: ". $data['talento']['tipo_formacion'];
+        return "<span class='card-title primary-text center'>Información Talento</span>
+                <div class='server-load row'>
+                    <div class='server-stat col s6 m6 l4'>
+                        <p>".$data['talento']['tipo_talento']."</p>
+                        <span>Tipo Talento</span>
+                    </div>
+                    <div class='server-stat col s6 m6 l4'>
+                        <p>".$data['talento']['regional']."</p>
+                        <span>Regional</span>
+                    </div>
+                    <div class='server-stat col s6 m6 l4'>
+                        <p>".$data['talento']['centro_formacion']."</p>
+                        <span>Centro de Formación</span>
+                    </div>
+                </div>
+                <div class='server-load row'>
+                    <div class='server-stat col s6 m6 l4'>
+                        <p>".$data['talento']['programa_formacion']."</p>
+                        <span>Programa de Formación</span>
+                    </div>
+                    <div class='server-stat col s6 m6 l4'>
+                        <p>".$data['talento']['tipo_formacion']."</p>
+                        <span>Tipo formacion</span>
+                    </div>
+                </div>";
     }
 }

@@ -166,14 +166,17 @@
                         $('#training_center').empty();
                         $('#training_center').append('<option value="">Seleccione el centro de formación</option>')
                         $.each(response.centros, function(id, nombre) {
-                            $('#training_center').append(`<option {{isset($user->informacion_user['talento']['centro_formacion']) && $user->informacion_user['talento']['centro_formacion'] == $user->informacion_user['talento']['centro_formacion'] ? 'selected':''}} value="${id}" >${nombre}</option>`);
-
-                            $('#training_center').material_select();
+                                @if (isset($user->informacion_user['talento']['centro_formacion']))
+                                    const selected =  String("{{$user->informacion_user['talento']['centro_formacion']}}") == String(nombre) ? 'selected' : '';
+                                    $('#training_center').append(`<option ${selected} value="${id}" >${nombre}</option>`);
+                                @else
+                                    $('#training_center').append(`<option value="${id}" >${nombre}</option>`);
+                                @endif
                         });
+                        $('#training_center').material_select();
                     });
                 }
-            },
-
+            }
         }
 
         $(document).on('submit', 'form#complete_talent_information_form', function (event) { // $('button[type="submit"]').prop("disabled", true);

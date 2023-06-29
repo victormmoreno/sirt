@@ -70,21 +70,12 @@ trait MustCompleteTalentInformation
         return $this->email;
     }
 
-
-
     public function getInformationTalentBuilder()
     {
-        if(isset($this->informacion_user["talento"])){
+        if($this->isUserTalento() && isset($this->informacion_user["talento"])){
             $talentType = Str::snake(Str::lower($this->informacion_user["talento"]["tipo_talento"]));
             $talentStorageClass = TalentStorageValues::TALENTTYPE[$talentType];
             return (new $talentStorageClass)->buildResponse($this->informacion_user);
-        }
-    }
-
-    public function getInformationTalentEloquent()
-    {
-        if(isset($this->informacion_user)){
-            return $this->informacion_user;
         }
     }
 }

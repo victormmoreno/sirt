@@ -185,7 +185,7 @@ const articulationStage = {
                                             <p class="hide-on-med-and-down"> Miembro desde ${articulationStage.formatDate(user.created_at)}</p>
                                         </div>
                                         <div class="card-action">
-                                            <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuario/usuarios/${user.documento}"><i class="material-icons left">link</i>Ver más</a>
+                                            <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuarios/${user.documento}"><i class="material-icons left">link</i>Ver más</a>
                                         </div>
                                     </div>`
                                 );
@@ -210,6 +210,7 @@ const articulationStage = {
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
+            "lengthChange": false,
             processing: true,
             serverSide: true,
             ajax: {
@@ -313,10 +314,11 @@ const articulationStage = {
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
+            "lengthChange": false,
             processing: true,
             serverSide: true,
             ajax: {
-                url: `${host_url}/usuarios/talento/getTalentosDeTecnoparque/`,
+                url: `${host_url}/usuarios/clientes`,
                 type: "get"
             },
             columns: [
@@ -370,7 +372,7 @@ const articulationStage = {
         $.ajax({
             dataType: 'json',
             type: 'get',
-            url: `${host_url}/usuarios/talento/consultarTalentoPorId/${id}`
+            url: `${host_url}/usuarios/cliente/${id}`
         }).done(function (response) {
             if(response != null){
                 articulationStage.searchUser(response.talento.documento);

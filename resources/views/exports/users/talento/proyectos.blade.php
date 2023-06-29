@@ -114,7 +114,6 @@
             <td>{{ $user->institucion }}</td>
             <td>{{ $user->titulo_obtenido }}</td>
             <td>{{ $user->fecha_terminacion }}</td>
-            {{-- <td>{{ $user->present()->userNombreTipoTalento() }}</td> --}}
         </tr>
         @endforeach
     </tbody>

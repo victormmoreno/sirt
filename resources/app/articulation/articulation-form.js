@@ -344,7 +344,7 @@ const filter_articulations = {
         $.ajax({
             dataType: 'json',
             type: 'get',
-            url: `${host_url}/usuarios/talento/consultarTalentoPorId/${id}`
+            url: `${host_url}/usuarios/cliente/${id}`
         }).done(function (response) {
             let fila = filter_articulations.prepareTableRowTalent(response);
             $('.alert-response-talents').append(fila);
@@ -354,7 +354,7 @@ const filter_articulations = {
         $.ajax({
             dataType: 'json',
             type: 'get',
-            url: `${host_url}/usuarios/talento/consultarTalentoPorId/${id}`
+            url: `${host_url}/usuarios/cliente/${id}`
         }).done(function (response) {
             let fila = filter_articulations.prepareTableRowTalent(response);
             $('.alert-response-talents').append(fila);
@@ -395,10 +395,11 @@ const filter_articulations = {
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
+            "lengthChange": false,
             processing: true,
             serverSide: true,
             ajax: {
-                url: `${host_url}/usuarios/talento/getTalentosDeTecnoparque/`,
+                url: `${host_url}/usuarios/clientes`,
                 type: "get"
             },
             columns: [

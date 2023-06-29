@@ -25,15 +25,6 @@
                     <div class="card-content">
                         <div class="row no-m-t no-m-b">
                             <div class="col s12 m12 l12">
-                                <div class="mailbox-options">
-                                    <ul>
-                                        <li>
-                                            <a href="{{{route('usuario.index')}}}">
-                                                Todos los talentos
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
                                 <div class="mailbox-view">
                                     <div class="mailbox-view-header">
                                         <span class="card-title primary-text">

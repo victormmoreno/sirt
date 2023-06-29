@@ -5,13 +5,11 @@ namespace App\Exports\Nodo;
 use App\Exports\FatherExport;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Events\AfterSheet;
-use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Style\Border;
-use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class NodoShowExport extends FatherExport
 {
-    const rowRangeHeading = 'A1:G1';
+    const rowRangeHeading = 'A1:N1';
     public function __construct($query)
     {
         $this->setQuery($query);
@@ -50,11 +48,6 @@ class NodoShowExport extends FatherExport
                         ],
                     ])->getAlignment()->setWrapText(true);
                 $event->sheet->getDelegate()->getStyle(Self::rowRangeHeading)
-                    ->getFill()
-                    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                    ->getStartColor()
-                    ->setARGB('FF32CD32');
-                $event->sheet->getDelegate()->getStyle(Self::rowRangeHeading)
                     ->getFont()
                     ->setBold(true);
                 $event->sheet->getDelegate()->getStyle(Self::rowRangeHeading)
@@ -73,25 +66,5 @@ class NodoShowExport extends FatherExport
     public function title(): String
     {
         return 'Nodos';
-    }
-    /**
-     * Asigna un valor a $title
-     * @param string $title
-     * @return void
-     * @author dum
-     */
-    private function setTitle($title)
-    {
-        $this->title = $title;
-    }
-
-    /**
-     * Retorna el valor de $title
-     * @return string
-     * @author dum
-     */
-    private function getTitle()
-    {
-        return $this->title;
     }
 }

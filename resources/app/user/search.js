@@ -58,7 +58,6 @@ $(document).on('submit', 'form#formSearchUser', function (event) {
                                 <li>
                                     <a class="mail-active">
                                         <h4 class="center-align">no se encontraron resultados</h4>
-                                        <a class="primary-text center-align" href="`+data.url+`">Registrar nuevo usuario</a>
                                     </a>
                                 </li>
                             </ul>
