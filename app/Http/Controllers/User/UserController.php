@@ -42,7 +42,7 @@ class UserController extends Controller
                 $users = User::query()
                     ->select('users.id', 'tiposdocumentos.nombre as tipodocumento', 'users.documento', 'users.email', 'users.celular', 'users.ultimo_login', 'users.estado', 'users.deleted_at')
                     ->selectRaw('concat(users.nombres, " ",users.apellidos) as usuario, GROUP_CONCAT(distinct roles.name SEPARATOR ", ") as roles')
-                    ->selectRaw("if(roles.name = 'Dinamizador', entidades.nombre , if(roles.name = 'Experto', entidades.nombre, if(roles.name = 'Articulador', entidades.nombre, if(roles.name = 'Infocenter', entidades.nombre, if(roles.name = 'Apoyo Tecnico', entidades.nombre, if(roles.name = 'Ingreso', entidades.nombre, 'RTC')))))) as nodo")
+                    ->selectRaw("if(entidades.nombre is null, 'No Aplica', entidades.nombre) as nodo")
                     ->userQuery()
                     ->nodeQuery($request->filter_role, $node)
                     ->roleQuery($request->filter_role)

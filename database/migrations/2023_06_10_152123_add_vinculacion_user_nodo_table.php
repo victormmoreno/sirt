@@ -15,7 +15,10 @@ class AddVinculacionUserNodoTable extends Migration
     public function up()
     {
         Schema::table($this->tableName, function (Blueprint $table) {
-            $table->tinyInteger('vinculacion')->default('0')->after('role');
+            if (!Schema::hasColumn('user_nodo','vinculacion'))
+            {
+                $table->tinyInteger('vinculacion')->default('0')->after('role');
+            }
             DB::statement('ALTER TABLE user_nodo MODIFY COLUMN nodo_id int null');
             DB::statement('ALTER TABLE user_nodo MODIFY COLUMN honorarios DOUBLE(15,2);');
             DB::statement('ALTER TABLE articulations MODIFY COLUMN start_date TIMESTAMP NULL;');
@@ -24,7 +27,10 @@ class AddVinculacionUserNodoTable extends Migration
 
 
         Schema::table('contratos', function (Blueprint $table) {
-            $table->dropColumn(['vinculacion']);
+            if (Schema::hasColumn('contratos','vinculacion'))
+            {
+                $table->dropColumn(['vinculacion']);
+            }
             DB::statement('ALTER TABLE contratos MODIFY COLUMN valor_contrato DOUBLE(20,2);');
         });
     }
