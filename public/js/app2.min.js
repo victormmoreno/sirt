@@ -4661,7 +4661,7 @@ function consultarExpertosDeUnNodo(nodo_id) {
       }).done(function(response){
           $("#txtexperto_id_proyecto").empty();
           $('#txtexperto_id_proyecto').append('<option value="">Seleccione el experto</option>');
-          $.each(response.gestores, function(i, e) {
+          $.each(response.experts, function(i, e) {
             $('#txtexperto_id_proyecto').append('<option  value="'+e.id+'">'+e.nombre_completo+'</option>');
           })
           $('#txtexperto_id_proyecto').material_select();
@@ -4674,8 +4674,8 @@ function consultarInformacionExperto(user) {
         type:'get',
         url: `${host_url}/usuarios/funcionario/${user}`
       }).done(function(response){
-          //printLinea(response);
-          //consultarSublineas(response.user.gestor.lineatecnologica.id);
+          printLinea(response);
+          consultarSublineas(response.user.experto.linea.id);
     });
 }
 
@@ -4699,11 +4699,7 @@ function printSublineas(response) {
 }
 
 function printLinea(response) {
-<<<<<<< HEAD
     $('#txtlinea').val(response.user.experto.linea.nombre);
-=======
-    //$('#txtlinea').val(response.user.gestor.lineatecnologica.nombre);
->>>>>>> bda543303133137733987c04c94cd1705361b4eb
 }
 
 // Enviar formulario para modificar el proyecto en fase de cierre

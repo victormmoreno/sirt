@@ -185,15 +185,14 @@ class NodoRepository
 
     public function consultarMetasDeTecnoparque($nodos = null)
     {
+        $query = MetaNodo::query()->select(['nodo_id','anho','articulaciones','trl6','trl7_trl8', 'entidades.nombre as nodo'])
+        ->join('nodos','nodos.id','metas_nodo.nodo_id')
+        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+        ->orderBy('entidades.nombre');
         if ($nodos == null) {
-            return MetaNodo::query()->select(['nodo_id','anho','articulaciones','trl6','trl7_trl8', 'entidades.nombre as nodo'])
-            ->join('nodos','nodos.id','metas_nodo.nodo_id')
-            ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id');
+            return $query;
         } else {
-            return MetaNodo::query()->select(['nodo_id','anho','articulaciones','trl6','trl7_trl8', 'entidades.nombre as nodo'])
-            ->join('nodos','nodos.id','metas_nodo.nodo_id')
-            ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-            ->whereIn('nodo_id', $nodos);
+            return $query->whereIn('nodo_id', $nodos);
         }
     }
 
