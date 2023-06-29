@@ -12,6 +12,7 @@ use Carbon\Carbon;
 
 class DynamizerOfficerStorage implements OfficerStorage
 {
+    protected $countDynamizerOfficers = 1;
     public function buildStorageRecord(Request $request)
     {
         if(isset($request->dynamizer_node)){
@@ -28,8 +29,35 @@ class DynamizerOfficerStorage implements OfficerStorage
         ];
     }
 
+    /**
+     * returns all the dynamizers of a node
+     * @return
+     */
+    protected function queryOfficeByNodo(Request  $request)
+    {
+        if ($request->filled('dynamizer_node')) {
+            return User::whereHas('dinamizador.nodo', function ($query) use ($request) {
+                $query->where('id', $request->dynamizer_node);
+            });
+        }
+        return null;
+    }
+
+
     public function save(Request $request, User $user)
     {
+        $dynamizers = $this->queryOfficeByNodo($request)->get();
+        if ($dynamizers !== null && $dynamizers->count() >= $this->countDynamizerOfficers) {
+            $dynamizers->each(function ($item) {
+                if($item->hasRole(User::IsDinamizador())){
+                    $item->removeRole(User::IsDinamizador());
+                }
+                if($item->roles->count() == 0 && !$item->hasRole(User::IsUsuario()))
+                {
+                    $item->assignRole(User::IsUsuario());
+                }
+            });
+        }
         $infoContract = $this->buildStorageRecord($request);
         $user->dinamizador()->updateOrCreate(
             ['role' => User::IsDinamizador()],
