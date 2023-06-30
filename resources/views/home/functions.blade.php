@@ -36,6 +36,40 @@
             }
         })
     }
+    function descargarSeguimientoExperto(e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'get',
+            url: host_url + '/excel/export_seguimiento',
+            xhrFields:{
+            responseType: 'blob'
+            },
+            data: {
+                from: 'home'
+            },
+            success: function (result, status, xhr) {
+            let disposition = xhr.getResponseHeader('content-disposition');
+            let matches = /"([^"]*)"/.exec(disposition);
+            let filename = (matches != null && matches[1] ? matches[1] : 'Segumiento.xlsx');
+
+            let blob = new Blob([result], {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            });
+            let link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = filename;
+
+            document.body.appendChild(link);
+
+            link.click();
+            document.body.removeChild(link);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+            alert("Error: " + errorThrown);
+            },
+        })
+    }
+
     function consultarIdeasPendientes(nodo, user) {
     $.ajax({
         dataType:'json',

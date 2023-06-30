@@ -170,7 +170,7 @@ class ProyectoPresenter extends Presenter
     public function proyectoNode()
     {
         if ($this->proyecto->has('nodo.entidad') && isset($this->proyecto->nodo->entidad)) {
-            return "Tecnoparque Nodo {$this->proyecto->nodo->entidad->nombre}";
+            return "Tecnoparque {$this->proyecto->nodo->entidad->nombre}";
         }
         return "No registra";
     }
@@ -249,24 +249,6 @@ class ProyectoPresenter extends Presenter
             return $this->proyecto->fase->nombre;
         }
         return "No registra";
-    }
-
-    public function isAprobacionDinamizadorEjecucion()
-    {
-        if ($this->proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 1)
-        {
-            return 1;
-        }
-        return 0;
-    }
-
-    public function isAprobacionDinamizadorSuspender()
-    {
-        if ($this->proyecto->articulacion_proyecto->aprobacion_dinamizador_suspender == 1)
-        {
-            return 1;
-        }
-        return 0;
     }
 
     public function proyectoAreaConocimiento()

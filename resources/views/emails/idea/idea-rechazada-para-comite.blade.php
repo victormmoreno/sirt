@@ -1,5 +1,5 @@
 @component('mail::message')
-# Se le ha convocado para presentarse en un taller de fortalecimiento | Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.
+# Se le ha convocado para presentarse en un taller de fortalecimiento | Tecnoparque {{$idea->nodo->entidad->nombre}}.
 
 Señor(a)<br>
 <b>_{{$idea->user->nombres }} {{$idea->user->apellidos }}_</b><br>
@@ -7,7 +7,7 @@ Cordial Saludo.
 
 <p align="justify">El tecnoparque <b>{{$idea->nodo->entidad->nombre}}</b> le ha convocado a un taller de fortalecimiento.</p>
 
-Ha recibido este mensaje porque Tecnoparque nodo {{$idea->nodo->entidad->nombre}} ha considerado que su idea tiene potencial para ser
+Ha recibido este mensaje porque Tecnoparque {{$idea->nodo->entidad->nombre}} ha considerado que su idea tiene potencial para ser
 acompañada por la Red Tecnoparque.
 
 <b>¿Qué significa esto?</b> Tecnoparque {{$idea->nodo->entidad->nombre}} ha considerado que, según la información diligenciada en el formulario de registro de idea, su idea
@@ -36,7 +36,7 @@ se le ha convocado a un taller de fortalecimiento. <br>
     </center>
 @endcomponent
 
-Para más información puede contactarse al telefono ☎️  <b>{{ $idea->nodo->telefono}}</b> ext <b>{{ $idea->nodo->extension}}</b>, o ocudir a las instalaciones de 🏬 <strong>Tecnoparque nodo {{$idea->nodo->entidad->nombre}}</strong>  ubicado en {{$idea->nodo->direccion}} en {{$idea->nodo->entidad->ciudad->nombre}} ({{$idea->nodo->entidad->ciudad->departamento->nombre}}).
+Para más información puede contactarse al telefono ☎️  <b>{{ $idea->nodo->telefono}}</b> ext <b>{{ $idea->nodo->extension}}</b>, o ocudir a las instalaciones de 🏬 <strong>Tecnoparque {{$idea->nodo->entidad->nombre}}</strong>  ubicado en {{$idea->nodo->direccion}} en {{$idea->nodo->entidad->ciudad->nombre}} ({{$idea->nodo->entidad->ciudad->departamento->nombre}}).
 
 
 Gracias,<br>

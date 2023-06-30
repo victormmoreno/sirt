@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Proyecto;
-use Illuminate\Support\Facades\Session;
 use App\User;
 
 class CostoController extends Controller

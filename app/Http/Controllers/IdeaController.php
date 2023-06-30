@@ -366,10 +366,15 @@ class IdeaController extends Controller
         }
         $resultado = $this->ideaRepository->derivarIdea($idea, $comite);
         alert($resultado['title'], $resultado['msg'], $resultado['type'])->showConfirmButton('Ok', '#3085d6');
-        if ($bandera != 1) {
-            return back();
+        if ($resultado['state']) {
+            if ($bandera != 1) {
+                return back();
+            } else {
+                return redirect()->route('comite.cambiar.asignacion', ['idea' => $resultado['idea']->id, 'comite' => $comite]);
+            }
         } else {
-            return redirect()->route('comite.cambiar.asignacion', ['idea' => $resultado['idea']->id, 'comite' => $comite]);
+            alert('Error', 'No se ha podido realizar esta acción: '. $resultado['msg'], 'error');
+            return back();
         }
     }
 
@@ -544,7 +549,6 @@ class IdeaController extends Controller
             alert('No autorizado', 'No tienes permisos para cambiar la información de esta idea de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-
         if ($request->input('txtidea_empresa') == 1) {
             // Idea con empresa
             $empresa = $this->empresaRepository->consultarEmpresaParams($request->input('txtnit'), 'nit')->first();
@@ -571,6 +575,15 @@ class IdeaController extends Controller
         if ($request->input('txtopcionRegistro') == "guardar") {
             $result = $this->ideaRepository->Update($request, $idea);
         } else {
+            if(!request()->user()->can('postularIdea', $idea)) {
+                alert('No autorizado', 'No tienes permisos para postular esta idea de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
+                return response()->json([
+                    'state' => 'no_update',
+                    'title' => 'No autorizado',
+                    'msg' => 'No tienes permisos para postular esta idea de proyecto',
+                    'type' =>'error'
+                ]);
+            }
             $result = $this->ideaRepository->updateAndPostular($request, $idea);
         }
         if ($result['state']) {
@@ -656,11 +669,8 @@ class IdeaController extends Controller
 
     public function show($id)
     {
-        $idea = Idea::select('id', 'codigo_idea','nombre_proyecto','objetivo', 'alcance',  'talento_id', 'sede_id')->with([
-            'talento' => function($query){
-                $query->select('id', 'user_id');
-            },
-            'talento.user' => function($query){
+        $idea = Idea::select('id', 'codigo_idea','nombre_proyecto','objetivo', 'alcance',  'user_id', 'sede_id')->with([
+            'user' => function($query){
                 $query->select('id','documento', 'nombres', 'apellidos', 'email', 'celular');
             },
             'sede' => function($query){

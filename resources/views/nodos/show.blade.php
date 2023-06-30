@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'Tecnoparque nodo '. $nodo->entidad->present()->entidadName())
+@section('meta-title', 'Tecnoparque '. $nodo->entidad->present()->entidadName())
 @section('content')
 @php
     $year = Carbon\Carbon::now()->year;
@@ -10,14 +10,14 @@
                 <div class="left left-align">
                     <h5 class="left-align primary-text">
                         <i class="material-icons left">domain</i>Tecnoparque
-                        Nodo {{$nodo->entidad->present()->entidadName()}}
+                        {{$nodo->entidad->present()->entidadName()}}
                     </h5>
                 </div>
                 <div class="right right-align show-on-large hide-on-med-and-down">
                     <ol class="breadcrumbs">
                         <li><a href="{{route('home')}}">Inicio</a></li>
                         <li><a href="{{route('nodo.index')}}">Nodos</a></li>
-                        <li class="active">Tecnoparque Nodo {{$nodo->entidad->present()->entidadName()}}</li>
+                        <li class="active">Tecnoparque {{$nodo->entidad->present()->entidadName()}}</li>
                     </ol>
                 </div>
             </div>
@@ -32,7 +32,7 @@
                                             <div class="left">
                                                 <div class="left">
                                                 <span class="mailbox-title primary-text">
-                                                Tecnoparque nodo {{$nodo->entidad->present()->entidadName()}} -
+                                                Tecnoparque {{$nodo->entidad->present()->entidadName()}} -
                                                 {{$nodo->entidad->present()->entidadLugar()}}
                                             </span>
                                                         <span class="mailbox-author">
@@ -48,7 +48,7 @@
                                             </div>
                                             <div class="right mailbox-buttons hide-on-med-and-down">
                                             <span class="mailbox-title">
-                                                <p class="center">Información Tecnoparque Nodo {{$nodo->entidad->present()->entidadName()}}</p><br/>
+                                                <p class="center">Información Tecnoparque {{$nodo->entidad->present()->entidadName()}}</p><br/>
                                                 <p class="center">{{isset($nodo->centro->entidad->nombre) ? $nodo->centro->entidad->nombre : ''}} - {{isset($nodo->centro->entidad->ciudad->nombre) ? $nodo->centro->entidad->ciudad->nombre : ''}} ({{ isset($nodo->centro->entidad->ciudad->departamento->nombre) ? $nodo->centro->entidad->ciudad->departamento->nombre : ''}})</p>
                                             </span>
                                             </div>
@@ -147,7 +147,7 @@
                                                     <div class="center">
                                                     <span class="mailbox-title primary-text">
                                                         <i class="material-icons fas fa-user-friends"></i>
-                                                        Equipo humano Tecnoparque Nodo {{$nodo->entidad->present()->entidadName()}}
+                                                        Equipo humano Tecnoparque {{$nodo->entidad->present()->entidadName()}}
                                                     </span>
                                                     </div>
                                                     <div class="divider mailbox-divider"></div>
@@ -190,7 +190,7 @@
                                                                             block
                                                                         </i>
                                                                         <p class="center-align">Tecnoparque
-                                                                            Nodo {{$nodo->entidad->present()->entidadName()}}
+                                                                            {{$nodo->entidad->present()->entidadName()}}
                                                                             no cuenta con
                                                                             un {{App\User::IsDinamizador()}}
                                                                             aún</p>
@@ -237,7 +237,7 @@
                                                                             block
                                                                         </i>
                                                                         <p class="center-align">Tecnoparque
-                                                                            Nodo {{$nodo->entidad->present()->entidadName()}}
+                                                                            {{$nodo->entidad->present()->entidadName()}}
                                                                             no cuenta con
                                                                             un {{App\User::IsInfocenter()}}
                                                                             aún</p>
@@ -293,7 +293,7 @@
                                                                             block
                                                                         </i>
                                                                         <p class="center-align">Tecnoparque
-                                                                            Nodo {{$nodo->entidad->present()->entidadName()}}
+                                                                            {{$nodo->entidad->present()->entidadName()}}
                                                                             no cuenta con
                                                                             un {{App\User::IsExperto()}} aún</p>
                                                                     </div>
@@ -349,7 +349,7 @@
                                                                             block
                                                                         </i>
                                                                         <p class="center-align">Tecnoparque
-                                                                            Nodo {{$nodo->entidad->present()->entidadName()}}
+                                                                            {{$nodo->entidad->present()->entidadName()}}
                                                                             no cuenta con
                                                                             un {{App\User::IsArticulador()}}
                                                                             aún</p>
@@ -406,7 +406,7 @@
                                                                             block
                                                                         </i>
                                                                         <p class="center-align">Tecnoparque
-                                                                            Nodo {{$nodo->entidad->present()->entidadName()}}
+                                                                            {{$nodo->entidad->present()->entidadName()}}
                                                                             no cuenta con
                                                                             un {{App\User::IsApoyoTecnico()}}
                                                                             aún</p>
@@ -463,7 +463,7 @@
                                                                             block
                                                                         </i>
                                                                         <p class="center-align">Tecnoparque
-                                                                            Nodo {{$nodo->entidad->present()->entidadName()}}
+                                                                            {{$nodo->entidad->present()->entidadName()}}
                                                                             no cuenta con
                                                                             un {{App\User::IsIngreso()}}
                                                                             aún</p>

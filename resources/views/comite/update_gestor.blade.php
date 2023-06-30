@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('meta-title', 'CSIBT')
 @section('content')
+<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <main class="mn-inner inner-active-sidebar">
   <div class="content">
     <div class="row no-m-t no-m-b">
@@ -36,8 +37,23 @@
                         <label id="txtgestor_id-error" class="error" for="txtgestor_id">{{ $message }}</label>
                       @enderror
                     </div>
+                  </div>
+                  <div class="divider"></div>
+                <div class="center">
+                  <button type="submit" value="send" class="waves-effect waves-light btn bg-secondary center-align">
+                    <i class="material-icons right">send</i>
+                    Cambiar experto.
+                  </button>
+                  <a href="{{route('csibt.detalle', $comite->id)}}" class="waves-effect bg-danger btn center-align">
+                    <i class="material-icons left">backspace</i>Cancelar
+                  </a>
                 </div>
+              </form>
             </div>
+          </div>
         </div>
-    </main>
+      </div>
+    </div>
+  </div>
+</main>
 @endsection

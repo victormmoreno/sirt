@@ -508,7 +508,7 @@ class ArticulationRepository extends Repository
         ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
         ->join('fases', 'fases.id', '=', 'articulations.phase_id')
         ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-        ->whereIn('fases.nombre', [Articulation::IsFinalizado(), 'Concluido sin finalizar'])
+        ->whereIn('fases.nombre', [Articulation::IsFinalizado(), 'Cancelado'])
         ->groupBy('entidades.nombre', 'fase')
         ->whereYear('articulations.end_date', $year);
     }

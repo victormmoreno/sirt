@@ -179,7 +179,7 @@
                                                                                         @if (isset($user->dinamizador->nodo->id) && collect($user->roles)->contains('name', App\User::IsDinamizador()))
                                                                                             <option
                                                                                                 value="{{ $user->dinamizador->nodo->id }}"
-                                                                                                selected>Tecnoparque Nodo
+                                                                                                selected>Tecnoparque
                                                                                                 {{ $user->dinamizador->nodo->entidad->nombre }}
                                                                                             </option>
                                                                                         @endif
@@ -286,7 +286,7 @@
                                                                                                 collect($user->roles)->contains('name', App\User::IsExperto()))
                                                                                             <option
                                                                                                 value="{{ $user->experto->nodo->id }}"
-                                                                                                selected="">Tecnoparque Nodo
+                                                                                                selected="">Tecnoparque
                                                                                                 {{ $user->experto->nodo->entidad->nombre }}
                                                                                             </option>
                                                                                         @elseif(session()->has('login_role') &&
@@ -295,7 +295,7 @@
                                                                                             <option value="">Seleccione Nodo</option>
                                                                                             <option
                                                                                                 value="{{ auth()->user()->dinamizador->nodo->id }}">
-                                                                                                Tecnoparque Nodo {{ auth()->user()->dinamizador->nodo->entidad->nombre }}
+                                                                                                Tecnoparque {{ auth()->user()->dinamizador->nodo->entidad->nombre }}
                                                                                             </option>
                                                                                         @endif
                                                                                 </select>
@@ -423,7 +423,7 @@
                                                                                                 collect($user->roles)->contains('name', App\User::IsArticulador()))
                                                                                             <option
                                                                                                 value="{{ $user->articulador->nodo->id }}"
-                                                                                                selected="">Tecnoparque Nodo
+                                                                                                selected="">Tecnoparque
                                                                                                 {{ $user->articulador->nodo->entidad->nombre }}
                                                                                             </option>
                                                                                         @elseif(session()->has('login_role') &&
@@ -432,7 +432,7 @@
                                                                                             <option value="">Seleccione Nodo</option>
                                                                                             <option
                                                                                                 value="{{ auth()->user()->dinamizador->nodo->id }}">
-                                                                                                Tecnoparque Nodo {{ auth()->user()->dinamizador->nodo->entidad->nombre }}
+                                                                                                Tecnoparque {{ auth()->user()->dinamizador->nodo->entidad->nombre }}
                                                                                             </option>
                                                                                         @endif
                                                                                 </select>
@@ -539,7 +539,7 @@
                                                                                         @if (isset($user->infocenter->nodo) && session()->has('login_role') && collect($user->roles)->contains('name', App\User::IsInfocenter()))
                                                                                             <option
                                                                                                 value="{{ $user->infocenter->nodo->id }}"
-                                                                                                selected="">Tecnoparque Nodo {{ $user->infocenter->nodo->entidad->nombre }}
+                                                                                                selected="">Tecnoparque {{ $user->infocenter->nodo->entidad->nombre }}
                                                                                             </option>
                                                                                         @elseif(session()->has('login_role') &&
                                                                                                 session()->get('login_role') == App\User::IsDinamizador() &&
@@ -547,7 +547,7 @@
                                                                                             <option value="">Seleccione Nodo</option>
                                                                                             <option
                                                                                                 value="{{ auth()->user()->dinamizador->nodo->id }}">
-                                                                                                Tecnoparque Nodo {{ auth()->user()->dinamizador->nodo->entidad->nombre }}
+                                                                                                Tecnoparque {{ auth()->user()->dinamizador->nodo->entidad->nombre }}
                                                                                             </option>
                                                                                         @endif
                                                                                 </select>
@@ -655,7 +655,7 @@
                                                                                         @if (isset($user->apoyotecnico->nodo->id) && session()->has('login_role') && collect($user->roles)->contains('name', App\User::IsApoyoTecnico()))
                                                                                             <option
                                                                                                 value="{{ $user->apoyotecnico->nodo->id }}"
-                                                                                                selected="">Tecnoparque Nodo {{ $user->apoyotecnico->nodo->entidad->nombre }}
+                                                                                                selected="">Tecnoparque {{ $user->apoyotecnico->nodo->entidad->nombre }}
                                                                                             </option>
                                                                                         @elseif(session()->has('login_role') &&
                                                                                                 session()->get('login_role') == App\User::IsDinamizador() &&
@@ -663,7 +663,7 @@
                                                                                             <option value="">Seleccione Nodo</option>
                                                                                             <option
                                                                                                 value="{{ auth()->user()->dinamizador->nodo->id }}">
-                                                                                                Tecnoparque Nodo {{ auth()->user()->dinamizador->nodo->entidad->nombre }}
+                                                                                                Tecnoparque {{ auth()->user()->dinamizador->nodo->entidad->nombre }}
                                                                                             </option>
                                                                                         @endif
                                                                                 </select>
@@ -789,7 +789,7 @@
                                                                                         @if (isset($user->ingreso->nodo->id) && session()->has('login_role') && collect($user->roles)->contains('name', App\User::IsIngreso()))
                                                                                             <option
                                                                                                 value="{{ $user->ingreso->nodo->id }}"
-                                                                                                selected="">Tecnoparque Nodo {{ $user->ingreso->nodo->entidad->nombre }}
+                                                                                                selected="">Tecnoparque {{ $user->ingreso->nodo->entidad->nombre }}
                                                                                             </option>
                                                                                         @elseif(session()->has('login_role') &&
                                                                                                 session()->get('login_role') == App\User::IsDinamizador() &&
@@ -797,7 +797,7 @@
                                                                                             <option value="">Seleccione Nodo</option>
                                                                                             <option
                                                                                                 value="{{ auth()->user()->dinamizador->nodo->id }}">
-                                                                                                Tecnoparque Nodo {{ auth()->user()->dinamizador->nodo->entidad->nombre }}
+                                                                                                Tecnoparque {{ auth()->user()->dinamizador->nodo->entidad->nombre }}
                                                                                             </option>
                                                                                         @endif
                                                                                 </select>

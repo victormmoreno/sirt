@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col s12 m12 l12">
                 <span class=" mailbox-title title primary-text">
-                    Proyectos Finalizados Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }}
+                    Proyectos Finalizados Tecnoparque {{ \NodoHelper::returnNameNodoUsuario() }}
                 </span>
                 <div class="row search-tabs-row search-tabs-header">
                     <div class="input-field col s12 m2 l2">

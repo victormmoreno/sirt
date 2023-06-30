@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'Equipos ' . 'Tecnoparque Nodo ' . \NodoHelper::returnNameNodoUsuario())
+@section('meta-title', 'Equipos ' . 'Tecnoparque ' . \NodoHelper::returnNameNodoUsuario())
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="content">

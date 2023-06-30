@@ -27,6 +27,8 @@ class NodoHelper
             return User::IsActivador();
         }else if (\Session::get('login_role') == User::IsUsuario()) {
             return User::IsUsuario();
+        }else if (\Session::get('login_role') == User::IsTalento()) {
+            return User::IsTalento();
         }
         else {
             return 'No hay información disponible.';
@@ -45,6 +47,8 @@ class NodoHelper
             return Nodo::userNodo(auth()->user()->ingreso->nodo_id)->first()->nombre;
         }else if (\Session::get('login_role') == User::IsApoyoTecnico() && isset(auth()->user()->apoyotecnico->nodo_id)) {
             return Nodo::userNodo(auth()->user()->apoyotecnico->nodo_id)->first()->nombre;
+        }else if (\Session::get('login_role') == User::IsTalento()) {
+            return 'Talento';
         }else if (\Session::get('login_role') == User::IsArticulador() && isset(auth()->user()->articulador->nodo_id)) {
             return Nodo::userNodo(auth()->user()->articulador->nodo_id)->first()->nombre;
         }  else {

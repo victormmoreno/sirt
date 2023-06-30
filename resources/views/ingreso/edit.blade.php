@@ -14,7 +14,7 @@
                         <div class="card-content">
                             <div class="row">
                                 <center>
-                                    <span class="card-title center-align">Nuevo Ingreso Tecnoparque nodo
+                                    <span class="card-title center-align">Nuevo Ingreso Tecnoparque
                                         {{ \NodoHelper::returnNameNodoUsuario() }}</span>
                                 </center>
                                 <div class="divider"></div>

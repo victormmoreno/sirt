@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('meta-title', 'Asesoría y Uso')
-
 @section('content')
 	<main class="mn-inner inner-active-sidebar">
         <div class="content">
@@ -30,8 +29,8 @@
                                                 <div class="card-content  white-text">
                                                     <div class="row">
                                                         <div class="col s12 m6 l9">
-                                                            <h4>{{$usoinfraestructura->present()->asesorable()}}</h4>
-                                                                <p>Nodo: Tecnoparque nodo {{$usoinfraestructura->present()->nodoUso()}}</p>
+                                                            <h4>{{$usoinfraestructura->present()->actividadUsoInfraestructura()}}</h4>
+                                                                <p>Tecnoparque {{$usoinfraestructura->present()->nodoUso()}}</p>
                                                         </div>
                                                         <div class="col s12 m6 l3 right-align">
                                                             <h4>${{number_format($totalCostos,0)}}</h4>

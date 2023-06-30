@@ -230,7 +230,7 @@ class Proyecto extends Model
      */
     public function asesor()
     {
-        return $this->belongsTo(User::class, 'experto_id', 'id');
+        return $this->belongsTo(User::class, 'experto_id', 'id')->withTrashed();
     }
 
     /**
@@ -351,17 +351,6 @@ class Proyecto extends Model
             return $query->where('fase_id', $fase);
         }
         return $query;
-    }
-
-    public function scopeProyectosGestor($query)
-    {
-        return $query->with(['articulacion_proyecto.actividad'])
-            ->where(function($subquery){
-                $subquery->where('fase_id', Fase::IsInicio())
-                ->orwhere('fase_id', Fase::IsPlaneacion())
-                ->orwhere('fase_id', Fase::IsEjecucion());
-            })->get()
-            ->pluck('articulacion_proyecto.actividad.nombre','articulacion_proyecto.actividad.codigo_actividad' );
     }
 
     /**

@@ -5,7 +5,7 @@
             <input type="hidden" value="{{$idea}}" name="txtidea_id">
             @csrf
             <i class="material-icons left">assignment_turned_in</i>
-            Postular proyecto al nodo {{$idea->nodo->entidad->nombre}}.
+            Postular proyecto a tecnoparque {{$idea->nodo->entidad->nombre}}.
         </form>
     </a>
 @endcan
@@ -30,7 +30,7 @@
 </a>
 @endcan
 @can('update', $idea)
-    <a href="{{route('idea.edit', $idea->id)}}" class="collection-item">
+    <a href="{{route('idea.edit', $idea)}}" class="collection-item">
         <i class="material-icons left">edit</i>
         Cambiar información de la idea.
     </a>

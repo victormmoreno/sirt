@@ -182,15 +182,12 @@ class Idea extends Model
             'convocatoria',
             'ideas.user_id'
         )
-        ->selectRaw('concat(nombres_contacto, " ", apellidos_contacto) AS nombres_contacto')
         ->selectRaw('concat(users.nombres, " ", users.apellidos) AS nombres_talento')
         ->selectRaw('concat(ug.nombres, " ", ug.apellidos) AS experto')
         ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
         ->join('estadosidea', 'estadosidea.id', '=', 'ideas.estadoidea_id')
-        ->leftJoin('gestores', 'gestores.id', '=', 'ideas.asesor_id')
-        ->leftJoin('users as ug', 'ug.id', '=', 'gestores.user_id')
-        ->leftjoin('talentos', 'talentos.id', '=', 'ideas.user_id')
-        ->leftjoin('users', 'users.id', '=', 'talentos.user_id')
+        ->leftJoin('users as ug', 'ug.id', '=', 'ideas.asesor_id')
+        ->leftjoin('users', 'users.id', '=', 'ideas.user_id')
         ->field($field, $value)
         ->oneNodo($nodo);
     }

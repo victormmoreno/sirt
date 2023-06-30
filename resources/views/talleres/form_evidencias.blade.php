@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'Entrenamientos')
+@section('meta-title', 'Taller de fortalecimiento')
 @section('content')
     <main class="mn-inner inner-active-sidebar">
         <div class="content">
@@ -71,11 +71,11 @@
                                                 <li>
                                                     <div class="collapsible-header teal lighten-4"><i
                                                             class="material-icons">filter_drama</i>Pulse aquí para subir los
-                                                        entregables del Entrenamiento</div>
+                                                        entregables del taller de fortalecimiento</div>
                                                     <div class="collapsible-body">
                                                         <div class="row">
                                                             <div class="center col s12 m12 l12">
-                                                                <h6>Pulse aquí para subir los entregables del Entrenamiento.
+                                                                <h6>Pulse aquí para subir los entregables del taller de fortalecimiento.
                                                                 </h6>
                                                                 <div class="dropzone" id="evidencias_entrenamiento"></div>
                                                             </div>
@@ -99,7 +99,7 @@
                                             <li>
                                                 <div class="collapsible-header teal lighten-4"><i
                                                         class="material-icons">filter_drama</i>Pulse aquí para ver las
-                                                    evidencias del Entrenamiento</div>
+                                                    evidencias del taller de fortalecimiento</div>
                                                 <div class="collapsible-body">
                                                     <div class="row">
                                                         <div class="col s12 m12 l12">

@@ -31,7 +31,7 @@
                                             @can('viewNodes', \App\User::class)
                                                 Usuarios de {{config('app.name')}}
                                             @else
-                                                Usuarios de Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}
+                                                Usuarios de Tecnoparque {{ \NodoHelper::returnNameNodoUsuario() }}
                                             @endcan
                                         </span>
                                         @can('search', \App\User::class)

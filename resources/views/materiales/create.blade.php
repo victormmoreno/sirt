@@ -23,7 +23,7 @@
             		<div class="card-content">
               			<div class="row">
 			                <center>
-				                <span class="card-title center-align primary-text">Nuevo Material Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }}
+				                <span class="card-title center-align primary-text">Nuevo Material Tecnoparque {{ \NodoHelper::returnNameNodoUsuario() }}
 				                </span>
 			                </center>
                 			<div class="divider"></div>
@@ -34,7 +34,7 @@
                                         block
                                     </i>
                                     <p>
-                                        Para registrar un nuevo material, Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }} debe tener lineas asociadas, por favor solicita al administrador de la plataforma para que este agregue nuevas lineas tecnológicas al nodo.
+                                        Para registrar un nuevo material, Tecnoparque {{ \NodoHelper::returnNameNodoUsuario() }} debe tener lineas asociadas, por favor solicita al administrador de la plataforma para que este agregue nuevas lineas tecnológicas al nodo.
                                     </p>
                                 </div>
                             @else

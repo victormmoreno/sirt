@@ -20,9 +20,9 @@
         <i class="material-icons {{setActiveRouteActiveIcon('materiales')}}">local_library</i>Materiales de Formación
     </a>
 </li>
-<li class="no-padding {{setActiveRoute('usoinfraestructura')}}">
-    <a class="waves-effect waves-grey {{setActiveRouteActivePage('usoinfraestructura')}}" href="{{route('usoinfraestructura.index')}}" rel="canonical" title="Asesorias y usos">
-        <i class="material-icons {{setActiveRouteActiveIcon('usoinfraestructura')}}">domain</i>Asesorias y usos
+<li class="no-padding {{setActiveRoute('asesorias')}}">
+    <a class="waves-effect waves-grey {{setActiveRouteActivePage('asesorias')}}" href="{{route('asesorias.index')}}" rel="canonical" title="Asesorias y usos">
+        <i class="material-icons {{setActiveRouteActiveIcon('asesorias')}}">domain</i>Asesorias y usos
     </a>
 </li>
 <li class="no-padding  ">

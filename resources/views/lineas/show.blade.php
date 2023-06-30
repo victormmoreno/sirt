@@ -135,7 +135,7 @@
                                                     <i class="material-icons left">
                                                         info
                                                     </i>
-                                                    Nodos con la linea de {{$linea->nombre}}
+                                                    Tecnoparques con la linea de {{$linea->nombre}}
                                                 </span>
                                             </div>
                                             
@@ -149,7 +149,7 @@
                                                         domain
                                                     </i>
                                                     <span class="title">
-                                                        Tecnoparque Nodo {{$nodo->entidad->nombre}} 
+                                                        Tecnoparque {{$nodo->entidad->nombre}} 
                                                     </span>
                                                     <p>
                                                        <b>Correo electónico: </b>{{!empty($nodo->entidad->email_entidad) ? $nodo->entidad->email_entidad : 'No registra' }}
@@ -170,7 +170,7 @@
                                                         info
                                                     </i>
                                                     <span class="title">
-                                                        No hay nodos asociados a la linea de {{$linea->nombre}}
+                                                        No hay tecnoparques asociados a la linea de {{$linea->nombre}}
                                                     </span>
                                                     
                                                 </li>

@@ -6,17 +6,8 @@ Route::group([
     'namespace'  => 'Asesorie',
     'middleware' => 'disablepreventback',
 ], function () {
-
-    Route::resource('usoinfraestructura', 'UsoInfraestructuraController', ['as' => 'usoinfraestructura'])->names([
-        'create'  => 'usoinfraestructura.create',
-        'update'  => 'usoinfraestructura.update',
-        'edit'    => 'usoinfraestructura.edit',
-        'destroy' => 'usoinfraestructura.destroy',
-        'show'    => 'usoinfraestructura.show',
-        'index'   => 'usoinfraestructura.index',
-        'store'   => 'usoinfraestructura.store',
-    ])->parameters([
-        'usoinfraestructura' => 'id',
+    Route::resource('asesorias', 'UsoInfraestructuraController')->parameters([
+        'asesorias' => 'id',
     ]);
 
     //consultas que se utlizan para el uso de infraestructura

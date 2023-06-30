@@ -1,5 +1,5 @@
 @component('mail::message')
-# Se ha aceptado una idea para presentarse al comité | Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.
+# Se ha aceptado una idea para presentarse al comité | Tecnoparque {{$idea->nodo->entidad->nombre}}.
 
 Cordial Saludo.
 

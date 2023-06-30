@@ -16,13 +16,13 @@ class EdtRepository
 
     /**
      * Método que retorna el directorio de los archivos que tiene una articulación en el servidor
-     * @param int $id Id de la articulacion_proyecto
+     * @param int $id Id de la edt
      * @return mixed
      * @author dum
      */
     private function returnDirectoryEdtFiles($id)
     {
-        // consulta los archivos de una articulacion_proyecto (registro de la base de datos)
+        // consulta los archivos de una edt (registro de la base de datos)
         $tempo = $this->consultarArchivosDeUnaEdt($id)->first();
         if ($tempo == null) {
         return false;

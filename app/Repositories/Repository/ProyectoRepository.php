@@ -826,8 +826,8 @@ class ProyectoRepository extends Repository
     /**
      * Retornar los emails de los destinatarios en un array
      *
-     * @param Type $var Description
-     * @return type
+     * @param $users
+     * @return array
      * @throws conditon
      **/
     private function returnEmailDestinatariosArray($users)
@@ -1280,9 +1280,9 @@ class ProyectoRepository extends Repository
     {
 
         $anho = Carbon::now()->isoFormat('YYYY');
-        $tecnoparque = sprintf("%02d", $experto->gestor->nodo_id);
-        $linea = $experto->gestor->lineatecnologica_id;
-        $gestor = sprintf("%03d", $experto->gestor->id);
+        $tecnoparque = sprintf("%02d", $experto->experto->nodo_id);
+        $linea = $experto->experto->linea_id;
+        $gestor = sprintf("%03d", $experto->experto->id);
         $idProyecto = Proyecto::selectRaw('MAX(id+1) AS max')->get()->last();
         $idProyecto->max == null ? $idProyecto->max = 1 : $idProyecto->max = $idProyecto->max;
         $idProyecto->max = sprintf("%04d", $idProyecto->max);
@@ -1305,9 +1305,7 @@ class ProyectoRepository extends Repository
             } else {
                 $experto = User::find(auth()->user()->id);
             }
-
             $codigo_actividad = $this->generarCodigoDeProyecto($experto);
-            $entidad_id = Entidad::all()->where('nombre', 'No Aplica')->last()->id;
 
             $trl_esperado = 1;
             $reci_ar_emp = 1;
@@ -1350,8 +1348,8 @@ class ProyectoRepository extends Repository
                 'nombre' => request()->txtnombre,
                 'fecha_inicio' => Carbon::now()->isoFormat('YYYY-MM-DD'),
                 'objetivo_general' => request()->txtobjetivo,
-                'asesor_id' => $experto->gestor->id,
-                'nodo_id' => $experto->gestor->nodo_id,
+                'experto_id' => $experto->id,
+                'nodo_id' => $experto->experto->nodo_id,
                 'fase_id' => Fase::where('nombre', 'Inicio')->first()->id,
                 'idea_id' => request()->txtidea_id,
                 'areaconocimiento_id' => request()->txtareaconocimiento_id,
@@ -1399,7 +1397,10 @@ class ProyectoRepository extends Repository
             return ['state' => true, 'id' => $proyecto->id];
         } catch (\Exception $e) {
             DB::rollback();
-            return ['state' => false];
+            return [
+                'state' => false,
+                'ex' => $e
+            ];
         }
     }
 

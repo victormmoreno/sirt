@@ -22,7 +22,7 @@
                             </div>
                             <div class="col s12 m12 l6 right-align">
                                 <h4 class="white-text">Estado: {{$idea->estadoIdea->nombre}}</h4>
-                                <h4 class="white-text">Nodo: {{$idea->nodo->entidad->nombre}}</h4>
+                                <h4 class="white-text">Tecnoparque {{$idea->nodo->entidad->nombre}}</h4>
                             </div>
                         </div>
                     </div>
@@ -453,7 +453,7 @@
                         </div>
                         <div class="col s12 m12 l12">
                             <p>
-                                <span class="primary-text">Nodo donde se presenta la idea</span><br>
+                                <span class="primary-text">Tecnoparque donde se presenta la idea</span><br>
                                 <b>
                                     {{$idea->nodo->entidad->nombre}}
                                 </b><br>

@@ -195,7 +195,7 @@
                                                                             <div class="row">
                                                                                 <div class="col s12 m4 l4">
                                                                                     <span class="title cyan-text text-darken-3">
-                                                                                        Nodo de registro de la idea
+                                                                                        Tecnoparque de registro de la idea
                                                                                     </span>
                                                                                     <br>
                                                                                     {{$idea->nodo->entidad->nombre}}
@@ -235,7 +235,7 @@
                                                                             <div class="row">
                                                                                 <div class="col s12 m4 l4">
                                                                                     <span class="title cyan-text text-darken-3">
-                                                                                        Nodo de registro del proyecto
+                                                                                        Tecnoparque de registro del proyecto
                                                                                     </span>
                                                                                     <br>
                                                                                     {{$proyecto->nodo->entidad->nombre}}

@@ -1,5 +1,5 @@
 @component('mail::message')
-# Programación para el Comité de Selección de Ideas | Tecnoparque Nodo {{$nodo}}.
+# Programación para el Comité de Selección de Ideas | Tecnoparque {{$nodo}}.
 
 Experto(a)
 <br>

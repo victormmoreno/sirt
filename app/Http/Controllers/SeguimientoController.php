@@ -71,6 +71,7 @@ class SeguimientoController extends Controller
                     'suspendido' => $cnt_suspendido
                 ];
             }
+            return $datos;
         }
 
     /**
@@ -297,7 +298,6 @@ class SeguimientoController extends Controller
         $Pabiertos = $this->getProyectoRepository()->proyectosSeguimientoAbiertos()->select('entidades.nombre', 'fases.nombre as fase')->selectRaw('count(trl_esperado) as trl_esperado')->groupBy('entidades.nombre', 'fase')->whereIn('nodos.id', $nodos)->get();
         $Pfinalizados = $this->getProyectoRepository()->proyectosSeguimientoCerrados(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->get();
         $agrupados = $this->agruparProyectos($Pabiertos, $Pfinalizados);
-
         return response()->json([
             'datos' => $agrupados
         ]);
@@ -351,7 +351,7 @@ class SeguimientoController extends Controller
             $cnt_ejecucion = $APabiertas->where('nodo', $row->first()->nodo)->where('fase', 'Ejecución')->first();
             $cnt_cierre = $APabiertas->where('nodo', $row->first()->nodo)->where('fase', 'Cierre')->first();
             $cnt_fin = $Afinalizadas->where('nodo', $row->first()->nodo)->where('fase', 'Finalizado')->first();
-            $cnt_suspendido = $Afinalizadas->where('nodo', $row->first()->nodo)->where('fase', 'Concluido sin finalizar')->first();
+            $cnt_suspendido = $Afinalizadas->where('nodo', $row->first()->nodo)->where('fase', 'Cancelado')->first();
 
             $cnt_inicio != null ? $cnt_inicio = $cnt_inicio->cantidad : $cnt_inicio = 0;
 
@@ -368,6 +368,7 @@ class SeguimientoController extends Controller
                 'finalizado' => $cnt_fin,
                 'suspendido' => $cnt_suspendido
             ];
+
         }
         return $datos;
     }
@@ -440,32 +441,33 @@ class SeguimientoController extends Controller
      **/
     private function retornarValorDeExpertos($request)
     {
-        $expertos_temp = User::ConsultarFuncionarios(request()->user()->getNodoUser(), User::IsExperto())->get();;
+        $expertos_temp = User::ConsultarFuncionarios(request()->user()->getNodoUser(), User::IsExperto())->get();
         if (Str::contains(session()->get('login_role'), [User::IsDinamizador(), User::IsInfocenter()])) {
-        if ($request->expertos[0] == 'all') {
-            foreach ($expertos_temp as $experto) {
-                $expertos[] = $experto->id;
+            if ($request->expertos[0] == 'all') {
+                foreach ($expertos_temp as $experto) {
+                    $expertos[] = $experto->id;
+                }
+            } else {
+                $expertos = $request->expertos;
             }
         } else {
-            $expertos = $request->expertos;
+            $expertos = [request()->user()->id];
         }
-        } else {
-        $expertos = [request()->user()->id];
-        }
+        return $expertos;
     }
     
     public function seguimientoProyectosInscritos(Request $request)
     {
         $nodos = $this->retornarValorDeNodos($request);
         if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
-        $query = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->get();
+            $query = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->get();
         } else {
-        $expertos = $this->retornarValorDeExpertos($request);
-        $query = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->whereIn('users.id', $expertos)->get();
+            $expertos = $this->retornarValorDeExpertos($request);
+            $query = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->whereIn('users.id', $expertos)->get();
         }
+        // dd($query);
 
         $datos = $this->agruparDatosPorMeses($query);
-
         return response()->json([
         'datos' => $datos
         ]);

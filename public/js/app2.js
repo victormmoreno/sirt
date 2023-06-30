@@ -269,7 +269,7 @@ function consultarEntrenamientosPorNodo(nodo) {
     },
     columns: [
       {
-        title: 'Código del Entrenamiento',
+        title: 'Código del taller',
         data: 'codigo_entrenamiento',
         name: 'codigo_entrenamiento',
       },
@@ -4661,8 +4661,8 @@ function consultarExpertosDeUnNodo(nodo_id) {
       }).done(function(response){
           $("#txtexperto_id_proyecto").empty();
           $('#txtexperto_id_proyecto').append('<option value="">Seleccione el experto</option>');
-          $.each(response.gestores, function(i, e) {
-            $('#txtexperto_id_proyecto').append('<option  value="'+e.user_id+'">'+e.nombre+'</option>');
+          $.each(response.experts, function(i, e) {
+            $('#txtexperto_id_proyecto').append('<option  value="'+e.id+'">'+e.nombre_completo+'</option>');
           })
           $('#txtexperto_id_proyecto').material_select();
     });
@@ -4674,8 +4674,8 @@ function consultarInformacionExperto(user) {
         type:'get',
         url: `${host_url}/usuarios/funcionario/${user}`
       }).done(function(response){
-          //printLinea(response);
-          //consultarSublineas(response.user.gestor.lineatecnologica.id);
+          printLinea(response);
+          consultarSublineas(response.user.experto.linea.id);
     });
 }
 
@@ -4699,7 +4699,7 @@ function printSublineas(response) {
 }
 
 function printLinea(response) {
-    //$('#txtlinea').val(response.user.gestor.lineatecnologica.nombre);
+    $('#txtlinea').val(response.user.experto.linea.nombre);
 }
 
 // Enviar formulario para modificar el proyecto en fase de cierre
@@ -8221,7 +8221,7 @@ function graficoSeguimientoArticulacionesFases(data, name) {
             name: 'Finalizado',
             data: finalizado
         }, {
-            name: 'Concluido sin finalizar',
+            name: 'Cancelado',
             data: suspendido
         }]
     });

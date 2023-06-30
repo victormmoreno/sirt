@@ -70,22 +70,17 @@ trait SearchUsers
     public function findOfficialById(int $id)
     {
         return response()->json([
-            'user' => User::withTrashed()->where('id', $id)->first(),
+            'user' => User::with(['experto', 'experto.linea'])->withTrashed()->where('id', $id)->first(),
         ]);
     }
 
     public function findExpertsByNodo($nodo = null)
     {
-        $experts = User::select('users.id')
-            ->selectRaw('CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) as nombre')
-            ->join('user_nodo', 'user_nodo.user_id', 'users.id')
-            ->role(User::IsExperto())
-            ->where('user_nodo.nodo_id', $nodo)
-            ->withTrashed()
-            ->get();
+        $gestores = User::ConsultarFuncionarios($nodo, User::IsExperto())->get();
         return response()->json([
-            'experts' => $experts
+            'experts' => $gestores
         ]);
+
     }
 
     /**

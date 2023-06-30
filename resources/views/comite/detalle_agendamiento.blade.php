@@ -139,6 +139,7 @@
                                                                                 </a>
                                                                             </div>
                                                                         @endcan
+                                                                        @can('cambiar_asignacion', [$value, $comite])
                                                                         <div class="col s12 m6 l6">
                                                                             @if ($value->pivot->admitido == 1)
                                                                                 <a href="{{route('comite.cambiar.asignacion', [$value, $comite])}}">
@@ -150,6 +151,7 @@
                                                                                 </a>
                                                                             @endif
                                                                         </div>
+                                                                        @endcan
                                                                     </div>
                                                                     @can('derivar_idea', [$comite, $value])
                                                                         <div class="row">

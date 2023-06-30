@@ -12,11 +12,9 @@ use App\Models\{Articulation,
     Nodo,
     Fase,
     Equipo,
-    Gestor,
     LineaTecnologica,
     Material};
 use App\Datatables\UsoInfraestructuraDatatable;
-use App\Repositories\Repository\UserRepository\GestorRepository;
 use App\Repositories\Repository\{LineaRepository, ProyectoRepository,  UsoInfraestructuraRepository};
 use App\User;
 use Carbon\Carbon;
@@ -40,7 +38,6 @@ class UsoInfraestructuraController extends Controller
     ) {
         $this->setUsoIngraestructuraProyectoRepository($UsoInfraestructuraProyectoRepository);
         $this->setUsoInfraestructuraRepository($UsoInfraestructuraRepository);
-        $this->setGestorRepository($gestorRepository);
         $this->setLineaTecnologicaRepository($lineaRepository);
         $this->setProyectoRepository($proyectoRepository);
     }

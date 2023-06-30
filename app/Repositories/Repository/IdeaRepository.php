@@ -772,11 +772,11 @@ class IdeaRepository
                 'type' => 'success',
                 'idea' => $idea
             ];
-        } catch (\Throwable $th) {
+        } catch (\Exception $ex) {
             DB::rollback();
             return [
                 'state' => false,
-                'msg' => 'La idea de proyecto no se ha modificado!',
+                'msg' => $ex->getMessage(),
                 'title' => 'Modificación errónea!',
                 'type' => 'error',
                 'idea' => null
