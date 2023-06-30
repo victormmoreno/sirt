@@ -15,8 +15,7 @@ class UsoInfraestructuraDatatable
             ->editColumn('fecha', function ($data) {
                 return optional($data->fecha)->format('Y-m-d');
             })
-
-            ->editColumn('actividad', function ($data) {
+            ->editColumn('asesorable', function ($data) {
                 return $data->nombre;
             })
             ->editColumn('tipo_asesoria', function ($data) {
@@ -40,7 +39,7 @@ class UsoInfraestructuraDatatable
             // ->filterColumn('fecha', function ($query, $keyword) {
             //     $query->whereRaw("DATE_FORMAT(fecha,'%m-%d-%Y') LIKE ?", ["%$keyword%"]);
             // })
-            ->rawColumns(['fecha','tipo_asesoria', 'actividad', 'expertoEncargado', 'fase', 'asesoria_directa', 'asesoria_indirecta', 'detail'])
+            ->rawColumns(['fecha','tipo_asesoria', 'asesorable', 'expertoEncargado', 'fase', 'asesoria_directa', 'asesoria_indirecta', 'detail'])
 
             ->make(true);
     }
@@ -51,14 +50,14 @@ class UsoInfraestructuraDatatable
             ->editColumn('fecha', function ($data) {
                 return $data->present()->fechaUsoInfraestructura();
             })
-            ->editColumn('actividad', function ($data) {
-                return $data->present()->actividadUsoInfraestructura();
+            ->editColumn('asesorable', function ($data) {
+                return $data->present()->asesorable();
             })
             ->editColumn('tipo_asesoria', function ($data) {
                 return $data->present()->tipoUsoInfraestructura();
             })
             ->editColumn('fase', function ($data) {
-                return $data->present()->faseActividad();
+                return $data->present()->asesorablePhase();
             })
             ->editColumn('asesoria_directa', function ($data) {
                 return $data->present()->asesoriaDirecta();
@@ -73,7 +72,7 @@ class UsoInfraestructuraDatatable
                 $button = '<a class="btn tooltipped green-complement  m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="' . route("usoinfraestructura.show", $data->id) . '" ><i class="material-icons">visibility</i></a>';
                 return $button;
             })
-            ->rawColumns(['fecha','tipo_asesoria', 'actividad', 'expertoEncargado', 'fase', 'asesoria_directa', 'asesoria_indirecta', 'detail'])
+            ->rawColumns(['fecha','tipo_asesoria', 'asesorable', 'expertoEncargado', 'fase', 'asesoria_directa', 'asesoria_indirecta', 'detail'])
             ->make(true);
     }
 }

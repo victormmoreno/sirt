@@ -30,7 +30,7 @@
                                                 <div class="card-content  white-text">
                                                     <div class="row">
                                                         <div class="col s12 m6 l9">
-                                                            <h4>{{$usoinfraestructura->present()->actividadUsoInfraestructura()}}</h4>
+                                                            <h4>{{$usoinfraestructura->present()->asesorable()}}</h4>
                                                                 <p>Nodo: Tecnoparque nodo {{$usoinfraestructura->present()->nodoUso()}}</p>
                                                         </div>
                                                         <div class="col s12 m6 l3 right-align">
@@ -66,13 +66,13 @@
                                                     <div class="col s12 m6 l3">
                                                         <p>
                                                             <span class="primary-text">Fecha de Inicio</span><br>
-                                                            <b>{{$usoinfraestructura->present()->actividadUsoInfraestructuraStartDate()}}</b>
+                                                            <b>{{$usoinfraestructura->present()->asesorableStartDate()}}</b>
                                                         </p>
                                                     </div>
                                                     <div class="col s12 m6 l3">
                                                         <p>
                                                             <span class="primary-text">Fase de {{$usoinfraestructura->present()->tipoUsoInfraestructura()}}</span><br>
-                                                            <b>{{$usoinfraestructura->present()->faseActividad()}}</b>
+                                                            <b>{{$usoinfraestructura->present()->asesorablePhase()}}</b>
                                                         </p>
                                                     </div>
                                                     @if(isset($usoinfraestructura->asesorable->codigo_proyecto) && $usoinfraestructura->asesorable->codigo_proyecto != null)

@@ -3,7 +3,6 @@
 namespace App\Presenters;
 
 use App\Models\UsoInfraestructura;
-use Illuminate\Database\Eloquent\Builder;
 
 class UsoInfraestructuraPresenter extends Presenter
 {
@@ -148,7 +147,7 @@ class UsoInfraestructuraPresenter extends Presenter
 
 
 
-    public function actividadUsoInfraestructura()
+    public function asesorable()
     {
         if(
             $this->uso->whereHasMorph(
@@ -175,7 +174,7 @@ class UsoInfraestructuraPresenter extends Presenter
         return "No registra";
     }
 
-    public function actividadUsoInfraestructuraStartDate()
+    public function asesorableStartDate()
     {
         if(
             $this->uso->whereHasMorph(
@@ -202,7 +201,7 @@ class UsoInfraestructuraPresenter extends Presenter
         return "No registra";
     }
 
-    public function faseActividad()
+    public function asesorablePhase()
     {
         if(
             $this->uso->whereHasMorph(

@@ -47,7 +47,7 @@ class ComiteController extends Controller
     $comite = Comite::findOrFail($id);
     if (!request()->user()->can('asignar_ideas', $comite)) {
       alert()->warning('Error!','No tienes permisos para para asignar las ideas de este comité a los expertos.')->showConfirmButton('Ok', '#3085d6');
-      return back(); 
+      return back();
     }
     $gestores = User::ConsultarFuncionarios(request()->user()->getNodoUser(), User::IsExperto())->get();
     return view('comite.asignar_ideas', [
@@ -67,7 +67,7 @@ class ComiteController extends Controller
     $comite = Comite::findOrFail($id);
     if (!request()->user()->can('calificar', $comite)) {
       alert()->warning('Error!','No tienes permisos para calificar este comité.')->showConfirmButton('Ok', '#3085d6');
-      return back(); 
+      return back();
     }
     $estados = EstadoIdea::whereIn('nombre', [EstadoIdea::IsReprogramado(), EstadoIdea::IsAdmitido(), EstadoIdea::IsRechazadoComite()])->get();
     return view('comite.realizar_comite', [
@@ -164,7 +164,7 @@ class ComiteController extends Controller
 
   /**
    * Formulario para cambiar el gestor de una idea de proyecto que fue aprobada en el comité
-   * 
+   *
    * @param Idea $idea
    * @param Comite $comite
    * @return Response
@@ -218,7 +218,7 @@ class ComiteController extends Controller
 
   /**
    * Registra el agenadamiento de un comité
-   * 
+   *
    * @param Request $request
    * @return \Illuminate\Http\Response
    */

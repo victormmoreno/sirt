@@ -31,12 +31,10 @@ class UsoInfraestructuraController extends Controller
     private $UsoInfraestructuraRepository;
     private $lineaRepository;
     private $proyectoRepository;
-    private $gestorRepository;
 
     public function __construct(
         ProyectoRepository $UsoInfraestructuraProyectoRepository,
         UsoInfraestructuraRepository $UsoInfraestructuraRepository,
-        GestorRepository $gestorRepository,
         LineaRepository $lineaRepository,
         ProyectoRepository $proyectoRepository
     ) {
@@ -86,24 +84,6 @@ class UsoInfraestructuraController extends Controller
         return $this->UsoInfraestructuraRepository;
     }
 
-    /**
-     * Asigna un valor a $gestorRepository
-     * @param object $gestorRepository
-     * @return void
-     */
-    private function setGestorRepository($gestorRepository)
-    {
-        $this->gestorRepository = $gestorRepository;
-    }
-
-    /**
-     * Retorna el valor de $gestorRepository
-     * @return object
-     */
-    private function getGestorRepository()
-    {
-        return $this->gestorRepository;
-    }
 
     /**
      * Asigna un valor a $lineaRepository
@@ -753,7 +733,6 @@ class UsoInfraestructuraController extends Controller
             'lineastecnologicas.nombre as lineatecnologica_nombre')
                 ->join('fases', 'fases.id', '=', 'proyectos.fase_id')
                 ->join('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-                ->join('actividades', 'articulacion_proyecto.actividad_id', '=', 'actividades.id')
                 ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
                 ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'gestores.lineatecnologica_id')
                 ->join('users', 'users.id', '=', 'gestores.user_id')

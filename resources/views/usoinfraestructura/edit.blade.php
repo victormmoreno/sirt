@@ -25,7 +25,7 @@
                                 <div class="row">
                                     <center>
                                     <span class="card-title center-align">Editar Uso Infraestructura |
-                                        <strong>{{$usoinfraestructura->present()->actividadUsoInfraestructura()}}</strong>
+                                        <strong>{{$usoinfraestructura->present()->asesorable()}}</strong>
                                     </span>
                                         <i class="Small material-icons prefix">domain</i>
                                     </center>

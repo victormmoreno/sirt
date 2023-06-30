@@ -32,17 +32,7 @@ class Articulacion extends Model
         'acuerdos',
         'alcance_articulacion',
         'siguientes_investigaciones',
-        'fase_id',
-        'codigo_articulacion',
-        'nombre',
-        'fecha_inicio',
-        'fecha_cierre',
-        'objetivo_general',
-        'conclusiones',
-        'formulario_inicio',
-        'cronograma',
-        'seguimiento',
-        'formulario_final'
+        'fase_id'
     ];
 
     public function productos()
@@ -77,6 +67,19 @@ class Articulacion extends Model
         return $this->belongsTo(Fase::class, 'fase_id', 'id');
     }
 
+    public function talentos()
+    {
+        return $this->belongsToMany(Talento::class, 'articulacion_talento')
+            ->withTimestamps()
+            ->withPivot('talento_lider');
+    }
+
+    public function articulacion_proyecto()
+    {
+        return $this->belongsTo(ArticulacionProyecto::class, 'articulacion_proyecto_id', 'id');
+    }
+
+
     public function scopeArticulacionesForTipoArticulacion($query, int $tipoArticulacion)
     {
         $query->where('tipo_articulacion', $tipoArticulacion);
@@ -86,4 +89,27 @@ class Articulacion extends Model
     {
         return $query->with($relations);
     }
+
+    // Retorno para la constante de no aplica
+    public function IsNoAplica()
+    {
+        return self::IS_NOAPLICA;
+    }
+
+    // Retorno de la constantes para el campo de tipo_articulacion
+    public static function IsGrupo()
+    {
+        return self::IS_GRUPO;
+    }
+
+    public static function IsEmpresa()
+    {
+        return self::IS_EMPRESA;
+    }
+
+    public static function IsEmprendedor()
+    {
+        return self::IS_EMPRENDEDOR;
+    }
+
 }

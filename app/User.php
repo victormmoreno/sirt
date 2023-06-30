@@ -200,7 +200,7 @@ class User extends Authenticatable implements JWTSubject,
 
     public function scopeConsultarUsuarios($query)
     {
-        return $query->select('users.documento', 'users.id', 'users.nombres', 'users.apellidos')
+        return $query->select('users.documento', 'users.id', 'users.nombres', 'users.apellidos', 'users.estado', 'users.created_at')
             ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS talento')
             ->join('model_has_roles', function ($join) {
                 $join->on('users.id', '=', 'model_has_roles.model_id')
