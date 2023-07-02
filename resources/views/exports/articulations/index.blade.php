@@ -15,6 +15,9 @@
                 {{__('Phase')}} {{__('articulation')}}
             </th>
             <th>
+                {{ __('Code articulation-stage') }}
+            </th>
+            <th>
                 {{ __('Name articulation-stage') }}
             </th>
             <th>
@@ -24,7 +27,10 @@
                 {{__('ArticulationStage Type')}}
             </th>
             <th>
-                Información {{__('ArticulationStage Type')}}
+                Código información {{__('ArticulationStage Type')}}
+            </th>
+            <th>
+                Nombre información {{__('ArticulationStage Type')}}
             </th>
             <th>
                 {{__('Description')}}
@@ -71,7 +77,10 @@
                 {{$articulationStage->fase}}
             </td>
             <td>
-                {{$articulationStage->code}} - {{$articulationStage->name}}
+                {{$articulationStage->code}}
+            </td>
+            <td>
+                {{$articulationStage->name}}
             </td>
             <td>
                 {{$articulationStage->present()->articulationStageStatus()}}
@@ -80,7 +89,10 @@
                 {{$articulationStage->articulation_state_type}}
             </td>
             <td>
-                {{$articulationStage->codigo_proyecto}} - {{$articulationStage->nombre_proyecto}}
+                {{$articulationStage->codigo_proyecto}}
+            </td>
+            <td>
+                {{$articulationStage->nombre_proyecto}}
             </td>
             <td>
                 {{$articulationStage->articulation_description}}

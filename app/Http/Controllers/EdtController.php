@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Session, Validator};
 use App\Http\Requests\{EdtFormRequest};
-use App\Repositories\Repository\{EntidadRepository, EdtRepository, UserRepository\GestorRepository};
+use App\Repositories\Repository\EdtRepository;
 use App\Models\{Edt, TipoEdt, AreaConocimiento, Nodo};
 use App\User;
 use App\Helpers\ArrayHelper;
@@ -16,12 +16,7 @@ class EdtController extends Controller
 
 
     private $edtRepository;
-    /**
-     * Objeto de la clase GestorRepository
-    *
-    * @var object
-    */
-    private $gestorRepository;
+
     public function __construct(EdtRepository $edtRepository)
     {
         $this->edtRepository = $edtRepository;

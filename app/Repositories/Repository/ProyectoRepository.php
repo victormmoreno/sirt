@@ -9,7 +9,6 @@ use App\Notifications\Proyecto\{ProyectoAprobarFase, ProyectoAprobarSuspendido, 
 use Carbon\Carbon;
 use App\Events\Proyecto\{ProyectoWasntApproved, ProyectoWasApproved, ProyectoApproveWasRequested, ProyectoSuspenderWasRequested};
 use App\User;
-use App\Repositories\Repository\UserRepository\DinamizadorRepository;
 use App\Repositories\Repository\Repository;
 
 class ProyectoRepository extends Repository
@@ -301,7 +300,7 @@ class ProyectoRepository extends Repository
 
     /**
      * Consulta de indicadores
-     * 
+     *
      * @return Builder
      * @author dum
      **/
@@ -324,7 +323,7 @@ class ProyectoRepository extends Repository
 
     /**
      * Retornar el query de proyectos
-     * 
+     *
      * @return Builder
      * @author dum
      */
@@ -363,7 +362,7 @@ class ProyectoRepository extends Repository
 
     /**
      * Retornar el query para mostrar las empresas asociadas a proyectos
-     * 
+     *
      * @return Builder
      * @author dum
      **/
@@ -385,7 +384,7 @@ class ProyectoRepository extends Repository
 
     /**
      * Retornar el query para mostrar los grupos de investigación asociadas a proyectos
-     * 
+     *
      * @return Builder
      * @author dum
      **/
@@ -406,7 +405,7 @@ class ProyectoRepository extends Repository
 
     /**
      * Retornar el query para mostrar las personas dueñas de la propiedad intelectual asociadas a proyectos
-     * 
+     *
      * @return Builder
      * @author dum
      **/
@@ -432,7 +431,7 @@ class ProyectoRepository extends Repository
 
     /**
      * Retornar el query para mostrar los talentos ejectuores asociados a proyectos
-     * 
+     *
      * @return Builder
      * @author dum
      **/
@@ -1131,12 +1130,11 @@ class ProyectoRepository extends Repository
 
     public function configuracionNotificacionDinamizador($proyecto)
     {
-        // $dinamizadorRepository = new DinamizadorRepository;
+
         if (Session::get('login_role') != User::IsTalento())
             $destinatarios[] = auth()->user()->email;
-        $dinamizador = User::ConsultarFuncionarios($proyecto->nodo_id, User::IsDinamizador())->get()->last();
-        // $dinamizador = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->nodo_id)->get()->last();
-        $destinatarios[] = $dinamizador->email;
+            $dinamizador = User::ConsultarFuncionarios($proyecto->nodo_id, User::IsDinamizador())->get()->last();
+            $destinatarios[] = $dinamizador->email;
         return [
             'receptor' => $dinamizador->id,
             'receptor_role' => User::IsDinamizador(),

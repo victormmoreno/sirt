@@ -4,10 +4,7 @@ namespace App\Repositories\Repository\Articulation;
 
 use App\Models\ControlNotificaciones;
 use App\Models\Movimiento;
-use App\Notifications\Articulation\ArticulationStageNoApproveEndorsement;
-use App\Notifications\Articulation\EndorsementStageArticulation;
 use App\Notifications\Articulation\RequestFinalizeArticulation;
-use App\Repositories\Repository\UserRepository\DinamizadorRepository;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\ArticulationStage;
@@ -18,7 +15,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Session;
 use App\Repositories\Repository\Repository;
-
 
 
 class ArticulationRepository extends Repository
@@ -139,7 +135,6 @@ class ArticulationRepository extends Repository
             'created_by' => auth()->user()->id,
         ]);
         if ($request->filled('talents')) {
-
             $articulation->users()->sync($request->talents);
             $articulation->users->map(function($user){
                 $user->changeOneRoleToAnother(config('laravelpermission.roles.roleTalento'));
@@ -398,14 +393,14 @@ class ArticulationRepository extends Repository
     {
         if (Session::get('login_role') != User::IsTalento())
             $destinatarios[] = auth()->user()->email;
-        $dinamizador = User::ConsultarFuncionarios($articulation->nodo_id, User::IsDinamizador())->get()->last();
-        $destinatarios[] = $dinamizador->email;
-        return [
-            'receptor' => $dinamizador->id,
-            'receptor_role' => User::IsDinamizador(),
-            'tipo_movimiento' => Movimiento::IsSolicitarDinamizador(),
-            'destinatarios' => $destinatarios
-        ];
+            $dinamizador = User::ConsultarFuncionarios($articulation->articulationstage->node_id, User::IsDinamizador())->get()->last();
+            $destinatarios[] = $dinamizador->email;
+            return [
+                'receptor' => $dinamizador->id,
+                'receptor_role' => User::IsDinamizador(),
+                'tipo_movimiento' => Movimiento::IsSolicitarDinamizador(),
+                'destinatarios' => $destinatarios
+            ];
     }
 
     /**

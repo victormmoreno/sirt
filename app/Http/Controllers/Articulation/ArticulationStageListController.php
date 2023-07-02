@@ -109,7 +109,6 @@ class ArticulationStageListController extends Controller
                 'proyectos.nombre as nombre_proyecto', 'proyectos.id as proyecto_id', 'interlocutor.documento', 'interlocutor.nombres',
                 'interlocutor.apellidos', 'interlocutor.email', 'articulation_subtypes.name as articulation_subtype', 'articulation_types.name as articulation_type', 'articulation_scopes.name as scope'
             )
-
             ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_state_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by, GROUP_CONCAT(DISTINCT CONCAT(participants.documento, ' - ', participants.nombres, ' ', participants.apellidos)  SEPARATOR ';') as participants")
             ->node($node)
             ->status($request->filter_status_articulationStage)
@@ -119,7 +118,7 @@ class ArticulationStageListController extends Controller
             ->orderBy('articulation_stages.updated_at', 'desc')
             ->get();
         }
-        return (new articulationStageExport($articulationStages))->download(__('articulation-stage') .' - '. config('app.name') . ".{$extension}");
+        return (new articulationStageExport($articulationStages))->download(__('Articulations') .' - '. config('app.name') . ".{$extension}");
     }
 
 

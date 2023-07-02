@@ -2,7 +2,6 @@
 
 namespace App\Repositories\Repository;
 
-use App\Repositories\Repository\UserRepository\DinamizadorRepository;
 use App\Models\{Comite, EstadoIdea, EstadoComite, Idea, Movimiento};
 use App\Events\Comite\{AgendamientoWasRegistered, ComiteWasRegistered, GestoresWereRegistered};
 use Illuminate\Support\Facades\{DB, Notification, Session};
@@ -10,7 +9,6 @@ use App\Notifications\Comite\ComiteRealizado;
 use App\Http\Controllers\PDF\PdfComiteController;
 use Carbon\Carbon;
 use App\User;
-use Illuminate\Support\Arr;
 
 class ComiteRepository
 {
@@ -68,7 +66,7 @@ class ComiteRepository
      */
     public function notificar_agendamiento(int $id = null, int $idea = null, string $rol = null)
     {
-        
+
         DB::beginTransaction();
         try {
             $comite = Comite::findOrFail($id);
@@ -199,7 +197,7 @@ class ComiteRepository
 
     /**
      * Método que modifica los datos del comité cuando ya se calificó
-     * 
+     *
      * @param $request Request
      * @param int $id Id del comité
      * @return boolean
@@ -209,13 +207,13 @@ class ComiteRepository
     {
         DB::beginTransaction();
         try {
-            
+
             $comite = Comite::findOrFail($id);
             $comite->update([
                 'observaciones' => $request->get('txtobservacionescomite'),
                 'estado_comite_id' => EstadoComite::where('nombre', 'Realizado')->first()->id
             ]);
-    
+
             $this->reiniciarCamposPivot($comite, $request);
             // Cambia los valores del campo asistencia a las ideas que asistieron.
             $this->updateCamposPivotBoolean($comite, $request, 'txtasistido', 'asistencia');
@@ -464,7 +462,7 @@ class ComiteRepository
                 }
 
                 break;
-            
+
             default:
                 # code...
                 break;
