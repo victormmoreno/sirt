@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th>Tecnoparque</th>
-            <th>Meta de {{__('Articulations')}} finalizadas</th>
+            <th>Meta de {{__('Articulations')}}</th>
             <th class="green lighten-5">Total de {{__('Articulations')}} en Inicio</th>
             <th class="green lighten-5">Total de {{__('Articulations')}} en Ejecución</th>
             <th class="green lighten-5">Total de {{__('Articulations')}} en Cierre</th>

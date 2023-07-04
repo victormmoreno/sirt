@@ -23,7 +23,7 @@ class ArchivoProyecto
             return true;
         }
         if (session()->get('login_role') == $user->IsExperto()) {
-            if ($archivoArticulacionProyecto->proyecto->asesor->id == auth()->user()->gestor->id) {
+            if ($archivoArticulacionProyecto->proyecto->asesor->id == auth()->user()->experto->id) {
                 return true;
             } else {
                 return false;

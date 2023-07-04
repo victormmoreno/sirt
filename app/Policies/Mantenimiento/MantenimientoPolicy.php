@@ -27,7 +27,7 @@ class MantenimientoPolicy
     }
     /**
      * Valida el index a mostrar para el administador/activador
-     * 
+     *
      * @param User $user
      * @return bool
      * @author dum
@@ -43,7 +43,7 @@ class MantenimientoPolicy
 
     /**
      * Valida el index a mostrar para el experto
-     * 
+     *
      * @param User $user
      * @return bool
      * @author dum
@@ -120,7 +120,7 @@ class MantenimientoPolicy
         if (session()->get('login_role') == $user->IsApoyoTecnico() && $mantenimiento->equipo->nodo_id == request()->user()->apoyotecnico->nodo_id) {
             return true;
         }
-        // if (session()->get('login_role') == $user->IsExperto() && $mantenimiento->equipo->lineatecnologica_id == $user->gestor->lineatecnologica_id) {
+        // if (session()->get('login_role') == $user->IsExperto() && $mantenimiento->equipo->lineatecnologica_id == $user->experto->lineatecnologica_id) {
         //     return true;
         // }
         return false;

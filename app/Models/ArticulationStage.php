@@ -172,7 +172,7 @@ class ArticulationStage extends Model
     }
 
     /**
-     * The query scope node
+     * The query scope year
      *
      * @return void
      */

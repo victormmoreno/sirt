@@ -7,179 +7,135 @@ use App\Http\Requests\UsoInfraestructura\UsoInfraestructuraFormRequest;
 use App\Models\{Articulation,
     Idea,
     UsoInfraestructura,
-    Talento,
     Proyecto,
     Nodo,
     Fase,
     Equipo,
     LineaTecnologica,
     Material};
-use App\Datatables\UsoInfraestructuraDatatable;
-use App\Repositories\Repository\{LineaRepository, ProyectoRepository,  UsoInfraestructuraRepository};
+use App\Datatables\AsesorieDatatable;
+use App\Repositories\Repository\{LineaRepository, ProyectoRepository,  AsesorieRepository};
+use App\Repositories\Repository\Articulation\ArticulationRepository;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-use App\Exports\UsoInfraestructura\UsoInfraestructuraExport;
+use App\Exports\Asesorie\AsesorieExport;
 
-class UsoInfraestructuraController extends Controller
+class AsesorieController extends Controller
 {
-    private $UsoInfraestructuraProyectoRepository;
-    private $UsoInfraestructuraRepository;
-    private $lineaRepository;
-    private $proyectoRepository;
+    private $asesorieRepository;
+    private $projectRepository;
+    private $articulationRepository;
+    private $lineRepository;
 
     public function __construct(
-        ProyectoRepository $UsoInfraestructuraProyectoRepository,
-        UsoInfraestructuraRepository $UsoInfraestructuraRepository,
-        LineaRepository $lineaRepository,
-        ProyectoRepository $proyectoRepository
+        AsesorieRepository $asesorieRepository,
+        ProyectoRepository $projectRepository,
+        ArticulationRepository $articulationRepository,
+        LineaRepository $lineRepository
     ) {
-        $this->setUsoIngraestructuraProyectoRepository($UsoInfraestructuraProyectoRepository);
-        $this->setUsoInfraestructuraRepository($UsoInfraestructuraRepository);
-        $this->setLineaTecnologicaRepository($lineaRepository);
-        $this->setProyectoRepository($proyectoRepository);
+        $this->asesorieRepository = $asesorieRepository;
+        $this->projectRepository = $projectRepository;
+        $this->articulationRepository = $articulationRepository;
+        $this->lineRepository = $lineRepository;
     }
 
-    /**
-     * Asigna un valor a $UsoInfraestructuraProyectoRepository
-     * @param object $UsoInfraestructuraProyectoRepository
-     * @return void
-     */
-    private function setUsoIngraestructuraProyectoRepository($UsoInfraestructuraProyectoRepository)
-    {
-        $this->UsoInfraestructuraProyectoRepository = $UsoInfraestructuraProyectoRepository;
-    }
-
-    /**
-     * Retorna el valor de $UsoInfraestructuraProyectoRepository
-     * @return object
-     */
-    private function getUsoIngraestructuraProyectoRepository()
-    {
-        return $this->UsoInfraestructuraProyectoRepository;
-    }
-
-
-    /**
-     * Asigna un valor a $UsoInfraestructuraRepository
-     * @param object $UsoInfraestructuraRepository
-     * @return void
-     */
-    private function setUsoInfraestructuraRepository($UsoInfraestructuraRepository)
-    {
-        $this->UsoInfraestructuraRepository = $UsoInfraestructuraRepository;
-    }
-
-    /**
-     * Retorna el valor de $UsoInfraestructuraRepository
-     * @return object
-     */
-    private function getUsoInfraestructuraRepository()
-    {
-        return $this->UsoInfraestructuraRepository;
-    }
-
-
-    /**
-     * Asigna un valor a $lineaRepository
-     * @param object $lineaRepository
-     * @return void
-     */
-    private function setLineaTecnologicaRepository($lineaRepository)
-    {
-        $this->lineaRepository = $lineaRepository;
-    }
-
-    /**
-     * Retorna el valor de $lineaRepository
-     * @return object
-     */
-    private function getLineaTecnologicaRepository()
-    {
-        return $this->lineaRepository;
-    }
-
-    /**
-     * Asigna un valor a $proyectoRepository
-     * @param object $proyectoRepository
-     * @return void type
-     */
-    private function setProyectoRepository($proyectoRepository)
-    {
-        $this->proyectoRepository = $proyectoRepository;
-    }
-
-    /**
-     * Retorna el valor de $proyectoRepository
-     * @return object
-     */
-    private function getProyectoRepository()
-    {
-        return $this->proyectoRepository;
-    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, UsoInfraestructuraDatatable $usoDatatable)
+    public function index()
     {
-        if (request()->user()->cannot('index',UsoInfraestructura::class)) {
+        if (request()->user()->cannot('index', UsoInfraestructura::class)) {
             alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
         }
-        $asesorUser = $this->checkRoleAuth($request)['user'];
-        $nodeUser = $this->checkRoleAuth($request)['node'];
-        $model = $this->checkRoleAuth($request)['model'];
-
-        if ($request->ajax()) {
-            $usos = [];
-            if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null)) {
-
-                $usos = UsoInfraestructura::query()
-                    ->selectAsesoria($model)
-                    ->joins($model)
-                    ->nodoAsesoriaQuery($model, $nodeUser)
-                    ->yearAsesoriaQuery($model, $request->filter_year)
-                    ->asesorQuery($model, $asesorUser)
-                    ->groupBy('usoinfraestructuras.id')
-                    ->latest('usoinfraestructuras.updated_at')
-                    ->get();
-            }
-            return $usoDatatable->indexDatatable($usos);
-        }
-
         $nodes = null;
         $modules = null;
         if(request()->user()->can('listNodes', UsoInfraestructura::class)) {
             $nodes = Nodo::SelectNodo()->get();
         }
         if(request()->user()->can('moduleType', UsoInfraestructura::class)) {
-            if(session()->get('login_role') == User::IsTalento()){
-                $modules = [
-                    class_basename(Proyecto::class) => __('Projects'),
-                    class_basename(Articulation::class) => __('Articulations')
-                ];
-            }else if(session()->get('login_role') == User::IsArticulador()){
-                $modules = [
-                    class_basename(Articulation::class) => __('Articulations'),
-                    class_basename(Idea::class) => __('Ideas')
-                ];
-            }
-            else{
-                $modules = [
-                    class_basename(Proyecto::class) => __('Projects'),
-                    class_basename(Articulation::class) => __('Articulations'),
-                    class_basename(Idea::class) => __('Ideas')
-                ];
+            switch(session()->get('login_role')){
+                case User::IsAdministrador():
+                    $modules = [
+                        class_basename(Proyecto::class) => __('Projects'),
+                        class_basename(Articulation::class) => __('Articulations'),
+                        class_basename(Idea::class) => __('Ideas')
+                    ];
+                    break;
+                case User::IsActivador():
+                    $modules = [
+                        class_basename(Proyecto::class) => __('Projects'),
+                        class_basename(Articulation::class) => __('Articulations'),
+                        class_basename(Idea::class) => __('Ideas')
+                    ];
+                    break;
+                case User::IsDinamizador():
+                    $modules = [
+                        class_basename(Proyecto::class) => __('Projects'),
+                        class_basename(Articulation::class) => __('Articulations'),
+                        class_basename(Idea::class) => __('Ideas')
+                    ];
+                    break;
+                case User::IsExperto():
+                    $modules = [
+                        class_basename(Proyecto::class) => __('Projects'),
+                    ];
+                    break;
+                case User::IsArticulador():
+                    $modules = [
+                        class_basename(Articulation::class) => __('Articulations'),
+                        class_basename(Idea::class) => __('Ideas')
+                    ];
+                    break;
+                case User::IsTalento():
+                    $modules = [
+                        class_basename(Proyecto::class) => __('Projects'),
+                        class_basename(Articulation::class) => __('Articulations')
+                    ];
+                    break;
+                default:
+                    $modules = [];
+                    break;
             }
         }
-        return view('usoinfraestructura.index', [
+        return view('asesorias.index', [
             'nodos' => $nodes,
             'modules' => $modules
         ]);
+    }
+
+    /**
+     * method to show return the datatables asesories
+     * @return void
+     */
+    public function datatableFiltros(Request $request, AsesorieDatatable $asesorieDatatable)
+    {
+        if (request()->ajax() && request()->user()->cannot('index', UsoInfraestructura::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return $asesorieDatatable->indexDatatable([]);
+        }
+        $asesor = $this->checkRoleAuth($request)['user'];
+        $node = $this->checkRoleAuth($request)['node'];
+        $model = $this->checkRoleAuth($request)['model'];
+
+        $asesories = [];
+        if (isset($request->filter_module) || isset($request->filter_node) || isset($request->filter_year)) {
+            $asesories = $this->asesorieRepository->getListAsesories()
+            ->selectAsesoria($model)
+            ->joins($model)
+            ->node($model, $node)
+            ->year($model, $request->filter_year)
+            ->asesor($model,$asesor)
+            ->groupBy('usoinfraestructuras.id')
+            ->orderBy('usoinfraestructuras.updated_at', 'desc')
+            ->get();
+        }
+        return $asesorieDatatable->indexDatatable($asesories);
     }
 
     /**
@@ -201,20 +157,20 @@ class UsoInfraestructuraController extends Controller
                 $model = $request->filter_module;
                 break;
             case User::IsDinamizador():
-                $node = auth()->user()->dinamizador->nodo_id;
+                $node = [auth()->user()->dinamizador->nodo_id];
                 $model = $request->filter_module;
                 break;
             case User::IsArticulador():
-                $node = auth()->user()->articulador->nodo_id;
+                $node = [auth()->user()->articulador->nodo_id];
                 $model = $request->filter_module;
                 break;
             case User::IsExperto():
-                $node = auth()->user()->experto->nodo_id;
+                $node = [auth()->user()->experto->nodo_id];
                 $user = auth()->user()->id;
                 $model = class_basename(Proyecto::class);
                 break;
             case User::IsApoyoTecnico():
-                $node = auth()->user()->apoyotecnico->nodo_id;
+                $node = [auth()->user()->apoyotecnico->nodo_id];
                 $user = auth()->user()->id;
                 $model = class_basename(Proyecto::class);
                 break;
@@ -233,207 +189,63 @@ class UsoInfraestructuraController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        if (request()->user()->cannot('create',UsoInfraestructura::class)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
-            return redirect()->back();
-        }
-        $sumasArray   = [];
-        $date         = Carbon::now()->format('Y-m-d');
-        switch (\Session::get('login_role')) {
-            case User::IsExperto():
-                $projects     = $this->getDataProjectsForUser()->count();
-                $sumasArray = ['projects'=> $projects];
-                $cantActividades = array_sum($sumasArray);
-                $relations = [
-                    'user'             => function ($query) {
-                        $query->select('id', 'documento', 'nombres', 'apellidos');
-                    },
-                    'lineatecnologica' => function ($query) {
-                        $query->select('id', 'nombre', 'abreviatura');
-                    },
-                ];
-                $user             = auth()->user()->id;
-                $nodo             = auth()->user()->gestor->nodo->id;
-                $gestores         = $this->getGestorRepository()->getInfoGestor($relations)
-                    ->whereHas('user', function ($query) use ($user) {
-                        $query->where('id', '!=', $user)->where('estado', User::IsActive());
-                    })
-                    ->whereHas('nodo', function ($query) use ($nodo) {
-                        $query->where('id', $nodo);
-                    })->get();
-                $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
-                break;
-            case User::IsArticulador():
-                $artulaciones = 0;
-                $sumasArray = [
-                    'articulaciones' => $artulaciones,
-                    'ideas' => 1
-                ];
-                $cantActividades = array_sum($sumasArray);
-                $relations = [
-                    'user'             => function ($query) {
-                        $query->select('id', 'documento', 'nombres', 'apellidos');
-                    },
-                    'lineatecnologica' => function ($query) {
-                        $query->select('id', 'nombre', 'abreviatura');
-                    },
-                ];
-                $user             = auth()->user()->id;
-                $nodo             = auth()->user()->articulador->nodo->id;
-                $gestores         = $this->getGestorRepository()->getInfoGestor($relations)
-                    ->whereHas('user', function ($query) use ($user) {
-                        $query->where('id', '!=', $user)->where('estado', User::IsActive());
-                    })
-                    ->whereHas('nodo', function ($query) use ($nodo) {
-                        $query->where('id', $nodo);
-                    })->get();
-                $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
-                break;
-            case User::IsApoyoTecnico():
-                $projects     = $this->getDataProjectsForUser()->count();
-                $sumasArray = [
-                    'projects'       => $projects,
-                ];
-                $cantActividades = array_sum($sumasArray);
-                $relations = [
-                    'user'             => function ($query) {
-                        $query->select('id', 'documento', 'nombres', 'apellidos');
-                    },
-                    'lineatecnologica' => function ($query) {
-                        $query->select('id', 'nombre', 'abreviatura');
-                    },
-                ];
-                $user             = auth()->user()->id;
-                $nodo             = auth()->user()->apoyotecnico->nodo->id;
-                $gestores         = $this->getGestorRepository()->getInfoGestor($relations)
-                    ->whereHas('user', function ($query) use ($user) {
-                        $query->where('id', '!=', $user)->where('estado', User::IsActive());
-                    })
-                    ->whereHas('nodo', function ($query) use ($nodo) {
-                        $query->where('id', $nodo);
-                    })->get();
-                $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
-                break;
-            case User::IsTalento():
-                $projects     = $this->getDataProjectsForUser()->count();
-                $sumasArray = [
-                    'projects'       => $projects,
-                ];
-                $cantActividades = array_sum($sumasArray);
-                return view('usoinfraestructura.create', [
-                    'date'                => $date,
-                    'cantidadActividades' => $cantActividades,
-                ]);
-                break;
-            default:
-                return abort('403');
-                break;
-        }
-
-        return view('usoinfraestructura.create', [
-            'gestores'            => $gestores,
-            'lineastecnologicas'  => $lineastecnologicas,
-            'date'                => $date,
-            'cantidadActividades' => $cantActividades,
-        ]);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        if (request()->user()->cannot('create',UsoInfraestructura::class)) {
-            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
-            return redirect()->back();
-        }
-        $req       = new UsoInfraestructuraFormRequest;
-        $validator = Validator::make($request->all(), $req->rules(), $req->messages());
-        if ($validator->fails()) {
-            return response()->json([
-                'fail'   => true,
-                'errors' => $validator->errors(),
-            ]);
-        }
-        $result = $this->getUsoInfraestructuraRepository()->storeUsoInfraestructuraProyecto($request);
-        if ($result == 'false') {
-            return response()->json([
-                'fail'         => false,
-                'redirect_url' => false,
-            ]);
-        } else if ($result == 'true') {
-            return response()->json([
-                'fail'         => false,
-                'redirect_url' => url(route('usoinfraestructura.index')),
-            ]);
-        }
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($code)
     {
-        $usoinfraestructura = UsoInfraestructura::with(
-            ['usotalentos.user'=> function($query){
+        $asesorie = UsoInfraestructura::query()
+        ->with(['participantes'=> function($query){
                 $query->withTrashed();
-            },'usogestores' => function($query){
+            },
+            'asesores' => function($query){
                 $query->withTrashed();
-            },'usoequipos'
-        ])->findOrFail($id);
-        if (request()->user()->cannot('show',$usoinfraestructura)) {
+            },
+            'usoequipos'
+        ])
+        ->where('codigo', $code)->firstOrFail();
+        if (request()->user()->cannot('show',$asesorie)) {
             alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
             return redirect()->back();
         }
-        $equipos = [];
-        if ($usoinfraestructura->has('usoequipos')) {
-            $equipos = $usoinfraestructura->usoequipos()->withTrashed()->get();
+        $devices = [];
+        if ($asesorie->has('usoequipos')) {
+            $devices = $asesorie->usoequipos()->withTrashed()->get();
         }
-        $totalCostos = 0;
+        $totalCosts = 0;
+        $totalCosts = $asesorie->usoequipos->sum('pivot.costo_equipo') + $asesorie->asesores->sum('pivot.costo_asesoria') + $asesorie->usoequipos->sum('pivot.costo_administrativo') + $asesorie->usomateriales->sum('pivot.costo_material');
 
-        $totalCostos = $usoinfraestructura->usoequipos->sum('pivot.costo_equipo') + $usoinfraestructura->usogestores->sum('pivot.costo_asesoria') + $usoinfraestructura->usoequipos->sum('pivot.costo_administrativo') + $usoinfraestructura->usomateriales->sum('pivot.costo_material');
-
-        return view('usoinfraestructura.show', [
-            'usoinfraestructura' => $usoinfraestructura,
-            'equipos' => $equipos,
-            'totalCostos' => $totalCostos,
+        return view('asesorias.show', [
+            'asesorie' => $asesorie,
+            'devices' => $devices,
+            'totalCosts' => $totalCosts,
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  string  $code
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($code)
     {
-        $usoinfraestructura = UsoInfraestructura::with(
-            ['usotalentos.user'=> function($query){
+        $asesorie = UsoInfraestructura::with(
+            ['participantes'=> function($query){
                 $query->withTrashed();
-            },'usogestores' => function($query){
+            },'asesores' => function($query){
                 $query->withTrashed();
             }]
-        )->findOrFail($id);
-        if (request()->user()->cannot('update',$usoinfraestructura)) {
+        )->where('codigo', $code)->firstOrFail();
+        if (request()->user()->cannot('update',$asesorie)) {
             alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
             return redirect()->back();
         }
-        $equipos = [];
-        if ($usoinfraestructura->has('usoequipos')) {
-            $equipos = $usoinfraestructura->usoequipos()->withTrashed()->get();
+        $devices = [];
+        if ($asesorie->has('usoequipos')) {
+            $devices = $asesorie->usoequipos()->withTrashed()->get();
         }
         $date = Carbon::now()->format('Y-m-d');
         switch (\Session::get('login_role')) {
@@ -447,7 +259,7 @@ class UsoInfraestructuraController extends Controller
                     },
                 ];
                 $user             = auth()->user()->id;
-                $nodo             = auth()->user()->gestor->nodo->id;
+                $nodo             = auth()->user()->experto->nodo->id;
                 $gestores         = $this->getGestorRepository()->getInfoGestor($relations)
                     ->whereHas('user', function ($query) use ($user) {
                         $query->where('id', '!=', $user)->where('estado', User::IsActive());
@@ -513,9 +325,9 @@ class UsoInfraestructuraController extends Controller
                     'projects'       => $projects,
                 ];
                 $cantActividades = array_sum($sumasArray);
-                return view('usoinfraestructura.edit', [
-                    'usoinfraestructura' => $usoinfraestructura,
-                    'equipos' => $equipos,
+                return view('asesorias.edit', [
+                    'usoinfraestructura' => $asesorie,
+                    'equipos' => $devices,
                     'date'                => $date,
                     'cantidadActividades' => $cantActividades,
                 ]);
@@ -525,11 +337,11 @@ class UsoInfraestructuraController extends Controller
                 break;
         }
 
-        return view('usoinfraestructura.edit', [
-            'usoinfraestructura' => $usoinfraestructura,
+        return view('asesorias.edit', [
+            'usoinfraestructura' => $asesorie,
             'gestores'           => $gestores,
             'lineastecnologicas' => $lineastecnologicas,
-            'equipos' => $equipos,
+            'equipos' => $devices,
             'date'               => $date,
         ]);
     }
@@ -567,7 +379,7 @@ class UsoInfraestructuraController extends Controller
         } else if ($result == true) {
             return response()->json([
                 'fail'         => false,
-                'redirect_url' => url(route('usoinfraestructura.index')),
+                'redirect_url' => url(route('asesorias.index')),
             ]);
         }
     }
@@ -741,15 +553,7 @@ class UsoInfraestructuraController extends Controller
                 ->where('lineastecnologicas_nodos.nodo_id', $proyectoNodo)
                 ->get();
 
-            $gestores = Gestor::select('gestores.id', 'lineastecnologicas.id as lineatecnologica_id', 'lineastecnologicas.abreviatura', 'lineastecnologicas.nombre as lineatecnologica_nombre', 'users.documento', 'users.nombres', 'users.apellidos')
-                ->join('lineastecnologicas', 'lineastecnologicas.id', 'gestores.lineatecnologica_id')
-                ->join('users', 'users.id', '=', 'gestores.user_id')
-                ->where('lineastecnologicas.id', $proyectoTalento->gestor_lineatecnologica_id)
-                ->where('gestores.nodo_id', $proyectoNodo)
-                ->where('users.id', '!=', $proyectoTalento->user_id)
-                ->where('users.estado', User::IsActive())
-                ->where('users.deleted_at', null)
-                ->get();
+
 
             $equipos = Equipo::where('lineatecnologica_id', $proyectoTalento->gestor_lineatecnologica_id)
                 ->where('nodo_id', $proyectoNodo)
@@ -872,7 +676,7 @@ class UsoInfraestructuraController extends Controller
     {
         $activities = [];
         if (Session::get('login_role') == User::IsExperto()) {
-            $gestor = auth()->user()->gestor->id;
+            $gestor = auth()->user()->experto->id;
             if ((!empty($anio) && $anio != null && $anio != 'all')) {
 
                 $activities =  Actividad::select('id')
@@ -932,13 +736,13 @@ class UsoInfraestructuraController extends Controller
             return redirect()->back();
         }
         $usoinfraestructura->usoequipos()->detach();
-        $usoinfraestructura->usotalentos()->detach();
+        $usoinfraestructura->participantes()->detach();
         $usoinfraestructura->usomateriales()->detach();
-        $usoinfraestructura->usogestores()->detach();
+        $usoinfraestructura->asesores()->detach();
         $usoinfraestructura->delete();
         return response()->json([
             'usoinfraestructura' => 'success',
-            'route' => route('usoinfraestructura.index')
+            'route' => route('asesorias.index')
         ]);
     }
 
@@ -948,22 +752,35 @@ class UsoInfraestructuraController extends Controller
             alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
             return redirect()->route('home');
         }
-        $asesorUser = $this->checkRoleAuth($request)['user'];
-        $nodeUser = $this->checkRoleAuth($request)['node'];
+        $asesor = $this->checkRoleAuth($request)['user'];
+        $node = $this->checkRoleAuth($request)['node'];
         $model = $this->checkRoleAuth($request)['model'];
-        $usos = [];
-        if (($request->filled('filter_nodo') || $request->filter_nodo == null)  && ($request->filled('filter_year') || $request->filter_year == null)) {
-            $usos = UsoInfraestructura::query()
-                ->selectAsesoria($model)
-                ->joins($model)
-                ->nodoAsesoriaQuery($model, $nodeUser)
-                ->yearAsesoriaQuery($model, $request->filter_year)
-                ->asesorQuery($model, $asesorUser)
-                ->groupBy('usoinfraestructuras.id')
-                ->latest('usoinfraestructuras.updated_at')
-                ->get();
+
+        $asesories = [];
+        if (isset($request->filter_module) || isset($request->filter_node) || isset($request->filter_year)) {
+            $asesories = $this->asesorieRepository->getListAsesories()
+            ->selectAsesoria($model)
+            ->selectRaw("usoinfraestructuras.descripcion, usoinfraestructuras.compromisos")
+            ->selectRaw("GROUP_CONCAT(DISTINCT CONCAT(equipos.referencia, ' - ', equipos.nombre) SEPARATOR ';') as equipos,
+            GROUP_CONCAT(DISTINCT CONCAT(materiales.codigo_material, ' - ', materiales.nombre) SEPARATOR ';') as materiales")
+            ->joins($model)
+            ->leftJoin('equipo_uso', function ($join) {
+                $join->on('equipo_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id');
+            })->leftJoin('equipos', function ($join) {
+                $join->on('equipos.id', '=', 'equipo_uso.equipo_id');
+            })->leftJoin('material_uso', function ($join) {
+                $join->on('material_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id');
+            })->leftJoin('materiales', function ($join) {
+                $join->on('materiales.id', '=', 'material_uso.material_id');
+            })
+            ->node($model, $node)
+            ->year($model, $request->filter_year)
+            ->asesor($model,$asesor)
+            ->groupBy('usoinfraestructuras.id')
+            ->orderBy('usoinfraestructuras.updated_at', 'desc')
+            ->get();
         }
-        return (new UsoInfraestructuraExport($request, $usos))->download("Asesorias y usos - " . config('app.name') . ".{$extension}");
+        return (new AsesorieExport($request, $asesories))->download("Asesorias" . config('app.name') . ".{$extension}");
     }
 
     /**

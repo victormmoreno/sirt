@@ -310,8 +310,8 @@
                 @forelse ($data->asesorias->sortBy('fecha')->values()->all() as $value)
                 <tr>
                     <td>{{ $value->fecha->isoFormat('YYYY-MM-DD') }}</td>
-                    <td>{{ $value->usogestores->sum('pivot.asesoria_directa') }}</td>
-                    <td>{{ $value->usogestores->sum('pivot.asesoria_indirecta') }}</td>
+                    <td>{{ $value->asesores->sum('pivot.asesoria_directa') }}</td>
+                    <td>{{ $value->asesores->sum('pivot.asesoria_indirecta') }}</td>
                     <td>{{ $value->usoequipos->map(function ($item, $key) {
                                 if(isset($item)){
                                     return $item->referencia . ' - ' . $item->present()->equipoNombre() . ' - Horas Uso: ' . $item->pivot->tiempo;

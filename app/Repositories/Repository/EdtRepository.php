@@ -64,9 +64,9 @@ class EdtRepository
         // Elimina los registros de la tabla material_uso
         UsoInfraestructura::deleteUsoMateriales($padre);
         // Elimina los registros de la tabla uso_talentos
-        UsoInfraestructura::deleteUsoTalentos($padre);
+        UsoInfraestructura::deleteParticipantes($padre);
         // Elimina los registros de la tabla gestor_uso
-        UsoInfraestructura::deleteUsoGestores($padre);
+        UsoInfraestructura::deleteAsesores($padre);
         // Elimina los registros de la tabla equipo_uso
         UsoInfraestructura::deleteUsoEquipos($padre);
         // Elimina los registros de la tabla usoinfraestructuras
@@ -451,9 +451,9 @@ class EdtRepository
         $codigo_edt = "";
         $anho       = Carbon::now()->isoFormat('YYYY');
 
-        $idnodo                           = sprintf("%02d", auth()->user()->gestor->nodo_id);
-        $linea                            = auth()->user()->gestor->lineatecnologica_id;
-        $gestor                           = sprintf("%03d", auth()->user()->gestor->id);
+        $idnodo                           = sprintf("%02d", auth()->user()->experto->nodo_id);
+        $linea                            = auth()->user()->experto->lineatecnologica_id;
+        $gestor                           = sprintf("%03d", auth()->user()->experto->id);
         $idEdt                            = Edt::selectRaw('MAX(id+1) AS max')->get()->last();
         $idEdt->max == null ? $idEdt->max = 1 : $idEdt->max = $idEdt->max;
         $idEdt->max                       = sprintf("%04d", $idEdt->max);
@@ -461,8 +461,8 @@ class EdtRepository
         $codigo_edt = 'E' . $anho . '-' . $idnodo . $linea . $gestor . '-' . $idEdt->max;
 
         $actividad = Actividad::create([
-        'gestor_id'        => auth()->user()->gestor->id,
-        'nodo_id'          => auth()->user()->gestor->nodo_id,
+        'gestor_id'        => auth()->user()->experto->id,
+        'nodo_id'          => auth()->user()->experto->nodo_id,
         'codigo_actividad' => $codigo_edt,
         'nombre'           => $request->txtnombre,
         'fecha_inicio'     => $request->txtfecha_inicio,

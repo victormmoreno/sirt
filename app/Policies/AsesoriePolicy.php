@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Policies\UsoInfraestrucutura;
+namespace App\Policies;
 
 use App\Models\UsoInfraestructura;
 use App\User;
@@ -8,7 +8,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Str;
 
 
-class UsoInfraestructuraPolicy
+class AsesoriePolicy
 {
     use HandlesAuthorization;
 
@@ -96,18 +96,6 @@ class UsoInfraestructuraPolicy
     }
 
 
-
-    /**
-     * Determine whether the user can get uso ingraestrucutra usos de infraestructura.
-     *
-     * @param  \App\User  $user
-     * @return bool
-     */
-    public function getUsoInfraestructuraForNodo(User $user)
-    {
-        return (bool) $user->hasAnyRole([User::IsAdministrador()]) && session()->get('login_role') == User::IsAdministrador();
-    }
-
     /**
      * Determine whether the user can show usos de infraestructura.
      *
@@ -129,8 +117,8 @@ class UsoInfraestructuraPolicy
                 )
                 || (
                     session()->get('login_role') == User::IsExperto()
-                    && (isset($uso->asesorable->nodo_id) &&  $uso->asesorable->nodo_id == $user->gestor->nodo_id)
-                    && (isset($uso->asesorable->asesor_id) &&  $uso->asesorable->asesor_id == $user->gestor->id)
+                    && (isset($uso->asesorable->nodo_id) &&  $uso->asesorable->nodo_id == $user->experto->nodo_id)
+                    && (isset($uso->asesorable->asesor_id) &&  $uso->asesorable->asesor_id == $user->experto->id)
                 )
                 || (
                     session()->get('login_role') == User::IsArticulador()
@@ -169,10 +157,10 @@ class UsoInfraestructuraPolicy
                     session()->get('login_role') == User::IsExperto()
                     && $uso->fecha->format('Y') > $date
                     && class_basename($uso->asesorable) === class_basename(\App\Models\Proyecto::class)
-                    && (isset($uso->asesorable->nodo_id) &&  $uso->asesorable->nodo_id == $user->gestor->nodo_id)
-                    && (isset($uso->asesorable->asesor_id) &&  $uso->asesorable->asesor_id == $user->gestor->id)
+                    && (isset($uso->asesorable->nodo_id) &&  $uso->asesorable->nodo_id == $user->experto->nodo_id)
+                    && (isset($uso->asesorable->asesor_id) &&  $uso->asesorable->asesor_id == $user->experto->id)
                     && $uso->whereHas(
-                        'usogestores',
+                        'asesores',
                         function ($query) use($user) {
                             return $query->where('users.id', $user->id);
                         })
@@ -183,7 +171,7 @@ class UsoInfraestructuraPolicy
                     && ((isset($uso->asesorable->articulationstage) &&  $uso->asesorable->articulationstage->node_id == $user->articulador->nodo_id)
                     || (isset($uso->asesorable->nodo_id) &&  $uso->asesorable->nodo_id == $user->articulador->nodo_id))
                     && $uso->whereHas(
-                        'usogestores',
+                        'asesores',
                         function ($query) use($user) {
                             return $query->where('users.id', $user->id);
                         })
@@ -194,7 +182,7 @@ class UsoInfraestructuraPolicy
                     && class_basename($uso->asesorable) === class_basename(\App\Models\Proyecto::class)
                     && (isset($uso->asesorable->nodo_id) &&  $uso->asesorable->nodo_id == $user->apoyotecnico->nodo_id)
                     && $uso->whereHas(
-                        'usogestores',
+                        'asesores',
                         function ($query) use($user) {
                             return $query->where('users.id', $user->id);
                         })
@@ -232,10 +220,10 @@ class UsoInfraestructuraPolicy
                     session()->get('login_role') == User::IsExperto()
                     && $uso->fecha->format('Y') > $date
                     && class_basename($uso->asesorable) === class_basename(\App\Models\Proyecto::class)
-                    && (isset($uso->asesorable->nodo_id) &&  $uso->asesorable->nodo_id == $user->gestor->nodo_id)
-                    && (isset($uso->asesorable->asesor_id) &&  $uso->asesorable->asesor_id == $user->gestor->id)
+                    && (isset($uso->asesorable->nodo_id) &&  $uso->asesorable->nodo_id == $user->experto->nodo_id)
+                    && (isset($uso->asesorable->asesor_id) &&  $uso->asesorable->asesor_id == $user->experto->id)
                     && $uso->whereHas(
-                        'usogestores',
+                        'asesores',
                         function ($query) use($user) {
                             return $query->where('users.id', $user->id);
                         })
@@ -246,7 +234,7 @@ class UsoInfraestructuraPolicy
                     && ((isset($uso->asesorable->articulationstage) &&  $uso->asesorable->articulationstage->node_id == $user->articulador->nodo_id)
                     || (isset($uso->asesorable->nodo_id) &&  $uso->asesorable->nodo_id == $user->articulador->nodo_id))
                     && $uso->whereHas(
-                        'usogestores',
+                        'asesores',
                         function ($query) use($user) {
                             return $query->where('users.id', $user->id);
                         })
@@ -257,7 +245,7 @@ class UsoInfraestructuraPolicy
                     && class_basename($uso->asesorable) === class_basename(\App\Models\Proyecto::class)
                     && (isset($uso->asesorable->nodo_id) &&  $uso->asesorable->nodo_id == $user->apoyotecnico->nodo_id)
                     && $uso->whereHas(
-                        'usogestores',
+                        'asesores',
                         function ($query) use($user) {
                             return $query->where('users.id', $user->id);
                         })

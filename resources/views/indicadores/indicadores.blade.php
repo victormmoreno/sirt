@@ -1,5 +1,4 @@
 <ul class="collapsible">
-    {{-- {{ session()->get('login_role') }} --}}
     @can('showIndicadoresProyectos', Illuminate\Database\Eloquent\Model::class)
         <li>
             <div class="collapsible-header"><i class="material-icons">edit</i>Generar indicadores de proyectos inscritos entre un rango de fechas</div>

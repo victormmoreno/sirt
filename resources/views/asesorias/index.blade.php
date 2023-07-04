@@ -30,16 +30,20 @@
                                 <div class="mailbox-view">
                                     <div class="mailbox-view-header center-align">
                                         <div class="row no-m-t no-m-b">
-                                            <div class="@canany(['create'], App\Models\UsoInfraestructura::class) col s12 m8 l8 @else col s12 m12 l12 @endcanany">
+                                            <div class="@canany(['create'], App\Models\UsoInfraestructura::class) col s12 m6 l6 @else col s12 m9 l9 @endcanany">
                                                 <span class="card-title center-align absolute-center primary-text">
                                                     Asesorias y usos de Infraestructura
                                                 </span>
                                             </div>
-                                            @can('create', App\Models\UsoInfraestructura::class)
-                                            <div class="col s12 m4 l4 show-on-large hide-on-med-and-down">
-                                                <a  href="{{route('usoinfraestructura.create')}}" class="waves-effect bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nueva Asesoria</a>
+
+                                            <div class="col s12 m6 l4 offset-m3 right show-on-large hide-on-med-and-down">
+
+                                                @can('create', App\Models\UsoInfraestructura::class)
+                                                <a  href="{{route('asesorias.create')}}" class="waves-effect bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nueva Asesoria</a>
+                                                @endcan
+                                                <a  href="{{route('asesorias.search')}}" class="waves-effect bg-info white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Buscar Asesoria</a>
                                             </div>
-                                            @endcan
+
                                         </div>
                                     </div>
                                 </div>
@@ -49,12 +53,24 @@
                         </div>
                         <div class=" mailbox-view mailbox-text">
                             <div class="row no-m-t no-m-b search-tabs-row search-tabs-header">
+                                @can('moduleType', \App\Models\UsoInfraestructura::class)
+                                    <div class="input-field col s12 m2 l2">
+                                        <label class="active" for="filter_module">Tipo Asesoria <span class="red-text">*</span></label>
+                                        <select name="filter_module" id="filter_module">
+                                            @forelse($modules as $id => $name)
+                                                <option value="{{$id}}" @if($loop->first) selected @endif>{{$name}}</option>
+                                            @empty
+                                                <option>No se encontraron Resultados</option>
+                                            @endforelse
+                                        </select>
+                                    </div>
+                                @endcan
                                 @can('listNodes', \App\Models\UsoInfraestructura::class)
                                     <div class="input-field col s12 m2 l2">
                                         <label class="active" for="filter_node">Nodo <span class="red-text">*</span></label>
-                                        <select name="filter_node" id="filter_node">
+                                        <select multiple tabindex="-1" style="width: 100%" name="filter_node[]" id="filter_node">
                                             @forelse($nodos as $nodo)
-                                                <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
+                                                <option value="{{$nodo->id}}" @if($loop->first) selected @endif>{{$nodo->nodos}}</option>
                                             @empty
                                                 <option>No se encontraron Resultados</option>
                                             @endforelse
@@ -62,23 +78,12 @@
                                         </select>
                                     </div>
                                 @endcan
-                                @can('moduleType', \App\Models\UsoInfraestructura::class)
-                                    <div class="input-field col s12 m2 l2">
-                                        <label class="active" for="filter_module">Tipo Asesoria <span class="red-text">*</span></label>
-                                        <select name="filter_module" id="filter_module">
-                                            @forelse($modules as $id => $name)
-                                                <option value="{{$id}}">{{$name}}</option>
-                                            @empty
-                                                <option>No se encontraron Resultados</option>
-                                            @endforelse
-                                        </select>
-                                    </div>
-                                @endcan
+
                                 <div class="input-field col s12 m2 l2">
                                     <label class="active" for="filter_year">Año <span class="red-text">*</span></label>
-                                    <select name="filter_year" id="filter_year">
+                                    <select multiple tabindex="-1" style="width: 100%" name="filter_year[]" id="filter_year">
                                         @for ($i=$year; $i >= 2016; $i--)
-                                            <option value="{{$i}}" >{{$i}}</option>
+                                            <option value="{{$i}}" @if($i == \Carbon\Carbon::now()->year) selected @endif>{{$i}}</option>
                                         @endfor
                                         <option value="all" >todos</option>
                                     </select>
@@ -92,6 +97,8 @@
                             </div>
                             <table class="display responsive-table datatable-example dataTable" id="usoinfraestructa_data_table" width="100%">
                                 <thead class="bg-primary white-text">
+                                    <th width="10%">Nodo</th>
+                                    <th width="10%">Código</th>
                                     <th width="10%">Fecha</th>
                                     <th width="20%">Asesor</th>
                                     <th width="10%">Tipo Asesoria</th>
@@ -105,7 +112,7 @@
                 </div>
                 @can('create', \App\Models\UsoInfraestructura::class)
                     <div class="fixed-action-btn show-on-medium-and-down hide-on-med-and-up">
-                        <a href="{{route('usoinfraestructura.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="{{session()->has('login_role') == App\User::IsExperto() ? 'Nueva Asesoria' : 'Nuevo uso de Infraestructura'}}">
+                        <a href="{{route('asesorias.create')}}"  class="btn tooltipped btn-floating btn-large green" data-position="left" data-delay="50" data-tooltip="{{session()->has('login_role') == App\User::IsExperto() ? 'Nueva Asesoria' : 'Nuevo uso de Infraestructura'}}">
                             <i class="material-icons">add</i>
                         </a>
                     </div>

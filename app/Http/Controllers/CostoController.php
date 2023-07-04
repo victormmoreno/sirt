@@ -73,7 +73,7 @@ class CostoController extends Controller
         $horasAsesorias = 0;
 
         foreach ($datos as $key => $uso) {
-            $horasAsesorias += $uso->usogestores->sum('pivot.asesoria_directa') + $uso->usogestores->sum('pivot.asesoria_indirecta');
+            $horasAsesorias += $uso->asesores->sum('pivot.asesoria_directa') + $uso->asesores->sum('pivot.asesoria_indirecta');
         }
         return $horasAsesorias;
     }
@@ -175,7 +175,7 @@ class CostoController extends Controller
     {
         $asesorias = 0;
         foreach ($datos as  $uso) {
-            $asesorias += $uso->usogestores->sum('pivot.costo_asesoria');
+            $asesorias += $uso->asesores->sum('pivot.costo_asesoria');
         }
         return $asesorias;
     }

@@ -1042,7 +1042,7 @@
             @if (isset($user->informacion_user['talento']['regional']))
                 tipoTalento.getCentroFormacion();
             @endif
-            @if (isset($user->gestor->nodo->lineas->id))
+            @if (isset($user->experto->nodo->lineas->id))
                 linea.getSelectLineForNodeExpert();
             @endif
         });

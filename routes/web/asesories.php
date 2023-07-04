@@ -1,14 +1,21 @@
 <?php
 
-Route::get('usoinfraestructura/export', 'Asesorie\UsoInfraestructuraController@export')->name('usoinfraestructura.export');
+Route::get('asesorias/exportar', 'Asesorie\AsesorieController@export')->name('usoinfraestructura.export');
 
 Route::group([
     'namespace'  => 'Asesorie',
     'middleware' => 'disablepreventback',
 ], function () {
-    Route::resource('asesorias', 'UsoInfraestructuraController')->parameters([
-        'asesorias' => 'id',
-    ]);
+    Route::get('asesorias', 'AsesorieController@index')->name('asesorias.index');
+    Route::get('/asesorias/search', 'AsesorieSearchController@showFormSearch')->name('asesorias.search');
+    Route::get('/asesorias/datatable_filtros', 'AsesorieController@datatableFiltros')->name('asesorias.datatable.filtros');
+    Route::get('asesorias/{code}', 'AsesorieController@show')->name('asesorias.show');
+    Route::get('asesorias/{code}/editar', 'AsesorieController@edit')->name('asesorias.edit');
+    Route::get('asesorias/crear', 'AsesorieRegisterController@showForm')->name('asesorias.create');
+    Route::post('asesorias', 'AsesorieRegisterController@store')->name('asesorias.store');
+    // Route::resource('asesorias', 'UsoInfraestructuraController')->parameters([
+    //     'asesorias' => 'id',
+    // ]);
 
     //consultas que se utlizan para el uso de infraestructura
 

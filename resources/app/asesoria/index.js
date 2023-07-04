@@ -21,22 +21,20 @@ $(document).ready(function() {
 
 });
 
-// var $ = require('jquery');
-// var DataTable = require('datatables.net');
-// require('datatables.net-plugins/dataRender/datetime.js');
 
-var usoinfraestructuraIndex = {
+
+const usoinfraestructuraIndex = {
     fillDatatatablesUsosInfraestructura: function(filter_nodo, filter_module, filter_year){
-        var datatable = $('#usoinfraestructa_data_table').DataTable({
+        let datatable = $('#usoinfraestructa_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
             "lengthChange": false,
             processing: true,
             serverSide: true,
-            "order": [[ 0, "desc" ]],
+            "order": [[ 2, "desc" ]],
             ajax:{
-                url: host_url + "/usoinfraestructura",
+                url: `${host_url}/asesorias/datatable_filtros`,
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
@@ -45,30 +43,26 @@ var usoinfraestructuraIndex = {
                 }
             },
             columnDefs: [ {
-                targets: 0,
-                // render: datatable.render.moment( 'DD-MM-YYYY' )
+                targets: 1,
                 type: "date"
             } ],
 
             columns: [
-                // {
-                //     type: "date",
-                //     data: 'fecha',
-                //     name: 'fecha',
-                //     width: '10%'
-                // },
+                {
+                    data: 'nodo',
+                    type: 'nodo'
+                },
+                {
+                    data: 'codigo',
+                    type: 'codigo'
+                },
                 {
                     data: 'fecha',
-                    type: 'date',
-                    // render: {
-                    //     _: 'display',
-                    //     sort: 'timestamp'
-                    // }
+                    type: 'date'
                 },
-
                 {
-                    data: 'gestorEncargado',
-                    name: 'gestorEncargado',
+                    data: 'asesores',
+                    name: 'asesores',
                     width: '20%',
                     orderable: false
                 },
@@ -78,8 +72,8 @@ var usoinfraestructuraIndex = {
                     width: '10%'
                 },
                 {
-                    data: 'actividad',
-                    name: 'actividad',
+                    data: 'asesorable',
+                    name: 'asesorable',
                     width: '35%'
                 }, {
                     data: 'fase',
@@ -94,65 +88,6 @@ var usoinfraestructuraIndex = {
             ],
         });
     },
-    queryExpertsByNodo: function(){
-        let nodo = $('#filter_nodo').val();
-        if (nodo == null || nodo == '' || nodo == 'all' || nodo == undefined){
-            $('#filter_gestor').empty();
-            $('#filter_gestor').append('<option value="" selected>Seleccione un experto</option>');
-        }else{
-            $.ajax({
-                type: 'GET',
-                url: `${host_url}/usuarios/expertos/nodo/${nodo}`,
-                contentType: false,
-                dataType: 'json',
-                processData: false,
-                success: function (data) {
-
-                    $('#filter_gestor').empty();
-                    $('#filter_gestor').append('<option value="all">todos</option>');
-                    $.each(data.gestores, function(i, e) {
-                        $('#filter_gestor').append('<option  value="'+i.id+'">'+e.nombre+'</option>');
-                    })
-                    $('#filter_gestor').material_select();
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    alert("Error: " + errorThrown);
-                }
-            });
-        }
-    },
-    queryActivitiesByAnio: function(){
-
-        let anio = $('#filter_year').val();
-
-        if (anio == null || anio == '' || anio == undefined){
-
-            $('#filter_actividad').empty();
-            $('#filter_actividad').append('<option value="">Seleccione un año</option>');
-
-        }else{
-            $.ajax({
-                type: 'GET',
-                url: host_url + '/usoinfraestructura/actividades/'+ anio,
-                contentType: false,
-                dataType: 'json',
-                processData: false,
-                success: function (data) {
-                    $('#filter_actividad').empty();
-                    $('#filter_actividad').append('<option value="all">Todas</option>');
-                    $.each(data.actividades, function(i, e) {
-                        $('#filter_actividad').append('<option  value="'+i+'">'+e+'</option>');
-                    });
-                    $('#filter_actividad').material_select();
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    alert("Error: " + errorThrown);
-                }
-            });
-        }
-
-    },
-
     destroyUsoInfraestructura: function(id){
         Swal.fire({
             title: '¿Estas seguro de eliminar este uso de infraestructura?',
@@ -168,7 +103,7 @@ var usoinfraestructuraIndex = {
                 let token = $("meta[name='csrf-token']").attr("content");
                 $.ajax(
                 {
-                    url: host_url + "/usoinfraestructura/"+id,
+                    url: `${host_url}/asesorias/${id}`,
                     type: 'DELETE',
                     data: {
                         "id": id,
@@ -224,11 +159,11 @@ $('#download_usoinfraestructura').click(function(){
     let filter_nodo = $('#filter_node').val();
     let filter_year = $('#filter_year').val();
     let filter_module = $('#filter_module').val();
-    var query = {
+    let query = {
+        filter_module: filter_module,
         filter_nodo: filter_nodo,
         filter_year: filter_year,
-        filter_module: filter_module,
     }
-    var url = host_url + "/usoinfraestructura/export?" + $.param(query)
+    let url = `${host_url}/asesorias/exportar?` + $.param(query)
     window.location = url;
 });

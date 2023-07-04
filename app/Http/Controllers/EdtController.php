@@ -174,7 +174,7 @@ class EdtController extends Controller
     {
         $id = "";
         if ( Session::get('login_role') == User::IsExperto() ) {
-        $id = auth()->user()->gestor->id;
+        $id = auth()->user()->experto->id;
         }
         $edts = $this->edtRepository->consultarEdtsDeUnGestor($id, $anho);
         return $this->datatableEdts($edts);

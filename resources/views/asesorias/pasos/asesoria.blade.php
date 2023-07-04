@@ -45,12 +45,12 @@
                             </tr>
                         </thead>
                         <tbody id="detallesGestores">
-                            @if(isset($usoinfraestructura->usogestores))
-                                @forelse ($usoinfraestructura->usogestores as $key => $user)
+                            @if(isset($usoinfraestructura->asesores))
+                                @forelse ($usoinfraestructura->asesores as $key => $user)
                                     @if($user->id === auth()->user()->id)
                                         <tr id="filaGestor{{$user->id}}">
                                             @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto()))
-                                                <td>{{$user->gestor->lineatecnologica->abreviatura}} -  {{$user->gestor->lineatecnologica->nombre}}</td>
+                                                <td>{{$user->experto->lineatecnologica->abreviatura}} -  {{$user->gestor->lineatecnologica->nombre}}</td>
                                             @endif
                                             <td>
                                                 <input type="hidden" name="gestor[]"  value="{{$user->id}}" min="0" />{{$user->documento}} - {{$user->present()->userFullName()}}
@@ -95,9 +95,9 @@
             <br><br>
             <div class="row">
                 <div class="input-field col s12 m4 l5">
-                    <select class="js-states browser-default select2"  id="txtgestorasesor" name="txtgestorasesor" style="width: 100%" tabindex="-1" {{isset($usoinfraestructura->usogestores) ? '' : 'disabled'}} >
+                    <select class="js-states browser-default select2"  id="txtgestorasesor" name="txtgestorasesor" style="width: 100%" tabindex="-1" {{isset($usoinfraestructura->asesores) ? '' : 'disabled'}} >
                         <option value="">Seleccione Experto</option>
-                        @if(isset($usoinfraestructura->usogestores))
+                        @if(isset($usoinfraestructura->asesores))
                             @foreach($gestores as $gestor)
                                 <option value="{{$gestor->user->id}}">
                                     {{$gestor->user()->withTrashed()->first()->documento}} - {{$gestor->user()->withTrashed()->first()->nombres}} {{$gestor->user()->withTrashed()->first()->apellidos}} / {{$gestor->lineatecnologica->nombre}}
@@ -160,8 +160,8 @@
                                 </tr>
                             </thead>
                             <tbody id="detallesGestoresAsesores">
-                                @if(isset($usoinfraestructura->usogestores))
-                                    @forelse ($usoinfraestructura->usogestores as $key => $user)
+                                @if(isset($usoinfraestructura->asesores))
+                                    @forelse ($usoinfraestructura->asesores as $key => $user)
                                             <tr id="filaGestorAsesor{{$user->id}}">
                                                 @if($user->id != auth()->user()->id)
                                                     <td>

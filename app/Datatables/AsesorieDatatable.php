@@ -2,16 +2,19 @@
 
 namespace App\Datatables;
 
-class UsoInfraestructuraDatatable
+class AsesorieDatatable
 {
     /**
-     * retorna datatables con los usos de infraestructura para el controlador UsoInfraestrucutra::index().
-     * @param $usoinfraestructura
+     * retorna datatables con las asesorias.
+     * @param $asesorias
      * @return \Illuminate\Http\Response
      */
-    public function indexDatatable($usoinfraestructura)
+    public function indexDatatable($asesorias)
     {
-        return datatables()->of($usoinfraestructura)
+        return datatables()->of($asesorias)
+            ->editColumn('codigo', function ($data) {
+                return $data->codigo;
+            })
             ->editColumn('fecha', function ($data) {
                 return optional($data->fecha)->format('Y-m-d');
             })
@@ -30,23 +33,19 @@ class UsoInfraestructuraDatatable
             ->editColumn('asesoria_indirecta', function ($data) {
                 return $data->asesoria_indirecta;
             })
-            ->addColumn('expertoEncargado', function ($data) {
+            ->addColumn('asesores', function ($data) {
                 return $data->asesores;
             })
             ->addColumn('detail', function ($data) {
-                return '<a class="btn tooltipped bg-info m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="' . route("usoinfraestructura.show", $data->id) . '" ><i class="material-icons">visibility</i></a>';
+                return '<a class="btn tooltipped bg-info m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="' . route("asesorias.show", $data->codigo) . '" ><i class="material-icons">visibility</i></a>';
             })
-            // ->filterColumn('fecha', function ($query, $keyword) {
-            //     $query->whereRaw("DATE_FORMAT(fecha,'%m-%d-%Y') LIKE ?", ["%$keyword%"]);
-            // })
-            ->rawColumns(['fecha','tipo_asesoria', 'asesorable', 'expertoEncargado', 'fase', 'asesoria_directa', 'asesoria_indirecta', 'detail'])
-
+            ->rawColumns(['codigo','fecha','tipo_asesoria', 'asesorable', 'asesores', 'fase', 'asesoria_directa', 'asesoria_indirecta', 'detail'])
             ->make(true);
     }
 
-    public function indexDatatableUsosProyectos($usoinfraestructura)
+    public function indexDatatableUsosProyectos($asesorias)
     {
-        return datatables()->of($usoinfraestructura)
+        return datatables()->of($asesorias)
             ->editColumn('fecha', function ($data) {
                 return $data->present()->fechaUsoInfraestructura();
             })
@@ -69,7 +68,7 @@ class UsoInfraestructuraDatatable
                 return $data->present()->asesor();
             })
             ->addColumn('detail', function ($data) {
-                $button = '<a class="btn tooltipped green-complement  m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="' . route("usoinfraestructura.show", $data->id) . '" ><i class="material-icons">visibility</i></a>';
+                $button = '<a class="btn tooltipped green-complement  m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="' . route("asesorias.show", $data->id) . '" ><i class="material-icons">visibility</i></a>';
                 return $button;
             })
             ->rawColumns(['fecha','tipo_asesoria', 'asesorable', 'expertoEncargado', 'fase', 'asesoria_directa', 'asesoria_indirecta', 'detail'])

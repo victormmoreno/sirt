@@ -2,9 +2,12 @@
     <thead>
         <tr>
             <th >Nodo</th>
+            <th >Código</th>
             <th >Fecha</th>
             <th >Tipo Asesoria</th>
             <th >Nombre</th>
+            <th >Descripción</th>
+            <th >Próximos compromisos</th>
             <th >Fase</th>
             <th >Asesor(a)</th>
             <th >Talentos</th>
@@ -13,34 +16,43 @@
         </tr>
     </thead>
     <tbody>
-        @forelse($usos as $uso)
+        @forelse($asesories as $asesorie)
         <tr>
             <td>
-                {{$uso->nodo}}
+                {{$asesorie->nodo}}
             </td>
             <td>
-                {{$uso->fecha}}
+                {{$asesorie->codigo}}
             </td>
             <td>
-                {{$uso->tipo_asesoria}}
+                {{optional($asesorie->fecha)->isoFormat('YYYY-MM-DD')}}
             </td>
             <td>
-                {{$uso->nombre}}
+                {{$asesorie->tipo_asesoria}}
             </td>
             <td>
-                {{$uso->fase}}
+                {{$asesorie->nombre}}
             </td>
             <td>
-                {{$uso->asesores}}
+                {{$asesorie->descripcion}}
             </td>
             <td>
-                {{$uso->talentos}}
+                {{$asesorie->compromisos}}
             </td>
             <td>
-                {{$uso->equipos}}
+                {{$asesorie->fase}}
             </td>
             <td>
-                {{$uso->present()->usoMateriales()}}
+                {{$asesorie->asesores}}
+            </td>
+            <td>
+                {{$asesorie->participants}}
+            </td>
+            <td>
+                {{$asesorie->equipos}}
+            </td>
+            <td>
+                {{$asesorie->materiales}}
             </td>
         </tr>
         @empty
