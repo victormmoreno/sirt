@@ -69,8 +69,14 @@ class UsoInfraestructura extends Model
                         GROUP_CONCAT(DISTINCT CONCAT(participants.documento, ' - ', participants.nombres, ' ', participants.apellidos) SEPARATOR ';') as talentos,
                         sum(gestor_uso.asesoria_directa) as aseseria_directa, sum(gestor_uso.asesoria_indirecta) as asesoria_indirecta");
                     break;
+                case class_basename(UsoInfraestructura::class):
+                    return $query->select('usoinfraestructuras.id', 'usoinfraestructuras.codigo', 'usoinfraestructuras.descripcion as nombre', 'usoinfraestructuras.fecha')
+                    ->selectRaw("GROUP_CONCAT(DISTINCT CONCAT(asesores.documento, ' - ', asesores.nombres, ' ', asesores.apellidos)  SEPARATOR ';') as asesores,
+                        GROUP_CONCAT(DISTINCT CONCAT(participants.documento, ' - ', participants.nombres, ' ', participants.apellidos) SEPARATOR ';') as talentos,
+                        sum(gestor_uso.asesoria_directa) as aseseria_directa, sum(gestor_uso.asesoria_indirecta) as asesoria_indirecta");
+                    break;
                 default:
-                    return "No registra";
+                    return $query;
                     break;
             }
         }
@@ -117,58 +123,15 @@ class UsoInfraestructura extends Model
         return $query;
     }
 
-
     /**
      * The query scope year
      *
      * @return void
      */
-    public function scopeYear($query, $module, $years)
+    public function scopeBetweenDate($query, $start_date, $end_date)
     {
-        if (isset($module) && $module != null && $module != 'all') {
-            if (isset($years) && (!collect($years)->contains('all'))) {
-                switch ($module){
-                    case class_basename(Proyecto::class):
-                        return $query->where(function($subquery) use($years){
-                            $subquery->whereIn(DB::raw('YEAR(usoinfraestructuras.fecha)'), $years)
-                                    ->orWhereIn(DB::raw('YEAR(usoinfraestructuras.fecha)'), $years);
-                        });
-                        break;
-                    case class_basename(Articulation::class):
-                        return $query->where(function($subquery) use($years){
-                                $subquery->whereIn(DB::raw('YEAR(usoinfraestructuras.fecha)'), $years)
-                                    ->orWhereIn(DB::raw('YEAR(usoinfraestructuras.fecha)'), $years)
-                                    ->orWhere(function ($q) use($years){
-                                            $q->where(function ($subquery) use ($years) {
-                                                $subquery->where(function($query)use ($years){
-                                                        $query->whereIn(DB::raw('YEAR(articulation_stages.start_date)'), $years)
-                                                            ->orWhereIn(DB::raw('YEAR(articulations.start_date)'), $years);
-                                                })
-                                                ->where(function($query){
-                                                    $query->where('articulation_stages.status', ArticulationStage::STATUS_CLOSE)
-                                                        ->orWhereIn('fasearticulation.nombre', ['Finalizado', 'Cancelado']);
-                                                });
-                                            })
-                                            ->orWhere(function ($query) {
-                                                $query->where('articulation_stages.status', ArticulationStage::STATUS_OPEN)
-                                                    ->OrWhereIn('fasearticulation.nombre', ['Inicio', 'Ejecución', 'Cierre']);
-                                            });
-                                        });
-                        });
-                        break;
-                    case class_basename(Idea::class):
-                        return $query->where(function($subquery) use($years){
-                            $subquery->whereIn(DB::raw('YEAR(usoinfraestructuras.fecha)'), $years)
-                                    ->orWhereIn(DB::raw('YEAR(usoinfraestructuras.fecha)'), $years);
-                        });
-                        break;
-                    default:
-                        return $query;
-                        break;
-                }
-
-            }
-            return $query;
+        if ((isset($start_date) && $start_date != null) || (isset($end_date) && $end_date != null) ){
+            return $query->whereBetween('usoinfraestructuras.fecha', [$start_date, $end_date]);
         }
         return $query;
     }
@@ -215,11 +178,15 @@ class UsoInfraestructura extends Model
                 case class_basename(Idea::class):
                     return $this->getJoinWithIdeas($query);
                     break;
+                case class_basename(UsoInfraestructura::class):
+                    return $query;
+                    break;
                 default:
                     return $query;
                     break;
             }
         }
+        return $query;
     }
 
     private function getJoinWithProjects($query){

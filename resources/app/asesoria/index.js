@@ -3,13 +3,14 @@ $(document).ready(function() {
     let filter_nodo = $('#filter_node').val();
     let filter_year = $('#filter_year').val();
     let filter_module = $('#filter_module').val();
-
+    let start_date = $('#start_date').val();
+    let end_date = $('#end_date').val();
 
     $('#usoinfraestructa_data_table').dataTable().fnDestroy();
-    if((filter_nodo != '' || filter_nodo != null)  && (filter_year != '' || filter_year != null) && (filter_module != '' || filter_module != null)){
-        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo, filter_module,  filter_year);
+    if((filter_nodo != '' || filter_nodo != null)  && (filter_year != '' || filter_year != null) && (filter_module != '' || filter_module != null) && (start_date != '' || start_date != null) && (end_date != '' || end_date != null)){
+        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo, filter_module,  filter_year, start_date, end_date);
     }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && (filter_year == '' || filter_year == null || filter_year == undefined) && (filter_module == '' || filter_module == null || filter_module == undefined)  ){
-        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo = null , filter_module = null, filter_year = null);
+        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo = null , filter_module = null, filter_year = null, start_date = null, end_date = null);
     }else{
         $('#usoinfraestructa_data_table').DataTable({
             language: {
@@ -18,13 +19,12 @@ $(document).ready(function() {
             "lengthChange": false
         }).clear().draw();
     }
-
 });
 
 
 
 const usoinfraestructuraIndex = {
-    fillDatatatablesUsosInfraestructura: function(filter_nodo, filter_module, filter_year){
+    fillDatatatablesUsosInfraestructura: function(filter_nodo, filter_module, filter_year, start_date, end_date){
         let datatable = $('#usoinfraestructa_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -39,7 +39,8 @@ const usoinfraestructuraIndex = {
                 data: {
                     filter_nodo: filter_nodo,
                     filter_module: filter_module,
-                    filter_year: filter_year
+                    start_date: start_date,
+                    end_date: end_date
                 }
             },
             columnDefs: [ {
@@ -139,12 +140,15 @@ $('#filter_usoinfraestructura').click(function(){
     let filter_nodo = $('#filter_node').val();
     let filter_year = $('#filter_year').val();
     let filter_module = $('#filter_module').val();
+    let start_date = $('#start_date').val();
+    let end_date = $('#end_date').val();
+
 
     $('#usoinfraestructa_data_table').dataTable().fnDestroy();
-    if((filter_nodo != '' || filter_nodo != null)  && (filter_year != '' || filter_year != null) && (filter_module != '' || filter_module != null)){
-        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo, filter_module,  filter_year);
+    if((filter_nodo != '' || filter_nodo != null)  && (filter_year != '' || filter_year != null) && (filter_module != '' || filter_module != null) && (start_date != '' || start_date != null) && (end_date != '' || end_date != null)){
+        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo, filter_module,  filter_year, start_date, end_date);
     }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && (filter_year == '' || filter_year == null || filter_year == undefined) && (filter_module == '' || filter_module == null || filter_module == undefined)  ){
-        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo = null , filter_module = null, filter_year = null);
+        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo = null , filter_module = null, filter_year = null, start_date = null, end_date = null);
     }else{
         $('#usoinfraestructa_data_table').DataTable({
             language: {
@@ -161,8 +165,7 @@ $('#download_usoinfraestructura').click(function(){
     let filter_module = $('#filter_module').val();
     let query = {
         filter_module: filter_module,
-        filter_nodo: filter_nodo,
-        filter_year: filter_year,
+        filter_nodo: filter_nodo
     }
     let url = `${host_url}/asesorias/exportar?` + $.param(query)
     window.location = url;

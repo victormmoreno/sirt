@@ -27,7 +27,8 @@ class AsesorieSearchRequest extends FormRequest
     public function rules()
     {
         return [
-            'type_search' => ['required', Rule::in(['code_asesorie', 'model_asesorie'])],
+            // 'type_search' => ['required', Rule::in(['code_asesorie', 'model_asesorie'])],
+            'type_search' => ['required'],
             'search_asesorie' => Rule::requiredIf(
                 isset(request()->type_search) && request()->type_search == 'code_asesorie' ? 'required' : 'required'
             ),

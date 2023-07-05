@@ -78,6 +78,7 @@
                                     </div>
                                 @endcan
 
+
                                 <div class="input-field col s12 m2 l2">
                                     <label class="active" for="filter_year">Año <span class="red-text">*</span></label>
                                     <select multiple tabindex="-1" style="width: 100%" name="filter_year[]" id="filter_year">
@@ -87,6 +88,18 @@
                                         <option value="all" >todos</option>
                                     </select>
                                 </div>
+                                <div class="input-field col s12 m2 l2">
+
+                                    <input type="date" id="start_date" name="start_date">
+                                    <label  >Desde <span class="red-text">*</span></label>
+                                </div>
+
+                                <div class="input-field col s12 m2 l2">
+
+                                    <input type="date" id="end_date" name="end_date">
+                                    <label  for="end_date">Hasta <span class="red-text">*</span></label>
+                                </div>
+
                                 <div class="col s12 m6 l4 offset-m3 right">
                                     @can('export', \App\Models\UsoInfraestructura::class)
                                     <button class="waves-effect waves-grey bg-secondary-lighten white-text btn-flat search-tabs-button right p-h-md" id="download_usoinfraestructura"><i class="material-icons">cloud_download</i>Descargar</button>

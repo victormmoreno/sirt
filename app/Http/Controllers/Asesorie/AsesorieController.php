@@ -124,12 +124,12 @@ class AsesorieController extends Controller
         $model = $this->checkRoleAuth($request)['model'];
 
         $asesories = [];
-        if (isset($request->filter_module) || isset($request->filter_node) || isset($request->filter_year)) {
+        if (isset($request->filter_module) || isset($request->filter_node) || isset($request->filter_year) || isset($request->start_date) || isset($request->end_date)) {
             $asesories = $this->asesorieRepository->getListAsesories()
             ->selectAsesoria($model)
             ->joins($model)
             ->node($model, $node)
-            ->year($model, $request->filter_year)
+            ->betweenDate($request->start_date, $request->end_date)
             ->asesor($model,$asesor)
             ->groupBy('usoinfraestructuras.id')
             ->orderBy('usoinfraestructuras.updated_at', 'desc')

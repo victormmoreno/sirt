@@ -2,20 +2,16 @@
 $(document).on('submit', 'form#formSearchAsesorie', function (event) {
     event.preventDefault();
     $('#response-alert').empty();
-    let type = $('#type_search').val();
-    let search = $('#search_asesorie').val();
-    let patronDocumento=new RegExp('^[0-9]{6,11}$');
-
-    if(type == ''){
+    if(!validar("#type_search")){
         Swal.fire(
             'Error',
             'Por favor selecciona una opción',
             'error'
         );
-    }else if(type == 'code_asesorie' && (search == null || search == '')){
+    }else if(!validar("#search_asesorie")){
         Swal.fire(
             'Error',
-            'Por favor ingrese un número de documento válido',
+            'Por favor ingrese un código válido',
             'error'
         );
     }else{
@@ -32,20 +28,21 @@ $(document).on('submit', 'form#formSearchAsesorie', function (event) {
             contentType: false,
             processData: false,
             success: function (response) {
+                console.log(response);
                 $('button[type="submit"]').removeAttr('disabled');
                 $('.error').hide();
                 $('#response-alert').empty();
                 if (response.fail) {
                     Swal.fire({
                         title: 'Registro Erróneo',
-                        html: "Estas ingresando mal los datos. " + errores,
+                        html: "Estas ingresando mal los datos. ",
                         type: 'error',
                         showCancelButton: false,
                         confirmButtonColor: '#3085d6',
                         confirmButtonText: 'Ok'
                     });
                 }
-                if (response.users.length == 0) {
+                if (response.asesories.length == 0) {
                     $('#response-alert').append(`
                         <div class="mailbox-list">
                             <ul>
@@ -58,16 +55,29 @@ $(document).on('submit', 'form#formSearchAsesorie', function (event) {
                         </div>`);
                 }else{
                     if(response.status == 200){
-                        $.each( response.users, function( key, user ) {
+                        $('#response-alert').append(`
+                            <div class="row search-tabs-row search-tabs-container grey lighten-4">
+                                <div class="col s12 m6 l6 left-align search-stats">
+
+
+                                        <span class="m-r-sm text-mailbox">${response.message}</span>
+
+
+                                </div>
+                                <div class="col s12 m6 l6 right-align search-stats">
+                                    <span class="m-r-sm">Resultados</span>
+                                    <span class="secondary-stats"></span>
+                                </div>
+                            </div>`);
+                        $.each( response.asesories, function( key, asesorie ) {
                             let route = response.urls[key];
                             $('#response-alert').append(`
                             <div class="mailbox-list">
                                 <ul>
                                     <li>
                                         <a href="`+route+`" class="mail-active">
-                                            <h5 class="mail-author">`+user.documento+` - `+user.nombres +` `+ user.apellidos+`</h5>
-                                            <p class="hide-on-small-and-down mail-text">Miembro desde `+userSearch.userCreated(user.created_at)+`</p>
-                                            <div class="position-top-right p f-12 mail-date"> Acceso al sistema: `+ userSearch.state(user.estado) +`</div>
+                                            <h5 class="mail-author">`+asesorie.codigo+` - `+asesorie.nombre+`</h5>
+                                            <p class="hide-on-small-and-down mail-text"> `+asesorie.fecha+`</p>
                                         </a>
                                     </li>
                                 </ul>
@@ -79,6 +89,20 @@ $(document).on('submit', 'form#formSearchAsesorie', function (event) {
         });
     }
 });
+
+const validar = ( selector, num = 4 ) => {
+    if ( typeof selector !== "string" )
+      return false;
+
+    let text = document.querySelector( selector );
+    if ( text === null )
+      return false;
+
+    if ( ! (text.value.trim().length < num) )
+      return true;
+
+    return false;
+};
 
 const asesorieSearch = {
     changetextLabel: function(){
