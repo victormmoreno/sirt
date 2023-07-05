@@ -22,5 +22,11 @@ class AsesorieRepository
             ->leftJoin('users as asesores', 'asesores.id', '=', 'gestor_uso.asesor_id');
     }
 
+    public function queryAsesorieSearch($field, $sentence, string $value)
+    {
+        return UsoInfraestructura::query()
+        ->where('usoinfraestructuras.codigo', 'LIKE', $value);
+    }
+
 
 }

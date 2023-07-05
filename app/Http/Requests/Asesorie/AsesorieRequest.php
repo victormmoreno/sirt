@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\UsoInfraestructura;
+namespace App\Http\Requests\Asesorie;
 
 use App\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UsoInfraestructuraFormRequest extends FormRequest
+class AsesorieRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

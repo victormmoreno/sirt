@@ -12,7 +12,7 @@ class articulationStageExport extends FatherExport
 {
     use Exportable;
 
-    const rowRangeHeading = 'A1:S1';
+    const rowRangeHeading = 'A1:V1';
 
     public function __construct($query)
     {

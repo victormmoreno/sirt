@@ -95,7 +95,7 @@ class ArticulationStageListController extends Controller
         $articulationStages = [];
         if (isset($request->filter_status_articulationStage)) {
             $articulationStages = $this->articulationStageRepository->getListArticulacionStagesWithArticulations()
-            ->rightJoin('articulations', 'articulations.articulation_stage_id', '=', 'articulation_stages.id')
+            ->leftJoin('articulations', 'articulations.articulation_stage_id', '=', 'articulation_stages.id')
             ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')
             ->leftJoin('articulation_scopes', 'articulation_scopes.id', '=', 'articulations.scope_id')
             ->leftJoin('articulation_user', 'articulation_user.articulation_id', '=', 'articulations.id')
@@ -104,17 +104,25 @@ class ArticulationStageListController extends Controller
             ->leftJoin('articulation_types', 'articulation_types.id', '=', 'articulation_subtypes.articulation_type_id')
             ->select(
                 'articulation_stages.*', 'articulations.code as articulation_code',
-                'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
+                'articulations.id as articulation_id','articulations.end_date as articulation_end_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
                 'entidades.nombre as nodo', 'proyectos.codigo_proyecto as codigo_proyecto',
                 'proyectos.nombre as nombre_proyecto', 'proyectos.id as proyecto_id', 'interlocutor.documento', 'interlocutor.nombres',
                 'interlocutor.apellidos', 'interlocutor.email', 'articulation_subtypes.name as articulation_subtype', 'articulation_types.name as articulation_type', 'articulation_scopes.name as scope'
             )
             ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_state_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by, GROUP_CONCAT(DISTINCT CONCAT(participants.documento, ' - ', participants.nombres, ' ', participants.apellidos)  SEPARATOR ';') as participants")
+            ->selectRaw("DATE_FORMAT(articulations.start_date, '%d/%m/%Y') AS articulation_start_date")
+            ->selectRaw("DATE_FORMAT(articulations.start_date, '%Y') AS articulation_start_date_year")
+            ->selectRaw("DATE_FORMAT(articulations.end_date, '%d/%m/%Y') AS articulation_end_date")
+            ->selectRaw("DATE_FORMAT(articulations.end_date, '%Y') AS articulation_end_date_year")
+            ->selectRaw("DATE_FORMAT(articulation_stages.start_date, '%d/%m/%Y') AS articulation_stages_start_date")
+            ->selectRaw("DATE_FORMAT(articulation_stages.start_date, '%Y') AS articulation_stages_start_date_year")
+            ->selectRaw("DATE_FORMAT(articulation_stages.end_date, '%d/%m/%Y') AS articulation_stages_end_date_year")
+            ->selectRaw("DATE_FORMAT(articulation_stages.end_date, '%Y') AS articulation_stages_end_date_year")
             ->node($node)
             ->status($request->filter_status_articulationStage)
             ->year($request->filter_year_articulationStage)
             ->interlocutorTalent($talent)
-            ->groupBy('articulation_code')
+            ->groupBy('articulation_stages.code')
             ->orderBy('articulation_stages.updated_at', 'desc')
             ->get();
         }

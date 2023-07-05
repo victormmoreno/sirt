@@ -37,7 +37,6 @@
                                             </div>
 
                                             <div class="col s12 m6 l4 offset-m3 right show-on-large hide-on-med-and-down">
-
                                                 @can('create', App\Models\UsoInfraestructura::class)
                                                 <a  href="{{route('asesorias.create')}}" class="waves-effect bg-secondary white-text btn-flat search-tabs-button right show-on-large hide-on-med-and-down">Nueva Asesoria</a>
                                                 @endcan

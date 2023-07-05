@@ -15,6 +15,18 @@
                 {{__('Phase')}} {{__('articulation')}}
             </th>
             <th>
+                Fecha inicio {{__('articulation')}}
+            </th>
+            <th>
+                Año Fecha inicio {{__('articulation')}}
+            </th>
+            <th>
+                Fecha cierre {{__('articulation')}}
+            </th>
+            <th>
+                Año Fecha cierre {{__('articulation')}}
+            </th>
+            <th>
                 {{ __('Code articulation-stage') }}
             </th>
             <th>
@@ -45,13 +57,10 @@
                 {{__('Scope')}}
             </th>
             <th>
-                {{__('Start Date')}}
+                {{__('Start Date')}} {{__('articulation-stage')}}
             </th>
             <th>
-                {{__('End Date')}}
-            </th>
-            <th>
-                {{__('Created_at')}}
+                {{__('End Date')}} {{__('articulation-stage')}}
             </th>
             <th>
                 {{__('Interlocutory talent')}}
@@ -75,6 +84,18 @@
             </td>
             <td>
                 {{$articulationStage->fase}}
+            </td>
+            <td>
+                {{$articulationStage->articulation_start_date}}
+            </td>
+            <td>
+                {{$articulationStage->articulation_start_date_year}}
+            </td>
+            <td>
+                {{$articulationStage->articulation_end_date}}
+            </td>
+            <td>
+                {{$articulationStage->articulation_end_date_year}}
             </td>
             <td>
                 {{$articulationStage->code}}
@@ -108,13 +129,10 @@
             </td>
 
             <td>
-                {{$articulationStage->present()->articulationStageStartDate()}}
+                {{$articulationStage->articulation_stages_start_date}}
             </td>
             <td>
-                {{$articulationStage->present()->articulationStageEndDate()}}
-            </td>
-            <td>
-                {{$articulationStage->present()->articulationStageCreatedDate()}}
+                {{$articulationStage->articulation_stages_end_date}}
             </td>
             <td>
                 {{$articulationStage->documento}} - {{$articulationStage->nombres}} {{$articulationStage->apellidos}}

@@ -42,18 +42,24 @@
                                         <div class="container">
                                             <div class="row">
                                                 <div class="col s12">
-                                                    <form id="formSearchAsesorie" action="{{ route('usuario.search.user')}}" method="POST">
+                                                    <form id="formSearchAsesorie" action="{{ route('asesorie.search')}}" method="POST">
                                                         {!! csrf_field() !!}
                                                         <div class="row">
+
                                                             <div class="input-field col s12 m4 l4">
-                                                                <select class="js-states browser-default select2" tabindex="-1" style="width: 100%" name="txttype_search" id="txttype_search" onchange="userSearch.changetextLabel()">
-                                                                    <option value="code">Código asesoria</option>
-                                                                    <option value="code_model">Código proyecto / articulación / idea</option>
+                                                                {{-- @can('moduleType', \App\Models\UsoInfraestructura::class) --}}
+                                                                <select class="js-states browser-default select2" tabindex="-1" style="width: 100%" name="type_search" id="type_search" onchange="asesorieSearch.changetextLabel()">
+                                                                    @forelse($modules as $id => $name)
+                                                                        <option value="{{$id}}" @if($loop->first) selected @endif>{{$name}}</option>
+                                                                    @empty
+                                                                        <option>No se encontraron Resultados</option>
+                                                                    @endforelse
                                                                 </select>
+                                                                {{-- @endcan --}}
                                                             </div>
                                                             <div class="input-field col s12 m8 l8">
-                                                                <input type="text" id="txtsearch_user" name="txtsearch_user" class="autocomplete">
-                                                                <label for="txtsearch_user">Código asesoria</label>
+                                                                <input type="text" id="search_asesorie" name="search_asesorie" class="autocomplete">
+                                                                <label for="search_asesorie">ingrese código de asesoria</label>
                                                             </div>
                                                         </div>
                                                         <div class="row">

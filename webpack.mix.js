@@ -105,6 +105,7 @@ mix.scripts([
     'resources/app/materiales/form.js',
     'resources/app/materiales/index.js',
     'resources/app/asesoria/index.js',
+    'resources/app/asesoria/search.js',
     'resources/app/visitante/index.js',
     'resources/app/ingreso/index.js',
     'resources/app/ingreso/ingreso/create.js',

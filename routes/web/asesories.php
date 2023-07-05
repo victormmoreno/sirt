@@ -8,6 +8,10 @@ Route::group([
 ], function () {
     Route::get('asesorias', 'AsesorieController@index')->name('asesorias.index');
     Route::get('/asesorias/search', 'AsesorieSearchController@showFormSearch')->name('asesorias.search');
+    Route::post('asesorias/search', [
+        'uses' => 'AsesorieSearchController@queryAsesorieSearch',
+        'as'   => 'asesorie.search',
+    ]);
     Route::get('/asesorias/datatable_filtros', 'AsesorieController@datatableFiltros')->name('asesorias.datatable.filtros');
     Route::get('asesorias/{code}', 'AsesorieController@show')->name('asesorias.show');
     Route::get('asesorias/{code}/editar', 'AsesorieController@edit')->name('asesorias.edit');
