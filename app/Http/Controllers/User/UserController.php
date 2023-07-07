@@ -42,7 +42,7 @@ class UserController extends Controller
                 $users = User::query()
                     ->select('users.id', 'tiposdocumentos.nombre as tipodocumento', 'users.documento', 'users.email', 'users.celular', 'users.ultimo_login', 'users.estado', 'users.deleted_at')
                     ->selectRaw('concat(users.nombres, " ",users.apellidos) as usuario, GROUP_CONCAT(distinct roles.name SEPARATOR ", ") as roles')
-                    ->selectRaw("if(roles.name = 'Dinamizador', entidades.nombre , if(roles.name = 'Experto', entidades.nombre, if(roles.name = 'Articulador', entidades.nombre, if(roles.name = 'Infocenter', entidades.nombre, if(roles.name = 'Apoyo Tecnico', entidades.nombre, if(roles.name = 'Ingreso', entidades.nombre, 'RTC')))))) as nodo")
+                    ->selectRaw("if(entidades.nombre is null, 'No Aplica', entidades.nombre) as nodo")
                     ->userQuery()
                     ->nodeQuery($request->filter_role, $node)
                     ->roleQuery($request->filter_role)
@@ -165,10 +165,10 @@ class UserController extends Controller
                 ->get();
             return datatables()->of($talents)
                 ->addColumn('add_proyecto', function ($data) {
-                    $add = '<a onclick="addTalentoProyecto(' . $data->id . ')" class="btn bg-info white-text m-b-xs"><i class="material-icons">done</i></a>';
+                    $add = '<a onclick="addTalentoProyecto(' . $data->documento . ')" class="btn bg-info white-text m-b-xs"><i class="material-icons">done</i></a>';
                     return $add;
                 })->addColumn('add_propiedad', function ($data) {
-                    $propiedad = '<a onclick="addPersonaPropiedad(' . $data->id . ')" class="btn bg-secondary m-b-xs"><i class="material-icons">done</i></a>';
+                    $propiedad = '<a onclick="addPersonaPropiedad(' . $data->documento . ')" class="btn bg-secondary m-b-xs"><i class="material-icons">done</i></a>';
                     return $propiedad;
                 })
                 ->addColumn('add_intertocutor_talent_articulation', function ($data) {

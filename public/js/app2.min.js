@@ -4147,15 +4147,15 @@ function prepararFilaEnLaTablaDeTalentos(ajax, isInterlocutor) {
     if(isInterlocutor){
         talentInterlocutor = "checked";
     }// El ajax.talento.id es el id del TALENTO, no del usuario
-    let idTalento = ajax.talento.id;
-    let fila = '<tr class="selected" id=talentoAsociadoAProyecto' + idTalento + '>' + '<td><input type="radio" '+ talentInterlocutor +' class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.talento.documento + ' - ' + ajax.talento.nombres + ' '+ ajax.talento.apellidos +'</td>' + '<td><a class="waves-effect bg-danger btn" onclick="eliminarTalentoDeProyecto_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let idTalento = ajax.data.user.id;
+    let fila = '<tr class="selected" id=talentoAsociadoAProyecto' + idTalento + '>' + '<td><input type="radio" '+ talentInterlocutor +' class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.data.user.documento + ' - ' + ajax.data.user.nombres + ' '+ ajax.data.user.apellidos +'</td>' + '<td><a class="waves-effect bg-danger btn" onclick="eliminarTalentoDeProyecto_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
 // Prepara un string con la fila que se va a pintar en la tabla de los propietarios (users/persona) que son dueños de la propiedad intelectual
 function prepararFilaEnLaTablaDePropietarios_Users(ajax) { // El ajax.user.id es el id del USER
-    let idUser = ajax.talento.id;
-    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Persona' + idUser + '>' + '<td><input type="hidden" name="propietarios_user[]" value="' + idUser + '">' + ajax.talento.documento + ' - ' + ajax.talento.nombres + ' ' + ajax.talento.apellidos + '</td>' + '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Persona(' + idUser + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let idUser = ajax.data.user.id;
+    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Persona' + idUser + '>' + '<td><input type="hidden" name="propietarios_user[]" value="' + idUser + '">' + ajax.data.user.documento + ' - ' + ajax.data.user.nombres + ' ' + ajax.data.user.apellidos + '</td>' + '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Persona(' + idUser + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
@@ -4433,8 +4433,8 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
             ideaProyectoAsociadaConExito(codigo, nombre);
 
             if(response.data.talento != null){
-                addTalentoProyecto(response.data.talento.id, true);
-                addPersonaPropiedad(response.data.talento.id);
+                addTalentoProyecto(response.data.talento.documento, true);
+                addPersonaPropiedad(response.data.talento.documento);
             }
             if(response.data.sede != null){
                 addSedePropietaria(response.data.sede.id);
@@ -4565,7 +4565,7 @@ function consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table(tableName, fie
         processing: true,
         serverSide: true,
         ajax: {
-            url: `${host_url}/usuarios/`,
+            url: `${host_url}/usuarios/clientes`,
             type: "get"
         },
         columns: [
@@ -6262,76 +6262,71 @@ var selectMaterialesPorNodo = {
     
 }
 $(document).ready(function() {
+    $('.input-field label').addClass('active');
 
     let filter_nodo = $('#filter_node').val();
-    let filter_year = $('#filter_year').val();
     let filter_module = $('#filter_module').val();
+    let filter_start_date = $('#filter_start_date').val();
+    let filter_end_date = $('#filter_end_date').val();
 
-
-    $('#usoinfraestructa_data_table').dataTable().fnDestroy();
-    if((filter_nodo != '' || filter_nodo != null)  && (filter_year != '' || filter_year != null) && (filter_module != '' || filter_module != null)){
-        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo, filter_module,  filter_year);
-    }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && (filter_year == '' || filter_year == null || filter_year == undefined) && (filter_module == '' || filter_module == null || filter_module == undefined)  ){
-        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo = null , filter_module = null, filter_year = null);
+    $('#asesorie_data_table').dataTable().fnDestroy();
+    if((filter_nodo != '' || filter_nodo != null) && (filter_module != '' || filter_module != null) && (filter_start_date != '' || filter_start_date != null) && (filter_end_date != '' || filter_end_date != null)){
+        asesorieIndex.fillDatatatablesAsesorie(filter_nodo, filter_module, filter_start_date, filter_end_date);
+    }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined)  && (filter_module == '' || filter_module == null || filter_module == undefined) && (filter_start_date == '' || filter_start_date == null || filter_start_date == undefined) && (filter_end_date == '' || filter_end_date == null || filter_end_date == undefined)){
+        asesorieIndex.fillDatatatablesAsesorie(filter_nodo = null , filter_module = null, start_date = null, end_date = null);
     }else{
-        $('#usoinfraestructa_data_table').DataTable({
+        $('#asesorie_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
             "lengthChange": false
         }).clear().draw();
     }
-
 });
 
-// var $ = require('jquery');
-// var DataTable = require('datatables.net');
-// require('datatables.net-plugins/dataRender/datetime.js');
 
-var usoinfraestructuraIndex = {
-    fillDatatatablesUsosInfraestructura: function(filter_nodo, filter_module, filter_year){
-        var datatable = $('#usoinfraestructa_data_table').DataTable({
+
+const asesorieIndex = {
+    fillDatatatablesAsesorie: function(filter_nodo, filter_module, filter_start_date, filter_end_date){
+        $('#asesorie_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
             "lengthChange": false,
             processing: true,
             serverSide: true,
-            "order": [[ 0, "desc" ]],
+            "order": [[ 2, "desc" ]],
             ajax:{
-                url: host_url + "/usoinfraestructura",
+                url: `${host_url}/asesorias/datatable_filtros`,
                 type: "get",
                 data: {
                     filter_nodo: filter_nodo,
                     filter_module: filter_module,
-                    filter_year: filter_year
+                    filter_start_date: filter_start_date,
+                    filter_end_date: filter_end_date
                 }
             },
             columnDefs: [ {
-                targets: 0,
-                // render: datatable.render.moment( 'DD-MM-YYYY' )
+                targets: 1,
                 type: "date"
             } ],
 
             columns: [
-                // {
-                //     type: "date",
-                //     data: 'fecha',
-                //     name: 'fecha',
-                //     width: '10%'
-                // },
+                {
+                    data: 'nodo',
+                    type: 'nodo'
+                },
+                {
+                    data: 'codigo',
+                    type: 'codigo'
+                },
                 {
                     data: 'fecha',
-                    type: 'date',
-                    // render: {
-                    //     _: 'display',
-                    //     sort: 'timestamp'
-                    // }
+                    type: 'date'
                 },
-
                 {
-                    data: 'gestorEncargado',
-                    name: 'gestorEncargado',
+                    data: 'asesores',
+                    name: 'asesores',
                     width: '20%',
                     orderable: false
                 },
@@ -6341,8 +6336,8 @@ var usoinfraestructuraIndex = {
                     width: '10%'
                 },
                 {
-                    data: 'actividad',
-                    name: 'actividad',
+                    data: 'asesorable',
+                    name: 'asesorable',
                     width: '35%'
                 }, {
                     data: 'fase',
@@ -6357,66 +6352,7 @@ var usoinfraestructuraIndex = {
             ],
         });
     },
-    queryExpertsByNodo: function(){
-        let nodo = $('#filter_nodo').val();
-        if (nodo == null || nodo == '' || nodo == 'all' || nodo == undefined){
-            $('#filter_gestor').empty();
-            $('#filter_gestor').append('<option value="" selected>Seleccione un experto</option>');
-        }else{
-            $.ajax({
-                type: 'GET',
-                url: `${host_url}/usuarios/expertos/nodo/${nodo}`,
-                contentType: false,
-                dataType: 'json',
-                processData: false,
-                success: function (data) {
-
-                    $('#filter_gestor').empty();
-                    $('#filter_gestor').append('<option value="all">todos</option>');
-                    $.each(data.gestores, function(i, e) {
-                        $('#filter_gestor').append('<option  value="'+i.id+'">'+e.nombre+'</option>');
-                    })
-                    $('#filter_gestor').material_select();
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    alert("Error: " + errorThrown);
-                }
-            });
-        }
-    },
-    queryActivitiesByAnio: function(){
-
-        let anio = $('#filter_year').val();
-
-        if (anio == null || anio == '' || anio == undefined){
-
-            $('#filter_actividad').empty();
-            $('#filter_actividad').append('<option value="">Seleccione un año</option>');
-
-        }else{
-            $.ajax({
-                type: 'GET',
-                url: host_url + '/usoinfraestructura/actividades/'+ anio,
-                contentType: false,
-                dataType: 'json',
-                processData: false,
-                success: function (data) {
-                    $('#filter_actividad').empty();
-                    $('#filter_actividad').append('<option value="all">Todas</option>');
-                    $.each(data.actividades, function(i, e) {
-                        $('#filter_actividad').append('<option  value="'+i+'">'+e+'</option>');
-                    });
-                    $('#filter_actividad').material_select();
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    alert("Error: " + errorThrown);
-                }
-            });
-        }
-
-    },
-
-    destroyUsoInfraestructura: function(id){
+    destroyAsesorie: function(id){
         Swal.fire({
             title: '¿Estas seguro de eliminar este uso de infraestructura?',
             text: "Recuerde que si lo elimina no lo podrá recuperar.",
@@ -6431,7 +6367,7 @@ var usoinfraestructuraIndex = {
                 let token = $("meta[name='csrf-token']").attr("content");
                 $.ajax(
                 {
-                    url: host_url + "/usoinfraestructura/"+id,
+                    url: `${host_url}/asesorias/${id}`,
                     type: 'DELETE',
                     data: {
                         "id": id,
@@ -6463,18 +6399,20 @@ var usoinfraestructuraIndex = {
     }
 }
 
-$('#filter_usoinfraestructura').click(function(){
+$('#filter_asesories').click(function(){
     let filter_nodo = $('#filter_node').val();
-    let filter_year = $('#filter_year').val();
     let filter_module = $('#filter_module').val();
+    let filter_start_date = $('#filter_start_date').val();
+    let filter_end_date = $('#filter_end_date').val();
 
-    $('#usoinfraestructa_data_table').dataTable().fnDestroy();
-    if((filter_nodo != '' || filter_nodo != null)  && (filter_year != '' || filter_year != null) && (filter_module != '' || filter_module != null)){
-        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo, filter_module,  filter_year);
-    }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && (filter_year == '' || filter_year == null || filter_year == undefined) && (filter_module == '' || filter_module == null || filter_module == undefined)  ){
-        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo = null , filter_module = null, filter_year = null);
+
+    $('#asesorie_data_table').dataTable().fnDestroy();
+    if((filter_nodo != '' || filter_nodo != null) && (filter_module != '' || filter_module != null) && (filter_start_date != '' || filter_start_date != null) && (filter_end_date != '' || filter_end_date != null)){
+        asesorieIndex.fillDatatatablesAsesorie(filter_nodo, filter_module, filter_start_date, filter_end_date);
+    }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined)  && (filter_module == '' || filter_module == null || filter_module == undefined) && (filter_start_date == '' || filter_start_date == null || filter_start_date == undefined) && (filter_end_date == '' || filter_end_date == null || filter_end_date == undefined)){
+        asesorieIndex.fillDatatatablesAsesorie(filter_nodo = null , filter_module = null, start_date = null, end_date = null);
     }else{
-        $('#usoinfraestructa_data_table').DataTable({
+        $('#asesorie_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
@@ -6483,18 +6421,143 @@ $('#filter_usoinfraestructura').click(function(){
     }
 });
 
-$('#download_usoinfraestructura').click(function(){
+$('#download_asesories').click(function(){
     let filter_nodo = $('#filter_node').val();
-    let filter_year = $('#filter_year').val();
     let filter_module = $('#filter_module').val();
-    var query = {
+    let filter_start_date = $('#filter_start_date').val();
+    let filter_end_date = $('#filter_end_date').val();
+    let query = {
         filter_nodo: filter_nodo,
-        filter_year: filter_year,
         filter_module: filter_module,
+        filter_start_date: filter_start_date,
+        filter_end_date: filter_end_date
     }
-    var url = host_url + "/usoinfraestructura/export?" + $.param(query)
+    let url = `${host_url}/asesorias/exportar?` + $.param(query)
     window.location = url;
 });
+
+//Enviar formulario
+$(document).on('submit', 'form#formSearchAsesorie', function (event) {
+    event.preventDefault();
+    $('#response-alert').empty();
+    if(!validar("#type_search")){
+        Swal.fire(
+            'Error',
+            'Por favor selecciona una opción',
+            'error'
+        );
+    }else if(!validar("#search_asesorie")){
+        Swal.fire(
+            'Error',
+            'Por favor ingrese un código válido',
+            'error'
+        );
+    }else{
+        let form = $(this);
+        let data = new FormData($(this)[0]);
+        let url = form.attr("action");
+        $.ajax({
+            type: form.attr('method'),
+            url: url,
+            data: data,
+            dataType: 'json',
+            cache: false,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                console.log(response);
+                $('button[type="submit"]').removeAttr('disabled');
+                $('.error').hide();
+                $('#response-alert').empty();
+                if (response.fail) {
+                    Swal.fire({
+                        title: 'Registro Erróneo',
+                        html: "Estas ingresando mal los datos. ",
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok'
+                    });
+                }
+                if (response.asesories.length == 0) {
+                    $('#response-alert').append(`
+                        <div class="mailbox-list">
+                            <ul>
+                                <li>
+                                    <a class="mail-active">
+                                        <h4 class="center-align">no se encontraron resultados</h4>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>`);
+                }else{
+                    if(response.status == 200){
+                        $('#response-alert').append(`
+                            <div class="row search-tabs-row search-tabs-container grey lighten-4">
+                                <div class="col s12 m6 l6 left-align search-stats">
+
+
+                                        <span class="m-r-sm text-mailbox">${response.message}</span>
+
+
+                                </div>
+                                <div class="col s12 m6 l6 right-align search-stats">
+                                    <span class="m-r-sm">Resultados</span>
+                                    <span class="secondary-stats"></span>
+                                </div>
+                            </div>`);
+                        $.each( response.asesories, function( key, asesorie ) {
+                            let route = response.urls[key];
+                            $('#response-alert').append(`
+                            <div class="mailbox-list">
+                                <ul>
+                                    <li>
+                                        <a href="`+route+`" class="mail-active">
+                                            <h5 class="mail-author">`+asesorie.codigo+` - `+asesorie.nombre+`</h5>
+                                            <p class="hide-on-small-and-down mail-text"> `+asesorie.fecha+`</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>`);
+                        });
+                    }
+                }
+            }
+        });
+    }
+});
+
+const validar = ( selector, num = 4 ) => {
+    if ( typeof selector !== "string" )
+      return false;
+
+    let text = document.querySelector( selector );
+    if ( text === null )
+      return false;
+
+    if ( ! (text.value.trim().length < num) )
+      return true;
+
+    return false;
+};
+
+const asesorieSearch = {
+    changetextLabel: function(){
+        let option = $('#type_search').val();
+        console.log(option);
+        $("#search_asesorie").val('');
+        if(option == 'UsoInfraestructura'){
+            $("label[for='search_asesorie']").text('Ingrese código de asesoria');
+        }else if(option == 'Proyecto'){
+            $("label[for='search_asesorie']").text('Ingrese código de proyecto');
+        }else if(option == 'Articulation'){
+            $("label[for='search_asesorie']").text('Ingrese código de la articulación');
+        }else if(option == 'Idea'){
+            $("label[for='search_asesorie']").text('Ingrese código de la Idea');
+        }
+    }
+}
 
 function datatableVisitantesPorNodo_Ingreso() {
   $('#visitantesRedTecnoparque_table').dataTable().fnDestroy();

@@ -19,9 +19,6 @@
         <tr class="tr-striped">
             <td colspan="6" ><b>Información general<b></td>
         </tr>
-        <tr class="tr-striped">
-            <td colspan="6" ><b>Información {{__('articulation')}}<b></td>
-        </tr>
         <tr>
             <td><b>{{__('Code articulation')}}<b></td>
             <td colspan="3">{{$articulation->code}}</td>

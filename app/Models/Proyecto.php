@@ -419,6 +419,10 @@ class Proyecto extends Model
         foreach ($proyecto->talentos as $value) {
             $value->restore();
             $value->update(['estado' => 1]);
+            if(!is_null($value) && $value->isUserConvencional())
+            {
+                $value->changeOneRoleToAnother(config('laravelpermission.roles.roleTalento'));
+            }
         }
     }
 

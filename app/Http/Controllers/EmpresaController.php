@@ -196,7 +196,7 @@ class EmpresaController extends Controller
     {
         $empresa = $this->empresaRepository->consultarEmpresaParams($value, $field)->first();
         return response()->json([
-        'empresa' => $empresa
+            'empresa' => $empresa
         ]);
     }
 

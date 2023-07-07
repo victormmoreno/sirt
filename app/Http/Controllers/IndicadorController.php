@@ -37,15 +37,16 @@ public function index()
     return back();
     }
     if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsActivador()) {
-    $nodos_temp = Nodo::SelectNodo()->get()->toArray();
-    foreach($nodos_temp as $nodo) {
-        $nodos[] = $nodo['id'];
-    }
+        $nodos_temp = Nodo::SelectNodo()->get()->toArray();
+        foreach($nodos_temp as $nodo) {
+            $nodos[] = $nodo['id'];
+        }
     } else {
-    $expertos = User::ConsultarFuncionarios(request()->user()->getNodoUser(), User::IsExperto())->get();
-    $nodos = [request()->user()->getNodoUser()];
+        $expertos = User::ConsultarFuncionarios(request()->user()->getNodoUser(), User::IsExperto())->get();
+        $nodos = [request()->user()->getNodoUser()];
     }
     $metas = $this->nodoRepository->consultarMetasDeTecnoparque($nodos)->where('anho', $year_now)->get();
+    // dd($metas);
     $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl6Obtenido()])->whereIn('nodos.id', $nodos)->get();
     $pbts_trl7_8 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl7Obtenido(), Proyecto::IsTrl8Obtenido()])->whereIn('nodos.id', $nodos)->get();
     $activos = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->select('proyectos.nodo_id')->selectRaw('count(proyectos.id) as cantidad')->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre'])->whereIn('proyectos.nodo_id', $nodos)->groupBy('proyectos.nodo_id')->get();

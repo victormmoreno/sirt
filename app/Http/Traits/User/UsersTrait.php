@@ -86,9 +86,9 @@ trait UsersTrait
      * Define a one-to-many relationship between users and articulaciones.
      * @return HasMany
      */
-    public function asesorarticulaciones(): HasMany
+    public function asesor_articulations(): HasMany
     {
-        return $this->hasMany(\App\Models\Articulacion::class, 'asesor_id', 'id');
+        return $this->hasMany(\App\Models\ArticulationStage::class, 'created_by', 'id');
     }
 
     public function actividades_movimientos()
@@ -269,7 +269,7 @@ trait UsersTrait
      */
     public function getQuantityArticulations()
     {
-        return $this->asesorarticulaciones->count();
+        return $this->asesor_articulations->count();
     }
 
 

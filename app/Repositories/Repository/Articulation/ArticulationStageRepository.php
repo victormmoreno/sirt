@@ -46,7 +46,7 @@ class ArticulationStageRepository
         return ArticulationStage::query()
             ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
             ->leftJoin('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-            ->join('articulationables', function($q) {
+            ->leftJoin('articulationables', function($q) {
                 $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
             })
             ->leftJoin('proyectos', 'proyectos.id', '=', 'articulationables.articulationable_id')
@@ -69,7 +69,7 @@ class ArticulationStageRepository
 
             $articulationStage = $this->storeArticulationStage($request);
             $this->validateArticulationStageType($request, $articulationStage);
-            $user = \App\User::where('id', $request->talent)->first();
+            $user = User::where('id', $request->talent)->first();
             if(!is_null($user) && $user->isUserConvencional())
             {
                 $user->changeOneRoleToAnother(config('laravelpermission.roles.roleTalento'));
@@ -169,7 +169,6 @@ class ArticulationStageRepository
      * Genera un código para el acompañamiento
      * @param string $initial
      * @return string
-     * @author devjul
      */
     private function generateCode($initial = null)
     {

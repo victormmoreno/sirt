@@ -112,7 +112,7 @@ class IdeaPolicy
      **/
     public function search(User $user)
     {
-        return (bool) !Str::contains(session()->get('login_role'), [$user->IsTalento(), $user->IsIngreso(), $user->IsApoyoTecnico()]);
+        return (bool) !Str::contains(session()->get('login_role'), [$user->IsUsuario(), $user->IsTalento(), $user->IsIngreso(), $user->IsApoyoTecnico()]);
     }
 
     /**

@@ -9,7 +9,6 @@ use App\Notifications\Proyecto\{ProyectoAprobarFase, ProyectoAprobarSuspendido, 
 use Carbon\Carbon;
 use App\Events\Proyecto\{ProyectoWasntApproved, ProyectoWasApproved, ProyectoApproveWasRequested, ProyectoSuspenderWasRequested};
 use App\User;
-use App\Repositories\Repository\UserRepository\DinamizadorRepository;
 use App\Repositories\Repository\Repository;
 
 class ProyectoRepository extends Repository
@@ -176,7 +175,6 @@ class ProyectoRepository extends Repository
         ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
         ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) as nombre_idea')
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
-        // ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
         ->join('users', 'users.id', '=', 'proyectos.experto_id')
         ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
         ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')
@@ -301,7 +299,7 @@ class ProyectoRepository extends Repository
 
     /**
      * Consulta de indicadores
-     * 
+     *
      * @return Builder
      * @author dum
      **/
@@ -324,7 +322,7 @@ class ProyectoRepository extends Repository
 
     /**
      * Retornar el query de proyectos
-     * 
+     *
      * @return Builder
      * @author dum
      */
@@ -338,7 +336,7 @@ class ProyectoRepository extends Repository
         )
         ->selectRaw('concat(users.nombres, " ", users.apellidos) AS experto')
         ->selectRaw('IF(trl_esperado = '.Proyecto::IsTrl6Esperado().', "TRL 6", "TRL 7 - TRL 8") AS trl_esperado')
-        ->selectRaw('IF(fases.nombre = "'.Proyecto::IsFinalizado().'", IF(trl_obtenido = 0, "TRL 6", IF(trl_obtenido = 1, "TRL 7", "TRL 8")), "El proyecto no se ha cerrado") AS trl_obtenido')
+        ->selectRaw('IF(fases.nombre = "'.Proyecto::IsFinalizado().'", IF(trl_obtenido = 0, "TRL 6", IF(trl_obtenido = 1, "TRL 7", "TRL 8")), "El proyecto no se ha cerrado ó se ha cancelado") AS trl_obtenido')
         ->selectRaw('IF(fabrica_productividad = 0, "No", "Si") AS fabrica_productividad')
         ->selectRaw('IF(reci_ar_emp = 0, "No", "Si") AS reci_ar_emp')
         ->selectRaw('IF(economia_naranja = 0, "No", "Si") AS economia_naranja')
@@ -363,7 +361,7 @@ class ProyectoRepository extends Repository
 
     /**
      * Retornar el query para mostrar las empresas asociadas a proyectos
-     * 
+     *
      * @return Builder
      * @author dum
      **/
@@ -385,7 +383,7 @@ class ProyectoRepository extends Repository
 
     /**
      * Retornar el query para mostrar los grupos de investigación asociadas a proyectos
-     * 
+     *
      * @return Builder
      * @author dum
      **/
@@ -406,7 +404,7 @@ class ProyectoRepository extends Repository
 
     /**
      * Retornar el query para mostrar las personas dueñas de la propiedad intelectual asociadas a proyectos
-     * 
+     *
      * @return Builder
      * @author dum
      **/
@@ -432,7 +430,7 @@ class ProyectoRepository extends Repository
 
     /**
      * Retornar el query para mostrar los talentos ejectuores asociados a proyectos
-     * 
+     *
      * @return Builder
      * @author dum
      **/
@@ -1131,12 +1129,11 @@ class ProyectoRepository extends Repository
 
     public function configuracionNotificacionDinamizador($proyecto)
     {
-        // $dinamizadorRepository = new DinamizadorRepository;
+
         if (Session::get('login_role') != User::IsTalento())
             $destinatarios[] = auth()->user()->email;
-        $dinamizador = User::ConsultarFuncionarios($proyecto->nodo_id, User::IsDinamizador())->get()->last();
-        // $dinamizador = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->nodo_id)->get()->last();
-        $destinatarios[] = $dinamizador->email;
+            $dinamizador = User::ConsultarFuncionarios($proyecto->nodo_id, User::IsDinamizador())->get()->last();
+            $destinatarios[] = $dinamizador->email;
         return [
             'receptor' => $dinamizador->id,
             'receptor_role' => User::IsDinamizador(),
@@ -1156,10 +1153,9 @@ class ProyectoRepository extends Repository
     {
         DB::beginTransaction();
         try {
-            $dinamizadorRepository = new DinamizadorRepository;
             $proyecto = Proyecto::findOrFail($id);
-            $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($proyecto->nodo_id)->get();
-            $destinatarios = $dinamizadorRepository->getAllDinamizadorPorNodoArray($dinamizadores);
+            $dinamizadores = User::ConsultarFuncionarios($proyecto->nodo_id, User::IsDinamizador())->get();
+            $destinatarios = $this->returnEmailDestinatariosArray($dinamizadores);
             Notification::send($dinamizadores, new ProyectoAprobarSuspendido($proyecto));
             $this->crearMovimiento($proyecto, 'Cancelado', 'solicitó al dinamizador', null);
             $movimiento = Proyecto::consultarHistoricoProyecto($proyecto->id)->get()->last();

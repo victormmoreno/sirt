@@ -61,7 +61,6 @@ class RegisterController extends Controller
             ]);
         } else {
             $user = $this->store($request);
-
             if ($user != null) {
                 $message = "Bienvenido(a) {$user->nombres} {$user->apellidos} a " . config('app.name');
                 return response()->json([

@@ -106,7 +106,7 @@ Route::get('contactenos', 'SupportController@send')->name('support.send')->middl
 Route::resource('support', 'SupportController', ['except' => ['create', 'edit']])->middleware(['auth','disablepreventback']);
 
 //-------------------Route group para el módulo de ideas
-Route::get('/registrar-idea', 'IdeaController@create')->name('idea.create')->middleware(['auth', 'role_session:Talento']);
+Route::get('/registrar-idea', 'IdeaController@create')->name('idea.create')->middleware(['auth']);
 Route::group(
     [
         'prefix' => 'idea',
@@ -114,7 +114,7 @@ Route::group(
     ],
     function () {
         Route::get('/', 'IdeaController@index')->name('idea.index');
-        Route::get('/datatable_filtros', 'IdeaController@datatableFiltros')->name('idea.datatable.filtros')->middleware('role_session:Talento|Articulador|Infocenter|Dinamizador|Activador|Experto');
+        Route::get('/datatable_filtros', 'IdeaController@datatableFiltros')->name('idea.datatable.filtros');
         Route::get('/export', 'IdeaController@export')->name('idea.export');
         Route::get('/export_registradas/{nodo}/{desde}/{hasta}', 'IdeaController@export_registradas')->name('idea.export.registradas');
         Route::get('/{id}/editar', 'IdeaController@edit')->name('idea.edit');
@@ -132,7 +132,7 @@ Route::group(
         Route::put('/update_nodo/{idea}', 'IdeaController@updateNodoIdea')->name('idea.update.nodo')->middleware('role_session:Articulador');
         Route::put('/aceptar_postulacion/{idea}', 'IdeaController@aceptarPostulacionIdea')->name('idea.aceptar.postulacion')->middleware('role_session:Articulador');
         Route::put('/rechazar_postulacion/{idea}', 'IdeaController@rechazarPostulacionIdea')->name('idea.rechazar.postulacion')->middleware('role_session:Articulador');
-        Route::put('/enviar_nodo/{id}', 'IdeaController@enviarIdeaAlNodo')->name('idea.enviar')->middleware('role_session:Talento');
+        Route::put('/enviar_nodo/{id}', 'IdeaController@enviarIdeaAlNodo')->name('idea.enviar');
         Route::put('/duplicar_idea/{id}', 'IdeaController@duplicarIdea')->name('idea.duplicar');
         Route::put('/inhabilitar_idea/{id}', 'IdeaController@inhabilitarIdea')->name('idea.inhabilitar');
         Route::put('/{idea}', 'IdeaController@update')->name('idea.update');
@@ -213,7 +213,7 @@ Route::get('/empresas/sede/{id}', 'EmpresaController@filterSede')->name('empresa
 Route::group(
     [
         'prefix'     => 'empresa',
-        'middleware' => ['auth', 'role_session:Talento|Activador|Articulador|Experto|Infocenter|Dinamizador'],
+        'middleware' => ['auth'],
     ],
     function () {
         Route::get('/', 'EmpresaController@index')->name('empresa');

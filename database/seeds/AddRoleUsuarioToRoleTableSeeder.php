@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Models\Role;
+use App\User;
 
 class AddRoleUsuarioToRoleTableSeeder extends Seeder
 {
@@ -12,9 +13,14 @@ class AddRoleUsuarioToRoleTableSeeder extends Seeder
      */
     public function run()
     {
-        Role::create([
-            'name' => 'Usuario',
-            'guard_name' => 'web'
-        ]);
+        $role = Role::whereIn('name', [User::IsUsuario()])->first();
+        if($role == null){
+            $this->command->info('Insertando nuevo rol...');
+            Role::create([
+                'name' => User::IsUsuario(),
+                'guard_name' => 'web'
+            ]);
+            $this->command->info('Nuevo rol insertado...');
+        }
     }
 }

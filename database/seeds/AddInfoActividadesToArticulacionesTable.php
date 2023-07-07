@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use App\Models\Articulacion;
 
 class AddInfoActividadesToArticulacionesTable extends Seeder
 {
@@ -15,7 +14,7 @@ class AddInfoActividadesToArticulacionesTable extends Seeder
     {
         DB::beginTransaction();
         try {
-            $articulaciones = Articulacion::select(
+            $articulaciones = DB::table('articulaciones')->select(
                 'articulaciones.id', 'codigo_actividad', 'actividades.nombre', 'actividades.fecha_inicio', 'actividades.fecha_cierre', 'actividades.objetivo_general', 'actividades.conclusiones',
                 'actividades.formulario_inicio', 'actividades.cronograma', 'actividades.seguimiento', 'actividades.formulario_final', 'articulacion_proyecto.entidad_id'
             )

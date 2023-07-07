@@ -170,8 +170,8 @@ class ArchivoController extends Controller
             $fileName = $idArchivoEdt->max . '_' . $file->getClientOriginalName();
             // Creando la ruta
             $edt = $this->edtRepository->consultarDetalleDeUnaEdt($id);
-            $nodo = sprintf("%02d", auth()->user()->gestor->nodo_id);
-            $gestor = sprintf("%03d", auth()->user()->gestor->id);
+            $nodo = sprintf("%02d", auth()->user()->experto->nodo_id);
+            $gestor = sprintf("%03d", auth()->user()->experto->id);
             $anho = Carbon::parse($edt->fecha_inicio)->isoFormat('YYYY');
             // $anho = $edt->fecha_inicio->isoFormat('YYYY');
             $route = 'public/' . $nodo . '/' . $anho . '/Edts' . '/' . $gestor . '/' . $id;

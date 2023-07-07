@@ -186,7 +186,7 @@ class SeguimientoController extends Controller
             $idnodo = auth()->user()->dinamizador->nodo_id;
         }
         if (Session::get('login_role') == User::IsExperto()) {
-            $idnodo = auth()->user()->gestor->nodo_id;
+            $idnodo = auth()->user()->experto->nodo_id;
         }
 
         $datos = array();
@@ -430,8 +430,8 @@ class SeguimientoController extends Controller
         }
         return $nodos;
     }
-    
-    
+
+
     /**
      * Retorna el valor de los expertos de los que se consultarán el seguimiento
      *
@@ -455,7 +455,7 @@ class SeguimientoController extends Controller
         }
         return $expertos;
     }
-    
+
     public function seguimientoProyectosInscritos(Request $request)
     {
         $nodos = $this->retornarValorDeNodos($request);
@@ -472,7 +472,7 @@ class SeguimientoController extends Controller
         'datos' => $datos
         ]);
     }
-    
+
 
 
     public function seguimientoArticulacionesInscritas(Request $request)
@@ -617,7 +617,7 @@ class SeguimientoController extends Controller
             $idnodo = auth()->user()->dinamizador->nodo_id;
         }
         if (Session::get('login_role') == User::IsExperto()) {
-            $idnodo = auth()->user()->gestor->nodo_id;
+            $idnodo = auth()->user()->experto->nodo_id;
         }
 
         $datos = array();

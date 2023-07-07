@@ -185,7 +185,8 @@ class User extends Authenticatable implements JWTSubject,
             'users.fechanacimiento',
             'users.nombres',
             'users.apellidos',
-            'user_nodo.role'
+            'user_nodo.role',
+            'user_nodo.honorarios'
         )
         ->selectRaw("CONCAT(users.nombres,' ',users.apellidos) as nombre_completo, GROUP_CONCAT(roles.name, ',') AS roles")
         ->selectRaw('GROUP_CONCAT(DISTINCT roles.name SEPARATOR "; ") as roles')
@@ -201,7 +202,7 @@ class User extends Authenticatable implements JWTSubject,
 
     public function scopeConsultarUsuarios($query)
     {
-        return $query->select('users.documento', 'users.id', 'users.nombres', 'users.apellidos')
+        return $query->select('users.documento', 'users.id', 'users.nombres', 'users.apellidos', 'users.estado', 'users.created_at')
             ->selectRaw('CONCAT(users.nombres, " ", users.apellidos) AS talento')
             ->join('model_has_roles', function ($join) {
                 $join->on('users.id', '=', 'model_has_roles.model_id')

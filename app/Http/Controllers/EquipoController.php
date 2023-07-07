@@ -137,9 +137,6 @@ class EquipoController extends Controller
             if (session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsExperto() || session()->get('login_role') == User::IsApoyoTecnico()) {
                 $nodo_id = request()->user()->getNodoUser();
             }
-            // if (session()->get('login_role') == User::IsExperto()) {
-            //     $nodo_id = auth()->user()->experto->nodo_id;
-            // }
 
             if (session()->get('login_role') == User::IsExperto()) {
                 if(isset($lineatecnologica)){
@@ -162,6 +159,12 @@ class EquipoController extends Controller
                 $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
                 ->where('nodo_id', $nodo_id)
                 ->where('lineatecnologica_id', $linea_id)
+                ->get();
+            }
+            if (session()->get('login_role') == User::IsTalento()) {
+                $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
+                ->where('nodo_id', $nodo)
+                ->where('lineatecnologica_id', $lineatecnologica)
                 ->get();
             }
             return response()->json([

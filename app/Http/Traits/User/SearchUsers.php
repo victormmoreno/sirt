@@ -76,9 +76,9 @@ trait SearchUsers
 
     public function findExpertsByNodo($nodo = null)
     {
-        $gestores = User::ConsultarFuncionarios($nodo, User::IsExperto())->get();
+        $experts = User::ConsultarFuncionarios($nodo, User::IsExperto())->get();
         return response()->json([
-            'experts' => $gestores
+            'experts' => $experts
         ]);
 
     }

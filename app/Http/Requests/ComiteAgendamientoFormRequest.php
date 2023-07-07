@@ -40,7 +40,7 @@ class ComiteAgendamientoFormRequest extends FormRequest
         'txtfechacomite_create.date_format' => 'La Fecha del Comité no tiene un formato válido.',
 
         'ideas.required' => 'Se requiere por lo menos de una idea de proyecto',
-        
+
         'gestores.required' => 'Se requiere por lo menos de un experto',
       ];
       if (request()->get('gestores') !== null) {

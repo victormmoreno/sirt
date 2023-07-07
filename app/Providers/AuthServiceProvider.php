@@ -30,7 +30,7 @@ use App\Policies\LineaTecnologica\LineaTecnologicaPolicy;
 use App\Policies\Mantenimiento\MantenimientoPolicy;
 use App\Policies\Nodo\NodoPolicy;
 use App\Policies\User\UserPolicy;
-use App\Policies\UsoInfraestrucutura\UsoInfraestructuraPolicy;
+use App\Policies\AsesoriePolicy;
 use App\Policies\Material\MaterialPolicy;
 use App\Policies\ModelPolicy;
 use App\Policies\Articulation\ArticulationStagePolicy;
@@ -61,7 +61,7 @@ class AuthServiceProvider extends ServiceProvider
         User::class => UserPolicy::class,
         LineaTecnologica::class => LineaTecnologicaPolicy::class,
         Nodo::class => NodoPolicy::class,
-        UsoInfraestructura::class => UsoInfraestructuraPolicy::class,
+        UsoInfraestructura::class => AsesoriePolicy::class,
         CostoAdministrativo::class => CostoAdministrativoPolicy::class,
         Equipo::class => EquipoPolicy::class,
         EquipoMantenimiento::class => MantenimientoPolicy::class,
@@ -72,7 +72,6 @@ class AuthServiceProvider extends ServiceProvider
         ArticulationType::class => ArticulationTypePolicy::class,
         ArticulationSubtype::class => ArticulationSubtypePolicy::class,
         Articulation::class => ArticulationPolicy::class,
-        UsoInfraestructura::class  => UsoInfraestructuraPolicy::class,
         Model::class => ModelPolicy::class,
         Proyecto::class => ProyectoPolicy::class,
         CharlaInformativa::class => CharlaInformativaPolicy::class,

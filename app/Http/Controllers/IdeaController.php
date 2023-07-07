@@ -94,15 +94,13 @@ class IdeaController extends Controller
             return back();
         }
         $nodos = $this->ideaRepository->getSelectNodo();
-        if (Session::get('login_role') == User::IsTalento()) {
-            return view('ideas.create', [
-                'nodos' => $nodos,
-                'departamentos' => Departamento::all(),
-                'sectores' => Sector::all(),
-                'tamanhos' => TamanhoEmpresa::all(),
-                'tipos' => TipoEmpresa::all()
-            ]);
-        }
+        return view('ideas.create', [
+            'nodos' => $nodos,
+            'departamentos' => Departamento::all(),
+            'sectores' => Sector::all(),
+            'tamanhos' => TamanhoEmpresa::all(),
+            'tipos' => TipoEmpresa::all()
+        ]);
     }
 
     /**
@@ -324,7 +322,7 @@ class IdeaController extends Controller
 
     public function datatableFiltros(Request $request)
     {
-        if (session()->get('login_role') == request()->user()->IsTalento()) {
+        if (session()->get('login_role') == request()->user()->IsTalento() || session()->get('login_role') == request()->user()->IsUsuario()) {
             $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('user_id', request()->user()->id)
             ->whereHas('estadoIdea',
             function ($query){

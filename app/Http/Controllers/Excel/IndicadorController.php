@@ -155,7 +155,7 @@ class IndicadorController extends Controller
               $meta['activos'] = $cantidad_activos->cantidad;
             }
         }
-        
+
         return $metas;
     }
 
@@ -510,7 +510,7 @@ class IndicadorController extends Controller
                 $node = auth()->user()->articulador->nodo_id;
                 break;
             case User::IsExperto():
-                $node = auth()->user()->gestor->nodo_id;
+                $node = auth()->user()->experto->nodo_id;
                 break;
             case User::IsInfocenter():
                 $node = auth()->user()->infocenter->nodo_id;

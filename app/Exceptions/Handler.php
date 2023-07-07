@@ -52,6 +52,9 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
+            return redirect()->route('login');
+        }
         if ($exception instanceof \League\Flysystem\FileNotFoundException) {
             return abort(404);
         }
@@ -72,6 +75,7 @@ class Handler extends ExceptionHandler
             if($exception instanceof HttpException){
                 return $this->errorResponse($exception->getMessage(), $exception->getStatusCode());
             }
+
         }
         return parent::render($request, $exception);
     }

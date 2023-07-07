@@ -17,13 +17,11 @@ class RolesTableSeeder extends Seeder
             'name' => config('laravelpermission.roles.roleAdministrador'),
         ]);
 
-
-
         $roleDinamizador = Role::create([
             'name' => config('laravelpermission.roles.roleDinamizador'),
         ]);
-        $roleGestor = Role::create([
-            'name' => config('laravelpermission.roles.roleGestor'),
+        $roleExperto = Role::create([
+            'name' => config('laravelpermission.roles.roleExperto'),
         ]);
         $roleInfocenter = Role::create([
             'name' => config('laravelpermission.roles.roleInfocenter'),

@@ -157,7 +157,7 @@ class ComitePolicy
         if (Str::contains(session()->get('login_role'), [$user->IsAdministrador()])) {
             return true;
         }
-        if ((Str::contains(session()->get('login_role'), [$user->IsInfocenter()]) && $comite->ideas->first()->nodo_id == $user->getNodoUser()) && Str::contains($comite->estado->nombre, [$comite->estado->IsProgramado(), $comite->estado->IsRealizado()])) {
+        if (Str::contains(session()->get('login_role'), [$user->IsInfocenter()]) && $comite->ideas->first()->nodo_id == $user->getNodoUser()) {
             return true;
         }
         return false;

@@ -13,6 +13,7 @@ class AddInfoTalentsToUsersTable extends Seeder
     public function run()
     {
         DB::beginTransaction();
+        $this->command->info('Cambiando informacion de talentos...');
         try {
             $talents = DB::table('talentos')
                         ->select(
@@ -110,9 +111,11 @@ class AddInfoTalentsToUsersTable extends Seeder
                             }
 
                         }
+                        $this->command->info('Informacion talento cambiada con éxito');
             DB::commit();
         }catch (\Throwable $th) {
             DB::rollBack();
+            $this->command->error('Error: '. $th->getMessage());
             throw $th;
         }
     }
