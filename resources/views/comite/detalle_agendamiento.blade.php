@@ -63,28 +63,28 @@
                                                                     <b class="black-text">
                                                                         Nombres y apellidos de la persona que inscribió la idea de proyecto:
                                                                     </b> 
-                                                                    @if (isset($value->talento->user->nombres))
-                                                                    {{$value->talento->user->nombres}} {{$value->talento->user->apellidos}}
+                                                                    @if (isset($value->user->nombres))
+                                                                    {{$value->user->nombres}} {{$value->user->apellidos}}
                                                                     @else
-                                                                    {{$value->nombres_contacto}} {{$value->apellidos_contacto}}
+                                                                        No hay información disponible
                                                                     @endif
                                                                     <br>
                                                                     <b class="black-text">
                                                                         Celular de la persona que inscribió la idea de proyecto:
                                                                     </b> 
-                                                                    @if (isset($value->talento->user->celular))
-                                                                        {{$value->talento->user->celular}}
+                                                                    @if (isset($value->user->celular))
+                                                                        {{$value->user->celular}}
                                                                     @else
-                                                                        {{$value->telefono_contacto}}
+                                                                        No hay información disponible
                                                                     @endif
                                                                     <br>
                                                                     <b class="black-text">
                                                                         Email de la persona que inscribió la idea de proyecto:
                                                                     </b> 
-                                                                    @if (isset($value->talento->user->email))
-                                                                        {{$value->talento->user->email}}
+                                                                    @if (isset($value->user->email))
+                                                                        {{$value->user->email}}
                                                                     @else
-                                                                        {{$value->correo_contacto}}
+                                                                        No hay información disponible
                                                                     @endif
                                                                 </p>
                                                             </div>
@@ -118,8 +118,8 @@
                                                                             Experto asignado a la idea de proyecto:
                                                                         </b> 
                                                                         @if ($value->pivot->admitido == 1)
-                                                                            @if(isset($value->gestor->user))
-                                                                            {{$value->gestor->user->nombres}} {{$value->gestor->user->apellidos}}
+                                                                            @if(isset($value->asesor))
+                                                                            {{$value->asesor->nombres}} {{$value->asesor->apellidos}}
                                                                             @else
                                                                             Esta idea de proyecto no ha sido asignada a ningún experto(a)
                                                                             @endif
@@ -139,6 +139,7 @@
                                                                                 </a>
                                                                             </div>
                                                                         @endcan
+                                                                        @can('cambiar_asignacion', [$value, $comite])
                                                                         <div class="col s12 m6 l6">
                                                                             @if ($value->pivot->admitido == 1)
                                                                                 <a href="{{route('comite.cambiar.asignacion', [$value, $comite])}}">
@@ -150,7 +151,19 @@
                                                                                 </a>
                                                                             @endif
                                                                         </div>
+                                                                        @endcan
                                                                     </div>
+                                                                    @can('derivar_idea', [$comite, $value])
+                                                                        <div class="row">
+                                                                            <div class="col s12 m12 l12">
+                                                                                <a href="javascript:void(0)" onclick="confirmacionDuplicidad( event, '{{route('idea.derivar', [$value->id, $comite->id, 1])}}' )">
+                                                                                    <div class="card-panel green lighten-3 black-text center">
+                                                                                        Duplicar idea de proyecto.
+                                                                                    </div>
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endcan
                                                                 </div>
                                                             </li>
                                                         @endcan
@@ -179,16 +192,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if ($comite->gestores->isEmpty())
+                                    @if ($comite->evaluadores->isEmpty())
                                         <tr>
                                             <td>No se han encontrado resultados</td>
                                             <td>No se han encontrado resultados</td>
                                             <td>No se han encontrado resultados</td>
                                         </tr>
                                     @else
-                                        @foreach ($comite->gestores as $key => $value2)
+                                        @foreach ($comite->evaluadores as $key => $value2)
                                             <tr>
-                                                <td colspan="1">{{$value2->user->documento}} - {{$value2->user->nombres}} {{$value2->user->apellidos}}</td>
+                                                <td colspan="1">{{$value2->documento}} - {{$value2->nombres}} {{$value2->apellidos}}</td>
                                                 <td colspan="1">{{$value2->pivot->hora_inicio}}</td>
                                                 <td colspan="1">{{$value2->pivot->hora_fin}}</td>
                                             </tr>
@@ -202,5 +215,4 @@
             </div>
         </div>
     </div>
-    {{-- <div class="divider mailbox-divider"></div> --}}
 </div>

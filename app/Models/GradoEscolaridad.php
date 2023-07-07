@@ -22,10 +22,6 @@ class GradoEscolaridad extends Model
         return $this->hasMany(User::class, 'gradoescolaridad_id', 'id');
     }
 
-    /*===========================================================================
-    =            scope para cosultar todos los grados de escolaridad            =
-    ===========================================================================*/
-
     public function scopeAllGradosEscolaridad($query)
     {
 
@@ -33,23 +29,8 @@ class GradoEscolaridad extends Model
 
     }
 
-    /*=====  End of scope para cosultar todos los grados de escolaridad  ======*/
-
-    /*=========================================
-    =            asesores eloquent            =
-    =========================================*/
-
     public function getNombreAttribute($nombre)
     {
         return ucwords(strtolower(trim($nombre)));
     }
-
-    /*=====  End of asesores eloquent  ======*/
-
-    /*========================================
-    =            mutador eloquent            =
-    ========================================*/
-
-    /*=====  End of mutador eloquent  ======*/
-
 }

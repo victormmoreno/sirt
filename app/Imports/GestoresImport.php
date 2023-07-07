@@ -158,7 +158,7 @@ class GestoresImport implements ToCollection, WithHeadingRow
 
     private function updateGestor($user, $linea, $honorarios)
     {
-        $user->gestor->update([
+        $user->experto->update([
             "user_id" => $user->id,
             "nodo_id" => $this->nodo,
             "lineatecnologica_id" => $linea->id,

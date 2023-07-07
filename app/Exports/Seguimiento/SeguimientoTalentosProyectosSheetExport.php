@@ -8,8 +8,6 @@ use App\Exports\FatherExport;
 
 class SeguimientoTalentosProyectosSheetExport extends FatherExport
 {
-
-
     public function __construct($query)
     {
         $this->setQuery($query);

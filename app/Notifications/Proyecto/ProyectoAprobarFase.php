@@ -41,11 +41,11 @@ class ProyectoAprobarFase extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'link'  => $this->control->fase->nombre == 'Concluido sin finalizar' ? route('proyecto.suspender', $this->control->notificable->id) : $this->control->notificable->present()->proyectoRutaActual(),
+            'link'  => $this->control->fase->nombre == 'Cancelado' ? route('proyecto.suspender', $this->control->notificable->id) : $this->control->notificable->present()->proyectoRutaActual(),
             'icon'  => 'library_books',
             'color' => 'green',
             'autor' => "{$this->control->remitente->nombres} {$this->control->remitente->nombres}",
-            'text'  => "El experto ha solicitado aprobar la fase de {$this->control->fase->nombre} | {$this->control->notificable->articulacion_proyecto->actividad->codigo_actividad} - {$this->control->notificable->articulacion_proyecto->actividad->nombre}",
+            'text'  => "El experto ha solicitado aprobar la fase de {$this->control->fase->nombre} | {$this->control->notificable->codigo_proyecto} - {$this->control->notificable->nombre}",
           ];
     }
 

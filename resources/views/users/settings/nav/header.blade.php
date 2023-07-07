@@ -4,14 +4,14 @@
     </div>
     <div class="left">
         <span class="mailbox-title ">
-            {{$user->present()->userFullName()}} 
+            {{$user->present()->userFullName()}}
         </span>
         <span class="mailbox-author">
-            {{$user->present()->userRolesNames()}}
+            {{$user->roles}}
             <br/>
             Miembro desde {{$user->present()->userCreatedAtFormat()}}
             <br/>
-            {{$user->present()->userYearOld()}} 
+            {{$user->present()->userYearOld()}}
         </span>
     </div>
 </div>

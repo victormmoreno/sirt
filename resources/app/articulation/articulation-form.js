@@ -256,7 +256,7 @@ const filter_articulations = {
             $.ajax({
                 dataType: 'json',
                 type: 'get',
-                url: '/usuarios/filtro-talento/' + document
+                url: `${host_url}/usuarios/filtro-talento/${document}`
             }).done(function (response) {
                 if(response.data.status_code == 200){
                     let user = response.data.user;
@@ -269,7 +269,7 @@ const filter_articulations = {
                                     <div class="mailbox-text p f-12 hide-on-med-and-down">Miembro desde ${filter_articulations.formatDate(user.created_at)}</div>
                                 </div>
                                 <div class="card-action">
-                                <a class="waves-effect waves-red btn-flat m-b-xs primary-text" onclick="filter_articulations.addTalentToArticulation(${user.talento.id});" class="primary-text">Agregar</a>
+                                <a class="waves-effect waves-red btn-flat m-b-xs primary-text" onclick="filter_articulations.addTalentToArticulation(${user.id});" class="primary-text">Agregar</a>
                                 </div>
                             </div>
                         </div>
@@ -344,7 +344,7 @@ const filter_articulations = {
         $.ajax({
             dataType: 'json',
             type: 'get',
-            url: '/usuario/talento/consultarTalentoPorId/' + id
+            url: `${host_url}/usuarios/cliente/${id}`
         }).done(function (response) {
             let fila = filter_articulations.prepareTableRowTalent(response);
             $('.alert-response-talents').append(fila);
@@ -354,7 +354,7 @@ const filter_articulations = {
         $.ajax({
             dataType: 'json',
             type: 'get',
-            url: '/usuario/talento/consultarTalentoPorId/' + id
+            url: `${host_url}/usuarios/cliente/${id}`
         }).done(function (response) {
             let fila = filter_articulations.prepareTableRowTalent(response);
             $('.alert-response-talents').append(fila);
@@ -362,16 +362,16 @@ const filter_articulations = {
     },
     prepareTableRowTalent: function(response) {
         let data = response;
-        let fila =`<div class="row card-talent`+data.talento.user_id+`">
+        let fila =`<div class="row card-talent`+data.talento.id+`">
                         <div class="col s12 m12 l12">
                             <div class="card card-panel server-card">
                                 <div class="card-content">
-                                    <span class="card-title">${data.talento.documento} - ${data.talento.talento}</span>
-                                    <input type="hidden" id="talents" name="talents[]" value="${data.talento.user_id}"/>
+                                    <span class="card-title">${data.talento.documento} - ${data.talento.nombres} ${data.talento.apellidos}</span>
+                                    <input type="hidden" id="talents" name="talents[]" value="${data.talento.id}"/>
                                 </div>
                                 <div class="card-action">
-                                    <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuario/usuarios/${data.talento.documento}"><i class="material-icons left"> link</i>Ver más</a>
-                                    <a onclick="filter_articulations.deleteTalent( ${data.talento.user_id});" class="waves-effect waves-red btn-flat m-b-xs red-text"><i class="material-icons left"> delete_sweep</i>Eliminar</a>
+                                    <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="/usuarios/${data.talento.documento}"><i class="material-icons left"> link</i>Ver más</a>
+                                    <a onclick="filter_articulations.deleteTalent(${data.talento.id});" class="waves-effect waves-red btn-flat m-b-xs red-text"><i class="material-icons left"> delete_sweep</i>Eliminar</a>
                                 </div>
                             </div>
                         </div>
@@ -395,10 +395,11 @@ const filter_articulations = {
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
+            "lengthChange": false,
             processing: true,
             serverSide: true,
             ajax: {
-                url: "/usuario/talento/getTalentosDeTecnoparque/",
+                url: `${host_url}/usuarios/clientes`,
                 type: "get"
             },
             columns: [

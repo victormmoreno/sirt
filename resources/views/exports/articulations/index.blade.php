@@ -15,6 +15,21 @@
                 {{__('Phase')}} {{__('articulation')}}
             </th>
             <th>
+                Fecha inicio {{__('articulation')}}
+            </th>
+            <th>
+                Año Fecha inicio {{__('articulation')}}
+            </th>
+            <th>
+                Fecha cierre {{__('articulation')}}
+            </th>
+            <th>
+                Año Fecha cierre {{__('articulation')}}
+            </th>
+            <th>
+                {{ __('Code articulation-stage') }}
+            </th>
+            <th>
                 {{ __('Name articulation-stage') }}
             </th>
             <th>
@@ -24,7 +39,10 @@
                 {{__('ArticulationStage Type')}}
             </th>
             <th>
-                Información {{__('ArticulationStage Type')}}
+                Código información {{__('ArticulationStage Type')}}
+            </th>
+            <th>
+                Nombre información {{__('ArticulationStage Type')}}
             </th>
             <th>
                 {{__('Description')}}
@@ -39,13 +57,10 @@
                 {{__('Scope')}}
             </th>
             <th>
-                {{__('Start Date')}}
+                {{__('Start Date')}} {{__('articulation-stage')}}
             </th>
             <th>
-                {{__('End Date')}}
-            </th>
-            <th>
-                {{__('Created_at')}}
+                {{__('End Date')}} {{__('articulation-stage')}}
             </th>
             <th>
                 {{__('Interlocutory talent')}}
@@ -71,7 +86,22 @@
                 {{$articulationStage->fase}}
             </td>
             <td>
-                {{$articulationStage->code}} - {{$articulationStage->name}}
+                {{$articulationStage->articulation_start_date}}
+            </td>
+            <td>
+                {{$articulationStage->articulation_start_date_year}}
+            </td>
+            <td>
+                {{$articulationStage->articulation_end_date}}
+            </td>
+            <td>
+                {{$articulationStage->articulation_end_date_year}}
+            </td>
+            <td>
+                {{$articulationStage->code}}
+            </td>
+            <td>
+                {{$articulationStage->name}}
             </td>
             <td>
                 {{$articulationStage->present()->articulationStageStatus()}}
@@ -80,7 +110,10 @@
                 {{$articulationStage->articulation_state_type}}
             </td>
             <td>
-                {{$articulationStage->codigo_proyecto}} - {{$articulationStage->nombre_proyecto}}
+                {{$articulationStage->codigo_proyecto}}
+            </td>
+            <td>
+                {{$articulationStage->nombre_proyecto}}
             </td>
             <td>
                 {{$articulationStage->articulation_description}}
@@ -96,13 +129,10 @@
             </td>
 
             <td>
-                {{$articulationStage->present()->articulationStageStartDate()}}
+                {{$articulationStage->articulation_stages_start_date}}
             </td>
             <td>
-                {{$articulationStage->present()->articulationStageEndDate()}}
-            </td>
-            <td>
-                {{$articulationStage->present()->articulationStageCreatedDate()}}
+                {{$articulationStage->articulation_stages_end_date}}
             </td>
             <td>
                 {{$articulationStage->documento}} - {{$articulationStage->nombres}} {{$articulationStage->apellidos}}

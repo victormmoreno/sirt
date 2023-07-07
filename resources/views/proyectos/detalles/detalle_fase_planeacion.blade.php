@@ -9,7 +9,7 @@
 <div class="row">
     <div class="col s6 m6 l6">
         <p class="p-v-xs">
-            <input type="checkbox" disabled {{ $proyecto->articulacion_proyecto->actividad->cronograma == 1 ? 'checked' : '' }}
+            <input type="checkbox" disabled {{ $proyecto->cronograma == 1 ? 'checked' : '' }}
                 id="txtcronograma" name="txtcronograma" value="1">
             <label for="txtcronograma">
                 Cronograma de trabajo.

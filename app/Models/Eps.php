@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Eps extends Model
 {
-
     const IS_ACTIVE   = 1;
     const IS_INACTIVE = 0;
     const OTRA_EPS    = 'Otra';
@@ -25,10 +24,6 @@ class Eps extends Model
         'estado',
     ];
 
-    /*=================================================================
-    =            metodos para conocer el estado de las eps            =
-    =================================================================*/
-
     public static function IsActive()
     {
         return self::IS_ACTIVE;
@@ -38,23 +33,11 @@ class Eps extends Model
         return self::IS_INACTIVE;
     }
 
-    /*=====  End of metodos para conocer el estado de las eps  ======*/
-
-    /*===========================================================
-    =            metodo para retornar las constantes            =
-    ===========================================================*/
-    
     public static function IsOtraEps()
     {
         return self::OTRA_EPS;
     }
-    
-    
-    /*=====  End of metodo para retornar las constantes  ======*/
 
-    /*=========================================
-    =            asesores eloquent            =
-    =========================================*/
     public function getCodigoAttribute($codigo)
     {
         return trim($codigo);
@@ -65,11 +48,6 @@ class Eps extends Model
         return ucwords(strtolower(trim($nombre)));
     }
 
-    /*=====  End of asesores eloquent  ======*/
-
-    /*========================================
-    =            mutador eloquent            =
-    ========================================*/
     public function setCodigoAttribute($codigo)
     {
         $this->attributes['codigo'] = trim($codigo);
@@ -80,30 +58,13 @@ class Eps extends Model
         $this->attributes['nombre'] = ucwords(mb_strtolower(trim($nombre),'UTF-8'));
     }
 
-    /*=====  End of mutador eloquent  ======*/
-    
-
-    /*===========================================
-    =            relaciones eloquent            =
-    ===========================================*/
     public function users()
     {
         return $this->hasMany(User::class, 'eps_id', 'id');
     }
 
-    /*=====  End of relaciones eloquent  ======*/
-
-    /*=================================================================
-    =            scope para consultar todas la eps segun el estado            =
-    =================================================================*/
-
-    public function scopeAllEps($query, $estado, $OrderBy)
+    public function scopeAllEps($query, $estado, $orderBy)
     {
-
-        return $query->selectRaw('eps.id,  eps.nombre')->where('estado', $estado)->orderby($OrderBy);
-
+        return $query->selectRaw('eps.id,  eps.nombre')->where('estado', $estado)->orderby($orderBy);
     }
-
-    /*=====  End of scope para consultar todas la eps segun el estado  ======*/
-
 }

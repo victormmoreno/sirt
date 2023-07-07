@@ -11,16 +11,9 @@
             </a>
         </li>
         <li>
-            <a href="{{{route('perfil.cuenta')}}}">
+            <a href="{{{route('perfil.account')}}}">
                 Cambiar Contraseña
             </a>
         </li>
-        @if(\Session::get('login_role') == App\User::IsTalento() || \Session::get('login_role') == App\User::IsExperto())
-        <li>
-            <a href="{{{route('perfil.actividades')}}}">
-                Mis Actividades
-            </a>
-        </li>
-        @endif
     </ul>
 </div>

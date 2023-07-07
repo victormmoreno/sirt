@@ -23,9 +23,6 @@
                 Teléfono / Celular
             </th>
             <th>
-                ¿Es aprendiz SENA?
-            </th>
-            <th>
                 ¿En qué estado se encuentra su propuesta?
             </th>
             <th>
@@ -76,28 +73,25 @@
                 {{isset($idea->estadoIdea) ? $idea->estadoIdea->nombre : 'No registra'}}
             </td>
             <td>
-                @if (isset($idea->talento->user->nombres))
-                    {{$idea->talento->user->nombres}} {{$idea->talento->user->apellidos}}
+                @if (isset($idea->user->nombres))
+                    {{$idea->user->nombres}} {{$idea->user->apellidos}}
                 @else
-                    {{$idea->nombres_contacto}} {{$idea->apellidos_contacto}}
+                    No hay información disponible
                 @endif
             </td>
             <td>
-                @if (isset($idea->talento->user->email))
-                    {{$idea->talento->user->email}}
+                @if (isset($idea->user->email))
+                    {{$idea->user->email}}
                 @else
-                    {{$idea->correo_contacto}}
+                    No hay información disponible
                 @endif
             </td>
             <td>
-                @if (isset($idea->talento->user->celular))
-                    {{$idea->talento->user->celular}}
+                @if (isset($idea->user->celular))
+                    {{$idea->user->celular}}
                 @else
-                    {{$idea->telefono_contacto}}
+                    No hay información disponible
                 @endif
-            </td>
-            <td>
-                {{$idea->aprendiz_sena == 1 ? 'Si': 'No'}}
             </td>
             <td>
                 {{App\Models\Idea::preguntaUno($idea->pregunta1)}}

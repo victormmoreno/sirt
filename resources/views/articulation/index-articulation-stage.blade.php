@@ -43,10 +43,10 @@
                                         <div class="input-field col s12 m2 l2">
                                             <label class="active" for="filter_node_articulationStage">Nodo <span class="red-text">*</span></label>
                                             <select multiple tabindex="-1" style="width: 100%" name="filter_node_articulationStage[]" id="filter_node_articulationStage">
-                                                <option value="all" >todos</option>
                                                 @foreach($nodos as $id => $name)
-                                                    <option value="{{$id}}">{{$name}}</option>
+                                                    <option value="{{$id}}" @if($loop->first) selected @endif>{{$name}}</option>
                                                 @endforeach
+                                                <option value="all" >todos</option>
                                             </select>
                                         </div>
                                     @endcan

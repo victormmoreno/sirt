@@ -1,4 +1,3 @@
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
 <div class="col s12 m10 l10 offset-l1 m1">
 
     {!! csrf_field() !!}
@@ -52,11 +51,11 @@
 				<select style="width: 100%" class="js-states" id="txtlineatecnologica" name="txtlineatecnologica">
 					<option value="">Seleccione la línea tecnológica donde se registrará el equipo</option>
 					@if (isset($equipo->lineatecnologica->id))
-					@forelse ($lineastecnologicas as $id => $linea)
+					@forelse ($lineastecnologicas->lineas as $id => $linea)
 						<option value="{{$linea->id}}" {{ $equipo->lineatecnologica_id == $linea->id ? 'selected':'' }}>{{$linea->nombre}}</option>
-						@empty
+					@empty
 						<option value=""> No hay información disponible</option>
-						@endforelse
+					@endforelse
 					@endif
 				</select>
 				@error('txtlineatecnologica')

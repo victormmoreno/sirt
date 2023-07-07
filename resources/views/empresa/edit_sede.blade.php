@@ -66,7 +66,7 @@
         $.ajax({
             dataType: 'json',
             type: 'get',
-            url: host_url + '/usuario/getciudad/' + id
+            url: `${host_url}/help/getciudades/${id}`
         }).done(function(response) {
             $('#txtciudad_id_sede').empty();
             $('#txtciudad_id_sede').append('<option value="">Seleccione la Ciudad</option>')

@@ -9,7 +9,7 @@ class ObjetivoEspecifico extends Model
 
     protected $table = 'objetivos_especificos';
     protected $fillable = [
-        'actividad_id',
+        'proyecto_id',
         'objetivo',
         'cumplido'
     ];
@@ -17,6 +17,6 @@ class ObjetivoEspecifico extends Model
 
     public function actividad()
     {
-        return $this->belongsTo(Actividad::class, 'actividad_id', 'id');
+        return $this->belongsTo(Proyecot::class, 'proyecto_id', 'id');
     }
 }

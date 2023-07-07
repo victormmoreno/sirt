@@ -37,7 +37,7 @@ function consultarEntrenamientosPorNodo(nodo) {
     },
     columns: [
       {
-        title: 'Código del Entrenamiento',
+        title: 'Código del taller',
         data: 'codigo_entrenamiento',
         name: 'codigo_entrenamiento',
       },

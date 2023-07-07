@@ -30,7 +30,7 @@ class MantenimientoController extends Controller
      */
     public function index()
     {
-        
+
         if(!request()->user()->can('index', EquipoMantenimiento::class)) {
             alert('No autorizado', 'No puedes ver la información de los equipos', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
@@ -45,8 +45,8 @@ class MantenimientoController extends Controller
                         })
                         ->get();
                 } elseif (session()->has('login_role') && session()->get('login_role') == User::IsExperto()) {
-                    $linea          = auth()->user()->gestor->lineatecnologica->id;
-                    $nodo           = auth()->user()->gestor->nodo->id;
+                    $linea          = auth()->user()->experto->lineatecnologica->id;
+                    $nodo           = auth()->user()->experto->nodo->id;
                     $mantenimientos = $this->getMantenimientoRepository()->findInfoMantenimiento()
                         ->whereHas('equipo.nodo', function($query) use($nodo){
                             $query->where('id',$nodo);
@@ -115,9 +115,9 @@ class MantenimientoController extends Controller
                 $nodo_id = request()->user()->getNodoUser();
             }
             // if (session()->get('login_role') == User::IsExperto()) {
-            //     $nodo_id = auth()->user()->gestor->nodo_id;
+            //     $nodo_id = auth()->user()->experto->nodo_id;
             // }
-            
+
             $mantenimientos = $this->getMantenimientoRepository()->findInfoMantenimiento()
             ->whereHas('equipo.nodo', function($query) use ($nodo_id) {
                 $query->where('id',$nodo_id);
@@ -175,7 +175,7 @@ class MantenimientoController extends Controller
         $nodos = $this->getNodoRepository()->getSelectNodo();
         $nodo = session()->get('login_role') == User::IsAdministrador() ? $nodos->first()->id : request()->user()->getNodoUser();
         $lineastecnologicas = $this->getLineaTecnologicaRepository()->getAllLineaNodo($nodo);
-        
+
         return view('mantenimiento.create', [
             'lineastecnologicas' => $lineastecnologicas->lineas,
             'year' =>  Carbon::now()->isoFormat('YYYY'),
@@ -259,7 +259,7 @@ class MantenimientoController extends Controller
     {
         $mantenimiento = $this->getMantenimientoRepository()->findInfoMantenimiento()->findOrFail($id);
         $this->authorize('edit', $mantenimiento);
-        
+
         $req = new MantenimientoFormRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
         if ($validator->fails()) {

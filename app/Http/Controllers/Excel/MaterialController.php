@@ -38,17 +38,17 @@ class MaterialController extends Controller
     if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsActivador()) {
         $materiales = $this->materialRepository->consultar()->get();
     } else {
-        $materiales = $this->materialRepository->consultar()->where('n.id', request()->user()->getNodoUser())->get();
+        $materiales = $this->materialRepository->consultar()->where('n.id', request()->user()->getNodoUser())->linea(request()->user()->getLineaUser())->get();
     }
-    return Excel::download(new MaterialesExport($materiales), 'Materiales de formación.xlsx');
+    return \Excel::download(new MaterialesExport($materiales), 'Materiales de formación.xlsx');
   }
 
   /**
    * Importar los materiales de fomración a partir de un excel
    *
    * @param Request $request
-   * @return type
-   * @throws conditon
+   * @return Response
+   * @author dum
    **/
   public function import(Request $request)
   {

@@ -28,10 +28,10 @@ class AdviceAndUseOfPolymorphicInfrastructure extends Seeder
                 ]);
             }
 
-            $item->usogestores->each(function ($item1) use($item) {
+            $item->asesores->each(function ($item1) use($item) {
                 if(isset($item1->user_id)){
                     $user = App\User::withTrashed()->where('id', $item1->user_id)->first();
-                    $item->usogestores()->update([
+                    $item->asesores()->update([
                         'asesorable_id' => $user->id,
                         'asesorable_type' => \App\User::class
                     ]);
@@ -42,7 +42,6 @@ class AdviceAndUseOfPolymorphicInfrastructure extends Seeder
 
     protected function asesorableId($model){
         return $model->id;
-        // return null;
     }
 
     protected function asesorableIdUser($model){

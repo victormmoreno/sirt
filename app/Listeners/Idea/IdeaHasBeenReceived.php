@@ -27,6 +27,6 @@ class IdeaHasBeenReceived
     public function handle(IdeaHasReceived $event)
     {
 
-        Mail::to($event->idea->talento->user->email)->send(new IdeaEnviadaEmprendedor($event->idea));
+        Mail::to($event->idea->user->email)->send(new IdeaEnviadaEmprendedor($event->idea));
     }
 }

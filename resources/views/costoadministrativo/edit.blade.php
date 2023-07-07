@@ -11,7 +11,7 @@
                     <a class="footer-text left-align" href="{{route('costoadministrativo.index')}}">
                         <i class="material-icons left">arrow_back</i>
                     </a>
-                    Editar Costos Administrativos Tecnoparque nodo {{$costoadministrativo->entidad}}
+                    Editar Costos Administrativos Tecnoparque {{$costoadministrativo->entidad}}
                 </h5>
             </div>
             <div class="right right-align show-on-large hide-on-med-and-down">

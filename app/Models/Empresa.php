@@ -36,9 +36,6 @@ class Empresa extends Model
         return false;
     }
 
-    /*=========================================
-    =            asesores eloquent            =
-    =========================================*/
     public function getNitAttribute($nit)
     {
         return trim($nit);
@@ -49,11 +46,6 @@ class Empresa extends Model
         return ucwords(mb_strtolower(trim($direccion),'UTF-8'));
     }
 
-    /*=====  End of asesores eloquent  ======*/
-
-    /*========================================
-    =            mutador eloquent            =
-    ========================================*/
     public function setNitAttribute($nit)
     {
         $this->attributes['nit'] = trim($nit);
@@ -73,8 +65,6 @@ class Empresa extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
-
-    /*=====  End of mutador eloquent  ======*/
 
     // Relación a la tabla entidades
     public function entidad()

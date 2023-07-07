@@ -2,26 +2,24 @@
 @section('meta-title','Inicio')
 @section('content')
   <main class="mn-inner inner-active-sidebar">
-    <div class="">
-        <div class="row no-m-t no-m-b">
-            <div class="col s12 m12 l12">
-                <div class="card card-transparent">
-                    <div class="card-content">
-                        @can('showDahsboardExperto', Illuminate\Database\Eloquent\Model::class)
-                            @include('home.dashboard.experto')
-                        @endcan
-                        @can('showDahsboardDinamizador', Illuminate\Database\Eloquent\Model::class)
-                            @include('home.dashboard.dinamizador')
-                        @endcan
-                        <div class="center-align">
-                            <p class="card-title aling-center">Bienvenido <span class="secondary-title"> Sistema Nacional de la Red de Tecnoparques Colombia</span>
-                            </p>
-                        </div>
-                        <div class="row">
-                            <div class="col s12 m12 l10 offset-l1">
-                                <img class="materialboxed responsive-img"
-                                     src="{{ asset('img/logo-tecnoparque-green.svg') }}" alt="sena | Tecnoparque">
-                            </div>
+    <div class="row no-m-t no-m-b">
+        <div class="col s12 m12 l12">
+            <div class="card card-transparent">
+                <div class="card-content">
+                    @can('showDahsboardExperto', Illuminate\Database\Eloquent\Model::class)
+                        @include('home.dashboard.experto')
+                    @endcan
+                    @can('showDahsboardDinamizador', Illuminate\Database\Eloquent\Model::class)
+                        @include('home.dashboard.dinamizador')
+                    @endcan
+                    <div class="center-align">
+                        <p class="card-title aling-center">Bienvenido <span class="secondary-title"> Sistema Nacional de la Red de Tecnoparques Colombia</span>
+                        </p>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 m12 l10 offset-l1">
+                            <img class="materialboxed responsive-img"
+                                    src="{{ asset('img/logo-tecnoparque-green.svg') }}" alt="sena | Tecnoparque">
                         </div>
                     </div>
                 </div>
@@ -35,9 +33,7 @@
     @if (session()->get('login_role') == App\User::IsExperto())
     <script>
         $(document).ready(function() {
-        // consultarSeguimientoDeUnGestor({{auth()->user()->gestor->id}});
-        // consultarSeguimientoActualDeUnGestor({{auth()->user()->gestor->id}});
-        consultarProyectosInscritosPorMes({{auth()->user()->gestor->id}});
+        consultarProyectosInscritosPorMes({{auth()->user()->id}});
         });
         function consultarProyectosInscritosPorMes(gestor_id) {
         $.ajax({

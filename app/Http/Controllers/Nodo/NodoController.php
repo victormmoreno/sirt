@@ -19,9 +19,6 @@ class NodoController extends Controller
     public function __construct(NodoRepository $nodoRepository, DepartamentoRepository $departamentoRepository)
     {
         $this->middleware('auth');
-        $this->middleware([
-            'auth',
-        ]);
         $this->setNodoRepository($nodoRepository);
         $this->setDepartamentoRepository($departamentoRepository);
     }

@@ -12,7 +12,7 @@
   </center>
   <p>
     Señor(a) <br>
-    <b>{{ $idea->talento->user->nombres }} {{ $idea->talento->user->apellidos }}</b><br>
+    <b>{{ $idea->user->nombres }} {{ $idea->user->apellidos }}</b><br>
     Cordial Saludo
   </p>
   <p style="text-align: justify">
@@ -23,7 +23,7 @@
     grupo de emprendedores innovadores de nuestra Red y recibirán de parte nuestra la
     Asesoría Técnica especializada y los servicios tecnológicos para el desarrollo de su
     idea: <b>“{{ $idea->nombre_proyecto }}”</b>
-    @if(isset($idea->gestor))
+    @if(isset($idea->experto))
     En los próximos días, el experto {{$idea->gestor->user->nombres}} {{$idea->gestor->user->apellidos}} se pondrá en contacto con usted para generar una agenda de trabajo inicial.
     @else
     En los próximos días, un experto(a) de Tecnoparque se pondrá en contacto con usted para generar una agenda de trabajo inicial.
@@ -52,5 +52,3 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>
-{{-- {{$nombre_proyecto}}
-{{$correo_contacto }} --}}

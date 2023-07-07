@@ -40,24 +40,24 @@
                 {{isset($idea->estadoIdea) ? $idea->estadoIdea->nombre : 'No registra'}}
             </td>
             <td>
-                @if (isset($idea->talento->user->nombres))
-                    {{$idea->talento->user->nombres}} {{$idea->talento->user->apellidos}}
+                @if (isset($idea->user->nombres))
+                    {{$idea->user->nombres}} {{$idea->user->apellidos}}
                 @else
-                    {{$idea->nombres_contacto}} {{$idea->apellidos_contacto}}
+                    No hay información disponible
                 @endif
             </td>
             <td>
-                @if (isset($idea->talento->user->email))
-                    {{$idea->talento->user->email}}
+                @if (isset($idea->user->email))
+                    {{$idea->user->email}}
                 @else
-                    {{$idea->correo_contacto}}
+                    No hay información disponible
                 @endif
             </td>
             <td>
-                @if (isset($idea->talento->user->celular))
-                    {{$idea->talento->user->celular}}
+                @if (isset($idea->user->celular))
+                    {{$idea->user->celular}}
                 @else
-                    {{$idea->telefono_contacto}}
+                    No hay información disponible
                 @endif
             </td>
             <td>
@@ -105,10 +105,10 @@
                     {{$idea->comites->last()->pivot->admitido == 0 ? "No" : "Si"}}
                 </td>
             @endif
-            @if ($idea->gestor == null)
+            @if ($idea->asesor == null)
                 <td>No se encontró al experto asociado</td>
             @else
-                <td>{{$idea->gestor->user->present()->userFullName()}}</td>
+                <td>{{$idea->asesor->nombres}} {{$idea->asesor->apellidos}}</td>
             @endif
             @if ($idea->proyecto == null)
                 <td>No se encontró proyecto asociado</td>

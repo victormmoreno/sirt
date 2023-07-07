@@ -1,8 +1,8 @@
-@extends('spa.layouts.app')
+@extends('layouts.guest')
 
 @section('meta-title', 'Créditos')
 @section('meta-content', 'Créditos')
-@section('content-spa')
+@section('content')
 <main class="mn-inner no-p">
     <div class="bg-primary-lighten">
         <div class="container">
@@ -13,7 +13,6 @@
                             <div class="row">
                                 <div class="col s12 m6 l12 m12  center-align">
                                     <img class="responsive-img" style="width: 100%; height: 500px;" src="{{asset('img/logo-tecnoparque-white.svg')}}" alt="logo Red Tecnoparque Colombia" title="Red Tecnoparque Colombia" />
-                                    <img class="responsive-img" style="width: 100%; height: 500px;" src="{{asset('img/Inicio.jpg')}}" alt="RED TECNOPARQUE COLOMBIA" title="RED TECNOPARQUE COLOMBIA" />
                                 </div>
                             </div>
                         </div>
@@ -50,12 +49,12 @@
                                             </div>
                                             <div>
                                                 <span  class="title">
-                                                    <strong class="primary-text">Lugar de Investigación:</strong> Tecnoparque Nodo Medellín Piso 7
+                                                    <strong class="primary-text">Lugar de Investigación:</strong> Tecnoparque Medellín Piso 7
                                                 </span>
                                             </div>
                                             <div>
                                                 <span class="title">
-                                                    <strong class="primary-text">Desarrollo web:</strong> Tecnoparque Nodo Medellín Piso 7
+                                                    <strong class="primary-text">Desarrollo web:</strong> Tecnoparque Medellín Piso 7
                                                 </span>
                                             </div>
                                             <br>
@@ -158,7 +157,7 @@
                                         <div class="col s12 m8 l8 offset-l2 offset-m2  center-align">
                                             <div>
                                                 <p class="justify-text">A Servicio nacional de Aprendizaje SENA, al Sistema de Investigación, Desarrollo tecnológico e Innovación SENNOVA, por la financiación y ejecución del proyecto: Plataforma para la gestión de procesos internos de la RED TECNOPARQUE COLOMBIA que sirve en la gestión de proyectos de base tecnológica de la Red a nivel Nacional.</p><br>
-                                                <p class="justify-text">A Tecnoparque Nodo Medellín por los recursos e información que puso a nuestra disposición el espacio para llevar a cabo las reuniones, desarrollo y funcionamiento del aplicativo y a las diferentes personas directamente implicadas que nos entregaron información valiosa para el desarrollo del proyecto.</p>
+                                                <p class="justify-text">A Tecnoparque Medellín por los recursos e información que puso a nuestra disposición el espacio para llevar a cabo las reuniones, desarrollo y funcionamiento del aplicativo y a las diferentes personas directamente implicadas que nos entregaron información valiosa para el desarrollo del proyecto.</p>
                                             </div>
                                         </div>
                                     </div>

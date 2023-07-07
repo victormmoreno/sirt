@@ -17,6 +17,6 @@ class ProyectoWasntApprovedInPhase
      */
     public function handle(ProyectoWasntApproved $event)
     {
-        Mail::to([$event->proyecto->asesor->user->email, auth()->user()->email])->send(new SendEmailProyectoNoAprobado($event->proyecto, $event->movimiento));
+        Mail::to([$event->proyecto->asesor->email, auth()->user()->email])->send(new SendEmailProyectoNoAprobado($event->proyecto, $event->movimiento));
     }
 }

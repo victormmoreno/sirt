@@ -117,7 +117,7 @@ class EquipoController extends Controller
         }
 
         return view('equipo.index', [
-            'nodos' =>  Entidad::has('nodo')->with('nodo')->get()->pluck('nombre', 'nodo.id'),
+            'nodos' =>  Entidad::has('nodo')->with('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id'),
         ]);
     }
 
@@ -137,15 +137,12 @@ class EquipoController extends Controller
             if (session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsExperto() || session()->get('login_role') == User::IsApoyoTecnico()) {
                 $nodo_id = request()->user()->getNodoUser();
             }
-            // if (session()->get('login_role') == User::IsExperto()) {
-            //     $nodo_id = auth()->user()->gestor->nodo_id;
-            // }
 
             if (session()->get('login_role') == User::IsExperto()) {
                 if(isset($lineatecnologica)){
                     $linea_id = $lineatecnologica;
                 }else{
-                    $linea_id = auth()->user()->gestor->lineatecnologica_id;
+                    $linea_id = auth()->user()->experto->linea_id;
                 }
             }
             if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsDinamizador() || session()->get('login_role') == User::IsApoyoTecnico()) {
@@ -162,6 +159,12 @@ class EquipoController extends Controller
                 $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
                 ->where('nodo_id', $nodo_id)
                 ->where('lineatecnologica_id', $linea_id)
+                ->get();
+            }
+            if (session()->get('login_role') == User::IsTalento()) {
+                $equipos = $this->getEquipoRepository()->getInfoDataEquipos()
+                ->where('nodo_id', $nodo)
+                ->where('lineatecnologica_id', $lineatecnologica)
                 ->get();
             }
             return response()->json([
@@ -265,7 +268,6 @@ class EquipoController extends Controller
         }
         $nodos = $this->getNodoRepository()->getSelectNodo();
         $lineastecnologicas = $this->getLineaTecnologicaRepository()->getAllLineaNodo($equipo->nodo_id);
-
         // $nodo               = auth()->user()->dinamizador->nodo->id;
         // $lineastecnologicas = $this->getLineaTecnologicaRepository()->findLineasByIdNameForNodo($nodo);
 
@@ -379,8 +381,8 @@ class EquipoController extends Controller
                 $linea = null;
                 break;
             case User::IsExperto():
-                $nodo = auth()->user()->gestor->nodo_id;
-                $linea = auth()->user()->gestor->lineatecnologica_id;
+                $nodo = auth()->user()->experto->nodo_id;
+                $linea = auth()->user()->experto->linea_id;
                 break;
             default:
                 return abort('403');

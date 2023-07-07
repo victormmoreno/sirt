@@ -34,7 +34,7 @@ class GruposExport extends FatherExport
     public function view(): View
     {
         return view('exports.gruposinvestigacion.propietarios', [
-        'proyectos' => $this->getQuery()
+        'grupos' => $this->getQuery()
         ]);
 
     }

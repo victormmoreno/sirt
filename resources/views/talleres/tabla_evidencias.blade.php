@@ -2,7 +2,7 @@
     <div class="col s12 m12 l12">
       <ul class="collapsible" data-collapsible="accordion">
         <li>
-          <div class="collapsible-header teal lighten-4"><i class="material-icons">filter_drama</i>Pulse aquí para ver las evidencias del Entrenamiento</div>
+          <div class="collapsible-header teal lighten-4"><i class="material-icons">filter_drama</i>Pulse aquí para ver las evidencias del taller de fortalecimiento</div>
           <div class="collapsible-body">
             <div class="row">
               <div class="col s12 m12 l12">

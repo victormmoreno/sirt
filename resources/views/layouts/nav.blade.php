@@ -48,7 +48,7 @@
                         <a href="{{route('usuario.dejar.control')}}" class="btn light-green lighten-1 m-t-xs">Dejar de controlar</a>
                     </li>
                 @endcan
-                    
+
             </ul>
             <ul class="dropdown-content notifications-dropdown" id="dropdown-logout">
                 <li class="notificatoins-dropdown-container">
@@ -182,21 +182,10 @@
                 <a class="account-settings-link" href="javascript:void(0);">
                     <p>@auth{{ auth()->user()->nombres}} {{auth()->user()->apellidos}}@endauth</p>
                     <span>
-                        @guest
-                        @else
-                        @if( \Session::get('login_role') != App\User::IsTalento() && \Session::get('login_role') != App\User::IsActivador() && \Session::get('login_role') != App\User::IsDesarrollador() )
+                        @auth
                             {{ \NodoHelper::returnNodoUsuario() }}
-                        @else
-                            @if (\Session::get('login_role') == App\User::IsTalento())
-                                Talento de Tecnoparque
-                            @elseif (\Session::get('login_role') == App\User::IsActivador())
-                                Activador de Tecnoparque
-                            @else
-                                Desarrollador de Tecnoparque
-                            @endif
-                        @endif
-                        <i class="material-icons right">arrow_drop_down</i>
-                        @endguest
+                            <i class="material-icons right">arrow_drop_down</i>
+                        @endauth
                     </span>
                 </a>
             </div>
@@ -237,45 +226,40 @@
                 </a>
             </li>
             @switch( \Session::get('login_role'))
-            @case(App\User::IsInfocenter())
-                @include('layouts.navrole.infocenter')
-            @break
-            @case(App\User::IsExperto())
-                @include('layouts.navrole.gestor')
+            @case(App\User::IsUsuario())
+                @include('layouts.navrole.usuario')
             @break
             @case(App\User::IsTalento())
                 @include('layouts.navrole.talento')
             @break
+            @case(App\User::IsAdministrador())
+                @include('layouts.navrole.admin')
+            @break
+            @case(App\User::IsActivador())
+                @include('layouts.navrole.activador')
+            @break
+            @case(App\User::IsDinamizador())
+                @include('layouts.navrole.dinamizador')
+            @break
+            @case(App\User::IsExperto())
+                @include('layouts.navrole.experto')
+            @break
+            @case(App\User::IsArticulador())
+                @include('layouts.navrole.articulador')
+            @break
+            @case(App\User::IsInfocenter())
+                @include('layouts.navrole.infocenter')
+            @break
+            @case(App\User::IsApoyoTecnico())
+                @include('layouts.navrole.apoyo-tecnico')
+            @break
             @case(App\User::IsIngreso())
                 @include('layouts.navrole.ingreso')
             @break
-            @case(App\User::IsDinamizador())
-                @if(\Session::has('login_role') && \Session::get('login_role') == 'Dinamizador')
-                    @include('layouts.navrole.dinamizador')
-                @endif
-            @break
-            @case(App\User::IsActivador())
-                @if(\Session::has('login_role') && \Session::get('login_role') == App\User::IsActivador())
-                    @include('layouts.navrole.activador')
-                @endif
-            @break
-            @case(App\User::IsAdministrador())
-                @if(\Session::has('login_role') && \Session::get('login_role') == App\User::IsAdministrador())
-                    @include('layouts.navrole.admin')
-                @endif
-            @break
             @case(App\User::IsDesarrollador())
-
-                    @include('layouts.navrole.desarrollador')
-                    @break
-
-                @case(App\User::IsArticulador())
-                    @include('layouts.navrole.articulador')
-                    @break
-                @case(App\User::IsApoyoTecnico())
-                    @include('layouts.navrole.apoyo-tecnico')
-                    @break
-                @default
+                @include('layouts.navrole.desarrollador')
+            @break
+            @default
             @endswitch
         </ul>
         <div class="footer">

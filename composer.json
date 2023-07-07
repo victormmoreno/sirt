@@ -18,7 +18,7 @@
             "email": "vmmorenov@sena.edu.co"
         }
     ],
-    "license": "MIT",
+    "license": "proprietary",
     "type": "project",
     "require": {
         "php": "^7.1.3",

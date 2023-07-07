@@ -23,10 +23,6 @@ class EntrenamientoIdea extends Model
         return $this->belongsTo(Entrenamiento::class, 'entrenamiento_id', 'id');
     }
 
-    /*========================================
-    =            mutador eloquent            =
-    ========================================*/
-
     public function setConfirmacionAttribute($confirmacion)
     {
         $this->attributes['confirmacion'] = trim($confirmacion);
@@ -51,6 +47,4 @@ class EntrenamientoIdea extends Model
     {
         $this->attributes['convocado_csibt'] = trim($convocado_csibt);
     }
-
-    /*=====  End of mutador eloquent  ======*/
 }

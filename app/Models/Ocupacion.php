@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\User;
 use Illuminate\Database\Eloquent\Model;
-use App\Http\Traits\OcupacionTrait\OcupacionTrait;
+use App\Http\Traits\Ocupacion\OcupacionTrait;
 
 
 class Ocupacion extends Model
@@ -24,11 +24,4 @@ class Ocupacion extends Model
     protected $fillable = [
         'nombre',
     ];
-
-    public function users()
-    {
-        return $this->belongsToMany(User::class, 'ocupaciones_users')
-            ->withTimestamps();
-    }
-
 }

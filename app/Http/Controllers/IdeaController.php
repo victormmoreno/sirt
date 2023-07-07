@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\{EmpresaFormRequest, IdeaFormRequest};
-use App\Models\{Departamento, EstadoIdea, Idea, Entidad, Sector, TamanhoEmpresa, TipoEmpresa, Nodo};
-use App\Repositories\Repository\{IdeaRepository, EmpresaRepository, UserRepository\GestorRepository, ComiteRepository};
+use App\Models\{Departamento, EstadoIdea, Idea, Comite, Entidad, Sector, TamanhoEmpresa, TipoEmpresa, Nodo};
+use App\Repositories\Repository\{IdeaRepository, EmpresaRepository};
 use App\User;
 use Illuminate\Support\Facades\{Session, Validator};
 use Illuminate\Http\Request;
@@ -15,19 +15,17 @@ class IdeaController extends Controller
 {
     public $ideaRepository;
     public $empresaRepository;
-    public $gestorRepository;
 
-    public function __construct(IdeaRepository $ideaRepository, EmpresaRepository $empresaRepository, GestorRepository $gestorRepository)
+    public function __construct(IdeaRepository $ideaRepository, EmpresaRepository $empresaRepository)
     {
         $this->ideaRepository = $ideaRepository;
         $this->empresaRepository = $empresaRepository;
-        $this->gestorRepository = $gestorRepository;
         $this->middleware('auth');
     }
 
     /**
      * Retorna los ids de los nodos en un array
-     * 
+     *
      * @param $request
      * @param bool $bandera Indica si se seleccionaron todos los nodos
      * @return array
@@ -49,7 +47,7 @@ class IdeaController extends Controller
 
     /**
      * Verifica que se haya seleccionado la opción de "Todos" en el select de nodos
-     * 
+     *
      * @param $request
      * @return bool
      * @author dum
@@ -65,10 +63,10 @@ class IdeaController extends Controller
         }
         return false;
     }
-    
+
     /**
      * Retorna el id del nodo para realizar consultas sobre las ideas de proyeco
-     * 
+     *
      * @param $request
      * @return mixed
      * @author dum
@@ -85,9 +83,6 @@ class IdeaController extends Controller
         return $nodo;
     }
 
-    /*========================================================================================================
-    =            metodo para mostrar el registro de ideas en la pagina principal de la aplicacion            =
-    ========================================================================================================*/
     /**
      * Display a create of the resource.
      * @author devjul
@@ -99,35 +94,12 @@ class IdeaController extends Controller
             return back();
         }
         $nodos = $this->ideaRepository->getSelectNodo();
-        if (Session::get('login_role') == User::IsTalento()) {
-            return view('ideas.create', [
-                'nodos' => $nodos,
-                'departamentos' => Departamento::all(),
-                'sectores' => Sector::all(),
-                'tamanhos' => TamanhoEmpresa::all(),
-                'tipos' => TipoEmpresa::all()
-            ]);
-        }
-    }
-
-    /**
-     * Formulario para asginar la idea de proyecto a un experto
-     *
-     * @param int $id Id de la idea de proyecto
-     * @return Response
-     * @author dum
-     **/
-    public function asignar_experto(int $id)
-    {
-        $idea = Idea::find($id);
-        // dd($idea->nodo_id);
-        if(!request()->user()->can('asignar', $idea)) {
-            alert('No autorizado', 'No tienes permisos para asignar esta idea de proyecto a un experto', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
-        }
-        return view('ideas.asignar', [
-            'idea' => $idea,
-            'gestores' => $this->gestorRepository->getAllGestoresPorNodo($idea->nodo_id)->selectRaw('gestores.id as gestor_id, CONCAT(users.documento, " - ", users.nombres, " ", users.apellidos) AS nombres_gestor')->get()
+        return view('ideas.create', [
+            'nodos' => $nodos,
+            'departamentos' => Departamento::all(),
+            'sectores' => Sector::all(),
+            'tamanhos' => TamanhoEmpresa::all(),
+            'tipos' => TipoEmpresa::all()
         ]);
     }
 
@@ -350,8 +322,8 @@ class IdeaController extends Controller
 
     public function datatableFiltros(Request $request)
     {
-        if (session()->get('login_role') == request()->user()->IsTalento()) {
-            $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('talento_id', auth()->user()->talento->id)
+        if (session()->get('login_role') == request()->user()->IsTalento() || session()->get('login_role') == request()->user()->IsUsuario()) {
+            $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('user_id', request()->user()->id)
             ->whereHas('estadoIdea',
             function ($query){
                 $query->whereNotIn('nombre', [EstadoIdea::IsRechazadoArticulador()]);
@@ -378,15 +350,30 @@ class IdeaController extends Controller
      *
      * @param int $id Id de la idea de proyecto
      * @param int $comite Id del comité
+     * @param $bandera Pra saber si se duplicará antes o despues de asignar la idea
      * @return Response
      * @author dum
      **/
-    public function deviarIdea($id, $comite)
+    public function deviarIdea($id, $comite, $bandera = null)
     {
         $idea = $this->ideaRepository->findByid($id);
+        $comite_model = Comite::findOrFail($comite);
+        if(!request()->user()->can('derivar_idea', [$comite_model, $idea])) {
+            alert('No autorizado', 'No tienes permisos para duplicar idea de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
         $resultado = $this->ideaRepository->derivarIdea($idea, $comite);
-        alert($resultado['title'], $resultado['msg'], $resultado['type'])->showConfirmButton('Ok', '#3085d6');;
-        return back();
+        alert($resultado['title'], $resultado['msg'], $resultado['type'])->showConfirmButton('Ok', '#3085d6');
+        if ($resultado['state']) {
+            if ($bandera != 1) {
+                return back();
+            } else {
+                return redirect()->route('comite.cambiar.asignacion', ['idea' => $resultado['idea']->id, 'comite' => $comite]);
+            }
+        } else {
+            alert('Error', 'No se ha podido realizar esta acción: '. $resultado['msg'], 'error');
+            return back();
+        }
     }
 
     /**
@@ -439,7 +426,7 @@ class IdeaController extends Controller
 
     public function datatableIdeasTalento(Request $request)
     {
-        $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('talento_id', auth()->user()->talento->id)
+        $ideas = $this->ideaRepository->consultarIdeasDeProyecto()->where('user_id', auth()->user()->id)
         ->whereHas('estadoIdea',
         function ($query){
             $query->whereNotIn('nombre', [EstadoIdea::IsRechazadoArticulador()]);
@@ -453,32 +440,32 @@ class IdeaController extends Controller
         ->editColumn('estado', function ($data) {
             return $data->estadoIdea->nombre;
         })->editColumn('persona', function ($data) {
-            if (isset($data->talento->user->nombres)) {
-                return "{$data->talento->user->nombres} {$data->talento->user->apellidos}";
+            if (isset($data->user->nombres)) {
+                return "{$data->user->nombres} {$data->user->apellidos}";
             } else {
-                return "{$data->nombres_contacto} {$data->apellidos_contacto}";
+                return "No hay información disponible";
             }
         })->editColumn('created_at', function ($data) {
             return isset($data->created_at) ? $data->created_at->isoFormat('DD/MM/YYYY') : 'No Registra';
         })->editColumn('correo_contacto', function ($data) {
-            if (isset($data->talento->user->email)) {
-                return "{$data->talento->user->email}";
+            if (isset($data->user->email)) {
+                return "{$data->user->email}";
             } else {
-                return "{$data->correo_contacto}";
+                return "No hay información disponible";
             }
         })->editColumn('telefono_contacto', function ($data) {
-            if (isset($data->talento->user->celular)) {
-                return "{$data->talento->user->celular}";
+            if (isset($data->user->celular)) {
+                return "{$data->user->celular}";
             } else {
-                return "{$data->telefono_contacto}";
+                return "No hay información disponible";
             }
         })->editColumn('estado', function ($data) {
             return $data->estadoIdea->nombre;
         })->editColumn('nombre_talento', function ($data) {
-            if (isset($data->talento->user->nombres)) {
-                return $data->talento->user->nombres . " " . $data->talento->user->apellidos;
+            if (isset($data->user->nombres)) {
+                return $data->user->nombres . " " . $data->user->apellidos;
             } else {
-                return "{$data->nombres_contacto} {$data->apellidos_contacto}";
+                return "No hay información disponible";
             }
         })->editColumn('nodo', function ($data) {
             return $data->nodo->entidad->nombre;
@@ -560,7 +547,6 @@ class IdeaController extends Controller
             alert('No autorizado', 'No tienes permisos para cambiar la información de esta idea de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-
         if ($request->input('txtidea_empresa') == 1) {
             // Idea con empresa
             $empresa = $this->empresaRepository->consultarEmpresaParams($request->input('txtnit'), 'nit')->first();
@@ -587,6 +573,15 @@ class IdeaController extends Controller
         if ($request->input('txtopcionRegistro') == "guardar") {
             $result = $this->ideaRepository->Update($request, $idea);
         } else {
+            if(!request()->user()->can('postularIdea', $idea)) {
+                alert('No autorizado', 'No tienes permisos para postular esta idea de proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
+                return response()->json([
+                    'state' => 'no_update',
+                    'title' => 'No autorizado',
+                    'msg' => 'No tienes permisos para postular esta idea de proyecto',
+                    'type' =>'error'
+                ]);
+            }
             $result = $this->ideaRepository->updateAndPostular($request, $idea);
         }
         if ($result['state']) {
@@ -672,11 +667,8 @@ class IdeaController extends Controller
 
     public function show($id)
     {
-        $idea = Idea::select('id', 'codigo_idea','nombre_proyecto','objetivo', 'alcance',  'talento_id', 'sede_id')->with([
-            'talento' => function($query){
-                $query->select('id', 'user_id');
-            },
-            'talento.user' => function($query){
+        $idea = Idea::select('id', 'codigo_idea','nombre_proyecto','objetivo', 'alcance',  'user_id', 'sede_id')->with([
+            'user' => function($query){
                 $query->select('id','documento', 'nombres', 'apellidos', 'email', 'celular');
             },
             'sede' => function($query){
@@ -686,13 +678,13 @@ class IdeaController extends Controller
                 $query->select('id', 'nombre', 'nit');
             }
         ])->where('id', $id)->first();
-        $talento = null;
+        $user = null;
         $sede = null;
 
 
-        if($idea->has('talento.user') &&isset($idea->talento->user))
+        if($idea->has('user') &&isset($idea->user))
         {
-            $talento = $idea->talento;
+            $user = $idea->user;
         }
         if($idea->has('sede.empresa') && isset($idea->sede->empresa))
         {
@@ -702,7 +694,7 @@ class IdeaController extends Controller
         return response()->json([
             'data' => [
                 'idea' => $idea,
-                'talento' => $talento,
+                'talento' => $user,
                 'sede' => $sede,
             ],
         ]);

@@ -36,9 +36,4 @@ class TipoTalento extends Model
     protected $casts = [
         'nombre'   => 'string',
     ];
-
-    public function talentos()
-    {
-        return $this->hasMany(Talento::class, 'tipo_talento_id', 'id');
-    }
 }

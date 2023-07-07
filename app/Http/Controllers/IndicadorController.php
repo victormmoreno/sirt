@@ -37,31 +37,23 @@ public function index()
     return back();
     }
     if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsActivador()) {
-    $nodos_temp = Nodo::SelectNodo()->get()->toArray();
-    foreach($nodos_temp as $nodo) {
-        $nodos[] = $nodo['id'];
-    }
+        $nodos_temp = Nodo::SelectNodo()->get()->toArray();
+        foreach($nodos_temp as $nodo) {
+            $nodos[] = $nodo['id'];
+        }
     } else {
-    $expertos = User::with(['gestor'])
-    ->role(User::IsExperto())
-    ->nodoUser(User::IsExperto(), request()->user()->getNodoUser())
-    ->stateDeletedAt('si')
-    // ->yearActividad(User::IsExperto(), $request->filter_year, $nodo)
-    ->orderBy('users.created_at', 'desc')
-    ->get();
-    $nodos = [request()->user()->getNodoUser()];
+        $expertos = User::ConsultarFuncionarios(request()->user()->getNodoUser(), User::IsExperto())->get();
+        $nodos = [request()->user()->getNodoUser()];
     }
     $metas = $this->nodoRepository->consultarMetasDeTecnoparque($nodos)->where('anho', $year_now)->get();
+    // dd($metas);
     $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl6Obtenido()])->whereIn('nodos.id', $nodos)->get();
     $pbts_trl7_8 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $year_now, [Proyecto::IsTrl7Obtenido(), Proyecto::IsTrl8Obtenido()])->whereIn('nodos.id', $nodos)->get();
-    $activos = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->select('nodo_id')->selectRaw('count(id) as cantidad')->whereHas('fase', function ($query) {
-    $query->whereIn('nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre']);
-    })->whereIn('nodo_id', $nodos)->groupBy('nodo_id')->get();
-    $articulations_start = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsInicio()])->whereIn('nodos.id', $nodos)
-    ->groupBy('nodos.id')->get();
-    $articulations_execution = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsEjecucion()])->whereIn('nodos.id', $nodos)->groupBy('nodos.id')->get();
-    $articulations_closing = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsCierre()])->whereIn('nodos.id', $nodos)->groupBy('nodos.id')->get();
-    $articulations_finish = $this->articulationRepository->articulationsForPhase('fases.nombre', 'articulations.end_date', $year_now, [Articulation::IsFinalizado()])->whereIn('nodos.id', $nodos)->groupBy('nodos.id')->get();
+    $activos = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->select('proyectos.nodo_id')->selectRaw('count(proyectos.id) as cantidad')->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre'])->whereIn('proyectos.nodo_id', $nodos)->groupBy('proyectos.nodo_id')->get();
+    $articulations_start = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsInicio()])->whereIn('nodos.id', $nodos)->get();
+    $articulations_execution = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsEjecucion()])->whereIn('nodos.id', $nodos)->get();
+    $articulations_closing = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsCierre()])->whereIn('nodos.id', $nodos)->get();
+    $articulations_finish = $this->articulationRepository->articulationsForPhase('fases.nombre', 'articulations.end_date', $year_now, [Articulation::IsFinalizado()])->whereIn('nodos.id', $nodos)->get();
 
     $metasProyectos = $this->retornarTodasLasMetasArray($metas, $pbts_trl6, $pbts_trl7_8, $activos);
     $metasArticulaciones = $this->retornarTodasLasMetasArticulacionArray($metas, ['start' => $articulations_start, 'execution' => $articulations_execution, 'closing' => $articulations_closing, 'finish' => $articulations_finish]);

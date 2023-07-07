@@ -37,7 +37,7 @@
                                                         <div class="left">
                                                             <span class="mailbox-title green-complement-text">
                                                                 <i class="material-icons fas fa-building"></i>
-                                                                Tecnoparque nodo {{$material->nodo->entidad->nombre}}
+                                                                Tecnoparque {{$material->nodo->entidad->nombre}}
                                                             </span>
                                                             <span class="mailbox-author show-on-large hide-on-med-and-down ">
                                                                 <b>Dirección: </b> {{$material->nodo->direccion}}<br/>

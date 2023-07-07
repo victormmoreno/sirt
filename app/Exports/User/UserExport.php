@@ -35,8 +35,12 @@ class UserExport extends FatherExport
     {
         return [
             AfterSheet::class => function (AfterSheet $event){
+
+
                 $this->setFilters($event);
+
                 $cellRange ="A1:{$event->sheet->getHighestColumn()}{$event->sheet->getHighestRow()}";
+
                 $event->sheet->getStyle($cellRange)->applyFromArray([
                         'borders' => [
                             'allBorders' => [
@@ -48,9 +52,12 @@ class UserExport extends FatherExport
                 $event->sheet->getDelegate()->getStyle(Self::rowRangeHeading)
                     ->getFont()
                     ->setBold(true);
+
                 $event->sheet->getDelegate()->getStyle(Self::rowRangeHeading)
                     ->getAlignment()
-                    ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                    ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)
+                    ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+
             },
         ];
     }
@@ -69,7 +76,6 @@ class UserExport extends FatherExport
      * Asigna el nombre para la hoja de excel
      * @return string
      * @abstract
-     * @author dum
      */
     public function title(): String
     {

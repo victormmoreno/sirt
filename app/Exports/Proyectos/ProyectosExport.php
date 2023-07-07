@@ -5,6 +5,7 @@ namespace App\Exports\Proyectos;
 use Illuminate\Contracts\View\View;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use App\Exports\FatherExport;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Events\{AfterSheet};
 // use Maatwebsite\Excel\Concerns\WithCharts;
 // use PhpOffice\PhpSpreadsheet\Chart\Chart as Charts;
@@ -15,10 +16,10 @@ use Maatwebsite\Excel\Events\{AfterSheet};
 // use PhpOffice\PhpSpreadsheet\Chart\Title;
 // use PhpOffice\PhpSpreadsheet\Worksheet\Chart;
 
-class ProyectosExport extends FatherExport
+class ProyectosExport extends FatherExport implements WithColumnWidths
 {
 
-    public function __construct($query)
+    public function __construct($query = null)
     {
         $this->setQuery($query);
         $this->setCount($this->getQuery()->count() + 1);
@@ -67,6 +68,17 @@ class ProyectosExport extends FatherExport
                 // $chart = $this->charts();
                 // $event->sheet->getDelegate()->addChart($chart);
             },
+        ];
+    }
+
+    public function columnWidths(): array
+    {
+        return [
+            'E' => 45,
+            'G' => 45,
+            'Z' => 45,
+            'AA' => 45,
+            'AB' => 45
         ];
     }
 

@@ -30,7 +30,7 @@
                     <p class="hide-on-med-and-down"> Miembro desde {{$articulationStage->interlocutor->present()->userCreatedAtFormat()}}</p>
                 </div>
                 <div class="card-action">
-                    <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="{{route('usuario.usuarios.show',$articulationStage->interlocutor->documento)}}"><i class="material-icons left">link</i>Ver más</a>
+                    <a target="_blank"  class="waves-effect waves-red btn-flat m-b-xs primary-text" href="{{route('usuario.show',$articulationStage->interlocutor->documento)}}"><i class="material-icons left">link</i>Ver más</a>
                 </div>
             </div>
         </div>

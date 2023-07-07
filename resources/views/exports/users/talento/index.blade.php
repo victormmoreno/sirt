@@ -69,13 +69,13 @@
                     <td>{{ $proyecto->present()->proyectoFase() }}</td>
                     <td>{{ $proyecto->present()->proyectoFechaCierre() }}</td>
 
-                    @if ($proyecto->present()->proyectoFase() == 'Finalizado' || $proyecto->present()->proyectoFase() == 'Concluido sin finalizar')
+                    @if ($proyecto->present()->proyectoFase() == 'Finalizado' || $proyecto->present()->proyectoFase() == 'Cancelado')
                     <td>{{ $proyecto->articulacion_proyecto->actividad->fecha_cierre->isoFormat('YYYY') }}</td>
                     @else
                     <td>El proyecto no se ha cerrado</td>
                     @endif
 
-                    @if ($proyecto->present()->proyectoFase() == 'Finalizado' || $proyecto->present()->proyectoFase() == 'Concluido sin finalizar')
+                    @if ($proyecto->present()->proyectoFase() == 'Finalizado' || $proyecto->present()->proyectoFase() == 'Cancelado')
                     <td>{{ $proyecto->articulacion_proyecto->actividad->fecha_cierre->isoFormat('MM') }}</td>
                     @else
                     <td>El proyecto no se ha cerrado</td>
@@ -115,7 +115,7 @@
                     <td>{{ $talento->user->present()->userInstitucion() }}</td>
                     <td>{{ $talento->user->present()->userTituloObtenido() }}</td>
                     <td>{{ $talento->user->present()->userFechaTerminacion() }}</td>
-                    <td>{{ $talento->user->present()->userNombreTipoTalento() }}</td>
+                    <td></td>
                 </tr>
             @endforeach
         @endforeach

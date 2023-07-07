@@ -198,7 +198,7 @@
                 <td colspan="5" class="centered"><b>Acta de Cierre<b></td>
             </tr>
             <tr>
-                <td colspan="5" class="centered"><b>ACTA No. {{ substr($proyecto->present()->proyectoCode(), -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b></td>
+                <td colspan="5" class="centered"><b>ACTA No. {{ $proyecto->id . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b></td>
             </tr>
         </table>
         <br>
@@ -252,14 +252,14 @@
                 <td colspan="1"><b> Interlocutor</b></td>
                 <td colspan="5"><b>Talento</b></td>
             </tr>
-            @forelse ($proyecto->articulacion_proyecto->talentos as $talento)
+            @forelse ($proyecto->talentos as $talento)
             <tr>
                 @if($talento->pivot->talento_lider == 1)
                     <td colspan="1" >SI</td>
                 @else
                 <td colspan="1" >NO</td>
                 @endif
-                <td colspan="5" >{{$talento->user->present()->userDocumento()}} - {{$talento->user->present()->userFullName()}}</td>
+                <td colspan="5" >{{$talento->present()->userDocumento()}} - {{$talento->present()->userFullName()}}</td>
             </tr>
             @empty
             <tr>
@@ -281,29 +281,29 @@
             <tr>
                 <td colspan="1"><b>1</b></td>
                 <td colspan="4"> {{ $proyecto->present()->proyectoPrimerObjetivo() }}</td>
-                <td colspan="1">{{ $proyecto->articulacion_proyecto->actividad->present()->isActividadCumplioPrimerObjetivo() }}</td>
+                <td colspan="1">{{ $proyecto->present()->isProyectoCumplioPrimerObjetivo() }}</td>
             </tr>
             <tr>
                 <td colspan="1"><b>2</b></td>
                 <td colspan="4"> {{ $proyecto->present()->proyectoSegundoObjetivo() }}</td>
-                <td colspan="1">{{ $proyecto->articulacion_proyecto->actividad->present()->isActividadCumplioSegundoObjetivo()}}</td>
+                <td colspan="1">{{ $proyecto->present()->isProyectoCumplioSegundoObjetivo()}}</td>
             </tr>
             <tr>
                 <td colspan="1"><b>3</b></td>
                 <td colspan="4"> {{ $proyecto->present()->proyectoTercerObjetivo() }}</td>
-                <td colspan="1">{{ $proyecto->articulacion_proyecto->actividad->present()->isActividadCumplioTercerObjetivo() }}</td>
+                <td colspan="1">{{ $proyecto->present()->isProyectoCumplioTercerObjetivo() }}</td>
             </tr>
             <tr>
                 <td colspan="1"><b>4</b></td>
                 <td colspan="4"> {{ $proyecto->present()->proyectoCuartoObjetivo() }}</td>
-                <td colspan="1">{{ $proyecto->articulacion_proyecto->actividad->present()->isActividadCumplioCuartoObjetivo() }}</td>
+                <td colspan="1">{{ $proyecto->present()->isProyectoCumplioCuartoObjetivo() }}</td>
             </tr>
             <tr class="tr-striped">
                 <td colspan="6" ><b>CONCLUSIONES Y SIGUIENTE PASO DEL PROYECTO<b></td>
             </tr>
             <tr>
                 <td colspan="6">
-                    {{$proyecto->articulacion_proyecto->actividad->present()->actividadConclusiones()}}
+                    {{$proyecto->conclusiones}}
                 </td>
             </tr>
             <tr class="tr-striped">

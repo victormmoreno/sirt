@@ -42,7 +42,7 @@ class ProyectoPresenter extends Presenter
 
     public function proyectoRutaActual()
     {
-        if ($this->proyecto->fase->nombre == 'Finalizado' || $this->proyecto->fase->nombre == 'Concluido sin finalizar') {
+        if ($this->proyecto->fase->nombre == 'Finalizado' || $this->proyecto->fase->nombre == 'Cancelado') {
             return route('proyecto.detalle', $this->proyecto->id);
         } else if ($this->proyecto->fase->nombre == 'Inicio') {
             return route('proyecto.inicio', $this->proyecto->id);
@@ -57,11 +57,11 @@ class ProyectoPresenter extends Presenter
 
     public function proyectoFechaCierre()
     {
-        if ($this->proyecto->fase->nombre == 'Concluido sin finalizar' || $this->proyecto->fase->nombre == 'Finalizado') {
-            if ($this->proyecto->articulacion_proyecto->actividad->fecha_cierre == null) {
+        if ($this->proyecto->fase->nombre == 'Cancelado' || $this->proyecto->fase->nombre == 'Finalizado') {
+            if ($this->proyecto->fecha_cierre == null) {
                 return "No registra";
             } else {
-                return $this->proyecto->articulacion_proyecto->actividad->fecha_cierre->isoFormat('YYYY-MM-DD');
+                return $this->proyecto->fecha_cierre->isoFormat('YYYY-MM-DD');
             }
         } else {
             return 'El proyecto no se ha cerrado';
@@ -70,10 +70,10 @@ class ProyectoPresenter extends Presenter
 
     public function proyectoFechaInicio()
     {
-        if ($this->proyecto->articulacion_proyecto->actividad->fecha_inicio == null) {
+        if ($this->proyecto->fecha_inicio == null) {
             return "No registra";
         } else {
-            return $this->proyecto->articulacion_proyecto->actividad->fecha_inicio->isoFormat('YYYY-MM-DD');
+            return $this->proyecto->fecha_inicio->isoFormat('YYYY-MM-DD');
         }
     }
 
@@ -170,15 +170,15 @@ class ProyectoPresenter extends Presenter
     public function proyectoNode()
     {
         if ($this->proyecto->has('nodo.entidad') && isset($this->proyecto->nodo->entidad)) {
-            return "Tecnoparque Nodo {$this->proyecto->nodo->entidad->nombre}";
+            return "Tecnoparque {$this->proyecto->nodo->entidad->nombre}";
         }
         return "No registra";
     }
 
     public function proyectoUserAsesor()
     {
-        if ($this->proyecto->has('asesor.user') && isset($this->proyecto->asesor->user)) {
-            return $this->proyecto->asesor->user->present()->userFullName();
+        if ($this->proyecto->has('asesor') && isset($this->proyecto->asesor)) {
+            return $this->proyecto->asesor->present()->userFullName();
         }
         return "No registra";
     }
@@ -251,24 +251,6 @@ class ProyectoPresenter extends Presenter
         return "No registra";
     }
 
-    public function isAprobacionDinamizadorEjecucion()
-    {
-        if ($this->proyecto->articulacion_proyecto->aprobacion_dinamizador_ejecucion == 1)
-        {
-            return 1;
-        }
-        return 0;
-    }
-
-    public function isAprobacionDinamizadorSuspender()
-    {
-        if ($this->proyecto->articulacion_proyecto->aprobacion_dinamizador_suspender == 1)
-        {
-            return 1;
-        }
-        return 0;
-    }
-
     public function proyectoAreaConocimiento()
     {
         if ($this->proyecto->has('areaconocimiento') && isset($this->proyecto->areaconocimiento)) {
@@ -288,42 +270,59 @@ class ProyectoPresenter extends Presenter
 
     public function proyectoConclusiones()
     {
-        if ($this->proyecto->has('articulacion_proyecto.actividad') && isset($this->proyecto->articulacion_proyecto->actividad)) {
-            return $this->proyecto->articulacion_proyecto->actividad->present()->actividadConclusiones();
-        }
-        return "No registra";
+        return $this->proyecto->conclusiones == null ? "No registra" : $this->proyecto->conclusiones;
     }
 
     public function proyectoPrimerObjetivo()
     {
-        if ($this->proyecto->has('articulacion_proyecto.actividad') && isset($this->proyecto->articulacion_proyecto->actividad)) {
-            return $this->proyecto->articulacion_proyecto->actividad->present()->actividadPrimerObjetivoEspecifico();
+        if (isset($this->proyecto->objetivos_especificos[0])) {
+            return $this->proyecto->objetivos_especificos[0]->objetivo;
         }
         return "No registra";
     }
 
     public function proyectoSegundoObjetivo()
     {
-        if ($this->proyecto->has('articulacion_proyecto.actividad') && isset($this->proyecto->articulacion_proyecto->actividad)) {
-            return $this->proyecto->articulacion_proyecto->actividad->present()->actividadSegundoObjetivoEspecifico();
+        if (isset($this->proyecto->objetivos_especificos[1])) {
+            return $this->proyecto->objetivos_especificos[1]->objetivo;
         }
         return "No registra";
     }
 
     public function proyectoTercerObjetivo()
     {
-        if ($this->proyecto->has('articulacion_proyecto.actividad') && isset($this->proyecto->articulacion_proyecto->actividad)) {
-            return $this->proyecto->articulacion_proyecto->actividad->present()->actividadTercerObjetivoEspecifico();
+        if (isset($this->proyecto->objetivos_especificos[2])) {
+            return $this->proyecto->objetivos_especificos[2]->objetivo;
         }
         return "No registra";
     }
 
     public function proyectoCuartoObjetivo()
     {
-        if ($this->proyecto->has('articulacion_proyecto.actividad') && isset($this->proyecto->articulacion_proyecto->actividad)) {
-            return $this->proyecto->articulacion_proyecto->actividad->present()->actividadCuartoObjetivoEspecifico();
+        if (isset($this->proyecto->objetivos_especificos[3])) {
+            return $this->proyecto->objetivos_especificos[3]->objetivo;
         }
         return "No registra";
+    }
+
+    public function isProyectoCumplioPrimerObjetivo()
+    {
+        return $this->proyecto->objetivos_especificos[0]->cumplido == 0 ? 'NO' : 'SI';
+    }
+
+    public function isProyectoCumplioSegundoObjetivo()
+    {
+        return $this->proyecto->objetivos_especificos[1]->cumplido == 0 ? 'NO' : 'SI';
+    }
+
+    public function isProyectoCumplioTercerObjetivo()
+    {
+        return $this->proyecto->objetivos_especificos[2]->cumplido == 0 ? 'NO' : 'SI';
+    }
+
+    public function isProyectoCumplioCuartoObjetivo()
+    {
+        return $this->proyecto->objetivos_especificos[3]->cumplido == 0 ? 'NO' : 'SI';
     }
 
     public function proyectoTrlPrototipo()
@@ -368,42 +367,27 @@ class ProyectoPresenter extends Presenter
 
     public function proyectoObjetivoGeneral()
     {
-        if ($this->proyecto->has('articulacion_proyecto.actividad') && isset($this->proyecto->articulacion_proyecto->actividad)) {
-            return $this->proyecto->articulacion_proyecto->actividad->present()->actividadObjetivoGeneral();
-        }
-        return "No registra";
+        return $this->proyecto->objetivo_general == null ? "No registra" : $this->proyecto->objetivo_general;
     }
 
     public function talentoInterlocutor()
     {
-        if ($this->proyecto->has('articulacion_proyecto.talentos') && isset($this->proyecto->articulacion_proyecto->talentos)) {
-            return $this->proyecto->articulacion_proyecto->talentos()->wherePivot('talento_lider', '=', 1)->first()->user->present()->userFullName();
-        }
-        return "No registra";
+        return $this->proyecto->talentos()->wherePivot('talento_lider', '=', 1)->first()->present()->userFullName();
     }
 
     public function proyectoCode()
     {
-        if ($this->proyecto->has('articulacion_proyecto.actividad') && isset($this->proyecto->articulacion_proyecto->actividad)) {
-            return $this->proyecto->articulacion_proyecto->actividad->present()->actividadCode();
-        }
-        return "No registra";
+        return $this->proyecto->codigo_proyecto == null ? "No registra" : $this->proyecto->codigo_proyecto;
     }
 
     public function proyectoName()
     {
-        if ($this->proyecto->has('articulacion_proyecto.actividad') && isset($this->proyecto->articulacion_proyecto->actividad)) {
-            return $this->proyecto->articulacion_proyecto->actividad->present()->actividadName();
-        }
-        return "No registra";
+        return $this->proyecto->nombre == null ? "No registra" : $this->proyecto->nombre;
     }
 
     public function proyectoNodoCentro()
     {
-        if ($this->proyecto->has('nodo.centro.entidad') && isset($this->proyecto->nodo->centro->entidad)) {
-            return $this->proyecto->nodo->centro->entidad->nombre;
-        }
-        return "No registra";
+        return $this->proyecto->nodo->centro->entidad->nombre;
     }
 
 

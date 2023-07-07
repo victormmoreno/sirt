@@ -26,6 +26,6 @@ class IdeaWasRegisteredInAgendamiento
      */
     public function handle(AgendamientoWasRegistered $event)
     {
-        Mail::to([$event->idea->talento->user->email, auth()->user()->email])->send(new SendEmailIdeaAgendamiento($event->idea, $event->comite));
+        Mail::to([$event->idea->user->email, auth()->user()->email])->send(new SendEmailIdeaAgendamiento($event->idea, $event->comite));
     }
 }

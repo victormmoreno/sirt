@@ -30,11 +30,6 @@ class IdeaRepository
     {
         return Idea::where('tipo_idea', Idea::IsEmprendedor());
     }
-    
-    public function getSelectNodoPrueba()
-    {
-        return Nodo::selectNodo()->where('entidades.nombre', '!=', Nodo::NODO_PRUEBA)->get();
-    }
 
     public function asginarIdeaExperto($request, $idea)
     {
@@ -114,18 +109,13 @@ class IdeaRepository
         DB::beginTransaction();
         try {
             $idea->update(['estadoidea_id' => EstadoIdea::where('nombre', EstadoIdea::IsConvocado())->first()->id]);
-            $infocenters = User::infoUserRole(['Infocenter'], ['infocenter', 'infocenter.nodo'])->whereHas(
-                'infocenter.nodo',
-                function ($query) use ($idea) {
-                    $query->where('id', $idea->nodo_id);
-                }
-            )->get();
+            $infocenters = User::ConsultarFuncionarios($idea->nodo_id, User::IsInfocenter())->get();
             $emails_infocenter = array();
             foreach ($infocenters as $key => $infocenter) {
                 $emails_infocenter[$key+1] = $infocenter->email;
             }
             event(new IdeasWasAccepted($idea, $infocenters, $request->txtobservacionesAceptacion));
-
+    
             if (!$infocenters->isEmpty()) {
                 Notification::send($infocenters, new IdeaAceptadaParaComite($idea, auth()->user()));
             }
@@ -176,8 +166,7 @@ class IdeaRepository
             'entrenamiento',
             'comites',
             'comites.estado',
-            'gestor',
-            'gestor.user' => function($query) {
+            'asesor' => function($query) {
                 $query->withTrashed();
             }]);
     }
@@ -341,7 +330,7 @@ class IdeaRepository
                 "codigo_idea" => $codigo_idea,
                 "tipo_idea" => Idea::IsEmprendedor(),
                 "estadoidea_id" => EstadoIdea::where('nombre', '=', EstadoIdea::IsRegistro())->first()->id,
-                "talento_id" => auth()->user()->talento->id,
+                "user_id" => auth()->user()->id,
                 "sede_id" => $sede_id,
                 "acuerdo_no_confidencialidad" => $valoresCondicionales['acuerdo_no_confidencialidad'],
                 "fecha_acuerdo_no_confidencialidad" => $valoresCondicionales['fecha_acuerdo_no_confidencialidad'],
@@ -461,8 +450,8 @@ class IdeaRepository
             DB::rollBack();
             return [
                 'state' => false,
-                'msg' => 'La idea no se ha inhabilitado!',
-                'title' => 'Inhabilitación errónea!',
+                'msg' => $th->getMessage(),
+                'title' => 'La idea no se ha inhabilitado!',
                 'type' => 'error'
             ];
         }
@@ -521,6 +510,8 @@ class IdeaRepository
         try {
             $comite_idea = $idea->comites()->wherePivot('comite_id', $comite)->first()->pivot;
             $duplicado = $idea->replicate();
+            $duplicado->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsAdmitido())->first()->id;
+            $duplicado->asesor_id = null;
             $duplicado->codigo_idea = $this->generarCodigoIdeaDuplicado($idea);
             $duplicado->save();
             $this->duplicarIdeaComite($comite, $comite_idea, $duplicado);
@@ -530,14 +521,16 @@ class IdeaRepository
                 'state' => true,
                 'msg' => 'La idea se ha derivado exitosamente!',
                 'title' => 'Duplicación exitosa!',
+                'idea' => $duplicado,
                 'type' => 'success'
             ];
-        } catch (\Throwable $th) {
+        } catch (\Exception $ex) {
             DB::rollBack();
             return [
                 'state' => false,
-                'msg' => 'La idea no se ha derivado!',
+                'msg' => $ex->getMessage(),
                 'title' => 'Duplicación errónea!',
+                'idea' => null,
                 'type' => 'error'
             ];
         }
@@ -557,16 +550,10 @@ class IdeaRepository
         try {
             $duplicado = $idea->replicate();
             $duplicado->codigo_idea = $this->generarCodigoIdeaDuplicado($idea);
-            // if ($duplicado->estadoIdea->nombre == $duplicado->estadoIdea->IsAdmitido() || $duplicado->estadoIdea->nombre == $duplicado->estadoIdea->IsPBT()) {
-            //     // $duplicado->gestor_id = null;
-            //     $duplicado->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsAdmitido())->first()->id;
-            // } else {
-            // }
             $duplicado->estadoidea_id = EstadoIdea::where('nombre', EstadoIdea::IsRegistro())->first()->id;
-            $duplicado->gestor_id = null;
+            $duplicado->asesor_id = null;
 
             $duplicado->push();
-            // $duplicado->push();
             $idea->registrarHistorialIdea(Movimiento::IsDuplicar(), Session::get('login_role'), null, 'con el código de idea ' . $duplicado->codigo_idea);
             if ($idea->rutamodel != null) {
                 $duplicado->rutamodel()->create([
@@ -585,8 +572,8 @@ class IdeaRepository
             DB::rollBack();
             return [
                 'state' => false,
-                'msg' => 'La idea no se ha duplicado!',
-                'title' => 'Duplicación errónea!',
+                'msg' => $th->getMessage(),
+                'title' => 'La idea no se ha duplicado!',
                 'type' => 'error'
             ];
         }
@@ -594,7 +581,6 @@ class IdeaRepository
 
     public function enviarIdeaAlNodo($request, $idea)
     {
-        // exit();
         DB::beginTransaction();
         try {
             if ( !$idea->validarAcuerdoConfidencialidad() ) {
@@ -625,12 +611,7 @@ class IdeaRepository
             //Enviar correo al talento que inscribió la idea de proyecto
             event(new IdeaHasReceived($idea));
             // Busca los articuladores del nodo
-            $users = User::infoUserRole(['Articulador'], ['gestor', 'gestor.nodo'])->whereHas(
-                'gestor.nodo',
-                function ($query) use ($idea) {
-                    $query->where('id', $idea->nodo_id);
-                }
-            )->get();
+            $users = User::ConsultarFuncionarios($idea->nodo_id, User::IsArticulador())->get();
             // Envia un correo a los articuladores del nodo
             if (!$users->isEmpty()) {
                 Notification::send($users, new IdeaReceived($idea));
@@ -645,11 +626,11 @@ class IdeaRepository
                 'idea' => $idea
             ];
 
-        } catch (\Throwable $th) {
+        } catch (\Exception $ex) {
             DB::rollBack();
             return [
                 'state' => false,
-                'msg' => 'La idea no se ha postulado al nodo!',
+                'msg' => $ex->getMessage(),
                 'title' => 'Postulación errónea!',
                 'type' => 'error',
                 'idea' => null
@@ -791,11 +772,11 @@ class IdeaRepository
                 'type' => 'success',
                 'idea' => $idea
             ];
-        } catch (\Throwable $th) {
+        } catch (\Exception $ex) {
             DB::rollback();
             return [
                 'state' => false,
-                'msg' => 'La idea de proyecto no se ha modificado!',
+                'msg' => $ex->getMessage(),
                 'title' => 'Modificación errónea!',
                 'type' => 'error',
                 'idea' => null
@@ -806,26 +787,6 @@ class IdeaRepository
     public function findByid($id)
     {
         return Idea::find($id);
-    }
-
-
-    public function getIdeaWithRelations($idea)
-    {
-        return $idea->with([
-            'nodo' => function ($query) {
-                $query->select('id', 'direccion', 'entidad_id');
-            },
-            'nodo.entidad' => function ($query) {
-                $query->select('id', 'nombre', 'ciudad_id');
-            },
-            'nodo.entidad.ciudad' => function ($query) {
-                $query->select('id', 'nombre', 'departamento_id');
-            },
-            'nodo.entidad.ciudad.departamento' => function ($query) {
-                $query->select('id', 'nombre');
-            },
-            'nodo.infocenter'
-        ])->select('id', 'nodo_id', 'apellidos_contacto', 'nombres_contacto', 'correo_contacto', 'nombre_proyecto', 'codigo_idea', 'viene_convocatoria', 'convocatoria')->get();
     }
 
     /**

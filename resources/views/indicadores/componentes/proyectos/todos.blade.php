@@ -1,15 +1,15 @@
 <div class="row card-panel teal lighten-5">
-    <h6>Para consultar TODOS los indicadores, debes seleccionar un nodo, un rango de fechas y luego presionar el botón de descarga.</h6>
+    <h6 class="font-bold">Para consultar TODOS los indicadores, debes seleccionar un nodo, un rango de fechas y luego presionar el botón de descarga.</h6>
     @can('showIndicadoresProyectoOptions', Illuminate\Database\Eloquent\Model::class)
         <div class="row">
             <div class="input-field col s12 m6 l6">
-                <select class="js-states select2 browser-default" name="txtnodo_id" id="txtnodo_id" style="width: 100%">
-                    <option value="all">Todos</option>
+                <select multiple name="txtnodo_id[]" id="txtnodo_id" style="width: 100%">
+                    <option value="all" selected>Todos</option>
                 @foreach($nodos as $nodo)
                     <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
                 @endforeach
                 </select>
-                <label for="txtnodo_id" class="active">Seleccione el Nodo</label>
+                <label for="txtnodo_id">Seleccione el Nodo</label>
             </div>
             <div class="input-field col s12 m6 l6">
                 <select class="js-states select2 browser-default" name="txthoja_nombre" id="txthoja_nombre" style="width: 100%">
@@ -33,7 +33,7 @@
             <label for="txtfecha_fin_todos">Fecha Fin</label>
         </div>
         <div class="center input-field col s12 m6 l6">
-            <a onclick="generarExcelConTodosLosIndicadoresProyectos();" class="waves-effect waves-grey bg-secondary-lighten white-text btn-flat search-tabs-button m-l-xs">Descargar<i class="material-icons left">file_download</i></a>
+            <a onclick="generarExcelConTodosLosIndicadores(event, {{request()->user()->getNodoUser()}});" class="waves-effect waves-grey bg-secondary-lighten white-text btn-flat search-tabs-button m-l-xs"><i class="material-icons">file_download</i></a>
         </div>
     </div>
 </div>

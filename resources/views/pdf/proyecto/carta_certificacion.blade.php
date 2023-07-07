@@ -183,7 +183,7 @@
 
                 <tr>
                     <td class="font-jose-bold">FECHA DE INICIO DE LA CONSULTORÍA</td>
-                    <td>{{$proyecto->articulacion_proyecto->actividad->present()->startDate()}}</td>
+                    <td>{{$proyecto->fecha_inicio->format('Y-m-d')}}</td>
                 </tr>
 
                 <tr>
@@ -193,7 +193,7 @@
 
                 <tr>
                     <td class="font-jose-bold">FECHA DE FINAL DE LA CONSULTORÍA</td>
-                    <td>{{$proyecto->articulacion_proyecto->actividad->present()->endDate()}}</td>
+                    <td>{{$proyecto->fecha_cierre->format('Y-m-d')}}</td>
                 </tr>
                 <tr>
                     <td class="font-jose-bold">TRL OBTENIDO DEL PROTOTIPO O PRODUCTO / SERVICIO</td>

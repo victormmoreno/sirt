@@ -6,6 +6,7 @@ use App\User;
 use App\Models\{Comite, Idea, RutaModel};
 use Illuminate\Support\Str;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Carbon\Carbon;
 
 class ComitePolicy
 {
@@ -156,7 +157,7 @@ class ComitePolicy
         if (Str::contains(session()->get('login_role'), [$user->IsAdministrador()])) {
             return true;
         }
-        if ((Str::contains(session()->get('login_role'), [$user->IsInfocenter()]) && $comite->ideas->first()->nodo_id == $user->getNodoUser()) && Str::contains($comite->estado->nombre, [$comite->estado->IsProgramado(), $comite->estado->IsRealizado()])) {
+        if (Str::contains(session()->get('login_role'), [$user->IsInfocenter()]) && $comite->ideas->first()->nodo_id == $user->getNodoUser()) {
             return true;
         }
         return false;
@@ -263,6 +264,27 @@ class ComitePolicy
             }
             return false;
         }        
+        return false;
+    }
+
+        /**
+     * Determina quieres y en qué momento se puede duplicar una idea de proyecto que ya fue asignada al comité
+     *
+     * @param User $user
+     * @param Comite $comite
+     * @param Idea $idea
+     * @return bool
+     * @author dum
+     **/
+    public function derivar_idea(User $user, Comite $comite, Idea $idea)
+    {
+        
+        if (session()->get('login_role') == $user->IsAdministrador() && ($idea->estadoIdea->nombre == $idea->estadoIdea->IsAdmitido() || $idea->estadoIdea->nombre == $idea->estadoIdea->IsPBT())) {
+            return true;
+        }
+        if (session()->get('login_role') == $user->IsDinamizador() && ($comite->estado->nombre == $comite->estado->IsAsignado() || $comite->estado->nombre == $comite->estado->IsRealizado()) && ($idea->estadoIdea->nombre == $idea->estadoIdea->IsAdmitido() || $idea->estadoIdea->nombre == $idea->estadoIdea->IsPBT()) && $comite->fechacomite->diffInDays(Carbon::now()) <= 7) {
+            return true;
+        }
         return false;
     }
 }

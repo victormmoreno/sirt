@@ -61,7 +61,7 @@
                                             </select>
                                         </div>
                                         <div class="col s12 m6 l4 offset-m3 right">
-                                            <button class="waves-effect waves-grey btn-flat search-tabs-button right" id="filter_articulation_subtype"><i class="material-icons">search</i>{{__('Filter')}}</button>
+                                            <button class="waves-effect waves-grey bg-secondary white-text btn-flat search-tabs-button right" id="filter_articulation_subtype"><i class="material-icons">search</i>{{__('Filter')}}</button>
                                         </div>
                                     </div>
                                     <table id="articulation_subtype_data_table" class="display responsive-table datatable-example dataTable" style="width: 100%">

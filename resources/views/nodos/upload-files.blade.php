@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'Tecnoparque nodo ' . $nodo->entidad->present()->entidadName())
+@section('meta-title', 'Tecnoparque ' . $nodo->entidad->present()->entidadName())
 @section('content')
     @php
         $year = Carbon\Carbon::now()->year;
@@ -17,7 +17,7 @@
                     <ol class="breadcrumbs">
                         <li><a href="{{ route('home') }}">Inicio</a></li>
                         <li><a href="{{ route('nodo.index') }}">Nodos</a></li>
-                        <li><a href="{{route('nodo.show', $nodo->entidad->slug)}}">Tecnoparque Nodo {{$nodo->entidad->present()->entidadName()}}</a></li>
+                        <li><a href="{{route('nodo.show', $nodo->entidad->slug)}}">Tecnoparque {{$nodo->entidad->present()->entidadName()}}</a></li>
                         <li class="active">Archivos</li>
                     </ol>
                 </div>
@@ -35,7 +35,7 @@
                                                 <div class="left">
                                                     <span class="mailbox-title primary-text">
 
-                                                        Tecnoparque nodo {{ $nodo->entidad->present()->entidadName() }} -
+                                                        Tecnoparque {{ $nodo->entidad->present()->entidadName() }} -
                                                         {{ $nodo->entidad->present()->entidadLugar() }}
                                                     </span>
                                                     <span class="mailbox-author">
@@ -52,8 +52,7 @@
                                             </div>
                                             <div class="right mailbox-buttons hide-on-med-and-down">
                                                 <span class="mailbox-title">
-                                                    <p class="center">Información Tecnoparque Nodo
-                                                        {{ $nodo->entidad->present()->entidadName() }}</p><br />
+                                                    <p class="center">Información Tecnoparque {{ $nodo->entidad->present()->entidadName() }}</p><br />
                                                     <p class="center">
                                                         {{ isset($nodo->centro->entidad->nombre) ? $nodo->centro->entidad->nombre : '' }}
                                                         -

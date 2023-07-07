@@ -1,3 +1,8 @@
+<li class="no-padding {{setActiveRoute('nodo')}}">
+    <a class="waves-effect waves-grey {{setActiveRouteActivePage('nodo')}}" href="{{route('nodo.index')}}" rel="canonical" title="Nodo">
+        <i class="material-icons {{ setActiveRouteActiveIcon('nodo') }}">location_city</i>Nodo
+    </a>
+</li>
 <li class="no-padding {{setActiveRoute('idea')}}">
     <a href="{{route('idea.index')}} " class="{{setActiveRouteActivePage('idea')}}" rel="canonical" title="Ideas">
         <i class="material-icons {{setActiveRouteActiveIcon('idea')}}">lightbulb</i>Ideas
@@ -20,9 +25,9 @@
         <i class="material-icons {{setActiveRouteActiveIcon('charla')}}">record_voice_over</i>Charlas Informativas
     </a>
 </li>
-<li class="no-padding {{setActiveRoute('usoinfraestructura')}}">
-    <a class="waves-effect waves-grey {{setActiveRouteActivePage('usoinfraestructura')}}" href="{{route('usoinfraestructura.index')}}" rel="canonical" title="Asesorias y usos">
-        <i class="material-icons {{setActiveRouteActiveIcon('usoinfraestructura')}}">domain</i>Asesorias y usos
+<li class="no-padding {{setActiveRoute('asesorias')}}">
+    <a class="waves-effect waves-grey {{setActiveRouteActivePage('asesorias')}}" href="{{route('asesorias.index')}}" rel="canonical" title="Asesorias y usos">
+        <i class="material-icons {{setActiveRouteActiveIcon('asesorias')}}">domain</i>Asesorias y usos
     </a>
 </li>
 @can('index', App\User::class)

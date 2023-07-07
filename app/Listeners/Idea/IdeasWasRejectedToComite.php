@@ -26,6 +26,6 @@ class IdeasWasRejectedToComite
      */
     public function handle(IdeasWasRejected $event)
     {
-        Mail::to($event->idea->talento->user->email)->bcc(auth()->user()->email)->send(new IdeaRechazadaParaComite($event->idea, $event->motivos));
+        Mail::to($event->idea->user->email)->bcc(auth()->user()->email)->send(new IdeaRechazadaParaComite($event->idea, $event->motivos));
     }
 }

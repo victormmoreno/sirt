@@ -73,7 +73,7 @@ var DepartamentsCreate = {
       $.ajax({
         dataType:'json',
         type:'get',
-        url: host_url + '/help/getciudades/'+id
+        url: `${host_url}/help/getciudades/${id}`
       }).done(function(response){
         $('#txtciudad').empty();
         $('#txtciudad').append('<option value="">Seleccione la Ciudad</option>')

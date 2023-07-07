@@ -22,7 +22,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{{route('perfil.cuenta')}}}">
+                <a href="{{{route('perfil.account')}}}">
                     <h4 class="mail-title">
                         Cambiar Contraseña
                     </h4>
@@ -31,18 +31,6 @@
                     </p>
                 </a>
             </li>
-            @if(\Session::get('login_role') == App\User::IsTalento() || \Session::get('login_role') == App\User::IsExperto())
-            <li>
-                <a href="{{{route('perfil.actividades')}}}">
-                    <h4 class="mail-title">
-                        Mis Actividades
-                    </h4>
-                    <p align="justify" class="hide-on-small-and-down mail-text">
-                        En este apartado podrás ver los proyectos y articulaciones trabajados en la {{config('app.name')}}
-                    </p>
-                </a>
-            </li>
-            @endif
         </ul>
 
     </div>

@@ -13,7 +13,7 @@
             <div class="card">
             <div class="card-content">
                 <div class="row">
-                <h4 class="center">Generar cartas de certificación para el proyecto {{$proyecto->articulacion_proyecto->actividad->present()->actividadName()}}</h4>
+                <h4 class="center">Generar cartas de certificación para el proyecto {{$proyecto->nombre}}</h4>
                 </div>
                 <div class="row">
                     <form id="frmCartaCertificacion" action="{{route('pdf.proyecto.certificacion', $proyecto->id)}}" method="POST">

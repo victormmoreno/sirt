@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Session, Validator};
 use App\Http\Requests\{EdtFormRequest};
-use App\Repositories\Repository\{EntidadRepository, EdtRepository, UserRepository\GestorRepository};
+use App\Repositories\Repository\EdtRepository;
 use App\Models\{Edt, TipoEdt, AreaConocimiento, Nodo};
 use App\User;
 use App\Helpers\ArrayHelper;
@@ -14,27 +14,12 @@ use RealRashid\SweetAlert\Facades\Alert;
 class EdtController extends Controller
 {
 
-    /**
-     * Un objeto la clase EntidadRepository
-     * @var object
-     */
-    private $entidadRepository;
-    /**
-     * Objeto de la clase EdtRepository
-     * @var object
-     */
+
     private $edtRepository;
-    /**
-     * Objeto de la clase GestorRepository
-    *
-    * @var object
-    */
-    private $gestorRepository;
-    public function __construct(GestorRepository $gestorRepository, EntidadRepository $entidadRepository, EdtRepository $edtRepository)
+
+    public function __construct(EdtRepository $edtRepository)
     {
-        $this->entidadRepository = $entidadRepository;
         $this->edtRepository = $edtRepository;
-        $this->gestorRepository = $gestorRepository;
         $this->middleware('auth');
     }
 
@@ -189,7 +174,7 @@ class EdtController extends Controller
     {
         $id = "";
         if ( Session::get('login_role') == User::IsExperto() ) {
-        $id = auth()->user()->gestor->id;
+        $id = auth()->user()->experto->id;
         }
         $edts = $this->edtRepository->consultarEdtsDeUnGestor($id, $anho);
         return $this->datatableEdts($edts);

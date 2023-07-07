@@ -11,7 +11,7 @@
   </center>
   <p>
     Señor(a) <br>
-    <b>{{ $idea->talento->user->nombres }} {{ $idea->talento->user->apellidos }}</b><br>
+    <b>{{ $idea->user->nombres }} {{ $idea->user->apellidos }}</b><br>
     Cordial Saludo
   </p>
   <p style="text-align: justify">

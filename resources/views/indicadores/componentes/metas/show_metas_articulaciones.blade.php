@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th>Tecnoparque</th>
-            <th>Meta de {{__('Articulations')}} finalizadas</th>
+            <th>Meta de {{__('Articulations')}} generadas</th>
             <th class="green lighten-5">Total de {{__('Articulations')}} en Inicio</th>
             <th class="green lighten-5">Total de {{__('Articulations')}} en Ejecución</th>
             <th class="green lighten-5">Total de {{__('Articulations')}} en Cierre</th>
@@ -12,7 +12,6 @@
     <tbody>
         @forelse ($metasArticulaciones as $metaA)
             <tr>
-                {{-- {{var_dump($metaA)}} --}}
                 <td>{{$metaA->nodo}}</td>
                 <td>{{$metaA->articulaciones}}</td>
                 <td class="green lighten-5">{{$metaA->articulation_start}}</td>

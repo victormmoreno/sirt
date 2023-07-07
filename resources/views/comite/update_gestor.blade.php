@@ -27,7 +27,7 @@
                       <select id="txtgestor_id" class="js-states" name="txtgestor_id" style="width: 100%;">
                         <option value="">Seleccione el experto</option>
                         @forelse ($gestores as $id => $gestor)
-                          <option value="{{$gestor->gestor->id}}" {{ $gestor->gestor->id == $idea->gestor_id ? 'selected' : '' }} {{ old('txtgestor_id') == $gestor->gestor->id ? 'selected':'' }} >{{$gestor->nombre}}</option>
+                          <option value="{{$gestor->id}}" {{ $gestor->id == $idea->asesor_id ? 'selected' : '' }} {{ old('txtgestor_id') == $gestor->id ? 'selected':'' }} >{{$gestor->nombres}} {{$gestor->apellidos}}</option>
                         @empty
                           <option value="">No hay información disponible</option>
                         @endforelse

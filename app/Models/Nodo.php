@@ -61,24 +61,24 @@ class Nodo extends Model
         return $this->hasMany(UserNodo::class, 'nodo_id', 'id')->where('role', User::IsApoyoTecnico());
     }
 
-    public function dinamizador()
+    public function dinamizadores()
     {
-        return $this->hasMany(Dinamizador::class, 'nodo_id', 'id');
+        return $this->hasMany(UserNodo::class, 'nodo_id', 'id')->where('role', User::IsDinamizador());
     }
 
-    public function gestores()
+    public function expertos()
     {
-        return $this->hasMany(Gestor::class, 'nodo_id', 'id');
+        return $this->hasMany(UserNodo::class, 'nodo_id', 'id')->where('role', User::IsExperto());
     }
 
-    public function infocenter()
+    public function infocenters()
     {
-        return $this->hasMany(Infocenter::class, 'nodo_id', 'id');
+        return $this->hasMany(UserNodo::class, 'nodo_id', 'id')->where('role', User::IsInfocenter());
     }
 
     public function ingresos()
     {
-        return $this->hasMany(Ingreso::class, 'nodo_id', 'id');
+        return $this->hasMany(UserNodo::class, 'nodo_id', 'id')->where('role', User::IsIngreso());
     }
 
     public function centro()
@@ -89,11 +89,6 @@ class Nodo extends Model
     public function entidad()
     {
         return $this->belongsTo(Entidad::class, 'entidad_id', 'id');
-    }
-
-    public function contratista()
-    {
-        return $this->hasMany(Contratista::class, 'nodo_id', 'id');
     }
 
     public function ideas()
@@ -149,11 +144,6 @@ class Nodo extends Model
             ->withTimestamps();
     }
 
-    public function contactosentidades()
-    {
-        return $this->hasMany(ContactoEntidad::class, 'nodo_id', 'id');
-    }
-
     /**
      * Define one to many relationship between accompanient and node
      *
@@ -182,13 +172,13 @@ class Nodo extends Model
 
     public function scopeSelectNodo($query)
     {
-        return $query->select('nodos.id', DB::raw("CONCAT('Tecnoparque Nodo ',entidades.nombre) as nodos"))
+        return $query->select('nodos.id', DB::raw("CONCAT('Tecnoparque ',entidades.nombre) as nodos"))
             ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
             ->orderBy('entidades.nombre');
     }
     public function scopeListNodos($query)
     {
-        return $query->select(DB::raw('concat("Tecnoparque nodo ", nombre) AS nombre'), 'id')
+        return $query->select(DB::raw('concat("Tecnoparque ", nombre) AS nombre'), 'id')
             ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id');
     }
 
@@ -206,7 +196,7 @@ class Nodo extends Model
 
     public function scopeNodoUserAthenticated($query, $nodo)
     {
-        return $query->select('nodos.id', DB::raw('concat("Tecnoparque nodo ", entidades.nombre) AS nombre'))
+        return $query->select('nodos.id', DB::raw('concat("Tecnoparque ", entidades.nombre) AS nombre'))
             ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
             ->where('nodos.id', '=', $nodo);
     }
@@ -311,19 +301,6 @@ class Nodo extends Model
             return $query->with($relations);
         }
         return $query;
-    }
-
-    public function scopeProyectosFinalizadosTrl6($query, $year, $nodo)
-    {
-        return $query->whereHas('proyectos.fase', function($query) {
-            $query->where('nombre', Proyecto::IsFinalizado());
-        })->whereHas('proyectos.articulacion_proyecto.actividad', function($query) use ($year) {
-            $query->whereYear('fecha_cierre', $year);
-        })->whereHas('proyectos', function($query) {
-            $query->where('trl_obtenido', Proyecto::IsTrl6Obtenido());
-        })->whereHas('proyectos', function($query) use ($nodo) {
-            $query->where('nodo_id', $nodo);
-        });
     }
 
     /**

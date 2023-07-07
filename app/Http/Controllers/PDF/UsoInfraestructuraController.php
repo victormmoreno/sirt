@@ -34,7 +34,7 @@ class UsoInfraestructuraController extends Controller
             }
             $pdf = PDF::loadView('pdf.usos.seguimiento', ['data' => $data, 'tipo_actividad' => $tipoActividad]);
             $pdf->setPaper(strtolower('LETTER'), $orientacion = 'landscape');
-            return $pdf->stream('Seguimiento_' . $data->articulacion_proyecto->actividad->present()->actividadCode() . '.pdf');
+            return $pdf->stream('Seguimiento_' . $data->present()->proyectoCode() . '.pdf');
 
         }else if ($tipoActividad == 'articulacion') {
             $data = Articulation::findOrFail($id);

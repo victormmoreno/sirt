@@ -10,7 +10,6 @@ use Illuminate\Queue\SerializesModels;
 class SendEmailIdeaComite extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
-    public $extensiones;
     public $datosIdea;
     public $pdf;
     public $subject = "Resultado de CSIBT";
@@ -20,9 +19,8 @@ class SendEmailIdeaComite extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($datosIdea, $pdf, $extensiones)
+    public function __construct($datosIdea, $pdf)
     {
-        $this->extensiones = $extensiones;
         $this->datosIdea = $datosIdea;
         $this->pdf       = base64_encode($pdf);
     }

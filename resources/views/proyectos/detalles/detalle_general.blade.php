@@ -7,8 +7,8 @@
             <p>
                 {{$proyecto->present()->proyectoUserAsesor()}}
             </p>
-            <a target="_blank" href="{{route("usuario.usuarios.show", $proyecto->asesor->user->documento)}}" class="info-text">
-                Ver mas información del usuario. 
+            <a target="_blank" href="{{route("usuario.show", $proyecto->asesor->documento)}}" class="info-text">
+                Ver mas información del usuario.
             </a>
         </li>
         <li class="collection-item">

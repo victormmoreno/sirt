@@ -15,12 +15,11 @@ class PdfComiteController extends Controller
         return $pdf->stream();
     }
 
-    public static function printPDFNoAceptado($idea, $comite, $extensiones)
+    public static function printPDFNoAceptado($idea, $comite)
     {
         $pdf = PDF::loadView('pdf.csibt.pdf_idea_rechazada', [
         'idea' => $idea,
-        'comite' => $comite,
-        'extensiones' => $extensiones
+        'comite' => $comite
         ]);
         return $pdf->stream();
     }

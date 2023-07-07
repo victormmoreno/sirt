@@ -1,5 +1,4 @@
 <ul class="collapsible">
-    {{-- {{ session()->get('login_role') }} --}}
     @can('showIndicadoresProyectos', Illuminate\Database\Eloquent\Model::class)
         <li>
             <div class="collapsible-header"><i class="material-icons">edit</i>Generar indicadores de proyectos inscritos entre un rango de fechas</div>
@@ -8,7 +7,7 @@
             </div>
         </li>
         <li>
-            <div class="collapsible-header"><i class="material-icons">done</i>Generar indicadores de proyectos finalizados y concluidos sin finalizar entre un rango de fechas</div>
+            <div class="collapsible-header"><i class="material-icons">done</i>Generar indicadores de proyectos finalizados y cancelados entre un rango de fechas</div>
             <div class="collapsible-body">
                 @include('indicadores.componentes.proyectos.finalizados')
             </div>
@@ -40,7 +39,7 @@
             </div>
         </li>
         <li>
-            <div class="collapsible-header"><i class="material-icons">done</i>Generar indicadores de articulaciones finalizadas y concluidas sin finalizar entre un rango de fechas</div>
+            <div class="collapsible-header"><i class="material-icons">done</i>Generar indicadores de articulaciones finalizadas y canceladas entre un rango de fechas</div>
             <div class="collapsible-body">
                 @include('indicadores.componentes.articulaciones.finalizadas')
             </div>

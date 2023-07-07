@@ -14,7 +14,6 @@ use App\Repositories\Repository\Articulation\ArticulationStageRepository;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Eloquent\Model;
 
 
 class ArticulationStageListController extends Controller
@@ -66,17 +65,16 @@ class ArticulationStageListController extends Controller
             ->select(
                 'articulation_stages.*', 'articulations.code as articulation_code',
                 'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
-                'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
-                'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id'
+                'entidades.nombre as nodo', 'proyectos.codigo_proyecto as codigo_proyecto',
+                'proyectos.nombre as nombre_proyecto', 'proyectos.id as proyecto_id'
             )
             ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', if(articulationables.articulationable_type = 'App\\\Models\\\Sede', 'Empresa', if(articulationables.articulationable_type = 'App\\\Models\\\Idea', 'Idea', 'No registra'))) as articulation_state_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by, concat(empresas.nit, ' - ', empresas.nombre, ' - ', sedes.nombre_sede) as sede, concat(ideas.codigo_idea, ' - ', ideas.nombre_proyecto) as idea")
-
-                ->node($node)
-                ->status($request->filter_status_articulationStage)
-                ->year($request->filter_year_articulationStage)
-                ->interlocutorTalent($talent)
-                ->orderBy('articulation_stages.updated_at', 'desc')
-                ->get();
+            ->node($node)
+            ->status($request->filter_status_articulationStage)
+            ->year($request->filter_year_articulationStage)
+            ->interlocutorTalent($talent)
+            ->orderBy('articulation_stages.updated_at', 'desc')
+            ->get();
         }
         return $this->datatablearticulationStages($articulationStages);
     }
@@ -97,7 +95,7 @@ class ArticulationStageListController extends Controller
         $articulationStages = [];
         if (isset($request->filter_status_articulationStage)) {
             $articulationStages = $this->articulationStageRepository->getListArticulacionStagesWithArticulations()
-            ->rightJoin('articulations', 'articulations.articulation_stage_id', '=', 'articulation_stages.id')
+            ->leftJoin('articulations', 'articulations.articulation_stage_id', '=', 'articulation_stages.id')
             ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')
             ->leftJoin('articulation_scopes', 'articulation_scopes.id', '=', 'articulations.scope_id')
             ->leftJoin('articulation_user', 'articulation_user.articulation_id', '=', 'articulations.id')
@@ -106,22 +104,29 @@ class ArticulationStageListController extends Controller
             ->leftJoin('articulation_types', 'articulation_types.id', '=', 'articulation_subtypes.articulation_type_id')
             ->select(
                 'articulation_stages.*', 'articulations.code as articulation_code',
-                'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
-                'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
-                'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id', 'interlocutor.documento', 'interlocutor.nombres',
+                'articulations.id as articulation_id','articulations.end_date as articulation_end_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase',
+                'entidades.nombre as nodo', 'proyectos.codigo_proyecto as codigo_proyecto',
+                'proyectos.nombre as nombre_proyecto', 'proyectos.id as proyecto_id', 'interlocutor.documento', 'interlocutor.nombres',
                 'interlocutor.apellidos', 'interlocutor.email', 'articulation_subtypes.name as articulation_subtype', 'articulation_types.name as articulation_type', 'articulation_scopes.name as scope'
             )
-
             ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', 'No registra') as articulation_state_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by, GROUP_CONCAT(DISTINCT CONCAT(participants.documento, ' - ', participants.nombres, ' ', participants.apellidos)  SEPARATOR ';') as participants")
+            ->selectRaw("DATE_FORMAT(articulations.start_date, '%d/%m/%Y') AS articulation_start_date")
+            ->selectRaw("DATE_FORMAT(articulations.start_date, '%Y') AS articulation_start_date_year")
+            ->selectRaw("DATE_FORMAT(articulations.end_date, '%d/%m/%Y') AS articulation_end_date")
+            ->selectRaw("DATE_FORMAT(articulations.end_date, '%Y') AS articulation_end_date_year")
+            ->selectRaw("DATE_FORMAT(articulation_stages.start_date, '%d/%m/%Y') AS articulation_stages_start_date")
+            ->selectRaw("DATE_FORMAT(articulation_stages.start_date, '%Y') AS articulation_stages_start_date_year")
+            ->selectRaw("DATE_FORMAT(articulation_stages.end_date, '%d/%m/%Y') AS articulation_stages_end_date_year")
+            ->selectRaw("DATE_FORMAT(articulation_stages.end_date, '%Y') AS articulation_stages_end_date_year")
             ->node($node)
             ->status($request->filter_status_articulationStage)
-            ->year($request->filter_year_articulationStage)
+            // ->year($request->filter_year_articulationStage)
             ->interlocutorTalent($talent)
-            ->groupBy('articulation_code')
-            ->orderBy('articulation_stages.updated_at', 'desc')
+            ->groupBy('articulations.code', 'articulation_stages.code')
+            ->orderBy('articulations.updated_at', 'desc')
             ->get();
         }
-        return (new articulationStageExport($articulationStages))->download(__('articulation-stage') .' - '. config('app.name') . ".{$extension}");
+        return (new articulationStageExport($articulationStages))->download(__('Articulations') .' - '. config('app.name') . ".{$extension}");
     }
 
 
@@ -193,8 +198,6 @@ class ArticulationStageListController extends Controller
     private function datatableArticulationStages($articulationStages)
     {
         return datatables()->of($articulationStages)
-            // ->setRowClass('{{ $articulation_state_type == "Proyecto" ? "border-solid":"" }}')
-
             ->editColumn('node', function ($data) {
                 if($data->articulation_code){
                     return "<blockquote class='primary-text'>{$data->nodo}</blockquote>";
@@ -207,7 +210,6 @@ class ArticulationStageListController extends Controller
                             <b>".Str::limit("{$data->articulation_name}", 40, '...')."</b>
                         </p>";
                 }
-
             })
             ->editColumn('articulationstate_name', function ($data) {
                 $articulationType = '';
@@ -261,7 +263,7 @@ class ArticulationStageListController extends Controller
             })
             ->editColumn('starDate', function ($data) {
                 if($data->articulation_start_date){
-                    return Carbon::parse($data->articulation_start_date)->isoFormat('DD/MM/YYYY');
+                    return Carbon::parse($data->articulation_start_date)->isoFormat('YYYY/MM/DD');
                 }
             })->addColumn('show', function ($data) {
                 if(isset($data->articulation_id)){
@@ -316,8 +318,8 @@ class ArticulationStageListController extends Controller
             ->select(
                 'articulation_stages.*', 'articulations.code as articulation_code',
                 'articulations.id as articulation_id','articulations.start_date as articulation_start_date','articulations.name as articulation_name','articulations.description as articulation_description', 'fases.nombre as fase', 'fases.id as fase_id',
-                'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
-                'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id', 'interlocutor.documento', 'interlocutor.nombres',
+                'entidades.nombre as nodo', 'proyectos.codigo_proyecto',
+                'proyectos.nombre as nombre_proyecto', 'proyectos.id as proyecto_id', 'interlocutor.documento', 'interlocutor.nombres',
                 'interlocutor.apellidos', 'interlocutor.email'
             )
             ->selectRaw("if(articulationables.articulationable_type = 'App\\\Models\\\Proyecto', 'Proyecto', if(articulationables.articulationable_type = 'App\\\Models\\\Sede', 'Empresa', if(articulationables.articulationable_type = 'App\\\Models\\\Idea', 'Idea', 'No registra'))) as articulation_type, concat(interlocutor.documento, ' - ', interlocutor.nombres, ' ', interlocutor.apellidos) as talent_interlocutor, concat(createdby.documento, ' - ', createdby.nombres, ' ', createdby.apellidos) as created_by")
@@ -329,8 +331,6 @@ class ArticulationStageListController extends Controller
                 $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
             })
             ->leftJoin('proyectos', 'proyectos.id', '=', 'articulationables.articulationable_id')
-            ->leftJoin('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-            ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
             ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
             ->leftJoin('users as createdby', 'createdby.id', '=', 'articulation_stages.created_by')
             ->groupBy('articulation_code')
@@ -400,7 +400,6 @@ class ArticulationStageListController extends Controller
 
 
     }
-
 
     public function changeStatus($code)
     {

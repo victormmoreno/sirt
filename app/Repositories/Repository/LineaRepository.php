@@ -7,16 +7,12 @@ use App\Models\Nodo;
 
 class LineaRepository
 {
-    /*=================================================================
-    =            metodo para consultar las lineas por nodo            =
-    =================================================================*/
 
     public function getAllLineaNodo($nodo)
     {
         return Nodo::allLineasPorNodo($nodo);
     }
 
-    /*=====  End of metodo para consultar las lineas por nodo  ======*/
 
     /**
      * metodo para consular el id y nombre de las linas

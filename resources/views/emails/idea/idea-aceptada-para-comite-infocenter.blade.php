@@ -1,5 +1,5 @@
 @component('mail::message')
-# Se ha aceptado una idea para presentarse al comité | Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.
+# Se ha aceptado una idea para presentarse al comité | Tecnoparque {{$idea->nodo->entidad->nombre}}.
 
 Cordial Saludo.
 
@@ -19,8 +19,8 @@ Por favor, tratar de realizar la debida gestión para realizar el comité.<br>
         <h3 class="subtittle-value">{{$idea->codigo_idea}}</h3>
         <h3 class="subtittle">Nombre Idea de proyecto: </h3>
         <h3 class="subtittle-value">{{$idea->nombre_proyecto}}</h3>
-        <h3 class="subtittle">Talento: </h3>
-        <h3 class="subtittle-value">{{$idea->talento->user->nombres}} {{$idea->talento->user->apellidos}} - {{$idea->talento->user->email}}</h3>
+        <h3 class="subtittle">Usuario: </h3>
+        <h3 class="subtittle-value">{{$idea->user->nombres}} {{$idea->user->apellidos}} - {{$idea->user->email}}</h3>
         @if ($observaciones != null)
         <h2>El articulador dejó las siguientes observaciones</h2>
         <small align="justify"><strong>{{$observaciones}}</strong></small>

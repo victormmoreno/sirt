@@ -41,8 +41,8 @@
     </div>
     <div class="input-field col s12 m6 l6">
       <select id="txtgestor_id" name="txtgestor_id" style="width: 100%" tabindex="-1">
-        @foreach($gestores as $id => $nombres_gestor)
-          <option value="{{$id}}">{{$nombres_gestor}}</option>
+        @foreach($gestores as $id => $experto)
+          <option value="{{$experto->id}}">{{$experto->nombres}} {{$experto->apellidos}}</option>
         @endforeach
       </select>
       <label for="txtgestor_id">Experto</label>

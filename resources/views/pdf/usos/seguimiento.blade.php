@@ -22,7 +22,7 @@
             <tr>
                 <td colspan="6" class="centered">
                 @if ($tipo_actividad == 'proyecto')
-                    <b>ACTA No. {{ substr($data->codigo_proyecto, -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b>
+                    <b>ACTA No. {{ $data->id . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b>
                 @elseif($tipo_actividad == 'articulacion')
                     <b>ACTA No. {{ substr($data->code, -4) . "-" . Carbon\Carbon::now()->isoFormat('YYYY-MM-DD') }}<b>
                 @else
@@ -81,12 +81,12 @@
                     <td colspan="2">Correo electrónico</td>
                     <td colspan="2">Número de contacto</td>
                 </tr>
-                @forelse ($data->articulacion_proyecto->talentos as $value)
+                @forelse ($data->talentos as $value)
                     <tr>
-                        <td colspan="2">{{ $value->user->documento }}</td>
-                        <td colspan="2">{{ $value->user->nombres . ' ' . $value->user->nombres }}</td>
-                        <td colspan="2">{{ $value->user->email }}</td>
-                        <td colspan="2">{{ $value->user->celular }} - {{ $value->user->telefono }}</td>
+                        <td colspan="2">{{ $value->documento }}</td>
+                        <td colspan="2">{{ $value->nombres . ' ' . $value->nombres }}</td>
+                        <td colspan="2">{{ $value->email }}</td>
+                        <td colspan="2">{{ $value->celular }} - {{ $value->telefono }}</td>
                     </tr>
                 @empty
                     <tr>
@@ -135,15 +135,15 @@
                 <td colspan="1" rowspan="2">Equipos</td>
                 <td colspan="1" rowspan="2">Materiales de Formación</td>
                 <td colspan="2" rowspan="2">Descripción</td>
-                <td colspan="1" rowspan="2">Funcionario / Talento</td>
+                <td colspan="1" rowspan="2">Funcionario</td>
             </tr>
             <tr>
             </tr>
                 @forelse ($data->asesorias->sortBy('fecha')->values()->all() as $value)
                 <tr>
                     <td>{{ $value->fecha->isoFormat('YYYY-MM-DD') }}</td>
-                    <td>{{ $value->usogestores->sum('pivot.asesoria_directa') }}</td>
-                    <td>{{ $value->usogestores->sum('pivot.asesoria_indirecta') }}</td>
+                    <td>{{ $value->asesores->sum('pivot.asesoria_directa') }}</td>
+                    <td>{{ $value->asesores->sum('pivot.asesoria_indirecta') }}</td>
                     <td>{{ $value->usoequipos->map(function ($item, $key) {
                                 if(isset($item)){
                                     return $item->referencia . ' - ' . $item->present()->equipoNombre() . ' - Horas Uso: ' . $item->pivot->tiempo;
