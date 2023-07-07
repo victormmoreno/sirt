@@ -18849,7 +18849,7 @@ h5.breadcrumbs-header {
     /*Custom Background Color While Active*/
 }
 
-.fixed-action-btn {
+/* .fixed-action-btn {
     position: fixed;
     top: 63%;
     right: 3%;
@@ -18857,7 +18857,7 @@ h5.breadcrumbs-header {
     padding-top: 15px;
     margin-bottom: 0;
     z-index: 998;
-}
+} */
 
 .plans {
     display: -webkit-box;

@@ -2,7 +2,7 @@
     <div class="modal-content">
         <div class="row">
         <div class="col s12 m12 l12">
-            <table id="usoinfraestrucutaTable" style="width: 100%" class="centered">
+            <table id="usoinfraestrucutaTable"  style="width: 100%" class="bg-primary centered">
             <thead>
                 <th>Código de Proyecto</th>
                 <th>Nombre</th>

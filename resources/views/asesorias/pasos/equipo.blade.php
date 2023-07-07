@@ -24,10 +24,10 @@
             <div class="divider"></div>
             <div class="row">
                 <div class="input-field col s12 m4 l4">
-                    @if(isset($usoinfraestructura->asesorable->nodo->equipos))
+                    @if(isset($asesorie->asesorable->nodo->equipos))
                         <select class="js-states browser-default select2 " tabindex="-1" style="width: 100%" name="txtlineatecnologica" id="txtlineatecnologica" onchange="getEquipoPorLinea()">
                             <option value="">Seleccione Linea Tecnológica</option>
-                            @foreach($usoinfraestructura->asesorable->nodo->lineas as $lineatecnologica)
+                            @foreach($asesorie->asesorable->nodo->lineas as $lineatecnologica)
                                 <option value="{{$lineatecnologica->id}}">
                                     {{$lineatecnologica->abreviatura}} - {{$lineatecnologica->nombre}}
                                 </option>
@@ -44,11 +44,11 @@
                 </div>
                 <div class="input-field col s12 m5 l4">
                     <select class="js-states browser-default select2" id="txtequipo" name="txtequipo" style="width: 100%" tabindex="-1">
-                        @if(isset($usoinfraestructura->asesorable->nodo->equipos) && isset($usoinfraestructura->asesorable->asesor->lineatecnologica_id))
+                        @if(isset($asesorie->asesorable->nodo->equipos) && isset($asesorie->asesorable->asesor->lineatecnologica_id))
                             <option value="">
                                 Seleccione el equipo
                             </option>
-                            @foreach($usoinfraestructura->asesorable->nodo->equipos->where('lineatecnologica_id', $usoinfraestructura->asesorable->asesor->lineatecnologica_id) as $equipo)
+                            @foreach($asesorie->asesorable->nodo->equipos->where('lineatecnologica_id', $asesorie->asesorable->asesor->lineatecnologica_id) as $equipo)
                                 <option value="{{$equipo->id}}">
                                     {{str_limit($equipo->nombre,50,"...")}}
                                 </option>
@@ -82,7 +82,7 @@
                     </tr>
                     </thead>
                     <tbody id="detallesUsoInfraestructura">
-                    @if(isset( $equipos))
+                    @if(isset($equipos))
                         @forelse ($equipos as $key => $equipo)
                             <tr id="filaEquipo{{$equipo->id}}">
                                 <td>

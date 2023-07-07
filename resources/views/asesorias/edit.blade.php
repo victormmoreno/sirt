@@ -12,7 +12,8 @@
                 <div class="right right-align show-on-large hide-on-med-and-down">
                     <ol class="breadcrumbs">
                         <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
-                        <li><a href="{{route('usoinfraestructura.index')}}">Asesoría y uso</a></li>
+                        <li><a href="{{route('asesorias.index')}}">Asesoría y uso</a></li>
+                        <li><a href="{{route('asesorias.show', $asesorie->codigo)}}">{{ $asesorie->codigo }}</a></li>
                         <li class="active">Editar Asesoría y uso</li>
                     </ol>
                 </div>
@@ -24,16 +25,16 @@
                             <div class="row">
                                 <div class="row">
                                     <center>
-                                    <span class="card-title center-align">Editar Uso Infraestructura |
-                                        <strong>{{$usoinfraestructura->present()->asesorable()}}</strong>
+                                    <span class="card-title center-align">Editar asesoria y uso |
+                                        <strong>{{$asesorie->codigo}}</strong>
                                     </span>
                                         <i class="Small material-icons prefix">domain</i>
                                     </center>
                                     <div class="divider">
                                     </div>
-                                    <form action="{{ route('usoinfraestructura.update', $usoinfraestructura->id)}}" id="formUsoInfraestructuraUpdate" method="POST">
+                                    <form action="{{ route('asesorias.update', $asesorie->id)}}" id="formUsoInfraestructuraUpdate" method="POST">
                                         {!! method_field('PUT')!!}
-                                        @include('usoinfraestructura.form', [
+                                        @include('asesorias.form', [
                                             'btnText' => 'Modificar',
                                         ])
                                     </form>
@@ -45,27 +46,27 @@
             </div>
         </div>
     </main>
-    @include('usoinfraestructura.modals')
+    @include('asesorias.modals')
 @endsection
 @push('script')
     <script>
         $(document).ready(function() {
-            // usoInfraestructuraUpdate.checkTipoUsoInfraestrucuta();
-            @if(isset($usoinfraestructura->asesorable) && $usoinfraestructura->asesorable_type == App\Models\Proyecto::class)
-            usoInfraestructuraUpdate.getSelectTalentoProyecto({{$usoinfraestructura->asesorable->id}});
+
+            @if(isset($asesorie->asesorable) && $asesorie->asesorable_type == App\Models\Proyecto::class)
+            usoInfraestructuraUpdate.getSelectTalentoProyecto({{$asesorie->asesorable->id}});
             usoInfraestructuraUpdate.removeDisableButtonGestorAsesor();
             @endif
-            @if(isset($usoinfraestructura->asesorable) && $usoinfraestructura->asesorable_type == \App\Models\Articulation::class)
+            @if(isset($asesorie->asesorable) && $asesorie->asesorable_type == \App\Models\Articulation::class)
             usoInfraestructuraUpdate.addDisableButtonEquipos();
             usoInfraestructuraUpdate.addDisableButtonMaterial();
             @endif
-            @if(isset($usoinfraestructura->asesorable) && $usoinfraestructura->asesorable_type == App\Models\Idea::class)
+            @if(isset($asesorie->asesorable) && $asesorie->asesorable_type == App\Models\Idea::class)
             usoInfraestructuraUpdate.addDisableButtonEquipos();
             usoInfraestructuraUpdate.addDisableButtonTalento();
             usoInfraestructuraUpdate.addDisableButtonMaterial();
             @endif
         });
-        var usoInfraestructuraUpdate = {
+        const usoInfraestructuraUpdate = {
             checkTipoUsoInfraestrucuta:function () {
 
                 $( "input[name='txttipousoinfraestructura']" ).change(function (){
@@ -257,7 +258,7 @@
                     "lengthChange": false,
                     order: [ 0, 'desc' ],
                     ajax:{
-                        url: host_url + "/usoinfraestructura/projectsforuser",
+                        url: host_url + "/asesorias/projects",
                         type: "get",
                     },
                     select: true,
@@ -294,7 +295,7 @@
                 $.ajax({
                     dataType:'json',
                     type:'get',
-                    url:'/usoinfraestructura/talentosporproyecto/'+id
+                    url:'/asesorias/talentosporproyecto/'+id
                 }).done(function(response){
                     $('#txttalento').empty();
                     $('#txtequipo').empty();
@@ -410,15 +411,15 @@
                     pageLength: 5,
                     order: [ 0, 'desc' ],
                     ajax:{
-                        url: host_url + "/usoinfraestructura/articulacionesforuser",
+                        url: host_url + "/asesorias/articulaciones",
                         type: "get",
                     },
                     select: true,
                     columns: [
                         {
-                            title: 'Codigo de Articulación',
-                            data: 'codigo_actividad',
-                            name: 'codigo_actividad',
+                            title: 'Código de Articulación',
+                            data: 'codigo',
+                            name: 'codigo',
                         },
                         {
                             title: 'Nombre de Articulación',
@@ -449,7 +450,7 @@
                 $.ajax({
                     dataType:'json',
                     type:'get',
-                    url: host_url + '/usoinfraestructura/talentosporarticulacion/'+id
+                    url: host_url + '/asesorias/talentosporarticulacion/'+id
                 }).done(function(response){
                     $('#txtequipo').empty();
                     $('#txtlineatecnologica').empty();
@@ -464,7 +465,7 @@
                         let cont;
                         let a = document.getElementsByName("gestor[]");
                         let fila ="";
-                        @if(!isset($usoinfraestructura->actividad))
+                        @if(!isset($asesorie->actividad))
                             fila = '<tr class="selected" id="filaGestor'+cont+'"><td><input type="hidden" name="gestor[]" value="'+response.articulacion.actividad.gestor_id+'">'+response.articulacion.actividad.gestor.user.documento + ' - ' +response.articulacion.actividad.gestor.user.nombres+' '+ response.articulacion.actividad.gestor.user.apellidos +'</td><td><input type="number" min="0" maxlength="6" name="asesoriadirecta[]" value="1"></td><td><input type="number" min="0" maxlength="6" name="asesoriaindirecta[]" value="1"></td></td><td></tr>';
                         @endif
                             cont++;
@@ -557,7 +558,7 @@
                     pageLength: 5,
                     order: [ 0, 'desc' ],
                     ajax:{
-                        url: host_url + "/usoinfraestructura/ideasfornode",
+                        url: host_url + "/asesorias/ideas",
                         type: "get",
                     },
                     select: true,
@@ -597,7 +598,7 @@
                 $.ajax({
                     dataType:'json',
                     type:'get',
-                    url: host_url + '/usoinfraestructura/idea/'+id
+                    url: host_url + '/asesorias/idea/'+id
                 }).done(function(response){
 
                     $('#txttalento').empty();
@@ -1173,7 +1174,7 @@
                             confirmButtonText: 'Ok'
                         });
                         setTimeout(function(){
-                            window.location.replace("{{route('usoinfraestructura.index')}}");
+                            window.location.replace("{{route('asesorias.index')}}");
                         }, 1000);
                     }
                 }

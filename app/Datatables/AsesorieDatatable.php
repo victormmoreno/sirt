@@ -68,7 +68,7 @@ class AsesorieDatatable
                 return $data->present()->asesor();
             })
             ->addColumn('detail', function ($data) {
-                $button = '<a class="btn tooltipped green-complement  m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="' . route("asesorias.show", $data->id) . '" ><i class="material-icons">visibility</i></a>';
+                $button = '<a class="btn tooltipped green-complement  m-b-xs" data-position="bottom" data-delay="50" data-tooltip="Ver detalle" href="' . route("asesorias.show", $data->codigo) . '" ><i class="material-icons">visibility</i></a>';
                 return $button;
             })
             ->rawColumns(['fecha','tipo_asesoria', 'asesorable', 'expertoEncargado', 'fase', 'asesoria_directa', 'asesoria_indirecta', 'detail'])

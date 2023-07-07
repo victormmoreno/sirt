@@ -11,6 +11,10 @@ class UsoInfraestructura extends Model
 {
     use AsesorieTrait, HasProject, HasArticulation, HasIdea, HasDevice, HasMaterial, HasUser;
 
+    const IS_PROYECTO     = 0;
+    const IS_ARTICULACION = 1;
+    const IS_IDEA          = 2;
+
     protected $table = 'usoinfraestructuras';
 
     /**
@@ -21,7 +25,6 @@ class UsoInfraestructura extends Model
     protected $fillable = [
         'asesorable_id',
         'asesorable_type',
-        'tipo_usoinfraestructura',
         'codigo',
         'fecha',
         'descripcion',
@@ -43,6 +46,8 @@ class UsoInfraestructura extends Model
         'compromisos'             => 'string',
         'estado'                  => 'boolean',
     ];
+
+
 
     public function scopeSelectAsesoria($query, $module){
         if ((!empty($module) && $module != null && $module != 'all')) {
@@ -99,13 +104,13 @@ class UsoInfraestructura extends Model
                         if((session()->has('login_role') && session()->get('login_role') == User::IsTalento())){
                             return $query->where('uso_talentos.user_id', $asesor);
                         }
-                        return $query->where('gestor_uso.asesorable_id', $asesor);
+                        return $query->where('gestor_uso.asesor_id', $asesor);
                         break;
                     case class_basename(Articulation::class):
                         if((session()->has('login_role') && session()->get('login_role') == User::IsTalento())){
                             return $query->where('uso_talentos.user_id', $asesor);
                         }
-                        return $query->where('gestor_uso.asesorable_id', $asesor);
+                        return $query->where('gestor_uso.asesor_id', $asesor);
                         break;
                     case class_basename(Idea::class):
                         if((session()->has('login_role') && session()->get('login_role') == User::IsTalento())){
@@ -124,7 +129,7 @@ class UsoInfraestructura extends Model
     }
 
     /**
-     * The query scope year
+     * The query scope BetweenDate
      *
      * @return void
      */

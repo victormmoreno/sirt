@@ -185,7 +185,8 @@ class User extends Authenticatable implements JWTSubject,
             'users.fechanacimiento',
             'users.nombres',
             'users.apellidos',
-            'user_nodo.role'
+            'user_nodo.role',
+            'user_nodo.honorarios'
         )
         ->selectRaw("CONCAT(users.nombres,' ',users.apellidos) as nombre_completo, GROUP_CONCAT(roles.name, ',') AS roles")
         ->selectRaw('GROUP_CONCAT(DISTINCT roles.name SEPARATOR "; ") as roles')

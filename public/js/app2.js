@@ -6262,20 +6262,20 @@ var selectMaterialesPorNodo = {
     
 }
 $(document).ready(function() {
+    $('.input-field label').addClass('active');
 
     let filter_nodo = $('#filter_node').val();
-    let filter_year = $('#filter_year').val();
     let filter_module = $('#filter_module').val();
-    let start_date = $('#start_date').val();
-    let end_date = $('#end_date').val();
+    let filter_start_date = $('#filter_start_date').val();
+    let filter_end_date = $('#filter_end_date').val();
 
-    $('#usoinfraestructa_data_table').dataTable().fnDestroy();
-    if((filter_nodo != '' || filter_nodo != null)  && (filter_year != '' || filter_year != null) && (filter_module != '' || filter_module != null) && (start_date != '' || start_date != null) && (end_date != '' || end_date != null)){
-        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo, filter_module,  filter_year, start_date, end_date);
-    }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && (filter_year == '' || filter_year == null || filter_year == undefined) && (filter_module == '' || filter_module == null || filter_module == undefined)  ){
-        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo = null , filter_module = null, filter_year = null, start_date = null, end_date = null);
+    $('#asesorie_data_table').dataTable().fnDestroy();
+    if((filter_nodo != '' || filter_nodo != null) && (filter_module != '' || filter_module != null) && (filter_start_date != '' || filter_start_date != null) && (filter_end_date != '' || filter_end_date != null)){
+        asesorieIndex.fillDatatatablesAsesorie(filter_nodo, filter_module, filter_start_date, filter_end_date);
+    }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined)  && (filter_module == '' || filter_module == null || filter_module == undefined) && (filter_start_date == '' || filter_start_date == null || filter_start_date == undefined) && (filter_end_date == '' || filter_end_date == null || filter_end_date == undefined)){
+        asesorieIndex.fillDatatatablesAsesorie(filter_nodo = null , filter_module = null, start_date = null, end_date = null);
     }else{
-        $('#usoinfraestructa_data_table').DataTable({
+        $('#asesorie_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
@@ -6286,9 +6286,9 @@ $(document).ready(function() {
 
 
 
-const usoinfraestructuraIndex = {
-    fillDatatatablesUsosInfraestructura: function(filter_nodo, filter_module, filter_year, start_date, end_date){
-        let datatable = $('#usoinfraestructa_data_table').DataTable({
+const asesorieIndex = {
+    fillDatatatablesAsesorie: function(filter_nodo, filter_module, filter_start_date, filter_end_date){
+        $('#asesorie_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
@@ -6302,8 +6302,8 @@ const usoinfraestructuraIndex = {
                 data: {
                     filter_nodo: filter_nodo,
                     filter_module: filter_module,
-                    start_date: start_date,
-                    end_date: end_date
+                    filter_start_date: filter_start_date,
+                    filter_end_date: filter_end_date
                 }
             },
             columnDefs: [ {
@@ -6352,7 +6352,7 @@ const usoinfraestructuraIndex = {
             ],
         });
     },
-    destroyUsoInfraestructura: function(id){
+    destroyAsesorie: function(id){
         Swal.fire({
             title: '¿Estas seguro de eliminar este uso de infraestructura?',
             text: "Recuerde que si lo elimina no lo podrá recuperar.",
@@ -6399,21 +6399,20 @@ const usoinfraestructuraIndex = {
     }
 }
 
-$('#filter_usoinfraestructura').click(function(){
+$('#filter_asesories').click(function(){
     let filter_nodo = $('#filter_node').val();
-    let filter_year = $('#filter_year').val();
     let filter_module = $('#filter_module').val();
-    let start_date = $('#start_date').val();
-    let end_date = $('#end_date').val();
+    let filter_start_date = $('#filter_start_date').val();
+    let filter_end_date = $('#filter_end_date').val();
 
 
-    $('#usoinfraestructa_data_table').dataTable().fnDestroy();
-    if((filter_nodo != '' || filter_nodo != null)  && (filter_year != '' || filter_year != null) && (filter_module != '' || filter_module != null) && (start_date != '' || start_date != null) && (end_date != '' || end_date != null)){
-        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo, filter_module,  filter_year, start_date, end_date);
-    }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined) && (filter_year == '' || filter_year == null || filter_year == undefined) && (filter_module == '' || filter_module == null || filter_module == undefined)  ){
-        usoinfraestructuraIndex.fillDatatatablesUsosInfraestructura(filter_nodo = null , filter_module = null, filter_year = null, start_date = null, end_date = null);
+    $('#asesorie_data_table').dataTable().fnDestroy();
+    if((filter_nodo != '' || filter_nodo != null) && (filter_module != '' || filter_module != null) && (filter_start_date != '' || filter_start_date != null) && (filter_end_date != '' || filter_end_date != null)){
+        asesorieIndex.fillDatatatablesAsesorie(filter_nodo, filter_module, filter_start_date, filter_end_date);
+    }else if((filter_nodo == '' || filter_nodo == null || filter_nodo == undefined)  && (filter_module == '' || filter_module == null || filter_module == undefined) && (filter_start_date == '' || filter_start_date == null || filter_start_date == undefined) && (filter_end_date == '' || filter_end_date == null || filter_end_date == undefined)){
+        asesorieIndex.fillDatatatablesAsesorie(filter_nodo = null , filter_module = null, start_date = null, end_date = null);
     }else{
-        $('#usoinfraestructa_data_table').DataTable({
+        $('#asesorie_data_table').DataTable({
             language: {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
@@ -6422,13 +6421,16 @@ $('#filter_usoinfraestructura').click(function(){
     }
 });
 
-$('#download_usoinfraestructura').click(function(){
+$('#download_asesories').click(function(){
     let filter_nodo = $('#filter_node').val();
-    let filter_year = $('#filter_year').val();
     let filter_module = $('#filter_module').val();
+    let filter_start_date = $('#filter_start_date').val();
+    let filter_end_date = $('#filter_end_date').val();
     let query = {
+        filter_nodo: filter_nodo,
         filter_module: filter_module,
-        filter_nodo: filter_nodo
+        filter_start_date: filter_start_date,
+        filter_end_date: filter_end_date
     }
     let url = `${host_url}/asesorias/exportar?` + $.param(query)
     window.location = url;

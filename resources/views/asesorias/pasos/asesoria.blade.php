@@ -45,12 +45,12 @@
                             </tr>
                         </thead>
                         <tbody id="detallesGestores">
-                            @if(isset($usoinfraestructura->asesores))
-                                @forelse ($usoinfraestructura->asesores as $key => $user)
+                            @if(isset($asesorie->asesores))
+                                @forelse ($asesorie->asesores as $key => $user)
                                     @if($user->id === auth()->user()->id)
                                         <tr id="filaGestor{{$user->id}}">
                                             @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto()))
-                                                <td>{{$user->experto->lineatecnologica->abreviatura}} -  {{$user->gestor->lineatecnologica->nombre}}</td>
+                                                <td>{{$user->experto->linea->abreviatura}} -  {{$user->experto->linea->nombre}}</td>
                                             @endif
                                             <td>
                                                 <input type="hidden" name="gestor[]"  value="{{$user->id}}" min="0" />{{$user->documento}} - {{$user->present()->userFullName()}}
@@ -60,12 +60,12 @@
                                         </tr>
                                     @endif
                                 @empty
-                                <tr id="filaGestor{{$usoinfraestructura->asesorable->asesor_id}}">
+                                <tr id="filaGestor{{$asesorie->asesorable->asesor_id}}">
                                     @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto()))
-                                        <td>{{$usoinfraestructura->asesorable->asesor->lineatecnologica->abreviatura}} -  {{$usoinfraestructura->asesorable->asesor->lineatecnologica->nombre}}</td>
+                                        <td>{{$asesorie->asesorable->asesor->linea->abreviatura}} -  {{$asesorie->asesorable->asesor->linea->nombre}}</td>
                                     @endif
                                     <td>
-                                        <input type="hidden" name="gestor[]" value="{{$usoinfraestructura->asesorable->asesor_id}}" min="0" />{{$usoinfraestructura->present()->expertoEncargado()}}- Asesor a cargo
+                                        <input type="hidden" name="gestor[]" value="{{$asesorie->asesorable->asesor_id}}" min="0" />{{$asesorie->present()->expertoEncargado()}}- Asesor a cargo
                                     </td>
                                     <td><input type="number" name="asesoriadirecta[]" value="0" step="0.1" min="0"></td>
                                     <td><input type="number" name="asesoriaindirecta[]" value="0" step="0.1" min="0"></td>
@@ -95,18 +95,18 @@
             <br><br>
             <div class="row">
                 <div class="input-field col s12 m4 l5">
-                    <select class="js-states browser-default select2"  id="txtgestorasesor" name="txtgestorasesor" style="width: 100%" tabindex="-1" {{isset($usoinfraestructura->asesores) ? '' : 'disabled'}} >
+                    <select class="js-states browser-default select2"  id="txtgestorasesor" name="txtgestorasesor" style="width: 100%" tabindex="-1" {{isset($asesorie->asesores) ? '' : 'disabled'}} >
                         <option value="">Seleccione Experto</option>
-                        @if(isset($usoinfraestructura->asesores))
-                            @foreach($gestores as $gestor)
-                                <option value="{{$gestor->user->id}}">
-                                    {{$gestor->user()->withTrashed()->first()->documento}} - {{$gestor->user()->withTrashed()->first()->nombres}} {{$gestor->user()->withTrashed()->first()->apellidos}} / {{$gestor->lineatecnologica->nombre}}
+                        @if(isset($asesorie->asesores))
+                            @foreach($experts as $asesor)
+                                <option value="{{$asesor->id}}">
+                                    {{$asesor->documento}} - {{$asesor->nombres}} {{$asesor->apellidos}} / {{$asesor->experto->linea->nombre}}
                                 </option>
                             @endforeach
                         @else
-                            @foreach($gestores as $gestor)
-                            <option value="{{$gestor->user->id}}">
-                                {{$gestor->user()->withTrashed()->first()->documento}} - {{$gestor->user()->withTrashed()->first()->nombres}} {{$gestor->user()->withTrashed()->first()->apellidos}} / {{$gestor->lineatecnologica->nombre}}
+                            @foreach($experts as $asesor)
+                            <option value="{{$asesor->id}}">
+                                {{$asesor->documento}} - {{$asesor->nombres}} {{$asesor->apellidos}} / {{$asesor->experto->linea->nombre}}
                             </option>
                             @endforeach
                         @endif
@@ -114,7 +114,7 @@
                     <label class="active" for="txtgestorasesor">Expertos</label>
                 </div>
                 <div class="input-field col s12 m2 l2">
-                    @if(isset($usoinfraestructura->asesoria_directa))
+                    @if(isset($asesorie->asesoria_directa))
                         <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="number"  min="0" step="0.1" value="0" />
                     @else
                         <input id="txtasesoriadirecta" name="txtasesoriadirecta" type="number" min="0" step="0.1" value="0" readonly />
@@ -126,7 +126,7 @@
                     <small class="center-align red-text text-ligth-3">solo se permite ingresar hasta 99 horas</small>
                 </div>
                 <div class="input-field col s12 m2 l2">
-                    @if(isset($usoinfraestructura->asesoria_indirecta))
+                    @if(isset($asesorie->asesoria_indirecta))
                         <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="number" min="0" step="0.1" value="0"  />
                     @else
                         <input id="txtasesoriaindirecta" name="txtasesoriaindirecta" type="number" min="0" step="0.1"  value="0" readonly />
@@ -160,12 +160,12 @@
                                 </tr>
                             </thead>
                             <tbody id="detallesGestoresAsesores">
-                                @if(isset($usoinfraestructura->asesores))
-                                    @forelse ($usoinfraestructura->asesores as $key => $user)
+                                @if(isset($asesorie->asesores))
+                                    @forelse ($asesorie->asesores as $key => $user)
                                             <tr id="filaGestorAsesor{{$user->id}}">
                                                 @if($user->id != auth()->user()->id)
                                                     <td>
-                                                        <input type="hidden" name="gestor[]" value="{{$user->id}}"/>{{$user->present()->userDocumento()}} - {{$user->present()->userFullName()}} / {{$user->gestor->lineatecnologica->nombre}}
+                                                        <input type="hidden" name="gestor[]" value="{{$user->id}}"/>{{$user->present()->userDocumento()}} - {{$user->present()->userFullName()}}
                                                     </td>
                                                     <td><input type="number" name="asesoriadirecta[]" value="{{$user->pivot->asesoria_directa}}"></td>
                                                     <td><input type="number" name="asesoriaindirecta[]" value="{{$user->pivot->asesoria_indirecta}}"></td>

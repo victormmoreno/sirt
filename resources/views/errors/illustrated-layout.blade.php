@@ -382,7 +382,12 @@
 
             .my-3 {
                 margin-top: .75rem;
-                margin-bottom: .75rem;
+                margin-top: .75rem;
+            }
+
+            .my-8 {
+                margin-top: 3rem;
+                margin-top: 3rem;
             }
 
             .mb-8 {
@@ -391,6 +396,16 @@
 
             .max-w-sm {
                 max-width: 30rem;
+            }
+
+            .mx-8 {
+                margin-left: 3rem;
+                margin-right: 3rem;
+            }
+
+            .mx-16 {
+                margin-left: 10rem;
+                margin-right: 10rem;
             }
 
             .min-h-screen {
@@ -550,7 +565,9 @@
             </div>
 
             <div class="relative pb-full md:flex md:pb-0 md:min-h-screen w-full md:w-1/2">
+
                 @yield('image')
+
             </div>
         </div>
     </body>

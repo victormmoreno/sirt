@@ -31,11 +31,11 @@
             <br><br>
             <div class="row">
                 <div class="input-field col s12 m7 l7">
-                    @if(isset($usoinfraestructura->asesorable->nodo->materiales))
+                    @if(isset($asesorie->asesorable->nodo->materiales))
                         <select class="js-states browser-default select2 " tabindex="-1" name="txtmaterial" id="txtmaterial"  onchange="getSelectMaterial()">
                             <option value="">Seleccione Material de  Formación</option>
-                            @if(isset($usoinfraestructura->asesorable->nodo->equipos) && isset($usoinfraestructura->asesorable->asesor->lineatecnologica_id))
-                            @foreach($usoinfraestructura->asesorable->nodo->materiales->where('lineatecnologica_id', $usoinfraestructura->asesorable->asesor->lineatecnologica_id) as $material)
+                            @if(isset($asesorie->asesorable->nodo->equipos) && isset($asesorie->asesorable->asesor->lineatecnologica_id))
+                            @foreach($asesorie->asesorable->nodo->materiales->where('lineatecnologica_id', $asesorie->asesorable->asesor->lineatecnologica_id) as $material)
                                 <option value="{{$material->id}}">
                                     {{$material->codigo_material}} - {{$material->presentacion->nombre}} {{str_limit($material->nombre,70 ,"...")}} x {{$material->medida->nombre}}
                                 </option>
@@ -82,8 +82,8 @@
                         </thead>
 
                         <tbody id="detalleMaterialUso">
-                            @if(isset($usoinfraestructura->usomateriales))
-                                @forelse ($usoinfraestructura->usomateriales as $key => $material)
+                            @if(isset($asesorie->usomateriales))
+                                @forelse ($asesorie->usomateriales as $key => $material)
 
                                         <tr id="filaMaterial{{$material->id}}">
                                             <td>
@@ -126,7 +126,7 @@
                         create
                     </i>
 
-                        <textarea class="materialize-textarea" id="txtcompromisos" length="2400" name="txtcompromisos">{{isset($usoinfraestructura->compromisos) ? $usoinfraestructura->compromisos: '' }}</textarea>
+                        <textarea class="materialize-textarea" id="txtcompromisos" length="2400" name="txtcompromisos">{{isset($asesorie->compromisos) ? $asesorie->compromisos: '' }}</textarea>
 
                     <label for="txtcompromisos">
                         Próximos Compromisos <span class="red-text">*</span>

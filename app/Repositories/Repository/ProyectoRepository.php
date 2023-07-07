@@ -175,7 +175,6 @@ class ProyectoRepository extends Repository
         ->selectRaw('concat(users.nombres, " ", users.apellidos) AS gestor')
         ->selectRaw('concat(ideas.codigo_idea, " - ", ideas.nombre_proyecto) as nombre_idea')
         ->join('sublineas', 'sublineas.id', '=', 'proyectos.sublinea_id')
-        // ->join('gestores', 'gestores.id', '=', 'proyectos.asesor_id')
         ->join('users', 'users.id', '=', 'proyectos.experto_id')
         ->join('ideas', 'ideas.id', '=', 'proyectos.idea_id')
         ->join('lineastecnologicas', 'lineastecnologicas.id', '=', 'sublineas.lineatecnologica_id')

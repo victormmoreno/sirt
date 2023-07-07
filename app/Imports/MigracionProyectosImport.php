@@ -25,7 +25,6 @@ class MigracionProyectosImport implements WithMultipleSheets
                 'Equipos' => new EquipoImport($this->nodo),
                 'Costos' => new CostoAdministrativoImport($this->nodo),
                 // 'Grupos' => new GruposInvestigacionImport(),
-                // 'Gestores' => new GestoresImport($this->nodo),
                 // 'Proyectos' => new ProyectosImport($this->nodo)
             ];
             DB::commit();

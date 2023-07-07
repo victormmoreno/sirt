@@ -30,17 +30,17 @@
                 <div class="input-field col s12 m9 l9">
                     <select class="js-states browser-default select2" id="txttalento" name="txttalento" style="width: 100%" tabindex="-1">
                         <option value="">Seleccione Talento</option>
-                        @if(isset($usoinfraestructura->actividad->articulacion_proyecto->talentos->user))
-                            @foreach($usoinfraestructura->actividad->articulacion_proyecto->talentos as $talento)
-                                <option value="{{$talento->id}}">
-                                    {{$talento->user()->withTrashed()->first()->documento}} - {{$talento->user()->withTrashed()->first()->nombres}} {{$talento->user->apellidos}}
+                        @if(isset($asesorie->actividad->articulacion_proyecto->talentos->user))
+                            @foreach($asesorie->actividad->articulacion_proyecto->talentos as $participant)
+                                <option value="{{$participant->id}}">
+                                    {{$participant->documento}} - {{$participant->nombres}} {{$participant->apellidos}}
                                 </option>
 
                             @endforeach
-                        @elseif(isset($usoinfraestructura->asesorable->talentos))
-                            @foreach($usoinfraestructura->asesorable->talentos as $talento)
-                                <option value="{{$talento->id}}">
-                                    {{$talento->user()->withTrashed()->first()->documento}} - {{$talento->user()->withTrashed()->first()->nombres}} {{$talento->user->apellidos}}
+                        @elseif(isset($asesorie->asesorable->participantes))
+                            @foreach($asesorie->asesorable->participantes as $participant)
+                                <option value="{{$participant->id}}">
+                                    {{$participant->documento}} - {{$participant->nombres}} {{$participant->apellidos}}
                                 </option>
                             @endforeach
                         @endif
@@ -64,16 +64,16 @@
                         </tr>
                     </thead>
                     <tbody id="detalleTalento">
-                        @if(isset($usoinfraestructura->usotalentos))
-                        @forelse ($usoinfraestructura->usotalentos as $key => $talento)
-                            @if(isset($talento->user()->withTrashed()->first()->id))
-                                    <tr id="filaTalento{{$talento->id}}">
+                        @if(isset($asesorie->participantes))
+                        @forelse ($asesorie->participantes as $key => $participant)
+                            @if(isset($participant->id))
+                                    <tr id="filaTalento{{$participant->id}}">
                                         <td>
-                                            <input type="hidden" name="talento[]" value="{{$talento->id}}"/>
-                                            {{$talento->user()->withTrashed()->get()->last()->documento}} - {{$talento->user()->withTrashed()->get()->last()->nombres}} {{$talento->user()->withTrashed()->get()->last()->apellidos}}
+                                            <input type="hidden" name="talento[]" value="{{$participant->id}}"/>
+                                            {{$participant->documento}} - {{$participant->nombres}} {{$participant->apellidos}}
                                         </td>
                                         <td>
-                                            <a class="waves-effect bg-danger white-text btn" onclick="eliminarTalento({{$talento->id}});">
+                                            <a class="waves-effect bg-danger white-text btn" onclick="eliminarTalento({{$participant->id}});">
                                                 <i class="material-icons">delete_sweep</i>
                                             </a>
                                         </td>

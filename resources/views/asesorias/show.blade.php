@@ -54,11 +54,11 @@
                                                     </div>
                                                     <div class="col s12 m6 l3 right-align">
                                                         <a target="_blank"  href="{!!$asesorie->present()->asesorableRoute()!!}" class="btn-floating btn-large waves-effect waves-grey bg-info white-text "><i class="material-icons">remove_red_eye</i></a>
-                                                        {{-- @can('update', $asesorie) --}}
-                                                        <a href="{{route('asesorias.edit',$asesorie->id)}}" class="btn-floating btn-large waves-effect waves-grey bg-warning white-text "><i class="material-icons">edit</i></a>
-                                                        {{-- @endcan --}}
+                                                        @can('update', $asesorie)
+                                                        <a href="{{route('asesorias.edit',$asesorie->codigo)}}" class="btn-floating btn-large waves-effect waves-grey bg-warning white-text"><i class="material-icons">edit</i></a>
+                                                        @endcan
                                                         @can('destroy', $asesorie)
-                                                            <a href="javascript:void(0)" onclick="usoinfraestructuraIndex.destroyUsoInfraestructura({{$asesorie->id}})" class="btn-floating btn-large waves-effect waves-grey bg-danger white-text mt-2"><i class="material-icons">delete</i></a>
+                                                            <a href="javascript:void(0)" onclick="asesorieIndex.destroyAsesorie({{$asesorie->id}})" class="btn-floating btn-large waves-effect waves-grey bg-danger white-text mt-2"><i class="material-icons">delete</i></a>
                                                         @endcan
                                                     </div>
                                                 </div>
@@ -322,10 +322,10 @@
                                                         <div class="row">
                                                             <div class="col s12 right-align m-t-sm">
                                                                 @can('update', $asesorie)
-                                                                    <a href="{{route('asesorias.edit',$asesorie->id)}}" class="waves-effect waves-grey btn bg-secondary center-align" ><i class="material-icons right">edit</i>Cambiar Información</a>
+                                                                    <a href="{{route('asesorias.edit',$asesorie->codigo)}}" class="waves-effect waves-grey btn bg-warning white-text center-align" ><i class="material-icons right">edit</i>Cambiar Información</a>
                                                                 @endcan
                                                                 @can('destroy', $asesorie)
-                                                                    <a href="javascript:void(0)" class="waves-grey bg-danger btn center-align" onclick="usoinfraestructuraIndex.destroyUsoInfraestructura({{$asesorie->id}})">
+                                                                    <a href="javascript:void(0)" class="waves-grey bg-danger btn center-align" onclick="asesorieIndex.destroyAsesorie({{$asesorie->id}})">
                                                                         <i class="material-icons right">
                                                                             delete_sweep
                                                                         </i>

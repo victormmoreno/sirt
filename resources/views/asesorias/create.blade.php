@@ -13,7 +13,7 @@
             <div class="right right-align show-on-large hide-on-med-and-down">
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">{{ __('Home') }}</a></li>
-                    <li><a href="{{route('usoinfraestructura.index')}}">Asesoría y uso</a></li>
+                    <li><a href="{{route('asesorias.index')}}">Asesoría y uso</a></li>
                     <li class="active">Nueva Asesoría y uso</li>
                 </ol>
             </div>
@@ -26,9 +26,9 @@
                             <span class="card-title center-align">Nueva Asesoría y uso</span>
                         </div>
                         <div class="divider"></div>
-                        @if($cantidadActividades != 0)
-                            <form action="{{ route('usoinfraestructura.store')}}" id="formUsoInfraestructuraCreate" method="POST">
-                                @include('usoinfraestructura.form', [
+                        @if($countModel != 0)
+                            <form action="{{ route('asesorias.store')}}" id="formUsoInfraestructuraCreate" method="POST">
+                                @include('asesorias.form', [
                                     'btnText' => 'Guardar',
                                 ])
                             </form>
@@ -57,11 +57,11 @@
         </div>
     </div>
 </main>
-@if($cantidadActividades != 0)
-@include('usoinfraestructura.modals')
+@if($countModel != 0)
+@include('asesorias.modals')
 @endif
 @endsection
-@if($cantidadActividades != 0)
+@if($countModel != 0)
 @push('script')
 <script>
     $(document).ready(function() {
@@ -74,7 +74,7 @@
         usoInfraestructuraCreate.addDisableButtonMaterial();
         usoInfraestructuraCreate.limpiarInputNodo();
     });
-    var usoInfraestructuraCreate = {
+    const usoInfraestructuraCreate = {
         checkTipoUsoInfraestrucuta:function () {
             $( "input[name='txttipousoinfraestructura']" ).change(function (){
                 if ( $("#IsProyecto").is(":checked") ) {
@@ -258,18 +258,18 @@
                     "lengthChange": false,
                     order: [ 0, 'desc' ],
                     ajax:{
-                        url: host_url + "/usoinfraestructura/projectsforuser",
+                        url: host_url + "/asesorias/projects",
                         type: "get",
                     },
                     select: true,
                     columns: [
                         {
-                            title: 'Codigo de proyecto',
-                            data: 'codigo_actividad',
-                            name: 'codigo_actividad',
+                            title: 'Código',
+                            data: 'codigo',
+                            name: 'codigo',
                         },
                         {
-                            title: 'Nombre del Proyecto',
+                            title: 'Nombre',
                             data: 'nombre',
                             name: 'nombre',
                         },
@@ -295,7 +295,7 @@
             $.ajax({
                 dataType:'json',
                 type:'get',
-                url: host_url + '/usoinfraestructura/talentosporproyecto/'+id
+                url: host_url + '/asesorias/talentosporproyecto/'+id
             }).done(function(response){
                 $('#txttalento').empty();
                 $('#txtequipo').empty();
@@ -334,7 +334,7 @@
                     @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
                         $('#txtgestor').val(response.proyecto.documento+ ' - '+ response.proyecto.nombres + ' ' + response.proyecto.apellidos);
                         $("label[for='txtgestor']").addClass('active');
-                        let userid = {{auth()->user()->talento->id}}
+                        let userid = {{auth()->user()->id}}
                         let userdocument = {{auth()->user()->documento }}
                         let username = "{{auth()->user()->present()->userFullName()}}";
                         let cont;
@@ -430,15 +430,15 @@
                 pageLength: 5,
                 order: [ 0, 'desc' ],
                 ajax:{
-                    url: host_url + "/usoinfraestructura/articulacionesforuser",
+                    url: host_url + "/asesorias/articulaciones",
                     type: "get",
                 },
                 select: true,
                 columns: [
                     {
                         title: 'Codigo de Articulación',
-                        data: 'codigo_actividad',
-                        name: 'codigo_actividad',
+                        data: 'codigo',
+                        name: 'codigo',
                     },
                     {
                         title: 'Nombre de Articulación',
@@ -470,9 +470,8 @@
             $.ajax({
                 dataType:'json',
                 type:'get',
-                url: host_url + '/usoinfraestructura/talentosporarticulacion/'+id
+                url: host_url + '/asesorias/talentosporarticulacion/'+id
             }).done(function(response){
-                console.log(response)
                 $('#txttalento').empty();
                 $('#txtequipo').empty();
                 $('#txtlinea').empty();
@@ -522,7 +521,7 @@
 
                 if (response.talentos.length != 0) {
                     $.each(response.talentos, function(e, user) {
-                        $('#txttalento').append('<option value="'+user.talento.id+'">'+ user.documento +' - '+user.nombres+' '+ user.apellidos + '</option>');
+                        $('#txttalento').append('<option value="'+user.id+'">'+ user.documento +' - '+user.nombres+' '+ user.apellidos + '</option>');
                     });
                 }else{
                     $('#txttalento').append('<option value="">no se encontraron resultados</option>');
@@ -575,7 +574,7 @@
                 pageLength: 5,
                 order: [ 0, 'desc' ],
                 ajax:{
-                    url: host_url + "/usoinfraestructura/ideasfornode",
+                    url: host_url + "/asesorias/ideas",
                     type: "get",
                 },
                 select: true,
@@ -614,7 +613,7 @@
             $.ajax({
                 dataType:'json',
                 type:'get',
-                url: host_url + '/usoinfraestructura/idea/'+id
+                url: host_url + '/asesorias/idea/'+id
             }).done(function(response){
                 $('#txttalento').empty();
                 $('#txtequipo').empty();
@@ -762,7 +761,7 @@
         }
     }
 
-    function asociarProyectoAUsoInfraestructura(id, codigo_actividad, nombre) {
+    function asociarProyectoAUsoInfraestructura(id, code, name) {
         $('#modalUsoIngraestrucuta_modal').closeModal();
         Swal.fire({
             toast: true,
@@ -770,9 +769,9 @@
             showConfirmButton: false,
             timer: 1500,
             type: 'success',
-            title: 'El proyecto  ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
+            title: 'El proyecto  ' + code +  ' - ' + name + ' se ha asociado  al uso de infraestructua'
         });
-        $('#txtactividad').val(codigo_actividad+ ' - '+ nombre);
+        $('#txtactividad').val(code+ ' - '+ name);
         $("label[for='txtactividad']").addClass('active');
         $("label[for='txtactividad']").text("Proyecto");
         $divActividad.show();
@@ -780,7 +779,7 @@
     }
 
     // Función para cerrar el modal y asignarle un valor al proyecto
-    function asociarArticulacionAUsoInfraestructura(id, codigo_actividad, nombre) {
+    function asociarArticulacionAUsoInfraestructura(id, code, name) {
         $('#modalUsoIngraestrucuta_modal').closeModal();
         Swal.fire({
             toast: true,
@@ -788,9 +787,9 @@
             showConfirmButton: false,
             timer: 1500,
             type: 'success',
-            title: 'La articulacion  ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
+            title: 'La articulacion  ' + code +  ' - ' + name + ' se ha asociado  al uso de infraestructua'
         });
-        $('#txtactividad').val(codigo_actividad+ ' - '+ nombre);
+        $('#txtactividad').val(code+ ' - '+ name);
         $("label[for='txtactividad']").addClass('active');
         $("label[for='txtactividad']").text("Articulación");
         $divActividad.show();
@@ -1166,7 +1165,6 @@
                 contentType: false,
                 processData: false,
                 success: function (data) {
-
                     $('button[type="submit"]').removeAttr('disabled');
                     $('.error').hide();
                     let errores = "";
@@ -1212,7 +1210,7 @@
                             confirmButtonText: 'Ok'
                           });
                           setTimeout(function(){
-                            window.location.replace("{{route('usoinfraestructura.index')}}");
+                            window.location.replace("{{route('asesorias.index')}}");
                           }, 1000);
                     }
                 }

@@ -3,9 +3,25 @@
 namespace App\Http\Traits\AsesorieTrait;
 
 use App\Presenters\AsesoriePresenter;
+use App\Models\UsoInfraestructura;
 
 trait AsesorieTrait
 {
+    public static function IsProyecto()
+    {
+        return UsoInfraestructura::IS_PROYECTO;
+    }
+
+    public static function IsArticulacion()
+    {
+        return UsoInfraestructura::IS_ARTICULACION;
+    }
+
+    public static function IsIdea()
+    {
+        return UsoInfraestructura::IS_IDEA;
+    }
+
     public function asesorable()
     {
         return $this->morphTo();

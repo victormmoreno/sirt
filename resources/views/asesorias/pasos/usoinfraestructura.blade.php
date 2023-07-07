@@ -38,15 +38,15 @@
                 <div class="input-field col s12 m12 l12">
                     <p class="center p-v-xs">
 
-                        @if(isset($usoinfraestructura->asesorable))
+                        @if(isset($asesorie->asesorable))
                             @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto() || session()->get('login_role') == App\User::IsTalento() || session()->get('login_role') == App\User::IsApoyoTecnico()))
-                                <input class="with-gap" id="IsProyecto" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->asesorable_type == App\Models\Proyecto::class ? 'checked' : old('txttipousoinfraestructura')}}  value="0"/>
+                                <input class="with-gap" id="IsProyecto" name="txttipousoinfraestructura" type="radio" {{$asesorie->asesorable_type == App\Models\Proyecto::class ? 'checked' : old('txttipousoinfraestructura')}}  value="0"/>
                                 <label for="IsProyecto">Proyectos</label>
                             @endif
                             @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsArticulador()))
-                                <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->asesorable_type == App\Models\Articulation::class ? 'checked' : old('txttipousoinfraestructura')}} value="1"/>
+                                <input class="with-gap" id="IsArticulacion" name="txttipousoinfraestructura" type="radio" {{$asesorie->asesorable_type == App\Models\Articulation::class ? 'checked' : old('txttipousoinfraestructura')}} value="1"/>
                                 <label for="IsIdea">Articulaciones</label>
-                                <input class="with-gap" id="IsIdea" name="txttipousoinfraestructura" type="radio" {{$usoinfraestructura->asesorable_type == App\Models\Idea::class ? 'checked' : old('txttipousoinfraestructura')}} value="2"/>
+                                <input class="with-gap" id="IsIdea" name="txttipousoinfraestructura" type="radio" {{$asesorie->asesorable_type == App\Models\Idea::class ? 'checked' : old('txttipousoinfraestructura')}} value="2"/>
                                 <label for="IsIdea">Ideas</label>
                             @endif
 
@@ -71,8 +71,8 @@
                 </div>
             </div>
             <div class="row">
-                @if(isset($usoinfraestructura->asesorable->nodo_id))
-                    <input type="hidden" name="txtnodo" id="txtnodo" value="{{$usoinfraestructura->asesorable->nodo_id}}">
+                @if(isset($asesorie->asesorable->nodo_id))
+                    <input type="hidden" name="txtnodo" id="txtnodo" value="{{$asesorie->asesorable->nodo_id}}">
                 @else
                     <input type="hidden" name="txtnodo" id="txtnodo">
                 @endif
@@ -82,8 +82,8 @@
                     @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsExperto()))
                         <div class="input-field col s12 m6 l6">
                             <i class="material-icons prefix">date_range</i>
-                            @if(isset($usoinfraestructura->fecha))
-                                <input class="datepicker" id="txtfecha" name="txtfecha" type="text" value="{{$usoinfraestructura->fecha->format('Y-m-d')}}"/>
+                            @if(isset($asesorie->fecha))
+                                <input class="datepicker" id="txtfecha" name="txtfecha" type="text" value="{{$asesorie->fecha->format('Y-m-d')}}"/>
                             @else
                                 <input class="datepicker" id="txtfecha" name="txtfecha" type="text" value="{{$date}}"/>
                             @endif
@@ -93,14 +93,14 @@
                         <div class="input-field col s12 m6 l6">
                             <i class="material-icons prefix">vertical_split</i>
                             @if(session()->has('login_role') && session()->get('login_role') == App\User::IsExperto())
-                                @if(isset($usoinfraestructura->asesorable->asesor->lineatecnologica))
-                                    <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$usoinfraestructura->asesorable->asesor->lineatecnologica->nombre}}"/>
+                                @if(isset($asesorie->asesorable->asesor->lineatecnologica))
+                                    <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$asesorie->asesorable->asesor->lineatecnologica->nombre}}"/>
                                 @else
                                     <input id="txtlinea" name="txtlinea" readonly="" type="text" value="Por favor seleccione un tipo de asesoría y uso"/>
                                 @endif
                             @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsTalento())
-                                @if(isset($usoinfraestructura->asesorable->asesor->lineatecnologica))
-                                    <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$usoinfraestructura->asesorable->asesor->lineatecnologica->nombre}}"/>
+                                @if(isset($asesorie->asesorable->asesor->lineatecnologica))
+                                    <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$asesorie->asesorable->asesor->lineatecnologica->nombre}}"/>
                                 @else
                                     <input id="txtlinea" name="txtlinea" readonly="" type="text" value="Por favor seleccione un tipo de asesoría y uso"/>
                                 @endif
@@ -112,8 +112,8 @@
                     @if(session()->has('login_role') && (session()->get('login_role') == App\User::IsArticulador() || session()->get('login_role') == App\User::IsApoyoTecnico()))
                         <div class="input-field col s12 m12 l12">
                             <i class="material-icons prefix">date_range</i>
-                            @if(isset($usoinfraestructura->fecha))
-                                <input class="datepicker" id="txtfecha" name="txtfecha" type="text" value="{{$usoinfraestructura->fecha->format('Y-m-d')}}"/>
+                            @if(isset($asesorie->fecha))
+                                <input class="datepicker" id="txtfecha" name="txtfecha" type="text" value="{{$asesorie->fecha->format('Y-m-d')}}"/>
                             @else
                                 <input class="datepicker" id="txtfecha" name="txtfecha" type="text" value="{{$date}}"/>
                             @endif
@@ -124,8 +124,8 @@
                 @elseif(session()->has('login_role') && (session()->get('login_role') == App\User::IsTalento() || session()->get('login_role') == App\User::IsApoyoTecnico()))
                     <div class="input-field col s12 m4 l4">
                         <i class="material-icons prefix">date_range</i>
-                        @if(isset($usoinfraestructura->fecha))
-                            <input class="datepicker" id="txtfecha" name="txtfecha" type="text" value="{{$usoinfraestructura->fecha->format('Y-m-d')}}"/>
+                        @if(isset($asesorie->fecha))
+                            <input class="datepicker" id="txtfecha" name="txtfecha" type="text" value="{{$asesorie->fecha->format('Y-m-d')}}"/>
                         @else
                             <input class="datepicker" id="txtfecha" name="txtfecha" type="text" value="{{$date}}"/>
                         @endif
@@ -134,8 +134,8 @@
                     </div>
                     <div class="input-field col s12 m4 l4">
                         <i class="material-icons prefix">vertical_split</i>
-                        @if(isset($usoinfraestructura->asesorable->asesor->lineatecnologica))
-                            <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$usoinfraestructura->asesorable->asesor->nombre}}"/>
+                        @if(isset($asesorie->asesorable->asesor->lineatecnologica))
+                            <input id="txtlinea" name="txtlinea" readonly="" type="text" value="{{$asesorie->asesorable->asesor->nombre}}"/>
                         @else
                             <input id="txtlinea" name="txtlinea" readonly="" type="text" value="Por favor seleccione un tipo de asesoría y uso"/>
                         @endif
@@ -144,8 +144,8 @@
                     </div>
                     <div class="input-field col s12 m4 l4">
                         <i class="material-icons prefix">account_circle</i>
-                        @if(isset($usoinfraestructura->asesorable->asesor->user))
-                            <input id="txtgestor" name="txtgestor" readonly="" type="text" value="{{$usoinfraestructura->asesorable->asesor->user->documento}} - {{$usoinfraestructura->asesorable->asesor->user->nombres}} {{$usoinfraestructura->asesorable->asesor->user->apellidos}}"/>
+                        @if(isset($asesorie->asesorable->asesor->user))
+                            <input id="txtgestor" name="txtgestor" readonly="" type="text" value="{{$asesorie->asesorable->asesor->user->documento}} - {{$asesorie->asesorable->asesor->user->nombres}} {{$asesorie->asesorable->asesor->user->apellidos}}"/>
                         @else
                             <input id="txtgestor" name="txtgestor" readonly="" type="text" value="Por favor seleccione un tipo de asesoría y uso"/>
                         @endif
@@ -157,14 +157,14 @@
             <div class="row divActividad">
                 <div class="input-field col s12 m12 l12">
                     <i class="material-icons prefix">library_books</i>
-                    @if(isset($usoinfraestructura->asesorable_type) && ($usoinfraestructura->asesorable_type == App\Models\Proyecto::class))
-                        <input id="txtactividad" name="txtactividad"  type="text" value="{{ isset($usoinfraestructura->asesorable->codigo_proyecto) ? $usoinfraestructura->asesorable->codigo_proyecto :  old('txtactividad')}} - {{ isset($usoinfraestructura->asesorable->nombre) ? $usoinfraestructura->asesorable->nombre : old('txtactividad')}}" readonly />
+                    @if(isset($asesorie->asesorable_type) && ($asesorie->asesorable_type == App\Models\Proyecto::class))
+                        <input id="txtactividad" name="txtactividad"  type="text" value="{{ isset($asesorie->asesorable->codigo_proyecto) ? $asesorie->asesorable->codigo_proyecto :  old('txtactividad')}} - {{ isset($asesorie->asesorable->nombre) ? $asesorie->asesorable->nombre : old('txtactividad')}}" readonly />
                         <label for="txtactividad">Proyecto</label>
-                    @elseif(isset($usoinfraestructura->asesorable_type) && ($usoinfraestructura->asesorable_type == \App\Models\Articulation::class))
-                        <input id="txtactividad" name="txtactividad"  type="text" value="{{ isset($usoinfraestructura->asesorable->code) ? $usoinfraestructura->asesorable->code :  old('txtactividad')}} - {{ isset($usoinfraestructura->asesorable->name) ? $usoinfraestructura->asesorable->name : old('txtactividad')}}" readonly />
+                    @elseif(isset($asesorie->asesorable_type) && ($asesorie->asesorable_type == \App\Models\Articulation::class))
+                        <input id="txtactividad" name="txtactividad"  type="text" value="{{ isset($asesorie->asesorable->code) ? $asesorie->asesorable->code :  old('txtactividad')}} - {{ isset($asesorie->asesorable->name) ? $asesorie->asesorable->name : old('txtactividad')}}" readonly />
                         <label for="txtactividad">seleccione un tipo de asesoría y uso<span class="red-text">*</span></label>
-                    @elseif(isset($usoinfraestructura->asesorable_type) && ($usoinfraestructura->asesorable_type == App\Models\Idea::class))
-                        <input id="txtactividad" name="txtactividad"  type="text" value="{{ isset($usoinfraestructura->asesorable->codigo_idea) ? $usoinfraestructura->asesorable->codigo_idea :  old('txtactividad')}} - {{ isset($usoinfraestructura->asesorable->nombre_proyecto) ? $usoinfraestructura->asesorable->nombre_proyecto : old('txtactividad')}}" readonly />
+                    @elseif(isset($asesorie->asesorable_type) && ($asesorie->asesorable_type == App\Models\Idea::class))
+                        <input id="txtactividad" name="txtactividad"  type="text" value="{{ isset($asesorie->asesorable->codigo_idea) ? $asesorie->asesorable->codigo_idea :  old('txtactividad')}} - {{ isset($asesorie->asesorable->nombre_proyecto) ? $asesorie->asesorable->nombre_proyecto : old('txtactividad')}}" readonly />
                         <label for="txtactividad">seleccione un tipo de asesoría y uso<span class="red-text">*</span></label>
                     @else
                         <input id="txtactividad" name="txtactividad"  type="text" readonly />
@@ -177,8 +177,8 @@
             <div class="row">
                 <div class="input-field col s12 m12 l12">
                     <i class="material-icons prefix">create</i>
-                    @if(isset($usoinfraestructura->descripcion))
-                        <textarea class="materialize-textarea" id="txtdescripcion" length="2000" name="txtdescripcion">{{$usoinfraestructura->descripcion}}</textarea>
+                    @if(isset($asesorie->descripcion))
+                        <textarea class="materialize-textarea" id="txtdescripcion" length="2000" name="txtdescripcion">{{$asesorie->descripcion}}</textarea>
                     @else
                         <textarea class="materialize-textarea" id="txtdescripcion" length="2000" name="txtdescripcion"></textarea>
                     @endif

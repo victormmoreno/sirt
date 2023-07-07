@@ -169,7 +169,6 @@ class ArticulationStageRepository
      * Genera un código para el acompañamiento
      * @param string $initial
      * @return string
-     * @author devjul
      */
     private function generateCode($initial = null)
     {
