@@ -88,10 +88,13 @@
                     <select id="txtgestor_id_actual" name="txtgestor_id_actual" style="width: 100%" tabindex="-1" onchange="consultarSeguimientoActualDeUnGestor(this.value)">
                     <option value="">Seleccione el experto</option>
                     @foreach($expertos as $id => $experto)
-                    <option value="{{$experto->gestor->id}}">{{$experto->nombres}} {{$experto->apellidos}}</option>
+                    <option value="{{$experto->id}}">{{$experto->nombres}} {{$experto->apellidos}}</option>
                     @endforeach
                     </select>
                     <label for="txtgestor_id_actual">Experto</label>
+                </div>
+                <div class="row">
+                    <a href="!#" onclick="descargarSeguimientoExperto(event);" class="waves-effect waves-grey bg-secondary-lighten white-text btn-flat center show-on-large hide-on-med-and-down ml-x">Descargar</a>
                 </div>
             </div>
             <div class="col s12 m8 l8">

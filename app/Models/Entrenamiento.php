@@ -35,14 +35,10 @@ class Entrenamiento extends Model
 
     public function ideas()
     {
-      return $this->belongsToMany(Idea::class, 'entrenamiento_idea')
-      ->withTimestamps()
-      ->withPivot(['confirmacion', 'canvas', 'asistencia1', 'asistencia2', 'convocado_csibt']);
+        return $this->belongsToMany(Idea::class, 'entrenamiento_idea')
+            ->withTimestamps()
+            ->withPivot(['confirmacion', 'canvas', 'asistencia1', 'asistencia2', 'convocado_csibt']);
     }
-
-    /*=========================================
-  =            asesores eloquent            =
-  =========================================*/
 
     public function getFechaSession1Attribute($fecha_sesion1)
     {
@@ -53,11 +49,6 @@ class Entrenamiento extends Model
     {
         return Carbon::parse($fecha_sesion2)->format('Y-m-d');
     }
-    /*=====  End of asesores eloquent  ======*/
-
-    /*========================================
-  =            mutador eloquent            =
-  ========================================*/
 
     public function setFechaSession1Attribute($fecha_sesion1)
     {
@@ -68,6 +59,4 @@ class Entrenamiento extends Model
     {
         $this->attributes['fecha_sesion2'] = Carbon::parse($fecha_sesion2)->format('Y-m-d');
     }
-
-    /*=====  End of mutador eloquent  ======*/
 }

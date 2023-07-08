@@ -17,8 +17,8 @@
                                 <div class="right mailbox-buttons">
                                     <span class="mailbox-title">
                                         <p class="center secondary-text">
-                                            Información de Proyecto en la fase de suspendido -
-                                            {{$proyecto->articulacion_proyecto->actividad->present()->actividadName()}}
+                                            Información de Proyecto en la fase de cancelado -
+                                            {{$proyecto->present()->proyectoName()}}
                                         </p>
                                         <br />
                                         <p class="center">Linea Tecnológica:
@@ -31,7 +31,7 @@
                             <div class="right">
                                 <small class="secondary-text">
                                     <b>Fecha de inicio del proyecto: </b>
-                                    {{$proyecto->articulacion_proyecto->actividad->present()->actividadcreatedAt()}}
+                                    {{$proyecto->fecha_inicio}}
                                 </small>
                             </div>
                             <div class="divider mailbox-divider"></div>
@@ -41,8 +41,8 @@
                                         <div class="center">
                                             <span class="mailbox-title primary-text">
                                                 Información del Proyecto
-                                                {{$proyecto->articulacion_proyecto->actividad->present()->actividadCode()}} -
-                                                {{$proyecto->articulacion_proyecto->actividad->present()->actividadName()}}
+                                                {{$proyecto->present()->proyectoCode()}} -
+                                                {{$proyecto->present()->proyectoName()}}
                                             </span>
                                         </div>
                                         <div class="divider mailbox-divider"></div>
@@ -56,7 +56,7 @@
                                 </div>
                                 <div class="divider mailbox-divider"></div>
                                 <div class="row">
-                                    @include('proyectos.archivos_table_fase', ['fase' => 'Concluido sin finalizar'])
+                                    @include('proyectos.archivos_table_fase', ['fase' => 'Cancelado'])
                                 </div>
                             </div>
                         </div>

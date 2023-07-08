@@ -86,8 +86,6 @@ class ResetPasswordController extends Controller
     {
         $user->password = $password;
 
-        // $user->setRememberToken(Str::random(60));
-
         $user->save();
 
         event(new PasswordReset($user));
@@ -95,6 +93,5 @@ class ResetPasswordController extends Controller
         $this->guard()->logout();
 
         return redirect('login');
-
     }
 }

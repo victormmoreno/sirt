@@ -7,6 +7,7 @@ use App\User;
 use App\Presenters\ProyectoPresenter;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class Proyecto extends Model
 {
@@ -36,7 +37,7 @@ class Proyecto extends Model
     const IS_EJECUCION = 'Ejecución';
     const IS_CIERRE = 'Cierre';
     const IS_FINALIZADO = 'Finalizado';
-    const IS_SUSPENDIDO = 'Concluido sin finalizar';
+    const IS_SUSPENDIDO = 'Cancelado';
 
     /**
      * Constante para el campo trl_obtenido
@@ -48,17 +49,40 @@ class Proyecto extends Model
     const IS_TRL8_OBTENIDO = 2;
 
     /**
+     * The attributes that should be cast to native types.
+     * @var array
+     */
+    protected $casts = [
+        'codigo_proyecto' => 'string',
+        'nombre'           => 'string',
+        'fecha_inicio'     => 'date:Y-m-d',
+        'fecha_cierre'     => 'date:Y-m-d'
+    ];
+
+    /**
      * The attributes that are mass assignable.
      * @author dum
      * @var array
      */
     protected $fillable = [
-        'articulacion_proyecto_id',
+        // 'articulacion_proyecto_id',
+        'experto_id',
         'asesor_id',
         'nodo_id',
         'idea_id',
         'sublinea_id',
         'areaconocimiento_id',
+        'fase_id',
+        'codigo_proyecto',
+        'nombre',
+        'fecha_inicio',
+        'fecha_cierre',
+        'objetivo_general',
+        'conclusiones',
+        'formulario_inicio',
+        'cronograma',
+        'seguimiento',
+        'formulario_final',
         'economia_naranja',
         'art_cti',
         'nom_act_cti',
@@ -74,7 +98,6 @@ class Proyecto extends Model
         'otro_areaconocimiento',
         'trl_esperado',
         'trl_obtenido',
-        'fase_id',
         'fabrica_productividad',
         'doc_titular',
         'trl_prototipo',
@@ -167,6 +190,28 @@ class Proyecto extends Model
         return $this->morphMany(ControlNotificaciones::class, 'notificable');
     }
 
+    public function objetivos_especificos()
+    {
+        return $this->hasMany(ObjetivoEspecifico::class, 'proyecto_id', 'id');
+    }
+
+    /**
+     * Relación muchos a muchos con la tabla de talentos
+     * @return Eloquent
+     * @author dum
+     */
+    public function talentos()
+    {
+        return $this->belongsToMany(User::class, 'proyecto_talento')
+            ->withTimestamps()
+            ->withTrashed()
+            ->withPivot('talento_lider');
+    }
+
+    public function archivos()
+    {
+        return $this->morphMany(ArchivoModel::class, 'model');
+    }
 
     /**
      * Define a polymorphic, inverse many-to-many relationship between projects and sedes
@@ -185,7 +230,7 @@ class Proyecto extends Model
      */
     public function asesor()
     {
-        return $this->belongsTo(Gestor::class, 'asesor_id', 'id');
+        return $this->belongsTo(User::class, 'experto_id', 'id')->withTrashed();
     }
 
     /**
@@ -276,26 +321,6 @@ class Proyecto extends Model
         return $this->morphMany(UsoInfraestructura::class, 'asesorable');
     }
 
-    /**
-     * Define an inverse one-to-one or many relationship between projects and articulacion_proyecto
-     * @author dum
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function articulacion_proyecto()
-    {
-        return $this->belongsTo(ArticulacionProyecto::class, 'articulacion_proyecto_id', 'id');
-    }
-
-    public function scopeEstadoOfProjects($query, array $relations, array $estado = [])
-    {
-        return $query->with($relations)->whereHas(
-            'estadoproyecto',
-            function ($query) use ($estado) {
-                $query->whereIn('nombre', $estado);
-            }
-        );
-    }
-
     public function scopeNodo($query, $nodo)
     {
         if (!empty($nodo) && $nodo != null && $nodo != 'all') {
@@ -307,7 +332,7 @@ class Proyecto extends Model
     public function scopeAsesor($query, $asesor)
     {
         if (!empty($asesor) && $asesor != null && $asesor != 'all') {
-            return $query->where('asesor_id', $asesor);
+            return $query->where('experto_id', $asesor);
         }
         return $query;
     }
@@ -315,9 +340,7 @@ class Proyecto extends Model
     public function scopeStarEndDate($query, $year)
     {
         if (!empty($year) && $year != null && $year != 'all') {
-            return $query->whereHas('articulacion_proyecto.actividad', function ($subQuery) use ($year) {
-                $subQuery->whereYear('fecha_inicio', $year)->orWhereYear('fecha_cierre', $year);
-            });
+            return $query->whereYear('fecha_inicio', $year)->orWhereYear('fecha_cierre', $year);
         }
         return $query;
     }
@@ -328,17 +351,6 @@ class Proyecto extends Model
             return $query->where('fase_id', $fase);
         }
         return $query;
-    }
-
-    public function scopeProyectosGestor($query)
-    {
-        return $query->with(['articulacion_proyecto.actividad'])
-            ->where(function($subquery){
-                $subquery->where('fase_id', Fase::IsInicio())
-                ->orwhere('fase_id', Fase::IsPlaneacion())
-                ->orwhere('fase_id', Fase::IsEjecucion());
-            })->get()
-            ->pluck('articulacion_proyecto.actividad.nombre','articulacion_proyecto.actividad.codigo_actividad' );
     }
 
     /**
@@ -360,7 +372,7 @@ class Proyecto extends Model
         return $this->notificaciones()->create([
             'fase_id' => $fase_conf,
             'remitente_id' => auth()->user()->id,
-            'rol_remitente_id' => Role::where('name', Session::get('login_role'))->first()->id,
+            'rol_remitente_id' => Role::where('name', session()->get('login_role'))->first()->id,
             'receptor_id' => $receptor,
             'rol_receptor_id' => Role::where('name', $rol_receptor)->first()->id,
             'fecha_envio' => Carbon::now(),
@@ -376,20 +388,42 @@ class Proyecto extends Model
      **/
     public function getLeadTalent()
     {
-        return $this->articulacion_proyecto->talentos()->wherePivot('talento_lider', 1)->first();
+        return $this->talentos()->wherePivot('talento_lider', 1)->first();
     }
 
+    /**
+     * Consulta el historico de una actividad
+     * @param int $id Id de la activdad
+     * @return Builder
+     * @author dum
+     */
+    public static function consultarHistoricoProyecto($id) {
+        return DB::table('movimientos_actividades_users_roles')->select('movimiento', 'fases.nombre AS fase', 'roles.name AS rol', 'comentarios', 'movimientos_actividades_users_roles.created_at')
+        ->selectRaw('concat(nombres, " ", apellidos) AS usuario')
+        ->where('proyecto_id', $id)
+        ->join('movimientos', 'movimientos.id', 'movimientos_actividades_users_roles.movimiento_id')
+        ->join('fases', 'fases.id', '=', 'movimientos_actividades_users_roles.fase_id')
+        ->join('users', 'users.id', '=', 'movimientos_actividades_users_roles.user_id')
+        ->join('roles', 'roles.id', '=', 'movimientos_actividades_users_roles.role_id')
+        ->orderBy('movimientos_actividades_users_roles.created_at');
+    }
 
-    public function consultarNotificaciones()
+    public function movimientos()
     {
-        return $this->with([
-                'notificaciones',
-                'notificaciones.fase',
-                'notificaciones.remitente',
-                'notificaciones.receptor',
-                'notificaciones.rol_receptor',
-                'notificaciones.rol_remitente'
-            ]);
+        return $this->belongsToMany(Movimiento::class, 'movimientos_actividades_users_roles')
+        ->withTimestamps();
+    }
+
+    public static function habilitarTalentos($proyecto)
+    {
+        foreach ($proyecto->talentos as $value) {
+            $value->restore();
+            $value->update(['estado' => 1]);
+            if(!is_null($value) && $value->isUserConvencional())
+            {
+                $value->changeOneRoleToAnother(config('laravelpermission.roles.roleTalento'));
+            }
+        }
     }
 
     /**

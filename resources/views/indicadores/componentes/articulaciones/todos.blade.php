@@ -1,5 +1,5 @@
 <div class="row card-panel teal lighten-5">
-    <h6>Para consultar TODOS los indicadores, debes seleccionar un nodo, un rango de fechas y luego presionar el botón de descarga.</h6>
+    <h6 class="font-bold">Para consultar TODOS los indicadores, debes seleccionar un nodo, un rango de fechas y luego presionar el botón de descarga.</h6>
     @can('showIndicadoresArticulacionOptions', Illuminate\Database\Eloquent\Model::class)
         <div class="row">
             <div class="input-field col s12 m6 l6">

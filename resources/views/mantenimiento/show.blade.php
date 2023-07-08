@@ -38,7 +38,7 @@
                                                     </div>
                                                     <div class="left">
                                                         <span class="mailbox-title">
-                                                            Tecnoparque nodo {{$mantenimiento->equipo->nodo->entidad->nombre}} 
+                                                            Tecnoparque {{$mantenimiento->equipo->nodo->entidad->nombre}} 
                                                         </span>
                                                         <span class="mailbox-author">
                                                             <b>Dirección: </b> {{$mantenimiento->equipo->nodo->direccion}}<br/>

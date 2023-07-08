@@ -29,7 +29,7 @@ class FasesTableSeeder extends Seeder
         ]);
 
         Fase::create([
-            'nombre' => 'Concluido sin finalizar',
+            'nombre' => 'Cancelado',
         ]);
 
         Fase::create([

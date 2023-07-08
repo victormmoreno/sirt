@@ -1,7 +1,7 @@
 @push('script')
 <script>
     @can('showDahsboardExperto', Illuminate\Database\Eloquent\Model::class)
-    consultarSeguimientoActualDeUnGestor('{{request()->user()->gestor->id}}');
+    consultarSeguimientoActualDeUnGestor('{{request()->user()->id}}');
         @if($ideas_sin_pbt > 0)
             consultarIdeasPendientes('{{request()->user()->getNodoUser()}}', '{{request()->user()->id}}');
         @endif
@@ -23,19 +23,53 @@
         let hasta = $('#txtideas_hasta').val();
         let nodo = '{{request()->user()->getNodoUser()}}';
         $.ajax({
-        dataType:'json',
-        type:'get',
-        url: host_url + "/idea/registradas/"+nodo+"/"+desde+"/"+hasta,
-        success: function (response) {
-            let strings = "";
-            $("#ideas_registradas_count").empty();
-            $("#ideas_registradas_count").append(response.data.ideas.length);
-        },
-        error: function (xhr, textStatus, errorThrown) {
-        alert("Error: " + errorThrown);
-        }
-    })
+            dataType:'json',
+            type:'get',
+            url: host_url + "/idea/registradas/"+nodo+"/"+desde+"/"+hasta,
+            success: function (response) {
+                let strings = "";
+                $("#ideas_registradas_count").empty();
+                $("#ideas_registradas_count").append(response.data.ideas.length);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+            alert("Error: " + errorThrown);
+            }
+        })
     }
+    function descargarSeguimientoExperto(e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'get',
+            url: host_url + '/excel/export_seguimiento',
+            xhrFields:{
+            responseType: 'blob'
+            },
+            data: {
+                from: 'home'
+            },
+            success: function (result, status, xhr) {
+            let disposition = xhr.getResponseHeader('content-disposition');
+            let matches = /"([^"]*)"/.exec(disposition);
+            let filename = (matches != null && matches[1] ? matches[1] : 'Segumiento.xlsx');
+
+            let blob = new Blob([result], {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            });
+            let link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = filename;
+
+            document.body.appendChild(link);
+
+            link.click();
+            document.body.removeChild(link);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+            alert("Error: " + errorThrown);
+            },
+        })
+    }
+
     function consultarIdeasPendientes(nodo, user) {
     $.ajax({
         dataType:'json',
@@ -54,12 +88,14 @@
             } else {
                 $.each(response.data.ideas, function(i, item) {
                     strings += '<li class="collection-item">'
-                        +'<div class="row"><b class="title green-text">Idea</b>'
+                        +'<div class="row"><div class="col s12 m3 l3"><b class="title green-text">Idea</b>'
                         +'<p>'+item.codigo_idea+' - '+item.nombre_proyecto+'</p></div>'
-                        +'<div class="row"><div class="col s12 m6 l6"><b class="title green-text">Talento</b>'
+                        +'<div class="col s12 m3 l3"><b class="title green-text">Talento</b>'
                         +'<p>'+item.nombres_talento+'</p></div>'
-                        +'<div class="col s12 m6 l6"><b class="title green-text">Experto</b>'
-                        +'<p>'+item.experto+'</p></div></div>'
+                        +'<div class="col s12 m3 l3"><b class="title green-text">Experto</b>'
+                        +'<p>'+item.experto+'</p></div>'
+                        +'<div class="col s12 m3 l3"><b class="title green-text">Fecha del comité</b>'
+                        +'<p>'+item.fechacomite+' ('+item.dias+' días)</p></div></div>'
                     +'</li>';
                 });
             }
@@ -147,6 +183,6 @@
             alert("Error: " + errorThrown);
         }
     })
-    } 
+    }
 </script>
 @endpush

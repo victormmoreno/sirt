@@ -142,9 +142,9 @@
 @push('script')
   <script type="text/javascript">
   $( document ).ready(function() {
-    consultarSeguimientoDeUnGestor({{auth()->user()->gestor->id}});
-    consultarSeguimientoActualDeUnGestor({{auth()->user()->gestor->id}});
-    consultarProyectosInscritosPorMes({{auth()->user()->gestor->id}});
+    consultarSeguimientoDeUnGestor({{auth()->user()->experto->id}});
+    consultarSeguimientoActualDeUnGestor({{auth()->user()->experto->id}});
+    consultarProyectosInscritosPorMes({{auth()->user()->experto->id}});
     consultarProyectosSeguimiento_Gestor();
     consultarArticulacionesSeguimiento_Gestor();
   });
@@ -225,6 +225,6 @@
         ],
       });
     }
-    
+
   </script>
 @endpush

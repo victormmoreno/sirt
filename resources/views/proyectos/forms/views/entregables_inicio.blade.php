@@ -22,9 +22,9 @@
                     <div class="divider"></div>
                     <div class="center">
                         @if ($proyecto->present()->proyectoFase() == 'Inicio')
-                        <button type="submit" class="waves-effect cyan darken-1 btn center-aling"><i class="material-icons right">done</i>Modificar</button>
+                        <button type="submit" class="waves-effect bg-secondary btn center-aling"><i class="material-icons right">send</i>Modificar</button>
                         @endif
-                        <a href="{{ route('proyecto.inicio', $proyecto->id) }}" class="waves-effect red lighten-2 btn center-aling"><i class="material-icons right">backspace</i>Cancelar</a>
+                        <a href="{{ route('proyecto.inicio', $proyecto->id) }}" class="waves-effect bg-danger btn center-align"><i class="material-icons left">backspace</i>Cancelar</a>
                     </div>
                 </form>
                 </div>

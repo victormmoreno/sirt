@@ -13,7 +13,7 @@
         <tr></tr>
         @foreach($metas as $key => $meta)
         <tr>
-            <td>{{ $meta->nodo->entidad->nombre }}</td>
+            <td>{{ $meta->nodo }}</td>
             <td>{{ $meta->trl6 + $meta->trl7_trl8 }}</td>
             <td>{{ $meta->articulaciones }}</td>
             <td>{{ $meta->trl6 }}</td>

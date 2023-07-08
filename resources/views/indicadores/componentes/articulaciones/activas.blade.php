@@ -1,6 +1,6 @@
 <div class="row card card-panel teal lighten-5">
-    <h6>Para consultar los indicadores ÚNICAMENTE DE Articulaciones EN FASE DE INICIO, EJECUCIÓN Y CIERRE, debes seleccionar un rango de fechas y luego presionar el botón de descarga.</h6>
-    <h6>Recordar que se está mostrando la fase ACTUAL de la articulación.</h6>
+    <h6 class="font-bold">Para consultar los indicadores ÚNICAMENTE DE Articulaciones EN FASE DE INICIO, EJECUCIÓN Y CIERRE, debes seleccionar un rango de fechas y luego presionar el botón de descarga.</h6>
+    <h6 class="font-bold">Recordar que se está mostrando la fase ACTUAL de la articulación.</h6>
     @can('showIndicadoresArticulacionOptions', Illuminate\Database\Eloquent\Model::class)
         <div class="row">
             <div class="input-field col s12 m6 l6">

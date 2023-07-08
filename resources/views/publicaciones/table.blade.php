@@ -1,5 +1,5 @@
 <table id="{{$id}}" style="width: 100%">
-  <thead>
+  <thead class="bg-primary white-text">
     @if ($rol == 'Desarrollador')
       <th>Código</th>
     @endif

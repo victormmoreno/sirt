@@ -14,7 +14,7 @@ class HelpController extends Controller
 
     public function __construct(HelpRepository $helpRepostory)
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except('getCiudad');
         $this->helpRepostory = $helpRepostory;
     }
 

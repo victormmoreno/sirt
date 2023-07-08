@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\{ComiteAgendamientoFormRequest, ComiteRealizarFormRequest, ComiteAsignarFormRequest};
-use App\Repositories\Repository\{ComiteRepository, UserRepository\GestorRepository};
+use App\Repositories\Repository\{ComiteRepository};
 use App\Models\{Nodo, Idea, Comite, EstadoIdea, Gestor};
 use Illuminate\Support\Facades\{Session, Validator};
 Use App\User;
@@ -15,10 +15,9 @@ class ComiteController extends Controller
   private $comiteRepository;
   private $gestorRepository;
 
-  public function __construct(ComiteRepository $comiteRepository, GestorRepository $gestorRepository)
+  public function __construct(ComiteRepository $comiteRepository)
   {
     $this->setComiteRepository($comiteRepository);
-    $this->setGestorRepository($gestorRepository);
     $this->middleware('auth');
   }
 
@@ -47,9 +46,9 @@ class ComiteController extends Controller
     $comite = Comite::findOrFail($id);
     if (!request()->user()->can('asignar_ideas', $comite)) {
       alert()->warning('Error!','No tienes permisos para para asignar las ideas de este comité a los expertos.')->showConfirmButton('Ok', '#3085d6');
-      return back(); 
+      return back();
     }
-    $gestores = $this->getGestorRepository()->getAllGestoresPorNodo($comite->ideas()->first()->nodo_id)->get();
+    $gestores = User::ConsultarFuncionarios($comite->ideas->first()->nodo_id, User::IsExperto())->get();
     return view('comite.asignar_ideas', [
       'comite' => $comite,
       'gestores' => $gestores
@@ -67,7 +66,7 @@ class ComiteController extends Controller
     $comite = Comite::findOrFail($id);
     if (!request()->user()->can('calificar', $comite)) {
       alert()->warning('Error!','No tienes permisos para calificar este comité.')->showConfirmButton('Ok', '#3085d6');
-      return back(); 
+      return back();
     }
     $estados = EstadoIdea::whereIn('nombre', [EstadoIdea::IsReprogramado(), EstadoIdea::IsAdmitido(), EstadoIdea::IsRechazadoComite()])->get();
     return view('comite.realizar_comite', [
@@ -134,7 +133,8 @@ class ComiteController extends Controller
       alert('No autorizado', 'No tienes permisos para cargar información de este comité', 'error')->showConfirmButton('Ok', '#3085d6');
       return back();
     }
-    !isset($request['ev_correos']) ? $request['ev_correos'] = 0 : $request['ev_correos'] = 1;
+    !isset($request['ev_acta']) ? $request['ev_acta'] = 0 : $request['ev_acta'] = 1;
+    !isset($request['ev_formato']) ? $request['ev_formato'] = 0 : $request['ev_formato'] = 1;
     !isset($request['ev_listado']) ? $request['ev_listado'] = 0 : $request['ev_listado'] = 1;
     !isset($request['ev_otros']) ? $request['ev_otros'] = 0 : $request['ev_otros'] = 1;
     $evidenciasComite = $this->getComiteRepository()->updateEvidenciasComite($request, $id);
@@ -154,7 +154,7 @@ class ComiteController extends Controller
       return back();
     }
     $ideas = Idea::ConsultarIdeasConvocadasAComite( request()->user()->getNodoUser() )->get();
-    $gestores = $this->getGestorRepository()->getAllGestoresPorNodo( request()->user()->getNodoUser() )->get();
+    $gestores = User::ConsultarFuncionarios(request()->user()->getNodoUser(), User::IsExperto())->get();
     return view('comite.create', [
       'ideas' => $ideas,
       'gestores' => $gestores
@@ -163,7 +163,7 @@ class ComiteController extends Controller
 
   /**
    * Formulario para cambiar el gestor de una idea de proyecto que fue aprobada en el comité
-   * 
+   *
    * @param Idea $idea
    * @param Comite $comite
    * @return Response
@@ -174,7 +174,7 @@ class ComiteController extends Controller
       alert('No autorizado', 'No tienes permisos para cambiar al asignación de experto de esta idea', 'error')->showConfirmButton('Ok', '#3085d6');
       return back();
     }
-    $gestores = $this->getGestorRepository()->getAllGestoresPorNodo($idea->nodo_id)->get();
+    $gestores = User::ConsultarFuncionarios($comite->ideas()->first()->nodo_id, User::IsExperto())->get();
     return view('comite.update_gestor', [
     'idea' => $idea,
     'comite' => $comite,
@@ -217,7 +217,7 @@ class ComiteController extends Controller
 
   /**
    * Registra el agenadamiento de un comité
-   * 
+   *
    * @param Request $request
    * @return \Illuminate\Http\Response
    */
@@ -363,18 +363,22 @@ class ComiteController extends Controller
    */
   public function notificar_resultadoController(int $id, int $idComite)
   {
-    $result = $this->getComiteRepository()->notificar_resultados($id, $idComite);
     $idea = Idea::findOrFail($id);
+    $comite = Comite::findOrFail($idComite);
+    if(!request()->user()->can('notificar_resultado', [$comite, $idea])) {
+      alert('No autorizado', 'No tienes permisos para notificar el resultado de esta idea', 'error')->showConfirmButton('Ok', '#3085d6');
+      return back();
+  }
+    $result = $this->getComiteRepository()->notificar_resultados($id, $idComite);
     if ($result) {
-      // alert()->success('Notificación Exitosa!','Se ha enviado un mensaje a la dirección: '.$idea->correo_contacto.' con los resultados del comité.')->showConfirmButton('Ok', '#3085d6');
       return response()->json([
         'state' => 'notifica',
-        'idea' => $idea->talento->user->email
+        'idea' => $idea->user->email
         ]);
     } else {
       return response()->json([
         'state' => 'no_notifica',
-        'idea' => $idea->talento->user->email
+        'idea' => $idea->user->email
       ]);
     }
   }
@@ -417,7 +421,7 @@ class ComiteController extends Controller
     $csibt = Comite::findOrFail($id);
     $idideas = $this->getIdIdeasDelComiteArray($csibt);
     $ideas = Idea::ConsultarIdeasConvocadasAComite( $csibt->ideas()->first()->nodo_id )->orWhereIn('ideas.id', $idideas)->get();
-    $gestores = $this->getGestorRepository()->getAllGestoresPorNodo( $csibt->ideas()->first()->nodo_id )->get();
+    $gestores = User::ConsultarFuncionarios($csibt->ideas()->first()->nodo_id, User::IsExperto())->get();
     return view('comite.edit_agendamiento', [
       'ideas' => $ideas,
       'comite' => $csibt,
@@ -448,26 +452,4 @@ class ComiteController extends Controller
     return $this->comiteRepository;
   }
 
-  /**
-   * Asigna un valor a $gestorRepository
-   *
-   * @param GestorRepository
-   * @return void
-   * @author dum
-   */
-  private function setGestorRepository(GestorRepository $gestorRepository)
-  {
-    $this->gestorRepository =  $gestorRepository;
-  }
-
-  /**
-   * Retorna el valor de $gestorRepository
-   *
-   * @return GestorRepository
-   * @author dum
-   */
-  private function getGestorRepository()
-  {
-    return $this->gestorRepository;
-  }
 }

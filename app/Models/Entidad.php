@@ -53,7 +53,6 @@ class Entidad extends Model
     {
         $this->attributes['email_entidad'] = trim($email_entidad);
     }
-    /*=====  End of mutador eloquent  ======*/
 
     public function setSlugAttribute($nombre)
     {

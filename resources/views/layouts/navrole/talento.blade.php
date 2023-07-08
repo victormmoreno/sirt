@@ -20,8 +20,8 @@
     </a>
 </li>
 @endcan
-<li class="no-padding {{setActiveRoute('usoinfraestructura')}}">
-    <a class="waves-effect waves-grey {{setActiveRouteActivePage('usoinfraestructura')}}" href="{{route('usoinfraestructura.index')}}" rel="canonical" title="Usos de infraestructura">
-        <i class="material-icons {{setActiveRouteActiveIcon('usoinfraestructura')}}">domain</i>Usos de infraestructura
+<li class="no-padding {{setActiveRoute('asesorias')}}">
+    <a class="waves-effect waves-grey {{setActiveRouteActivePage('asesorias')}}" href="{{route('asesorias.index')}}" rel="canonical" title="Asesorias y usos">
+        <i class="material-icons {{setActiveRouteActiveIcon('asesorias')}}">domain</i>Asesorias y usos
     </a>
 </li>

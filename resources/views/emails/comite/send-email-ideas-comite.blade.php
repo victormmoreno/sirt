@@ -1,8 +1,8 @@
 @component('mail::message')
-# Resultados del Comité de Selección de Ideas | Tecnoparque Nodo {{$datosIdea->nodo->entidad->nombre}}.
+# Resultados del Comité de Selección de Ideas | Tecnoparque {{$datosIdea->nodo->entidad->nombre}}.
 
 Señor(a)<br>
-<b>_{{$datosIdea->talento->user->nombres }} {{$datosIdea->talento->user->apellidos }}_</b><br>
+<b>_{{$datosIdea->user->nombres }} {{$datosIdea->user->apellidos }}_</b><br>
 Cordial Saludo.
 
 @component('mail::panel')
@@ -24,7 +24,7 @@ Email 📧: <b> {{ $datosIdea->nodo->entidad->email_entidad }}. </b> <br>
 Teléfono ☎️: <b>{{ $datosIdea->nodo->telefono }}</b>{!! isset($datosIdea->nodo->extension) ? ' ext <b>' . $datosIdea->nodo->extension . '</b>' : '' !!}. <br>
 @endif
 @if (isset($datosIdea->nodo->direccion))
-Acudir a las instalaciones de 🏬 <strong>Tecnoparque nodo {{$datosIdea->nodo->entidad->nombre}}</strong>  ubicado en {{$datosIdea->nodo->direccion}} en {{$datosIdea->nodo->entidad->ciudad->nombre}} ({{$datosIdea->nodo->entidad->ciudad->departamento->nombre}}). <br>
+Acudir a las instalaciones de 🏬 <strong>Tecnoparque {{$datosIdea->nodo->entidad->nombre}}</strong>  ubicado en {{$datosIdea->nodo->direccion}} en {{$datosIdea->nodo->entidad->ciudad->nombre}} ({{$datosIdea->nodo->entidad->ciudad->departamento->nombre}}). <br>
 @endif
 
 Gracias,<br>

@@ -28,7 +28,7 @@
                                 <div class="center-align">
                                     @include('proyectos.botones_aprobacion_component')
                                     <a href="{{route('proyecto')}}" class="waves-effect bg-danger btn center-aling">
-                                        <i class="material-icons right">backspace</i>Cancelar
+                                        <i class="material-icons left">backspace</i>Cancelar
                                     </a>
                                 </div>
                             </form>
@@ -51,7 +51,7 @@
         },
         dictDefaultMessage: 'Arrastra los archivos aquí para subirlos.',
         params: {
-        fase: 'Concluido sin finalizar'
+        fase: 'Cancelado'
         },
         paramName: 'nombreArchivo'
     });
@@ -111,7 +111,7 @@
             serverSide: true,
             order: false,
             ajax:{
-            url: "{{route('proyecto.files', [$proyecto->id, 'Concluido sin finalizar'])}}",
+            url: "{{route('proyecto.files', [$proyecto->id, 'Cancelado'])}}",
             type: "get",
             },
             columns: [
@@ -125,7 +125,7 @@
                 name: 'download',
                 orderable: false,
             },
-            @if ($proyecto->present()->isAprobacionDinamizadorSuspender() == 0)
+            @if ($proyecto->fase->nombre != $proyecto->IsSuspendido())
             {
                 data: 'delete',
                 name: 'delete',

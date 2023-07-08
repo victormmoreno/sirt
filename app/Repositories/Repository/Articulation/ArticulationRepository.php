@@ -4,10 +4,7 @@ namespace App\Repositories\Repository\Articulation;
 
 use App\Models\ControlNotificaciones;
 use App\Models\Movimiento;
-use App\Notifications\Articulation\ArticulationStageNoApproveEndorsement;
-use App\Notifications\Articulation\EndorsementStageArticulation;
 use App\Notifications\Articulation\RequestFinalizeArticulation;
-use App\Repositories\Repository\UserRepository\DinamizadorRepository;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\ArticulationStage;
@@ -18,7 +15,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Session;
 use App\Repositories\Repository\Repository;
-
 
 
 class ArticulationRepository extends Repository
@@ -57,8 +53,8 @@ class ArticulationRepository extends Repository
             'articulation_types.name as articulation_type',
             'articulation_subtypes.name as articulation_subtype',
             'articulation_scopes.name as articulation_scope',
-            'entidades.nombre as nodo', 'actividades.codigo_actividad as codigo_proyecto',
-            'actividades.nombre as nombre_proyecto', 'proyectos.id as proyecto_id',
+            'entidades.nombre as nodo', 'proyectos.codigo_proyecto',
+            'proyectos.nombre as nombre_proyecto', 'proyectos.id as proyecto_id',
             'fasespro.nombre as fase_proyecto'
         )
         ->selectRaw('year(articulations.start_date) as articulation_start_date_year, MONTHNAME(articulations.start_date) as articulation_start_date_month, year(articulations.end_date) as articulation_end_date_year, MONTHNAME(articulations.end_date) as articulation_end_date_month')
@@ -83,8 +79,6 @@ class ArticulationRepository extends Repository
             })
             ->leftJoin('proyectos', 'proyectos.id', '=', 'articulationables.articulationable_id')
             ->leftJoin('fases as fasespro', 'fasespro.id', '=', 'proyectos.fase_id')
-            ->leftJoin('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-            ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
             ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
             ->leftJoin('users as createdby', 'createdby.id', '=', 'articulation_stages.created_by')
             ->leftJoin('sedes', 'sedes.id', '=', 'articulationables.articulationable_id')
@@ -103,6 +97,7 @@ class ArticulationRepository extends Repository
     {
         try {
             $accompaniment = $this->storeArticulation($request, $accompaniment);
+
             return [
                 'data' => $accompaniment,
                 'message' => '',
@@ -141,6 +136,9 @@ class ArticulationRepository extends Repository
         ]);
         if ($request->filled('talents')) {
             $articulation->users()->sync($request->talents);
+            $articulation->users->map(function($user){
+                $user->changeOneRoleToAnother(config('laravelpermission.roles.roleTalento'));
+            });
         }
         return $articulation;
     }
@@ -393,17 +391,16 @@ class ArticulationRepository extends Repository
 
     public function settingsNotificationDynamizer($articulation)
     {
-        $dinamizadorRepository = new DinamizadorRepository;
         if (Session::get('login_role') != User::IsTalento())
             $destinatarios[] = auth()->user()->email;
-        $dinamizador = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulation->articulationstage->node_id)->get()->last();
-        $destinatarios[] = $dinamizador->email;
-        return [
-            'receptor' => $dinamizador->id,
-            'receptor_role' => User::IsDinamizador(),
-            'tipo_movimiento' => Movimiento::IsSolicitarDinamizador(),
-            'destinatarios' => $destinatarios
-        ];
+            $dinamizador = User::ConsultarFuncionarios($articulation->articulationstage->node_id, User::IsDinamizador())->get()->last();
+            $destinatarios[] = $dinamizador->email;
+            return [
+                'receptor' => $dinamizador->id,
+                'receptor_role' => User::IsDinamizador(),
+                'tipo_movimiento' => Movimiento::IsSolicitarDinamizador(),
+                'destinatarios' => $destinatarios
+            ];
     }
 
     /**
@@ -484,7 +481,8 @@ class ArticulationRepository extends Repository
                 $query->whereYear($field_date, $year);
             }
         })
-        ->whereIn('fases.nombre', $phase);
+        ->whereIn('fases.nombre', $phase)
+        ->groupBy('entidades.nombre');
     }
 
     public function seguimientoArticulacionesAbiertas()
@@ -506,7 +504,7 @@ class ArticulationRepository extends Repository
         ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
         ->join('fases', 'fases.id', '=', 'articulations.phase_id')
         ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-        ->whereIn('fases.nombre', [Articulation::IsFinalizado(), 'Concluido sin finalizar'])
+        ->whereIn('fases.nombre', [Articulation::IsFinalizado(), 'Cancelado'])
         ->groupBy('entidades.nombre', 'fase')
         ->whereYear('articulations.end_date', $year);
     }

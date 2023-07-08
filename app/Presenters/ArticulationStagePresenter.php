@@ -73,19 +73,19 @@ class ArticulationStagePresenter extends Presenter
 
     public function articulationStageCreatedDate()
     {
-        return optional($this->articulationStage->created_at)->isoFormat('DD/MM/YYYY');
+        return optional($this->articulationStage->created_at)->isoFormat('YYYY/MM/DD');
     }
 
 
     public function articulationStageStartDate()
     {
-        return optional($this->articulationStage->start_date)->isoFormat('DD/MM/YYYY');
+        return optional($this->articulationStage->start_date)->isoFormat('YYYY/MM/DD');
     }
 
     public function articulationStageEndDate()
     {
         if($this->articulationStage->status == ArticulationStage::STATUS_OPEN && isset($this->articulationStage->end_date)){
-            return optional($this->articulationStage->end_date)->isoFormat('DD/MM/YYYY');
+            return optional($this->articulationStage->end_date)->isoFormat('YYYY/MM/DD');
         }
         return "No aplica";
 
@@ -117,7 +117,7 @@ class ArticulationStagePresenter extends Presenter
         ){
             return $this->articulationStage->projects->map(function ($item) {
                 if(isset($item)){
-                    return $item->articulacion_proyecto->actividad->codigo_actividad . ' - '.  $item->articulacion_proyecto->actividad->nombre;
+                    return $item->codigo_proyecto . ' - '.  $item->nombre;
                 }
                 return "No registra";
             })->implode(',');
@@ -168,7 +168,7 @@ class ArticulationStagePresenter extends Presenter
         ){
             return $this->articulationStage->projects->map(function ($item) {
                 if(isset($item)){
-                    return $item->articulacion_proyecto->actividad->objetivo_general;
+                    return $item->objetivo_general;
                 }
             })->implode(',');
         }
@@ -184,7 +184,7 @@ class ArticulationStagePresenter extends Presenter
         ){
             return $this->articulationStage->projects->map(function ($item) {
                 if(isset($item)){
-                    return optional($item->articulacion_proyecto->actividad->fecha_cierre)->isoFormat('DD/MM/YYYY');
+                    return optional($item->fecha_cierre)->isoFormat('DD/MM/YYYY');
                 }
             })->implode(',');
         }

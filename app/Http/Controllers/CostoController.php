@@ -3,37 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Proyecto;
-use Illuminate\Support\Facades\Session;
 use App\User;
 
 class CostoController extends Controller
 {
     /**
-     * Index principal para los costos de actividades
+     * Index principal para los costos
     *
     * @return \Illuminate\Http\Response
     */
     public function index()
     {
-        switch (Session::get('login_role')) {
-            case User::IsArticulador():
-                abort('403');
-                break;
-            case User::IsExperto():
-                $projects = Proyecto::where('asesor_id', auth()->user()->gestor->id)->get()->pluck('proyecto', 'id');
-                break;
-            case User::IsDinamizador():
-                $projects = Proyecto::with(['articulacion_proyecto.actividad'])->where('nodo_id', auth()->user()->dinamizador->nodo_id)->get()->pluck('articulacion_proyecto.actividad.nombre', 'id');
-                break;
-
-            default:
-                abort('403');
-                break;
-        }
-
+        $projects = Proyecto::select('codigo_proyecto', 'nombre', 'id')->asesor(session()->get('login_role') == User::IsExperto() ? request()->user()->id : null)->nodo(request()->user()->getNodoUser())->get();
         return view('costos.index', [
             'projects' => $projects,
-            // 'articulaciones' => $articulaciones
         ]);
 
     }
@@ -49,6 +32,7 @@ class CostoController extends Controller
     {
         $proyect = Proyecto::find($id);
         $usos = $proyect->usoinfraestructuras;
+        // dd($usos);
         // Costos en pesos
         $costosEquipos = $this->calcularCostosDeEquipos($usos);
         $costosAsesorias = $this->calcularCostosDeAsesorias($usos);
@@ -89,7 +73,7 @@ class CostoController extends Controller
         $horasAsesorias = 0;
 
         foreach ($datos as $key => $uso) {
-            $horasAsesorias += $uso->usogestores->sum('pivot.asesoria_directa') + $uso->usogestores->sum('pivot.asesoria_indirecta');
+            $horasAsesorias += $uso->asesores->sum('pivot.asesoria_directa') + $uso->asesores->sum('pivot.asesoria_indirecta');
         }
         return $horasAsesorias;
     }
@@ -191,7 +175,7 @@ class CostoController extends Controller
     {
         $asesorias = 0;
         foreach ($datos as  $uso) {
-            $asesorias += $uso->usogestores->sum('pivot.costo_asesoria');
+            $asesorias += $uso->asesores->sum('pivot.costo_asesoria');
         }
         return $asesorias;
     }

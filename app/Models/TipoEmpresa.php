@@ -18,6 +18,6 @@ class TipoEmpresa extends Model
 
     public function empresas()
     {
-      return $this->hasMany(Empresa::class, 'tipoempresa_id', 'id');
+        return $this->hasMany(Empresa::class, 'tipoempresa_id', 'id');
     }
 }

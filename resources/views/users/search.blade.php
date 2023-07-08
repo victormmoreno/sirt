@@ -42,7 +42,7 @@
                                         <div class="container">
                                             <div class="row">
                                                 <div class="col s12">
-                                                    <form id="formSearchUser" action="{{ route('usuario.buscarusuario')}}" method="POST">
+                                                    <form id="formSearchUser" action="{{ route('usuario.search.user')}}" method="POST">
                                                         {!! csrf_field() !!}
                                                         <div class="row">
                                                             <div class="input-field col s12 m4 l4">

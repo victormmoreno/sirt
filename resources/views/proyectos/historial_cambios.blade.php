@@ -7,7 +7,7 @@
           <ul class="collection">
             <li class="collection-item">
               El proyecto fue creado el día
-              {{$proyecto->articulacion_proyecto->actividad->fecha_inicio->isoFormat('YYYY-MM-DD')}}.
+              {{$proyecto->fecha_inicio->isoFormat('YYYY-MM-DD')}}.
             </li>
             @for ($i = 0; $i < $historico->count(); $i++)
               <li class="collection-item">

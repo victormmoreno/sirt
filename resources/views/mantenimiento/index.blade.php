@@ -2,7 +2,7 @@
 @if(session()->has('login_role') && session()->get('login_role') == App\User::IsActivador())
     @section('meta-title', 'Mantenimientos '. config('app.name'))
 @elseif(session()->has('login_role') && session()->get('login_role') == App\User::IsDinamizador())
-    @section('meta-title', 'Mantenimientos' . 'Tecnoparque Nodo ' . \NodoHelper::returnNameNodoUsuario())
+    @section('meta-title', 'Mantenimientos' . 'Tecnoparque ' . \NodoHelper::returnNameNodoUsuario())
 @endif
 @section('content')
 <main class="mn-inner inner-active-sidebar">

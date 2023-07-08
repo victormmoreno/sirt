@@ -45,18 +45,18 @@
                 <td>{{ $articulation->articulation_start_date_year }}</td>
                 <td>{{ $articulation->articulation_start_date_month }}</td>
                 <td>{{ $articulation->articulation_phase }}</td>
-                @if ($articulation->articulation_phase == 'Finalizado' || $articulation->articulation_phase == 'Concluido sin finalizar' || $articulation->articulation_phase == 'Suspendido')
+                @if ($articulation->articulation_phase == 'Finalizado' || $articulation->articulation_phase == 'Cancelado' || $articulation->articulation_phase == 'Suspendido')
                     <td>{{ $articulation->articulation_end_date }}</td>
                 @else
                     <td>La articulación no se ha cerrado</td>
                 @endif
-                @if ($articulation->articulation_phase == 'Finalizado' || $articulation->articulation_phase == 'Concluido sin finalizar' || $articulation->articulation_phase == 'Suspendido')
+                @if ($articulation->articulation_phase == 'Finalizado' || $articulation->articulation_phase == 'Cancelado' || $articulation->articulation_phase == 'Suspendido')
                     <td>{{ $articulation->articulation_end_date_year }}</td>
                 @else
                     <td>La articulación no se ha cerrado</td>
                 @endif
 
-                @if ($articulation->articulation_phase == 'Finalizado' || $articulation->articulation_phase == 'Concluido sin finalizar' || $articulation->articulation_phase == 'Suspendido')
+                @if ($articulation->articulation_phase == 'Finalizado' || $articulation->articulation_phase == 'Cancelado' || $articulation->articulation_phase == 'Suspendido')
                     <td>{{ $articulation->articulation_end_date_month }}</td>
                 @else
                     <td>La articulación no se ha cerrado</td>

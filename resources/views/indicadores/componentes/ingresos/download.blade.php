@@ -20,14 +20,5 @@
     </div>
     <div class="input-field col m2 l2 s2">
         <button class="waves-effect waves-grey bg-secondary-lighten white-text btn-flat right show-on-large hide-on-med-and-down m-l-xs" id="download_excel_visitas"><i class="material-icons left">cloud_download</i>Descargar</button>
-        {{-- <button type="submit" class="btn bg-secondary show-on-large hide-on-med-and-down" id="download_excel_visitas">
-            <i class="material-icons left">file_download</i>Descargar ingresos
-        </button> --}}
     </div>
 </div>
-    {{-- <center>
-    </center> --}}
-    {{-- <form action="{{route('indicador.export.ideas')}}" name="frmDescargarIngresos" method="get">
-        {!! method_field('GET')!!}
-        {!! csrf_field() !!}
-    </form> --}}

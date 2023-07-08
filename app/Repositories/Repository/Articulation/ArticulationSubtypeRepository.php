@@ -77,7 +77,7 @@ class ArticulationSubtypeRepository
             ->addColumn('articulation_type_name', function ($data) {
                 return $data->articulation_type_name;
             })->addColumn('show', function ($data) {
-                return '<a class="btn bg-secondary m-b-xs modal-trigger" href='.route('tiposubarticulaciones.show', $data->articulation_subtype_id).'>
+                return '<a class="btn tooltipped bg-info m-b-xs modal-trigger" href='.route('tiposubarticulaciones.show', $data->articulation_subtype_id).'>
                             <i class="material-icons">search</i>
                         </a>';
             })

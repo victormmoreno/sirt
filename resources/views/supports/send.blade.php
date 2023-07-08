@@ -2,7 +2,6 @@
 @section('meta-title', config('app.technical_support.title'))
 @section('content')
 <main class="mn-inner inner-active-sidebar">
-
     <div class="bg-primary z-depth-2">
         <div class="container ">
             <div class="row">

@@ -195,7 +195,7 @@
                                                                             <div class="row">
                                                                                 <div class="col s12 m4 l4">
                                                                                     <span class="title cyan-text text-darken-3">
-                                                                                        Nodo de registro de la idea
+                                                                                        Tecnoparque de registro de la idea
                                                                                     </span>
                                                                                     <br>
                                                                                     {{$idea->nodo->entidad->nombre}}
@@ -221,7 +221,7 @@
                                                 </ul>
                                                 <ul class="collapsible" data-collapsible="accordion">
                                                     <li>
-                                                        <div class="collapsible-header"><h5>Proyectos a la empresa</h5></div>
+                                                        <div class="collapsible-header"><h5>Proyectos asociados a la empresa</h5></div>
                                                         <div class="collapsible-body">
                                                             <ul class="collection">
                                                             @foreach ($empresa->sedes as $sede)
@@ -235,7 +235,7 @@
                                                                             <div class="row">
                                                                                 <div class="col s12 m4 l4">
                                                                                     <span class="title cyan-text text-darken-3">
-                                                                                        Nodo de registro del proyecto
+                                                                                        Tecnoparque de registro del proyecto
                                                                                     </span>
                                                                                     <br>
                                                                                     {{$proyecto->nodo->entidad->nombre}}
@@ -245,7 +245,7 @@
                                                                                         Proyecto
                                                                                     </span>
                                                                                     <br>
-                                                                                    <a href="{{$proyecto->fase->nombre == 'Finalizado' || $proyecto->fase->nombre == 'Concluido sin finalizar' ? route('proyecto.detalle', $proyecto->id) : route('proyecto.inicio', $proyecto->id)}}" target="_blank">
+                                                                                    <a href="{{$proyecto->fase->nombre == 'Finalizado' || $proyecto->fase->nombre == 'Cancelado' ? route('proyecto.detalle', $proyecto->id) : route('proyecto.inicio', $proyecto->id)}}" target="_blank">
                                                                                         {{$proyecto->present()->proyectoCode()}} - {{$proyecto->present()->proyectoName()}}
                                                                                     </a>
                                                                                     - <b class="secondary-text">{{$proyecto->fase->nombre}}</b>

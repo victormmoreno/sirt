@@ -5,11 +5,11 @@
 <div class="row">
     <div class="input-field col s12 m6 l6">
         <input name="txtcodigo_proyecto" disabled
-            value="{{ $proyecto->articulacion_proyecto->actividad->present()->actividadCode() }}" id="txtcodigo_proyecto">
+            value="{{ $proyecto->present()->proyectoCode() }}" id="txtcodigo_proyecto">
         <label class="active" for="txtcodigo_proyecto">Código de Proyecto</label>
     </div>
     <div class="input-field col s12 m6 l6">
-        <input name="txtnombre" value="{{ $proyecto->articulacion_proyecto->actividad->present()->actividadName() }}" disabled
+        <input name="txtnombre" value="{{ $proyecto->present()->proyectoName() }}" disabled
             id="txtnombre" required>
         <label class="active" for="txtnombre">Nombre del Proyecto</label>
     </div>
@@ -30,7 +30,7 @@
 <div class="row">
     <div class="col s6 m6 l6">
         <p class="p-v-xs">
-            <input type="checkbox" {{ $proyecto->articulacion_proyecto->actividad->cronograma == 1 ? 'checked' : '' }} id="txtcronograma" name="txtcronograma" value="1">
+            <input type="checkbox" {{ $proyecto->cronograma == 1 ? 'checked' : '' }} id="txtcronograma" name="txtcronograma" value="1">
             <label for="txtcronograma">Cronograma de trabajo.</label>
         </p>
     </div>

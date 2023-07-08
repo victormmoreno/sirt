@@ -8,10 +8,8 @@ use Faker\Generator as Faker;
 
 $factory->define(Idea::class, function (Faker $faker) {
 
-    $userinfocenter = User::has('infocenter')->get()->random();
-    $usergestor = User::has('gestor')->whereHas('gestor', function ($query) use ($userinfocenter) {
-        return $query->where('nodo_id', $userinfocenter->infocenter->nodo_id);
-    })->get()->random();
+    $userinfocenter = User::all()->random();
+    $usergestor = User::all()->random();
     $entidadInfocenter = Entidad::has('nodo')->whereHas('nodo', function ($query) use ($userinfocenter) {
         return $query->where('id', $userinfocenter->infocenter->nodo_id);
     })->get()->random();

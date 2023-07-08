@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('meta-title', 'CSIBT')
 @section('content')
-<link rel="stylesheet" type="text/css" href="{{ asset('css/Edicion_Text.css') }}">
   <main class="mn-inner inner-active-sidebar">
     <div class="content">
       <div class="row no-m-t no-m-b">
@@ -44,19 +43,25 @@
                   <div class="divider"></div>
                   <div class="row">
                     <h5>Evidencias del CSIBT</h5>
-                    <div class="col s12 m4 l4">
+                    <div class="col s12 m3 l3">
                       <p class="p-v-xs">
-                        <input type="checkbox" name="ev_correos" {{ $comite->correos == 0 ? '' : 'checked' }} id="ev_correos" value="1">
-                        <label for="ev_correos">Correos</label>
+                        <input type="checkbox" name="ev_acta" {{ $comite->acta == 0 ? '' : 'checked' }} id="ev_acta" value="1">
+                        <label for="ev_acta">Acta de comité</label>
                       </p>
                     </div>
-                    <div class="col s6 m4 l4">
+                    <div class="col s12 m3 l3">
+                      <p class="p-v-xs">
+                        <input type="checkbox" name="ev_formato" {{ $comite->formato_evaluacion == 0 ? '' : 'checked' }} id="ev_formato" value="1">
+                        <label for="ev_formato">Formato de evaluación</label>
+                      </p>
+                    </div>
+                    <div class="col s6 m3 l3">
                       <p class="p-v-xs">
                         <input type="checkbox" name="ev_listado" {{ $comite->listado_asistencia == 0 ? '' : 'checked' }} id="ev_listado" value="1">
                         <label for="ev_listado">Listado de Asistencia</label>
                       </p>
                     </div>
-                    <div class="col s6 m4 l4">
+                    <div class="col s6 m3 l3">
                       <p class="p-v-xs">
                         <input type="checkbox" name="ev_otros" {{ $comite->otros == 0 ? '' : 'checked' }} id="ev_otros" value="1">
                         <label for="ev_otros">Otros</label>
@@ -81,95 +86,95 @@
                   </thead>
                   <tbody>
 
-                  </tbody>
-                </table>
-              </div>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </main>
+    </main>
 @endsection
 @push('script')
-  <script>
-  datatableArchivoDeUnComite();
-  function datatableArchivoDeUnComite() {
-    $('#archivosDelComite').DataTable({
-      language: {
-        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-      },
-      processing: true,
-      serverSide: true,
-      order: false,
-      ajax:{
-        url: host_url + "/csibt/archivosDeUnComite/"+{{$comite->id}},
-        type: "get",
-      },
-      columns: [
-        {
-          data: 'file',
-          name: 'file',
-          orderable: false,
-        },
-        {
-          data: 'download',
-          name: 'download',
-          orderable: false,
-        },
-        {
-          data: 'delete',
-          name: 'delete',
-          orderable: false,
-        },
-      ],
-      initComplete: function () {
-        this.api().columns().every(function () {
-          var column = this;
-          var input = document.createElement("input");
-          $(input).appendTo($(column.footer()).empty())
-          .on('change', function () {
-            column.search($(this).val(), false, false, true).draw();
-          });
+    <script>
+        datatableArchivoDeUnComite();
+
+        function datatableArchivoDeUnComite() {
+            $('#archivosDelComite').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                },
+                processing: true,
+                serverSide: true,
+                order: false,
+                ajax: {
+                    url: host_url + "/csibt/archivosDeUnComite/" + {{ $comite->id }},
+                    type: "get",
+                },
+                columns: [{
+                        data: 'file',
+                        name: 'file',
+                        orderable: false,
+                    },
+                    {
+                        data: 'download',
+                        name: 'download',
+                        orderable: false,
+                    },
+                    {
+                        data: 'delete',
+                        name: 'delete',
+                        orderable: false,
+                    },
+                ],
+                initComplete: function() {
+                    this.api().columns().every(function() {
+                        var column = this;
+                        var input = document.createElement("input");
+                        $(input).appendTo($(column.footer()).empty())
+                            .on('change', function() {
+                                column.search($(this).val(), false, false, true).draw();
+                            });
+                    });
+                }
+            });
+        }
+
+        var DropzoneComite = new Dropzone('.dropzone', {
+            url: host_url + '/csibt/store/{{ $comite->id }}/filesComite',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            dictDefaultMessage: 'Arrastra los archivos aquí para subirlos',
+            paramName: 'nombreArchivo'
         });
-      }
-    });
-  }
 
-  var DropzoneComite = new Dropzone('.dropzone', {
-    url: host_url + '/csibt/store/{{ $comite->id }}/filesComite',
-    headers: {
-      'X-CSRF-TOKEN': '{{ csrf_token() }}'
-    },
-    dictDefaultMessage: 'Arrastra los archivos aquí para subirlos',
-    paramName: 'nombreArchivo'
-  });
+        DropzoneComite.on('success', function(res) {
+            $('#archivosDelComite').dataTable().fnDestroy();
+            datatableArchivoDeUnComite();
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                type: 'success',
+                title: 'El archivo se ha subido con éxito!'
+            });
+        })
 
-  DropzoneComite.on('success', function (res) {
-    $('#archivosDelComite').dataTable().fnDestroy();
-    datatableArchivoDeUnComite();
-    Swal.fire({
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3000,
-      type: 'success',
-      title: 'El archivo se ha subido con éxito!'
-    });
-  })
-
-  DropzoneComite.on('error', function (file, res) {
-    var msg = res.errors.nombreArchivo[0];
-    $('.dz-error-message:last > span').text(msg);
-    Swal.fire({
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3000,
-      type: 'error',
-      title: 'El archivo no se ha podido subir!'
-    });
-  })
-  Dropzone.autoDiscover = false;
-  </script>
+        DropzoneComite.on('error', function(file, res) {
+            var msg = res.errors.nombreArchivo[0];
+            $('.dz-error-message:last > span').text(msg);
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                type: 'error',
+                title: 'El archivo no se ha podido subir!'
+            });
+        })
+        Dropzone.autoDiscover = false;
+    </script>
 @endpush

@@ -25,7 +25,7 @@ class EquipoController extends Controller
 
   /**
    * Descagar el listado de equipos de un nodo
-   * 
+   *
    * @return Excel
    * @author dum
    */
@@ -40,7 +40,7 @@ class EquipoController extends Controller
         $equipos = $equipos->get();
     } else {
         if (session()->get('login_role') == User::IsExperto()) {
-            $equipos = $equipos->where('n.id', request()->user()->getNodoUser())->where('lt.id', request()->user()->gestor->nodo_id)->get();
+            $equipos = $equipos->where('n.id', request()->user()->getNodoUser())->where('lt.id', request()->user()->experto->nodo_id)->get();
         } else {
             $equipos = $equipos->where('n.id', request()->user()->getNodoUser())->get();
         }

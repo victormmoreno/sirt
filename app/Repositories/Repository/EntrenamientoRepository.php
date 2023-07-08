@@ -220,16 +220,4 @@ class EntrenamientoRepository
         return $syncData;
     }
 
-    // Consulta los entrenamientos que se hicieron en la fecha de la primera y segunda sesion
-    public function consultarEntrenamientoPorFechas($nodo_id, $fecha_sesion1, $fecha_sesion2)
-    {
-        return Entrenamiento::select('entrenamientos.id', 'fecha_sesion1', 'fecha_sesion2', 'codigo_entrenamiento')
-            ->join('entrenamiento_idea', 'entrenamiento_idea.entrenamiento_id', '=', 'entrenamientos.id')
-            ->join('ideas', 'ideas.id', '=', 'entrenamiento_idea.idea_id')
-            ->join('nodos', 'nodos.id', '=', 'ideas.nodo_id')
-            ->where('nodos.id', $nodo_id)
-            ->where('fecha_sesion1', $fecha_sesion1)
-            ->where('fecha_sesion2', $fecha_sesion2)
-            ->get();
-    }
 }

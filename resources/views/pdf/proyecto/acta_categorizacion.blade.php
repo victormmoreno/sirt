@@ -42,12 +42,12 @@
         </thead>
         <tbody>
             <tr>
-            <td class="centrar" scope="row" colspan="6"><b>TÍTULO DE CONSULTORÍA: {{$proyecto->articulacion_proyecto->actividad->present()->actividadName()}}</b></td>
+            <td class="centrar" scope="row" colspan="6"><b>TÍTULO DE CONSULTORÍA: {{$proyecto->present()->proyectoName()}}</b></td>
             </tr>
             <tr>
             <td colspan="1" scope="row">Nodo: <b>{{$proyecto->present()->proyectoNode()}}</b></td>
-            <td colspan="2">Fecha de inicio: <b>{{$proyecto->articulacion_proyecto->actividad->present()->startDate()}}</b></td>
-            <td colspan="3">Código del consultoría: <b>{{$proyecto->articulacion_proyecto->actividad->present()->actividadCode()}}</b></td>
+            <td colspan="2">Fecha de inicio: <b>{{$proyecto->present()->proyectoFechaInicio()}}</b></td>
+            <td colspan="3">Código del consultoría: <b>{{$proyecto->present()->proyectoCode()}}</b></td>
             </tr>
             <tr>
             <th class="centrar" colspan="6">DATOS DEL PROYECTO</th>

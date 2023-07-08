@@ -1,11 +1,11 @@
 @component('mail::message')
-# Su idea fue postulada | Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.
+# Su idea fue postulada | Tecnoparque {{$idea->nodo->entidad->nombre}}.
 
 Señor(a)<br>
-<b>_{{$idea->talento->user->nombres }} {{$idea->talento->user->apellidos }}_</b><br>
+<b>_{{$idea->user->nombres }} {{$idea->user->apellidos }}_</b><br>
 Cordial Saludo.
 
-Ha recibido este mensaje porque hemos recibido la postulación de su idea, la cual fue asocida a Tecnoparque Nodo {{$idea->nodo->entidad->nombre}}.<br>
+Ha recibido este mensaje porque hemos recibido la postulación de su idea, la cual fue asocida a Tecnoparque {{$idea->nodo->entidad->nombre}}.<br>
 
 @component('mail::panel')
 
@@ -30,7 +30,7 @@ Email 📧: <b> {{ $idea->nodo->entidad->email_entidad }}. </b> <br>
 Teléfono ☎️: <b>{{ $idea->nodo->telefono }}</b>{!! isset($idea->nodo->extension) ? ' ext <b>' . $idea->nodo->extension . '</b>' : '' !!}. <br>
 @endif
 @if (isset($idea->nodo->direccion))
-Acudir a las instalaciones de 🏬 <strong>Tecnoparque nodo {{$idea->nodo->entidad->nombre}}</strong>  ubicado en {{$idea->nodo->direccion}} en {{$idea->nodo->entidad->ciudad->nombre}} ({{$idea->nodo->entidad->ciudad->departamento->nombre}}). <br>
+Acudir a las instalaciones de 🏬 <strong>Tecnoparque {{$idea->nodo->entidad->nombre}}</strong>  ubicado en {{$idea->nodo->direccion}} en {{$idea->nodo->entidad->ciudad->nombre}} ({{$idea->nodo->entidad->ciudad->departamento->nombre}}). <br>
 @endif
 
 

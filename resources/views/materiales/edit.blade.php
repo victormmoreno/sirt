@@ -9,7 +9,7 @@
                     <h5 class="left left-align primary-text">
                         <a class="footer-text" href="{{route('equipo.index')}}">
                               <i class="material-icons left primary-text">local_library</i>
-                        </a> Materiales de Formación Tecnoparque Nodo {{$material->nodo->entidad->nombre}}
+                        </a> Materiales de Formación Tecnoparque {{$material->nodo->entidad->nombre}}
                     </h5>
                     <div class="right right-align show-on-large hide-on-med-and-down">
                         <ol class="breadcrumbs">
@@ -35,7 +35,7 @@
                                     </i>
                                     
                                     <p>
-                                        Para editar un nuevo material, Tecnoparque Nodo {{ \NodoHelper::returnNameNodoUsuario() }} debe tener lineas asociadas, por favor solicita al administrador de la plataforma para que este agregue nuevas lineas tecnológicas al nodo.
+                                        Para editar un nuevo material, Tecnoparque {{ \NodoHelper::returnNameNodoUsuario() }} debe tener lineas asociadas, por favor solicita al administrador de la plataforma para que este agregue nuevas lineas tecnológicas al nodo.
                                     </p>
                                 </div>
                             @else

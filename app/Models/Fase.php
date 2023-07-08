@@ -60,12 +60,6 @@ class Fase extends Model
         return $this->hasMany(ArchivoModel::class, 'fase_id', 'id');
     }
 
-    public function actividades_movimientos()
-    {
-        return $this->belongsToMany(Actividad::class, 'movimientos_actividades_users_roles')
-            ->withTimestamps();
-    }
-
     public function users_movimientos()
     {
         return $this->belongsToMany(User::class, 'movimientos_actividades_users_roles')

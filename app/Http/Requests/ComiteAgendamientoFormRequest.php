@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Gestor;
+use App\User;
 
 class ComiteAgendamientoFormRequest extends FormRequest
 {
@@ -40,17 +40,17 @@ class ComiteAgendamientoFormRequest extends FormRequest
         'txtfechacomite_create.date_format' => 'La Fecha del Comité no tiene un formato válido.',
 
         'ideas.required' => 'Se requiere por lo menos de una idea de proyecto',
-        
+
         'gestores.required' => 'Se requiere por lo menos de un experto',
       ];
       if (request()->get('gestores') !== null) {
         foreach (request()->get('horas_inicio') as $key => $val) {
-          $gestor = Gestor::find(request()->gestores[$key]);
-          $messages['horas_inicio.'.$key.'.required'] =  'La hora de inicio del experto '. $gestor->user->nombres . ' ' . $gestor->user->apellidos . ' es obligatoria.';
+          $gestor = User::find(request()->gestores[$key]);
+          $messages['horas_inicio.'.$key.'.required'] =  'La hora de inicio del experto '. $gestor->nombres . ' ' . $gestor->apellidos . ' es obligatoria.';
         }
         foreach (request()->get('horas_fin') as $key => $val) {
-          $gestor = Gestor::find(request()->gestores[$key]);
-          $messages['horas_fin.'.$key.'.required'] =  'La hora de fin del experto '. $gestor->user->nombres . ' ' . $gestor->user->apellidos . ' es obligatoria.';
+          $gestor = User::find(request()->gestores[$key]);
+          $messages['horas_fin.'.$key.'.required'] =  'La hora de fin del experto '. $gestor->nombres . ' ' . $gestor->apellidos . ' es obligatoria.';
         }
       }
       return $messages;

@@ -145,12 +145,7 @@ class TalentosImport implements ToCollection, WithHeadingRow
                         // Cambia la información actual
                         $this->updateUser($user, $row, $queryTipoDocumento, $queryGradoEscolaridad, $queryGrupoSanguineo, $queryEps, $ocupaciones[1]);
                         $user->ocupaciones()->sync($ocupaciones[0], true);
-                        if ($user->talento == null) {
-                            $this->registrarTalento($row['programa_formacion'], $user, $queryTipoTalento, $tipo_formacion_id, $datos_universidad, $entidad_id, $dependencia, $empresa);
-                        } else {
-                            $this->updateTalento($row['programa_formacion'], $user, $queryTipoTalento, $tipo_formacion_id, $datos_universidad, $entidad_id, $dependencia, $empresa);
-                        }
-                        // $this->updateTalento($row['programa_formacion'], $user, $queryTipoTalento, $tipo_formacion_id, $datos_universidad, $entidad_id, $dependencia, $empresa);
+
                     } else {
                         // No permite actualizar la información porque el correo se encuentra asociado a otra persona
                         return $this->validaciones->errorValidacionCorreo($row['correo'], $key, $user->documento, $this->hoja);
@@ -230,21 +225,6 @@ class TalentosImport implements ToCollection, WithHeadingRow
         ]);
     }
 
-    private function updateTalento($programa, $user, $tipo_talento, $tipo_formacion, array $datos_universidad, $entidad_id, $dependencia, $empresa)
-    {
-        return $user->talento()->update([
-            "user_id" => $user->id,
-            "tipo_talento_id" => $tipo_talento == null ? null : $tipo_talento->id,
-            "entidad_id" => $entidad_id,
-            "programa_formacion" => $programa,
-            "tipo_formacion_id" => $tipo_formacion,
-            "universidad" => $datos_universidad[0],
-            "carrera_universitaria" => $datos_universidad[1],
-            "tipo_estudio_id" => $datos_universidad[2],
-            "dependencia" => $dependencia,
-            "empresa" => $empresa
-        ]);
-    }
 
     private function getEntidad($row, $tipo_talento)
     {

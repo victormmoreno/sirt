@@ -5,7 +5,7 @@
         <div class="row">
             <div class="input-field col s12 m6 l6">
                 <select class="js-states select2 browser-default" name="txtestado_idea_download" id="txtestado_idea_download" style="width: 100%">
-                  <option value="{{App\Models\EstadoIdea::IsAdmitido()}}">Ideas que se aprobaron en comité pero no tiene proyecto iniciado</option>
+                    <option value="{{App\Models\EstadoIdea::IsAdmitido()}}">Ideas que se aprobaron en comité pero no tiene proyecto iniciado</option>
                 </select>
                 <label for="txtestado_idea_download" class="active">Seleccione una opción</label>
             </div>

@@ -17,18 +17,18 @@
     <tbody>
         @for ($i=0; $i < count($historial) ; $i++)
         <tr>
-            <td>{{ $proyecto->articulacion_proyecto->actividad->nodo->entidad->nombre }}</td>
+            <td>{{ $proyecto->nodo->entidad->nombre }}</td>
             <td>{{ $proyecto->articulacion_proyecto->actividad->gestor->user->present()->userFullName() }}</td>
             <td>{{ $proyecto->sublinea->linea->nombre }}</td>
             <td>{{ $proyecto->sublinea->nombre }}</td>
-            <td>{{ $proyecto->articulacion_proyecto->actividad->codigo_actividad }}</td>
-            <td>{{ $proyecto->articulacion_proyecto->actividad->nombre }}</td>
+            <td>{{ $proyecto->codigo_proyecto }}</td>
+            <td>{{ $proyecto->nombre }}</td>
             <td>{{ $historial[$i]->rol }}</td>
             <td>{{ $historial[$i]->usuario }}</td>
             <td>{{ $historial[$i]->movimiento }}</td>
             <td>{{ $historial[$i]->fase }}</td>
             <td>{{ $historial[$i]->created_at }}</td>
-          </tr>        
+          </tr>
         @endfor
     </tbody>
 </table>

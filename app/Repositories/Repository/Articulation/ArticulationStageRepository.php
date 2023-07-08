@@ -10,7 +10,6 @@ use App\Models\Proyecto;
 use App\Models\ArchivoModel;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\DB;
-use App\Repositories\Repository\UserRepository\DinamizadorRepository;
 use Illuminate\Support\Facades\Session;
 use App\User;
 use App\Models\Movimiento;
@@ -47,12 +46,10 @@ class ArticulationStageRepository
         return ArticulationStage::query()
             ->join('nodos', 'nodos.id', '=', 'articulation_stages.node_id')
             ->leftJoin('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-            ->join('articulationables', function($q) {
+            ->leftJoin('articulationables', function($q) {
                 $q->on('articulationables.articulation_stage_id', '=', 'articulation_stages.id');
             })
             ->leftJoin('proyectos', 'proyectos.id', '=', 'articulationables.articulationable_id')
-            ->leftJoin('articulacion_proyecto', 'articulacion_proyecto.id', '=', 'proyectos.articulacion_proyecto_id')
-            ->leftJoin('actividades', 'actividades.id', '=', 'articulacion_proyecto.actividad_id')
             ->leftJoin('users as interlocutor', 'interlocutor.id', '=', 'articulation_stages.interlocutor_talent_id')
             ->leftJoin('users as createdby', 'createdby.id', '=', 'articulation_stages.created_by')
             ->leftJoin('sedes', 'sedes.id', '=', 'articulationables.articulationable_id')
@@ -69,8 +66,14 @@ class ArticulationStageRepository
     {
         DB::beginTransaction();
         try {
+
             $articulationStage = $this->storeArticulationStage($request);
             $this->validateArticulationStageType($request, $articulationStage);
+            $user = User::where('id', $request->talent)->first();
+            if(!is_null($user) && $user->isUserConvencional())
+            {
+                $user->changeOneRoleToAnother(config('laravelpermission.roles.roleTalento'));
+            }
             DB::commit();
             return [
                 'state' => true,
@@ -166,7 +169,6 @@ class ArticulationStageRepository
      * Genera un código para el acompañamiento
      * @param string $initial
      * @return string
-     * @author devjul
      */
     private function generateCode($initial = null)
     {
@@ -307,10 +309,8 @@ class ArticulationStageRepository
 
     public function configurationNotificationDynamizer($model)
     {
-        $dinamizadorRepository = new DinamizadorRepository;
         if (Session::get('login_role') != User::IsTalento())
-            $recipients[] = auth()->user()->email;
-            $dinamizador = $dinamizadorRepository->getAllDinamizadoresPorNodo($model->node_id)->get()->last();
+            $dinamizador = User::ConsultarFuncionarios($model->node_id, User::IsDinamizador())->get()->last();
             $recipients[] = $dinamizador->email;
         return [
             'receptor' => $dinamizador->id,
@@ -471,10 +471,9 @@ class ArticulationStageRepository
 
     public function settingsNotificationDynamizer($articulationStage)
     {
-        $dinamizadorRepository = new DinamizadorRepository;
         if (Session::get('login_role') != User::IsTalento())
             $destinatarios[] = auth()->user()->email;
-            $dinamizador = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulationStage->node_id)->get()->last();
+            $dinamizador = User::ConsultarFuncionarios($articulationStage->node_id, User::IsDinamizador())->get()->last();
             $destinatarios[] = $dinamizador->email;
         return [
             'receptor' => $dinamizador->id,
@@ -498,14 +497,8 @@ class ArticulationStageRepository
             $movimiento = null;
             $mensaje = null;
             $title = null;
-            $dinamizadorRepository = new DinamizadorRepository;
-            $dinamizadores = $dinamizadorRepository->getAllDinamizadoresPorNodo($articulationStage->node_id)->get();
-            $asesores = User::InfoUserDatatable()
-                ->Join('user_nodo', 'user_nodo.user_id', '=', 'users.id')
-                ->role(User::IsArticulador())
-                ->where('users.deleted_at' ,'!=', null)
-                ->where('user_nodo.nodo_id', '=', $articulationStage->node_id)->get();
-            $talento_lider = $articulationStage->interlocutor;
+            $dinamizadores = User::ConsultarFuncionarios($articulationStage->node_id, User::IsDinamizador())->get();
+            $asesores =  User::ConsultarFuncionarios($articulationStage->node_id, User::IsArticulador())->get();
             $notificacion_act = ControlNotificaciones::find($request->control_notificacion_id);
             if($articulationStage->status == ArticulationStage::STATUS_OPEN){
                 $phase = 'cerrar';
@@ -517,11 +510,8 @@ class ArticulationStageRepository
                 $mensaje = 'Se le han notificado al asesor los motivos por los cuales no se aprueba el aval de la fase de articulación';
                 $comentario = $request->motivosNoAprueba;
                 $movimiento = Movimiento::IsNoAprobar();
-
                 $articulationStage->createTraceability($movimiento,Session::get('login_role'),$comentario, $phase);
-
                 $regMovimiento = $articulationStage->traceability()->get()->last();
-
                 Notification::send($asesores, new ArticulationStageNoApproveEndorsement($articulationStage, $regMovimiento));
                 $notificacion_act->update(['estado' => $notificacion_act->IsRechazado()]);
 

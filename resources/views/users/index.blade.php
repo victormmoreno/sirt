@@ -25,29 +25,13 @@
                     <div class="card-content">
                         <div class="row no-m-t no-m-b">
                             <div class="col s12 m12 l12">
-                                @can('talentsList', \App\User::class)
-                                <div class="mailbox-options">
-                                    <ul>
-                                        <li>
-                                            <a href="{{{route('usuario.index')}}}">
-                                                Todos los talentos
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{{route('usuario.mytalentos')}}}">
-                                                Mis talentos
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                @endcan
                                 <div class="mailbox-view">
                                     <div class="mailbox-view-header">
                                         <span class="card-title primary-text">
                                             @can('viewNodes', \App\User::class)
                                                 Usuarios de {{config('app.name')}}
                                             @else
-                                                Usuarios de Tecnoparque nodo {{ \NodoHelper::returnNameNodoUsuario() }}
+                                                Usuarios de Tecnoparque {{ \NodoHelper::returnNameNodoUsuario() }}
                                             @endcan
                                         </span>
                                         @can('search', \App\User::class)

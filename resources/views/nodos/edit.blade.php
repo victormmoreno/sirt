@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'Tecnoparque nodo '. $nodo->entidad->present()->entidadName())
+@section('meta-title', 'Tecnoparque '. $nodo->entidad->present()->entidadName())
 
 @section('content')
 <main class="mn-inner inner-active-sidebar">
@@ -17,7 +17,7 @@
                 <ol class="breadcrumbs">
                     <li><a href="{{route('home')}}">Inicio</a></li>
                     <li><a href="{{route('nodo.index')}}">Nodos</a></li>
-                    <li><a href="{{route('nodo.show', $nodo->entidad->slug)}}">Tecnoparque Nodo {{$nodo->entidad->present()->entidadName()}}</a></li>
+                    <li><a href="{{route('nodo.show', $nodo->entidad->slug)}}">Tecnoparque {{$nodo->entidad->present()->entidadName()}}</a></li>
                     <li class="active">Editar Nodo</li>
                 </ol>
             </div>

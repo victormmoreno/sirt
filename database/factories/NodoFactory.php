@@ -9,8 +9,6 @@ use Carbon\Carbon;
 $factory->define(Nodo::class, function (Faker $faker) {
 
     $centros = Entidad::has('centro')->get()->random();
-    // $centros = Entidad::all()->random();
-    // $entidad = Entidad::all()->except($centros->id)->random();
     return [
         'centro_id' => $centros->centro->id,
         'direccion' => $faker->streetAddress,

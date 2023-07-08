@@ -13,7 +13,7 @@ class NodoRepository
     public function getAlltNodo()
     {
 
-        return Nodo::select('entidades.id', DB::raw("CONCAT('Tecnoparque Nodo ',entidades.nombre) as nodos"), "nodos.direccion", DB::raw("CONCAT(centros.codigo_centro,' -  ',ent.nombre) as centro"), DB::raw("CONCAT(ciudades.nombre,' (',departamentos.nombre,') ') as ubicacion"), 'entidades.slug')
+        return Nodo::select('entidades.id', DB::raw("CONCAT('Tecnoparque ',entidades.nombre) as nodos"), "nodos.direccion", DB::raw("CONCAT(centros.codigo_centro,' -  ',ent.nombre) as centro"), DB::raw("CONCAT(ciudades.nombre,' (',departamentos.nombre,') ') as ubicacion"), 'entidades.slug')
             ->join('centros', 'centros.id', '=', 'nodos.centro_id')
             ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
             ->join('entidades as ent', 'ent.id', '=', 'centros.entidad_id')
@@ -164,15 +164,11 @@ class NodoRepository
             'centro.entidad.ciudad.departamento',
             'centro.regional',
             'lineas',
-            'dinamizador',
-            'dinamizador.user',
-            'infocenter',
-            'infocenter.user',
-            'gestores',
-            'gestores.user',
-            'gestores.lineatecnologica',
+            'dinamizadores',
+            'infocenters',
+            'expertos',
+            'expertos.linea',
             'ingresos',
-            'ingresos.user',
         ]);
     }
 
@@ -189,15 +185,14 @@ class NodoRepository
 
     public function consultarMetasDeTecnoparque($nodos = null)
     {
+        $query = MetaNodo::query()->select(['nodo_id','anho','articulaciones','trl6','trl7_trl8', 'entidades.nombre as nodo'])
+        ->join('nodos','nodos.id','metas_nodo.nodo_id')
+        ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+        ->orderBy('entidades.nombre');
         if ($nodos == null) {
-            return MetaNodo::query()->select(['nodo_id','anho','articulaciones','trl6','trl7_trl8', 'entidades.nombre as nodo'])
-            ->join('nodos','nodos.id','metas_nodo.nodo_id')
-            ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id');
+            return $query;
         } else {
-            return MetaNodo::query()->select(['nodo_id','anho','articulaciones','trl6','trl7_trl8', 'entidades.nombre as nodo'])
-            ->join('nodos','nodos.id','metas_nodo.nodo_id')
-            ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
-            ->whereIn('nodo_id', $nodos);
+            return $query->whereIn('nodo_id', $nodos);
         }
     }
 

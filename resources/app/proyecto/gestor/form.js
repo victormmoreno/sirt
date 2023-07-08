@@ -209,15 +209,15 @@ function prepararFilaEnLaTablaDeTalentos(ajax, isInterlocutor) {
     if(isInterlocutor){
         talentInterlocutor = "checked";
     }// El ajax.talento.id es el id del TALENTO, no del usuario
-    let idTalento = ajax.talento.id;
-    let fila = '<tr class="selected" id=talentoAsociadoAProyecto' + idTalento + '>' + '<td><input type="radio" '+ talentInterlocutor +' class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.talento.documento + ' - ' + ajax.talento.talento + '</td>' + '<td><a class="waves-effect bg-danger btn" onclick="eliminarTalentoDeProyecto_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let idTalento = ajax.data.user.id;
+    let fila = '<tr class="selected" id=talentoAsociadoAProyecto' + idTalento + '>' + '<td><input type="radio" '+ talentInterlocutor +' class="with-gap" name="radioTalentoLider" id="radioButton' + idTalento + '" value="' + idTalento + '" /><label for ="radioButton' + idTalento + '"></label></td>' + '<td><input type="hidden" name="talentos[]" value="' + idTalento + '">' + ajax.data.user.documento + ' - ' + ajax.data.user.nombres + ' '+ ajax.data.user.apellidos +'</td>' + '<td><a class="waves-effect bg-danger btn" onclick="eliminarTalentoDeProyecto_FaseInicio(' + idTalento + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
 // Prepara un string con la fila que se va a pintar en la tabla de los propietarios (users/persona) que son dueños de la propiedad intelectual
 function prepararFilaEnLaTablaDePropietarios_Users(ajax) { // El ajax.user.id es el id del USER
-    let idUser = ajax.user.id;
-    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Persona' + idUser + '>' + '<td><input type="hidden" name="propietarios_user[]" value="' + idUser + '">' + ajax.user.documento + ' - ' + ajax.user.nombres + ' ' + ajax.user.apellidos + '</td>' + '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Persona(' + idUser + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
+    let idUser = ajax.data.user.id;
+    let fila = '<tr class="selected" id=propietarioAsociadoAlProyecto_Persona' + idUser + '>' + '<td><input type="hidden" name="propietarios_user[]" value="' + idUser + '">' + ajax.data.user.documento + ' - ' + ajax.data.user.nombres + ' ' + ajax.data.user.apellidos + '</td>' + '<td><a class="waves-effect bg-danger white-text btn" onclick="eliminarPropietarioDeUnProyecto_FaseInicio_Persona(' + idUser + ');"><i class="material-icons">delete_sweep</i></a></td>' + '</tr>';
     return fila;
 }
 
@@ -246,7 +246,7 @@ function pintarTalentoEnTabla_Fase_Inicio(id, isInterlocutor) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: host_url + '/usuario/talento/consultarTalentoPorId/' + id
+        url: `${host_url}/usuarios/${id}`
     }).done(function (ajax) {
 
         let fila = prepararFilaEnLaTablaDeTalentos(ajax, isInterlocutor);
@@ -260,7 +260,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual(id) {
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url: host_url + '/usuario/consultarUserPorId/' + id
+        url: `${host_url}/usuarios/${id}`
     }).done(function (ajax) {
         let fila = prepararFilaEnLaTablaDePropietarios_Users(ajax);
         $('#propiedadIntelectual_Personas').append(fila);
@@ -273,7 +273,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Sede(sede_id)
     $.ajax({
         dataType: 'json',
         type: 'get',
-        url : host_url + '/empresa/ajaxDetalleDeUnaSede/'+sede_id,
+        url : `${host_url}/empresa/ajaxDetalleDeUnaSede/${sede_id}`,
         success: function (response) {
           Swal.fire({
             toast: true,
@@ -309,8 +309,6 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Grupo(id) {
 
 // Valida que el talento no se encuentre asociado al proyecto
 function noRepeat(id) {
-    // console.log('fff');
-    // let retorno = true;
     let a = document.getElementsByName("talentos[]");
     for (x = 0; x < a.length; x ++) {
         if (a[x].value == id) {
@@ -497,9 +495,8 @@ function asociarIdeaDeProyectoAProyecto(id, nombre, codigo) {
             ideaProyectoAsociadaConExito(codigo, nombre);
 
             if(response.data.talento != null){
-
-                addTalentoProyecto(response.data.talento.id, true);
-                addPersonaPropiedad(response.data.talento.user.id);
+                addTalentoProyecto(response.data.talento.documento, true);
+                addPersonaPropiedad(response.data.talento.documento);
             }
             if(response.data.sede != null){
                 addSedePropietaria(response.data.sede.id);
@@ -629,9 +626,8 @@ function consultarTalentosDeTecnoparque_Proyecto_FaseInicio_table(tableName, fie
         },
         processing: true,
         serverSide: true,
-        // order: false,
         ajax: {
-            url: host_url + "/usuario/talento/getTalentosDeTecnoparque/",
+            url: `${host_url}/usuarios/clientes`,
             type: "get"
         },
         columns: [
@@ -723,12 +719,12 @@ function consultarExpertosDeUnNodo(nodo_id) {
     $.ajax({
         dataType:'json',
         type:'get',
-        url: host_url + "/usuario/usuarios/gestores/nodo/"+nodo_id
+        url: `${host_url}/usuarios/expertos/nodo/${nodo_id}`
       }).done(function(response){
           $("#txtexperto_id_proyecto").empty();
           $('#txtexperto_id_proyecto').append('<option value="">Seleccione el experto</option>');
-          $.each(response.gestores, function(i, e) {
-            $('#txtexperto_id_proyecto').append('<option  value="'+e.user_id+'">'+e.nombre+'</option>');
+          $.each(response.experts, function(i, e) {
+            $('#txtexperto_id_proyecto').append('<option  value="'+e.id+'">'+e.nombre_completo+'</option>');
           })
           $('#txtexperto_id_proyecto').material_select();
     });
@@ -738,10 +734,10 @@ function consultarInformacionExperto(user) {
     $.ajax({
         dataType:'json',
         type:'get',
-        url: host_url + "/usuario/consultarUserPorId/"+user
+        url: `${host_url}/usuarios/funcionario/${user}`
       }).done(function(response){
           printLinea(response);
-          consultarSublineas(response.user.gestor.lineatecnologica.id);
+          consultarSublineas(response.user.experto.linea.id);
     });
 }
 
@@ -751,7 +747,6 @@ function consultarSublineas(linea) {
         type:'get',
         url: host_url + "/proyecto/sublineas_of/"+linea
     }).done(function (response) {
-          console.log(response);
         printSublineas(response);
     });
 }
@@ -766,5 +761,5 @@ function printSublineas(response) {
 }
 
 function printLinea(response) {
-    $('#txtlinea').val(response.user.gestor.lineatecnologica.nombre);
+    $('#txtlinea').val(response.user.experto.linea.nombre);
 }

@@ -8,21 +8,21 @@
                             <div class="col s12 m6 l6">
                                 <h4 class=white-text>{{$idea->codigo_idea}} - {{$idea->nombre_proyecto}}</h4>
                                 <address>
-                                    @if (isset($idea->talento->user->nombres))
-                                        {{$idea->talento->user->nombres}} {{$idea->talento->user->apellidos}}
+                                    @if (isset($idea->user->nombres))
+                                        {{$idea->user->nombres}} {{$idea->user->apellidos}}
                                     @else
-                                        {{$idea->nombres_contacto}} {{$idea->apellidos_contacto}}
+                                        No hay información disponible
                                     @endif<br>
-                                    @if (isset($idea->talento->user->email))
-                                        {{$idea->talento->user->email}}
+                                    @if (isset($idea->user->email))
+                                        {{$idea->user->email}}
                                     @else
-                                        {{$idea->correo_contacto}}
+                                        No hay información disponible
                                     @endif
                                 </address>
                             </div>
                             <div class="col s12 m12 l6 right-align">
                                 <h4 class="white-text">Estado: {{$idea->estadoIdea->nombre}}</h4>
-                                <h4 class="white-text">Nodo: {{$idea->nodo->entidad->nombre}}</h4>
+                                <h4 class="white-text">Tecnoparque {{$idea->nodo->entidad->nombre}}</h4>
                             </div>
                         </div>
                     </div>
@@ -102,10 +102,10 @@
                             <p>
                                 <span class="primary-text">Nombres y apellidos</span><br>
                                 <b>
-                                    @if (isset($idea->talento->user->nombres))
-                                        {{$idea->talento->user->nombres}} {{$idea->talento->user->apellidos}}
+                                    @if (isset($idea->user->nombres))
+                                        {{$idea->user->nombres}} {{$idea->user->apellidos}}
                                     @else
-                                        {{$idea->nombres_contacto}} {{$idea->apellidos_contacto}}
+                                        No hay información disponible
                                     @endif
                                 </b><br>
                             </p>
@@ -114,10 +114,10 @@
                             <p>
                                 <span class="primary-text">Correo de contacto</span><br>
                                 <b>
-                                    @if (isset($idea->talento->user->email))
-                                        {{$idea->talento->user->email}}
+                                    @if (isset($idea->user->email))
+                                        {{$idea->user->email}}
                                     @else
-                                        {{$idea->correo_contacto}}
+                                        No hay información disponible
                                     @endif
                                 </b><br>
                             </p>
@@ -126,10 +126,10 @@
                             <p>
                                 <span class="primary-text">Número de celular</span><br>
                                 <b>
-                                    @if (isset($idea->talento->user->celular))
-                                        {{$idea->talento->user->celular}}
+                                    @if (isset($idea->user->celular))
+                                        {{$idea->user->celular}}
                                     @else
-                                        {{$idea->telefono_contacto}}
+                                        No hay información disponible
                                     @endif
                                 </b><br>
                             </p>
@@ -453,7 +453,7 @@
                         </div>
                         <div class="col s12 m12 l12">
                             <p>
-                                <span class="primary-text">Nodo donde se presenta la idea</span><br>
+                                <span class="primary-text">Tecnoparque donde se presenta la idea</span><br>
                                 <b>
                                     {{$idea->nodo->entidad->nombre}}
                                 </b><br>

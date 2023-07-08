@@ -377,7 +377,7 @@ class ArticulationPolicy
     {
         return (bool) $user->hasAnyRole([User::IsArticulador()])
             && (session()->has('login_role') && session()->get('login_role') == User::IsArticulador())
-            && ($user->articulador->nodo_id == $articulation->articulationstage->node_id)
+            && (isset($user->articulador->nodo_id) && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
             && ($articulation->phase->nombre == Articulation::IsCierre());
     }
 
@@ -392,7 +392,7 @@ class ArticulationPolicy
     {
         return (bool) $user->hasAnyRole([User::IsArticulador()])
         && (session()->has('login_role') && session()->get('login_role') == User::IsArticulador())
-        && ($user->articulador->nodo_id == $articulation->articulationstage->node_id)
+        && (isset($user->articulador->nodo_id) && $user->articulador->nodo_id == $articulation->articulationstage->node_id)
         && ($articulation->phase->nombre == Articulation::IsInicio());
     }
 }

@@ -116,7 +116,7 @@ class MaterialController extends Controller
             $nodo = request()->user()->getNodoUser();
         }
         if (session()->get('login_role') == User::IsExperto()) {
-            $linea = auth()->user()->gestor->lineatecnologica_id;
+            $linea = auth()->user()->experto->linea_id;
         }
         $materiales = $this->getMaterialRepository()->consultar()->where('n.id', $nodo);
 
@@ -153,7 +153,7 @@ class MaterialController extends Controller
         if (session()->get('login_role') == User::IsDinamizador()) {
             $nodo = auth()->user()->dinamizador->nodo->id;
         } elseif (session()->get('login_role') == User::IsExperto()) {
-            $nodo = auth()->user()->gestor->nodo->id;
+            $nodo = auth()->user()->experto->nodo->id;
         } else {
             $nodo = $nodos->first()->id;
         }

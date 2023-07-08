@@ -3,11 +3,11 @@
 <div class="row">
     <div class="input-field col s12 m6 l6">
         <input name="txtcodigo_proyecto" disabled
-            value="{{ $proyecto->articulacion_proyecto->actividad->present()->actividadCode() }}" id="txtcodigo_proyecto">
+            value="{{ $proyecto->present()->proyectoCode() }}" id="txtcodigo_proyecto">
         <label class="active" for="txtcodigo_proyecto">Código de Proyecto</label>
     </div>
     <div class="input-field col s12 m6 l6">
-        <input name="txtnombre" value="{{ $proyecto->articulacion_proyecto->actividad->present()->actividadName() }}" disabled
+        <input name="txtnombre" value="{{ $proyecto->present()->proyectoName() }}" disabled
             id="txtnombre" required>
         <label class="active" for="txtnombre">Nombre del Proyecto</label>
     </div>
@@ -47,7 +47,7 @@
     </div>
     <div class="col s6 m3 l3">
         <p class="p-v-xs">
-            <input type="checkbox" {{ $proyecto->articulacion_proyecto->actividad->formulario_inicio == 1 ? 'checked' : '' }} id="txtformulario_inicio" name="txtformulario_inicio" value="1">
+            <input type="checkbox" {{ $proyecto->formulario_inicio == 1 ? 'checked' : '' }} id="txtformulario_inicio" name="txtformulario_inicio" value="1">
             <label for="txtformulario_inicio">Acta de Inicio. (se puede generar desde la plataforma)</label>
         </p>
     </div>
