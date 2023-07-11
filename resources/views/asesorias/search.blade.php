@@ -45,9 +45,7 @@
                                                     <form id="formSearchAsesorie" action="{{ route('asesorie.search')}}" method="POST">
                                                         {!! csrf_field() !!}
                                                         <div class="row">
-
                                                             <div class="input-field col s12 m4 l4">
-                                                                {{-- @can('moduleType', \App\Models\UsoInfraestructura::class) --}}
                                                                 <select class="js-states browser-default select2" tabindex="-1" style="width: 100%" name="type_search" id="type_search" onchange="asesorieSearch.changetextLabel()">
                                                                     @forelse($modules as $id => $name)
                                                                         <option value="{{$id}}" @if($loop->first) selected @endif>{{$name}}</option>
@@ -55,7 +53,6 @@
                                                                         <option>No se encontraron Resultados</option>
                                                                     @endforelse
                                                                 </select>
-                                                                {{-- @endcan --}}
                                                             </div>
                                                             <div class="input-field col s12 m8 l8">
                                                                 <input type="text" id="search_asesorie" name="search_asesorie" class="autocomplete">

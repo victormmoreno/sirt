@@ -49,7 +49,6 @@
         <th>Institución</th>
         <th>Título obtenido</th>
         <th>Fecha de terminación</th>
-        {{-- <th>Tipo de talento</th> --}}
     </tr>
     </thead>
     <tbody>

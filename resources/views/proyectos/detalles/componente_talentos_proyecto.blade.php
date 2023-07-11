@@ -13,7 +13,7 @@
                                     <div class="collapsible-header cyan lighten-1"><i class="material-icons">group_add</i>
                                         Pulse aquí para ver los talentos y asociarlos al proyecto.</div>
                                     <div class="collapsible-body">
-                                        {{-- Collapsible 1 --}}
+
                                         <div class="card-content">
                                             <div class="row">
                                                 <table id="talentosDeTecnoparque_Proyecto_FaseInicio_table" style="width: 100%">
@@ -37,7 +37,7 @@
                                         Pulse aquí para la información de los talentos asociados al proyecto.
                                     </div>
                                     <div class="collapsible-body">
-                                        {{-- Collapsible 2 --}}
+
                                         <div class="card-content">
                                             <div class="row">
                                                 <table id="detalleTalentosDeUnProyecto_Create" class="striped">
