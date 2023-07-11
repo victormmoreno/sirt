@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $('.input-field label').addClass('active');
+    // $('.input-field label').addClass('active');
 
     let filter_nodo = $('#filter_node').val();
     let filter_module = $('#filter_module').val();
