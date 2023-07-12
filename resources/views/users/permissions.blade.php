@@ -403,7 +403,7 @@
                                                                                         session()->get('login_role') == App\User::IsActivador()))
                                                                                             <option value="">Seleccione Nodo</option>
                                                                                             @foreach ($nodos as $id => $nodo)
-                                                                                                @if (isset($user->articulador->nodo->id) && collect($user->roles)->contains('name', App\User::IsExperto()))
+                                                                                                @if (isset($user->articulador->nodo->id) && collect($user->roles)->contains('name', App\User::IsArticulador()))
                                                                                                     <option
                                                                                                         value="{{ $id }}"
                                                                                                         {{ old('articulator_node', $user->articulador->nodo->id) == $id ? 'selected' : '' }}>
@@ -521,7 +521,7 @@
                                                                                         session()->get('login_role') == App\User::IsActivador()))
                                                                                             <option value="">Seleccione Nodo</option>
                                                                                             @foreach ($nodos as $id => $nodo)
-                                                                                                @if (isset($user->infocenter->nodo->id) && collect($user->roles)->contains('name', App\User::IsExperto()))
+                                                                                                @if (isset($user->infocenter->nodo->id) && collect($user->roles)->contains('name', App\User::IsInfocenter()))
                                                                                                     <option
                                                                                                         value="{{ $id }}"
                                                                                                         {{ old('infocenter_node', $user->infocenter->nodo->id) == $id ? 'selected' : '' }}>
@@ -564,8 +564,8 @@
                                                                                     @if(collect($user->roles)->contains('name', App\User::IsInfocenter()) && isset($user->infocenter)  && isset(auth()->user()->dinamizador->nodo_id) && isset($user->infocenter->nodo_id) && $user->infocenter->nodo_id != auth()->user()->dinamizador->nodo_id && (session()->get('login_role') == App\User::IsDinamizador()))
                                                                                         <option value="{{ isset($user->infocenter) && $user->infocenter->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? 1 : 0 }}" {{ isset($user->infocenter) && $user->infocenter->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? 'selected' : '' }}>{{ isset($user->infocenter) && $user->infocenter->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? 'Planta' : 'Contratista' }}</option>
                                                                                     @else
-                                                                                        <option value="0" {{ isset($user->infocenter) && $user->infocenter->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsExperto()) ? 'selected' : '' }}>Contratista</option>
-                                                                                        <option value="1" {{ isset($user->infocenter) && $user->infocenter->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsExperto()) ? 'selected' : '' }}>Planta</option>
+                                                                                        <option value="0" {{ isset($user->infocenter) && $user->infocenter->vinculacion == 0 && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? 'selected' : '' }}>Contratista</option>
+                                                                                        <option value="1" {{ isset($user->infocenter) && $user->infocenter->vinculacion == 1 && collect($user->roles)->contains('name', App\User::IsInfocenter()) ? 'selected' : '' }}>Planta</option>
                                                                                     @endif
                                                                                 </select>
                                                                                 <label for="infocenter_type_relationship" class="active">Tipo Vinculación
@@ -637,10 +637,10 @@
                                                                                         session()->get('login_role') == App\User::IsActivador()))
                                                                                             <option value="">Seleccione Nodo</option>
                                                                                             @foreach ($nodos as $id => $nodo)
-                                                                                                @if (isset($user->apoyotecnico->nodo->id) && collect($user->roles)->contains('name', App\User::IsExperto()))
+                                                                                                @if (isset($user->apoyotecnico->nodo->id) && collect($user->roles)->contains('name', App\User::IsApoyoTecnico()))
                                                                                                     <option
                                                                                                         value="{{ $id }}"
-                                                                                                        {{ old('technical_support_node', $user->articulador->nodo->id) == $id ? 'selected' : '' }}>
+                                                                                                        {{ old('technical_support_node', $user->apoyotecnico->nodo->id) == $id ? 'selected' : '' }}>
                                                                                                         {{ $nodo }}
                                                                                                     </option>
                                                                                                 @else
@@ -676,7 +676,7 @@
                                                                                 <select class="js-states browser-default select2"
                                                                                     id="technical_support_line" name="technical_support_line"
                                                                                     style="width: 100%" tabindex="-1">
-                                                                                    @if(isset($user->apoyotecnico->linea) && (session()->get('login_role') == App\User::IsExperto() || session()->get('login_role') == App\User::IsDinamizador()) && isset(auth()->user()->dinamizador->nodo_id) && isset($user->apoyotecnico->nodo_id) && $user->apoyotecnico->nodo_id != auth()->user()->dinamizador->nodo_id && collect($user->roles)->contains('name',App\User::IsApoyoTecnico()))
+                                                                                    @if(isset($user->apoyotecnico->linea) && (session()->get('login_role') == App\User::IsDinamizador()) && isset(auth()->user()->dinamizador->nodo_id) && isset($user->apoyotecnico->nodo_id) && $user->apoyotecnico->nodo_id != auth()->user()->dinamizador->nodo_id && collect($user->roles)->contains('name',App\User::IsApoyoTecnico()))
                                                                                     <option value="{{$user->apoyotecnico->linea->id}}" selected>{{$user->apoyotecnico->linea->nombre}}</option>
                                                                                     @else
                                                                                         @foreach($lineas as $id => $linea)
