@@ -250,7 +250,7 @@ class AsesorieController extends Controller
         $model = $this->checkRoleAuth($request)['model'];
 
         $asesories = [];
-        if (isset($request->filter_module) || isset($request->filter_node) || isset($request->filter_year)) {
+        if (isset($request->filter_module) || isset($request->filter_node) || isset($request->filter_start_date) || isset($request->filter_end_date)) {
             $asesories = $this->asesorieRepository->getListAsesories()
             ->selectAsesoria($model)
             ->selectRaw("usoinfraestructuras.descripcion, usoinfraestructuras.compromisos")
@@ -258,14 +258,14 @@ class AsesorieController extends Controller
             GROUP_CONCAT(DISTINCT CONCAT(materiales.codigo_material, ' - ', materiales.nombre) SEPARATOR ';') as materiales")
             ->joins($model)
             ->leftJoin('equipo_uso', function ($join) {
-                $join->on('equipo_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id');
-            })->leftJoin('equipos', function ($join) {
-                $join->on('equipos.id', '=', 'equipo_uso.equipo_id');
-            })->leftJoin('material_uso', function ($join) {
-                $join->on('material_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id');
-            })->leftJoin('materiales', function ($join) {
-                $join->on('materiales.id', '=', 'material_uso.material_id');
-            })
+                        $join->on('equipo_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id');
+                    })->leftJoin('equipos', function ($join) {
+                        $join->on('equipos.id', '=', 'equipo_uso.equipo_id');
+                    })->leftJoin('material_uso', function ($join) {
+                        $join->on('material_uso.usoinfraestructura_id', '=', 'usoinfraestructuras.id');
+                    })->leftJoin('materiales', function ($join) {
+                        $join->on('materiales.id', '=', 'material_uso.material_id');
+                    })
             ->node($model, $node)
             ->betweenDate($request->filter_start_date, $request->filter_end_date)
             ->asesor($model,$asesor)
