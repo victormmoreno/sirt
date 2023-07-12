@@ -32,14 +32,14 @@
     @if ($metas->count() != 0)
         <tfoot class="centered">
             <tr>
-                <td><b>Total</b></td>
-                <td><b>{{$metas->sum('trl6') + $metas->sum('trl7_trl8')}}</b></td>
-                <td><b>{{$metas->sum('trl6')}}</b></td>
-                <td><b>{{$metas->sum('trl7_trl8')}}</b></td>
-                <td class="green lighten-5"><b>{{$metas->sum('activos')}}</b></td>
-                <td class="green lighten-5"><b>{{$metas->sum('trl6_obtenido')}}</b></td>
-                <td class="green lighten-5"><b>{{$metas->sum('trl7_8_obtenido')}}</b></td>
-                <td class="green lighten-5">
+                <td class="center-align"><b>Total</b></td>
+                <td  class="center-align"><b>{{$metas->sum('trl6') + $metas->sum('trl7_trl8')}}</b></td>
+                <td  class="center-align"><b>{{$metas->sum('trl6')}}</b></td>
+                <td  class="center-align"><b>{{$metas->sum('trl7_trl8')}}</b></td>
+                <td class="green lighten-5 center-align"><b>{{$metas->sum('activos')}}</b></td>
+                <td class="green lighten-5 center-align"><b>{{$metas->sum('trl6_obtenido')}}</b></td>
+                <td class="green lighten-5 center-align"><b>{{$metas->sum('trl7_8_obtenido')}}</b></td>
+                <td class="green lighten-5 center-align">
                     <b>
                         {{$metas->sum('trl7_8_obtenido') + $metas->sum('trl6_obtenido')}} ({{round(100*($metas->sum('trl7_8_obtenido') + $metas->sum('trl6_obtenido'))/($metas->sum('trl6') + $metas->sum('trl7_trl8')), 2)}}%)
                     </b>

@@ -1,6 +1,4 @@
 $(document).ready(function() {
-    $('.input-field label').addClass('active');
-
     let filter_nodo = $('#filter_node').val();
     let filter_module = $('#filter_module').val();
     let filter_start_date = $('#filter_start_date').val();

@@ -7,14 +7,8 @@
             <ul class="collection">
               @foreach ($comite->historial as $value)
               <li class="collection-item">
-                El día {{$value->created_at}} el {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}} 
+                El día {{$value->created_at}} el {{$value->role->name}} {{$value->user->nombres}} {{$value->user->apellidos}} {{$value->movimiento->movimiento}}
                 {{$value->descripcion}}.
-                {{-- @switch($value->movimiento->movimiento)
-                    @case(App\Models\Movimiento::IsRegistrar())
-                        @break
-                    @default
-                        
-                @endswitch --}}
               </li>
               @endforeach
             </ul>

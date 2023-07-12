@@ -24,6 +24,5 @@
 </table>
 <br>
 <div class="col-md-12 center text-center">
-    {{-- <span class="left" id="total_reg"></span> --}}
     <ul class="pagination pager" id="{{$idPager}}"></ul>
 </div>

@@ -28,13 +28,13 @@
     @if ($metasArticulaciones->count() != 0)
         <tfoot class="centered">
             <tr>
-                <td><b>Total</b></td>
-                <td><b>{{$metas->sum('articulaciones')}}</b></td>
+                <td class="center-align"><b>Total</b></td>
+                <td class="center-align"><b>{{$metas->sum('articulaciones')}}</b></td>
 
-                <td class="green lighten-5"><b>{{$metas->sum('articulation_start')}}</b></td>
-                <td class="green lighten-5"><b>{{$metas->sum('articulation_execution')}}</b></td>
-                <td class="green lighten-5"><b>{{$metas->sum('articulation_closing')}}</b></td>
-                <td class="green lighten-5">
+                <td class="green lighten-5 center-align"><b>{{$metas->sum('articulation_start')}}</b></td>
+                <td class="green lighten-5 center-align"><b>{{$metas->sum('articulation_execution')}}</b></td>
+                <td class="green lighten-5 center-align"><b>{{$metas->sum('articulation_closing')}}</b></td>
+                <td class="green lighten-5 center-align">
                     <b>
                         {{$metas->sum('articulation_finish')}} ({{round(100*($metas->sum('articulation_finish')/$metas->sum('articulaciones')), 2)}}%)
                     </b>
