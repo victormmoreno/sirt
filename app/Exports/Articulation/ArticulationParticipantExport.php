@@ -9,7 +9,7 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 
 class ArticulationParticipantExport extends FatherExport
 {
-    const rowRangeHeading = 'A1:AE1';
+    const rowRangeHeading = 'A1:AF1';
     public function __construct($query)
     {
         $this->setQuery($query);

@@ -50,7 +50,6 @@
                                                                         <th>Archivo</th>
                                                                         <th>Fase</th>
                                                                         <th style="width: 10%">Descargar</th>
-                                                                        {{-- <th style="width: 10%">Eliminar</th> --}}
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>

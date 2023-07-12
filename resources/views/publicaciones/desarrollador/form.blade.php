@@ -39,7 +39,6 @@
   <h5 class="center">Contenido</h5>
   <div class="input-field col s12 m12 l8 offset-l2">
     <textarea id="txtcontenido" name="txtcontenido" class="materialize-textarea">{{ isset($publicacion) ? $publicacion->contenido : '' }}</textarea>
-    {{-- <label for="txtcontenido">Contenido</label> --}}
     <small id="txtcontenido-error" class="error red-text"></small>
   </div>
 </div>

@@ -34,7 +34,7 @@ class RoleContratInformationRequest extends FormRequest
             'activator_code_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsActivador()) &&
                     request()->activator_type_relationship == 0
-                ) . '|min:1|max:40|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|nullable',
+                ) . '|min:1|max:40|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_.-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|nullable',
             'activator_start_date_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsActivador()) &&
                     request()->activator_type_relationship == 0
@@ -59,7 +59,7 @@ class RoleContratInformationRequest extends FormRequest
             'dynamizer_code_contract' => Rule::requiredIf(
                     collect(request()->role)->contains(User::IsDinamizador()) &&
                         request()->dynamizer_type_relationship == 0
-                    ) . '|min:1|max:40|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|nullable',
+                    ) . '|min:1|max:40|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_.-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|nullable',
             'dynamizer_start_date_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsDinamizador()) &&
                     request()->dynamizer_type_relationship == 0
@@ -87,7 +87,7 @@ class RoleContratInformationRequest extends FormRequest
             'expert_code_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsExperto()) &&
                     request()->expert_type_relationship == 0
-                ) . '|min:1|max:40|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|nullable',
+                ) . '|min:1|max:40|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_.-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|nullable',
             'expert_start_date_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsExperto()) &&
                     request()->expert_type_relationship == 0
@@ -112,7 +112,7 @@ class RoleContratInformationRequest extends FormRequest
             'articulator_code_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsArticulador()) &&
                     request()->articulator_type_relationship == 0
-                ) . '|min:1|max:40|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|nullable',
+                ) . '|min:1|max:40|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_.-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|nullable',
             'articulator_start_date_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsArticulador()) &&
                     request()->articulator_type_relationship == 0
@@ -137,7 +137,7 @@ class RoleContratInformationRequest extends FormRequest
             'infocenter_code_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsInfocenter()) &&
                     request()->infocenter_type_relationship == 0
-                ) . '|min:1|max:40|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|nullable',
+                ) . '|min:1|max:40|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_.-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|nullable',
             'infocenter_start_date_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsInfocenter()) &&
                     request()->infocenter_type_relationship == 0
@@ -165,7 +165,7 @@ class RoleContratInformationRequest extends FormRequest
             'technical_support_code_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsApoyoTecnico()) &&
                     request()->technical_support_type_relationship == 0
-                ) . '|min:1|max:40|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|nullable',
+                ) . '|min:1|max:40|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_.-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_.-]*)*)+$/|nullable',
             'technical_support_start_date_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsApoyoTecnico()) &&
                     request()->technical_support_type_relationship == 0
@@ -190,7 +190,7 @@ class RoleContratInformationRequest extends FormRequest
             'income_code_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsIngreso()) &&
                     request()->income_type_relationship == 0
-                ) . '|min:1|max:40|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/|nullable',
+                ) . '|min:1|max:40|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_.-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_.-]*)*)+$/|nullable',
             'income_start_date_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsIngreso()) &&
                     request()->income_type_relationship == 0

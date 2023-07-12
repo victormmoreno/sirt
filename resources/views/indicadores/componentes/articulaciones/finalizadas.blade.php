@@ -1,5 +1,5 @@
 <div class="row card card-panel teal lighten-5">
-    <h6 class="font-bold">Para consultar los indicadores ÚNICAMENTE DE ARTICULACIONES FINALIZADAS Y CONCLUIDAS SIN FINALIZAR, debes seleccionar un rango de fechas y luego presionar el botón de descarga.</h6>
+    <h6 class="font-bold">Para consultar los indicadores ÚNICAMENTE DE ARTICULACIONES FINALIZADAS Y CANCELADAS, debes seleccionar un rango de fechas y luego presionar el botón de descarga.</h6>
     <h6 class="font-bold">Recordar que se está mostrando la fase ACTUAL de la articulación.</h6>
     @can('showIndicadoresArticulacionOptions', Illuminate\Database\Eloquent\Model::class)
         <div class="row">

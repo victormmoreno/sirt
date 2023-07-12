@@ -52,7 +52,6 @@
   </main>
 @endsection
 @push('script')
-  {{-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script> --}}
   <script>
     //Enviar formulario
     $(document).on('submit', 'form#frmPublicacionesEdit', function (event) {
