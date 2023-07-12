@@ -445,7 +445,7 @@ class ArchivoController extends Controller
             }
         }
         if (session()->get('login_role') == User::IsExperto()) {
-            if ($file->model->asesor_id != auth()->user()->id) {
+            if ($file->model->experto_id != auth()->user()->id) {
                 return false;
             }
         }
