@@ -207,34 +207,6 @@ Route::group(
     }
 );
 
-//-------------------Route group para el módulo de empresas
-Route::get('/empresas/filter-code/{value}', 'EmpresaController@filterByCode')->name('empresa.filterbycode');
-Route::get('/empresas/sede/{id}', 'EmpresaController@filterSede')->name('empresa.sede.filter');
-Route::group(
-    [
-        'prefix'     => 'empresa',
-        'middleware' => ['auth'],
-    ],
-    function () {
-        Route::get('/', 'EmpresaController@index')->name('empresa');
-        Route::get('/create', 'EmpresaController@create')->name('empresa.create')->middleware('role_session:Talento|Activador');
-        Route::get('/search', 'EmpresaController@search')->name('empresa.search');
-        Route::get('/detalle/{id}', 'EmpresaController@detalle')->name('empresa.detalle');
-        Route::get('/cambiar_responsable/{id}', 'EmpresaController@form_responsable')->name('empresa.responsable')->middleware('role_session:Talento|Activador');
-        Route::get('/datatableEmpresasDeTecnoparque', 'EmpresaController@datatableEmpresasDeTecnoparque')->name('empresa.datatable');
-        Route::get('/{id}/edit', 'EmpresaController@edit')->name('empresa.edit')->middleware('role_session:Talento|Activador');
-        Route::get('/{id}/{id_sede}/sedes_edit', 'EmpresaController@sedes_edit')->name('empresa.edit.sedes')->middleware('role_session:Talento|Activador');
-        Route::get('/{id}/add_sede', 'EmpresaController@add_sede')->name('empresa.add.sede')->middleware('role_session:Talento|Activador');
-        Route::get('/ajaxDetallesDeUnaEmpresa/{value}/{field}', 'EmpresaController@ajaxDeUnaEmpresa')->name('empresa.ajax.detalle');
-        Route::get('/ajaxDetalleDeUnaSede/{id}', 'EmpresaController@ajaxDeUnaSede')->name('empresa.ajax.detalle');
-        Route::put('/{id}/responsable', 'EmpresaController@update_responsable')->name('empresa.update.responsable')->middleware('role_session:Talento|Activador');
-        Route::put('/{id}', 'EmpresaController@update')->name('empresa.update')->middleware('role_session:Talento|Activador');
-        Route::put('/{id}/store_sede', 'EmpresaController@store_sede')->name('empresa.store.sede')->middleware('role_session:Talento|Activador');
-        Route::put('/{id}/{id_sede}', 'EmpresaController@update_sede')->name('empresa.update.sede')->middleware('role_session:Talento|Activador');
-        Route::post('/buscar_empresas', 'EmpresaController@search_empresa')->name('empresa.search.rq');
-        Route::post('/', 'EmpresaController@store')->name('empresa.store')->middleware('role_session:Talento|Activador');
-    }
-);
 
 Route::group(
     [

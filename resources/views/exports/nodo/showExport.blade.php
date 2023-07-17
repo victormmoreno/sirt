@@ -22,7 +22,12 @@
             <tr>
                 <td>{{ $user->nodo }}</td>
                 <td>{{ $user->roles }}</td>
-                <td>{{ !is_null($user->linea) ? $user->linea : 'No Aplica' }}</td>
+                <td>{{
+                    (
+                        isset($user->experto->linea) && $user->IsExperto() ? $user->experto->linea->nombre :
+                            (isset($user->apoyotecnico->linea) && $user->IsApoyoTecnico() ? $user->apoyotecnico->linea->nombre :'No aplica')
+                    )
+                }}</td>
                 <td>{{ $user->documento }}</td>
                 <td>{{ $user->nombres }} {{ $user->apellidos }}</td>
                 <td>{{ $user->email }}</td>
@@ -86,5 +91,3 @@
         @endforeach
     </tbody>
 </table>
-
-
