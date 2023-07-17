@@ -16,6 +16,9 @@
         <th>Tipo articulación</th>
         <th>Tipo subarticulación</th>
         <th>Alcance</th>
+        <th>Código fase de articulación</th>
+        <th>Nombre fase de articulación</th>
+        <th>Estado fase de articulación</th>
         <th>Código PBT</th>
         <th>Nombre PBT</th>
         <th>Fase PBT</th>
@@ -67,6 +70,9 @@
                 <td>{{ $articulation->articulation_type }}</td>
                 <td>{{ $articulation->articulation_subtype }}</td>
                 <td>{{ $articulation->articulation_scope }}</td>
+                <td>{{ $articulation->code }}</td>
+                <td>{{ $articulation->name }}</td>
+                <td>{{ $articulation->status == 1 ? 'Abierta' : 'Cerrada' }}</td>
                 <td>{{ $articulation->codigo_proyecto }}</td>
                 <td>{{ $articulation->nombre_proyecto }}</td>
                 <td>{{ $articulation->fase_proyecto }}</td>
