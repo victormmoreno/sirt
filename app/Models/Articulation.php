@@ -14,6 +14,7 @@ class Articulation extends Model
     const EXECUTION_PHASE = "Ejecución";
     const CLOSING_PHASE = "Cierre";
     const SUSPENDED_PHASE = "Suspendido";
+    const CANCELED_PHASE = "Cancelado";
     const FINISHED_PHASE = "Finalizado";
 
     /**
@@ -108,6 +109,10 @@ class Articulation extends Model
 
     public static function IsSuspendido() {
         return self::SUSPENDED_PHASE;
+    }
+
+    public static function IsCancelado() {
+        return self::CANCELED_PHASE;
     }
 
 
