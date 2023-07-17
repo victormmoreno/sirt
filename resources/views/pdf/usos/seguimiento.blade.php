@@ -14,7 +14,7 @@
 @endsection
 @section('content-pdf')
 <main class="card-content">
-        <table class="bordered">
+        <table class="bordered" style="table-layout: fixed">
             <tr>
                 <td colspan="2" rowspan="2"><img class="center-image" src="{{asset('img/web.png')}}"></td>
                 <td colspan="6" class="centered"><b>Seguimiento de Asesorias y Uso Infraestructura<b></td>

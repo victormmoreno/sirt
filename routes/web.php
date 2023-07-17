@@ -217,7 +217,7 @@ Route::group(
     ],
     function () {
         Route::get('/', 'EmpresaController@index')->name('empresa');
-        Route::get('/create', 'EmpresaController@create')->name('empresa.create')->middleware('role_session:Talento|Activador');
+        Route::get('/create', 'EmpresaController@create')->name('empresa.create');
         Route::get('/search', 'EmpresaController@search')->name('empresa.search');
         Route::get('/detalle/{id}', 'EmpresaController@detalle')->name('empresa.detalle');
         Route::get('/cambiar_responsable/{id}', 'EmpresaController@form_responsable')->name('empresa.responsable')->middleware('role_session:Talento|Activador');

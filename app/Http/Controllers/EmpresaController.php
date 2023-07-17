@@ -91,7 +91,7 @@ class EmpresaController extends Controller
     // Datatable que muestra las empresas de tecnoparque por parte del dinamizador
     public function datatableEmpresasDeTecnoparque()
     {
-        if (Session::get('login_role') == User::IsTalento()) {
+        if (Session::get('login_role') == User::IsTalento() || Session::get('login_role') == User::IsUsuario()) {
             $empresas = $this->empresaRepository->consultarEmpresas()->where('users.id', auth()->user()->id)->get();
         } else {
             $empresas = $this->empresaRepository->consultarEmpresas()->get();
