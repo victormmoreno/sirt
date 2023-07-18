@@ -29,7 +29,16 @@ class EmpresaPolicy
      **/
     public function index(User $user)
     {
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsActivador(), $user->IsAdministrador(), $user->IsTalento(), $user->IsUsuario(), $user->IsArticulador(), $user->IsExperto(), $user->IsInfocenter(), $user->IsDinamizador()]);
+        return (bool) Str::contains(session()->get('login_role'), [
+            $user->IsAdministrador(),
+            $user->IsActivador(),
+            $user->IsDinamizador(),
+            $user->IsExperto(),
+            $user->IsArticulador(),
+            $user->IsInfocenter(),
+            $user->IsTalento(),
+            $user->IsUsuario()
+        ]);
     }
 
     /**
@@ -41,7 +50,12 @@ class EmpresaPolicy
      **/
     public function create(User $user)
     {
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsActivador(), $user->IsAdministrador(), $user->IsTalento(), $user->IsTalento(), $user->IsUsuario()]);
+        return (bool) Str::contains(session()->get('login_role'), [
+            $user->IsActivador(),
+            $user->IsAdministrador(),
+            $user->IsTalento(),
+            $user->IsUsuario()
+        ]);
     }
 
     /**
@@ -54,10 +68,14 @@ class EmpresaPolicy
      **/
     public function edit(User $user, Empresa $empresa)
     {
-        if (Str::contains(session()->get('login_role'), [$user->IsActivador(), $user->IsAdministrador()])) {
+        if (Str::contains(session()->get('login_role'), [
+            $user->IsActivador(),
+            $user->IsAdministrador()])) {
             return true;
         }
-        if ((session()->get('login_role') == $user->IsTalento() || session()->get('login_role') == $user->IsUsuario()) && $empresa->user_id == request()->user()->id) {
+        if (session()->get('login_role') == $user->IsTalento() ||
+            session()->get('login_role') == $user->IsUsuario() &&
+            $empresa->user_id == $user->id) {
             return true;
         }
         return false;
@@ -106,7 +124,6 @@ class EmpresaPolicy
      * @param User $user
      * @param Empresa $empresa
      * @return bool
-     * @author dum
      **/
     public function showInfoRestricted(User $user, Empresa $empresa)
     {
@@ -118,5 +135,4 @@ class EmpresaPolicy
         }
         return false;
     }
-
 }

@@ -60,9 +60,9 @@ class EmpresaController extends Controller
     */
     public function index()
     {
-        if (!request()->user()->can('index', Empresa::class)) {
-            alert('No autorizado', 'No puedes ver la información de empresas', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
+        if (request()->user()->cannot('index', Empresa::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
         }
         return view('empresa.index');
     }
@@ -107,15 +107,15 @@ class EmpresaController extends Controller
     */
     public function create()
     {
-        if (!request()->user()->can('create', Empresa::class)) {
-            alert('No autorizado', 'No puedes registrar información de empresas', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
+        if (request()->user()->cannot('create', Empresa::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
         }
         return view('empresa.create', [
-        'departamentos' => $this->userRepository->getAllDepartamentos(),
-        'sectores' => Sector::SelectAllSectors()->get(),
-        'tamanhos' => TamanhoEmpresa::all(),
-        'tipos' => TipoEmpresa::all()
+            'departamentos' => $this->userRepository->getAllDepartamentos(),
+            'sectores' => Sector::SelectAllSectors()->get(),
+            'tamanhos' => TamanhoEmpresa::all(),
+            'tipos' => TipoEmpresa::all()
         ]);
     }
 
@@ -124,13 +124,12 @@ class EmpresaController extends Controller
     *
     * @param  \Illuminate\Http\Request  $request
     * @return \Illuminate\Http\Response
-    * @author Julian Dario Londoño Raigosa
     */
     public function store(Request $request)
     {
-        if (!request()->user()->can('create', Empresa::class)) {
-            alert('No autorizado', 'No puedes registrar información de empresas', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
+        if (request()->user()->cannot('create', Empresa::class)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
         }
         $req = new EmpresaFormRequest;
         $validator = Validator::make($request->all(), $req->rules(), $req->messages());
@@ -165,14 +164,13 @@ class EmpresaController extends Controller
     *
     * @param  int  $id
     * @return \Illuminate\Http\Response
-    * @author Victor Manuel Moreno Vega
     */
     public function edit($id)
     {
         $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
-        if (!request()->user()->can('edit', $empresa)) {
-            alert('No autorizado', 'No puedes cambiar la informacion de esta empresa', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
+        if (request()->user()->cannot('edit', $empresa)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
         }
         return view('empresa.edit', [
             'empresa' => $empresa,
@@ -227,9 +225,9 @@ class EmpresaController extends Controller
     public function sedes_edit($id, $id_sede)
     {
         $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
-        if (!request()->user()->can('edit', $empresa)) {
-            alert('No autorizado', 'No puedes cambiar la informacion de esta empresa', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
+        if (request()->user()->cannot('edit', $empresa)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
         }
         $sede = $empresa->sedes->where('id', $id_sede)->first();
         return view('empresa.edit_sede', [
@@ -249,9 +247,9 @@ class EmpresaController extends Controller
     public function form_responsable($id)
     {
         $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
-        if (!request()->user()->can('edit', $empresa)) {
-            alert('No autorizado', 'No puedes cambiar la informacion de esta empresa', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
+        if (request()->user()->cannot('edit', $empresa)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
         }
         return view('empresa.edit_responsable', [
             'empresa' => $empresa
@@ -269,9 +267,9 @@ class EmpresaController extends Controller
     public function update_responsable(Request $request, $id)
     {
         $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
-        if (!request()->user()->can('edit', $empresa)) {
-            alert('No autorizado', 'No puedes cambiar la informacion de esta empresa', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
+        if (request()->user()->cannot('edit', $empresa)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
         }
 
         if ($request->input('txttype_search') == 1) {
@@ -340,9 +338,9 @@ class EmpresaController extends Controller
     public function update(Request $request, $id)
     {
         $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
-        if (!request()->user()->can('edit', $empresa)) {
-            alert('No autorizado', 'No puedes cambiar la informacion de esta empresa', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
+        if (request()->user()->cannot('edit', $empresa)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
         }
         $req       = new EmpresaFormRequest;
         $validator = Validator::make($request->all(), $req->rules('just_comp'), $req->messages());
@@ -379,9 +377,9 @@ class EmpresaController extends Controller
     public function update_sede(Request $request, $id, $id_sede)
     {
         $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
-        if (!request()->user()->can('edit', $empresa)) {
-            alert('No autorizado', 'No puedes cambiar la informacion de esta empresa', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
+        if (request()->user()->cannot('edit', $empresa)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
         }
         $sede = $empresa->sedes->where('id', $id_sede)->first();
 
@@ -420,9 +418,9 @@ class EmpresaController extends Controller
     public function store_sede(Request $request, $id)
     {
         $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
-        if (!request()->user()->can('edit', $empresa)) {
-            alert('No autorizado', 'No puedes cambiar la informacion de esta empresa', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
+        if (request()->user()->cannot('edit', $empresa)) {
+            alert()->warning(__('Sorry, you are not authorized to access the page').' '. request()->path())->toToast()->autoClose(10000);
+            return redirect()->back();
         }
         $req       = new EmpresaFormRequest;
         $validator = Validator::make($request->all(), $req->rules('just_hq'), $req->messages());

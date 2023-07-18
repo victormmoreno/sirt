@@ -32,7 +32,6 @@
             </div>
         </div>
     </main>
-    {{-- {{ App\Models\Visitante::where('documento', ) }} --}}
 @endsection
 @push('script')
     <script>

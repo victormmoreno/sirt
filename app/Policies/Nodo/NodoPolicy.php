@@ -141,7 +141,14 @@ class NodoPolicy
      */
     public function downloadOne(User $user, Nodo $nodo)
     {
-        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador()]) && session()->has('login_role') && (session()->get('login_role') == User::IsActivador() || session()->get('login_role') == User::IsAdministrador());
+        return (bool) $user->hasAnyRole([User::IsAdministrador(), User::IsActivador(), User::IsDinamizador()])
+                && (
+                    session()->has('login_role') && (
+                        session()->get('login_role') == User::IsAdministrador()
+                        || session()->get('login_role') == User::IsActivador()
+                        || (session()->get('login_role') == User::IsDinamizador() && isset($user->dinamizador) && $user->dinamizador->nodo_id == $nodo->id)
+                    )
+                );
     }
 
     /**

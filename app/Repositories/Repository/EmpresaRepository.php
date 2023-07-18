@@ -149,7 +149,7 @@ class EmpresaRepository
         DB::beginTransaction();
         try {
             $user_id = null;
-            if (Session::get('login_role') == User::IsTalento()) {
+            if (Session::get('login_role') == User::IsTalento() || Session::get('login_role') == User::IsUsuario()) {
                 $user_id = auth()->user()->id;
             }
 

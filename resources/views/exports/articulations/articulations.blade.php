@@ -16,7 +16,11 @@
         <th>Tipo articulación</th>
         <th>Tipo subarticulación</th>
         <th>Alcance</th>
-        <th>PBT</th>
+        <th>Código fase de articulación</th>
+        <th>Nombre fase de articulación</th>
+        <th>Estado fase de articulación</th>
+        <th>Código PBT</th>
+        <th>Nombre PBT</th>
         <th>Fase PBT</th>
         <th>Entidad con la que se realiza la articulación</th>
         <th>Nombre contacto</th>
@@ -66,7 +70,11 @@
                 <td>{{ $articulation->articulation_type }}</td>
                 <td>{{ $articulation->articulation_subtype }}</td>
                 <td>{{ $articulation->articulation_scope }}</td>
-                <td>{{ $articulation->codigo_proyecto }} - {{ $articulation->nombre_proyecto }}</td>
+                <td>{{ $articulation->code }}</td>
+                <td>{{ $articulation->name }}</td>
+                <td>{{ $articulation->status == 1 ? 'Abierta' : 'Cerrada' }}</td>
+                <td>{{ $articulation->codigo_proyecto }}</td>
+                <td>{{ $articulation->nombre_proyecto }}</td>
                 <td>{{ $articulation->fase_proyecto }}</td>
                 <td>{{ $articulation->articulation_entity }}</td>
                 <td>{{ $articulation->articulation_contact_name }}</td>
@@ -82,19 +90,6 @@
                 <td>{{ $articulation->articulation_learned_lessons }}</td>
                 <td>{{ $articulation->talent_interlocutor }}</td>
                 <td>{{ $articulation->participants }}</td>
-
-
-                {{-- <td>{{ $articulation->present()->proyectoTrlEsperado() }}</td>
-                <td>{{ $articulation->present()->proyectoTrlObtenido() }}</td>
-                <td>{{ $articulation->present()->proyectoFabricaProductividad() }}</td>
-                <td>{{ $articulation->present()->proyectoRecibidoAreaEmprendimiento() }}</td>
-                <td>{{ $articulation->present()->proyectoEconomiaNaranja() }}</td>
-                <td>{{ $articulation->present()->proyectoTipoEconomiaNaranja() }}</td>
-                <td>{{ $articulation->present()->proyectoDirigidoDiscapacitados() }}</td>
-                <td>{{ $articulation->present()->proyectoDirigidoTipoDiscapacitados() }}</td>
-                <td>{{ $articulation->present()->proyectoActorCTi() }}</td>
-                <td>{{ $articulation->present()->proyectoNombreActorCTi() }}</td>
-                <td>{{ $articulation->present()->proyectoDirigidoAreaEmprendimiento() }}</td> --}}
             </tr>
         @endforeach
     </tbody>

@@ -51,7 +51,6 @@
                 <span class="stats-counter">
                     @if ($proyectos_limite_inicio != 0)
                         Hay {{$proyectos_limite_inicio}} proyectos atrasados en la fase de inicio en el nodo (Máximo {{config('app.proyectos.duracion.inicio')}} días en esta fase).
-                        {{-- <a  class="btn bg-info"><i class="material-icons">search</i></a> --}}
                     @else
                         No hay proyectos con mas de {{config('app.proyectos.duracion.inicio')}} días en la fase de inicio en el nodo.
                     @endif

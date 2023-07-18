@@ -54,9 +54,16 @@ public function index()
     $articulations_execution = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsEjecucion()])->whereIn('nodos.id', $nodos)->get();
     $articulations_closing = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsCierre()])->whereIn('nodos.id', $nodos)->get();
     $articulations_finish = $this->articulationRepository->articulationsForPhase('fases.nombre', 'articulations.end_date', $year_now, [Articulation::IsFinalizado()])->whereIn('nodos.id', $nodos)->get();
+    $articulations_canceled = $this->articulationRepository->articulationsForPhase('fases.nombre', 'articulations.end_date', $year_now, [Articulation::IsCancelado()])->whereIn('nodos.id', $nodos)->get();
 
     $metasProyectos = $this->retornarTodasLasMetasArray($metas, $pbts_trl6, $pbts_trl7_8, $activos);
-    $metasArticulaciones = $this->retornarTodasLasMetasArticulacionArray($metas, ['start' => $articulations_start, 'execution' => $articulations_execution, 'closing' => $articulations_closing, 'finish' => $articulations_finish]);
+    $metasArticulaciones = $this->retornarTodasLasMetasArticulacionArray($metas, [
+        'start' => $articulations_start,
+        'execution' => $articulations_execution,
+        'closing' => $articulations_closing,
+        'finish' => $articulations_finish,
+        'canceled' => $articulations_canceled
+    ]);
     $nodos = Nodo::SelectNodo()->whereIn('nodos.id', $nodos)->get();
     return view('indicadores.index', [
       'nodos' => $nodos,
@@ -106,6 +113,7 @@ public function index()
             $cantidad_ejecucion = $values['execution']->where('nodo', $meta->nodo_id)->first();
             $cantidad_cierre = $values['closing']->where('nodo', $meta->nodo_id)->first();
             $cantidad_finalizado = $values['finish']->where('nodo', $meta->nodo_id)->first();
+            $cantidad_cancelado = $values['canceled']->where('nodo', $meta->nodo_id)->first();
             if ($cantidad_inicio == null) {
                 $meta['articulation_start'] = 0;
             } else {
@@ -125,6 +133,11 @@ public function index()
                 $meta['articulation_finish'] = 0;
             } else {
                 $meta['articulation_finish'] = $cantidad_finalizado->cantidad;
+            }
+            if ($cantidad_cancelado == null) {
+                $meta['articulation_canceled'] = 0;
+            } else {
+                $meta['articulation_canceled'] = $cantidad_cancelado->cantidad;
             }
             if(isset($meta->articulation_finish) && $meta->articulation_finish != 0){
                 $meta['progreso_total_articulaciones'] = round(100*($meta->articulation_finish/$meta->articulaciones), 2);

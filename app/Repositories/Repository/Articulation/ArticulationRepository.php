@@ -66,7 +66,7 @@ class ArticulationRepository extends Repository
         ->selectRaw("CASE WHEN articulations.postulation = 1  THEN if(articulations.approval = 1, articulations.received_date, 'No registra') ELSE 'No Aplica' END AS 'articulation_received_date'")
         ->selectRaw("CASE WHEN articulations.postulation = 1  THEN if(articulations.approval = 0, articulations.report, 'No registra') ELSE 'No Aplica' END AS 'articulation_report'")
         ->selectRaw("CASE WHEN articulations.postulation = 0  THEN articulations.justification ELSE 'No Aplica' END AS 'articulation_justification'")
-        ->selectRaw("GROUP_CONCAT(concat(participant.documento, ' - ', participant.nombres, ' ', participant.apellidos)) AS participants")
+        ->selectRaw("GROUP_CONCAT(DISTINCT concat(participant.documento, ' - ', participant.nombres, ' ', participant.apellidos)) AS participants")
             ->leftJoin('fases', 'fases.id', '=', 'articulations.phase_id')
             ->leftJoin('articulation_scopes', 'articulation_scopes.id', '=', 'articulations.scope_id')
             ->leftJoin('articulation_subtypes', 'articulation_subtypes.id', '=', 'articulations.articulation_subtype_id')
