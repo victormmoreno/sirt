@@ -47,10 +47,10 @@
     </a>
 @endcan
 @can('asignar', $idea)
-    <a href="{{ route('idea.asignar.experto', $idea->id) }}" class="collection-item">
-        <i class="material-icons left">edit</i>
-        Asignar experto a la idea.
-    </a>
+  <a href="{{route('idea.asignar.experto', $idea->id)}}" class="collection-item">
+    <i class="material-icons left">edit</i>
+    Asignar experto a la idea.
+  </a>
 @endcan
 @can('inhabilitar', $idea)
     <a class="collection-item" href="!#" onclick="confirmacionInhabilitar(event)">

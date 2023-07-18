@@ -207,7 +207,6 @@ Route::group(
     }
 );
 
-
 Route::group(
     [
         'prefix'     => 'grupo',

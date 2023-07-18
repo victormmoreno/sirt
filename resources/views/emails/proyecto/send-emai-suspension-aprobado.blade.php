@@ -1,11 +1,11 @@
 @component('mail::message')
-# Suspensión de proyecto | {{$proyecto->present()->proyectoNode()}}.
+# Cancelación de proyecto | {{$proyecto->present()->proyectoNode()}}.
 
 Dinamizador(a)<br>
 Cordial Saludo.
 <br>
 Se ha enviado este correo para informarte que el {{$movimiento->rol}} 
-{{$movimiento->usuario}} solicita suspender el proyecto.
+{{$movimiento->usuario}} solicita cancelar el proyecto.
 <br>
 @component('mail::panel')
 

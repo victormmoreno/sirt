@@ -12,7 +12,7 @@ class SendEmailAprobarSuspenderProyecto extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
     public $proyecto;
     public $movimiento;
-    public $subject = "Aprobación de suspensión de proyecto.";
+    public $subject = "Aprobación de cancelación de proyecto.";
     /**
      * Create a new message instance.
      *

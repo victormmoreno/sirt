@@ -144,8 +144,8 @@
                     </div>
                     <div class="input-field col s12 m4 l4">
                         <i class="material-icons prefix">account_circle</i>
-                        @if(isset($asesorie->asesorable->asesor->user))
-                            <input id="txtgestor" name="txtgestor" readonly="" type="text" value="{{$asesorie->asesorable->asesor->user->documento}} - {{$asesorie->asesorable->asesor->user->nombres}} {{$asesorie->asesorable->asesor->user->apellidos}}"/>
+                        @if(isset($asesorie->asesorable->asesor))
+                            <input id="txtgestor" name="txtgestor" readonly="" type="text" value="{{$asesorie->asesorable->asesor->documento}} - {{$asesorie->asesorable->asesor->nombres}} {{$asesorie->asesorable->asesor->apellidos}}"/>
                         @else
                             <input id="txtgestor" name="txtgestor" readonly="" type="text" value="Por favor seleccione un tipo de asesoría y uso"/>
                         @endif

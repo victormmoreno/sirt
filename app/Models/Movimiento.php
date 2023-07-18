@@ -22,7 +22,7 @@ class Movimiento extends Model
     const IS_INHABILITAR = 'inhabilitó';
     const IS_NOTIFICAR = 'notificó';
     const IS_REASIGNAR = 'reasignó';
-    const IS_SUSPENDER = 'suspendió';
+    const IS_SUSPENDER = 'canceló';
     const IS_CAMBIAR_INTERLOCUTOR = 'cambió el talento interlocutor';
     const IS_CAMBIAR_TALENTOS = 'cambió los talentos del proyecto';
     protected $table = 'movimientos';

@@ -59,7 +59,7 @@
     function preguntaSuspender(e){
     e.preventDefault();
         Swal.fire({
-            title: '¿Está seguro(a) de suspender este proyecto?',
+            title: '¿Está seguro(a) de cancelar este proyecto?',
             text: "No podrás revertir esta acción!",
             type: 'warning',
             showCancelButton: true,
@@ -69,7 +69,7 @@
             confirmButtonText: 'Sí!'
         }).then((result) => {
             if (result.value) {
-                document.frmSuspenderProyectoGestor.submit();
+                document.frmAprobacionProyecto.submit();
             }
         })
     }
