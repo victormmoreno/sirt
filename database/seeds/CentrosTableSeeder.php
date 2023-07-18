@@ -806,8 +806,6 @@ class CentrosTableSeeder extends Seeder
                 'entidad_id'    => Entidad::where('nombre', 'Centro de Producción y Transformación Agroindustrial de la Orinoquía')->first()->id,
                 'codigo_centro' => 9531,
             ]);
-        } else {
-            factory(Centro::class, 200)->create();
         }
     }
 }

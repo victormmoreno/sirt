@@ -243,8 +243,6 @@ class RegionalesTableSeeder extends Seeder
                 'codigo_regional' => '99',
                 'direccion'       => '(Sede Nueva) Carrera 10 No 15 - 131 Barrio Tamarido',
             ]);
-        } else {
-            factory(Regional::class, 32)->create();
         }
     }
 }

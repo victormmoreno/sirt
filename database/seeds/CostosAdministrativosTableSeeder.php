@@ -31,19 +31,11 @@ class CostosAdministrativosTableSeeder extends Seeder
         ]);
 
         CostoAdministrativo::create([
-            'nombre' => 'Enlace',
+            'nombre' => 'Soporte en sitio - Mesa de servicio',
         ]);
 
         CostoAdministrativo::create([
             'nombre' => 'Servicios Administrativos',
-        ]);
-
-        CostoAdministrativo::create([
-            'nombre' => 'Dinamizador',
-        ]);
-
-        CostoAdministrativo::create([
-            'nombre' => 'Infocenter',
         ]);
 
         $costos = CostoAdministrativo::all();

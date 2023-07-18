@@ -24,5 +24,8 @@ class OcupacionesTableSeeder extends Seeder
         Ocupacion::create([
             'nombre' => 'Empleado',
         ]);
+        Ocupacion::create([
+            'nombre' => 'Campesino',
+        ]);
     }
 }
