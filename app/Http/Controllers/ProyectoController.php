@@ -850,9 +850,9 @@ class ProyectoController extends Controller
     {
         $notificacion = $this->getProyectoRepository()->notificarAlDinamziador_Suspendido($id);
         if ($notificacion) {
-            Alert::success('Notificación Exitosa!', 'Se le ha enviado una notificación al dinamizador para que apruebe la suspensión del proyecto!')->showConfirmButton('Ok', '#3085d6');
+            Alert::success('Notificación Exitosa!', 'Se le ha enviado una notificación al dinamizador para que apruebe la cancelación del proyecto!')->showConfirmButton('Ok', '#3085d6');
         } else {
-            Alert::error('Notificación Errónea!', 'No se le ha enviado una notificación al dinamizador para que apruebe la suspensión del proyecto!')->showConfirmButton('Ok', '#3085d6');
+            Alert::error('Notificación Errónea!', 'No se le ha enviado una notificación al dinamizador para que apruebe la cancelación del proyecto!')->showConfirmButton('Ok', '#3085d6');
         }
         return back();
     }

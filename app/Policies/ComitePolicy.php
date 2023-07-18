@@ -282,7 +282,10 @@ class ComitePolicy
         if (session()->get('login_role') == $user->IsAdministrador() && ($idea->estadoIdea->nombre == $idea->estadoIdea->IsAdmitido() || $idea->estadoIdea->nombre == $idea->estadoIdea->IsPBT())) {
             return true;
         }
-        if (session()->get('login_role') == $user->IsDinamizador() && ($comite->estado->nombre == $comite->estado->IsAsignado() || $comite->estado->nombre == $comite->estado->IsRealizado()) && ($idea->estadoIdea->nombre == $idea->estadoIdea->IsAdmitido() || $idea->estadoIdea->nombre == $idea->estadoIdea->IsPBT()) && $comite->fechacomite->diffInDays(Carbon::now()) <= 7) {
+        if (session()->get('login_role') == $user->IsDinamizador() && $comite->estado->nombre == $comite->estado->IsRealizado() && $idea->estadoIdea->nombre == $idea->estadoIdea->IsAdmitido()) {
+            return true;
+        }
+        if (session()->get('login_role') == $user->IsDinamizador() && $comite->estado->nombre == $comite->estado->IsAsignado() && ($idea->estadoIdea->nombre == $idea->estadoIdea->IsAdmitido() || $idea->estadoIdea->nombre == $idea->estadoIdea->IsPBT()) && $comite->fechacomite->diffInDays(Carbon::now()) <= 7) {
             return true;
         }
         return false;

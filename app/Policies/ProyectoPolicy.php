@@ -389,7 +389,7 @@ class ProyectoPolicy
     }
 
     /**
-     * Determina quienes y cuando se pueden ver los botones de aprobación o rechazo de la suspensión del proyecto
+     * Determina quienes y cuando se pueden ver los botones de aprobación o rechazo de la cancelación del proyecto
      *
      * @param \App\User $user
      * @param \App\Models\Proyecto $ult_notificacion

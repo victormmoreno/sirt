@@ -2,9 +2,9 @@
 <input type="hidden" type="text" name="control_notificacion_id" id="control_notificacion_id" value="{{$ult_notificacion->id}}">
 <input type="hidden" type="text" name="decision" id="decision">
 @if ($ult_notificacion->fase->nombre == App\Models\Proyecto::IsSuspendido())
-    <button type="submit" onclick="preguntaSuspendido(event)" class="waves-effect bg-secondary btn center-aling">
+    <button type="submit" onclick="preguntaSuspender(event)" class="waves-effect bg-secondary btn center-aling">
         <i class="material-icons right">done</i>
-        Aprobar la suspensión del proyecto
+        Aprobar la cancelación del proyecto
     </button>
 @else
     @if ( url()->current() == $proyecto->present()->proyectoRutaActual() )

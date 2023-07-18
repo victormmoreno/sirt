@@ -5,7 +5,7 @@
             @canany(['showOptionsForDinamizador', 'showOptionsForExperto'], App\Models\Proyecto::class)
                 <a href="{{route('proyecto.suspender', $proyecto->id)}}" class="collection-item">
                     <i class="material-icons left">priority_high</i>
-                    Suspender proyecto.
+                    Cancelar proyecto.
                 </a>
             @endcan
             @can('showOptionsForExperto', App\Models\Proyecto::class)

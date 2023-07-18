@@ -1062,7 +1062,7 @@ class ProyectoRepository extends Repository
             $conf_envios = false;
             if ($fase == $proyecto->IsSuspendido()) {
                 $conf_envios = $this->configuracionNotificacionDinamizador($proyecto);
-                $msg = 'Se le ha enviado una notificación al dinamizador para que apruebe la suspensión del proyecto!';
+                $msg = 'Se le ha enviado una notificación al dinamizador para que apruebe la cancelación del proyecto!';
                 $notificacion = $proyecto->registerNotifyProject($conf_envios['receptor'], $conf_envios['receptor_role'], $fase);
             } else {
                 if ($notificacion_fase_actual == null) {
@@ -1178,7 +1178,6 @@ class ProyectoRepository extends Repository
     {
         DB::beginTransaction();
         try {
-
             $proyecto = Proyecto::findOrFail($id);
             $notificacion_act = ControlNotificaciones::find($request->control_notificacion_id);
             $notificacion_act->update(['fecha_aceptacion' => Carbon::now(), 'estado' => $notificacion_act->IsAceptado()]);
@@ -1187,7 +1186,7 @@ class ProyectoRepository extends Repository
                 'fase_id' => Fase::where('nombre', $proyecto->IsSuspendido())->first()->id,
                 'fecha_cierre' => Carbon::now()
             ]);
-            Notification::send(User::findOrFail($proyecto->asesor->user->id), new ProyectoSuspendidoAprobado($proyecto));
+            Notification::send(User::findOrFail($proyecto->asesor->id), new ProyectoSuspendidoAprobado($proyecto));
             DB::commit();
             return true;
         } catch (\Throwable $th) {

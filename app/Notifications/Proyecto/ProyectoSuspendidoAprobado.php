@@ -45,7 +45,7 @@ class ProyectoSuspendidoAprobado extends Notification implements ShouldQueue
             'icon'  => 'library_books',
             'color' => 'green',
             'autor' => "{$this->getProyecto()->present()->proyectoUserAsesor()}",
-            'text'  => "Se aprobó la suspensión del proyecto | {$this->getProyecto()->present()->proyectoCode()} - {$this->getProyecto()->present()->proyectoName()}",
+            'text'  => "Se aprobó la cancelación del proyecto | {$this->getProyecto()->present()->proyectoCode()} - {$this->getProyecto()->present()->proyectoName()}",
         ];
     }
 

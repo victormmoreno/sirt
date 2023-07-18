@@ -20,7 +20,6 @@ class IndicadorArticulacionesExport implements WithMultipleSheets
      */
     public function sheets(): array
     {
-        // dd($this->hoja);
         $sheets = [];
         if ($this->hoja == 'all') {
             $sheets[] = new ArticulacionExport(
