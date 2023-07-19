@@ -32,6 +32,18 @@ trait MustCompleteTalentInformation
     }
 
     /**
+     * Mark the given user's information talent as incompleted.
+     *
+     * @return bool
+     */
+    public function markInformationTalentAsIncompleted()
+    {
+        return $this->forceFill([
+            'informacion_user_completed_at' => null,
+        ])->save();
+    }
+
+    /**
      * save information talent.
      *
      */
