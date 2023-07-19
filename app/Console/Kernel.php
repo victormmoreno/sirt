@@ -7,6 +7,7 @@ use App\Console\Commands\DisableOfficialsCommand;
 use App\Console\Commands\QueueWorkCronJons;
 use App\Console\Commands\RetryingFailedJobs;
 use App\Console\Commands\CreateCostoAdministrativoForYear;
+use App\Console\Commands\MarkInformationTalentIncompleteCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -23,6 +24,7 @@ class Kernel extends ConsoleKernel
         QueueWorkCronJons::class,
         CreateCostoAdministrativoForYear::class,
         RetryingFailedJobs::class,
+        MarkInformationTalentIncompleteCommand::class
     ];
 
     /**
@@ -34,7 +36,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('officials:disabled')
-                    ->daily();
+                    ->dailyAt('1:00');
+        $schedule->command('user:mark-information-talent-incomplete --document=default')
+                    ->dailyAt('1:00');
         $schedule->command('costoadministrativo:create')
                     ->yearly()
                     ->monthlyOn(1, '01:00');
