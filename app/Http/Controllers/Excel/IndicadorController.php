@@ -310,9 +310,9 @@ class IndicadorController extends Controller
                 break;
             case 'todos':
                 return $query->where(function($q) use ($request) {
-                    $q->whereBetween('fecha_cierre', [$request->fecha_inicio, $request->fecha_cierre])
+                    $q->whereBetween('fecha_cierre', [$request->fecha_inicio, $request->fecha_fin])
                     ->orWhere(function($query) use ($request) {
-                        $query->whereBetween('fecha_inicio', [$request->fecha_inicio, $request->fecha_cierre])
+                        $query->whereBetween('fecha_inicio', [$request->fecha_inicio, $request->fecha_fin])
                         ->orWhereIn('fases.nombre', [Proyecto::IsInicio(), Proyecto::IsPlaneacion(), Proyecto::IsEjecucion(), Proyecto::IsCierre()]);
                     });
                 });
