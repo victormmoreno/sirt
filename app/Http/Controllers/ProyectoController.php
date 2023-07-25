@@ -841,23 +841,6 @@ class ProyectoController extends Controller
     }
 
     /**
-     * Notifica al dinamizador para que un proyecto se suspenda
-     * @param int $id Id del proyecto
-     * @return Reponse
-     * @author dum
-     **/
-    public function notificar_suspendido(int $id)
-    {
-        $notificacion = $this->getProyectoRepository()->notificarAlDinamziador_Suspendido($id);
-        if ($notificacion) {
-            Alert::success('Notificación Exitosa!', 'Se le ha enviado una notificación al dinamizador para que apruebe la cancelación del proyecto!')->showConfirmButton('Ok', '#3085d6');
-        } else {
-            Alert::error('Notificación Errónea!', 'No se le ha enviado una notificación al dinamizador para que apruebe la cancelación del proyecto!')->showConfirmButton('Ok', '#3085d6');
-        }
-        return back();
-    }
-
-    /**
      * Modifica los datos de la fase de inicio de un proyecto.
      *
      * @param  \Illuminate\Http\Request  $request
