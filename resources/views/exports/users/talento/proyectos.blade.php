@@ -49,6 +49,8 @@
         <th>Institución</th>
         <th>Título obtenido</th>
         <th>Fecha de terminación</th>
+        <th>Tipo Talento</th>
+        <th>Información Talento</th>
     </tr>
     </thead>
     <tbody>
@@ -113,6 +115,8 @@
             <td>{{ $user->institucion }}</td>
             <td>{{ $user->titulo_obtenido }}</td>
             <td>{{ $user->fecha_terminacion }}</td>
+            <td>{{ $user->tipo_talento }}</td>
+            <td>{{ $user->detalle_talento }}</td>
         </tr>
         @endforeach
     </tbody>
