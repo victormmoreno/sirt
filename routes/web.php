@@ -313,7 +313,7 @@ Route::group(
         Route::get('/import_metas_form', 'IndicadorController@form_import_metas')->name('indicadores.form.metas')->middleware('role_session:Activador');
         Route::get('/export_materiales', 'Excel\MaterialController@download')->name('download.materiales');
         Route::get('/export_equipos', 'Excel\EquipoController@download')->name('download.equipos');
-        Route::get('/export_seguimiento', 'Excel\SeguimientoController@download_seguimiento')->name('download.equipos');
+        Route::get('/export_seguimiento', 'Excel\SeguimientoController@download_seguimiento');
 
         Route::get('/export/{nodo}/articulaciones/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicatorArticulations')->name('indicador.export.excel');
 
