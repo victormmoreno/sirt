@@ -444,6 +444,20 @@ class ProyectoRepository extends Repository
             IF(ue.mujerCabezaFamilia=1,"Si","No") AS mujerCabezaFamilia, IF(ue.desplazadoPorViolencia=1,"Si","No") AS desplazadoPorViolencia, ue.institucion,
             ue.titulo_obtenido, ue.fecha_terminacion
         ')
+        ->selectRaw(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.tipo_talento')) as tipo_talento"))
+        ->selectRaw(DB::raw(
+            "CASE
+                WHEN JSON_CONTAINS(ue.informacion_user, '\"Aprendiz SENA con apoyo de sostenimiento\"',  '$.talento.tipo_talento') THEN CONCAT(JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.regional')), ', ', JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.centro_formacion')), ', ', JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.programa_formacion')))
+                WHEN JSON_CONTAINS(ue.informacion_user, '\"Aprendiz SENA sin apoyo de sostenimiento\"',  '$.talento.tipo_talento') THEN CONCAT(JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.regional')), ', ', JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.centro_formacion')), ', ', JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.programa_formacion')))
+                WHEN JSON_CONTAINS(ue.informacion_user, '\"Egresado SENA\"',  '$.talento.tipo_talento') THEN CONCAT(JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.regional')), ', ', JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.centro_formacion')), ', ', JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.programa_formacion')), ', ', JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.tipo_formacion')))
+                WHEN JSON_CONTAINS(ue.informacion_user, '\"Estudiante Universitario\"',  '$.talento.tipo_talento') THEN CONCAT(JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.tipo_estudio')), ', ', JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.universidad')), ', ', JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.carrera')))
+                WHEN JSON_CONTAINS(ue.informacion_user, '\"Funcionario de empresa\"',  '$.talento.tipo_talento') THEN JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.empresa'))
+                WHEN JSON_CONTAINS(ue.informacion_user, '\"Funcionario SENA\"',  '$.talento.tipo_talento') THEN CONCAT(JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.regional')), ', ', JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.centro_formacion')), ', ', JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.dependencia')))
+                WHEN JSON_CONTAINS(ue.informacion_user, '\"Instrutor SENA\"',  '$.talento.tipo_talento') THEN CONCAT(JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.regional')), ', ', JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.centro_formacion')))
+                WHEN JSON_CONTAINS(ue.informacion_user, '\"Propietario Empresa\"',  '$.talento.tipo_talento') THEN JSON_UNQUOTE(JSON_EXTRACT(ue.informacion_user,  '$.talento.empresa'))
+                ELSE 'No aplica'
+            END as detalle_talento"
+    ))
         ->join('proyecto_talento', 'proyecto_talento.proyecto_id', '=', 'proyectos.id')
         ->join('users AS ue', 'ue.id', '=', 'proyecto_talento.user_id')
         ->leftjoin('gruposanguineos', 'gruposanguineos.id', '=', 'ue.gruposanguineo_id')
