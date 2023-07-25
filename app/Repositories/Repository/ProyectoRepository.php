@@ -411,7 +411,7 @@ class ProyectoRepository extends Repository
     public function indicadoresUsers()
     {
         $user = User::class;
-        return $this->proyectosIndicadoresSeparados_Repository()->selectRaw('
+        return $this->proyectosIndicadoresSeparados_Repository()->selectRaw('up.informacion_user->>"$.talento.tipo_talento" AS tipo_talento,
             up.documento, up.nombres, up.apellidos, up.email, up.celular, up.telefono, gruposanguineos.nombre AS nombre_gruposanguineo, up.estrato,
             IF(up.genero=0,"Femenino",IF(up.genero=1,"Masculino","No binario")) as genero, concat(cr.nombre, " - ", dr.nombre) AS ciudad_residencia, up.direccion,
             up.barrio, up.fechanacimiento, eps.nombre AS nombre_eps, IF(eps.nombre="Otra",up.otra_eps,"No aplica") AS otra_eps, etnias.nombre AS etnia,
@@ -436,7 +436,7 @@ class ProyectoRepository extends Repository
      **/
     public function indicadoresUsersEjecutores()
     {
-        return $this->proyectosIndicadoresSeparados_Repository()->selectRaw('
+        return $this->proyectosIndicadoresSeparados_Repository()->selectRaw('ue.informacion_user->>"$.talento.tipo_talento" AS tipo_talento,
             ue.documento, ue.nombres, ue.apellidos, ue.email, ue.celular, ue.telefono, gruposanguineos.nombre AS nombre_gruposanguineo, ue.estrato,
             IF(ue.genero=0,"Femenino",IF(ue.genero=1,"Masculino","No binario")) as genero, concat(cr.nombre, " - ", dr.nombre) AS ciudad_residencia, ue.direccion,
             ue.barrio, ue.fechanacimiento, eps.nombre AS nombre_eps, IF(eps.nombre="Otra",ue.otra_eps,"No aplica") AS otra_eps, etnias.nombre AS etnia,
