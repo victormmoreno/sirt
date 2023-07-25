@@ -5,7 +5,7 @@ namespace App\Repositories\Repository;
 
 use App\Models\{Proyecto, Entidad, Fase, ControlNotificaciones, Movimiento, Role, Idea, EstadoIdea, Sede, GrupoInvestigacion};
 use Illuminate\Support\Facades\{DB, Notification, Storage, Session};
-use App\Notifications\Proyecto\{ProyectoAprobarFase, ProyectoAprobarSuspendido, ProyectoSuspendidoAprobado, ProyectoNoAprobarFase};
+use App\Notifications\Proyecto\{ProyectoAprobarFase, ProyectoSuspendidoAprobado, ProyectoNoAprobarFase};
 use Carbon\Carbon;
 use App\Events\Proyecto\{ProyectoWasntApproved, ProyectoWasApproved, ProyectoApproveWasRequested, ProyectoSuspenderWasRequested};
 use App\User;
@@ -411,7 +411,7 @@ class ProyectoRepository extends Repository
     public function indicadoresUsers()
     {
         $user = User::class;
-        return $this->proyectosIndicadoresSeparados_Repository()->selectRaw('up.informacion_user->>"$.talento.tipo_talento" AS tipo_talento,
+        return $this->proyectosIndicadoresSeparados_Repository()->selectRaw('
             up.documento, up.nombres, up.apellidos, up.email, up.celular, up.telefono, gruposanguineos.nombre AS nombre_gruposanguineo, up.estrato,
             IF(up.genero=0,"Femenino",IF(up.genero=1,"Masculino","No binario")) as genero, concat(cr.nombre, " - ", dr.nombre) AS ciudad_residencia, up.direccion,
             up.barrio, up.fechanacimiento, eps.nombre AS nombre_eps, IF(eps.nombre="Otra",up.otra_eps,"No aplica") AS otra_eps, etnias.nombre AS etnia,
@@ -419,6 +419,20 @@ class ProyectoRepository extends Repository
             IF(up.mujerCabezaFamilia=1,"Si","No") AS mujerCabezaFamilia, IF(up.desplazadoPorViolencia=1,"Si","No") AS desplazadoPorViolencia, up.institucion,
             up.titulo_obtenido, up.fecha_terminacion
         ')
+        ->selectRaw(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.tipo_talento')) as tipo_talento"))
+        ->selectRaw(DB::raw(
+            "CASE
+                WHEN JSON_CONTAINS(up.informacion_user, '\"Aprendiz SENA con apoyo de sostenimiento\"',  '$.talento.tipo_talento') THEN CONCAT(JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.regional')), ', ', JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.centro_formacion')), ', ', JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.programa_formacion')))
+                WHEN JSON_CONTAINS(up.informacion_user, '\"Aprendiz SENA sin apoyo de sostenimiento\"',  '$.talento.tipo_talento') THEN CONCAT(JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.regional')), ', ', JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.centro_formacion')), ', ', JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.programa_formacion')))
+                WHEN JSON_CONTAINS(up.informacion_user, '\"Egresado SENA\"',  '$.talento.tipo_talento') THEN CONCAT(JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.regional')), ', ', JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.centro_formacion')), ', ', JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.programa_formacion')), ', ', JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.tipo_formacion')))
+                WHEN JSON_CONTAINS(up.informacion_user, '\"Estudiante Universitario\"',  '$.talento.tipo_talento') THEN CONCAT(JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.tipo_estudio')), ', ', JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.universidad')), ', ', JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.carrera')))
+                WHEN JSON_CONTAINS(up.informacion_user, '\"Funcionario de empresa\"',  '$.talento.tipo_talento') THEN JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.empresa'))
+                WHEN JSON_CONTAINS(up.informacion_user, '\"Funcionario SENA\"',  '$.talento.tipo_talento') THEN CONCAT(JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.regional')), ', ', JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.centro_formacion')), ', ', JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.dependencia')))
+                WHEN JSON_CONTAINS(up.informacion_user, '\"Instrutor SENA\"',  '$.talento.tipo_talento') THEN CONCAT(JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.regional')), ', ', JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.centro_formacion')))
+                WHEN JSON_CONTAINS(up.informacion_user, '\"Propietario Empresa\"',  '$.talento.tipo_talento') THEN JSON_UNQUOTE(JSON_EXTRACT(up.informacion_user,  '$.talento.empresa'))
+                ELSE 'No aplica'
+            END as detalle_talento"
+        ))
         ->join('propietarios', 'propietarios.proyecto_id', '=', 'proyectos.id')
         ->join('users AS up', function($q) use ($user) {$q->on('up.id', '=', 'propietarios.propietario_id')->where('propietarios.propietario_type', "$user");})
         ->leftjoin('gruposanguineos', 'gruposanguineos.id', '=', 'up.gruposanguineo_id')
@@ -436,7 +450,7 @@ class ProyectoRepository extends Repository
      **/
     public function indicadoresUsersEjecutores()
     {
-        return $this->proyectosIndicadoresSeparados_Repository()->selectRaw('ue.informacion_user->>"$.talento.tipo_talento" AS tipo_talento,
+        return $this->proyectosIndicadoresSeparados_Repository()->selectRaw('
             ue.documento, ue.nombres, ue.apellidos, ue.email, ue.celular, ue.telefono, gruposanguineos.nombre AS nombre_gruposanguineo, ue.estrato,
             IF(ue.genero=0,"Femenino",IF(ue.genero=1,"Masculino","No binario")) as genero, concat(cr.nombre, " - ", dr.nombre) AS ciudad_residencia, ue.direccion,
             ue.barrio, ue.fechanacimiento, eps.nombre AS nombre_eps, IF(eps.nombre="Otra",ue.otra_eps,"No aplica") AS otra_eps, etnias.nombre AS etnia,
@@ -1154,32 +1168,6 @@ class ProyectoRepository extends Repository
             'tipo_movimiento' => Movimiento::IsSolicitarDinamizador(),
             'destinatarios' => $destinatarios
         ];
-    }
-
-    /**
-     * Notifica al dinamizador para que apruebe el proyecto en la fase de suspendido
-     *
-     * @param int $id Id del proyecto
-     * @return boolean
-     * @author dum
-     */
-    public function notificarAlDinamziador_Suspendido(int $id)
-    {
-        DB::beginTransaction();
-        try {
-            $proyecto = Proyecto::findOrFail($id);
-            $dinamizadores = User::ConsultarFuncionarios($proyecto->nodo_id, User::IsDinamizador())->get();
-            $destinatarios = $this->returnEmailDestinatariosArray($dinamizadores);
-            Notification::send($dinamizadores, new ProyectoAprobarSuspendido($proyecto));
-            $this->crearMovimiento($proyecto, 'Cancelado', 'solicitó al dinamizador', null);
-            $movimiento = Proyecto::consultarHistoricoProyecto($proyecto->id)->get()->last();
-            event(new ProyectoSuspenderWasRequested($proyecto, $movimiento, $destinatarios));
-            DB::commit();
-        return true;
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            return false;
-        }
     }
 
     /**
