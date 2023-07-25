@@ -374,15 +374,16 @@ class EquipoController extends Controller
                 $linea = null;
                 break;
             case User::IsDinamizador():
-                $nodo = auth()->user()->dinamizador->nodo_id;
+                $nodo = request()->user()->dinamizador->nodo_id;
                 $linea = null;
+                break;
             case User::IsApoyoTecnico():
-                $nodo = auth()->user()->apoyotecnico->nodo_id;
+                $nodo = request()->user()->apoyotecnico->nodo_id;
                 $linea = null;
                 break;
             case User::IsExperto():
-                $nodo = auth()->user()->experto->nodo_id;
-                $linea = auth()->user()->experto->linea_id;
+                $nodo = request()->user()->experto->nodo_id;
+                $linea = request()->user()->experto->linea_id;
                 break;
             default:
                 return abort('403');
