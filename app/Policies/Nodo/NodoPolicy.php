@@ -125,11 +125,10 @@ class NodoPolicy
                     && (
                         session()->get('login_role') == User::IsAdministrador() ||
                         session()->get('login_role') == User::IsActivador() ||
-                        session()->get('login_role') == User::IsDinamizador()
+                        (session()->get('login_role') == User::IsDinamizador() && $user->dinamizador->nodo_id == $nodo->id)
                         )
                     )
-                )
-            && ($user->dinamizador->nodo_id == $nodo->id);
+                );
     }
 
     /**
