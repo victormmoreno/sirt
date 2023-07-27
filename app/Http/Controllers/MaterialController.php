@@ -104,7 +104,7 @@ class MaterialController extends Controller
     }
 
     /**
-     * devolver datatables equipos por nodo.
+     * devolver datatables materiales por nodo.
      *
      * @param  int nodo
      * @return \Illuminate\Http\Response
@@ -244,9 +244,9 @@ class MaterialController extends Controller
         $materialUpdate = $this->getMaterialRepository()->updateMaterial($request, $material);
         if ($materialUpdate == true) {
 
-            alert()->success("El equipo ha sido  modificado.", 'Modificación Exitosa', "success");
+            alert()->success("El material ha sido  modificado.", 'Modificación Exitosa', "success");
         } else {
-            alert()->error("El equipo no ha sido  modificado.", 'Modificación Errónea', "error");
+            alert()->error("El material no ha sido  modificado.", 'Modificación Errónea', "error");
         }
 
         return redirect()->route('material.index');
