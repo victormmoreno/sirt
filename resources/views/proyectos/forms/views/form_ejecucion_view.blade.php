@@ -96,13 +96,13 @@
                 name: 'download',
                 orderable: false,
             },
-            @if ($proyecto->present()->proyectoFase() == 'Ejecución' || $proyecto->fase->nombre == 'Finalizado')
+            @can('delete_files', [$proyecto, $proyecto->IsEjecucion()])
             {
                 data: 'delete',
                 name: 'delete',
                 orderable: false,
             },
-            @endif
+            @endcan
             ],
         });
     }

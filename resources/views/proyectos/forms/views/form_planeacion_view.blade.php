@@ -105,13 +105,13 @@
                 name: 'download',
                 orderable: false,
             },
-            @if (($proyecto->fase->nombre == 'Planeación' || $proyecto->fase->nombre == 'Finalizado') || session()->get('login_role') == App\User::IsAdministrador())
+            @can('delete_files', [$proyecto, $proyecto->IsPlaneacion()])
             {
                 data: 'delete',
                 name: 'delete',
                 orderable: false,
             },
-            @endif
+            @endcan
             ],
         });
     }
