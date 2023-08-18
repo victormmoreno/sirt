@@ -683,7 +683,8 @@ class ProyectoController extends Controller
     {
         $proyecto = Proyecto::findOrFail($id);
         if(!request()->user()->can('detalle', $proyecto)) {
-            alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
+            alert()->warning('No autorizado','No puedes ver la información de los proyectos que no haces parte');
+            // alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
         $historico = Proyecto::consultarHistoricoProyecto($proyecto->id)->get();
