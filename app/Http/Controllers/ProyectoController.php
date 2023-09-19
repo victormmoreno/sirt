@@ -66,6 +66,29 @@ class ProyectoController extends Controller
     }
 
     /**
+     * Registra la fecha de finalización de ejecución de un proyecto
+     *
+    //  * @param Request $request
+     * @return void
+     * @author dum
+     **/
+    public function registrar_fecha_ejecucion(int $proyecto, string $date)
+    {
+        $proyecto = Proyecto::find($proyecto);
+        if(!request()->user()->can('solicitar_fecha', $proyecto)) {
+            alert('No autorizado', 'No tienes permisos para cambiar realizar esto', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+        $registro = $this->getProyectoRepository()->registrar_fecha($proyecto, $date);
+        if ($registro['state']) {
+            alert('Registro exitoso', 'La fecha estimada para terminar el proyecto se ha registrado', 'success')->showConfirmButton('Ok', '#3085d6');
+        } else {
+            alert('Registro erróneo', $registro['msj'], 'error')->showConfirmButton('Ok', '#3085d6');
+        }
+        return redirect()->route('proyecto.ejecucion', $proyecto->id);
+    }
+
+    /**
      * Formulario que permite cambiar los talentos de un proyecto en cualquier fase
      *
      * @param int id del proyecto
@@ -797,8 +820,8 @@ class ProyectoController extends Controller
      * Formulario para cambiar el experto de un proyecto
      *
      * @param int $id Id del proyecto
-     * @return type
-     * @throws conditon
+     * @return Response
+     * @author dum
      **/
     public function cambiar_gestor(int $id)
     {
@@ -823,7 +846,7 @@ class ProyectoController extends Controller
      * @return Response
      * @author dum
      */
-    public function solicitar_aprobacion(int $id, string $fase = null)
+    public function solicitar_aprobacion(int $id, string $fase = null, string $fecha = null)
     {
         $proyecto = Proyecto::find($id);
         if(!request()->user()->can('notificar_aprobacion', $proyecto)) {
@@ -831,7 +854,7 @@ class ProyectoController extends Controller
             return back();
         }
 
-        $notificacion = $this->getProyectoRepository()->notificarAprobacionDeFase($proyecto, $fase);
+        $notificacion = $this->getProyectoRepository()->notificarAprobacionDeFase($proyecto, $fase, $fecha);
         if ($notificacion['notificacion']) {
             Alert::success('Notificación Exitosa!', $notificacion['msg'])->showConfirmButton('Ok', '#3085d6');
         } else {
@@ -1250,11 +1273,10 @@ class ProyectoController extends Controller
      **/
     public function proyectosLimiteInicio($nodo, $experto)
     {
-        $limite_inicio = Carbon::now()->subDays(config('app.proyectos.duracion.inicio'));
         $experto = $experto == "null" ? null : $experto;
         return response()->json([
             'data' => [
-                'proyectos' => $this->proyectoRepository->selectProyectosLimiteInicio($nodo, $experto, $limite_inicio)->get()
+                'proyectos' => $this->proyectoRepository->selectProyectosLimiteInicio($nodo, $experto)->get()
             ]
         ]);
     }
@@ -1269,11 +1291,28 @@ class ProyectoController extends Controller
      **/
     public function proyectosLimitePlaneacion($nodo, $experto)
     {
-        $limite_inicio = Carbon::now()->subDays(config('app.proyectos.duracion.planeacion'));
         $experto = $experto == "null" ? null : $experto;
         return response()->json([
             'data' => [
-                'proyectos' => $this->proyectoRepository->selectProyectosLimitePlaneacion($nodo, $experto, $limite_inicio)->groupBy('codigo_proyecto')->get()
+                'proyectos' => $this->proyectoRepository->selectProyectosLimitePlaneacion($nodo, $experto)->groupBy('codigo_proyecto')->get()
+            ]
+        ]);
+    }
+
+    /**
+     * Muestra los proyectos que llevan mucho tiempo en ejecución sin cambiar de fase
+     *
+     * @param int $nodo
+     * @param int $experto
+     * @return Response
+     * @author dum
+     **/
+    public function proyectosLimiteEjecucion($nodo, $experto)
+    {
+        $experto = $experto == "null" ? null : $experto;
+        return response()->json([
+            'data' => [
+                'proyectos' => $this->proyectoRepository->selectProyectosLimiteEjecucion($nodo, $experto)->groupBy('codigo_proyecto')->get()
             ]
         ]);
     }

@@ -6,10 +6,27 @@ use App\User;
 use App\Models\{Proyecto, ControlNotificaciones, Fase};
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class ProyectoPolicy
 {
     use HandlesAuthorization;
+
+    /**
+     * Determina quien y cuando se puede establecer una fecha para finalizar la ejecución de un proyecto
+     *
+     * @param User $user
+     * @param Proyecto $proyecto
+     * @return bool
+     * @author dum
+     **/
+    public function solicitar_fecha(User $user, Proyecto $proyecto)
+    {
+        if ( (($proyecto->prorrogas->count() == 0 && $proyecto->fase->nombre == Proyecto::IsEjecucion()) || ($proyecto->prorrogas()->get()->last()->fecha_ejecucion < Carbon::now()->format('Y-m-d')))  && Str::contains(session()->get('login_role'), [$user->IsExperto(), $user->IsAdministrador()])) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Determina quienes y cuando pueden subir entregables de una fase de proyecto

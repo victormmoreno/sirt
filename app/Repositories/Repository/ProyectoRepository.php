@@ -5,7 +5,7 @@ namespace App\Repositories\Repository;
 
 use App\Models\{Proyecto, Entidad, Fase, ControlNotificaciones, Movimiento, Role, Idea, EstadoIdea, Sede, GrupoInvestigacion};
 use Illuminate\Support\Facades\{DB, Notification, Storage, Session};
-use App\Notifications\Proyecto\{ProyectoAprobarFase, ProyectoSuspendidoAprobado, ProyectoNoAprobarFase};
+use App\Notifications\Proyecto\{ProyectoAprobarFase, ProyectoSuspendidoAprobado, ProyectoNoAprobarFase, ProyectoEjecucion};
 use Carbon\Carbon;
 use App\Events\Proyecto\{ProyectoWasntApproved, ProyectoWasApproved, ProyectoApproveWasRequested, ProyectoSuspenderWasRequested};
 use App\User;
@@ -208,6 +208,18 @@ class ProyectoRepository extends Repository
         ->where('fases.nombre', Proyecto::IsPlaneacion())
         ->whereRaw('DATEDIFF("'.$now.'", hist.created_at) > '.config('app.proyectos.duracion.planeacion'))
         ->orderBy('hist.created_at')
+        ->asesor($experto);
+    }
+
+    public function selectProyectosLimiteEjecucion($nodo, $experto)
+    {
+        $now = Carbon::now();
+        return $this->selectProyecto()->selectRaw('MAX(pro.fecha_ejecucion) AS ejecucion, DATEDIFF("'.$now.'", pro.fecha_ejecucion) AS dias')
+        ->join('prorroga_proyecto as pro', 'pro.proyecto_id', '=', 'proyectos.id')
+        ->where('nodos.id', $nodo)
+        ->where('fases.nombre', Proyecto::IsEjecucion())
+        ->havingRaw('MAX(pro.fecha_ejecucion) < "'.$now.'"')
+        ->orderBy('pro.fecha_ejecucion')
         ->asesor($experto);
     }
 
@@ -1081,7 +1093,7 @@ class ProyectoRepository extends Repository
      * @return array
      * @author dum
      */
-    public function notificarAprobacionDeFase(Proyecto $proyecto, string $fase = null)
+    public function notificarAprobacionDeFase(Proyecto $proyecto, string $fase = null, string $fecha = null)
     {
         DB::beginTransaction();
         try {
@@ -1116,6 +1128,10 @@ class ProyectoRepository extends Repository
                 event(new ProyectoApproveWasRequested($notificacion, $conf_envios['destinatarios']));
                 // Registrar el historial
                 $this->crearMovimiento($proyecto, $notificacion->fase->nombre, $conf_envios['tipo_movimiento'], null);
+                // Registra la fecha para terminar la ejecución del proyecto
+                if ($proyecto->fase->nombre == Proyecto::IsPlaneacion()) {
+                    $this->registrarFechaEjecucion($proyecto, $fecha);
+                }
             }
 
             DB::commit();
@@ -1130,6 +1146,53 @@ class ProyectoRepository extends Repository
                 'notificacion' => false,
                 'msg' => 'Ha ocurrido un error ' . $th->getMessage()
             ];
+        }
+    }
+
+    /**
+     * Registra la fecha de terminación de ejecución de un proyecto
+     *
+     * @param Proyecto $proyecto
+     * @param string $date
+     * @return array
+     * @author dum
+     **/
+    public function registrar_fecha(Proyecto $proyecto, string $date)
+    {
+        DB::beginTransaction();
+        try {
+            $this->registrarFechaEjecucion($proyecto, $date);
+
+            DB::commit();
+            return [
+                'state' => true,
+            ];
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return [
+                'state' => false,
+                'msj' => $th->getMessage()
+            ];
+        }
+    }
+
+    /**
+     * Reistra la fecha de ejecución de un proyecto
+     *
+     * @param Proyecto $proyecto
+     * @param string $fecha
+     * @return void
+     * @author dum
+     **/
+    public function registrarFechaEjecucion(Proyecto $proyecto, string $fecha)
+    {
+        $fecha = Carbon::parse($fecha)->format('Y-m-d');
+        $ult_pror = $proyecto->prorrogas()->get()->last();
+        if ($ult_pror == null || $ult_pror->fecha_ejecucion != $fecha) {
+            $proyecto->prorrogas()->create(['fecha_ejecucion' => $fecha]);
+            $this->crearMovimiento($proyecto, Proyecto::IsEjecucion(), Movimiento::IsEstablecer(), $fecha);
+            $dinamizador = User::ConsultarFuncionarios($proyecto->nodo_id, User::IsDinamizador())->get()->last();
+            Notification::send($dinamizador, new ProyectoEjecucion($proyecto, $fecha));
         }
     }
 

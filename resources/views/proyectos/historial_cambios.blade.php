@@ -31,6 +31,9 @@
                   @elseif($historico[$i]->movimiento == 'Aprobó')
                   El {{$historico[$i]->rol}} {{$historico[$i]->usuario}}
                   {{$historico[$i]->movimiento}} la fase de {{$historico[$i]->fase}} el día {{$historico[$i]->created_at}}.
+                  @elseif($historico[$i]->movimiento == 'estableció')
+                  El {{$historico[$i]->rol}} {{$historico[$i]->usuario}}
+                  {{$historico[$i]->movimiento}} como fecha para terminar la fase de {{$historico[$i]->fase}} del proyecto el día {{$historico[$i]->comentarios}} (Acción realizada: {{$historico[$i]->created_at}}).
                   @else
                   El {{$historico[$i]->rol}} {{$historico[$i]->usuario}}
                   {{$historico[$i]->movimiento}} mientras el proyecto estaba en fase {{$historico[$i]->fase}} el día {{$historico[$i]->created_at}}.

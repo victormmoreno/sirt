@@ -18,6 +18,7 @@
                     @include('proyectos.historial_cambios')
                     @include('proyectos.options.options')
                     @include('proyectos.detalles.detalle_general')
+                    @include('proyectos.detalles.prorrogas')
                     @include('proyectos.detalles.detalle_fase_ejecucion')
                     @can('aprobar', $proyecto)
                         @include('proyectos.forms.form_aprobacion')
@@ -28,6 +29,7 @@
 
         </div>
     </div>
+
 </main>
 @include('proyectos.modals')
 @endsection
@@ -35,7 +37,53 @@
 <script>
     $( document ).ready(function() {
         datatableArchivosDeUnProyecto_ejecucion();
+        @can('solicitar_fecha', $proyecto)
+            pedirFechaDeEjecucion(event);
+        @endcan
     });
+
+    function pedirFechaDeEjecucion() {
+        Swal.fire({
+            title: 'Se necesita una fecha estimada para la terminar la ejecución del proyecto',
+            html: 'Para continuar se necesita ingresar la fecha de finalización de ejecución del proyecto según el <b>cronograma</b> adjuntado en esta fase. En el formato YYYY-MM-DD',
+            type: 'warning',
+            input: 'text',
+            footer: '<a href="{{route('proyecto.planeacion', $proyecto->id)}}" target="_blank">Ir a las evidencias de la fase de planeación</a>',
+            inputValidator: ( value ) => {
+                let date = new Date(value);
+                let today = new Date();
+                if (!value) {
+                    return 'La fecha para terminar la ejecución es obligatoria';
+                }
+                if (!isDateValid(value)) {
+                    return 'El formato de fecha debe ser (YYYY-MM-DD)';
+                }
+                if (value.length < 10) {
+                    return 'Formato inválido de fecha';
+                }
+                if (date < today) {
+                    return 'Ingrese una fecha posterior al día de hoy';
+                }
+            },
+            inputAttributes: {
+                maxlength: 10,
+                // min: 10,
+                placeHolder: 'Fecha (YYYY-MM-DD)'
+            },
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Guardar!'
+        }).then((result) => {
+            let route = "/proyecto/registrar_fecha/"+{{$proyecto->id}}+'/'+result.value;
+            if (result.value) {
+                // let route = '/proyecto/registrar_fecha/'+{{$proyecto->id}}+'/'+result.value;
+
+                location.href=route;
+            }
+        });
+    }
     
     function datatableArchivosDeUnProyecto_ejecucion() {
         $('#archivosDeUnProyecto').DataTable({
