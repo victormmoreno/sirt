@@ -72,14 +72,14 @@ class ProyectoController extends Controller
      * @return void
      * @author dum
      **/
-    public function registrar_fecha_ejecucion(int $proyecto, string $date)
+    public function registrar_fecha_ejecucion(int $proyecto, string $date, string $justification = null)
     {
         $proyecto = Proyecto::find($proyecto);
-        if(!request()->user()->can('solicitar_fecha', $proyecto)) {
+        if(!request()->user()->can('solicitar_primera_fecha', $proyecto) && !request()->user()->can('solicitar_prorroga', $proyecto)) {
             alert('No autorizado', 'No tienes permisos para cambiar realizar esto', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        $registro = $this->getProyectoRepository()->registrar_fecha($proyecto, $date);
+        $registro = $this->getProyectoRepository()->registrar_fecha($proyecto, $date, $justification);
         if ($registro['state']) {
             alert('Registro exitoso', 'La fecha estimada para terminar el proyecto se ha registrado', 'success')->showConfirmButton('Ok', '#3085d6');
         } else {

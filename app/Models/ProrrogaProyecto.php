@@ -14,7 +14,8 @@ class ProrrogaProyecto extends Model
     protected $table = 'prorroga_proyecto';
 
     protected $fillable = [
-        'fecha_ejecucion'
+        'fecha_ejecucion',
+        'justificacion'
     ];
 
     public function proyecto()

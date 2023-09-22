@@ -8,7 +8,7 @@ Route::group(
     ],
     function () {
         Route::get('/notificar_inicio/{id}/{fase}/{date?}', 'ProyectoController@solicitar_aprobacion')->name('proyecto.solicitar.aprobacion')->middleware('role_session:Experto');
-        Route::get('/registrar_fecha/{id}/{date}', 'ProyectoController@registrar_fecha_ejecucion')->name('proyecto.fecha.ejecucion');
+        Route::get('/registrar_fecha/{id}/{date}/{justify?}', 'ProyectoController@registrar_fecha_ejecucion')->name('proyecto.fecha.ejecucion');
         // Route::get('/informacion-proyecto/{id}', 'ProyectoController@informacionProyectoById')->name('proyecto.informacion')->middleware('role_session:Experto|Dinamizador|Talento|Activador');
         Route::get('/', 'ProyectoController@index')->name('proyecto');
         Route::get('/consultarProyectos_costos/{anho}', 'ProyectoController@proyectosCostos')->name('proyecto.costos')->middleware('role_session:Dinamizador|Experto');

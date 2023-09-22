@@ -8,6 +8,9 @@
                 <p>
                     {{$proyecto->prorrogas()->get()->last()->fecha_ejecucion}}
                 </p>
+                <p>
+                    {{$proyecto->prorrogas()->get()->last()->justificacion}}
+                </p>
                 @if ($proyecto->prorrogas()->get()->count() > 1)
                     <a href="#prorrogasProyecto_modal" class="modal-trigger">
                         Este proyecto registra {{$proyecto->prorrogas()->get()->count()}} veces en las que se ha extendido su fecha de ejecución
@@ -31,11 +34,14 @@
                                 <b class="title green-text">Proyecto</b>
                                 <p>{{$proyecto->codigo_proyecto}} {{$proyecto->nombre}}</p>
                             </div>
-                            <div class="col s12 m4 l4">
+                            <div class="col s12 m5 l5">
                                 <b class="title green-text">Fecha estimada para finalizar la ejecución</b>
                                 <p>{{$prorroga->fecha_ejecucion}}</p>
+                                @if ($prorroga->justificacion != null)
+                                    <p><b>Justificación:</b> {{$prorroga->justificacion}}</p>
+                                @endif
                             </div>
-                            <div class="col s12 m4 l4">
+                            <div class="col s12 m3 l3">
                                 <b class="title green-text">Fecha de registro en el sistema</b>
                                 <p>{{$prorroga->created_at}}</p>
                             </div>

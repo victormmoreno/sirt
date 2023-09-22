@@ -201,6 +201,10 @@
                     +'</li>';
             } else {
                 $.each(response.data.proyectos, function(i, item) {
+                    let justify = '';
+                    if (item.justificacion != null) {
+                        justify = '<p><b>Justificación: </b>'+item.justificacion+'</p>';
+                    }
                     strings += '<li class="collection-item">'
                         +'<div class="row"><div class="col s12 m3 l3"><b class="title green-text">Proyecto</b>'
                         +'<p><a href="/proyecto/ejecucion/'+item.id+'">'+item.codigo_proyecto+' - '+item.nombre+'</a></p></div>'
@@ -209,7 +213,7 @@
                         +'<div class="col s12 m3 l3"><b class="title green-text">Experto</b>'
                         +'<p>'+item.gestor+'</p></div>'
                         +'<div class="col s12 m3 l3"><b class="title green-text">Fecha estimada para terminar la fase de ejecución</b>'
-                        +'<p>'+item.ejecucion+' ('+item.dias+' días)</p></div></div>'
+                        +'<p>'+item.ejecucion+' ('+item.dias+' días)</p>'+justify+'</div></div>'
                     +'</li>';
                 });
             }

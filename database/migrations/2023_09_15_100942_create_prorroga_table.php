@@ -17,6 +17,7 @@ class CreateProrrogaTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('proyecto_id');
             $table->date('fecha_ejecucion');
+            $table->string('justificacion', 200)->nullable()->default(null);
             $table->timestamps();
 
             $table->foreign('proyecto_id')

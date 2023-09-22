@@ -214,12 +214,13 @@ class ProyectoRepository extends Repository
     public function selectProyectosLimiteEjecucion($nodo, $experto)
     {
         $now = Carbon::now();
-        return $this->selectProyecto()->selectRaw('MAX(pro.fecha_ejecucion) AS ejecucion, DATEDIFF("'.$now.'", pro.fecha_ejecucion) AS dias')
-        ->join('prorroga_proyecto as pro', 'pro.proyecto_id', '=', 'proyectos.id')
+        return $this->selectProyecto()
+        ->selectRaw('MAX(fecha_ejecucion) AS ejecucion, DATEDIFF("'.$now.'", MAX(fecha_ejecucion)) AS dias, justificacion')
+        ->join('prorroga_proyecto as pro', 'proyectos.id', '=', 'pro.proyecto_id')
+        ->join(DB::raw('(select proyecto_id, max(id) as maxid from prorroga_proyecto group by proyecto_id) as b'), 'pro.id', '=', 'b.maxid')
         ->where('nodos.id', $nodo)
         ->where('fases.nombre', Proyecto::IsEjecucion())
-        ->havingRaw('MAX(pro.fecha_ejecucion) < "'.$now.'"')
-        ->orderBy('pro.fecha_ejecucion')
+        ->whereRaw('pro.fecha_ejecucion < "'.$now.'"')
         ->asesor($experto);
     }
 
@@ -1157,12 +1158,11 @@ class ProyectoRepository extends Repository
      * @return array
      * @author dum
      **/
-    public function registrar_fecha(Proyecto $proyecto, string $date)
+    public function registrar_fecha(Proyecto $proyecto, string $date, string $justificacion = null)
     {
         DB::beginTransaction();
         try {
-            $this->registrarFechaEjecucion($proyecto, $date);
-
+            $this->registrarFechaEjecucion($proyecto, $date, $justificacion);
             DB::commit();
             return [
                 'state' => true,
@@ -1184,12 +1184,12 @@ class ProyectoRepository extends Repository
      * @return void
      * @author dum
      **/
-    public function registrarFechaEjecucion(Proyecto $proyecto, string $fecha)
+    public function registrarFechaEjecucion(Proyecto $proyecto, string $fecha, string $justificacion = null)
     {
         $fecha = Carbon::parse($fecha)->format('Y-m-d');
         $ult_pror = $proyecto->prorrogas()->get()->last();
         if ($ult_pror == null || $ult_pror->fecha_ejecucion != $fecha) {
-            $proyecto->prorrogas()->create(['fecha_ejecucion' => $fecha]);
+            $proyecto->prorrogas()->create(['fecha_ejecucion' => $fecha, 'justificacion' => $justificacion]);
             $this->crearMovimiento($proyecto, Proyecto::IsEjecucion(), Movimiento::IsEstablecer(), $fecha);
             $dinamizador = User::ConsultarFuncionarios($proyecto->nodo_id, User::IsDinamizador())->get()->last();
             Notification::send($dinamizador, new ProyectoEjecucion($proyecto, $fecha));
