@@ -3,9 +3,9 @@ $(document).ready(function() {
     consultarProyectosUnNodoPorAnho();
 });
 
-function sendNotification(route, fase, e) {
+function sendNotification(route, fase, contador, e) {
     e.preventDefault();
-    if (fase == 'Planeación') {
+    if (fase == 'Planeación' && contador == 0) {
         Swal.fire({
             title: '¿Está seguro(a) de enviar la solicitud de aprobación?',
             text: 'Para continuar se necesita ingresar la fecha de finalización de ejecución del proyecto según el cronograma adjunto en esta fase. En el formato YYYY-MM-DD',

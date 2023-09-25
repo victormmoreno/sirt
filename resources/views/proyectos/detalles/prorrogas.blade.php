@@ -3,7 +3,7 @@
         <ul class="collection">
             <li class="collection-item">
                 <span class="title secondary-text">
-                    Fecha para terminar la ejecución del proyecto.
+                    Fecha estidama para terminar la ejecución del proyecto.
                 </span>
                 <p>
                     {{$proyecto->prorrogas()->get()->last()->fecha_ejecucion}}

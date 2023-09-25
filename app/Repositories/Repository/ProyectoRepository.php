@@ -1130,7 +1130,7 @@ class ProyectoRepository extends Repository
                 // Registrar el historial
                 $this->crearMovimiento($proyecto, $notificacion->fase->nombre, $conf_envios['tipo_movimiento'], null);
                 // Registra la fecha para terminar la ejecución del proyecto
-                if ($proyecto->fase->nombre == Proyecto::IsPlaneacion()) {
+                if ($proyecto->fase->nombre == Proyecto::IsPlaneacion() && $fecha != null) {
                     $this->registrarFechaEjecucion($proyecto, $fecha);
                 }
             }
