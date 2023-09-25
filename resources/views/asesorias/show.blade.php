@@ -231,13 +231,15 @@
                                                                         <tr>
                                                                             <th>Equipo ({{$devices->count()}})</th>
                                                                             <th>Referencia</th>
+                                                                            <th>Tiempo uso (en horas)</th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
-                                                                        @forelse($devices as $device)
+                                                                        @forelse($asesorie->usoequipos as $device)
                                                                             <tr>
                                                                                 <td>{{$device->nombre}}</td>
                                                                                 <td>{{$device->referencia}}</td>
+                                                                                <td>{{isset($device->pivot->tiempo) ? $device->pivot->tiempo : 0}}</td>
                                                                             </tr>
                                                                         @empty
                                                                             <tr>

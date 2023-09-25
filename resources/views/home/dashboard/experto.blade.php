@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col s12 m4 l4">
+    <div class="col s12 m3 l3">
         <div class="card stats-card {{$ideas_sin_pbt != 0 ? 'red lighten-3' : 'green lighten-3'}}" onclick="consultarIdeasPendientes('{{request()->user()->getNodoUser()}}', '{{request()->user()->id}}')" style="cursor: pointer">
             <div class="card-content">
                 <span class="stats-counter">
@@ -16,7 +16,7 @@
             </div>
         </div>
     </div>
-    <div class="col s12 m4 l4">
+    <div class="col s12 m3 l3">
         <div class="card stats-card {{$proyectos_limite_inicio != 0 ? 'orange lighten-3' : 'green lighten-3'}}" onclick="consultarProyectosInicio('{{request()->user()->getNodoUser()}}', '{{request()->user()->id}}')" style="cursor: pointer">
             <div class="card-content">
                 <span class="stats-counter">
@@ -33,14 +33,31 @@
             </div>
         </div>
     </div>
-    <div class="col s12 m4 l4">
+    <div class="col s12 m3 l3">
         <div class="card stats-card {{$proyectos_limite_planeacion != 0 ? 'orange lighten-3' : 'green lighten-3'}}" onclick="consultarProyectosPlaneacion('{{request()->user()->getNodoUser()}}', '{{request()->user()->id}}')" style="cursor: pointer">
             <div class="card-content">
                 <span class="stats-counter">
                     @if ($proyectos_limite_planeacion != 0)
-                        Tienes {{$proyectos_limite_planeacion}} proyectos atrasados en la fase de planeación (Máximo {{config('app.proyectos.duracion.inicio')}} días en esta fase).
+                        Tienes {{$proyectos_limite_planeacion}} proyectos atrasados en la fase de planeación (Máximo {{config('app.proyectos.duracion.planeacion')}} días en esta fase).
                     @else
-                        No tienes proyectos con mas de {{config('app.proyectos.duracion.planeacion')}} días en la fase de inicio.
+                        No tienes proyectos con mas de {{config('app.proyectos.duracion.planeacion')}} días en la fase de planeación.
+                    @endif
+                </span>
+                <br>
+            </div>
+            <div class="progress stats-card-progress bg-secondary">
+                <div class="determinate"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col s12 m3 l3">
+        <div class="card stats-card {{$proyectos_limite_ejecucion != 0 ? 'orange lighten-3' : 'green lighten-3'}}" onclick="consultarProyectosEjecucion('{{request()->user()->getNodoUser()}}', '{{request()->user()->id}}')" style="cursor: pointer">
+            <div class="card-content">
+                <span class="stats-counter">
+                    @if ($proyectos_limite_ejecucion != 0)
+                        Tienes {{$proyectos_limite_ejecucion}} proyectos atrasados en la fase de ejecución.
+                    @else
+                        No tienes proyectos atrasados en la fase de ejecución.
                     @endif
                 </span>
                 <br>

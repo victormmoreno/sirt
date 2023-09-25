@@ -40,8 +40,8 @@
                     </a>
                 </li>
                 <li class="hide-on-med-and-down">
-                    <clock>
-                    </clock>
+                    {{-- <clock>
+                    </clock> --}}
                 </li>
                 @can('dejar_control', App\User::class)
                     <li class="hide-on-med-and-down">

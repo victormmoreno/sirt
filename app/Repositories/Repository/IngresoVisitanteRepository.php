@@ -129,7 +129,8 @@ class IngresoVisitanteRepository
     ->join('servicios', 'servicios.id', '=', 'ingresos_visitantes.servicio_id')
     ->join('tiposvisitante', 'tiposvisitante.id', '=', 'visitantes.tipovisitante_id')
     ->join('nodos', 'nodos.id', '=', 'ingresos_visitantes.nodo_id')
-    ->join('users', 'users.id', '=', 'ingresos_visitantes.user_id');
+    ->join('users', 'users.id', '=', 'ingresos_visitantes.user_id')
+    ->orderBy('fecha_ingreso');
   }
 
 }

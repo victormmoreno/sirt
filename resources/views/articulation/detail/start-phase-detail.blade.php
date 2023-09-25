@@ -44,6 +44,14 @@
                             {{$articulation->present()->articulationExpectedEndDate()}}
                         </p>
                     </li>
+                    <li class="collection-item">
+                        <span class="title black-text">
+                            {{__('End Date')}}
+                        </span>
+                        <p>
+                            {{$articulation->present()->articulationEndDate()}}
+                        </p>
+                    </li>
                 </ul>
             </div>
             <div class="col s12 m12 l4">

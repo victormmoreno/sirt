@@ -3,6 +3,55 @@ $(document).ready(function() {
     consultarProyectosUnNodoPorAnho();
 });
 
+function sendNotification(route, fase, contador, e) {
+    e.preventDefault();
+    if (fase == 'Planeación' && contador == 0) {
+        Swal.fire({
+            title: '¿Está seguro(a) de enviar la solicitud de aprobación?',
+            text: 'Para continuar se necesita ingresar la fecha de finalización de ejecución del proyecto según el cronograma adjunto en esta fase. En el formato YYYY-MM-DD',
+            type: 'warning',
+            input: 'text',
+            inputValidator: ( value ) => {
+                let date = new Date(value);
+                let today = new Date();
+                if (!value) {
+                    return 'La fecha para terminar la ejecución es obligatoria';
+                }
+                if (!isDateValid(value)) {
+                    return 'El formato de fecha debe ser (YYYY-MM-DD)';
+                }
+                if (value.length < 10) {
+                    return 'Formato inválido de fecha';
+                }
+                if (date < today) {
+                    return 'Ingrese una fecha posterior al día de hoy';
+                }
+            },
+            inputAttributes: {
+                maxlength: 10,
+                // min: 10,
+                placeHolder: 'Fecha (YYYY-MM-DD)'
+            },
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Enviar solicitud!'
+        }).then((result) => {
+            if (result.value) {
+                // console.log(route + '/' + result.value);
+                location.href = route + '/' + result.value;
+            }
+        });
+    } else {
+        location.href = route;
+    }
+}
+
+function isDateValid(dateStr) {
+    return !isNaN(new Date(dateStr));
+  }
+
 function verHorasDeExpertosEnProyecto(id) {
   $.ajax({
     dataType:'json',

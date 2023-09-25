@@ -170,6 +170,11 @@ class Proyecto extends Model
         return self::IS_TRL6_ESPERADO;
     }
 
+    public function prorrogas()
+    {
+        return $this->hasMany(ProrrogaProyecto::class, 'proyecto_id', 'id');
+    }
+
     /**
      * returns the obtained trl
      * @author dum
