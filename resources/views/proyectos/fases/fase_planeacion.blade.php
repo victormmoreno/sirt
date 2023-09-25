@@ -18,6 +18,7 @@
                     @include('proyectos.historial_cambios')
                     @include('proyectos.options.options')
                     @include('proyectos.detalles.detalle_general')
+                    @include('proyectos.detalles.prorrogas')
                     @include('proyectos.detalles.detalle_fase_planeacion')
                     @can('aprobar', $proyecto)
                         @include('proyectos.forms.form_aprobacion')

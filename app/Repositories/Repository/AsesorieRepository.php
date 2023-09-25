@@ -183,12 +183,11 @@ class AsesorieRepository
      * retorna registro de un uso de infraestructura
      * @return bool
      * @param $request
-     * @author devjul
      */
     public function store($request)
     {
-        // DB::beginTransaction();
-        // try {
+        DB::beginTransaction();
+        try {
             $asesorable = null;
             if (Session::get('login_role') == User::IsExperto() || Session::get('login_role') == User::IsTalento() || Session::get('login_role') == User::IsApoyoTecnico()) {
                 $asesorable = \App\Models\Proyecto::where('codigo_proyecto', explode(" - ", $request->txtactividad)[0])
@@ -210,12 +209,12 @@ class AsesorieRepository
             // //llamado de metodo para guardar materiales y costos de material asociados al uso de infraestructura
             $this->storeMaterialToAsesorie($asesorie, $request);
             $this->storeDevicesToAsesorie($asesorie, $request);
-            // DB::commit();
+            DB::commit();
             return true;
-        // } catch (\Exception $e) {
-        //     DB::rollback();
-        //     return false;
-        // }
+        } catch (\Exception $e) {
+            DB::rollback();
+            return false;
+        }
     }
 
     /**
@@ -241,9 +240,8 @@ class AsesorieRepository
      */
     public function update($request, $id)
     {
-        // DB::beginTransaction();
-        // try {
-
+        DB::beginTransaction();
+        try {
             $asesorie = $this->updateAsesorie($request, $id);
             //llamado de metodo para guardar talentos asociados al uso de infraestructura
             $this->storeTalentoToAsesorie($asesorie, $request);
@@ -252,12 +250,12 @@ class AsesorieRepository
             //llamado de metodo para guardar materiales y costos de material asociados al uso de infraestructura
             $this->storeMaterialToAsesorie($asesorie, $request);
             $this->storeDevicesToAsesorie($asesorie, $request);
-            // DB::commit();
+            DB::commit();
             return true;
-        // } catch (\Exception $e) {
-        //     DB::rollback();
-        //     return false;
-        // }
+        } catch (\Exception $e) {
+            DB::rollback();
+            return false;
+        }
     }
 
 
@@ -354,7 +352,7 @@ class AsesorieRepository
      * @param $asesorie
      * @param $request
      */
-    private function storeDevicesToAsesorie($asesorie, $request)
+    public function storeDevicesToAsesorie($asesorie, $request)
     {
         if ($request->filled('equipo')) {
             $syncData = array();
@@ -381,16 +379,6 @@ class AsesorieRepository
         $totalHonorario           = [];
         $horasAsesoriaExperto = [];
         $asesor = null;
-        $node = null;
-        if(\Session::get('login_role') == User::IsExperto()){
-            $node = auth()->user()->experto->nodo_id;
-        }else if(\Session::get('login_role') == User::IsArticulador()){
-            $node = auth()->user()->articulador->nodo_id;
-        }else if(\Session::get('login_role') == User::IsArticulador()){
-            $node = auth()->user()->articulador->nodo_id;
-        }else if(\Session::get('login_role') == User::IsApoyoTecnico()){
-            $node = auth()->user()->apoyotecnico->nodo_id;
-        }
 
         foreach ($request->get('gestor') as $id => $value) {
             $asesor = null;
@@ -415,22 +403,11 @@ class AsesorieRepository
                 $honorarioAsesor = 0;
             }
 
-            $dinamizadores = User::ConsultarFuncionarios($node, User::IsDinamizador())->get();
-            $infocenters = User::ConsultarFuncionarios($node, User::IsInfocenter())->get();
-            if(isset($dinamizadores) && $dinamizadores->count() > 0){
-                $calculateHonorariosDinamizador = round(($dinamizadores->sum('honorarios') / CostoAdministrativo::DIAS_AL_MES / CostoAdministrativo::HORAS_AL_DIA) * (int) $horasAsesoriaExperto[$id]);
-            }else{
-                $calculateHonorariosDinamizador = 0;
-            }
-            if(isset($infocenters) && $infocenters->count() > 0){
-                $calculateHonorariosInfocenter = round(($infocenters->sum('honorarios') / CostoAdministrativo::DIAS_AL_MES / CostoAdministrativo::HORAS_AL_DIA) * (int) $horasAsesoriaExperto[$id]);
-            }else{
-                $calculateHonorariosInfocenter = 0;
-            }
-            $calculateHonorariosAsesor = round(($honorarioAsesor / CostoAdministrativo::DIAS_AL_MES / CostoAdministrativo::HORAS_AL_DIA) * (int) $horasAsesoriaExperto[$id]);
+
+            $calculateHonorariosAsesor = round(($honorarioAsesor / CostoAdministrativo::DIAS_AL_MES / CostoAdministrativo::HORAS_AL_DIA) * (double) $horasAsesoriaExperto[$id]);
 
             //calculo de honorario de valor hora del asesor * horas de asesoriria
-            $totalHonorario[$id] = $calculateHonorariosAsesor + $calculateHonorariosDinamizador + $calculateHonorariosInfocenter;
+            $totalHonorario[$id] = $calculateHonorariosAsesor;
             //array que almacena los datos a guardar
             $syncData[$id] = [
                 'asesor_id' => $asesor->id,
@@ -474,7 +451,6 @@ class AsesorieRepository
      * metodo retorna costo de equipos
      *
      * @param object $request
-     * @author devjul
      */
     private function calculateCostoEquipos($request)
     {
@@ -484,12 +460,20 @@ class AsesorieRepository
         $costoAdministracion = [];
         $totalEquipos        = [];
         $anioActual          = Carbon::now()->year;
+        $node = null;
+        if(\Session::get('login_role') == User::IsExperto()){
+            $node = auth()->user()->experto->nodo_id;
+        }else if(\Session::get('login_role') == User::IsArticulador()){
+            $node = auth()->user()->articulador->nodo_id;
+        }else if(\Session::get('login_role') == User::IsApoyoTecnico()){
+            $node = auth()->user()->apoyotecnico->nodo_id;
+        }
         foreach ($request->get('equipo') as $id => $value) {
             $equipo = Equipo::with(['equiposmantenimientos', 'lineatecnologica', 'nodo'])->where('id', $value)->first();
             if ($equipo->vida_util == 0 || $equipo->horas_uso_anio == 0 || $equipo->costo_adquisicion == 0) {
                         $depreciacionEquipo[$id] = 0;
             } else {
-                $depreciacionEquipo[$id] = ($equipo->costo_adquisicion  / $equipo->horas_uso_anio) * (double) $request->get('tiempouso')[$id];
+                $depreciacionEquipo[$id] = ($equipo->costo_adquisicion / $equipo->vida_util / $equipo->horas_uso_anio) * (double) $request->get('tiempouso')[$id];
             }
             // if (($anioActual - $equipo->anio_compra) < $equipo->vida_util) {
             //     if ($equipo->vida_util == 0 || $equipo->horas_uso_anio == 0 || $equipo->costo_adquisicion == 0) {
@@ -525,11 +509,24 @@ class AsesorieRepository
             $countlineas  = $nodolineas->lineas->count();
             $countequipos = $nodolineas->equipos->count();
 
+            $dinamizadores = User::ConsultarFuncionarios($node, User::IsDinamizador())->get();
+            $infocenters = User::ConsultarFuncionarios($node, User::IsInfocenter())->get();
+            if(isset($dinamizadores) && $dinamizadores->count() > 0){
+                $calculateHonorariosDinamizador = $dinamizadores->sum('honorarios');
+            }else{
+                $calculateHonorariosDinamizador = 0;
+            }
+            if(isset($infocenters) && $infocenters->count() > 0){
+                $calculateHonorariosInfocenter = $infocenters->sum('honorarios');
+            }else{
+                $calculateHonorariosInfocenter = 0;
+            }
+
             if ($costo->valor_costo_administrativo == 0) {
                 $costoAdministracion[$id] = 0;
             } else {
-                $costoAdministracion[$id] = round((($costo->valor_costo_administrativo / CostoAdministrativo::DIAS_AL_MES / CostoAdministrativo::HORAS_AL_DIA / $countlineas / CostoAdministrativo::DEDICACION)
-                    * (100 / ($countequipos) * (int) $request->get('tiempouso')[$id]) / 100));
+                $costoAdministracion[$id] = round((( ($costo->valor_costo_administrativo + $calculateHonorariosDinamizador + $calculateHonorariosInfocenter) / CostoAdministrativo::DIAS_AL_MES / CostoAdministrativo::HORAS_AL_DIA / $countlineas / CostoAdministrativo::DEDICACION)
+                    * (100 / ($countequipos) * (double) $request->get('tiempouso')[$id]) / 100));
             }
             $syncData[$id] = array(
                 'equipo_id'            => $value,
