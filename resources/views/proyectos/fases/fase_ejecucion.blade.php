@@ -47,7 +47,7 @@
     function pedirFechaDeEjecucion() {
         Swal.fire({
             title: 'Se necesita una fecha estimada para la terminar la ejecución del proyecto',
-            html: 'Para continuar se necesita ingresar la fecha de finalización de ejecución del proyecto según el <b>cronograma</b> adjuntado en esta fase. En el formato YYYY-MM-DD',
+            html: 'Para continuar se necesita ingresar la fecha de finalización de ejecución del proyecto según el <b>cronograma</b> adjuntado en la fase de planeación. En el formato YYYY-MM-DD',
             type: 'warning',
             input: 'text',
             footer: '<a href="{{route('proyecto.planeacion', $proyecto->id)}}" target="_blank">Ir a las evidencias de la fase de planeación</a>',
