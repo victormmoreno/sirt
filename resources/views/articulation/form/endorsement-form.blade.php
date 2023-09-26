@@ -8,25 +8,25 @@
         @if ($articulationStage->endorsement == \App\Models\ArticulationStage::ENDORSEMENT_NO )
             <button type="submit" onclick="endorsementQuestionArticulationStage(event, 'abrir')" class="center-align center waves-effect waves-light btn bg-secondary btn-large modal-trigger" style="margin-bottom: 10px; margin-right: 10px; margin-top: 10px; width: 100%;">
                 <i class="material-icons right">done</i>
-                Aprobar aval {{$articulationStage->present()->articulationStageEndorsementApproval()}}
+                Aprobar {{$articulationStage->present()->articulationStageEndorsementApproval()}}
             </button>
             <button type="submit" onclick="questionRejectEndorsementArticulationStage(event)" class="center-align waves-effect waves-light btn bg-danger modal-trigger" style="margin-bottom: 10px; margin-right: 10px; margin-top: 0px; width: 100%">
                 <i class="material-icons right">close</i>
-                No aprobar aval {{$articulationStage->present()->articulationStageEndorsementApproval()}}
+                No aprobar {{$articulationStage->present()->articulationStageEndorsementApproval()}}
             </button>
         @elseif ($articulationStage->endorsement == \App\Models\ArticulationStage::ENDORSEMENT_YES)
             <button type="submit" onclick="endorsementQuestionArticulationStage(event)" class="center-align center waves-effect waves-light btn bg-secondary btn-large modal-trigger" style="margin-bottom: 10px; margin-right: 10px; margin-top: 10px; width: 100%;">
                 <i class="material-icons right">done</i>
-                Aprobar aval {{$articulationStage->present()->articulationStageEndorsementApproval()}}
+                Aprobar {{$articulationStage->present()->articulationStageEndorsementApproval()}}
             </button>
             <button type="submit" onclick="questionRejectEndorsementArticulationStage(event)" class="center-align waves-effect waves-light btn bg-danger modal-trigger" style="margin-bottom: 10px; margin-right: 10px; margin-top: 0px; width: 100%">
                 <i class="material-icons right">close</i>
-                No aprobar aval {{$articulationStage->present()->articulationStageEndorsementApproval()}}
+                No aprobar {{$articulationStage->present()->articulationStageEndorsementApproval()}}
             </button>
         @else
             <button type="submit" class="center-align center waves-effect waves-light btn bg-secondary modal-trigger" style="margin-bottom: 10px; margin-right: 10px; margin-top: 0px; width: 100%;" disabled>
                 <i class="material-icons right">done</i>
-                Ya está avalada
+                Ya está aprobada
             </button>
         @endif
     @endif

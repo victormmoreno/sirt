@@ -402,28 +402,28 @@ class ArticulationStageRepository
             $comentario = "";
             $notificacion_fase_actual = $this->retornarUltimaNotificacionPendiente($articulationStage);
             $ult_traceability = ArticulationStage::getTraceability($articulationStage)->get()->last();
-            $msg = 'No se ha podido enviar la solicitud de aval, inténtalo nuevamente';
+            $msg = 'No se ha podido enviar la solicitud de aprobación, inténtalo nuevamente';
             $conf_envios = false;
             if ($notificacion_fase_actual == null) {
                 $conf_envios = $this->settingsNotificationTalent($articulationStage);
                 $movimiento = Movimiento::IsSolicitarTalento();
-                $msg = 'Se le ha enviado una notificación al talento interlocutor para que avale el ' . $articulationStage->present()->articulationStageEndorsementApproval();
+                $msg = 'Se le ha enviado una notificación al talento interlocutor para que apruebe el ' . $articulationStage->present()->articulationStageEndorsementApproval();
             }
             else {
                 if ($notificacion_fase_actual->rol_receptor->name == User::IsTalento()) {
                     $conf_envios = $this->settingsNotificationTalent($articulationStage);
                     $movimiento = Movimiento::IsSolicitarTalento();
-                    $msg = 'Se le ha enviado una notificación al talento interlocutor para que avale el ' . $articulationStage->present()->articulationStageEndorsementApproval();
+                    $msg = 'Se le ha enviado una notificación al talento interlocutor para que apruebe el ' . $articulationStage->present()->articulationStageEndorsementApproval();
                 }
                 else {
                     if(isset($ult_traceability) && $ult_traceability->movimiento == Movimiento::IsAprobar() && $ult_traceability->rol == \App\User::IsDinamizador()){
                         $conf_envios = $this->settingsNotificationTalent($articulationStage);
                         $movimiento = Movimiento::IsSolicitarTalento();
-                        $msg = 'Se le ha enviado una notificación al talento interlocutor para que avale el ' . $articulationStage->present()->articulationStageEndorsementApproval();
+                        $msg = 'Se le ha enviado una notificación al talento interlocutor para que apruebe el ' . $articulationStage->present()->articulationStageEndorsementApproval();
                     }else{
                         $conf_envios = $this->settingsNotificationDynamizer($articulationStage);
                         $movimiento = Movimiento::IsSolicitarDinamizador();
-                        $msg = 'Se le ha enviado una notificación al dinamizador para que avale ' . $articulationStage->present()->articulationStageEndorsementApproval();
+                        $msg = 'Se le ha enviado una notificación al dinamizador para que apruebe ' . $articulationStage->present()->articulationStageEndorsementApproval();
                     }
 
                 }
@@ -507,7 +507,7 @@ class ArticulationStageRepository
             }
             if ($request->decision == 'rechazado') {
                 $title = 'Aprobación rechazada!';
-                $mensaje = 'Se le han notificado al asesor los motivos por los cuales no se aprueba el aval de la fase de articulación';
+                $mensaje = 'Se le han notificado al asesor los motivos por los cuales no se aprueba la fase de articulación';
                 $comentario = $request->motivosNoAprueba;
                 $movimiento = Movimiento::IsNoAprobar();
                 $articulationStage->createTraceability($movimiento,Session::get('login_role'),$comentario, $phase);
@@ -517,7 +517,7 @@ class ArticulationStageRepository
 
             } else {
                 $title = 'Aprobación Exitosa!';
-                $mensaje = 'Se ha aprobado el aval de esta ' . __('articulation-stage');
+                $mensaje = 'Se ha aprobado esta ' . __('articulation-stage');
                 $movimiento = Movimiento::IsAprobar();
                 $regMovimiento = $articulationStage->traceability()->get()->last();
                 $notificacion_act->update(['fecha_aceptacion' => Carbon::now(), 'estado' => $notificacion_act->IsAceptado()]);

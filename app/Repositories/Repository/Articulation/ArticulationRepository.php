@@ -357,16 +357,16 @@ class ArticulationRepository extends Repository
             $phase = $articulation->phase_id;
             $notificacion_fase_actual = $this->retornarUltimaNotificacionPendiente($articulation);
             $ult_traceability = Articulation::getTraceability($articulation)->get()->last();
-            $msg = 'No se ha podido enviar la solicitud de aval, inténtalo nuevamente';
+            $msg = 'No se ha podido enviar la solicitud de aprobación, inténtalo nuevamente';
             $conf_envios = false;
             if ($notificacion_fase_actual == null) {
                 $conf_envios = $this->settingsNotificationDynamizer($articulation);
                 $movimiento = Movimiento::IsSolicitarDinamizador();
-                $msg = 'Se le ha enviado una notificación al dinamizador para que avale la finalización de la articulación';
+                $msg = 'Se le ha enviado una notificación al dinamizador para que apruebe la finalización de la articulación';
             } else {
                 $conf_envios = $this->settingsNotificationDynamizer($articulation);
                 $movimiento = Movimiento::IsSolicitarDinamizador();
-                $msg = 'Se le ha enviado una notificación al dinamizador para que avale la finalización de la articulación';
+                $msg = 'Se le ha enviado una notificación al dinamizador para que apruebe la finalización de la articulación';
             }
 
             $notificacion = $articulation->registerNotify($conf_envios['receptor'], $conf_envios['receptor_role'], $phase, $msg);
@@ -422,7 +422,7 @@ class ArticulationRepository extends Repository
 
             if ($request->decision == 'rechazado') {
                 $title = 'Aprobación rechazada!';
-                $mensaje = 'Se le han notificado al asesor los motivos por los cuales no se aprueba el aval de la articulación';
+                $mensaje = 'Se le han notificado al asesor los motivos por los cuales no se aprueba la articulación';
                 $comentario = $request->motivosNoAprueba;
                 $movimiento = Movimiento::IsNoAprobar();
 
@@ -431,7 +431,7 @@ class ArticulationRepository extends Repository
 
             } else {
                 $title = 'Aprobación Exitosa!';
-                $mensaje = 'Se ha aprobado el aval de esta fase de articulación';
+                $mensaje = 'Se ha aprobado esta fase de articulación';
                 $movimiento = Movimiento::IsAprobar();
                 $notificacion_act->update(['fecha_aceptacion' => Carbon::now(), 'estado' => $notificacion_act->IsAceptado()]);
                 $articulation->createTraceability($movimiento,Session::get('login_role'), $comentario, $phase);
