@@ -359,21 +359,6 @@ Route::group(
     }
 );
 
-/**
- * Route group para el módulo de indicadores
- */
-Route::group(
-    [
-        'prefix' => 'indicadores',
-        'middleware' => ['auth', 'role_session:Administrador|Activador|Dinamizador|Experto|Articulador|Infocenter']
-    ],
-    function () {
-        Route::get('/', 'IndicadorController@index')->name('indicadores');
-        // Route::get('/nodo/fetch_data', 'IndicadorController@nodo_pagination')->name('indicadores.paginar');
-
-    }
-);
-
 
 /**
  * Route group para el módulo de costos
