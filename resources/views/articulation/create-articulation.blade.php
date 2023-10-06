@@ -9,7 +9,7 @@
         <div class="row no-m-t no-m-b m-r-lg m-l-lg">
             <div class="left left-align">
                 <h5 class="left-align primary-text">
-                    <i class="material-icons left">autorenew</i>{{__('articulation-stage')}}
+                    <i class="material-icons left">autorenew</i>{{__('articulation-stage / articulation')}}
                 </h5>
             </div>
             <div class="right right-align show-on-large hide-on-med-and-down">

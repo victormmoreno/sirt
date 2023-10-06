@@ -45,7 +45,7 @@ class ArticulationStageNoApproveEndorsement extends Notification implements Shou
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject("Solicitud de aval para {$this->articulationStage->present()->articulationStageCode()} - {$this->articulationStage->present()->articulationStageName()}" )
+            ->subject("Solicitud de aprobación para {$this->articulationStage->present()->articulationStageCode()} - {$this->articulationStage->present()->articulationStageName()}" )
             ->markdown('emails.articulation.endorsement-stage-articulation', ['articulationStage' => $this->articulationStage, 'notification' => $this->notification]);
     }
 
@@ -63,7 +63,7 @@ class ArticulationStageNoApproveEndorsement extends Notification implements Shou
             'icon'  => 'library_books',
             'color' => 'green',
             'autor' => "",
-            'text'  => "El articulador ha solicitado el aval para {$this->articulationStage->present()->articulationStageEndorsementApproval()} la ". __('articulation-stage') ." {$this->articulationStage->code}",
+            'text'  => "El articulador ha solicitado la aprobación para {$this->articulationStage->present()->articulationStageEndorsementApproval()} la ". __('articulation-stage') ." {$this->articulationStage->code}",
         ];
     }
 

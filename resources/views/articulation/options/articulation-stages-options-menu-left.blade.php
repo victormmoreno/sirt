@@ -20,15 +20,15 @@
                     class="collection-item yellow lighten-3">
                     <i class="material-icons left">notifications</i>
                     @if($rol_destinatario == \App\User::IsTalento())
-                        Enviar solicitud de aval al {{\App\User::IsTalento()}}
+                        Enviar solicitud de aprobación al {{\App\User::IsTalento()}}
                         para {{$articulationStage->present()->articulationStageEndorsementApproval()}}
                     @else
                         @if(isset($ult_traceability->movimiento) && $ult_traceability->movimiento == \App\Models\Movimiento::IsAprobar() && $ult_traceability->rol == \App\User::IsDinamizador())
-                            Enviar solicitud de aval al {{\App\User::IsTalento()}}
+                            Enviar solicitud de aprobación al {{\App\User::IsTalento()}}
                             para {{$articulationStage->present()->articulationStageEndorsementApproval()}}
                         @else
-                            El talento interlocutor dió el aval, enviar
-                            solicitud de aval al dinamizador
+                            El talento interlocutor dió la aprobación, enviar
+                            solicitud de aprobación al dinamizador
                             para {{$articulationStage->present()->articulationStageEndorsementApproval()}}.
                         @endif
                     @endif
@@ -38,16 +38,16 @@
                     class="collection-item yellow lighten-3">
                     <i class="material-icons left">notifications</i>
                     @if($rol_destinatario == \App\User::IsTalento())
-                        Enviar solicitud de aval al talento
+                        Enviar solicitud de aprobación al talento
                         para {{$articulationStage->present()->articulationStageEndorsementApproval()}}
                         esta {{__('articulation-stage')}}.
                     @else
                         @if(isset($ult_traceability->movimiento) && $ult_traceability->movimiento == \App\Models\Movimiento::IsAprobar() && $ult_traceability->rol == \App\User::IsDinamizador())
-                            Enviar solicitud de aval al {{\App\User::IsTalento()}}
+                            Enviar solicitud de aprobación al {{\App\User::IsTalento()}}
                             para {{$articulationStage->present()->articulationStageEndorsementApproval()}}
                         @else
-                            El talento interlocutor dió el aval, enviar
-                            solicitud de aval al dinamizador
+                            El talento interlocutor dió la aprobación, enviar
+                            solicitud de aprobación al dinamizador
                             para {{$articulationStage->present()->articulationStageEndorsementApproval()}}.
                         @endif
                     @endif

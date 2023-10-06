@@ -45,7 +45,7 @@ class RequestFinalizeArticulation extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject("Solicitud de aval para finalizar la ". __('articulation') ." {$this->articulation->present()->articulationCode()} - {$this->articulation->present()->articulationName()}" )
+            ->subject("Solicitud de aprobación para finalizar la ". __('articulation') ." {$this->articulation->present()->articulationCode()} - {$this->articulation->present()->articulationName()}" )
             ->markdown('emails.articulation.request-finalize-articulation', ['articulation' => $this->articulation, 'notification' => $this->notification]);
     }
 
@@ -63,7 +63,7 @@ class RequestFinalizeArticulation extends Notification implements ShouldQueue
             'icon'  => 'library_books',
             'color' => 'green',
             'autor' => "{$this->notification->remitente->nombres} {$this->notification->remitente->nombres}",
-            'text'  => "El articulador ha solicitado el aval para finalizar la ". __('articulation') ." {$this->articulation->present()->articulationCode()}",
+            'text'  => "El articulador ha solicitado la aprobación para finalizar la ". __('articulation') ." {$this->articulation->present()->articulationCode()}",
         ];
     }
 

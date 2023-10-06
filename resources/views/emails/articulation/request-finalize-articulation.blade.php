@@ -1,12 +1,12 @@
 @component('mail::message')
-# Solicitud de aval | {{$notification->notificable->present()->articulationCode()}}.
+# Solicitud de aprobación | {{$notification->notificable->present()->articulationCode()}}.
 
 Señor(a)<br>
 <b>_{{$notification->receptor->nombres.' '.$notification->receptor->apellidos}}_</b><br>
 Cordial Saludo.
 <br>
 Se ha enviado este correo para informar que el señor(a) {{$notification->rol_remitente->name}} {{$notification->remitente->nombres .' '. $notification->remitente->apellidos}} ha solicitado
-aprobar el aval para finalizar la {{__('articulation')}} {{$notification->notificable->present()->articulationName()}}.
+la aprobación para finalizar la {{__('articulation')}} {{$notification->notificable->present()->articulationName()}}.
 <br>
 
 
@@ -14,8 +14,6 @@ aprobar el aval para finalizar la {{__('articulation')}} {{$notification->notifi
     <center>
         <h3 class="subtittle">{{__('articulation')}}</h3>
         <h3 class="subtittle-value">{{$notification->notificable->present()->articulationCode()}} - {{$notification->notificable->present()->articulationName()}}</h3>
-        <h3 class="subtittle">{{ __('Status') }}</h3>
-        <h3 class="subtittle-value">{{$notification->notificable->present()->articulationPhase()}}</h3>
     </center>
 @endcomponent
 

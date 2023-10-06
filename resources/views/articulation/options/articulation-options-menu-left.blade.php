@@ -9,14 +9,14 @@
                 class="collection-item yellow lighten-3">
                 <i class="material-icons left">notifications</i>
                 @if($rol_destinatario == \App\User::IsDinamizador())
-                    Enviar solicitud de aval al {{\App\User::IsDinamizador()}}
+                    Enviar solicitud de aprobación al {{\App\User::IsDinamizador()}}
                     para finalizar
                 @else
                     @if(isset($ult_traceability->movimiento)  && $ult_traceability->rol == \App\User::IsDinamizador())
-                        Enviar solicitud de aval al {{\App\User::IsDinamizador()}}
+                        Enviar solicitud de aprobación al {{\App\User::IsDinamizador()}}
                         para finalizar
                     @else
-                        El dinamizador ya dio el aval
+                        El dinamizador ya dio la aprobación
                     @endif
                 @endif
             </a>
