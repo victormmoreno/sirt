@@ -25,7 +25,7 @@ class EmpresaFormRequest extends FormRequest
     public function rules($sit = null)
     {
         return [
-            'txtnit_empresa' => Rule::requiredIf($sit != 'just_hq').'|digits_between:8,13|unique:empresas,nit,' . request()->route('id'),
+            'txtnit_empresa' => Rule::requiredIf($sit != 'just_hq').'|min:8|max:13|unique:empresas,nit,' . request()->route('id'),
             'txtcodigo_ciiu_empresa' => 'max:15|nullable',
             'txtnombre_empresa' => Rule::requiredIf($sit != 'just_hq') . '|min:1|max:300',
             'txtnombre_sede' =>  Rule::requiredIf($sit != 'just_comp') . '|min:1|max:300',

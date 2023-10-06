@@ -28,7 +28,7 @@ class EmpresaController extends Controller
         $empresa = $this->empresaRepository->consultarDetallesDeUnaEmpresa($id);
         if (!request()->user()->can('show', $empresa)) {
             alert('No autorizado', 'No puedes ver la información de esta empresa', 'error')->showConfirmButton('Ok', '#3085d6');
-            return back();
+            return redirect()->route('empresa');
         }
         return view('empresa.show', ['empresa' => $empresa]);
     }

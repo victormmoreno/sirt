@@ -84,7 +84,7 @@
                 @forelse ($data->talentos as $value)
                     <tr>
                         <td colspan="2">{{ $value->documento }}</td>
-                        <td colspan="2">{{ $value->nombres . ' ' . $value->nombres }}</td>
+                        <td colspan="2">{{ $value->nombres . ' ' . $value->apellidos }}</td>
                         <td colspan="2">{{ $value->email }}</td>
                         <td colspan="2">{{ $value->celular }} - {{ $value->telefono }}</td>
                     </tr>

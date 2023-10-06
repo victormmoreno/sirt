@@ -3,7 +3,7 @@
     Cambiar talentos que desarrollan el proyecto.
 </a>
 @can('notificar_aprobacion', $proyecto)
-    <a href="{{route('proyecto.solicitar.aprobacion', [$proyecto->id, -1])}}" class="collection-item orange-text">
+    <a href="" class="collection-item orange-text" onclick="sendNotification('{{route('proyecto.solicitar.aprobacion', [$proyecto->id, -1])}}', '{{$proyecto->fase->nombre}}', {{$proyecto->prorrogas()->count()}}, event)">
         <i class="material-icons left">notifications</i>
         @if ($rol_destinatario == 'Talento')
             Enviar solicitud de aprobación de la fase de {{$proyecto->fase->nombre}} al talento.

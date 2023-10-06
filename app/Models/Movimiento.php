@@ -25,6 +25,7 @@ class Movimiento extends Model
     const IS_SUSPENDER = 'canceló';
     const IS_CAMBIAR_INTERLOCUTOR = 'cambió el talento interlocutor';
     const IS_CAMBIAR_TALENTOS = 'cambió los talentos del proyecto';
+    const IS_ESTABLECER = 'estableció';
     protected $table = 'movimientos';
 
     /**
@@ -125,6 +126,11 @@ class Movimiento extends Model
     public static function IsCambiarTalentos()
     {
         return self::IS_CAMBIAR_TALENTOS;
+    }
+
+    public static function IsEstablecer()
+    {
+        return self::IS_ESTABLECER;
     }
 
     // public function historial()

@@ -127,7 +127,7 @@
                 $.each(response.data.proyectos, function(i, item) {
                     strings += '<li class="collection-item">'
                         +'<div class="row"><div class="col s12 m3 l3"><b class="title green-text">Proyecto</b>'
-                        +'<p>'+item.codigo_proyecto+' - '+item.nombre+'</p></div>'
+                            +'<p><a href="/proyecto/inicio/'+item.id+'">'+item.codigo_proyecto+' - '+item.nombre+'</a></p></div>'
                         +'<div class="col s12 m3 l3"><b class="title green-text">Línea</b>'
                         +'<p>'+item.nombre_linea+'</p></div>'
                         +'<div class="col s12 m3 l3"><b class="title green-text">Experto</b>'
@@ -155,7 +155,7 @@
             let strings = "";
             $("#proyectoInicio_body").empty();
             $("#proyectoInicio_titulo").empty();
-            $("#proyectoInicio_titulo").append("<span class='cyan-text text-darken-3'>Proyectos que llevan mucho tiempo en planeación</span>");
+            $("#proyectoInicio_titulo").append("<span class='cyan-text text-darken-3'>Proyectos que están atrasados en la fase de planeación</span>");
             strings = '<ul class="collection">';
                 if (response.data.proyectos.length == 0) {
                 strings += '<li class="collection-item">'
@@ -165,13 +165,55 @@
                 $.each(response.data.proyectos, function(i, item) {
                     strings += '<li class="collection-item">'
                         +'<div class="row"><div class="col s12 m3 l3"><b class="title green-text">Proyecto</b>'
-                        +'<p>'+item.codigo_proyecto+' - '+item.nombre+'</p></div>'
+                        +'<p><a href="/proyecto/planeacion/'+item.id+'">'+item.codigo_proyecto+' - '+item.nombre+'</a></p></div>'
                         +'<div class="col s12 m3 l3"><b class="title green-text">Línea</b>'
                         +'<p>'+item.nombre_linea+'</p></div>'
                         +'<div class="col s12 m3 l3"><b class="title green-text">Experto</b>'
                         +'<p>'+item.gestor+'</p></div>'
                         +'<div class="col s12 m3 l3"><b class="title green-text">Fecha de aprobación de la fase de inicio</b>'
                         +'<p>'+item.aprobacion+' ('+item.dias+' días)</p></div></div>'
+                    +'</li>';
+                });
+            }
+            strings += '</ul>';
+            $('#proyectoInicio_body').append(strings);
+            $('#proyectoInicio_modal').openModal();
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            alert("Error: " + errorThrown);
+        }
+    })
+    }
+    function consultarProyectosEjecucion(nodo, user) {
+    $.ajax({
+        dataType:'json',
+        type:'get',
+        url: host_url + "/proyecto/limite-ejecucion/"+nodo+"/"+user,
+        success: function (response) {
+            let strings = "";
+            $("#proyectoInicio_body").empty();
+            $("#proyectoInicio_titulo").empty();
+            $("#proyectoInicio_titulo").append("<span class='cyan-text text-darken-3'>Proyectos que llevan mucho tiempo en ejecución</span>");
+            strings = '<ul class="collection">';
+                if (response.data.proyectos.length == 0) {
+                strings += '<li class="collection-item">'
+                        +'<div class="row"><b class="title green-text">No tienes proyectos atrasados en la fase de ejecución</b>'
+                    +'</li>';
+            } else {
+                $.each(response.data.proyectos, function(i, item) {
+                    let justify = '';
+                    if (item.justificacion != null) {
+                        justify = '<p><b>Justificación: </b>'+item.justificacion+'</p>';
+                    }
+                    strings += '<li class="collection-item">'
+                        +'<div class="row"><div class="col s12 m3 l3"><b class="title green-text">Proyecto</b>'
+                        +'<p><a href="/proyecto/ejecucion/'+item.id+'">'+item.codigo_proyecto+' - '+item.nombre+'</a></p></div>'
+                        +'<div class="col s12 m3 l3"><b class="title green-text">Línea</b>'
+                        +'<p>'+item.nombre_linea+'</p></div>'
+                        +'<div class="col s12 m3 l3"><b class="title green-text">Experto</b>'
+                        +'<p>'+item.gestor+'</p></div>'
+                        +'<div class="col s12 m3 l3"><b class="title green-text">Fecha estimada para terminar la fase de ejecución</b>'
+                        +'<p>'+item.ejecucion+' ('+item.dias+' días)</p>'+justify+'</div></div>'
                     +'</li>';
                 });
             }
