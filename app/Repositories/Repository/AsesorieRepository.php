@@ -304,8 +304,8 @@ class AsesorieRepository
 
         $asesorie->update([
             'fecha'                   => $request->txtfecha,
-            'asesoria_directa'        => isset($request->txtasesoriadirecta) ? $request->txtasesoriadirecta : '0',
-            'asesoria_indirecta'      => isset($request->txtasesoriaindirecta) ? $request->txtasesoriaindirecta : '0',
+            // 'asesoria_directa'        => isset($request->txtasesoriadirecta) ? $request->txtasesoriadirecta : '0',
+            // 'asesoria_indirecta'      => isset($request->txtasesoriaindirecta) ? $request->txtasesoriaindirecta : '0',
             'descripcion'             => $request->txtdescripcion,
             'compromisos'             => $request->get('txtcompromisos'),
             'estado'                  => 1,
@@ -383,27 +383,25 @@ class AsesorieRepository
         foreach ($request->get('gestor') as $id => $value) {
             $asesor = null;
             if($asesorie->asesorable_type == \App\Models\Proyecto::class){
-                $asesor = User::where('id', $value)->first();
+                $asesor = User::where('id', $value)->withTrashed()->first();
             }else if($asesorie->asesorable_type == \App\Models\Articulation::class){
-                $asesor = User::where('id', $value)->first();
+                $asesor = User::where('id', $value)->withTrashed()->first();
             }else if($asesorie->asesorable_type == \App\Models\Idea::class){
-                $asesor = User::where('id', $value)->first();
+                $asesor = User::where('id', $value)->withTrashed()->first();
             }
-
             //suma de las horas de asesoria directa y horas de asesoria indirecta
             $horasAsesoriaExperto[$id] = $request->get('asesoriadirecta')[$id] + $request->get('asesoriaindirecta')[$id];
 
-            if(isset($asesor->experto) && \Session::get('login_role') == User::IsExperto()){
+            if(isset($asesor->experto)){
                 $honorarioAsesor = $asesor->experto->honorarios;
-            }else if(isset($asesor->articulador) && \Session::get('login_role') == User::IsArticulador()){
+            }else if(isset($asesor->articulador)){
                 $honorarioAsesor = $asesor->articulador->honorarios;
-            }else if(isset($asesor->apoyotecnico) && \Session::get('login_role') == User::IsApoyoTecnico()){
+            }else if(isset($asesor->apoyotecnico)){
                 $honorarioAsesor = $asesor->apoyotecnico->honorarios;
             }else{
                 $honorarioAsesor = 0;
             }
-
-
+            
             $calculateHonorariosAsesor = round(($honorarioAsesor / CostoAdministrativo::DIAS_AL_MES / CostoAdministrativo::HORAS_AL_DIA) * (double) $horasAsesoriaExperto[$id]);
 
             //calculo de honorario de valor hora del asesor * horas de asesoriria
@@ -461,15 +459,16 @@ class AsesorieRepository
         $totalEquipos        = [];
         $anioActual          = Carbon::now()->year;
         $node = null;
-        if(\Session::get('login_role') == User::IsExperto()){
-            $node = auth()->user()->experto->nodo_id;
-        }else if(\Session::get('login_role') == User::IsArticulador()){
-            $node = auth()->user()->articulador->nodo_id;
-        }else if(\Session::get('login_role') == User::IsApoyoTecnico()){
-            $node = auth()->user()->apoyotecnico->nodo_id;
-        }
+        // if(\Session::get('login_role') == User::IsExperto()){
+        //     $node = auth()->user()->experto->nodo_id;
+        // }else if(\Session::get('login_role') == User::IsArticulador()){
+        //     $node = auth()->user()->articulador->nodo_id;
+        // }else if(\Session::get('login_role') == User::IsApoyoTecnico()){
+        //     $node = auth()->user()->apoyotecnico->nodo_id;
+        // }
         foreach ($request->get('equipo') as $id => $value) {
             $equipo = Equipo::with(['equiposmantenimientos', 'lineatecnologica', 'nodo'])->where('id', $value)->first();
+            $node = $equipo->nodo_id;
             if ($equipo->vida_util == 0 || $equipo->horas_uso_anio == 0 || $equipo->costo_adquisicion == 0) {
                         $depreciacionEquipo[$id] = 0;
             } else {

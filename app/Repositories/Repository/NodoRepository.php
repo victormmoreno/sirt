@@ -186,6 +186,7 @@ class NodoRepository
     public function consultarMetasDeTecnoparque($nodos = null)
     {
         $query = MetaNodo::query()->select(['nodo_id','anho','articulaciones','trl6','trl7_trl8', 'entidades.nombre as nodo'])
+        ->selectRaw('(trl6+trl7_trl8) AS metas_pbts_finalizados')
         ->join('nodos','nodos.id','metas_nodo.nodo_id')
         ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
         ->orderBy('entidades.nombre');

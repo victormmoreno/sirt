@@ -385,6 +385,10 @@ class EquipoController extends Controller
                 $nodo = request()->user()->experto->nodo_id;
                 $linea = request()->user()->experto->linea_id;
                 break;
+            case User::IsInfocenter():
+                $nodo = request()->user()->infocenter->nodo_id;
+                $linea = null;
+                break;
             default:
                 return abort('403');
                 break;
