@@ -7,11 +7,11 @@
         <input type="hidden" type="text" name="decision" id="decision">
         <button type="submit" onclick="endorsementQuestionArticulation(event)" class="center-align center waves-effect waves-light btn bg-secondary btn-large modal-trigger" style="margin-bottom: 10px; margin-right: 10px; margin-top: 10px; width: 100%;">
             <i class="material-icons left">done</i>
-            Aprobar aval
+            Aprobar
         </button>
         <button type="submit" onclick="questionRejectEndorsementArticulation(event)" class="center-align waves-effect waves-light btn bg-danger modal-trigger" style="margin-bottom: 10px; margin-right: 10px; margin-top: 0px; width: 100%">
             <i class="material-icons left">close</i>
-            No aprobar aval
+            No aprobar
         </button>
     @endif
 </form>

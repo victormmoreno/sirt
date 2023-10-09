@@ -12,20 +12,18 @@
                         @for ($i = 0; $i < $traceability->count(); $i++)
                         <li class="collection-item">
                             @if ( isset($traceability[$i]->usuario) && $traceability[$i]->movimiento == App\Models\Movimiento::IsSolicitarTalento())
-                                El {{$traceability[$i]->rol}} {{$traceability[$i]->usuario}} {{$traceability[$i]->movimiento}} avalar el '{{$traceability[$i]->descripcion}}' de la {{__('articulation-stage')}}
+                                El {{$traceability[$i]->rol}} {{$traceability[$i]->usuario}} {{$traceability[$i]->movimiento}} aprobar para {{$traceability[$i]->descripcion}} la {{__('articulation-stage')}}
                                 en la fecha {{$traceability[$i]->created_at->isoFormat('MMMM Do YYYY, h:mm:ss a')}}
                             @endif
                             @if ( isset($traceability[$i]->usuario) && $traceability[$i]->movimiento== App\Models\Movimiento::IsSolicitarDinamizador())
-                                El {{$traceability[$i]->rol}} {{$traceability[$i]->usuario}} {{$traceability[$i]->movimiento}}
-                                el aval para '{{$traceability[$i]->descripcion}}' la {{__('articulation-stage')}} en la fecha {{$traceability[$i]->created_at->isoFormat('MMMM Do YYYY, h:mm:ss a')}}
+                                El {{$traceability[$i]->rol}} {{$traceability[$i]->usuario}} {{$traceability[$i]->movimiento}} {{$traceability[$i]->descripcion}} la {{__('articulation-stage')}}  en la fecha {{$traceability[$i]->created_at->isoFormat('MMMM Do YYYY, h:mm:ss a')}}
                             @endif
                             @if ( isset($traceability[$i]->usuario) && $traceability[$i]->movimiento == App\Models\Movimiento::IsAprobar())
-                                El {{$traceability[$i]->rol}} {{$traceability[$i]->usuario}} {{$traceability[$i]->movimiento}}
-                                el aval para '{{$traceability[$i]->descripcion}}' la {{__('articulation-stage')}} en la fecha {{$traceability[$i]->created_at->isoFormat('MMMM Do YYYY, h:mm:ss a')}}
+                                El {{$traceability[$i]->rol}} {{$traceability[$i]->usuario}} {{$traceability[$i]->movimiento}} {{$traceability[$i]->descripcion}} la
+                                {{__('articulation-stage')}} en la fecha {{$traceability[$i]->created_at->isoFormat('MMMM Do YYYY, h:mm:ss a')}}
                             @endif
                             @if ( isset($traceability[$i]->usuario) && $traceability[$i]->movimiento == App\Models\Movimiento::IsNoAprobar())
-                                El {{$traceability[$i]->rol}} {{$traceability[$i]->usuario}} {{$traceability[$i]->movimiento}}
-                                el aval para '{{$traceability[$i]->descripcion}}' la {{__('articulation-stage')}}  en la fecha {{$traceability[$i]->created_at->isoFormat('MMMM Do YYYY, h:mm:ss a')}} por los siguientes motivos:  {{$traceability[$i]->comentarios}}
+                                El {{$traceability[$i]->rol}} {{$traceability[$i]->usuario}} {{$traceability[$i]->movimiento}} {{$traceability[$i]->descripcion}} la {{__('articulation-stage')}}    en la fecha {{$traceability[$i]->created_at->isoFormat('MMMM Do YYYY, h:mm:ss a')}} por los siguientes motivos:  {{$traceability[$i]->comentarios}}
                             @endif
                             @if ( isset($traceability[$i]->usuario) && $traceability[$i]->movimiento == App\Models\Movimiento::IsRegistrar() || $traceability[$i]->movimiento == App\Models\Movimiento::IsCalificar())
                                 El día {{$traceability[$i]->created_at->isoFormat('MMMM Do YYYY, h:mm:ss a')}} el {{$traceability[$i]->rol}} {{$traceability[$i]->usuario}} {{$traceability[$i]->movimiento}}

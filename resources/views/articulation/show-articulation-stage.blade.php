@@ -155,7 +155,7 @@
                                                 </div>
                                             </div>
                                             <div class="col s12 m12 l12">
-                                                <span class="mailbox-title primary-text text-center">Articulaciones</span>
+                                                <span class="mailbox-title primary-text text-center">Acciones de articulación</span>
                                             </div>
                                             <div class="col s12 m12 l12">
                                                 <table id="articulation_data_table"

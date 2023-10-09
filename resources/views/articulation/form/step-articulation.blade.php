@@ -37,7 +37,7 @@
                         <small id="start_date-error" class="error red-text"></small>
                     </div>
                     <div class="input-field col m12 s12">
-                        <label for="name">Nombre Articulación <span class="red-text">*</span></label>
+                        <label for="name">Nombre acción de Articulación <span class="red-text">*</span></label>
                         <input id="name" name="name" value="{{isset($articulation) ? $articulation->name : old('name')}}" type="text">
                     </div>
                     <div class="input-field col m12 s12">
