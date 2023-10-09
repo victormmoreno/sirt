@@ -26,6 +26,7 @@ class MigracionMetasImport extends \PhpOffice\PhpSpreadsheet\Cell\StringValueBin
 
     public function collection(Collection $rows)
     {
+        DB::beginTransaction();
         try {
             $year = Carbon::now()->format('Y');
             foreach ($rows as $key => $row) {

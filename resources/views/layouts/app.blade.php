@@ -17,6 +17,10 @@
         <meta name="copyright" content="© 2019 redtecnoparquecolombia" />
         <meta http-equiv="Content-Language" content="{{config('app.locale')}}"/>
         <meta name="distribution" content="global"/>
+        <meta http-equiv="Expires" content="0">
+        <meta http-equiv="Last-Modified" content="0">
+        <meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+        <meta http-equiv="Pragma" content="no-cache">
         <meta name="robots" content="index"/>
         <meta name="Keywords" content="@yield('meta-keywords', 'Tecnoparque, SENA, Innovacion, Tecnologia, desarrollo, emprendimiento' )"/>
         <meta content="{{ csrf_token()}}" name="csrf-token"/>
