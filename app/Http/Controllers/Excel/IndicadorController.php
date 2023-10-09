@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Excel;
 
 use App\Exports\Indicadores\IndicadoresExport;
 use App\Exports\Indicadores\IndicadorArticulacionesExport;
+use App\Exports\Indicadores\MetasToImport;
 use App\Exports\Metas\MetasExport;
 use App\Exports\Idea\IdeasIndicadorExport;
 use App\Exports\Proyectos\{ProyectosExport};
@@ -21,6 +22,7 @@ use App\Models\{Articulation, Proyecto, Nodo};
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class IndicadorController extends Controller
@@ -41,6 +43,54 @@ class IndicadorController extends Controller
         $this->ideaRepository = $ideaRepository;
         $this->year_now = Carbon::now()->format('Y');
     }
+
+      /**
+   * Descagar el listado de equipos de un nodo
+   *
+   * @return Excel
+   * @author dum
+   */
+  public function download_metas()
+  {
+    // if(!request()->user()->can('import', Equipo::class)) {
+    //     alert('No autorizado', 'No puedes descargar la información de los equipos de este nodo', 'error')->showConfirmButton('Ok', '#3085d6');
+    //     return back();
+    // }
+    $year = Carbon::now()->format('Y');
+    $metas = $this->nodoRepository->consultarMetasDeTecnoparque()->where('anho', $year)->get();
+    $nodos = Nodo::all();
+    $metas_temp = null;
+    foreach ($nodos as $key => $nodo) {
+        $meta = $metas->where('nodo_id', $nodo->id)->first();
+        if ($meta == null) {
+            $metas_temp[$key]['nodo'] = $nodo->entidad->nombre;
+            $metas_temp[$key]['articulaciones'] = 0;
+            $metas_temp[$key]['trl6'] = 0;
+            $metas_temp[$key]['tr7_trl8'] = 0;
+            $metas_temp[$key]['metas_pbts_finalizados'] = 0;
+        } else {
+            $metas_temp[$key]['nodo'] = $meta->nodo;
+            $metas_temp[$key]['articulaciones'] = $meta->articulaciones;
+            $metas_temp[$key]['trl6'] = $meta->trl6;
+            $metas_temp[$key]['tr7_trl8'] = $meta->trl7_trl8;
+            $metas_temp[$key]['metas_pbts_finalizados'] = $meta->metas_pbts_finalizados;
+        }
+
+    }
+
+    $metas_download = new Collection();
+
+    foreach ($metas_temp as $key => $meta) {
+        $metas_download->push((object)[
+            'nodo' => $meta['nodo'],
+            'articulaciones'=>$meta['articulaciones'],
+            'trl6'=>$meta['trl6'],
+            'trl7_trl8'=>$meta['tr7_trl8'],
+            'metas_pbts_finalizados'=>$meta['metas_pbts_finalizados']
+        ]);
+    }
+    return Excel::download(new MetasToImport($metas_download), 'Importar metas.xlsx');
+  }
 
     public function exportIndicadoresProyectos(Request $request)
     {
