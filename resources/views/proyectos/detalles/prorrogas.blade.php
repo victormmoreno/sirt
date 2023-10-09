@@ -3,7 +3,7 @@
         <ul class="collection">
             <li class="collection-item">
                 <span class="title secondary-text">
-                    Fecha estimada para terminar la ejecución del proyecto.
+                    Fecha estimada para terminar la fase de ejecución del proyecto.
                 </span>
                 <p>
                     {{$proyecto->prorrogas()->get()->last()->fecha_ejecucion}}
@@ -22,7 +22,7 @@
     <div id="prorrogasProyecto_modal" class="modal modal-fixed-footer">
         <div class="modal-content">
             <center>
-                <h4 class="center-aling">Veces que el proyecto ha extendido su fecha de ejecución</h4>
+                <h4 class="center-aling">Veces que el proyecto ha extendido la fecha para terminar la fase de ejecución</h4>
             </center>
             <div class="divider"></div>
             <div>
@@ -35,7 +35,7 @@
                                 <p>{{$proyecto->codigo_proyecto}} {{$proyecto->nombre}}</p>
                             </div>
                             <div class="col s12 m5 l5">
-                                <b class="title green-text">Fecha estimada para finalizar la ejecución</b>
+                                <b class="title green-text">Fecha estimada para finalizar la fase de ejecución</b>
                                 <p>{{$prorroga->fecha_ejecucion}}</p>
                                 @if ($prorroga->justificacion != null)
                                     <p><b>Justificación:</b> {{$prorroga->justificacion}}</p>
