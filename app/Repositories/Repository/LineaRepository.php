@@ -59,7 +59,7 @@ class LineaRepository
         return LineaTecnologica::create([
             "abreviatura" => $request->input('txtabreviatura'),
             "nombre"      => $request->input('txtnombre'),
-            "slug"        => str_slug($request->input('txtnombre'), '-'),
+            "slug"        => str()->slug($request->input('txtnombre'), '-'),
         ]);
     }
 
@@ -74,7 +74,7 @@ class LineaRepository
         $lineatecnologica->update([
             "abreviatura" => $request->input('txtabreviatura'),
             "nombre"      => $request->input('txtnombre'),
-            "slug"        => str_slug($request->input('txtnombre'), '-'),
+            "slug"        => str()->slug($request->input('txtnombre'), '-'),
         ]);
 
         return $lineatecnologica;

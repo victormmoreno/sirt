@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Cache;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+// use Illuminate\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Session;
 
 class LoginController extends Controller
@@ -20,7 +22,7 @@ class LoginController extends Controller
     | to conveniently provide its functionality to your applications.
     |
      */
-    use AuthenticatesUsers;
+    // use AuthenticatesUsers;
 
     public $maxAttempts  = 3;
     public $decayMinutes = 3;
@@ -39,45 +41,67 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-
-    /**
-     * Handle a login request to the application.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function login(Request $request)
-    {
-        $this->validateLogin($request);
-
-        // If the class is using the ThrottlesLogins trait, we can automatically throttle
-        // the login attempts for this application. We'll key this by the username and
-        // the IP address of the client making these requests into this application.
-        if (
-            method_exists($this, 'hasTooManyLoginAttempts') &&
-            $this->hasTooManyLoginAttempts($request)
-        ) {
-            $this->fireLockoutEvent($request);
-
-            return $this->sendLockoutResponse($request);
-        }
-
-        if ($this->attemptLogin($request)) {
-            session()->put('login_role', collect(\Auth::user()->roles)->first()->name);
-            alert()->info('Señor(a), ' . collect(auth()->user()->roles)->firstWhere('name', auth()->user()->roles->first()->name)->name . ' ' . auth()->user()->nombres . ' ' . auth()->user()->apellidos . ' bienvenido a ' . config('app.name'))->toToast();
-
-            return $this->sendLoginResponse($request);
-        }
-
-        // If the login attempt was unsuccessful we will increment the number of attempts
-        // to login and redirect the user back to the login form. Of course, when this
-        // user surpasses their maximum number of attempts they will get locked out.
-        $this->incrementLoginAttempts($request);
-
-        return $this->sendFailedLoginResponse($request);
+    
+    public function showLoginForm() {
+        return view('auth.login');
     }
+
+    public function authenticate(Request $request): RedirectResponse
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+ 
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            session()->put('login_role', collect(\Auth::user()->roles)->first()->name);
+            return redirect()->intended('/home');
+        }
+ 
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
+    }
+
+    // /**
+    //  * Handle a login request to the application.
+    //  *
+    //  * @param  \Illuminate\Http\Request  $request
+    //  * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse
+    //  *
+    //  * @throws \Illuminate\Validation\ValidationException
+    //  */
+    // public function login(Request $request)
+    // {
+    //     $this->validateLogin($request);
+
+    //     // If the class is using the ThrottlesLogins trait, we can automatically throttle
+    //     // the login attempts for this application. We'll key this by the username and
+    //     // the IP address of the client making these requests into this application.
+    //     if (
+    //         method_exists($this, 'hasTooManyLoginAttempts') &&
+    //         $this->hasTooManyLoginAttempts($request)
+    //     ) {
+    //         $this->fireLockoutEvent($request);
+
+    //         return $this->sendLockoutResponse($request);
+    //     }
+
+    //     if ($this->attemptLogin($request)) {
+    //         session()->put('login_role', collect(\Auth::user()->roles)->first()->name);
+    //         alert()->info('Señor(a), ' . collect(auth()->user()->roles)->firstWhere('name', auth()->user()->roles->first()->name)->name . ' ' . auth()->user()->nombres . ' ' . auth()->user()->apellidos . ' bienvenido a ' . config('app.name'))->toToast();
+
+    //         return $this->sendLoginResponse($request);
+    //     }
+
+    //     // If the login attempt was unsuccessful we will increment the number of attempts
+    //     // to login and redirect the user back to the login form. Of course, when this
+    //     // user surpasses their maximum number of attempts they will get locked out.
+    //     $this->incrementLoginAttempts($request);
+
+    //     return $this->sendFailedLoginResponse($request);
+    // }
 
     /**
      * Validate the user login request.
@@ -116,13 +140,22 @@ class LoginController extends Controller
         return 'password';
     }
 
-
-    public function logout(Request $request)
+    public function logout(Request $request): RedirectResponse
     {
-        $this->guard()->logout();
+        Auth::logout();
+     
         $request->session()->invalidate();
-        return $this->loggedOut($request) ?: redirect('/');
+     
+        $request->session()->regenerateToken();
+     
+        return redirect('/');
     }
+    // public function logout(Request $request)
+    // {
+    //     $this->guard()->logout();
+    //     $request->session()->invalidate();
+    //     return $this->loggedOut($request) ?: redirect('/');
+    // }
 
     protected function loggedOut(Request $request)
     {

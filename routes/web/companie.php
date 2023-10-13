@@ -18,7 +18,7 @@ Route::group(
         Route::get('/{id}/{id_sede}/sedes_edit', 'EmpresaController@sedes_edit')->name('empresa.edit.sedes');
         Route::get('/{id}/add_sede', 'EmpresaController@add_sede')->name('empresa.add.sede');
         Route::get('/ajaxDetallesDeUnaEmpresa/{value}/{field}', 'EmpresaController@ajaxDeUnaEmpresa')->name('empresa.ajax.detalle');
-        Route::get('/ajaxDetalleDeUnaSede/{id}', 'EmpresaController@ajaxDeUnaSede')->name('empresa.ajax.detalle');
+        Route::get('/ajaxDetalleDeUnaSede/{id}', 'EmpresaController@ajaxDeUnaSede')->name('empresa.ajax.detalle.sede');
         Route::put('/{id}/responsable', 'EmpresaController@update_responsable')->name('empresa.update.responsable');
         Route::put('/{id}', 'EmpresaController@update')->name('empresa.update');
         Route::put('/{id}/store_sede', 'EmpresaController@store_sede')->name('empresa.store.sede');

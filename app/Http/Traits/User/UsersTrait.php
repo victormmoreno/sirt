@@ -292,13 +292,13 @@ trait UsersTrait
 
     public static function generatePasswordRamdom()
     {
-        return str_random(12);
+        return str()->random(12);
     }
 
     public function generateToken()
     {
         $this->token()->create([
-            'token' => str_random(60),
+            'token' => str()->random(60),
         ]);
         return $this;
     }

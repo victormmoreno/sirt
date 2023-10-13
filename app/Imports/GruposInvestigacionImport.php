@@ -115,7 +115,7 @@ class GruposInvestigacionImport implements ToCollection, WithHeadingRow
         $entidad = Entidad::create([
             'ciudad_id' => $ciudad->id,
             'nombre' => $row['nombre'],
-            'slug' => str_slug($row['nombre'] . str_random(7), '-'),
+            'slug' => str()->slug($row['nombre'] . str()->random(7), '-'),
             'email_entidad' => $row['correo'],
             ]);
       

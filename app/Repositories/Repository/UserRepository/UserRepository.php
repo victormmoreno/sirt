@@ -96,7 +96,7 @@ class UserRepository
     {
         return ActivationToken::create([
             'user_id'    => $user,
-            'token'      => str_random(60),
+            'token'      => str()->random(60),
             'created_at' => Carbon::now(),
         ]);
     }
