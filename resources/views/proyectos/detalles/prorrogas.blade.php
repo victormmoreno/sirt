@@ -42,7 +42,7 @@
                                 @endif
                             </div>
                             <div class="col s12 m3 l3">
-                                <b class="title green-text">Fecha de registro en el sistema</b>
+                                <b class="title green-text">Fecha de registro en el sistem</b>
                                 <p>{{$prorroga->created_at}}</p>
                             </div>
                         </div>
