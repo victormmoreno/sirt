@@ -152,7 +152,7 @@
             },
             dictDefaultMessage: 'Arrastra los archivos aquí para subirlos.',
             params: {
-                type: "{{ basename(\App\Models\Articulation::class)}}",
+                type: "Articulation",
                 phase: 'Cierre'
             },
             paramName: 'nombreArchivo'
@@ -197,7 +197,7 @@
                     "url": "{{route('articulation.files', [$articulation->id])}}",
                     "type": "get",
                     "data": {
-                        type: "{{ basename(\App\Models\Articulation::class)}}",
+                        type: "Articulation",
                         phase: "Cierre"
                     },
                 },
