@@ -176,51 +176,44 @@ class IndicadorController extends Controller
 
     public function downloadMetasArticulaciones(Request $request)
     {
-        if ($request->txtnodo_meta_articulaticion[0] != 'all') {
-            if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
-                $nodos = $request->txtnodo_meta_articulaticion;
-            } else {
-                $nodos = [request()->user()->getNodoUser()];
-            }
-        } else {
-            $nodos_temp = Nodo::SelectNodo()->get();
-            foreach ($nodos_temp as $nodo) {
-                $nodos[] = $nodo->id;
-            }
-        }
-        $metas = $this->nodoRepository->consultarMetasDeTecnoparque($nodos)->where('anho', Carbon::now()->format('Y'))->get();
-        // $pbts_trl6 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $this->year_now, [Proyecto::IsTrl6Obtenido()])
-        // ->whereIn('nodos.id', $nodos)
-        // ->groupBy('mes')
-        // ->get();
-        // $pbts_trl7_8 = $this->proyectoRepository->consultarTrl('trl_obtenido', 'fecha_cierre', $this->year_now, [Proyecto::IsTrl7Obtenido(), Proyecto::IsTrl8Obtenido()])
-        // ->whereIn('nodos.id', $nodos)
-        // ->groupBy('mes')
-        // ->get();
-        // $activos = $this->proyectoRepository->proyectosIndicadoresSeparados_Repository()->select('proyectos.nodo_id')->selectRaw('count(proyectos.id) as cantidad')
-        // ->whereIn('fases.nombre', ['Inicio', 'Planeación', 'Ejecución', 'Cierre'])
-        // ->groupBy('proyectos.nodo_id')->get();
-        $year_now = Carbon::now()->format('Y');
-        $articulations_start = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsInicio()])
-            ->selectRaw('count(articulations.id) as cantidad')
-            ->whereIn('nodos.id', $nodos)
-            ->groupBy('nodo')
-            ->get();
-        // dd($articulations_start);
-        $articulations_execution = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsEjecucion()])->whereIn('nodos.id', $nodos)->get();
-        $articulations_closing = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsCierre()])->whereIn('nodos.id', $nodos)->get();
-        $articulations_finish = $this->articulationRepository->articulationsForPhase('fases.nombre', 'articulations.end_date', $year_now, [Articulation::IsFinalizado()])
-            ->whereIn('nodos.id', $nodos)
-            ->groupBy('mes')
-            ->get();
-        $articulations_canceled = $this->articulationRepository->articulationsForPhase('fases.nombre', 'articulations.end_date', $year_now, [Articulation::IsCancelado()])
-            ->whereIn('nodos.id', $nodos)
-            ->groupBy('mes')
-            ->get();
 
-        $metas = $this->retornarTodasLasMetasArticulacionesToExcel($metas, $articulations_start, $articulations_execution, $articulations_closing, $articulations_finish, $articulations_canceled);
-        // dd($metas);
-        return Excel::download(new MetasArticulationExport($metas), 'Metas Articulaciones.xlsx');
+        try {
+            if ($request->txtnodo_meta_articulaticion[0] != 'all') {
+                if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
+                    $nodos = $request->txtnodo_meta_articulaticion;
+                } else {
+                    $nodos = [request()->user()->getNodoUser()];
+                }
+            } else {
+                $nodos_temp = Nodo::SelectNodo()->get();
+                foreach ($nodos_temp as $nodo) {
+                    $nodos[] = $nodo->id;
+                }
+            }
+            $metas = $this->nodoRepository->consultarMetasDeTecnoparque($nodos)->where('anho', Carbon::now()->format('Y'))->get();
+            $year_now = Carbon::now()->format('Y');
+            $articulations_start = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsInicio()])
+                ->selectRaw('count(articulations.id) as cantidad')
+                ->whereIn('nodos.id', $nodos)
+                ->groupBy('nodo')
+                ->get();
+            $articulations_execution = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsEjecucion()])->whereIn('nodos.id', $nodos)->get();
+            $articulations_closing = $this->articulationRepository->articulationsForPhase('fases.nombre', null, $year_now, [Articulation::IsCierre()])->whereIn('nodos.id', $nodos)->get();
+            $articulations_finish = $this->articulationRepository->articulationsForPhase('fases.nombre', 'articulations.end_date', $year_now, [Articulation::IsFinalizado()])
+                ->whereIn('nodos.id', $nodos)
+                ->groupBy('mes')
+                ->get();
+            $articulations_canceled = $this->articulationRepository->articulationsForPhase('fases.nombre', 'articulations.end_date', $year_now, [Articulation::IsCancelado()])
+                ->whereIn('nodos.id', $nodos)
+                ->groupBy('mes')
+                ->get();
+            $metas = $this->retornarTodasLasMetasArticulacionesToExcel($metas, $articulations_start, $articulations_execution, $articulations_closing, $articulations_finish, $articulations_canceled);
+            toast('Reporte generado con éxito!', 'success')->autoClose(2000)->position('top-end');
+            return Excel::download(new MetasArticulationExport($metas), 'Metas Articulaciones.xlsx');
+        } catch (\Exception $e) {
+            toast('No se pudo exportar el reporte', 'danger')->autoClose(2000)->position('top-end');
+            return back();
+        }
     }
 
 
@@ -273,7 +266,7 @@ class IndicadorController extends Controller
             $articulation_canceled = $articulations_canceled->where('nodo', $meta->nodo_id)->first();
 
             $meta['month_articulation_finish'] = collect([]);
-            
+
             $progreso_articulation_finish = $articulations_finish->where('nodo', $meta->nodo_id);
             foreach ($meses as $mes) {
                 $progreso_mes = $progreso_articulation_finish->where('mes', $mes->monthName);

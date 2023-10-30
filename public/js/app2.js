@@ -10843,6 +10843,18 @@ function downloadMetas(e) {
     }
 }
 
+function downloadMetasArticulaciones(e) {
+    e.preventDefault();
+    input = $("#txtnodo_meta_articulaticion").val();
+    if (!validarSelect(input)) {
+        Swal.fire("Error!", "Debe seleccionar por lo menos un nodo", "warning");
+        return false;
+    } else {
+        document.frmDescargarMetasArticulaciones.submit();
+    }
+}
+
+
 function validarSelect(input) {
     if (input == null) {
         return false;

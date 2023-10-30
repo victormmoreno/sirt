@@ -14,10 +14,7 @@
             <label for="txtnodo_meta_articulaticion">Seleccione el nodo</label>
         </div>
         <div class="input-field col s12 m4 l4">
-            {{-- <button type="submit" onclick="downloadMetasArticulaciones(event)" class="btn bg-secondary left show-on-large hide-on-med-and-down">
-                <i class="material-icons left">file_download</i>Descargar metas
-            </button> --}}
-            <button type="submit" class="btn bg-secondary left show-on-large hide-on-med-and-down">
+            <button type="submit" onclick="downloadMetasArticulaciones(event)" class="btn bg-secondary left show-on-large hide-on-med-and-down">
                 <i class="material-icons left">file_download</i>Descargar metas
             </button>
         </div>
