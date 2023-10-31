@@ -307,6 +307,7 @@ Route::group(
         // Ruta para la generación de excel del módulo de articulaciones
 
         Route::get('/export/downloadMetas', 'Excel\IndicadorController@downloadMetas')->name('indicador.export.metas');
+        Route::get('/export/downloadMetas/articulaciones', 'Excel\IndicadorController@downloadMetasArticulaciones')->name('indicador.export.metas-articulaciones');
         Route::get('/export/downloadIdeas', 'Excel\IndicadorController@downloadIdeas')->name('indicador.export.ideas');
         Route::get('/export_proyectos_indicadores', 'Excel\IndicadorController@exportIndicadoresProyectos')->name('indicador.proyectos.export.excel')->middleware('role_session:Experto|Infocenter|Dinamizador|Activador');
         // Route::get('/export_trazabilidad/{idproyecto}', 'Excel\ProyectoController@exportTrazabilidadProyecto')->name('excel.proyecto.trazabilidad');

@@ -9530,6 +9530,11 @@ $( document ).ready(function() {
     $('#filter_talents_advanced').click(function () {
         articulationStage.queryTalentos();
     });
+    $('.articulation_date-end').bootstrapMaterialDatePicker(configbootstrapMaterialDatePickerRangeDate);
+
+    $('.articulation_date-start').bootstrapMaterialDatePicker(configbootstrapMaterialDatePickerRangeDate).on('change', function(e, date) {
+        $('.articulation_date-end').bootstrapMaterialDatePicker('setMinDate', date);
+    });
 
     $('.datepicker_accompaniable_date').pickadate({
         selectMonths: true,
@@ -9763,6 +9768,12 @@ $( document ).ready(function() {
     $('.select-wrapper.initialized').prev( "ul" ).remove();
     $('.select-wrapper.initialized').prev( "input" ).remove();
     $('.select-wrapper.initialized').prev( "span" ).remove();
+
+    $('.articulation_date-end').bootstrapMaterialDatePicker(configbootstrapMaterialDatePickerRangeDate);
+
+    $('.articulation_date-start').bootstrapMaterialDatePicker(configbootstrapMaterialDatePickerRangeDate).on('change', function(e, date) {
+        $('.articulation_date-end').bootstrapMaterialDatePicker('setMinDate', date);
+    });
 
     $('.datepicker_articulation_date').pickadate({
         selectMonths: true,
@@ -10842,6 +10853,18 @@ function downloadMetas(e) {
         document.frmDescargarMetas.submit();
     }
 }
+
+function downloadMetasArticulaciones(e) {
+    e.preventDefault();
+    input = $("#txtnodo_meta_articulaticion").val();
+    if (!validarSelect(input)) {
+        Swal.fire("Error!", "Debe seleccionar por lo menos un nodo", "warning");
+        return false;
+    } else {
+        document.frmDescargarMetasArticulaciones.submit();
+    }
+}
+
 
 function validarSelect(input) {
     if (input == null) {
