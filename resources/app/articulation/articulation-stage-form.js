@@ -197,6 +197,11 @@ $( document ).ready(function() {
     $('#filter_talents_advanced').click(function () {
         articulationStage.queryTalentos();
     });
+    $('.articulation_date-end').bootstrapMaterialDatePicker(configbootstrapMaterialDatePickerRangeDate);
+
+    $('.articulation_date-start').bootstrapMaterialDatePicker(configbootstrapMaterialDatePickerRangeDate).on('change', function(e, date) {
+        $('.articulation_date-end').bootstrapMaterialDatePicker('setMinDate', date);
+    });
 
     $('.datepicker_accompaniable_date').pickadate({
         selectMonths: true,

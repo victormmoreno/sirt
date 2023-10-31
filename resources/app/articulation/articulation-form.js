@@ -188,6 +188,12 @@ $( document ).ready(function() {
     $('.select-wrapper.initialized').prev( "input" ).remove();
     $('.select-wrapper.initialized').prev( "span" ).remove();
 
+    $('.articulation_date-end').bootstrapMaterialDatePicker(configbootstrapMaterialDatePickerRangeDate);
+
+    $('.articulation_date-start').bootstrapMaterialDatePicker(configbootstrapMaterialDatePickerRangeDate).on('change', function(e, date) {
+        $('.articulation_date-end').bootstrapMaterialDatePicker('setMinDate', date);
+    });
+
     $('.datepicker_articulation_date').pickadate({
         selectMonths: true,
         selectYears: 10,

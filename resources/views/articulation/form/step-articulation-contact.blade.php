@@ -44,7 +44,7 @@
                         <small id="summon_name-error" class="error red-text"></small>
                     </div>
                     <div class="input-field col s12 m12 l6">
-                        <input id="expected_date" name="expected_date" type="text" class="datepicker_articulation_date" value="{{isset($articulation) ? $articulation->expected_end_date->format('Y-m-d') : old('expected_date')}}">
+                        <input id="expected_date" name="expected_date" type="text" class="articulation_date-end" value="{{isset($articulation) ? $articulation->expected_end_date->format('Y-m-d') : old('expected_date')}}">
                         <label for="expected_date">Fecha esperada de finalización <span class="red-text">*</span></label>
                         <small id="expected_date-error" class="error red-text"></small>
                     </div>
