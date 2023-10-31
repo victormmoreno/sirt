@@ -29,9 +29,9 @@
                 <div class="row">
                     <div class="input-field col s12 m12 l12">
                         @if(isset($articulation))
-                            <input  id="start_date" name="start_date" type="text" class="datepicker_articulation_max_date" value="{{$articulation->start_date->format('Y-m-d')}}">
+                            <input  id="start_date" name="start_date" type="text" class="articulation_date-start" value="{{$articulation->start_date->format('Y-m-d')}}">
                         @else
-                            <input id="start_date" name="start_date" type="text" class="datepicker_articulation_max_date">
+                            <input id="start_date" name="start_date" type="text" class="articulation_date-start">
                         @endif
                         <label for="start_date">Fecha de inicio articulación<span class="red-text">*</span></label>
                         <small id="start_date-error" class="error red-text"></small>
