@@ -5,12 +5,8 @@ Señor(a)<br>
 <b>_{{$notification->receptor->nombres.' '.$notification->receptor->apellidos}}_</b><br>
 Cordial Saludo.
 <br>
-@if ($notification->rol_remitente->name == App\User::IsTalento())
-Se ha enviado este correo para informar que el  {{$notification->rol_remitente->name}} {{$notification->remitente->nombres .' '. $notification->remitente->apellidos}} aprobó {{$notification->notificable->present()->articulationStageEndorsementApproval()}} la {{__('articulation-stage')}} {{$notification->notificable->present()->articulationStageName()}}, ahora debes aprobar o no aprobar para {{$notification->notificable->present()->articulationStageEndorsementApproval()}} la {{__('articulation-stage')}}.
-@else
 Se ha enviado este correo para informar que el señor(a) {{$notification->rol_remitente->name}} {{$notification->remitente->nombres .' '. $notification->remitente->apellidos}} ha solicitado
-la aprobación  para {{$notification->notificable->present()->articulationStageEndorsementApproval()}} la {{__('articulation-stage')}} {{$notification->notificable->present()->articulationStageName()}}.
-@endif
+la aprobación para finalizar la {{__('articulation')}} {{$notification->notificable->present()->articulationName()}}.
 <br>
 
 
@@ -46,4 +42,3 @@ Gestión {{ config('app.name') }} 💯
 @endslot
 
 @endcomponent
-
