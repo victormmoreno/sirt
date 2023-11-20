@@ -1,15 +1,42 @@
 <div class="row">
-    @include('articulation.options.articulation-options-menu-left')
-    <div class="@canany(['showButtonAprobacion', 'requestApproval', 'showStart', 'showExecution', 'showClosing', 'changeTalents', 'changePhase'], $articulation)col s12 m8 l9 @else col s12 m12 l12  @endcanany">
+    @canany(['showButtonAprobacion', 'requestApproval', 'showStart', 'showExecution', 'showClosing', 'changeTalents'],
+        $articulation)
+        <div class="collection with-header col s12 m4 l3">
+            <h5 href="!#" class="collection-header">Opciones</h5>
+            @can('showButtonAprobacion', $articulation)
+                @include('articulation.form.approval-articulation-form')
+            @endcan
+            @can('requestApproval', $articulation)
+                <a href="{{ route('articulation.request-approval', $articulation) }}" class="collection-item yellow lighten-3">
+                    <i class="material-icons left">notifications</i>
+                    @if ($rol_destinatario == \App\User::IsDinamizador())
+                        Enviar solicitud de aprobación al {{ \App\User::IsDinamizador() }}
+                        para finalizar
+                    @else
+                        @if (isset($ult_traceability->movimiento) && $ult_traceability->rol == \App\User::IsDinamizador())
+                            Enviar solicitud de aprobación al {{ \App\User::IsDinamizador() }}
+                            para finalizar
+                        @else
+                            El dinamizador ya dio la aprobación
+                        @endif
+                    @endif
+                </a>
+            @endcan
+            @include('articulation.options.articulation-options-menu-left')
+        </div>
+    @endcanany
+    <div
+        class="@canany(['showButtonAprobacion', 'requestApproval', 'showStart', 'showExecution', 'showClosing', 'changeTalents', 'changePhase'], $articulation)col s12 m8 l9 @else col s12 m12 l12  @endcanany">
         <div class="row">
             <div class="col s12 m12 l6">
                 <ul class="collection">
                     <li class="collection-item">
                         <span class="title black-text">
-                            {{__('Name ArticulationStage')}}
+                            {{ __('Name ArticulationStage') }}
                         </span>
                         <p>
-                            {{$articulation->articulationStage->present()->articulationStageCode()}} - {{$articulation->articulationStage->present()->articulationStageName()}}
+                            {{ $articulation->articulationStage->present()->articulationStageCode() }} -
+                            {{ $articulation->articulationStage->present()->articulationStageName() }}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -17,12 +44,13 @@
                             Articulación
                         </span>
                         <p>
-                            {{$articulation->present()->articulationCode()}} - {{$articulation->present()->articulationName()}}
+                            {{ $articulation->present()->articulationCode() }} -
+                            {{ $articulation->present()->articulationName() }}
                         </p>
                     </li>
                     <li class="collection-item">
                         <span class="title black-text">
-                            {{__('Project')}}
+                            {{ __('Project') }}
                         </span>
                         <p>
                             {!! $articulation->articulationStage->present()->articulationStageableLink() !!}
@@ -34,7 +62,7 @@
                             Fecha Incio de la Articulación
                         </span>
                         <p>
-                            {{$articulation->present()->articulationStartDate()}}
+                            {{ $articulation->present()->articulationStartDate() }}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -42,7 +70,7 @@
                             Fecha esperada de finalización de la Articulación
                         </span>
                         <p>
-                            {{$articulation->present()->articulationExpectedEndDate()}}
+                            {{ $articulation->present()->articulationExpectedEndDate() }}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -50,7 +78,7 @@
                             Alcance Articulación
                         </span>
                         <p>
-                            {{$articulation->present()->articulationScope()}}
+                            {{ $articulation->present()->articulationScope() }}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -58,7 +86,7 @@
                             Objetivo de la articulación
                         </span>
                         <p>
-                            {{$articulation->present()->articulationObjetive()}}
+                            {{ $articulation->present()->articulationObjetive() }}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -66,7 +94,7 @@
                             {{ __('Interlocutory talent') }}
                         </span>
                         <p>
-                            {{$articulation->articulationStage->present()->articulationStageInterlocutorTalent()}}
+                            {{ $articulation->articulationStage->present()->articulationStageInterlocutorTalent() }}
                         </p>
                     </li>
                 </ul>
@@ -78,7 +106,7 @@
                             Entidad con la que se realiza la articulación
                         </span>
                         <p>
-                            {{$articulation->present()->articulationEntity()}}
+                            {{ $articulation->present()->articulationEntity() }}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -86,7 +114,7 @@
                             Nombre de contacto
                         </span>
                         <p>
-                            {{$articulation->present()->articulationContactName()}}
+                            {{ $articulation->present()->articulationContactName() }}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -94,7 +122,7 @@
                             Mail institucional de contacto de la organización
                         </span>
                         <p>
-                            {{$articulation->present()->articulationEmailEntity()}}
+                            {{ $articulation->present()->articulationEmailEntity() }}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -102,7 +130,7 @@
                             Tipo articulación / tipo subarticulación
                         </span>
                         <p>
-                            {{$articulation->present()->articulationSubtype()}}
+                            {{ $articulation->present()->articulationSubtype() }}
                         </p>
                     </li>
                     <li class="collection-item">
@@ -110,7 +138,7 @@
                             Se realizo la postulación al convenio, convocatoria y/o instrumento
                         </span>
                         <p>
-                            {{$articulation->postulation == 0 ? 'NO': 'SI' }}
+                            {{ $articulation->postulation == 0 ? 'NO' : 'SI' }}
                         </p>
                     </li>
                     @if ($articulation->postulation == 0)
@@ -119,7 +147,7 @@
                                 PDF justificativo firmado por el Talento
                             </span>
                             <p>
-                                {{$articulation->justified_report == 0 ? 'NO': 'SI' }}
+                                {{ $articulation->justified_report == 0 ? 'NO' : 'SI' }}
                             </p>
                         </li>
                         <li class="collection-item">
@@ -127,7 +155,7 @@
                                 Justificación
                             </span>
                             <p>
-                                {{ isset($articulation->justification) ? $articulation->justification : 'No registra'}}
+                                {{ isset($articulation->justification) ? $articulation->justification : 'No registra' }}
                             </p>
                         </li>
                     @else
@@ -136,7 +164,7 @@
                                 Aprobación
                             </span>
                             <p>
-                                {{$articulation->approval == 1 ? 'Aprobado': 'No aprobado' }}
+                                {{ $articulation->approval == 1 ? 'Aprobado' : 'No aprobado' }}
                             </p>
                         </li>
                         @if ($articulation->approval == 1)
@@ -145,7 +173,7 @@
                                     Qué recibirá
                                 </span>
                                 <p>
-                                    {{isset($articulation->receive) ? $articulation->receive : ''}}
+                                    {{ isset($articulation->receive) ? $articulation->receive : '' }}
                                 </p>
                             </li>
                             <li class="collection-item">
@@ -153,7 +181,7 @@
                                     Cuando
                                 </span>
                                 <p>
-                                    {{isset($articulation) ? optional($articulation->received_date)->format('Y-m-d') : ''}}
+                                    {{ isset($articulation) ? optional($articulation->received_date)->format('Y-m-d') : '' }}
                                 </p>
                             </li>
                             <li class="collection-item">
@@ -178,7 +206,7 @@
                                     Informe
                                 </span>
                                 <p>
-                                    {{isset($articulation) ? $articulation->report: '' }}
+                                    {{ isset($articulation) ? $articulation->report : '' }}
                                 </p>
                             </li>
                             <li class="collection-item">
@@ -204,7 +232,7 @@
                             Lecciones aprendidas
                         </span>
                         <p>
-                            {{isset($articulation) ? $articulation->learned_lessons : '' }}
+                            {{ isset($articulation) ? $articulation->learned_lessons : '' }}
                         </p>
                     </li>
                 </ul>
@@ -215,5 +243,3 @@
 <div class="row">
     @include('articulation.table-archive-phase', ['fase' => 'Closing'])
 </div>
-
-
