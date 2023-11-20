@@ -242,7 +242,7 @@
                     ¿Dirigido al área de emprendimiento SENA?: <b>{{$proyecto->diri_ar_emp == 0 ? 'NO' : 'SI'}}</b>
                 </td>
                 <td colspan="2">
-                    Costo aproximado del proyecto: <b>$ {{$costo->getData()->costosTotales}}</b></span>
+                    Aporte económico aproximado de tecnoparque al proyecto: <b>$ {{$costo->getData()->costosTotales}}</b></span>
                 </td>
             </tr>
             <tr class="tr-striped">

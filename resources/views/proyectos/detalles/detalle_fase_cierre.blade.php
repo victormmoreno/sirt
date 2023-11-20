@@ -73,7 +73,7 @@
                     </li>
                     <li class="collection-item">
                         <span class="title black-text text-darken-3">
-                            Costo Aproximado del Proyecto
+                            Aporte económico aproximado de tecnoparque al proyecto
                         </span>
                         <p>
                             $ {{$costo->getData()->costosTotales}}
