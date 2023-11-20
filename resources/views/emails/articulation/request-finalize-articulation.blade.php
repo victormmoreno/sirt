@@ -42,4 +42,3 @@ Gestión {{ config('app.name') }} 💯
 @endslot
 
 @endcomponent
-
