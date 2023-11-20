@@ -36,7 +36,7 @@
     <div class="col s6 m3 l3">
         <p class="p-v-xs">
             <input type="checkbox" {{ $proyecto->doc_titular == 1 ? 'checked' : '' }} id="txtdoc_titular" name="txtdoc_titular" value="1">
-            <label for="txtdoc_titular">Documento del Titular.</label>
+            <label for="txtdoc_titular">Documento del Titular (Cédula o Rut y Cámara de Comercio)</label>
         </p>
     </div>
     <div class="col s6 m3 l3">
