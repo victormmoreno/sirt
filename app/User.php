@@ -129,6 +129,7 @@ class User extends Authenticatable implements JWTSubject,
         'email_verified_at'    => 'datetime',
         'fechanacimiento'      => 'date:Y-m-d',
         'fechanacimiento'      => 'date:Y-m-d',
+        'ultimo_login'      => 'date:Y-m-d',
         'informacion_user'  => 'array',
     ];
 

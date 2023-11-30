@@ -14,7 +14,7 @@ class GrupoInvestigacionRepository
         DB::transaction(function () use ($request, $grupo) {
             $grupo->entidad->ciudad_id     = $request->input('txtciudad_id');
             $grupo->entidad->nombre        = $request->input('txtnombre');
-            $grupo->entidad->slug        = str_slug($request->input('nombre') . str_random(7), '-');
+            $grupo->entidad->slug        = str()->slug($request->input('nombre') . str()->random(7), '-');
             $grupo->entidad->email_entidad = $request->input('txtemail_entidad');
             $grupo->entidad->update();
             $grupo->clasificacioncolciencias_id = $request->input('txtclasificacionclociencias_id');
@@ -33,7 +33,7 @@ class GrupoInvestigacionRepository
             $entidad = Entidad::create([
             'ciudad_id'     => $request->input('txtciudad_id'),
             'nombre'        => $request->input('txtnombre'),
-            'slug'          => str_slug($request->input('nombre') . str_random(7), '-'),
+            'slug'          => str()->slug($request->input('nombre') . str()->random(7), '-'),
             'email_entidad' => $request->input('txtemail_entidad'),
             ]);
 

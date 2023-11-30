@@ -6,6 +6,7 @@
         <title>
             {{config('app.name')}} | @yield('meta-title',   config('app.name') )
         </title>
+        {{-- <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'> --}}
         <link href="{{ asset('css/libs.css') }}" rel="stylesheet"/>
         <link href="{{ asset('sweetalert2/sweetalert2.css') }}" rel="stylesheet"/>
         <link href="{{ asset('img/web.svg') }}" rel="shortcut icon" type="image/x-icon"/>
@@ -62,15 +63,18 @@
         </div>
         <div class="left-sidebar-hover">
         </div>
-        @include('sweetalert::alert')
+        {{-- @include('sweetalert::alert') --}}
         <script>
             const host_url = "{{config('app.url')}}";
         </script>
+        {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script> --}}
         <script src="{{ asset('js/app.js') }}">
         </script>
         <script src="{{ asset('js/libs.js') }}">
         </script>
         <script src="{{ asset('js/app2.js') }}">
+        </script>
+        <script src="{{ asset('sweetalert2/sweetalert2.js') }}">
         </script>
         @stack('script')
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-129874326-1"></script>

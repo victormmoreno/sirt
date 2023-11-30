@@ -46,10 +46,10 @@ class RoleContratInformationRequest extends FormRequest
             'activator_contract_value_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsActivador()) &&
                     request()->activator_type_relationship == 0
-                ) . '|numeric|min:0|max:999.999.999|nullable',
+                ) . '|numeric|min:0|max:999999999|nullable',
             'activator_fees_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsActivador())
-            ).'|numeric|digits_between:1,999.999.999|nullable',
+            ).'|numeric|digits_between:1999999999|nullable',
             'dynamizer_node'        => Rule::requiredIf(
                         collect(request()->role)->contains(User::IsDinamizador())
                     ) . '|nullable',
@@ -71,7 +71,7 @@ class RoleContratInformationRequest extends FormRequest
             'dynamizer_contract_value_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsDinamizador()) &&
                     request()->dynamizer_type_relationship == 0
-                ) . '|numeric|min:0|max:999.999.999|nullable',
+                ) . '|numeric|min:0|max:999999999|nullable',
             'dynamizer_fees_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsDinamizador())
             ).'|numeric|min:0|max:99999999|nullable',
@@ -99,7 +99,7 @@ class RoleContratInformationRequest extends FormRequest
             'expert_contract_value_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsExperto()) &&
                     request()->expert_type_relationship == 0
-                ) . '|numeric|min:0|max:999.999.999|nullable',
+                ) . '|numeric|min:0|max:999999999|nullable',
             'expert_fees_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsExperto())
                 ) . '|numeric|min:0|max:99999999|nullable',
@@ -124,7 +124,7 @@ class RoleContratInformationRequest extends FormRequest
             'articulator_contract_value_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsArticulador()) &&
                     request()->articulator_type_relationship == 0
-                ) . '|numeric|min:0|max:999.999.999|nullable',
+                ) . '|numeric|min:0|max:999999999|nullable',
             'articulator_fees_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsArticulador())
                 ) . '|numeric|min:0|max:99999999|nullable',
@@ -149,7 +149,7 @@ class RoleContratInformationRequest extends FormRequest
             'infocenter_contract_value_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsInfocenter()) &&
                     request()->infocenter_type_relationship == 0
-                ) . '|numeric|min:0|max:999.999.999|nullable',
+                ) . '|numeric|min:0|max:999999999|nullable',
             'infocenter_fees_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsInfocenter())
                 ) . '|numeric|min:0|max:99999999|nullable',
@@ -202,7 +202,7 @@ class RoleContratInformationRequest extends FormRequest
             'income_contract_value_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsIngreso()) &&
                     request()->income_type_relationship == 0
-                ) . '|numeric|min:0|max:999.999.999|nullable',
+                ) . '|numeric|min:0|max:999999999|nullable',
             'income_fees_contract' => Rule::requiredIf(
                 collect(request()->role)->contains(User::IsIngreso())) . '|numeric|min:0|max:99999999|numeric|nullable',
 

@@ -90,7 +90,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(GateContract $gate)
     {
-        $this->registerPolicies($gate);
+        // $this->registerPolicies($gate);
         Gate::guessPolicyNamesUsing(function ($modelClass) {
             $policyName = class_basename($modelClass) . 'Policy';
             return "App\\Policies\\{$policyName}";

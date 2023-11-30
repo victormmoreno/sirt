@@ -74,7 +74,7 @@ class LineaTecnologica extends Model
 
     public function setSlugAttribute($nombre)
     {
-        $this->attributes['slug'] = str_slug($nombre, '-');
+        $this->attributes['slug'] = str()->slug($nombre, '-');
     }
 
     public function setAbreviaturaAttribute($abreviatura)

@@ -99,7 +99,7 @@ class EmpresasImport implements ToCollection, WithHeadingRow
         $entidad = Entidad::create([
             'ciudad_id' => $queryCiudad->id,
             'nombre' => $row['nombre'],
-            'slug' => str_slug($row['nombre'] . str_random(7), '-'),
+            'slug' => str()->slug($row['nombre'] . str()->random(7), '-'),
             'email_entidad' => $row['correo']
         ]);
         Empresa::create([

@@ -171,8 +171,8 @@ class FuncionarioImport implements ToCollection, WithHeadingRow
 
     private function registrarUser($row, $tipo_documento, $grado_escolaridad, $grupo_sanguineo, $eps, $otra_ocupacion)
     {
-        $ciudad_expedicion = Ciudad::where('nombre', str_slug($row['ciudad_expedicion'], '_'))->first();
-        $ciudad_residencia = Ciudad::where('nombre', str_slug($row['ciudad_residencia'],'_'))->first();
+        $ciudad_expedicion = Ciudad::where('nombre', str()->slug($row['ciudad_expedicion'], '_'))->first();
+        $ciudad_residencia = Ciudad::where('nombre', str()->slug($row['ciudad_residencia'],'_'))->first();
         return User::create([
             "tipodocumento_id" => $tipo_documento->id,
             "gradoescolaridad_id" => $grado_escolaridad == null ? null : $grado_escolaridad->id,
@@ -186,13 +186,13 @@ class FuncionarioImport implements ToCollection, WithHeadingRow
             "email" => $row['correo'],
             "direccion" => $row['direccion'],
             "celular" => $row['celular'],
-            "fechanacimiento" => str_slug($row['fecha_nacimiento'], '_'),
+            "fechanacimiento" => str()->slug($row['fecha_nacimiento'], '_'),
             "genero" => $row['genero'] == 'FEMENINO' ? 0 : 1,
-            "otra_eps" => $eps->nombre == 'Otra' ? str_slug($row['otra_eps'], '_') : null,
+            "otra_eps" => $eps->nombre == 'Otra' ? str()->slug($row['otra_eps'], '_') : null,
             "estado" => User::IsActive(),
             "institucion" => $row['institucion'],
-            "titulo_obtenido" => str_slug($row['titulo_obtenido'], '_'),
-            "fecha_terminacion" => str_slug($row['fecha_terminacion'], '_'),
+            "titulo_obtenido" => str()->slug($row['titulo_obtenido'], '_'),
+            "fecha_terminacion" => str()->slug($row['fecha_terminacion'], '_'),
             "estrato" => $row['estrato'],
             "otra_ocupacion" => $otra_ocupacion
         ]);

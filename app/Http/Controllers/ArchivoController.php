@@ -386,6 +386,7 @@ class ArchivoController extends Controller
         $fase_id = $fase->id;
         $fase = $fase->nombre;
         $route = 'public/' . $nodo . '/' . $anho . '/Proyectos' . '/' . $linea . '/' . $gestor . '/' . $idproyecto . '/' . $fase;
+        // dd($file);
         $fileUrl = $file->storeAs($route, $fileName);
         $id = $proyecto->id;
         $proyecto->archivos()->create([
