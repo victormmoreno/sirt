@@ -72,7 +72,7 @@
         Swal.fire({
           title: 'Error!',
           text: "Debes seleccionar un experto!",
-          type: 'warning',
+          icon: 'warning',
           showCancelButton: false,
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'

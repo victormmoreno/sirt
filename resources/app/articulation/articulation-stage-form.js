@@ -134,7 +134,7 @@ $( document ).ready(function() {
                     if(!response.fail && response.errors == null){
                         Swal.fire({
                             title: response.message,
-                            type: 'success',
+                            icon: 'success',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: 'Ok',
@@ -148,7 +148,7 @@ $( document ).ready(function() {
                     Swal.fire({
                         title: ' Error, vuelve a intentarlo',
                         html:  `${xhr.status} ${errorThrown}`,
-                        type: 'error',
+                        icon: 'error',
                         showCancelButton: false,
                         confirmButtonColor: '#3085d6',
                         confirmButtonText: 'Ok',

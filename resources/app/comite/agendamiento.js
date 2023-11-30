@@ -73,7 +73,7 @@ $(document).on('submit', 'form#formComiteAgendamientoCreate', function (event) {
     Swal.fire({
         title: '¿Está seguro(a) de guardar esta información?',
         // text: "You won't be able to revert this!",
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -96,7 +96,7 @@ event.preventDefault();
 Swal.fire({
     title: '¿Está seguro(a) de guardar esta información?',
     // text: "You won't be able to revert this!",
-    type: 'warning',
+    icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
@@ -154,7 +154,7 @@ if (data.state == 'registro') {
     Swal.fire({
         title: 'Registro Exitoso',
         text: "El comité ha sido registrado satisfactoriamente",
-        type: 'success',
+        icon: 'success',
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'Ok'
@@ -166,7 +166,7 @@ if (data.state == 'registro') {
 if (data.state == 'no_registro') {
     Swal.fire({
         title: 'El comité no se ha registrado, por favor inténtalo de nuevo',
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'Ok'
@@ -179,7 +179,7 @@ if (data.state == 'update') {
     Swal.fire({
         title: 'Modificación Exitosa',
         text: "El comité se ha modificado satisfactoriamente",
-        type: 'success',
+        icon: 'success',
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'Ok'
@@ -191,7 +191,7 @@ if (data.state == 'update') {
 if (data.state == 'no_update') {
     Swal.fire({
         title: 'El comité no se ha modificado, por favor inténtalo de nuevo',
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'Ok'
@@ -229,7 +229,7 @@ Swal.fire({
     position: 'top-end',
     showConfirmButton: false,
     timer: 3000,
-    type: 'error',
+    icon: 'error',
     title: 'Estás ingresando mal los datos'
 })
 }
@@ -241,7 +241,7 @@ Swal.fire({
           position: 'top-end',
           showConfirmButton: false,
           timer: 3000,
-          type: 'success',
+          icon: 'success',
           title: 'La idea de proyecto se asoció con éxito al comité'
         })
 }
@@ -252,7 +252,7 @@ Swal.fire({
     position: 'top-end',
     showConfirmButton: false,
     timer: 1500,
-    type: 'warning',
+    icon: 'warning',
     title: 'La idea de proyecto ya se encuentra asociada al comité!'
 });
 }

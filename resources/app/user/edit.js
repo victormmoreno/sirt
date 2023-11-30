@@ -31,7 +31,7 @@ $(document).on('submit', 'form#formEditUser', function (event) {
           if (data.state == 'error') {
             Swal.fire({
               title: 'La cuenta del usuario no se ha modificado, por favor inténtalo de nuevo',
-              type: 'warning',
+              icon: 'warning',
               showCancelButton: false,
               confirmButtonColor: '#3085d6',
               confirmButtonText: 'Ok'
@@ -44,7 +44,7 @@ $(document).on('submit', 'form#formEditUser', function (event) {
             Swal.fire({
                 title: 'Modifciación Exitosa',
                 text: `La cuenta del usuario ha sido modificada satisfactoriamente`,
-                type: 'success',
+                icon: 'success',
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'Ok'
@@ -71,7 +71,7 @@ var EditUser = {
             Swal.fire({
                 title: 'Advertencia!',
                 html: 'Estas ingresando mal los datos.' + errores,
-                type: 'error',
+                icon: 'error',
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'Ok'
@@ -108,7 +108,7 @@ $(document).on('submit', 'form#FormConfirmUser', function (event) {
             if (data.state == 'error' && data.url == false) {
                 Swal.fire({
                     title: 'El Usuario no se ha modificado, por favor inténtalo de nuevo',
-                    type: 'warning',
+                    icon: 'warning',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok'
@@ -118,7 +118,7 @@ $(document).on('submit', 'form#FormConfirmUser', function (event) {
                 Swal.fire({
                     title: 'Modifciación Exitosa',
                     text: `El Usuario `+data.user.nombres+ ` ` +data.user.apellidos+`  ha sido modificado satisfactoriamente`,
-                    type: 'success',
+                    icon: 'success',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok'

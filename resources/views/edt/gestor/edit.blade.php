@@ -45,7 +45,7 @@
           Swal.fire({
             title: 'Modificación Errónea',
             text: "Estas ingresando mal los datos!",
-            type: 'error',
+            icon: 'error',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -59,7 +59,7 @@
           Swal.fire({
             title: 'Modificación Errónea',
             text: "La Edt no se ha modificado!",
-            type: 'error',
+            icon: 'error',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -69,7 +69,7 @@
           Swal.fire({
             title: 'Modificación Exitosa!',
             text: "La Edt se ha modificado satisfactoriamente!",
-            type: 'success',
+            icon: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'

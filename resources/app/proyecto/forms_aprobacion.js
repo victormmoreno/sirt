@@ -4,7 +4,7 @@ function preguntaRechazarAprobacionProyecto(e) {
     Swal.fire({
         title: '¿Está seguro(a) de no aprobar esta fase del proyecto?',
         input: 'text',
-        type: 'warning',
+        icon: 'warning',
         inputValidator: (value) => {
             if (!value) {
                 return 'Las observaciones deben ser obligatorias!'
@@ -35,7 +35,7 @@ function preguntaAprobacion(e) {
     Swal.fire({
         title: '¿Está seguro(a) de aprobar esta fase del proyecto?',
         text: 'Al hacerlo estás aceptando y aprobando toda la información de esta fase, los documento adjuntos y las asesorias recibidas.',
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',

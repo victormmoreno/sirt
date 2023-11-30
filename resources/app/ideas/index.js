@@ -194,7 +194,7 @@ var idea ={
 function cambiarEstadoIdeaDeProyecto(id, estado) {
 Swal.fire({
     title: '¿Desea cambiar el estado de la idea de proyecto a '+estado+'?',
-    type: 'warning',
+    icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
@@ -209,7 +209,7 @@ Swal.fire({
         success: function (data) {
         Swal.fire({
             title: 'El estado de la idea se ha cambiado exitosamente!',
-            type: 'success',
+            icon: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Sí'
@@ -311,7 +311,7 @@ function confirmacionPostulacion(e){
   Swal.fire({
   title: '¿Está seguro(a) de postular esta idea de proyecto?',
   text: "Una vez que se postule la idea de proyecto, ya no se podrá cambiar los datos de esta.",
-  type: 'warning',
+  icon: 'warning',
   showCancelButton: true,
   confirmButtonColor: '#3085d6',
   cancelButtonColor: '#d33',
@@ -329,7 +329,7 @@ function confirmacionInhabilitar(e){
   Swal.fire({
   title: '¿Está seguro(a) de inhabilitar esta idea de proyecto?',
   text: "Esto quiere decir que esta idea de proyecto no se le podrá realizar un proceso en tecnoparque.",
-  type: 'warning',
+  icon: 'warning',
   showCancelButton: true,
   confirmButtonColor: '#3085d6',
   cancelButtonColor: '#d33',

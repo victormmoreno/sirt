@@ -48,7 +48,7 @@
         Swal.fire({
             title: 'Se necesita una fecha estimada para la terminar la fase de ejecución del proyecto',
             html: 'Para continuar se necesita ingresar la fecha de finalización de la fase ejecución del proyecto según el <b>cronograma</b> adjuntado en la fase de planeación. En el formato YYYY-MM-DD',
-            type: 'warning',
+            icon: 'warning',
             input: 'text',
             footer: '<a href="{{route('proyecto.planeacion', $proyecto->id)}}" target="_blank">Ir a las evidencias de la fase de planeación</a>',
             inputValidator: ( value ) => {
@@ -93,7 +93,7 @@
             'En el formato <b>YYYY-MM-DD</b>'+
             '<input type="text" id="fecha" class="swal2-input" placeholder="Fecha (YYYY-MM-DD)" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"><label for="fecha" class="red-text" id="fecha_error"></label>'+
             '<textarea id="justificacion" class="swal2-input" placeholder="Justificación" maxlength="200"></textarea><label for="justificacion" id="justificacion_error"></label>',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',

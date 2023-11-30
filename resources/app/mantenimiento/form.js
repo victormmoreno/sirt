@@ -44,7 +44,7 @@ function mensajesFormMantenimiento(data) {
         Swal.fire({
             title: data.title,
             text: data.msj,
-            type: 'success',
+            icon: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -56,7 +56,7 @@ function mensajesFormMantenimiento(data) {
         Swal.fire({
             title: data.title,
             text: data.msj,
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'

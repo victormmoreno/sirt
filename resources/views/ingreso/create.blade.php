@@ -61,7 +61,7 @@
                         Swal.fire({
                             title: 'Registro Erróneo',
                             text: "Estas ingresando mal los datos!",
-                            type: 'error',
+                            icon: 'error',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: 'Ok'
@@ -75,7 +75,7 @@
                         Swal.fire({
                             title: 'El ingreso no se ha registrado, por favor inténtalo de nuevo',
                             // text: "You won't be able to revert this!",
-                            type: 'warning',
+                            icon: 'warning',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: 'Ok'
@@ -85,7 +85,7 @@
                         Swal.fire({
                             title: 'Registro Exitoso',
                             text: "El ingreso ha sido creado satisfactoriamente",
-                            type: 'success',
+                            icon: 'success',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: 'Ok'

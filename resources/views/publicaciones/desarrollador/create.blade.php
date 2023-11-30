@@ -86,7 +86,7 @@
             Swal.fire({
               title: 'Advertencia!',
               html: 'Estas ingresando mal los datos.' + errores,
-              type: 'error',
+              icon: 'error',
               showCancelButton: false,
               confirmButtonColor: '#3085d6',
               confirmButtonText: 'Ok'
@@ -95,7 +95,7 @@
           if (data.fail == false && data.redirect_url == false) {
             Swal.fire({
               title: 'La publicación no se ha registrado, por favor inténtalo de nuevo.',
-              type: 'warning',
+              icon: 'warning',
               showCancelButton: false,
               confirmButtonColor: '#3085d6',
               confirmButtonText: 'Ok'
@@ -105,7 +105,7 @@
             Swal.fire({
               title: 'Registro Exitoso',
               text: "La publicación ha sido creada satisfactoriamente",
-              type: 'success',
+              icon: 'success',
               showCancelButton: false,
               confirmButtonColor: '#3085d6',
               confirmButtonText: 'Ok'

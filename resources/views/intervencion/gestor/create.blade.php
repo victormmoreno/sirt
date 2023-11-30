@@ -196,7 +196,7 @@
             Swal.fire({
               title: 'La articulación no se ha registrado, por favor inténtalo de nuevo',
               // text: "You won't be able to revert this!",
-              type: 'warning',
+              icon: 'warning',
               showCancelButton: false,
               confirmButtonColor: '#3085d6',
               confirmButtonText: 'Ok'
@@ -205,7 +205,7 @@
             Swal.fire({
               title: 'Registro Exitoso',
               text: "La articulación ha sido creado satisfactoriamente",
-              type: 'success',
+              icon: 'success',
               showCancelButton: false,
               confirmButtonColor: '#3085d6',
               confirmButtonText: 'Ok'
@@ -235,7 +235,7 @@
           position: 'top-end',
           showConfirmButton: false,
           timer: 3000,
-          type: 'success',
+          icon: 'success',
           title: 'El nit de la empresa con la que se realizará la articulación es: ' + respuesta.detalles.nit
         })
       })

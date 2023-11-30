@@ -28,7 +28,7 @@
 //                 Swal.fire({
 //                     title: 'El Usuario no se ha modificado, por favor inténtalo de nuevo',
 //                     text: "Recuerde que si lo elimina no lo podrá recuperar.",
-//                     type: 'warning',
+//                     icon: 'warning',
 //                     text: data.message,
 //                     showCancelButton: true,
 //                     confirmButtonColor: '#3085d6',
@@ -46,7 +46,7 @@
 //                         Swal.fire({
 //                             title: 'actividades sin finalzar',
 //                             html: activitiesFinalizar,
-//                             type: 'info',
+//                             icon: 'info',
 //                             showCancelButton: false,
 //                             confirmButtonColor: '#3085d6',
 //                             confirmButtonText: 'Ok'
@@ -59,7 +59,7 @@
 //                 Swal.fire({
 //                     title: 'Modifciación Exitosa',
 //                     text: `El Usuario `+data.user.nombres+ ` ` +data.user.apellidos+`  ha sido modificado satisfactoriamente`,
-//                     type: 'success',
+//                     icon: 'success',
 //                     showCancelButton: false,
 //                     confirmButtonColor: '#3085d6',
 //                     confirmButtonText: 'Ok'
@@ -99,7 +99,7 @@ $(document).on('submit', 'form#form-update-role-nodo', function (event) {
                 Swal.fire({
                     title: 'Modifciación Exitosa',
                     text: `Cuenta de usuario actualizada exitosamente.`,
-                    type: 'success',
+                    icon: 'success',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok'
@@ -112,7 +112,7 @@ $(document).on('submit', 'form#form-update-role-nodo', function (event) {
                 Swal.fire({
                     title: 'Modifciación Errónea',
                     text: `Cuenta de usuario no actualizada, por favor intente nuevamente.`,
-                    type: 'error',
+                    icon: 'error',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok'

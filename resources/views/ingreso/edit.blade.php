@@ -62,7 +62,7 @@
                         Swal.fire({
                             title: 'Modificación Errónea',
                             text: "Estas ingresando mal los datos!",
-                            type: 'error',
+                            icon: 'error',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: 'Ok'
@@ -75,7 +75,7 @@
                     if (data.fail == false && data.redirect_url == false) {
                         Swal.fire({
                             title: 'El ingreso no se ha modificado, por favor inténtalo de nuevo',
-                            type: 'warning',
+                            icon: 'warning',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: 'Ok'
@@ -85,7 +85,7 @@
                         Swal.fire({
                             title: 'Modificación Exitosa',
                             text: "El ingreso se ha modificado satisfactoriamente",
-                            type: 'success',
+                            icon: 'success',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: 'Ok'

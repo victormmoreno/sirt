@@ -217,7 +217,7 @@ function inhabilitarFuncionarios(e, rt) {
     Swal.fire({
         title: '¿Está seguro(a) de inhabilitar los funcionarios de este nodo?',
         text: 'Al hacerlo estás bloqueando el acceso al sistema de todos los funcionarios de este nodo, luego los deberás volver a inhabilitar desde el menú de usuarios.',
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -314,7 +314,7 @@ $(document).on('submit', 'form#formEntrenamientosCreate', function (event) { // 
     Swal.fire({
         title: '¿Está seguro(a) de guardar esta información?',
         // text: "You won't be able to revert this!",
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -416,7 +416,7 @@ function addIdeaToEntrenamiento() {
       position: 'top-end',
       showConfirmButton: false,
       timer: 3000,
-      type: 'error',
+      icon: 'error',
       title: 'Estás ingresando mal los datos'
   })
   } else {
@@ -426,7 +426,7 @@ function addIdeaToEntrenamiento() {
           position: 'top-end',
           showConfirmButton: false,
           timer: 1500,
-          type: 'warning',
+          icon: 'warning',
           title: 'La idea de proyecto ya se encuentra asociada al taller!'
       });
       } else {
@@ -448,7 +448,7 @@ function pintarIdeaEnLaTablaTaller(id, confirmacion, asistencia) {
         position: 'top-end',
         showConfirmButton: false,
         timer: 3000,
-        type: 'success',
+        icon: 'success',
         title: 'La idea de proyecto se asoció con éxito al taller'
       });
       reiniciarCamposTaller();
@@ -679,7 +679,7 @@ var idea ={
 function cambiarEstadoIdeaDeProyecto(id, estado) {
 Swal.fire({
     title: '¿Desea cambiar el estado de la idea de proyecto a '+estado+'?',
-    type: 'warning',
+    icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
@@ -694,7 +694,7 @@ Swal.fire({
         success: function (data) {
         Swal.fire({
             title: 'El estado de la idea se ha cambiado exitosamente!',
-            type: 'success',
+            icon: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Sí'
@@ -796,7 +796,7 @@ function confirmacionPostulacion(e){
   Swal.fire({
   title: '¿Está seguro(a) de postular esta idea de proyecto?',
   text: "Una vez que se postule la idea de proyecto, ya no se podrá cambiar los datos de esta.",
-  type: 'warning',
+  icon: 'warning',
   showCancelButton: true,
   confirmButtonColor: '#3085d6',
   cancelButtonColor: '#d33',
@@ -814,7 +814,7 @@ function confirmacionInhabilitar(e){
   Swal.fire({
   title: '¿Está seguro(a) de inhabilitar esta idea de proyecto?',
   text: "Esto quiere decir que esta idea de proyecto no se le podrá realizar un proceso en tecnoparque.",
-  type: 'warning',
+  icon: 'warning',
   showCancelButton: true,
   confirmButtonColor: '#3085d6',
   cancelButtonColor: '#d33',
@@ -878,7 +878,7 @@ function consultarEmpresaTecnoparque() {
         Swal.fire({
             title: 'Advertencia!',
             text: "El nit de la empresa debe tener entre 9 y 13 dígitos!",
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -888,7 +888,7 @@ function consultarEmpresaTecnoparque() {
           Swal.fire({
             title: 'Advertencia!',
             text: "Digite el nit de la empresa!",
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -952,7 +952,7 @@ function asociarSedeAIdeaProyecto(sede_id) {
         position: 'top-end',
         showConfirmButton: false,
         timer: 1500,
-        type: 'success',
+        icon: 'success',
         title: 'La sede '+response.sede.nombre_sede+' se asoció a la idea de proyecto!'
     });
     },
@@ -1001,7 +1001,7 @@ function asociarSedeAIdeaProyecto(sede_id) {
         '<button type="button" role="button" tabindex="0" class="btnModalIdeaCancelar swal2-cancelar-custom">' + 'Cancelar' + '</button>',
     showCancelButton: false,
     showConfirmButton: false,
-    type: 'warning',
+    icon: 'warning',
     })
   }
 
@@ -1016,7 +1016,7 @@ function asociarSedeAIdeaProyecto(sede_id) {
         '<button type="button" role="button" tabindex="0" class="btnModalIdeaCancelar swal2-cancelar-custom">' + 'Cancelar' + '</button>',
     showCancelButton: false,
     showConfirmButton: false,
-    type: 'warning',
+    icon: 'warning',
     })
   }
 
@@ -1194,7 +1194,7 @@ function mensajesIdeaCreate(data) {
       Swal.fire({
           title: 'Registro Exitoso',
           text: "La idea de proyecto ha sido registrada satisfactoriamente",
-          type: 'success',
+          icon: 'success',
           showCancelButton: false,
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'
@@ -1206,7 +1206,7 @@ function mensajesIdeaCreate(data) {
   if (data.state == 'no_registro') {
       Swal.fire({
           title: 'La idea de proyecto no se ha registrado, por favor inténtalo de nuevo',
-          type: 'warning',
+          icon: 'warning',
           showCancelButton: false,
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'
@@ -1219,7 +1219,7 @@ function mensajesIdeaUpdate(data) {
       Swal.fire({
           title: 'Modificación Exitosa',
           text: "La idea de proyecto ha sido modificada satisfactoriamente",
-          type: 'success',
+          icon: 'success',
           showCancelButton: false,
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'
@@ -1231,7 +1231,7 @@ function mensajesIdeaUpdate(data) {
   if (data.state == 'no_update') {
       Swal.fire({
           title: 'La idea de proyecto no se ha modificado, por favor inténtalo de nuevo',
-          type: 'warning',
+          icon: 'warning',
           showCancelButton: false,
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'
@@ -1243,7 +1243,7 @@ function confirmacionDuplicacion(e){
   Swal.fire({
   title: '¿Está seguro(a) de duplicar esta idea de proyecto?',
   text: "Esto se recomienda hacer en caso de que se quiera continuar con el proceso en tecnoparque.",
-  type: 'warning',
+  icon: 'warning',
   showCancelButton: true,
   confirmButtonColor: '#3085d6',
   cancelButtonColor: '#d33',
@@ -1262,7 +1262,7 @@ function confirmacionAceptacionPostulacion(e) {
     title: '¿Está seguro(a) de aceptar la postulación de esta idea de proyecto?',
     input: 'textarea',
     inputPlaceholder: 'Puedes dejar algunas observaciones para el talento',
-    type: 'warning',
+    icon: 'warning',
     inputValidator: (value) => {
       if (!value) {
         return 'Se necesitan unas observaciones!'
@@ -1292,7 +1292,7 @@ function confirmacionAceptacionPostulacion(e) {
     title: '¿Está seguro(a) de devolver la postulación de esta idea de proyecto?',
     input: 'textarea',
     inputPlaceholder: 'Por favor, escriba los motivos por los cuales se está devolviendo la postulación de la idea de proyecto',
-    type: 'warning',
+    icon: 'warning',
     inputValidator: (value) => {
       if (!value) {
         return 'Los motivos por los cuales se devuelve la idea deben ser obligatorios!'
@@ -1338,7 +1338,7 @@ function notificacionExitosaDelResultado(data) {
     Swal.fire({
         title: 'Notificación Exitosa!',
         text: "Se ha enviado un mensaje a la dirección: " + data.idea + " con los resultados del comité.",
-        type: 'success',
+        icon: 'success',
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'Ok'
@@ -1349,7 +1349,7 @@ function notificacionFallidaDelResultado() {
     Swal.fire({
         title: 'Notificación Fallida!',
         text: "No se ha logrado enviar una mensaje con los resultados del comité al talento.",
-        type: 'error',
+        icon: 'error',
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'Ok'
@@ -1361,7 +1361,7 @@ $(document).on('submit', 'form#formComiteAsignarCreate', function (event) {
         title: '¿Está seguro(a) de guardar esta información?',
         text: "No podrás revertir estos cambios!",
         // text: "Debes tener en cuenta mientras el dinamizador no asigne las ideas de proyectos a los expertos puedes cambiar esta información",
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -1384,7 +1384,7 @@ function confirmacionDuplicidad(e, route){
     Swal.fire({
     title: '¿Está seguro(a) de duplicar esta idea de proyecto?',
     text: "Debes tener en cuenta que a partir de esta idea se va a registrar mas de un TRL.",
-    type: 'warning',
+    icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
@@ -1395,7 +1395,7 @@ function confirmacionDuplicidad(e, route){
         Swal.fire({
             title: 'Verificación. ¿Está seguro(a) de duplicar esta idea de proyecto?',
             text: "Esta acción no se podrá revertir.",
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
@@ -1438,7 +1438,7 @@ function mensajesComiteAsignarCreate(data) {
         Swal.fire({
             title: 'Registro Exitoso',
             text: "La asignación de ideas de proyecto del comité ha sido registrada satisfactoriamente",
-            type: 'success',
+            icon: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -1450,7 +1450,7 @@ function mensajesComiteAsignarCreate(data) {
     if (data.state == 'no_registro') {
         Swal.fire({
             title: 'La asignación de ideas de proyecto del comité no se ha registrado, por favor inténtalo de nuevo',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -1532,7 +1532,7 @@ $(document).on('submit', 'form#formComiteAgendamientoCreate', function (event) {
     Swal.fire({
         title: '¿Está seguro(a) de guardar esta información?',
         // text: "You won't be able to revert this!",
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -1555,7 +1555,7 @@ event.preventDefault();
 Swal.fire({
     title: '¿Está seguro(a) de guardar esta información?',
     // text: "You won't be able to revert this!",
-    type: 'warning',
+    icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
@@ -1613,7 +1613,7 @@ if (data.state == 'registro') {
     Swal.fire({
         title: 'Registro Exitoso',
         text: "El comité ha sido registrado satisfactoriamente",
-        type: 'success',
+        icon: 'success',
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'Ok'
@@ -1625,7 +1625,7 @@ if (data.state == 'registro') {
 if (data.state == 'no_registro') {
     Swal.fire({
         title: 'El comité no se ha registrado, por favor inténtalo de nuevo',
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'Ok'
@@ -1638,7 +1638,7 @@ if (data.state == 'update') {
     Swal.fire({
         title: 'Modificación Exitosa',
         text: "El comité se ha modificado satisfactoriamente",
-        type: 'success',
+        icon: 'success',
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'Ok'
@@ -1650,7 +1650,7 @@ if (data.state == 'update') {
 if (data.state == 'no_update') {
     Swal.fire({
         title: 'El comité no se ha modificado, por favor inténtalo de nuevo',
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'Ok'
@@ -1688,7 +1688,7 @@ Swal.fire({
     position: 'top-end',
     showConfirmButton: false,
     timer: 3000,
-    type: 'error',
+    icon: 'error',
     title: 'Estás ingresando mal los datos'
 })
 }
@@ -1700,7 +1700,7 @@ Swal.fire({
           position: 'top-end',
           showConfirmButton: false,
           timer: 3000,
-          type: 'success',
+          icon: 'success',
           title: 'La idea de proyecto se asoció con éxito al comité'
         })
 }
@@ -1711,7 +1711,7 @@ Swal.fire({
     position: 'top-end',
     showConfirmButton: false,
     timer: 1500,
-    type: 'warning',
+    icon: 'warning',
     title: 'La idea de proyecto ya se encuentra asociada al comité!'
 });
 }
@@ -1745,7 +1745,7 @@ $(document).on('submit', 'form#formComiteRealizadoCreate', function (event) {
         title: '¿Está seguro(a) de guardar esta información?',
         // text: "You won't be able to revert this!",
         text: "Debes tener en cuenta mientras el dinamizador no asigne las ideas de proyectos a los expertos puedes cambiar esta información",
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -1791,7 +1791,7 @@ function mensajesComiteRealizadoCreate(data) {
         Swal.fire({
             title: 'Registro Exitoso',
             text: "La calificación del comité ha sido registrada satisfactoriamente",
-            type: 'success',
+            icon: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -1803,7 +1803,7 @@ function mensajesComiteRealizadoCreate(data) {
     if (data.state == 'no_registro') {
         Swal.fire({
             title: 'La calificación del comité no se ha registrado, por favor inténtalo de nuevo',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -1906,7 +1906,7 @@ $(document).on('submit', 'form#formRegisterCompany', function (event) {
         if (data.state == 'error' && data.url == false) {
         Swal.fire({
             title: 'La empresa no se ha registrado, por favor inténtalo de nuevo',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -1916,7 +1916,7 @@ $(document).on('submit', 'form#formRegisterCompany', function (event) {
         Swal.fire({
             title: 'Registro Exitoso',
             text:  data.message,
-            type: 'success',
+            icon: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok',
@@ -2325,7 +2325,7 @@ $(document).on('submit', 'form#formSearchUser', function (event) {
                     Swal.fire({
                         title: 'Registro Erróneo',
                         html: "Estas ingresando mal los datos. " + errores,
-                        type: 'error',
+                        icon: 'error',
                         showCancelButton: false,
                         confirmButtonColor: '#3085d6',
                         confirmButtonText: 'Ok'
@@ -2447,7 +2447,7 @@ $(document).on('submit', 'form#formEditUser', function (event) {
           if (data.state == 'error') {
             Swal.fire({
               title: 'La cuenta del usuario no se ha modificado, por favor inténtalo de nuevo',
-              type: 'warning',
+              icon: 'warning',
               showCancelButton: false,
               confirmButtonColor: '#3085d6',
               confirmButtonText: 'Ok'
@@ -2460,7 +2460,7 @@ $(document).on('submit', 'form#formEditUser', function (event) {
             Swal.fire({
                 title: 'Modifciación Exitosa',
                 text: `La cuenta del usuario ha sido modificada satisfactoriamente`,
-                type: 'success',
+                icon: 'success',
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'Ok'
@@ -2487,7 +2487,7 @@ var EditUser = {
             Swal.fire({
                 title: 'Advertencia!',
                 html: 'Estas ingresando mal los datos.' + errores,
-                type: 'error',
+                icon: 'error',
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'Ok'
@@ -2524,7 +2524,7 @@ $(document).on('submit', 'form#FormConfirmUser', function (event) {
             if (data.state == 'error' && data.url == false) {
                 Swal.fire({
                     title: 'El Usuario no se ha modificado, por favor inténtalo de nuevo',
-                    type: 'warning',
+                    icon: 'warning',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok'
@@ -2534,7 +2534,7 @@ $(document).on('submit', 'form#FormConfirmUser', function (event) {
                 Swal.fire({
                     title: 'Modifciación Exitosa',
                     text: `El Usuario `+data.user.nombres+ ` ` +data.user.apellidos+`  ha sido modificado satisfactoriamente`,
-                    type: 'success',
+                    icon: 'success',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok'
@@ -2581,7 +2581,7 @@ $(document).on('submit', 'form#FormConfirmUser', function (event) {
 //                 Swal.fire({
 //                     title: 'El Usuario no se ha modificado, por favor inténtalo de nuevo',
 //                     text: "Recuerde que si lo elimina no lo podrá recuperar.",
-//                     type: 'warning',
+//                     icon: 'warning',
 //                     text: data.message,
 //                     showCancelButton: true,
 //                     confirmButtonColor: '#3085d6',
@@ -2599,7 +2599,7 @@ $(document).on('submit', 'form#FormConfirmUser', function (event) {
 //                         Swal.fire({
 //                             title: 'actividades sin finalzar',
 //                             html: activitiesFinalizar,
-//                             type: 'info',
+//                             icon: 'info',
 //                             showCancelButton: false,
 //                             confirmButtonColor: '#3085d6',
 //                             confirmButtonText: 'Ok'
@@ -2612,7 +2612,7 @@ $(document).on('submit', 'form#FormConfirmUser', function (event) {
 //                 Swal.fire({
 //                     title: 'Modifciación Exitosa',
 //                     text: `El Usuario `+data.user.nombres+ ` ` +data.user.apellidos+`  ha sido modificado satisfactoriamente`,
-//                     type: 'success',
+//                     icon: 'success',
 //                     showCancelButton: false,
 //                     confirmButtonColor: '#3085d6',
 //                     confirmButtonText: 'Ok'
@@ -2652,7 +2652,7 @@ $(document).on('submit', 'form#form-update-role-nodo', function (event) {
                 Swal.fire({
                     title: 'Modifciación Exitosa',
                     text: `Cuenta de usuario actualizada exitosamente.`,
-                    type: 'success',
+                    icon: 'success',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok'
@@ -2665,7 +2665,7 @@ $(document).on('submit', 'form#form-update-role-nodo', function (event) {
                 Swal.fire({
                     title: 'Modifciación Errónea',
                     text: `Cuenta de usuario no actualizada, por favor intente nuevamente.`,
-                    type: 'error',
+                    icon: 'error',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok'
@@ -2844,7 +2844,7 @@ $(document).on('submit', 'form#formEditProfile', function (event) {
           if (data.state == 'error') {
             Swal.fire({
               title: 'Tu perfil no se ha modificado, por favor inténtalo de nuevo',
-              type: 'warning',
+              icon: 'warning',
               showCancelButton: false,
               confirmButtonColor: '#3085d6',
               confirmButtonText: 'Ok'
@@ -2857,7 +2857,7 @@ $(document).on('submit', 'form#formEditProfile', function (event) {
             Swal.fire({
               title: 'Modifciación Exitosa',
               text: `Tu perfil ha sido actualizado exitosamente.`,
-              type: 'success',
+              icon: 'success',
               showCancelButton: false,
               confirmButtonColor: '#3085d6',
               confirmButtonText: 'Ok'
@@ -2886,7 +2886,7 @@ var EditProfileUser = {
         Swal.fire({
             title: 'Advertencia!',
             html: 'Estas ingresando mal los datos.' + errores,
-            type: 'error',
+            icon: 'error',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -3245,7 +3245,7 @@ function detallesDeUnaIntervencion(id){
     Swal.fire({
       title: '¿Desea eliminar la Intervención a Empresa?',
       text: "Al hacer esto, todo lo relacionado con esta Intervención a Empresa será eliminado de la base de datos, eso incluye usos de infraestructura y los archivos subidos al servidor!",
-      type: 'warning',
+      icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
@@ -3287,7 +3287,7 @@ function sendNotification(route, fase, contador, e) {
         Swal.fire({
             title: '¿Está seguro(a) de enviar la solicitud de aprobación?',
             text: 'Para continuar se necesita ingresar la fecha de finalización de ejecución del proyecto según el cronograma adjunto en esta fase. En el formato YYYY-MM-DD',
-            type: 'warning',
+            icon: 'warning',
             input: 'text',
             inputValidator: ( value ) => {
                 let date = new Date(value);
@@ -3341,7 +3341,7 @@ function verHorasDeExpertosEnProyecto(id) {
       Swal.fire({
         title: 'Ups!!',
         text: "No se encontraron horas de asesorías de los expertos en este proyecto!",
-        type: 'error',
+        icon: 'error',
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'Ok'
@@ -3453,7 +3453,7 @@ function verTalentosDeUnProyecto(id){
         Swal.fire({
             title: 'Ups!!',
             text: "No se encontraron talentos asociados a este proyecto!",
-            type: 'error',
+            icon: 'error',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -3549,7 +3549,7 @@ function preguntaReversar(e, id, fase){
     e.preventDefault();
     Swal.fire({
     title: '¿Está seguro(a) de reversar este proyecto a la fase de '+fase+'?',
-    type: 'warning',
+    icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
@@ -3941,7 +3941,7 @@ function preguntaRechazarAprobacionProyecto(e) {
     Swal.fire({
         title: '¿Está seguro(a) de no aprobar esta fase del proyecto?',
         input: 'text',
-        type: 'warning',
+        icon: 'warning',
         inputValidator: (value) => {
             if (!value) {
                 return 'Las observaciones deben ser obligatorias!'
@@ -3972,7 +3972,7 @@ function preguntaAprobacion(e) {
     Swal.fire({
         title: '¿Está seguro(a) de aprobar esta fase del proyecto?',
         text: 'Al hacerlo estás aceptando y aprobando toda la información de esta fase, los documento adjuntos y las asesorias recibidas.',
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -4060,7 +4060,7 @@ function mensajesProyectoCreate(data) {
         Swal.fire({
             title: 'Registro Exitoso',
             text: "El proyecto ha sido registrado satisfactoriamente",
-            type: 'success',
+            icon: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -4072,7 +4072,7 @@ function mensajesProyectoCreate(data) {
     if (data.state == 'no_registro') {
         Swal.fire({
             title: 'El proyecto no se ha registrado, por favor inténtalo de nuevo',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -4085,7 +4085,7 @@ function mensajesProyectoUpdate(data) {
         Swal.fire({
             title: 'Modificación Exitosa',
             text: "El proyecto ha sido cambiado satisfactoriamente",
-            type: 'success',
+            icon: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -4097,7 +4097,7 @@ function mensajesProyectoUpdate(data) {
     if (data.state == 'no_update') {
         Swal.fire({
             title: 'El proyecto no se ha modificado, por favor inténtalo de nuevo',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -4112,7 +4112,7 @@ function talentoYaSeEncuentraAsociado() {
         position: 'top-end',
         showConfirmButton: false,
         timer: 1500,
-        type: 'warning',
+        icon: 'warning',
         title: 'El talento ya se encuentra asociado al proyecto!'
     });
 }
@@ -4124,7 +4124,7 @@ function usuarioYaSeEncuentraAsociado_Propietario() {
         position: 'top-end',
         showConfirmButton: false,
         timer: 1500,
-        type: 'warning',
+        icon: 'warning',
         title: 'El usuario ya se encuentra asociado como dueño de la propiedad intelectual!'
     });
 }
@@ -4136,7 +4136,7 @@ function empresaYaSeEncuentraAsociado_Propietario() {
         position: 'top-end',
         showConfirmButton: false,
         timer: 1500,
-        type: 'warning',
+        icon: 'warning',
         title: 'Esta empresa/sede ya se encuentra asociada como dueño de la propiedad intelectual!'
     });
 }
@@ -4148,7 +4148,7 @@ function talentoSeAsocioAlProyecto() {
         position: 'top-end',
         showConfirmButton: false,
         timer: 1500,
-        type: 'success',
+        icon: 'success',
         title: 'El talento se ha asociado al proyecto!'
     });
 }
@@ -4160,7 +4160,7 @@ function empresaSeAsocioAlProyecto_Propietario() {
         position: 'top-end',
         showConfirmButton: false,
         timer: 1500,
-        type: 'success',
+        icon: 'success',
         title: 'La sede se ha asociado como dueño de la propiedad intelectual!'
     });
 }
@@ -4172,7 +4172,7 @@ function grupoSeAsocioAlProyecto_Propietario() {
         position: 'top-end',
         showConfirmButton: false,
         timer: 1500,
-        type: 'success',
+        icon: 'success',
         title: 'El grupo de investigación se ha asociado como dueño de la propiedad intelectual!'
     });
 }
@@ -4184,7 +4184,7 @@ function ideaProyectoAsociadaConExito(codigo, nombre) {
         position: 'top-end',
         showConfirmButton: false,
         timer: 1500,
-        type: 'success',
+        icon: 'success',
         title: 'La siguiente idea se ha asociado al proyecto: ' + codigo + ' - ' + nombre
     });
 }
@@ -4267,7 +4267,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Sede(sede_id)
             position: 'top-end',
             showConfirmButton: false,
             timer: 1500,
-            type: 'success',
+            icon: 'success',
             title: 'La sede '+response.sede.nombre_sede+' se asoció a la idea de proyecto!'
           });
           let fila = prepararFilaEnLaTablaDePropietarios_Empresa(response);
@@ -4794,7 +4794,7 @@ function printErroresFormulario(data) {
         Swal.fire({
             title: 'Advertencia!',
             html: 'Estas ingresando mal los datos.' + errores,
-            type: 'error',
+            icon: 'error',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -4807,7 +4807,7 @@ function mensajesProyectoCierre(data) {
         Swal.fire({
             title: 'Modificación Exitosa!',
             text: "El proyecto ha sido modificado satisfactoriamente",
-            type: 'success',
+            icon: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -4819,7 +4819,7 @@ function mensajesProyectoCierre(data) {
     if (data.state == 'no_update') {
         Swal.fire({
             title: 'El proyecto no se ha modificado, por favor inténtalo de nuevo',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -4879,7 +4879,7 @@ function addEmpresaAEdt(id) {
       position: 'top-end',
       showConfirmButton: false,
       timer: 1500,
-      type: 'warning',
+      icon: 'warning',
       title: 'La empresa ya se encuentra asociada a la edt!'
     });
   } else {
@@ -4900,7 +4900,7 @@ function addEmpresaAEdt(id) {
         position: 'top-end',
         showConfirmButton: false,
         timer: 1500,
-        type: 'success',
+        icon: 'success',
         title: 'La empresa se ha asociado a la edt!'
       });
     });
@@ -4914,7 +4914,7 @@ function eliminarEntidadAsociadaAEdt(index){
     position: 'top-end',
     showConfirmButton: false,
     timer: 1500,
-    type: 'success',
+    icon: 'success',
     title: 'Se ha removido la empresa de la edt!'
   });
 }
@@ -5010,7 +5010,7 @@ function eliminarEdtPorId_event(id, event) {
   Swal.fire({
     title: '¿Desea eliminar la edt?',
     text: "Al hacer esto, todo lo relacionado con esta edt será eliminado de la base de datos, eso incluye usos de infraestructura y los archivos subidos al servidor!",
-    type: 'warning',
+    icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#d33',
     cancelButtonColor: '#3085d6',
@@ -5151,7 +5151,7 @@ function verEntidadesDeUnaEdt(id) {
         Swal.fire({
           title: 'Ups!!',
           text: "No se encontraron empresas asociadas a esta Edt!",
-          type: 'error',
+          icon: 'error',
           showCancelButton: false,
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'
@@ -5962,7 +5962,7 @@ function mensajesFormMantenimiento(data) {
         Swal.fire({
             title: data.title,
             text: data.msj,
-            type: 'success',
+            icon: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -5974,7 +5974,7 @@ function mensajesFormMantenimiento(data) {
         Swal.fire({
             title: data.title,
             text: data.msj,
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -6521,7 +6521,7 @@ $(document).on('submit', 'form#formSearchAsesorie', function (event) {
                     Swal.fire({
                         title: 'Registro Erróneo',
                         html: "Estas ingresando mal los datos. ",
-                        type: 'error',
+                        icon: 'error',
                         showCancelButton: false,
                         confirmButtonColor: '#3085d6',
                         confirmButtonText: 'Ok'
@@ -6764,7 +6764,7 @@ function consultarVisitanteTecnoparque() {
     Swal.fire({
       title: 'Advertencia!',
       text: "Digite un número de documento!",
-      type: 'warning',
+      icon: 'warning',
       showCancelButton: false,
       confirmButtonColor: '#3085d6',
       confirmButtonText: 'Ok'
@@ -8972,7 +8972,7 @@ const articulationStage = {
             position: 'top-end',
             showConfirmButton: false,
             timer: 1500,
-            type: 'warning',
+            icon: 'warning',
             title: 'El talento ya se encuentra asociado a la articulación!'
         });
     },
@@ -8995,7 +8995,7 @@ const articulationStage = {
             Swal.fire({
                 title: title,
                 text: "La fase de articulación  ha sido "+action+" satisfactoriamente",
-                type: 'success',
+                icon: 'success',
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'Ok'
@@ -9007,7 +9007,7 @@ const articulationStage = {
         if (data.state == 404) {
             Swal.fire({
                 title: 'La fase de articulación  no se ha '+action+', por favor inténtalo de nuevo',
-                type: 'warning',
+                icon: 'warning',
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'Ok'
@@ -9033,7 +9033,7 @@ const articulationStage = {
                 Swal.fire({
                     title: 'Error, vuelve a intentarlo',
                     html: "Error: " + textStatus,
-                    type: 'error',
+                    icon: 'error',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok',
@@ -9081,7 +9081,7 @@ const articulationStage = {
                         Swal.fire({
                             title: 'Error, vuelve a intentarlo',
                             html: "Error: " + textStatus,
-                            type: 'error',
+                            icon: 'error',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: 'Ok',
@@ -9129,7 +9129,7 @@ const articulationStage = {
                         Swal.fire({
                             title: 'Error, vuelve a intentarlo',
                             html: "Error: " + textStatus,
-                            type: 'error',
+                            icon: 'error',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: 'Ok',
@@ -9195,7 +9195,7 @@ function endorsementQuestionArticulationStage(e) {
     Swal.fire({
         title: '¿Está seguro(a) de aprobar el aval?',
         text: 'Al hacerlo estás aceptando y aprobando toda la información de esta fase de articulación, los documento adjuntos y las asesorias recibidas.',
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -9215,7 +9215,7 @@ function questionRejectEndorsementArticulationStage(e) {
     Swal.fire({
         title: '¿Está seguro(a) de no aprobar el aval?',
         input: 'text',
-        type: 'warning',
+        icon: 'warning',
         inputValidator: (value) => {
             if (!value) {
                 return 'Las observaciones deben ser obligatorias!'
@@ -9245,7 +9245,7 @@ function endorsementQuestionArticulation(e) {
     Swal.fire({
         title: '¿Está seguro(a) de aprobar el aval?',
         text: 'Al hacerlo estás aceptando y aprobando toda la información de esta fase de articulación, los documento adjuntos y las asesorias recibidas.',
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -9266,7 +9266,7 @@ function questionRejectEndorsementArticulation(e) {
     Swal.fire({
         title: '¿Está seguro(a) de no aprobar el aval?',
         input: 'text',
-        type: 'warning',
+        icon: 'warning',
         inputValidator: (value) => {
             if (!value) {
                 return 'Las observaciones deben ser obligatorias!'
@@ -9296,7 +9296,7 @@ function changeNextPhaseArticulation(e) {
     $('button[type="submit"]').attr('disabled', true);
     Swal.fire({
         title: '¿Está seguro(a) de continuar a la siguiente fase?',
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -9315,7 +9315,7 @@ function changePreviusPhaseArticulation(e) {
     $('button[type="submit"]').attr('disabled', true);
     Swal.fire({
         title: '¿Está seguro(a) de volver a la anterior fase?',
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -9467,7 +9467,7 @@ $( document ).ready(function() {
                     if(!response.fail && response.errors == null){
                         Swal.fire({
                             title: response.message,
-                            type: 'success',
+                            icon: 'success',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: 'Ok',
@@ -9481,7 +9481,7 @@ $( document ).ready(function() {
                     Swal.fire({
                         title: ' Error, vuelve a intentarlo',
                         html:  `${xhr.status} ${errorThrown}`,
-                        type: 'error',
+                        icon: 'error',
                         showCancelButton: false,
                         confirmButtonColor: '#3085d6',
                         confirmButtonText: 'Ok',
@@ -9923,7 +9923,7 @@ const filter_articulations = {
             position: 'top-end',
             showConfirmButton: false,
             timer: 1500,
-            type: 'warning',
+            icon: 'warning',
             title: 'El talento ya se encuentra asociado a la articulación!'
         });
     },
@@ -9972,7 +9972,7 @@ const filter_articulations = {
             position: 'top-end',
             showConfirmButton: false,
             timer: 1500,
-            type: 'success',
+            icon: 'success',
             title: 'Talento eliminado.'
         });
     },
@@ -10010,7 +10010,7 @@ const filter_articulations = {
             Swal.fire({
                 title: title,
                 text: "La articulación ha sido "+action+" satisfactoriamente",
-                type: 'success',
+                icon: 'success',
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'Ok'
@@ -10022,7 +10022,7 @@ const filter_articulations = {
         else {
             Swal.fire({
                 title: 'La articulación no se ha '+action+', por favor inténtalo de nuevo',
-                type: 'warning',
+                icon: 'warning',
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'Ok'
@@ -10077,7 +10077,7 @@ const filter_articulations = {
                 Swal.fire({
                     title: 'Error, vuelve a intentarlo',
                     html: "Error: " + textStatus,
-                    type: 'error',
+                    icon: 'error',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok',
@@ -10104,7 +10104,7 @@ const filter_articulations = {
                 Swal.fire({
                     title: 'Error, vuelve a intentarlo',
                     html: "Error: " + textStatus,
-                    type: 'error',
+                    icon: 'error',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok',
@@ -10152,7 +10152,7 @@ const filter_articulations = {
                         Swal.fire({
                             title: 'Error, vuelve a intentarlo',
                             html: "Error: " + textStatus,
-                            type: 'error',
+                            icon: 'error',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: 'Ok',
@@ -10342,7 +10342,7 @@ $("#formTypeArticulation").on('submit', function(e){
             if(!response.fail && response.errors == null){
                 Swal.fire({
                     title: response.message,
-                    type: 'success',
+                    icon: 'success',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok',
@@ -10356,7 +10356,7 @@ $("#formTypeArticulation").on('submit', function(e){
             Swal.fire({
                 title: 'Error, vuelve a intentarlo',
                 html: ajaxContext.status + ' - ' + ajaxContext.responseJSON.message,
-                type: 'error',
+                icon: 'error',
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'Ok',
@@ -10527,7 +10527,7 @@ $("#formArticualtionSubtype").on('submit', function(e){
             if(!response.fail && response.errors == null){
                 Swal.fire({
                     title: response.message,
-                    type: 'success',
+                    icon: 'success',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok',
@@ -10541,7 +10541,7 @@ $("#formArticualtionSubtype").on('submit', function(e){
             Swal.fire({
                 title: ' Registro erróneo, vuelve a intentarlo',
                 html: ajaxContext.status + ' - ' + ajaxContext.responseJSON.message,
-                type: 'error',
+                icon: 'error',
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'Ok',
@@ -11054,7 +11054,7 @@ $('#txtfecha_fin').bootstrapMaterialDatePicker({
                 if(!response.fail && response.errors == null){
                     Swal.fire({
                         title: 'Registro Exitoso',
-                        type: 'success',
+                        icon: 'success',
                         showCancelButton: false,
                         confirmButtonColor: '#3085d6',
                         confirmButtonText: 'Ok',
@@ -11069,7 +11069,7 @@ $('#txtfecha_fin').bootstrapMaterialDatePicker({
                 Swal.fire({
                     title: ' Registro erróneo, vuelve a intentarlo',
                     html: ajaxContext.status + ' - ' + ajaxContext.responseJSON.message,
-                    type: 'error',
+                    icon: 'error',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok',

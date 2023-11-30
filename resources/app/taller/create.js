@@ -19,7 +19,7 @@ $(document).on('submit', 'form#formEntrenamientosCreate', function (event) { // 
     Swal.fire({
         title: '¿Está seguro(a) de guardar esta información?',
         // text: "You won't be able to revert this!",
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -121,7 +121,7 @@ function addIdeaToEntrenamiento() {
       position: 'top-end',
       showConfirmButton: false,
       timer: 3000,
-      type: 'error',
+      icon: 'error',
       title: 'Estás ingresando mal los datos'
   })
   } else {
@@ -131,7 +131,7 @@ function addIdeaToEntrenamiento() {
           position: 'top-end',
           showConfirmButton: false,
           timer: 1500,
-          type: 'warning',
+          icon: 'warning',
           title: 'La idea de proyecto ya se encuentra asociada al taller!'
       });
       } else {
@@ -153,7 +153,7 @@ function pintarIdeaEnLaTablaTaller(id, confirmacion, asistencia) {
         position: 'top-end',
         showConfirmButton: false,
         timer: 3000,
-        type: 'success',
+        icon: 'success',
         title: 'La idea de proyecto se asoció con éxito al taller'
       });
       reiniciarCamposTaller();

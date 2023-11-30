@@ -44,7 +44,7 @@
           Swal.fire({
             title: 'Registro Erróneo',
             text: "Estas ingresando mal los datos!",
-            type: 'error',
+            icon: 'error',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -58,7 +58,7 @@
           Swal.fire({
             title: 'Registro Erróneo',
             text: "La Edt no se ha registrado!",
-            type: 'error',
+            icon: 'error',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -68,7 +68,7 @@
           Swal.fire({
             title: 'Registro Exitoso',
             text: "La Edt se ha registrado satisfactoriamente!",
-            type: 'success',
+            icon: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'

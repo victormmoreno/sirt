@@ -76,7 +76,7 @@
                             position: 'bottom-end',
                             title: 'proyecto',
                             text: "por favor seleccion un proyecto",
-                            type: 'warning',
+                            icon: 'warning',
                             showConfirmButton: false,
                             timer: 10000
                         });
@@ -103,7 +103,7 @@
                             position: 'bottom-end',
                             title: 'Articulación',
                             text: "por favor seleccione una articulación",
-                            type: 'warning',
+                            icon: 'warning',
                             showConfirmButton: false,
                             timer: 10000
                         });
@@ -128,7 +128,7 @@
                             position: 'bottom-end',
                             title: 'Idea',
                             text: "por favor seleccione una idea     ",
-                            type: 'warning',
+                            icon: 'warning',
                             showConfirmButton: false,
                             timer: 10000
                         });
@@ -755,7 +755,7 @@
                 position: 'top-end',
                 showConfirmButton: false,
                 timer: 1500,
-                type: 'success',
+                icon: 'success',
                 title: 'El proyecto  ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
             });
             $('#txtactividad').val(codigo_actividad+ ' - '+ nombre);
@@ -786,7 +786,7 @@
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 1500,
-                    type: 'warning',
+                    icon: 'warning',
                     title: 'Debe seleccionar un equipo.'
                 });
             }else  if ($("#txttiempouso").val() == ""){
@@ -795,7 +795,7 @@
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 1500,
-                    type: 'warning',
+                    icon: 'warning',
                     title: 'Debe ingresa el tiempo de uso'
                 });
             }else if($("#txttiempouso").val() <= 0){
@@ -804,7 +804,7 @@
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 1500,
-                    type: 'warning',
+                    icon: 'warning',
                     title: 'el tiempo de uso debe ser mayor o igual a 1.'
                 });
             }else if(usoInfraestructuraUpdate.validateTiempoUso() != true){
@@ -813,7 +813,7 @@
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 1500,
-                    type: 'error',
+                    icon: 'error',
                     title: 'El tiempo de uso debe ser un valor numerico entre 0 y 99.9.'
                 });
             }else{
@@ -823,7 +823,7 @@
                         position: 'top-end',
                         showConfirmButton: false,
                         timer: 1500,
-                        type: 'success',
+                        icon: 'success',
                         title: 'Equipo ' + nombreEquipo + ' agregado.'
                     });
                     var a = document.getElementsByName("equipo[]");
@@ -837,7 +837,7 @@
                         position: 'top-end',
                         showConfirmButton: false,
                         timer: 1500,
-                        type: 'error',
+                        icon: 'error',
                         title: 'El Equipo ' + nombreEquipo + ' ya esta listado.'
                     });
                 }
@@ -854,7 +854,7 @@
                 position: 'top-end',
                 showConfirmButton: false,
                 timer: 1500,
-                type: 'success',
+                icon: 'success',
                 title: 'La articulacion  ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
             });
             $('#txtactividad').val(codigo_actividad+ ' - '+ nombre);
@@ -870,7 +870,7 @@
                 position: 'top-end',
                 showConfirmButton: false,
                 timer: 1500,
-                type: 'success',
+                icon: 'success',
                 title: 'La edt ' + codigo_actividad +  ' - ' + nombre + ' se ha asociado  al uso de infraestructua'
             });
             $('#txtactividad').val(codigo_actividad+ ' - '+ nombre);
@@ -888,7 +888,7 @@
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 1500,
-                    type: 'warning',
+                    icon: 'warning',
                     title: 'Debe seleccionar un talento'
                 });
             }else{
@@ -898,7 +898,7 @@
                         position: 'top-end',
                         showConfirmButton: false,
                         timer: 1500,
-                        type: 'error',
+                        icon: 'error',
                         title: 'El Talento ' + nombreTalento + ' ya esta listado.'
                     });
                     $("#txttalento").val();
@@ -908,7 +908,7 @@
                         position: 'top-end',
                         showConfirmButton: false,
                         timer: 1500,
-                        type: 'success',
+                        icon: 'success',
                         title: 'el Talento ' + nombreTalento + ' agregado.'
                     });
                     let a = document.getElementsByName("talento[]");
@@ -929,7 +929,7 @@
                 position: 'top-end',
                 showConfirmButton: false,
                 timer: 1500,
-                type: 'success',
+                icon: 'success',
                 title: 'Talento eliminado.'
             });
         }
@@ -941,7 +941,7 @@
                 position: 'top-end',
                 showConfirmButton: false,
                 timer: 1500,
-                type: 'success',
+                icon: 'success',
                 title: 'Equipo eliminado.'
             });
         }
@@ -958,7 +958,7 @@
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 1500,
-                    type: 'warning',
+                    icon: 'warning',
                     title: 'Debe seleccionar un Gestor'
                 });
             }else{
@@ -968,7 +968,7 @@
                         position: 'top-end',
                         showConfirmButton: false,
                         timer: 1500,
-                        type: 'error',
+                        icon: 'error',
                         title: 'El Gestor ' + nombreGestor + ' ya esta listado.'
                     });
                     $("#txtgestorasesor").val();
@@ -978,7 +978,7 @@
                         position: 'top-end',
                         showConfirmButton: false,
                         timer: 1500,
-                        type: 'error',
+                        icon: 'error',
                         title: 'Por favor ingrese una hora de asesoria directa correcta'
                     });
                     $("#txtasesoriadirecta").val(0);
@@ -989,7 +989,7 @@
                         position: 'top-end',
                         showConfirmButton: false,
                         timer: 1500,
-                        type: 'error',
+                        icon: 'error',
                         title: 'Debe de haber al menos una asesoria con el valor de 1'
                     });
                     $("#txtasesoriadirecta").val(0);
@@ -1003,7 +1003,7 @@
                         position: 'top-end',
                         showConfirmButton: false,
                         timer: 1500,
-                        type: 'error',
+                        icon: 'error',
                         title: 'Por favor ingrese una hora de asesoria indirecta correcta.'
                     });
                     $("#txtasesoriaindirecta").val(0);
@@ -1014,7 +1014,7 @@
                         position: 'top-end',
                         showConfirmButton: false,
                         timer: 1500,
-                        type: 'success',
+                        icon: 'success',
                         title: 'El Gestor ' + nombreGestor + ' agregado.'
                     });
                     let a = document.getElementsByName("gestor[]");
@@ -1039,7 +1039,7 @@
                 position: 'top-end',
                 showConfirmButton: false,
                 timer: 1500,
-                type: 'success',
+                icon: 'success',
                 title: 'Experto eliminado.'
             });
         }
@@ -1051,7 +1051,7 @@
                 position: 'top-end',
                 showConfirmButton: false,
                 timer: 1500,
-                type: 'success',
+                icon: 'success',
                 title: 'Material eliminado.'
             });
         }
@@ -1067,7 +1067,7 @@
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 1500,
-                    type: 'warning',
+                    icon: 'warning',
                     title: 'Debe seleccionar un Material de Formación.'
                 });
             }else{
@@ -1077,7 +1077,7 @@
                         position: 'top-end',
                         showConfirmButton: false,
                         timer: 1500,
-                        type: 'error',
+                        icon: 'error',
                         title: 'El Material ' + nombreMaterial + ' ya esta listado.'
                     });
                     $("#txtmaterial").val();
@@ -1087,7 +1087,7 @@
                         position: 'top-end',
                         showConfirmButton: false,
                         timer: 1500,
-                        type: 'error',
+                        icon: 'error',
                         title: 'Por favor ingrese una cantidad correcta'
                     });
                     $("#txtcantidad").val(1);
@@ -1098,7 +1098,7 @@
                         position: 'top-end',
                         showConfirmButton: false,
                         timer: 1500,
-                        type: 'success',
+                        icon: 'success',
                         title: 'Material ' + nombreMaterial + ' agregado.'
                     });
                     let a = document.getElementsByName("material[]");
@@ -1148,7 +1148,7 @@
                         Swal.fire({
                             title: 'Registro Erróneo',
                             html: "Estas ingresando mal los datos." + errores,
-                            type: 'error',
+                            icon: 'error',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: 'Ok'
@@ -1157,7 +1157,7 @@
                     if (data.fail == false && data.redirect_url == false) {
                         Swal.fire({
                             title: 'El uso de infraestructua no se ha modificado, por favor inténtalo de nuevo',
-                            type: 'warning',
+                            icon: 'warning',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: 'Ok'
@@ -1168,7 +1168,7 @@
                         Swal.fire({
                             title: 'Modificación Exitosa',
                             text: "El uso de infraestructua ha sido modificado satisfactoriamente",
-                            type: 'success',
+                            icon: 'success',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: 'Ok'

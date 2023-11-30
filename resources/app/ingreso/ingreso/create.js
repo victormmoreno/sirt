@@ -4,7 +4,7 @@ function consultarVisitanteTecnoparque() {
     Swal.fire({
       title: 'Advertencia!',
       text: "Digite un número de documento!",
-      type: 'warning',
+      icon: 'warning',
       showCancelButton: false,
       confirmButtonColor: '#3085d6',
       confirmButtonText: 'Ok'

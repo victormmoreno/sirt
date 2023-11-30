@@ -4,7 +4,7 @@ $(document).on('submit', 'form#formComiteRealizadoCreate', function (event) {
         title: '¿Está seguro(a) de guardar esta información?',
         // text: "You won't be able to revert this!",
         text: "Debes tener en cuenta mientras el dinamizador no asigne las ideas de proyectos a los expertos puedes cambiar esta información",
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -50,7 +50,7 @@ function mensajesComiteRealizadoCreate(data) {
         Swal.fire({
             title: 'Registro Exitoso',
             text: "La calificación del comité ha sido registrada satisfactoriamente",
-            type: 'success',
+            icon: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -62,7 +62,7 @@ function mensajesComiteRealizadoCreate(data) {
     if (data.state == 'no_registro') {
         Swal.fire({
             title: 'La calificación del comité no se ha registrado, por favor inténtalo de nuevo',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'

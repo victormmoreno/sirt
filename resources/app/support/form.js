@@ -21,7 +21,7 @@
                 if(!response.fail && response.errors == null){
                     Swal.fire({
                         title: 'Registro Exitoso',
-                        type: 'success',
+                        icon: 'success',
                         showCancelButton: false,
                         confirmButtonColor: '#3085d6',
                         confirmButtonText: 'Ok',
@@ -36,7 +36,7 @@
                 Swal.fire({
                     title: ' Registro erróneo, vuelve a intentarlo',
                     html: ajaxContext.status + ' - ' + ajaxContext.responseJSON.message,
-                    type: 'error',
+                    icon: 'error',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok',

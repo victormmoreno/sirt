@@ -197,7 +197,7 @@
                 position: 'top-end',
                 showConfirmButton: false,
                 timer: 3000,
-                type: 'success',
+                icon: 'success',
                 title: 'El archivo se ha subido con éxito!'
             });
         })
@@ -210,7 +210,7 @@
                 position: 'top-end',
                 showConfirmButton: false,
                 timer: 3000,
-                type: 'error',
+                icon: 'error',
                 title: 'El archivo no se ha podido subir!'
             });
         })

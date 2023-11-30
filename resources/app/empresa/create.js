@@ -20,7 +20,7 @@ $(document).on('submit', 'form#formRegisterCompany', function (event) {
         if (data.state == 'error' && data.url == false) {
         Swal.fire({
             title: 'La empresa no se ha registrado, por favor inténtalo de nuevo',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -30,7 +30,7 @@ $(document).on('submit', 'form#formRegisterCompany', function (event) {
         Swal.fire({
             title: 'Registro Exitoso',
             text:  data.message,
-            type: 'success',
+            icon: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok',

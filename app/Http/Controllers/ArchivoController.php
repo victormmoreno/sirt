@@ -23,6 +23,7 @@ use App\Repositories\Repository\{Articulation\ArticulationStageRepository, Archi
 use Illuminate\Support\Facades\{Storage, Session};
 use App\User;
 use Carbon\Carbon;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ArchivoController extends Controller
 {

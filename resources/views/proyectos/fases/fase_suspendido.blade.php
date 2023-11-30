@@ -61,7 +61,7 @@
         Swal.fire({
             title: '¿Está seguro(a) de cancelar este proyecto?',
             text: "No podrás revertir esta acción!",
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
@@ -82,7 +82,7 @@
             position: 'top-end',
             showConfirmButton: false,
             timer: 3000,
-            type: 'success',
+            icon: 'success',
             title: 'El archivo se ha subido con éxito!'
         });
     })
@@ -95,7 +95,7 @@
         position: 'top-end',
         showConfirmButton: false,
         timer: 3000,
-        type: 'error',
+        icon: 'error',
         title: 'El archivo no se ha podido subir!'
         });
     })

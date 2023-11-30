@@ -342,7 +342,7 @@ const filter_articulations = {
             position: 'top-end',
             showConfirmButton: false,
             timer: 1500,
-            type: 'warning',
+            icon: 'warning',
             title: 'El talento ya se encuentra asociado a la articulación!'
         });
     },
@@ -391,7 +391,7 @@ const filter_articulations = {
             position: 'top-end',
             showConfirmButton: false,
             timer: 1500,
-            type: 'success',
+            icon: 'success',
             title: 'Talento eliminado.'
         });
     },
@@ -429,7 +429,7 @@ const filter_articulations = {
             Swal.fire({
                 title: title,
                 text: "La articulación ha sido "+action+" satisfactoriamente",
-                type: 'success',
+                icon: 'success',
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'Ok'
@@ -441,7 +441,7 @@ const filter_articulations = {
         else {
             Swal.fire({
                 title: 'La articulación no se ha '+action+', por favor inténtalo de nuevo',
-                type: 'warning',
+                icon: 'warning',
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'Ok'
@@ -496,7 +496,7 @@ const filter_articulations = {
                 Swal.fire({
                     title: 'Error, vuelve a intentarlo',
                     html: "Error: " + textStatus,
-                    type: 'error',
+                    icon: 'error',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok',
@@ -523,7 +523,7 @@ const filter_articulations = {
                 Swal.fire({
                     title: 'Error, vuelve a intentarlo',
                     html: "Error: " + textStatus,
-                    type: 'error',
+                    icon: 'error',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok',
@@ -571,7 +571,7 @@ const filter_articulations = {
                         Swal.fire({
                             title: 'Error, vuelve a intentarlo',
                             html: "Error: " + textStatus,
-                            type: 'error',
+                            icon: 'error',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: 'Ok',

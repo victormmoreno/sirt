@@ -20,7 +20,7 @@ $("#formArticualtionSubtype").on('submit', function(e){
             if(!response.fail && response.errors == null){
                 Swal.fire({
                     title: response.message,
-                    type: 'success',
+                    icon: 'success',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok',
@@ -34,7 +34,7 @@ $("#formArticualtionSubtype").on('submit', function(e){
             Swal.fire({
                 title: ' Registro erróneo, vuelve a intentarlo',
                 html: ajaxContext.status + ' - ' + ajaxContext.responseJSON.message,
-                type: 'error',
+                icon: 'error',
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'Ok',

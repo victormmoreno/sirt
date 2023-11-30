@@ -39,7 +39,7 @@ function endorsementQuestionArticulationStage(e) {
     Swal.fire({
         title: '¿Está seguro(a) de aprobar el aval?',
         text: 'Al hacerlo estás aceptando y aprobando toda la información de esta fase de articulación, los documento adjuntos y las asesorias recibidas.',
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -59,7 +59,7 @@ function questionRejectEndorsementArticulationStage(e) {
     Swal.fire({
         title: '¿Está seguro(a) de no aprobar el aval?',
         input: 'text',
-        type: 'warning',
+        icon: 'warning',
         inputValidator: (value) => {
             if (!value) {
                 return 'Las observaciones deben ser obligatorias!'
@@ -89,7 +89,7 @@ function endorsementQuestionArticulation(e) {
     Swal.fire({
         title: '¿Está seguro(a) de aprobar el aval?',
         text: 'Al hacerlo estás aceptando y aprobando toda la información de esta fase de articulación, los documento adjuntos y las asesorias recibidas.',
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -110,7 +110,7 @@ function questionRejectEndorsementArticulation(e) {
     Swal.fire({
         title: '¿Está seguro(a) de no aprobar el aval?',
         input: 'text',
-        type: 'warning',
+        icon: 'warning',
         inputValidator: (value) => {
             if (!value) {
                 return 'Las observaciones deben ser obligatorias!'
@@ -140,7 +140,7 @@ function changeNextPhaseArticulation(e) {
     $('button[type="submit"]').attr('disabled', true);
     Swal.fire({
         title: '¿Está seguro(a) de continuar a la siguiente fase?',
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -159,7 +159,7 @@ function changePreviusPhaseArticulation(e) {
     $('button[type="submit"]').attr('disabled', true);
     Swal.fire({
         title: '¿Está seguro(a) de volver a la anterior fase?',
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',

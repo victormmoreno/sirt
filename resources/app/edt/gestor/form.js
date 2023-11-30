@@ -50,7 +50,7 @@ function addEmpresaAEdt(id) {
       position: 'top-end',
       showConfirmButton: false,
       timer: 1500,
-      type: 'warning',
+      icon: 'warning',
       title: 'La empresa ya se encuentra asociada a la edt!'
     });
   } else {
@@ -71,7 +71,7 @@ function addEmpresaAEdt(id) {
         position: 'top-end',
         showConfirmButton: false,
         timer: 1500,
-        type: 'success',
+        icon: 'success',
         title: 'La empresa se ha asociado a la edt!'
       });
     });
@@ -85,7 +85,7 @@ function eliminarEntidadAsociadaAEdt(index){
     position: 'top-end',
     showConfirmButton: false,
     timer: 1500,
-    type: 'success',
+    icon: 'success',
     title: 'Se ha removido la empresa de la edt!'
   });
 }

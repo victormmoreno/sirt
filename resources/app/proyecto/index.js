@@ -9,7 +9,7 @@ function sendNotification(route, fase, contador, e) {
         Swal.fire({
             title: '¿Está seguro(a) de enviar la solicitud de aprobación?',
             text: 'Para continuar se necesita ingresar la fecha de finalización de ejecución del proyecto según el cronograma adjunto en esta fase. En el formato YYYY-MM-DD',
-            type: 'warning',
+            icon: 'warning',
             input: 'text',
             inputValidator: ( value ) => {
                 let date = new Date(value);
@@ -63,7 +63,7 @@ function verHorasDeExpertosEnProyecto(id) {
       Swal.fire({
         title: 'Ups!!',
         text: "No se encontraron horas de asesorías de los expertos en este proyecto!",
-        type: 'error',
+        icon: 'error',
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'Ok'
@@ -175,7 +175,7 @@ function verTalentosDeUnProyecto(id){
         Swal.fire({
             title: 'Ups!!',
             text: "No se encontraron talentos asociados a este proyecto!",
-            type: 'error',
+            icon: 'error',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -271,7 +271,7 @@ function preguntaReversar(e, id, fase){
     e.preventDefault();
     Swal.fire({
     title: '¿Está seguro(a) de reversar este proyecto a la fase de '+fase+'?',
-    type: 'warning',
+    icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',

@@ -26,7 +26,7 @@ $(document).on('submit', 'form#formValidateCredentials', function (event) {
                     Swal.fire({
                         title: 'Atención!',
                         html: 'Este usuario ya existe. Por favor ingrese utilizando las credenciales de usuario. Recuerde que si no recuerda su contraseña también la puede restablecer.',
-                        type: 'error',
+                        icon: 'error',
                         position: 'top',
                         toast: true,
                         icon: 'error',

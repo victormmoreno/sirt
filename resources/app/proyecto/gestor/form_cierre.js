@@ -41,7 +41,7 @@ function printErroresFormulario(data) {
         Swal.fire({
             title: 'Advertencia!',
             html: 'Estas ingresando mal los datos.' + errores,
-            type: 'error',
+            icon: 'error',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -54,7 +54,7 @@ function mensajesProyectoCierre(data) {
         Swal.fire({
             title: 'Modificación Exitosa!',
             text: "El proyecto ha sido modificado satisfactoriamente",
-            type: 'success',
+            icon: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -66,7 +66,7 @@ function mensajesProyectoCierre(data) {
     if (data.state == 'no_update') {
         Swal.fire({
             title: 'El proyecto no se ha modificado, por favor inténtalo de nuevo',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'

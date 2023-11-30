@@ -73,7 +73,7 @@ function mensajesProyectoCreate(data) {
         Swal.fire({
             title: 'Registro Exitoso',
             text: "El proyecto ha sido registrado satisfactoriamente",
-            type: 'success',
+            icon: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -85,7 +85,7 @@ function mensajesProyectoCreate(data) {
     if (data.state == 'no_registro') {
         Swal.fire({
             title: 'El proyecto no se ha registrado, por favor inténtalo de nuevo',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -98,7 +98,7 @@ function mensajesProyectoUpdate(data) {
         Swal.fire({
             title: 'Modificación Exitosa',
             text: "El proyecto ha sido cambiado satisfactoriamente",
-            type: 'success',
+            icon: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -110,7 +110,7 @@ function mensajesProyectoUpdate(data) {
     if (data.state == 'no_update') {
         Swal.fire({
             title: 'El proyecto no se ha modificado, por favor inténtalo de nuevo',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -125,7 +125,7 @@ function talentoYaSeEncuentraAsociado() {
         position: 'top-end',
         showConfirmButton: false,
         timer: 1500,
-        type: 'warning',
+        icon: 'warning',
         title: 'El talento ya se encuentra asociado al proyecto!'
     });
 }
@@ -137,7 +137,7 @@ function usuarioYaSeEncuentraAsociado_Propietario() {
         position: 'top-end',
         showConfirmButton: false,
         timer: 1500,
-        type: 'warning',
+        icon: 'warning',
         title: 'El usuario ya se encuentra asociado como dueño de la propiedad intelectual!'
     });
 }
@@ -149,7 +149,7 @@ function empresaYaSeEncuentraAsociado_Propietario() {
         position: 'top-end',
         showConfirmButton: false,
         timer: 1500,
-        type: 'warning',
+        icon: 'warning',
         title: 'Esta empresa/sede ya se encuentra asociada como dueño de la propiedad intelectual!'
     });
 }
@@ -161,7 +161,7 @@ function talentoSeAsocioAlProyecto() {
         position: 'top-end',
         showConfirmButton: false,
         timer: 1500,
-        type: 'success',
+        icon: 'success',
         title: 'El talento se ha asociado al proyecto!'
     });
 }
@@ -173,7 +173,7 @@ function empresaSeAsocioAlProyecto_Propietario() {
         position: 'top-end',
         showConfirmButton: false,
         timer: 1500,
-        type: 'success',
+        icon: 'success',
         title: 'La sede se ha asociado como dueño de la propiedad intelectual!'
     });
 }
@@ -185,7 +185,7 @@ function grupoSeAsocioAlProyecto_Propietario() {
         position: 'top-end',
         showConfirmButton: false,
         timer: 1500,
-        type: 'success',
+        icon: 'success',
         title: 'El grupo de investigación se ha asociado como dueño de la propiedad intelectual!'
     });
 }
@@ -197,7 +197,7 @@ function ideaProyectoAsociadaConExito(codigo, nombre) {
         position: 'top-end',
         showConfirmButton: false,
         timer: 1500,
-        type: 'success',
+        icon: 'success',
         title: 'La siguiente idea se ha asociado al proyecto: ' + codigo + ' - ' + nombre
     });
 }
@@ -280,7 +280,7 @@ function pintarPropietarioEnTabla_Fase_Inicio_PropiedadIntelectual_Sede(sede_id)
             position: 'top-end',
             showConfirmButton: false,
             timer: 1500,
-            type: 'success',
+            icon: 'success',
             title: 'La sede '+response.sede.nombre_sede+' se asoció a la idea de proyecto!'
           });
           let fila = prepararFilaEnLaTablaDePropietarios_Empresa(response);

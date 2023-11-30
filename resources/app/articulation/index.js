@@ -364,7 +364,7 @@ const articulationStage = {
             position: 'top-end',
             showConfirmButton: false,
             timer: 1500,
-            type: 'warning',
+            icon: 'warning',
             title: 'El talento ya se encuentra asociado a la articulación!'
         });
     },
@@ -387,7 +387,7 @@ const articulationStage = {
             Swal.fire({
                 title: title,
                 text: "La fase de articulación  ha sido "+action+" satisfactoriamente",
-                type: 'success',
+                icon: 'success',
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'Ok'
@@ -399,7 +399,7 @@ const articulationStage = {
         if (data.state == 404) {
             Swal.fire({
                 title: 'La fase de articulación  no se ha '+action+', por favor inténtalo de nuevo',
-                type: 'warning',
+                icon: 'warning',
                 showCancelButton: false,
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'Ok'
@@ -425,7 +425,7 @@ const articulationStage = {
                 Swal.fire({
                     title: 'Error, vuelve a intentarlo',
                     html: "Error: " + textStatus,
-                    type: 'error',
+                    icon: 'error',
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok',
@@ -473,7 +473,7 @@ const articulationStage = {
                         Swal.fire({
                             title: 'Error, vuelve a intentarlo',
                             html: "Error: " + textStatus,
-                            type: 'error',
+                            icon: 'error',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: 'Ok',
@@ -521,7 +521,7 @@ const articulationStage = {
                         Swal.fire({
                             title: 'Error, vuelve a intentarlo',
                             html: "Error: " + textStatus,
-                            type: 'error',
+                            icon: 'error',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: 'Ok',

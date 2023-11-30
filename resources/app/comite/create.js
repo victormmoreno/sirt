@@ -38,7 +38,7 @@ csibt_create = {
     if (idIdea == 0) {
       Swal.fire({
         title: 'Por favor seleccione por la idea de proyecto que se asociará al comité',
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'Entendido!'
@@ -51,7 +51,7 @@ csibt_create = {
       if (horaCitacionDeLaIdea == "") {
         Swal.fire({
           title: 'Por favor seleccione la hora que se presentará la idea de proyecto',
-          type: 'warning',
+          icon: 'warning',
           showCancelButton: false,
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Entendido!'
@@ -83,7 +83,7 @@ csibt_create = {
             Swal.fire({
               title: 'Error!',
               text: 'La idea de proyecto ya está asociada al comité!',
-              type: 'warning',
+              icon: 'warning',
               confirmButtonText: 'Cool'
             })
           } else if (response.data == 2) {
@@ -93,7 +93,7 @@ csibt_create = {
               position: 'top-end',
               showConfirmButton: false,
               timer: 3000,
-              type: 'success',
+              icon: 'success',
               title: 'La idea de proyecto se asoció con éxito al comité'
             })
             reInitCamposDeLaIdea()
@@ -145,7 +145,7 @@ csibt_create = {
           position: 'top-end',
           showConfirmButton: false,
           timer: 3000,
-          type: 'success',
+          icon: 'success',
           title: 'La idea de proyecto se eliminó con éxito del comité'
         })
       }

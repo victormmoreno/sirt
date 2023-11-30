@@ -231,7 +231,7 @@ function detallesDeUnaIntervencion(id){
     Swal.fire({
       title: '¿Desea eliminar la Intervención a Empresa?',
       text: "Al hacer esto, todo lo relacionado con esta Intervención a Empresa será eliminado de la base de datos, eso incluye usos de infraestructura y los archivos subidos al servidor!",
-      type: 'warning',
+      icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',

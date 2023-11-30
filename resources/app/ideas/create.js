@@ -49,7 +49,7 @@ function consultarEmpresaTecnoparque() {
         Swal.fire({
             title: 'Advertencia!',
             text: "El nit de la empresa debe tener entre 9 y 13 dígitos!",
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -59,7 +59,7 @@ function consultarEmpresaTecnoparque() {
           Swal.fire({
             title: 'Advertencia!',
             text: "Digite el nit de la empresa!",
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -123,7 +123,7 @@ function asociarSedeAIdeaProyecto(sede_id) {
         position: 'top-end',
         showConfirmButton: false,
         timer: 1500,
-        type: 'success',
+        icon: 'success',
         title: 'La sede '+response.sede.nombre_sede+' se asoció a la idea de proyecto!'
     });
     },
@@ -172,7 +172,7 @@ function asociarSedeAIdeaProyecto(sede_id) {
         '<button type="button" role="button" tabindex="0" class="btnModalIdeaCancelar swal2-cancelar-custom">' + 'Cancelar' + '</button>',
     showCancelButton: false,
     showConfirmButton: false,
-    type: 'warning',
+    icon: 'warning',
     })
   }
 
@@ -187,7 +187,7 @@ function asociarSedeAIdeaProyecto(sede_id) {
         '<button type="button" role="button" tabindex="0" class="btnModalIdeaCancelar swal2-cancelar-custom">' + 'Cancelar' + '</button>',
     showCancelButton: false,
     showConfirmButton: false,
-    type: 'warning',
+    icon: 'warning',
     })
   }
 
@@ -365,7 +365,7 @@ function mensajesIdeaCreate(data) {
       Swal.fire({
           title: 'Registro Exitoso',
           text: "La idea de proyecto ha sido registrada satisfactoriamente",
-          type: 'success',
+          icon: 'success',
           showCancelButton: false,
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'
@@ -377,7 +377,7 @@ function mensajesIdeaCreate(data) {
   if (data.state == 'no_registro') {
       Swal.fire({
           title: 'La idea de proyecto no se ha registrado, por favor inténtalo de nuevo',
-          type: 'warning',
+          icon: 'warning',
           showCancelButton: false,
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'
@@ -390,7 +390,7 @@ function mensajesIdeaUpdate(data) {
       Swal.fire({
           title: 'Modificación Exitosa',
           text: "La idea de proyecto ha sido modificada satisfactoriamente",
-          type: 'success',
+          icon: 'success',
           showCancelButton: false,
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'
@@ -402,7 +402,7 @@ function mensajesIdeaUpdate(data) {
   if (data.state == 'no_update') {
       Swal.fire({
           title: 'La idea de proyecto no se ha modificado, por favor inténtalo de nuevo',
-          type: 'warning',
+          icon: 'warning',
           showCancelButton: false,
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'

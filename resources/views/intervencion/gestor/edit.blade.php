@@ -172,7 +172,7 @@
         Swal.fire({
           title: 'Advertencia!',
           text: "Al cerrar la articulación con el código {{$articulacion->codigo_articulacion}}, ten en cuenta que no podrás realizar ningún cambio una vez cerrada la articulación!",
-          type: 'warning',
+          icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
@@ -212,7 +212,7 @@
             Swal.fire({
               title: 'Advertencia!',
               html: 'Estas ingresando mal los datos.' + errores,
-              type: 'warning',
+              icon: 'warning',
               showCancelButton: false,
               confirmButtonColor: '#3085d6',
               confirmButtonText: 'Ok'
@@ -222,7 +222,7 @@
             Swal.fire({
               title: 'Modificación Errónea',
               text: 'La articulación no se ha modificado, por favor inténtalo de nuevo',
-              type: 'error',
+              icon: 'error',
               showCancelButton: false,
               confirmButtonColor: '#3085d6',
               confirmButtonText: 'Ok'
@@ -231,7 +231,7 @@
             Swal.fire({
               title: '<b>Modificación Exitosa</b>',
               html: "La articulación <b>{{$articulacion->codigo_articulacion}}</b> ha sido modificada satisfactoriamente",
-              type: 'success',
+              icon: 'success',
               showCancelButton: false,
               confirmButtonColor: '#3085d6',
               confirmButtonText: 'Ok'
@@ -262,7 +262,7 @@
           position: 'top-end',
           showConfirmButton: false,
           timer: 3000,
-          type: 'success',
+          icon: 'success',
           title: 'El nit de la empresa con la que se realizará la articulación es: ' + respuesta.detalles.nit
         })
       })

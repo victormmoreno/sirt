@@ -4,7 +4,7 @@ $(document).on('submit', 'form#formComiteAsignarCreate', function (event) {
         title: '¿Está seguro(a) de guardar esta información?',
         text: "No podrás revertir estos cambios!",
         // text: "Debes tener en cuenta mientras el dinamizador no asigne las ideas de proyectos a los expertos puedes cambiar esta información",
-        type: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -27,7 +27,7 @@ function confirmacionDuplicidad(e, route){
     Swal.fire({
     title: '¿Está seguro(a) de duplicar esta idea de proyecto?',
     text: "Debes tener en cuenta que a partir de esta idea se va a registrar mas de un TRL.",
-    type: 'warning',
+    icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
@@ -38,7 +38,7 @@ function confirmacionDuplicidad(e, route){
         Swal.fire({
             title: 'Verificación. ¿Está seguro(a) de duplicar esta idea de proyecto?',
             text: "Esta acción no se podrá revertir.",
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
@@ -81,7 +81,7 @@ function mensajesComiteAsignarCreate(data) {
         Swal.fire({
             title: 'Registro Exitoso',
             text: "La asignación de ideas de proyecto del comité ha sido registrada satisfactoriamente",
-            type: 'success',
+            icon: 'success',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'
@@ -93,7 +93,7 @@ function mensajesComiteAsignarCreate(data) {
     if (data.state == 'no_registro') {
         Swal.fire({
             title: 'La asignación de ideas de proyecto del comité no se ha registrado, por favor inténtalo de nuevo',
-            type: 'warning',
+            icon: 'warning',
             showCancelButton: false,
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Ok'

@@ -36,7 +36,7 @@ $(document).on('submit', 'form#formSearchAsesorie', function (event) {
                     Swal.fire({
                         title: 'Registro Erróneo',
                         html: "Estas ingresando mal los datos. ",
-                        type: 'error',
+                        icon: 'error',
                         showCancelButton: false,
                         confirmButtonColor: '#3085d6',
                         confirmButtonText: 'Ok'

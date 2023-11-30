@@ -6,7 +6,7 @@ function eliminarEdtPorId_event(id, event) {
   Swal.fire({
     title: '¿Desea eliminar la edt?',
     text: "Al hacer esto, todo lo relacionado con esta edt será eliminado de la base de datos, eso incluye usos de infraestructura y los archivos subidos al servidor!",
-    type: 'warning',
+    icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#d33',
     cancelButtonColor: '#3085d6',
@@ -147,7 +147,7 @@ function verEntidadesDeUnaEdt(id) {
         Swal.fire({
           title: 'Ups!!',
           text: "No se encontraron empresas asociadas a esta Edt!",
-          type: 'error',
+          icon: 'error',
           showCancelButton: false,
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok'
