@@ -292,7 +292,7 @@ function sendReversarProyecto(id, fase) {
         success: function (data) {
             Swal.fire({
                 title: data.msg,
-                type: data.type_alert,
+                icon: data.type_alert,
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',

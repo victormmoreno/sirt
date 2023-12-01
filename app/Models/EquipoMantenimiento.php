@@ -28,7 +28,7 @@ class EquipoMantenimiento extends Model
      */
     protected $casts = [
         'equipo_id'                 => 'integer',
-        'ultimo_anio_mantenimiento' => 'year',
+        'ultimo_anio_mantenimiento' => 'integer',
         'valor_mantenimiento'       => 'string',
     ];
 

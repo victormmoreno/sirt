@@ -9,7 +9,7 @@
     <h6 class="right-align grey-text">Generado: {{ Carbon\Carbon::now() }}</h6>
     <center>
         <p class="z-depth-3">
-            <img src="http://drive.google.com/uc?export=view&id=1QLkYJuTk4JaT9nqHF7Rw6eF5p0G3or4C" class="img-responsive"
+            <img src="{{asset('img/logonacional_Negro.png')}}" class="img-responsive"
                 width="342" height="89">
         </p>
     </center>

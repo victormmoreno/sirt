@@ -245,7 +245,7 @@ function pintarMensajeIdeaForm(title, text, type) {
     Swal.fire({
         title: title,
         html: text,
-        type: type,
+        icon: type,
         showCancelButton: false,
         confirmButtonColor: '#3085d6',
         confirmButtonText: 'Ok'

@@ -129,15 +129,13 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="1" rowspan="2">Fecha de la Asesoría y uso</td>
-                <td colspan="1" rowspan="2">Horas de Asesoria Directa</td>
-                <td colspan="1" rowspan="2">Horas de Asesoria Indirecta</td>
-                <td colspan="1" rowspan="2">Equipos</td>
-                <td colspan="1" rowspan="2">Materiales de Formación</td>
-                <td colspan="2" rowspan="2">Descripción</td>
-                <td colspan="1" rowspan="2">Funcionario</td>
-            </tr>
-            <tr>
+                <td colspan="1">Fecha de la Asesoría y uso</td>
+                <td colspan="1">Horas de Asesoria Directa</td>
+                <td colspan="1">Horas de Asesoria Indirecta</td>
+                <td colspan="1">Equipos</td>
+                <td colspan="1">Materiales de Formación</td>
+                <td colspan="2">Descripción</td>
+                <td colspan="1">Funcionario</td>
             </tr>
                 @forelse ($data->asesorias->sortBy('fecha')->values()->all() as $value)
                 <tr>

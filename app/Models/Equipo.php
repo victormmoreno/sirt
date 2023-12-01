@@ -49,7 +49,7 @@ class Equipo extends Model
         'marca'               => 'string',
         'costo_adquisicion'   => 'string',
         'vida_util'           => 'integer',
-        'anio_compra'         => 'year',
+        'anio_compra'         => 'integer',
         'horas_uso_anio'      => 'integer',
     ];
 

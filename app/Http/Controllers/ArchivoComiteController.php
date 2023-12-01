@@ -40,7 +40,7 @@ class ArchivoComiteController extends Controller
                 return back();
             }
             $path = str_replace('storage', 'public', $ruta->ruta);
-            return Storage::download($path);
+            return Storage::response($path);
         } catch (\Exception $e) {
             return abort(404, $e->getMessage());
         }

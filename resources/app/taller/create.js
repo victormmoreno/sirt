@@ -63,7 +63,7 @@ function mensajesEntrenamientoCreate(data) {
     Swal.fire({
       title: data.title,
       html: data.msg,
-      type: data.type,
+      icon: data.type,
       showCancelButton: false,
       confirmButtonColor: '#3085d6',
       confirmButtonText: 'Ok'

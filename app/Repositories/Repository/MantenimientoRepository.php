@@ -34,7 +34,7 @@ class MantenimientoRepository
             DB::rollback();
             return [
                 'state' => false,
-                'msj' => $e->getPrevious()->getMessage(),
+                'msj' => $e->getMessage(),
                 'title' => 'Registro erróneo'
             ];
         }

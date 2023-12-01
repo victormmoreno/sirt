@@ -49,7 +49,7 @@ class Nodo extends Model
         'direccion'   => 'string',
         'telefono'    => 'string',
         'extension'    => 'string',
-        'anho_inicio' => 'year',
+        'anho_inicio' => 'date:Y',
     ];
     public function articuladores()
     {

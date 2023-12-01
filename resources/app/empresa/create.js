@@ -66,7 +66,7 @@ $(document).on('submit', 'form#formEditCompany', function (event) {
                 Swal.fire({
                     title: data.title,
                     html: data.msg,
-                    type: data.type,
+                    icon: data.type,
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok'
@@ -105,7 +105,7 @@ $(document).on('submit', 'form#formEditCompanyHq', function (event) {
                 Swal.fire({
                     title: data.title,
                     html: data.msg,
-                    type: data.type,
+                    icon: data.type,
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok'
@@ -144,7 +144,7 @@ $(document).on('submit', 'form#formAddCompanyHq', function (event) {
                 Swal.fire({
                     title: data.title,
                     html: data.msg,
-                    type: data.type,
+                    icon: data.type,
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok'
@@ -183,7 +183,7 @@ $(document).on('submit', 'form#formEditResponsable', function (event) {
                 Swal.fire({
                     title: data.title,
                     html: data.msg,
-                    type: data.type,
+                    icon: data.type,
                     showCancelButton: false,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Ok'

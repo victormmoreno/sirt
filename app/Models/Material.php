@@ -48,12 +48,12 @@ class Material extends Model
         'categoria_material_id' => 'integer',
         'presentacion_id'       => 'integer',
         'medida_id'             => 'integer',
-        // 'fecha'                 => 'date:Y-m-d',
+        'fecha'                 => 'date:Y-m-d',
         'codigo_material'       => 'string',
         'nombre'                => 'string',
         'cantidad'              => 'float',
         'valor_compra'          => 'float',
-        'proveedor'             => 'sgtring',
+        'proveedor'             => 'string',
         'marca'                 => 'string',
     ];
 

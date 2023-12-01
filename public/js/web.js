@@ -159,7 +159,7 @@ $(document).on("submit", "form#formRegisterUser", function(event) {
             if (data.state == "error" && data.url == false) {
                 Swal.fire({
                     title: "Registro Erróneo, por favor inténtalo de nuevo",
-                    type: "error",
+                    icon: "error",
                     showCancelButton: false,
                     confirmButtonColor: "#3085d6",
                     confirmButtonText: "Ok"
@@ -169,7 +169,7 @@ $(document).on("submit", "form#formRegisterUser", function(event) {
                 Swal.fire({
                     title: "Registro Exitoso",
                     icon: "success",
-                    type: "success",
+                    icon: "success",
                     html: data.message,
                     showCancelButton: false,
                     confirmButtonColor: "#3085d6",

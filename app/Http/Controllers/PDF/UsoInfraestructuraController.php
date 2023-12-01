@@ -5,7 +5,7 @@ namespace App\Http\Controllers\PDF;
 use App\Http\Controllers\Controller;
 use App\Models\Articulation;
 use App\Repositories\Repository\{ProyectoRepository};
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 
 class UsoInfraestructuraController extends Controller
 {
