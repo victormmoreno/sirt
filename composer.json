@@ -35,7 +35,7 @@
     },
     "require-dev": {
         "filp/whoops": "^2.15.2",
-        "fzaninotto/faker": "^1.9.2",
+        "fakerphp/faker": "^1.9.1",
         "mockery/mockery": "^1.6.5",
         "nunomaduro/collision": "^7.0",
         "phpunit/phpunit": "^10.0"

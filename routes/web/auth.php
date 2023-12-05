@@ -6,7 +6,7 @@ Route::get('/home', 'HomeController@index')->name('home')->middleware(['disablep
 // Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
 // Route::post('login', 'Auth\LoginController@login');
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login.form');
-Route::post('login', 'Auth\LoginController@authenticate')->name('login');
+Route::post('login', 'Auth\LoginController@login')->name('login');
 
 Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 

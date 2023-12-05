@@ -4,10 +4,9 @@ namespace App\Http\Traits\ExcelTrait;
 
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
-trait createDrawingsExcel
+trait CreateDrawingsExcel
 {
-
-	public function drawings()
+    public function drawings()
     {
         $drawing = new Drawing();
         $drawing->setName('Logo Tecnoparque');
