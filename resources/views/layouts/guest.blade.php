@@ -8,7 +8,7 @@
         {{ config('app.name') }} | @yield('meta-title', config('app.name'))
     </title>
     <link href="{{ asset('css/libs.css') }}" rel="stylesheet" />
-    <link href="{{ asset('sweetalert2/sweetalert2.css') }}" rel="stylesheet" />
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'>
     <link href="{{ asset('img/web.svg') }}" rel="shortcut icon" type="image/x-icon" />
     <meta name="theme-color" content="#39A900" />
     <meta name="title" content="@yield('meta-title', config('app.name'))" />
@@ -124,10 +124,12 @@
     <script>
         const host_url = "{{ config('app.url') }}";
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/libs.js') }}"></script>
     <script src="{{ asset('js/web.js') }}"></script>
-    @include('sweetalert::alert')
+    
+    {{-- @include('sweetalert::alert')       --}}
     @stack('script')
 </body>
 

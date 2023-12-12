@@ -169,7 +169,6 @@ $(document).on("submit", "form#formRegisterUser", function(event) {
                 Swal.fire({
                     title: "Registro Exitoso",
                     icon: "success",
-                    icon: "success",
                     html: data.message,
                     showCancelButton: false,
                     confirmButtonColor: "#3085d6",
