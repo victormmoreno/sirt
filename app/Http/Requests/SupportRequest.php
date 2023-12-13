@@ -13,7 +13,7 @@ class SupportRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -28,7 +28,7 @@ class SupportRequest extends FormRequest
             'txtasunto' => 'required|min:1|max:200',
             'txtemail' => 'required|email|min:1|max:100',
             'txtmensaje' => 'required|min:1|max:60000',
-            'filedocument' => 'max:50000|mimes:jpeg,png,jpg,docx,doc,pdf,xlsl,xlsx,xls',
+            'filedocument' => 'size:5000|max:50000|mimes:jpeg,png,jpg,docx,doc,pdf,xlsl,xlsx,xls',
         ];
     }
 
@@ -52,7 +52,8 @@ class SupportRequest extends FormRequest
             'txtmensaje.min'      => 'El mensaje debe ser de al menos :min caracter.',
             'txtmensaje.max'      => 'El mensaje no debe ser mayor a :max caracter(es).',
             'filedocument.max'      => 'El archivo no debe ser mayor que :max kilobytes.',
-            'filedocument.mimes'      => 'El archivo debe ser un archivo con formato: :values.'
+            'filedocument.mimes'      => 'El archivo debe ser un archivo con formato: :values.',
+            'filedocument.size'      => 'El archivo no debe ser mayor que :size kilobytes.',
         ];
     }
 }

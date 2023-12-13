@@ -12,7 +12,7 @@ use App\Http\Controllers\CostoController;
 class PdfProyectoController extends Controller
 {
     public $costoController;
-    
+
     public function __construct(CostoController $costoController)
     {
         $this->costoController = $costoController;

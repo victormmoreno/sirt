@@ -5,7 +5,7 @@ namespace App\Repositories\Repository\ProfileRepository;
 use App\Models\Eps;
 use App\Models\Ocupacion;
 use App\User;
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProfileRepository
 {
