@@ -29,7 +29,9 @@ class UserSearchRequest extends FormRequest
         return [
             'txttype_search' => ['required', Rule::in(['1', '2'])],
             'txtsearch_user' => Rule::requiredIf(
-                isset(request()->txttype_search) && request()->txttype_search == 1 ? 'required|digits_between:6,11|numeric' : 'required|email'
+                function(){
+                    return isset(request()->txttype_search) && request()->txttype_search == 1 ? 'required|digits_between:6,11|numeric' : 'required|email';
+                }
             ),
         ];
     }

@@ -129,8 +129,11 @@ class User extends Authenticatable implements JWTSubject,
         'email_verified_at'    => 'datetime',
         'fechanacimiento'      => 'date:Y-m-d',
         'fechanacimiento'      => 'date:Y-m-d',
+        'fecha_terminacion'    => 'date:Y-m-d',
         'ultimo_login'      => 'date:Y-m-d',
         'informacion_user'  => 'array',
+        'informacion_user_completed_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     public function scopeInfoUserBuilder($query)

@@ -65,13 +65,14 @@
         }
 
         .certificad{
-            margin: 0px 35px;
+            margin: 0px 140px 0px 40px;
         }
 
         .center,
         .center-align {
             text-align: center;
             align-content: center;
+            margin-right: 20px;
 
         }
         .page:after { content: counter(page, upper-roman); }
@@ -306,20 +307,19 @@
         .promotion {
             background-color: #ffffff;
             border: 2px dashed #9ba2ab;
-            margin: 0;
             margin-bottom: 25px;
             margin-top: 25px;
-            padding: 24px;
+            padding: 18px;
             width: 100%;
-            -premailer-cellpadding: 0;
-            -premailer-cellspacing: 0;
-            -premailer-width: 100%;
         }
 
         .title-date{
+            margin-top: -60px;
+            margin-right: 37px;
             text-align: right;
-            padding-top: -50px;
-            font-size: 12px;
+
+            padding-top: -20px;
+            font-size: 10px;
         }
 
         .title-date-rotate {
@@ -402,7 +402,7 @@
             no requieren intermediarios.
         </p>
         <div class="footer">
-            <img class="image-footer-left" src="{{asset('img/logo-tecnoparque-green.svg')}}"/>
+            <img class="image-footer-left" src="{{asset('img/logo-sirt-green.svg')}}"/>
             <img class="image-footer-right" src="{{asset('img/sennova.png')}}"/>
             <p class="center">
                 {{config('app.url')}}
