@@ -201,6 +201,14 @@ class Proyecto extends Model
     }
 
     /**
+     * Get all of the tag's proyecto.
+     */
+    public function tags()
+    {
+        return $this->morphMany(Taggable::class, 'taggable');
+    }
+
+    /**
      * Relación muchos a muchos con la tabla de talentos
      * @return Eloquent
      * @author dum

@@ -247,6 +247,21 @@ Route::group(
 );
 
 /**
+ * Route group para el módulo visitantes
+ */
+Route::group(
+    [
+        'prefix'     => 'tag',
+        'middleware' => ['auth'],
+    ],
+    function () {
+        Route::get('/', 'TagController@index')->name('tag');
+        Route::get('/create', 'TagController@create')->name('tag.create');
+        Route::post('/', 'TagController@store')->name('tag.store');
+    }
+);
+
+/**
  * Route group para el módulo de ingresos de visitantes
  */
 Route::group(

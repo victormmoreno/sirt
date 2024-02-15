@@ -24,6 +24,7 @@ use App\Models\Entrenamiento;
 use App\Models\Comite;
 use App\Models\IngresoVisitante;
 use App\Models\Visitante;
+use App\Models\Tag;
 use App\Policies\CostoAdministrativo\CostoAdministrativoPolicy;
 use App\Policies\Equipo\EquipoPolicy;
 use App\Policies\LineaTecnologica\LineaTecnologicaPolicy;
@@ -45,6 +46,7 @@ use App\Policies\TallerPolicy;
 use App\Policies\ComitePolicy;
 use App\Policies\IngresoVisitantePolicy;
 use App\Policies\VisitantePolicy;
+use App\Policies\TagPolicy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -81,6 +83,7 @@ class AuthServiceProvider extends ServiceProvider
         Comite::class => ComitePolicy::class,
         IngresoVisitante::class => IngresoVisitantePolicy::class,
         Visitante::class => VisitantePolicy::class,
+        Tag::class => TagPolicy::class,
     ];
 
     /**
