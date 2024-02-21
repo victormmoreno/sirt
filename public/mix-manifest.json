@@ -1,3 +1,11 @@
 {
-    "/js/app.js": "/js/app.js"
+    "/js/app.js": "/js/app.js?id=3eec3953b55a077f4163",
+    "/js/app.min.js": "/js/app.min.js?id=3eec3953b55a077f4163",
+    "/css/libs.css": "/css/libs.css?id=087fcd6323a8c4d87247",
+    "/css/libs.min.css": "/css/libs.min.css?id=087fcd6323a8c4d87247",
+    "/js/libs.js": "/js/libs.js?id=92203340976f691f62fc",
+    "/js/libs.min.js": "/js/libs.min.js?id=92203340976f691f62fc",
+    "/js/app2.js": "/js/app2.js?id=f26e25a6fc815bd08191",
+    "/js/app2.min.js": "/js/app2.min.js?id=f26e25a6fc815bd08191",
+    "/js/web.js": "/js/web.js?id=43a9f0874e0b15a7d5d4"
 }
