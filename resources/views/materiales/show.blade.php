@@ -171,6 +171,14 @@
                                                                                {{$material->proveedor}}
                                                                             </p>
                                                                         </li>
+                                                                        <li class="collection-item">
+                                                                            <span class="title cyan-text text-darken-3">
+                                                                                Estado
+                                                                            </span>
+                                                                            <p>
+                                                                               {{$material == true ? 'Habilitado' : 'Inhabilitado'}}
+                                                                            </p>
+                                                                        </li>
                                                                     </ul>
                                                                 </div>
                                                             </div>
