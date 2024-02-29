@@ -201,6 +201,22 @@ class Proyecto extends Model
     }
 
     /**
+     * Get all of the tag's proyecto.
+     */
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
+
+    public function SelectedTags()
+    {
+        $selected_tags = $this->tags()->selectRaw('1 as tagged, tags.*')->get();
+        $arr_tag = $selected_tags->pluck('id')->toArray();
+        $tags = Tag::selectRaw('0 as tagged, tags.*')->whereNotIn('id', $arr_tag)->get();
+        return $selected_tags->merge($tags);
+    }
+
+    /**
      * Relación muchos a muchos con la tabla de talentos
      * @return Eloquent
      * @author dum

@@ -19092,6 +19092,8 @@ h5.breadcrumbs-header {
     height: 57px;
 }
 
-
-
+label.btn:not(.btn-flat) { 
+  background-color: var(--primary);
+  color: #333;
+}
 

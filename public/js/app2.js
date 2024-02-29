@@ -11271,3 +11271,116 @@ let support ={
         })
     }
 }
+
+function consultarTagsTecnoparque(type) {
+    $('#tags_table').dataTable().fnDestroy();
+    let data = {
+      type: type,
+    }
+    $('#tags_table').DataTable({
+      language: {
+        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+      },
+      processing: true,
+      serverSide: true,
+      order: [ 0, 'desc' ],
+      ajax:{
+        url: host_url + "/tag/tagsList?" + $.param(data),
+        type: "get",
+      },
+      // ajax:{
+      //   url: host_url + "/tag/tagsList",
+      //       data: function (data) {
+      //           data.type = type
+      //       }
+      //   },
+      columns: [
+        {
+          width: '15%',
+          data: 'type',
+          name: 'type',
+        },
+        {
+          width: '40%',
+          data: 'name',
+          name: 'name',
+        },
+        {
+          data: 'state',
+          name: 'state',
+        },
+        {
+          data: 'edit',
+          name: 'edit',
+          orderable: false
+        },
+        {
+          data: 'delete',
+          name: 'delete',
+          orderable: false
+        },
+      ],
+    });
+  }
+$(document).on('submit', 'form#frmEtiquetas_Create', function (event) {
+    $('button[type="submit"]').attr('disabled', 'disabled');
+    event.preventDefault();
+    var form = $(this);
+    var data = new FormData($(this)[0]);
+    var url = form.attr("action");
+    ajaxSendFormTag(form, data, url);
+});
+
+function ajaxSendFormTag(form, data, url) {
+    $.ajax({
+        type: form.attr('method'),
+        url: url,
+        data: data,
+        cache: false,
+        contentType: false,
+        dataType: 'json',
+        processData: false,
+        success: function (data) {
+            $('button[type="submit"]').removeAttr('disabled');
+            $('.error').hide();
+            printErroresFormulario(data);
+            mensajesTagForm(data);
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            alert("Error: " + errorThrown);
+        }
+    });
+};
+
+function mensajesTagForm(data) {
+    console.log(data);
+    let title = "error";
+    let text = "error";
+    let type = "error";
+    title = data.title;
+    text = data.msg;
+    type = data.type;
+    
+    if (data.state != 'error_form') {
+        Swal.fire({
+            title: title,
+            html: text,
+            type: type,
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok'
+        });
+    }
+    
+    if (data.state == true) {
+        setTimeout(function () {
+            window.location.href = data.url;
+        }, 1500);
+    }
+
+    // if (data.state == 'update') {
+    //     setTimeout(function () {
+    //         window.location.href = data.url;
+    //     }, 5000);
+    // }
+};

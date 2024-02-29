@@ -3,7 +3,7 @@
 namespace App\Repositories\Repository;
 
 
-use App\Models\{Proyecto, Entidad, Fase, ControlNotificaciones, Movimiento, Role, Idea, EstadoIdea, Sede, GrupoInvestigacion};
+use App\Models\{Proyecto, Entidad, Fase, ControlNotificaciones, Movimiento, Role, Idea, EstadoIdea, Sede, GrupoInvestigacion, Tag};
 use Illuminate\Support\Facades\{DB, Notification, Storage, Session};
 use App\Notifications\Proyecto\{ProyectoAprobarFase, ProyectoSuspendidoAprobado, ProyectoNoAprobarFase, ProyectoEjecucion};
 use Carbon\Carbon;
@@ -623,6 +623,10 @@ class ProyectoRepository extends Repository
             $proyecto->objetivos_especificos->get(3)->update([
                 'objetivo' => request()->txtobjetivo_especifico4
             ]);
+
+            $tags = request()->tags;
+            $tags = Tag::whereIn('id', $tags)->pluck('id');
+            $proyecto->tags()->sync($tags);
 
             $proyecto->users_propietarios()->detach();
             $proyecto->sedes()->detach();
@@ -1447,6 +1451,10 @@ class ProyectoRepository extends Repository
             $proyecto->objetivos_especificos()->create([
                 'objetivo' => request()->txtobjetivo_especifico4
             ]);
+
+            $tags = request()->tags;
+            $tags = Tag::whereIn('id', $tags)->pluck('id');
+            $proyecto->tags()->sync($tags);
 
             $proyecto->users_propietarios()->attach(request()->propietarios_user);
             $proyecto->sedes()->attach(request()->propietarios_sedes);
