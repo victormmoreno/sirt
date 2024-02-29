@@ -28,7 +28,7 @@
                 </div>
                 <div class="divider"></div>
                 <form id="frmEtiquetas_Create" action="{{route('tag.store')}}" method="POST">
-                @include('tags.forms.create', [
+                @include('tags.forms.form', [
                 'btnText' => 'Guardar'])
                 </form>
                 </div>

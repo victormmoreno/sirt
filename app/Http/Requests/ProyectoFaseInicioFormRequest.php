@@ -34,6 +34,7 @@ class ProyectoFaseInicioFormRequest extends FormRequest
             'txttipo_economianaranja' => Rule::requiredIf(isset(request()->txteconomia_naranja)) . '|max:100',
             'txttipo_discapacitados' => Rule::requiredIf(isset(request()->txtdirigido_discapacitados)) . '|max:100',
             'txtnom_act_cti' => Rule::requiredIf(isset(request()->txtarti_cti)) . '|max:100',
+            'tags' => 'required',
             'talentos' => 'required',
             'radioTalentoLider' => 'required',
             'txtobjetivo' => 'required|max:500',
@@ -84,6 +85,8 @@ class ProyectoFaseInicioFormRequest extends FormRequest
             'txtnom_act_cti.required' => 'El nombre del actor CT+i debe ser obligatorio.',
             // 'txtnom_act_cti.min' => 'El nombre del actor CT+i debe ser mínimo de 5 carácteres.',
             'txtnom_act_cti.max' => 'El nombre del actor CT+i debe ser máximo de 100 carácteres.',
+            // Mensaje de error para las etiquetas
+            'tags.required' => 'Se debe seleccionar por lo menos una etiqueta.',
             // Mensajes para el input de talentos
             'talentos.required' => 'Debe asociar por lo menos un talento al proyecto.',
             // Mensajes para el input radioTalentoLider

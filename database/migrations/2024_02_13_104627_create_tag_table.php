@@ -17,10 +17,10 @@ class CreateTagTable extends Migration
             $table->bigIncrements('id');
 
             $table->string('name');
+            $table->string('description')->nullable();
             $table->string('slug');
             $table->string('type')->nullable();
             $table->boolean('state');
-            $table->json('options');
             
             $table->timestamps();
 
@@ -29,25 +29,13 @@ class CreateTagTable extends Migration
             $table->index('type');
         });
 
-        Schema::create('selected_tags', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('tag_id');
-            $table->foreign('tag_id')
-            ->references('id')->on('tags')
-            ->onDelete('no action')
-            ->onUpdate('no action');
-            $table->json('response');
-            
-            $table->timestamps();
-        });
-
         Schema::create('taggables', function (Blueprint $table) {
-            $table->unsignedBigInteger('selected_tag_id');
+            $table->unsignedBigInteger('tag_id');
             $table->morphs('taggable');
             
-            $table->unique(['selected_tag_id', 'taggable_id', 'taggable_type']);
-            $table->foreign('selected_tag_id')
-            ->references('id')->on('selected_tags')
+            $table->unique(['tag_id', 'taggable_id', 'taggable_type']);
+            $table->foreign('tag_id')
+            ->references('id')->on('tags')
             ->onDelete('no action')
             ->onUpdate('no action');
         });

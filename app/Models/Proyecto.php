@@ -205,7 +205,15 @@ class Proyecto extends Model
      */
     public function tags()
     {
-        return $this->morphMany(Taggable::class, 'taggable');
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
+
+    public function SelectedTags()
+    {
+        $selected_tags = $this->tags()->selectRaw('1 as tagged, tags.*')->get();
+        $arr_tag = $selected_tags->pluck('id')->toArray();
+        $tags = Tag::selectRaw('0 as tagged, tags.*')->whereNotIn('id', $arr_tag)->get();
+        return $selected_tags->merge($tags);
     }
 
     /**

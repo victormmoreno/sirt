@@ -12,10 +12,10 @@ class Tag extends Model
 
     protected $fillable = [
         'name',
+        'description',
         'slug',
         'type',
-        'state',
-        'options'
+        'state'
     ];
 
     /**
@@ -35,5 +35,53 @@ class Tag extends Model
     {
         return self::IS_INACTIVE;
     }
+
+    /**
+     * Retorna la etiquetas activas
+     *
+     * @param Query $query
+     * @param string $type El tipo de modelo 
+     * @return Builder
+     * @author dum
+     **/
+    public function scopeTagsByType($query, $type)
+    {
+        return $query->where('type', $type)->orderBy('state', 'desc');
+    }
+
+    /**
+     * Retorna la etiquetas activas
+     *
+     * @param Query $query
+     * @param string $type El tipo de modelo 
+     * @return Builder
+     * @author dum
+     **/
+    public function scopeActiveTagsByType($query, $type)
+    {
+        return $query->where('state', $this->IsActive())->where('type', $type)->orderBy('name');
+    }
+
+    // /**
+    //  * Retorna la etiquetas seleccionada en un modelo
+    //  *
+    //  * @param Type $var Description
+    //  * @return type
+    //  * @throws conditon
+    //  **/
+    // public function scopeSelectedTagsModel($query, $model)
+    // {
+    //     return $query->select('tags.id', 'taggable_id AS selected')
+    //     ->join('taggables', 'taggables.')
+    //     ->where('taggable_id', $model->id)
+    //     ->orWhere('taggable_id', null)
+    //     ->orderBy('name');
+    // }
+
+    public function proyectos()
+    {
+        return $this->morphedByMany(Proyecto::class, 'taggable');
+    }
+
 
 }

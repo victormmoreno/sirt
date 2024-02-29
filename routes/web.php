@@ -255,8 +255,13 @@ Route::group(
         'middleware' => ['auth'],
     ],
     function () {
-        Route::get('/', 'TagController@index')->name('tag');
+        Route::get('/', 'TagController@index')->name('tag.index');
+        // Route::get('/index', 'TagController@index')->name('tag.index');
         Route::get('/create', 'TagController@create')->name('tag.create');
+        Route::get('/state/{id}/{state}', 'TagController@update_state')->name('tag.state');
+        Route::get('/edit/{id}', 'TagController@edit')->name('tag.edit');
+        Route::get('/tagsList', 'TagController@tagsList')->name('tag.list');
+        Route::put('/{id}', 'TagController@update')->name('tag.update');
         Route::post('/', 'TagController@store')->name('tag.store');
     }
 );
