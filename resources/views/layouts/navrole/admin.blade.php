@@ -15,6 +15,11 @@
         <i class="material-icons {{ setActiveRouteActiveIcon('costos-administrativos') }}">settings_input_svideo</i>Costos Administrativos
     </a>
 </li>
+<li class="no-padding {{setActiveRoute('tag')}}">
+    <a class="waves-effect waves-grey {{setActiveRouteActivePage('tag')}}" href="{{route('tag.index')}}" rel="canonical" title="Tags">
+        <i class="material-icons {{ setActiveRouteActiveIcon('tag') }}">bookmark</i>Etiquetas
+    </a>
+</li>
 <li class="no-padding {{setActiveRoute('lineas')}}">
     <a class="waves-effect waves-grey {{setActiveRouteActivePage('lineas')}}" href="{{route('lineas.index')}}" rel="canonical" title="Lineas Tecnológicas">
         <i class="material-icons {{ setActiveRouteActiveIcon('lineas') }}">linear_scale</i>Lineas Tecnológicas

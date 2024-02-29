@@ -35781,6 +35781,18 @@ $(document)
     $loading.closeModal();
 });
 
+$('label.btn').on('click','input', function(e){
+    e.stopPropagation();
+    $(this).attr('checked', !$(this).attr('checked'));
+    $(e.target).closest('label').toggleClass('btn-flat');
+});
+
+// function selectTag(e) {
+//     e.stopPropagation();
+//     $(this).attr('checked', !$(this).attr('checked'));
+//     $(e.target).closest('label').toggleClass('btn-flat');
+// }
+
 function printErroresFormulario(data) {
     if (data.state == 'error_form') {
         let errores = "";
