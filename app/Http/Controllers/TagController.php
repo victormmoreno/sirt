@@ -44,9 +44,9 @@ class TagController extends Controller
         })->editColumn('state', function ($data) {
             return $data->state == $data->IsActive() ? 'Activa' : 'Inactiva';
         })->editColumn('name', function ($data) {
-            return $data->name . ': ' . $data->description;
+            return '<b>'.$data->name . '</b>: ' . $data->description;
         })
-        ->rawColumns(['edit', 'delete'])->make(true);
+        ->rawColumns(['edit', 'delete', 'name'])->make(true);
     }
 
     

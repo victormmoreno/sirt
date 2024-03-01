@@ -76,6 +76,7 @@ class ProyectosExport extends FatherExport implements WithColumnWidths
         return [
             'E' => 45,
             'G' => 45,
+            'Q' => 45,
             'Z' => 45,
             'AA' => 45,
             'AB' => 45
