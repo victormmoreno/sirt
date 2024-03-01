@@ -60,6 +60,7 @@ class MaterialRepository
             'marca',
             'lt.nombre as linea'
         )
+        ->selectRaw("if(estado = true, 'Habilitado', 'Inhabilitado') as estado_material")
         ->join('nodos as n', 'n.id', '=', 'materiales.nodo_id')
         ->join('entidades as e', 'e.id', '=', 'n.entidad_id')
         ->join('tiposmateriales as tm', 'tm.id', '=', 'materiales.tipomaterial_id')
