@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Asesorie\AsesorieSearchRequest;
 use App\Models\Fase;
+use App\Models\Idea;
 use App\Models\Articulation;
 use App\Models\LineaTecnologica;
 use App\Models\Equipo;
@@ -350,6 +351,7 @@ class AsesorieSearchController extends Controller
                 ->join('medidas', 'medidas.id', 'materiales.medida_id')
                 ->where('materiales.lineatecnologica_id', $projectTalent->asesor_linea_id)
                 ->where('materiales.nodo_id', $nodeProject)
+                ->where('materiales.estado', 1)
                 ->get();
 
             $talents = User::select('users.id', 'users.documento', 'users.nombres', 'users.apellidos')
