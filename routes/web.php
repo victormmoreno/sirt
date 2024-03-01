@@ -48,6 +48,7 @@ Route::resource('equipos', 'EquipoController', [
     ]);
 
 //materiales
+Route::get('/materiales/cambiar-estado/{id}/', 'MaterialController@changeStatus')->name('material.cambiar-estado');
 Route::get('/materiales/getmaterialespornodo/{nodo}', 'MaterialController@getMaterialesPorNodo')
     ->name('material.getmaterialespornodo');
 

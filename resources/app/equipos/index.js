@@ -283,56 +283,7 @@ var equipo = {
             }
         })
     },
-    // deleteEquipo: function(id){
-    //     Swal.fire({
-    //         title: '¿Estas seguro de eliminar este equipo?',
-    //         text: "Recuerde que si lo elimina no lo podrá recuperar.",
-    //         icon: 'warning',
-    //         showCancelButton: true,
-    //         confirmButtonColor: '#3085d6',
-    //         cancelButtonColor: '#d33',
-    //         confirmButtonText: 'si, elminar equipo',
-    //         cancelButtonText: 'No, cancelar',
-    //       }).then((result) => {
-    //         if (result.value) {
-    //             let token = $("meta[name='csrf-token']").attr("content");
-    //             $.ajax(
-    //             {
-    //                 url: host_url + `/equipos/${id}`,
-    //                 type: 'DELETE',
-    //                 data: {
-    //                     "id": id,
-    //                     "_token": token,
-    //                 },
-    //                 success: function (response){
-    //                     if(response.statusCode == 200){
-    //                         Swal.fire(
-    //                             'Eliminado!',
-    //                             'El equipo ha sido eliminado satisfactoriamente.',
-    //                             'success'
-    //                         );
-    //                         location.href = response.route;
-    //                     }else if(response.statusCode == 226){
-    //                         Swal.fire(
-    //                             'No se puede elimnar!',
-    //                             response.message,
-    //                             'error'
-    //                         );
-    //                     }
-    //                 },
-    //                 error: function (xhr, textStatus, errorThrown) {
-    //                     alert("Error: " + errorThrown);
-    //                 }
-    //             });
-    //         }else if ( result.dismiss === Swal.DismissReason.cancel ) {
-    //             swalWithBootstrapButtons.fire(
-    //                 'Cancelado',
-    //                 'Tu equipo está a salvo',
-    //                 'error'
-    //             )
-    //         }
-    //     })
-    // },
+   
     changeState: function(id){
         Swal.fire({
             title: '¿Estas seguro de cambiar el estado a este equipo?',

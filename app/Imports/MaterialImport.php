@@ -48,14 +48,14 @@ class MaterialImport implements ToCollection, WithHeadingRow
             'nodo',
             'nombre',
             'fecha_de_adquisicion',
-            // 'tipo_de_material',
             'categoria',
             'presentacion',
             'medida',
             'cantidad',
             'valor_de_compra',
             'proveedor',
-            'marca'
+            'marca',
+            'estado'
         ];
         foreach ($encabezado as $key => $columna) {
             if (!isset($row[$columna])) {
@@ -64,7 +64,7 @@ class MaterialImport implements ToCollection, WithHeadingRow
             }
         }
         return true;
-        
+
     }
 
     /**
@@ -78,7 +78,7 @@ class MaterialImport implements ToCollection, WithHeadingRow
         try {
             if (!$this->validar_encabezado($rows->first())) {
                 return false;
-            } 
+            }
             foreach ($rows as $key => $row) {
                 // $fecha = Carbon::instance(Date::excelToDateTimeObject($row['fecha_de_adquisicion']));
                 if (is_numeric($row['fecha_de_adquisicion'])) {
@@ -98,6 +98,7 @@ class MaterialImport implements ToCollection, WithHeadingRow
                 $row['valor_de_compra'] = ltrim(rtrim($row['valor_de_compra']));
                 $row['proveedor'] = ltrim(rtrim($row['proveedor']));
                 $row['marca'] = ltrim(rtrim($row['marca']));
+                $row['estado'] = ltrim(rtrim($row['estado']));
 
                 if ($this->session == User::IsAdministrador()) {
                     $nodo = Nodo::select('nodos.id')->join('entidades as e', 'e.id', '=', 'nodos.entidad_id')->where('nombre', $row['nodo'])->first();
@@ -141,17 +142,17 @@ class MaterialImport implements ToCollection, WithHeadingRow
                         'nombre' => ltrim(rtrim($row['medida']))
                     ]);
                 }
-                
+
                 $validacion = $this->validaciones->validarCelda($row['presentacion'], $key, 'presentación', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
-                
+
                 $validacion = $this->validaciones->validarCelda($row['medida'], $key, 'Fecha', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
                 }
-                
+
                 $validacion = $this->validaciones->validarCelda($row['fecha_de_adquisicion'], $key, 'Fecha', $this->hoja);
                 if (!$validacion) {
                     return $validacion;
@@ -188,6 +189,12 @@ class MaterialImport implements ToCollection, WithHeadingRow
                 if (!$validacion) {
                     return $validacion;
                 }
+
+                $validacion = $this->validaciones->validarDosOpciones($row['estado'], $key, 'estado', $this->hoja, 'Habilitado', 'Inhabilitado');
+                if (!$validacion) {
+                    return $validacion;
+                }
+
 
                 $material = Material::where('codigo_material', $row['codigo_de_material'])->first();
                 $params = [
@@ -269,6 +276,7 @@ class MaterialImport implements ToCollection, WithHeadingRow
             'valor_compra'          => $row['valor_de_compra'],
             'proveedor'             => $row['proveedor'],
             'marca'                 => $row['marca'],
+            'estado'                => $row['estado'] == 'Habilitado' ? 1 : 0,
         ]);
     }
 }

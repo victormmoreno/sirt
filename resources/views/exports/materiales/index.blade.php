@@ -17,6 +17,7 @@
         <th>Valor de compra</th>
         <th>Proveedor</th>
         <th>Marca</th>
+        <th>Estado</th>
     </tr>
     </thead>
     <tbody>
@@ -34,6 +35,7 @@
             <td>{{ $material->valor_compra }}</td>
             <td>{{ $material->proveedor }}</td>
             <td>{{ $material->marca }}</td>
+            <td>{{ $material->estado_material }}</td>
           </tr>
         @endforeach
     </tbody>
