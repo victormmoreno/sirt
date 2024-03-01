@@ -17,7 +17,7 @@
 </li>
 <li class="no-padding {{setActiveRoute('tag')}}">
     <a class="waves-effect waves-grey {{setActiveRouteActivePage('tag')}}" href="{{route('tag.index')}}" rel="canonical" title="Tags">
-        <i class="material-icons {{ setActiveRouteActiveIcon('tag') }}">bookmark</i>Etiquetas
+        <i class="material-icons {{ setActiveRouteActiveIcon('tag') }}">bookmark</i>Caracterización
     </a>
 </li>
 <li class="no-padding {{setActiveRoute('lineas')}}">
