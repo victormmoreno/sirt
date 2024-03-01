@@ -321,15 +321,19 @@ class ProyectoRepository extends Repository
         $sede = Sede::class;
         $user = User::class;
         $grupo = GrupoInvestigacion::class;
+        $proyecto = Proyecto::class;
         return $this->proyectosIndicadoresSeparados_Repository()->selectRaw('GROUP_CONCAT(empresas.nit, " - ", empresas.nombre, ";") AS empresas')
         ->selectRaw('GROUP_CONCAT(up.nombres, " ",up.apellidos,";") AS personas')
         ->selectRaw('GROUP_CONCAT(gruposinvestigacion.codigo_grupo, " ", eg.nombre, ";") AS grupos')
+        ->selectRaw('GROUP_CONCAT(tag.name SEPARATOR ";") AS caracterizacion')
         ->join('propietarios', 'propietarios.proyecto_id', '=', 'proyectos.id')
         ->leftJoin('sedes', function($q) use ($sede) {$q->on('sedes.id', '=', 'propietarios.propietario_id')->where('propietarios.propietario_type', "$sede");})
         ->leftJoin('empresas', 'empresas.id', '=', 'sedes.empresa_id')
         ->leftJoin('users AS up', function($q) use ($user) {$q->on('up.id', '=', 'propietarios.propietario_id')->where('propietarios.propietario_type', "$user");})
         ->leftJoin('gruposinvestigacion', function($q) use ($grupo) {$q->on('gruposinvestigacion.id', '=', 'propietarios.propietario_id')->where('propietarios.propietario_type', "$grupo");})
         ->leftJoin('entidades AS eg', 'eg.id', '=', 'gruposinvestigacion.entidad_id')
+        ->leftJoin('taggables', function($q) use ($proyecto) {$q->on('taggables.taggable_id', '=', 'proyectos.id')->where('taggables.taggable_type', "$proyecto");})
+        ->leftJoin('tags as tag', 'tag.id', '=', 'taggables.tag_id')
         ->groupBy('proyectos.id');
     }
 

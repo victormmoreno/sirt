@@ -99,7 +99,7 @@ class TagController extends Controller
     public function create()
     {
         if(!request()->user()->can('create', Tag::class)) {
-            alert('No autorizado', 'No tienes permisos para registrar etiquetas!', 'warning')->showConfirmButton('Ok', '#3085d6');
+            alert('No autorizado', 'No tienes permisos para registrar caracterizaciones!', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
         // dd($this->types);
@@ -119,7 +119,7 @@ class TagController extends Controller
     {
 
         if(!request()->user()->can('create', Tag::class)) {
-            alert('No autorizado', 'No puedes registrar etiquetas', 'warning')->showConfirmButton('Ok', '#3085d6');
+            alert('No autorizado', 'No puedes registrar caracterizaciones', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
         $result = $this->tagRepository->store($request);

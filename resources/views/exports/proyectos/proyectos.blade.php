@@ -17,6 +17,7 @@
         <th>Mes de cierre</th>
         <th>TRL esperado</th>
         <th>TRL obtenido</th>
+        <th>Caracterización</th>
         <th>¿Recibido a través de fábrica de productividad?</th>
         <th>¿Recibido a través del área de emprendimiento SENA?</th>
         <th>¿El proyecto pertenece a la economía naranja?</th>
@@ -61,6 +62,7 @@
 
             <td>{{ $proyecto->trl_esperado }}</td>
             <td>{{ $proyecto->trl_obtenido }}</td>
+            <td>{{ $proyecto->caracterizacion }}</td>
             <td>{{ $proyecto->fabrica_productividad }}</td>
             <td>{{ $proyecto->reci_ar_emp }}</td>
             <td>{{ $proyecto->economia_naranja }}</td>

@@ -210,9 +210,9 @@ class Proyecto extends Model
 
     public function SelectedTags()
     {
-        $selected_tags = $this->tags()->selectRaw('1 as tagged, tags.*')->get();
+        $selected_tags = $this->tags()->selectRaw('1 as tagged, tags.*')->orderBy('name')->get();
         $arr_tag = $selected_tags->pluck('id')->toArray();
-        $tags = Tag::selectRaw('0 as tagged, tags.*')->whereNotIn('id', $arr_tag)->get();
+        $tags = Tag::selectRaw('0 as tagged, tags.*')->whereNotIn('id', $arr_tag)->orderBy('name')->get();
         return $selected_tags->merge($tags);
     }
 

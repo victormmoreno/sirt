@@ -26,6 +26,11 @@
         <i class="material-icons {{ setActiveRouteActiveIcon('sublineas') }}">linear_scale</i>Sublineas
     </a>
 </li>
+<li class="no-padding {{setActiveRoute('tag')}}">
+    <a class="waves-effect waves-grey {{setActiveRouteActivePage('tag')}}" href="{{route('tag.index')}}" rel="canonical" title="Tags">
+        <i class="material-icons {{ setActiveRouteActiveIcon('tag') }}">bookmark</i>Caracterización
+    </a>
+</li>
 <li class="no-padding {{setActiveRoute('proyecto')}}">
     <a href="{{ route('proyecto') }}" class="{{setActiveRouteActivePage('proyecto')}}" rel="canonical" title="Proyectos de Base Tecnológica">
         <i class="material-icons {{setActiveRouteActiveIcon('proyecto')}}">library_books</i>Proyectos

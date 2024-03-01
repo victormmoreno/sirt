@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta-title', 'Etiquetas SIRT')
+@section('meta-title', 'Caracterización SIRT')
 @section('content')
 <main class="mn-inner inner-active-sidebar">
     <div class="content">
@@ -8,13 +8,13 @@
                 <h5 class="left-align primary-text">
                     <a class="footer-text left-align " href="{{route('home')}}">
                         <i class="material-icons arrow-l left">arrow_back</i>
-                    </a>Etiquetas del SIRT
+                    </a>Caracterización del SIRT
                 </h5>
             </div>
             <div class="right right-align show-on-large hide-on-med-and-down">
                 <ol class="breadcrumbs">
                     <li><a href="{{ route('home') }}">Inicio</a></li>
-                    <li class="active">Nueva etiqueta</li>
+                    <li class="active">Nueva caracterización</li>
                 </ol>
             </div>
         </div>
@@ -24,7 +24,7 @@
             <div class="card-content">
                 <div class="row">
                 <div class="center-align">
-                    <span class="card-title center-align primary-text"><b>Nueva etiqueta</b></span>
+                    <span class="card-title center-align primary-text"><b>Nueva caracterización</b></span>
                 </div>
                 <div class="divider"></div>
                 <form id="frmEtiquetas_Create" action="{{route('tag.store')}}" method="POST">
