@@ -317,7 +317,7 @@
     </div>
 </div>
 <div class="row">
-    <h5 class="center primary-text"><i class="material-icons">bookmark</i>Etiquetas de proyecto (Seleccionar 1 o más de una)</h5>
+    <h5 class="center primary-text"><i class="material-icons">bookmark</i>Caracterización del proyecto (Seleccionar 1 o más de una)</h5>
     @if ($existe)
         @forelse ($proyecto->SelectedTags() as $tag)
             @if ($tag->tagged == 1)
@@ -328,14 +328,14 @@
                 <input type="checkbox" name="tags[]" value="{{$tag->id}}" />{{$tag->name}}</label>
             @endif
         @empty
-            <p>No hay etiquetas activas en el momento</p>
+            <p>No hay caracterizaciones activas en el momento</p>
         @endforelse
     @else
         @forelse ($tags as $tag)
             <label class="waves-effect waves-light btn btn-flat tooltipped" data-position="bottom" data-tooltip="{{$tag->description}}">
             <input type="checkbox" name="tags[]" value="{{$tag->id}}" />{{$tag->name}}</label>
         @empty
-            <p>No hay etiquetas activas en el momento</p>
+            <p>No hay caracterizaciones activas en el momento</p>
         @endforelse
     @endif
 </div>
