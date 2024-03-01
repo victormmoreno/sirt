@@ -38,7 +38,7 @@ class MaterialRepository
 
     /**
      * Consulta información de los materiales de formación
-     * 
+     *
      * @return Builder
      * @author dum
      */
@@ -60,6 +60,7 @@ class MaterialRepository
             'marca',
             'lt.nombre as linea'
         )
+        ->selectRaw("if(estado = true, 'Habilitado', 'Inhabilitado') as estado_material")
         ->join('nodos as n', 'n.id', '=', 'materiales.nodo_id')
         ->join('entidades as e', 'e.id', '=', 'n.entidad_id')
         ->join('tiposmateriales as tm', 'tm.id', '=', 'materiales.tipomaterial_id')
@@ -75,8 +76,6 @@ class MaterialRepository
     {
 
         DB::beginTransaction();
-
-        // dd($this->findLineaBySession($request));
         Material::create([
             'nodo_id'               => $this->findNodoBySession(),
             'lineatecnologica_id'   => $this->findLineaBySession($request),
@@ -97,7 +96,7 @@ class MaterialRepository
 
             DB::commit();
             return true;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             return false;
         }
@@ -112,7 +111,7 @@ class MaterialRepository
      */
     public function updateMaterial($request, $material)
     {
-       
+
         DB::beginTransaction();
 
         try {
@@ -133,7 +132,7 @@ class MaterialRepository
             ]);
             DB::commit();
             return true;
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             DB::rollback();
             throw $ex;
             return false;
@@ -173,7 +172,7 @@ class MaterialRepository
         } else {
             return request()->txtnodo_id;
         }
-        
+
 
     }
 

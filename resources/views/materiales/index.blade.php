@@ -56,7 +56,9 @@
                                 <th width="10%">Tamaño presentacion o venta/paquete</th>
                                 <th width="20%">Valor Unitario</th>
                                 <th width="20%">Valor total</th>
+                                <th width="15%">Estado</th>
                                 <th width="15%">Detalle</th>
+                                <th width="15%">Cambiar estado</th>
                             </thead>
                         </table>
                     </div>

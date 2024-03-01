@@ -28,16 +28,16 @@ var selectMaterialesPorNodo = {
                 {
                     data: 'fecha',
                     name: 'fecha',
-                    width: '20%'
+                    width: '15%'
                 },
                 {
                     data: 'nombrelinea',
                     name: 'nombrelinea',
-                    width: '30%'
+                    width: '15%'
                 },{
                     data: 'codigo_material',
                     name: 'codigo_material',
-                    width: '30%'
+                    width: '20%'
                 },
                 {
                     data: 'material',
@@ -68,13 +68,67 @@ var selectMaterialesPorNodo = {
                     width: '15%'
                 },
                 {
+                    data: 'estado_material',
+                    name: 'estado_material',
+                    width: '15%'
+                },
+                {
                     data: 'detail',
                     name: 'detail',
                     width: '15%'
-                }, ],
+                },
+                {
+                    data: 'changeStatus',
+                    name: 'changeStatus',
+                    width: '15%'
+                },  ],
             });
         }
         
     },
-    
+
+    changeStatus: function(id){
+        Swal.fire({
+            title: '¿Estas seguro de cambiar el estado a este material?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, cambiar estado',
+            cancelButtonText: 'No, cancelar',
+          }).then((result) => {
+            if (result.value) {
+                $.ajax(
+                {
+                    url: host_url + `/materiales/cambiar-estado/${id}`,
+                    type: 'GET',
+                    success: function (response){
+                        if(response.statusCode == 200){
+                            Swal.fire(
+                                'Estado cambiado!',
+                                'El material ha cambiado de estado.',
+                                'success'
+                            );
+                            location.href = response.route;
+                        }else {
+                            Swal.fire(
+                                'No se puede cambiar estado!',
+                                response.message,
+                                'error'
+                            );
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert("Error: " + errorThrown);
+                    }
+                });
+            }else if ( result.dismiss === Swal.DismissReason.cancel ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelado',
+                    'Tu material está a salvo',
+                    'error'
+                )
+            }
+        })
+    },
 }

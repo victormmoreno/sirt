@@ -128,7 +128,7 @@ class MaterialController extends Controller
 
     /**
      * Muestra el formulario para importar materiales de formación
-     * 
+     *
      * @return Response
      * @author dum
      */
@@ -255,7 +255,9 @@ class MaterialController extends Controller
     public function getMaterial($id)
     {
         if (request()->ajax()) {
-            $material = $this->getMaterialRepository()->getInfoDataMateriales()->find($id);
+            $material = $this->getMaterialRepository()
+            ->getInfoDataMateriales()
+            ->find($id);
             if ($material != null) {
                 return response()->json([
                     'material' => $material,
@@ -270,6 +272,34 @@ class MaterialController extends Controller
         }
         abort(Response::HTTP_FORBIDDEN);
     }
+
+    /**
+     * change state the specified resource in detroy.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function changeStatus(int $id)
+    {
+
+        $material = Material::findOrFail($id);
+
+        if(!request()->user()->can('edit', $material)) {
+            alert('No autorizado', 'No puedes cambiar la información de este material', 'error')->showConfirmButton('Ok', '#3085d6');
+            return back();
+        }
+
+        $material->update([
+            'estado' => $material->estado == true ? false : true
+        ]);
+
+        return response()->json([
+            'statusCode' => Response::HTTP_OK,
+            'message' => 'estado cambiado',
+            'route' => route('material.index')
+        ], Response::HTTP_OK);
+    }
+
 
     public function destroy(int $id)
     {
