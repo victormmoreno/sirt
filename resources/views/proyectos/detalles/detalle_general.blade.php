@@ -41,6 +41,18 @@
                 {{$proyecto->present()->proyectoFechaInicio()}}
             </p>
         </li>
+        @if ($proyecto->tags()->exists())
+        <li class="collection-item">
+            <span class="title black-text text-darken-3">
+                Caracterización del proyecto
+            </span>
+            <p>
+                @foreach ($proyecto->tags as $tag)
+                    <a class="waves-effect waves-light btn-flat btn-small primary-text xs tooltipped" data-position="bottom" data-tooltip="{{$tag->description}}">{{$tag->name}}</a>
+                @endforeach
+            </p>
+        </li>
+        @endif
     </ul>
 </div>
 @include('ideas.modals')

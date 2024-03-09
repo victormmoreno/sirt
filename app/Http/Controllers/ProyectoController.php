@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{AreaConocimiento, Centro, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, Fase};
+use App\Models\{AreaConocimiento, Centro, GrupoInvestigacion, Idea, Nodo, Proyecto, Sublinea, Tecnoacademia, Fase, Tag};
 use App\Repositories\Repository\{EmpresaRepository, ProyectoRepository};
 use Illuminate\Support\{Str, Facades\Session, Facades\Validator};
 use App\Http\Requests\{ProyectoFaseInicioFormRequest, ProyectoFaseCierreFormRequest};
@@ -552,7 +552,8 @@ class ProyectoController extends Controller
         return view('proyectos.create', [
             'sublineas' => $sublineas,
             'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
-            'nodos' => Nodo::SelectNodo()->get()
+            'nodos' => Nodo::SelectNodo()->get(),
+            'tags' => Tag::ActiveTagsByType(Proyecto::class)->get()
         ]);
     }
 
@@ -595,13 +596,16 @@ class ProyectoController extends Controller
             alert('No autorizado', 'No puedes ver la información de los proyectos que no haces parte', 'warning')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
+        // dd($proyecto->SelectedTags());
+        // exit;
         // dd($proyecto->asesor->experto);
         if ($proyecto->fase->nombre == Proyecto::IsInicio() || session()->get('login_role') == User::IsAdministrador()) {
             return view('proyectos.forms.views.form_inicio_view', [
                 'sublineas' => Sublinea::SubLineasDeUnaLinea($proyecto->sublinea->linea->id)->get()->pluck('nombre', 'id'),
                 'areasconocimiento' => AreaConocimiento::ConsultarAreasConocimiento()->pluck('nombre', 'id'),
                 'proyecto' => $proyecto,
-                'nodos' => Nodo::SelectNodo()->get()
+                'nodos' => Nodo::SelectNodo()->get(),
+                'tags' => Tag::ActiveTagsByType(Proyecto::class)->get()
             ]);
         } else {
             Alert::error('Error!', 'No es posible cambiar la información de la fase de inicio, el proyecto debe estar en esta fase!')->showConfirmButton('Ok', '#3085d6');

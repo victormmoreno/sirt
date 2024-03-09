@@ -317,6 +317,32 @@
     </div>
 </div>
 <div class="row">
+    <h5 class="center primary-text"><i class="material-icons">bookmark</i>Caracterización del proyecto (Seleccionar 1 o más de una)</h5>
+    @if ($existe)
+        @forelse ($proyecto->SelectedTags() as $tag)
+            @if ($tag->tagged == 1)
+                <label class="waves-effect waves-light btn tooltipped" data-position="bottom" data-tooltip="{{$tag->description}}">
+                <input type="checkbox" name="tags[]" checked value="{{$tag->id}}" />{{$tag->name}}</label>
+            @else
+                <label class="waves-effect waves-light btn btn-flat tooltipped" data-position="bottom" data-tooltip="{{$tag->description}}">
+                <input type="checkbox" name="tags[]" value="{{$tag->id}}" />{{$tag->name}}</label>
+            @endif
+        @empty
+            <p>No hay caracterizaciones activas en el momento</p>
+        @endforelse
+    @else
+        @forelse ($tags as $tag)
+            <label class="waves-effect waves-light btn btn-flat tooltipped" data-position="bottom" data-tooltip="{{$tag->description}}">
+            <input type="checkbox" name="tags[]" value="{{$tag->id}}" />{{$tag->name}}</label>
+        @empty
+            <p>No hay caracterizaciones activas en el momento</p>
+        @endforelse
+    @endif
+</div>
+<div class="row center">
+    <small id="tags-error" class="error red-text"></small>
+</div>
+<div class="row">
     <h5 class="center primary-text"><i class="material-icons">supervised_user_circle</i>Talentos que participarán en el proyecto</h5>
 </div>
 <div class="divider"></div>
