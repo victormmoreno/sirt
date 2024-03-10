@@ -36,6 +36,7 @@ class Nodo extends Model
         'telefono',
         'extension',
         'anho_inicio',
+        'estado'
     ];
 
     /**
@@ -50,6 +51,7 @@ class Nodo extends Model
         'telefono'    => 'string',
         'extension'    => 'string',
         'anho_inicio' => 'year',
+        'estado'      => 'boolean'
     ];
     public function articuladores()
     {
@@ -174,7 +176,9 @@ class Nodo extends Model
     {
         return $query->select('nodos.id', DB::raw("CONCAT('Tecnoparque ',entidades.nombre) as nodos"))
             ->join('entidades', 'entidades.id', '=', 'nodos.entidad_id')
+            ->where('nodos.estado', 1)
             ->orderBy('entidades.nombre');
+
     }
     public function scopeListNodos($query)
     {

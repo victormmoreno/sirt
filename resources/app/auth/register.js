@@ -116,7 +116,7 @@ $(document).on("submit", "form#formRegisterUser", function(event) {
             if (data.state == "success" && data.url != false) {
                 Swal.fire({
                     title: "Registro Exitoso",
-                    icon: "success",
+                    type: "success",
                     type: "success",
                     html: data.message,
                     showCancelButton: false,

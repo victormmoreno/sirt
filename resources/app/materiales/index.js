@@ -4,7 +4,7 @@ var selectMaterialesPorNodo = {
         if (!isset(nodo)) {
             nodo = 0;
         }
-        
+
         $('#materiales_table').dataTable().fnDestroy();
         if (isset(nodo)) {
             $('#materiales_table').DataTable({
@@ -84,13 +84,13 @@ var selectMaterialesPorNodo = {
                 },  ],
             });
         }
-        
+
     },
 
     changeStatus: function(id){
         Swal.fire({
             title: '¿Estas seguro de cambiar el estado a este material?',
-            icon: 'warning',
+            type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
