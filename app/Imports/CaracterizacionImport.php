@@ -41,7 +41,7 @@ class CaracterizacionImport implements ToCollection, WithHeadingRow
    
             foreach ($rows as $key => $row) {
                 $selected_tags = [];
-                // dd($row['convergencia-regional']);
+                $selected_tags[] = Tag::where('name', 'Convergencia regional')->first()->id;
                 foreach ($tags as $tag) {
                     if ($row[str_slug($tag->name, '_')] != null) {
                         $selected_tags[] = $tag->id;
