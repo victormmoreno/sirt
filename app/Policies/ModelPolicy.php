@@ -31,15 +31,16 @@ class ModelPolicy
      **/
     public function index_indicadores(User $user)
     {
-        return (bool) Str::contains(session()->get('login_role'), [$user->IsActivador(), $user->IsAdministrador(), $user->IsDinamizador(), $user->IsInfocenter(), $user->IsArticulador(), $user->IsExperto()]);
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsAuxiliar(), $user->IsActivador(), $user->IsAdministrador(), $user->IsDinamizador(), $user->IsInfocenter(), $user->IsArticulador(), $user->IsExperto()]);
     }
 
     public function showIndicadoresProyectoOptions(User $user)
     {
-        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador()) {
-            return true;
-        }
-        return false;
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsAuxiliar(), $user->IsActivador(), $user->IsAdministrador()]);
+        // if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador()) {
+        //     return true;
+        // }
+        // return false;
     }
 
     public function showIndicadoresProyectos(User $user)
@@ -47,6 +48,7 @@ class ModelPolicy
         return (bool)
                     session()->has('login_role')
                     && (
+                        (session()->get('login_role') == User::IsAuxiliar() && $user->IsAuxiliar() ) ||
                         (session()->get('login_role') == User::IsAdministrador() && $user->IsAdministrador() ) ||
                         (session()->get('login_role') == User::IsActivador() && $user->IsActivador()) ||
                         (session()->get('login_role') == User::IsDinamizador() && $user->IsDinamizador()) ||
@@ -57,10 +59,7 @@ class ModelPolicy
 
     public function showIndicadoresArticulacionOptions(User $user)
     {
-        if (session()->get('login_role') == $user->IsAdministrador() || session()->get('login_role') == $user->IsActivador()) {
-            return true;
-        }
-        return false;
+        return (bool) Str::contains(session()->get('login_role'), [$user->IsAuxiliar(), $user->IsActivador(), $user->IsAdministrador()]);
     }
 
     public function showIndicadoresArticulacions(User $user)
@@ -68,6 +67,7 @@ class ModelPolicy
         return (bool)
                     session()->has('login_role')
                     && (
+                        (session()->get('login_role') == User::IsAuxiliar() && $user->IsAuxiliar()) ||
                         (session()->get('login_role') == User::IsAdministrador() && $user->IsAdministrador()) ||
                         (session()->get('login_role') == User::IsActivador() && $user->IsActivador()) ||
                         (session()->get('login_role') == User::IsDinamizador() && $user->IsDinamizador()) ||
