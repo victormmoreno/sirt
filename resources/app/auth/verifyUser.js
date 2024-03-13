@@ -29,7 +29,7 @@ $(document).on('submit', 'form#formValidateCredentials', function (event) {
                         type: 'error',
                         position: 'top',
                         toast: true,
-                        icon: 'error',
+                        type: 'error',
                         showCancelButton: false,
                         confirmButtonColor: '#3085d6',
                         confirmButtonText: 'Ok',

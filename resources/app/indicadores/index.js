@@ -373,7 +373,6 @@ function consultarSeguimientoArticulacionDeUnNodoFases(e, url) {
     } else {
         let ajax = sendListNodos(url, input);
         ajax.success(function (data) {
-            console.log(data);
             graficoSeguimientoArticulacionesFases(
                 data,
                 graficosArticulacionSeguimiento.nodo_fases

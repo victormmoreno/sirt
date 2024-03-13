@@ -39,7 +39,6 @@ function sendNotification(route, fase, contador, e) {
             confirmButtonText: 'Enviar solicitud!'
         }).then((result) => {
             if (result.value) {
-                // console.log(route + '/' + result.value);
                 location.href = route + '/' + result.value;
             }
         });
