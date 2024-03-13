@@ -117,7 +117,12 @@ class EquipoController extends Controller
         }
 
         return view('equipo.index', [
-            'nodos' =>  Entidad::has('nodo')->with('nodo')->orderBy('nombre')->get()->pluck('nombre', 'nodo.id'),
+            'nodos' =>  Entidad::whereHas('nodo', function ($query) {
+                return $query->where('estado', 1);
+            })
+            ->orderBy('nombre')
+            ->get()
+            ->pluck('nombre', 'nodo.id'),
         ]);
     }
 

@@ -53,6 +53,7 @@
                                 <th >Nombre</th>
                                 <th >Dirección</th>
                                 <th >Ubicación</th>
+                                <th >Estado</th>
                                 <th >Detalle</th>
                             </thead>
                         </table>

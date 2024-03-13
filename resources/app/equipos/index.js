@@ -283,11 +283,11 @@ var equipo = {
             }
         })
     },
-   
+
     changeState: function(id){
         Swal.fire({
             title: '¿Estas seguro de cambiar el estado a este equipo?',
-            icon: 'warning',
+            type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
@@ -333,7 +333,7 @@ var equipo = {
         Swal.fire({
             title: '¿Estás seguro de '+estado+' este equipo?',
             text: 'Solo puede haber un límite de '+limite+' equipos destacados.',
-            icon: 'warning',
+            type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',

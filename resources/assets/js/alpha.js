@@ -207,11 +207,7 @@ $( document ).ready(function() {
     });
 
     window.onload = function() {
-        // $('.loader').fadeOut('400');
-        // let dir = window.location.pathname
 
-        // console.log(dir.substring(dir.lastIndexOf('/')+1));
-        // $('body').addClass('loaded');
         setTimeout(function(){
             $('body').addClass('loaded');
         }, 1000);

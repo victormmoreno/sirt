@@ -254,7 +254,12 @@ class IdeaController extends Controller
             EstadoIdea::IsNoAplica()
         ])->pluck('nombre', 'id');
 
-        $nodos = Entidad::has('nodo')->with('nodo')->orderBy('entidades.nombre')->get()->pluck('nombre', 'nodo.id');
+        $nodos = Entidad::whereHas('nodo', function ($query) {
+            return $query->where('estado', 1);
+        })
+        ->orderBy('entidades.nombre')
+        ->get()
+        ->pluck('nombre', 'nodo.id');
         return view('ideas.index', [
             'nodos' => $nodos,
             'estadosIdeas' => $estadosIdeas

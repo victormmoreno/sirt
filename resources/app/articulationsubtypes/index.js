@@ -95,7 +95,7 @@ let articulationSubtype ={
         Swal.fire({
             title: '¿Estas seguro de eliminar este tipo de subarticulación?',
             text: "Recuerde que si lo elimina no lo podrá recuperar.",
-            icon: 'warning',
+            type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
