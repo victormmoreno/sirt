@@ -22,6 +22,16 @@ class MigracionController extends Controller
         ]);
     }
 
+    public function proyectos() {
+        return view('migrations.proyectos', [
+            'nodos' => Nodo::SelectNodo()->get()
+        ]);
+    }
+
+    public function caracterizacion_proyectos() {
+        return view('migrations.caracterizacion');
+    }
+
     public function import(Request $request)
     {
         abort('404');

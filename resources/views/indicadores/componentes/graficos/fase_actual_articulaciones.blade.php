@@ -1,7 +1,7 @@
 <div class="row">
     <div class="input-field col s12 m6 l6">
         <select multiple name="nodo_articulacion_actual[]" id="nodo_articulacion_actual" style="width: 100%">
-            @if (session()->get('login_role') == auth()->user()->IsActivador() || session()->get('login_role') == auth()->user()->IsAdministrador())
+            @if (session()->get('login_role') == auth()->user()->IsAuxiliar() || session()->get('login_role') == auth()->user()->IsActivador() || session()->get('login_role') == auth()->user()->IsAdministrador())
                 <option value="all" selected>Todos</option>
             @endif
                 @foreach($nodos as $nodo)

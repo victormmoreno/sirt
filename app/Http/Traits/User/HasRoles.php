@@ -100,6 +100,11 @@ trait HasRoles
         return User::IS_USUARIO;
     }
 
+    public static function IsAuxiliar()
+    {
+        return User::IS_AUXILIAR;
+    }
+
     public function isUserAdministrador(): bool
     {
         return (bool) $this->hasRole(self::IsAdministrador());
@@ -156,6 +161,11 @@ trait HasRoles
     public function isUserConvencional(): bool
     {
         return (bool) $this->hasRole(self::IsUsuario());
+    }
+
+    public function isUserAuxiliar(): bool
+    {
+        return (bool) $this->hasRole(self::IsAuxiliar());
     }
 
     public function scopeRole($query, $role)

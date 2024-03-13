@@ -45,6 +45,7 @@ class User extends Authenticatable implements JWTSubject,
     const IS_ARTICULADOR    = "Articulador";
     const IS_APOYO_TECNICO  = "Apoyo Técnico";
     const IS_USUARIO        = "Usuario";
+    const IS_AUXILIAR        = "Auxiliar";
 
     /**
      * The accessors to append to the model's array form.

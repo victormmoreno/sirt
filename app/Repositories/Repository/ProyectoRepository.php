@@ -325,7 +325,7 @@ class ProyectoRepository extends Repository
         return $this->proyectosIndicadoresSeparados_Repository()->selectRaw('GROUP_CONCAT(empresas.nit, " - ", empresas.nombre, ";") AS empresas')
         ->selectRaw('GROUP_CONCAT(up.nombres, " ",up.apellidos,";") AS personas')
         ->selectRaw('GROUP_CONCAT(gruposinvestigacion.codigo_grupo, " ", eg.nombre, ";") AS grupos')
-        ->selectRaw('GROUP_CONCAT(tag.name SEPARATOR ";") AS caracterizacion')
+        ->selectRaw('GROUP_CONCAT(DISTINCT tag.name SEPARATOR ";") AS caracterizacion')
         ->join('propietarios', 'propietarios.proyecto_id', '=', 'proyectos.id')
         ->leftJoin('sedes', function($q) use ($sede) {$q->on('sedes.id', '=', 'propietarios.propietario_id')->where('propietarios.propietario_type', "$sede");})
         ->leftJoin('empresas', 'empresas.id', '=', 'sedes.empresa_id')

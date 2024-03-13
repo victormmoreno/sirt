@@ -5,7 +5,7 @@
 Route::group(
     [
         'prefix' => 'indicadores',
-        'middleware' => ['auth', 'role_session:Administrador|Activador|Dinamizador|Experto|Articulador|Infocenter']
+        'middleware' => ['auth', 'role_session:Auxiliar|Administrador|Activador|Dinamizador|Experto|Articulador|Infocenter']
     ],
     function () {
         Route::get('/', 'IndicadorController@index')->name('indicadores');

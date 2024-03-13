@@ -193,7 +193,8 @@ class UserPresenter extends Presenter
             User::IsDesarrollador(),
             User::IsExperto(),
             User::IsApoyoTecnico(),
-            User::IsUsuario()
+            User::IsUsuario(),
+            User::IsAuxiliar()
         ]) ? true : false;
     }
 
