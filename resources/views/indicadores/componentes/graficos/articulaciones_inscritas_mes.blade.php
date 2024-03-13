@@ -1,8 +1,8 @@
 <div class="row">
-    @if (session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsAdministrador())
+    @if (session()->get('login_role') == App\User::IsAuxiliar() || session()->get('login_role') == App\User::IsActivador() || session()->get('login_role') == App\User::IsAdministrador())
         <div class="input-field col s12 m6 l6">
             <select multiple name="nodo_articulaciones_inscritas_mes[]" id="nodo_articulaciones_inscritas_mes" style="width: 100%">
-                @if (session()->get('login_role') == auth()->user()->IsActivador() || session()->get('login_role') == auth()->user()->IsAdministrador())
+                @if (session()->get('login_role') == auth()->user()->IsAuxiliar() || session()->get('login_role') == auth()->user()->IsActivador() || session()->get('login_role') == auth()->user()->IsAdministrador())
                     <option value="all" selected>Todos</option>
                 @endif
                     @foreach($nodos as $nodo)

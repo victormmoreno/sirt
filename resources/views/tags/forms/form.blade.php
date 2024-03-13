@@ -8,7 +8,7 @@
         <select style="width: 100%" class="js-states" id="selectType" name="selectType" required>
             <option value="">Seleccione el tipo de caracterización</option>
             @forelse ($types as $id => $type)
-            <option value="{{$type}}" {{ $type == $id ? 'selected' : '' }}>{{class_basename($type)}}</option>
+            <option value="{{$type}}" {{ $type == $id ? 'selected' : '' }}>{{__(class_basename($type))}}</option>
             @empty
             <option value="">No hay información disponible</option>
             @endforelse

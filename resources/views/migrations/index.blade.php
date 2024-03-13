@@ -29,57 +29,39 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                                 <div class="divider"></div>
                             </div>
-
                             <div class="row">
-                                @if ($errors->any())
-                                    @if(collect($errors->all())->count() > 1)
-                                    <span class="red-text">{{collect($errors->all())->count()}} errores</span>
-                                    @else
-                                    <span class="red-text">Tienes {{collect($errors->all())->count()}} error</span>
-                                    @endif
-                                @endif
-                                <div class="col s12 m12 l12">
-                                    <form action="{{route('migracion.proyectos.store')}}" method="POST" enctype="multipart/form-data">
-                                        {!! csrf_field() !!}
-                                        <div class="row">
-                                            <div class="col s12 m6 l6">
-                                            <div class="input-field file-field">
-                                                <div class="btn bg-primary white-text">
-                                                    <span>Archivo</span>
-                                                    <input type="file"  name="nombreArchivo" accept=".xlsx">
-
-                                                </div>
-                                                <div class="file-path-wrapper ">
-                                                    <input class="file-path validate " type="text">
-                                                </div>
-                                                @error('nombreArchivo')
-                                                    <label id="nombreArchivo-error" class="error" for="nombreArchivo">{{ $message }}</label>
-                                                @enderror
+                                <div class="col s12 m6 l6">
+                                    <a href="{{route('migracion.proyectos')}}">
+                                        <div class="card stats-card green lighten-3" style="cursor:pointer">
+                                            <div class="card-content">
+                                                <span class="stats-counter">
+                                                    Migración de proyectos
+                                                </span>
+                                                <br>
                                             </div>
-                                            </div>
-                                            <div class="input-field col s12 m6 l6">
-                                            <select class="js-states select2 browser-default" name="txtnodo_id" id="txtnodo_id" style="width: 100%">
-                                                @foreach($nodos as $nodo)
-                                                <option value="{{$nodo->id}}">{{$nodo->nodos}}</option>
-                                                @endforeach
-                                            </select>
-                                            <label for="txtnodo_id" class="active">Seleccione el Nodo</label>
-                                            @error('txtnodo_id')
-                                                <label id="txtnodo_id-error" class="error" for="txtnodo_id">{{ $message }}</label>
-                                            @enderror
+                                            <div class="progress stats-card-progress bg-secondary">
+                                                <div class="determinate"></div>
                                             </div>
                                         </div>
-                                        <center>
-                                            <button type="submit" class="waves-effect bg-secondary white-text btn center-aling">
-                                                <i class="material-icons right">done</i>
-                                                Migrar
-                                            </button>
-                                        </center>
-                                    </form>
+                                    </a>
+                                </div>
+                                <div class="col s12 m6 l6">
+                                    <a href="{{route('migracion.proyectos.caracterizacion')}}">
+                                        <div class="card stats-card green lighten-3" style="cursor:pointer">
+                                            <div class="card-content">
+                                                <span class="stats-counter">
+                                                    Migración de caracterización de proyectos
+                                                </span>
+                                                <br>
+                                            </div>
+                                            <div class="progress stats-card-progress bg-secondary">
+                                                <div class="determinate"></div>
+                                            </div>
+                                        </div>
+
+                                    </a>
                                 </div>
                             </div>
                         </div>

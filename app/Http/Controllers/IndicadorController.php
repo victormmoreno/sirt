@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\{User, Models\Nodo, Models\Proyecto, Models\Articulation};
 use Repositories\Repository\NodoRepository;
 use App\Repositories\Repository\ProyectoRepository;
+use Illuminate\Support\Str;
 use App\Repositories\Repository\Articulation\ArticulationRepository;
 use Carbon\Carbon;
 
@@ -36,7 +37,7 @@ public function index()
     alert('No autorizado', 'No puedes acceder a los indicadores', 'error')->showConfirmButton('Ok', '#3085d6');
     return back();
     }
-    if (session()->get('login_role') == User::IsAdministrador() || session()->get('login_role') == User::IsActivador()) {
+    if (Str::contains(session()->get('login_role'), [User::IsAuxiliar(), User::IsActivador(), User::IsAdministrador()])) {
         $nodos_temp = Nodo::SelectNodo()->get()->toArray();
         foreach($nodos_temp as $nodo) {
             $nodos[] = $nodo['id'];

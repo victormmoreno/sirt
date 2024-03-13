@@ -229,6 +229,9 @@
             @case(App\User::IsUsuario())
                 @include('layouts.navrole.usuario')
             @break
+            @case(App\User::IsAuxiliar())
+                @include('layouts.navrole.auxiliar')
+            @break
             @case(App\User::IsTalento())
                 @include('layouts.navrole.talento')
             @break

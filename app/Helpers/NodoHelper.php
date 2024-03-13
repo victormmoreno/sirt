@@ -29,6 +29,8 @@ class NodoHelper
             return User::IsUsuario();
         }else if (\Session::get('login_role') == User::IsTalento()) {
             return User::IsTalento();
+        }else if (\Session::get('login_role') == User::IsAuxiliar()) {
+            return User::IsAuxiliar();
         }
         else {
             return 'No hay información disponible.';

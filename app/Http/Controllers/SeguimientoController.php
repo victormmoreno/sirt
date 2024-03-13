@@ -416,7 +416,7 @@ class SeguimientoController extends Controller
    **/
     private function retornarValorDeNodos($request)
     {
-        if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
+        if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador(), User::IsAuxiliar()])) {
             if ($request->nodos[0] == 'all') {
                 $nodos_temp = Nodo::SelectNodo()->get();
                 foreach ($nodos_temp as $nodo) {
@@ -459,7 +459,7 @@ class SeguimientoController extends Controller
     public function seguimientoProyectosInscritos(Request $request)
     {
         $nodos = $this->retornarValorDeNodos($request);
-        if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
+        if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador(), User::IsAuxiliar()])) {
             $query = $this->getProyectoRepository()->proyectosInscritosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->get();
         } else {
             $expertos = $this->retornarValorDeExpertos($request);
@@ -495,7 +495,7 @@ class SeguimientoController extends Controller
     public function seguimientoProyectosCerrados(Request $request)
     {
         $nodos = $this->retornarValorDeNodos($request);
-        if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador()])) {
+        if (Str::contains(session()->get('login_role'), [User::IsActivador(), User::IsAdministrador(), User::IsAuxiliar()])) {
         $query = $this->getProyectoRepository()->proyectosCerradosPorMes(Carbon::now()->isoFormat('YYYY'))->whereIn('nodos.id', $nodos)->get();
         } else {
         $expertos = $this->retornarValorDeExpertos($request);

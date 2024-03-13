@@ -330,7 +330,7 @@ Route::group(
         Route::get('/export/downloadMetas', 'Excel\IndicadorController@downloadMetas')->name('indicador.export.metas');
         Route::get('/export/downloadMetas/articulaciones', 'Excel\IndicadorController@downloadMetasArticulaciones')->name('indicador.export.metas-articulaciones');
         Route::get('/export/downloadIdeas', 'Excel\IndicadorController@downloadIdeas')->name('indicador.export.ideas');
-        Route::get('/export_proyectos_indicadores', 'Excel\IndicadorController@exportIndicadoresProyectos')->name('indicador.proyectos.export.excel')->middleware('role_session:Experto|Infocenter|Dinamizador|Activador');
+        Route::get('/export_proyectos_indicadores', 'Excel\IndicadorController@exportIndicadoresProyectos')->name('indicador.proyectos.export.excel')->middleware('role_session:Auxiliar|Experto|Infocenter|Dinamizador|Activador');
         // Route::get('/export_trazabilidad/{idproyecto}', 'Excel\ProyectoController@exportTrazabilidadProyecto')->name('excel.proyecto.trazabilidad');
         Route::get('/import_metas_form', 'IndicadorController@form_import_metas')->name('indicadores.form.metas')->middleware('role_session:Activador');
         Route::get('/export_materiales', 'Excel\MaterialController@download')->name('download.materiales');
@@ -339,15 +339,15 @@ Route::group(
 
         Route::get('/export/{nodo}/articulaciones/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicatorArticulations')->name('indicador.export.excel');
 
-
-
         Route::post('/import_materiales', 'Excel\MaterialController@import')->name('import.materiales');
         Route::post('/import_equipos', 'Excel\EquipoController@import')->name('import.equipos');
         Route::post('/import_metas', 'Excel\IndicadorController@importIndicadoresAll')->name('indicadores.import.metas')->middleware('role_session:Activador');
+        
+        Route::post('/importar/caracterizacion', 'Excel\MigracionController@import_caracterizacion_proyectos')->name('migracion.proyectos.caracterizacion.store')->middleware('role_session:Desarrollador');
 
-        Route::get('/export_articulaciones_actuales/{nodo}/{hoja}', 'Excel\IndicadorController@exportIndicadoresArticulacionesActivas')->name('indicador.proyectos.actuales.export.excel')->middleware('role_session:Administrador|Dinamizador|Activador|Articulador|Infocenter');
-        Route::get('/export_articulaciones_inscritos/{nodo}/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicadorArticulacionesInscritas')->name('indicador.articulaciones.inscritas.export.excel')->middleware('role_session:Administrador|Dinamizador|Activador|Articulador|Infocenter');
-        Route::get('/export_articulaciones_finalizadas/{nodo}/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicadoresArticulacionesFinalizadas')->name('indicador.articulaciones.finalizadas.export.excel')->middleware('role_session:Administrador|Dinamizador|Activador|Articulador|Infocenter');
+        Route::get('/export_articulaciones_actuales/{nodo}/{hoja}', 'Excel\IndicadorController@exportIndicadoresArticulacionesActivas')->name('indicador.proyectos.actuales.export.excel')->middleware('role_session:Auxiliar|Administrador|Dinamizador|Activador|Articulador|Infocenter');
+        Route::get('/export_articulaciones_inscritos/{nodo}/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicadorArticulacionesInscritas')->name('indicador.articulaciones.inscritas.export.excel')->middleware('role_session:Auxiliar|Administrador|Dinamizador|Activador|Articulador|Infocenter');
+        Route::get('/export_articulaciones_finalizadas/{nodo}/{fecha_inicio}/{fecha_fin}/{hoja}', 'Excel\IndicadorController@exportIndicadoresArticulacionesFinalizadas')->name('indicador.articulaciones.finalizadas.export.excel')->middleware('role_session:Auxiliar|Administrador|Dinamizador|Activador|Articulador|Infocenter');
     }
 );
 
@@ -357,26 +357,26 @@ Route::group(
 Route::group(
     [
         'prefix' => 'seguimiento',
-        'middleware' => ['auth', 'role_session:Administrador|Activador|Dinamizador|Experto|Articulador|Infocenter',]
+        'middleware' => ['auth', 'role_session:Auxiliar|Administrador|Activador|Dinamizador|Experto|Articulador|Infocenter',]
     ],
     function () {
         // Route::get('/', 'SeguimientoController@index')->name('seguimiento');
         Route::get('/seguimientoEsperadoDeUnGestor/{id}', 'SeguimientoController@seguimientoEsperadoDelGestor');
-        Route::get('/seguimientoInscritosPorMesExperto/{id}', 'SeguimientoController@seguimientoProyectosInscritosPorMes')->middleware('role_session:Administrador|Activador|Dinamizador|Experto|Infocenter');
+        Route::get('/seguimientoInscritosPorMesExperto/{id}', 'SeguimientoController@seguimientoProyectosInscritosPorMes');
         Route::get('/seguimientoProyectosInscritosPorMes', 'SeguimientoController@seguimientoProyectosInscritos');
-        Route::get('/seguimientoProyectosCerradosPorMes', 'SeguimientoController@seguimientoProyectosCerrados')->middleware('role_session:Administrador|Activador|Dinamizador|Experto|Infocenter');
+        Route::get('/seguimientoProyectosCerradosPorMes', 'SeguimientoController@seguimientoProyectosCerrados');
         Route::get('/seguimientoEsperadoDeUnaLinea/{id}/{nodo}', 'SeguimientoController@seguimientoEsperadoDeLaLinea');
-        Route::get('/seguimientoEsperado', 'SeguimientoController@seguimientoEsperado')->middleware('role_session:Activador|Dinamizador|Experto|Infocenter')->name('seguimiento.esperado');
+        Route::get('/seguimientoEsperado', 'SeguimientoController@seguimientoEsperado')->name('seguimiento.esperado');
         Route::get('/seguimientoEsperadoDeTecnoparque', 'SeguimientoController@seguimientoEsperadoDeTecnoparque')->middleware('role_session:Activador');
-        Route::get('/seguimientoDeUnNodoFases', 'SeguimientoController@seguimientoDelNodoFases')->middleware('role_session:Activador|Dinamizador|Experto|Infocenter');
+        Route::get('/seguimientoDeUnNodoFases', 'SeguimientoController@seguimientoDelNodoFases')->middleware('role_session:Auxiliar|Activador|Dinamizador|Experto|Infocenter');
         // Route::get('/seguimientoEsperadoDeUnNodo', 'SeguimientoController@seguimientoEsperado')->middleware('role_session:Activador|Dinamizador');
-        Route::get('/seguimientoDeTecnoparqueFases', 'SeguimientoController@seguimientoDeTecnoparqueFases')->middleware('role_session:Dinamizador|Activador');
+        Route::get('/seguimientoDeTecnoparqueFases', 'SeguimientoController@seguimientoDeTecnoparqueFases')->middleware('role_session:Dinamizador|Activador|Auxiliar');
         Route::get('/seguimientoActualDeUnGestor/{id}', 'SeguimientoController@seguimientoActualDelGestor');
         Route::get('/seguimientoActualDeUnaLinea/{id}/{nodo}', 'SeguimientoController@seguimientoActualDeLaLinea');
 
-        Route::get('/seguimientoArticulacionesCerradasPorMes', 'SeguimientoController@seguimientoArticulacionesCerradas')->middleware('role_session:Administrador|Activador|Dinamizador|Articulador|Infocenter');
-        Route::get('/seguimientoArticulacionesInscritasPorMes', 'SeguimientoController@seguimientoArticulacionesInscritas')->middleware('role_session:Administrador|Activador|Dinamizador|Articulador|Infocenter');
-        Route::get('/seguimientoArticulacionDeUnNodoFases', 'SeguimientoController@seguimientoArticulacionesDelNodoFases')->middleware('role_session:Administrador|Activador|Dinamizador|Articulador|Infocenter');
+        Route::get('/seguimientoArticulacionesCerradasPorMes', 'SeguimientoController@seguimientoArticulacionesCerradas');
+        Route::get('/seguimientoArticulacionesInscritasPorMes', 'SeguimientoController@seguimientoArticulacionesInscritas');
+        Route::get('/seguimientoArticulacionDeUnNodoFases', 'SeguimientoController@seguimientoArticulacionesDelNodoFases');
 
     }
 );
@@ -437,6 +437,8 @@ Route::group([
     'prefix' => 'migracion'
 ], function () {
     Route::get('/', 'MigracionController@index')->name('migracion.index');
+    Route::get('/proyectos', 'MigracionController@proyectos')->name('migracion.proyectos');
+    Route::get('/proyectos/caracterizacion', 'MigracionController@caracterizacion_proyectos')->name('migracion.proyectos.caracterizacion');
     Route::post('/importar', 'MigracionController@import')->name('migracion.proyectos.store');
 });
 
