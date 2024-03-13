@@ -36,7 +36,7 @@ class ArticulationStageListController extends Controller
         }
         $nodos = null;
         if(request()->user()->can('listNodes', ArticulationStage::class)) {
-            $nodos = Nodo::query()->with('entidad')->get();
+            $nodos = Nodo::query()->with('entidad')->where('nodos.estado', 1)->get();
             $nodos = collect($nodos)->sortBy('entidad.nombre')->pluck('entidad.nombre', 'id');
         }
         return view('articulation.index-articulation-stage', ['nodos' => $nodos]);

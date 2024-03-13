@@ -9,7 +9,9 @@ use App\Datatables\NodoDatatable;
 use App\Repositories\Repository\DepartamentoRepository;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Repositories\Repository\NodoRepository;
+
 
 class NodoController extends Controller
 {
@@ -221,5 +223,25 @@ class NodoController extends Controller
         return view('nodos.upload-files', [
             'nodo'              => $nodo
         ]);
+    }
+
+    /**
+     * change state the specified resource in detroy.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function changeStatus(int $id)
+    {
+
+        $nodo = Nodo::findOrFail($id);
+        $nodo->estado = !$nodo->estado;
+        $nodo->save();
+
+        return response()->json([
+            'statusCode' => Response::HTTP_OK,
+            'message' => 'estado cambiado',
+            'route' => route('nodo.show', $nodo->entidad->slug)
+        ], Response::HTTP_OK);
     }
 }

@@ -28,7 +28,6 @@ $(document).on('submit', 'form#formSearchAsesorie', function (event) {
             contentType: false,
             processData: false,
             success: function (response) {
-                console.log(response);
                 $('button[type="submit"]').removeAttr('disabled');
                 $('.error').hide();
                 $('#response-alert').empty();
@@ -107,7 +106,6 @@ const validar = ( selector, num = 4 ) => {
 const asesorieSearch = {
     changetextLabel: function(){
         let option = $('#type_search').val();
-        console.log(option);
         $("#search_asesorie").val('');
         if(option == 'UsoInfraestructura'){
             $("label[for='search_asesorie']").text('Ingrese código de asesoria');

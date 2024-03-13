@@ -42,6 +42,9 @@ $(document).ready(function() {
             data: 'ubicacion',
             name: 'ubicacion',
         }, {
+            data: 'nombre_estado',
+            name: 'estado',
+        },{
             data: 'detail',
             name: 'detail',
             orderable: false
@@ -174,3 +177,50 @@ function inhabilitarFuncionarios(e, rt) {
         }
     })
 }
+
+const nodo = {
+    changeStatus: function(id){
+        Swal.fire({
+            title: '¿Estas seguro de cambiar el estado a este nodo?',
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, cambiar estado',
+            cancelButtonText: 'No, cancelar',
+          }).then((result) => {
+            if (result.value) {
+                $.ajax(
+                {
+                    url: host_url + `/nodo/cambiar-estado/${id}`,
+                    type: 'GET',
+                    success: function (response){
+                        if(response.statusCode == 200){
+                            Swal.fire(
+                                'Estado cambiado!',
+                                'El equipo ha cambiado de estado.',
+                                'success'
+                            );
+                            location.href = response.route;
+                        }else {
+                            Swal.fire(
+                                'No se puede cambiar estado!',
+                                response.message,
+                                'error'
+                            );
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert("Error: " + errorThrown);
+                    }
+                });
+            }else if ( result.dismiss === Swal.DismissReason.cancel ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelado',
+                    'error'
+                )
+            }
+        })
+    }
+}
+

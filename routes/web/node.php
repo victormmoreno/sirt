@@ -7,6 +7,7 @@ Route::post('nodo/files/{nodo}', 'ArchivoController@uploadFileNode')->name('nodo
 Route::get('nodo/{nodo}/cargar-archivos',  'Nodo\NodoController@uploadFiles')->name('nodo.upload-files');
 Route::get('nodo/downloadFile/{id}', 'ArchivoController@downloadFileNode')->name('nodo.files.download');
 
+Route::get('/nodo/cambiar-estado/{id}', 'Nodo\NodoController@changeStatus')->name('nodo.cambiar-estado');
 Route::delete('nodo/{idFile}/files', 'ArchivoController@destroyFileNode')->name('nodo.files.destroy');
 Route::get('/nodo/fetch_data', 'Nodo\NodoController@nodo_pagination');
 Route::resource('nodo', 'Nodo\NodoController')->middleware(['disablepreventback']);

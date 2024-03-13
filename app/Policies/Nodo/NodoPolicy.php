@@ -113,6 +113,22 @@ class NodoPolicy
     }
 
     /**
+     * Determine whether the user can change status a nodo.
+     *
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function changeStatus(User $user)
+    {
+        return (bool) $user->hasAnyRole([User::IsActivador(), User::IsAdministrador()])
+        && session()->has('login_role')
+        && (
+            session()->get('login_role') == User::IsAdministrador() ||
+            session()->get('login_role') == User::IsActivador()
+        );
+    }
+
+    /**
      * Determine whether the user can upload files a nodo.
      *
      * @param  \App\User  $user

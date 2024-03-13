@@ -29,14 +29,13 @@ function ajaxSendFormTag(form, data, url) {
 };
 
 function mensajesTagForm(data) {
-    console.log(data);
     let title = "error";
     let text = "error";
     let type = "error";
     title = data.title;
     text = data.msg;
     type = data.type;
-    
+
     if (data.state != 'error_form') {
         Swal.fire({
             title: title,
@@ -47,16 +46,10 @@ function mensajesTagForm(data) {
             confirmButtonText: 'Ok'
         });
     }
-    
+
     if (data.state == true) {
         setTimeout(function () {
             window.location.href = data.url;
         }, 1500);
     }
-
-    // if (data.state == 'update') {
-    //     setTimeout(function () {
-    //         window.location.href = data.url;
-    //     }, 5000);
-    // }
 };

@@ -102,7 +102,7 @@ let support ={
         Swal.fire({
             title: '¿Estas seguro de eliminar este caso?',
             text: "Recuerde que si lo elimina no lo podrá recuperar.",
-            icon: 'warning',
+            type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
@@ -146,8 +146,7 @@ let support ={
     updateSupport: function(ticket, status){
         Swal.fire({
             title: '¿Estas seguro de cambiar a '+ status + ' este caso?',
-            // text: "Recuerde que si lo elimina no lo podrá recuperar.",
-            icon: 'warning',
+            type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
