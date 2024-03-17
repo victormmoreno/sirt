@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\User;
+use Illuminate\Support\Collection;
 
 class DisableOfficialsCommand extends Command
 {
@@ -40,15 +41,24 @@ class DisableOfficialsCommand extends Command
      */
     public function handle()
     {
-        $users = DB::table('users')
+        $users = User::query()
         ->join('user_nodo', 'user_nodo.user_id', '=', 'users.id')
         ->join('contratos', 'contratos.user_nodo_id', '=', 'user_nodo.id')
+        // ->where('users.documento', '1042348706')
         ->where('contratos.fecha_finalizacion', Carbon::today())
         ->groupBy('users.documento')
-        ->update([
-            'users.estado' => User::IsInactive(),
-            'users.deleted_at' =>  Carbon::today()
-        ]);
-        $this->info("{$users} offcials disabled");
+        ->get();
+
+        $users->map(function($user){
+            // $user->roles()->detach();
+            $user->syncRoles(User::IsUsuario());
+            $user->update([
+                'users.estado' => User::IsInactive(),
+                'users.deleted_at' =>  Carbon::today()
+            ]);
+            $user->refresh();
+        });
+
+        $this->info("{$users->count()} offcials disabled");
     }
 }
