@@ -89,6 +89,11 @@ return [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
+        'seeder' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/seeder.log'),
+            'level' => 'debug',
+        ],
     ],
 
 ];

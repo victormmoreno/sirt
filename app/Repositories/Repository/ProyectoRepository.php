@@ -951,19 +951,22 @@ class ProyectoRepository extends Repository
                         if ($proyecto->fase->nombre == "Inicio") {
                         // Cambiar el proyecto de fase
                         $proyecto->update([
-                            'fase_id' => Fase::where('nombre', 'Planeación')->first()->id
+                            'fase_id' => Fase::where('nombre', 'Planeación')->first()->id,
+                            'fecha_inicio_planeacion' => Carbon::now()
                         ]);
                         }
                         if ($proyecto->fase->nombre == "Planeación") {
                         // Cambiar el proyecto de fase
                         $proyecto->update([
-                            'fase_id' => Fase::where('nombre', 'Ejecución')->first()->id
+                            'fase_id' => Fase::where('nombre', 'Ejecución')->first()->id,
+                            'fecha_inicio_ejecucion' => Carbon::now()
                         ]);
                         }
                         if ($proyecto->fase->nombre == "Ejecución") {
                         // Cambiar el proyecto de fase
                         $proyecto->update([
-                            'fase_id' => Fase::where('nombre', 'Cierre')->first()->id
+                            'fase_id' => Fase::where('nombre', 'Cierre')->first()->id,
+                            'fecha_inicio_cierre' => Carbon::now()
                         ]);
                         }
                         if ($proyecto->fase->nombre == "Cierre") {
