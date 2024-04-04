@@ -44,7 +44,7 @@ class ProyectoAprobarFase extends Notification implements ShouldQueue
             'link'  => $this->control->fase->nombre == 'Cancelado' ? route('proyecto.suspender', $this->control->notificable->id) : $this->control->notificable->present()->proyectoRutaActual(),
             'icon'  => 'library_books',
             'color' => 'green',
-            'autor' => "{$this->control->remitente->nombres} {$this->control->remitente->nombres}",
+            'autor' => "{$this->control->remitente->nombres} {$this->control->remitente->apellidos}",
             'text'  => "El experto ha solicitado aprobar la fase de {$this->control->fase->nombre} | {$this->control->notificable->codigo_proyecto} - {$this->control->notificable->nombre}",
           ];
     }

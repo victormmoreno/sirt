@@ -12,6 +12,9 @@
         <th>Otro área de conocimiento</th>
         <th>Fecha de Inicio de Proyecto</th>
         <th>Fase actual del proyecto</th>
+        <th>Fecha de inicio de la fase de planeación</th>
+        <th>Fecha de inicio de la fase de ejecución</th>
+        <th>Fecha de inicio de la fase de cierre</th>
         <th>Fecha de Cierre de Proyecto</th>
         <th>Año de cierre</th>
         <th>Mes de cierre</th>
@@ -46,6 +49,9 @@
             <td>{{ $proyecto->nombre_area_conocimiento == 'Otro' ? $proyecto->otro_areaconocimiento : 'No aplica' }}</td>
             <td>{{ $proyecto->fecha_inicio }}</td>
             <td>{{ $proyecto->nombre_fase }}</td>
+            <td>{{ $proyecto->fecha_inicio_planeacion }}</td>
+            <td>{{ $proyecto->fecha_inicio_ejecucion }}</td>
+            <td>{{ $proyecto->fecha_inicio_cierre }}</td>
             <td>{{ $proyecto->nombre_fase == 'Cancelado' || $proyecto->nombre_fase == 'Finalizado' ? $proyecto->fecha_cierre : 'El proyecto no se ha cerrado' }}</td>
 
             @if ($proyecto->nombre_fase == 'Finalizado' || $proyecto->nombre_fase == 'Cancelado')

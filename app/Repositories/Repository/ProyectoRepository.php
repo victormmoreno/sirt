@@ -349,7 +349,8 @@ class ProyectoRepository extends Repository
             'entidades.nombre AS nombre_nodo', 'lineastecnologicas.nombre AS nombre_linea', 'sublineas.nombre AS nombre_sublinea',
             'ideas.codigo_idea', 'ideas.nombre_proyecto AS nombre_idea', 'codigo_proyecto',
             'areasconocimiento.nombre AS nombre_area_conocimiento', 'otro_areaconocimiento', 'fecha_inicio',
-            'fases.nombre AS nombre_fase', 'fecha_cierre', 'proyectos.id', 'proyectos.nombre AS nombre_proyecto'
+            'fases.nombre AS nombre_fase', 'fecha_cierre', 'proyectos.id', 'proyectos.nombre AS nombre_proyecto',
+            'fecha_inicio_planeacion', 'fecha_inicio_ejecucion', 'fecha_inicio_cierre'
         )
         ->selectRaw('concat(users.nombres, " ", users.apellidos) AS experto')
         ->selectRaw('IF(trl_esperado = '.Proyecto::IsTrl6Esperado().', "TRL 6", "TRL 7 - TRL 8") AS trl_esperado')
