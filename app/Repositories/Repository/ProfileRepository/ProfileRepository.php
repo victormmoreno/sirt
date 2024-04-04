@@ -23,7 +23,6 @@ class ProfileRepository
             "documento"            => $request->input('txtdocumento'),
             "email"                => $request->input('txtemail'),
             "barrio"               => $request->input('txtbarrio'),
-            "direccion"            => $request->input('txtdireccion'),
             "etnia_id"               => $request->input('txtetnias'),
             "grado_discapacidad"    => $request->input('txtgrado_discapacidad'),
             "descripcion_grado_discapacidad"    => $request->input('txtgrado_discapacidad') == 1 ? $request['txtdiscapacidad'] : null,

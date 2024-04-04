@@ -109,7 +109,6 @@ class RegisterController extends Controller
             "celular"              => $request->input('celular'),
             "ciudad_id"            => $request->input('ciudad'),
             "barrio"               => $request->input('barrio'),
-            "direccion"            => $request->input('direccion'),
             "nombres"              => $request->input('nombres'),
             "apellidos"            => $request->input('apellidos'),
             "fechanacimiento"      => $request->input('fechanacimiento'),

@@ -85,7 +85,7 @@
                 <span>Barrio</span>
             </div>
             <div class="server-stat col s6 m4 l3">
-                <p>{{$user->direccion}}</p>
+                <p>{{isset($user->direccion) ? $user->direccion : 'No registra'}}</p>
                 <span>Dirección</span>
             </div>
             <div class="server-stat col s6 m4 l3">
