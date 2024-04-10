@@ -65,11 +65,12 @@ class ArchivoComiteController extends Controller
         ]);
         $comite = Comite::find($id);
         $file = request()->file('nombreArchivo');
+        $size = $file->getSize();
         $idmax = RutaModel::selectRaw('MAX(id+1) AS max')->get()->last();
         $idmax = $idmax->max;
         $fileName = $idmax . '_' . $file->getClientOriginalName();
         $fileUrl = $file->storeAs("public/" . $comite->ideas()->first()->nodo_id . '/'.Carbon::now()->format('Y').'/CSIBT//' . $id, $fileName);
-        $this->archivoComiteRepository->store($id, Storage::url($fileUrl));
+        $this->archivoComiteRepository->store($id, Storage::url($fileUrl), $size);
         }
     }
 }
