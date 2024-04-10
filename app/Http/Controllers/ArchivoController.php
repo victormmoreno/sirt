@@ -395,7 +395,7 @@ class ArchivoController extends Controller
         $proyecto->archivos()->create([
             'ruta' => Storage::url($fileUrl),
             'fase_id' => $fase_id,
-            'filsize' => $size
+            'filesize' => $size
         ]);
         }
     }
