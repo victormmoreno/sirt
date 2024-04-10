@@ -61,17 +61,6 @@ class AddDateToProyectosTableSeeder extends Seeder
      **/
     public function getFechaInicioPlaneacion($proyecto)
     {
-        // $query = DB::table('movimientos_actividades_users_roles')->select('proyecto_id', 'fases.nombre', 'movimientos.movimiento', 'movimientos_actividades_users_roles.created_at')
-        // ->where('proyecto_id', $proyecto->id)
-        // ->where('movimientos.movimiento', Movimiento::IsAprobar())
-        // ->where('roles.name', User::IsDinamizador())
-        // ->where('fases.nombre', Proyecto::IsInicio())
-        // ->join('movimientos', 'movimientos.id', 'movimientos_actividades_users_roles.movimiento_id')
-        // ->join('fases', 'fases.id', '=', 'movimientos_actividades_users_roles.fase_id')
-        // ->join('users', 'users.id', '=', 'movimientos_actividades_users_roles.user_id')
-        // ->join('roles', 'roles.id', '=', 'movimientos_actividades_users_roles.role_id')
-        // ->orderBy('movimientos_actividades_users_roles.created_at')
-        // ->get();
         $query = $this->getQuery($proyecto)->where('fases.nombre', Proyecto::IsInicio())->get();
 
         if ($query->count() == 0) {
