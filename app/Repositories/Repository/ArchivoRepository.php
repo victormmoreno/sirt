@@ -24,11 +24,12 @@ class ArchivoRepository
     * @param string fileUrl Ruta con la que se guardará el arcivo en el servidor
     * @return void
     */
-    public function storeFileCharlaInformativaRepository($id, $fileUrl)
+    public function storeFileCharlaInformativaRepository($id, $fileUrl, $size)
     {
         $charla = CharlaInformativa::find($id);
         $charla->rutamodel()->create([
             'ruta' => $fileUrl,
+            'filesize' => $size
         ]);
     }
 
@@ -38,11 +39,12 @@ class ArchivoRepository
     * @param string fileUrl Ruta con la que se guardará el arcivo en el servidor
     * @return void
     */
-    public function storeFileEdt($id, $fileUrl)
+    public function storeFileEdt($id, $fileUrl, $size)
     {
         $edt = Edt::find($id);
         $edt->rutamodel()->create([
             'ruta' => $fileUrl,
+            'filesize' => $size
         ]);
     }
 
@@ -53,11 +55,12 @@ class ArchivoRepository
     * @return void
     * @author dum
     */
-    public function storeFileEntrenamiento($id, $fileUrl)
+    public function storeFileEntrenamiento($id, $fileUrl, $size)
     {
         $entrenamiento = Entrenamiento::find($id);
         $entrenamiento->rutamodel()->create([
             'ruta' => $fileUrl,
+            'filesize' => $size
         ]);
     }
 

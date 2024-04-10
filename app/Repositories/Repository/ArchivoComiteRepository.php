@@ -13,11 +13,12 @@ class ArchivoComiteRepository
   * @return Collection
   * @author dum
   */
-  public function store($id, $fileUrl)
+  public function store($id, $fileUrl, $size)
   {
     $comite = Comite::find($id);
     $comite->rutamodel()->create([
       'ruta' => $fileUrl,
+      'filesize' => $size
     ]);
   }
 
