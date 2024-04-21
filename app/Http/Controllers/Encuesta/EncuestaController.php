@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Proyecto;
 use App\Models\Articulation;
-use Illuminate\Support\Str;
-
 
 class EncuestaController extends Controller
 {
@@ -39,16 +37,12 @@ class EncuestaController extends Controller
                 return;
                 break;
         }
+
         $user = $query->interlocutor($query);
-        if($query->exists($token)){
-            dd([
-                'module' => $module,
-                'id' => $id,
-                'token' => $token,
-                'query' => $query,
-                ]);
+        if(!$query->exists($token)){
+            return abort(404);
         }
-        dd('no coincide token');
+        dd(['query' => $query, 'mensaje'=> 'bienvenido a la encuesta']);
 
     }
 }

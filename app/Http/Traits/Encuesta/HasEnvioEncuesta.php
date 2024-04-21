@@ -6,10 +6,14 @@ namespace App\Http\Traits\Encuesta;
 use App\Models\Proyecto;
 use App\Models\Articulation;
 use App\Models\EncuestaToken;
+use App\Models\Movimiento;
+use App\Models\Fase;
+use App\Models\Role;
 use App\Notifications\Encuesta\EnviarEncuesta as EncuestaNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 trait HasEnvioEncuesta {
 
@@ -19,7 +23,7 @@ trait HasEnvioEncuesta {
     public $expires = '*'; //1hora
 
     /**
-     * consultarInformacion.
+     * consultar Informacion.
      *
      * @param  string  $token
      * @return void
@@ -46,6 +50,7 @@ trait HasEnvioEncuesta {
     public function enviarNotificacionEncuesta($token)
     {
         $this->user->notify(new EncuestaNotification($this->query, $token));
+        // dd($this->crearTrazabilidad($this->query));
         return EncuestaToken::ENVIAR_ENCUESTA;
     }
     /**
@@ -60,7 +65,7 @@ trait HasEnvioEncuesta {
     }
 
     /**
-     * Create a new token record.
+     * crear el nuevo token.
      *
      * @param  \Illuminate\Contracts\Auth\CanResetPassword  $user
      * @return string
@@ -79,7 +84,7 @@ trait HasEnvioEncuesta {
     }
 
     /**
-     * Create a new token for the user.
+     * generate token aleatorio.
      *
      * @return string
      */
@@ -89,7 +94,7 @@ trait HasEnvioEncuesta {
     }
 
     /**
-     * Delete all existing reset tokens from the database.
+     * eliminar todos los token existentes del usuario.
      *
      */
     protected function deleteExisting()
@@ -98,7 +103,7 @@ trait HasEnvioEncuesta {
     }
 
     /**
-     * Build the record payload for the table.
+     * contruir los datos a insertar en la tabla
      *
      * @param  string  $email
      * @param  string  $token
@@ -109,6 +114,11 @@ trait HasEnvioEncuesta {
         return ['email' => $email, 'token' => bcrypt($token), 'created_at' => new Carbon];
     }
 
+    /**
+     * verificar el token con el token de la base de datos
+     * @param  string  $token
+     * @return bool
+     */
     protected function checkToken($token)
     {
         $encriptToken = EncuestaToken::where('email', $this->obtenerEmailParaEnviarEncuesta())->first()->token;
@@ -119,7 +129,7 @@ trait HasEnvioEncuesta {
     }
 
     /**
-     * Determine if a token record exists and is valid.
+     * Determine si existe un registro de token y si es válido.
      *
      * @param  \Illuminate\Contracts\Auth\CanResetPassword  $user
      * @param  string  $token
@@ -137,7 +147,7 @@ trait HasEnvioEncuesta {
     }
 
     /**
-     * Determine if the token has expired.
+     * Determine si el token ha caducado.
      *
      * @param  string  $createdAt
      * @return bool
@@ -152,8 +162,7 @@ trait HasEnvioEncuesta {
     }
 
     /**
-     * Delete a token record by user.
-     *
+     * Eliminar un registro de token por usuario.
      * @param  \Illuminate\Contracts\Auth\CanResetPassword  $user
      * @return void
      */
@@ -163,8 +172,7 @@ trait HasEnvioEncuesta {
     }
 
     /**
-     * Delete expired tokens.
-     *
+     * Eliminar tokens caducados
      * @return void
      */
     public function deleteExpired()
@@ -173,6 +181,26 @@ trait HasEnvioEncuesta {
             $expiredAt = Carbon::now()->subSeconds($this->expires);
             EncuestaToken::where('created_at', '<', $expiredAt)->delete();
         }
+    }
+
+    /**
+     * Crear trazabilidad al modelo cuando se envia la encuesta
+     * @return void
+     */
+    protected function crearTrazabilidad($query){
+        // if(class_basename($query) == class_basename(Proyecto::class)){
+        //     $mensaje = 'El experto solicito realzar la encuesta de satisfacción';
+        //     $trazabilidad = $query->movimientos()->attach(Movimiento::where('movimiento', Movimiento::IsSolicitarTalento())->first(), [
+        //         'proyecto_id' => $query->id,
+        //         'user_id' => auth()->user()->id,
+        //         'fase_id' => Fase::where('nombre', 'Ejecución')->first()->id,
+        //         'role_id' => Role::where('name', Session::get('login_role'))->first()->id,
+        //         'comentarios' => $mensaje
+        //         ]);
+        //     return $trazabilidad;
+        // }
+        // $mensaje = 'El articulador solicito realzar la encuesta de satisfacción';
+        // return $mensaje;
     }
 
 }

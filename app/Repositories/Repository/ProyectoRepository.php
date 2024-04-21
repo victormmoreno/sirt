@@ -1104,8 +1104,10 @@ class ProyectoRepository extends Repository
      */
     public function notificarAprobacionDeFase(Proyecto $proyecto, string $fase = null, string $fecha = null)
     {
+
         DB::beginTransaction();
         try {
+
             $notificacion_fase_actual = $this->retornarUltimaNotificacionPendiente($proyecto);
             $msg = 'No se ha podido enviar la solicitud de aprobación, inténtalo nuevamente';
             $conf_envios = false;

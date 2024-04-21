@@ -71,15 +71,14 @@ class EnviarEncuesta extends Notification implements ShouldQueue
                     'token' => $this->token,
                 ]);
         }
-        if(class_basename($this->query) == class_basename(\App\Models\Articulacion::class)){
+        if(class_basename($this->query) == class_basename(\App\Models\Articulation::class)){
             return (new MailMessage)
             ->subject(Lang::getFromJson('Encuesta de Satisfaccion').' '. strtolower(class_basename($this->query)). ' '.  $this->query->code)
-            ->line(Lang::getFromJson('Ha recibido este mensaje porque se solicitó diligenciar la encuesta de satisfaccion de '. $this->query->code))
-            ->action(Lang::getFromJson('Realizar Encuesta'), url(config('app.url').route('encuesta.formulario', [
-                    'id' => $this->query->id,'module' => strtolower(class_basename($this->query)), 'token' => $this->token
-            ],false)))
-            ->line('Recuerde que esta encuesta debe ser diligenciada con el fin de avanzar a la siguiente fase.')
-            ->line('<p>hola perrro</p> <h1>hola</h1>');
+            ->markdown('emails.encuesta.enviar-link-encuesta-articulacion', [
+                'query' => $this->query,
+                'notifiable' => $notifiable,
+                'token' => $this->token,
+            ]);
         }
     }
 

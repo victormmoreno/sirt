@@ -16,7 +16,7 @@ Ha recibido este mensaje porque se solicitó diligenciar la encuesta de satisfac
 
 @component('mail::button', [
     'url' => url(config('app.url').route('encuesta.formulario', [
-                        'id' => $query->id,'module' => strtolower(class_basename($query)), 'token' => $token
+                        'id' => $query->id,'module' => 'articulacion', 'token' => $token
                 ],false))
     ])
 🔗 Realizar Encuesta
@@ -40,7 +40,7 @@ Gestión {{ config('app.name') }} 💯
     [
         'actionText' => 'Ir a la página para realizar la encuesta',
         'actionURL' => url(config('app.url').route('encuesta.formulario', [
-                        'id' => $query->id,'module' => strtolower(class_basename($query)), 'token' => $token
+                        'id' => $query->id,'module' => 'articulacion', 'token' => $token
                 ],false)),
     ]
 )

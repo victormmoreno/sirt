@@ -10,9 +10,9 @@ Route::group(
     ],
     ],
     function () {
-        Route::get('/{module}/{id}', 'Encuesta\EnvioEncuestaController@enviarLinkEncuesta')->name('encuesta.link');
+        Route::get('/{module}/{id}', 'Encuesta\EnvioEncuestaController@enviarLinkEncuesta')->name('encuesta.link')->middleware(['auth', 'role_session:Experto|Articulador']);
 
         Route::get('/{module}/{id}/{token}', 'Encuesta\EncuestaController@mostrarFormularioEncuesta')->name('encuesta.formulario');
-        // ->middleware('role_session:Experto');
+
     }
 );

@@ -7,18 +7,17 @@ use App\Models\Proyecto;
 use App\Models\Articulation;
 use App\Models\EncuestaToken;
 
-
 class EnvioEncuestaController extends Controller
 {
-
     /**
-     * Send a reset link to the given user.
+     * enviar el link de la encuesta.
      *
      * @param  \Illuminate\Http\Request  $request
      */
     public function enviarLinkEncuesta($modulo, $id)
     {
         $query = $this->obtenerInformacionModulo($modulo, $id);
+
         if(is_null($query)){
             return abort(404);
         }
@@ -33,7 +32,6 @@ class EnvioEncuestaController extends Controller
         return $response == EncuestaToken::ENVIAR_ENCUESTA
                     ? $this->enviarRespuestaLinkEncuesta()
                     : $this->enviarLinkEncuestaRespuestaFallida();
-
     }
 
     /**
@@ -73,8 +71,7 @@ class EnvioEncuestaController extends Controller
     }
 
     /**
-     * Get the response for a successful password reset link.
-     *
+     * obtener larespuesta al enviar el link de la encuesta.
      */
     protected function enviarRespuestaLinkEncuesta()
     {
@@ -83,8 +80,7 @@ class EnvioEncuestaController extends Controller
     }
 
     /**
-     * Get the response for a failed password reset link.
-     *
+     * obtener la respuesta cuando falla el envio del link de la encuesta.
      */
     protected function enviarLinkEncuestaRespuestaFallida()
     {

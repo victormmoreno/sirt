@@ -449,7 +449,6 @@ class Proyecto extends Model
             }
         }
     }
-
     /**
      * returns an instance of the ProjectPresenter class
      * @author dum
