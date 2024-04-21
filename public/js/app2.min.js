@@ -4877,24 +4877,32 @@ function mensajesProyectoCierre(data) {
     }
 };
 
-function sendTokenEncuesta(route, fase, contador, e) {
+const sendTokenEncuesta = (route, fase, e) => {
     e.preventDefault();
-    if (fase == "Planeación" && contador == 0) {
+    if (fase == "Ejecución") {
         Swal.fire({
-            title: "¿Está seguro(a) de enviar la solicitud de aprobación?",
-            text: "Para continuar se necesita ingresar la fecha de finalización de ejecución del proyecto según el cronograma adjunto en esta fase. En el formato YYYY-MM-DD",
+            title: "¿Está seguro(a) de enviar la encuesta de satisfacción?",
+            text: "Esta encuesta es obligatoria para poder avanzar a la siguiente fase.",
             type: "warning",
-            input: "text",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            cancelButtonText: "Cancelar",
+            confirmButtonText: "Sí, enviar",
         }).then((result) => {
-            console.log(result);
-            // if (result.value) {
-            //     location.href = route + "/" + result.value;
-            // }
+            if (result.value) {
+                setTimeout(function() {
+                    location.href = route;
+                }, 50);
+            } else {
+                Swal.fire("Encuesta no enviada", "", "info");
+            }
         });
     } else {
-        // location.href = route;
+        Swal.fire("En esta fase no esta permitida enviar la encuesta", "", "error");
+        location.href = route;
     }
-}
+};
 
 $(document).ready(function() {
   $('#empresasDeTecnoparque_modEdt_table').DataTable({

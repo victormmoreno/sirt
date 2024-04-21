@@ -15,7 +15,7 @@
                 @include('proyectos.options.options_ever_dinamizador')
             @endcan
         @endif
-        <a href="" class="collection-item orange-text" onclick="sendTokenEncuesta('{{route('proyecto.solicitar.aprobacion', [$proyecto->id, -1])}}', '{{$proyecto->fase->nombre}}', {{$proyecto->prorrogas()->count()}}, event)">
+        <a class="collection-item orange-text" onclick="sendTokenEncuesta('{{route('encuesta.link', ['proyecto', $proyecto->id])}}', '{{$proyecto->fase->nombre}}', event)">
             <i class="material-icons left">notifications</i>
                 Enviar encuesta al talento.
         </a>

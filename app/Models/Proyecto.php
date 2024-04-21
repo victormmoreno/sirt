@@ -8,9 +8,12 @@ use App\Presenters\ProyectoPresenter;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use \App\Http\Traits\Encuesta\HasEnvioEncuesta as EncuestaTrait;
 
 class Proyecto extends Model
 {
+
+    use EncuestaTrait;
 
     /**
      * the table name
