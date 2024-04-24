@@ -585,7 +585,7 @@
 
         });
 
-        var ocupacion = {
+        let ocupacion = {
             getOtraOcupacion:function (idocupacion) {
                 $('#otraocupacion').hide();
                 let id = $(idocupacion).val();
@@ -608,7 +608,7 @@
         };
 
 
-        var user = {
+        let user = {
             getCiudadExpedicion:function(){
                 let id;
                 id = $('#txtdepartamentoexpedicion').val();

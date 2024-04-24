@@ -15,6 +15,10 @@
                 @include('proyectos.options.options_ever_dinamizador')
             @endcan
         @endif
+        <a class="collection-item orange-text" onclick="sendTokenEncuesta('{{route('encuesta.link', ['proyecto', $proyecto->id])}}', '{{$proyecto->fase->nombre}}', event)">
+            <i class="material-icons left">notifications</i>
+                Enviar encuesta al talento.
+        </a>
         @can('showOptionsForExperto', App\Models\Proyecto::class)
             @if (Route::currentRouteName() == 'proyecto.inicio')
                 @include('proyectos.options.options_inicio')

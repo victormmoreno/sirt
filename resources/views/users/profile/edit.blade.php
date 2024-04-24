@@ -354,7 +354,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
-                                                                    <div class="input-field col s12 m6 l6">
+                                                                    <div class="input-field col s12 m12 l12">
 
                                                                         <input class="validate" id="txtbarrio"
                                                                                name="txtbarrio" type="text"
@@ -364,15 +364,7 @@
                                                                         <small id="txtbarrio-error"
                                                                                class="error red-text"></small>
                                                                     </div>
-                                                                    <div class="input-field col s12 m6 l6">
-                                                                        <input class="validate" id="txtdireccion"
-                                                                               name="txtdireccion" type="text"
-                                                                               value="{{ isset($user->direccion) ? $user->direccion : old('txtdireccion')}}">
-                                                                        <label for="txtdireccion">Dirección <span
-                                                                                class="red-text">*</span></label>
-                                                                        <small id="txtdireccion-error"
-                                                                               class="error red-text"></small>
-                                                                    </div>
+
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="input-field col s12 m6 l6">
