@@ -2,18 +2,17 @@
 
 namespace App\Http\Traits\Encuesta;
 
-
+use Illuminate\Support\Facades\Session;
+use App\Models\Role;
+use App\Models\Fase;
+use App\Models\Movimiento;
 use App\Models\Proyecto;
 use App\Models\Articulation;
 use App\Models\EncuestaToken;
-use App\Models\Movimiento;
-use App\Models\Fase;
-use App\Models\Role;
 use App\Notifications\Encuesta\EnviarEncuesta as EncuestaNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
 
 trait HasEnvioEncuesta {
 
@@ -50,7 +49,7 @@ trait HasEnvioEncuesta {
     public function enviarNotificacionEncuesta($token)
     {
         $this->user->notify(new EncuestaNotification($this->query, $token));
-        // dd($this->crearTrazabilidad($this->query));
+        $this->crearTrazabilidad($this->query);
         return EncuestaToken::ENVIAR_ENCUESTA;
     }
     /**
@@ -72,15 +71,19 @@ trait HasEnvioEncuesta {
      */
     public function createToken()
     {
-        $email = $this->obtenerEmailParaEnviarEncuesta();
+        try{
+            $email = $this->obtenerEmailParaEnviarEncuesta();
 
-        $this->deleteExisting();
+            $this->deleteExisting();
 
-        $token = $this->createNewToken();
+            $token = $this->createNewToken();
 
-        EncuestaToken::create($this->getPayload($email, $token));
+            EncuestaToken::create($this->getPayload($email, $token));
 
-        return $token;
+            return $token;
+        }catch(\Exception $exception){
+            return $exception->getMessage();
+        }
     }
 
     /**
@@ -166,7 +169,7 @@ trait HasEnvioEncuesta {
      * @param  \Illuminate\Contracts\Auth\CanResetPassword  $user
      * @return void
      */
-    public function delete()
+    public function deleteToken()
     {
         $this->deleteExisting();
     }
@@ -188,19 +191,17 @@ trait HasEnvioEncuesta {
      * @return void
      */
     protected function crearTrazabilidad($query){
-        // if(class_basename($query) == class_basename(Proyecto::class)){
-        //     $mensaje = 'El experto solicito realzar la encuesta de satisfacción';
-        //     $trazabilidad = $query->movimientos()->attach(Movimiento::where('movimiento', Movimiento::IsSolicitarTalento())->first(), [
-        //         'proyecto_id' => $query->id,
-        //         'user_id' => auth()->user()->id,
-        //         'fase_id' => Fase::where('nombre', 'Ejecución')->first()->id,
-        //         'role_id' => Role::where('name', Session::get('login_role'))->first()->id,
-        //         'comentarios' => $mensaje
-        //         ]);
-        //     return $trazabilidad;
-        // }
-        // $mensaje = 'El articulador solicito realzar la encuesta de satisfacción';
-        // return $mensaje;
+        if(class_basename($query) == class_basename(Proyecto::class)){
+            $mensaje = 'El experto solicitó realzar la encuesta de satisfacción';
+            $trazabilidad = $query->movimientos()->attach(Movimiento::where('movimiento', Movimiento::IsEnviarEncuestaSatisfaccion())->first(), [
+                'proyecto_id' => $query->id,
+                'user_id' => auth()->user()->id,
+                'fase_id' => Fase::where('nombre', Proyecto::IsEjecucion())->first()->id,
+                'role_id' => Role::where('name', Session::get('login_role'))->first()->id,
+                'comentarios' => $mensaje
+                ]);
+            return $trazabilidad;
+        }
     }
 
 }

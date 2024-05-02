@@ -858,7 +858,6 @@ class ProyectoController extends Controller
             alert('No autorizado', 'No puedes solicitar la aprobación de este proyecto', 'error')->showConfirmButton('Ok', '#3085d6');
             return back();
         }
-        (new \App\Http\Controllers\Encuesta\EnvioEncuestaController())->enviarLinkEncuesta(class_basename(Proyecto::class), $proyecto->id);
 
         $notificacion = $this->getProyectoRepository()->notificarAprobacionDeFase($proyecto, $fase, $fecha);
         if ($notificacion['notificacion']) {

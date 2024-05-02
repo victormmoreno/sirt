@@ -40,10 +40,14 @@ class EncuestaController extends Controller
         }
 
         $user = $query->interlocutor($query);
+        //verificar si existe aun el token
         if(!$query->exists($token)){
             return abort(404);
         }
-        dd(['query' => $query, 'mensaje'=> 'bienvenido a la encuesta']);
+        return dd(['user'=> $user, 'model' => $query]);
+        //elminiar el token
+        //se debe eliminar un vez se envie la encuesta.
+        //$query->deleteToken();
 
     }
 
@@ -57,7 +61,7 @@ class EncuestaController extends Controller
         return view('encuestas.index');
     }
 
-    
+
     /**
      * Show the form for creating a new resource.
      *

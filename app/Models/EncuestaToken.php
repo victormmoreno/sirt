@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class EncuestaToken extends Model
 {
     const ENVIAR_ENCUESTA = 'enviar.encuesta';
+
     protected $table = 'encuesta_tokens';
 
     public $timestamps = false;

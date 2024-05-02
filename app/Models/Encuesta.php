@@ -9,7 +9,6 @@ class Encuesta extends Model
     /**
      * the table name
      * @var string
-     * @author dum
      */
     protected $table = 'encuestas';
 
@@ -18,4 +17,9 @@ class Encuesta extends Model
         'descripcion',
         'estado'
     ];
+
+    public function encuestaToken()
+    {
+        return $this->hasOne(EncuestaToken::class);
+    }
 }
