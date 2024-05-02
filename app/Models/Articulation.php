@@ -6,9 +6,12 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ArticulationPresenter;
 use Illuminate\Support\Facades\Session;
+use \App\Http\Traits\Encuesta\HasEnvioEncuesta as EncuestaTrait;
 
 class Articulation extends Model
 {
+
+    use EncuestaTrait;
 
     const START_PHASE = "Inicio";
     const EXECUTION_PHASE = "Ejecución";

@@ -46,7 +46,6 @@ class ProfileFormRequest extends FormRequest
             'txtdiscapacidad'          =>  Rule::requiredIf(request()->txtgrado_discapacidad == 1 || request()->txtgrado_discapacidad == '1') . '|min:1|max:45|regex:/^([a-zA-ZñÑáéíóúÁÉÍÓÚ._-])+((\s*)+([a-zA-ZñÑáéíóúÁÉÍÓÚ._-]*)*)+$/|nullable',
             'txtemail'                  => 'required|email|min:1|max:100|unique:users,email,' . request()->route('perfil'),
             'txtbarrio'                 => 'required|min:1|max:100',
-            'txtdireccion'              => 'required|min:1|max:200',
             'txttelefono'               => 'nullable|digits_between:6,11|numeric',
             'txtcelular'                => 'nullable|digits_between:10,11|numeric',
             'txtinstitucion'            => 'required|min:1|max:100|regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/',
@@ -99,10 +98,6 @@ class ProfileFormRequest extends FormRequest
             'txtemail.min'                        => 'El correo electrónico debe ser minimo 1 caracter',
             'txtemail.max'                        => 'El correo electrónico debe ser máximo 100 caracteres',
             'txtemail.unique'                     => 'El correo electrónico ya ha sido registrado',
-
-            'txtdireccion.required'               => 'La dirección es obligatoria.',
-            'txtdireccion.min'                    => 'La dirección debe ser minimo 1 caracter',
-            'txtdireccion.max'                    => 'La dirección debe ser máximo 200 caracteres',
 
             'txtbarrio.required'                  => 'El barrio es obligatorio.',
             'txtbarrio.min'                       => 'El barrio debe ser minimo 1 caracter',
@@ -165,7 +160,6 @@ class ProfileFormRequest extends FormRequest
             'txtfecha_nacimiento'  => 'fecha de nacimiento',
             'txtestrato'           => 'estrato',
             'txtemail'             => 'correo electrónico',
-            'txtdireccion'         => 'dirección',
             'txtbarrio'            => 'barrio',
             'txttelefono'          => 'telefono',
             'txtcelular'           => 'celular',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Traits\User;
 
+use App\Models\Ocupacion;
 use App\Notifications\User\CompleteTalentInformation;
 use App\Values\TalentStorageValues;
 use Illuminate\Http\Request;
@@ -58,9 +59,29 @@ trait MustCompleteTalentInformation
             ];
             $this->update(['informacion_user' => $structures]);
 
+            $this->syncOcupaciones($request);
+
             $this->markInformationTalentAsCompleted();
         }
     }
+
+
+    /**
+     * Actualizar las ocupaciones.
+     */
+    protected function syncOcupaciones($request)
+    {
+        if($request->filled('txtocupaciones')){
+            $this->ocupaciones()->sync($request->get('txtocupaciones'));
+        }
+        if($request->filled('txtotra_ocupacion')){
+            return $this->forceFill([
+                "otra_ocupacion"  => collect($request->input('txtocupaciones'))->contains(Ocupacion::where('nombre', Ocupacion::IsOtraOcupacion())->first()->id) ? $request->input('txtotra_ocupacion') : null,
+            ])->save();
+        }
+        return $this;
+    }
+
 
     /**
      * Send the email information talent notification.
