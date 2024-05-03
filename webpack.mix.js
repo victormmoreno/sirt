@@ -127,7 +127,8 @@ mix.scripts([
     'resources/app/support/form.js',
     'resources/app/support/index.js',
     'resources/app/tag/index.js',
-    'resources/app/tag/form.js'
+    'resources/app/tag/form.js',
+    'resources/app/encuesta/form.js',
 	],'public/js/app2.js');
 
 mix.minify('public/js/app2.js')

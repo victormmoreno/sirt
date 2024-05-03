@@ -78,7 +78,7 @@ class CreateEncuestaTable extends Migration
             $table->unsignedBigInteger('encuesta_id');
             $table->unsignedInteger('user_id');
             $table->string('token', 100);
-            $table->tinyInteger('estado')->default(0);
+            // $table->tinyInteger('estado')->default(0);
             $table->timestamps();
 
             $table->foreign('encuesta_id')
