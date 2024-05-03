@@ -68,9 +68,17 @@
         divInfocenter = $('#infocenter_content');
         divDinamizador = $('#dinamizador_content');
         divArticulador = $('#articulador_content');
+        divArticuladorAcompanamiento = $('#articulador_acompanamiento_content');
+        divCredenciales = $('#credenciales_content');
+        divAlcanzaObjetivo = $('#alcanza_objetivo_content');
+        divOtrosServicios = $('#otros_servicios_content');
         divInfocenter.hide();
         divDinamizador.hide();
         divArticulador.hide();
+        divArticuladorAcompanamiento.hide();
+        divCredenciales.hide();
+        divAlcanzaObjetivo.show();
+        divOtrosServicios.hide();
     });
 
     // let softSlider = document.getElementById('infocenter_amabilidad');
@@ -108,6 +116,30 @@
             divArticulador.show();
         } else {
             divArticulador.hide();
+        }
+    }
+
+    function showInput_CompartirCredenciales() {
+        if ($('#comparte_credenciales').is(':checked')) {
+            divCredenciales.show();
+        } else {
+            divCredenciales.hide();
+        }
+    }
+
+    function showInput_AlcanzaObjetivos() {
+        if (!$('#alcanza_objetivos').is(':checked')) {
+            divAlcanzaObjetivo.show();
+        } else {
+            divAlcanzaObjetivo.hide();
+        }
+    }
+
+    function showInput_OtrosServicios() {
+        if ($('#usa_otros_servicios').is(':checked')) {
+            divOtrosServicios.show();
+        } else {
+            divOtrosServicios.hide();
         }
     }
 </script>
