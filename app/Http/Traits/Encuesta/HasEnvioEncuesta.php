@@ -16,10 +16,29 @@ use Illuminate\Support\Facades\Hash;
 
 trait HasEnvioEncuesta {
 
-    public $user = null;
-    public $query = null;
-    // public $expires = 60 * 60; //1hora
-    public $expires = '*'; //1hora
+    private $user = null;
+    private $query = null;
+    // private $expires = 60 * 60; //1hora
+    private $expires = '*'; //1hora
+
+    /**
+     * Relacion uno a uno polimorfica
+     */
+    public function encuestaToken()
+    {
+        return $this->morphOne(EncuestaToken::class, 'encuestable');
+    }
+
+    public function setQuery($query)
+    {
+        $this->query = $query;
+        $this->setUser();
+    }
+
+    public function getQuery()
+    {
+        return $this->query;
+    }
 
     /**
      * consultar Informacion.
@@ -27,16 +46,17 @@ trait HasEnvioEncuesta {
      * @param  string  $token
      * @return void
      */
-    public function interlocutor($query)
+    public function setUser()
     {
-        $this->query = $query;
-        if(class_basename($query) == class_basename(Proyecto::class)){
-            $this->user = $query->getLeadTalent();
-        }else if(class_basename($query) == class_basename(Articulation::class)){
-            $this->user = $query->articulationstage->interlocutor;
-        }else {
-            $this->user = null;
+        if(class_basename($this->query) == class_basename(Proyecto::class)){
+            $this->user = $this->query->getLeadTalent();
+        }else if(class_basename($this->query) == class_basename(Articulation::class)){
+            $this->user = $this->query->articulationstage->interlocutor;
         }
+    }
+
+    public function getUser()
+    {
         return $this->user;
     }
 
@@ -48,39 +68,59 @@ trait HasEnvioEncuesta {
      */
     public function enviarNotificacionEncuesta($token)
     {
-        $this->user->notify(new EncuestaNotification($this->query, $token));
-        $this->crearTrazabilidad($this->query);
-        return EncuestaToken::ENVIAR_ENCUESTA;
+        if(isset($this->user)){
+            $this->user->notify(new EncuestaNotification($this->query, $token));
+            $this->crearTrazabilidad($this->query);
+            return EncuestaToken::ENVIAR_ENCUESTA;
+        }
     }
+
     /**
      * enviar la notificacion con la encuesta.
-     *
      * @param  string  $token
      * @return void
      */
     public function obtenerEmailParaEnviarEncuesta()
     {
-        return $this->user->email;
+        if(isset($this->user)){
+            return $this->user->email;
+        }
+    }
+
+    /**
+     * Obtener el id del modelo
+     * @param  string  $token
+     * @return void
+     */
+    public function obtenerIdModulo()
+    {
+        return $this->query->id;
+    }
+    /**
+     * Obtener el id del modelo
+     * @param  string  $token
+     * @return void
+     */
+    public function obtenerClassName()
+    {
+        return get_class($this->getModel());
     }
 
     /**
      * crear el nuevo token.
-     *
-     * @param  \Illuminate\Contracts\Auth\CanResetPassword  $user
      * @return string
      */
     public function createToken()
     {
         try{
-            $email = $this->obtenerEmailParaEnviarEncuesta();
-
-            $this->deleteExisting();
-
-            $token = $this->createNewToken();
-
-            EncuestaToken::create($this->getPayload($email, $token));
-
-            return $token;
+            if($this->query->exists){
+                $token = $this->createNewToken();
+                $email = $this->obtenerEmailParaEnviarEncuesta();
+                $this->deleteExisting();
+                $this->query->encuestaToken()->create($this->getPayload($email, $token));
+                return $token;
+            }
+            return 'No se genero el token';
         }catch(\Exception $exception){
             return $exception->getMessage();
         }
@@ -102,7 +142,11 @@ trait HasEnvioEncuesta {
      */
     protected function deleteExisting()
     {
-        return EncuestaToken::where('email', $this->obtenerEmailParaEnviarEncuesta())->delete();
+        return EncuestaToken::query()
+        ->where('email', $this->obtenerEmailParaEnviarEncuesta())
+        ->where('encuestable_type', $this->obtenerClassName())
+        ->where('encuestable_id', $this->obtenerIdModulo())
+        ->delete();
     }
 
     /**
@@ -124,7 +168,11 @@ trait HasEnvioEncuesta {
      */
     protected function checkToken($token)
     {
-        $encriptToken = EncuestaToken::where('email', $this->obtenerEmailParaEnviarEncuesta())->first()->token;
+        $encriptToken = EncuestaToken::query()
+        ->where('email', $this->obtenerEmailParaEnviarEncuesta())
+        ->where('encuestable_type', $this->obtenerClassName())
+        ->where('encuestable_id', $this->obtenerIdModulo())
+        ->first()->token;
         if (!Hash::check($token, $encriptToken)) {
             return false;
         }
@@ -140,9 +188,11 @@ trait HasEnvioEncuesta {
      */
     public function exists($token)
     {
-        $record = EncuestaToken::where(
-            'email', $this->obtenerEmailParaEnviarEncuesta()
-        )->first();
+        $record = EncuestaToken::query()
+        ->where('email', $this->obtenerEmailParaEnviarEncuesta())
+        ->where('encuestable_type', $this->obtenerClassName())
+        ->where('encuestable_id', $this->obtenerIdModulo())
+        ->first();
 
         return $record &&
                 ! $this->tokenExpired($record->created_at) &&

@@ -21,11 +21,7 @@ class EnvioEncuestaController extends Controller
         if(is_null($query)){
             return abort(404);
         }
-        $user = $query->interlocutor($query);
-        if (is_null($user)) {
-            return abort(404);
-        }
-
+        $query->setQuery($query);
         $response =  $query->enviarNotificacionEncuesta(
             $query->createToken()
         );

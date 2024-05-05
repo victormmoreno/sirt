@@ -15,4 +15,9 @@ class EncuestaToken extends Model
     protected $fillable = [
         'email', 'token', 'created_at'
     ];
+
+    public function encuestable()
+    {
+        return $this->morphTo();
+    }
 }
