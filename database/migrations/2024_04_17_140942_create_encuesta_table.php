@@ -15,6 +15,7 @@ class CreateEncuestaTable extends Migration
     {
         Schema::create('encuesta_tokens', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->morphs('encuestable');
             $table->string('email')->index();
             $table->string('token')->index();
             $table->timestamp('created_at');
