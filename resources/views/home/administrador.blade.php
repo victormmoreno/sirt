@@ -66,14 +66,24 @@
                 <div class="col s12 m12 l12">
                     <div class="card card-transparent">
                         <div class="card-content">
-                            <div class="center-align">
+                            {{-- <div class="center-align">
                                 <p class="card-title aling-center">Bienvenido <span class="secondary-title"> Sistema Nacional de la Red de Tecnoparques Colombia</span>
                                 </p>
                             </div>
                             <div class="row">
                                 <div class="col s12 m12 l10 offset-l1">
                                     <img class="materialboxed responsive-img"
-                                         src="{{ asset('img/logo-tecnoparque-green.svg') }}" alt="sena | Tecnoparque">
+                                        src="{{ asset('img/logo-tecnoparque-green.svg') }}" alt="sena | Tecnoparque">
+                                </div>
+                            </div> --}}
+                            <div class="center-align">
+                                <p class="card-title aling-center"> Tablero Power Bi - Red Tecnoparque Colombia
+                                </p>
+                            </div>
+                            <div class="row">
+                                <div class="col s12 m12 l10 offset-l2">
+                                    <iframe title="1 ModuloTecnoBI_SIRT_2024" width="1024" height="612" src="https://app.powerbi.com/view?r=eyJrIjoiNDQ1YmIwMWYtOTg4Yy00MzAzLTgwYTgtNjVkODkxYTE3YmM3IiwidCI6ImNiYzJjMzgxLTJmMmUtNGQ5My05MWQxLTUwNmM5MzE2YWNlNyIsImMiOjR9" frameborder="0" allowFullScreen="true"></iframe>
+
                                 </div>
                             </div>
                         </div>
